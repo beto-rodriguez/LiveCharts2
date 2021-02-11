@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SkiaSharp.Views.WPF" Version="2.80.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LiveCharts.Core\LiveChartsCore.csproj" />
+    <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharp.csproj" />
+  </ItemGroup>
+
+</Project>
