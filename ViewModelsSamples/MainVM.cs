@@ -20,8 +20,8 @@ namespace ViewModelsSamples
         {
             var stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 3);
             stroke.StrokeCap = SKStrokeCap.Round;
-            var pathEffect = new AnimatedDashEffectBuilder(new[] { 5f, 5f });
-            pathEffect.Phase = 5;
+            var pathEffect = new AnimatedDashEffectBuilder(new[] { 8f, 8f });
+            pathEffect.Phase = 10;
             stroke.PathEffect = pathEffect;
             stroke.SetPropertyTransition(
                 new LiveChartsCore.Drawing.Animation(EasingFunctions.Lineal, TimeSpan.FromMilliseconds(500), int.MaxValue),

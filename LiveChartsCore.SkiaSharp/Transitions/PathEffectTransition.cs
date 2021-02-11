@@ -34,7 +34,9 @@ namespace LiveChartsCore.SkiaSharp.Transitions
 
         protected override PathEffectBuilder OnGetMovement(float progress)
         {
-            if (toValue == null || fromValue == null) return null;
+            if (fromValue == null && toValue == null) return null;
+            if (toValue == null && fromValue != null) toValue = fromValue;
+            if (fromValue == null && toValue != null) fromValue = toValue;
             return toValue.InterpolateFrom(fromValue, progress);
         }
     }
