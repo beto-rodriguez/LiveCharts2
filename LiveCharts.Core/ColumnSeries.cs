@@ -53,9 +53,6 @@ namespace LiveChartsCore
             var xScale = new ScaleContext(drawLocation, drawMarginSize, xAxis.Orientation, xAxis.DataBounds);
             var yScale = new ScaleContext(drawLocation, drawMarginSize, yAxis.Orientation, yAxis.DataBounds);
 
-            if (HighlightFill != null) view.CoreCanvas.AddPaintTask(HighlightFill);
-            if (HighlightStroke != null) view.CoreCanvas.AddPaintTask(HighlightStroke);
-
             float uw = xScale.ScaleToUi(1f) - xScale.ScaleToUi(0f);
             float uwm = 0.5f * uw;
             float sw = Stroke?.StrokeWidth ?? 0;
@@ -107,6 +104,9 @@ namespace LiveChartsCore
                 OnPointMeasured(point, rectangle);
                 drawBucket.Add(rectangle);
             }
+
+            if (HighlightFill != null) view.CoreCanvas.AddPaintTask(HighlightFill);
+            if (HighlightStroke != null) view.CoreCanvas.AddPaintTask(HighlightStroke);
         }
 
         public override CartesianBounds GetBounds(SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)

@@ -41,10 +41,42 @@ namespace LiveChartsCore
         private IPathGeometry<TDrawingContext> strokePath;
         private double lineSmoothness = 0.65;
         private double geometrySize = 18d;
+        private IDrawableTask<TDrawingContext> shapesFill;
+        private IDrawableTask<TDrawingContext> shapesStroke;
 
         public LineSeries()
         {
 
+        }
+
+        public IDrawableTask<TDrawingContext> ShapesFill
+        {
+            get => shapesFill;
+            set
+            {
+                shapesFill = value;
+                if (shapesFill != null)
+                {
+                    shapesFill.IsStroke = false;
+                    shapesFill.StrokeWidth = 0;
+                }
+
+                OnPaintContextChanged();
+            }
+        }
+
+        public IDrawableTask<TDrawingContext> ShapesStroke
+        {
+            get => shapesStroke;
+            set
+            {
+                shapesStroke = value;
+                if (shapesStroke != null)
+                {
+                    shapesStroke.IsStroke = true;
+                }
+                OnPaintContextChanged();
+            }
         }
 
         public double Pivot { get; set; }
@@ -61,9 +93,6 @@ namespace LiveChartsCore
             var drawMarginSize = view.Core.DrawMarginSize;
             var xScale = new ScaleContext(drawLocation, drawMarginSize, xAxis.Orientation, xAxis.DataBounds);
             var yScale = new ScaleContext(drawLocation, drawMarginSize, yAxis.Orientation, yAxis.DataBounds);
-
-            if (HighlightFill != null) view.CoreCanvas.AddPaintTask(HighlightFill);
-            if (HighlightStroke != null) view.CoreCanvas.AddPaintTask(HighlightStroke);
 
             var gs = unchecked((float)geometrySize);
             var hgs = gs / 2f;
@@ -106,8 +135,8 @@ namespace LiveChartsCore
 
                     data.TargetCoordinate.HoverArea = new HoverArea();
                     data.TargetCoordinate.Visual = v;
-                    if (Fill != null) Fill.AddGeometyToPaintTask(v.Geometry);
-                    if (Stroke != null) Stroke.AddGeometyToPaintTask(v.Geometry);
+                    if (ShapesFill != null) ShapesFill.AddGeometyToPaintTask(v.Geometry);
+                    if (ShapesStroke != null) ShapesStroke.AddGeometyToPaintTask(v.Geometry);
                 }
 
                 var visual = (LineSeriesVisualPoint<TDrawingContext, TVisual>)data.TargetCoordinate.Visual;
@@ -140,6 +169,11 @@ namespace LiveChartsCore
                 OnPointMeasured(data.TargetCoordinate, visual.Geometry);
                 drawBucket.Add(visual.Geometry);
             }
+
+            if (HighlightFill != null) view.CoreCanvas.AddPaintTask(HighlightFill);
+            if (HighlightStroke != null) view.CoreCanvas.AddPaintTask(HighlightStroke);
+            if (ShapesFill != null) view.CoreCanvas.AddPaintTask(ShapesFill);
+            if (ShapesStroke != null) view.CoreCanvas.AddPaintTask(ShapesStroke);
         }
 
         public override CartesianBounds GetBounds(SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
@@ -233,6 +267,64 @@ namespace LiveChartsCore
                     };
                 }
             }
+        }
+
+        protected override void OnPaintContextChanged()
+        {
+            var context = new PaintContext<TDrawingContext>();
+            var lss = unchecked((float)LegendShapeSize);
+            var w = LegendShapeSize;
+
+            if (shapesFill != null)
+            {
+                var fillClone = shapesFill.CloneTask();
+                var visual = new TVisual { X = 0, Y = 0, Height = lss, Width = lss };
+                visual.CompleteTransitions();
+                fillClone.AddGeometyToPaintTask(visual);
+                context.PaintTasks.Add(fillClone);
+            } else if (Fill != null)
+            {
+                var fillClone = Fill.CloneTask();
+                var visual = new TVisual { X = 0, Y = 0, Height = lss, Width = lss };
+                visual.CompleteTransitions();
+                fillClone.AddGeometyToPaintTask(visual);
+                context.PaintTasks.Add(fillClone);
+            }
+
+            if (shapesStroke != null)
+            {
+                var strokeClone = shapesStroke.CloneTask();
+                var visual = new TVisual
+                {
+                    X = shapesStroke.StrokeWidth,
+                    Y = shapesStroke.StrokeWidth,
+                    Height = lss,
+                    Width = lss
+                };
+                visual.CompleteTransitions();
+                w += 2 * shapesStroke.StrokeWidth;
+                strokeClone.AddGeometyToPaintTask(visual);
+                context.PaintTasks.Add(strokeClone);
+            } else if (Stroke != null)
+            {
+                var strokeClone = Stroke.CloneTask();
+                var visual = new TVisual
+                {
+                    X = strokeClone.StrokeWidth,
+                    Y = strokeClone.StrokeWidth,
+                    Height = lss,
+                    Width = lss
+                };
+                visual.CompleteTransitions();
+                w += 2 * strokeClone.StrokeWidth;
+                strokeClone.AddGeometyToPaintTask(visual);
+                context.PaintTasks.Add(strokeClone);
+            }
+
+            context.Width = w;
+            context.Height = w;
+
+            paintContext = context;
         }
     }
 }

@@ -42,6 +42,7 @@ namespace LiveChartsCore
         private INotifyCollectionChanged previousValuesNCCInstance;
         private IEnumerable<TModel> values;
         protected bool implementsINCC = false;
+        protected PaintContext<TDrawingContext> paintContext;
         private CartesianBounds _currentBounds = null;
         protected readonly bool isValueType;
         protected readonly bool implementsINPC;
@@ -52,7 +53,6 @@ namespace LiveChartsCore
         private IDrawableTask<TDrawingContext> fill;
         private IDrawableTask<TDrawingContext> highlightStroke;
         private IDrawableTask<TDrawingContext> highlightFill;
-        private PaintContext<TDrawingContext> paintContext;
         private double legendShapeSize = 15;
 
         /// <summary>
@@ -352,7 +352,7 @@ namespace LiveChartsCore
             foreach (var chart in subscribedTo) chart.Update();
         }
 
-        private void OnPaintContextChanged()
+        protected virtual void OnPaintContextChanged()
         {
             var context = new PaintContext<TDrawingContext>();
 

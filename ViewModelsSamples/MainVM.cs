@@ -18,15 +18,6 @@ namespace ViewModelsSamples
         {
             Series = new ObservableCollection<ISeries<SkiaDrawingContext>>
             {
-                new LineSeries<double>
-                {
-                    Name = "lineas",
-                    Values = new[]{ 1d, 4, 2, 1, 7, 3, 5, 6, 3, 6, 8, 3},
-                    Stroke = new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
-                    Fill = new SolidColorPaintTask(new SKColor(2, 136, 209, 50), 3),
-                    HighlightFill = new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
-                    HighlightStroke = new SolidColorPaintTask(new SKColor(20, 20, 20), 3)
-                },
                 new ColumnSeries<double>
                 {
                     Name = "columnas",
@@ -34,7 +25,18 @@ namespace ViewModelsSamples
                     //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 3),
                     Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
                     HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
-                }
+                },
+                 new LineSeries<double>
+                {
+                    Name = "lineas",
+                    Values = new[]{ 1d, 4, 2, 1, 7, 3, 5, 6, 3, 6, 8, 3},
+                    Stroke = new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
+                    Fill = new SolidColorPaintTask(new SKColor(2, 136, 209, 50), 3),
+                    ShapesFill = new SolidColorPaintTask(new SKColor(255, 255, 255)),
+                    ShapesStroke =  new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
+                    HighlightFill = new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
+                    HighlightStroke = new SolidColorPaintTask(new SKColor(20, 20, 20), 3)
+                },
             };
 
             YAxes = new List<IAxis<SkiaDrawingContext>>
@@ -72,7 +74,7 @@ namespace ViewModelsSamples
                 "M 225 0 L 225 100, 275 100" +                                  // L
                 "M 300 50 A 25 50 0 1 0 300 49.9 Z");                           // O
 
-        public HelloGeometry() 
+        public HelloGeometry()
             : base(helloPath) // We pass the already parsed SVG path, this way it is not parsed for every shape.
         {
             // alternatively we could use the SVG property.
