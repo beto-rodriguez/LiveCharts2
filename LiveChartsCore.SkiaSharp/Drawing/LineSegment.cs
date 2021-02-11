@@ -23,27 +23,23 @@
 using LiveChartsCore.Transitions;
 using SkiaSharp;
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.SkiaSharp.Drawing
 {
     public class LineSegment : PathCommand
     {
-        private FloatTransition xTransition;
-        private FloatTransition yTransition;
+        private readonly PathGeometry pathGeometry;
+        private FloatTransitionProperty xTransition;
+        private FloatTransitionProperty yTransition;
 
-        public LineSegment()
+        public LineSegment(PathGeometry pathGeometry)
         {
-            xTransition = new FloatTransition(0f);
-            yTransition = new FloatTransition(0f);
+            xTransition = new FloatTransitionProperty(nameof(X), 0f);
+            yTransition = new FloatTransitionProperty(nameof(Y), 0f);
+            this.pathGeometry = pathGeometry;
         }
 
-        public LineSegment(float x, float y)
-        {
-            xTransition = new FloatTransition(x);
-            yTransition = new FloatTransition(y);
-        }
-
-        public float X { get => xTransition.GetCurrentMovement(this); set => xTransition.MoveTo(value, this); }
-        public float Y { get => yTransition.GetCurrentMovement(this); set => yTransition.MoveTo(value, this); }
+        public float X { get => xTransition.GetCurrentMovement(pathGeometry); set => xTransition.MoveTo(value, pathGeometry); }
+        public float Y { get => yTransition.GetCurrentMovement(pathGeometry); set => yTransition.MoveTo(value, pathGeometry); }
 
         public override void Excecute(SKPath path)
         {

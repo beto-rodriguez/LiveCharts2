@@ -34,11 +34,16 @@ namespace LiveChartsCore.SkiaSharp.Painting
     /// Defines a brush that support animations, this class is based on <see cref="SKPaint"/> 
     /// class (https://docs.microsoft.com/en-us/dotnet/api/skiasharp.skpaint?view=skiasharp-1.68.2). Also see https://api.skia.org/classSkPaint.html
     /// </summary>
-    public abstract class PaintTask : NaturalElement, IDisposable, IDrawableTask<SkiaDrawingContext>
+    public abstract class PaintTask : Animatable, IDisposable, IDrawableTask<SkiaDrawingContext>
     {
         protected SKPaint skiaPaint;
         private HashSet<IGeometry<SkiaDrawingContext>> geometries = new HashSet<IGeometry<SkiaDrawingContext>>();
-        protected FloatTransition strokeWidthTransition = new FloatTransition(0f);
+        protected FloatTransitionProperty strokeWidthTransition;
+
+        public PaintTask()
+        {
+            strokeWidthTransition = RegisterTransitionProperty(new FloatTransitionProperty(nameof(StrokeWidth), 0f));
+        }
 
         public int ZIndex { get; set; }
         public float StrokeWidth { get => strokeWidthTransition.GetCurrentMovement(this); set => strokeWidthTransition.MoveTo(value, this); }

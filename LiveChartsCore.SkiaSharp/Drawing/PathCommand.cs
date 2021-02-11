@@ -20,12 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing.Common;
 using SkiaSharp;
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.SkiaSharp.Drawing
 {
-    public abstract class PathCommand : NaturalElement
+    public abstract class PathCommand
     {
         public abstract void Excecute(SKPath path);
     }

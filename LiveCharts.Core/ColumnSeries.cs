@@ -52,6 +52,7 @@ namespace LiveChartsCore
             var drawMarginSize = view.Core.DrawMarginSize;
             var xScale = new ScaleContext(drawLocation, drawMarginSize, xAxis.Orientation, xAxis.DataBounds);
             var yScale = new ScaleContext(drawLocation, drawMarginSize, yAxis.Orientation, yAxis.DataBounds);
+            var chartAnimation = new Animation(view.EasingFunction, view.AnimationsSpeed);
 
             float uw = xScale.ScaleToUi(1f) - xScale.ScaleToUi(0f);
             float uwm = 0.5f * uw;
@@ -76,6 +77,10 @@ namespace LiveChartsCore
                         Width = uw,
                         Height = 0
                     };
+                    r.SetPropertyTransition(
+                        chartAnimation,
+                        nameof(ISizedGeometry<TDrawingContext>.X), nameof(ISizedGeometry<TDrawingContext>.Y),
+                        nameof(ISizedGeometry<TDrawingContext>.Width), nameof(ISizedGeometry<TDrawingContext>.Height));
                     r.CompleteTransitions();
                     point.HoverArea = new HoverArea();
                     point.Visual = r;

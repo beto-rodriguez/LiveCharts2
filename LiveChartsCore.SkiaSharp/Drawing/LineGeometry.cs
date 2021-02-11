@@ -29,18 +29,13 @@ namespace LiveChartsCore.SkiaSharp.Drawing
 {
     public class LineGeometry : Geometry, ILineGeometry<SkiaDrawingContext>
     {
-        private readonly FloatTransition x1 = new FloatTransition(0f);
-        private readonly FloatTransition y1 = new FloatTransition(0f);
+        private readonly FloatTransitionProperty x1;
+        private readonly FloatTransitionProperty y1;
 
         public LineGeometry()
         {
-        }
-
-        public LineGeometry(float x, float y, float x1, float y1)
-            : base(x, y)
-        {
-            this.x1 = new FloatTransition(x1);
-            this.y1 = new FloatTransition(y1);
+            x1 = RegisterTransitionProperty(new FloatTransitionProperty(nameof(X1), 0f));
+            y1 = RegisterTransitionProperty(new FloatTransitionProperty(nameof(Y1), 0f));
         }
 
         public float X1 { get => x1.GetCurrentMovement(this); set => x1.MoveTo(value, this); }

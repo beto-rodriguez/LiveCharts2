@@ -28,20 +28,14 @@ namespace LiveChartsCore.SkiaSharp.Drawing
 {
     public abstract class SizedGeometry : Geometry, ISizedGeometry<SkiaDrawingContext>
     {
-        protected readonly FloatTransition width = new FloatTransition(0);
-        protected readonly FloatTransition height = new FloatTransition(0);
+        protected readonly FloatTransitionProperty width;
+        protected readonly FloatTransitionProperty height;
         protected bool matchDimensions = false;
 
         public SizedGeometry() : base()
         {
-
-        }
-
-        public SizedGeometry(float x, float y, float width, float height)
-            : base(x, y)
-        {
-            this.width = new FloatTransition(width);
-            this.height = new FloatTransition(height);
+            width = RegisterTransitionProperty(new FloatTransitionProperty(nameof(Width), 0));
+            height = RegisterTransitionProperty(new FloatTransitionProperty(nameof(Height), 0));
         }
 
         public float Width { get => width.GetCurrentMovement(this); set => width.MoveTo(value, this); }

@@ -33,12 +33,6 @@ namespace LiveChartsCore.SkiaSharp.Drawing
         {
         }
 
-        public TextGeometry(string text, float x, float y)
-            : base(x, y)
-        {
-            this.text = text;
-        }
-
         public Align VerticalAlign { get; set; } = Align.Middle;
 
         public Align HorizontalAlign { get; set; } = Align.Middle;

@@ -31,12 +31,6 @@ namespace LiveChartsCore.SkiaSharp.Drawing
             matchDimensions = true;
         }
 
-        public SquareGeometry(float x, float y, float width)
-            : base(x, y, width, width)
-        {
-            matchDimensions = true;
-        }
-
         public override void OnDraw(SkiaDrawingContext context, SKPaint paint)
         {
             context.Canvas.DrawRect(

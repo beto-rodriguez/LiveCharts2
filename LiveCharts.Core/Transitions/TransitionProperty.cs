@@ -22,19 +22,24 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
-using System;
 
 namespace LiveChartsCore.Transitions
 {
     /// <summary>
-    /// The <see cref="Transition{T}"/> object tracks where a property of a <see cref="NaturalElement"/> is in a time line.
+    /// The <see cref="TransitionProperty{T}"/> object tracks where a property of a <see cref="Animatable"/> is in a time line.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class Transition<T>
+    public abstract class TransitionProperty<T>: ITransitionProperty
     {
-        private static Animation unknownAnimation = new Animation(EasingFunctions.Lineal, TimeSpan.FromSeconds(1));
         protected internal T fromValue;
         protected internal T toValue;
+        private Animation animation;
+        private readonly string propertyName;
+
+        public TransitionProperty(string propertyName)
+        {
+            this.propertyName = propertyName;
+        }
 
         /// <summary>
         /// Gets the value where the transition began.
@@ -47,11 +52,21 @@ namespace LiveChartsCore.Transitions
         public T ToValue { get => toValue; }
 
         /// <summary>
+        /// Gets or sets the animation to define the transition.
+        /// </summary>
+        public Animation Animation { get => animation; set => animation = value; }
+
+        /// <summary>
+        /// Gets the property name.
+        /// </summary>
+        public string PropertyName => propertyName;
+
+        /// <summary>
         /// Moves to he specified value.
         /// </summary>
         /// <param name="value">The value to move to.</param>
         /// <param name="visual">The <see cref="Visual"/> instance that is moving.</param>
-        public void MoveTo(T value, NaturalElement visual)
+        public void MoveTo(T value, Animatable visual)
         {
             fromValue = GetCurrentMovement(visual);
             toValue = value;
@@ -59,44 +74,31 @@ namespace LiveChartsCore.Transitions
         }
 
         /// <summary>
-        /// Moves to he specified value and completes the transition.
-        /// </summary>
-        /// <param name="value">The value to move to.</param>
-        /// <param name="visual">The <see cref="Visual"/> instance that is moving.</param>
-        public void MoveToAndComplete(T value, NaturalElement visual)
-        {
-            fromValue = value;
-            toValue = value;
-            visual.requiresStoryboardCalculation = false;
-            visual.isCompleted = true;
-        }
-
-        /// <summary>
         /// Gets the current movement in the <see cref="Animation"/>.
         /// </summary>
-        /// <param name="visual"></param>
+        /// <param name="animatable"></param>
         /// <returns></returns>
-        public T GetCurrentMovement(NaturalElement visual)
+        public T GetCurrentMovement(Animatable animatable)
         {
-            if (visual.isCompleted) return OnGetMovement(1);
-            if (visual.currentTime - visual.startTime == 0) return OnGetMovement(0);
+            if (animation == null || animatable.isCompleted) return OnGetMovement(1);
+            if (animatable.currentTime - animatable.startTime <= 0) return OnGetMovement(0);
 
             unchecked
             {
-                var p = (visual.currentTime - visual.startTime) / (float)(visual.endTime - visual.startTime);
+                var p = (animatable.currentTime - animatable.startTime) / (float)(animatable.endTime - animatable.startTime);
+
                 if (p >= 1)
                 {
                     p = 1;
-                    visual.isCompleted = true;
-                    visual.animationRepeatCount++;
-                    if (visual.transition.Repeat == int.MaxValue || visual.transition.Repeat < visual.animationRepeatCount)
-                    {
-                        visual.isCompleted = false;
-                        visual.RequiresStoryboardCalculation = true;
-                    }
+                    animatable.isCompleted = true;
+                    animatable.animationRepeatCount++;
+                    if (animation.Repeat == int.MaxValue || animation.Repeat < animatable.animationRepeatCount)
+                        animatable.Invalidate();
                 }
-                var tp = visual.transition.EasingFunction(p);
-                return OnGetMovement(tp);
+
+                var fp = animation.EasingFunction(p);
+
+                return OnGetMovement(fp);
             }
         }
 

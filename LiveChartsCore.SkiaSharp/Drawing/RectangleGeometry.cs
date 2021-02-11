@@ -31,12 +31,6 @@ namespace LiveChartsCore.SkiaSharp.Drawing
 
         }
 
-        public RectangleGeometry(float x, float y, float width, float height)
-            : base(x, y, width, height)
-        {
-
-        }
-
         public override void OnDraw(SkiaDrawingContext context, SKPaint paint)
         {
             context.Canvas.DrawRect(

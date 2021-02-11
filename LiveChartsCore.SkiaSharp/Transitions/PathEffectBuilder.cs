@@ -20,19 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+using SkiaSharp;
+
+namespace LiveChartsCore.SkiaSharp.Transitions
 {
-    public interface IAnimatable
+    public abstract class PathEffectBuilder
     {
-        bool RequiresStoryboardCalculation { get; }
-        bool IsCompleted { get; }
-        bool RemoveOnCompleted { get; set; }
-
-        void SetPropertyTransition(Animation animation, params string[] propertyName);
-        void RemovePropertyTransition(string propertyName);
-
-        void SetStoryboard(long frameTime, Animation animation);
-        void SetTime(long frameTime);
-        void CompleteTransitions();
+        public abstract PathEffectBuilder InterpolateFrom(PathEffectBuilder from, float progress);
+        public abstract SKPathEffect GetSKPath();
     }
 }

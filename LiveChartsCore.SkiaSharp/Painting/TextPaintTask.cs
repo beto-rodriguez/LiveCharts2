@@ -32,18 +32,19 @@ namespace LiveChartsCore.SkiaSharp.Painting
 {
     public class TextPaintTask : PaintTask, IWritableTask<SkiaDrawingContext>
     {
-        private readonly ColorTransition colorTransition = new ColorTransition();
-        private readonly FloatTransition textSizeTransition = new FloatTransition(0);
+        private readonly ColorTransitionProperty colorTransition;
+        private readonly FloatTransitionProperty textSizeTransition;
 
         public TextPaintTask()
         {
-
+            colorTransition = RegisterTransitionProperty(new ColorTransitionProperty(nameof(Color), new SKColor()));
+            textSizeTransition = RegisterTransitionProperty(new FloatTransitionProperty(nameof(TextSize), 13f));
         }
 
         public TextPaintTask(SKColor color, float fontSize)
         {
-            colorTransition = new ColorTransition(new SKColor(color.Red, color.Green, color.Blue, color.Alpha));
-            textSizeTransition = new FloatTransition(fontSize);
+            colorTransition = RegisterTransitionProperty(new ColorTransitionProperty(nameof(Color), color));
+            textSizeTransition = RegisterTransitionProperty(new FloatTransitionProperty(nameof(TextSize), fontSize));
         }
 
         public SKColor Color { get => colorTransition.GetCurrentMovement(this); set { colorTransition.MoveTo(value, this); } }

@@ -2,7 +2,9 @@
 using LiveChartsCore.SkiaSharp;
 using LiveChartsCore.SkiaSharp.Drawing;
 using LiveChartsCore.SkiaSharp.Painting;
+using LiveChartsCore.SkiaSharp.Transitions;
 using SkiaSharp;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -16,13 +18,22 @@ namespace ViewModelsSamples
 
         public MainVM()
         {
+            var stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 3);
+            stroke.StrokeCap = SKStrokeCap.Round;
+            var pathEffect = new AnimatedDashEffectBuilder(new[] { 5f, 5f });
+            pathEffect.Phase = 5;
+            stroke.PathEffect = pathEffect;
+            stroke.SetPropertyTransition(
+                new LiveChartsCore.Drawing.Animation(EasingFunctions.Lineal, TimeSpan.FromMilliseconds(500), int.MaxValue),
+                nameof(stroke.PathEffect));
+
             Series = new ObservableCollection<ISeries<SkiaDrawingContext>>
             {
                 new ColumnSeries<double>
                 {
                     Name = "columnas",
                     Values =  new[]{ 10d, -4, 2, -1, 7, -3, 5, -6, 3, -6, 8, -3},
-                    //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 3),
+                    Stroke = stroke,
                     Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
                     HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
                 },

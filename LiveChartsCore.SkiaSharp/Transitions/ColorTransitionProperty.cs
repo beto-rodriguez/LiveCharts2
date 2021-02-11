@@ -20,19 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+using LiveChartsCore.Transitions;
+using SkiaSharp;
+
+namespace LiveChartsCore.SkiaSharp.Transitions
 {
-    public interface IAnimatable
+    public class ColorTransitionProperty : TransitionProperty<SKColor>
     {
-        bool RequiresStoryboardCalculation { get; }
-        bool IsCompleted { get; }
-        bool RemoveOnCompleted { get; set; }
+        public ColorTransitionProperty(string propertyName)
+            : base(propertyName)
+        {
+            fromValue = new SKColor();
+            toValue = new SKColor();
+        }
 
-        void SetPropertyTransition(Animation animation, params string[] propertyName);
-        void RemovePropertyTransition(string propertyName);
+        public ColorTransitionProperty(string propertyName, SKColor color)
+            :base(propertyName)
+        {
+            fromValue = new SKColor(color.Red, color.Green, color.Blue, color.Alpha);
+            toValue = new SKColor(color.Red, color.Green, color.Blue, color.Alpha);
+        }
 
-        void SetStoryboard(long frameTime, Animation animation);
-        void SetTime(long frameTime);
-        void CompleteTransitions();
+        protected override SKColor OnGetMovement(float progress)
+        {
+            unchecked
+            {
+                return new SKColor(
+                    (byte)(fromValue.Red + progress * (toValue.Red - fromValue.Red)),
+                    (byte)(fromValue.Green + progress * (toValue.Green - fromValue.Green)),
+                    (byte)(fromValue.Blue + progress * (toValue.Blue - fromValue.Blue)),
+                    (byte)(fromValue.Alpha + progress * (toValue.Alpha - fromValue.Alpha)));
+            }
+        }
     }
 }

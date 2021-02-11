@@ -20,25 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Transitions
+using LiveChartsCore.Transitions;
+
+namespace LiveChartsCore.SkiaSharp.Transitions
 {
-    public class FloatTransition : Transition<float>
+    public class PathEffectTransition : TransitionProperty<PathEffectBuilder>
     {
-        public FloatTransition()
+        public PathEffectTransition(string propertyName)
+            : base(propertyName)
         {
-            fromValue = 0;
-            toValue = 0;
+
         }
 
-        public FloatTransition(float value)
+        protected override PathEffectBuilder OnGetMovement(float progress)
         {
-            fromValue = value;
-            toValue = value;
-        }
-
-        protected override float OnGetMovement(float progress)
-        {
-            return fromValue + progress * (toValue - fromValue);
+            if (toValue == null || fromValue == null) return null;
+            return toValue.InterpolateFrom(fromValue, progress);
         }
     }
 }

@@ -26,6 +26,10 @@ namespace LiveChartsCore.Drawing
 {
     public class Animation
     {
+        private Func<float, float> easingFunction;
+        private long duration;
+        private int repeat = 1;
+
         public Animation()
         {
 
@@ -37,19 +41,33 @@ namespace LiveChartsCore.Drawing
             Duration = (long)duration.TotalMilliseconds;
         }
 
+        public Animation(Func<float, float> easingFunction, TimeSpan duration, int repeat)
+        {
+            this.easingFunction = easingFunction;
+            this.duration = (long)duration.TotalMilliseconds;
+            this.repeat = repeat;
+        }
+
+        public Animation(Animation animation)
+        {
+            this.easingFunction = animation.EasingFunction;
+            this.duration = animation.Duration;
+            this.repeat = animation.Repeat;
+        }
+
         /// <summary>
         /// Gets or sets the easing function.
         /// </summary>
-        public Func<float, float> EasingFunction { get; set; }
+        public Func<float, float> EasingFunction { get => easingFunction; set => easingFunction = value; }
 
         /// <summary>
         /// Gets or sets the duration of the transition in Milliseconds.
         /// </summary>
-        public long Duration { get; set; }
+        public long Duration { get => duration; set => duration = value; }
 
         /// <summary>
         /// Gets or sets the number of times the Animation will be repeated, default is 1, use <see cref="int.MaxValue"/> to repeat the animation infinitely.
         /// </summary>
-        public int Repeat { get; set; } = 1;
+        public int Repeat { get => repeat; set => repeat = value; }
     }
 }

@@ -43,26 +43,6 @@ namespace LiveChartsCore.SkiaSharp.Drawing
             throw new NotImplementedException();
         }
 
-        public override void SetTime(long time)
-        {
-            base.SetTime(time);
-
-            foreach (var segment in commands)
-            {
-                segment.SetTime(time);
-            }
-        }
-
-        public override void SetStoryboard(long start, Animation transition)
-        {
-            foreach (var segment in commands)
-            {
-                segment.SetStoryboard(start, transition);
-            }
-
-            base.SetStoryboard(start, transition);
-        }
-
         public override void OnDraw(SkiaDrawingContext context, SKPaint paint)
         {
             if (commands.Count == 0) return;
@@ -97,7 +77,7 @@ namespace LiveChartsCore.SkiaSharp.Drawing
 
         public void CubicBezierTo(float x0, float y0, float x1, float y1, float x2, float y2)
         {
-            var bezier = new CubicBezierSegment
+            var bezier = new CubicBezierSegment(this)
             {
                 X0 = x0,
                 Y0 = y0,
@@ -106,29 +86,26 @@ namespace LiveChartsCore.SkiaSharp.Drawing
                 X2 = x2,
                 Y2 = y2
             };
-            bezier.CompleteTransitions();
             AddCommand(bezier);
         }
 
         public void LineTo(float x, float y)
         {
-            var line = new LineSegment
+            var line = new LineSegment(this)
             {
                 X = x,
                 Y = y,
             };
-            line.CompleteTransitions();
             AddCommand(line);
         }
 
         public void MoveTo(float x, float y)
         {
-            var moveTo = new MoveToPathCommand
+            var moveTo = new MoveToPathCommand(this)
             {
                 X = x,
                 Y = y,
             };
-            moveTo.CompleteTransitions();
             AddCommand(moveTo);
         }
 

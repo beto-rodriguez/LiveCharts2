@@ -20,19 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Transitions
 {
-    public interface IAnimatable
+    public class FloatTransitionProperty : TransitionProperty<float>
     {
-        bool RequiresStoryboardCalculation { get; }
-        bool IsCompleted { get; }
-        bool RemoveOnCompleted { get; set; }
+        public FloatTransitionProperty(string propertyName)
+            : base(propertyName)
+        {
+            fromValue = 0;
+            toValue = 0;
+        }
 
-        void SetPropertyTransition(Animation animation, params string[] propertyName);
-        void RemovePropertyTransition(string propertyName);
+        public FloatTransitionProperty(string propertyName, float value)
+            : base(propertyName)
+        {
+            fromValue = value;
+            toValue = value;
+        }
 
-        void SetStoryboard(long frameTime, Animation animation);
-        void SetTime(long frameTime);
-        void CompleteTransitions();
+        protected override float OnGetMovement(float progress)
+        {
+            return fromValue + progress * (toValue - fromValue);
+        }
     }
 }

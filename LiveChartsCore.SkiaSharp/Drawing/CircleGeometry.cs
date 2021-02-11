@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharp.Drawing
@@ -28,12 +27,6 @@ namespace LiveChartsCore.SkiaSharp.Drawing
     public class CircleGeometry : SizedGeometry
     {
         public CircleGeometry() : base()
-        {
-            matchDimensions = true;
-        }
-
-        public CircleGeometry(float x, float y, float width)
-            : base(x, y, width, width)
         {
             matchDimensions = true;
         }

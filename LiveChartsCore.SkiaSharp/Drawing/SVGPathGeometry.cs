@@ -39,12 +39,6 @@ namespace LiveChartsCore.SkiaSharp.Drawing
             this.svgPath = svgPath;
         }
 
-        public SVGPathGeometry(float x, float y, float width, float height, string svg)
-            : base(x, y, width, height)
-        {
-            this.svg = svg;
-        }
-
         public string SVG { get => svg; set { svg = value; OnSVGPropertyChanged(); } }
 
         public override void OnDraw(SkiaDrawingContext context, SKPaint paint)

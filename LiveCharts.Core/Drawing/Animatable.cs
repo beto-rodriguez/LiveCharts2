@@ -20,20 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Transitions;
 using System;
+using System.Collections.Generic;
 
 namespace LiveChartsCore.Drawing.Common
 {
-    public class NaturalElement : IAnimatable
+    public abstract class Animatable: IAnimatable
     {
+        private Dictionary<string, ITransitionProperty> transitionProperties = new Dictionary<string, ITransitionProperty>();
         internal long startTime;
         internal long endTime;
         internal long currentTime;
-        internal Animation transition = new Animation(EasingFunctions.Lineal, TimeSpan.FromMilliseconds(300));
         internal int animationRepeatCount = 0;
         internal bool requiresStoryboardCalculation = false;
         internal bool isCompleted = true;
         internal bool removeOnCompleted;
+
+        public Animatable()
+        {
+        }
 
         public bool RequiresStoryboardCalculation { get => requiresStoryboardCalculation; set => requiresStoryboardCalculation = value; }
 
@@ -47,13 +53,12 @@ namespace LiveChartsCore.Drawing.Common
         /// <summary>
         /// Occurs when the transition of every property is completed.
         /// </summary>
-        public event Action<NaturalElement> TransitionCompleted;
+        public event Action<Animatable> TransitionCompleted;
 
         public virtual void SetStoryboard(long start, Animation transition)
         {
             startTime = start;
             endTime = start + transition.Duration;
-            this.transition = transition;
             requiresStoryboardCalculation = false;
             animationRepeatCount = 0;
         }
@@ -78,6 +83,19 @@ namespace LiveChartsCore.Drawing.Common
             return;
         }
 
+        public void SetPropertyTransition(Animation animation, params string[] propertyName)
+        {
+            foreach (var name in propertyName)
+            {
+                transitionProperties[name].Animation = animation;
+            }
+        }
+
+        public void RemovePropertyTransition(string propertyName)
+        {
+            transitionProperties[propertyName].Animation = null;
+        }
+
         /// <summary>
         /// Completes the current transitions.
         /// </summary>
@@ -92,6 +110,12 @@ namespace LiveChartsCore.Drawing.Common
             requiresStoryboardCalculation = true;
             isCompleted = false;
         }
-    }
 
+        protected T RegisterTransitionProperty<T>(T transition)
+            where T: ITransitionProperty
+        {
+            transitionProperties[transition.PropertyName] = transition;
+            return transition;
+        }
+    }
 }

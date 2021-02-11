@@ -20,35 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Transitions;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharp.Transitions
 {
-    public class ColorTransition : Transition<SKColor>
+    public class AnimatedDashEffectBuilder : PathEffectBuilder
     {
-        public ColorTransition()
+        private readonly float[] dashArray;
+        private float phase;
+
+        public AnimatedDashEffectBuilder(float[] dashArray)
         {
-            fromValue = new SKColor();
-            toValue = new SKColor();
+            this.dashArray = dashArray;
         }
 
-        public ColorTransition(SKColor color)
+        public override SKPathEffect GetSKPath()
         {
-            fromValue = new SKColor(color.Red, color.Green, color.Blue, color.Alpha);
-            toValue = new SKColor(color.Red, color.Green, color.Blue, color.Alpha);
+            return SKPathEffect.CreateDash(dashArray, phase);
         }
 
-        protected override SKColor OnGetMovement(float progress)
+        public float Phase { get => phase; set => phase = value; }
+
+        public override PathEffectBuilder InterpolateFrom(PathEffectBuilder from, float progress)
         {
-            unchecked
+            var fromDashEffect = (AnimatedDashEffectBuilder)from;
+            return new AnimatedDashEffectBuilder(dashArray)
             {
-                return new SKColor(
-                    (byte)(fromValue.Red + progress * (toValue.Red - fromValue.Red)),
-                    (byte)(fromValue.Green + progress * (toValue.Green - fromValue.Green)),
-                    (byte)(fromValue.Blue + progress * (toValue.Blue - fromValue.Blue)),
-                    (byte)(fromValue.Alpha + progress * (toValue.Alpha - fromValue.Alpha)));
-            }
+                Phase = fromDashEffect.phase + progress * (phase - fromDashEffect.phase)
+            };
         }
     }
 }

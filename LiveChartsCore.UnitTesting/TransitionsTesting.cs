@@ -12,7 +12,7 @@ namespace LiveChartsCore.UnitTesting
         [TestMethod]
         public void TestMethod1()
         {
-            var r = new RectangleGeometry(0, 0, 0, 0);
+            var r = new RectangleGeometry();
 
             var time = 0;
 

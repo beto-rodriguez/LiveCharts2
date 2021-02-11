@@ -29,55 +29,45 @@ using SkiaSharp;
 namespace LiveChartsCore.SkiaSharp.Drawing
 {
 
-    public abstract class Geometry : NaturalElement, IGeometry<SkiaDrawingContext>, IHighlightableGeometry<SkiaDrawingContext>
+    public abstract class Geometry : Animatable, IGeometry<SkiaDrawingContext>, IHighlightableGeometry<SkiaDrawingContext>
     {
-        private bool hasRotation = false;
         private bool hasTransform = false;
-        private float rotation;
-        protected readonly MatrixTransition matrix = new MatrixTransition();
 
-        protected readonly FloatTransition x = new FloatTransition(0);
-        protected readonly FloatTransition y = new FloatTransition(0);
+        protected readonly MatrixTransition transform;
+        protected readonly FloatTransitionProperty x;
+        protected readonly FloatTransitionProperty y;
+        protected readonly FloatTransitionProperty rotation;
 
         public Geometry()
         {
-
-        }
-
-        public Geometry(float x, float y)
-        {
-            this.x = new FloatTransition(x);
-            this.y = new FloatTransition(y);
+            x = RegisterTransitionProperty(new FloatTransitionProperty(nameof(X), 0));
+            y = RegisterTransitionProperty(new FloatTransitionProperty(nameof(Y), 0));
+            transform = RegisterTransitionProperty(new MatrixTransition(nameof(Transform)));
+            rotation = RegisterTransitionProperty(new FloatTransitionProperty(nameof(Rotation), 0));
         }
 
         public float X { get => x.GetCurrentMovement(this); set => x.MoveTo(value, this); }
 
         public float Y { get => y.GetCurrentMovement(this); set => y.MoveTo(value, this); }
-
+        
         public SKMatrix Transform
         {
-            get => matrix.GetCurrentMovement(this);
+            get => transform.GetCurrentMovement(this);
             set
             {
-                matrix.MoveTo(value, this);
+                transform.MoveTo(value, this);
                 if (value != SKMatrix.Identity) hasTransform = true;
             }
         }
 
-        public float Rotation
-        {
-            get => rotation;
-            set
-            {
-                rotation = value;
-                if (value != 0) hasRotation = true;
-            }
-        }
+        public float Rotation { get => rotation.GetCurrentMovement(this); set => rotation.MoveTo(value, this); }
 
         public IGeometry<SkiaDrawingContext> HighlightableGeometry => GetHighlitableGeometry();
 
         public void Draw(SkiaDrawingContext context)
         {
+            var hasRotation = Rotation != 0;
+
             if (hasTransform || hasRotation)
             {
                 context.Canvas.Save();
@@ -89,7 +79,7 @@ namespace LiveChartsCore.SkiaSharp.Drawing
                     var ty = p.Y;
                     context.Canvas.Translate(tx, ty);
 
-                    var t = SKMatrix.CreateRotationDegrees(rotation);
+                    var t = SKMatrix.CreateRotationDegrees(Rotation);
                     context.Canvas.Concat(ref t);
 
                     context.Canvas.Translate(-tx, -ty);

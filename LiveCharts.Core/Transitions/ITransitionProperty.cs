@@ -22,9 +22,11 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.SkiaSharp.Drawing
+namespace LiveChartsCore.Transitions
 {
-    public class SkiaCanvas : Canvas<SkiaDrawingContext>
+    public interface ITransitionProperty
     {
+        string PropertyName { get; }
+        Animation Animation { get; set; }
     }
 }

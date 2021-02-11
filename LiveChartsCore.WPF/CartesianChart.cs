@@ -128,7 +128,7 @@ namespace LiveChartsCore.WPF
 
         public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(500);
 
-        public Func<float, float> EasingFunction { get; set; } = LiveChartsCore.EasingFunctions.QuadraticIn;
+        public Func<float, float> EasingFunction { get; set; } = EasingFunctions.Lineal;
 
         public override void OnApplyTemplate()
         {

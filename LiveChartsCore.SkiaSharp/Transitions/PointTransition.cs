@@ -25,15 +25,17 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharp.Transitions
 {
-    public class PointTransition : Transition<SKPoint>
+    public class PointTransition : TransitionProperty<SKPoint>
     {
-        public PointTransition()
+        public PointTransition(string propertyName)
+            : base(propertyName)
         {
             fromValue = new SKPoint();
             toValue = new SKPoint();
         }
 
-        public PointTransition(SKPoint point)
+        public PointTransition(string propertyName, SKPoint point)
+            : base(propertyName)
         {
             fromValue = new SKPoint(point.X, point.Y);
             toValue = new SKPoint(point.X, point.Y);
