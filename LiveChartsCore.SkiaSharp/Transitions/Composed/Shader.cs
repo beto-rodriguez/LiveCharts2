@@ -22,11 +22,11 @@
 
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharp.Transitions
+namespace LiveChartsCore.SkiaSharp.Transitions.Composed
 {
-    public abstract class PathEffectBuilder
+    public abstract class Shader
     {
-        public abstract PathEffectBuilder InterpolateFrom(PathEffectBuilder from, float progress);
-        public abstract SKPathEffect GetSKPath();
+        public abstract Shader InterpolateFrom(Shader from, float progress);
+        public abstract SKShader GetSKShader();
     }
 }

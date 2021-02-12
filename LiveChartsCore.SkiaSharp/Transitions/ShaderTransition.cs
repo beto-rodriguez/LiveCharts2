@@ -20,30 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using SkiaSharp;
+using LiveChartsCore.SkiaSharp.Transitions.Composed;
+using LiveChartsCore.Transitions;
 
 namespace LiveChartsCore.SkiaSharp.Transitions
 {
-    public class AnimatedDashEffectBuilder : PathEffectBuilder
+    public class ShaderTransition : TransitionProperty<Shader>
     {
-        private readonly float[] dashArray;
-        private readonly float phase;
-
-        public AnimatedDashEffectBuilder(float[] dashArray, float phase)
+        public ShaderTransition(string propertyName)
+            : base(propertyName)
         {
-            this.dashArray = dashArray;
-            this.phase = phase;
+
         }
 
-        public override SKPathEffect GetSKPath()
+        protected override Shader OnGetMovement(float progress)
         {
-            return SKPathEffect.CreateDash(dashArray, phase);
-        }
-
-        public override PathEffectBuilder InterpolateFrom(PathEffectBuilder from, float progress)
-        {
-            var fromDashEffect = (AnimatedDashEffectBuilder)from;
-            return new AnimatedDashEffectBuilder(dashArray, fromDashEffect.phase + progress * (phase - 0));
+            if (fromValue == null && toValue == null) return null;
+            if (toValue == null && fromValue != null) toValue = fromValue;
+            if (fromValue == null && toValue != null) fromValue = toValue;
+            return toValue.InterpolateFrom(fromValue, progress);
         }
     }
 }

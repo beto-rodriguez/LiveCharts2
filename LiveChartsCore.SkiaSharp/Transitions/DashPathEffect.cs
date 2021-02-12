@@ -21,24 +21,30 @@
 // SOFTWARE.
 
 using LiveChartsCore.SkiaSharp.Transitions.Composed;
-using LiveChartsCore.Transitions;
+using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharp.Transitions
 {
-    public class PathEffectTransition : TransitionProperty<PathEffect>
+    public class DashPathEffect : PathEffect
     {
-        public PathEffectTransition(string propertyName)
-            : base(propertyName)
-        {
+        private readonly float[] dashArray;
+        private readonly float phase;
 
+        public DashPathEffect(float[] dashArray, float phase)
+        {
+            this.dashArray = dashArray;
+            this.phase = phase;
         }
 
-        protected override PathEffect OnGetMovement(float progress)
+        public override SKPathEffect GetSKPath()
         {
-            if (fromValue == null && toValue == null) return null;
-            if (toValue == null && fromValue != null) toValue = fromValue;
-            if (fromValue == null && toValue != null) fromValue = toValue;
-            return toValue.InterpolateFrom(fromValue, progress);
+            return SKPathEffect.CreateDash(dashArray, phase);
+        }
+
+        public override PathEffect InterpolateFrom(PathEffect from, float progress)
+        {
+            var fromDashEffect = (DashPathEffect)from;
+            return new DashPathEffect(dashArray, fromDashEffect.phase + progress * (phase - 0));
         }
     }
 }

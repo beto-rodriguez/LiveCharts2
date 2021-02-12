@@ -20,25 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.SkiaSharp.Transitions.Composed;
-using LiveChartsCore.Transitions;
+using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharp.Transitions
+namespace LiveChartsCore.SkiaSharp.Transitions.Composed
 {
-    public class PathEffectTransition : TransitionProperty<PathEffect>
+    public abstract class PathEffect
     {
-        public PathEffectTransition(string propertyName)
-            : base(propertyName)
-        {
-
-        }
-
-        protected override PathEffect OnGetMovement(float progress)
-        {
-            if (fromValue == null && toValue == null) return null;
-            if (toValue == null && fromValue != null) toValue = fromValue;
-            if (fromValue == null && toValue != null) fromValue = toValue;
-            return toValue.InterpolateFrom(fromValue, progress);
-        }
+        public abstract PathEffect InterpolateFrom(PathEffect from, float progress);
+        public abstract SKPathEffect GetSKPath();
     }
 }
