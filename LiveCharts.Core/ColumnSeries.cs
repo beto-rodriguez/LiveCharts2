@@ -41,6 +41,7 @@ namespace LiveChartsCore
         }
 
         public double Pivot { get; set; }
+        public double ColumnPadding { get; set; }
 
         public override void Measure(
             IChartView<TDrawingContext> view,
@@ -58,9 +59,12 @@ namespace LiveChartsCore
             float uwm = 0.5f * uw;
             float sw = Stroke?.StrokeWidth ?? 0;
             float p = yScale.ScaleToUi(unchecked((float)Pivot));
+            float colPad = unchecked((float)ColumnPadding);
 
             if (Fill != null) view.CoreCanvas.AddPaintTask(Fill);
             if (Stroke != null) view.CoreCanvas.AddPaintTask(Stroke);
+
+            var ts = transitionSetter ?? SetDefaultTransitions;
 
             foreach (var point in GetPonts())
             {
@@ -78,15 +82,7 @@ namespace LiveChartsCore
                         Height = 0
                     };
 
-                    var affectedProperties = new string[]
-                    {
-                        nameof(ISizedGeometry<TDrawingContext>.X),
-                        nameof(ISizedGeometry<TDrawingContext>.Y),
-                        nameof(ISizedGeometry<TDrawingContext>.Width),
-                        nameof(ISizedGeometry<TDrawingContext>.Height)
-                    };
-                    r.SetPropertyTransition(chartAnimation, affectedProperties);
-                    r.CompleteTransition(affectedProperties);
+                    ts(r, chartAnimation);
 
                     point.HoverArea = new HoverArea();
                     point.Visual = r;
@@ -130,6 +126,28 @@ namespace LiveChartsCore
                     min = baseBounds.YAxisBounds.min - tick.Value
                 }
             };
+        }
+
+        protected override void SetDefaultTransitions(ISizedGeometry<TDrawingContext> geometry, Animation defaultAnimation)
+        {
+            var defaultProperties = new string[]
+            {
+                    nameof(ISizedGeometry<TDrawingContext>.X),
+                    nameof(ISizedGeometry<TDrawingContext>.Width)
+            };
+            geometry.SetPropertyTransition(defaultAnimation, defaultProperties);
+            geometry.CompleteTransition(defaultProperties);
+
+            var bounceProperties = new string[]
+            {
+                nameof(ISizedGeometry<TDrawingContext>.Y),
+                nameof(ISizedGeometry<TDrawingContext>.Height),
+            };
+
+            geometry.SetPropertyTransition(
+                new Animation(EasingFunctions.BounceOut, defaultAnimation.duration, defaultAnimation.RepeatTimes),
+                bounceProperties);
+            geometry.CompleteTransition(bounceProperties);
         }
     }
 }

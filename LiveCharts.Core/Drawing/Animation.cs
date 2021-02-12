@@ -49,6 +49,13 @@ namespace LiveChartsCore.Drawing
             this.repeatTimes = repeatTimes;
         }
 
+        public Animation(Func<float, float> easingFunction, long duration, int repeatTimes)
+        {
+            this.easingFunction = easingFunction;
+            this.duration = duration;
+            this.repeatTimes = repeatTimes;
+        }
+
         public Animation(Animation animation)
         {
             easingFunction = animation.easingFunction;
