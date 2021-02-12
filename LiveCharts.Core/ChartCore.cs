@@ -154,11 +154,11 @@ namespace LiveChartsCore
 
             foreach (var axis in chartView.XAxes)
             {
-                //axis.Measure(ChartView, drawBucket);
+                axis.Measure(ChartView, drawBucket);
             }
             foreach (var axis in chartView.YAxes)
             {
-                //axis.Measure(ChartView, drawBucket);
+                axis.Measure(ChartView, drawBucket);
             }
             foreach (var series in chartView.Series)
             {

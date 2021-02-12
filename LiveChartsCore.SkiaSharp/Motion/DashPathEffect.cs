@@ -20,13 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.SkiaSharp.Motion.Composed;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharp.Transitions.Composed
+namespace LiveChartsCore.SkiaSharp.Motion
 {
-    public abstract class Shader
+    public class DashPathEffect : PathEffect
     {
-        public abstract Shader InterpolateFrom(Shader from, float progress);
-        public abstract SKShader GetSKShader();
+        private readonly float[] dashArray;
+        private readonly float phase;
+
+        public DashPathEffect(float[] dashArray, float phase)
+        {
+            this.dashArray = dashArray;
+            this.phase = phase;
+        }
+
+        public override SKPathEffect GetSKPath()
+        {
+            return SKPathEffect.CreateDash(dashArray, phase);
+        }
+
+        public override PathEffect InterpolateFrom(PathEffect from, float progress)
+        {
+            var fromDashEffect = (DashPathEffect)from;
+            return new DashPathEffect(dashArray, fromDashEffect.phase + progress * (phase - 0));
+        }
     }
 }

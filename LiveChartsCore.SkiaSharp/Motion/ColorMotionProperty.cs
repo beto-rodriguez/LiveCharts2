@@ -20,33 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Transitions;
+using LiveChartsCore.Motion;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharp.Transitions
+namespace LiveChartsCore.SkiaSharp.Motion
 {
-    public class MatrixTransition : TransitionProperty<SKMatrix>
+    public class ColorMotionProperty : MotionProperty<SKColor>
     {
-        public MatrixTransition(string propertyName)
+        public ColorMotionProperty(string propertyName)
             : base(propertyName)
         {
-
+            fromValue = new SKColor();
+            toValue = new SKColor();
         }
 
-        protected override SKMatrix OnGetMovement(float progress)
+        public ColorMotionProperty(string propertyName, SKColor color)
+            : base(propertyName)
         {
-            return new SKMatrix
+            fromValue = new SKColor(color.Red, color.Green, color.Blue, color.Alpha);
+            toValue = new SKColor(color.Red, color.Green, color.Blue, color.Alpha);
+        }
+
+        protected override SKColor OnGetMovement(float progress)
+        {
+            unchecked
             {
-                Persp0 = fromValue.Persp0 + progress * (toValue.Persp0 - fromValue.Persp0),
-                Persp1 = fromValue.Persp1 + progress * (toValue.Persp1 - fromValue.Persp1),
-                Persp2 = fromValue.Persp2 + progress * (toValue.Persp2 - fromValue.Persp2),
-                ScaleX = fromValue.ScaleX + progress * (toValue.ScaleX - fromValue.ScaleX),
-                ScaleY = fromValue.ScaleY + progress * (toValue.ScaleY - fromValue.ScaleY),
-                SkewX = fromValue.SkewX + progress * (toValue.SkewX - fromValue.SkewX),
-                SkewY = fromValue.SkewY + progress * (toValue.SkewY - fromValue.SkewY),
-                TransX = fromValue.TransX + progress * (toValue.TransX - fromValue.TransX),
-                TransY = fromValue.TransY + progress * (toValue.TransY - fromValue.TransY)
-            };
+                return new SKColor(
+                    (byte)(fromValue.Red + progress * (toValue.Red - fromValue.Red)),
+                    (byte)(fromValue.Green + progress * (toValue.Green - fromValue.Green)),
+                    (byte)(fromValue.Blue + progress * (toValue.Blue - fromValue.Blue)),
+                    (byte)(fromValue.Alpha + progress * (toValue.Alpha - fromValue.Alpha)));
+            }
         }
     }
 }

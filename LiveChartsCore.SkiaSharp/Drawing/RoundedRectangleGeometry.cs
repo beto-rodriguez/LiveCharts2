@@ -20,24 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Transitions;
+using LiveChartsCore.Motion;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharp.Drawing
 {
     public class RoundedRectangleGeometry : SizedGeometry
     {
-        private FloatTransitionProperty rx;
-        private FloatTransitionProperty ry;
+        private FloatMotionProperty rx;
+        private FloatMotionProperty ry;
 
         public RoundedRectangleGeometry()
         {
-            rx = RegisterTransitionProperty(new FloatTransitionProperty(nameof(Rx), 0f));
-            ry = RegisterTransitionProperty(new FloatTransitionProperty(nameof(Ry), 0f));
+            rx = RegisterTransitionProperty(new FloatMotionProperty(nameof(Rx), 0f));
+            ry = RegisterTransitionProperty(new FloatMotionProperty(nameof(Ry), 0f));
         }
 
-        public float Rx { get => rx.GetCurrentMovement(this); set => rx.MoveTo(value, this); }
-        public float Ry { get => ry.GetCurrentMovement(this); set => ry.MoveTo(value, this); }
+        public float Rx { get => rx.GetMovement(this); set => rx.SetMovement(value, this); }
+        public float Ry { get => ry.GetMovement(this); set => ry.SetMovement(value, this); }
 
         public override void OnDraw(SkiaDrawingContext context, SKPaint paint)
         {

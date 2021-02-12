@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Transitions;
+using LiveChartsCore.Motion;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharp.Drawing
@@ -28,35 +28,35 @@ namespace LiveChartsCore.SkiaSharp.Drawing
     public class CubicBezierSegment : PathCommand
     {
         private readonly PathGeometry pathGeometry;
-        private FloatTransitionProperty x0Transition;
-        private FloatTransitionProperty y0Transition;
-        private FloatTransitionProperty x1Transition;
-        private FloatTransitionProperty y1Transition;
-        private FloatTransitionProperty x2Transition;
-        private FloatTransitionProperty y2Transition;
+        private FloatMotionProperty x0Transition;
+        private FloatMotionProperty y0Transition;
+        private FloatMotionProperty x1Transition;
+        private FloatMotionProperty y1Transition;
+        private FloatMotionProperty x2Transition;
+        private FloatMotionProperty y2Transition;
 
         public CubicBezierSegment(PathGeometry pathGeometry)
         {
-            x0Transition = new FloatTransitionProperty(nameof(X0), 0f);
-            y0Transition = new FloatTransitionProperty(nameof(Y0), 0f);
-            x1Transition = new FloatTransitionProperty(nameof(X1), 0f);
-            y1Transition = new FloatTransitionProperty(nameof(Y1), 0f);
-            x2Transition = new FloatTransitionProperty(nameof(X2), 0f);
-            y2Transition = new FloatTransitionProperty(nameof(Y2), 0f);
+            x0Transition = new FloatMotionProperty(nameof(X0), 0f);
+            y0Transition = new FloatMotionProperty(nameof(Y0), 0f);
+            x1Transition = new FloatMotionProperty(nameof(X1), 0f);
+            y1Transition = new FloatMotionProperty(nameof(Y1), 0f);
+            x2Transition = new FloatMotionProperty(nameof(X2), 0f);
+            y2Transition = new FloatMotionProperty(nameof(Y2), 0f);
             this.pathGeometry = pathGeometry;
         }
 
-        public float X0 { get => x0Transition.GetCurrentMovement(pathGeometry); set => x0Transition.MoveTo(value, pathGeometry); }
+        public float X0 { get => x0Transition.GetMovement(pathGeometry); set => x0Transition.SetMovement(value, pathGeometry); }
 
-        public float Y0 { get => y0Transition.GetCurrentMovement(pathGeometry); set => y0Transition.MoveTo(value, pathGeometry); }
+        public float Y0 { get => y0Transition.GetMovement(pathGeometry); set => y0Transition.SetMovement(value, pathGeometry); }
 
-        public float X1 { get => x1Transition.GetCurrentMovement(pathGeometry); set => x1Transition.MoveTo(value, pathGeometry); }
+        public float X1 { get => x1Transition.GetMovement(pathGeometry); set => x1Transition.SetMovement(value, pathGeometry); }
 
-        public float Y1 { get => y1Transition.GetCurrentMovement(pathGeometry); set => y1Transition.MoveTo(value, pathGeometry); }
+        public float Y1 { get => y1Transition.GetMovement(pathGeometry); set => y1Transition.SetMovement(value, pathGeometry); }
 
-        public float X2 { get => x2Transition.GetCurrentMovement(pathGeometry); set => x2Transition.MoveTo(value, pathGeometry); }
+        public float X2 { get => x2Transition.GetMovement(pathGeometry); set => x2Transition.SetMovement(value, pathGeometry); }
 
-        public float Y2 { get => y2Transition.GetCurrentMovement(pathGeometry); set => y2Transition.MoveTo(value, pathGeometry); }
+        public float Y2 { get => y2Transition.GetMovement(pathGeometry); set => y2Transition.SetMovement(value, pathGeometry); }
 
         public override void Excecute(SKPath path)
         {

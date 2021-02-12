@@ -22,8 +22,8 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharp.Drawing;
-using LiveChartsCore.Transitions;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -38,15 +38,15 @@ namespace LiveChartsCore.SkiaSharp.Painting
     {
         protected SKPaint skiaPaint;
         private HashSet<IGeometry<SkiaDrawingContext>> geometries = new HashSet<IGeometry<SkiaDrawingContext>>();
-        protected FloatTransitionProperty strokeWidthTransition;
+        protected FloatMotionProperty strokeWidthTransition;
 
         public PaintTask()
         {
-            strokeWidthTransition = RegisterTransitionProperty(new FloatTransitionProperty(nameof(StrokeWidth), 0f));
+            strokeWidthTransition = RegisterTransitionProperty(new FloatMotionProperty(nameof(StrokeWidth), 0f));
         }
 
         public int ZIndex { get; set; }
-        public float StrokeWidth { get => strokeWidthTransition.GetCurrentMovement(this); set => strokeWidthTransition.MoveTo(value, this); }
+        public float StrokeWidth { get => strokeWidthTransition.GetMovement(this); set => strokeWidthTransition.SetMovement(value, this); }
         public SKPaintStyle Style { get; set; }
         public bool IsStroke { get; set; }
         public bool IsFill { get; set; }

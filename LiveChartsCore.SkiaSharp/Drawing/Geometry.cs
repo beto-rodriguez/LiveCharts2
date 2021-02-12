@@ -22,8 +22,8 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
-using LiveChartsCore.SkiaSharp.Transitions;
-using LiveChartsCore.Transitions;
+using LiveChartsCore.Motion;
+using LiveChartsCore.SkiaSharp.Motion;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharp.Drawing
@@ -33,34 +33,34 @@ namespace LiveChartsCore.SkiaSharp.Drawing
     {
         private bool hasTransform = false;
 
-        protected readonly MatrixTransition transform;
-        protected readonly FloatTransitionProperty x;
-        protected readonly FloatTransitionProperty y;
-        protected readonly FloatTransitionProperty rotation;
+        protected readonly MatrixMotionProperty transform;
+        protected readonly FloatMotionProperty x;
+        protected readonly FloatMotionProperty y;
+        protected readonly FloatMotionProperty rotation;
 
         public Geometry()
         {
-            x = RegisterTransitionProperty(new FloatTransitionProperty(nameof(X), 0));
-            y = RegisterTransitionProperty(new FloatTransitionProperty(nameof(Y), 0));
-            transform = RegisterTransitionProperty(new MatrixTransition(nameof(Transform)));
-            rotation = RegisterTransitionProperty(new FloatTransitionProperty(nameof(Rotation), 0));
+            x = RegisterTransitionProperty(new FloatMotionProperty(nameof(X), 0));
+            y = RegisterTransitionProperty(new FloatMotionProperty(nameof(Y), 0));
+            transform = RegisterTransitionProperty(new MatrixMotionProperty(nameof(Transform)));
+            rotation = RegisterTransitionProperty(new FloatMotionProperty(nameof(Rotation), 0));
         }
 
-        public float X { get => x.GetCurrentMovement(this); set => x.MoveTo(value, this); }
+        public float X { get => x.GetMovement(this); set => x.SetMovement(value, this); }
 
-        public float Y { get => y.GetCurrentMovement(this); set => y.MoveTo(value, this); }
+        public float Y { get => y.GetMovement(this); set => y.SetMovement(value, this); }
         
         public SKMatrix Transform
         {
-            get => transform.GetCurrentMovement(this);
+            get => transform.GetMovement(this);
             set
             {
-                transform.MoveTo(value, this);
+                transform.SetMovement(value, this);
                 if (value != SKMatrix.Identity) hasTransform = true;
             }
         }
 
-        public float Rotation { get => rotation.GetCurrentMovement(this); set => rotation.MoveTo(value, this); }
+        public float Rotation { get => rotation.GetMovement(this); set => rotation.SetMovement(value, this); }
 
         public IGeometry<SkiaDrawingContext> HighlightableGeometry => GetHighlitableGeometry();
 

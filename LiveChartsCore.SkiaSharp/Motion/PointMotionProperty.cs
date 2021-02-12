@@ -20,27 +20,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Transitions
+using LiveChartsCore.Motion;
+using SkiaSharp;
+
+namespace LiveChartsCore.SkiaSharp.Motion
 {
-    public class FloatTransitionProperty : TransitionProperty<float>
+    public class PointMotionProperty : MotionProperty<SKPoint>
     {
-        public FloatTransitionProperty(string propertyName)
+        public PointMotionProperty(string propertyName)
             : base(propertyName)
         {
-            fromValue = 0;
-            toValue = 0;
+            fromValue = new SKPoint();
+            toValue = new SKPoint();
         }
 
-        public FloatTransitionProperty(string propertyName, float value)
+        public PointMotionProperty(string propertyName, SKPoint point)
             : base(propertyName)
         {
-            fromValue = value;
-            toValue = value;
+            fromValue = new SKPoint(point.X, point.Y);
+            toValue = new SKPoint(point.X, point.Y);
         }
 
-        protected override float OnGetMovement(float progress)
+        protected override SKPoint OnGetMovement(float progress)
         {
-            return fromValue + progress * (toValue - fromValue);
+            return new SKPoint(
+                fromValue.X + progress * (toValue.X - fromValue.X),
+                fromValue.Y + progress * (toValue.Y - fromValue.Y));
         }
     }
 }

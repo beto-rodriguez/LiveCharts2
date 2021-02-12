@@ -2,9 +2,7 @@
 using LiveChartsCore.SkiaSharp;
 using LiveChartsCore.SkiaSharp.Drawing;
 using LiveChartsCore.SkiaSharp.Painting;
-using LiveChartsCore.SkiaSharp.Transitions;
 using SkiaSharp;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -47,7 +45,7 @@ namespace ViewModelsSamples
                 new ColumnSeries<double>
                 {
                     Name = "columns",
-                    Values =  new[]{ 10d, -4, 2, -1, 7, -3, 5, -6, 3, -6, 8, -3},
+                    Values = new[]{ 10d, -4, 2, -1, 7, -3, 5, -6, 3, -6, 8, -3},
                     Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
                     Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
                     HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),

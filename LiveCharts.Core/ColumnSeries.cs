@@ -73,14 +73,21 @@ namespace LiveChartsCore
                     var r = new TVisual
                     {
                         X = x - uwm,
-                        Y = b,
+                        Y = p,
                         Width = uw,
                         Height = 0
                     };
-                    r.SetPropertyTransition(
-                        chartAnimation,
-                        nameof(ISizedGeometry<TDrawingContext>.X), nameof(ISizedGeometry<TDrawingContext>.Y),
-                        nameof(ISizedGeometry<TDrawingContext>.Width), nameof(ISizedGeometry<TDrawingContext>.Height));
+
+                    var affectedProperties = new string[]
+                    {
+                        nameof(ISizedGeometry<TDrawingContext>.X),
+                        nameof(ISizedGeometry<TDrawingContext>.Y),
+                        nameof(ISizedGeometry<TDrawingContext>.Width),
+                        nameof(ISizedGeometry<TDrawingContext>.Height)
+                    };
+                    r.SetPropertyTransition(chartAnimation, affectedProperties);
+                    r.CompleteTransition(affectedProperties);
+
                     point.HoverArea = new HoverArea();
                     point.Visual = r;
                     if (Fill != null) Fill.AddGeometyToPaintTask(r);
@@ -89,21 +96,12 @@ namespace LiveChartsCore
 
                 var rectangle = (TVisual)point.Visual;
 
-                if (point.Y > Pivot)
-                {
-                    rectangle.X = x - uwm;
-                    rectangle.Y = y;
-                    rectangle.Width = uw;
-                    rectangle.Height = b;
-                    point.HoverArea.SetDimensions(x - uwm, y - sw, uw, b + 2 * sw);
-                } else
-                {
-                    rectangle.X = x - uwm;
-                    rectangle.Y = y - b;
-                    rectangle.Width = uw;
-                    rectangle.Height = b;
-                    point.HoverArea.SetDimensions(x - uwm, y - sw, uw, b + 2 * sw);
-                }
+                var cy = point.Y > Pivot ? y : y - b;
+
+                rectangle.X = x - uwm;
+                rectangle.Y = cy;
+                rectangle.Width = uw;
+                rectangle.Height = b;
 
                 OnPointMeasured(point, rectangle);
                 drawBucket.Add(rectangle);

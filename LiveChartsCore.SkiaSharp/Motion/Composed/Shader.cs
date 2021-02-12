@@ -20,14 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
+using SkiaSharp;
 
-namespace LiveChartsCore.Transitions
+namespace LiveChartsCore.SkiaSharp.Motion.Composed
 {
-    public interface ITransitionProperty
+    public abstract class Shader
     {
-        bool IsTransitionCompleted { get; set; }
-        string PropertyName { get; }
-        Animation Animation { get; set; }
+        public abstract Shader InterpolateFrom(Shader from, float progress);
+        public abstract SKShader GetSKShader();
     }
 }

@@ -23,13 +23,13 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
 
-namespace LiveChartsCore.Transitions
+namespace LiveChartsCore.Motion
 {
     /// <summary>
-    /// The <see cref="TransitionProperty{T}"/> object tracks where a property of a <see cref="Animatable"/> is in a time line.
+    /// The <see cref="MotionProperty{T}"/> object tracks where a property of a <see cref="Animatable"/> is in a time line.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class TransitionProperty<T>: ITransitionProperty
+    public abstract class MotionProperty<T> : IMotionProperty
     {
         private Animation animation;
         protected internal T fromValue;
@@ -38,8 +38,9 @@ namespace LiveChartsCore.Transitions
         internal long endTime;
         private bool isTransitionCompleted = false;
         private readonly string propertyName;
+        private bool requiresToInitialize = true;
 
-        public TransitionProperty(string propertyName)
+        public MotionProperty(string propertyName)
         {
             this.propertyName = propertyName;
         }
@@ -71,14 +72,21 @@ namespace LiveChartsCore.Transitions
         /// </summary>
         /// <param name="value">The value to move to.</param>
         /// <param name="animatable">The <see cref="Visual"/> instance that is moving.</param>
-        public void MoveTo(T value, Animatable animatable)
+        public void SetMovement(T value, Animatable animatable)
         {
-            fromValue = GetCurrentMovement(animatable);
+            fromValue = GetMovement(animatable);
             toValue = value;
             if (animation != null)
             {
-                startTime = animatable.currentTime;
-                endTime = animatable.currentTime + animation.duration;
+                if (animatable.currentTime == long.MinValue) // the animatable is not in the canvas yet.
+                {
+                    requiresToInitialize = true;
+                }
+                else
+                {
+                    startTime = animatable.currentTime;
+                    endTime = animatable.currentTime + animation.duration;
+                }
                 animation.animationCompletedCount = 0;
                 isTransitionCompleted = false;
             }
@@ -90,9 +98,16 @@ namespace LiveChartsCore.Transitions
         /// </summary>
         /// <param name="animatable"></param>
         /// <returns></returns>
-        public T GetCurrentMovement(Animatable animatable)
+        public T GetMovement(Animatable animatable)
         {
             if (animation == null || isTransitionCompleted) return OnGetMovement(1);
+
+            if (requiresToInitialize)
+            {
+                startTime = animatable.currentTime;
+                endTime = animatable.currentTime + animation.duration;
+                requiresToInitialize = false;
+            }
 
             // at this points we are sure that the animatable has not finished at least with this property.
             animatable.isCompleted = false;
@@ -109,7 +124,8 @@ namespace LiveChartsCore.Transitions
                     p = 1;
                     animation.animationCompletedCount++;
                     isTransitionCompleted = animation.repeatTimes != int.MaxValue && animation.repeatTimes < animation.animationCompletedCount;
-                    if (!isTransitionCompleted) {
+                    if (!isTransitionCompleted)
+                    {
                         startTime = animatable.currentTime;
                         endTime = animatable.currentTime + animation.duration;
                         isTransitionCompleted = false;

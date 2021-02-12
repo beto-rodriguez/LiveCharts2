@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Transitions;
+using LiveChartsCore.Motion;
 using SkiaSharp;
 using System;
 
@@ -29,18 +29,18 @@ namespace LiveChartsCore.SkiaSharp.Drawing
 {
     public class LineGeometry : Geometry, ILineGeometry<SkiaDrawingContext>
     {
-        private readonly FloatTransitionProperty x1;
-        private readonly FloatTransitionProperty y1;
+        private readonly FloatMotionProperty x1;
+        private readonly FloatMotionProperty y1;
 
         public LineGeometry()
         {
-            x1 = RegisterTransitionProperty(new FloatTransitionProperty(nameof(X1), 0f));
-            y1 = RegisterTransitionProperty(new FloatTransitionProperty(nameof(Y1), 0f));
+            x1 = RegisterTransitionProperty(new FloatMotionProperty(nameof(X1), 0f));
+            y1 = RegisterTransitionProperty(new FloatMotionProperty(nameof(Y1), 0f));
         }
 
-        public float X1 { get => x1.GetCurrentMovement(this); set => x1.MoveTo(value, this); }
+        public float X1 { get => x1.GetMovement(this); set => x1.SetMovement(value, this); }
 
-        public float Y1 { get => y1.GetCurrentMovement(this); set => y1.MoveTo(value, this); }
+        public float Y1 { get => y1.GetMovement(this); set => y1.SetMovement(value, this); }
 
         public override void OnDraw(SkiaDrawingContext context, SKPaint paint)
         {

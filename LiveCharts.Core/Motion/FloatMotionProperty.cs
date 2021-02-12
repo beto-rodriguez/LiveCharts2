@@ -20,25 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.SkiaSharp.Transitions.Composed;
-using LiveChartsCore.Transitions;
-
-namespace LiveChartsCore.SkiaSharp.Transitions
+namespace LiveChartsCore.Motion
 {
-    public class ShaderTransition : TransitionProperty<Shader>
+    public class FloatMotionProperty : MotionProperty<float>
     {
-        public ShaderTransition(string propertyName)
+        public FloatMotionProperty(string propertyName)
             : base(propertyName)
         {
-
+            fromValue = 0;
+            toValue = 0;
         }
 
-        protected override Shader OnGetMovement(float progress)
+        public FloatMotionProperty(string propertyName, float value)
+            : base(propertyName)
         {
-            if (fromValue == null && toValue == null) return null;
-            if (toValue == null && fromValue != null) toValue = fromValue;
-            if (fromValue == null && toValue != null) fromValue = toValue;
-            return toValue.InterpolateFrom(fromValue, progress);
+            fromValue = value;
+            toValue = value;
+        }
+
+        protected override float OnGetMovement(float progress)
+        {
+            return fromValue + progress * (toValue - fromValue);
         }
     }
 }

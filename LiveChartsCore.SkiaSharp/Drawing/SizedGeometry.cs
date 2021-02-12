@@ -21,40 +21,40 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Transitions;
+using LiveChartsCore.Motion;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharp.Drawing
 {
     public abstract class SizedGeometry : Geometry, ISizedGeometry<SkiaDrawingContext>
     {
-        protected readonly FloatTransitionProperty width;
-        protected readonly FloatTransitionProperty height;
+        protected readonly FloatMotionProperty width;
+        protected readonly FloatMotionProperty height;
         protected bool matchDimensions = false;
 
         public SizedGeometry() : base()
         {
-            width = RegisterTransitionProperty(new FloatTransitionProperty(nameof(Width), 0));
-            height = RegisterTransitionProperty(new FloatTransitionProperty(nameof(Height), 0));
+            width = RegisterTransitionProperty(new FloatMotionProperty(nameof(Width), 0));
+            height = RegisterTransitionProperty(new FloatMotionProperty(nameof(Height), 0));
         }
 
-        public float Width { get => width.GetCurrentMovement(this); set => width.MoveTo(value, this); }
+        public float Width { get => width.GetMovement(this); set => width.SetMovement(value, this); }
 
         public float Height
         {
             get
             {
-                if (matchDimensions) return width.GetCurrentMovement(this);
-                return height.GetCurrentMovement(this);
+                if (matchDimensions) return width.GetMovement(this);
+                return height.GetMovement(this);
             }
             set
             {
                 if (matchDimensions)
                 {
-                    width.MoveTo(value, this);
+                    width.SetMovement(value, this);
                     return;
                 }
-                height.MoveTo(value, this);
+                height.SetMovement(value, this);
             }
         }
 

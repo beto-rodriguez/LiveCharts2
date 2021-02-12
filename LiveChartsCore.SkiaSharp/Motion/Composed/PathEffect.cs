@@ -20,37 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Transitions;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharp.Transitions
+namespace LiveChartsCore.SkiaSharp.Motion.Composed
 {
-    public class ColorTransitionProperty : TransitionProperty<SKColor>
+    public abstract class PathEffect
     {
-        public ColorTransitionProperty(string propertyName)
-            : base(propertyName)
-        {
-            fromValue = new SKColor();
-            toValue = new SKColor();
-        }
-
-        public ColorTransitionProperty(string propertyName, SKColor color)
-            :base(propertyName)
-        {
-            fromValue = new SKColor(color.Red, color.Green, color.Blue, color.Alpha);
-            toValue = new SKColor(color.Red, color.Green, color.Blue, color.Alpha);
-        }
-
-        protected override SKColor OnGetMovement(float progress)
-        {
-            unchecked
-            {
-                return new SKColor(
-                    (byte)(fromValue.Red + progress * (toValue.Red - fromValue.Red)),
-                    (byte)(fromValue.Green + progress * (toValue.Green - fromValue.Green)),
-                    (byte)(fromValue.Blue + progress * (toValue.Blue - fromValue.Blue)),
-                    (byte)(fromValue.Alpha + progress * (toValue.Alpha - fromValue.Alpha)));
-            }
-        }
+        public abstract PathEffect InterpolateFrom(PathEffect from, float progress);
+        public abstract SKPathEffect GetSKPath();
     }
 }

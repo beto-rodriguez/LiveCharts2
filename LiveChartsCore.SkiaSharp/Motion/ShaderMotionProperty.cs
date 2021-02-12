@@ -20,32 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Transitions;
-using SkiaSharp;
+using LiveChartsCore.Motion;
+using LiveChartsCore.SkiaSharp.Motion.Composed;
 
-namespace LiveChartsCore.SkiaSharp.Transitions
+namespace LiveChartsCore.SkiaSharp.Motion
 {
-    public class PointTransition : TransitionProperty<SKPoint>
+    public class ShaderMotionProperty : MotionProperty<Shader>
     {
-        public PointTransition(string propertyName)
+        public ShaderMotionProperty(string propertyName)
             : base(propertyName)
         {
-            fromValue = new SKPoint();
-            toValue = new SKPoint();
+
         }
 
-        public PointTransition(string propertyName, SKPoint point)
-            : base(propertyName)
+        protected override Shader OnGetMovement(float progress)
         {
-            fromValue = new SKPoint(point.X, point.Y);
-            toValue = new SKPoint(point.X, point.Y);
-        }
-
-        protected override SKPoint OnGetMovement(float progress)
-        {
-            return new SKPoint(
-                fromValue.X + progress * (toValue.X - fromValue.X),
-                fromValue.Y + progress * (toValue.Y - fromValue.Y));
+            if (fromValue == null && toValue == null) return null;
+            if (toValue == null && fromValue != null) toValue = fromValue;
+            if (fromValue == null && toValue != null) fromValue = toValue;
+            return toValue.InterpolateFrom(fromValue, progress);
         }
     }
 }

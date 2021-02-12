@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Transitions;
+using LiveChartsCore.Motion;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharp.Drawing
@@ -28,18 +28,18 @@ namespace LiveChartsCore.SkiaSharp.Drawing
     public class LineSegment : PathCommand
     {
         private readonly PathGeometry pathGeometry;
-        private FloatTransitionProperty xTransition;
-        private FloatTransitionProperty yTransition;
+        private FloatMotionProperty xTransition;
+        private FloatMotionProperty yTransition;
 
         public LineSegment(PathGeometry pathGeometry)
         {
-            xTransition = new FloatTransitionProperty(nameof(X), 0f);
-            yTransition = new FloatTransitionProperty(nameof(Y), 0f);
+            xTransition = new FloatMotionProperty(nameof(X), 0f);
+            yTransition = new FloatMotionProperty(nameof(Y), 0f);
             this.pathGeometry = pathGeometry;
         }
 
-        public float X { get => xTransition.GetCurrentMovement(pathGeometry); set => xTransition.MoveTo(value, pathGeometry); }
-        public float Y { get => yTransition.GetCurrentMovement(pathGeometry); set => yTransition.MoveTo(value, pathGeometry); }
+        public float X { get => xTransition.GetMovement(pathGeometry); set => xTransition.SetMovement(value, pathGeometry); }
+        public float Y { get => yTransition.GetMovement(pathGeometry); set => yTransition.SetMovement(value, pathGeometry); }
 
         public override void Excecute(SKPath path)
         {

@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.SkiaSharp.Transitions.Composed;
+using LiveChartsCore.SkiaSharp.Motion.Composed;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharp.Transitions
+namespace LiveChartsCore.SkiaSharp.Motion
 {
     public class LinearGradientShader : Shader
     {

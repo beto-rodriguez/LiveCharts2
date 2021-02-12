@@ -20,15 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Transitions;
+using LiveChartsCore.Motion;
 using System.Collections.Generic;
 
 namespace LiveChartsCore.Drawing.Common
 {
     public abstract class Animatable : IAnimatable
     {
-        private Dictionary<string, ITransitionProperty> transitionProperties = new Dictionary<string, ITransitionProperty>();
-        internal long currentTime;
+        protected Dictionary<string, IMotionProperty> transitionProperties = new Dictionary<string, IMotionProperty>();
+        internal long currentTime = long.MinValue;
         internal bool isCompleted = true;
         internal bool removeOnCompleted;
 
@@ -76,7 +76,7 @@ namespace LiveChartsCore.Drawing.Common
             }
         }
 
-        public ITransitionProperty GetTransitionProperty(string propertyName)
+        public IMotionProperty GetTransitionProperty(string propertyName)
         {
             if (!transitionProperties.TryGetValue(propertyName, out var transitionProperty))
                 throw new System.Exception(
@@ -86,7 +86,7 @@ namespace LiveChartsCore.Drawing.Common
         }
 
         protected T RegisterTransitionProperty<T>(T transition)
-            where T : ITransitionProperty
+            where T : IMotionProperty
         {
             transitionProperties[transition.PropertyName] = transition;
             return transition;
