@@ -50,11 +50,13 @@ namespace LiveChartsCore.Drawing
 
             foreach (var paint in paintTasks.OrderBy(x => x.ZIndex))
             {
+                paint.IsCompleted = true;
                 paint.CurrentTime = frameTime;
                 paint.InitializeTask(context);
 
                 foreach (var geometry in paint.GetGeometries())
                 {
+                    geometry.IsCompleted = true;
                     geometry.CurrentTime = frameTime;
                     geometry.Draw(context);
 

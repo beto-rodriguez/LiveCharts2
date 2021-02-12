@@ -13,6 +13,9 @@ namespace LiveChartsCore.UnitTesting
         public void TestMethod1()
         {
             var r = new RectangleGeometry();
+            var a = (IAnimatable)r;
+            r.SetPropertyTransition(
+                new Animation(EasingFunctions.Lineal, TimeSpan.FromSeconds(1), int.MaxValue), nameof(r.Y));
 
             var time = 0;
 
@@ -21,18 +24,29 @@ namespace LiveChartsCore.UnitTesting
             r.Width = 100;
             r.Height = 100;
 
-            //r.SetStoryboard(time, new Animation(EasingFunctions.Lineal, TimeSpan.FromSeconds(1)));
+            void setTime(long time)
+            {
+                a.CurrentTime = time;
+                a.IsCompleted = true;
+            }
 
-            //while (time <= 1000)
-            //{
-            //    r.SetTime(time);
+            a.CurrentTime = time;
 
-            //    //Trace.WriteLine(r.IsCompleted);
+            float g = 0;
 
-            //    time += 50;
-            //}
+            while (time <= 1000)
+            {
+                setTime(time);
 
-            ////Assert.IsTrue(r.IsCompleted);
+                g = r.Y; // dummy get
+
+                Assert.IsTrue(!a.IsCompleted);
+                time += 500;
+            }
+
+            setTime(1000);
+            g = r.Y;  // dummy get
+            Assert.IsTrue(!a.IsCompleted);
 
             //time = 1000;
             //r.Height = 200;

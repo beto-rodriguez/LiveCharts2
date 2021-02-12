@@ -27,11 +27,12 @@ namespace LiveChartsCore.SkiaSharp.Transitions
     public class AnimatedDashEffectBuilder : PathEffectBuilder
     {
         private readonly float[] dashArray;
-        private float phase;
+        private readonly float phase;
 
-        public AnimatedDashEffectBuilder(float[] dashArray)
+        public AnimatedDashEffectBuilder(float[] dashArray, float phase)
         {
             this.dashArray = dashArray;
+            this.phase = phase;
         }
 
         public override SKPathEffect GetSKPath()
@@ -39,15 +40,10 @@ namespace LiveChartsCore.SkiaSharp.Transitions
             return SKPathEffect.CreateDash(dashArray, phase);
         }
 
-        public float Phase { get => phase; set => phase = value; }
-
         public override PathEffectBuilder InterpolateFrom(PathEffectBuilder from, float progress)
         {
             var fromDashEffect = (AnimatedDashEffectBuilder)from;
-            return new AnimatedDashEffectBuilder(dashArray)
-            {
-                Phase = fromDashEffect.phase + progress * (phase - fromDashEffect.phase)
-            };
+            return new AnimatedDashEffectBuilder(dashArray, fromDashEffect.phase + progress * (phase - 0));
         }
     }
 }

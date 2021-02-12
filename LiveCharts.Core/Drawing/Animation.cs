@@ -52,7 +52,6 @@ namespace LiveChartsCore.Drawing
             this.repeatTimes = repeatTimes;
         }
 
-
         public Animation(Animation animation)
         {
             easingFunction = animation.easingFunction;
@@ -80,7 +79,6 @@ namespace LiveChartsCore.Drawing
         {
             startTime = currentTime;
             endTime = currentTime + duration;
-            animationCompletedCount = 0;
         }
     }
 }

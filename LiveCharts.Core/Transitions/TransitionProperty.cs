@@ -70,7 +70,7 @@ namespace LiveChartsCore.Transitions
         {
             fromValue = GetCurrentMovement(visual);
             toValue = value;
-            if (animation != null) animation.Restart(visual.currentTime);
+            if (animation != null) { animation.Restart(visual.currentTime); animation.animationCompletedCount = 0; }
             visual.Invalidate();
         }
 
@@ -82,6 +82,10 @@ namespace LiveChartsCore.Transitions
         public T GetCurrentMovement(Animatable animatable)
         {
             if (animation == null || animation.isCompleted) return OnGetMovement(1);
+
+            // at this points we are sure that the animatable has not finished at least with this property.
+            animatable.isCompleted = false;
+
             if (animatable.currentTime - animation.startTime <= 0) return OnGetMovement(0);
 
             unchecked
@@ -93,13 +97,9 @@ namespace LiveChartsCore.Transitions
                     // at this point the animation is completed
                     p = 1;
                     animation.animationCompletedCount++;
-                    // unless it requires to repeat... if it does, we restart it.
-                    animation.isCompleted = animation.repeatTimes == int.MaxValue || animation.repeatTimes < animation.animationCompletedCount;                   
+                    animation.isCompleted = animation.repeatTimes != int.MaxValue && animation.repeatTimes < animation.animationCompletedCount;
                     if (!animation.isCompleted) animation.Restart(animatable.currentTime);
                 }
-
-                // at this points we are sure that the animatable has not finished at least with this property.
-                animatable.isCompleted = false;
 
                 var fp = animation.EasingFunction(p);
                 return OnGetMovement(fp);

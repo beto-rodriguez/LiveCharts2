@@ -19,19 +19,18 @@ namespace ViewModelsSamples
         public MainVM()
         {
             var stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 3);
-            stroke.StrokeCap = SKStrokeCap.Round;
-            var pathEffect = new AnimatedDashEffectBuilder(new[] { 8f, 8f });
-            pathEffect.Phase = 10;
-            stroke.PathEffect = pathEffect;
             stroke.SetPropertyTransition(
-                new LiveChartsCore.Drawing.Animation(EasingFunctions.Lineal, TimeSpan.FromMilliseconds(500), int.MaxValue),
+                new LiveChartsCore.Drawing.Animation(EasingFunctions.Lineal, TimeSpan.FromMilliseconds(5000), int.MaxValue),
                 nameof(stroke.PathEffect));
+            stroke.StrokeCap = SKStrokeCap.Round;
+            stroke.PathEffect = new AnimatedDashEffectBuilder(new[] { 8f, 24f }, 0);
+            stroke.PathEffect = new AnimatedDashEffectBuilder(new[] { 8f, 24f }, 24);
 
             Series = new ObservableCollection<ISeries<SkiaDrawingContext>>
             {
                 new ColumnSeries<double>
                 {
-                    Name = "columnas",
+                    Name = "columns",
                     Values =  new[]{ 10d, -4, 2, -1, 7, -3, 5, -6, 3, -6, 8, -3},
                     Stroke = stroke,
                     Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
@@ -39,7 +38,7 @@ namespace ViewModelsSamples
                 },
                  new LineSeries<double>
                 {
-                    Name = "lineas",
+                    Name = "lines",
                     Values = new[]{ 1d, 4, 2, 1, 7, 3, 5, 6, 3, 6, 8, 3},
                     Stroke = new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
                     Fill = new SolidColorPaintTask(new SKColor(2, 136, 209, 50), 3),
