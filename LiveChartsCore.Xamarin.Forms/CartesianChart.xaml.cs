@@ -78,11 +78,13 @@ namespace LiveChartsCore.Xamarin.Forms
 
         public static readonly BindableProperty XAxesProperty =
             BindableProperty.Create(
-                nameof(XAxes), typeof(IList<IAxis<SkiaDrawingContext>>), typeof(CartesianChart), new List<Axis>(), BindingMode.Default, null);
+                nameof(XAxes), typeof(IList<IAxis<SkiaDrawingContext>>),
+                typeof(CartesianChart), new List<IAxis<SkiaDrawingContext>>(), BindingMode.Default, null);
 
         public static readonly BindableProperty YAxesProperty =
             BindableProperty.Create(
-                nameof(YAxes), typeof(IList<IAxis<SkiaDrawingContext>>), typeof(CartesianChart), new List<Axis>(), BindingMode.Default, null);
+                nameof(YAxes), typeof(IList<IAxis<SkiaDrawingContext>>),
+                typeof(CartesianChart), new List<IAxis<SkiaDrawingContext>>(), BindingMode.Default, null);
 
         public IEnumerable<ISeries<SkiaDrawingContext>> Series
         {

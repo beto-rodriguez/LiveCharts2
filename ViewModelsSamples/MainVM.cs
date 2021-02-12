@@ -32,14 +32,14 @@ namespace ViewModelsSamples
             animatedGradient.Shader = new LinearGradientShader(
                 new SKPoint(0, 0),
                 new SKPoint(100, 100),
-                new SKColor[] { new SKColor(2, 136, 209), SKColors.WhiteSmoke },
-                new[] { 0f, 1},
+                new SKColor[] { new SKColor(2, 136, 209), SKColors.WhiteSmoke, new SKColor(2, 136, 209) },
+                new[] { 0f, 0.5f, 1},
                 SKShaderTileMode.Repeat);
             animatedGradient.Shader = new LinearGradientShader(
                 new SKPoint(0, 0),
-                new SKPoint(50, 50),
-                new SKColor[] { new SKColor(2, 136, 209), SKColors.WhiteSmoke },
-                new[] { 0f, 1 },
+                new SKPoint(100, 100),
+                new SKColor[] { SKColors.WhiteSmoke, new SKColor(2, 136, 209), SKColors.WhiteSmoke },
+                new[] { 0f, 0.5f, 1 },
                 SKShaderTileMode.Repeat);
 
             Series = new ObservableCollection<ISeries<SkiaDrawingContext>>
