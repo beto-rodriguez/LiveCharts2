@@ -28,9 +28,6 @@ namespace LiveChartsCore.Drawing
     {
         private Func<float, float> easingFunction;
         internal long duration;
-        internal long startTime;
-        internal long endTime;
-        internal bool isCompleted = false;
         internal int animationCompletedCount = 0;
         internal int repeatTimes;
 
@@ -74,11 +71,5 @@ namespace LiveChartsCore.Drawing
         /// use int.MaxValue to repeat it indefinitely number of times.
         /// </summary>
         public int RepeatTimes { get => repeatTimes; set => repeatTimes = value; }
-
-        internal void Restart(long currentTime)
-        {
-            startTime = currentTime;
-            endTime = currentTime + duration;
-        }
     }
 }

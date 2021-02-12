@@ -31,9 +31,12 @@ namespace LiveChartsCore.Transitions
     /// <typeparam name="T"></typeparam>
     public abstract class TransitionProperty<T>: ITransitionProperty
     {
+        private Animation animation;
         protected internal T fromValue;
         protected internal T toValue;
-        private Animation animation;
+        internal long startTime;
+        internal long endTime;
+        private bool isTransitionCompleted = false;
         private readonly string propertyName;
 
         public TransitionProperty(string propertyName)
@@ -61,17 +64,23 @@ namespace LiveChartsCore.Transitions
         /// </summary>
         public string PropertyName => propertyName;
 
+        public bool IsTransitionCompleted { get => isTransitionCompleted; set => isTransitionCompleted = value; }
+
         /// <summary>
         /// Moves to he specified value.
         /// </summary>
         /// <param name="value">The value to move to.</param>
-        /// <param name="visual">The <see cref="Visual"/> instance that is moving.</param>
-        public void MoveTo(T value, Animatable visual)
+        /// <param name="animatable">The <see cref="Visual"/> instance that is moving.</param>
+        public void MoveTo(T value, Animatable animatable)
         {
-            fromValue = GetCurrentMovement(visual);
+            fromValue = GetCurrentMovement(animatable);
             toValue = value;
-            if (animation != null) { animation.Restart(visual.currentTime); animation.animationCompletedCount = 0; }
-            visual.Invalidate();
+            if (animation != null)
+            {
+                animation.animationCompletedCount = 0;
+                isTransitionCompleted = false;
+            }
+            animatable.Invalidate();
         }
 
         /// <summary>
@@ -81,24 +90,28 @@ namespace LiveChartsCore.Transitions
         /// <returns></returns>
         public T GetCurrentMovement(Animatable animatable)
         {
-            if (animation == null || animation.isCompleted) return OnGetMovement(1);
+            if (animation == null || isTransitionCompleted) return OnGetMovement(1);
 
             // at this points we are sure that the animatable has not finished at least with this property.
             animatable.isCompleted = false;
 
-            if (animatable.currentTime - animation.startTime <= 0) return OnGetMovement(0);
+            if (animatable.currentTime - startTime <= 0) return OnGetMovement(0);
 
             unchecked
             {
-                var p = (animatable.currentTime - animation.startTime) / (float)(animation.endTime - animation.startTime);
+                var p = (animatable.currentTime - startTime) / (float)(endTime - startTime);
 
                 if (p >= 1)
                 {
                     // at this point the animation is completed
                     p = 1;
                     animation.animationCompletedCount++;
-                    animation.isCompleted = animation.repeatTimes != int.MaxValue && animation.repeatTimes < animation.animationCompletedCount;
-                    if (!animation.isCompleted) animation.Restart(animatable.currentTime);
+                    isTransitionCompleted = animation.repeatTimes != int.MaxValue && animation.repeatTimes < animation.animationCompletedCount;
+                    if (!isTransitionCompleted) {
+                        startTime = animatable.currentTime;
+                        endTime = animatable.currentTime + animation.duration;
+                        isTransitionCompleted = false;
+                    }
                 }
 
                 var fp = animation.EasingFunction(p);

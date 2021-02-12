@@ -102,8 +102,6 @@ namespace LiveChartsCore.SkiaSharp.Painting
                 StrokeWidth = StrokeWidth
             };
 
-            clone.CompleteTransitions();
-
             return clone;
         }
 

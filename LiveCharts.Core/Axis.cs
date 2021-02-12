@@ -146,7 +146,6 @@ namespace LiveChartsCore
                         var textGeometry = new TTextGeometry();
                         visualSeparator.Text = textGeometry;
                         if (hasRotation) textGeometry.Rotation = r;
-                        textGeometry.CompleteTransitions();
 
                         TextBrush.AddGeometyToPaintTask(textGeometry);
                     }

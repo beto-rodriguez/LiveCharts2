@@ -58,17 +58,31 @@ namespace LiveChartsCore.Drawing.Common
             transitionProperties[propertyName].Animation = null;
         }
 
-        /// <summary>
-        /// Completes the current transitions.
-        /// </summary>
-        public virtual void CompleteTransitions()
-        {
-            isCompleted = true;
-        }
-
         public void Invalidate()
         {
             isCompleted = false;
+        }
+
+        public void CompleteTransition(params string[] propertyName)
+        {
+            foreach (var property in propertyName)
+            {
+                if (!transitionProperties.TryGetValue(property, out var transitionProperty))
+                    throw new System.Exception(
+                        $"The property {property} is not a transition property of this instance.");
+
+                if (transitionProperty.Animation == null) continue;
+                transitionProperty.IsTransitionCompleted = true;
+            }
+        }
+
+        public ITransitionProperty GetTransitionProperty(string propertyName)
+        {
+            if (!transitionProperties.TryGetValue(propertyName, out var transitionProperty))
+                throw new System.Exception(
+                    $"The property {propertyName} is not a transition property of this instance.");
+
+            return transitionProperty;
         }
 
         protected T RegisterTransitionProperty<T>(T transition)

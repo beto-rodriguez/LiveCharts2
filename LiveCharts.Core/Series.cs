@@ -360,7 +360,6 @@ namespace LiveChartsCore
             {
                 var fillClone = Fill.CloneTask();
                 var visual = new TVisual { X = 0, Y = 0, Height = (float)legendShapeSize, Width = (float)legendShapeSize };
-                visual.CompleteTransitions();
                 fillClone.AddGeometyToPaintTask(visual);
                 context.PaintTasks.Add(fillClone);
             }
@@ -376,7 +375,6 @@ namespace LiveChartsCore
                     Height = (float)legendShapeSize,
                     Width = (float)legendShapeSize 
                 };
-                visual.CompleteTransitions();
                 w += 2*strokeClone.StrokeWidth;
                 strokeClone.AddGeometyToPaintTask(visual);
                 context.PaintTasks.Add(strokeClone);

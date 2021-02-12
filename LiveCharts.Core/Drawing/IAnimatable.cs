@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Transitions;
+
 namespace LiveChartsCore.Drawing
 {
     public interface IAnimatable
@@ -32,6 +34,7 @@ namespace LiveChartsCore.Drawing
         void SetPropertyTransition(Animation animation, params string[] propertyName);
         void RemovePropertyTransition(string propertyName);
 
-        void CompleteTransitions();
+        void CompleteTransition(params string[] propertyName);
+        ITransitionProperty GetTransitionProperty(string propertyName);
     }
 }

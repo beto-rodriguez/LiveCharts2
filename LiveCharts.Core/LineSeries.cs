@@ -131,7 +131,6 @@ namespace LiveChartsCore
                     v.Geometry.Y = y - hgs;
                     v.Geometry.Width = gs;
                     v.Geometry.Height = gs;
-                    v.Geometry.CompleteTransitions();
 
                     data.TargetCoordinate.HoverArea = new HoverArea();
                     data.TargetCoordinate.Visual = v;
@@ -279,14 +278,12 @@ namespace LiveChartsCore
             {
                 var fillClone = shapesFill.CloneTask();
                 var visual = new TVisual { X = 0, Y = 0, Height = lss, Width = lss };
-                visual.CompleteTransitions();
                 fillClone.AddGeometyToPaintTask(visual);
                 context.PaintTasks.Add(fillClone);
             } else if (Fill != null)
             {
                 var fillClone = Fill.CloneTask();
                 var visual = new TVisual { X = 0, Y = 0, Height = lss, Width = lss };
-                visual.CompleteTransitions();
                 fillClone.AddGeometyToPaintTask(visual);
                 context.PaintTasks.Add(fillClone);
             }
@@ -301,7 +298,6 @@ namespace LiveChartsCore
                     Height = lss,
                     Width = lss
                 };
-                visual.CompleteTransitions();
                 w += 2 * shapesStroke.StrokeWidth;
                 strokeClone.AddGeometyToPaintTask(visual);
                 context.PaintTasks.Add(strokeClone);
@@ -315,7 +311,6 @@ namespace LiveChartsCore
                     Height = lss,
                     Width = lss
                 };
-                visual.CompleteTransitions();
                 w += 2 * strokeClone.StrokeWidth;
                 strokeClone.AddGeometyToPaintTask(visual);
                 context.PaintTasks.Add(strokeClone);

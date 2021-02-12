@@ -81,7 +81,6 @@ namespace LiveChartsCore
                         chartAnimation,
                         nameof(ISizedGeometry<TDrawingContext>.X), nameof(ISizedGeometry<TDrawingContext>.Y),
                         nameof(ISizedGeometry<TDrawingContext>.Width), nameof(ISizedGeometry<TDrawingContext>.Height));
-                    r.CompleteTransitions();
                     point.HoverArea = new HoverArea();
                     point.Visual = r;
                     if (Fill != null) Fill.AddGeometyToPaintTask(r);
@@ -92,6 +91,7 @@ namespace LiveChartsCore
 
                 if (point.Y > Pivot)
                 {
+                    var xx = rectangle.X;
                     rectangle.X = x - uwm;
                     rectangle.Y = y;
                     rectangle.Width = uw;
@@ -99,6 +99,7 @@ namespace LiveChartsCore
                     point.HoverArea.SetDimensions(x - uwm, y - sw, uw, b + 2 * sw);
                 } else
                 {
+                    var xx = rectangle.X;
                     rectangle.X = x - uwm;
                     rectangle.Y = y - b;
                     rectangle.Width = uw;

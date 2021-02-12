@@ -18,29 +18,29 @@ namespace ViewModelsSamples
 
         public MainVM()
         {
-            var animatedStrokeDash = new SolidColorPaintTask(new SKColor(217, 47, 47), 2);
-            animatedStrokeDash.SetPropertyTransition(
-                new LiveChartsCore.Drawing.Animation(EasingFunctions.Lineal, TimeSpan.FromMilliseconds(1000), int.MaxValue),
-                nameof(animatedStrokeDash.PathEffect));
-            animatedStrokeDash.PathEffect = new DashPathEffect(new[] { 5f, 5f}, 0);
-            animatedStrokeDash.PathEffect = new DashPathEffect(new[] { 5f, 5f}, 10);
+            //var animatedStrokeDash = new SolidColorPaintTask(new SKColor(217, 47, 47), 2);
+            //animatedStrokeDash.SetPropertyTransition(
+            //    new LiveChartsCore.Drawing.Animation(EasingFunctions.Lineal, TimeSpan.FromMilliseconds(1000), int.MaxValue),
+            //    nameof(animatedStrokeDash.PathEffect));
+            //animatedStrokeDash.PathEffect = new DashPathEffect(new[] { 5f, 5f}, 0);
+            //animatedStrokeDash.PathEffect = new DashPathEffect(new[] { 5f, 5f}, 10);
 
-            var animatedGradient = new SolidColorPaintTask(new SKColor(2, 136, 209, 200));
-            animatedGradient.SetPropertyTransition(
-               new LiveChartsCore.Drawing.Animation(EasingFunctions.Lineal, TimeSpan.FromMilliseconds(1000), int.MaxValue),
-               nameof(animatedGradient.Shader));
-            animatedGradient.Shader = new LinearGradientShader(
-                new SKPoint(0, 0),
-                new SKPoint(100, 100),
-                new SKColor[] { new SKColor(2, 136, 209), SKColors.WhiteSmoke, new SKColor(2, 136, 209) },
-                new[] { 0f, 0.5f, 1},
-                SKShaderTileMode.Repeat);
-            animatedGradient.Shader = new LinearGradientShader(
-                new SKPoint(0, 0),
-                new SKPoint(100, 100),
-                new SKColor[] { SKColors.WhiteSmoke, new SKColor(2, 136, 209), SKColors.WhiteSmoke },
-                new[] { 0f, 0.5f, 1 },
-                SKShaderTileMode.Repeat);
+            //var animatedGradient = new SolidColorPaintTask(new SKColor(2, 136, 209, 200));
+            //animatedGradient.SetPropertyTransition(
+            //   new LiveChartsCore.Drawing.Animation(EasingFunctions.Lineal, TimeSpan.FromMilliseconds(1000), int.MaxValue),
+            //   nameof(animatedGradient.Shader));
+            //animatedGradient.Shader = new LinearGradientShader(
+            //    new SKPoint(0, 0),
+            //    new SKPoint(100, 100),
+            //    new SKColor[] { new SKColor(2, 136, 209), SKColors.WhiteSmoke, new SKColor(2, 136, 209) },
+            //    new[] { 0f, 0.5f, 1},
+            //    SKShaderTileMode.Repeat);
+            //animatedGradient.Shader = new LinearGradientShader(
+            //    new SKPoint(0, 0),
+            //    new SKPoint(100, 100),
+            //    new SKColor[] { SKColors.WhiteSmoke, new SKColor(2, 136, 209), SKColors.WhiteSmoke },
+            //    new[] { 0f, 0.5f, 1 },
+            //    SKShaderTileMode.Repeat);
 
             Series = new ObservableCollection<ISeries<SkiaDrawingContext>>
             {
@@ -48,21 +48,21 @@ namespace ViewModelsSamples
                 {
                     Name = "columns",
                     Values =  new[]{ 10d, -4, 2, -1, 7, -3, 5, -6, 3, -6, 8, -3},
-                    Stroke = animatedStrokeDash,
+                    Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
                     Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
                     HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
                 },
-                 new LineSeries<double>
-                {
-                    Name = "lines",
-                    Values = new[]{ 1d, 4, 2, 1, 7, 3, 5, 6, 3, 6, 8, 3},
-                    Stroke = new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
-                    Fill = animatedGradient,
-                    ShapesFill = new SolidColorPaintTask(new SKColor(255, 255, 255)),
-                    ShapesStroke =  new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
-                    HighlightFill = new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
-                    HighlightStroke = new SolidColorPaintTask(new SKColor(20, 20, 20), 3)
-                },
+                // new LineSeries<double>
+                //{
+                //    Name = "lines",
+                //    Values = new[]{ 1d, 4, 2, 1, 7, 3, 5, 6, 3, 6, 8, 3},
+                //    Stroke = new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
+                //    Fill = new SolidColorPaintTask(new SKColor(2, 136, 209, 200)),
+                //    ShapesFill = new SolidColorPaintTask(new SKColor(255, 255, 255)),
+                //    ShapesStroke =  new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
+                //    HighlightFill = new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
+                //    HighlightStroke = new SolidColorPaintTask(new SKColor(20, 20, 20), 3)
+                //},
             };
 
             YAxes = new List<IAxis<SkiaDrawingContext>>

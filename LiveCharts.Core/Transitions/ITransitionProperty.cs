@@ -26,6 +26,7 @@ namespace LiveChartsCore.Transitions
 {
     public interface ITransitionProperty
     {
+        bool IsTransitionCompleted { get; set; }
         string PropertyName { get; }
         Animation Animation { get; set; }
     }
