@@ -70,6 +70,7 @@ namespace LiveChartsCore.Transitions
         {
             fromValue = GetCurrentMovement(visual);
             toValue = value;
+            if (animation != null) animation.Restart(visual.currentTime);
             visual.Invalidate();
         }
 
@@ -80,24 +81,27 @@ namespace LiveChartsCore.Transitions
         /// <returns></returns>
         public T GetCurrentMovement(Animatable animatable)
         {
-            if (animation == null || animatable.isCompleted) return OnGetMovement(1);
-            if (animatable.currentTime - animatable.startTime <= 0) return OnGetMovement(0);
+            if (animation == null || animation.isCompleted) return OnGetMovement(1);
+            if (animatable.currentTime - animation.startTime <= 0) return OnGetMovement(0);
 
             unchecked
             {
-                var p = (animatable.currentTime - animatable.startTime) / (float)(animatable.endTime - animatable.startTime);
+                var p = (animatable.currentTime - animation.startTime) / (float)(animation.endTime - animation.startTime);
 
                 if (p >= 1)
                 {
+                    // at this point the animation is completed
                     p = 1;
-                    animatable.isCompleted = true;
-                    animatable.animationRepeatCount++;
-                    if (animation.Repeat == int.MaxValue || animation.Repeat < animatable.animationRepeatCount)
-                        animatable.Invalidate();
+                    animation.animationCompletedCount++;
+                    // unless it requires to repeat... if it does, we restart it.
+                    animation.isCompleted = animation.repeatTimes == int.MaxValue || animation.repeatTimes < animation.animationCompletedCount;                   
+                    if (!animation.isCompleted) animation.Restart(animatable.currentTime);
                 }
 
-                var fp = animation.EasingFunction(p);
+                // at this points we are sure that the animatable has not finished at least with this property.
+                animatable.isCompleted = false;
 
+                var fp = animation.EasingFunction(p);
                 return OnGetMovement(fp);
             }
         }

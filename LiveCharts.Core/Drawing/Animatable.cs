@@ -21,19 +21,14 @@
 // SOFTWARE.
 
 using LiveChartsCore.Transitions;
-using System;
 using System.Collections.Generic;
 
 namespace LiveChartsCore.Drawing.Common
 {
-    public abstract class Animatable: IAnimatable
+    public abstract class Animatable : IAnimatable
     {
         private Dictionary<string, ITransitionProperty> transitionProperties = new Dictionary<string, ITransitionProperty>();
-        internal long startTime;
-        internal long endTime;
         internal long currentTime;
-        internal int animationRepeatCount = 0;
-        internal bool requiresStoryboardCalculation = false;
         internal bool isCompleted = true;
         internal bool removeOnCompleted;
 
@@ -41,47 +36,14 @@ namespace LiveChartsCore.Drawing.Common
         {
         }
 
-        public bool RequiresStoryboardCalculation { get => requiresStoryboardCalculation; set => requiresStoryboardCalculation = value; }
+        bool IAnimatable.IsCompleted { get => isCompleted; set => isCompleted = value; }
+        long IAnimatable.CurrentTime { get => currentTime; set => currentTime = value; }
 
-        public bool IsCompleted => isCompleted;
 
         /// <summary>
         /// if true, the element will be removed from the UI the next time <see cref="TransitionCompleted"/> event occurs.
         /// </summary>
         public bool RemoveOnCompleted { get => removeOnCompleted; set => removeOnCompleted = value; }
-
-        /// <summary>
-        /// Occurs when the transition of every property is completed.
-        /// </summary>
-        public event Action<Animatable> TransitionCompleted;
-
-        public virtual void SetStoryboard(long start, Animation transition)
-        {
-            startTime = start;
-            endTime = start + transition.Duration;
-            requiresStoryboardCalculation = false;
-            animationRepeatCount = 0;
-        }
-
-        /// <summary>
-        /// Sets the transition time, returns weather the transition of all the properties is completed or not.
-        /// </summary>
-        /// <param name="time"></param>
-        /// <returns></returns>
-        public virtual void SetTime(long frameTime)
-        {
-            if (isCompleted) return;
-
-            currentTime = frameTime;
-            if (currentTime >= endTime)
-            {
-                isCompleted = true;
-                TransitionCompleted?.Invoke(this);
-                return;
-            }
-
-            return;
-        }
 
         public void SetPropertyTransition(Animation animation, params string[] propertyName)
         {
@@ -102,17 +64,15 @@ namespace LiveChartsCore.Drawing.Common
         public virtual void CompleteTransitions()
         {
             isCompleted = true;
-            currentTime = endTime;
         }
 
         public void Invalidate()
         {
-            requiresStoryboardCalculation = true;
             isCompleted = false;
         }
 
         protected T RegisterTransitionProperty<T>(T transition)
-            where T: ITransitionProperty
+            where T : ITransitionProperty
         {
             transitionProperties[transition.PropertyName] = transition;
             return transition;

@@ -45,24 +45,17 @@ namespace LiveChartsCore.Drawing
         public void DrawFrame(TDrawingContext context)
         {
             var isValid = true;
-            //var skiaContext = new SkiaContext(info, surface, canvas);
             var frameTime = stopwatch.ElapsedMilliseconds;
             context.ClearCanvas();
 
-            var testAnimation = new Animation(EasingFunctions.Lineal, TimeSpan.FromMilliseconds(300));
-
             foreach (var paint in paintTasks.OrderBy(x => x.ZIndex))
             {
-                if (paint.RequiresStoryboardCalculation) paint.SetStoryboard(frameTime, testAnimation);
-                paint.SetTime(frameTime);
-
+                paint.CurrentTime = frameTime;
                 paint.InitializeTask(context);
 
                 foreach (var geometry in paint.GetGeometries())
                 {
-                    if (geometry.RequiresStoryboardCalculation) geometry.SetStoryboard(frameTime, testAnimation);
-
-                    geometry.SetTime(frameTime);
+                    geometry.CurrentTime = frameTime;
                     geometry.Draw(context);
 
                     isValid = isValid && geometry.IsCompleted;
@@ -73,6 +66,7 @@ namespace LiveChartsCore.Drawing
 
                 isValid = isValid && paint.IsCompleted;
                 paint.Dispose();
+
                 if (paint.RemoveOnCompleted && paint.IsCompleted) paintTasks.Remove(paint);
             }
 

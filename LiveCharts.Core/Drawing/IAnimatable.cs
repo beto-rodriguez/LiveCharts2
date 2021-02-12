@@ -24,15 +24,14 @@ namespace LiveChartsCore.Drawing
 {
     public interface IAnimatable
     {
-        bool RequiresStoryboardCalculation { get; }
-        bool IsCompleted { get; }
+        bool IsCompleted { get; set; }
+        long CurrentTime { get; set; }
+
         bool RemoveOnCompleted { get; set; }
 
         void SetPropertyTransition(Animation animation, params string[] propertyName);
         void RemovePropertyTransition(string propertyName);
 
-        void SetStoryboard(long frameTime, Animation animation);
-        void SetTime(long frameTime);
         void CompleteTransitions();
     }
 }

@@ -21,35 +21,35 @@ namespace LiveChartsCore.UnitTesting
             r.Width = 100;
             r.Height = 100;
 
-            r.SetStoryboard(time, new Animation(EasingFunctions.Lineal, TimeSpan.FromSeconds(1)));
+            //r.SetStoryboard(time, new Animation(EasingFunctions.Lineal, TimeSpan.FromSeconds(1)));
 
-            while (time <= 1000)
-            {
-                r.SetTime(time);
+            //while (time <= 1000)
+            //{
+            //    r.SetTime(time);
 
-                Trace.WriteLine(r.IsCompleted);
+            //    //Trace.WriteLine(r.IsCompleted);
 
-                time += 50;
-            }
+            //    time += 50;
+            //}
 
-            Assert.IsTrue(r.IsCompleted);
+            ////Assert.IsTrue(r.IsCompleted);
 
-            time = 1000;
-            r.Height = 200;
+            //time = 1000;
+            //r.Height = 200;
 
-            r.SetStoryboard(time, new Animation(EasingFunctions.Lineal, TimeSpan.FromSeconds(1)));
-            Assert.IsTrue(!r.IsCompleted);
+            //r.SetStoryboard(time, new Animation(EasingFunctions.Lineal, TimeSpan.FromSeconds(1)));
+            ////Assert.IsTrue(!r.IsCompleted);
 
-            while (time <= 2000)
-            {
-                r.SetTime(time);
+            //while (time <= 2000)
+            //{
+            //    r.SetTime(time);
 
-                Trace.WriteLine(r.IsCompleted);
+            //    //Trace.WriteLine(r.IsCompleted);
 
-                time += 50;
-            }
+            //    time += 50;
+            //}
 
-            Assert.IsTrue(r.IsCompleted);
+            ////Assert.IsTrue(r.IsCompleted);
         }
     }
 }

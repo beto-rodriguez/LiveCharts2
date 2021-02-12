@@ -27,8 +27,12 @@ namespace LiveChartsCore.Drawing
     public class Animation
     {
         private Func<float, float> easingFunction;
-        private long duration;
-        private int repeat = 1;
+        internal long duration;
+        internal long startTime;
+        internal long endTime;
+        internal bool isCompleted = false;
+        internal int animationCompletedCount = 0;
+        internal int repeatTimes;
 
         public Animation()
         {
@@ -37,22 +41,23 @@ namespace LiveChartsCore.Drawing
 
         public Animation(Func<float, float> easingFunction, TimeSpan duration)
         {
-            EasingFunction = easingFunction;
-            Duration = (long)duration.TotalMilliseconds;
+            this.easingFunction = easingFunction;
+            this.duration = (long)duration.TotalMilliseconds;
         }
 
-        public Animation(Func<float, float> easingFunction, TimeSpan duration, int repeat)
+        public Animation(Func<float, float> easingFunction, TimeSpan duration, int repeatTimes)
         {
             this.easingFunction = easingFunction;
             this.duration = (long)duration.TotalMilliseconds;
-            this.repeat = repeat;
+            this.repeatTimes = repeatTimes;
         }
+
 
         public Animation(Animation animation)
         {
-            this.easingFunction = animation.EasingFunction;
-            this.duration = animation.Duration;
-            this.repeat = animation.Repeat;
+            easingFunction = animation.easingFunction;
+            duration = animation.duration;
+            repeatTimes = animation.repeatTimes;
         }
 
         /// <summary>
@@ -66,8 +71,16 @@ namespace LiveChartsCore.Drawing
         public long Duration { get => duration; set => duration = value; }
 
         /// <summary>
-        /// Gets or sets the number of times the Animation will be repeated, default is 1, use <see cref="int.MaxValue"/> to repeat the animation infinitely.
+        /// Gets or sets how many times the animation needs to repeat before it is completed, 
+        /// use int.MaxValue to repeat it indefinitely number of times.
         /// </summary>
-        public int Repeat { get => repeat; set => repeat = value; }
+        public int RepeatTimes { get => repeatTimes; set => repeatTimes = value; }
+
+        internal void Restart(long currentTime)
+        {
+            startTime = currentTime;
+            endTime = currentTime + duration;
+            animationCompletedCount = 0;
+        }
     }
 }

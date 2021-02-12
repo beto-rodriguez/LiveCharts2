@@ -50,6 +50,7 @@ namespace LiveChartsCore.SkiaSharp.Painting
         public SKPaintStyle Style { get; set; }
         public bool IsStroke { get; set; }
         public bool IsFill { get; set; }
+        
 
         public abstract void InitializeTask(SkiaDrawingContext drawingContext);
 
