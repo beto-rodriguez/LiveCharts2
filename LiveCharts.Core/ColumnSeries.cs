@@ -145,7 +145,7 @@ namespace LiveChartsCore
             };
 
             geometry.SetPropertyTransition(
-                new Animation(EasingFunctions.BounceOut, defaultAnimation.duration, defaultAnimation.RepeatTimes),
+                new Animation(EasingFunctions.BounceOut, defaultAnimation.duration * 2, defaultAnimation.RepeatTimes),
                 bounceProperties);
             geometry.CompleteTransition(bounceProperties);
         }
