@@ -77,6 +77,8 @@ namespace LiveChartsCore.Transitions
             toValue = value;
             if (animation != null)
             {
+                startTime = animatable.currentTime;
+                endTime = animatable.currentTime + animation.duration;
                 animation.animationCompletedCount = 0;
                 isTransitionCompleted = false;
             }

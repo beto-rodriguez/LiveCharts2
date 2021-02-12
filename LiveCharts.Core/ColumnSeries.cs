@@ -91,7 +91,6 @@ namespace LiveChartsCore
 
                 if (point.Y > Pivot)
                 {
-                    var xx = rectangle.X;
                     rectangle.X = x - uwm;
                     rectangle.Y = y;
                     rectangle.Width = uw;
@@ -99,7 +98,6 @@ namespace LiveChartsCore
                     point.HoverArea.SetDimensions(x - uwm, y - sw, uw, b + 2 * sw);
                 } else
                 {
-                    var xx = rectangle.X;
                     rectangle.X = x - uwm;
                     rectangle.Y = y - b;
                     rectangle.Width = uw;
