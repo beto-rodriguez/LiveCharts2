@@ -65,7 +65,7 @@ namespace LiveChartsCore.Motion
         /// </summary>
         public string PropertyName => propertyName;
 
-        public bool IsTransitionCompleted { get => isTransitionCompleted; set => isTransitionCompleted = value; }
+        public bool IsCompleted { get => isTransitionCompleted; set => isTransitionCompleted = value; }
 
         /// <summary>
         /// Moves to he specified value.

@@ -53,7 +53,7 @@ namespace LiveChartsCore
         IDrawableTask<TDrawingContext> AlternativeSeparatorForeground { get; set; }
 
         void Initialize(AxisOrientation orientation);
-        void Measure(IChartView<TDrawingContext> view, HashSet<IGeometry<TDrawingContext>> drawBucket);
+        void Measure(IChartView<TDrawingContext> view, HashSet<IDrawable<TDrawingContext>> drawBucket);
         SizeF GetPossibleSize(IChartView<TDrawingContext> view);
     }
 }

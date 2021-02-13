@@ -20,29 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Common;
 using LiveChartsCore.Motion;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharp.Drawing
 {
-    public class MoveToPathCommand : PathCommand
+    public class MoveToPathCommand : PathCommand, IMoveToPathCommand<SKPath>
     {
-        private readonly PathGeometry pathGeometry;
-        private FloatMotionProperty xTransition;
-        private FloatMotionProperty yTransition;
+        private readonly FloatMotionProperty xTransition;
+        private readonly FloatMotionProperty yTransition;
 
-        public MoveToPathCommand(PathGeometry pathGeometry)
+        public MoveToPathCommand()
         {
-            xTransition = new FloatMotionProperty(nameof(X), 0f);
-            yTransition = new FloatMotionProperty(nameof(Y), 0f);
-            this.pathGeometry = pathGeometry;
+            xTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0f));
+            yTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0f));
         }
 
-        public float X { get => xTransition.GetMovement(pathGeometry); set => xTransition.SetMovement(value, pathGeometry); }
-        public float Y { get => yTransition.GetMovement(pathGeometry); set => yTransition.SetMovement(value, pathGeometry); }
+        public float X { get => xTransition.GetMovement(this); set => xTransition.SetMovement(value, this); }
+        public float Y { get => yTransition.GetMovement(this); set => yTransition.SetMovement(value, this); }
 
-        public override void Excecute(SKPath path)
+        public override void Execute(SKPath path, long currentTime, Animatable pathGeometry)
         {
+            SetCurrentTime(currentTime);
             path.MoveTo(X, Y);
         }
     }

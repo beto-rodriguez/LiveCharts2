@@ -20,7 +20,7 @@ namespace LiveChartsCore.WPF
         private TimeSpan animationsSpeed = TimeSpan.FromMilliseconds(200);
         private IEasingFunction easingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
         private Timer clearHighlightTimer = new Timer();
-        private Dictionary<IDrawableTask<SkiaDrawingContext>, HashSet<IGeometry<SkiaDrawingContext>>> highlited;
+        private Dictionary<IDrawableTask<SkiaDrawingContext>, HashSet<IDrawable<SkiaDrawingContext>>> highlited;
         private CartesianChart chart;
         private double hideoutCount = 1500;
         private System.Drawing.PointF previousLocation = new System.Drawing.PointF();
@@ -152,7 +152,7 @@ namespace LiveChartsCore.WPF
             FontStyle = wpfChart.TooltipFontStyle ?? FontStyles.Normal;
             FontStretch = wpfChart.TooltipFontStretch ?? FontStretches.Normal;
 
-            var highlightTasks = new Dictionary<IDrawableTask<SkiaDrawingContext>, HashSet<IGeometry<SkiaDrawingContext>>>();
+            var highlightTasks = new Dictionary<IDrawableTask<SkiaDrawingContext>, HashSet<IDrawable<SkiaDrawingContext>>>();
             highlited = highlightTasks;
 
             void highlightGeometries(FoundPoint<SkiaDrawingContext> point, IDrawableTask<SkiaDrawingContext> highlightPaintTask)
@@ -161,7 +161,7 @@ namespace LiveChartsCore.WPF
                 if (!highlightTasks.TryGetValue(highlightPaintTask, out var highlighPaint))
                 {
                     // create a new empty collection (hashSet) to draw our geometries using the highlight paint.
-                    highlighPaint = new HashSet<IGeometry<SkiaDrawingContext>>();
+                    highlighPaint = new HashSet<IDrawable<SkiaDrawingContext>>();
                     highlightPaintTask.SetGeometries(highlighPaint);
                     highlightTasks.Add(highlightPaintTask, highlighPaint);
                 }

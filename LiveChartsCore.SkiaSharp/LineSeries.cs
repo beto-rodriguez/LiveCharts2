@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharp.Drawing;
+using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharp
 {
@@ -30,7 +31,8 @@ namespace LiveChartsCore.SkiaSharp
 
     }
 
-    public class LineSeries<TModel, TVisual> : LineSeries<TModel, PathGeometry, TVisual, SkiaDrawingContext>
+    public class LineSeries<TModel, TVisual> 
+        : LineSeries<TModel, TVisual, SkiaDrawingContext, PathGeometry, LineSegment, CubicBezierSegment, MoveToPathCommand, SKPath>
        where TVisual : ISizedGeometry<SkiaDrawingContext>, IHighlightableGeometry<SkiaDrawingContext>, new()
     {
 

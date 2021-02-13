@@ -34,8 +34,8 @@ namespace LiveChartsCore.SkiaSharp.Drawing
 
         public LineGeometry()
         {
-            x1 = RegisterTransitionProperty(new FloatMotionProperty(nameof(X1), 0f));
-            y1 = RegisterTransitionProperty(new FloatMotionProperty(nameof(Y1), 0f));
+            x1 = RegisterMotionProperty(new FloatMotionProperty(nameof(X1), 0f));
+            y1 = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
         }
 
         public float X1 { get => x1.GetMovement(this); set => x1.SetMovement(value, this); }

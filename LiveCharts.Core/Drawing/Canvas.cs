@@ -99,9 +99,9 @@ namespace LiveChartsCore.Drawing
             Invalidate();
         }
 
-        public void ForEachGeometry(Action<IGeometry<TDrawingContext>> predicate) => ForEachGeometry((geometry, paint) => predicate(geometry));
+        public void ForEachGeometry(Action<IDrawable<TDrawingContext>> predicate) => ForEachGeometry((geometry, paint) => predicate(geometry));
 
-        public void ForEachGeometry(Action<IGeometry<TDrawingContext>, IDrawableTask<TDrawingContext>> predicate)
+        public void ForEachGeometry(Action<IDrawable<TDrawingContext>, IDrawableTask<TDrawingContext>> predicate)
         {
             foreach (var paint in paintTasks)
                 foreach (var geometry in paint.GetGeometries())

@@ -71,7 +71,7 @@ namespace LiveChartsCore
 
         private void Measure()
         {
-            var drawBucket = new HashSet<IGeometry<TDrawingContext>>();
+            var drawBucket = new HashSet<IDrawable<TDrawingContext>>();
 
             if(chartView.Legend != null) chartView.Legend.Draw(chartView);
             var controlSize = chartView.ControlSize;

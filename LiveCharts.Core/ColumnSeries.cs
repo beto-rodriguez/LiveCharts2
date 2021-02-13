@@ -42,18 +42,18 @@ namespace LiveChartsCore
 
         public double Pivot { get; set; }
         public double ColumnPadding { get; set; }
+        public TransitionsSetterDelegate<ISizedGeometry<TDrawingContext>> TransitionsSetter { get; set; }
 
         public override void Measure(
             IChartView<TDrawingContext> view,
             IAxis<TDrawingContext> xAxis,
             IAxis<TDrawingContext> yAxis,
-            HashSet<IGeometry<TDrawingContext>> drawBucket)
+            HashSet<IDrawable<TDrawingContext>> drawBucket)
         {
             var drawLocation = view.Core.DrawMaringLocation;
             var drawMarginSize = view.Core.DrawMarginSize;
             var xScale = new ScaleContext(drawLocation, drawMarginSize, xAxis.Orientation, xAxis.DataBounds);
             var yScale = new ScaleContext(drawLocation, drawMarginSize, yAxis.Orientation, yAxis.DataBounds);
-            var chartAnimation = new Animation(view.EasingFunction, view.AnimationsSpeed);
 
             float uw = xScale.ScaleToUi(1f) - xScale.ScaleToUi(0f);
             float uwm = 0.5f * uw;
@@ -64,7 +64,8 @@ namespace LiveChartsCore
             if (Fill != null) view.CoreCanvas.AddPaintTask(Fill);
             if (Stroke != null) view.CoreCanvas.AddPaintTask(Stroke);
 
-            var ts = transitionSetter ?? SetDefaultTransitions;
+            var chartAnimation = new Animation(view.EasingFunction, view.AnimationsSpeed);
+            var ts = TransitionsSetter ?? SetDefaultTransitions;
 
             foreach (var point in GetPonts())
             {
@@ -90,17 +91,17 @@ namespace LiveChartsCore
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(r);
                 }
 
-                var rectangle = (TVisual)point.Visual;
+                var sizedGeometry = (TVisual)point.Visual;
 
                 var cy = point.Y > Pivot ? y : y - b;
 
-                rectangle.X = x - uwm;
-                rectangle.Y = cy;
-                rectangle.Width = uw;
-                rectangle.Height = b;
+                sizedGeometry.X = x - uwm;
+                sizedGeometry.Y = cy;
+                sizedGeometry.Width = uw;
+                sizedGeometry.Height = b;
 
-                OnPointMeasured(point, rectangle);
-                drawBucket.Add(rectangle);
+                OnPointMeasured(point, sizedGeometry);
+                drawBucket.Add(sizedGeometry);
             }
 
             if (HighlightFill != null) view.CoreCanvas.AddPaintTask(HighlightFill);
@@ -128,26 +129,25 @@ namespace LiveChartsCore
             };
         }
 
-        protected override void SetDefaultTransitions(ISizedGeometry<TDrawingContext> geometry, Animation defaultAnimation)
+        protected virtual void SetDefaultTransitions(ISizedGeometry<TDrawingContext> visual, Animation defaultAnimation)
         {
             var defaultProperties = new string[]
             {
-                    nameof(ISizedGeometry<TDrawingContext>.X),
-                    nameof(ISizedGeometry<TDrawingContext>.Width)
+                    nameof(visual.X),
+                    nameof(visual.Width)
             };
-            geometry.SetPropertyTransition(defaultAnimation, defaultProperties);
-            geometry.CompleteTransition(defaultProperties);
+            visual.SetPropertyTransition(defaultAnimation, defaultProperties);
+            visual.CompleteTransition(defaultProperties);
 
             var bounceProperties = new string[]
             {
-                nameof(ISizedGeometry<TDrawingContext>.Y),
-                nameof(ISizedGeometry<TDrawingContext>.Height),
+                nameof(visual.Y),
+                nameof(visual.Height),
             };
-
-            geometry.SetPropertyTransition(
-                new Animation(EasingFunctions.BounceOut, defaultAnimation.duration * 2, defaultAnimation.RepeatTimes),
+            visual.SetPropertyTransition(
+                new Animation(EasingFunctions.BounceOut, (long)(defaultAnimation.duration * 1.5), defaultAnimation.RepeatTimes),
                 bounceProperties);
-            geometry.CompleteTransition(bounceProperties);
+            visual.CompleteTransition(bounceProperties);
         }
     }
 }

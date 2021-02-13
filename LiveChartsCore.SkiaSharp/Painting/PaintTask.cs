@@ -37,12 +37,12 @@ namespace LiveChartsCore.SkiaSharp.Painting
     public abstract class PaintTask : Animatable, IDisposable, IDrawableTask<SkiaDrawingContext>
     {
         protected SKPaint skiaPaint;
-        private HashSet<IGeometry<SkiaDrawingContext>> geometries = new HashSet<IGeometry<SkiaDrawingContext>>();
+        private HashSet<IDrawable<SkiaDrawingContext>> geometries = new HashSet<IDrawable<SkiaDrawingContext>>();
         protected FloatMotionProperty strokeWidthTransition;
 
         public PaintTask()
         {
-            strokeWidthTransition = RegisterTransitionProperty(new FloatMotionProperty(nameof(StrokeWidth), 0f));
+            strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeWidth), 0f));
         }
 
         public int ZIndex { get; set; }
@@ -54,7 +54,7 @@ namespace LiveChartsCore.SkiaSharp.Painting
 
         public abstract void InitializeTask(SkiaDrawingContext drawingContext);
 
-        public IEnumerable<IGeometry<SkiaDrawingContext>> GetGeometries()
+        public IEnumerable<IDrawable<SkiaDrawingContext>> GetGeometries()
         {
             foreach (var item in geometries)
             {
@@ -62,19 +62,19 @@ namespace LiveChartsCore.SkiaSharp.Painting
             }
         }
 
-        public void SetGeometries(HashSet<IGeometry<SkiaDrawingContext>> geometries)
+        public void SetGeometries(HashSet<IDrawable<SkiaDrawingContext>> geometries)
         {
             this.geometries = geometries;
             Invalidate();
         }
 
-        public void AddGeometyToPaintTask(IGeometry<SkiaDrawingContext> geometry)
+        public void AddGeometyToPaintTask(IDrawable<SkiaDrawingContext> geometry)
         {
             geometries.Add(geometry);
             Invalidate();
         }
 
-        public void RemoveGeometryFromPainTask(IGeometry<SkiaDrawingContext> geometry)
+        public void RemoveGeometryFromPainTask(IDrawable<SkiaDrawingContext> geometry)
         {
             geometries.Remove(geometry);
             Invalidate();

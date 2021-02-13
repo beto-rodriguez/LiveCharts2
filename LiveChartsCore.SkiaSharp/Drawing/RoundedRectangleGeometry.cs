@@ -27,13 +27,13 @@ namespace LiveChartsCore.SkiaSharp.Drawing
 {
     public class RoundedRectangleGeometry : SizedGeometry
     {
-        private FloatMotionProperty rx;
-        private FloatMotionProperty ry;
+        private readonly FloatMotionProperty rx;
+        private readonly FloatMotionProperty ry;
 
         public RoundedRectangleGeometry()
         {
-            rx = RegisterTransitionProperty(new FloatMotionProperty(nameof(Rx), 0f));
-            ry = RegisterTransitionProperty(new FloatMotionProperty(nameof(Ry), 0f));
+            rx = RegisterMotionProperty(new FloatMotionProperty(nameof(Rx), 0f));
+            ry = RegisterMotionProperty(new FloatMotionProperty(nameof(Ry), 0f));
         }
 
         public float Rx { get => rx.GetMovement(this); set => rx.SetMovement(value, this); }

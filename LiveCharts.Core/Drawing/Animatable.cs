@@ -39,7 +39,6 @@ namespace LiveChartsCore.Drawing.Common
         bool IAnimatable.IsCompleted { get => isCompleted; set => isCompleted = value; }
         long IAnimatable.CurrentTime { get => currentTime; set => currentTime = value; }
 
-
         /// <summary>
         /// if true, the element will be removed from the UI the next time <see cref="TransitionCompleted"/> event occurs.
         /// </summary>
@@ -72,7 +71,7 @@ namespace LiveChartsCore.Drawing.Common
                         $"The property {property} is not a transition property of this instance.");
 
                 if (transitionProperty.Animation == null) continue;
-                transitionProperty.IsTransitionCompleted = true;
+                transitionProperty.IsCompleted = true;
             }
         }
 
@@ -85,11 +84,21 @@ namespace LiveChartsCore.Drawing.Common
             return transitionProperty;
         }
 
-        protected T RegisterTransitionProperty<T>(T transition)
+        protected T RegisterMotionProperty<T>(T transition)
             where T : IMotionProperty
         {
             transitionProperties[transition.PropertyName] = transition;
             return transition;
+        }
+
+        protected void SetCurrentTime(long time)
+        {
+            currentTime = time;
+        }
+
+        protected long GetCurrentTime()
+        {
+            return currentTime;
         }
     }
 }

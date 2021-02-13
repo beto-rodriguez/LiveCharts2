@@ -37,14 +37,14 @@ namespace LiveChartsCore.SkiaSharp.Painting
 
         public TextPaintTask()
         {
-            colorTransition = RegisterTransitionProperty(new ColorMotionProperty(nameof(Color), new SKColor()));
-            textSizeTransition = RegisterTransitionProperty(new FloatMotionProperty(nameof(TextSize), 13f));
+            colorTransition = RegisterMotionProperty(new ColorMotionProperty(nameof(Color), new SKColor()));
+            textSizeTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize), 13f));
         }
 
         public TextPaintTask(SKColor color, float fontSize)
         {
-            colorTransition = RegisterTransitionProperty(new ColorMotionProperty(nameof(Color), color));
-            textSizeTransition = RegisterTransitionProperty(new FloatMotionProperty(nameof(TextSize), fontSize));
+            colorTransition = RegisterMotionProperty(new ColorMotionProperty(nameof(Color), color));
+            textSizeTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize), fontSize));
         }
 
         public SKColor Color { get => colorTransition.GetMovement(this); set { colorTransition.SetMovement(value, this); } }

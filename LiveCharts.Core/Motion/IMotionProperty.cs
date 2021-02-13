@@ -26,7 +26,7 @@ namespace LiveChartsCore.Motion
 {
     public interface IMotionProperty
     {
-        bool IsTransitionCompleted { get; set; }
+        bool IsCompleted { get; set; }
         string PropertyName { get; }
         Animation Animation { get; set; }
     }

@@ -79,7 +79,7 @@ namespace LiveChartsCore
 
         public IDrawableTask<TDrawingContext> AlternativeSeparatorForeground { get; set; }
 
-        public void Measure(IChartView<TDrawingContext> view, HashSet<IGeometry<TDrawingContext>> drawBucket)
+        public void Measure(IChartView<TDrawingContext> view, HashSet<IDrawable<TDrawingContext>> drawBucket)
         {
             var controlSize = view.ControlSize;
             var drawLocation = view.Core.DrawMaringLocation;

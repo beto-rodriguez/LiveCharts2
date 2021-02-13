@@ -54,7 +54,6 @@ namespace LiveChartsCore
         private IDrawableTask<TDrawingContext> highlightStroke;
         private IDrawableTask<TDrawingContext> highlightFill;
         private double legendShapeSize = 15;
-        protected TransitionsSetterDelegate<TDrawingContext> transitionSetter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Series{T}"/> class.
@@ -161,12 +160,6 @@ namespace LiveChartsCore
 
         public string Name { get; set; }
 
-        public TransitionsSetterDelegate<TDrawingContext> TransitionsSetter
-        {
-            get => transitionSetter;
-            set => transitionSetter = value;
-        }
-
         public double LegendShapeSize { get => legendShapeSize; set => legendShapeSize = value; }
         /// <summary>
         /// Gets or sets the mapping that defines how a type is mapped to a <see cref="ChartPoint"/> instance, 
@@ -218,21 +211,7 @@ namespace LiveChartsCore
             IChartView<TDrawingContext> view,
             IAxis<TDrawingContext> xAxis,
             IAxis<TDrawingContext> yAxis,
-            HashSet<IGeometry<TDrawingContext>> drawBucket);
-
-        protected virtual void SetDefaultTransitions(ISizedGeometry<TDrawingContext> geometry, Animation defaultAnimation)
-        {
-            var defaultProperties = new string[]
-            {
-                nameof(ISizedGeometry<TDrawingContext>.X),
-                nameof(ISizedGeometry<TDrawingContext>.Y),
-                nameof(ISizedGeometry<TDrawingContext>.Width),
-                nameof(ISizedGeometry<TDrawingContext>.Height)
-            };
-            geometry.SetPropertyTransition(defaultAnimation, defaultProperties);
-            geometry.CompleteTransition(defaultProperties);
-        }
-
+            HashSet<IDrawable<TDrawingContext>> drawBucket);
         /// <summary>
         /// Gets the 
         /// </summary>

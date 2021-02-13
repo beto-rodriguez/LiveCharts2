@@ -34,8 +34,8 @@ namespace LiveChartsCore.SkiaSharp.Drawing
 
         public SizedGeometry() : base()
         {
-            width = RegisterTransitionProperty(new FloatMotionProperty(nameof(Width), 0));
-            height = RegisterTransitionProperty(new FloatMotionProperty(nameof(Height), 0));
+            width = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 0));
+            height = RegisterMotionProperty(new FloatMotionProperty(nameof(Height), 0));
         }
 
         public float Width { get => width.GetMovement(this); set => width.SetMovement(value, this); }

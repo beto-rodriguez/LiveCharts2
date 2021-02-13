@@ -21,15 +21,13 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Drawing.Common;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharp.Motion;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharp.Drawing
 {
-
-    public abstract class Geometry : Animatable, IGeometry<SkiaDrawingContext>, IHighlightableGeometry<SkiaDrawingContext>
+    public abstract class Geometry : Drawable, IGeometry<SkiaDrawingContext>, IHighlightableGeometry<SkiaDrawingContext>
     {
         private bool hasTransform = false;
 
@@ -40,10 +38,10 @@ namespace LiveChartsCore.SkiaSharp.Drawing
 
         public Geometry()
         {
-            x = RegisterTransitionProperty(new FloatMotionProperty(nameof(X), 0));
-            y = RegisterTransitionProperty(new FloatMotionProperty(nameof(Y), 0));
-            transform = RegisterTransitionProperty(new MatrixMotionProperty(nameof(Transform)));
-            rotation = RegisterTransitionProperty(new FloatMotionProperty(nameof(Rotation), 0));
+            x = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0));
+            y = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0));
+            transform = RegisterMotionProperty(new MatrixMotionProperty(nameof(Transform)));
+            rotation = RegisterMotionProperty(new FloatMotionProperty(nameof(Rotation), 0));
         }
 
         public float X { get => x.GetMovement(this); set => x.SetMovement(value, this); }
@@ -62,9 +60,9 @@ namespace LiveChartsCore.SkiaSharp.Drawing
 
         public float Rotation { get => rotation.GetMovement(this); set => rotation.SetMovement(value, this); }
 
-        public IGeometry<SkiaDrawingContext> HighlightableGeometry => GetHighlitableGeometry();
+        public IDrawable<SkiaDrawingContext> HighlightableGeometry => GetHighlitableGeometry();
 
-        public void Draw(SkiaDrawingContext context)
+        public override void Draw(SkiaDrawingContext context)
         {
             var hasRotation = Rotation != 0;
 

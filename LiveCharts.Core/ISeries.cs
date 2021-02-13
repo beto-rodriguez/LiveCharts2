@@ -37,8 +37,6 @@ namespace LiveChartsCore
     public interface ISeries<TDrawingContext>: ISeries
         where TDrawingContext: DrawingContext
     {
-        TransitionsSetterDelegate<TDrawingContext> TransitionsSetter { get; set; }
-
         IDrawableTask<TDrawingContext> Stroke { get; }
         IDrawableTask<TDrawingContext> Fill { get; }
         IDrawableTask<TDrawingContext> HighlightStroke { get; }
@@ -56,9 +54,8 @@ namespace LiveChartsCore
             IChartView<TDrawingContext> view,
             IAxis<TDrawingContext> xAxis,
             IAxis<TDrawingContext> yAxis,
-            HashSet<IGeometry<TDrawingContext>> drawBucket);
+            HashSet<IDrawable<TDrawingContext>> drawBucket);
     }
 
-    public delegate void TransitionsSetterDelegate<T>(ISizedGeometry<T> geometry, Animation chartAnimation)
-        where T : DrawingContext;
+    public delegate void TransitionsSetterDelegate<T>(T visual, Animation chartAnimation);
 }

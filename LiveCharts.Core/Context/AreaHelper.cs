@@ -21,30 +21,32 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Drawing.Common;
-using LiveChartsCore.Motion;
-using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharp.Drawing
+namespace LiveChartsCore.Context
 {
-    public class LineSegment : PathCommand, ILinePathSegment<SKPath>
+    public class AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveTo, TPathContext>
+        where TGeometryPath : IPathGeometry<TDrawingContext, TPathContext>, new()
+        where TLineSegment : ILinePathSegment<TPathContext>, new()
+        where TMoveTo : IMoveToPathCommand<TPathContext>, new()
+        where TDrawingContext : DrawingContext
     {
-        private readonly FloatMotionProperty xTransition;
-        private readonly FloatMotionProperty yTransition;
+        public IPathGeometry<TDrawingContext, TPathContext> Path { get; set; }
+        public IMoveToPathCommand<TPathContext> StartPoint { get; set; }
+        public ILinePathSegment<TPathContext> StartSegment { get; set; }
+        public ILinePathSegment<TPathContext> EndSegment { get; set; }
+        public bool IsInitialized { get; set; }
 
-        public LineSegment()
+        public void Initialize(
+            TransitionsSetterDelegate<AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveTo, TPathContext>> transitionSetter, Animation defaultAnimation)
         {
-            xTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0f));
-            yTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0f));
-        }
+            if (IsInitialized) return;
+            IsInitialized = true;
+            Path = new TGeometryPath();
+            StartPoint = new TMoveTo();
+            StartSegment = new TLineSegment();
+            EndSegment = new TLineSegment();
 
-        public float X { get => xTransition.GetMovement(this); set => xTransition.SetMovement(value, this); }
-        public float Y { get => yTransition.GetMovement(this); set => yTransition.SetMovement(value, this); }
-
-        public override void Execute(SKPath path, long currentTime, Animatable pathGeometry)
-        {
-            SetCurrentTime(currentTime);
-            path.LineTo(X, Y);
+            transitionSetter(this, defaultAnimation);
         }
     }
 }

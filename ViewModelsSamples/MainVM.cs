@@ -42,25 +42,25 @@ namespace ViewModelsSamples
 
             Series = new ObservableCollection<ISeries<SkiaDrawingContext>>
             {
-                new ColumnSeries<double>
-                {
-                    Name = "columns",
-                    Values = new[]{ 10d, -4, 2, -1, 7, -3, 5, -6, 3, -6, 8, -3},
-                    Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
-                    Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
-                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
-                },
-                // new LineSeries<double>
+                //new ColumnSeries<double>
                 //{
-                //    Name = "lines",
-                //    Values = new[]{ 1d, 4, 2, 1, 7, 3, 5, 6, 3, 6, 8, 3},
-                //    Stroke = new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
-                //    Fill = new SolidColorPaintTask(new SKColor(2, 136, 209, 200)),
-                //    ShapesFill = new SolidColorPaintTask(new SKColor(255, 255, 255)),
-                //    ShapesStroke =  new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
-                //    HighlightFill = new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
-                //    HighlightStroke = new SolidColorPaintTask(new SKColor(20, 20, 20), 3)
+                //    Name = "columns",
+                //    Values = new[]{ 10d, -4, 2, -1, 7, -3, 5, -6, 3, -6, 8, -3},
+                //    Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
+                //    Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
+                //    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
                 //},
+                 new LineSeries<double>
+                {
+                    Name = "lines",
+                    Values = new[]{ 1d, 4, 2, 1, 7, 3, 5, 6, 3, 6, 8, 3},
+                    Stroke = new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
+                    Fill = new SolidColorPaintTask(new SKColor(2, 136, 209, 200)),
+                    ShapesFill = new SolidColorPaintTask(new SKColor(255, 255, 255)),
+                    ShapesStroke =  new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
+                    HighlightFill = new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
+                    HighlightStroke = new SolidColorPaintTask(new SKColor(20, 20, 20), 3)
+                },
             };
 
             YAxes = new List<IAxis<SkiaDrawingContext>>

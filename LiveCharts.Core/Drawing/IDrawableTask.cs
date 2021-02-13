@@ -33,10 +33,10 @@ namespace LiveChartsCore.Drawing
         int ZIndex { get; set; }
         float StrokeWidth { get; set; }
         void InitializeTask(TDrawingContext context);
-        IEnumerable<IGeometry<TDrawingContext>> GetGeometries();
-        void SetGeometries(HashSet<IGeometry<TDrawingContext>> geometries);
-        void AddGeometyToPaintTask(IGeometry<TDrawingContext> geometry);
-        void RemoveGeometryFromPainTask(IGeometry<TDrawingContext> geometry);
+        IEnumerable<IDrawable<TDrawingContext>> GetGeometries();
+        void SetGeometries(HashSet<IDrawable<TDrawingContext>> geometries);
+        void AddGeometyToPaintTask(IDrawable<TDrawingContext> geometry);
+        void RemoveGeometryFromPainTask(IDrawable<TDrawingContext> geometry);
         IDrawableTask<TDrawingContext> CloneTask();
     }
 }

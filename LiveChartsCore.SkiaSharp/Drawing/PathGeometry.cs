@@ -27,89 +27,54 @@ using System.Collections.Generic;
 
 namespace LiveChartsCore.SkiaSharp.Drawing
 {
-    public class PathGeometry : Geometry, IPathGeometry<SkiaDrawingContext>
+    public class PathGeometry : Drawable, IPathGeometry<SkiaDrawingContext, SKPath>
     {
-        private readonly HashSet<PathCommand> commands = new HashSet<PathCommand>();
+        private readonly HashSet<IPathCommand<SKPath>> commands = new HashSet<IPathCommand<SKPath>>();
 
         public PathGeometry()
         {
-
         }
 
         public bool IsClosed { get; set; }
 
-        public override SKSize Measure(SkiaDrawingContext context, SKPaint paint)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void OnDraw(SkiaDrawingContext context, SKPaint paint)
+        public override void Draw(SkiaDrawingContext context)
         {
             if (commands.Count == 0) return;
 
             SKPath path = new SKPath();
 
+            var isValid = true;
             foreach (var segment in commands)
             {
-                segment.Excecute(path);
+                segment.IsCompleted = true;
+                segment.Execute(path, GetCurrentTime(), this);
+                isValid = isValid && segment.IsCompleted;
             }
 
-             if (IsClosed) path.Close();
-            context.Canvas.DrawPath(path, paint);
+            if (IsClosed) path.Close();
+            context.Canvas.DrawPath(path, context.Paint);
+
+            if (!isValid) Invalidate();
         }
 
-        public void AddCommand(PathCommand segment)
+        public void AddCommand(IPathCommand<SKPath> segment)
         {
             commands.Add(segment);
             Invalidate();
         }
 
-        public bool ContainesCommad(PathCommand segment)
+        public bool ContainsCommand(IPathCommand<SKPath> segment)
         {
             return commands.Contains(segment);
         }
 
-        public void RemoveCommand(PathCommand segment)
+        public void RemoveCommand(IPathCommand<SKPath> segment)
         {
             commands.Remove(segment);
             Invalidate();
         }
 
-        public void CubicBezierTo(float x0, float y0, float x1, float y1, float x2, float y2)
-        {
-            var bezier = new CubicBezierSegment(this)
-            {
-                X0 = x0,
-                Y0 = y0,
-                X1 = x1,
-                Y1 = y1,
-                X2 = x2,
-                Y2 = y2
-            };
-            AddCommand(bezier);
-        }
-
-        public void LineTo(float x, float y)
-        {
-            var line = new LineSegment(this)
-            {
-                X = x,
-                Y = y,
-            };
-            AddCommand(line);
-        }
-
-        public void MoveTo(float x, float y)
-        {
-            var moveTo = new MoveToPathCommand(this)
-            {
-                X = x,
-                Y = y,
-            };
-            AddCommand(moveTo);
-        }
-
-        public void ClearSegments()
+        public void ClearCommands()
         {
             commands.Clear();
         }

@@ -20,31 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
-using LiveChartsCore.Motion;
-using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharp.Drawing
+namespace LiveChartsCore.Drawing
 {
-    public class LineSegment : PathCommand, ILinePathSegment<SKPath>
+    public interface IPathCommand<TPathContext>: IAnimatable
     {
-        private readonly FloatMotionProperty xTransition;
-        private readonly FloatMotionProperty yTransition;
-
-        public LineSegment()
-        {
-            xTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0f));
-            yTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0f));
-        }
-
-        public float X { get => xTransition.GetMovement(this); set => xTransition.SetMovement(value, this); }
-        public float Y { get => yTransition.GetMovement(this); set => yTransition.SetMovement(value, this); }
-
-        public override void Execute(SKPath path, long currentTime, Animatable pathGeometry)
-        {
-            SetCurrentTime(currentTime);
-            path.LineTo(X, Y);
-        }
+        void Execute(TPathContext path, long currentTime, Animatable pathGeometry);
     }
 }
