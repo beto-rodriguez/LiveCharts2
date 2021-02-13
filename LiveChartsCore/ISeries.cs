@@ -29,6 +29,7 @@ namespace LiveChartsCore
 {
     public interface ISeries
     {
+        SeriesType SeriesType { get; }
         string Name { get; set; }
         int ScalesXAt { get; set; }
         int ScalesYAt { get; set; }
@@ -54,6 +55,7 @@ namespace LiveChartsCore
             IChartView<TDrawingContext> view,
             IAxis<TDrawingContext> xAxis,
             IAxis<TDrawingContext> yAxis,
+            SeriesContext<TDrawingContext> context,
             HashSet<IDrawable<TDrawingContext>> drawBucket);
     }
 

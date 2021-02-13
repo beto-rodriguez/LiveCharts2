@@ -33,21 +33,25 @@ namespace LiveChartsCore
     /// </summary>
     public class ColumnSeries<TModel, TVisual, TDrawingContext> : Series<TModel, TVisual, TDrawingContext>
         where TVisual : ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
-        where TDrawingContext: DrawingContext
+        where TDrawingContext : DrawingContext
     {
         public ColumnSeries()
+            : base(SeriesType.Column)
         {
 
         }
 
         public double Pivot { get; set; }
-        public double ColumnPadding { get; set; }
+        public double MaxColumnWidth { get; set; } = double.MaxValue;
+        public bool IgnoresColumnPosition { get; set; } = false;
+
         public TransitionsSetterDelegate<ISizedGeometry<TDrawingContext>> TransitionsSetter { get; set; }
 
         public override void Measure(
             IChartView<TDrawingContext> view,
             IAxis<TDrawingContext> xAxis,
             IAxis<TDrawingContext> yAxis,
+            SeriesContext<TDrawingContext> context,
             HashSet<IDrawable<TDrawingContext>> drawBucket)
         {
             var drawLocation = view.Core.DrawMaringLocation;
@@ -59,7 +63,23 @@ namespace LiveChartsCore
             float uwm = 0.5f * uw;
             float sw = Stroke?.StrokeWidth ?? 0;
             float p = yScale.ScaleToUi(unchecked((float)Pivot));
-            float colPad = unchecked((float)ColumnPadding);
+             
+            var pos = context.GetColumnPostion(this);
+            var count = context.GetColumnSeriesCount();
+            float cp = 0f;
+
+            if (!IgnoresColumnPosition && count > 1)
+            {
+                uw = uw / count;
+                uwm = 0.5f * uw;
+                cp = (pos - (count/2f)) * uw + uwm;
+            }
+
+            if (uw > MaxColumnWidth)
+            {
+                uw = unchecked((float)MaxColumnWidth);
+                uwm = uw / 2f;
+            }
 
             if (Fill != null) view.CoreCanvas.AddPaintTask(Fill);
             if (Stroke != null) view.CoreCanvas.AddPaintTask(Stroke);
@@ -77,7 +97,7 @@ namespace LiveChartsCore
                 {
                     var r = new TVisual
                     {
-                        X = x - uwm,
+                        X = x - uwm + cp,
                         Y = p,
                         Width = uw,
                         Height = 0
@@ -95,7 +115,7 @@ namespace LiveChartsCore
 
                 var cy = point.Y > Pivot ? y : y - b;
 
-                sizedGeometry.X = x - uwm;
+                sizedGeometry.X = x - uwm + cp;
                 sizedGeometry.Y = cy;
                 sizedGeometry.Width = uw;
                 sizedGeometry.Height = b;

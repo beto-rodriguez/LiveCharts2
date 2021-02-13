@@ -38,6 +38,7 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
         where TVisual : ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
     {
+        private readonly SeriesType seriesType;
         private readonly HashSet<ChartCore<TDrawingContext>> subscribedTo = new HashSet<ChartCore<TDrawingContext>>();
         private INotifyCollectionChanged previousValuesNCCInstance;
         private IEnumerable<TModel> values;
@@ -58,8 +59,9 @@ namespace LiveChartsCore
         /// <summary>
         /// Initializes a new instance of the <see cref="Series{T}"/> class.
         /// </summary>
-        public Series()
+        public Series(SeriesType type)
         {
+            seriesType = type;
             var t = typeof(TModel);
             implementsINPC = typeof(INotifyPropertyChanged).IsAssignableFrom(t);
             implementsICC = typeof(ICartesianCoordinate).IsAssignableFrom(t);
@@ -158,6 +160,8 @@ namespace LiveChartsCore
 
         public PaintContext<TDrawingContext> DefaultPaintContext => paintContext;
 
+        public SeriesType SeriesType => seriesType;
+
         public string Name { get; set; }
 
         public double LegendShapeSize { get => legendShapeSize; set => legendShapeSize = value; }
@@ -211,6 +215,7 @@ namespace LiveChartsCore
             IChartView<TDrawingContext> view,
             IAxis<TDrawingContext> xAxis,
             IAxis<TDrawingContext> yAxis,
+            SeriesContext<TDrawingContext> context,
             HashSet<IDrawable<TDrawingContext>> drawBucket);
         /// <summary>
         /// Gets the 

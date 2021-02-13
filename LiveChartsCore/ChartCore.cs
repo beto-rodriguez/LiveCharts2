@@ -160,11 +160,13 @@ namespace LiveChartsCore
             {
                 axis.Measure(ChartView, drawBucket);
             }
+
+            var seriesContext = new SeriesContext<TDrawingContext>(chartView.Series);
             foreach (var series in chartView.Series)
             {
                 var x = ChartView.XAxes[series.ScalesXAt];
                 var y = ChartView.YAxes[series.ScalesYAt];
-                series.Measure(chartView, x, y, drawBucket);
+                series.Measure(chartView, x, y, seriesContext, drawBucket);
             }
 
             chartView.CoreCanvas.ForEachGeometry((geometry, paint) => 

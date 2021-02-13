@@ -52,6 +52,7 @@ namespace LiveChartsCore
         private IDrawableTask<TDrawingContext> shapesStroke;
 
         public LineSeries()
+            :base(SeriesType.HorizontalLine)
         {
 
         }
@@ -96,6 +97,7 @@ namespace LiveChartsCore
             IChartView<TDrawingContext> view,
             IAxis<TDrawingContext> xAxis,
             IAxis<TDrawingContext> yAxis,
+            SeriesContext<TDrawingContext> context,
             HashSet<IDrawable<TDrawingContext>> drawBucket)
         {
             var drawLocation = view.Core.DrawMaringLocation;
