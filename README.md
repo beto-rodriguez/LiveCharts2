@@ -19,7 +19,7 @@ Yes desktop means Linux, MacOS and Windows, mobile IOS and Android.
 
 The ** in web means that is has its problems, Is WASM production ready? Is Blazor WASM production ready? Is there a SkiaSharpView for Blazor? (I think no, [this](https://github.com/mattleibow/BlazorSkiaSharp) is the closest), but there is hope for web there is (Uno platform)[https://github.com/unoplatform] also, and yes SkiaSharp has a view for Uno.
 
-[Avalonia](https://avaloniaui.net/) is also an interesting project that was a [SkiaView](https://www.nuget.org/packages/Avalonia.Skia/).
+[Avalonia](https://avaloniaui.net/) is also an interesting project that has a [SkiaView](https://www.nuget.org/packages/Avalonia.Skia/).
 
 If your application targets multiple platforms, you could also share the same chart model for your Xamarin App and your desktop App for example.
 
