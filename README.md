@@ -109,44 +109,37 @@ The following topics will work on any platform.
   - [x] ~~Allow the user to define a custom geometry for every point in the line~~
   - [ ] allow vertical mode
   - [ ] allow gaps in the line series
-  - [ ] allow data labels and make them zutomizable
+  - [ ] allow data labels and make them cutomizable
     
 - [ ] ColumnSeries
   - [x] ~~Draw a basic column ~~
   - [x] ~~Allow the user to define a custom geometry for every column in the series~~
   - [x] ~~Layered columns~~
   - [ ] allow vertical mode
-  - [ ] allow data labels and make them zutomizable
+  - [ ] allow data labels and make them cutomizable
   
 - [ ] StackedColumnSeries
   - [ ] Draw a basic stacked column
   - [ ] Allow the user to define a custom geometry for every column in the series
   - [ ] allow vertical mode
-  - [ ] allow data labels and make them zutomizable
+  - [ ] allow data labels and make them cutomizable
   
 - [ ] StackedAreaSeries
   - [ ] Draw a basic stacked area
   - [ ] allow vertical mode
-  - [ ] allow data labels and make them zutomizable
+  - [ ] allow data labels and make them cutomizable
   
 - [ ] ScatteredSeries
   - [ ] Draw a basic scatered series
   - [ ] Allow the user to define a custom geometry for every point in the series
   - [ ] Allow points to have a "weight" so we can scale on "Z", see  [bubble chart](https://lvcharts.net/App/examples/v1/wpf/Bubble%20Chart)
-  - [ ] allow data labels and make them zutomizable
+  - [ ] allow data labels and make them cutomizable
   
 - [ ] PieChart and Pie Series
   - [ ] Draw a basic pie slice geometry, where the corners could be rounded and you can define a "wedge" property so we can make a [doughnut](https://lvcharts.net/App/examples/v1/wpf/Doughnut%20Chart)
-  - [ ] allow data labels and make them zutomizable
+  - [ ] allow data labels and make them cutomizable
   
 - [ ] Solid Gauges
 
 - [ ] GeomMaps
-
-
   
-  
-
-  
- 
-
