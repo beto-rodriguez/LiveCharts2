@@ -13,7 +13,7 @@ V2 is designed to work on multiple platforms, it requires minimal effort to take
 
 ### Where can LiveCharts2 run?
 
-Thanks to [SkiaSharp](https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/) practically everywhere, yes desktop, mobile and web**.
+Thanks to [SkiaSharp](https://github.com/mono/SkiaSharp) practically everywhere, yes desktop, mobile and web**.
 
 Yes desktop means Linux, MacOS and Windows, mobile IOS and Android.
 
