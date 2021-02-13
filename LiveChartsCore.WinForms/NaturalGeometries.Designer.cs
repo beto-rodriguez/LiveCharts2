@@ -1,4 +1,6 @@
 ﻿
+using SkiaSharp.Views.Desktop;
+
 namespace LiveChartsCore.WinForms
 {
     partial class NaturalGeometries
@@ -29,7 +31,7 @@ namespace LiveChartsCore.WinForms
         /// </summary>
         private void InitializeComponent()
         {
-            this.skControl1 = new SkiaSharp.Views.Desktop.SKControl();
+            this.skControl1 = new SKControl();
             this.SuspendLayout();
             // 
             // skControl1
@@ -42,7 +44,7 @@ namespace LiveChartsCore.WinForms
             this.skControl1.Size = new System.Drawing.Size(150, 150);
             this.skControl1.TabIndex = 0;
             this.skControl1.Text = "skControl1";
-            this.skControl1.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs>(this.SkiaElement_PaintSurface);
+            this.skControl1.PaintSurface += new System.EventHandler<SKPaintSurfaceEventArgs>(this.SkiaElement_PaintSurface);
             // 
             // NaturalGeometries
             // 
@@ -54,6 +56,6 @@ namespace LiveChartsCore.WinForms
 
         #endregion
 
-        private SkiaSharp.Views.Desktop.SKControl skControl1;
+        private SKControl skControl1;
     }
 }

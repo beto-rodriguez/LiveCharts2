@@ -39,7 +39,7 @@ namespace LiveChartsCore.WinForms
             isDrawingLoopRunning = true;
 
             var ts = TimeSpan.FromSeconds(1 / framesPerSecond);
-            while (!canvasCore.HasPendingDrawTasks)
+            while (!canvasCore.IsValid)
             {
                 skControl1.Invalidate();
                 await Task.Delay(ts);

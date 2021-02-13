@@ -81,13 +81,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LiveCharts.Core\LiveChartsCore.csproj">
-      <Project>{ea89d36e-67d9-4b22-8f91-972e6ccc327a}</Project>
-      <Name>LiveChartsCore</Name>
+    <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharp.csproj">
+      <Project>{a6751acf-717b-4b36-8004-79f27553f4c3}</Project>
+      <Name>LiveChartsCore.SkiaSharp</Name>
     </ProjectReference>
     <ProjectReference Include="..\LiveChartsCore.WinForms\LiveChartsCore.WinForms.csproj">
       <Project>{ff053e8a-23c3-4b9b-80c3-c9849a007ec0}</Project>
       <Name>LiveChartsCore.WinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LiveChartsCore\LiveChartsCore.csproj">
+      <Project>{778c1704-edcf-4444-aa01-2b56ce356538}</Project>
+      <Name>LiveChartsCore</Name>
     </ProjectReference>
     <ProjectReference Include="..\ViewModelsSamples\ViewModelsSamples.csproj">
       <Project>{8c9a180c-ca3d-4d69-ae2e-b5fbd1b264ec}</Project>

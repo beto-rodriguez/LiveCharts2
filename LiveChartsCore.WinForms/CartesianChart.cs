@@ -45,7 +45,7 @@ namespace LiveChartsCore.WinForms
 
         public LegendOrientation LegendOrientation { get; set; }
 
-        public IChartLegend<SkiaDrawingContext> Legend => throw new NotImplementedException();
+        public IChartLegend<SkiaDrawingContext> Legend => null;
 
         public Margin DrawMargin { get => drawMargin; set { drawMargin = value; OnDataChanged(); } }
 
