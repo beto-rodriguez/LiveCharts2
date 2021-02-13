@@ -35,7 +35,7 @@ We can now customize the easing curves, and how every property in our plot is an
 
 ![bounce](https://user-images.githubusercontent.com/10853349/107853263-71887b00-6dda-11eb-94ba-03aa518e86dc.gif)
 
-In the next image we are also animating The StrokeDash array of your column series, and the Fill of our line series.
+In the next image we are also animating The StrokeDash array of our column series, and the Fill of our line series.
 
 ![](https://user-images.githubusercontent.com/10853349/107728642-39871800-6cb4-11eb-8373-422123e2e59e.gif)
 
