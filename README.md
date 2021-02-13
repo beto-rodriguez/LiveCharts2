@@ -21,7 +21,7 @@ The ** in web means that is has its problems, Is WASM production ready? Is Blazo
 
 [Avalonia](https://avaloniaui.net/) is also an interesting project that has a [SkiaView](https://www.nuget.org/packages/Avalonia.Skia/).
 
-If your application targets multiple platforms, you could also share the same chart model for your Xamarin App and your desktop App for example.
+If your application targets multiple platforms, you could also share the same chart model for your Xamarin App and your desktop App.
 
 ### Then LiveCharts2 requires SkiaSharp?
 
@@ -45,9 +45,9 @@ The repo is structured as follows, every level (tabbed) describes the dependenci
 
     LiveChartsCore                                
       |   LiveChartsCore.SkiaSharp                Depends on LiveChartsCore and SkiaSharp
-      |     |   LiveChartsCore.WPF                Depends on LiveChartsCore, LiveChartsCore.SkiaSharp and SkiaSharp.Views.WPF
-      |     |   LiveChartsCore.Xamarin.Forms      Depends on LiveChartsCore, LiveChartsCore.SkiaSharp and SkiaSharp.Views.Forms
-      |     |   LiveChartsCore.WinForms           Depends on LiveChartsCore, LiveChartsCore.SkiaSharp and SkiaSharp.Views.WindowsForms
+      |     |   LiveChartsCore.WPF                Depends on LiveChartsCore.SkiaSharp and SkiaSharp.Views.WPF
+      |     |   LiveChartsCore.Xamarin.Forms      Depends on LiveChartsCore.SkiaSharp and SkiaSharp.Views.Forms
+      |     |   LiveChartsCore.WinForms           Depends on LiveChartsCore.SkiaSharp and SkiaSharp.Views.WindowsForms
 
 There are also many sample projects that will start an application in the selected platform
 
