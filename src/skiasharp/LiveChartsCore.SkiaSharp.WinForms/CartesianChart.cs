@@ -1,0 +1,86 @@
+﻿using LiveChartsCore.Context;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace LiveChartsCore.SkiaSharpView.WinForms
+{
+    public partial class CartesianChart : UserControl, IChartView<SkiaDrawingContext>
+    {
+        protected ChartCore<SkiaDrawingContext> core;
+        private MotionCanvas motionCanvas;
+        private IEnumerable<ISeries<SkiaDrawingContext>> series = new List<ISeries<SkiaDrawingContext>>();
+        private IList<IAxis<SkiaDrawingContext>> xAxes = new List<IAxis<SkiaDrawingContext>>();
+        private IList<IAxis<SkiaDrawingContext>> yAxes = new List<IAxis<SkiaDrawingContext>>();
+        private Margin drawMargin;
+
+        public CartesianChart()
+        {
+            InitializeComponent();
+            motionCanvas = new MotionCanvas();
+            motionCanvas.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            Controls.Add(motionCanvas);
+        }
+
+        ChartCore<SkiaDrawingContext> IChartView<SkiaDrawingContext>.Core => core;
+        public Canvas<SkiaDrawingContext> CoreCanvas => motionCanvas.CanvasCore;
+
+        System.Drawing.SizeF IChartView<SkiaDrawingContext>.ControlSize
+        {
+            get
+            {
+                return new System.Drawing.SizeF { Width = Width, Height = Height };
+            }
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public IEnumerable<ISeries<SkiaDrawingContext>> Series { get => series; set { series = value; OnDataChanged(); } }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public IList<IAxis<SkiaDrawingContext>> XAxes { get => xAxes; set { xAxes = value; OnDataChanged(); } }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public IList<IAxis<SkiaDrawingContext>> YAxes { get => yAxes; set { yAxes = value; OnDataChanged(); } }
+
+        public LegendPosition LegendPosition { get; set; }
+
+        public LegendOrientation LegendOrientation { get; set; }
+
+        public IChartLegend<SkiaDrawingContext> Legend => null;
+
+        public Margin DrawMargin { get => drawMargin; set { drawMargin = value; OnDataChanged(); } }
+
+        public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(500);
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public Func<float, float> EasingFunction { get; set; } = EasingFunctions.QuadraticIn;
+
+
+        public TooltipFindingStrategy TooltipFindingStrategy { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public IChartTooltip<SkiaDrawingContext> Tooltip => throw new NotImplementedException();
+
+        public TooltipPosition TooltipPosition { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        private void UserControl1_Load(object sender, EventArgs e)
+        {
+            core = new ChartCore<SkiaDrawingContext>(this, motionCanvas.CanvasCore);
+            core.Update();
+        }
+
+        private void CartesianChart_Resize(object sender, EventArgs e)
+        {
+            if (core == null) return;
+            core.Update();
+        }
+
+        private void OnDataChanged()
+        {
+            if (core == null) return;
+            core.Update();
+        }
+    }
+}
