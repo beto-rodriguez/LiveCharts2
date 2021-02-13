@@ -42,7 +42,7 @@ namespace LiveChartsCore
         }
 
         public double Pivot { get; set; }
-        public double MaxColumnWidth { get; set; } = double.MaxValue;
+        public double MaxColumnWidth { get; set; } = 30;
         public bool IgnoresColumnPosition { get; set; } = false;
 
         public TransitionsSetterDelegate<ISizedGeometry<TDrawingContext>> TransitionsSetter { get; set; }
@@ -120,6 +120,7 @@ namespace LiveChartsCore
                 sizedGeometry.Width = uw;
                 sizedGeometry.Height = b;
 
+                point.HoverArea.SetDimensions(x - uwm + cp, cy, uw, b);
                 OnPointMeasured(point, sizedGeometry);
                 drawBucket.Add(sizedGeometry);
             }
