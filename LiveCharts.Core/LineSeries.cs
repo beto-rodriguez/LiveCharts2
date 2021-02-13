@@ -32,16 +32,16 @@ namespace LiveChartsCore
     /// <summary>
     /// Defines the data to plot as a line.
     /// </summary>
-    public class LineSeries<TModel, TVisual, TDrawingContext, TGeometryPath, TLineSegment, TBezierSegment, TMoveTo, TPathContext> 
+    public class LineSeries<TModel, TVisual, TDrawingContext, TGeometryPath, TLineSegment, TBezierSegment, TMoveTo, TPathContext>
         : Series<TModel, TVisual, TDrawingContext>
-        where TGeometryPath: IPathGeometry<TDrawingContext, TPathContext>, new()
+        where TGeometryPath : IPathGeometry<TDrawingContext, TPathContext>, new()
         where TLineSegment : ILinePathSegment<TPathContext>, new()
         where TBezierSegment : IBezierSegment<TPathContext>, new()
         where TMoveTo : IMoveToPathCommand<TPathContext>, new()
         where TVisual : ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
-        private readonly AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveTo, TPathContext> fillPathHelper = 
+        private readonly AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveTo, TPathContext> fillPathHelper =
             new AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveTo, TPathContext>();
         private readonly AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveTo, TPathContext> strokePathHelper =
             new AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveTo, TPathContext>();
@@ -107,14 +107,17 @@ namespace LiveChartsCore
             var hgs = gs / 2f;
             float uw = xScale.ScaleToUi(1f) - xScale.ScaleToUi(0f);
             float huw = uw * 0.5f;
-            float sw = Stroke?.StrokeWidth ?? 0; 
+            float sw = Stroke?.StrokeWidth ?? 0;
             float p = yScale.ScaleToUi(unchecked((float)Pivot));
+
+            var wasFillInitialized = false;
+            var wasStrokeInitialized = false;
 
             var chartAnimation = new Animation(view.EasingFunction, view.AnimationsSpeed);
             var pts = PathTransitionsSetter ?? SetDefaultPathTransitions;
             if (Fill != null)
             {
-                fillPathHelper.Initialize(pts, chartAnimation);
+                wasFillInitialized = fillPathHelper.Initialize(pts, chartAnimation);
                 Fill.AddGeometyToPaintTask(fillPathHelper.Path);
                 drawBucket.Add(fillPathHelper.Path);
                 view.CoreCanvas.AddPaintTask(Fill);
@@ -122,7 +125,7 @@ namespace LiveChartsCore
             }
             if (Stroke != null)
             {
-                strokePathHelper.Initialize(pts, chartAnimation);
+                wasStrokeInitialized = strokePathHelper.Initialize(pts, chartAnimation);
                 Stroke.AddGeometyToPaintTask(strokePathHelper.Path);
                 drawBucket.Add(strokePathHelper.Path);
                 view.CoreCanvas.AddPaintTask(Stroke);
@@ -142,12 +145,18 @@ namespace LiveChartsCore
                         Geometry = new TVisual(),
                         Bezier = new TBezierSegment()
                     };
+
                     v.Geometry.X = x - hgs;
-                    v.Geometry.Y = y - hgs;
+                    v.Geometry.Y = p - hgs;
                     v.Geometry.Width = gs;
                     v.Geometry.Height = gs;
 
-                    // ToDo... initialize bezier...
+                    v.Bezier.X0 = data.X0;
+                    v.Bezier.Y0 = p - hgs;
+                    v.Bezier.X1 = data.X1;
+                    v.Bezier.Y1 = p - hgs;
+                    v.Bezier.X2 = data.X2;
+                    v.Bezier.Y2 = p - hgs;
 
                     ts(v, chartAnimation);
 
@@ -169,7 +178,7 @@ namespace LiveChartsCore
 
                 if (Fill != null)
                 {
-                    if (data.IsFirst) 
+                    if (data.IsFirst)
                     {
                         fillPathHelper.StartPoint.X = data.X0;
                         fillPathHelper.StartPoint.Y = p;
@@ -178,6 +187,14 @@ namespace LiveChartsCore
                         fillPathHelper.StartSegment.X = data.X0;
                         fillPathHelper.StartSegment.Y = data.Y0;
                         fillPathHelper.Path.AddCommand(fillPathHelper.StartSegment);
+
+                        if (wasFillInitialized)
+                        {
+                            fillPathHelper.StartPoint.CompleteTransition(
+                                nameof(fillPathHelper.StartPoint.Y), nameof(fillPathHelper.StartPoint.X));
+                            fillPathHelper.StartSegment.CompleteTransition(
+                                nameof(fillPathHelper.StartSegment.Y), nameof(fillPathHelper.StartSegment.X));
+                        }
                     }
 
                     fillPathHelper.Path.AddCommand(visual.Bezier);
@@ -187,14 +204,25 @@ namespace LiveChartsCore
                         fillPathHelper.EndSegment.X = data.X0;
                         fillPathHelper.EndSegment.Y = p;
                         fillPathHelper.Path.AddCommand(fillPathHelper.EndSegment);
+
+                        if (wasFillInitialized)
+                            fillPathHelper.EndSegment.CompleteTransition(
+                                nameof(fillPathHelper.EndSegment.Y), nameof(fillPathHelper.EndSegment.X));
                     }
                 }
                 if (Stroke != null)
                 {
-                    if (data.IsFirst) {
+                    if (data.IsFirst)
+                    {
                         strokePathHelper.StartPoint.X = data.X0;
                         strokePathHelper.StartPoint.Y = data.Y0;
                         strokePathHelper.Path.AddCommand(strokePathHelper.StartPoint);
+
+                        if (wasStrokeInitialized)
+                        {
+                            strokePathHelper.StartPoint.CompleteTransition(
+                               nameof(fillPathHelper.StartPoint.Y), nameof(fillPathHelper.StartPoint.X));
+                        }
                     }
 
                     strokePathHelper.Path.AddCommand(visual.Bezier);
@@ -205,7 +233,7 @@ namespace LiveChartsCore
                 visual.Geometry.Width = gs;
                 visual.Geometry.Height = gs;
 
-                data.TargetCoordinate.HoverArea.SetDimensions(x - huw, y - hgs - sw, uw, gs + 2*sw);
+                data.TargetCoordinate.HoverArea.SetDimensions(x - huw, y - hgs - sw, uw, gs + 2 * sw);
                 OnPointMeasured(data.TargetCoordinate, visual.Geometry);
                 drawBucket.Add(visual.Geometry);
             }
@@ -323,7 +351,7 @@ namespace LiveChartsCore
                     yield return new BezierData
                     {
                         IsFirst = i == 0,
-                        IsLast = i == points.Length -1,
+                        IsLast = i == points.Length - 1,
                         TargetCoordinate = points[i],
                         X0 = xScale.ScaleToUi(x0),
                         Y0 = yScale.ScaleToUi(y0),
@@ -390,7 +418,8 @@ namespace LiveChartsCore
                 var visual = new TVisual { X = 0, Y = 0, Height = lss, Width = lss };
                 fillClone.AddGeometyToPaintTask(visual);
                 context.PaintTasks.Add(fillClone);
-            } else if (Fill != null)
+            }
+            else if (Fill != null)
             {
                 var fillClone = Fill.CloneTask();
                 var visual = new TVisual { X = 0, Y = 0, Height = lss, Width = lss };
@@ -411,7 +440,8 @@ namespace LiveChartsCore
                 w += 2 * shapesStroke.StrokeWidth;
                 strokeClone.AddGeometyToPaintTask(visual);
                 context.PaintTasks.Add(strokeClone);
-            } else if (Stroke != null)
+            }
+            else if (Stroke != null)
             {
                 var strokeClone = Stroke.CloneTask();
                 var visual = new TVisual

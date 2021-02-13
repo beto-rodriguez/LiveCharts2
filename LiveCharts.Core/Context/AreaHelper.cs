@@ -36,10 +36,11 @@ namespace LiveChartsCore.Context
         public ILinePathSegment<TPathContext> EndSegment { get; set; }
         public bool IsInitialized { get; set; }
 
-        public void Initialize(
-            TransitionsSetterDelegate<AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveTo, TPathContext>> transitionSetter, Animation defaultAnimation)
+        public bool Initialize(
+            TransitionsSetterDelegate<AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveTo, TPathContext>> transitionSetter,
+            Animation defaultAnimation)
         {
-            if (IsInitialized) return;
+            if (IsInitialized) return false;
             IsInitialized = true;
             Path = new TGeometryPath();
             StartPoint = new TMoveTo();
@@ -47,6 +48,7 @@ namespace LiveChartsCore.Context
             EndSegment = new TLineSegment();
 
             transitionSetter(this, defaultAnimation);
+            return true;
         }
     }
 }
