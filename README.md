@@ -17,7 +17,7 @@ Thanks to [SkiaSharp](https://docs.microsoft.com/en-us/xamarin/xamarin-forms/use
 
 Yes desktop means Linux, MacOS and Windows, mobile IOS and Android.
 
-The ** in web means that is has its problems, Is WASM production ready? Is Blazor WASM production ready? Is there a SkiaSharpView for Blazor? (I think no, [this](https://github.com/mattleibow/BlazorSkiaSharp) is the closest), but there is hope for web there is (Uno platform)[https://github.com/unoplatform] also, and yes SkiaSharp has a view for Uno.
+The ** in web means that is has its problems, Is WASM production ready? Is Blazor WASM production ready? Is there a SkiaSharpView for Blazor? (I think no, [this](https://github.com/mattleibow/BlazorSkiaSharp) is the closest), but there is hope for web there is [Uno platform](https://github.com/unoplatform) also, and yes SkiaSharp has a view for Uno.
 
 [Avalonia](https://avaloniaui.net/) is also an interesting project that has a [SkiaView](https://www.nuget.org/packages/Avalonia.Skia/).
 
