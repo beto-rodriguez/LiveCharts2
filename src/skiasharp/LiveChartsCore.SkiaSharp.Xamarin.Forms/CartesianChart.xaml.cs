@@ -30,7 +30,7 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace LiveChartsCore.Xamarin.Forms
+namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CartesianChart : ContentView, IChartView<SkiaDrawingContext>

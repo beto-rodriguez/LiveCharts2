@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="LiveChartsCore.Xamarin.Forms.CartesianChart"
-             xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms" 
-             xmlns:lvc="clr-namespace:LiveChartsCore.Xamarin.Forms">
+             x:Class="LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Xamarin.Forms">
     <lvc:NaturalVisualCanvas x:Name="canvas">
         <lvc:NaturalVisualCanvas.GestureRecognizers >
             <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />

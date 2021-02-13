@@ -2,7 +2,7 @@
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:forms="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
-             x:Class="LiveChartsCore.Xamarin.Forms.NaturalVisualCanvas">
+             x:Class="LiveChartsCore.SkiaSharpView.Xamarin.Forms.NaturalVisualCanvas">
   <ContentView.Content>
         <forms:SKCanvasView x:Name="skiaElement">
             <!--<forms:SKCanvasView.GestureRecognizers >

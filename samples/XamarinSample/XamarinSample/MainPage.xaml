@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Xamarin.Forms;assembly=LiveChartsCore.SkiaSharpView.Xamarin.Forms" 
+             xmlns:vm="clr-namespace:ViewModelsSamples;assembly=ViewModelsSamples"
+             x:Class="XamarinSample.MainPage">
+
+    <ContentPage.BindingContext>
+        <vm:MainVM></vm:MainVM>
+    </ContentPage.BindingContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <lvc:CartesianChart Grid.Row="0" Grid.Column="0" 
+                            
+                            Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}">
+        </lvc:CartesianChart>
+    </Grid>
+
+
+</ContentPage>
