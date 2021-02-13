@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LiveCharts.Core\LiveChartsCore.csproj" />
+    <ProjectReference Include="..\LiveChartsCore\LiveChartsCore.csproj" />
   </ItemGroup>
 
 </Project>
