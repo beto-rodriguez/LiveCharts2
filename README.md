@@ -25,7 +25,7 @@ If your application targets multiple platforms, you could also share the same ch
 
 ### Then LiveCharts2 requires SkiaSharp?
 
-Not necessarily, The SkiaAPI makes it much easier to take the platform everywhere, but that does not means that LiveCharts2 requires it to work we could easily move to any other drawing engine.
+Not necessarily, The SkiaAPI makes it much easier to take the library everywhere, but that does not means that LiveCharts2 requires it to work we could easily move to any other drawing engine.
 
 ### I dont care about mobile, or web I just need it for my WinForms app, then what is new?
 
