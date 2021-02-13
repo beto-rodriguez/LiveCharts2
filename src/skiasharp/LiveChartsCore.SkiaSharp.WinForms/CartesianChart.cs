@@ -11,7 +11,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     public partial class CartesianChart : UserControl, IChartView<SkiaDrawingContext>
     {
         protected ChartCore<SkiaDrawingContext> core;
-        private MotionCanvas motionCanvas;
         private IEnumerable<ISeries<SkiaDrawingContext>> series = new List<ISeries<SkiaDrawingContext>>();
         private IList<IAxis<SkiaDrawingContext>> xAxes = new List<IAxis<SkiaDrawingContext>>();
         private IList<IAxis<SkiaDrawingContext>> yAxes = new List<IAxis<SkiaDrawingContext>>();
@@ -20,9 +19,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         public CartesianChart()
         {
             InitializeComponent();
-            motionCanvas = new MotionCanvas();
-            motionCanvas.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            Controls.Add(motionCanvas);
         }
 
         ChartCore<SkiaDrawingContext> IChartView<SkiaDrawingContext>.Core => core;
@@ -65,13 +61,13 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         public TooltipPosition TooltipPosition { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        private void UserControl1_Load(object sender, EventArgs e)
+        private void OnLoaded(object sender, EventArgs e)
         {
             core = new ChartCore<SkiaDrawingContext>(this, motionCanvas.CanvasCore);
             core.Update();
         }
 
-        private void CartesianChart_Resize(object sender, EventArgs e)
+        private void OnResized(object sender, EventArgs e)
         {
             if (core == null) return;
             core.Update();

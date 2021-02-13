@@ -29,10 +29,34 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.motionCanvas = new LiveChartsCore.SkiaSharpView.WinForms.MotionCanvas();
+            this.SuspendLayout();
+            // 
+            // motionCanvas
+            // 
+            this.motionCanvas.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.motionCanvas.FramesPerSecond = 90D;
+            this.motionCanvas.Location = new System.Drawing.Point(0, 0);
+            this.motionCanvas.Name = "motionCanvas";
+            this.motionCanvas.Size = new System.Drawing.Size(150, 150);
+            this.motionCanvas.TabIndex = 0;
+            this.motionCanvas.Load += new System.EventHandler(this.OnLoaded);
+            this.motionCanvas.Resize += new System.EventHandler(this.OnResized);
+            // 
+            // CartesianChart
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.motionCanvas);
+            this.Name = "CartesianChart";
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private MotionCanvas motionCanvas;
     }
 }

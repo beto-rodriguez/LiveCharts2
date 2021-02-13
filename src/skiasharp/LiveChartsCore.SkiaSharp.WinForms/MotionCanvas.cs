@@ -9,18 +9,14 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 {
     public partial class MotionCanvas : UserControl
     {
-        private readonly SKControl skControl; private bool isDrawingLoopRunning = false;
+        private bool isDrawingLoopRunning = false;
         private Canvas<SkiaDrawingContext> canvasCore = new Canvas<SkiaDrawingContext>();
         private double framesPerSecond = 90;
 
         public MotionCanvas()
         {
             InitializeComponent();
-
-            skControl = new SKControl();
-            skControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            skControl.PaintSurface += SkControl_PaintSurface;
-            Controls.Add(skControl);
+            canvasCore.Invalidated += CanvasCore_Invalidated;
         }
 
         public double FramesPerSecond { get => framesPerSecond; set => framesPerSecond = value; }
@@ -45,7 +41,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             var ts = TimeSpan.FromSeconds(1 / framesPerSecond);
             while (!canvasCore.IsValid)
             {
-                skControl.Invalidate();
+                skControl2.Invalidate();
                 await Task.Delay(ts);
             }
 
