@@ -42,26 +42,26 @@ namespace ViewModelsSamples
 
             Series = new ObservableCollection<ISeries<SkiaDrawingContext>>
             {
-                new ColumnSeries<double>
+                new StackedColumnSeries<double>
                 {
                     Name = "columns",
-                    Values = new[]{ 10d, -4, 2, -1, 7, -3, 5, -6, 3, -6, 8, -3},
+                    Values = new[]{ 2d, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
                     Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
                     Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
                     HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
                 },
-                new ColumnSeries<double>
+                new StackedColumnSeries<double>
                 {
                     Name = "columns 2",
-                    Values = new[]{ 5d, 9, 5, 3,5,8,6,4,2,4, 5, 3},
+                    Values = new[]{ 2d, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
                     Stroke = new SolidColorPaintTask(new SKColor(2, 136, 209), 2),
                     Fill = new SolidColorPaintTask(new SKColor(2, 136, 209, 30)),
-                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
+                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
                 },
-                new ColumnSeries<double>
+                new StackedColumnSeries<double>
                 {
                     Name = "columns 3",
-                    Values = new[]{ 5d, 9, 5, 3,5,8,6,4,2,4, 5, 3},
+                    Values = new[]{ 2d, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
                     Stroke = new SolidColorPaintTask(new SKColor(67, 160, 61), 2),
                     Fill = new SolidColorPaintTask(new SKColor(67, 160, 61, 30)),
                     HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),

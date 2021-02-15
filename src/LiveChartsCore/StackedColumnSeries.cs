@@ -22,36 +22,26 @@
 
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
-using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace LiveChartsCore
 {
-    /// <summary>
-    /// Defines the data to plot as columns.
-    /// </summary>
-    public class ColumnSeries<TModel, TVisual, TDrawingContext> : Series<TModel, TVisual, TDrawingContext>
+    public class StackedColumnSeries<TModel, TVisual, TDrawingContext> : Series<TModel, TVisual, TDrawingContext>
         where TVisual : ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
-        public ColumnSeries()
-            : base(SeriesType.Column)
+        private readonly static float pivot = 0;
+
+        public StackedColumnSeries()
+            :base(SeriesType.StackedColumn)
         {
 
         }
 
-        public double Pivot { get; set; }
         public double MaxColumnWidth { get; set; } = 30;
-        public bool IgnoresColumnPosition { get; set; } = false;
         public TransitionsSetterDelegate<ISizedGeometry<TDrawingContext>> TransitionsSetter { get; set; }
 
-        public override void Measure(
-            IChartView<TDrawingContext> view,
-            IAxis<TDrawingContext> xAxis,
-            IAxis<TDrawingContext> yAxis,
-            SeriesContext<TDrawingContext> context,
-            HashSet<IDrawable<TDrawingContext>> drawBucket)
+        public override void Measure(IChartView<TDrawingContext> view, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis, SeriesContext<TDrawingContext> context, HashSet<IDrawable<TDrawingContext>> drawBucket)
         {
             var drawLocation = view.Core.DrawMaringLocation;
             var drawMarginSize = view.Core.DrawMarginSize;
@@ -61,18 +51,7 @@ namespace LiveChartsCore
             float uw = xScale.ScaleToUi(1f) - xScale.ScaleToUi(0f);
             float uwm = 0.5f * uw;
             float sw = Stroke?.StrokeWidth ?? 0;
-            float p = yScale.ScaleToUi(unchecked((float)Pivot));
-             
-            var pos = context.GetColumnPostion(this);
-            var count = context.GetColumnSeriesCount();
-            float cp = 0f;
-
-            if (!IgnoresColumnPosition && count > 1)
-            {
-                uw = uw / count;
-                uwm = 0.5f * uw;
-                cp = (pos - (count/2f)) * uw + uwm;
-            }
+            float p = yScale.ScaleToUi(pivot);
 
             if (uw > MaxColumnWidth)
             {
@@ -80,17 +59,19 @@ namespace LiveChartsCore
                 uwm = uw / 2f;
             }
 
+            float cp = 0;
+
             if (Fill != null) view.CoreCanvas.AddPaintTask(Fill);
             if (Stroke != null) view.CoreCanvas.AddPaintTask(Stroke);
 
             var chartAnimation = new Animation(view.EasingFunction, view.AnimationsSpeed);
             var ts = TransitionsSetter ?? SetDefaultTransitions;
 
+            var stacker = context.GetStackPosition(this);
+
             foreach (var point in GetPonts())
             {
                 var x = xScale.ScaleToUi(point.X);
-                var y = yScale.ScaleToUi(point.Y);
-                float b = Math.Abs(y - p);
 
                 if (point.Visual == null)
                 {
@@ -112,23 +93,23 @@ namespace LiveChartsCore
 
                 var sizedGeometry = (TVisual)point.Visual;
 
-                var cy = point.Y > Pivot ? y : y - b;
+                var sy = stacker.GetStack(point);
+                var yi = yScale.ScaleToUi(sy.Start);
+                var yj = yScale.ScaleToUi(sy.End);
 
                 sizedGeometry.X = x - uwm + cp;
-                sizedGeometry.Y = cy;
+                sizedGeometry.Y = yj;
                 sizedGeometry.Width = uw;
-                sizedGeometry.Height = b;
+                sizedGeometry.Height = yi - yj;
 
-                point.HoverArea.SetDimensions(x - uwm + cp, cy, uw, b);
+                point.HoverArea.SetDimensions(x - uwm + cp, yj, uw, yi - yj);
                 OnPointMeasured(point, sizedGeometry);
                 drawBucket.Add(sizedGeometry);
             }
-
-            if (HighlightFill != null) view.CoreCanvas.AddPaintTask(HighlightFill);
-            if (HighlightStroke != null) view.CoreCanvas.AddPaintTask(HighlightStroke);
         }
 
-        public override CartesianBounds GetBounds(SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y, SeriesContext<TDrawingContext> seriesContext)
+        public override CartesianBounds GetBounds(
+            System.Drawing.SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y, SeriesContext<TDrawingContext> seriesContext)
         {
             var baseBounds = base.GetBounds(controlSize, x, y, seriesContext);
 
@@ -144,7 +125,7 @@ namespace LiveChartsCore
                 YAxisBounds = new Bounds
                 {
                     Max = baseBounds.YAxisBounds.Max + tick.Value,
-                    min = baseBounds.YAxisBounds.min - tick.Value
+                    min = 0
                 }
             };
         }
@@ -153,8 +134,8 @@ namespace LiveChartsCore
         {
             var defaultProperties = new string[]
             {
-                    nameof(visual.X),
-                    nameof(visual.Width)
+                nameof(visual.X),
+                nameof(visual.Width)
             };
             visual.SetPropertyTransition(defaultAnimation, defaultProperties);
             visual.CompleteTransition(defaultProperties);

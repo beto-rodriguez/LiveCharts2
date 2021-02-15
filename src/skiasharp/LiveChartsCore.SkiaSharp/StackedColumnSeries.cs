@@ -20,40 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.ComponentModel;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing;
 
-namespace LiveChartsCore.Context
+namespace LiveChartsCore.SkiaSharpView
 {
-    public interface ICartesianCoordinate: INotifyPropertyChanged
+    public class StackedColumnSeries<TModel>: StackedColumnSeries<TModel, RectangleGeometry>
     {
-        /// <summary>
-        /// Gets the X coordinate.
-        /// </summary>
-        float X { get; }
 
-        /// <summary>
-        /// Gets the Y Coordinate
-        /// </summary>
-        float Y { get; }
+    }
 
-        /// <summary>
-        /// Gets the position of the point the collection that was used when the point was drawn.
-        /// </summary>
-        int Index { get; set; }
+    public class StackedColumnSeries<TModel, TVisual> : StackedColumnSeries<TModel, TVisual, SkiaDrawingContext>
+        where TVisual : ISizedGeometry<SkiaDrawingContext>, IHighlightableGeometry<SkiaDrawingContext>, new()
+    {
 
-        /// <summary>
-        /// Gets or sets the DataSource.
-        /// </summary>
-        object DataSource { get; set; }
-
-        /// <summary>
-        /// Gets or sets (must not be set) the visual element in the UI.
-        /// </summary>
-        object Visual { get; set; }
-
-        /// <summary>
-        /// Gets or sets the area that triggers the ToolTip.
-        /// </summary>
-        HoverArea HoverArea { get; set; }
     }
 }

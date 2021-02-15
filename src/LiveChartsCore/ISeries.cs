@@ -49,7 +49,8 @@ namespace LiveChartsCore
         /// <summary>
         /// Gets the <see cref="CartesianBounds"/> for the current <see cref="Values"/>;
         /// </summary>
-        CartesianBounds GetBounds(SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
+        CartesianBounds GetBounds(
+            SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y, SeriesContext<TDrawingContext> context);
 
         void Measure(
             IChartView<TDrawingContext> view,

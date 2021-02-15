@@ -28,14 +28,21 @@ namespace LiveChartsCore.Context
     public class SeriesContext<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        private readonly IChartView<TDrawingContext> chartView;
         private readonly IEnumerable<ISeries<TDrawingContext>> series;
-        private Dictionary<ISeries<TDrawingContext>, int> columnPositions;
-        private int columnsCount = 0;
 
-        public SeriesContext(IEnumerable<ISeries<TDrawingContext>> series)
+        private int columnsCount = 0;
+        private Dictionary<ISeries<TDrawingContext>, int> columnPositions;
+
+        private Stacker<TDrawingContext> columnsStacker = new Stacker<TDrawingContext>(AxisOrientation.Y);
+
+        public SeriesContext(IChartView<TDrawingContext> chartView, IEnumerable<ISeries<TDrawingContext>> series)
         {
             this.series = series;
+            this.chartView = chartView;
         }
+
+        #region columns and rows
 
         public int GetColumnPostion(ISeries<TDrawingContext> series)
         {
@@ -61,5 +68,50 @@ namespace LiveChartsCore.Context
                 columnPositions[item] = columnsCount++;
             }
         }
+
+        #endregion
+
+        #region stacked
+
+        public StackPosition<TDrawingContext> GetStackPosition(ISeries<TDrawingContext> series)
+        {
+            var s = GetStacker(series);
+
+            if (s == null) return null;
+
+            return new StackPosition<TDrawingContext>
+            {
+                Stacker = s,
+                Position = s.GetSeriesStackPosition(series)
+            };
+        }
+
+        private Stacker<TDrawingContext> GetStacker(ISeries<TDrawingContext> series)
+        {
+            Stacker<TDrawingContext> stacker = null;
+
+            switch (series.SeriesType)
+            {
+                case SeriesType.Column:
+                    break;
+                case SeriesType.StackedColumn:
+                    stacker = columnsStacker;
+                    break;
+                case SeriesType.Row:
+                    break;
+                case SeriesType.StackedRow:
+                    break;
+                case SeriesType.HorizontalLine:
+                    break;
+                case SeriesType.VerticalLine:
+                    break;
+                default:
+                    return null;
+            }
+
+            return stacker;
+        }
+
+        #endregion
     }
 }

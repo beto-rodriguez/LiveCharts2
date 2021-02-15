@@ -81,12 +81,13 @@ namespace LiveChartsCore
             foreach (var axis in chartView.YAxes) axis.Initialize(AxisOrientation.Y);
 
             // get series bounds
+            var seriesContext = new SeriesContext<TDrawingContext>(ChartView, chartView.Series);
             foreach (var series in chartView.Series)
             {
                 var xAxis = chartView.XAxes[series.ScalesXAt];
                 var yAxis = chartView.YAxes[series.ScalesYAt];
 
-                var seriesBounds = series.GetBounds(controlSize, xAxis, yAxis);
+                var seriesBounds = series.GetBounds(controlSize, xAxis, yAxis, seriesContext);
                 xAxis.DataBounds.AppendValue(seriesBounds.XAxisBounds.max);
                 xAxis.DataBounds.AppendValue(seriesBounds.XAxisBounds.min);
                 yAxis.DataBounds.AppendValue(seriesBounds.YAxisBounds.max);
@@ -101,7 +102,7 @@ namespace LiveChartsCore
 
                 foreach (var axis in chartView.XAxes)
                 {
-                    var s = axis.GetPossibleSize(chartView );
+                    var s = axis.GetPossibleSize(chartView);
                     if (axis.Position == AxisPosition.LeftOrBottom)
                     {
                         // X Bottom
@@ -160,8 +161,6 @@ namespace LiveChartsCore
             {
                 axis.Measure(ChartView, drawBucket);
             }
-
-            var seriesContext = new SeriesContext<TDrawingContext>(chartView.Series);
             foreach (var series in chartView.Series)
             {
                 var x = ChartView.XAxes[series.ScalesXAt];

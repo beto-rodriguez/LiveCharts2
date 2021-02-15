@@ -179,9 +179,13 @@ namespace LiveChartsCore
         }
 
         /// <inheritdoc/>
-        public virtual CartesianBounds GetBounds(SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
+        public virtual CartesianBounds GetBounds(SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y, SeriesContext<TDrawingContext> context)
         {
             if (_currentBounds != null && implementsICC && implementsINCC && implementsINPC) return _currentBounds;
+
+            var seriesLength = 0;
+
+            var stack = context.GetStackPosition(this);
 
             // when we implement INotifyCollectionChanged, INotifyPropertyChanged and ICartesianCoordinate
             // then we could skip this the next code.
@@ -191,21 +195,33 @@ namespace LiveChartsCore
                 var isXLimit = coordinate.X == bounds.XAxisBounds.max || coordinate.X == bounds.XAxisBounds.min;
                 var isYLimit = coordinate.Y == bounds.YAxisBounds.Max || coordinate.Y == bounds.YAxisBounds.min;
 
-                var abx = bounds.XAxisBounds.AppendValue(coordinate.X);
-                var aby = bounds.YAxisBounds.AppendValue(coordinate.Y);
+                var cx = coordinate.X;
+                var cy = coordinate.Y;
+                if (stack != null) 
+                {
+                    var s = stack.StackPoint(coordinate);
+                    if (stack.Stacker.Orientation == AxisOrientation.X) cx = s;
+                    else cy = s;
+                }
+
+                var abx = bounds.XAxisBounds.AppendValue(cx);
+                var aby = bounds.YAxisBounds.AppendValue(cy);
 
                 if (abx > 0)
                 {
                     if (!isXLimit) bounds.XCoordinatesBounds = new HashSet<ICartesianCoordinate>();
                     bounds.XCoordinatesBounds.Add(coordinate);
-                };
+                }
 
                 if (aby > 0)
                 {
                     if (!isYLimit) bounds.YCoordinatesBounds = new HashSet<ICartesianCoordinate>();
                     bounds.YCoordinatesBounds.Add(coordinate);
                 }
+
+                seriesLength++;
             }
+
             _currentBounds = bounds;
             return bounds;
         }

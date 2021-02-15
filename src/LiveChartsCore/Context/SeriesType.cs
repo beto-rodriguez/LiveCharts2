@@ -25,7 +25,9 @@ namespace LiveChartsCore.Context
     public enum SeriesType
     {
         Column,
+        StackedColumn,
         Row,
+        StackedRow,
         HorizontalLine,
         VerticalLine
     }

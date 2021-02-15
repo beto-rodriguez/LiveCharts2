@@ -246,9 +246,10 @@ namespace LiveChartsCore
             if (ShapesStroke != null) view.CoreCanvas.AddPaintTask(ShapesStroke);
         }
 
-        public override CartesianBounds GetBounds(SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
+        public override CartesianBounds GetBounds(
+            SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y, SeriesContext<TDrawingContext> context)
         {
-            var baseBounds = base.GetBounds(controlSize, x, y);
+            var baseBounds = base.GetBounds(controlSize, x, y, context);
 
             var tick = y.GetTick(controlSize, baseBounds.YAxisBounds);
 

@@ -20,40 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.ComponentModel;
+using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Context
 {
-    public interface ICartesianCoordinate: INotifyPropertyChanged
+    public class StackPosition<TDrawingContext>
+        where TDrawingContext : DrawingContext
     {
-        /// <summary>
-        /// Gets the X coordinate.
-        /// </summary>
-        float X { get; }
+        private int position;
+        private Stacker<TDrawingContext> stacker;
 
-        /// <summary>
-        /// Gets the Y Coordinate
-        /// </summary>
-        float Y { get; }
+        public Stacker<TDrawingContext> Stacker { get => stacker; set => stacker = value; }
+        public int Position { get => position; set => position = value; }
 
-        /// <summary>
-        /// Gets the position of the point the collection that was used when the point was drawn.
-        /// </summary>
-        int Index { get; set; }
+        public float StackPoint(ICartesianCoordinate point)
+        {
+            return stacker.StackPoint(point, position);
+        }
 
-        /// <summary>
-        /// Gets or sets the DataSource.
-        /// </summary>
-        object DataSource { get; set; }
-
-        /// <summary>
-        /// Gets or sets (must not be set) the visual element in the UI.
-        /// </summary>
-        object Visual { get; set; }
-
-        /// <summary>
-        /// Gets or sets the area that triggers the ToolTip.
-        /// </summary>
-        HoverArea HoverArea { get; set; }
+        public  StackedValue GetStack(ICartesianCoordinate point)
+        {
+            return stacker.GetStack(position, point);
+        }
     }
 }
