@@ -41,20 +41,15 @@ In the next image we are also animating The StrokeDash array of our column serie
 
 ### About this repo
 
-The repo is structured as follows, every level (tabbed) describes the dependencies every project has, the left side is the less dependent, and the right the most.
+Net 5 is required, latest Visual studio would help, Xamarin SDK might be required if you need to run the xamarin samples.
 
-    LiveChartsCore                                
-      |   LiveChartsCore.SkiaSharp                Depends on LiveChartsCore and SkiaSharp
-      |     |   LiveChartsCore.WPF                Depends on LiveChartsCore.SkiaSharp and SkiaSharp.Views.WPF
-      |     |   LiveChartsCore.Xamarin.Forms      Depends on LiveChartsCore.SkiaSharp and SkiaSharp.Views.Forms
-      |     |   LiveChartsCore.WinForms           Depends on LiveChartsCore.SkiaSharp and SkiaSharp.Views.WindowsForms
+The project contains 3 folders:
 
-There are also many sample projects that will start an application in the selected platform
+src: contains the source code of the library
 
-    ViewModelsSamples                             This project defines the chart models to draw for every platform
-      |   WPFSample
-      |   WinFormsSample
-      |   XamarinFormsSample
+samples: contains samples targeting different platforms consumin src folder projects.
+
+tests: contains units tests.
       
 ### Road map
 
