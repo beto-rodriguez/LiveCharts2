@@ -29,6 +29,7 @@ namespace LiveChartsCore.Context
         Row,
         StackedRow,
         HorizontalLine,
-        VerticalLine
+        VerticalLine,
+        Scatter
     }
 }

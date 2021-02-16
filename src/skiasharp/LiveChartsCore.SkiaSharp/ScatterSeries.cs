@@ -20,14 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Context
+using LiveChartsCore.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing;
+
+namespace LiveChartsCore.SkiaSharpView
 {
-    public enum SeriesDirection
+    public class ScatterSeries<TModel>: ScatterSeries<TModel, CircleGeometry>
     {
-        None,
-        Vertical,
-        Horizontal
+
+    }
+
+    public class ScatterSeries<TModel, TVisual>: ScatterSeries<TModel, TVisual, SkiaDrawingContext>
+        where TVisual : ISizedGeometry<SkiaDrawingContext>, IHighlightableGeometry<SkiaDrawingContext>, new()
+    {
+
     }
 }
-
-

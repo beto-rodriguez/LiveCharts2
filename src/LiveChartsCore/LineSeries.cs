@@ -107,8 +107,6 @@ namespace LiveChartsCore
 
             var gs = unchecked((float)geometrySize);
             var hgs = gs / 2f;
-            float uw = xScale.ScaleToUi(1f) - xScale.ScaleToUi(0f);
-            float huw = uw * 0.5f;
             float sw = Stroke?.StrokeWidth ?? 0;
             float p = yScale.ScaleToUi(unchecked((float)Pivot));
 
@@ -235,7 +233,7 @@ namespace LiveChartsCore
                 visual.Geometry.Width = gs;
                 visual.Geometry.Height = gs;
 
-                data.TargetCoordinate.HoverArea.SetDimensions(x - huw, y - hgs - sw, uw, gs + 2 * sw);
+                data.TargetCoordinate.HoverArea.SetDimensions(x - hgs, y - hgs + 2 * sw, gs, gs + 2 * sw);
                 OnPointMeasured(data.TargetCoordinate, visual.Geometry);
                 drawBucket.Add(visual.Geometry);
             }
