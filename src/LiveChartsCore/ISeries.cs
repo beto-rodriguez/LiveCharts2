@@ -30,6 +30,8 @@ namespace LiveChartsCore
     public interface ISeries
     {
         SeriesType SeriesType { get; }
+        SeriesDirection Direction { get; }
+        bool IsColumnOrRow { get; }
         string Name { get; set; }
         int ScalesXAt { get; set; }
         int ScalesYAt { get; set; }
@@ -50,7 +52,8 @@ namespace LiveChartsCore
         /// Gets the <see cref="CartesianBounds"/> for the current <see cref="Values"/>;
         /// </summary>
         CartesianBounds GetBounds(
-            SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y, SeriesContext<TDrawingContext> context);
+            SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y,
+            SeriesContext<TDrawingContext> context);
 
         void Measure(
             IChartView<TDrawingContext> view,
@@ -58,6 +61,8 @@ namespace LiveChartsCore
             IAxis<TDrawingContext> yAxis,
             SeriesContext<TDrawingContext> context,
             HashSet<IDrawable<TDrawingContext>> drawBucket);
+
+        int GetStackGroup();
     }
 
     public delegate void TransitionsSetterDelegate<T>(T visual, Animation chartAnimation);

@@ -36,7 +36,7 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
     {
         public ColumnSeries()
-            : base(SeriesType.Column)
+            : base(SeriesType.Column, SeriesDirection.Vertical, true)
         {
 
         }
@@ -128,7 +128,8 @@ namespace LiveChartsCore
             if (HighlightStroke != null) view.CoreCanvas.AddPaintTask(HighlightStroke);
         }
 
-        public override CartesianBounds GetBounds(SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y, SeriesContext<TDrawingContext> seriesContext)
+        public override CartesianBounds GetBounds(
+            SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y, SeriesContext<TDrawingContext> seriesContext)
         {
             var baseBounds = base.GetBounds(controlSize, x, y, seriesContext);
 
@@ -153,8 +154,8 @@ namespace LiveChartsCore
         {
             var defaultProperties = new string[]
             {
-                    nameof(visual.X),
-                    nameof(visual.Width)
+                nameof(visual.X),
+                nameof(visual.Width)
             };
             visual.SetPropertyTransition(defaultAnimation, defaultProperties);
             visual.CompleteTransition(defaultProperties);
@@ -169,5 +170,7 @@ namespace LiveChartsCore
                 bounceProperties);
             visual.CompleteTransition(bounceProperties);
         }
+
+        public override int GetStackGroup() => 0;
     }
 }

@@ -65,7 +65,16 @@ namespace ViewModelsSamples
                     Stroke = new SolidColorPaintTask(new SKColor(67, 160, 61), 2),
                     Fill = new SolidColorPaintTask(new SKColor(67, 160, 61, 30)),
                     HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
-                    MaxColumnWidth = 10
+                    StackGroup = 1,
+                },
+                new StackedColumnSeries<double>
+                {
+                    Name = "columns 4",
+                    Values = new[]{ 2d, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+                    Stroke = new SolidColorPaintTask(new SKColor(239, 108, 0), 2),
+                    Fill = new SolidColorPaintTask(new SKColor(239, 108, 0, 30)),
+                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
+                    StackGroup = 1
                 },
                 // new LineSeries<double>
                 //{

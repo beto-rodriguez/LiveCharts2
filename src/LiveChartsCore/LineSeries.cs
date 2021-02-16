@@ -52,7 +52,7 @@ namespace LiveChartsCore
         private IDrawableTask<TDrawingContext> shapesStroke;
 
         public LineSeries()
-            :base(SeriesType.HorizontalLine)
+            :base(SeriesType.HorizontalLine, SeriesDirection.Vertical, false)
         {
 
         }
@@ -464,5 +464,7 @@ namespace LiveChartsCore
 
             paintContext = context;
         }
+
+        public override int GetStackGroup() => 0;
     }
 }

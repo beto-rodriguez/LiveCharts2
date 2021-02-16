@@ -28,54 +28,111 @@ namespace LiveChartsCore.Context
     public class SeriesContext<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        private readonly IChartView<TDrawingContext> chartView;
         private readonly IEnumerable<ISeries<TDrawingContext>> series;
 
         private int columnsCount = 0;
-        private Dictionary<ISeries<TDrawingContext>, int> columnPositions;
+        private int rowsCount = 0;
+        private int stackedColumnsCount = 0;
+        private int stackedRowsCount = 0;
+        private bool isCounted = false;
+        private Dictionary<ISeries<TDrawingContext>, int> columnPositions = new Dictionary<ISeries<TDrawingContext>, int>();
+        private Dictionary<ISeries<TDrawingContext>, int> rowPositions = new Dictionary<ISeries<TDrawingContext>, int>();
+        private Dictionary<int, int> stackColumnPositions = new Dictionary<int, int>();
+        private Dictionary<int, int> stackRowsPositions = new Dictionary<int, int>();
 
-        private Stacker<TDrawingContext> columnsStacker = new Stacker<TDrawingContext>(AxisOrientation.Y);
+        private Dictionary<string, Stacker<TDrawingContext>> stackers = new Dictionary<string, Stacker<TDrawingContext>>();
 
-        public SeriesContext(IChartView<TDrawingContext> chartView, IEnumerable<ISeries<TDrawingContext>> series)
+        public SeriesContext(IEnumerable<ISeries<TDrawingContext>> series)
         {
             this.series = series;
-            this.chartView = chartView;
         }
 
         #region columns and rows
 
         public int GetColumnPostion(ISeries<TDrawingContext> series)
         {
-            if (columnPositions != null) return columnPositions[series];
-            IndexColumns();
+            if (isCounted) return columnPositions[series];
+            IndexRowsColumns();
             return columnPositions[series];
         }
 
         public int GetColumnSeriesCount()
         {
-            if (columnPositions != null) return columnsCount;
-            IndexColumns();
+            if (isCounted) return columnsCount;
+            IndexRowsColumns();
             return columnsCount;
         }
 
-        private void IndexColumns()
+        public int GetRowPostion(ISeries<TDrawingContext> series)
         {
-            columnPositions = new Dictionary<ISeries<TDrawingContext>, int>();
+            if (isCounted) return rowPositions[series];
+            IndexRowsColumns();
+            return rowPositions[series];
+        }
+
+        public int GetRowSeriesCount()
+        {
+            if (isCounted) return rowsCount;
+            IndexRowsColumns();
+            return rowsCount;
+        }
+
+        public int GetStackedColumnPostion(ISeries<TDrawingContext> series)
+        {
+            if (isCounted) return stackColumnPositions[series.GetStackGroup()];
+            IndexRowsColumns();
+            return stackColumnPositions[series.GetStackGroup()];
+        }
+
+        public int GetStackedColumnSeriesCount()
+        {
+            if (isCounted) return stackedColumnsCount;
+            IndexRowsColumns();
+            return stackedColumnsCount;
+        }
+
+        public int GetStackedRowPostion(ISeries<TDrawingContext> series)
+        {
+            if (isCounted) return stackRowsPositions[series.GetStackGroup()];
+            IndexRowsColumns();
+            return stackRowsPositions[series.GetStackGroup()];
+        }
+
+        public int GetStackedRowSeriesCount()
+        {
+            if (isCounted) return stackedRowsCount;
+            IndexRowsColumns();
+            return stackedRowsCount;
+        }
+
+        private void IndexRowsColumns()
+        {
             columnsCount = 0;
-            foreach (var item in this.series)
+            rowsCount = 0;
+            stackedColumnsCount = 0;
+            stackedRowsCount = 0;
+
+            foreach (var item in series)
             {
-                if (item.SeriesType != SeriesType.Column) continue;
-                columnPositions[item] = columnsCount++;
+                if (!item.IsColumnOrRow) continue;
+                if (item.SeriesType == SeriesType.Column) columnPositions[item] = columnsCount++;
+                if (item.SeriesType == SeriesType.Row) rowPositions[item] = rowsCount++;
+                if (item.SeriesType == SeriesType.StackedColumn && !stackColumnPositions.ContainsKey(item.GetStackGroup()))
+                    stackColumnPositions[item.GetStackGroup()] = stackedColumnsCount++;
+                if (item.SeriesType == SeriesType.StackedRow && !stackRowsPositions.ContainsKey(item.GetStackGroup()))
+                    stackRowsPositions[item.GetStackGroup()] = stackedRowsCount++;
             }
+
+            isCounted = true;
         }
 
         #endregion
 
         #region stacked
 
-        public StackPosition<TDrawingContext> GetStackPosition(ISeries<TDrawingContext> series)
+        public StackPosition<TDrawingContext> GetStackPosition(ISeries<TDrawingContext> series, int stackGroup)
         {
-            var s = GetStacker(series);
+            var s = GetStacker(series, stackGroup);
 
             if (s == null) return null;
 
@@ -86,27 +143,14 @@ namespace LiveChartsCore.Context
             };
         }
 
-        private Stacker<TDrawingContext> GetStacker(ISeries<TDrawingContext> series)
+        private Stacker<TDrawingContext> GetStacker(ISeries<TDrawingContext> series, int stackGroup)
         {
-            Stacker<TDrawingContext> stacker = null;
+            var key = $"{series.SeriesType}.{series.Direction}.{stackGroup}";
 
-            switch (series.SeriesType)
+            if (!stackers.TryGetValue(key, out var stacker))
             {
-                case SeriesType.Column:
-                    break;
-                case SeriesType.StackedColumn:
-                    stacker = columnsStacker;
-                    break;
-                case SeriesType.Row:
-                    break;
-                case SeriesType.StackedRow:
-                    break;
-                case SeriesType.HorizontalLine:
-                    break;
-                case SeriesType.VerticalLine:
-                    break;
-                default:
-                    return null;
+                stacker = new Stacker<TDrawingContext>(series.Direction);
+                stackers.Add(key, stacker);
             }
 
             return stacker;

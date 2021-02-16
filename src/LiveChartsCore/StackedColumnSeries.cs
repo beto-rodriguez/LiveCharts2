@@ -31,13 +31,15 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
     {
         private readonly static float pivot = 0;
+        private int stackGroup;
 
         public StackedColumnSeries()
-            :base(SeriesType.StackedColumn)
+            : base(SeriesType.StackedColumn, SeriesDirection.Vertical, true)
         {
 
         }
 
+        public int StackGroup { get => stackGroup; set => stackGroup = value; }
         public double MaxColumnWidth { get; set; } = 30;
         public TransitionsSetterDelegate<ISizedGeometry<TDrawingContext>> TransitionsSetter { get; set; }
 
@@ -53,13 +55,22 @@ namespace LiveChartsCore
             float sw = Stroke?.StrokeWidth ?? 0;
             float p = yScale.ScaleToUi(pivot);
 
+            var pos = context.GetStackedColumnPostion(this);
+            var count = context.GetStackedColumnSeriesCount();
+            float cp = 0f;
+
+            if (count > 1)
+            {
+                uw = uw / count;
+                uwm = 0.5f * uw;
+                cp = (pos - (count / 2f)) * uw + uwm;
+            }
+
             if (uw > MaxColumnWidth)
             {
                 uw = unchecked((float)MaxColumnWidth);
                 uwm = uw / 2f;
             }
-
-            float cp = 0;
 
             if (Fill != null) view.CoreCanvas.AddPaintTask(Fill);
             if (Stroke != null) view.CoreCanvas.AddPaintTask(Stroke);
@@ -67,7 +78,7 @@ namespace LiveChartsCore
             var chartAnimation = new Animation(view.EasingFunction, view.AnimationsSpeed);
             var ts = TransitionsSetter ?? SetDefaultTransitions;
 
-            var stacker = context.GetStackPosition(this);
+            var stacker = context.GetStackPosition(this, GetStackGroup());
 
             foreach (var point in GetPonts())
             {
@@ -150,5 +161,7 @@ namespace LiveChartsCore
                 bounceProperties);
             visual.CompleteTransition(bounceProperties);
         }
+
+        public override int GetStackGroup() => stackGroup;
     }
 }

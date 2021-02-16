@@ -81,7 +81,7 @@ namespace LiveChartsCore
             foreach (var axis in chartView.YAxes) axis.Initialize(AxisOrientation.Y);
 
             // get series bounds
-            var seriesContext = new SeriesContext<TDrawingContext>(ChartView, chartView.Series);
+            var seriesContext = new SeriesContext<TDrawingContext>(chartView.Series);
             foreach (var series in chartView.Series)
             {
                 var xAxis = chartView.XAxes[series.ScalesXAt];

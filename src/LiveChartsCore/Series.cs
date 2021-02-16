@@ -39,6 +39,8 @@ namespace LiveChartsCore
         where TVisual : ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
     {
         private readonly SeriesType seriesType;
+        private readonly SeriesDirection direction;
+        private readonly bool isColumnOrRow;
         private readonly HashSet<ChartCore<TDrawingContext>> subscribedTo = new HashSet<ChartCore<TDrawingContext>>();
         private INotifyCollectionChanged previousValuesNCCInstance;
         private IEnumerable<TModel> values;
@@ -59,14 +61,20 @@ namespace LiveChartsCore
         /// <summary>
         /// Initializes a new instance of the <see cref="Series{T}"/> class.
         /// </summary>
-        public Series(SeriesType type)
+        public Series(SeriesType type, SeriesDirection direction, bool isColumnOrRow)
         {
             seriesType = type;
+            this.direction = direction;
+            this.isColumnOrRow = isColumnOrRow;
             var t = typeof(TModel);
             implementsINPC = typeof(INotifyPropertyChanged).IsAssignableFrom(t);
             implementsICC = typeof(ICartesianCoordinate).IsAssignableFrom(t);
             isValueType = t.IsValueType;
         }
+
+        public SeriesType SeriesType => seriesType;
+        public SeriesDirection Direction => direction;
+        public bool IsColumnOrRow => isColumnOrRow;
 
         /// <summary>
         /// Gets or sets the series to draw in the chart.
@@ -160,8 +168,6 @@ namespace LiveChartsCore
 
         public PaintContext<TDrawingContext> DefaultPaintContext => paintContext;
 
-        public SeriesType SeriesType => seriesType;
-
         public string Name { get; set; }
 
         public double LegendShapeSize { get => legendShapeSize; set => legendShapeSize = value; }
@@ -179,13 +185,14 @@ namespace LiveChartsCore
         }
 
         /// <inheritdoc/>
-        public virtual CartesianBounds GetBounds(SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y, SeriesContext<TDrawingContext> context)
+        public virtual CartesianBounds GetBounds(
+            SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y, SeriesContext<TDrawingContext> context)
         {
             if (_currentBounds != null && implementsICC && implementsINCC && implementsINPC) return _currentBounds;
 
             var seriesLength = 0;
 
-            var stack = context.GetStackPosition(this);
+            var stack = context.GetStackPosition(this, GetStackGroup());
 
             // when we implement INotifyCollectionChanged, INotifyPropertyChanged and ICartesianCoordinate
             // then we could skip this the next code.
@@ -200,7 +207,7 @@ namespace LiveChartsCore
                 if (stack != null) 
                 {
                     var s = stack.StackPoint(coordinate);
-                    if (stack.Stacker.Orientation == AxisOrientation.X) cx = s;
+                    if (stack.Stacker.Orientation == SeriesDirection.Horizontal) cx = s;
                     else cy = s;
                 }
 
@@ -405,5 +412,7 @@ namespace LiveChartsCore
 
             paintContext = context;
         }
+
+        public abstract int GetStackGroup();
     }
 }
