@@ -114,8 +114,8 @@ The following topics will work on any platform.
   - [ ] allow data labels and make them cutomizable
   
 - [ ] StackedColumnSeries
-  - [ ] Draw a basic stacked column
-  - [ ] Allow the user to define a custom geometry for every column in the series
+  - [x] ~~Draw a basic stacked column~~
+  - [x] ~~Allow the user to define a custom geometry for every column in the series~~
   - [ ] allow vertical mode
   - [ ] allow data labels and make them cutomizable
   
@@ -125,8 +125,8 @@ The following topics will work on any platform.
   - [ ] allow data labels and make them cutomizable
   
 - [ ] ScatteredSeries
-  - [ ] Draw a basic scatered series
-  - [ ] Allow the user to define a custom geometry for every point in the series
+  - [x] ~~Draw a basic scatered series~~
+  - [x] ~~Allow the user to define a custom geometry for every point in the series~~
   - [ ] Allow points to have a "weight" so we can scale on "Z", see  [bubble chart](https://lvcharts.net/App/examples/v1/wpf/Bubble%20Chart)
   - [ ] allow data labels and make them cutomizable
   
