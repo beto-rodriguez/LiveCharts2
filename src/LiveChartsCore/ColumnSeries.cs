@@ -36,7 +36,7 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
     {
         public ColumnSeries()
-            : base(SeriesType.Column, SeriesDirection.Vertical, true)
+            : base (SeriesProperties.Bar | SeriesProperties.VerticalOrientation)
         {
 
         }

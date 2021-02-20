@@ -34,16 +34,16 @@ namespace LiveChartsCore.Context
         private int knownMaxLenght = 0;
         private List<List<StackedValue>> stack = new List<List<StackedValue>>();
         private List<float> totals = new List<float>();
-        private SeriesDirection direction;
+        private bool isVertical;
+
+        public Stacker(bool isVertical)
+        {
+            this.isVertical = isVertical;
+        }
 
         public int MaxLenght => stackMaxLength;
 
-        public SeriesDirection Orientation => direction;
-
-        public Stacker(SeriesDirection direction)
-        {
-            this.direction = direction;
-        }
+        public bool IsVertical => isVertical;
 
         public int GetSeriesStackPosition(ISeries<TDrawingContext> series)
         {
@@ -61,7 +61,7 @@ namespace LiveChartsCore.Context
         public float StackPoint(ICartesianCoordinate point, int seriesStackPosition)
         {
             var start = seriesStackPosition == 0 ? 0 : stack[seriesStackPosition - 1][point.Index].End;
-            var value = direction == SeriesDirection.Horizontal ? point.X : point.Y;
+            var value = isVertical ? point.Y : point.X;
 
             var si = stack[seriesStackPosition];
             if (si.Count < point.Index + 1)

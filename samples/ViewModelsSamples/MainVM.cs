@@ -66,7 +66,7 @@ namespace ViewModelsSamples
                 //    Fill = new SolidColorPaintTask(new SKColor(67, 160, 61, 30)),
                 //    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
                 //},
-                new ScatterSeries<double>
+                new ColumnSeries<double>
                 {
                     Name = "scatter",
                     Values = new[]{ 2d, 4, 3, 1, 8, 3, 7, 2, 6, 3, 7, 3},

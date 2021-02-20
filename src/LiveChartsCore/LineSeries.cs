@@ -52,7 +52,7 @@ namespace LiveChartsCore
         private IDrawableTask<TDrawingContext> shapesStroke;
 
         public LineSeries()
-            :base(SeriesType.HorizontalLine, SeriesDirection.Vertical, false)
+            : base(SeriesProperties.Line | SeriesProperties.VerticalOrientation)
         {
 
         }

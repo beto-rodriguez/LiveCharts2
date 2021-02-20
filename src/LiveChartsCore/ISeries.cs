@@ -29,9 +29,7 @@ namespace LiveChartsCore
 {
     public interface ISeries
     {
-        SeriesType SeriesType { get; }
-        SeriesDirection Direction { get; }
-        bool IsColumnOrRow { get; }
+        SeriesProperties SeriesProperties { get; }
         string Name { get; set; }
         int ScalesXAt { get; set; }
         int ScalesYAt { get; set; }

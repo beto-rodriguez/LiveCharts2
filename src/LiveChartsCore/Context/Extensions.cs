@@ -99,5 +99,29 @@ namespace LiveChartsCore.Context
 
             return new AxisTick { Value = tick, Magnitude = magnitude };
         }
+
+        public static bool IsBarSeries<TDrawingContext>(this ISeries<TDrawingContext> series)
+            where TDrawingContext : DrawingContext 
+                => (series.SeriesProperties & SeriesProperties.Bar) != 0;
+
+        public static bool IsColumnSeries<TDrawingContext>(this ISeries<TDrawingContext> series)
+           where TDrawingContext : DrawingContext
+               => (series.SeriesProperties & (SeriesProperties.Bar | SeriesProperties.VerticalOrientation)) != 0;
+
+        public static bool IsRowSeries<TDrawingContext>(this ISeries<TDrawingContext> series)
+           where TDrawingContext : DrawingContext
+               => (series.SeriesProperties & (SeriesProperties.Bar | SeriesProperties.HorizontalOrientation)) != 0;
+
+        public static bool IsStackedSeries<TDrawingContext>(this ISeries<TDrawingContext> series)
+           where TDrawingContext : DrawingContext
+               => (series.SeriesProperties & (SeriesProperties.Stacked)) != 0;
+
+        public static bool IsVerticalSeries<TDrawingContext>(this ISeries<TDrawingContext> series)
+           where TDrawingContext : DrawingContext
+               => (series.SeriesProperties & (SeriesProperties.VerticalOrientation)) != 0;
+
+        public static bool IsHorizontalSeries<TDrawingContext>(this ISeries<TDrawingContext> series)
+           where TDrawingContext : DrawingContext
+               => (series.SeriesProperties & (SeriesProperties.HorizontalOrientation)) != 0;
     }
 }

@@ -33,7 +33,7 @@ namespace LiveChartsCore
         private double geometrySize = 18d;
 
         public ScatterSeries()
-            :base(SeriesType.Scatter, SeriesDirection.None, false)
+            : base(SeriesProperties.Scatter)
         {
 
         }

@@ -38,9 +38,7 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
         where TVisual : ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
     {
-        private readonly SeriesType seriesType;
-        private readonly SeriesDirection direction;
-        private readonly bool isColumnOrRow;
+        private readonly SeriesProperties properties;
         private readonly HashSet<ChartCore<TDrawingContext>> subscribedTo = new HashSet<ChartCore<TDrawingContext>>();
         private INotifyCollectionChanged previousValuesNCCInstance;
         private IEnumerable<TModel> values;
@@ -61,20 +59,16 @@ namespace LiveChartsCore
         /// <summary>
         /// Initializes a new instance of the <see cref="Series{T}"/> class.
         /// </summary>
-        public Series(SeriesType type, SeriesDirection direction, bool isColumnOrRow)
+        public Series(SeriesProperties properties)
         {
-            seriesType = type;
-            this.direction = direction;
-            this.isColumnOrRow = isColumnOrRow;
+            this.properties = properties;
             var t = typeof(TModel);
             implementsINPC = typeof(INotifyPropertyChanged).IsAssignableFrom(t);
             implementsICC = typeof(ICartesianCoordinate).IsAssignableFrom(t);
             isValueType = t.IsValueType;
         }
 
-        public SeriesType SeriesType => seriesType;
-        public SeriesDirection Direction => direction;
-        public bool IsColumnOrRow => isColumnOrRow;
+        public SeriesProperties SeriesProperties => properties;
 
         /// <summary>
         /// Gets or sets the series to draw in the chart.
@@ -207,7 +201,7 @@ namespace LiveChartsCore
                 if (stack != null) 
                 {
                     var s = stack.StackPoint(coordinate);
-                    if (stack.Stacker.Orientation == SeriesDirection.Horizontal) cx = s;
+                    if (!stack.Stacker.IsVertical) cx = s;
                     else cy = s;
                 }
 

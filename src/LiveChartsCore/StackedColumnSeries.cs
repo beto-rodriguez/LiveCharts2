@@ -34,7 +34,7 @@ namespace LiveChartsCore
         private int stackGroup;
 
         public StackedColumnSeries()
-            : base(SeriesType.StackedColumn, SeriesDirection.Vertical, true)
+            : base(SeriesProperties.Bar | SeriesProperties.Stacked | SeriesProperties.VerticalOrientation)
         {
 
         }

@@ -34,7 +34,8 @@ namespace LiveChartsCore.Context
         private int rowsCount = 0;
         private int stackedColumnsCount = 0;
         private int stackedRowsCount = 0;
-        private bool isCounted = false;
+        private bool areBarsIndexed = false;
+
         private Dictionary<ISeries<TDrawingContext>, int> columnPositions = new Dictionary<ISeries<TDrawingContext>, int>();
         private Dictionary<ISeries<TDrawingContext>, int> rowPositions = new Dictionary<ISeries<TDrawingContext>, int>();
         private Dictionary<int, int> stackColumnPositions = new Dictionary<int, int>();
@@ -51,61 +52,61 @@ namespace LiveChartsCore.Context
 
         public int GetColumnPostion(ISeries<TDrawingContext> series)
         {
-            if (isCounted) return columnPositions[series];
-            IndexRowsColumns();
+            if (areBarsIndexed) return columnPositions[series];
+            IndexBars();
             return columnPositions[series];
         }
 
         public int GetColumnSeriesCount()
         {
-            if (isCounted) return columnsCount;
-            IndexRowsColumns();
+            if (areBarsIndexed) return columnsCount;
+            IndexBars();
             return columnsCount;
         }
 
         public int GetRowPostion(ISeries<TDrawingContext> series)
         {
-            if (isCounted) return rowPositions[series];
-            IndexRowsColumns();
+            if (areBarsIndexed) return rowPositions[series];
+            IndexBars();
             return rowPositions[series];
         }
 
         public int GetRowSeriesCount()
         {
-            if (isCounted) return rowsCount;
-            IndexRowsColumns();
+            if (areBarsIndexed) return rowsCount;
+            IndexBars();
             return rowsCount;
         }
 
         public int GetStackedColumnPostion(ISeries<TDrawingContext> series)
         {
-            if (isCounted) return stackColumnPositions[series.GetStackGroup()];
-            IndexRowsColumns();
+            if (areBarsIndexed) return stackColumnPositions[series.GetStackGroup()];
+            IndexBars();
             return stackColumnPositions[series.GetStackGroup()];
         }
 
         public int GetStackedColumnSeriesCount()
         {
-            if (isCounted) return stackedColumnsCount;
-            IndexRowsColumns();
+            if (areBarsIndexed) return stackedColumnsCount;
+            IndexBars();
             return stackedColumnsCount;
         }
 
         public int GetStackedRowPostion(ISeries<TDrawingContext> series)
         {
-            if (isCounted) return stackRowsPositions[series.GetStackGroup()];
-            IndexRowsColumns();
+            if (areBarsIndexed) return stackRowsPositions[series.GetStackGroup()];
+            IndexBars();
             return stackRowsPositions[series.GetStackGroup()];
         }
 
         public int GetStackedRowSeriesCount()
         {
-            if (isCounted) return stackedRowsCount;
-            IndexRowsColumns();
+            if (areBarsIndexed) return stackedRowsCount;
+            IndexBars();
             return stackedRowsCount;
         }
 
-        private void IndexRowsColumns()
+        private void IndexBars()
         {
             columnsCount = 0;
             rowsCount = 0;
@@ -114,16 +115,38 @@ namespace LiveChartsCore.Context
 
             foreach (var item in series)
             {
-                if (!item.IsColumnOrRow) continue;
-                if (item.SeriesType == SeriesType.Column) columnPositions[item] = columnsCount++;
-                if (item.SeriesType == SeriesType.Row) rowPositions[item] = rowsCount++;
-                if (item.SeriesType == SeriesType.StackedColumn && !stackColumnPositions.ContainsKey(item.GetStackGroup()))
-                    stackColumnPositions[item.GetStackGroup()] = stackedColumnsCount++;
-                if (item.SeriesType == SeriesType.StackedRow && !stackRowsPositions.ContainsKey(item.GetStackGroup()))
-                    stackRowsPositions[item.GetStackGroup()] = stackedRowsCount++;
+                if (!item.IsBarSeries()) continue;
+
+                if (item.IsColumnSeries())
+                {
+                    if (!item.IsStackedSeries())
+                    {
+                        columnPositions[item] = columnsCount++;
+                        continue;
+                    }
+
+                    if (!stackColumnPositions.ContainsKey(item.GetStackGroup()))
+                        stackColumnPositions[item.GetStackGroup()] = stackedColumnsCount++;
+
+                    continue;
+                }
+
+                if (item.IsRowSeries())
+                {
+                    if (!item.IsRowSeries())
+                    {
+                        rowPositions[item] = rowsCount++;
+                        continue;
+                    }
+
+                    if (!stackRowsPositions.ContainsKey(item.GetStackGroup()))
+                        stackRowsPositions[item.GetStackGroup()] = stackedRowsCount++;
+
+                    continue;
+                }
             }
 
-            isCounted = true;
+            areBarsIndexed = true;
         }
 
         #endregion
@@ -132,6 +155,8 @@ namespace LiveChartsCore.Context
 
         public StackPosition<TDrawingContext> GetStackPosition(ISeries<TDrawingContext> series, int stackGroup)
         {
+            if (!series.IsStackedSeries()) return null;
+
             var s = GetStacker(series, stackGroup);
 
             if (s == null) return null;
@@ -145,11 +170,11 @@ namespace LiveChartsCore.Context
 
         private Stacker<TDrawingContext> GetStacker(ISeries<TDrawingContext> series, int stackGroup)
         {
-            var key = $"{series.SeriesType}.{series.Direction}.{stackGroup}";
+            var key = $"{series.SeriesProperties}.{stackGroup}";
 
             if (!stackers.TryGetValue(key, out var stacker))
             {
-                stacker = new Stacker<TDrawingContext>(series.Direction);
+                stacker = new Stacker<TDrawingContext>(series.IsVerticalSeries());
                 stackers.Add(key, stacker);
             }
 

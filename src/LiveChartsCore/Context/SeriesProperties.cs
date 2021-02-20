@@ -20,14 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+
 namespace LiveChartsCore.Context
 {
-    public enum SeriesDirection
+    [Flags]
+    public enum SeriesProperties
     {
-        None,
-        Vertical,
-        Horizontal
+        Bar = 1 << 0,
+        Line = 1 << 2,
+        Scatter = 1 << 4,
+
+        Stacked = 1 << 5,
+
+        VerticalOrientation = 1 << 6,
+        HorizontalOrientation = 1 << 7
     }
 }
-
-
