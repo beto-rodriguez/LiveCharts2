@@ -33,9 +33,9 @@ using Xamarin.Forms.Xaml;
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class CartesianChart : ContentView, IChartView<SkiaDrawingContext>
+    public partial class CartesianChart : ContentView, ICartesianChartView<SkiaDrawingContext>
     {
-        protected ChartCore<SkiaDrawingContext> core;
+        protected CartesianChartCore<SkiaDrawingContext> core;
 
         public CartesianChart()
         {
@@ -46,16 +46,16 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     $"SkiaElement not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
                     $"If you override the template please add an {nameof(NaturalVisualCanvas)} to the template and name it 'canvas'");
 
-            core = new ChartCore<SkiaDrawingContext>(this, canvas.CanvasCore);
+            core = new CartesianChartCore<SkiaDrawingContext>(this, canvas.CanvasCore);
             core.Update();
 
             SizeChanged += CartesianChart_SizeChanged;
         }
 
-        ChartCore<SkiaDrawingContext> IChartView<SkiaDrawingContext>.Core => core;
+        CartesianChartCore<SkiaDrawingContext> ICartesianChartView<SkiaDrawingContext>.Core => core;
         public Canvas<SkiaDrawingContext> CoreCanvas => canvas.CanvasCore;
 
-        System.Drawing.SizeF IChartView<SkiaDrawingContext>.ControlSize
+        System.Drawing.SizeF ICartesianChartView<SkiaDrawingContext>.ControlSize
         {
             get
             {
@@ -78,12 +78,12 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public static readonly BindableProperty XAxesProperty =
             BindableProperty.Create(
-                nameof(XAxes), typeof(IList<IAxis<SkiaDrawingContext>>),
+                nameof(XAxes), typeof(IEnumerable<IAxis<SkiaDrawingContext>>),
                 typeof(CartesianChart), new List<IAxis<SkiaDrawingContext>>(), BindingMode.Default, null);
 
         public static readonly BindableProperty YAxesProperty =
             BindableProperty.Create(
-                nameof(YAxes), typeof(IList<IAxis<SkiaDrawingContext>>),
+                nameof(YAxes), typeof(IEnumerable<IAxis<SkiaDrawingContext>>),
                 typeof(CartesianChart), new List<IAxis<SkiaDrawingContext>>(), BindingMode.Default, null);
 
         public IEnumerable<ISeries<SkiaDrawingContext>> Series
@@ -92,15 +92,15 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             set { SetValue(SeriesProperty, value); }
         }
 
-        public IList<IAxis<SkiaDrawingContext>> XAxes
+        public IEnumerable<IAxis<SkiaDrawingContext>> XAxes
         {
-            get { return (IList<IAxis<SkiaDrawingContext>>)GetValue(XAxesProperty); }
+            get { return (IEnumerable<IAxis<SkiaDrawingContext>>)GetValue(XAxesProperty); }
             set { SetValue(XAxesProperty, value); }
         }
 
-        public IList<IAxis<SkiaDrawingContext>> YAxes
+        public IEnumerable<IAxis<SkiaDrawingContext>> YAxes
         {
-            get { return (IList<IAxis<SkiaDrawingContext>>)GetValue(YAxesProperty); }
+            get { return (IEnumerable<IAxis<SkiaDrawingContext>>)GetValue(YAxesProperty); }
             set { SetValue(YAxesProperty, value); }
         }
 

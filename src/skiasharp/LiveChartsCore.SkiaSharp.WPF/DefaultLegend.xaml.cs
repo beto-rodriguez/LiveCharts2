@@ -80,7 +80,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set { SetValue(TextColorProperty, value); }
         }
 
-        void IChartLegend<SkiaDrawingContext>.Draw(IChartView<SkiaDrawingContext> view)
+        void IChartLegend<SkiaDrawingContext>.Draw(ICartesianChartView<SkiaDrawingContext> view)
         {
             var series = view.Series;
             var legendOrientation = view.LegendOrientation;

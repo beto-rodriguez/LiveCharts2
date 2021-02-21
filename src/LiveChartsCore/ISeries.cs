@@ -23,7 +23,6 @@
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace LiveChartsCore
 {
@@ -44,21 +43,12 @@ namespace LiveChartsCore
         IDrawableTask<TDrawingContext> HighlightFill { get; }
 
         PaintContext<TDrawingContext> DefaultPaintContext { get; }
-        IEnumerable<ICartesianCoordinate> Fetch(ChartCore<TDrawingContext> chart);
 
-        /// <summary>
-        /// Gets the <see cref="CartesianBounds"/> for the current <see cref="Values"/>;
-        /// </summary>
-        CartesianBounds GetBounds(
-            SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y,
-            SeriesContext<TDrawingContext> context);
+        IEnumerable<ICartesianCoordinate> Fetch(CartesianChartCore<TDrawingContext> chart);
 
-        void Measure(
-            IChartView<TDrawingContext> view,
-            IAxis<TDrawingContext> xAxis,
-            IAxis<TDrawingContext> yAxis,
-            SeriesContext<TDrawingContext> context,
-            HashSet<IDrawable<TDrawingContext>> drawBucket);
+        CartesianBounds GetBounds(CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
+
+        void Measure(CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
 
         int GetStackGroup();
     }

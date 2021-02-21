@@ -20,8 +20,8 @@ namespace ViewModelsSamples
             //animatedStrokeDash.SetPropertyTransition(
             //    new LiveChartsCore.Drawing.Animation(EasingFunctions.Lineal, TimeSpan.FromMilliseconds(1000), int.MaxValue),
             //    nameof(animatedStrokeDash.PathEffect));
-            //animatedStrokeDash.PathEffect = new DashPathEffect(new[] { 5f, 5f}, 0);
-            //animatedStrokeDash.PathEffect = new DashPathEffect(new[] { 5f, 5f}, 10);
+            //animatedStrokeDash.PathEffect = new DashPathEffect(new[] { 5f, 5f }, 0);
+            //animatedStrokeDash.PathEffect = new DashPathEffect(new[] { 5f, 5f }, 10);
 
             //var animatedGradient = new SolidColorPaintTask(new SKColor(2, 136, 209, 200));
             //animatedGradient.SetPropertyTransition(
@@ -42,37 +42,38 @@ namespace ViewModelsSamples
 
             Series = new ObservableCollection<ISeries<SkiaDrawingContext>>
             {
-                //new StackedColumnSeries<double>
-                //{
-                //    Name = "columns",
-                //    Values = new[]{ 2d, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                //    Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
-                //    Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
-                //    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
-                //},
-                //new StackedColumnSeries<double>
-                //{
-                //    Name = "columns 2",
-                //    Values = new[]{ 2d, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                //    Stroke = new SolidColorPaintTask(new SKColor(2, 136, 209), 2),
-                //    Fill = new SolidColorPaintTask(new SKColor(2, 136, 209, 30)),
-                //    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
-                //},
-                //new StackedColumnSeries<double>
-                //{
-                //    Name = "columns 3",
-                //    Values = new[]{ 2d, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                //    Stroke = new SolidColorPaintTask(new SKColor(67, 160, 61), 2),
-                //    Fill = new SolidColorPaintTask(new SKColor(67, 160, 61, 30)),
-                //    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
-                //},
-                new ColumnSeries<double>
+                new StackedColumnSeries<double>
                 {
-                    Name = "scatter",
-                    Values = new[]{ 2d, 4, 3, 1, 8, 3, 7, 2, 6, 3, 7, 3},
-                    Stroke = new SolidColorPaintTask(new SKColor(239, 108, 0), 2),
-                    Fill = new SolidColorPaintTask(new SKColor(239, 108, 0, 30)),
+                    Name = "columns",
+                    Values = new[]{ 2d, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+                    Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
+                    Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
+                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
                 },
+                new StackedColumnSeries<double>
+                {
+                    Name = "columns 2",
+                    Values = new[]{ 2d, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+                    Stroke = new SolidColorPaintTask(new SKColor(2, 136, 209), 2),
+                    Fill = new SolidColorPaintTask(new SKColor(2, 136, 209, 30)),
+                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
+                },
+                new StackedColumnSeries<double>
+                {
+                    Name = "columns 3",
+                    Values = new[]{ 2d, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+                    Stroke = new SolidColorPaintTask(new SKColor(67, 160, 61), 2),
+                    Fill = new SolidColorPaintTask(new SKColor(67, 160, 61, 30)),
+                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
+                    StackGroup = 1
+                },
+                //new ColumnSeries<double>
+                //{
+                //    Name = "scatter",
+                //    Values = new[]{ 2d, 4, 3, 1, 8, 3, 7, 2, 6, 3, 7, 3},
+                //    Stroke = new SolidColorPaintTask(new SKColor(239, 108, 0), 2),
+                //    Fill = new SolidColorPaintTask(new SKColor(239, 108, 0, 30)),
+                //},
                 // new LineSeries<double>
                 //{
                 //    Name = "lines",

@@ -27,18 +27,17 @@ using System.Collections.Generic;
 
 namespace LiveChartsCore
 {
-    public interface IChartView<TDrawingContext>
+    public interface ICartesianChartView<TDrawingContext>
         where TDrawingContext: DrawingContext
     {
-        ChartCore<TDrawingContext> Core { get; }
+        CartesianChartCore<TDrawingContext> Core { get; }
         Canvas<TDrawingContext> CoreCanvas { get; }
 
         System.Drawing.SizeF ControlSize { get; }
+        IEnumerable<IAxis<TDrawingContext>> XAxes { get; set; }
+        IEnumerable<IAxis<TDrawingContext>> YAxes { get; set; }
 
         IEnumerable<ISeries<TDrawingContext>> Series { get; set; }
-
-        IList<IAxis<TDrawingContext>> XAxes { get; set; }
-        IList<IAxis<TDrawingContext>> YAxes { get; set; }
 
         LegendPosition LegendPosition { get; set; }
         LegendOrientation LegendOrientation { get; set; }

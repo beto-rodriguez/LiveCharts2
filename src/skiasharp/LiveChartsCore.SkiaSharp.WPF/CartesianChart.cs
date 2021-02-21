@@ -34,9 +34,9 @@ using System.Windows.Media;
 
 namespace LiveChartsCore.SkiaSharpView.WPF
 {
-    public class CartesianChart : Control, IChartView<SkiaDrawingContext>
+    public class CartesianChart : Control, ICartesianChartView<SkiaDrawingContext>
     {
-        protected ChartCore<SkiaDrawingContext> core;
+        protected CartesianChartCore<SkiaDrawingContext> core;
         protected NaturalGeometriesCanvas canvas;
         protected IChartLegend<SkiaDrawingContext> legend;
         protected IChartTooltip<SkiaDrawingContext> tooltip;
@@ -56,10 +56,10 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             mouseMoveThrottler.Unlocked += MouseMoveThrottlerUnlocked;
         }
 
-        ChartCore<SkiaDrawingContext> IChartView<SkiaDrawingContext>.Core => core;
+        CartesianChartCore<SkiaDrawingContext> ICartesianChartView<SkiaDrawingContext>.Core => core;
         public Canvas<SkiaDrawingContext> CoreCanvas => canvas.CanvasCore;
 
-        SizeF IChartView<SkiaDrawingContext>.ControlSize
+        SizeF ICartesianChartView<SkiaDrawingContext>.ControlSize
         { 
             get
             {
@@ -77,12 +77,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty XAxesProperty =
             DependencyProperty.Register(
-                nameof(XAxes), typeof(IList<IAxis<SkiaDrawingContext>>),
+                nameof(XAxes), typeof(IEnumerable<IAxis<SkiaDrawingContext>>),
                 typeof(CartesianChart), new PropertyMetadata(new List<IAxis<SkiaDrawingContext>> { new Axis() }));
 
         public static readonly DependencyProperty YAxesProperty =
             DependencyProperty.Register(
-                nameof(YAxes), typeof(IList<IAxis<SkiaDrawingContext>>),
+                nameof(YAxes), typeof(IEnumerable<IAxis<SkiaDrawingContext>>),
                 typeof(CartesianChart), new PropertyMetadata(new List<IAxis<SkiaDrawingContext>> { new Axis() }));
 
         public IEnumerable<ISeries<SkiaDrawingContext>> Series
@@ -91,15 +91,15 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set { SetValue(SeriesProperty, value); }
         }
 
-        public IList<IAxis<SkiaDrawingContext>> XAxes
+        public IEnumerable<IAxis<SkiaDrawingContext>> XAxes
         {
-            get { return (IList<IAxis<SkiaDrawingContext>>)GetValue(XAxesProperty); }
+            get { return (IEnumerable<IAxis<SkiaDrawingContext>>)GetValue(XAxesProperty); }
             set { SetValue(XAxesProperty, value); }
         }
 
-        public IList<IAxis<SkiaDrawingContext>> YAxes
+        public IEnumerable<IAxis<SkiaDrawingContext>> YAxes
         {
-            get { return (IList<IAxis<SkiaDrawingContext>>)GetValue(YAxesProperty); }
+            get { return (IEnumerable<IAxis<SkiaDrawingContext>>)GetValue(YAxesProperty); }
             set { SetValue(YAxesProperty, value); }
         }
 
@@ -139,7 +139,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     $"If you override the template please add an {nameof(NaturalGeometriesCanvas)} to the template and name it 'canvas'");
 
             this.canvas = canvas;
-            core = new ChartCore<SkiaDrawingContext>(this, canvas.CanvasCore);
+            core = new CartesianChartCore<SkiaDrawingContext>(this, canvas.CanvasCore);
             legend = Template.FindName("legend", this) as IChartLegend<SkiaDrawingContext>;
             tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaDrawingContext>;
             core.Update();

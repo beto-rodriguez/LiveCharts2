@@ -42,24 +42,24 @@ namespace LiveChartsCore
         public TransitionsSetterDelegate<ISizedGeometry<TDrawingContext>> TransitionsSetter { get; set; }
 
         public override void Measure(
-            IChartView<TDrawingContext> view, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis, SeriesContext<TDrawingContext> context, HashSet<IDrawable<TDrawingContext>> drawBucket)
+            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
         {
-            var drawLocation = view.Core.DrawMaringLocation;
-            var drawMarginSize = view.Core.DrawMarginSize;
+            var drawLocation = chart.DrawMaringLocation;
+            var drawMarginSize = chart.DrawMarginSize;
             var xScale = new ScaleContext(drawLocation, drawMarginSize, xAxis.Orientation, xAxis.DataBounds);
             var yScale = new ScaleContext(drawLocation, drawMarginSize, yAxis.Orientation, yAxis.DataBounds);
 
-            if (Fill != null) view.CoreCanvas.AddPaintTask(Fill);
-            if (Stroke != null) view.CoreCanvas.AddPaintTask(Stroke);
+            if (Fill != null) chart.Canvas.AddPaintTask(Fill);
+            if (Stroke != null) chart.Canvas.AddPaintTask(Stroke);
 
             var gs = unchecked((float)geometrySize);
             var hgs = gs / 2f;
             float sw = Stroke?.StrokeWidth ?? 0;
 
-            var chartAnimation = new Animation(view.EasingFunction, view.AnimationsSpeed);
+            var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
             var ts = TransitionsSetter ?? SetDefaultTransitions;
 
-            foreach (var point in GetPonts())
+            foreach (var point in Fetch(chart))
             {
                 var x = xScale.ScaleToUi(point.X);
                 var y = yScale.ScaleToUi(point.Y);
@@ -91,19 +91,19 @@ namespace LiveChartsCore
 
                 point.HoverArea.SetDimensions(x - hgs, y - hgs, gs + 2 * sw, gs + 2 * sw);
                 OnPointMeasured(point, sizedGeometry);
-                drawBucket.Add(sizedGeometry);
+                chart.MeasuredDrawables.Add(sizedGeometry);
             }
 
-            if (HighlightFill != null) view.CoreCanvas.AddPaintTask(HighlightFill);
-            if (HighlightStroke != null) view.CoreCanvas.AddPaintTask(HighlightStroke);
+            if (HighlightFill != null) chart.Canvas.AddPaintTask(HighlightFill);
+            if (HighlightStroke != null) chart.Canvas.AddPaintTask(HighlightStroke);
         }
 
         public override CartesianBounds GetBounds(
-            System.Drawing.SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y, SeriesContext<TDrawingContext> context)
+            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
-            var baseBounds = base.GetBounds(controlSize, x, y, context);
+            var baseBounds = base.GetBounds(chart, x, y);
 
-            var tick = y.GetTick(controlSize, baseBounds.YAxisBounds);
+            var tick = y.GetTick(chart.ControlSize, baseBounds.YAxisBounds);
 
             return new CartesianBounds
             {

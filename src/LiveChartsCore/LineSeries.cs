@@ -24,7 +24,6 @@ using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 namespace LiveChartsCore
@@ -32,19 +31,19 @@ namespace LiveChartsCore
     /// <summary>
     /// Defines the data to plot as a line.
     /// </summary>
-    public class LineSeries<TModel, TVisual, TDrawingContext, TGeometryPath, TLineSegment, TBezierSegment, TMoveTo, TPathContext>
+    public class LineSeries<TModel, TVisual, TDrawingContext, TGeometryPath, TLineSegment, TBezierSegment, TMoveToCommand, TPathContext>
         : Series<TModel, TVisual, TDrawingContext>
         where TGeometryPath : IPathGeometry<TDrawingContext, TPathContext>, new()
         where TLineSegment : ILinePathSegment<TPathContext>, new()
         where TBezierSegment : IBezierSegment<TPathContext>, new()
-        where TMoveTo : IMoveToPathCommand<TPathContext>, new()
+        where TMoveToCommand : IMoveToPathCommand<TPathContext>, new()
         where TVisual : ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
-        private readonly AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveTo, TPathContext> fillPathHelper =
-            new AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveTo, TPathContext>();
-        private readonly AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveTo, TPathContext> strokePathHelper =
-            new AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveTo, TPathContext>();
+        private readonly AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveToCommand, TPathContext> fillPathHelper =
+            new AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveToCommand, TPathContext>();
+        private readonly AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveToCommand, TPathContext> strokePathHelper =
+            new AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveToCommand, TPathContext>();
 
         private double lineSmoothness = 0.65;
         private double geometrySize = 18d;
@@ -91,17 +90,13 @@ namespace LiveChartsCore
         public double GeometrySize { get => geometrySize; set => geometrySize = value; }
         public double LineSmoothness { get => lineSmoothness; set => lineSmoothness = value; }
         public TransitionsSetterDelegate<LineSeriesVisualPoint<TDrawingContext, TVisual, TGeometryPath, TPathContext>> TransitionsSetter { get; set; }
-        public TransitionsSetterDelegate<AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveTo, TPathContext>> PathTransitionsSetter { get; set; }
+        public TransitionsSetterDelegate<AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveToCommand, TPathContext>> PathTransitionsSetter { get; set; }
 
         public override void Measure(
-            IChartView<TDrawingContext> view,
-            IAxis<TDrawingContext> xAxis,
-            IAxis<TDrawingContext> yAxis,
-            SeriesContext<TDrawingContext> context,
-            HashSet<IDrawable<TDrawingContext>> drawBucket)
+            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext>xAxis, IAxis<TDrawingContext> yAxis)
         {
-            var drawLocation = view.Core.DrawMaringLocation;
-            var drawMarginSize = view.Core.DrawMarginSize;
+            var drawLocation = chart.DrawMaringLocation;
+            var drawMarginSize = chart.DrawMarginSize;
             var xScale = new ScaleContext(drawLocation, drawMarginSize, xAxis.Orientation, xAxis.DataBounds);
             var yScale = new ScaleContext(drawLocation, drawMarginSize, yAxis.Orientation, yAxis.DataBounds);
 
@@ -113,27 +108,27 @@ namespace LiveChartsCore
             var wasFillInitialized = false;
             var wasStrokeInitialized = false;
 
-            var chartAnimation = new Animation(view.EasingFunction, view.AnimationsSpeed);
+            var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
             var pts = PathTransitionsSetter ?? SetDefaultPathTransitions;
             if (Fill != null)
             {
                 wasFillInitialized = fillPathHelper.Initialize(pts, chartAnimation);
                 Fill.AddGeometyToPaintTask(fillPathHelper.Path);
-                drawBucket.Add(fillPathHelper.Path);
-                view.CoreCanvas.AddPaintTask(Fill);
+                chart.MeasuredDrawables.Add(fillPathHelper.Path);
+                chart.Canvas.AddPaintTask(Fill);
                 fillPathHelper.Path.ClearCommands();
             }
             if (Stroke != null)
             {
                 wasStrokeInitialized = strokePathHelper.Initialize(pts, chartAnimation);
                 Stroke.AddGeometyToPaintTask(strokePathHelper.Path);
-                drawBucket.Add(strokePathHelper.Path);
-                view.CoreCanvas.AddPaintTask(Stroke);
+                chart.MeasuredDrawables.Add(strokePathHelper.Path);
+                chart.Canvas.AddPaintTask(Stroke);
                 strokePathHelper.Path.ClearCommands();
             }
             var ts = TransitionsSetter ?? SetDefaultTransitions;
 
-            foreach (var data in GetSpline(xScale, yScale))
+            foreach (var data in GetSpline(chart, xScale, yScale))
             {
                 var x = xScale.ScaleToUi(data.TargetCoordinate.X);
                 var y = yScale.ScaleToUi(data.TargetCoordinate.Y);
@@ -235,21 +230,21 @@ namespace LiveChartsCore
 
                 data.TargetCoordinate.HoverArea.SetDimensions(x - hgs, y - hgs + 2 * sw, gs, gs + 2 * sw);
                 OnPointMeasured(data.TargetCoordinate, visual.Geometry);
-                drawBucket.Add(visual.Geometry);
+                chart.MeasuredDrawables.Add(visual.Geometry);
             }
 
-            if (HighlightFill != null) view.CoreCanvas.AddPaintTask(HighlightFill);
-            if (HighlightStroke != null) view.CoreCanvas.AddPaintTask(HighlightStroke);
-            if (ShapesFill != null) view.CoreCanvas.AddPaintTask(ShapesFill);
-            if (ShapesStroke != null) view.CoreCanvas.AddPaintTask(ShapesStroke);
+            if (HighlightFill != null) chart.Canvas.AddPaintTask(HighlightFill);
+            if (HighlightStroke != null) chart.Canvas.AddPaintTask(HighlightStroke);
+            if (ShapesFill != null) chart.Canvas.AddPaintTask(ShapesFill);
+            if (ShapesStroke != null) chart.Canvas.AddPaintTask(ShapesStroke);
         }
 
         public override CartesianBounds GetBounds(
-            SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y, SeriesContext<TDrawingContext> context)
+            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
-            var baseBounds = base.GetBounds(controlSize, x, y, context);
+            var baseBounds = base.GetBounds(chart, x, y);
 
-            var tick = y.GetTick(controlSize, baseBounds.YAxisBounds);
+            var tick = y.GetTick(chart.ControlSize, baseBounds.YAxisBounds);
 
             return new CartesianBounds
             {
@@ -293,9 +288,10 @@ namespace LiveChartsCore
             visual.Bezier.CompleteTransition(cubicBezierProperties);
         }
 
-        private IEnumerable<BezierData> GetSpline(ScaleContext xScale, ScaleContext yScale)
+        private IEnumerable<BezierData> GetSpline(
+            CartesianChartCore<TDrawingContext> chart, ScaleContext xScale, ScaleContext yScale)
         {
-            var points = GetPonts().ToArray();
+            var points = Fetch(chart).ToArray();
 
             if (points.Length == 0) yield break;
             ICartesianCoordinate previous, current, next, next2;
@@ -380,7 +376,7 @@ namespace LiveChartsCore
         }
 
         protected virtual void SetDefaultPathTransitions(
-            AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveTo, TPathContext> areaHelper, Animation defaultAnimation)
+            AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveToCommand, TPathContext> areaHelper, Animation defaultAnimation)
         {
             var startPointProperties = new string[]
             {
@@ -464,5 +460,17 @@ namespace LiveChartsCore
         }
 
         public override int GetStackGroup() => 0;
+    }
+
+    public class StackedAreaSeries<TModel, TVisual, TDrawingContext, TGeometryPath, TLineSegment, TBezierSegment, TMoveToCommand, TPathContext>
+        : LineSeries<TModel, TVisual, TDrawingContext, TGeometryPath, TLineSegment, TBezierSegment, TMoveToCommand, TPathContext>
+         where TGeometryPath : IPathGeometry<TDrawingContext, TPathContext>, new()
+        where TLineSegment : ILinePathSegment<TPathContext>, new()
+        where TBezierSegment : IBezierSegment<TPathContext>, new()
+        where TMoveToCommand : IMoveToPathCommand<TPathContext>, new()
+        where TVisual : ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
+        where TDrawingContext : DrawingContext
+    {
+
     }
 }

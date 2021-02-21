@@ -7,4 +7,9 @@
     <RootNamespace>LiveChartsCore</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="IPieChartView.cs" />
+    <Compile Remove="PieChartCore.cs" />
+  </ItemGroup>
+
 </Project>

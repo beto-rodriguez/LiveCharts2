@@ -43,10 +43,11 @@ namespace LiveChartsCore
         public double MaxColumnWidth { get; set; } = 30;
         public TransitionsSetterDelegate<ISizedGeometry<TDrawingContext>> TransitionsSetter { get; set; }
 
-        public override void Measure(IChartView<TDrawingContext> view, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis, SeriesContext<TDrawingContext> context, HashSet<IDrawable<TDrawingContext>> drawBucket)
+        public override void Measure(
+            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
         {
-            var drawLocation = view.Core.DrawMaringLocation;
-            var drawMarginSize = view.Core.DrawMarginSize;
+            var drawLocation = chart.DrawMaringLocation;
+            var drawMarginSize = chart.DrawMarginSize;
             var xScale = new ScaleContext(drawLocation, drawMarginSize, xAxis.Orientation, xAxis.DataBounds);
             var yScale = new ScaleContext(drawLocation, drawMarginSize, yAxis.Orientation, yAxis.DataBounds);
 
@@ -55,8 +56,8 @@ namespace LiveChartsCore
             float sw = Stroke?.StrokeWidth ?? 0;
             float p = yScale.ScaleToUi(pivot);
 
-            var pos = context.GetStackedColumnPostion(this);
-            var count = context.GetStackedColumnSeriesCount();
+            var pos = chart.SeriesContext.GetStackedColumnPostion(this);
+            var count = chart.SeriesContext.GetStackedColumnSeriesCount();
             float cp = 0f;
 
             if (count > 1)
@@ -72,15 +73,15 @@ namespace LiveChartsCore
                 uwm = uw / 2f;
             }
 
-            if (Fill != null) view.CoreCanvas.AddPaintTask(Fill);
-            if (Stroke != null) view.CoreCanvas.AddPaintTask(Stroke);
+            if (Fill != null) chart.Canvas.AddPaintTask(Fill);
+            if (Stroke != null) chart.Canvas.AddPaintTask(Stroke);
 
-            var chartAnimation = new Animation(view.EasingFunction, view.AnimationsSpeed);
+            var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
             var ts = TransitionsSetter ?? SetDefaultTransitions;
 
-            var stacker = context.GetStackPosition(this, GetStackGroup());
+            var stacker = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
 
-            foreach (var point in GetPonts())
+            foreach (var point in Fetch(chart))
             {
                 var x = xScale.ScaleToUi(point.X);
 
@@ -115,16 +116,16 @@ namespace LiveChartsCore
 
                 point.HoverArea.SetDimensions(x - uwm + cp, yj, uw, yi - yj);
                 OnPointMeasured(point, sizedGeometry);
-                drawBucket.Add(sizedGeometry);
+                chart.MeasuredDrawables.Add(sizedGeometry);
             }
         }
 
         public override CartesianBounds GetBounds(
-            System.Drawing.SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y, SeriesContext<TDrawingContext> seriesContext)
+           CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
-            var baseBounds = base.GetBounds(controlSize, x, y, seriesContext);
+            var baseBounds = base.GetBounds(chart, x, y);
 
-            var tick = y.GetTick(controlSize, baseBounds.YAxisBounds);
+            var tick = y.GetTick(chart.ControlSize, baseBounds.YAxisBounds);
 
             return new CartesianBounds
             {

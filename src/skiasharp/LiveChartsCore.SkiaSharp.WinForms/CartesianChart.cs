@@ -8,12 +8,12 @@ using System.Windows.Forms;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms
 {
-    public partial class CartesianChart : UserControl, IChartView<SkiaDrawingContext>
+    public partial class CartesianChart : UserControl, ICartesianChartView<SkiaDrawingContext>
     {
-        protected ChartCore<SkiaDrawingContext> core;
+        protected CartesianChartCore<SkiaDrawingContext> core;
         private IEnumerable<ISeries<SkiaDrawingContext>> series = new List<ISeries<SkiaDrawingContext>>();
-        private IList<IAxis<SkiaDrawingContext>> xAxes = new List<IAxis<SkiaDrawingContext>>();
-        private IList<IAxis<SkiaDrawingContext>> yAxes = new List<IAxis<SkiaDrawingContext>>();
+        private IEnumerable<IAxis<SkiaDrawingContext>> xAxes = new List<IAxis<SkiaDrawingContext>>();
+        private IEnumerable<IAxis<SkiaDrawingContext>> yAxes = new List<IAxis<SkiaDrawingContext>>();
         private Margin drawMargin;
 
         public CartesianChart()
@@ -21,10 +21,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             InitializeComponent();
         }
 
-        ChartCore<SkiaDrawingContext> IChartView<SkiaDrawingContext>.Core => core;
+        CartesianChartCore<SkiaDrawingContext> ICartesianChartView<SkiaDrawingContext>.Core => core;
         public Canvas<SkiaDrawingContext> CoreCanvas => motionCanvas.CanvasCore;
 
-        System.Drawing.SizeF IChartView<SkiaDrawingContext>.ControlSize
+        System.Drawing.SizeF ICartesianChartView<SkiaDrawingContext>.ControlSize
         {
             get
             {
@@ -36,10 +36,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         public IEnumerable<ISeries<SkiaDrawingContext>> Series { get => series; set { series = value; OnDataChanged(); } }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IList<IAxis<SkiaDrawingContext>> XAxes { get => xAxes; set { xAxes = value; OnDataChanged(); } }
+        public IEnumerable<IAxis<SkiaDrawingContext>> XAxes { get => xAxes; set { xAxes = value; OnDataChanged(); } }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IList<IAxis<SkiaDrawingContext>> YAxes { get => yAxes; set { yAxes = value; OnDataChanged(); } }
+        public IEnumerable<IAxis<SkiaDrawingContext>> YAxes { get => yAxes; set { yAxes = value; OnDataChanged(); } }
 
         public LegendPosition LegendPosition { get; set; }
 
@@ -63,7 +63,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         private void OnLoaded(object sender, EventArgs e)
         {
-            core = new ChartCore<SkiaDrawingContext>(this, motionCanvas.CanvasCore);
+            core = new CartesianChartCore<SkiaDrawingContext>(this, motionCanvas.CanvasCore);
             core.Update();
         }
 

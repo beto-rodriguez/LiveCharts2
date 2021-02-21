@@ -23,39 +23,29 @@
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 
 namespace LiveChartsCore
 {
-    public interface IAxis<TDrawingContext>
+    public interface IPieChartView<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        Bounds DataBounds { get; }
-        AxisOrientation Orientation { get; }
-        float Xo { get; set; }
-        float Yo { get; set; }
+        PieChartCore<TDrawingContext> Core { get; }
+        Canvas<TDrawingContext> CoreCanvas { get; }
 
-        Func<double, AxisTick, string> Labeler { get; set; }
-        double Step { get ; set; }
-        double UnitWith { get; set; }
+        System.Drawing.SizeF ControlSize { get; }
 
-        AxisPosition Position { get ; set; }
-        double LabelsRotation { get; set; }
+        LegendPosition LegendPosition { get; set; }
+        LegendOrientation LegendOrientation { get; set; }
+        IChartLegend<TDrawingContext> Legend { get; }
 
-        IWritableTask<TDrawingContext> TextBrush { get; set; }
+        TooltipPosition TooltipPosition { get; set; }
+        TooltipFindingStrategy TooltipFindingStrategy { get; set; }
+        IChartTooltip<TDrawingContext> Tooltip { get; }
 
-        IDrawableTask<TDrawingContext> SeparatorsBrush { get; set; }
+        Margin DrawMargin { get; set; }
 
-        bool ShowSeparatorLines { get; set; }
-        bool ShowSeparatorWedges { get; set; }
+        TimeSpan AnimationsSpeed { get; set; }
 
-        IDrawableTask<TDrawingContext> AlternativeSeparatorForeground { get; set; }
-
-        void Initialize(AxisOrientation orientation);
-        void Measure(CartesianChartCore<TDrawingContext> chart);
-        SizeF GetPossibleSize(CartesianChartCore<TDrawingContext> chart);
-
-        IAxis<TDrawingContext> Copy();
+        Func<float, float> EasingFunction { get; set; }
     }
 }

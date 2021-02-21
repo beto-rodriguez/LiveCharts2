@@ -26,7 +26,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
 
 namespace LiveChartsCore
@@ -38,8 +37,10 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
         where TVisual : ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
     {
+        private readonly object measuredFor = new object();
+        private IEnumerable<ICartesianCoordinate> fetched = Enumerable.Empty<ICartesianCoordinate>();
         private readonly SeriesProperties properties;
-        private readonly HashSet<ChartCore<TDrawingContext>> subscribedTo = new HashSet<ChartCore<TDrawingContext>>();
+        private readonly HashSet<CartesianChartCore<TDrawingContext>> subscribedTo = new HashSet<CartesianChartCore<TDrawingContext>>();
         private INotifyCollectionChanged previousValuesNCCInstance;
         private IEnumerable<TModel> values;
         protected bool implementsINCC = false;
@@ -172,33 +173,36 @@ namespace LiveChartsCore
         public Func<TModel, int, ICartesianCoordinate> Mapping { get; set; }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<ICartesianCoordinate> Fetch(ChartCore<TDrawingContext> chart)
+        public virtual IEnumerable<ICartesianCoordinate> Fetch(CartesianChartCore<TDrawingContext> chart)
         {
             subscribedTo.Add(chart);
-            return GetPonts();
+            if (measuredFor == chart.MeasureWorker) return fetched;
+
+            fetched = implementsICC ? GetPointsFromICC() : GetMappedPoints();
+            return fetched;
         }
 
         /// <inheritdoc/>
         public virtual CartesianBounds GetBounds(
-            SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y, SeriesContext<TDrawingContext> context)
+            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
             if (_currentBounds != null && implementsICC && implementsINCC && implementsINPC) return _currentBounds;
 
             var seriesLength = 0;
 
-            var stack = context.GetStackPosition(this, GetStackGroup());
+            var stack = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
 
             // when we implement INotifyCollectionChanged, INotifyPropertyChanged and ICartesianCoordinate
             // then we could skip this the next code.
             var bounds = new CartesianBounds();
-            foreach (var coordinate in GetPonts())
+            foreach (var coordinate in Fetch(chart))
             {
                 var isXLimit = coordinate.X == bounds.XAxisBounds.max || coordinate.X == bounds.XAxisBounds.min;
                 var isYLimit = coordinate.Y == bounds.YAxisBounds.Max || coordinate.Y == bounds.YAxisBounds.min;
 
                 var cx = coordinate.X;
                 var cy = coordinate.Y;
-                if (stack != null) 
+                if (stack != null)
                 {
                     var s = stack.StackPoint(coordinate);
                     if (!stack.Stacker.IsVertical) cx = s;
@@ -229,16 +233,7 @@ namespace LiveChartsCore
 
         /// <inheritdoc/>
         public abstract void Measure(
-            IChartView<TDrawingContext> view,
-            IAxis<TDrawingContext> xAxis,
-            IAxis<TDrawingContext> yAxis,
-            SeriesContext<TDrawingContext> context,
-            HashSet<IDrawable<TDrawingContext>> drawBucket);
-        /// <summary>
-        /// Gets the 
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<ICartesianCoordinate> GetPonts() => implementsICC ? GetPointsFromICC() : GetMappedPoints();
+            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
 
         /// <inheritdoc/>
         public void Dispose()

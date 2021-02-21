@@ -24,7 +24,6 @@ using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace LiveChartsCore
 {
@@ -47,14 +46,10 @@ namespace LiveChartsCore
         public TransitionsSetterDelegate<ISizedGeometry<TDrawingContext>> TransitionsSetter { get; set; }
 
         public override void Measure(
-            IChartView<TDrawingContext> view,
-            IAxis<TDrawingContext> xAxis,
-            IAxis<TDrawingContext> yAxis,
-            SeriesContext<TDrawingContext> context,
-            HashSet<IDrawable<TDrawingContext>> drawBucket)
+            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
         {
-            var drawLocation = view.Core.DrawMaringLocation;
-            var drawMarginSize = view.Core.DrawMarginSize;
+            var drawLocation = chart.DrawMaringLocation;
+            var drawMarginSize = chart.DrawMarginSize;
             var xScale = new ScaleContext(drawLocation, drawMarginSize, xAxis.Orientation, xAxis.DataBounds);
             var yScale = new ScaleContext(drawLocation, drawMarginSize, yAxis.Orientation, yAxis.DataBounds);
 
@@ -63,8 +58,8 @@ namespace LiveChartsCore
             float sw = Stroke?.StrokeWidth ?? 0;
             float p = yScale.ScaleToUi(unchecked((float)Pivot));
              
-            var pos = context.GetColumnPostion(this);
-            var count = context.GetColumnSeriesCount();
+            var pos = chart.SeriesContext.GetColumnPostion(this);
+            var count = chart.SeriesContext.GetColumnSeriesCount();
             float cp = 0f;
 
             if (!IgnoresColumnPosition && count > 1)
@@ -80,13 +75,13 @@ namespace LiveChartsCore
                 uwm = uw / 2f;
             }
 
-            if (Fill != null) view.CoreCanvas.AddPaintTask(Fill);
-            if (Stroke != null) view.CoreCanvas.AddPaintTask(Stroke);
+            if (Fill != null) chart.Canvas.AddPaintTask(Fill);
+            if (Stroke != null) chart.Canvas.AddPaintTask(Stroke);
 
-            var chartAnimation = new Animation(view.EasingFunction, view.AnimationsSpeed);
+            var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
             var ts = TransitionsSetter ?? SetDefaultTransitions;
 
-            foreach (var point in GetPonts())
+            foreach (var point in Fetch(chart))
             {
                 var x = xScale.ScaleToUi(point.X);
                 var y = yScale.ScaleToUi(point.Y);
@@ -121,19 +116,19 @@ namespace LiveChartsCore
 
                 point.HoverArea.SetDimensions(x - uwm + cp, cy, uw, b);
                 OnPointMeasured(point, sizedGeometry);
-                drawBucket.Add(sizedGeometry);
+                chart.MeasuredDrawables.Add(sizedGeometry);
             }
 
-            if (HighlightFill != null) view.CoreCanvas.AddPaintTask(HighlightFill);
-            if (HighlightStroke != null) view.CoreCanvas.AddPaintTask(HighlightStroke);
+            if (HighlightFill != null) chart.Canvas.AddPaintTask(HighlightFill);
+            if (HighlightStroke != null) chart.Canvas.AddPaintTask(HighlightStroke);
         }
 
         public override CartesianBounds GetBounds(
-            SizeF controlSize, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y, SeriesContext<TDrawingContext> seriesContext)
+            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
-            var baseBounds = base.GetBounds(controlSize, x, y, seriesContext);
+            var baseBounds = base.GetBounds(chart, x, y);
 
-            var tick = y.GetTick(controlSize, baseBounds.YAxisBounds);
+            var tick = y.GetTick(chart.ControlSize, baseBounds.YAxisBounds);
 
             return new CartesianBounds
             {

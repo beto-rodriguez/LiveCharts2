@@ -79,11 +79,11 @@ namespace LiveChartsCore
 
         public IDrawableTask<TDrawingContext> AlternativeSeparatorForeground { get; set; }
 
-        public void Measure(IChartView<TDrawingContext> view, HashSet<IDrawable<TDrawingContext>> drawBucket)
+        public void Measure(CartesianChartCore<TDrawingContext> chart)
         {
-            var controlSize = view.ControlSize;
-            var drawLocation = view.Core.DrawMaringLocation;
-            var drawMarginSize = view.Core.DrawMarginSize;
+            var controlSize = chart.ControlSize;
+            var drawLocation = chart.DrawMaringLocation;
+            var drawMarginSize = chart.DrawMarginSize;
             var labeler = Labeler;
 
             var scale = new ScaleContext(drawLocation, drawMarginSize, orientation, dataBounds);
@@ -93,13 +93,13 @@ namespace LiveChartsCore
                 ? axisTick.Value
                 : step;
 
-            if (TextBrush != null) view.CoreCanvas.AddPaintTask(TextBrush);
-            if (SeparatorsBrush != null) view.CoreCanvas.AddPaintTask(SeparatorsBrush);
+            if (TextBrush != null) chart.Canvas.AddPaintTask(TextBrush);
+            if (SeparatorsBrush != null) chart.Canvas.AddPaintTask(SeparatorsBrush);
 
-            var lyi = view.Core.DrawMaringLocation.Y;
-            var lyj = view.Core.DrawMaringLocation.Y + view.Core.DrawMarginSize.Height;
-            var lxi = view.Core.DrawMaringLocation.X;
-            var lxj = view.Core.DrawMaringLocation.X + view.Core.DrawMarginSize.Width;
+            var lyi = drawLocation.Y;
+            var lyj = drawLocation.Y + drawMarginSize.Height;
+            var lxi = drawLocation.X;
+            var lxj = drawLocation.X + drawMarginSize.Width;
 
             float xoo = 0f, yoo = 0f;
 
@@ -199,23 +199,24 @@ namespace LiveChartsCore
                     }
                 }
 
-                if (visualSeparator.Text != null) drawBucket.Add(visualSeparator.Text);
-                if (visualSeparator.Line != null) drawBucket.Add(visualSeparator.Line);
+                if (visualSeparator.Text != null) chart.MeasuredDrawables.Add(visualSeparator.Text);
+                if (visualSeparator.Line != null) chart.MeasuredDrawables.Add(visualSeparator.Line);
             }
 
             foreach (var separator in activeSeparators.ToArray())
             {
-                if (drawBucket.Contains(separator.Value.Line) || drawBucket.Contains(separator.Value.Text)) continue;
+                if (chart.MeasuredDrawables.Contains(separator.Value.Line) || chart.MeasuredDrawables.Contains(separator.Value.Text)) 
+                    continue;
                 activeSeparators.Remove(separator.Key);
             }
         }
 
-        public SizeF GetPossibleSize(IChartView<TDrawingContext> view)
+        public SizeF GetPossibleSize(CartesianChartCore<TDrawingContext> chart)
         {
             if (TextBrush == null) return new SizeF(0f, 0f);
 
             var labeler = Labeler;
-            var axisTick = this.GetTick(view.Core.DrawMarginSize);
+            var axisTick = this.GetTick(chart.DrawMarginSize);
             var s = double.IsNaN(step) || step == 0
                 ? axisTick.Value
                 : step;
@@ -238,6 +239,23 @@ namespace LiveChartsCore
         {
             this.orientation = orientation;
             DataBounds = new Bounds();
+        }
+
+        public IAxis<TDrawingContext> Copy()
+        {
+            return new Axis<TDrawingContext, TTextGeometry, TLineGeometry>
+            {
+               Labeler = labeler,
+               Step = step,
+               UnitWith = UnitWith,
+               Position = position,
+               LabelsRotation = labelsRotation,
+               TextBrush = TextBrush,
+               SeparatorsBrush = SeparatorsBrush,
+               ShowSeparatorLines = ShowSeparatorLines,
+               ShowSeparatorWedges = ShowSeparatorWedges,
+               AlternativeSeparatorForeground = AlternativeSeparatorForeground
+            };
         }
     }
 }

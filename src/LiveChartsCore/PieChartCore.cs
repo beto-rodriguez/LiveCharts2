@@ -1,45 +1,22 @@
-﻿// The MIT License(MIT)
-
-// Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
-using LiveChartsCore.Context;
+﻿using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Rx;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 
 namespace LiveChartsCore
 {
-    public class ChartCore<TDrawingContext>
-        where TDrawingContext: DrawingContext
+    public class PieChartCore<TDrawingContext>
+        where TDrawingContext : DrawingContext
     {
-        private readonly IChartView<TDrawingContext> chartView;
+        private readonly IPieChartView<TDrawingContext> chartView;
         private readonly Canvas<TDrawingContext> naturalGeometriesCanvas;
         private readonly ActionThrottler updateThrottler;
         private SizeF drawMarginSize;
         private PointF drawMaringLocation;
 
-        public ChartCore(IChartView<TDrawingContext> view, Canvas<TDrawingContext> canvas)
+        public PieChartCore(IPieChartView<TDrawingContext> view, Canvas<TDrawingContext> canvas)
         {
             naturalGeometriesCanvas = canvas;
             chartView = view;
@@ -49,16 +26,10 @@ namespace LiveChartsCore
 
         public Canvas<TDrawingContext> NaturalGeometriesCanvas => naturalGeometriesCanvas;
 
-        public IChartView<TDrawingContext> ChartView => chartView;
+        public IPieChartView<TDrawingContext> ChartView => chartView;
 
         internal PointF DrawMaringLocation => drawMaringLocation;
         internal SizeF DrawMarginSize => drawMarginSize;
-
-        public void Update()
-        {
-            updateThrottler.LockTime = chartView.AnimationsSpeed;
-            updateThrottler.TryRun();
-        }
 
         public IEnumerable<FoundPoint<TDrawingContext>> FindPointsNearTo(PointF point)
         {
@@ -73,7 +44,7 @@ namespace LiveChartsCore
         {
             var drawBucket = new HashSet<IDrawable<TDrawingContext>>();
 
-            if(chartView.Legend != null) chartView.Legend.Draw(chartView);
+            if (chartView.Legend != null) chartView.Legend.Draw(chartView);
             var controlSize = chartView.ControlSize;
 
             // restart axes bounds and meta data
@@ -168,7 +139,7 @@ namespace LiveChartsCore
                 series.Measure(chartView, x, y, seriesContext, drawBucket);
             }
 
-            chartView.CoreCanvas.ForEachGeometry((geometry, paint) => 
+            chartView.CoreCanvas.ForEachGeometry((geometry, paint) =>
             {
                 if (drawBucket.Contains(geometry)) return; // then the geometry was updated by the measure method
 
