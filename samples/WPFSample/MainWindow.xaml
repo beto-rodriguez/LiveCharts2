@@ -14,7 +14,14 @@
     </Window.DataContext>
 
     <Grid>
-        <lvc:CartesianChart Series="{Binding Series}" YAxes="{Binding YAxes}" XAxes="{Binding XAxes}" 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Button Command="{}"></Button>
+        </StackPanel>
+        <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" YAxes="{Binding YAxes}" XAxes="{Binding XAxes}" 
                             LegendPosition="Right" TooltipPosition="Top" TooltipFindingStrategy="CompareOnlyX">
         </lvc:CartesianChart>
     </Grid>

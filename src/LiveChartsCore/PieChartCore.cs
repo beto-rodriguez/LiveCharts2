@@ -1,18 +1,60 @@
-﻿using LiveChartsCore.Context;
+﻿// The MIT License(MIT)
+
+// Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Rx;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace LiveChartsCore
 {
     public class PieChartCore<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        private object measureWorker = null;
+        private HashSet<IDrawable<TDrawingContext>> measuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
+        private SeriesContext<TDrawingContext> seriesContext = new SeriesContext<TDrawingContext>(
+            Enumerable.Empty<ISeries<TDrawingContext>>());
+
         private readonly IPieChartView<TDrawingContext> chartView;
         private readonly Canvas<TDrawingContext> naturalGeometriesCanvas;
         private readonly ActionThrottler updateThrottler;
+
+        // view copied properties
+        private SizeF controlSize = new SizeF();
+        private Margin viewDrawMargin = null;
+
+        private LegendPosition legendPosition;
+        private LegendOrientation legendOrientation;
+        private IChartLegend<TDrawingContext> legend;
+        private TooltipPosition tooltipPosition;
+        private TooltipFindingStrategy tooltipFindingStrategy;
+        private IChartTooltip<TDrawingContext> tooltip;
+        private TimeSpan animationsSpeed;
+        private Func<float, float> easingFunction;
+
         private SizeF drawMarginSize;
         private PointF drawMaringLocation;
 
@@ -24,15 +66,34 @@ namespace LiveChartsCore
             updateThrottler.Unlocked += UpdateThrottlerUnlocked;
         }
 
-        public Canvas<TDrawingContext> NaturalGeometriesCanvas => naturalGeometriesCanvas;
+        public object MeasureWorker => measureWorker;
+        public HashSet<IDrawable<TDrawingContext>> MeasuredDrawables => measuredDrawables;
+        public SeriesContext<TDrawingContext> SeriesContext => seriesContext;
 
-        public IPieChartView<TDrawingContext> ChartView => chartView;
+        public Canvas<TDrawingContext> Canvas => naturalGeometriesCanvas;
 
-        internal PointF DrawMaringLocation => drawMaringLocation;
-        internal SizeF DrawMarginSize => drawMarginSize;
+        public SizeF ControlSize => controlSize;
+        public PointF DrawMaringLocation => drawMaringLocation;
+        public SizeF DrawMarginSize => drawMarginSize;
+        public LegendPosition LegendPosition => LegendPosition;
+        public LegendOrientation LegendOrientation => legendOrientation;
+        public IChartLegend<TDrawingContext> Legend => legend;
+        public TooltipPosition TooltipPosition => tooltipPosition;
+        public TooltipFindingStrategy TooltipFindingStrategy => tooltipFindingStrategy;
+        public IChartTooltip<TDrawingContext> Tooltip => tooltip;
+        public TimeSpan AnimationsSpeed => animationsSpeed;
+        public Func<float, float> EasingFunction => easingFunction;
+
+        public void Update()
+        {
+            updateThrottler.LockTime = chartView.AnimationsSpeed;
+            updateThrottler.TryRun();
+        }
 
         public IEnumerable<FoundPoint<TDrawingContext>> FindPointsNearTo(PointF point)
         {
+            if (measureWorker == null) return Enumerable.Empty<FoundPoint<TDrawingContext>>();
+
             return chartView.Series
                 .SelectMany(series => series
                         .Fetch(this)
@@ -42,38 +103,38 @@ namespace LiveChartsCore
 
         private void Measure()
         {
-            var drawBucket = new HashSet<IDrawable<TDrawingContext>>();
+            measuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
+            seriesContext = new SeriesContext<TDrawingContext>(series);
 
-            if (chartView.Legend != null) chartView.Legend.Draw(chartView);
-            var controlSize = chartView.ControlSize;
+            if (legend != null) legend.Draw(chartView);
 
             // restart axes bounds and meta data
-            foreach (var axis in chartView.XAxes) axis.Initialize(AxisOrientation.X);
-            foreach (var axis in chartView.YAxes) axis.Initialize(AxisOrientation.Y);
+            foreach (var axis in xAxes) axis.Initialize(AxisOrientation.X);
+            foreach (var axis in yAxes) axis.Initialize(AxisOrientation.Y);
 
-            // get series bounds
-            var seriesContext = new SeriesContext<TDrawingContext>(chartView.Series);
-            foreach (var series in chartView.Series)
+            // get seriesBounds
+            foreach (var series in series)
             {
-                var xAxis = chartView.XAxes[series.ScalesXAt];
-                var yAxis = chartView.YAxes[series.ScalesYAt];
+                var xAxis = xAxes[series.ScalesXAt];
+                var yAxis = yAxes[series.ScalesYAt];
 
-                var seriesBounds = series.GetBounds(controlSize, xAxis, yAxis, seriesContext);
+                var seriesBounds = series.GetBounds(this, xAxis, yAxis);
+
                 xAxis.DataBounds.AppendValue(seriesBounds.XAxisBounds.max);
                 xAxis.DataBounds.AppendValue(seriesBounds.XAxisBounds.min);
                 yAxis.DataBounds.AppendValue(seriesBounds.YAxisBounds.max);
                 yAxis.DataBounds.AppendValue(seriesBounds.YAxisBounds.min);
             }
 
-            if (chartView.DrawMargin == null)
+            if (viewDrawMargin == null)
             {
-                var m = chartView.DrawMargin ?? new Margin();
+                var m = viewDrawMargin ?? new Margin();
                 float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
                 SetDrawMargin(controlSize, m);
 
-                foreach (var axis in chartView.XAxes)
+                foreach (var axis in xAxes)
                 {
-                    var s = axis.GetPossibleSize(chartView);
+                    var s = axis.GetPossibleSize(this);
                     if (axis.Position == AxisPosition.LeftOrBottom)
                     {
                         // X Bottom
@@ -93,9 +154,9 @@ namespace LiveChartsCore
                         //if (rs + s.Width * 0.5f > m.Right) m.Right = rs + s.Width * 0.5f;
                     }
                 }
-                foreach (var axis in chartView.YAxes)
+                foreach (var axis in yAxes)
                 {
-                    var s = axis.GetPossibleSize(chartView);
+                    var s = axis.GetPossibleSize(this);
                     var w = s.Width > m.Left ? s.Width : m.Left;
                     if (axis.Position == AxisPosition.LeftOrBottom)
                     {
@@ -124,30 +185,30 @@ namespace LiveChartsCore
             // or it is initializing in the UI and has no dimensions yet
             if (drawMarginSize.Width <= 0 || drawMarginSize.Height <= 0) return;
 
-            foreach (var axis in chartView.XAxes)
+            foreach (var axis in xAxes)
             {
-                axis.Measure(ChartView, drawBucket);
+                axis.Measure(this);
             }
-            foreach (var axis in chartView.YAxes)
+            foreach (var axis in yAxes)
             {
-                axis.Measure(ChartView, drawBucket);
+                axis.Measure(this);
             }
-            foreach (var series in chartView.Series)
+            foreach (var series in series)
             {
-                var x = ChartView.XAxes[series.ScalesXAt];
-                var y = ChartView.YAxes[series.ScalesYAt];
-                series.Measure(chartView, x, y, seriesContext, drawBucket);
+                var x = xAxes[series.ScalesXAt];
+                var y = yAxes[series.ScalesYAt];
+                series.Measure(this, x, y);
             }
 
             chartView.CoreCanvas.ForEachGeometry((geometry, paint) =>
             {
-                if (drawBucket.Contains(geometry)) return; // then the geometry was updated by the measure method
+                if (measuredDrawables.Contains(geometry)) return; // then the geometry was measured
 
-                // at this point, no one used this geometry, we need to remove if from our canvas
+                // at this point,the geometry is not required in the UI
                 geometry.RemoveOnCompleted = true;
             });
 
-            NaturalGeometriesCanvas.Invalidate();
+            Canvas.Invalidate();
         }
 
         private void SetDrawMargin(SizeF controlSize, Margin margin)
@@ -163,6 +224,42 @@ namespace LiveChartsCore
 
         private void UpdateThrottlerUnlocked()
         {
+            // before measure every element in the chart
+            // we copy the properties that might change while we are updating the chart
+            // this call should be thread safe
+            // ToDo: ensure it is thread safe...
+
+            viewDrawMargin = chartView.DrawMargin;
+            controlSize = chartView.ControlSize;
+            yAxes = chartView.YAxes.Select(x => x.Copy()).ToArray();
+            xAxes = chartView.XAxes.Select(x => x.Copy()).ToArray();
+
+            measureWorker = new object();
+            series = chartView.Series.Select(series => 
+            { 
+                // a good implementation of ISeries<T>
+                // must use the measureWorker to identify
+                // if the points are already fetched.
+
+                // this way no matter if the Series.Values collection changes
+                // the fetch method will always return the same collection for the
+                // current measureWorker instance
+
+                series.Fetch(this);
+                return series;
+            }).ToArray();
+
+            legendPosition = chartView.LegendPosition;
+            legendOrientation = chartView.LegendOrientation;
+            legend = chartView.Legend; // ... this is a reference type.. this has no sense
+
+            tooltipPosition = chartView.TooltipPosition;
+            tooltipFindingStrategy = chartView.TooltipFindingStrategy;
+            tooltip = chartView.Tooltip; //... no sense again...
+
+            animationsSpeed = chartView.AnimationsSpeed;
+            easingFunction = chartView.EasingFunction;
+    
             Measure();
         }
     }

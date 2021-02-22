@@ -1,6 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <LangVersion>8.0</LangVersion>
     <TargetFramework>net5.0</TargetFramework>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>LiveChartsCore</AssemblyName>

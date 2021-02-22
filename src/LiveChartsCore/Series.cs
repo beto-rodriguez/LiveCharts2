@@ -30,6 +30,7 @@ using System.Linq;
 
 namespace LiveChartsCore
 {
+
     /// <summary>
     /// Defines data to plot in a chart.
     /// </summary>
@@ -39,23 +40,22 @@ namespace LiveChartsCore
     {
         private readonly object measuredFor = new object();
         private IEnumerable<ICartesianCoordinate> fetched = Enumerable.Empty<ICartesianCoordinate>();
+        private CollectionDeepObserverer<TModel> observerer;
         private readonly SeriesProperties properties;
         private readonly HashSet<CartesianChartCore<TDrawingContext>> subscribedTo = new HashSet<CartesianChartCore<TDrawingContext>>();
-        private INotifyCollectionChanged previousValuesNCCInstance;
-        private IEnumerable<TModel> values;
         protected bool implementsINCC = false;
         protected PaintContext<TDrawingContext> paintContext;
-        private CartesianBounds _currentBounds = null;
         protected readonly bool isValueType;
         protected readonly bool implementsINPC;
         protected readonly bool implementsICC;
-        protected Dictionary<int, ICartesianCoordinate> byValueVisualMap = new Dictionary<int, ICartesianCoordinate>();
-        protected Dictionary<TModel, ICartesianCoordinate> byReferenceVisualMap = new Dictionary<TModel, ICartesianCoordinate>();
+        protected readonly Dictionary<int, ICartesianCoordinate> byValueVisualMap = new Dictionary<int, ICartesianCoordinate>();
+        protected readonly Dictionary<TModel, ICartesianCoordinate> byReferenceVisualMap = new Dictionary<TModel, ICartesianCoordinate>();
         private IDrawableTask<TDrawingContext> stroke;
         private IDrawableTask<TDrawingContext> fill;
         private IDrawableTask<TDrawingContext> highlightStroke;
         private IDrawableTask<TDrawingContext> highlightFill;
         private double legendShapeSize = 15;
+        private IEnumerable<TModel> values;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Series{T}"/> class.
@@ -67,6 +67,15 @@ namespace LiveChartsCore
             implementsINPC = typeof(INotifyPropertyChanged).IsAssignableFrom(t);
             implementsICC = typeof(ICartesianCoordinate).IsAssignableFrom(t);
             isValueType = t.IsValueType;
+            observerer = new CollectionDeepObserverer<TModel>(
+                (object sender, NotifyCollectionChangedEventArgs e) =>
+                {
+                    NotifySubscribers();
+                },
+                (object sender, PropertyChangedEventArgs e) =>
+                {
+                    NotifySubscribers();
+                });
         }
 
         public SeriesProperties SeriesProperties => properties;
@@ -74,22 +83,13 @@ namespace LiveChartsCore
         /// <summary>
         /// Gets or sets the series to draw in the chart.
         /// </summary>
-        public IEnumerable<TModel> Values
+        public IEnumerable<TModel> Values 
         {
-            get => values;
-            set
-            {
-                if (value != previousValuesNCCInstance)
-                {
-                    if (previousValuesNCCInstance != null) previousValuesNCCInstance.CollectionChanged -= OnValuesCollectionChanged;
-                    if (value is INotifyCollectionChanged incc)
-                    {
-                        incc.CollectionChanged += OnValuesCollectionChanged;
-                        implementsINCC = true;
-                    }
-                    previousValuesNCCInstance = values as INotifyCollectionChanged;
-                    _currentBounds = null;
-                }
+            get => values; 
+            set 
+            { 
+                observerer.Dispose(values);
+                observerer.Initialize(value);
                 values = value;
             }
         }
@@ -186,14 +186,9 @@ namespace LiveChartsCore
         public virtual CartesianBounds GetBounds(
             CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
-            if (_currentBounds != null && implementsICC && implementsINCC && implementsINPC) return _currentBounds;
-
             var seriesLength = 0;
-
             var stack = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
 
-            // when we implement INotifyCollectionChanged, INotifyPropertyChanged and ICartesianCoordinate
-            // then we could skip this the next code.
             var bounds = new CartesianBounds();
             foreach (var coordinate in Fetch(chart))
             {
@@ -227,7 +222,6 @@ namespace LiveChartsCore
                 seriesLength++;
             }
 
-            _currentBounds = bounds;
             return bounds;
         }
 
@@ -238,10 +232,7 @@ namespace LiveChartsCore
         /// <inheritdoc/>
         public void Dispose()
         {
-            if (previousValuesNCCInstance != null)
-                previousValuesNCCInstance.CollectionChanged -= OnValuesCollectionChanged;
-            byReferenceVisualMap = null;
-            byValueVisualMap = null;
+            observerer.Dispose(values);
         }
 
         protected virtual void OnPointMeasured(ICartesianCoordinate coordinate, TVisual visual)
@@ -255,8 +246,8 @@ namespace LiveChartsCore
             {
                 item.Index = i++;
                 item.DataSource = item;
-                item.PropertyChanged -= OnValuesElementPropertyChanged;
-                item.PropertyChanged += OnValuesElementPropertyChanged;
+                //item.PropertyChanged -= OnValuesElementPropertyChanged;
+                //item.PropertyChanged += OnValuesElementPropertyChanged;
                 yield return item;
             }
         }
@@ -270,8 +261,8 @@ namespace LiveChartsCore
                 if (implementsINPC)
                 {
                     var inpc = (INotifyPropertyChanged)item;
-                    inpc.PropertyChanged -= OnValuesElementPropertyChanged;
-                    inpc.PropertyChanged += OnValuesElementPropertyChanged;
+                    //inpc.PropertyChanged -= OnValuesElementPropertyChanged;
+                    //inpc.PropertyChanged += OnValuesElementPropertyChanged;
                 }
 
                 ICartesianCoordinate icc;
@@ -293,75 +284,6 @@ namespace LiveChartsCore
             }
         }
 
-        private void OnValuesElementPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (_currentBounds != null && implementsICC)
-            {
-                var icc = (ICartesianCoordinate)sender;
-                // if any limit was modified, then we clear the limits, that means they will be calculate again.
-                if (_currentBounds.XCoordinatesBounds.Contains(icc) || _currentBounds.YCoordinatesBounds.Contains(icc))
-                    _currentBounds = null;
-            }
-            NotifySubscribers();
-        }
-
-        private void OnValuesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (_currentBounds != null)
-            {
-                if (implementsICC)
-                {
-                    switch (e.Action)
-                    {
-                        case NotifyCollectionChangedAction.Add:
-                            foreach (var item in e.NewItems)
-                            {
-                                var coordinate = (ICartesianCoordinate)item;
-                                _currentBounds.XAxisBounds.AppendValue(coordinate.X);
-                                _currentBounds.YAxisBounds.AppendValue(coordinate.Y);
-                            }
-                            break;
-                        case NotifyCollectionChangedAction.Remove:
-                            foreach (var item in e.OldItems)
-                            {
-                                var coordinate = (ICartesianCoordinate)item;
-                                if (coordinate.X < _currentBounds.XAxisBounds.min || coordinate.X > _currentBounds.XAxisBounds.max ||
-                                    coordinate.Y < _currentBounds.YAxisBounds.min || coordinate.Y > _currentBounds.YAxisBounds.max)
-                                {
-                                    _currentBounds = null;
-                                    break;
-                                }
-                            }
-                            break;
-                        case NotifyCollectionChangedAction.Replace:
-                            foreach (var item in e.NewItems)
-                            {
-                                var coordinate = (ICartesianCoordinate)item;
-                                _currentBounds.XAxisBounds.AppendValue(coordinate.X);
-                                _currentBounds.YAxisBounds.AppendValue(coordinate.Y);
-                            }
-                            foreach (var item in e.OldItems)
-                            {
-                                var coordinate = (ICartesianCoordinate)item;
-                                if (coordinate.X < _currentBounds.XAxisBounds.min || coordinate.X > _currentBounds.XAxisBounds.max ||
-                                    coordinate.Y < _currentBounds.YAxisBounds.min || coordinate.Y > _currentBounds.YAxisBounds.max)
-                                {
-                                    _currentBounds = null;
-                                    break;
-                                }
-                            }
-                            break;
-                        case NotifyCollectionChangedAction.Move:
-                            /// ignored.
-                            break;
-                        case NotifyCollectionChangedAction.Reset:
-                            _currentBounds = null;
-                            break;
-                    }
-                }
-            }
-            NotifySubscribers();
-        }
 
         private void NotifySubscribers()
         {

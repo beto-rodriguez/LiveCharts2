@@ -39,7 +39,7 @@ namespace LiveChartsCore
             Enumerable.Empty<ISeries<TDrawingContext>>());
 
         private readonly ICartesianChartView<TDrawingContext> chartView;
-        private readonly Canvas<TDrawingContext> naturalGeometriesCanvas;
+        private readonly Canvas<TDrawingContext> canvas;
         private readonly ActionThrottler updateThrottler;
 
         // view copied properties
@@ -62,7 +62,7 @@ namespace LiveChartsCore
 
         public CartesianChartCore(ICartesianChartView<TDrawingContext> view, Canvas<TDrawingContext> canvas)
         {
-            naturalGeometriesCanvas = canvas;
+            this.canvas = canvas;
             chartView = view;
             updateThrottler = new ActionThrottler(TimeSpan.FromSeconds(300));
             updateThrottler.Unlocked += UpdateThrottlerUnlocked;
@@ -72,9 +72,7 @@ namespace LiveChartsCore
         public HashSet<IDrawable<TDrawingContext>> MeasuredDrawables => measuredDrawables;
         public SeriesContext<TDrawingContext> SeriesContext => seriesContext;
 
-        public Canvas<TDrawingContext> Canvas => naturalGeometriesCanvas;
-
-        //public ICartesianChartView<TDrawingContext> ChartView => chartView;
+        public Canvas<TDrawingContext> Canvas => canvas;
 
         public SizeF ControlSize => controlSize;
         public PointF DrawMaringLocation => drawMaringLocation;
