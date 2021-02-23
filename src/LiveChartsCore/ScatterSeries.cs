@@ -26,7 +26,7 @@ using System.Collections.Generic;
 
 namespace LiveChartsCore
 {
-    public class ScatterSeries<TModel, TVisual, TDrawingContext> : Series<TModel, TVisual, TDrawingContext>
+    public class ScatterSeries<TModel, TVisual, TDrawingContext> : CartesianSeries<TModel, TVisual, TDrawingContext>
         where TVisual : ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
@@ -61,10 +61,10 @@ namespace LiveChartsCore
 
             foreach (var point in Fetch(chart))
             {
-                var x = xScale.ScaleToUi(point.X);
-                var y = yScale.ScaleToUi(point.Y);
+                var x = xScale.ScaleToUi(point.SecondaryValue);
+                var y = yScale.ScaleToUi(point.PrimaryValue);
 
-                if (point.Visual == null)
+                if (point.PointContext.Visual == null)
                 {
                     var r = new TVisual
                     {
@@ -76,20 +76,20 @@ namespace LiveChartsCore
 
                     ts(r, chartAnimation);
 
-                    point.HoverArea = new HoverArea();
-                    point.Visual = r;
+                    point.PointContext.HoverArea = new HoverArea();
+                    point.PointContext.Visual = r;
                     if (Fill != null) Fill.AddGeometyToPaintTask(r);
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(r);
                 }
 
-                var sizedGeometry = (TVisual)point.Visual;
+                var sizedGeometry = (TVisual)point.PointContext.Visual;
 
                 sizedGeometry.X = x - hgs;
                 sizedGeometry.Y = y - hgs;
                 sizedGeometry.Width = gs;
                 sizedGeometry.Height =  gs;
 
-                point.HoverArea.SetDimensions(x - hgs, y - hgs, gs + 2 * sw, gs + 2 * sw);
+                point.PointContext.HoverArea.SetDimensions(x - hgs, y - hgs, gs + 2 * sw, gs + 2 * sw);
                 OnPointMeasured(point, sizedGeometry);
                 chart.MeasuredDrawables.Add(sizedGeometry);
             }
@@ -103,19 +103,19 @@ namespace LiveChartsCore
         {
             var baseBounds = base.GetBounds(chart, x, y);
 
-            var tick = y.GetTick(chart.ControlSize, baseBounds.YAxisBounds);
+            var tick = y.GetTick(chart.ControlSize, baseBounds.PrimaryBounds);
 
             return new CartesianBounds
             {
-                XAxisBounds = new Bounds
+                SecondaryBounds = new Bounds
                 {
-                    Max = baseBounds.XAxisBounds.Max + tick.Value,
-                    Min = baseBounds.XAxisBounds.Min - tick.Value
+                    Max = baseBounds.SecondaryBounds.Max + tick.Value,
+                    Min = baseBounds.SecondaryBounds.Min - tick.Value
                 },
-                YAxisBounds = new Bounds
+                PrimaryBounds = new Bounds
                 {
-                    Max = baseBounds.YAxisBounds.Max + tick.Value,
-                    min = baseBounds.YAxisBounds.min - tick.Value
+                    Max = baseBounds.PrimaryBounds.Max + tick.Value,
+                    min = baseBounds.PrimaryBounds.min - tick.Value
                 }
             };
         }

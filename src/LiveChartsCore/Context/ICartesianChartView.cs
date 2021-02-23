@@ -20,15 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 using System;
 using System.Collections.Generic;
 
-namespace LiveChartsCore
+namespace LiveChartsCore.Context
 {
     public interface ICartesianChartView<TDrawingContext>
-        where TDrawingContext: DrawingContext
+        where TDrawingContext : DrawingContext
     {
         CartesianChartCore<TDrawingContext> Core { get; }
         Canvas<TDrawingContext> CoreCanvas { get; }
@@ -37,7 +36,7 @@ namespace LiveChartsCore
         IEnumerable<IAxis<TDrawingContext>> XAxes { get; set; }
         IEnumerable<IAxis<TDrawingContext>> YAxes { get; set; }
 
-        IEnumerable<ISeries<TDrawingContext>> Series { get; set; }
+        IEnumerable<ICartesianSeries<TDrawingContext>> Series { get; set; }
 
         LegendPosition LegendPosition { get; set; }
         LegendOrientation LegendOrientation { get; set; }

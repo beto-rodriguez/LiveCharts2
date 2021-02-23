@@ -20,38 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 using System.Collections.Generic;
 
-namespace LiveChartsCore
+namespace LiveChartsCore.Context
 {
-    public interface ISeries
+    public interface IDataSeries<TDrawingContext> : ISeries
+         where TDrawingContext : DrawingContext
     {
-        SeriesProperties SeriesProperties { get; }
-        string Name { get; set; }
-        int ScalesXAt { get; set; }
-        int ScalesYAt { get; set; }
-    }
-
-    public interface ISeries<TDrawingContext>: ISeries
-        where TDrawingContext: DrawingContext
-    {
-        IDrawableTask<TDrawingContext> Stroke { get; }
-        IDrawableTask<TDrawingContext> Fill { get; }
-        IDrawableTask<TDrawingContext> HighlightStroke { get; }
-        IDrawableTask<TDrawingContext> HighlightFill { get; }
+        IDrawableTask<TDrawingContext>? Stroke { get; }
+        IDrawableTask<TDrawingContext>? Fill { get; }
+        IDrawableTask<TDrawingContext>? HighlightStroke { get; }
+        IDrawableTask<TDrawingContext>? HighlightFill { get; }
 
         PaintContext<TDrawingContext> DefaultPaintContext { get; }
 
-        IEnumerable<ICartesianCoordinate> Fetch(CartesianChartCore<TDrawingContext> chart);
-
-        CartesianBounds GetBounds(CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
-
-        void Measure(CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
+        IEnumerable<IChartPoint> Fetch(CartesianChartCore<TDrawingContext> chart);
 
         int GetStackGroup();
     }
-
-    public delegate void TransitionsSetterDelegate<T>(T visual, Animation chartAnimation);
 }

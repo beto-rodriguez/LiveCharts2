@@ -30,13 +30,12 @@ using System.Linq;
 
 namespace LiveChartsCore
 {
-    public class CartesianChartCore<TDrawingContext>
+    public class CartesianChartCore<TDrawingContext>: IChart
         where TDrawingContext : DrawingContext
     {
         private object measureWorker = null;
         private HashSet<IDrawable<TDrawingContext>> measuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
-        private SeriesContext<TDrawingContext> seriesContext = new SeriesContext<TDrawingContext>(
-            Enumerable.Empty<ISeries<TDrawingContext>>());
+        private SeriesContext<TDrawingContext> seriesContext = new SeriesContext<TDrawingContext>(Enumerable.Empty<IDataSeries<TDrawingContext>>());
 
         private readonly ICartesianChartView<TDrawingContext> chartView;
         private readonly Canvas<TDrawingContext> canvas;
@@ -44,10 +43,10 @@ namespace LiveChartsCore
 
         // view copied properties
         private SizeF controlSize = new SizeF();
-        private Margin viewDrawMargin = null;
+        private Margin? viewDrawMargin = null;
         private IAxis<TDrawingContext>[] xAxes = new IAxis<TDrawingContext>[0];
         private IAxis<TDrawingContext>[] yAxes = new IAxis<TDrawingContext>[0];
-        private ISeries<TDrawingContext>[] series = new ISeries<TDrawingContext>[0];
+        private ICartesianSeries<TDrawingContext>[] series = new ICartesianSeries<TDrawingContext>[0];
         private LegendPosition legendPosition;
         private LegendOrientation legendOrientation;
         private IChartLegend<TDrawingContext> legend;
@@ -79,7 +78,7 @@ namespace LiveChartsCore
         public SizeF DrawMarginSize => drawMarginSize;
         public IAxis<TDrawingContext>[] XAxes => xAxes;
         public IAxis<TDrawingContext>[] YAxes => yAxes;
-        public ISeries<TDrawingContext>[] Series => series;
+        public IDataSeries<TDrawingContext>[] Series => series;
         public LegendPosition LegendPosition => LegendPosition;
         public LegendOrientation LegendOrientation => legendOrientation;
         public IChartLegend<TDrawingContext> Legend => legend;
@@ -95,15 +94,15 @@ namespace LiveChartsCore
             updateThrottler.TryRun();
         }
 
-        public IEnumerable<FoundPoint<TDrawingContext>> FindPointsNearTo(PointF point)
+        public IEnumerable<FoundPoint<TDrawingContext>> FindPointsNearTo(PointF pointerPosition)
         {
             if (measureWorker == null) return Enumerable.Empty<FoundPoint<TDrawingContext>>();
 
             return chartView.Series
                 .SelectMany(series => series
                         .Fetch(this)
-                        .Where(p => p.HoverArea.IsTriggerBy(point, chartView.TooltipFindingStrategy))
-                        .Select(p => new FoundPoint<TDrawingContext> { Coordinate = p, Series = series }));
+                        .Where(point => point.PointContext.HoverArea.IsTriggerBy(pointerPosition, chartView.TooltipFindingStrategy))
+                        .Select(point => new FoundPoint<TDrawingContext>(series, point)));
         }
 
         private void Measure()
@@ -125,10 +124,10 @@ namespace LiveChartsCore
 
                 var seriesBounds = series.GetBounds(this, xAxis, yAxis);
 
-                xAxis.DataBounds.AppendValue(seriesBounds.XAxisBounds.max);
-                xAxis.DataBounds.AppendValue(seriesBounds.XAxisBounds.min);
-                yAxis.DataBounds.AppendValue(seriesBounds.YAxisBounds.max);
-                yAxis.DataBounds.AppendValue(seriesBounds.YAxisBounds.min);
+                xAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.max);
+                xAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.min);
+                yAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.max);
+                yAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.min);
             }
 
             if (viewDrawMargin == null)

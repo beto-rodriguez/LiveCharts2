@@ -32,7 +32,7 @@ namespace LiveChartsCore
     /// Defines the data to plot as a line.
     /// </summary>
     public class LineSeries<TModel, TVisual, TDrawingContext, TGeometryPath, TLineSegment, TBezierSegment, TMoveToCommand, TPathContext>
-        : Series<TModel, TVisual, TDrawingContext>
+        : CartesianSeries<TModel, TVisual, TDrawingContext>
         where TGeometryPath : IPathGeometry<TDrawingContext, TPathContext>, new()
         where TLineSegment : ILinePathSegment<TPathContext>, new()
         where TBezierSegment : IBezierSegment<TPathContext>, new()
@@ -44,11 +44,10 @@ namespace LiveChartsCore
             new AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveToCommand, TPathContext>();
         private readonly AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveToCommand, TPathContext> strokePathHelper =
             new AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveToCommand, TPathContext>();
-
         private double lineSmoothness = 0.65;
         private double geometrySize = 18d;
-        private IDrawableTask<TDrawingContext> shapesFill;
-        private IDrawableTask<TDrawingContext> shapesStroke;
+        private IDrawableTask<TDrawingContext>? shapesFill;
+        private IDrawableTask<TDrawingContext>? shapesStroke;
 
         public LineSeries()
             : base(SeriesProperties.Line | SeriesProperties.VerticalOrientation)
@@ -56,7 +55,7 @@ namespace LiveChartsCore
 
         }
 
-        public IDrawableTask<TDrawingContext> ShapesFill
+        public IDrawableTask<TDrawingContext>? ShapesFill
         {
             get => shapesFill;
             set
@@ -72,7 +71,7 @@ namespace LiveChartsCore
             }
         }
 
-        public IDrawableTask<TDrawingContext> ShapesStroke
+        public IDrawableTask<TDrawingContext>? ShapesStroke
         {
             get => shapesStroke;
             set
@@ -87,10 +86,14 @@ namespace LiveChartsCore
         }
 
         public double Pivot { get; set; }
+
         public double GeometrySize { get => geometrySize; set => geometrySize = value; }
+
         public double LineSmoothness { get => lineSmoothness; set => lineSmoothness = value; }
-        public TransitionsSetterDelegate<LineSeriesVisualPoint<TDrawingContext, TVisual, TGeometryPath, TPathContext>> TransitionsSetter { get; set; }
-        public TransitionsSetterDelegate<AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveToCommand, TPathContext>> PathTransitionsSetter { get; set; }
+
+        public TransitionsSetterDelegate<LineSeriesVisualPoint<TDrawingContext, TVisual, TGeometryPath, TPathContext>>? TransitionsSetter { get; set; }
+
+        public TransitionsSetterDelegate<AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveToCommand, TPathContext>>? PathTransitionsSetter { get; set; }
 
         public override void Measure(
             CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext>xAxis, IAxis<TDrawingContext> yAxis)
@@ -130,10 +133,10 @@ namespace LiveChartsCore
 
             foreach (var data in GetSpline(chart, xScale, yScale))
             {
-                var x = xScale.ScaleToUi(data.TargetCoordinate.X);
-                var y = yScale.ScaleToUi(data.TargetCoordinate.Y);
+                var x = xScale.ScaleToUi(data.TargetPoint.SecondaryValue);
+                var y = yScale.ScaleToUi(data.TargetPoint.PrimaryValue);
 
-                if (data.TargetCoordinate.Visual == null)
+                if (data.TargetPoint.PointContext.Visual == null)
                 {
                     var v = new LineSeriesVisualPoint<TDrawingContext, TVisual, TGeometryPath, TPathContext>
                     {
@@ -155,14 +158,14 @@ namespace LiveChartsCore
 
                     ts(v, chartAnimation);
 
-                    data.TargetCoordinate.HoverArea = new HoverArea();
-                    data.TargetCoordinate.Visual = v;
+                    data.TargetPoint.PointContext.HoverArea = new HoverArea();
+                    data.TargetPoint.PointContext.Visual = v;
 
                     if (ShapesFill != null) ShapesFill.AddGeometyToPaintTask(v.Geometry);
                     if (ShapesStroke != null) ShapesStroke.AddGeometyToPaintTask(v.Geometry);
                 }
 
-                var visual = (LineSeriesVisualPoint<TDrawingContext, TVisual, TGeometryPath, TPathContext>)data.TargetCoordinate.Visual;
+                var visual = (LineSeriesVisualPoint<TDrawingContext, TVisual, TGeometryPath, TPathContext>)data.TargetPoint.PointContext.Visual;
 
                 visual.Bezier.X0 = data.X0;
                 visual.Bezier.Y0 = data.Y0;
@@ -228,8 +231,8 @@ namespace LiveChartsCore
                 visual.Geometry.Width = gs;
                 visual.Geometry.Height = gs;
 
-                data.TargetCoordinate.HoverArea.SetDimensions(x - hgs, y - hgs + 2 * sw, gs, gs + 2 * sw);
-                OnPointMeasured(data.TargetCoordinate, visual.Geometry);
+                data.TargetPoint.PointContext.HoverArea.SetDimensions(x - hgs, y - hgs + 2 * sw, gs, gs + 2 * sw);
+                OnPointMeasured(data.TargetPoint, visual.Geometry);
                 chart.MeasuredDrawables.Add(visual.Geometry);
             }
 
@@ -244,19 +247,19 @@ namespace LiveChartsCore
         {
             var baseBounds = base.GetBounds(chart, x, y);
 
-            var tick = y.GetTick(chart.ControlSize, baseBounds.YAxisBounds);
+            var tick = y.GetTick(chart.ControlSize, baseBounds.PrimaryBounds);
 
             return new CartesianBounds
             {
-                XAxisBounds = new Bounds
+                SecondaryBounds = new Bounds
                 {
-                    Max = baseBounds.XAxisBounds.Max,
-                    Min = baseBounds.XAxisBounds.Min
+                    Max = baseBounds.SecondaryBounds.Max,
+                    Min = baseBounds.SecondaryBounds.Min
                 },
-                YAxisBounds = new Bounds
+                PrimaryBounds = new Bounds
                 {
-                    Max = baseBounds.YAxisBounds.Max + tick.Value,
-                    min = baseBounds.YAxisBounds.min - tick.Value
+                    Max = baseBounds.PrimaryBounds.Max + tick.Value,
+                    min = baseBounds.PrimaryBounds.min - tick.Value
                 }
             };
         }
@@ -288,13 +291,13 @@ namespace LiveChartsCore
             visual.Bezier.CompleteTransition(cubicBezierProperties);
         }
 
-        private IEnumerable<BezierData> GetSpline(
+        private IEnumerable<BezierData<TModel>> GetSpline(
             CartesianChartCore<TDrawingContext> chart, ScaleContext xScale, ScaleContext yScale)
         {
             var points = Fetch(chart).ToArray();
 
             if (points.Length == 0) yield break;
-            ICartesianCoordinate previous, current, next, next2;
+            IChartPoint previous, current, next, next2;
 
             for (int i = 0; i < points.Length; i++)
             {
@@ -303,16 +306,25 @@ namespace LiveChartsCore
                 next = points[i + 1 > points.Length - 1 ? points.Length - 1 : i + 1];
                 next2 = points[i + 2 > points.Length - 1 ? points.Length - 1 : i + 2];
 
-                var xc1 = (previous.X + current.X) / 2.0;
-                var yc1 = (previous.Y + current.Y) / 2.0;
-                var xc2 = (current.X + next.X) / 2.0;
-                var yc2 = (current.Y + next.Y) / 2.0;
-                var xc3 = (next.X + next2.X) / 2.0;
-                var yc3 = (next.Y + next2.Y) / 2.0;
+                var xc1 = (previous.SecondaryValue + current.SecondaryValue) / 2.0;
+                var yc1 = (previous.PrimaryValue + current.PrimaryValue) / 2.0;
+                var xc2 = (current.SecondaryValue + next.SecondaryValue) / 2.0;
+                var yc2 = (current.PrimaryValue + next.PrimaryValue) / 2.0;
+                var xc3 = (next.SecondaryValue + next2.SecondaryValue) / 2.0;
+                var yc3 = (next.PrimaryValue + next2.PrimaryValue) / 2.0;
 
-                var len1 = Math.Sqrt((current.X - previous.X) * (current.X - previous.X) + (current.Y - previous.Y) * (current.Y - previous.Y));
-                var len2 = Math.Sqrt((next.X - current.X) * (next.X - current.X) + (next.Y - current.Y) * (next.Y - current.Y));
-                var len3 = Math.Sqrt((next2.X - next.X) * (next2.X - next.X) + (next2.Y - next.Y) * (next2.Y - next.Y));
+                var len1 = Math.Sqrt(
+                    (current.SecondaryValue - previous.SecondaryValue) * 
+                    (current.SecondaryValue - previous.SecondaryValue) + 
+                    (current.PrimaryValue - previous.PrimaryValue) * (current.PrimaryValue - previous.PrimaryValue));
+                var len2 = Math.Sqrt(
+                    (next.SecondaryValue - current.SecondaryValue) * 
+                    (next.SecondaryValue - current.SecondaryValue) + 
+                    (next.PrimaryValue - current.PrimaryValue) * (next.PrimaryValue - current.PrimaryValue));
+                var len3 = Math.Sqrt(
+                    (next2.SecondaryValue - next.SecondaryValue) * 
+                    (next2.SecondaryValue - next.SecondaryValue) + 
+                    (next2.PrimaryValue - next.PrimaryValue) * (next2.PrimaryValue - next.PrimaryValue));
 
                 var k1 = len1 / (len1 + len2);
                 var k2 = len2 / (len2 + len3);
@@ -325,10 +337,10 @@ namespace LiveChartsCore
                 var xm2 = xc2 + (xc3 - xc2) * k2;
                 var ym2 = yc2 + (yc3 - yc2) * k2;
 
-                var c1X = xm1 + (xc2 - xm1) * lineSmoothness + current.X - xm1;
-                var c1Y = ym1 + (yc2 - ym1) * lineSmoothness + current.Y - ym1;
-                var c2X = xm2 + (xc2 - xm2) * lineSmoothness + next.X - xm2;
-                var c2Y = ym2 + (yc2 - ym2) * lineSmoothness + next.Y - ym2;
+                var c1X = xm1 + (xc2 - xm1) * lineSmoothness + current.SecondaryValue - xm1;
+                var c1Y = ym1 + (yc2 - ym1) * lineSmoothness + current.PrimaryValue - ym1;
+                var c2X = xm2 + (xc2 - xm2) * lineSmoothness + next.SecondaryValue - xm2;
+                var c2Y = ym2 + (yc2 - ym2) * lineSmoothness + next.PrimaryValue - ym2;
 
                 unchecked
                 {
@@ -336,8 +348,8 @@ namespace LiveChartsCore
 
                     if (i == 0)
                     {
-                        x0 = current.X;
-                        y0 = current.Y;
+                        x0 = current.SecondaryValue;
+                        y0 = current.PrimaryValue;
                     }
                     else
                     {
@@ -345,17 +357,16 @@ namespace LiveChartsCore
                         y0 = (float)c1Y;
                     }
 
-                    yield return new BezierData
+                    yield return new BezierData<TModel>(points[i])
                     {
                         IsFirst = i == 0,
                         IsLast = i == points.Length - 1,
-                        TargetCoordinate = points[i],
                         X0 = xScale.ScaleToUi(x0),
                         Y0 = yScale.ScaleToUi(y0),
                         X1 = xScale.ScaleToUi((float)c2X),
                         Y1 = yScale.ScaleToUi((float)c2Y),
-                        X2 = xScale.ScaleToUi(next.X),
-                        Y2 = yScale.ScaleToUi(next.Y)
+                        X2 = xScale.ScaleToUi(next.SecondaryValue),
+                        Y2 = yScale.ScaleToUi(next.PrimaryValue)
                     };
                 }
             }
@@ -460,17 +471,5 @@ namespace LiveChartsCore
         }
 
         public override int GetStackGroup() => 0;
-    }
-
-    public class StackedAreaSeries<TModel, TVisual, TDrawingContext, TGeometryPath, TLineSegment, TBezierSegment, TMoveToCommand, TPathContext>
-        : LineSeries<TModel, TVisual, TDrawingContext, TGeometryPath, TLineSegment, TBezierSegment, TMoveToCommand, TPathContext>
-         where TGeometryPath : IPathGeometry<TDrawingContext, TPathContext>, new()
-        where TLineSegment : ILinePathSegment<TPathContext>, new()
-        where TBezierSegment : IBezierSegment<TPathContext>, new()
-        where TMoveToCommand : IMoveToPathCommand<TPathContext>, new()
-        where TVisual : ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
-        where TDrawingContext : DrawingContext
-    {
-
     }
 }

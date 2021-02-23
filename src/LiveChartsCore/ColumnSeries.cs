@@ -23,14 +23,13 @@
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 using System;
-using System.Collections.Generic;
 
 namespace LiveChartsCore
 {
     /// <summary>
     /// Defines the data to plot as columns.
     /// </summary>
-    public class ColumnSeries<TModel, TVisual, TDrawingContext> : Series<TModel, TVisual, TDrawingContext>
+    public class ColumnSeries<TModel, TVisual, TDrawingContext> : CartesianSeries<TModel, TVisual, TDrawingContext>
         where TVisual : ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
@@ -41,9 +40,12 @@ namespace LiveChartsCore
         }
 
         public double Pivot { get; set; }
+
         public double MaxColumnWidth { get; set; } = 30;
+
         public bool IgnoresColumnPosition { get; set; } = false;
-        public TransitionsSetterDelegate<ISizedGeometry<TDrawingContext>> TransitionsSetter { get; set; }
+
+        public TransitionsSetterDelegate<ISizedGeometry<TDrawingContext>>? TransitionsSetter { get; set; }
 
         public override void Measure(
             CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
@@ -83,11 +85,11 @@ namespace LiveChartsCore
 
             foreach (var point in Fetch(chart))
             {
-                var x = xScale.ScaleToUi(point.X);
-                var y = yScale.ScaleToUi(point.Y);
+                var x = xScale.ScaleToUi(point.SecondaryValue);
+                var y = yScale.ScaleToUi(point.PrimaryValue);
                 float b = Math.Abs(y - p);
 
-                if (point.Visual == null)
+                if (point.PointContext.Visual == null)
                 {
                     var r = new TVisual
                     {
@@ -99,22 +101,21 @@ namespace LiveChartsCore
 
                     ts(r, chartAnimation);
 
-                    point.HoverArea = new HoverArea();
-                    point.Visual = r;
+                    point.PointContext.Visual = r;
                     if (Fill != null) Fill.AddGeometyToPaintTask(r);
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(r);
                 }
 
-                var sizedGeometry = (TVisual)point.Visual;
+                var sizedGeometry = (TVisual)point.PointContext.Visual;
 
-                var cy = point.Y > Pivot ? y : y - b;
+                var cy = point.PrimaryValue > Pivot ? y : y - b;
 
                 sizedGeometry.X = x - uwm + cp;
                 sizedGeometry.Y = cy;
                 sizedGeometry.Width = uw;
                 sizedGeometry.Height = b;
 
-                point.HoverArea.SetDimensions(x - uwm + cp, cy, uw, b);
+                point.PointContext.HoverArea.SetDimensions(x - uwm + cp, cy, uw, b);
                 OnPointMeasured(point, sizedGeometry);
                 chart.MeasuredDrawables.Add(sizedGeometry);
             }
@@ -128,19 +129,19 @@ namespace LiveChartsCore
         {
             var baseBounds = base.GetBounds(chart, x, y);
 
-            var tick = y.GetTick(chart.ControlSize, baseBounds.YAxisBounds);
+            var tick = y.GetTick(chart.ControlSize, baseBounds.PrimaryBounds);
 
             return new CartesianBounds
             {
-                XAxisBounds = new Bounds
+                SecondaryBounds = new Bounds
                 {
-                    Max = baseBounds.XAxisBounds.Max + 0.5,
-                    Min = baseBounds.XAxisBounds.Min - 0.5
+                    Max = baseBounds.SecondaryBounds.Max + 0.5,
+                    Min = baseBounds.SecondaryBounds.Min - 0.5
                 },
-                YAxisBounds = new Bounds
+                PrimaryBounds = new Bounds
                 {
-                    Max = baseBounds.YAxisBounds.Max + tick.Value,
-                    min = baseBounds.YAxisBounds.min - tick.Value
+                    Max = baseBounds.PrimaryBounds.Max + tick.Value,
+                    min = baseBounds.PrimaryBounds.min - tick.Value
                 }
             };
         }
@@ -161,7 +162,7 @@ namespace LiveChartsCore
                 nameof(visual.Height),
             };
             visual.SetPropertyTransition(
-                new Animation(EasingFunctions.BounceOut, (long)(defaultAnimation.duration * 1.5), defaultAnimation.RepeatTimes),
+                new Animation(EasingFunctions.BounceIn, (long)(defaultAnimation.duration * 1.5), defaultAnimation.RepeatTimes),
                 bounceProperties);
             visual.CompleteTransition(bounceProperties);
         }

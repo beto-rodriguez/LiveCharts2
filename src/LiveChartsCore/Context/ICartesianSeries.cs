@@ -24,19 +24,14 @@ using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Context
 {
-    public class FoundPoint<TDrawingContext>
+    public interface ICartesianSeries<TDrawingContext> : IDataSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        private IDataSeries<TDrawingContext> series;
-        private IChartPoint point;
+        int ScalesXAt { get; set; }
+        int ScalesYAt { get; set; }
 
-        public FoundPoint(IDataSeries<TDrawingContext> series, IChartPoint point)
-        {
-            this.series = series;
-            this.point = point;
-        }
+        CartesianBounds GetBounds(CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
 
-        public IDataSeries<TDrawingContext> Series { get => series; set => series = value; }
-        public IChartPoint Point { get => point; set => point = value; }
+        void Measure(CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
     }
 }

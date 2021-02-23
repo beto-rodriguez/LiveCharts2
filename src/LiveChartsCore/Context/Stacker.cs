@@ -30,22 +30,18 @@ namespace LiveChartsCore.Context
     {
         private int stackCount = 0;
         private int stackMaxLength = 0;
-        private Dictionary<ISeries<TDrawingContext>, int> stackPositions = new Dictionary<ISeries<TDrawingContext>, int>();
+        private Dictionary<IDataSeries<TDrawingContext>, int> stackPositions = new Dictionary<IDataSeries<TDrawingContext>, int>();
         private int knownMaxLenght = 0;
         private List<List<StackedValue>> stack = new List<List<StackedValue>>();
         private List<float> totals = new List<float>();
-        private bool isVertical;
 
-        public Stacker(bool isVertical)
+        public Stacker()
         {
-            this.isVertical = isVertical;
         }
 
         public int MaxLenght => stackMaxLength;
 
-        public bool IsVertical => isVertical;
-
-        public int GetSeriesStackPosition(ISeries<TDrawingContext> series)
+        public int GetSeriesStackPosition(IDataSeries<TDrawingContext> series)
         {
             if (!stackPositions.TryGetValue(series, out var i))
             {
@@ -58,13 +54,14 @@ namespace LiveChartsCore.Context
             return i;
         }
 
-        public float StackPoint(ICartesianCoordinate point, int seriesStackPosition)
+        public float StackPoint(IOutOfContextChartPoint point, int seriesStackPosition)
         {
-            var start = seriesStackPosition == 0 ? 0 : stack[seriesStackPosition - 1][point.Index].End;
-            var value = isVertical ? point.Y : point.X;
+            var index = unchecked((int)point.SecondaryValue);
+            var start = seriesStackPosition == 0 ? 0 : stack[seriesStackPosition - 1][index].End;
+            var value = point.PrimaryValue;
 
             var si = stack[seriesStackPosition];
-            if (si.Count < point.Index + 1)
+            if (si.Count < point.SecondaryValue + 1)
             {
                 si.Add(new StackedValue { Start = start, End = start + value });
                 totals.Add(value);
@@ -72,18 +69,19 @@ namespace LiveChartsCore.Context
             }
             else
             {
-                si[point.Index] = new StackedValue { Start = start, End = start + value };
+                si[index] = new StackedValue { Start = start, End = start + value };
             }
 
-            var total = totals[point.Index] + value;
-            totals[point.Index] = total;
+            var total = totals[index] + value;
+            totals[index] = total;
 
             return total;
         }
 
-        public StackedValue GetStack(int seriesStackPosition, ICartesianCoordinate point)
+        public StackedValue GetStack(int seriesStackPosition, IOutOfContextChartPoint point)
         {
-            var p = stack[seriesStackPosition][point.Index];
+            var index = unchecked((int)point.SecondaryValue);
+            var p = stack[seriesStackPosition][index];
 
             return new StackedValue
             {

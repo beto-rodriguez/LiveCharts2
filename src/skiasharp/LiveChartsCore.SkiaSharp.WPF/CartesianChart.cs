@@ -72,8 +72,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty SeriesProperty =
             DependencyProperty.Register(
-                nameof(Series), typeof(IEnumerable<ISeries<SkiaDrawingContext>>), 
-                typeof(CartesianChart), new PropertyMetadata(new List<ISeries<SkiaDrawingContext>>()));
+                nameof(Series), typeof(IEnumerable<ICartesianSeries<SkiaDrawingContext>>), 
+                typeof(CartesianChart), new PropertyMetadata(new List<ICartesianSeries<SkiaDrawingContext>>()));
 
         public static readonly DependencyProperty XAxesProperty =
             DependencyProperty.Register(
@@ -85,9 +85,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 nameof(YAxes), typeof(IEnumerable<IAxis<SkiaDrawingContext>>),
                 typeof(CartesianChart), new PropertyMetadata(new List<IAxis<SkiaDrawingContext>> { new Axis() }));
 
-        public IEnumerable<ISeries<SkiaDrawingContext>> Series
+        public IEnumerable<ICartesianSeries<SkiaDrawingContext>> Series
         {
-            get { return (IEnumerable<ISeries<SkiaDrawingContext>>)GetValue(SeriesProperty); }
+            get { return (IEnumerable<ICartesianSeries<SkiaDrawingContext>>)GetValue(SeriesProperty); }
             set { SetValue(SeriesProperty, value); }
         }
 

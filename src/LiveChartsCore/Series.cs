@@ -30,44 +30,31 @@ using System.Linq;
 
 namespace LiveChartsCore
 {
-
-    /// <summary>
-    /// Defines data to plot in a chart.
-    /// </summary>
-    public abstract class Series<TModel, TVisual, TDrawingContext> : IDisposable, ISeries<TDrawingContext>
+    public abstract class Series<TModel, TVisual, TDrawingContext> : IDataSeries<TDrawingContext>, IDisposable
         where TDrawingContext : DrawingContext
         where TVisual : ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
     {
+        private readonly CollectionDeepObserver<TModel> observerer;
         private readonly object measuredFor = new object();
-        private IEnumerable<ICartesianCoordinate> fetched = Enumerable.Empty<ICartesianCoordinate>();
-        private CollectionDeepObserverer<TModel> observerer;
-        private readonly SeriesProperties properties;
-        private readonly HashSet<CartesianChartCore<TDrawingContext>> subscribedTo = new HashSet<CartesianChartCore<TDrawingContext>>();
-        protected bool implementsINCC = false;
-        protected PaintContext<TDrawingContext> paintContext;
+        private IEnumerable<IChartPoint> fetched = Enumerable.Empty<IChartPoint>();
         protected readonly bool isValueType;
-        protected readonly bool implementsINPC;
-        protected readonly bool implementsICC;
-        protected readonly Dictionary<int, ICartesianCoordinate> byValueVisualMap = new Dictionary<int, ICartesianCoordinate>();
-        protected readonly Dictionary<TModel, ICartesianCoordinate> byReferenceVisualMap = new Dictionary<TModel, ICartesianCoordinate>();
-        private IDrawableTask<TDrawingContext> stroke;
-        private IDrawableTask<TDrawingContext> fill;
-        private IDrawableTask<TDrawingContext> highlightStroke;
-        private IDrawableTask<TDrawingContext> highlightFill;
+        protected readonly bool implementsICP;
+        protected readonly Dictionary<int, ChartPoint<TModel>> byValueVisualMap = new Dictionary<int, ChartPoint<TModel>>();
+        protected readonly Dictionary<TModel, ChartPoint<TModel>> byReferenceVisualMap = new Dictionary<TModel, ChartPoint<TModel>>();
+        private readonly HashSet<CartesianChartCore<TDrawingContext>> subscribedTo = new HashSet<CartesianChartCore<TDrawingContext>>();
+        private readonly SeriesProperties properties;
+        private IEnumerable<TModel>? values;
+        protected PaintContext<TDrawingContext> paintContext = new PaintContext<TDrawingContext>();
+        private IDrawableTask<TDrawingContext>? stroke = null;
+        private IDrawableTask<TDrawingContext>? fill = null;
+        private IDrawableTask<TDrawingContext>? highlightStroke = null;
+        private IDrawableTask<TDrawingContext>? highlightFill = null;
         private double legendShapeSize = 15;
-        private IEnumerable<TModel> values;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Series{T}"/> class.
-        /// </summary>
         public Series(SeriesProperties properties)
         {
             this.properties = properties;
-            var t = typeof(TModel);
-            implementsINPC = typeof(INotifyPropertyChanged).IsAssignableFrom(t);
-            implementsICC = typeof(ICartesianCoordinate).IsAssignableFrom(t);
-            isValueType = t.IsValueType;
-            observerer = new CollectionDeepObserverer<TModel>(
+            observerer = new CollectionDeepObserver<TModel>(
                 (object sender, NotifyCollectionChangedEventArgs e) =>
                 {
                     NotifySubscribers();
@@ -76,31 +63,31 @@ namespace LiveChartsCore
                 {
                     NotifySubscribers();
                 });
+            var t = typeof(TModel);
+            implementsICP = typeof(IChartPoint).IsAssignableFrom(t);
+            isValueType = t.IsValueType;
         }
 
         public SeriesProperties SeriesProperties => properties;
 
+        /// <inheritdoc />
+        public string? Name { get; set; }
+
         /// <summary>
         /// Gets or sets the series to draw in the chart.
         /// </summary>
-        public IEnumerable<TModel> Values 
+        public IEnumerable<TModel>? Values
         {
-            get => values; 
-            set 
-            { 
+            get => values;
+            set
+            {
                 observerer.Dispose(values);
                 observerer.Initialize(value);
                 values = value;
             }
         }
 
-        /// <inheritdoc/>
-        public int ScalesXAt { get; set; }
-
-        /// <inheritdoc/>
-        public int ScalesYAt { get; set; }
-
-        public IDrawableTask<TDrawingContext> Stroke
+        public IDrawableTask<TDrawingContext>? Stroke
         {
             get => stroke;
             set
@@ -115,7 +102,7 @@ namespace LiveChartsCore
             }
         }
 
-        public IDrawableTask<TDrawingContext> Fill
+        public IDrawableTask<TDrawingContext>? Fill
         {
             get => fill;
             set
@@ -130,7 +117,7 @@ namespace LiveChartsCore
             }
         }
 
-        public IDrawableTask<TDrawingContext> HighlightStroke
+        public IDrawableTask<TDrawingContext>? HighlightStroke
         {
             get => highlightStroke;
             set
@@ -145,7 +132,7 @@ namespace LiveChartsCore
             }
         }
 
-        public IDrawableTask<TDrawingContext> HighlightFill
+        public IDrawableTask<TDrawingContext>? HighlightFill
         {
             get => highlightFill;
             set
@@ -163,131 +150,29 @@ namespace LiveChartsCore
 
         public PaintContext<TDrawingContext> DefaultPaintContext => paintContext;
 
-        public string Name { get; set; }
-
         public double LegendShapeSize { get => legendShapeSize; set => legendShapeSize = value; }
+
         /// <summary>
         /// Gets or sets the mapping that defines how a type is mapped to a <see cref="ChartPoint"/> instance, 
         /// then the <see cref="ChartPoint"/> will be drawn as a point in our chart.
         /// </summary>
-        public Func<TModel, int, ICartesianCoordinate> Mapping { get; set; }
+        public ChartPointMapperDelegate<TModel>? Mapping { get; set; }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<ICartesianCoordinate> Fetch(CartesianChartCore<TDrawingContext> chart)
+        public virtual IEnumerable<IChartPoint> Fetch(CartesianChartCore<TDrawingContext> chart)
         {
             subscribedTo.Add(chart);
             if (measuredFor == chart.MeasureWorker) return fetched;
 
-            fetched = implementsICC ? GetPointsFromICC() : GetMappedPoints();
+            fetched = implementsICP ? GetPointsFromICP() : GetMappedPoints();
+
             return fetched;
         }
-
-        /// <inheritdoc/>
-        public virtual CartesianBounds GetBounds(
-            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
-        {
-            var seriesLength = 0;
-            var stack = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
-
-            var bounds = new CartesianBounds();
-            foreach (var coordinate in Fetch(chart))
-            {
-                var isXLimit = coordinate.X == bounds.XAxisBounds.max || coordinate.X == bounds.XAxisBounds.min;
-                var isYLimit = coordinate.Y == bounds.YAxisBounds.Max || coordinate.Y == bounds.YAxisBounds.min;
-
-                var cx = coordinate.X;
-                var cy = coordinate.Y;
-                if (stack != null)
-                {
-                    var s = stack.StackPoint(coordinate);
-                    if (!stack.Stacker.IsVertical) cx = s;
-                    else cy = s;
-                }
-
-                var abx = bounds.XAxisBounds.AppendValue(cx);
-                var aby = bounds.YAxisBounds.AppendValue(cy);
-
-                if (abx > 0)
-                {
-                    if (!isXLimit) bounds.XCoordinatesBounds = new HashSet<ICartesianCoordinate>();
-                    bounds.XCoordinatesBounds.Add(coordinate);
-                }
-
-                if (aby > 0)
-                {
-                    if (!isYLimit) bounds.YCoordinatesBounds = new HashSet<ICartesianCoordinate>();
-                    bounds.YCoordinatesBounds.Add(coordinate);
-                }
-
-                seriesLength++;
-            }
-
-            return bounds;
-        }
-
-        /// <inheritdoc/>
-        public abstract void Measure(
-            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
 
         /// <inheritdoc/>
         public void Dispose()
         {
             observerer.Dispose(values);
-        }
-
-        protected virtual void OnPointMeasured(ICartesianCoordinate coordinate, TVisual visual)
-        {
-        }
-
-        private IEnumerable<ICartesianCoordinate> GetPointsFromICC()
-        {
-            var i = 0;
-            foreach (var item in Values.Cast<ICartesianCoordinate>())
-            {
-                item.Index = i++;
-                item.DataSource = item;
-                //item.PropertyChanged -= OnValuesElementPropertyChanged;
-                //item.PropertyChanged += OnValuesElementPropertyChanged;
-                yield return item;
-            }
-        }
-
-        private IEnumerable<ICartesianCoordinate> GetMappedPoints()
-        {
-            var mapper = Mapping ?? LiveCharts.CurrentSettings.GetMapping<TModel>();
-            var index = 0;
-            foreach (var item in Values)
-            {
-                if (implementsINPC)
-                {
-                    var inpc = (INotifyPropertyChanged)item;
-                    //inpc.PropertyChanged -= OnValuesElementPropertyChanged;
-                    //inpc.PropertyChanged += OnValuesElementPropertyChanged;
-                }
-
-                ICartesianCoordinate icc;
-
-                if (isValueType)
-                {
-                    if (!byValueVisualMap.TryGetValue(index, out icc)) byValueVisualMap[index] = (icc = mapper(item, index));
-                }
-                else
-                {
-                    if (!byReferenceVisualMap.TryGetValue(item, out icc)) byReferenceVisualMap[item] = (icc = mapper(item, index));
-                }
-
-                icc.Index = index;
-                icc.DataSource = item;
-                index++;
-
-                yield return icc;
-            }
-        }
-
-
-        private void NotifySubscribers()
-        {
-            foreach (var chart in subscribedTo) chart.Update();
         }
 
         protected virtual void OnPaintContextChanged()
@@ -322,6 +207,64 @@ namespace LiveChartsCore
             context.Height = w;
 
             paintContext = context;
+        }
+
+        protected virtual void OnPointMeasured(IChartPoint chartPoint, TVisual visual)
+        {
+        }
+
+        private IEnumerable<IChartPoint> GetPointsFromICP()
+        {
+            if (values == null) yield break;
+
+            var index = 0;
+
+            foreach (var item in values)
+            {
+                var chartPoint = (IChartPoint)item;
+                chartPoint.PointContext = new ChartPointContext(index++, item, properties, true);
+                yield return chartPoint;
+            }
+        }
+
+        private IEnumerable<IChartPoint> GetMappedPoints()
+        {
+            if (values == null) yield break;
+
+            var mapper = Mapping ?? LiveCharts.CurrentSettings.GetMapper<TModel>();
+            var index = 0;
+
+            if (isValueType)
+            {
+                foreach (var item in values)
+                {
+                    if (!byValueVisualMap.TryGetValue(index, out ChartPoint<TModel> cp))
+                        byValueVisualMap[index] = (cp = new ChartPoint<TModel>());
+
+                    cp.PointContext = new ChartPointContext(index++, item, properties, true);
+                    mapper(cp, item, cp.PointContext);
+
+                    yield return cp;
+                }
+            }
+            else
+            {
+                foreach (var item in values)
+                {
+                    if (!byReferenceVisualMap.TryGetValue(item, out ChartPoint<TModel> cp))
+                        byReferenceVisualMap[item] = (cp = new ChartPoint<TModel>());
+
+                    cp.PointContext = new ChartPointContext(index++, item, properties, true);
+                    mapper(cp, item, cp.PointContext);
+
+                    yield return cp;
+                }
+            }
+        }
+
+        private void NotifySubscribers()
+        {
+            foreach (var chart in subscribedTo) chart.Update();
         }
 
         public abstract int GetStackGroup();

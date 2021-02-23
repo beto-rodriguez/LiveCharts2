@@ -26,7 +26,7 @@ using System.Collections.Generic;
 
 namespace LiveChartsCore
 {
-    public class StackedColumnSeries<TModel, TVisual, TDrawingContext> : Series<TModel, TVisual, TDrawingContext>
+    public class StackedColumnSeries<TModel, TVisual, TDrawingContext> : CartesianSeries<TModel, TVisual, TDrawingContext>
         where TVisual : ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
@@ -83,9 +83,9 @@ namespace LiveChartsCore
 
             foreach (var point in Fetch(chart))
             {
-                var x = xScale.ScaleToUi(point.X);
+                var x = xScale.ScaleToUi(point.SecondaryValue);
 
-                if (point.Visual == null)
+                if (point.PointContext.Visual == null)
                 {
                     var r = new TVisual
                     {
@@ -97,13 +97,13 @@ namespace LiveChartsCore
 
                     ts(r, chartAnimation);
 
-                    point.HoverArea = new HoverArea();
-                    point.Visual = r;
+                    point.PointContext.HoverArea = new HoverArea();
+                    point.PointContext.Visual = r;
                     if (Fill != null) Fill.AddGeometyToPaintTask(r);
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(r);
                 }
 
-                var sizedGeometry = (TVisual)point.Visual;
+                var sizedGeometry = (TVisual)point.PointContext.Visual;
 
                 var sy = stacker.GetStack(point);
                 var yi = yScale.ScaleToUi(sy.Start);
@@ -114,7 +114,7 @@ namespace LiveChartsCore
                 sizedGeometry.Width = uw;
                 sizedGeometry.Height = yi - yj;
 
-                point.HoverArea.SetDimensions(x - uwm + cp, yj, uw, yi - yj);
+                point.PointContext.HoverArea.SetDimensions(x - uwm + cp, yj, uw, yi - yj);
                 OnPointMeasured(point, sizedGeometry);
                 chart.MeasuredDrawables.Add(sizedGeometry);
             }
@@ -125,18 +125,18 @@ namespace LiveChartsCore
         {
             var baseBounds = base.GetBounds(chart, x, y);
 
-            var tick = y.GetTick(chart.ControlSize, baseBounds.YAxisBounds);
+            var tick = y.GetTick(chart.ControlSize, baseBounds.PrimaryBounds);
 
             return new CartesianBounds
             {
-                XAxisBounds = new Bounds
+                SecondaryBounds = new Bounds
                 {
-                    Max = baseBounds.XAxisBounds.Max + 0.5,
-                    Min = baseBounds.XAxisBounds.Min - 0.5
+                    Max = baseBounds.SecondaryBounds.Max + 0.5,
+                    Min = baseBounds.SecondaryBounds.Min - 0.5
                 },
-                YAxisBounds = new Bounds
+                PrimaryBounds = new Bounds
                 {
-                    Max = baseBounds.YAxisBounds.Max + tick.Value,
+                    Max = baseBounds.PrimaryBounds.Max + tick.Value,
                     min = 0
                 }
             };

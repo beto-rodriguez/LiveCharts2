@@ -27,7 +27,7 @@ using System.Linq;
 
 namespace LiveChartsCore.Context
 {
-    public class CollectionDeepObserverer<T>
+    public class CollectionDeepObserver<T>
     {
         private readonly NotifyCollectionChangedEventHandler onCollectionChanged;
         private readonly PropertyChangedEventHandler onItemPropertyChanged;
@@ -35,7 +35,7 @@ namespace LiveChartsCore.Context
 
         protected bool implementsINPC;
 
-        public CollectionDeepObserverer(
+        public CollectionDeepObserver(
             NotifyCollectionChangedEventHandler onCollectionChanged, PropertyChangedEventHandler onItemPropertyChanged)
         {
             this.onCollectionChanged = onCollectionChanged;
@@ -43,8 +43,10 @@ namespace LiveChartsCore.Context
             implementsINPC = typeof(INotifyPropertyChanged).IsAssignableFrom(typeof(T));
         }
 
-        public void Initialize(IEnumerable<T> instance)
+        public void Initialize(IEnumerable<T>? instance)
         {
+            if (instance == null) return;
+
             if (instance is INotifyCollectionChanged incc)
             {
                 incc.CollectionChanged += OnCollectionChanged;
@@ -55,7 +57,7 @@ namespace LiveChartsCore.Context
                     item.PropertyChanged += onItemPropertyChanged;
         }
 
-        public void Dispose(IEnumerable<T> instance)
+        public void Dispose(IEnumerable<T>? instance)
         {
             if (instance == null) return;
 

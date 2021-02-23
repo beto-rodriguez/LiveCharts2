@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="IPieChartView.cs" />
+    <Compile Remove="Context\IPieChartView.cs" />
     <Compile Remove="PieChartCore.cs" />
   </ItemGroup>
 

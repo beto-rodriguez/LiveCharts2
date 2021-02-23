@@ -30,13 +30,31 @@ using System.Linq;
 
 namespace LiveChartsCore
 {
-    public class PieChartCore<TDrawingContext>
+
+    public class PieDataSeries<TModel, TVisual, TDrawingContext>: Series<TModel, TVisual, TDrawingContext>, IDisposable
+        where TDrawingContext : DrawingContext
+        where TVisual : ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
+    {
+        public PieDataSeries()
+        {
+
+        }
+
+        public IEnumerable<TModel>? Values { get; set; }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class PieChartCore<TDrawingContext>: IChart
         where TDrawingContext : DrawingContext
     {
         private object measureWorker = null;
         private HashSet<IDrawable<TDrawingContext>> measuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
         private SeriesContext<TDrawingContext> seriesContext = new SeriesContext<TDrawingContext>(
-            Enumerable.Empty<ISeries<TDrawingContext>>());
+            Enumerable.Empty<ICartesianSeries<TDrawingContext>>());
 
         private readonly IPieChartView<TDrawingContext> chartView;
         private readonly Canvas<TDrawingContext> naturalGeometriesCanvas;

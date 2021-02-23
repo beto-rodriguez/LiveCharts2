@@ -20,40 +20,61 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.ComponentModel;
-
 namespace LiveChartsCore.Context
 {
-    public interface ICartesianCoordinate: INotifyPropertyChanged
+    /// <summary>
+    /// Defines all the involved variables a point inside a chart requires.
+    /// </summary>
+    public class ChartPointContext
     {
-        /// <summary>
-        /// Gets the X coordinate.
-        /// </summary>
-        float X { get; }
+        private readonly int index;
+        private readonly object dataSource;
+        private readonly SeriesProperties seriesProperties;
+        private readonly bool isInitialized;
+        private HoverArea hoverArea = new HoverArea();
 
         /// <summary>
-        /// Gets the Y Coordinate
+        /// Initializes a new instance of the <see cref="ChartPointContext"/> class.
         /// </summary>
-        float Y { get; }
+        /// <param name="index"></param>
+        /// <param name="dataSource"></param>
+        /// <param name="seriesProperties"></param>
+        internal ChartPointContext(int index, object dataSource, SeriesProperties seriesProperties, bool isInitialized)
+        {
+            this.index = index;
+            this.dataSource = dataSource;
+            this.seriesProperties = seriesProperties;
+            this.isInitialized = isInitialized;
+        }
 
         /// <summary>
         /// Gets the position of the point the collection that was used when the point was drawn.
         /// </summary>
-        int Index { get; set; }
+        public int Index { get => index; }
 
         /// <summary>
-        /// Gets or sets the DataSource.
+        /// Gets the DataSource.
         /// </summary>
-        object DataSource { get; set; }
+        public object DataSource { get => dataSource; }
+
+        /// <summary>
+        /// Gets the series properties.
+        /// </summary>
+        public SeriesProperties SeriesProperties { get => seriesProperties; }
 
         /// <summary>
         /// Gets or sets (must not be set) the visual element in the UI.
         /// </summary>
-        object Visual { get; set; }
+        public object? Visual { get; set; }
 
         /// <summary>
         /// Gets or sets the area that triggers the ToolTip.
         /// </summary>
-        HoverArea HoverArea { get; set; }
+        public HoverArea HoverArea { get => hoverArea; set => hoverArea = value; }
+
+        /// <summary>
+        /// Gets weather the instance is initialized or not.
+        /// </summary>
+        public bool IsInitialized => isInitialized;
     }
 }

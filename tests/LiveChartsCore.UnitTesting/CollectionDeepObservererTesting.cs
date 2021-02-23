@@ -1,5 +1,6 @@
 ﻿using LiveChartsCore.Context;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -16,7 +17,7 @@ namespace LiveChartsCore.UnitTesting
             var propertyChanges = 0;
             var collectionChanges = 0;
 
-            // DUMMY CASE
+            // CASE 0, DUMMY CASE
             var dummyObserver = new TestObserver<int>();
             var dummyList = new List<int>();
             dummyObserver.MyCollection = dummyList;
@@ -24,7 +25,7 @@ namespace LiveChartsCore.UnitTesting
 
             Assert.IsTrue(dummyObserver.CollectionChangedCount == 0 && dummyObserver.PropertyChangedCount == 0);
 
-            // CASE 1 ANOTHER DUMMY CASE
+            // CASE 1, ANOTHER DUMMY CASE
             var propertyChangedObserver = new TestObserver<PropertyChangedObject>();
 
             var caseOneCollection = new List<PropertyChangedObject>();
@@ -147,15 +148,14 @@ namespace LiveChartsCore.UnitTesting
         }
     }
 
-    public class TestObserver<T>
+    public class TestObserver<T>: IDisposable
     {
-        private readonly CollectionDeepObserverer<T> observerer;
-            
-        private IEnumerable<T> myCollection;
+        private readonly CollectionDeepObserver<T> observerer;
+        private IEnumerable<T> observedCollection;
 
         public TestObserver()
         {
-            observerer = new CollectionDeepObserverer<T>(
+            observerer = new CollectionDeepObserver<T>(
                 (object sender, NotifyCollectionChangedEventArgs e) =>
                 {
                     CollectionChangedCount++;
@@ -168,17 +168,22 @@ namespace LiveChartsCore.UnitTesting
 
         public IEnumerable<T> MyCollection
         {
-            get => myCollection;
+            get => observedCollection;
             set
             {
-                observerer.Dispose(myCollection);
+                observerer.Dispose(observedCollection);
                 observerer.Initialize(value);
-                myCollection = value;
+                observedCollection = value;
             }
         }
 
         public int CollectionChangedCount { get; private set; }
         public int PropertyChangedCount { get; private set; }
+
+        public void Dispose()
+        {
+            observerer.Dispose(observedCollection);
+        }
     }
 
     public class PropertyChangedObject : INotifyPropertyChanged

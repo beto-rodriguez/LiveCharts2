@@ -28,17 +28,17 @@ namespace LiveChartsCore.Context
         where TDrawingContext : DrawingContext
     {
         private int position;
-        private Stacker<TDrawingContext> stacker;
+        private Stacker<TDrawingContext> stacker = new Stacker<TDrawingContext>();
 
         public Stacker<TDrawingContext> Stacker { get => stacker; set => stacker = value; }
         public int Position { get => position; set => position = value; }
 
-        public float StackPoint(ICartesianCoordinate point)
+        public float StackPoint(IOutOfContextChartPoint point)
         {
             return stacker.StackPoint(point, position);
         }
 
-        public  StackedValue GetStack(ICartesianCoordinate point)
+        public StackedValue GetStack(IOutOfContextChartPoint point)
         {
             return stacker.GetStack(position, point);
         }

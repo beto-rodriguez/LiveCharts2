@@ -49,9 +49,9 @@ namespace LiveChartsCore
         /// <typeparam name="T">The type</typeparam>
         /// <param name="predicate">The mapper</param>
         /// <returns></returns>
-        public LiveChartsSettings SetMapping<TModel>(Func<TModel, int, ICartesianCoordinate> predicate)
+        public LiveChartsSettings HasMap<TModel>(ChartPointMapperDelegate<TModel> mapper)
         {
-            _mappers[typeof(TModel)] = predicate;
+            _mappers[typeof(TModel)] = mapper;
             return this;
         }
 
@@ -60,14 +60,15 @@ namespace LiveChartsCore
         /// </summary>
         /// <typeparam name="T">The type</typeparam>
         /// <returns>The current mapper</returns>
-        public Func<TModel, int, ICartesianCoordinate> GetMapping<TModel>()
+        public ChartPointMapperDelegate<TModel> GetMapper<TModel>()
         {
             if (!_mappers.TryGetValue(typeof(TModel), out var mapper))
                 throw new NotImplementedException(
-                    $"A mapper for type {typeof(TModel)} is not implemented yet, consider using {nameof(LiveCharts)}.{nameof(LiveCharts.Configure)}() " +
-                    $"method to call {nameof(SetMapping)}() with the type you are trying to plot.");
+                    $"A mapper for type {typeof(TModel)} is not implemented yet, consider using " +
+                    $"{nameof(LiveCharts)}.{nameof(LiveCharts.Configure)}() " +
+                    $"method to call {nameof(HasMap)}() with the type you are trying to plot.");
 
-            return (Func<TModel, int, ICartesianCoordinate>) mapper;
+            return (ChartPointMapperDelegate<TModel>) mapper;
         }
 
         /// <summary>
@@ -76,14 +77,36 @@ namespace LiveChartsCore
         /// <returns></returns>
         public LiveChartsSettings AddDefaultMappers()
         {
-            SetMapping<short>((value, index) => new ChartPoint<short>(index, value, index, value));
-            SetMapping<int>((value, index) => new ChartPoint<int>(index, value, index, value));
-            SetMapping<long>((value, index) => new ChartPoint<long>(index, value, index, value));
-            SetMapping<float>((value, index) => new ChartPoint<float>(index, value, index, value));
-            SetMapping<double>((value, index) => new ChartPoint<double>(index, value, index, value));
-            SetMapping<decimal>((value, index) => new ChartPoint<decimal>(index, (double) value, index, value));
-
-            return this;
+            return HasMap<short>((point, model, context) =>
+                 {
+                     point.PrimaryValue = model;
+                     point.SecondaryValue = context.Index;
+                 })
+                 .HasMap<int>((point, model, context) =>
+                 {
+                     point.PrimaryValue = model;
+                     point.SecondaryValue = context.Index;
+                 })
+                 .HasMap<long>((point, model, context) =>
+                 {
+                     point.PrimaryValue = model;
+                     point.SecondaryValue = context.Index;
+                 })
+                 .HasMap<float>((point, model, context) =>
+                 {
+                     point.PrimaryValue = model;
+                     point.SecondaryValue = context.Index;
+                 })
+                 .HasMap<double>((point, model, context) =>
+                 {
+                     point.PrimaryValue = unchecked((float) model);
+                     point.SecondaryValue = context.Index;
+                 })
+                 .HasMap<decimal>((point, model, context) =>
+                 {
+                     point.PrimaryValue = unchecked((float) model);
+                     point.SecondaryValue = context.Index;
+                 });
         }
 
         /// <summary>

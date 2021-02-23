@@ -73,8 +73,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public static readonly BindableProperty SeriesProperty =
             BindableProperty.Create(
-                nameof(Series), typeof(IEnumerable<ISeries<SkiaDrawingContext>>), typeof(CartesianChart),
-                new List<ISeries<SkiaDrawingContext>>(), BindingMode.Default, null);
+                nameof(Series), typeof(IEnumerable<ICartesianSeries<SkiaDrawingContext>>), typeof(CartesianChart),
+                new List<ICartesianSeries<SkiaDrawingContext>>(), BindingMode.Default, null);
 
         public static readonly BindableProperty XAxesProperty =
             BindableProperty.Create(
@@ -86,9 +86,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 nameof(YAxes), typeof(IEnumerable<IAxis<SkiaDrawingContext>>),
                 typeof(CartesianChart), new List<IAxis<SkiaDrawingContext>>(), BindingMode.Default, null);
 
-        public IEnumerable<ISeries<SkiaDrawingContext>> Series
+        public IEnumerable<ICartesianSeries<SkiaDrawingContext>> Series
         {
-            get { return (IEnumerable<ISeries<SkiaDrawingContext>>)GetValue(SeriesProperty); }
+            get { return (IEnumerable<ICartesianSeries<SkiaDrawingContext>>)GetValue(SeriesProperty); }
             set { SetValue(SeriesProperty, value); }
         }
 

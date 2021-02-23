@@ -1,4 +1,4 @@
-﻿using LiveChartsCore;
+﻿using LiveChartsCore.Context;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -10,7 +10,7 @@ namespace ViewModelsSamples
 {
     public class MainVM
     {
-        public ObservableCollection<ISeries<SkiaDrawingContext>> Series { get; set; }
+        public ObservableCollection<ICartesianSeries<SkiaDrawingContext>> Series { get; set; }
         public List<IAxis<SkiaDrawingContext>> YAxes { get; set; }
         public List<IAxis<SkiaDrawingContext>> XAxes { get; set; }
 
@@ -40,7 +40,7 @@ namespace ViewModelsSamples
             //    new[] { 0f, 0.5f, 1 },
             //    SKShaderTileMode.Repeat);
 
-            Series = new ObservableCollection<ISeries<SkiaDrawingContext>>
+            Series = new ObservableCollection<ICartesianSeries<SkiaDrawingContext>>
             {
                 new StackedColumnSeries<double>
                 {

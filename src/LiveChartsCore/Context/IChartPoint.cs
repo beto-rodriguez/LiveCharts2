@@ -22,42 +22,28 @@
 
 namespace LiveChartsCore.Context
 {
-    /// <summary>
-    /// Defines bounds for both, X and Y axes.
-    /// </summary>
-    public class CartesianBounds
+    public interface IChartPoint: IOutOfContextChartPoint
     {
-        private Bounds secondaryBounds;
-        private Bounds primaryBounds;
+        ChartPointContext PointContext { get; set; }
+    }
+
+    public interface IOutOfContextChartPoint
+    {
+        /// <summary>
+        /// Gets the primary value of the point.
+        /// Normally the map goes as follows:
+        /// For Horizontal Cartesian (<see cref="LineSeries{TModel, TVisual, TDrawingContext, TGeometryPath, TLineSegment, TBezierSegment, TMoveToCommand, TPathContext}"/>, <see cref="ColumnSeries{TModel, TVisual, TDrawingContext}"/>) series => Y coordinate.
+        /// For Vertical Cartesian (VerticalLine, RowSeries) series => X coordinate.
+        /// For <see cref="PieDataSeries{TModel, TVisual, TDrawingContext}"/> => the value of the slice.
+        /// </summary>
+        float PrimaryValue { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CartesianBounds"/> class.
+        /// Gets the secondary value of the point.
+        /// For Horizontal Cartesian (<see cref="LineSeries{TModel, TVisual, TDrawingContext, TGeometryPath, TLineSegment, TBezierSegment, TMoveToCommand, TPathContext}"/>, <see cref="ColumnSeries{TModel, TVisual, TDrawingContext}"/>) series => X coordinate.
+        /// For Vertical Cartesian (VerticalLine, RowSeries) series => Y coordinate.
+        /// For <see cref="PieDataSeries{TModel, TVisual, TDrawingContext}"/> => *ignored*.
         /// </summary>
-        public CartesianBounds()
-        {
-            secondaryBounds = new Bounds();
-            primaryBounds = new Bounds();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CartesianBounds"/> class with given bounds.
-        /// </summary>
-        /// <param name="secondaryBounds">The secondary axis bounds.</param>
-        /// <param name="primaryBounds">The primaty axis bounds.</param>
-        public CartesianBounds(Bounds secondaryBounds, Bounds primaryBounds)
-        {
-            this.secondaryBounds = secondaryBounds;
-            this.primaryBounds = primaryBounds;
-        }
-
-        /// <summary>
-        /// Gets or sets the X axis bounds.
-        /// </summary>
-        public Bounds SecondaryBounds { get => secondaryBounds; set {  secondaryBounds = value; } }
-
-        /// <summary>
-        /// Gets or sets the Y axis bounds.
-        /// </summary>
-        public Bounds PrimaryBounds { get => primaryBounds; set { primaryBounds = value; } }
+        float SecondaryValue { get; }
     }
 }

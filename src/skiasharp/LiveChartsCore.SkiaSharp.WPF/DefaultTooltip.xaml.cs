@@ -166,7 +166,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     highlightTasks.Add(highlightPaintTask, highlighPaint);
                 }
 
-                highlighPaint.Add(((IHighlightableGeometry<SkiaDrawingContext>) point.Coordinate.Visual).HighlightableGeometry);
+                highlighPaint.Add(((IHighlightableGeometry<SkiaDrawingContext>) point.Point.PointContext.Visual).HighlightableGeometry);
             }
 
             foreach (var point in foundPoints)

@@ -20,32 +20,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 using System;
+using System.Drawing;
 
-namespace LiveChartsCore
+namespace LiveChartsCore.Context
 {
-    public interface IPieChartView<TDrawingContext>
+    public interface IAxis<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        PieChartCore<TDrawingContext> Core { get; }
-        Canvas<TDrawingContext> CoreCanvas { get; }
+        Bounds DataBounds { get; }
+        AxisOrientation Orientation { get; }
+        float Xo { get; set; }
+        float Yo { get; set; }
 
-        System.Drawing.SizeF ControlSize { get; }
+        Func<double, AxisTick, string> Labeler { get; set; }
+        double Step { get; set; }
+        double UnitWith { get; set; }
 
-        LegendPosition LegendPosition { get; set; }
-        LegendOrientation LegendOrientation { get; set; }
-        IChartLegend<TDrawingContext> Legend { get; }
+        AxisPosition Position { get; set; }
+        double LabelsRotation { get; set; }
 
-        TooltipPosition TooltipPosition { get; set; }
-        TooltipFindingStrategy TooltipFindingStrategy { get; set; }
-        IChartTooltip<TDrawingContext> Tooltip { get; }
+        IWritableTask<TDrawingContext> TextBrush { get; set; }
 
-        Margin DrawMargin { get; set; }
+        IDrawableTask<TDrawingContext> SeparatorsBrush { get; set; }
 
-        TimeSpan AnimationsSpeed { get; set; }
+        bool ShowSeparatorLines { get; set; }
+        bool ShowSeparatorWedges { get; set; }
 
-        Func<float, float> EasingFunction { get; set; }
+        IDrawableTask<TDrawingContext> AlternativeSeparatorForeground { get; set; }
+
+        void Initialize(AxisOrientation orientation);
+        void Measure(CartesianChartCore<TDrawingContext> chart);
+        SizeF GetPossibleSize(CartesianChartCore<TDrawingContext> chart);
+
+        IAxis<TDrawingContext> Copy();
     }
 }

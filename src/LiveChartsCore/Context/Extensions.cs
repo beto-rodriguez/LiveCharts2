@@ -48,7 +48,7 @@ namespace LiveChartsCore.Context
 
             foreach (var point in foundPoints)
             {
-                var ha = point.Coordinate.HoverArea;
+                var ha = point.Point.PointContext.HoverArea;
                 if (ha.Y < mostTop) mostTop = ha.Y;
                 if (ha.Y + ha.Height > mostBottom) mostBottom = ha.Y + ha.Height;
                 if (ha.X + ha.Width > mostRight) mostRight = ha.X + ha.Width;
@@ -58,8 +58,8 @@ namespace LiveChartsCore.Context
 
             if (count == 0) return null;
 
-            var avrgX = ((mostRight + mostLeft)/2f) - tooltipSize.Width * 0.5f;
-            var avrgY = ((mostTop + mostBottom)/2f) - tooltipSize.Height * 0.5f;
+            var avrgX = ((mostRight + mostLeft) / 2f) - tooltipSize.Width * 0.5f;
+            var avrgY = ((mostTop + mostBottom) / 2f) - tooltipSize.Height * 0.5f;
 
             switch (position)
             {
@@ -100,28 +100,22 @@ namespace LiveChartsCore.Context
             return new AxisTick { Value = tick, Magnitude = magnitude };
         }
 
-        public static bool IsBarSeries<TDrawingContext>(this ISeries<TDrawingContext> series)
-            where TDrawingContext : DrawingContext 
-                => (series.SeriesProperties & SeriesProperties.Bar) != 0;
+        public static bool IsBarSeries(this ISeries series)
+            => (series.SeriesProperties & SeriesProperties.Bar) != 0;
 
-        public static bool IsColumnSeries<TDrawingContext>(this ISeries<TDrawingContext> series)
-           where TDrawingContext : DrawingContext
-               => (series.SeriesProperties & (SeriesProperties.Bar | SeriesProperties.VerticalOrientation)) != 0;
+        public static bool IsColumnSeries(this ISeries series)
+            => (series.SeriesProperties & (SeriesProperties.Bar | SeriesProperties.VerticalOrientation)) != 0;
 
-        public static bool IsRowSeries<TDrawingContext>(this ISeries<TDrawingContext> series)
-           where TDrawingContext : DrawingContext
-               => (series.SeriesProperties & (SeriesProperties.Bar | SeriesProperties.HorizontalOrientation)) != 0;
+        public static bool IsRowSeries(this ISeries series)
+            => (series.SeriesProperties & (SeriesProperties.Bar | SeriesProperties.HorizontalOrientation)) != 0;
 
-        public static bool IsStackedSeries<TDrawingContext>(this ISeries<TDrawingContext> series)
-           where TDrawingContext : DrawingContext
-               => (series.SeriesProperties & (SeriesProperties.Stacked)) != 0;
+        public static bool IsStackedSeries(this ISeries series)
+            => (series.SeriesProperties & (SeriesProperties.Stacked)) != 0;
 
-        public static bool IsVerticalSeries<TDrawingContext>(this ISeries<TDrawingContext> series)
-           where TDrawingContext : DrawingContext
-               => (series.SeriesProperties & (SeriesProperties.VerticalOrientation)) != 0;
+        public static bool IsVerticalSeries(this ISeries series)
+            => (series.SeriesProperties & (SeriesProperties.VerticalOrientation)) != 0;
 
-        public static bool IsHorizontalSeries<TDrawingContext>(this ISeries<TDrawingContext> series)
-           where TDrawingContext : DrawingContext
-               => (series.SeriesProperties & (SeriesProperties.HorizontalOrientation)) != 0;
+        public static bool IsHorizontalSeries(this ISeries series)
+            => (series.SeriesProperties & (SeriesProperties.HorizontalOrientation)) != 0;
     }
 }

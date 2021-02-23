@@ -20,23 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-
 namespace LiveChartsCore.Context
 {
-    public class FoundPoint<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public class ChartPoint<TModel> : IChartPoint
     {
-        private IDataSeries<TDrawingContext> series;
-        private IChartPoint point;
+        /// <inheritdoc/>
+        public float PrimaryValue { get; set; }
 
-        public FoundPoint(IDataSeries<TDrawingContext> series, IChartPoint point)
-        {
-            this.series = series;
-            this.point = point;
-        }
+        /// <inheritdoc/>
+        public float SecondaryValue { get; set; }
 
-        public IDataSeries<TDrawingContext> Series { get => series; set => series = value; }
-        public IChartPoint Point { get => point; set => point = value; }
+        /// <inheritdoc/>
+        public ChartPointContext? PointContext { get; set; }
     }
 }

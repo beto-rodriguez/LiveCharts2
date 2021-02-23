@@ -41,8 +41,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty SeriesProperty =
             DependencyProperty.Register(
-                nameof(Series), typeof(IEnumerable<ISeries<SkiaDrawingContext>>),
-                typeof(DefaultLegend), new PropertyMetadata(new List<ISeries<SkiaDrawingContext>>()));
+                nameof(Series), typeof(IEnumerable<ICartesianSeries<SkiaDrawingContext>>),
+                typeof(DefaultLegend), new PropertyMetadata(new List<ICartesianSeries<SkiaDrawingContext>>()));
 
         public static readonly DependencyProperty OrientationProperty =
             DependencyProperty.Register(
@@ -56,9 +56,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
            DependencyProperty.Register(
                nameof(TextColor), typeof(SolidColorBrush), typeof(DefaultLegend), new PropertyMetadata(new SolidColorBrush(Color.FromRgb(35, 35, 35))));
 
-        public IEnumerable<ISeries<SkiaDrawingContext>> Series
+        public IEnumerable<ICartesianSeries<SkiaDrawingContext>> Series
         {
-            get { return (IEnumerable<ISeries<SkiaDrawingContext>>)GetValue(SeriesProperty); }
+            get { return (IEnumerable<ICartesianSeries<SkiaDrawingContext>>)GetValue(SeriesProperty); }
             set { SetValue(SeriesProperty, value); }
         }
 

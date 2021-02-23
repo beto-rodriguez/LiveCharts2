@@ -11,7 +11,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     public partial class CartesianChart : UserControl, ICartesianChartView<SkiaDrawingContext>
     {
         protected CartesianChartCore<SkiaDrawingContext> core;
-        private IEnumerable<ISeries<SkiaDrawingContext>> series = new List<ISeries<SkiaDrawingContext>>();
+        private IEnumerable<ICartesianSeries<SkiaDrawingContext>> series = new List<ICartesianSeries<SkiaDrawingContext>>();
         private IEnumerable<IAxis<SkiaDrawingContext>> xAxes = new List<IAxis<SkiaDrawingContext>>();
         private IEnumerable<IAxis<SkiaDrawingContext>> yAxes = new List<IAxis<SkiaDrawingContext>>();
         private Margin drawMargin;
@@ -33,7 +33,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<ISeries<SkiaDrawingContext>> Series { get => series; set { series = value; OnDataChanged(); } }
+        public IEnumerable<ICartesianSeries<SkiaDrawingContext>> Series { get => series; set { series = value; OnDataChanged(); } }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IEnumerable<IAxis<SkiaDrawingContext>> XAxes { get => xAxes; set { xAxes = value; OnDataChanged(); } }
