@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Common;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -97,6 +98,11 @@ namespace LiveChartsCore.Context
             else tick = magnitude;
 
             return new AxisTick { Value = tick, Magnitude = magnitude };
+        }
+
+        public static TransitionBuilder DefinePropertyTransitions(this IAnimatable animatable, params string[] properties)
+        {
+            return new TransitionBuilder(animatable, properties);
         }
 
         public static bool IsBarSeries(this ISeries series)

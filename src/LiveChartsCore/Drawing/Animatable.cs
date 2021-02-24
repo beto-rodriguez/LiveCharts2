@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Motion;
+using System;
 using System.Collections.Generic;
 
 namespace LiveChartsCore.Drawing.Common
@@ -44,9 +45,9 @@ namespace LiveChartsCore.Drawing.Common
         /// </summary>
         public bool RemoveOnCompleted { get => removeOnCompleted; set => removeOnCompleted = value; }
 
-        public void SetPropertyTransition(Animation animation, params string[] propertyName)
+        public void SetPropertiesTransitions(Animation animation, params string[] properties)
         {
-            foreach (var name in propertyName)
+            foreach (var name in properties)
             {
                 transitionProperties[name].Animation = animation;
             }
@@ -62,7 +63,7 @@ namespace LiveChartsCore.Drawing.Common
             isCompleted = false;
         }
 
-        public void CompleteTransition(params string[] propertyName)
+        public void CompleteTransitions(params string[] propertyName)
         {
             foreach (var property in propertyName)
             {

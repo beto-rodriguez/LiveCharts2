@@ -119,15 +119,10 @@ namespace LiveChartsCore
 
         protected virtual void SetDefaultTransitions(ISizedGeometry<TDrawingContext> visual, Animation defaultAnimation)
         {
-            var defaultProperties = new string[]
-            {
-                nameof(visual.X),
-                nameof(visual.Y),
-                nameof(visual.Width),
-                nameof(visual.Height),
-            };
-            visual.SetPropertyTransition(defaultAnimation, defaultProperties);
-            visual.CompleteTransition(defaultProperties);
+            visual
+                .DefinePropertyTransitions(nameof(visual.X), nameof(visual.Y), nameof(visual.Width), nameof(visual.Height))
+                .WithAnimation(defaultAnimation)
+                .CompleteCurrentTransitions();
         }
 
         protected override void OnPaintContextChanged()

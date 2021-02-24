@@ -20,21 +20,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Motion;
+using System;
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Drawing.Common
 {
-    public interface IAnimatable
+    public class TransitionBuilder
     {
-        bool IsCompleted { get; set; }
-        long CurrentTime { get; set; }
+        private readonly string[] properties;
+        private readonly IAnimatable target;
 
-        bool RemoveOnCompleted { get; set; }
+        public TransitionBuilder(IAnimatable target, string[] properties)
+        {
+            this.target = target;
+            this.properties = properties;
+        }
 
-        void SetPropertiesTransitions(Animation animation, params string[] propertyName);
-        void RemovePropertyTransition(string propertyName);
+        public TransitionBuilder WithAnimation(Animation animation)
+        {
+            target.SetPropertiesTransitions(animation, properties);
+            return this;
+        }
 
-        void CompleteTransitions(params string[] propertyName);
-        IMotionProperty GetTransitionProperty(string propertyName);
+        public TransitionBuilder WithAnimation(Action<Animation> animationBuilder)
+        {
+            var animation = new Animation();
+            animationBuilder(animation);
+            return WithAnimation(animation);
+        }
+
+        public TransitionBuilder CompleteCurrentTransitions()
+        {
+            target.CompleteTransitions(properties);
+            return this;
+        }
     }
 }

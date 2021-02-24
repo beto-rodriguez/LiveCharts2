@@ -17,7 +17,7 @@ namespace LiveChartsCore.UnitTesting
             var duration = TimeSpan.FromSeconds(1);
             var easing = EasingFunctions.Lineal;
 
-            r.SetPropertyTransition(
+            r.SetPropertiesTransitions(
                 new Animation(easing, duration, int.MaxValue),
                 nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
 
@@ -41,7 +41,7 @@ namespace LiveChartsCore.UnitTesting
             r.X = 50;
             r.Width = 50;
             r.Height = 50;
-            r.CompleteTransition(nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
+            r.CompleteTransitions(nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
 
             r.Y = 100;
             r.X = 100;

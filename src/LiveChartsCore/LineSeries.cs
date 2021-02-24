@@ -183,9 +183,9 @@ namespace LiveChartsCore
 
                         if (wasFillInitialized)
                         {
-                            fillPathHelper.StartPoint.CompleteTransition(
+                            fillPathHelper.StartPoint.CompleteTransitions(
                                 nameof(fillPathHelper.StartPoint.Y), nameof(fillPathHelper.StartPoint.X));
-                            fillPathHelper.StartSegment.CompleteTransition(
+                            fillPathHelper.StartSegment.CompleteTransitions(
                                 nameof(fillPathHelper.StartSegment.Y), nameof(fillPathHelper.StartSegment.X));
                         }
                     }
@@ -199,7 +199,7 @@ namespace LiveChartsCore
                         fillPathHelper.Path.AddCommand(fillPathHelper.EndSegment);
 
                         if (wasFillInitialized)
-                            fillPathHelper.EndSegment.CompleteTransition(
+                            fillPathHelper.EndSegment.CompleteTransitions(
                                 nameof(fillPathHelper.EndSegment.Y), nameof(fillPathHelper.EndSegment.X));
                     }
                 }
@@ -213,7 +213,7 @@ namespace LiveChartsCore
 
                         if (wasStrokeInitialized)
                         {
-                            strokePathHelper.StartPoint.CompleteTransition(
+                            strokePathHelper.StartPoint.CompleteTransitions(
                                nameof(fillPathHelper.StartPoint.Y), nameof(fillPathHelper.StartPoint.X));
                         }
                     }
@@ -270,8 +270,8 @@ namespace LiveChartsCore
                 nameof(visual.Geometry.Width),
                 nameof(visual.Geometry.Height)
             };
-            visual.Geometry.SetPropertyTransition(defaultAnimation, geometryProperties);
-            visual.Geometry.CompleteTransition(geometryProperties);
+            visual.Geometry.SetPropertiesTransitions(defaultAnimation, geometryProperties);
+            visual.Geometry.CompleteTransitions(geometryProperties);
 
             var cubicBezierProperties = new string[]
             {
@@ -282,8 +282,8 @@ namespace LiveChartsCore
                 nameof(visual.Bezier.X2),
                 nameof(visual.Bezier.Y2)
             };
-            visual.Bezier.SetPropertyTransition(defaultAnimation, cubicBezierProperties);
-            visual.Bezier.CompleteTransition(cubicBezierProperties);
+            visual.Bezier.SetPropertiesTransitions(defaultAnimation, cubicBezierProperties);
+            visual.Bezier.CompleteTransitions(cubicBezierProperties);
         }
 
         private IEnumerable<BezierData<LineSeriesVisualPoint<TDrawingContext, TVisual, TGeometryPath, TBezierSegment, TPathContext>, TDrawingContext>> GetSpline(
@@ -377,36 +377,27 @@ namespace LiveChartsCore
                 nameof(geometry.Width),
                 nameof(geometry.Height)
             };
-            geometry.SetPropertyTransition(defaultAnimation, defaultProperties);
-            geometry.CompleteTransition(defaultProperties);
+            geometry.SetPropertiesTransitions(defaultAnimation, defaultProperties);
+            geometry.CompleteTransitions(defaultProperties);
         }
 
         protected virtual void SetDefaultPathTransitions(
             AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveToCommand, TPathContext> areaHelper, Animation defaultAnimation)
         {
-            var startPointProperties = new string[]
-            {
-                nameof(areaHelper.StartPoint.X),
-                nameof(areaHelper.StartPoint.Y)
-            };
-            areaHelper.StartPoint.SetPropertyTransition(defaultAnimation, startPointProperties);
-            areaHelper.StartPoint.CompleteTransition(startPointProperties);
+            areaHelper.StartPoint
+                .DefinePropertyTransitions(nameof(areaHelper.StartPoint.X), nameof(areaHelper.StartPoint.Y))
+                .WithAnimation(defaultAnimation)
+                .CompleteCurrentTransitions();
 
-            var startSegmentProperties = new string[]
-            {
-                nameof(areaHelper.StartSegment.X),
-                nameof(areaHelper.StartSegment.Y)
-            };
-            areaHelper.StartSegment.SetPropertyTransition(defaultAnimation, startSegmentProperties);
-            areaHelper.StartSegment.CompleteTransition(startSegmentProperties);
+            areaHelper.StartSegment
+                .DefinePropertyTransitions(nameof(areaHelper.StartSegment.X), nameof(areaHelper.StartSegment.Y))
+                .WithAnimation(defaultAnimation)
+                .CompleteCurrentTransitions();
 
-            var endSegmentProperties = new string[]
-            {
-                nameof(areaHelper.EndSegment.X),
-                nameof(areaHelper.EndSegment.Y)
-            };
-            areaHelper.EndSegment.SetPropertyTransition(defaultAnimation, endSegmentProperties);
-            areaHelper.EndSegment.CompleteTransition(endSegmentProperties);
+            areaHelper.EndSegment
+                .DefinePropertyTransitions(nameof(areaHelper.EndSegment.X), nameof(areaHelper.EndSegment.Y))
+                .WithAnimation(defaultAnimation)
+                .CompleteCurrentTransitions();
         }
 
         protected override void OnPaintContextChanged()
