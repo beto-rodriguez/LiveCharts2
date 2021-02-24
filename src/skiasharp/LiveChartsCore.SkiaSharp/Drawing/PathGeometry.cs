@@ -22,7 +22,6 @@
 
 using LiveChartsCore.Drawing;
 using SkiaSharp;
-using System;
 using System.Collections.Generic;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing
