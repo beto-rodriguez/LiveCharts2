@@ -25,28 +25,11 @@ using System;
 
 namespace LiveChartsCore.Context
 {
-    public interface IPieChartView<TDrawingContext>
+    public interface IPieChartView<TDrawingContext>: IChartView<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         PieChart<TDrawingContext> Core { get; }
-        Canvas<TDrawingContext> CoreCanvas { get; }
 
-        System.Drawing.SizeF ControlSize { get; }
-
-        IPieSeries<TDrawingContext> Series { get; set; }
-
-        LegendPosition LegendPosition { get; set; }
-        LegendOrientation LegendOrientation { get; set; }
-        IChartLegend<TDrawingContext> Legend { get; }
-
-        TooltipPosition TooltipPosition { get; set; }
-        TooltipFindingStrategy TooltipFindingStrategy { get; set; }
-        IChartTooltip<TDrawingContext> Tooltip { get; }
-
-        Margin DrawMargin { get; set; }
-
-        TimeSpan AnimationsSpeed { get; set; }
-
-        Func<float, float> EasingFunction { get; set; }
+        IPieSeries<TDrawingContext>? Series { get; set; }
     }
 }

@@ -54,7 +54,7 @@ namespace LiveChartsCore
             updateThrottler.TryRun();
         }
 
-        public IEnumerable<TooltipPoint> FindPointsNearTo(PointF pointerPosition)
+        public override IEnumerable<TooltipPoint> FindPointsNearTo(PointF pointerPosition)
         {
             if (measureWorker == null) return Enumerable.Empty<TooltipPoint>();
 

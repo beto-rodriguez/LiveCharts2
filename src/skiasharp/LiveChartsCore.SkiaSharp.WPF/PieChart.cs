@@ -20,18 +20,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+using LiveChartsCore.Context;
+using LiveChartsCore.SkiaSharpView.Drawing;
+using System.Windows;
+
+namespace LiveChartsCore.SkiaSharpView.WPF
 {
-    // Based on https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/curves/arcs#the-angle-arc
-    // where X and Y properties are the top left corner of the rectangle bounds
-    // and Width and Height properties define the dimensions of the rectangle
-    public interface IArcToSegment<TPath>: IPathCommand<TPath>
+    public class PieChart : Chart, IPieChartView<SkiaDrawingContext>
     {
-        float X { get; set; }
-        float Y { get; set; }
-        float Width { get; set; }
-        float Height { get; set; }
-        float StartAngle { get; set; }
-        float SweepAngle { get; set; }
+        PieChart<SkiaDrawingContext> IPieChartView<SkiaDrawingContext>.Core => (PieChart<SkiaDrawingContext>)core;
+
+        public static readonly DependencyProperty SeriesProperty =
+            DependencyProperty.Register(
+                nameof(Series), typeof(IPieSeries<SkiaDrawingContext>), typeof(PieChart), new PropertyMetadata(null));
+
+        public IPieSeries<SkiaDrawingContext> Series
+        {
+            get { return (IPieSeries<SkiaDrawingContext>)GetValue(SeriesProperty); }
+            set { SetValue(SeriesProperty, value); }
+        }
+
+        public override void InitializeCore()
+        {
+            core = new PieChart<SkiaDrawingContext>(this, canvas.CanvasCore);
+            legend = Template.FindName("legend", this) as IChartLegend<SkiaDrawingContext>;
+            tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaDrawingContext>;
+            core.Update();
+        }
     }
 }

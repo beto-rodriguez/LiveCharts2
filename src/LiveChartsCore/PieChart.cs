@@ -48,9 +48,9 @@ namespace LiveChartsCore
             updateThrottler.TryRun();
         }
 
-        public IEnumerable<TooltipPoint> FindPointsNearTo(PointF pointerPosition)
+        public override IEnumerable<TooltipPoint> FindPointsNearTo(PointF pointerPosition)
         {
-            if (measureWorker == null) return Enumerable.Empty<TooltipPoint>();
+            if (measureWorker == null || chartView.Series == null) return Enumerable.Empty<TooltipPoint>();
 
             return chartView.Series.FindPointsNearTo(this, pointerPosition);
         }
@@ -118,7 +118,7 @@ namespace LiveChartsCore
             // this way no matter if the Series.Values collection changes
             // the fetch method will always return the same collection for the
             // current measureWorker instance
-            chartView.Series.Fetch(this);
+            chartView.Series?.Fetch(this);
             series = chartView.Series;
 
             legendPosition = chartView.LegendPosition;

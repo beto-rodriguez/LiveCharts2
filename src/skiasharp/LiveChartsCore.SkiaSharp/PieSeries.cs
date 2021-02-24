@@ -25,6 +25,11 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView
 {
+    public class PieSeries<TModel>: PieSeries<TModel, DoughnutGeometry>
+    {
+
+    }
+
     public class PieSeries<TModel, TVisual>: PieSeries<TModel, TVisual, SkiaDrawingContext>
         where TVisual : class, IDoughnutGeometry<SkiaDrawingContext>, IHighlightableGeometry<SkiaDrawingContext>, new()
     {

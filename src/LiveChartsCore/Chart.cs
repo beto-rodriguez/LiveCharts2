@@ -26,6 +26,7 @@ using LiveChartsCore.Rx;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace LiveChartsCore
 {
@@ -82,6 +83,8 @@ namespace LiveChartsCore
         protected abstract void Measure();
 
         protected abstract void UpdateThrottlerUnlocked();
+
+        public abstract IEnumerable<TooltipPoint> FindPointsNearTo(PointF pointerPosition);
 
         protected void SetDrawMargin(SizeF controlSize, Margin margin)
         {
