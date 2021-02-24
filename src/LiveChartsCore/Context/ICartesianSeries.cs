@@ -24,7 +24,7 @@ using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Context
 {
-    public interface ICartesianSeries<TDrawingContext> : IDataSeries<TDrawingContext>
+    public interface ICartesianSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         int ScalesXAt { get; set; }

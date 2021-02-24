@@ -32,12 +32,12 @@ namespace LiveChartsCore
     /// Defines the data to plot as a line.
     /// </summary>
     public class LineSeries<TModel, TVisual, TDrawingContext, TGeometryPath, TLineSegment, TBezierSegment, TMoveToCommand, TPathContext>
-        : CartesianSeries<TModel, TVisual, TDrawingContext>
+        : CartesianSeries<TModel, LineSeriesVisualPoint<TDrawingContext, TVisual, TGeometryPath, TPathContext>, TDrawingContext>
         where TGeometryPath : IPathGeometry<TDrawingContext, TPathContext>, new()
         where TLineSegment : ILinePathSegment<TPathContext>, new()
         where TBezierSegment : IBezierSegment<TPathContext>, new()
         where TMoveToCommand : IMoveToPathCommand<TPathContext>, new()
-        where TVisual : ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
+        where TVisual : class, ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
         private readonly AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveToCommand, TPathContext> fillPathHelper =
@@ -165,7 +165,7 @@ namespace LiveChartsCore
                     if (ShapesStroke != null) ShapesStroke.AddGeometyToPaintTask(v.Geometry);
                 }
 
-                var visual = (LineSeriesVisualPoint<TDrawingContext, TVisual, TGeometryPath, TPathContext>)data.TargetPoint.PointContext.Visual;
+                var visual = data.TargetPoint.PointContext.Visual;
 
                 visual.Bezier.X0 = data.X0;
                 visual.Bezier.Y0 = data.Y0;
@@ -232,7 +232,7 @@ namespace LiveChartsCore
                 visual.Geometry.Height = gs;
 
                 data.TargetPoint.PointContext.HoverArea.SetDimensions(x - hgs, y - hgs + 2 * sw, gs, gs + 2 * sw);
-                OnPointMeasured(data.TargetPoint, visual.Geometry);
+                OnPointMeasured(data.TargetPoint, visual);
                 chart.MeasuredDrawables.Add(visual.Geometry);
             }
 
@@ -291,13 +291,13 @@ namespace LiveChartsCore
             visual.Bezier.CompleteTransition(cubicBezierProperties);
         }
 
-        private IEnumerable<BezierData<TModel>> GetSpline(
+        private IEnumerable<BezierData<LineSeriesVisualPoint<TDrawingContext, TVisual, TGeometryPath, TPathContext>, TDrawingContext>> GetSpline(
             CartesianChartCore<TDrawingContext> chart, ScaleContext xScale, ScaleContext yScale)
         {
             var points = Fetch(chart).ToArray();
 
             if (points.Length == 0) yield break;
-            IChartPoint previous, current, next, next2;
+            IChartPoint<LineSeriesVisualPoint<TDrawingContext, TVisual, TGeometryPath, TPathContext>, TDrawingContext> previous, current, next, next2;
 
             for (int i = 0; i < points.Length; i++)
             {
@@ -357,7 +357,7 @@ namespace LiveChartsCore
                         y0 = (float)c1Y;
                     }
 
-                    yield return new BezierData<TModel>(points[i])
+                    yield return new BezierData<LineSeriesVisualPoint<TDrawingContext, TVisual, TGeometryPath, TPathContext>, TDrawingContext>(points[i])
                     {
                         IsFirst = i == 0,
                         IsLast = i == points.Length - 1,

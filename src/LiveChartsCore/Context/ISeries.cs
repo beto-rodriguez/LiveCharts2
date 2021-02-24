@@ -20,11 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
+using System.Drawing;
+
 namespace LiveChartsCore.Context
 {
     public interface ISeries
     {
         SeriesProperties SeriesProperties { get; }
+
         string? Name { get; set; }
+
+        IEnumerable<IChartPoint> Fetch(IChart chart);
+
+        IEnumerable<TooltipPoint> FindPointsNearTo(IChart chart, PointF pointerPosition);
     }
 }

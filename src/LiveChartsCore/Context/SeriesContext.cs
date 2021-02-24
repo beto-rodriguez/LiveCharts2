@@ -28,7 +28,7 @@ namespace LiveChartsCore.Context
     public class SeriesContext<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        private readonly IEnumerable<IDataSeries<TDrawingContext>> series;
+        private readonly IEnumerable<IDrawableSeries<TDrawingContext>> series;
 
         private int columnsCount = 0;
         private int rowsCount = 0;
@@ -36,21 +36,21 @@ namespace LiveChartsCore.Context
         private int stackedRowsCount = 0;
         private bool areBarsIndexed = false;
 
-        private Dictionary<IDataSeries<TDrawingContext>, int> columnPositions = new Dictionary<IDataSeries<TDrawingContext>, int>();
-        private Dictionary<IDataSeries<TDrawingContext>, int> rowPositions = new Dictionary<IDataSeries<TDrawingContext>, int>();
+        private Dictionary<IDrawableSeries<TDrawingContext>, int> columnPositions = new Dictionary<IDrawableSeries<TDrawingContext>, int>();
+        private Dictionary<IDrawableSeries<TDrawingContext>, int> rowPositions = new Dictionary<IDrawableSeries<TDrawingContext>, int>();
         private Dictionary<int, int> stackColumnPositions = new Dictionary<int, int>();
         private Dictionary<int, int> stackRowsPositions = new Dictionary<int, int>();
 
         private Dictionary<string, Stacker<TDrawingContext>> stackers = new Dictionary<string, Stacker<TDrawingContext>>();
 
-        public SeriesContext(IEnumerable<IDataSeries<TDrawingContext>> series)
+        public SeriesContext(IEnumerable<IDrawableSeries<TDrawingContext>> series)
         {
             this.series = series;
         }
 
         #region columns and rows
 
-        public int GetColumnPostion(IDataSeries<TDrawingContext> series)
+        public int GetColumnPostion(IDrawableSeries<TDrawingContext> series)
         {
             if (areBarsIndexed) return columnPositions[series];
             IndexBars();
@@ -64,7 +64,7 @@ namespace LiveChartsCore.Context
             return columnsCount;
         }
 
-        public int GetRowPostion(IDataSeries<TDrawingContext> series)
+        public int GetRowPostion(IDrawableSeries<TDrawingContext> series)
         {
             if (areBarsIndexed) return rowPositions[series];
             IndexBars();
@@ -78,7 +78,7 @@ namespace LiveChartsCore.Context
             return rowsCount;
         }
 
-        public int GetStackedColumnPostion(IDataSeries<TDrawingContext> series)
+        public int GetStackedColumnPostion(IDrawableSeries<TDrawingContext> series)
         {
             if (areBarsIndexed) return stackColumnPositions[series.GetStackGroup()];
             IndexBars();
@@ -92,7 +92,7 @@ namespace LiveChartsCore.Context
             return stackedColumnsCount;
         }
 
-        public int GetStackedRowPostion(IDataSeries<TDrawingContext> series)
+        public int GetStackedRowPostion(IDrawableSeries<TDrawingContext> series)
         {
             if (areBarsIndexed) return stackRowsPositions[series.GetStackGroup()];
             IndexBars();
@@ -153,7 +153,7 @@ namespace LiveChartsCore.Context
 
         #region stacked
 
-        public StackPosition<TDrawingContext>? GetStackPosition(IDataSeries<TDrawingContext> series, int stackGroup)
+        public StackPosition<TDrawingContext>? GetStackPosition(IDrawableSeries<TDrawingContext> series, int stackGroup)
         {
             if (!series.IsStackedSeries()) return null;
 
@@ -168,7 +168,7 @@ namespace LiveChartsCore.Context
             };
         }
 
-        private Stacker<TDrawingContext> GetStacker(IDataSeries<TDrawingContext> series, int stackGroup)
+        private Stacker<TDrawingContext> GetStacker(IDrawableSeries<TDrawingContext> series, int stackGroup)
         {
             var key = $"{series.SeriesProperties}.{stackGroup}";
 

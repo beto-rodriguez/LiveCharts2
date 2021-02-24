@@ -20,17 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
+
 namespace LiveChartsCore.Context
 {
-    public class ChartPoint<TModel> : IChartPoint
+    public interface IDrawableSeries<TDrawingContext> : ISeries
+         where TDrawingContext : DrawingContext
     {
-        /// <inheritdoc/>
-        public float PrimaryValue { get; set; }
+        IDrawableTask<TDrawingContext>? Stroke { get; }
+        IDrawableTask<TDrawingContext>? Fill { get; }
+        IDrawableTask<TDrawingContext>? HighlightStroke { get; }
+        IDrawableTask<TDrawingContext>? HighlightFill { get; }
 
-        /// <inheritdoc/>
-        public float SecondaryValue { get; set; }
+        PaintContext<TDrawingContext> DefaultPaintContext { get; }
 
-        /// <inheritdoc/>
-        public ChartPointContext? PointContext { get; set; }
+        int GetStackGroup();
     }
 }

@@ -20,23 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using System.Collections.Generic;
-
 namespace LiveChartsCore.Context
 {
-    public interface IDataSeries<TDrawingContext> : ISeries
-         where TDrawingContext : DrawingContext
+    public interface IChartPointContext
     {
-        IDrawableTask<TDrawingContext>? Stroke { get; }
-        IDrawableTask<TDrawingContext>? Fill { get; }
-        IDrawableTask<TDrawingContext>? HighlightStroke { get; }
-        IDrawableTask<TDrawingContext>? HighlightFill { get; }
+        /// <summary>
+        /// Gets the position of the point the collection that was used when the point was drawn.
+        /// </summary>
+        int Index { get; }
 
-        PaintContext<TDrawingContext> DefaultPaintContext { get; }
+        /// <summary>
+        /// Gets the DataSource.
+        /// </summary>
+        object DataSource { get; }
 
-        IEnumerable<IChartPoint> Fetch(CartesianChartCore<TDrawingContext> chart);
+        object Visual { get; }
 
-        int GetStackGroup();
+        /// <summary>
+        /// Gets or sets the area that triggers the ToolTip.
+        /// </summary>
+        HoverArea HoverArea { get; set; }
+    }
+
+    public interface IChartPointContext<TVisual>: IChartPointContext
+        where TVisual: class
+    {
+        new TVisual? Visual { get; set; }
     }
 }

@@ -35,7 +35,7 @@ namespace LiveChartsCore
     {
         private object measureWorker = null;
         private HashSet<IDrawable<TDrawingContext>> measuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
-        private SeriesContext<TDrawingContext> seriesContext = new SeriesContext<TDrawingContext>(Enumerable.Empty<IDataSeries<TDrawingContext>>());
+        private SeriesContext<TDrawingContext> seriesContext = new SeriesContext<TDrawingContext>(Enumerable.Empty<IDrawableSeries<TDrawingContext>>());
 
         private readonly ICartesianChartView<TDrawingContext> chartView;
         private readonly Canvas<TDrawingContext> canvas;
@@ -70,7 +70,6 @@ namespace LiveChartsCore
         public object MeasureWorker => measureWorker;
         public HashSet<IDrawable<TDrawingContext>> MeasuredDrawables => measuredDrawables;
         public SeriesContext<TDrawingContext> SeriesContext => seriesContext;
-
         public Canvas<TDrawingContext> Canvas => canvas;
 
         public SizeF ControlSize => controlSize;
@@ -78,7 +77,7 @@ namespace LiveChartsCore
         public SizeF DrawMarginSize => drawMarginSize;
         public IAxis<TDrawingContext>[] XAxes => xAxes;
         public IAxis<TDrawingContext>[] YAxes => yAxes;
-        public IDataSeries<TDrawingContext>[] Series => series;
+        public IDrawableSeries<TDrawingContext>[] Series => series;
         public LegendPosition LegendPosition => LegendPosition;
         public LegendOrientation LegendOrientation => legendOrientation;
         public IChartLegend<TDrawingContext> Legend => legend;
@@ -94,15 +93,11 @@ namespace LiveChartsCore
             updateThrottler.TryRun();
         }
 
-        public IEnumerable<FoundPoint<TDrawingContext>> FindPointsNearTo(PointF pointerPosition)
+        public IEnumerable<TooltipPoint> FindPointsNearTo(PointF pointerPosition)
         {
-            if (measureWorker == null) return Enumerable.Empty<FoundPoint<TDrawingContext>>();
+            if (measureWorker == null) return Enumerable.Empty<TooltipPoint>();
 
-            return chartView.Series
-                .SelectMany(series => series
-                        .Fetch(this)
-                        .Where(point => point.PointContext.HoverArea.IsTriggerBy(pointerPosition, chartView.TooltipFindingStrategy))
-                        .Select(point => new FoundPoint<TDrawingContext>(series, point)));
+            return chartView.Series.SelectMany(series => series.FindPointsNearTo(this, pointerPosition));
         }
 
         private void Measure()

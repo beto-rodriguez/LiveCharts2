@@ -31,7 +31,7 @@ namespace LiveChartsCore.SkiaSharpView
     }
 
     public class ScatterSeries<TModel, TVisual>: ScatterSeries<TModel, TVisual, SkiaDrawingContext>
-        where TVisual : ISizedGeometry<SkiaDrawingContext>, IHighlightableGeometry<SkiaDrawingContext>, new()
+        where TVisual : class, ISizedGeometry<SkiaDrawingContext>, IHighlightableGeometry<SkiaDrawingContext>, new()
     {
 
     }

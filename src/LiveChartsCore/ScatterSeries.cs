@@ -22,12 +22,10 @@
 
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
-using System.Collections.Generic;
-
 namespace LiveChartsCore
 {
     public class ScatterSeries<TModel, TVisual, TDrawingContext> : CartesianSeries<TModel, TVisual, TDrawingContext>
-        where TVisual : ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
+        where TVisual : class, ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
         private double geometrySize = 18d;
@@ -39,7 +37,7 @@ namespace LiveChartsCore
         }
 
         public double GeometrySize { get => geometrySize; set => geometrySize = value; }
-        public TransitionsSetterDelegate<ISizedGeometry<TDrawingContext>> TransitionsSetter { get; set; }
+        public TransitionsSetterDelegate<ISizedGeometry<TDrawingContext>>? TransitionsSetter { get; set; }
 
         public override void Measure(
             CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
@@ -82,7 +80,7 @@ namespace LiveChartsCore
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(r);
                 }
 
-                var sizedGeometry = (TVisual)point.PointContext.Visual;
+                var sizedGeometry = point.PointContext.Visual;
 
                 sizedGeometry.X = x - hgs;
                 sizedGeometry.Y = y - hgs;
@@ -131,6 +129,40 @@ namespace LiveChartsCore
             };
             visual.SetPropertyTransition(defaultAnimation, defaultProperties);
             visual.CompleteTransition(defaultProperties);
+        }
+
+        protected override void OnPaintContextChanged()
+        {
+            var context = new PaintContext<TDrawingContext>();
+
+            if (Fill != null)
+            {
+                var fillClone = Fill.CloneTask();
+                var visual = new TVisual { X = 0, Y = 0, Height = (float)LegendShapeSize, Width = (float)LegendShapeSize };
+                fillClone.AddGeometyToPaintTask(visual);
+                context.PaintTasks.Add(fillClone);
+            }
+
+            var w = LegendShapeSize;
+            if (Stroke != null)
+            {
+                var strokeClone = Stroke.CloneTask();
+                var visual = new TVisual
+                {
+                    X = strokeClone.StrokeWidth,
+                    Y = strokeClone.StrokeWidth,
+                    Height = (float)LegendShapeSize,
+                    Width = (float)LegendShapeSize
+                };
+                w += 2 * strokeClone.StrokeWidth;
+                strokeClone.AddGeometyToPaintTask(visual);
+                context.PaintTasks.Add(strokeClone);
+            }
+
+            context.Width = w;
+            context.Height = w;
+
+            paintContext = context;
         }
 
         public override int GetStackGroup() => 0;

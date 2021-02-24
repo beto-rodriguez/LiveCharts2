@@ -20,23 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-
 namespace LiveChartsCore.Context
 {
-    public class FoundPoint<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public class TooltipPoint
     {
-        private IDataSeries<TDrawingContext> series;
+        private ISeries series;
         private IChartPoint point;
 
-        public FoundPoint(IDataSeries<TDrawingContext> series, IChartPoint point)
+        public TooltipPoint(ISeries series, IChartPoint point)
         {
             this.series = series;
             this.point = point;
         }
 
-        public IDataSeries<TDrawingContext> Series { get => series; set => series = value; }
+        public ISeries Series { get => series; set => series = value; }
+
         public IChartPoint Point { get => point; set => point = value; }
     }
 }

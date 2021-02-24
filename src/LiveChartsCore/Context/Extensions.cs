@@ -38,11 +38,10 @@ namespace LiveChartsCore.Context
         /// <param name="position"></param>
         /// <param name="tooltipSize"></param>
         /// <returns></returns>
-        public static PointF? GetTooltipLocation<TDrawingContext>(
-            this IEnumerable<FoundPoint<TDrawingContext>> foundPoints,
+        public static PointF? GetTooltipLocation(
+            this IEnumerable<TooltipPoint> foundPoints,
             TooltipPosition position,
             SizeF tooltipSize)
-            where TDrawingContext : DrawingContext
         {
             float count = 0f, mostTop = float.MaxValue, mostBottom = float.MinValue, mostRight = float.MinValue, mostLeft = float.MaxValue;
 

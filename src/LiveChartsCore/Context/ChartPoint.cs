@@ -24,23 +24,19 @@ using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Context
 {
-    public class StackPosition<TDrawingContext>
+    public class ChartPoint<TModel, TVisual, TDrawingContext> : IChartPoint<TVisual, TDrawingContext>, IChartPoint
         where TDrawingContext : DrawingContext
+        where TVisual : class, IHighlightableGeometry<TDrawingContext>, new()
     {
-        private int position;
-        private Stacker<TDrawingContext> stacker = new Stacker<TDrawingContext>();
+        /// <inheritdoc/>
+        public float PrimaryValue { get; set; }
 
-        public Stacker<TDrawingContext> Stacker { get => stacker; set => stacker = value; }
-        public int Position { get => position; set => position = value; }
+        /// <inheritdoc/>
+        public float SecondaryValue { get; set; }
 
-        public float StackPoint(IChartPoint point)
-        {
-            return stacker.StackPoint(point, position);
-        }
+        /// <inheritdoc/>
+        public ChartPointContext<TVisual, TDrawingContext> PointContext { get; set; } = new ChartPointContext<TVisual, TDrawingContext>(0, new object(), 0, false);
 
-        public StackedValue GetStack(IChartPoint point)
-        {
-            return stacker.GetStack(point, position);
-        }
+        IChartPointContext IChartPoint.PointContext => PointContext;
     }
 }

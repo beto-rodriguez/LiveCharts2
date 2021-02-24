@@ -31,7 +31,7 @@ namespace LiveChartsCore.SkiaSharpView
     }
 
     public class StackedColumnSeries<TModel, TVisual> : StackedColumnSeries<TModel, TVisual, SkiaDrawingContext>
-        where TVisual : ISizedGeometry<SkiaDrawingContext>, IHighlightableGeometry<SkiaDrawingContext>, new()
+        where TVisual : class, ISizedGeometry<SkiaDrawingContext>, IHighlightableGeometry<SkiaDrawingContext>, new()
     {
 
     }

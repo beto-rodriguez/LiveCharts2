@@ -20,30 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
+
 namespace LiveChartsCore.Context
 {
-    public interface IChartPoint: IOutOfContextChartPoint
+    public interface IChartPoint
     {
-        ChartPointContext PointContext { get; set; }
+        float PrimaryValue { get; set; }
+
+        float SecondaryValue { get; set; }
+
+        IChartPointContext PointContext { get; }
     }
 
-    public interface IOutOfContextChartPoint
+    public interface IChartPoint<TVisual, TDrawingContext>: IChartPoint
+        where TDrawingContext : DrawingContext
+        where TVisual : class, IHighlightableGeometry<TDrawingContext>, new()
     {
-        /// <summary>
-        /// Gets the primary value of the point.
-        /// Normally the map goes as follows:
-        /// For Horizontal Cartesian (<see cref="LineSeries{TModel, TVisual, TDrawingContext, TGeometryPath, TLineSegment, TBezierSegment, TMoveToCommand, TPathContext}"/>, <see cref="ColumnSeries{TModel, TVisual, TDrawingContext}"/>) series => Y coordinate.
-        /// For Vertical Cartesian (VerticalLine, RowSeries) series => X coordinate.
-        /// For <see cref="PieDataSeries{TModel, TVisual, TDrawingContext}"/> => the value of the slice.
-        /// </summary>
-        float PrimaryValue { get; }
-
-        /// <summary>
-        /// Gets the secondary value of the point.
-        /// For Horizontal Cartesian (<see cref="LineSeries{TModel, TVisual, TDrawingContext, TGeometryPath, TLineSegment, TBezierSegment, TMoveToCommand, TPathContext}"/>, <see cref="ColumnSeries{TModel, TVisual, TDrawingContext}"/>) series => X coordinate.
-        /// For Vertical Cartesian (VerticalLine, RowSeries) series => Y coordinate.
-        /// For <see cref="PieDataSeries{TModel, TVisual, TDrawingContext}"/> => *ignored*.
-        /// </summary>
-        float SecondaryValue { get; }
+        new float PrimaryValue { get; set; }
+        new float SecondaryValue { get; set; }
+        new ChartPointContext<TVisual, TDrawingContext> PointContext { get; set; }
     }
 }

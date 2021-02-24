@@ -25,6 +25,13 @@ namespace LiveChartsCore.Context
     public interface IChart
     {
         object MeasureWorker { get; }
+
+        LegendPosition LegendPosition { get; }
+        LegendOrientation LegendOrientation { get; }
+
+        TooltipPosition TooltipPosition { get; }
+        TooltipFindingStrategy TooltipFindingStrategy { get; }
+
         void Update();
     }
 }

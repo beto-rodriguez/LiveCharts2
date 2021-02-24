@@ -30,7 +30,7 @@ namespace LiveChartsCore.Context
     {
         private int stackCount = 0;
         private int stackMaxLength = 0;
-        private Dictionary<IDataSeries<TDrawingContext>, int> stackPositions = new Dictionary<IDataSeries<TDrawingContext>, int>();
+        private Dictionary<IDrawableSeries<TDrawingContext>, int> stackPositions = new Dictionary<IDrawableSeries<TDrawingContext>, int>();
         private int knownMaxLenght = 0;
         private List<List<StackedValue>> stack = new List<List<StackedValue>>();
         private List<float> totals = new List<float>();
@@ -41,7 +41,7 @@ namespace LiveChartsCore.Context
 
         public int MaxLenght => stackMaxLength;
 
-        public int GetSeriesStackPosition(IDataSeries<TDrawingContext> series)
+        public int GetSeriesStackPosition(IDrawableSeries<TDrawingContext> series)
         {
             if (!stackPositions.TryGetValue(series, out var i))
             {
@@ -54,7 +54,7 @@ namespace LiveChartsCore.Context
             return i;
         }
 
-        public float StackPoint(IOutOfContextChartPoint point, int seriesStackPosition)
+        public float StackPoint(IChartPoint point, int seriesStackPosition)
         {
             var index = unchecked((int)point.SecondaryValue);
             var start = seriesStackPosition == 0 ? 0 : stack[seriesStackPosition - 1][index].End;
@@ -78,7 +78,7 @@ namespace LiveChartsCore.Context
             return total;
         }
 
-        public StackedValue GetStack(int seriesStackPosition, IOutOfContextChartPoint point)
+        public StackedValue GetStack(IChartPoint point, int seriesStackPosition)
         {
             var index = unchecked((int)point.SecondaryValue);
             var p = stack[seriesStackPosition][index];

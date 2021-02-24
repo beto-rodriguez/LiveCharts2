@@ -44,8 +44,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty PointsProperty =
            DependencyProperty.Register(
-               nameof(Points), typeof(IEnumerable<FoundPoint<SkiaDrawingContext>>),
-               typeof(DefaultTooltip), new PropertyMetadata(new List<FoundPoint<SkiaDrawingContext>>()));
+               nameof(Points), typeof(IEnumerable<SkiaDrawingContext>),
+               typeof(DefaultTooltip), new PropertyMetadata(new List<SkiaDrawingContext>()));
 
         public static readonly DependencyProperty FontFamilyProperty =
            DependencyProperty.Register(
@@ -79,9 +79,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         public IEasingFunction EasingFunction { get => easingFunction; set => easingFunction = value; }
         public double HideoutCount { get => hideoutCount; set => hideoutCount = value; }
 
-        public IEnumerable<FoundPoint<SkiaDrawingContext>> Points
+        public IEnumerable<TooltipPoint> Points
         {
-            get { return (IEnumerable<FoundPoint<SkiaDrawingContext>>)GetValue(PointsProperty); }
+            get { return (IEnumerable<TooltipPoint>)GetValue(PointsProperty); }
             set { SetValue(PointsProperty, value); }
         }
 
@@ -123,7 +123,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         #endregion
 
-        void IChartTooltip<SkiaDrawingContext>.Show(IEnumerable<FoundPoint<SkiaDrawingContext>> foundPoints, ICartesianChartView<SkiaDrawingContext> view)
+        void IChartTooltip<SkiaDrawingContext>.Show(IEnumerable<TooltipPoint> foundPoints, ICartesianChartView<SkiaDrawingContext> view)
         {
             var location = foundPoints.GetTooltipLocation(
                 view.TooltipPosition, new System.Drawing.SizeF((float)border.ActualWidth, (float)border.ActualHeight));
@@ -155,7 +155,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             var highlightTasks = new Dictionary<IDrawableTask<SkiaDrawingContext>, HashSet<IDrawable<SkiaDrawingContext>>>();
             highlited = highlightTasks;
 
-            void highlightGeometries(FoundPoint<SkiaDrawingContext> point, IDrawableTask<SkiaDrawingContext> highlightPaintTask)
+            void highlightGeometries(TooltipPoint point, IDrawableTask<SkiaDrawingContext> highlightPaintTask)
             {
                 // if we have not cleared the geometries of the current series... we do it!
                 if (!highlightTasks.TryGetValue(highlightPaintTask, out var highlighPaint))
@@ -171,8 +171,11 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
             foreach (var point in foundPoints)
             {
-                if (point.Series.HighlightFill != null) highlightGeometries(point, point.Series.HighlightFill);
-                if (point.Series.HighlightStroke != null) highlightGeometries(point, point.Series.HighlightStroke);
+                var hlf = (point.Series as IDrawableSeries<SkiaDrawingContext>)?.HighlightFill;
+                var hls = (point.Series as IDrawableSeries<SkiaDrawingContext>)?.HighlightStroke;
+
+                if (hlf != null) highlightGeometries(point, hlf);
+                if (hls != null) highlightGeometries(point, hls);
             }
 
             wpfChart.CoreCanvas.Invalidate();

@@ -26,30 +26,25 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 
 namespace LiveChartsCore
 {
-    public abstract class Series<TModel, TVisual, TDrawingContext> : IDataSeries<TDrawingContext>, IDisposable
+    public abstract class Series<TModel, TVisual, TDrawingContext> : ISeries, IDisposable
         where TDrawingContext : DrawingContext
-        where TVisual : ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
+        where TVisual : class, IHighlightableGeometry<TDrawingContext>, new()
     {
         private readonly CollectionDeepObserver<TModel> observerer;
         private readonly object measuredFor = new object();
-        private IEnumerable<IChartPoint> fetched = Enumerable.Empty<IChartPoint>();
+        private IEnumerable<IChartPoint<TVisual, TDrawingContext>> fetched = Enumerable.Empty<IChartPoint<TVisual, TDrawingContext>>();
         protected readonly bool isValueType;
         protected readonly bool implementsICP;
-        protected readonly Dictionary<int, ChartPoint<TModel>> byValueVisualMap = new Dictionary<int, ChartPoint<TModel>>();
-        protected readonly Dictionary<TModel, ChartPoint<TModel>> byReferenceVisualMap = new Dictionary<TModel, ChartPoint<TModel>>();
-        private readonly HashSet<CartesianChartCore<TDrawingContext>> subscribedTo = new HashSet<CartesianChartCore<TDrawingContext>>();
+        protected readonly Dictionary<int, ChartPoint<TModel, TVisual, TDrawingContext>> byValueVisualMap = new Dictionary<int, ChartPoint<TModel, TVisual, TDrawingContext>>();
+        protected readonly Dictionary<TModel, ChartPoint<TModel, TVisual, TDrawingContext>> byReferenceVisualMap = new Dictionary<TModel, ChartPoint<TModel, TVisual, TDrawingContext>>();
+        private readonly HashSet<IChart> subscribedTo = new HashSet<IChart>();
         private readonly SeriesProperties properties;
         private IEnumerable<TModel>? values;
-        protected PaintContext<TDrawingContext> paintContext = new PaintContext<TDrawingContext>();
-        private IDrawableTask<TDrawingContext>? stroke = null;
-        private IDrawableTask<TDrawingContext>? fill = null;
-        private IDrawableTask<TDrawingContext>? highlightStroke = null;
-        private IDrawableTask<TDrawingContext>? highlightFill = null;
-        private double legendShapeSize = 15;
 
         public Series(SeriesProperties properties)
         {
@@ -64,7 +59,7 @@ namespace LiveChartsCore
                     NotifySubscribers();
                 });
             var t = typeof(TModel);
-            implementsICP = typeof(IChartPoint).IsAssignableFrom(t);
+            implementsICP = typeof(IChartPoint<TVisual, TDrawingContext>).IsAssignableFrom(t);
             isValueType = t.IsValueType;
         }
 
@@ -87,71 +82,6 @@ namespace LiveChartsCore
             }
         }
 
-        public IDrawableTask<TDrawingContext>? Stroke
-        {
-            get => stroke;
-            set
-            {
-                stroke = value;
-                if (stroke != null)
-                {
-                    stroke.IsStroke = true;
-                }
-
-                OnPaintContextChanged();
-            }
-        }
-
-        public IDrawableTask<TDrawingContext>? Fill
-        {
-            get => fill;
-            set
-            {
-                fill = value;
-                if (fill != null)
-                {
-                    fill.IsStroke = false;
-                    fill.StrokeWidth = 0;
-                }
-                OnPaintContextChanged();
-            }
-        }
-
-        public IDrawableTask<TDrawingContext>? HighlightStroke
-        {
-            get => highlightStroke;
-            set
-            {
-                highlightStroke = value;
-                if (highlightStroke != null)
-                {
-                    highlightStroke.IsStroke = true;
-                    highlightStroke.ZIndex = 1;
-                }
-                OnPaintContextChanged();
-            }
-        }
-
-        public IDrawableTask<TDrawingContext>? HighlightFill
-        {
-            get => highlightFill;
-            set
-            {
-                highlightFill = value;
-                if (highlightFill != null)
-                {
-                    highlightFill.IsStroke = false;
-                    highlightFill.StrokeWidth = 0;
-                    highlightFill.ZIndex = 1;
-                }
-                OnPaintContextChanged();
-            }
-        }
-
-        public PaintContext<TDrawingContext> DefaultPaintContext => paintContext;
-
-        public double LegendShapeSize { get => legendShapeSize; set => legendShapeSize = value; }
-
         /// <summary>
         /// Gets or sets the mapping that defines how a type is mapped to a <see cref="ChartPoint"/> instance, 
         /// then the <see cref="ChartPoint"/> will be drawn as a point in our chart.
@@ -159,7 +89,7 @@ namespace LiveChartsCore
         public ChartPointMapperDelegate<TModel>? Mapping { get; set; }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<IChartPoint> Fetch(CartesianChartCore<TDrawingContext> chart)
+        public virtual IEnumerable<IChartPoint<TVisual, TDrawingContext>> Fetch(IChart chart)
         {
             subscribedTo.Add(chart);
             if (measuredFor == chart.MeasureWorker) return fetched;
@@ -169,51 +99,24 @@ namespace LiveChartsCore
             return fetched;
         }
 
+        IEnumerable<IChartPoint> ISeries.Fetch(IChart chart) => Fetch(chart);
+
+        IEnumerable<TooltipPoint> ISeries.FindPointsNearTo(IChart chart, PointF pointerPosition) =>
+            Fetch(chart)
+                .Where(point => point.PointContext.HoverArea.IsTriggerBy(pointerPosition, chart.TooltipFindingStrategy))
+                .Select(point => new TooltipPoint(this, point));
+
         /// <inheritdoc/>
         public void Dispose()
         {
             observerer.Dispose(values);
         }
 
-        protected virtual void OnPaintContextChanged()
-        {
-            var context = new PaintContext<TDrawingContext>();
-
-            if (Fill != null)
-            {
-                var fillClone = Fill.CloneTask();
-                var visual = new TVisual { X = 0, Y = 0, Height = (float)legendShapeSize, Width = (float)legendShapeSize };
-                fillClone.AddGeometyToPaintTask(visual);
-                context.PaintTasks.Add(fillClone);
-            }
-
-            var w = LegendShapeSize;
-            if (Stroke != null)
-            {
-                var strokeClone = Stroke.CloneTask();
-                var visual = new TVisual
-                {
-                    X = strokeClone.StrokeWidth,
-                    Y = strokeClone.StrokeWidth,
-                    Height = (float)legendShapeSize,
-                    Width = (float)legendShapeSize
-                };
-                w += 2 * strokeClone.StrokeWidth;
-                strokeClone.AddGeometyToPaintTask(visual);
-                context.PaintTasks.Add(strokeClone);
-            }
-
-            context.Width = w;
-            context.Height = w;
-
-            paintContext = context;
-        }
-
-        protected virtual void OnPointMeasured(IChartPoint chartPoint, TVisual visual)
+        protected virtual void OnPointMeasured(IChartPoint<TVisual, TDrawingContext> chartPoint, TVisual visual)
         {
         }
 
-        private IEnumerable<IChartPoint> GetPointsFromICP()
+        private IEnumerable<IChartPoint<TVisual, TDrawingContext>> GetPointsFromICP()
         {
             if (values == null) yield break;
 
@@ -221,13 +124,13 @@ namespace LiveChartsCore
 
             foreach (var item in values)
             {
-                var chartPoint = (IChartPoint)item;
-                chartPoint.PointContext = new ChartPointContext(index++, item, properties, true);
+                var chartPoint = (IChartPoint<TVisual, TDrawingContext>)item;
+                chartPoint.PointContext = new ChartPointContext<TVisual, TDrawingContext>(index++, item, properties, true);
                 yield return chartPoint;
             }
         }
 
-        private IEnumerable<IChartPoint> GetMappedPoints()
+        private IEnumerable<IChartPoint<TVisual, TDrawingContext>> GetMappedPoints()
         {
             if (values == null) yield break;
 
@@ -238,10 +141,10 @@ namespace LiveChartsCore
             {
                 foreach (var item in values)
                 {
-                    if (!byValueVisualMap.TryGetValue(index, out ChartPoint<TModel> cp))
-                        byValueVisualMap[index] = (cp = new ChartPoint<TModel>());
+                    if (!byValueVisualMap.TryGetValue(index, out ChartPoint<TModel, TVisual, TDrawingContext> cp))
+                        byValueVisualMap[index] = (cp = new ChartPoint<TModel, TVisual, TDrawingContext>());
 
-                    cp.PointContext = new ChartPointContext(index++, item, properties, true);
+                    cp.PointContext = new ChartPointContext<TVisual, TDrawingContext>(index++, item, properties, true);
                     mapper(cp, item, cp.PointContext);
 
                     yield return cp;
@@ -251,10 +154,10 @@ namespace LiveChartsCore
             {
                 foreach (var item in values)
                 {
-                    if (!byReferenceVisualMap.TryGetValue(item, out ChartPoint<TModel> cp))
-                        byReferenceVisualMap[item] = (cp = new ChartPoint<TModel>());
+                    if (!byReferenceVisualMap.TryGetValue(item, out ChartPoint<TModel, TVisual, TDrawingContext> cp))
+                        byReferenceVisualMap[item] = (cp = new ChartPoint<TModel, TVisual, TDrawingContext>());
 
-                    cp.PointContext = new ChartPointContext(index++, item, properties, true);
+                    cp.PointContext = new ChartPointContext<TVisual, TDrawingContext>(index++, item, properties, true);
                     mapper(cp, item, cp.PointContext);
 
                     yield return cp;

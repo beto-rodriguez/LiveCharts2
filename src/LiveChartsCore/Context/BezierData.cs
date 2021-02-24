@@ -20,18 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
+
 namespace LiveChartsCore.Context
 {
-    public class BezierData<TModel>
+    public class BezierData<TVisual, TDrawingContext>
+        where TVisual : class, IHighlightableGeometry<TDrawingContext>, new()
+        where TDrawingContext : DrawingContext
     {
-        private IChartPoint targetPoint;
+        private IChartPoint<TVisual, TDrawingContext> targetPoint;
 
-        public BezierData(IChartPoint chartPoint)
+        public BezierData(IChartPoint<TVisual, TDrawingContext> chartPoint)
         {
             targetPoint = chartPoint;
         }
 
-        public IChartPoint TargetPoint { get => targetPoint; set => targetPoint = value; }
+        public IChartPoint<TVisual, TDrawingContext> TargetPoint { get => targetPoint; set => targetPoint = value; }
         public float X0 { get; set; }
         public float Y0 { get; set; }
         public float X1 { get; set; }

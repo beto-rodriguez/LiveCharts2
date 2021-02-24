@@ -3,5 +3,6 @@
 namespace LiveChartsCore.Context
 {
     public delegate void TransitionsSetterDelegate<T>(T visual, Animation chartAnimation);
-    public delegate void ChartPointMapperDelegate<T>(ChartPoint<T> point, T model, ChartPointContext pointContext);
+
+    public delegate void ChartPointMapperDelegate<TModel>(IChartPoint point, TModel model, IChartPointContext pointContext);
 }

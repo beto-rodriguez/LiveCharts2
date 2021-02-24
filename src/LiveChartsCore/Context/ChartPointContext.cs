@@ -20,12 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
+
 namespace LiveChartsCore.Context
 {
     /// <summary>
     /// Defines all the involved variables a point inside a chart requires.
     /// </summary>
-    public class ChartPointContext
+    public class ChartPointContext<TVisual, TDrawingContext>: IChartPointContext
+        where TDrawingContext : DrawingContext
+        where TVisual : class, IHighlightableGeometry<TDrawingContext>, new()
     {
         private readonly int index;
         private readonly object dataSource;
@@ -65,7 +69,8 @@ namespace LiveChartsCore.Context
         /// <summary>
         /// Gets or sets (must not be set) the visual element in the UI.
         /// </summary>
-        public object? Visual { get; set; }
+        public TVisual? Visual { get; set; }
+        object IChartPointContext.Visual => Visual;
 
         /// <summary>
         /// Gets or sets the area that triggers the ToolTip.
