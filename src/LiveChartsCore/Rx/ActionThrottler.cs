@@ -32,7 +32,7 @@ namespace LiveChartsCore.Rx
 
         }
 
-        public event Action Unlocked;
+        public event Action? Unlocked;
 
         public void TryRun()
         {
@@ -52,7 +52,7 @@ namespace LiveChartsCore.Rx
         {
         }
 
-        public event Action<T> Unlocked;
+        public event Action<T>? Unlocked;
 
         public void TryRun(T param)
         {
@@ -72,7 +72,7 @@ namespace LiveChartsCore.Rx
         {
         }
 
-        public event Action<T1, T2> Unlocked;
+        public event Action<T1, T2>? Unlocked;
 
         public void TryRun(T1 param1, T2 param2)
         {
@@ -92,7 +92,7 @@ namespace LiveChartsCore.Rx
         {
         }
 
-        public event Action<T1, T2, T3> Unlocked;
+        public event Action<T1, T2, T3>? Unlocked;
 
         public void TryRun(T1 param1, T2 param2, T3 param3)
         {
@@ -112,7 +112,7 @@ namespace LiveChartsCore.Rx
         {
         }
 
-        public event Action<T1, T2, T3, T4> Unlocked;
+        public event Action<T1, T2, T3, T4>? Unlocked;
 
         public void TryRun(T1 param1, T2 param2, T3 param3, T4 param4)
         {
@@ -132,7 +132,7 @@ namespace LiveChartsCore.Rx
         {
         }
 
-        public event Action<T1, T2, T3, T4, T5> Unlocked;
+        public event Action<T1, T2, T3, T4, T5>? Unlocked;
 
         public void TryRun(T1 param1, T2 param2, T3 param3, T4 param4, T5 param5)
         {

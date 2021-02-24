@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
+using System;
 
 namespace LiveChartsCore
 {
@@ -79,6 +80,7 @@ namespace LiveChartsCore
             var ts = TransitionsSetter ?? SetDefaultTransitions;
 
             var stacker = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
+            if (stacker == null) throw new Exception("The stack failed");
 
             foreach (var point in Fetch(chart))
             {

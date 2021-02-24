@@ -34,6 +34,6 @@ namespace LiveChartsCore.Drawing
         /// <summary>
         /// Gets the <see cref="Geometry"/> what we need to highlight when te point requires so.
         /// </summary>
-        IDrawable<TDrawingContext> HighlightableGeometry { get; }
+        IDrawable<TDrawingContext>? HighlightableGeometry { get; }
     }
 }

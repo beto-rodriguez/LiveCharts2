@@ -24,14 +24,17 @@ using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Context
 {
-    public class LineSeriesVisualPoint<TDrawingContext, TVisual, TGeometryPath, TPath>: IHighlightableGeometry<TDrawingContext>
-        where TVisual: ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>
-        where TDrawingContext: DrawingContext
-        where TGeometryPath: IPathGeometry<TDrawingContext, TPath>
+    public class LineSeriesVisualPoint<TDrawingContext, TVisual, TGeometryPath, TBezierSegment, TPathContext> : IHighlightableGeometry<TDrawingContext>
+        where TVisual: ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new ()
+        where TGeometryPath: IPathGeometry<TDrawingContext, TPathContext>
+        where TBezierSegment : IBezierSegment<TPathContext>, new()
+        where TDrawingContext : DrawingContext
     {
-        public TVisual Geometry { get; set; }
-        public IBezierSegment<TPath> Bezier { get; set; }
-        public IDrawable<TDrawingContext> HighlightableGeometry => Geometry.HighlightableGeometry;
+        public TVisual Geometry { get; set; } = new TVisual();
+
+        public TBezierSegment Bezier { get; set; } = new TBezierSegment();
+
+        public IDrawable<TDrawingContext>? HighlightableGeometry => Geometry?.HighlightableGeometry;
     }
 }
 

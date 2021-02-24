@@ -37,15 +37,15 @@ namespace LiveChartsCore
         private const float wedgeLength = 8;
         internal AxisOrientation orientation;
         private double step = double.NaN;
-        private Bounds dataBounds;
-        private Bounds previousDataBounds;
+        private Bounds dataBounds = new Bounds();
+        private Bounds previousDataBounds = new Bounds();
         private double labelsRotation;
         private readonly Dictionary<string, AxisVisualSeprator<TDrawingContext>> activeSeparators = 
             new Dictionary<string, AxisVisualSeprator<TDrawingContext>>();
         // xo (x origin) and yo (y origin) are the distance to the center of the axis to the control bounds
         internal float xo = 0f, yo = 0f;
         private AxisPosition position = AxisPosition.LeftOrBottom;
-        private Func<double, AxisTick, string> labeler;
+        private Func<double, AxisTick, string>? labeler;
 
         public Bounds DataBounds
         {
@@ -70,14 +70,14 @@ namespace LiveChartsCore
         public AxisPosition Position { get => position; set => position = value; }
         public double LabelsRotation { get => labelsRotation; set => labelsRotation = value; }
 
-        public IWritableTask<TDrawingContext> TextBrush { get; set; }
+        public IWritableTask<TDrawingContext>? TextBrush { get; set; }
 
-        public IDrawableTask<TDrawingContext> SeparatorsBrush { get; set; }
+        public IDrawableTask<TDrawingContext>? SeparatorsBrush { get; set; }
 
         public bool ShowSeparatorLines { get; set; } = true;
         public bool ShowSeparatorWedges { get; set; } = true;
 
-        public IDrawableTask<TDrawingContext> AlternativeSeparatorForeground { get; set; }
+        public IDrawableTask<TDrawingContext>? AlternativeSeparatorForeground { get; set; }
 
         public void Measure(CartesianChartCore<TDrawingContext> chart)
         {
@@ -205,8 +205,12 @@ namespace LiveChartsCore
 
             foreach (var separator in activeSeparators.ToArray())
             {
-                if (chart.MeasuredDrawables.Contains(separator.Value.Line) || chart.MeasuredDrawables.Contains(separator.Value.Text)) 
+                if (separator.Value.Line == null || chart.MeasuredDrawables.Contains(separator.Value.Line) ||
+                    separator.Value.Text == null || chart.MeasuredDrawables.Contains(separator.Value.Text))
+                {
                     continue;
+                }
+
                 activeSeparators.Remove(separator.Key);
             }
         }
@@ -245,7 +249,7 @@ namespace LiveChartsCore
         {
             return new Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             {
-               Labeler = labeler,
+               Labeler = labeler ?? Labelers.Default,
                Step = step,
                UnitWith = UnitWith,
                Position = position,

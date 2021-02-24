@@ -33,7 +33,7 @@ namespace LiveChartsCore.Drawing
 
         public Animation()
         {
-
+            easingFunction = t => t;
         }
 
         public Animation(Func<float, float> easingFunction, TimeSpan duration)

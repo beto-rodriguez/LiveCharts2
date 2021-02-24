@@ -33,7 +33,7 @@ namespace LiveChartsCore
     public class CartesianChartCore<TDrawingContext>: IChart
         where TDrawingContext : DrawingContext
     {
-        private object measureWorker = null;
+        private object measureWorker = new object();
         private HashSet<IDrawable<TDrawingContext>> measuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
         private SeriesContext<TDrawingContext> seriesContext = new SeriesContext<TDrawingContext>(Enumerable.Empty<IDrawableSeries<TDrawingContext>>());
 
@@ -49,10 +49,10 @@ namespace LiveChartsCore
         private ICartesianSeries<TDrawingContext>[] series = new ICartesianSeries<TDrawingContext>[0];
         private LegendPosition legendPosition;
         private LegendOrientation legendOrientation;
-        private IChartLegend<TDrawingContext> legend;
+        private IChartLegend<TDrawingContext>? legend;
         private TooltipPosition tooltipPosition;
         private TooltipFindingStrategy tooltipFindingStrategy;
-        private IChartTooltip<TDrawingContext> tooltip;
+        private IChartTooltip<TDrawingContext>? tooltip;
         private TimeSpan animationsSpeed;
         private Func<float, float> easingFunction;
 
@@ -65,10 +65,10 @@ namespace LiveChartsCore
             chartView = view;
             updateThrottler = new ActionThrottler(TimeSpan.FromSeconds(300));
             updateThrottler.Unlocked += UpdateThrottlerUnlocked;
+            this.easingFunction = EasingFunctions.SinOut;
         }
 
-        public object MeasureWorker 
-            => measureWorker;
+        public object MeasureWorker => measureWorker;
         public HashSet<IDrawable<TDrawingContext>> MeasuredDrawables => measuredDrawables;
         public SeriesContext<TDrawingContext> SeriesContext => seriesContext;
         public Canvas<TDrawingContext> Canvas => canvas;
@@ -81,10 +81,10 @@ namespace LiveChartsCore
         public IDrawableSeries<TDrawingContext>[] Series => series;
         public LegendPosition LegendPosition => LegendPosition;
         public LegendOrientation LegendOrientation => legendOrientation;
-        public IChartLegend<TDrawingContext> Legend => legend;
+        public IChartLegend<TDrawingContext>? Legend => legend;
         public TooltipPosition TooltipPosition => tooltipPosition;
         public TooltipFindingStrategy TooltipFindingStrategy => tooltipFindingStrategy;
-        public IChartTooltip<TDrawingContext> Tooltip => tooltip;
+        public IChartTooltip<TDrawingContext>? Tooltip => tooltip;
         public TimeSpan AnimationsSpeed => animationsSpeed;
         public Func<float, float> EasingFunction => easingFunction;
 

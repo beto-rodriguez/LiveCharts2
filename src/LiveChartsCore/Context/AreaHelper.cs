@@ -30,10 +30,14 @@ namespace LiveChartsCore.Context
         where TMoveTo : IMoveToPathCommand<TPathContext>, new()
         where TDrawingContext : DrawingContext
     {
-        public IPathGeometry<TDrawingContext, TPathContext> Path { get; set; }
-        public IMoveToPathCommand<TPathContext> StartPoint { get; set; }
-        public ILinePathSegment<TPathContext> StartSegment { get; set; }
-        public ILinePathSegment<TPathContext> EndSegment { get; set; }
+        public IPathGeometry<TDrawingContext, TPathContext> Path { get; set; } = new TGeometryPath();
+
+        public IMoveToPathCommand<TPathContext> StartPoint { get; set; } = new TMoveTo();
+
+        public ILinePathSegment<TPathContext> StartSegment { get; set; } = new TLineSegment();
+
+        public ILinePathSegment<TPathContext> EndSegment { get; set; } = new TLineSegment();
+
         public bool IsInitialized { get; set; }
 
         public bool Initialize(
@@ -41,13 +45,10 @@ namespace LiveChartsCore.Context
             Animation defaultAnimation)
         {
             if (IsInitialized) return false;
-            IsInitialized = true;
-            Path = new TGeometryPath();
-            StartPoint = new TMoveTo();
-            StartSegment = new TLineSegment();
-            EndSegment = new TLineSegment();
 
+            IsInitialized = true;
             transitionSetter(this, defaultAnimation);
+
             return true;
         }
     }

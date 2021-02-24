@@ -39,7 +39,7 @@ namespace LiveChartsCore.Drawing
             stopwatch.Start();
         }
 
-        public event Action<Canvas<TDrawingContext>> Invalidated;
+        public event Action<Canvas<TDrawingContext>>? Invalidated;
         public bool IsValid { get => isValid; }
 
         public void DrawFrame(TDrawingContext context)
