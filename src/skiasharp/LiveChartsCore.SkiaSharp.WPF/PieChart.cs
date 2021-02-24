@@ -28,6 +28,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 {
     public class PieChart : Chart, IPieChartView<SkiaDrawingContext>
     {
+        static PieChart()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(PieChart), new FrameworkPropertyMetadata(typeof(PieChart)));
+        }
+
+        public PieChart() { }
         PieChart<SkiaDrawingContext> IPieChartView<SkiaDrawingContext>.Core => (PieChart<SkiaDrawingContext>)core;
 
         public static readonly DependencyProperty SeriesProperty =

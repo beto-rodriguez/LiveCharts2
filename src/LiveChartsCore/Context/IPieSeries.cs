@@ -27,7 +27,7 @@ namespace LiveChartsCore.Context
     public interface IPieSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        Bounds GetBounds(PieChart<TDrawingContext> chart);
+        void GetBounds(PieChart<TDrawingContext> chart);
 
         void Measure(PieChart<TDrawingContext> chart);
     }

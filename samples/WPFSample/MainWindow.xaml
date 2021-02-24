@@ -10,7 +10,8 @@
         Title="MainWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen">
 
     <Window.DataContext>
-        <vm:MainVM></vm:MainVM>
+        <vm:PieViewModel></vm:PieViewModel>
+        <!--<vm:MainVM></vm:MainVM>-->
     </Window.DataContext>
 
     <Grid>
@@ -19,10 +20,12 @@
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
-            <Button Command="{}"></Button>
+            <Button>Action!</Button>
         </StackPanel>
-        <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" YAxes="{Binding YAxes}" XAxes="{Binding XAxes}" 
+        <lvc:PieChart Grid.Row="1" Series="{Binding Series}">
+        </lvc:PieChart>
+        <!--<lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" YAxes="{Binding YAxes}" XAxes="{Binding XAxes}" 
                             LegendPosition="Right" TooltipPosition="Top" TooltipFindingStrategy="CompareOnlyX">
-        </lvc:CartesianChart>
+        </lvc:CartesianChart>-->
     </Grid>
 </Window>

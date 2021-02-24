@@ -16,11 +16,11 @@
     </ControlTemplate>
 
     <Style TargetType="{x:Type local:CartesianChart}">
-        <Setter Property="Template" Value="{StaticResource DefaultChartTempalte}"></Setter>
+        <Setter Property="Template" Value="{StaticResource DefaultChartTempalte}" />
     </Style>
 
     <Style TargetType="{x:Type local:PieChart}">
-        <Setter Property="Template" Value="{StaticResource DefaultChartTempalte}"></Setter>
+        <Setter Property="Template" Value="{StaticResource DefaultChartTempalte}" />
     </Style>
     
     <Style TargetType="{x:Type local:NaturalGeometriesCanvas}">

@@ -28,6 +28,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
 {
     public class DoughnutGeometry : Geometry, IDoughnutGeometry<SkiaDrawingContext>
     {
+        private readonly FloatMotionProperty cxProperty;
+        private readonly FloatMotionProperty cyProperty;
         private readonly FloatMotionProperty wProperty;
         private readonly FloatMotionProperty hProperty;
         private readonly FloatMotionProperty startProperty;
@@ -35,12 +37,16 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
 
         public DoughnutGeometry()
         {
+            cxProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(CenterX)));
+            cyProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(CenterY)));
             wProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width)));
             hProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Height)));
             startProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(StartAngle)));
             sweepProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(SweepAngle)));
         }
 
+        public float CenterX { get => cxProperty.GetMovement(this); set => cxProperty.SetMovement(value, this); }
+        public float CenterY { get => cyProperty.GetMovement(this); set => cyProperty.SetMovement(value, this); }
         public float Width { get => wProperty.GetMovement(this); set => wProperty.SetMovement(value, this); }
         public float Height { get => hProperty.GetMovement(this); set => hProperty.SetMovement(value, this); }
         public float StartAngle { get => startProperty.GetMovement(this); set => startProperty.SetMovement(value, this); }
@@ -55,6 +61,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
         {
             SKPath path = new SKPath();
 
+            path.MoveTo(context.Info.Width / 2f, context.Info.Height / 2);
+            path.MoveTo(CenterX, CenterY);
             path.ArcTo(
                 new SKRect { Left = X, Top = Y, Size = new SKSize { Width = Width, Height = Height } }, 
                 StartAngle,

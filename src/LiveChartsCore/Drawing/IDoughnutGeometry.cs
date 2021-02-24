@@ -25,6 +25,8 @@ namespace LiveChartsCore.Drawing
     public interface IDoughnutGeometry<TDrawingContext>: IDrawable<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        float CenterX { get; set; }
+        float CenterY { get; set; }
         float X { get; set; }
         float Y { get; set; }
         float Width { get; set; }

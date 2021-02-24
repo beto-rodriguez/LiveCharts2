@@ -8,13 +8,13 @@ using System.Collections.ObjectModel;
 
 namespace ViewModelsSamples
 {
-    public class MainVM
+    public class CartesianViewModel
     {
         public ObservableCollection<ICartesianSeries<SkiaDrawingContext>> Series { get; set; }
         public List<IAxis<SkiaDrawingContext>> YAxes { get; set; }
         public List<IAxis<SkiaDrawingContext>> XAxes { get; set; }
 
-        public MainVM()
+        public CartesianViewModel()
         {
             //var animatedStrokeDash = new SolidColorPaintTask(new SKColor(217, 47, 47), 2);
             //animatedStrokeDash.SetPropertyTransition(
@@ -106,6 +106,23 @@ namespace ViewModelsSamples
                     LabelsRotation = 0,
                     Labeler = (value, tick) => $"this {value}"
                 }
+            };
+        }
+    }
+
+    public class PieViewModel
+    {
+        public IPieSeries<SkiaDrawingContext> Series { get; set; }
+
+        public PieViewModel()
+        {
+            Series = new PieSeries<int>
+            {
+                Name = "pies",
+                Values = new[] { 2, 2, 2, 2, 2 },
+                Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
+                Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
+                HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
             };
         }
     }

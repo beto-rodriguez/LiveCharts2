@@ -23,7 +23,6 @@
 using LiveChartsCore.Context;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows;
 
 namespace LiveChartsCore.SkiaSharpView.WPF

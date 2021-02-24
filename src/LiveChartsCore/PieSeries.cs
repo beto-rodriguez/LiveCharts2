@@ -30,8 +30,8 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
         where TVisual : class, IDoughnutGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
     {
-        private Bounds bounds = new Bounds();
-        private Stacker<TDrawingContext> stacker = new Stacker<TDrawingContext>();
+        private float total = 0;
+        private int count = 0;
 
         public PieSeries() : base(SeriesProperties.PieSeries) { }
 
@@ -52,7 +52,7 @@ namespace LiveChartsCore
             var cx = drawLocation.X + drawMarginSize.Width * 0.5f;
             var cy = drawLocation.Y + drawMarginSize.Height * 0.5f;
 
-            var stackPosition = GetStackGroup();
+            var stackedValue = 0f;
 
             foreach (var point in Fetch(chart))
             {
@@ -60,6 +60,8 @@ namespace LiveChartsCore
                 {
                     var p = new TVisual 
                     {
+                        CenterX = drawLocation.X + drawMarginSize.Width * 0.5f,
+                        CenterY = drawLocation.Y + drawMarginSize.Height * 0.5f,
                         X = cx,
                         Y = cy,
                         Width = 0,
@@ -77,39 +79,35 @@ namespace LiveChartsCore
 
                 var dougnutGeometry = point.PointContext.Visual;
 
-                var s = stacker.GetStack(point, stackPosition);
-
+                dougnutGeometry.CenterX = drawLocation.X + drawMarginSize.Width * 0.5f;
+                dougnutGeometry.CenterY = drawLocation.Y + drawMarginSize.Height * 0.5f;
                 dougnutGeometry.X = (drawMarginSize.Width - minDimension) * 0.5f;
                 dougnutGeometry.Y = (drawMarginSize.Height - minDimension) * 0.5f;
                 dougnutGeometry.Width = minDimension;
                 dougnutGeometry.Height = minDimension;
-                var start = (s.Start / s.Total) * 360;
-                var end = (s.End / s.Total) * 360;
+                var start = (stackedValue / total) * 360;
+                var end = (stackedValue + point.PrimaryValue / total) * 360;
                 dougnutGeometry.StartAngle = start;
                 dougnutGeometry.SweepAngle = end;
 
                 point.PointContext.HoverArea = new SemicircleHoverArea().SetDimensions(cx, cy, start, end, minDimension * 0.5f);
                 OnPointMeasured(point, dougnutGeometry);
                 chart.MeasuredDrawables.Add(dougnutGeometry);
+
+                stackedValue += point.PrimaryValue;
             }
         }
 
-        public Bounds GetBounds(PieChart<TDrawingContext> chart)
+        public void GetBounds(PieChart<TDrawingContext> chart)
         {
-            bounds = new Bounds();
-            stacker = new Stacker<TDrawingContext>();
-            var stackPosition = GetStackGroup();
+            total = 0;
+            count = 0;
 
             foreach (var point in Fetch(chart))
             {
-                var secondary = point.SecondaryValue;
-                var primary = stacker.StackPoint(point, stackPosition);
-
-                bounds.AppendValue(secondary);
-                bounds.AppendValue(primary);
+                total += point.PrimaryValue;
+                count++;
             }
-
-            return bounds;
         }
 
         protected virtual void SetDefaultTransitions(IDoughnutGeometry<TDrawingContext> visual, Animation defaultAnimation)
@@ -117,7 +115,7 @@ namespace LiveChartsCore
             visual
                 .DefinePropertyTransitions(
                     nameof(visual.X), nameof(visual.Y), nameof(visual.Width), nameof(visual.Height),
-                    nameof(visual.StartAngle), nameof(visual.SweepAngle))
+                    nameof(visual.StartAngle), nameof(visual.SweepAngle), nameof(visual.CenterX), nameof(visual.CenterY))
                 .WithAnimation(defaultAnimation)
                 .CompleteCurrentTransitions();
         }
