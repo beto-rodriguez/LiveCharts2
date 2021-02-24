@@ -29,8 +29,7 @@ namespace LiveChartsCore
     /// <summary>
     /// Defines data to plot in a chart.
     /// </summary>
-    public abstract class CartesianSeries<TModel, TVisual, TDrawingContext>
-        : DrawableSeries<TModel, TVisual, TDrawingContext>, IDisposable, ICartesianSeries<TDrawingContext>
+    public abstract class CartesianSeries<TModel, TVisual, TDrawingContext>: DrawableSeries<TModel, TVisual, TDrawingContext>, IDisposable, ICartesianSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TVisual : class, IHighlightableGeometry<TDrawingContext>, new()
     {
@@ -47,7 +46,7 @@ namespace LiveChartsCore
 
         /// <inheritdoc/>
         public virtual CartesianBounds GetBounds(
-            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
+            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
             var seriesLength = 0;
             var stack = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
@@ -72,6 +71,6 @@ namespace LiveChartsCore
 
         /// <inheritdoc/>
         public abstract void Measure(
-            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
+            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
     }
 }

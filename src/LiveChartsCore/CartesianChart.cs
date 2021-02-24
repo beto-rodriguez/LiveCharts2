@@ -22,73 +22,33 @@
 
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Rx;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
 namespace LiveChartsCore
 {
-    public class CartesianChartCore<TDrawingContext>: IChart
+    public class CartesianChart<TDrawingContext>: Chart<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        private object measureWorker = new object();
-        private HashSet<IDrawable<TDrawingContext>> measuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
-        private SeriesContext<TDrawingContext> seriesContext = new SeriesContext<TDrawingContext>(Enumerable.Empty<IDrawableSeries<TDrawingContext>>());
-
         private readonly ICartesianChartView<TDrawingContext> chartView;
-        private readonly Canvas<TDrawingContext> canvas;
-        private readonly ActionThrottler updateThrottler;
-
-        // view copied properties
-        private SizeF controlSize = new SizeF();
-        private Margin? viewDrawMargin = null;
+        private CartesianSeriesContext<TDrawingContext> seriesContext = new CartesianSeriesContext<TDrawingContext>(Enumerable.Empty<IDrawableSeries<TDrawingContext>>());
         private IAxis<TDrawingContext>[] xAxes = new IAxis<TDrawingContext>[0];
         private IAxis<TDrawingContext>[] yAxes = new IAxis<TDrawingContext>[0];
         private ICartesianSeries<TDrawingContext>[] series = new ICartesianSeries<TDrawingContext>[0];
-        private LegendPosition legendPosition;
-        private LegendOrientation legendOrientation;
-        private IChartLegend<TDrawingContext>? legend;
-        private TooltipPosition tooltipPosition;
-        private TooltipFindingStrategy tooltipFindingStrategy;
-        private IChartTooltip<TDrawingContext>? tooltip;
-        private TimeSpan animationsSpeed;
-        private Func<float, float> easingFunction;
 
-        private SizeF drawMarginSize;
-        private PointF drawMaringLocation;
-
-        public CartesianChartCore(ICartesianChartView<TDrawingContext> view, Canvas<TDrawingContext> canvas)
+        public CartesianChart(ICartesianChartView<TDrawingContext> view, Canvas<TDrawingContext> canvas)
+            :base(canvas)
         {
-            this.canvas = canvas;
             chartView = view;
-            updateThrottler = new ActionThrottler(TimeSpan.FromSeconds(300));
-            updateThrottler.Unlocked += UpdateThrottlerUnlocked;
-            this.easingFunction = EasingFunctions.SinOut;
         }
 
-        public object MeasureWorker => measureWorker;
-        public HashSet<IDrawable<TDrawingContext>> MeasuredDrawables => measuredDrawables;
-        public SeriesContext<TDrawingContext> SeriesContext => seriesContext;
-        public Canvas<TDrawingContext> Canvas => canvas;
-
-        public SizeF ControlSize => controlSize;
-        public PointF DrawMaringLocation => drawMaringLocation;
-        public SizeF DrawMarginSize => drawMarginSize;
         public IAxis<TDrawingContext>[] XAxes => xAxes;
         public IAxis<TDrawingContext>[] YAxes => yAxes;
-        public IDrawableSeries<TDrawingContext>[] Series => series;
-        public LegendPosition LegendPosition => LegendPosition;
-        public LegendOrientation LegendOrientation => legendOrientation;
-        public IChartLegend<TDrawingContext>? Legend => legend;
-        public TooltipPosition TooltipPosition => tooltipPosition;
-        public TooltipFindingStrategy TooltipFindingStrategy => tooltipFindingStrategy;
-        public IChartTooltip<TDrawingContext>? Tooltip => tooltip;
-        public TimeSpan AnimationsSpeed => animationsSpeed;
-        public Func<float, float> EasingFunction => easingFunction;
+        public ICartesianSeries<TDrawingContext>[] Series => series;
+        public CartesianSeriesContext<TDrawingContext> SeriesContext => seriesContext;
 
-        public void Update()
+        public override void Update()
         {
             updateThrottler.LockTime = chartView.AnimationsSpeed;
             updateThrottler.TryRun();
@@ -101,10 +61,10 @@ namespace LiveChartsCore
             return chartView.Series.SelectMany(series => series.FindPointsNearTo(this, pointerPosition));
         }
 
-        private void Measure()
+        protected override void Measure()
         {
             measuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
-            seriesContext = new SeriesContext<TDrawingContext>(series);
+            seriesContext = new CartesianSeriesContext<TDrawingContext>(series);
 
             if (legend != null) legend.Draw(chartView);
 
@@ -200,7 +160,7 @@ namespace LiveChartsCore
                 series.Measure(this, x, y);
             }
 
-            chartView.CoreCanvas.ForEachGeometry((geometry, paint) =>
+            chartView.CoreCanvas.ForEachGeometry((geometry, drawable) =>
             {
                 if (measuredDrawables.Contains(geometry)) return; // then the geometry was measured
 
@@ -211,18 +171,7 @@ namespace LiveChartsCore
             Canvas.Invalidate();
         }
 
-        private void SetDrawMargin(SizeF controlSize, Margin margin)
-        {
-            drawMarginSize = new SizeF
-            {
-                Width = controlSize.Width - margin.Left - margin.Right,
-                Height = controlSize.Height - margin.Top - margin.Bottom
-            };
-
-            drawMaringLocation = new PointF(margin.Left, margin.Top);
-        }
-
-        private void UpdateThrottlerUnlocked()
+        protected override void UpdateThrottlerUnlocked()
         {
             // before measure every element in the chart
             // we copy the properties that might change while we are updating the chart

@@ -20,31 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
+
 namespace LiveChartsCore.Context
 {
-    public interface IChartPointContext
+    public interface IPieSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
+        where TDrawingContext : DrawingContext
     {
-        /// <summary>
-        /// Gets the position of the point the collection that was used when the point was drawn.
-        /// </summary>
-        int Index { get; }
+        Bounds GetBounds(PieChart<TDrawingContext> chart);
 
-        /// <summary>
-        /// Gets the DataSource.
-        /// </summary>
-        object? DataSource { get; }
-
-        object? Visual { get; }
-
-        /// <summary>
-        /// Gets or sets the area that triggers the ToolTip.
-        /// </summary>
-        HoverArea? HoverArea { get; }
-    }
-
-    public interface IChartPointContext<TVisual>: IChartPointContext
-        where TVisual: class
-    {
-        new TVisual? Visual { get; set; }
+        void Measure(PieChart<TDrawingContext> chart);
     }
 }

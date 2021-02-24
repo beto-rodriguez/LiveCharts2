@@ -20,31 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Context
+namespace LiveChartsCore.Drawing
 {
-    public interface IChartPointContext
+    public interface IDoughnutGeometry<TDrawingContext>: IDrawable<TDrawingContext>
+        where TDrawingContext : DrawingContext
     {
-        /// <summary>
-        /// Gets the position of the point the collection that was used when the point was drawn.
-        /// </summary>
-        int Index { get; }
-
-        /// <summary>
-        /// Gets the DataSource.
-        /// </summary>
-        object? DataSource { get; }
-
-        object? Visual { get; }
-
-        /// <summary>
-        /// Gets or sets the area that triggers the ToolTip.
-        /// </summary>
-        HoverArea? HoverArea { get; }
-    }
-
-    public interface IChartPointContext<TVisual>: IChartPointContext
-        where TVisual: class
-    {
-        new TVisual? Visual { get; set; }
+        float X { get; set; }
+        float Y { get; set; }
+        float Width { get; set; }
+        float Height { get; set; }
+        float StartAngle { get; set; }
+        float SweepAngle { get; set; }
     }
 }

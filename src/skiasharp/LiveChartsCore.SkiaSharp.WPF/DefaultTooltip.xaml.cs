@@ -126,7 +126,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         void IChartTooltip<SkiaDrawingContext>.Show(IEnumerable<TooltipPoint> foundPoints, ICartesianChartView<SkiaDrawingContext> view)
         {
-            var location = foundPoints.GetTooltipLocation(
+            var location = foundPoints.GetCartesianTooltipLocation(
                 view.TooltipPosition, new System.Drawing.SizeF((float)border.ActualWidth, (float)border.ActualHeight));
 
             if (location == null) return;

@@ -28,10 +28,12 @@ namespace LiveChartsCore.Context
     public interface IPieChartView<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        PieChartCore<TDrawingContext> Core { get; }
+        PieChart<TDrawingContext> Core { get; }
         Canvas<TDrawingContext> CoreCanvas { get; }
 
         System.Drawing.SizeF ControlSize { get; }
+
+        IPieSeries<TDrawingContext> Series { get; set; }
 
         LegendPosition LegendPosition { get; set; }
         LegendOrientation LegendOrientation { get; set; }

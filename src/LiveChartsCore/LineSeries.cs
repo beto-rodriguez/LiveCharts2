@@ -96,7 +96,7 @@ namespace LiveChartsCore
         public TransitionsSetterDelegate<AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveToCommand, TPathContext>>? PathTransitionsSetter { get; set; }
 
         public override void Measure(
-            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext>xAxis, IAxis<TDrawingContext> yAxis)
+            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext>xAxis, IAxis<TDrawingContext> yAxis)
         {
             var drawLocation = chart.DrawMaringLocation;
             var drawMarginSize = chart.DrawMarginSize;
@@ -226,7 +226,7 @@ namespace LiveChartsCore
                 visual.Geometry.Width = gs;
                 visual.Geometry.Height = gs;
 
-                data.TargetPoint.PointContext.HoverArea.SetDimensions(x - hgs, y - hgs + 2 * sw, gs, gs + 2 * sw);
+                data.TargetPoint.PointContext.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs, y - hgs + 2 * sw, gs, gs + 2 * sw);
                 OnPointMeasured(data.TargetPoint, visual);
                 chart.MeasuredDrawables.Add(visual.Geometry);
             }
@@ -238,7 +238,7 @@ namespace LiveChartsCore
         }
 
         public override CartesianBounds GetBounds(
-            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
+            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
             var baseBounds = base.GetBounds(chart, x, y);
 
@@ -287,7 +287,7 @@ namespace LiveChartsCore
         }
 
         private IEnumerable<BezierData<LineSeriesVisualPoint<TDrawingContext, TVisual, TGeometryPath, TBezierSegment, TPathContext>, TDrawingContext>> GetSpline(
-            CartesianChartCore<TDrawingContext> chart, ScaleContext xScale, ScaleContext yScale)
+            CartesianChart<TDrawingContext> chart, ScaleContext xScale, ScaleContext yScale)
         {
             var points = Fetch(chart).ToArray();
 

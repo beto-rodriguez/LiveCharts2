@@ -22,29 +22,11 @@
 
 namespace LiveChartsCore.Context
 {
-    public interface IChartPointContext
+    public class TooltipPlacementContext
     {
-        /// <summary>
-        /// Gets the position of the point the collection that was used when the point was drawn.
-        /// </summary>
-        int Index { get; }
-
-        /// <summary>
-        /// Gets the DataSource.
-        /// </summary>
-        object? DataSource { get; }
-
-        object? Visual { get; }
-
-        /// <summary>
-        /// Gets or sets the area that triggers the ToolTip.
-        /// </summary>
-        HoverArea? HoverArea { get; }
-    }
-
-    public interface IChartPointContext<TVisual>: IChartPointContext
-        where TVisual: class
-    {
-        new TVisual? Visual { get; set; }
+        public float MostTop { get; set; } = float.MaxValue;
+        public float MostBottom { get; set; } = float.MinValue;
+        public float MostRight { get; set; } = float.MinValue;
+        public float MostLeft { get; set; } = float.MaxValue;
     }
 }

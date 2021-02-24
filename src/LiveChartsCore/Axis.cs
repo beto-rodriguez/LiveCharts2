@@ -79,7 +79,7 @@ namespace LiveChartsCore
 
         public IDrawableTask<TDrawingContext>? AlternativeSeparatorForeground { get; set; }
 
-        public void Measure(CartesianChartCore<TDrawingContext> chart)
+        public void Measure(CartesianChart<TDrawingContext> chart)
         {
             var controlSize = chart.ControlSize;
             var drawLocation = chart.DrawMaringLocation;
@@ -215,7 +215,7 @@ namespace LiveChartsCore
             }
         }
 
-        public SizeF GetPossibleSize(CartesianChartCore<TDrawingContext> chart)
+        public SizeF GetPossibleSize(CartesianChart<TDrawingContext> chart)
         {
             if (TextBrush == null) return new SizeF(0f, 0f);
 

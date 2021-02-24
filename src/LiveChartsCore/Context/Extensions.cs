@@ -39,34 +39,33 @@ namespace LiveChartsCore.Context
         /// <param name="position"></param>
         /// <param name="tooltipSize"></param>
         /// <returns></returns>
-        public static PointF? GetTooltipLocation(
+        public static PointF? GetCartesianTooltipLocation(
             this IEnumerable<TooltipPoint> foundPoints,
             TooltipPosition position,
             SizeF tooltipSize)
         {
-            float count = 0f, mostTop = float.MaxValue, mostBottom = float.MinValue, mostRight = float.MinValue, mostLeft = float.MaxValue;
+            float count = 0f;
+
+            var placementContext = new TooltipPlacementContext();
 
             foreach (var point in foundPoints)
             {
-                var ha = point.Point.PointContext.HoverArea;
-                if (ha.Y < mostTop) mostTop = ha.Y;
-                if (ha.Y + ha.Height > mostBottom) mostBottom = ha.Y + ha.Height;
-                if (ha.X + ha.Width > mostRight) mostRight = ha.X + ha.Width;
-                if (ha.X < mostLeft) mostLeft = ha.X;
+                if (point.Point.PointContext.HoverArea == null) continue;
+                point.Point.PointContext.HoverArea.SuggestTooltipPlacement(placementContext);
                 count++;
             }
 
             if (count == 0) return null;
 
-            var avrgX = ((mostRight + mostLeft) / 2f) - tooltipSize.Width * 0.5f;
-            var avrgY = ((mostTop + mostBottom) / 2f) - tooltipSize.Height * 0.5f;
+            var avrgX = ((placementContext.MostRight + placementContext.MostLeft) / 2f) - tooltipSize.Width * 0.5f;
+            var avrgY = ((placementContext.MostTop + placementContext.MostBottom) / 2f) - tooltipSize.Height * 0.5f;
 
             switch (position)
             {
-                case TooltipPosition.Top: return new PointF(avrgX, mostTop - tooltipSize.Height);
-                case TooltipPosition.Bottom: return new PointF(avrgX, mostBottom);
-                case TooltipPosition.Left: return new PointF(mostLeft - tooltipSize.Width, avrgY);
-                case TooltipPosition.Right: return new PointF(mostRight, avrgY);
+                case TooltipPosition.Top: return new PointF(avrgX, placementContext.MostTop - tooltipSize.Height);
+                case TooltipPosition.Bottom: return new PointF(avrgX, placementContext.MostBottom);
+                case TooltipPosition.Left: return new PointF(placementContext.MostLeft - tooltipSize.Width, avrgY);
+                case TooltipPosition.Right: return new PointF(placementContext.MostRight, avrgY);
                 case TooltipPosition.Center: return new PointF(avrgX, avrgY);
                 default: throw new NotImplementedException();
             }

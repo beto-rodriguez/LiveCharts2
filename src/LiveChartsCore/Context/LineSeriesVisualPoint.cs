@@ -24,10 +24,10 @@ using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Context
 {
-    public class LineSeriesVisualPoint<TDrawingContext, TVisual, TGeometryPath, TBezierSegment, TPathContext> : IHighlightableGeometry<TDrawingContext>
+    public class LineSeriesVisualPoint<TDrawingContext, TVisual, TGeometryPath, TBezierSegment, TPathArgs> : IHighlightableGeometry<TDrawingContext>
         where TVisual: ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new ()
-        where TGeometryPath: IPathGeometry<TDrawingContext, TPathContext>
-        where TBezierSegment : IBezierSegment<TPathContext>, new()
+        where TGeometryPath: IPathGeometry<TDrawingContext, TPathArgs>
+        where TBezierSegment : IBezierSegment<TPathArgs>, new()
         where TDrawingContext : DrawingContext
     {
         public TVisual Geometry { get; set; } = new TVisual();
@@ -37,5 +37,3 @@ namespace LiveChartsCore.Context
         public IDrawable<TDrawingContext>? HighlightableGeometry => Geometry?.HighlightableGeometry;
     }
 }
-
-

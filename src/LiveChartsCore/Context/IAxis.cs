@@ -51,8 +51,8 @@ namespace LiveChartsCore.Context
         IDrawableTask<TDrawingContext>? AlternativeSeparatorForeground { get; set; }
 
         void Initialize(AxisOrientation orientation);
-        void Measure(CartesianChartCore<TDrawingContext> chart);
-        SizeF GetPossibleSize(CartesianChartCore<TDrawingContext> chart);
+        void Measure(CartesianChart<TDrawingContext> chart);
+        SizeF GetPossibleSize(CartesianChart<TDrawingContext> chart);
 
         IAxis<TDrawingContext> Copy();
     }

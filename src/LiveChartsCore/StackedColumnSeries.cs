@@ -44,7 +44,7 @@ namespace LiveChartsCore
         public TransitionsSetterDelegate<ISizedGeometry<TDrawingContext>>? TransitionsSetter { get; set; }
 
         public override void Measure(
-            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
+            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
         {
             var drawLocation = chart.DrawMaringLocation;
             var drawMarginSize = chart.DrawMarginSize;
@@ -114,14 +114,14 @@ namespace LiveChartsCore
                 sizedGeometry.Width = uw;
                 sizedGeometry.Height = yi - yj;
 
-                point.PointContext.HoverArea.SetDimensions(x - uwm + cp, yj, uw, yi - yj);
+                point.PointContext.HoverArea = new RectangleHoverArea().SetDimensions(x - uwm + cp, yj, uw, yi - yj);
                 OnPointMeasured(point, sizedGeometry);
                 chart.MeasuredDrawables.Add(sizedGeometry);
             }
         }
 
         public override CartesianBounds GetBounds(
-           CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
+           CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
             var baseBounds = base.GetBounds(chart, x, y);
 

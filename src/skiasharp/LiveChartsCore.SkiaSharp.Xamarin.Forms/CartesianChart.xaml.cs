@@ -35,7 +35,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CartesianChart : ContentView, ICartesianChartView<SkiaDrawingContext>
     {
-        protected CartesianChartCore<SkiaDrawingContext> core;
+        protected CartesianChart<SkiaDrawingContext> core;
 
         public CartesianChart()
         {
@@ -46,13 +46,13 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     $"SkiaElement not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
                     $"If you override the template please add an {nameof(NaturalVisualCanvas)} to the template and name it 'canvas'");
 
-            core = new CartesianChartCore<SkiaDrawingContext>(this, canvas.CanvasCore);
+            core = new CartesianChart<SkiaDrawingContext>(this, canvas.CanvasCore);
             core.Update();
 
             SizeChanged += CartesianChart_SizeChanged;
         }
 
-        CartesianChartCore<SkiaDrawingContext> ICartesianChartView<SkiaDrawingContext>.Core => core;
+        CartesianChart<SkiaDrawingContext> ICartesianChartView<SkiaDrawingContext>.Core => core;
         public Canvas<SkiaDrawingContext> CoreCanvas => canvas.CanvasCore;
 
         System.Drawing.SizeF ICartesianChartView<SkiaDrawingContext>.ControlSize

@@ -20,31 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Context
+namespace LiveChartsCore.Drawing
 {
-    public interface IChartPointContext
+    // Based on https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/curves/arcs#the-angle-arc
+    // where X and Y properties are the top left corner of the rectangle bounds
+    // and Width and Height properties define the dimensions of the rectangle
+    public interface IArcToSegment<TPath>: IPathCommand<TPath>
     {
-        /// <summary>
-        /// Gets the position of the point the collection that was used when the point was drawn.
-        /// </summary>
-        int Index { get; }
-
-        /// <summary>
-        /// Gets the DataSource.
-        /// </summary>
-        object? DataSource { get; }
-
-        object? Visual { get; }
-
-        /// <summary>
-        /// Gets or sets the area that triggers the ToolTip.
-        /// </summary>
-        HoverArea? HoverArea { get; }
-    }
-
-    public interface IChartPointContext<TVisual>: IChartPointContext
-        where TVisual: class
-    {
-        new TVisual? Visual { get; set; }
+        float X { get; set; }
+        float Y { get; set; }
+        float Width { get; set; }
+        float Height { get; set; }
+        float StartAngle { get; set; }
+        float SweepAngle { get; set; }
     }
 }

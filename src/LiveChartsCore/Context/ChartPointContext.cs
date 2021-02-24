@@ -51,6 +51,6 @@ namespace LiveChartsCore.Context
         /// <summary>
         /// Gets or sets the area that triggers the ToolTip.
         /// </summary>
-        public HoverArea HoverArea { get; } = new HoverArea();
+        public HoverArea? HoverArea { get; internal set; }
     }
 }

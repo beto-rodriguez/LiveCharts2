@@ -29,7 +29,7 @@ namespace LiveChartsCore.Context
     public interface ICartesianChartView<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        CartesianChartCore<TDrawingContext> Core { get; }
+        CartesianChart<TDrawingContext> Core { get; }
         Canvas<TDrawingContext> CoreCanvas { get; }
 
         System.Drawing.SizeF ControlSize { get; }

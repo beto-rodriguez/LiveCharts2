@@ -86,7 +86,8 @@ namespace LiveChartsCore.Context
             return new StackedValue
             {
                 Start = p.Start,
-                End = p.End
+                End = p.End,
+                Total = totals[index]
             };
         }
     }

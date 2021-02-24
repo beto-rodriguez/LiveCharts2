@@ -104,12 +104,8 @@ namespace LiveChartsCore
 
         IEnumerable<TooltipPoint> ISeries.FindPointsNearTo(IChart chart, PointF pointerPosition) =>
             Fetch(chart)
-                .Where(point =>
-                    point.PointContext.HoverArea.IsTriggerBy(pointerPosition, chart.TooltipFindingStrategy)
-                )
-                .Select(point => 
-                    new TooltipPoint(this, point)
-                );
+                .Where(point => point.PointContext.HoverArea?.IsTriggerBy(pointerPosition, chart.TooltipFindingStrategy) ?? false)
+                .Select(point => new TooltipPoint(this, point));
 
         /// <inheritdoc/>
         public void Dispose()

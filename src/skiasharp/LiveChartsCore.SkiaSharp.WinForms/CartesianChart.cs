@@ -10,7 +10,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 {
     public partial class CartesianChart : UserControl, ICartesianChartView<SkiaDrawingContext>
     {
-        protected CartesianChartCore<SkiaDrawingContext> core;
+        protected CartesianChart<SkiaDrawingContext> core;
         private IEnumerable<ICartesianSeries<SkiaDrawingContext>> series = new List<ICartesianSeries<SkiaDrawingContext>>();
         private IEnumerable<IAxis<SkiaDrawingContext>> xAxes = new List<IAxis<SkiaDrawingContext>>();
         private IEnumerable<IAxis<SkiaDrawingContext>> yAxes = new List<IAxis<SkiaDrawingContext>>();
@@ -21,7 +21,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             InitializeComponent();
         }
 
-        CartesianChartCore<SkiaDrawingContext> ICartesianChartView<SkiaDrawingContext>.Core => core;
+        CartesianChart<SkiaDrawingContext> ICartesianChartView<SkiaDrawingContext>.Core => core;
         public Canvas<SkiaDrawingContext> CoreCanvas => motionCanvas.CanvasCore;
 
         System.Drawing.SizeF ICartesianChartView<SkiaDrawingContext>.ControlSize
@@ -63,7 +63,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         private void OnLoaded(object sender, EventArgs e)
         {
-            core = new CartesianChartCore<SkiaDrawingContext>(this, motionCanvas.CanvasCore);
+            core = new CartesianChart<SkiaDrawingContext>(this, motionCanvas.CanvasCore);
             core.Update();
         }
 

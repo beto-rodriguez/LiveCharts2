@@ -36,7 +36,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 {
     public class CartesianChart : Control, ICartesianChartView<SkiaDrawingContext>
     {
-        protected CartesianChartCore<SkiaDrawingContext> core;
+        protected CartesianChart<SkiaDrawingContext> core;
         protected NaturalGeometriesCanvas canvas;
         protected IChartLegend<SkiaDrawingContext> legend;
         protected IChartTooltip<SkiaDrawingContext> tooltip;
@@ -56,7 +56,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             mouseMoveThrottler.Unlocked += MouseMoveThrottlerUnlocked;
         }
 
-        CartesianChartCore<SkiaDrawingContext> ICartesianChartView<SkiaDrawingContext>.Core => core;
+        CartesianChart<SkiaDrawingContext> ICartesianChartView<SkiaDrawingContext>.Core => core;
         public Canvas<SkiaDrawingContext> CoreCanvas => canvas.CanvasCore;
 
         SizeF ICartesianChartView<SkiaDrawingContext>.ControlSize
@@ -139,7 +139,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     $"If you override the template please add an {nameof(NaturalGeometriesCanvas)} to the template and name it 'canvas'");
 
             this.canvas = canvas;
-            core = new CartesianChartCore<SkiaDrawingContext>(this, canvas.CanvasCore);
+            core = new CartesianChart<SkiaDrawingContext>(this, canvas.CanvasCore);
             legend = Template.FindName("legend", this) as IChartLegend<SkiaDrawingContext>;
             tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaDrawingContext>;
             core.Update();
