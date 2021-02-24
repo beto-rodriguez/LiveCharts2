@@ -67,7 +67,8 @@ namespace LiveChartsCore
             updateThrottler.Unlocked += UpdateThrottlerUnlocked;
         }
 
-        public object MeasureWorker => measureWorker;
+        public object MeasureWorker 
+            => measureWorker;
         public HashSet<IDrawable<TDrawingContext>> MeasuredDrawables => measuredDrawables;
         public SeriesContext<TDrawingContext> SeriesContext => seriesContext;
         public Canvas<TDrawingContext> Canvas => canvas;

@@ -36,7 +36,7 @@ namespace LiveChartsCore
         where TVisual : class, IHighlightableGeometry<TDrawingContext>, new()
     {
         private readonly CollectionDeepObserver<TModel> observerer;
-        private readonly object measuredFor = new object();
+        private object fetchedFor = new object();
         private IEnumerable<IChartPoint<TVisual, TDrawingContext>> fetched = Enumerable.Empty<IChartPoint<TVisual, TDrawingContext>>();
         protected readonly bool isValueType;
         protected readonly bool implementsICP;
@@ -91,10 +91,11 @@ namespace LiveChartsCore
         /// <inheritdoc/>
         public virtual IEnumerable<IChartPoint<TVisual, TDrawingContext>> Fetch(IChart chart)
         {
-            subscribedTo.Add(chart);
-            if (measuredFor == chart.MeasureWorker) return fetched;
+            if (fetchedFor == chart.MeasureWorker) return fetched;
 
+            subscribedTo.Add(chart);
             fetched = implementsICP ? GetPointsFromICP() : GetMappedPoints();
+            fetchedFor = chart.MeasureWorker;
 
             return fetched;
         }
@@ -103,8 +104,12 @@ namespace LiveChartsCore
 
         IEnumerable<TooltipPoint> ISeries.FindPointsNearTo(IChart chart, PointF pointerPosition) =>
             Fetch(chart)
-                .Where(point => point.PointContext.HoverArea.IsTriggerBy(pointerPosition, chart.TooltipFindingStrategy))
-                .Select(point => new TooltipPoint(this, point));
+                .Where(point =>
+                    point.PointContext.HoverArea.IsTriggerBy(pointerPosition, chart.TooltipFindingStrategy)
+                )
+                .Select(point => 
+                    new TooltipPoint(this, point)
+                );
 
         /// <inheritdoc/>
         public void Dispose()
@@ -124,9 +129,16 @@ namespace LiveChartsCore
 
             foreach (var item in values)
             {
-                var chartPoint = (IChartPoint<TVisual, TDrawingContext>)item;
-                chartPoint.PointContext = new ChartPointContext<TVisual, TDrawingContext>(index++, item, properties, true);
-                yield return chartPoint;
+                // it will never be null at this point, becuase in the constructor
+                // we forced the implementation of ICP
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+                var cp = (IChartPoint<TVisual, TDrawingContext>)item;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                cp.PointContext.Index = index++;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                cp.PointContext.DataSource = item;
+                yield return cp;
             }
         }
 
@@ -144,7 +156,8 @@ namespace LiveChartsCore
                     if (!byValueVisualMap.TryGetValue(index, out ChartPoint<TModel, TVisual, TDrawingContext> cp))
                         byValueVisualMap[index] = (cp = new ChartPoint<TModel, TVisual, TDrawingContext>());
 
-                    cp.PointContext = new ChartPointContext<TVisual, TDrawingContext>(index++, item, properties, true);
+                    cp.PointContext.Index = index++;
+                    cp.PointContext.DataSource = item;
                     mapper(cp, item, cp.PointContext);
 
                     yield return cp;
@@ -157,7 +170,8 @@ namespace LiveChartsCore
                     if (!byReferenceVisualMap.TryGetValue(item, out ChartPoint<TModel, TVisual, TDrawingContext> cp))
                         byReferenceVisualMap[item] = (cp = new ChartPoint<TModel, TVisual, TDrawingContext>());
 
-                    cp.PointContext = new ChartPointContext<TVisual, TDrawingContext>(index++, item, properties, true);
+                    cp.PointContext.Index = index++;
+                    cp.PointContext.DataSource = item;
                     mapper(cp, item, cp.PointContext);
 
                     yield return cp;

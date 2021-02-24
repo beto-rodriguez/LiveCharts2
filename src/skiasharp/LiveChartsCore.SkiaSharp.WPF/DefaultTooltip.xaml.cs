@@ -4,6 +4,7 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls.Primitives;
@@ -44,8 +45,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty PointsProperty =
            DependencyProperty.Register(
-               nameof(Points), typeof(IEnumerable<SkiaDrawingContext>),
-               typeof(DefaultTooltip), new PropertyMetadata(new List<SkiaDrawingContext>()));
+               nameof(Points), typeof(IEnumerable<TooltipPoint>),
+               typeof(DefaultTooltip), new PropertyMetadata(new List<TooltipPoint>()));
 
         public static readonly DependencyProperty FontFamilyProperty =
            DependencyProperty.Register(

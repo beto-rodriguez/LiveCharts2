@@ -38,7 +38,9 @@ namespace LiveChartsCore.Context
         where TVisual : class, IHighlightableGeometry<TDrawingContext>, new()
     {
         new float PrimaryValue { get; set; }
+
         new float SecondaryValue { get; set; }
-        new ChartPointContext<TVisual, TDrawingContext> PointContext { get; set; }
+
+        new ChartPointContext<TVisual, TDrawingContext> PointContext { get; }
     }
 }

@@ -42,7 +42,7 @@ namespace ViewModelsSamples
 
             Series = new ObservableCollection<ICartesianSeries<SkiaDrawingContext>>
             {
-                new StackedColumnSeries<double>
+                new ColumnSeries<double>
                 {
                     Name = "columns",
                     Values = new[]{ 2d, 5, 3, 6, 2, 8, 4, 2, 9, 6, 9, 3},

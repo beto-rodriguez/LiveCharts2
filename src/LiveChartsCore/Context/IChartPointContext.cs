@@ -32,7 +32,7 @@ namespace LiveChartsCore.Context
         /// <summary>
         /// Gets the DataSource.
         /// </summary>
-        object DataSource { get; }
+        object? DataSource { get; }
 
         object? Visual { get; }
 

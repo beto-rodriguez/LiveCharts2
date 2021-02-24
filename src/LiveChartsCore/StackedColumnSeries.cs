@@ -96,7 +96,6 @@ namespace LiveChartsCore
 
                     ts(r, chartAnimation);
 
-                    point.PointContext.HoverArea = new HoverArea();
                     point.PointContext.Visual = r;
                     if (Fill != null) Fill.AddGeometyToPaintTask(r);
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(r);

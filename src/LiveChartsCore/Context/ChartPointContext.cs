@@ -31,39 +31,15 @@ namespace LiveChartsCore.Context
         where TDrawingContext : DrawingContext
         where TVisual : class, IHighlightableGeometry<TDrawingContext>, new()
     {
-        private readonly int index;
-        private readonly object dataSource;
-        private readonly SeriesProperties seriesProperties;
-        private readonly bool isInitialized;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ChartPointContext"/> class.
-        /// </summary>
-        /// <param name="index"></param>
-        /// <param name="dataSource"></param>
-        /// <param name="seriesProperties"></param>
-        internal ChartPointContext(int index, object dataSource, SeriesProperties seriesProperties, bool isInitialized)
-        {
-            this.index = index;
-            this.dataSource = dataSource;
-            this.seriesProperties = seriesProperties;
-            this.isInitialized = isInitialized;
-        }
-
         /// <summary>
         /// Gets the position of the point the collection that was used when the point was drawn.
         /// </summary>
-        public int Index { get => index; }
+        public int Index { get; internal set; }
 
         /// <summary>
         /// Gets the DataSource.
         /// </summary>
-        public object DataSource { get => dataSource; }
-
-        /// <summary>
-        /// Gets the series properties.
-        /// </summary>
-        public SeriesProperties SeriesProperties { get => seriesProperties; }
+        public object? DataSource { get; internal set; }
 
         /// <summary>
         /// Gets the visual element in the UI.
@@ -75,11 +51,6 @@ namespace LiveChartsCore.Context
         /// <summary>
         /// Gets or sets the area that triggers the ToolTip.
         /// </summary>
-        public HoverArea HoverArea { get; internal set; } = new HoverArea();
-
-        /// <summary>
-        /// Gets weather the instance is initialized or not.
-        /// </summary>
-        public bool IsInitialized => isInitialized;
+        public HoverArea HoverArea { get; } = new HoverArea();
     }
 }
