@@ -34,12 +34,12 @@ namespace LiveChartsCore.Context
         /// </summary>
         object DataSource { get; }
 
-        object Visual { get; }
+        object? Visual { get; }
 
         /// <summary>
         /// Gets or sets the area that triggers the ToolTip.
         /// </summary>
-        HoverArea HoverArea { get; set; }
+        HoverArea HoverArea { get; }
     }
 
     public interface IChartPointContext<TVisual>: IChartPointContext

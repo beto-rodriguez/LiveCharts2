@@ -35,7 +35,6 @@ namespace LiveChartsCore.Context
         private readonly object dataSource;
         private readonly SeriesProperties seriesProperties;
         private readonly bool isInitialized;
-        private HoverArea hoverArea = new HoverArea();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChartPointContext"/> class.
@@ -67,15 +66,16 @@ namespace LiveChartsCore.Context
         public SeriesProperties SeriesProperties { get => seriesProperties; }
 
         /// <summary>
-        /// Gets or sets (must not be set) the visual element in the UI.
+        /// Gets the visual element in the UI.
         /// </summary>
-        public TVisual? Visual { get; set; }
-        object IChartPointContext.Visual => Visual;
+        public TVisual? Visual { get; internal set; }
+
+        object? IChartPointContext.Visual => Visual;
 
         /// <summary>
         /// Gets or sets the area that triggers the ToolTip.
         /// </summary>
-        public HoverArea HoverArea { get => hoverArea; set => hoverArea = value; }
+        public HoverArea HoverArea { get; internal set; } = new HoverArea();
 
         /// <summary>
         /// Gets weather the instance is initialized or not.
