@@ -33,7 +33,7 @@ namespace LiveChartsCore
         private Bounds bounds = new Bounds();
         private Stacker<TDrawingContext> stacker = new Stacker<TDrawingContext>();
 
-        public PieSeries(SeriesProperties properties) : base(properties) { }
+        public PieSeries() : base(SeriesProperties.PieSeries) { }
 
         public TransitionsSetterDelegate<IDoughnutGeometry<TDrawingContext>>? TransitionsSetter { get; set; }
 
