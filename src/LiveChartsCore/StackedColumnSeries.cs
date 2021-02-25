@@ -80,7 +80,7 @@ namespace LiveChartsCore
             var ts = TransitionsSetter ?? SetDefaultTransitions;
 
             var stacker = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
-            if (stacker == null) throw new Exception("The stack failed");
+            if (stacker == null) throw new NullReferenceException("Unexpected null stacker");
 
             foreach (var point in Fetch(chart))
             {
@@ -120,14 +120,14 @@ namespace LiveChartsCore
             }
         }
 
-        public override CartesianBounds GetBounds(
+        public override BiDimensinalBounds GetBounds(
            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
             var baseBounds = base.GetBounds(chart, x, y);
 
             var tick = y.GetTick(chart.ControlSize, baseBounds.PrimaryBounds);
 
-            return new CartesianBounds
+            return new BiDimensinalBounds
             {
                 SecondaryBounds = new Bounds
                 {

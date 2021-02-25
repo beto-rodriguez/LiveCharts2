@@ -30,13 +30,10 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
         where TVisual : class, IDoughnutGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
     {
-        private float total = 0;
-        private int count = 0;
-
-        public PieSeries() : base(SeriesProperties.PieSeries) { }
+        public PieSeries() : base(SeriesProperties.PieSeries | SeriesProperties.Stacked) { }
 
         public double PushOut { get; set; } = 10;
-        public double InnerRadius { get; set; } = .1;
+        public double InnerRadius { get; set; } = .6;
 
         public TransitionsSetterDelegate<IDoughnutGeometry<TDrawingContext>>? TransitionsSetter { get; set; }
 
@@ -58,8 +55,9 @@ namespace LiveChartsCore
 
             var cx = drawLocation.X + drawMarginSize.Width * 0.5f;
             var cy = drawLocation.Y + drawMarginSize.Height * 0.5f;
-            
-            var stackedValue = 0f;
+
+            var stacker = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
+            if (stacker == null) throw new NullReferenceException("Unexpected null stacker");
 
             foreach (var point in Fetch(chart))
             {
@@ -86,12 +84,11 @@ namespace LiveChartsCore
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(p);
                 }
 
-                //if (Math.Abs(stackedValue - 2f) > 0.01) {
-                //    stackedValue += point.PrimaryValue;
-                //    continue;
-                //}
-
                 var dougnutGeometry = point.PointContext.Visual;
+
+                var stack = stacker.GetStack(point);
+                var stackedValue = stack.Start;
+                var total = stack.Total;
 
                 dougnutGeometry.PushOut = pushout;
                 dougnutGeometry.CenterX = drawLocation.X + drawMarginSize.Width * 0.5f;
@@ -115,16 +112,20 @@ namespace LiveChartsCore
             }
         }
 
-        public void GetBounds(PieChart<TDrawingContext> chart)
+        public BiDimensinalBounds GetBounds(PieChart<TDrawingContext> chart)
         {
-            total = 0;
-            count = 0;
+            var stack = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
+            if (stack == null) throw new NullReferenceException("Unexpected null stacker");
 
+            var bounds = new BiDimensinalBounds();
             foreach (var point in Fetch(chart))
             {
-                total += point.PrimaryValue;
-                count++;
+                stack.StackPoint(point);
+                bounds.PrimaryBounds.AppendValue(point.PrimaryValue);
+                bounds.SecondaryBounds.AppendValue(point.SecondaryValue);
             }
+
+            return bounds;
         }
 
         protected virtual void SetDefaultTransitions(IDoughnutGeometry<TDrawingContext> visual, Animation defaultAnimation)

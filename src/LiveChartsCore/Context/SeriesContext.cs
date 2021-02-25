@@ -25,7 +25,7 @@ using System.Collections.Generic;
 
 namespace LiveChartsCore.Context
 {
-    public class CartesianSeriesContext<TDrawingContext>
+    public class SeriesContext<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         private readonly IEnumerable<IDrawableSeries<TDrawingContext>> series;
@@ -43,7 +43,7 @@ namespace LiveChartsCore.Context
 
         private Dictionary<string, Stacker<TDrawingContext>> stackers = new Dictionary<string, Stacker<TDrawingContext>>();
 
-        public CartesianSeriesContext(IEnumerable<IDrawableSeries<TDrawingContext>> series)
+        public SeriesContext(IEnumerable<IDrawableSeries<TDrawingContext>> series)
         {
             this.series = series;
         }

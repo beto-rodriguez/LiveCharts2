@@ -25,26 +25,26 @@ namespace LiveChartsCore.Context
     /// <summary>
     /// Defines bounds for both, X and Y axes.
     /// </summary>
-    public class CartesianBounds
+    public class BiDimensinalBounds
     {
         private Bounds secondaryBounds;
         private Bounds primaryBounds;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CartesianBounds"/> class.
+        /// Initializes a new instance of the <see cref="BiDimensinalBounds"/> class.
         /// </summary>
-        public CartesianBounds()
+        public BiDimensinalBounds()
         {
             secondaryBounds = new Bounds();
             primaryBounds = new Bounds();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CartesianBounds"/> class with given bounds.
+        /// Initializes a new instance of the <see cref="BiDimensinalBounds"/> class with given bounds.
         /// </summary>
         /// <param name="secondaryBounds">The secondary axis bounds.</param>
         /// <param name="primaryBounds">The primaty axis bounds.</param>
-        public CartesianBounds(Bounds secondaryBounds, Bounds primaryBounds)
+        public BiDimensinalBounds(Bounds secondaryBounds, Bounds primaryBounds)
         {
             this.secondaryBounds = secondaryBounds;
             this.primaryBounds = primaryBounds;

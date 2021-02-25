@@ -32,7 +32,7 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
     {
         private readonly IPieChartView<TDrawingContext> chartView;
-        private IPieSeries<TDrawingContext>? series;
+        private IPieSeries<TDrawingContext>[] series = new IPieSeries<TDrawingContext>[0];
 
         public PieChart(IPieChartView<TDrawingContext> view, Canvas<TDrawingContext> canvas)
             : base(canvas)
@@ -40,19 +40,21 @@ namespace LiveChartsCore
             chartView = view;
         }
 
-        public IPieSeries<TDrawingContext>? Series => series;
+        public IPieSeries<TDrawingContext>[] Series => series;
+        public Bounds ValueBounds { get; private set; } = new Bounds();
+        public Bounds IndexBounds { get; private set; } = new Bounds();
+
+        public override IEnumerable<TooltipPoint> FindPointsNearTo(PointF pointerPosition)
+        {
+            if (measureWorker == null) return Enumerable.Empty<TooltipPoint>();
+
+            return chartView.Series.SelectMany(series => series.FindPointsNearTo(this, pointerPosition));
+        }
 
         public override void Update()
         {
             updateThrottler.LockTime = chartView.AnimationsSpeed;
             updateThrottler.TryRun();
-        }
-
-        public override IEnumerable<TooltipPoint> FindPointsNearTo(PointF pointerPosition)
-        {
-            if (measureWorker == null || chartView.Series == null) return Enumerable.Empty<TooltipPoint>();
-
-            return chartView.Series.FindPointsNearTo(this, pointerPosition);
         }
 
         protected override void Measure()
@@ -70,10 +72,21 @@ namespace LiveChartsCore
             }
 
             measuredDrawables =  new HashSet<IDrawable<TDrawingContext>>();
+            seriesContext = new SeriesContext<TDrawingContext>(series);
 
             //if (legend != null) legend.Draw(chartView);
 
-            series.GetBounds(this);
+            ValueBounds = new Bounds();
+            IndexBounds = new Bounds();
+            foreach (var series in series)
+            {
+                var seriesBounds = series.GetBounds(this);
+
+                ValueBounds.AppendValue(seriesBounds.SecondaryBounds.max);
+                ValueBounds.AppendValue(seriesBounds.SecondaryBounds.min);
+                IndexBounds.AppendValue(seriesBounds.PrimaryBounds.max);
+                IndexBounds.AppendValue(seriesBounds.PrimaryBounds.min);
+            }
 
             if (viewDrawMargin == null)
             {
@@ -86,7 +99,10 @@ namespace LiveChartsCore
             // or it is initializing in the UI and has no dimensions yet
             if (drawMarginSize.Width <= 0 || drawMarginSize.Height <= 0) return;
 
-            series.Measure(this);
+            foreach (var series in series)
+            {
+                series.Measure(this);
+            }
 
             chartView.CoreCanvas.ForEachGeometry((geometry, drawable) =>
             {
@@ -110,16 +126,19 @@ namespace LiveChartsCore
             controlSize = chartView.ControlSize;
 
             measureWorker = new object();
+            series = chartView.Series.Select(series =>
+            {
+                // a good implementation of ISeries<T>
+                // must use the measureWorker to identify
+                // if the points are already fetched.
 
-            // a good implementation of ISeries<T>
-            // must use the measureWorker to identify
-            // if the points are already fetched.
+                // this way no matter if the Series.Values collection changes
+                // the fetch method will always return the same collection for the
+                // current measureWorker instance
 
-            // this way no matter if the Series.Values collection changes
-            // the fetch method will always return the same collection for the
-            // current measureWorker instance
-            chartView.Series?.Fetch(this);
-            series = chartView.Series;
+                series.Fetch(this);
+                return series;
+            }).ToArray();
 
             legendPosition = chartView.LegendPosition;
             legendOrientation = chartView.LegendOrientation;

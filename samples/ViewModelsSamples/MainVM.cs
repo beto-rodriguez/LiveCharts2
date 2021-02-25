@@ -112,17 +112,52 @@ namespace ViewModelsSamples
 
     public class PieViewModel
     {
-        public IPieSeries<SkiaDrawingContext> Series { get; set; }
+        public IEnumerable<IPieSeries<SkiaDrawingContext>> Series { get; set; }
 
         public PieViewModel()
         {
-            Series = new PieSeries<int>
+            Series =new List<IPieSeries<SkiaDrawingContext>>
             {
-                Name = "pies",
-                Values = new[] { 2, 2, 2, 2, 2 },
-                //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
-                Fill = new SolidColorPaintTask(new SKColor(217, 47, 47)),
-                HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
+                new PieSeries<int>
+                {
+                    Name = "pies",
+                    Values = new[] { 2 },
+                    //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
+                    Fill = new SolidColorPaintTask(new SKColor(217, 47, 47)),
+                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
+                },
+                new PieSeries<int>
+                {
+                    Name = "pies 2",
+                    Values = new[] { 2 },
+                    //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
+                    Fill = new SolidColorPaintTask(SKColors.BlueViolet),
+                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
+                },
+                new PieSeries<int>
+                {
+                    Name = "pies 3",
+                    Values = new[] { 2 },
+                    //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
+                    Fill = new SolidColorPaintTask(SKColors.DarkOliveGreen),
+                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
+                },
+                new PieSeries<int>
+                {
+                    Name = "pies 4",
+                    Values = new[] { 2 },
+                    //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
+                    Fill = new SolidColorPaintTask(SKColors.Coral),
+                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
+                },
+                new PieSeries<int>
+                {
+                    Name = "pies 5",
+                    Values = new[] { 2 },
+                    //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
+                    Fill = new SolidColorPaintTask(SKColors.Cyan),
+                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
+                }
             };
         }
     }

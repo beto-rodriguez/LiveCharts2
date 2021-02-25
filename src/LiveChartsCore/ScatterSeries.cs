@@ -95,14 +95,14 @@ namespace LiveChartsCore
             if (HighlightStroke != null) chart.Canvas.AddPaintTask(HighlightStroke);
         }
 
-        public override CartesianBounds GetBounds(
+        public override BiDimensinalBounds GetBounds(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
             var baseBounds = base.GetBounds(chart, x, y);
 
             var tick = y.GetTick(chart.ControlSize, baseBounds.PrimaryBounds);
 
-            return new CartesianBounds
+            return new BiDimensinalBounds
             {
                 SecondaryBounds = new Bounds
                 {

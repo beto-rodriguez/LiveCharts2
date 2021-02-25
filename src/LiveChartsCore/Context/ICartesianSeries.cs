@@ -30,7 +30,7 @@ namespace LiveChartsCore.Context
         int ScalesXAt { get; set; }
         int ScalesYAt { get; set; }
 
-        CartesianBounds GetBounds(CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
+        BiDimensinalBounds GetBounds(CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
 
         void Measure(CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
     }

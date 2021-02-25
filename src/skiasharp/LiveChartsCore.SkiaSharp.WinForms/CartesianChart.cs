@@ -24,7 +24,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         CartesianChart<SkiaDrawingContext> ICartesianChartView<SkiaDrawingContext>.Core => core;
         public Canvas<SkiaDrawingContext> CoreCanvas => motionCanvas.CanvasCore;
 
-        System.Drawing.SizeF ICartesianChartView<SkiaDrawingContext>.ControlSize
+        System.Drawing.SizeF IChartView<SkiaDrawingContext>.ControlSize
         {
             get
             {

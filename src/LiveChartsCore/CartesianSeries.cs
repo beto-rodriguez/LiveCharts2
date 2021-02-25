@@ -45,25 +45,21 @@ namespace LiveChartsCore
         public int ScalesYAt { get; set; }
 
         /// <inheritdoc/>
-        public virtual CartesianBounds GetBounds(
+        public virtual BiDimensinalBounds GetBounds(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
-            var seriesLength = 0;
             var stack = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
 
-            var bounds = new CartesianBounds();
+            var bounds = new BiDimensinalBounds();
             foreach (var point in Fetch(chart))
             {
                 var secondary = point.SecondaryValue;
                 var primary = point.PrimaryValue;
 
-                if (stack != null)
-                    primary = stack.StackPoint(point);
+                if (stack != null) primary = stack.StackPoint(point);
 
-                var abx = bounds.SecondaryBounds.AppendValue(secondary);
-                var aby = bounds.PrimaryBounds.AppendValue(primary);
-
-                seriesLength++;
+                bounds.PrimaryBounds.AppendValue(primary);
+                bounds.SecondaryBounds.AppendValue(secondary);
             }
 
             return bounds;

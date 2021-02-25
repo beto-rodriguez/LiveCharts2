@@ -32,7 +32,7 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
     {
         private readonly ICartesianChartView<TDrawingContext> chartView;
-        private CartesianSeriesContext<TDrawingContext> seriesContext = new CartesianSeriesContext<TDrawingContext>(Enumerable.Empty<IDrawableSeries<TDrawingContext>>());
+        
         private IAxis<TDrawingContext>[] xAxes = new IAxis<TDrawingContext>[0];
         private IAxis<TDrawingContext>[] yAxes = new IAxis<TDrawingContext>[0];
         private ICartesianSeries<TDrawingContext>[] series = new ICartesianSeries<TDrawingContext>[0];
@@ -46,7 +46,6 @@ namespace LiveChartsCore
         public IAxis<TDrawingContext>[] XAxes => xAxes;
         public IAxis<TDrawingContext>[] YAxes => yAxes;
         public ICartesianSeries<TDrawingContext>[] Series => series;
-        public CartesianSeriesContext<TDrawingContext> SeriesContext => seriesContext;
 
         public override void Update()
         {
@@ -64,7 +63,7 @@ namespace LiveChartsCore
         protected override void Measure()
         {
             measuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
-            seriesContext = new CartesianSeriesContext<TDrawingContext>(series);
+            seriesContext = new SeriesContext<TDrawingContext>(series);
 
             if (legend != null) legend.Draw(chartView);
 

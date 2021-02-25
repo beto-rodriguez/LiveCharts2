@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using System;
+using System.Collections.Generic;
 
 namespace LiveChartsCore.Context
 {
@@ -30,6 +30,6 @@ namespace LiveChartsCore.Context
     {
         PieChart<TDrawingContext> Core { get; }
 
-        IPieSeries<TDrawingContext>? Series { get; set; }
+        IEnumerable<IPieSeries<TDrawingContext>> Series { get; set; }
     }
 }
