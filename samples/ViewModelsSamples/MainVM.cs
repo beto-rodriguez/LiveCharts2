@@ -120,7 +120,7 @@ namespace ViewModelsSamples
             {
                 Name = "pies",
                 Values = new[] { 2, 2, 2, 2, 2 },
-                Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
+                Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 8),
                 Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
                 HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
             };

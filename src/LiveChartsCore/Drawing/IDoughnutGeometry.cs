@@ -33,5 +33,7 @@ namespace LiveChartsCore.Drawing
         float Height { get; set; }
         float StartAngle { get; set; }
         float SweepAngle { get; set; }
+        float PushOut { get; set; }
+        float InnerRadius { get; set; }
     }
 }

@@ -35,6 +35,9 @@ namespace LiveChartsCore
 
         public PieSeries() : base(SeriesProperties.PieSeries) { }
 
+        public double PushOut { get; set; } = 10;
+        public double InnerRadius { get; set; } = .5;
+
         public TransitionsSetterDelegate<IDoughnutGeometry<TDrawingContext>>? TransitionsSetter { get; set; }
 
         public void Measure(PieChart<TDrawingContext> chart)
@@ -42,6 +45,10 @@ namespace LiveChartsCore
             var drawLocation = chart.DrawMaringLocation;
             var drawMarginSize = chart.DrawMarginSize;
             var minDimension = drawMarginSize.Width < drawMarginSize.Height ? drawMarginSize.Width : drawMarginSize.Height;
+
+            var pushout = (float)PushOut;
+            var innerRadius = (float)InnerRadius;
+            minDimension = minDimension - pushout - (Stroke?.StrokeWidth ?? 0) * 2;
 
             if (Fill != null) chart.Canvas.AddPaintTask(Fill);
             if (Stroke != null) chart.Canvas.AddPaintTask(Stroke);
@@ -51,7 +58,7 @@ namespace LiveChartsCore
 
             var cx = drawLocation.X + drawMarginSize.Width * 0.5f;
             var cy = drawLocation.Y + drawMarginSize.Height * 0.5f;
-
+            
             var stackedValue = 0f;
 
             foreach (var point in Fetch(chart))
@@ -67,7 +74,9 @@ namespace LiveChartsCore
                         Width = 0,
                         Height = 0,
                         SweepAngle = 0,
-                        StartAngle = 0
+                        StartAngle = 0,
+                        PushOut = 0,
+                        InnerRadius = 0
                     };
 
                     ts(p, chartAnimation);
@@ -79,12 +88,15 @@ namespace LiveChartsCore
 
                 var dougnutGeometry = point.PointContext.Visual;
 
+                dougnutGeometry.PushOut = pushout;
                 dougnutGeometry.CenterX = drawLocation.X + drawMarginSize.Width * 0.5f;
                 dougnutGeometry.CenterY = drawLocation.Y + drawMarginSize.Height * 0.5f;
                 dougnutGeometry.X = (drawMarginSize.Width - minDimension) * 0.5f;
                 dougnutGeometry.Y = (drawMarginSize.Height - minDimension) * 0.5f;
                 dougnutGeometry.Width = minDimension;
                 dougnutGeometry.Height = minDimension;
+                dougnutGeometry.InnerRadius = minDimension * 0.5f * innerRadius;
+                dougnutGeometry.PushOut = pushout;
                 var start = (stackedValue / total) * 360;
                 var end = (stackedValue + point.PrimaryValue / total) * 360;
                 dougnutGeometry.StartAngle = start;
@@ -114,8 +126,11 @@ namespace LiveChartsCore
         {
             visual
                 .DefinePropertyTransitions(
-                    nameof(visual.X), nameof(visual.Y), nameof(visual.Width), nameof(visual.Height),
-                    nameof(visual.StartAngle), nameof(visual.SweepAngle), nameof(visual.CenterX), nameof(visual.CenterY))
+                    nameof(visual.X), nameof(visual.Y),
+                    nameof(visual.Width), nameof(visual.Height),
+                    nameof(visual.StartAngle), nameof(visual.SweepAngle),
+                    nameof(visual.CenterX), nameof(visual.CenterY),
+                    nameof(visual.PushOut), nameof(visual.InnerRadius))
                 .WithAnimation(defaultAnimation)
                 .CompleteCurrentTransitions();
         }
