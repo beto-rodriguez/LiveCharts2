@@ -59,15 +59,19 @@ namespace LiveChartsCore.Context
         {
             var dx = centerX - point.X;
             var dy = centerY - point.Y;
-            var beta = Math.Atan(dy / dx) * (Math.PI/180);
+            var beta = Math.Atan(dy / dx) * (180 / Math.PI);
+            if ((dx > 0 && dy < 0) || (dx > 0 && dy > 0)) beta += 180;
+            if (dx < 0 && dy > 0) beta += 360;
             var r = Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2));
 
-            return startAngle >= beta && endAngle <= beta && r < radius;
+            return startAngle <= beta && endAngle >= beta && r < radius;
         }
 
         public override void SuggestTooltipPlacement(TooltipPlacementContext context)
         {
-            throw new NotImplementedException();
+            var angle = (startAngle + endAngle) / 2;
+            context.PieX = centerX + (float) Math.Cos(angle * (Math.PI / 180)) * radius;
+            context.PieY = centerY + (float)Math.Sin(angle * (Math.PI / 180)) * radius;
         }
     }
 }

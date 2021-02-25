@@ -1,10 +1,14 @@
-﻿using LiveChartsCore.Context;
+﻿using LiveChartsCore;
+using LiveChartsCore.Context;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
 
 namespace ViewModelsSamples
 {
@@ -112,73 +116,113 @@ namespace ViewModelsSamples
 
     public class PieViewModel
     {
-        public IEnumerable<IPieSeries<SkiaDrawingContext>> Series { get; set; }
+        public IList<IPieSeries<SkiaDrawingContext>> Series { get; set; }
 
         public PieViewModel()
         {
-            Series =new List<IPieSeries<SkiaDrawingContext>>
+            var pushout = 3;
+
+            LiveCharts.Configure(config =>
             {
-                new PieSeries<int>
+                config.HasMap<Observable>(
+                    (point, model, context) => 
+                    {
+                        point.PrimaryValue = (float)model.Value;
+                        point.SecondaryValue = context.Index;
+                    });
+            });
+
+            Series = new List<IPieSeries<SkiaDrawingContext>>
+            {
+                new PieSeries<Observable>
                 {
                     Name = "pies",
-                    Values = new[] { 2 },
+                    Values = new[] { new Observable { Value = 2 } },
                     //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
                     Fill = new SolidColorPaintTask(new SKColor(217, 47, 47)),
                     HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
-                    PushOut = 0,
-                    MaxOuterRadius = 1
+                    PushOut = pushout,
+                    //MaxOuterRadius = 1
                 },
-                new PieSeries<int>
+                new PieSeries<Observable>
                 {
                     Name = "pies 2",
-                    Values = new[] { 2 },
+                    Values = new[] {  new Observable { Value = 2 }  },
                     //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
                     Fill = new SolidColorPaintTask(SKColors.BlueViolet),
                     HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
-                    PushOut = 0,
-                    MaxOuterRadius = .9
+                    PushOut = pushout,
+                    //MaxOuterRadius = .9
                 },
-                new PieSeries<int>
+                new PieSeries<Observable>
                 {
                     Name = "pies 3",
-                    Values = new[] { 2 },
+                    Values = new[] {  new Observable { Value = 2 }  },
                     //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
                     Fill = new SolidColorPaintTask(SKColors.DarkOliveGreen),
                     HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
-                    PushOut = 0,
-                    MaxOuterRadius = .8
+                    PushOut = pushout,
+                    //MaxOuterRadius = .8
                 },
-                new PieSeries<int>
+                new PieSeries<Observable>
                 {
                     Name = "pies 4",
-                    Values = new[] { 2 },
+                    Values = new[] {  new Observable { Value = 2 } },
                     //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
                     Fill = new SolidColorPaintTask(SKColors.Coral),
                     HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
-                    PushOut = 0,
-                    MaxOuterRadius = .7
+                    PushOut = pushout,
+                    //MaxOuterRadius = .7
                 },
-                new PieSeries<int>
+                new PieSeries<Observable>
                 {
                     Name = "pies 5",
-                    Values = new[] { 2 },
+                    Values = new[] {  new Observable { Value = 2 }  },
                     //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
                     Fill = new SolidColorPaintTask(SKColors.Cyan),
                     HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
-                    PushOut = 0,
-                    MaxOuterRadius = .6
+                    PushOut = pushout,
+                    MaxOuterRadius = .8
                 },
-                new PieSeries<int>
+                new PieSeries<Observable>
                 {
                     Name = "pies 5",
-                    Values = new[] { 2 },
+                    Values = new[] {  new Observable { Value = 2 }  },
                     //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
                     Fill = new SolidColorPaintTask(SKColors.DeepPink),
                     HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
-                    PushOut = 0,
-                    MaxOuterRadius = .5
+                    PushOut = pushout,
+                    MaxOuterRadius = .8
                 }
             };
+
+            Randomize();
+        }
+
+        public void Randomize()
+        {
+            var r = new Random();
+            var values = ((PieSeries<Observable>)Series[r.Next(Series.Count)]).Values.ToArray();
+            var value = values[r.Next(values.Length)];
+            value.Value = r.NextDouble() * 5;
+
+            //var a = r.NextDouble();
+            //if (a < 0.1 && Series.Count > 2) Series.RemoveAt(0);
+            //if (a > 0.9 && Series.Count < 10) Series.Add(new PieSeries<Observable> { Values = new[] { new Observable { Value = 2 } } });
+        }
+    }
+
+    public class Observable : INotifyPropertyChanged
+    {
+        private double value;
+
+        public double Value { get => value; set { this.value = value; OnPropertyChanged(nameof(Value)); } }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 

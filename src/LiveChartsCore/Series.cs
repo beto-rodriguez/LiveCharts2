@@ -86,7 +86,7 @@ namespace LiveChartsCore
         /// Gets or sets the mapping that defines how a type is mapped to a <see cref="ChartPoint"/> instance, 
         /// then the <see cref="ChartPoint"/> will be drawn as a point in our chart.
         /// </summary>
-        public ChartPointMapperDelegate<TModel>? Mapping { get; set; }
+        public Action<IChartPoint, TModel, IChartPointContext>? Mapping { get; set; }
 
         /// <inheritdoc/>
         public virtual IEnumerable<IChartPoint<TVisual, TDrawingContext>> Fetch(IChart chart)

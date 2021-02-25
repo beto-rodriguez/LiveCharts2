@@ -49,7 +49,7 @@ namespace LiveChartsCore
         /// <typeparam name="T">The type</typeparam>
         /// <param name="predicate">The mapper</param>
         /// <returns></returns>
-        public LiveChartsSettings HasMap<TModel>(ChartPointMapperDelegate<TModel> mapper)
+        public LiveChartsSettings HasMap<TModel>(Action<IChartPoint, TModel, IChartPointContext> mapper)
         {
             _mappers[typeof(TModel)] = mapper;
             return this;
@@ -60,7 +60,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <typeparam name="T">The type</typeparam>
         /// <returns>The current mapper</returns>
-        public ChartPointMapperDelegate<TModel> GetMapper<TModel>()
+        public Action<IChartPoint, TModel, IChartPointContext> GetMapper<TModel>()
         {
             if (!_mappers.TryGetValue(typeof(TModel), out var mapper))
                 throw new NotImplementedException(
@@ -68,7 +68,7 @@ namespace LiveChartsCore
                     $"{nameof(LiveCharts)}.{nameof(LiveCharts.Configure)}() " +
                     $"method to call {nameof(HasMap)}() with the type you are trying to plot.");
 
-            return (ChartPointMapperDelegate<TModel>) mapper;
+            return (Action<IChartPoint, TModel, IChartPointContext>) mapper;
         }
 
         /// <summary>

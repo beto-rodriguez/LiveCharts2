@@ -28,5 +28,7 @@ namespace LiveChartsCore.Context
         public float MostBottom { get; set; } = float.MinValue;
         public float MostRight { get; set; } = float.MinValue;
         public float MostLeft { get; set; } = float.MaxValue;
+        public float PieX { get; set; } = 0;
+        public float PieY { get; set; } = 0;
     }
 }

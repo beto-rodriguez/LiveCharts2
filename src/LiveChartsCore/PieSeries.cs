@@ -32,9 +32,10 @@ namespace LiveChartsCore
     {
         public PieSeries() : base(SeriesProperties.PieSeries | SeriesProperties.Stacked) { }
 
-        public double PushOut { get; set; } = 0;
-        public double InnerRadius { get; set; } = 0;
-        public double MaxOuterRadius { get; set; } = 1;
+
+        public double PushOut { get; set; } = 5; // pixels
+        public double InnerRadius { get; set; } = 0; // pixels
+        public double MaxOuterRadius { get; set; } = 1; // 0 - 1
 
         public TransitionsSetterDelegate<IDoughnutGeometry<TDrawingContext>>? TransitionsSetter { get; set; }
 
@@ -109,7 +110,7 @@ namespace LiveChartsCore
                 dougnutGeometry.SweepAngle = end;
                 if (start == 0 && end == 360) dougnutGeometry.SweepAngle = 359.9999f;
 
-                point.PointContext.HoverArea = new SemicircleHoverArea().SetDimensions(cx, cy, start, end, minDimension * 0.5f);
+                point.PointContext.HoverArea = new SemicircleHoverArea().SetDimensions(cx, cy, start, start + end, minDimension * 0.5f);
                 OnPointMeasured(point, dougnutGeometry);
                 chart.MeasuredDrawables.Add(dougnutGeometry);
 

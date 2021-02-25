@@ -116,9 +116,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         private void MouseMoveThrottlerUnlocked()
         {
-            // to do... let the tooltip work for pie charts
-            // currently it requires a cartesian chart.
-            //tooltip.Show(core.FindPointsNearTo(mousePosition), this);
+            tooltip.Show(core.FindPointsNearTo(mousePosition), this);
         }
     }
 }

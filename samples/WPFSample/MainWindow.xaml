@@ -11,7 +11,7 @@
 
     <Window.DataContext>
         <vm:PieViewModel></vm:PieViewModel>
-        <!--<vm:MainVM></vm:MainVM>-->
+        <!--<vm:CartesianViewModel></vm:CartesianViewModel>-->
     </Window.DataContext>
 
     <Grid>

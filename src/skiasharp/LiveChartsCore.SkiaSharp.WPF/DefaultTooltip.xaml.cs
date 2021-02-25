@@ -4,7 +4,6 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls.Primitives;
@@ -22,7 +21,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         private IEasingFunction easingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
         private Timer clearHighlightTimer = new Timer();
         private Dictionary<IDrawableTask<SkiaDrawingContext>, HashSet<IDrawable<SkiaDrawingContext>>> highlited;
-        private CartesianChart chart;
+        private Chart chart;
         private double hideoutCount = 1500;
         private System.Drawing.PointF previousLocation = new System.Drawing.PointF();
 
@@ -124,10 +123,20 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         #endregion
 
-        void IChartTooltip<SkiaDrawingContext>.Show(IEnumerable<TooltipPoint> foundPoints, ICartesianChartView<SkiaDrawingContext> view)
+        void IChartTooltip<SkiaDrawingContext>.Show(IEnumerable<TooltipPoint> foundPoints, IChartView<SkiaDrawingContext> view)
         {
-            var location = foundPoints.GetCartesianTooltipLocation(
-                view.TooltipPosition, new System.Drawing.SizeF((float)border.ActualWidth, (float)border.ActualHeight));
+            System.Drawing.PointF? location = null;
+            
+            if (view is ICartesianChartView<SkiaDrawingContext>)
+            {
+                location = foundPoints.GetCartesianTooltipLocation(
+                    view.TooltipPosition, new System.Drawing.SizeF((float)border.ActualWidth, (float)border.ActualHeight));
+            }
+            if (view is IPieChartView<SkiaDrawingContext>)
+            {
+                location = foundPoints.GetPieTooltipLocation(
+                    view.TooltipPosition, new System.Drawing.SizeF((float)border.ActualWidth, (float)border.ActualHeight));
+            }
 
             if (location == null) return;
             if (previousLocation.X == location.Value.X && previousLocation.Y == location.Value.Y) return;
@@ -145,7 +154,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             var animation = new RectAnimation(from, to, animationsSpeed) { EasingFunction = easingFunction };
             BeginAnimation(PlacementRectangleProperty, animation);
 
-            var wpfChart = (CartesianChart)view;
+            var wpfChart = (Chart)view;
             FontFamily = wpfChart.TooltipFontFamily ?? new FontFamily("Trebuchet MS");
             TextColor = wpfChart.TooltipTextColor ?? new SolidColorBrush(Color.FromRgb(35, 35, 35));
             FontSize = wpfChart.TooltipFontSize ?? 13;

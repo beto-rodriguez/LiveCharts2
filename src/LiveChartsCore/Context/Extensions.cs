@@ -25,6 +25,7 @@ using LiveChartsCore.Drawing.Common;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace LiveChartsCore.Context
 {
@@ -40,9 +41,7 @@ namespace LiveChartsCore.Context
         /// <param name="tooltipSize"></param>
         /// <returns></returns>
         public static PointF? GetCartesianTooltipLocation(
-            this IEnumerable<TooltipPoint> foundPoints,
-            TooltipPosition position,
-            SizeF tooltipSize)
+            this IEnumerable<TooltipPoint> foundPoints, TooltipPosition position, SizeF tooltipSize)
         {
             float count = 0f;
 
@@ -69,6 +68,23 @@ namespace LiveChartsCore.Context
                 case TooltipPosition.Center: return new PointF(avrgX, avrgY);
                 default: throw new NotImplementedException();
             }
+        }
+
+        public static PointF? GetPieTooltipLocation(
+            this IEnumerable<TooltipPoint> foundPoints, TooltipPosition position, SizeF tooltipSize) 
+        {
+            var placementContext = new TooltipPlacementContext();
+            var found = false;
+
+            foreach (var foundPoint in foundPoints)
+            {
+                if (foundPoint.Point.PointContext.HoverArea == null) continue;
+                foundPoint.Point.PointContext.HoverArea.SuggestTooltipPlacement(placementContext);
+                found = true;
+                break; // we only care about the first one.
+            }
+
+            return found ? new PointF(placementContext.PieX, placementContext.PieY) : null;
         }
 
         public static AxisTick GetTick<TDrawingContext>(this IAxis<TDrawingContext> axis, SizeF controlSize)
