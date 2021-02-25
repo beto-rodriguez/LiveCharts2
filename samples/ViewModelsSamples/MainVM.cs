@@ -124,40 +124,60 @@ namespace ViewModelsSamples
                     Values = new[] { 2 },
                     //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
                     Fill = new SolidColorPaintTask(new SKColor(217, 47, 47)),
-                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
+                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
+                    PushOut = 0,
+                    MaxOuterRadius = 1
                 },
-                //new PieSeries<int>
-                //{
-                //    Name = "pies 2",
-                //    Values = new[] { 2 },
-                //    //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
-                //    Fill = new SolidColorPaintTask(SKColors.BlueViolet),
-                //    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
-                //},
-                //new PieSeries<int>
-                //{
-                //    Name = "pies 3",
-                //    Values = new[] { 2 },
-                //    //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
-                //    Fill = new SolidColorPaintTask(SKColors.DarkOliveGreen),
-                //    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
-                //},
-                //new PieSeries<int>
-                //{
-                //    Name = "pies 4",
-                //    Values = new[] { 2 },
-                //    //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
-                //    Fill = new SolidColorPaintTask(SKColors.Coral),
-                //    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
-                //},
-                //new PieSeries<int>
-                //{
-                //    Name = "pies 5",
-                //    Values = new[] { 2 },
-                //    //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
-                //    Fill = new SolidColorPaintTask(SKColors.Cyan),
-                //    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
-                //}
+                new PieSeries<int>
+                {
+                    Name = "pies 2",
+                    Values = new[] { 2 },
+                    //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
+                    Fill = new SolidColorPaintTask(SKColors.BlueViolet),
+                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
+                    PushOut = 0,
+                    MaxOuterRadius = .9
+                },
+                new PieSeries<int>
+                {
+                    Name = "pies 3",
+                    Values = new[] { 2 },
+                    //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
+                    Fill = new SolidColorPaintTask(SKColors.DarkOliveGreen),
+                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
+                    PushOut = 0,
+                    MaxOuterRadius = .8
+                },
+                new PieSeries<int>
+                {
+                    Name = "pies 4",
+                    Values = new[] { 2 },
+                    //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
+                    Fill = new SolidColorPaintTask(SKColors.Coral),
+                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
+                    PushOut = 0,
+                    MaxOuterRadius = .7
+                },
+                new PieSeries<int>
+                {
+                    Name = "pies 5",
+                    Values = new[] { 2 },
+                    //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
+                    Fill = new SolidColorPaintTask(SKColors.Cyan),
+                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
+                    PushOut = 0,
+                    MaxOuterRadius = .6
+                },
+                new PieSeries<int>
+                {
+                    Name = "pies 5",
+                    Values = new[] { 2 },
+                    //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
+                    Fill = new SolidColorPaintTask(SKColors.DeepPink),
+                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
+                    PushOut = 0,
+                    MaxOuterRadius = .5
+                }
             };
         }
     }

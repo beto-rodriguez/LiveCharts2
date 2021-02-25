@@ -120,14 +120,14 @@ namespace LiveChartsCore
             }
         }
 
-        public override BiDimensinalBounds GetBounds(
+        public override DimensinalBounds GetBounds(
            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
             var baseBounds = base.GetBounds(chart, x, y);
 
             var tick = y.GetTick(chart.ControlSize, baseBounds.PrimaryBounds);
 
-            return new BiDimensinalBounds
+            return new DimensinalBounds
             {
                 SecondaryBounds = new Bounds
                 {

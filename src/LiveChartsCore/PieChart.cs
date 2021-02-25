@@ -45,6 +45,7 @@ namespace LiveChartsCore
         public override IChartView<TDrawingContext> ChartView => chartView;
         public Bounds ValueBounds { get; private set; } = new Bounds();
         public Bounds IndexBounds { get; private set; } = new Bounds();
+        public Bounds PushoutBounds { get; private set; } = new Bounds();
 
         public override IEnumerable<TooltipPoint> FindPointsNearTo(PointF pointerPosition)
         {
@@ -80,14 +81,17 @@ namespace LiveChartsCore
 
             ValueBounds = new Bounds();
             IndexBounds = new Bounds();
+            PushoutBounds = new Bounds();
             foreach (var series in series)
             {
                 var seriesBounds = series.GetBounds(this);
 
-                ValueBounds.AppendValue(seriesBounds.SecondaryBounds.max);
-                ValueBounds.AppendValue(seriesBounds.SecondaryBounds.min);
-                IndexBounds.AppendValue(seriesBounds.PrimaryBounds.max);
-                IndexBounds.AppendValue(seriesBounds.PrimaryBounds.min);
+                ValueBounds.AppendValue(seriesBounds.PrimaryBounds.max);
+                ValueBounds.AppendValue(seriesBounds.PrimaryBounds.min);
+                IndexBounds.AppendValue(seriesBounds.SecondaryBounds.max);
+                IndexBounds.AppendValue(seriesBounds.SecondaryBounds.min);
+                PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.max);
+                PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.min);
             }
 
             if (viewDrawMargin == null)

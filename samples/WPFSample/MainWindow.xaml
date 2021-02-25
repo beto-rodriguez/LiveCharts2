@@ -19,7 +19,7 @@
             <RowDefinition Height="40"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Horizontal" Background="Red">
             <Button>Action!</Button>
         </StackPanel>
         <lvc:PieChart Grid.Row="1" Series="{Binding Series}" LegendPosition="Right"> </lvc:PieChart>

@@ -32,8 +32,9 @@ namespace LiveChartsCore
     {
         public PieSeries() : base(SeriesProperties.PieSeries | SeriesProperties.Stacked) { }
 
-        public double PushOut { get; set; } = 10;
-        public double InnerRadius { get; set; } = .6;
+        public double PushOut { get; set; } = 0;
+        public double InnerRadius { get; set; } = 0;
+        public double MaxOuterRadius { get; set; } = 1;
 
         public TransitionsSetterDelegate<IDoughnutGeometry<TDrawingContext>>? TransitionsSetter { get; set; }
 
@@ -43,9 +44,12 @@ namespace LiveChartsCore
             var drawMarginSize = chart.DrawMarginSize;
             var minDimension = drawMarginSize.Width < drawMarginSize.Height ? drawMarginSize.Width : drawMarginSize.Height;
 
+            var maxPushout = (float)chart.PushoutBounds.Max;
             var pushout = (float)PushOut;
             var innerRadius = (float)InnerRadius;
-            minDimension = minDimension - pushout * 2 - (Stroke?.StrokeWidth ?? 0) * 2;
+            var maxOuterRadius = (float)MaxOuterRadius;
+            minDimension = minDimension - (Stroke?.StrokeWidth ?? 0) * 2 -  maxPushout *2;
+            minDimension *= maxOuterRadius;
 
             if (Fill != null) chart.Canvas.AddPaintTask(Fill);
             if (Stroke != null) chart.Canvas.AddPaintTask(Stroke);
@@ -97,7 +101,7 @@ namespace LiveChartsCore
                 dougnutGeometry.Y = (drawMarginSize.Height - minDimension) * 0.5f;
                 dougnutGeometry.Width = minDimension;
                 dougnutGeometry.Height = minDimension;
-                dougnutGeometry.InnerRadius = minDimension * 0.5f * innerRadius;
+                dougnutGeometry.InnerRadius = innerRadius;
                 dougnutGeometry.PushOut = pushout;
                 var start = (stackedValue / total) * 360;
                 var end = ((stackedValue + point.PrimaryValue) / total) * 360 - start;
@@ -113,17 +117,18 @@ namespace LiveChartsCore
             }
         }
 
-        public BiDimensinalBounds GetBounds(PieChart<TDrawingContext> chart)
+        public DimensinalBounds GetBounds(PieChart<TDrawingContext> chart)
         {
             var stack = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
             if (stack == null) throw new NullReferenceException("Unexpected null stacker");
 
-            var bounds = new BiDimensinalBounds();
+            var bounds = new DimensinalBounds();
             foreach (var point in Fetch(chart))
             {
                 stack.StackPoint(point);
                 bounds.PrimaryBounds.AppendValue(point.PrimaryValue);
                 bounds.SecondaryBounds.AppendValue(point.SecondaryValue);
+                bounds.TertiaryBounds.AppendValue(PushOut);
             }
 
             return bounds;

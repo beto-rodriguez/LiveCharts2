@@ -45,12 +45,12 @@ namespace LiveChartsCore
         public int ScalesYAt { get; set; }
 
         /// <inheritdoc/>
-        public virtual BiDimensinalBounds GetBounds(
+        public virtual DimensinalBounds GetBounds(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
             var stack = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
 
-            var bounds = new BiDimensinalBounds();
+            var bounds = new DimensinalBounds();
             foreach (var point in Fetch(chart))
             {
                 var secondary = point.SecondaryValue;
