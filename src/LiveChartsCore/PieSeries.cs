@@ -103,6 +103,7 @@ namespace LiveChartsCore
                 var end = ((stackedValue + point.PrimaryValue) / total) * 360 - start;
                 dougnutGeometry.StartAngle = start;
                 dougnutGeometry.SweepAngle = end;
+                if (start == 0 && end == 360) dougnutGeometry.SweepAngle = 359.9999f;
 
                 point.PointContext.HoverArea = new SemicircleHoverArea().SetDimensions(cx, cy, start, end, minDimension * 0.5f);
                 OnPointMeasured(point, dougnutGeometry);
@@ -145,32 +146,46 @@ namespace LiveChartsCore
         {
             var context = new PaintContext<TDrawingContext>();
 
-            //if (Fill != null)
-            //{
-            //    var fillClone = Fill.CloneTask();
-            //    var visual = new TVisual { X = 0, Y = 0, Height = (float)LegendShapeSize, Width = (float)LegendShapeSize };
-            //    fillClone.AddGeometyToPaintTask(visual);
-            //    context.PaintTasks.Add(fillClone);
-            //}
+            if (Fill != null)
+            {
+                var fillClone = Fill.CloneTask();
+                var visual = new TVisual 
+                {
+                    X = 0, 
+                    Y = 0, 
+                    Height = (float)LegendShapeSize, 
+                    Width = (float)LegendShapeSize,
+                    CenterX = (float) LegendShapeSize *0.5f,
+                    CenterY= (float)LegendShapeSize * 0.5f,
+                    StartAngle = 0,
+                    SweepAngle = 359.9999f
+                };
+                fillClone.AddGeometyToPaintTask(visual);
+                context.PaintTasks.Add(fillClone);
+            }
 
-            //var w = LegendShapeSize;
-            //if (Stroke != null)
-            //{
-            //    var strokeClone = Stroke.CloneTask();
-            //    var visual = new TVisual
-            //    {
-            //        X = strokeClone.StrokeWidth,
-            //        Y = strokeClone.StrokeWidth,
-            //        Height = (float)LegendShapeSize,
-            //        Width = (float)LegendShapeSize
-            //    };
-            //    w += 2 * strokeClone.StrokeWidth;
-            //    strokeClone.AddGeometyToPaintTask(visual);
-            //    context.PaintTasks.Add(strokeClone);
-            //}
+            var w = LegendShapeSize;
+            if (Stroke != null)
+            {
+                var strokeClone = Stroke.CloneTask();
+                var visual = new TVisual
+                {
+                    X = 0,
+                    Y = 0,
+                    Height = (float)LegendShapeSize,
+                    Width = (float)LegendShapeSize,
+                    CenterX = (float)LegendShapeSize * 0.5f,
+                    CenterY = (float)LegendShapeSize * 0.5f,
+                    StartAngle = 0,
+                    SweepAngle = 359.9999f
+                };
+                w += 2 * strokeClone.StrokeWidth;
+                strokeClone.AddGeometyToPaintTask(visual);
+                context.PaintTasks.Add(strokeClone);
+            }
 
-            //context.Width = w;
-            //context.Height = w;
+            context.Width = w;
+            context.Height = w;
 
             paintContext = context;
         }

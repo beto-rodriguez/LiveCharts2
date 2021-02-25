@@ -41,6 +41,8 @@ namespace LiveChartsCore
         }
 
         public IPieSeries<TDrawingContext>[] Series => series;
+        public override IEnumerable<IDrawableSeries<TDrawingContext>> DrawableSeries => series;
+        public override IChartView<TDrawingContext> ChartView => chartView;
         public Bounds ValueBounds { get; private set; } = new Bounds();
         public Bounds IndexBounds { get; private set; } = new Bounds();
 
@@ -74,7 +76,7 @@ namespace LiveChartsCore
             measuredDrawables =  new HashSet<IDrawable<TDrawingContext>>();
             seriesContext = new SeriesContext<TDrawingContext>(series);
 
-            //if (legend != null) legend.Draw(chartView);
+            if (legend != null) legend.Draw(this);
 
             ValueBounds = new Bounds();
             IndexBounds = new Bounds();

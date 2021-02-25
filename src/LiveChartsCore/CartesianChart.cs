@@ -28,17 +28,17 @@ using System.Linq;
 
 namespace LiveChartsCore
 {
-    public class CartesianChart<TDrawingContext>: Chart<TDrawingContext>
+    public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         private readonly ICartesianChartView<TDrawingContext> chartView;
-        
+
         private IAxis<TDrawingContext>[] xAxes = new IAxis<TDrawingContext>[0];
         private IAxis<TDrawingContext>[] yAxes = new IAxis<TDrawingContext>[0];
         private ICartesianSeries<TDrawingContext>[] series = new ICartesianSeries<TDrawingContext>[0];
 
         public CartesianChart(ICartesianChartView<TDrawingContext> view, Canvas<TDrawingContext> canvas)
-            :base(canvas)
+            : base(canvas)
         {
             chartView = view;
         }
@@ -46,6 +46,8 @@ namespace LiveChartsCore
         public IAxis<TDrawingContext>[] XAxes => xAxes;
         public IAxis<TDrawingContext>[] YAxes => yAxes;
         public ICartesianSeries<TDrawingContext>[] Series => series;
+        public override IEnumerable<IDrawableSeries<TDrawingContext>> DrawableSeries => series;
+        public override IChartView<TDrawingContext> ChartView => chartView;
 
         public override void Update()
         {
@@ -65,7 +67,7 @@ namespace LiveChartsCore
             measuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
             seriesContext = new SeriesContext<TDrawingContext>(series);
 
-            if (legend != null) legend.Draw(chartView);
+            if (legend != null) legend.Draw(this);
 
             // restart axes bounds and meta data
             foreach (var axis in xAxes) axis.Initialize(AxisOrientation.X);
@@ -183,8 +185,8 @@ namespace LiveChartsCore
             xAxes = chartView.XAxes.Select(x => x.Copy()).ToArray();
 
             measureWorker = new object();
-            series = chartView.Series.Select(series => 
-            { 
+            series = chartView.Series.Select(series =>
+            {
                 // a good implementation of ISeries<T>
                 // must use the measureWorker to identify
                 // if the points are already fetched.
@@ -207,7 +209,7 @@ namespace LiveChartsCore
 
             animationsSpeed = chartView.AnimationsSpeed;
             easingFunction = chartView.EasingFunction;
-    
+
             Measure();
         }
     }

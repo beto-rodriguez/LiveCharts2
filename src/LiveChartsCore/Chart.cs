@@ -65,12 +65,14 @@ namespace LiveChartsCore
         public HashSet<IDrawable<TDrawingContext>> MeasuredDrawables => measuredDrawables;
         public SeriesContext<TDrawingContext> SeriesContext => seriesContext;
         public Canvas<TDrawingContext> Canvas => canvas;
+        public abstract IEnumerable<IDrawableSeries<TDrawingContext>> DrawableSeries { get; }
+        public abstract IChartView<TDrawingContext> ChartView { get; }
 
         public SizeF ControlSize => controlSize;
         public PointF DrawMaringLocation => drawMaringLocation;
         public SizeF DrawMarginSize => drawMarginSize;
 
-        public LegendPosition LegendPosition => LegendPosition;
+        public LegendPosition LegendPosition => legendPosition;
         public LegendOrientation LegendOrientation => legendOrientation;
         public IChartLegend<TDrawingContext>? Legend => legend;
         public TooltipPosition TooltipPosition => tooltipPosition;
