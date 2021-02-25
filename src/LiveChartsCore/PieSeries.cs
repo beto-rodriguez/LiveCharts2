@@ -36,7 +36,7 @@ namespace LiveChartsCore
         public PieSeries() : base(SeriesProperties.PieSeries) { }
 
         public double PushOut { get; set; } = 10;
-        public double InnerRadius { get; set; } = .5;
+        public double InnerRadius { get; set; } = .1;
 
         public TransitionsSetterDelegate<IDoughnutGeometry<TDrawingContext>>? TransitionsSetter { get; set; }
 
@@ -48,7 +48,7 @@ namespace LiveChartsCore
 
             var pushout = (float)PushOut;
             var innerRadius = (float)InnerRadius;
-            minDimension = minDimension - pushout - (Stroke?.StrokeWidth ?? 0) * 2;
+            minDimension = minDimension - pushout * 2 - (Stroke?.StrokeWidth ?? 0) * 2;
 
             if (Fill != null) chart.Canvas.AddPaintTask(Fill);
             if (Stroke != null) chart.Canvas.AddPaintTask(Stroke);
@@ -86,6 +86,11 @@ namespace LiveChartsCore
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(p);
                 }
 
+                //if (Math.Abs(stackedValue - 2f) > 0.01) {
+                //    stackedValue += point.PrimaryValue;
+                //    continue;
+                //}
+
                 var dougnutGeometry = point.PointContext.Visual;
 
                 dougnutGeometry.PushOut = pushout;
@@ -98,7 +103,7 @@ namespace LiveChartsCore
                 dougnutGeometry.InnerRadius = minDimension * 0.5f * innerRadius;
                 dougnutGeometry.PushOut = pushout;
                 var start = (stackedValue / total) * 360;
-                var end = (stackedValue + point.PrimaryValue / total) * 360;
+                var end = ((stackedValue + point.PrimaryValue) / total) * 360 - start;
                 dougnutGeometry.StartAngle = start;
                 dougnutGeometry.SweepAngle = end;
 
@@ -126,10 +131,10 @@ namespace LiveChartsCore
         {
             visual
                 .DefinePropertyTransitions(
+                nameof(visual.CenterX), nameof(visual.CenterY),
                     nameof(visual.X), nameof(visual.Y),
                     nameof(visual.Width), nameof(visual.Height),
                     nameof(visual.StartAngle), nameof(visual.SweepAngle),
-                    nameof(visual.CenterX), nameof(visual.CenterY),
                     nameof(visual.PushOut), nameof(visual.InnerRadius))
                 .WithAnimation(defaultAnimation)
                 .CompleteCurrentTransitions();
