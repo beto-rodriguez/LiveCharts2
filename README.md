@@ -131,7 +131,7 @@ The following topics will work on any platform.
   - [ ] allow data labels and make them cutomizable
   
 - [ ] PieChart and Pie Series
-  - [ ] Draw a basic pie slice geometry, where the corners could be rounded and you can define a "wedge" property so we can make a [doughnut](https://lvcharts.net/App/examples/v1/wpf/Doughnut%20Chart)
+  - [x] ~~Draw a basic pie slice geometry, where the corners could be rounded and you can define a "wedge" property so we can make a [doughnut](https://lvcharts.net/App/examples/v1/wpf/Doughnut%20Chart)~~
   - [ ] allow data labels and make them cutomizable
   
 - [ ] Solid Gauges
