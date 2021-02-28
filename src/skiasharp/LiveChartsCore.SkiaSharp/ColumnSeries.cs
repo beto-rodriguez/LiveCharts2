@@ -30,9 +30,8 @@ namespace LiveChartsCore.SkiaSharpView
 
     }
 
-    public class ColumnSeries<TModel, TVisual>: ColumnSeries<TModel, TVisual, SkiaDrawingContext>
-        where TVisual: class, ISizedGeometry<SkiaDrawingContext>, IHighlightableGeometry<SkiaDrawingContext>, new()
+    public class ColumnSeries<TModel, TVisual>: ColumnSeries<TModel, TVisual, SkiaSharpDrawingContext>
+        where TVisual: class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
     {
-
     }
 }

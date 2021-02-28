@@ -21,8 +21,10 @@
 // SOFTWARE.
 
 using LiveChartsCore.Context;
+using LiveChartsCore.Drawing;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace LiveChartsCore
 {
@@ -31,16 +33,9 @@ namespace LiveChartsCore
     /// </summary>
     public class LiveChartsSettings
     {
-        private readonly Dictionary<Type, object> _mappers = new Dictionary<Type, object>();
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LiveChartsSettings"/> class.
-        /// </summary>
-        public LiveChartsSettings()
-        {
-            AddDefaultMappers()
-                .AddGlobalEasing(EasingFunctions.Lineal, TimeSpan.FromMilliseconds(500));
-        }
+        private readonly Dictionary<Type, object> mappers = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, object> seriesStyleBuilder = new Dictionary<Type, object>();
+        private Animation? defaultAnimation;
 
         /// <summary>
         /// Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a <see cref="ChartPoint"/> instance, 
@@ -51,7 +46,7 @@ namespace LiveChartsCore
         /// <returns></returns>
         public LiveChartsSettings HasMap<TModel>(Action<IChartPoint, TModel, IChartPointContext> mapper)
         {
-            _mappers[typeof(TModel)] = mapper;
+            mappers[typeof(TModel)] = mapper;
             return this;
         }
 
@@ -60,15 +55,57 @@ namespace LiveChartsCore
         /// </summary>
         /// <typeparam name="T">The type</typeparam>
         /// <returns>The current mapper</returns>
-        public Action<IChartPoint, TModel, IChartPointContext> GetMapper<TModel>()
+        internal Action<IChartPoint, TModel, IChartPointContext> GetMap<TModel>()
         {
-            if (!_mappers.TryGetValue(typeof(TModel), out var mapper))
+            if (!mappers.TryGetValue(typeof(TModel), out var mapper))
                 throw new NotImplementedException(
                     $"A mapper for type {typeof(TModel)} is not implemented yet, consider using " +
                     $"{nameof(LiveCharts)}.{nameof(LiveCharts.Configure)}() " +
                     $"method to call {nameof(HasMap)}() with the type you are trying to plot.");
 
-            return (Action<IChartPoint, TModel, IChartPointContext>) mapper;
+            return (Action<IChartPoint, TModel, IChartPointContext>)mapper;
+        }
+
+        public LiveChartsSettings RemoveMap<TModel>()
+        {
+            mappers.Remove(typeof(TModel));
+            return this;
+        }
+
+        public LiveChartsSettings HasDefaultAnimation(Animation? animation)
+        {
+            defaultAnimation = animation;
+            return this;
+        }
+
+        public LiveChartsSettings AddDefaultStyles<TDrawingContext>(Action<StyleBuilder<TDrawingContext>> builder)
+            where TDrawingContext: DrawingContext
+        {
+            if (!seriesStyleBuilder.TryGetValue(typeof(TDrawingContext), out var stylesBuilder))
+            {
+                stylesBuilder = new StyleBuilder<TDrawingContext>();
+                seriesStyleBuilder[typeof(TDrawingContext)] = stylesBuilder;
+            }
+
+            var sb = (StyleBuilder<TDrawingContext>)stylesBuilder;
+            builder(sb);
+
+            return this;
+        }
+
+        internal void ApplySeriesStyle<TDrawingContext>(IDrawableSeries<TDrawingContext> series)
+            where TDrawingContext : DrawingContext
+        {
+            if (!seriesStyleBuilder.TryGetValue(typeof(TDrawingContext), out var stylesBuilder)) 
+            {
+#if DEBUG
+                Trace.WriteLine(nameof(TDrawingContext) + " is not registered, the style was not applied.");
+#endif
+                return;
+            }
+
+            var sb = (StyleBuilder<TDrawingContext>)stylesBuilder;
+            sb.SetNextNameFillAndStroke(series);
         }
 
         /// <summary>
@@ -107,18 +144,6 @@ namespace LiveChartsCore
                      point.PrimaryValue = unchecked((float) model);
                      point.SecondaryValue = context.Index;
                  });
-        }
-
-        /// <summary>
-        /// Configures <see cref="NaturalGeometries"/> class to use LiveCharts settings transitions globally.
-        /// </summary>
-        /// <param name="duration"></param>
-        /// <param name="easingFunction"></param>
-        /// <returns></returns>
-        public LiveChartsSettings AddGlobalEasing(Func<float, float> easingFunction, TimeSpan duration)
-        {
-            //Visual.AddTransition(Visual.AllShapesAllProperties, new Animation(easingFunction, duration));
-            return this;
         }
     }
 }

@@ -22,10 +22,11 @@
 
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
+
 namespace LiveChartsCore
 {
     public class ScatterSeries<TModel, TVisual, TDrawingContext> : CartesianSeries<TModel, TVisual, TDrawingContext>
-        where TVisual : class, ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
+        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
         private double geometrySize = 18d;
@@ -37,7 +38,6 @@ namespace LiveChartsCore
         }
 
         public double GeometrySize { get => geometrySize; set => geometrySize = value; }
-        public TransitionsSetterDelegate<ISizedGeometry<TDrawingContext>>? TransitionsSetter { get; set; }
 
         public override void Measure(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
@@ -47,8 +47,8 @@ namespace LiveChartsCore
             var xScale = new ScaleContext(drawLocation, drawMarginSize, xAxis.Orientation, xAxis.DataBounds);
             var yScale = new ScaleContext(drawLocation, drawMarginSize, yAxis.Orientation, yAxis.DataBounds);
 
-            if (Fill != null) chart.Canvas.AddPaintTask(Fill);
-            if (Stroke != null) chart.Canvas.AddPaintTask(Stroke);
+            if (Fill != null) chart.Canvas.AddDrawableTask(Fill);
+            if (Stroke != null) chart.Canvas.AddDrawableTask(Stroke);
 
             var gs = unchecked((float)geometrySize);
             var hgs = gs / 2f;
@@ -91,8 +91,8 @@ namespace LiveChartsCore
                 chart.MeasuredDrawables.Add(sizedGeometry);
             }
 
-            if (HighlightFill != null) chart.Canvas.AddPaintTask(HighlightFill);
-            if (HighlightStroke != null) chart.Canvas.AddPaintTask(HighlightStroke);
+            if (HighlightFill != null) chart.Canvas.AddDrawableTask(HighlightFill);
+            if (HighlightStroke != null) chart.Canvas.AddDrawableTask(HighlightStroke);
         }
 
         public override DimensinalBounds GetBounds(

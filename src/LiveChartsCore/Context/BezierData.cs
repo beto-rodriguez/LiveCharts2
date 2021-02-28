@@ -25,7 +25,7 @@ using LiveChartsCore.Drawing;
 namespace LiveChartsCore.Context
 {
     public class BezierData<TVisual, TDrawingContext>
-        where TVisual : class, IHighlightableGeometry<TDrawingContext>, new()
+        where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
         private IChartPoint<TVisual, TDrawingContext> targetPoint;

@@ -21,35 +21,26 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
 using SkiaSharp;
-using System;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing
 {
-    public class LineGeometry : Geometry, ILineGeometry<SkiaSharpDrawingContext>
+    public class SkiaSharpDrawingContext : DrawingContext
     {
-        private readonly FloatMotionProperty x1;
-        private readonly FloatMotionProperty y1;
-
-        public LineGeometry()
+        public SkiaSharpDrawingContext(SKImageInfo info, SKSurface surface, SKCanvas canvas)
         {
-            x1 = RegisterMotionProperty(new FloatMotionProperty(nameof(X1), 0f));
-            y1 = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
+            Info = info;
+            Surface = surface;
+            Canvas = canvas;
         }
+        public SKImageInfo Info { get; set; }
+        public SKSurface Surface { get; set; }
+        public SKCanvas Canvas { get; set; }
+        public SKPaint Paint { get; set; }
 
-        public float X1 { get => x1.GetMovement(this); set => x1.SetMovement(value, this); }
-
-        public float Y1 { get => y1.GetMovement(this); set => y1.SetMovement(value, this); }
-
-        public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+        public override void ClearCanvas()
         {
-            context.Canvas.DrawLine(X, Y, X1, Y1, paint);
-        }
-
-        public override SKSize Measure(SkiaSharpDrawingContext context, SKPaint paint)
-        {
-            return new SKSize(Math.Abs(X1 - X), Math.Abs(Y1 - Y));
+            Canvas.Clear();
         }
     }
 }

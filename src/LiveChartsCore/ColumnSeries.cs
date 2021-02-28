@@ -30,13 +30,12 @@ namespace LiveChartsCore
     /// Defines the data to plot as columns.
     /// </summary>
     public class ColumnSeries<TModel, TVisual, TDrawingContext> : CartesianSeries<TModel, TVisual, TDrawingContext>
-        where TVisual : class, ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
+        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
         public ColumnSeries()
             : base (SeriesProperties.Bar | SeriesProperties.VerticalOrientation)
         {
-
         }
 
         public double Pivot { get; set; }
@@ -44,8 +43,6 @@ namespace LiveChartsCore
         public double MaxColumnWidth { get; set; } = 30;
 
         public bool IgnoresColumnPosition { get; set; } = false;
-
-        public TransitionsSetterDelegate<ISizedGeometry<TDrawingContext>>? TransitionsSetter { get; set; }
 
         public override void Measure(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
@@ -77,8 +74,8 @@ namespace LiveChartsCore
                 uwm = uw / 2f;
             }
 
-            if (Fill != null) chart.Canvas.AddPaintTask(Fill);
-            if (Stroke != null) chart.Canvas.AddPaintTask(Stroke);
+            if (Fill != null) chart.Canvas.AddDrawableTask(Fill);
+            if (Stroke != null) chart.Canvas.AddDrawableTask(Stroke);
 
             var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
             var ts = TransitionsSetter ?? SetDefaultTransitions;
@@ -120,8 +117,8 @@ namespace LiveChartsCore
                 chart.MeasuredDrawables.Add(sizedGeometry);
             }
 
-            if (HighlightFill != null) chart.Canvas.AddPaintTask(HighlightFill);
-            if (HighlightStroke != null) chart.Canvas.AddPaintTask(HighlightStroke);
+            if (HighlightFill != null) chart.Canvas.AddDrawableTask(HighlightFill);
+            if (HighlightStroke != null) chart.Canvas.AddDrawableTask(HighlightStroke);
         }
 
         public override DimensinalBounds GetBounds(

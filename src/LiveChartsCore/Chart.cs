@@ -33,11 +33,14 @@ namespace LiveChartsCore
     public abstract class Chart<TDrawingContext> : IChart
         where TDrawingContext : DrawingContext
     {
+        private static bool isPlatformInitialized = false;
+
         protected object measureWorker = new object();
         protected HashSet<IDrawable<TDrawingContext>> measuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
         protected SeriesContext<TDrawingContext> seriesContext = new SeriesContext<TDrawingContext>(Enumerable.Empty<IDrawableSeries<TDrawingContext>>());
         protected readonly Canvas<TDrawingContext> canvas;
         protected readonly ActionThrottler updateThrottler;
+        private readonly Dictionary<string, IDrawableTask<TDrawingContext>> states = new Dictionary<string, IDrawableTask<TDrawingContext>>();
 
         // view copied properties
         protected SizeF controlSize = new SizeF();
@@ -53,12 +56,16 @@ namespace LiveChartsCore
         protected SizeF drawMarginSize;
         protected PointF drawMaringLocation;
 
-        public Chart(Canvas<TDrawingContext> canvas)
+        public Chart(Canvas<TDrawingContext> canvas, Action<LiveChartsSettings> defaultPlatformConfig)
         {
             this.canvas = canvas;
             updateThrottler = new ActionThrottler(TimeSpan.FromSeconds(300));
             updateThrottler.Unlocked += UpdateThrottlerUnlocked;
             easingFunction = EasingFunctions.QuadraticOut;
+            if (!isPlatformInitialized && !LiveCharts.HasUserConfiguration)
+            {
+                LiveCharts.Configure(defaultPlatformConfig);
+            }
         }
 
         public object MeasureWorker => measureWorker;
@@ -98,6 +105,18 @@ namespace LiveChartsCore
             };
 
             drawMaringLocation = new PointF(margin.Left, margin.Top);
+        }
+
+        public void DefinePointState(string pointStateName, IDrawableTask<TDrawingContext> drawableTask)
+        {
+            states[pointStateName] = drawableTask;
+            canvas.AddDrawableTask(drawableTask);
+        }
+
+        public void RemovePointState(string pointStateName)
+        {
+            canvas.RemovePaintTask(states[pointStateName]);
+            states.Remove(pointStateName);
         }
     }
 }

@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -32,10 +33,14 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
     {
         private readonly IPieChartView<TDrawingContext> chartView;
+        private int nextSeries = 0;
         private IPieSeries<TDrawingContext>[] series = new IPieSeries<TDrawingContext>[0];
 
-        public PieChart(IPieChartView<TDrawingContext> view, Canvas<TDrawingContext> canvas)
-            : base(canvas)
+        public PieChart(
+            IPieChartView<TDrawingContext> view,
+            Action<LiveChartsSettings> defaultPlatformConfig,
+            Canvas<TDrawingContext> canvas)
+            : base(canvas, defaultPlatformConfig)
         {
             chartView = view;
         }
@@ -84,6 +89,12 @@ namespace LiveChartsCore
             PushoutBounds = new Bounds();
             foreach (var series in series)
             {
+                if (series.SeriesId == -1)
+                {
+                    series.SeriesId = nextSeries++;
+                    LiveCharts.CurrentSettings.ApplySeriesStyle(series);
+                }
+
                 var seriesBounds = series.GetBounds(this);
 
                 ValueBounds.AppendValue(seriesBounds.PrimaryBounds.max);

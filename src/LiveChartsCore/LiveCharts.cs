@@ -20,16 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Context;
 using System;
 
 namespace LiveChartsCore
 {
     public static class LiveCharts
     {
-        private static readonly LiveChartsSettings _settings = new LiveChartsSettings();
+        private static bool hasUserConfiguration = false;
+        private static readonly LiveChartsSettings settings = new LiveChartsSettings();
 
-        public static void Configure(Action<LiveChartsSettings> configuration) => configuration(_settings);
+        public static bool HasUserConfiguration => hasUserConfiguration;
 
-        internal static LiveChartsSettings CurrentSettings => _settings;
+        internal static LiveChartsSettings CurrentSettings => settings;
+
+        public static void Configure(Action<LiveChartsSettings> configuration)
+        {
+            if (configuration == null) throw new NullReferenceException($"{nameof(LiveChartsSettings)} must not be null.");
+
+            hasUserConfiguration = true;
+            configuration(settings);
+        }
+
+        public static LiveChartsSettings HasMapFor<TModel>(Action<IChartPoint, TModel, IChartPointContext> mapper)
+        {
+            return settings.HasMap(mapper);
+        }
     }
 }

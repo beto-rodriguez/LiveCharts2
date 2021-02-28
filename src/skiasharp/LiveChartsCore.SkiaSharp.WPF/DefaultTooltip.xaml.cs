@@ -15,12 +15,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     /// <summary>
     /// Interaction logic for DefaultTooltip.xaml
     /// </summary>
-    public partial class DefaultTooltip : Popup, IChartTooltip<SkiaDrawingContext>
+    public partial class DefaultTooltip : Popup, IChartTooltip<SkiaSharpDrawingContext>
     {
         private TimeSpan animationsSpeed = TimeSpan.FromMilliseconds(200);
         private IEasingFunction easingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
         private Timer clearHighlightTimer = new Timer();
-        private Dictionary<IDrawableTask<SkiaDrawingContext>, HashSet<IDrawable<SkiaDrawingContext>>> highlited;
+        private Dictionary<IDrawableTask<SkiaSharpDrawingContext>, HashSet<IDrawable<SkiaSharpDrawingContext>>> highlited;
         private Chart chart;
         private double hideoutCount = 1500;
         private System.Drawing.PointF previousLocation = new System.Drawing.PointF();
@@ -123,16 +123,16 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         #endregion
 
-        void IChartTooltip<SkiaDrawingContext>.Show(IEnumerable<TooltipPoint> foundPoints, IChartView<SkiaDrawingContext> view)
+        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> foundPoints, IChartView<SkiaSharpDrawingContext> view)
         {
             System.Drawing.PointF? location = null;
             
-            if (view is ICartesianChartView<SkiaDrawingContext>)
+            if (view is ICartesianChartView<SkiaSharpDrawingContext>)
             {
                 location = foundPoints.GetCartesianTooltipLocation(
                     view.TooltipPosition, new System.Drawing.SizeF((float)border.ActualWidth, (float)border.ActualHeight));
             }
-            if (view is IPieChartView<SkiaDrawingContext>)
+            if (view is IPieChartView<SkiaSharpDrawingContext>)
             {
                 location = foundPoints.GetPieTooltipLocation(
                     view.TooltipPosition, new System.Drawing.SizeF((float)border.ActualWidth, (float)border.ActualHeight));
@@ -162,27 +162,27 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             FontStyle = wpfChart.TooltipFontStyle ?? FontStyles.Normal;
             FontStretch = wpfChart.TooltipFontStretch ?? FontStretches.Normal;
 
-            var highlightTasks = new Dictionary<IDrawableTask<SkiaDrawingContext>, HashSet<IDrawable<SkiaDrawingContext>>>();
+            var highlightTasks = new Dictionary<IDrawableTask<SkiaSharpDrawingContext>, HashSet<IDrawable<SkiaSharpDrawingContext>>>();
             highlited = highlightTasks;
 
-            void highlightGeometries(TooltipPoint point, IDrawableTask<SkiaDrawingContext> highlightPaintTask)
+            void highlightGeometries(TooltipPoint point, IDrawableTask<SkiaSharpDrawingContext> highlightPaintTask)
             {
                 // if we have not cleared the geometries of the current series... we do it!
                 if (!highlightTasks.TryGetValue(highlightPaintTask, out var highlighPaint))
                 {
                     // create a new empty collection (hashSet) to draw our geometries using the highlight paint.
-                    highlighPaint = new HashSet<IDrawable<SkiaDrawingContext>>();
+                    highlighPaint = new HashSet<IDrawable<SkiaSharpDrawingContext>>();
                     highlightPaintTask.SetGeometries(highlighPaint);
                     highlightTasks.Add(highlightPaintTask, highlighPaint);
                 }
 
-                highlighPaint.Add(((IHighlightableGeometry<SkiaDrawingContext>) point.Point.PointContext.Visual).HighlightableGeometry);
+                highlighPaint.Add(((IVisualChartPoint<SkiaSharpDrawingContext>) point.Point.PointContext.Visual).HighlightableGeometry);
             }
 
             foreach (var point in foundPoints)
             {
-                var hlf = (point.Series as IDrawableSeries<SkiaDrawingContext>)?.HighlightFill;
-                var hls = (point.Series as IDrawableSeries<SkiaDrawingContext>)?.HighlightStroke;
+                var hlf = (point.Series as IDrawableSeries<SkiaSharpDrawingContext>)?.HighlightFill;
+                var hls = (point.Series as IDrawableSeries<SkiaSharpDrawingContext>)?.HighlightStroke;
 
                 if (hlf != null) highlightGeometries(point, hlf);
                 if (hls != null) highlightGeometries(point, hls);

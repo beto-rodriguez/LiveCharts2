@@ -62,6 +62,7 @@ namespace LiveChartsCore.Context
             var beta = Math.Atan(dy / dx) * (180 / Math.PI);
             if ((dx > 0 && dy < 0) || (dx > 0 && dy > 0)) beta += 180;
             if (dx < 0 && dy > 0) beta += 360;
+
             var r = Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2));
 
             return startAngle <= beta && endAngle >= beta && r < radius;

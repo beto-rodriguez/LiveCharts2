@@ -27,7 +27,7 @@ using System;
 namespace LiveChartsCore
 {
     public class StackedColumnSeries<TModel, TVisual, TDrawingContext> : CartesianSeries<TModel, TVisual, TDrawingContext>
-        where TVisual : class, ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
+        where TVisual : class, ISizedGeometry<TDrawingContext>, IVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
         private readonly static float pivot = 0;
@@ -41,7 +41,6 @@ namespace LiveChartsCore
 
         public int StackGroup { get => stackGroup; set => stackGroup = value; }
         public double MaxColumnWidth { get; set; } = 30;
-        public TransitionsSetterDelegate<ISizedGeometry<TDrawingContext>>? TransitionsSetter { get; set; }
 
         public override void Measure(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
@@ -73,8 +72,8 @@ namespace LiveChartsCore
                 uwm = uw / 2f;
             }
 
-            if (Fill != null) chart.Canvas.AddPaintTask(Fill);
-            if (Stroke != null) chart.Canvas.AddPaintTask(Stroke);
+            if (Fill != null) chart.Canvas.AddDrawableTask(Fill);
+            if (Stroke != null) chart.Canvas.AddDrawableTask(Stroke);
 
             var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
             var ts = TransitionsSetter ?? SetDefaultTransitions;

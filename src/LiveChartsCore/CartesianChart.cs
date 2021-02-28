@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -32,13 +33,16 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
     {
         private readonly ICartesianChartView<TDrawingContext> chartView;
-
+        private int nextSeries = 0;
         private IAxis<TDrawingContext>[] xAxes = new IAxis<TDrawingContext>[0];
         private IAxis<TDrawingContext>[] yAxes = new IAxis<TDrawingContext>[0];
         private ICartesianSeries<TDrawingContext>[] series = new ICartesianSeries<TDrawingContext>[0];
 
-        public CartesianChart(ICartesianChartView<TDrawingContext> view, Canvas<TDrawingContext> canvas)
-            : base(canvas)
+        public CartesianChart(
+            ICartesianChartView<TDrawingContext> view,
+            Action<LiveChartsSettings> defaultPlatformConfig,
+            Canvas<TDrawingContext> canvas)
+            : base(canvas, defaultPlatformConfig)
         {
             chartView = view;
         }
@@ -76,6 +80,12 @@ namespace LiveChartsCore
             // get seriesBounds
             foreach (var series in series)
             {
+                if (series.SeriesId == -1)
+                {
+                    series.SeriesId = nextSeries++;
+                    LiveCharts.CurrentSettings.ApplySeriesStyle(series);
+                }
+
                 var xAxis = xAxes[series.ScalesXAt];
                 var yAxis = yAxes[series.ScalesYAt];
 

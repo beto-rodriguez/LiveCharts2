@@ -8,23 +8,24 @@ using System.Windows.Forms;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms
 {
-    public partial class CartesianChart : UserControl, ICartesianChartView<SkiaDrawingContext>
+    public partial class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingContext>
     {
-        protected CartesianChart<SkiaDrawingContext> core;
-        private IEnumerable<ICartesianSeries<SkiaDrawingContext>> series = new List<ICartesianSeries<SkiaDrawingContext>>();
-        private IEnumerable<IAxis<SkiaDrawingContext>> xAxes = new List<IAxis<SkiaDrawingContext>>();
-        private IEnumerable<IAxis<SkiaDrawingContext>> yAxes = new List<IAxis<SkiaDrawingContext>>();
+        protected CartesianChart<SkiaSharpDrawingContext> core;
+        private IEnumerable<ICartesianSeries<SkiaSharpDrawingContext>> series = new List<ICartesianSeries<SkiaSharpDrawingContext>>();
+        private IEnumerable<IAxis<SkiaSharpDrawingContext>> xAxes = new List<IAxis<SkiaSharpDrawingContext>>();
+        private IEnumerable<IAxis<SkiaSharpDrawingContext>> yAxes = new List<IAxis<SkiaSharpDrawingContext>>();
         private Margin drawMargin;
 
         public CartesianChart()
         {
+            LiveChartsSkiaSharp.Register();
             InitializeComponent();
         }
 
-        CartesianChart<SkiaDrawingContext> ICartesianChartView<SkiaDrawingContext>.Core => core;
-        public Canvas<SkiaDrawingContext> CoreCanvas => motionCanvas.CanvasCore;
+        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => core;
+        public Canvas<SkiaSharpDrawingContext> CoreCanvas => motionCanvas.CanvasCore;
 
-        System.Drawing.SizeF IChartView<SkiaDrawingContext>.ControlSize
+        System.Drawing.SizeF IChartView<SkiaSharpDrawingContext>.ControlSize
         {
             get
             {
@@ -33,19 +34,19 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<ICartesianSeries<SkiaDrawingContext>> Series { get => series; set { series = value; OnDataChanged(); } }
+        public IEnumerable<ICartesianSeries<SkiaSharpDrawingContext>> Series { get => series; set { series = value; OnDataChanged(); } }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<IAxis<SkiaDrawingContext>> XAxes { get => xAxes; set { xAxes = value; OnDataChanged(); } }
+        public IEnumerable<IAxis<SkiaSharpDrawingContext>> XAxes { get => xAxes; set { xAxes = value; OnDataChanged(); } }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<IAxis<SkiaDrawingContext>> YAxes { get => yAxes; set { yAxes = value; OnDataChanged(); } }
+        public IEnumerable<IAxis<SkiaSharpDrawingContext>> YAxes { get => yAxes; set { yAxes = value; OnDataChanged(); } }
 
         public LegendPosition LegendPosition { get; set; }
 
         public LegendOrientation LegendOrientation { get; set; }
 
-        public IChartLegend<SkiaDrawingContext> Legend => null;
+        public IChartLegend<SkiaSharpDrawingContext> Legend => null;
 
         public Margin DrawMargin { get => drawMargin; set { drawMargin = value; OnDataChanged(); } }
 
@@ -57,13 +58,13 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         public TooltipFindingStrategy TooltipFindingStrategy { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public IChartTooltip<SkiaDrawingContext> Tooltip => throw new NotImplementedException();
+        public IChartTooltip<SkiaSharpDrawingContext> Tooltip => throw new NotImplementedException();
 
         public TooltipPosition TooltipPosition { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         private void OnLoaded(object sender, EventArgs e)
         {
-            core = new CartesianChart<SkiaDrawingContext>(this, motionCanvas.CanvasCore);
+            core = new CartesianChart<SkiaSharpDrawingContext>(this, motionCanvas.CanvasCore);
             core.Update();
         }
 

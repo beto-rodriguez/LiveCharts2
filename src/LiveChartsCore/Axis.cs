@@ -93,8 +93,8 @@ namespace LiveChartsCore
                 ? axisTick.Value
                 : step;
 
-            if (TextBrush != null) chart.Canvas.AddPaintTask(TextBrush);
-            if (SeparatorsBrush != null) chart.Canvas.AddPaintTask(SeparatorsBrush);
+            if (TextBrush != null) chart.Canvas.AddDrawableTask(TextBrush);
+            if (SeparatorsBrush != null) chart.Canvas.AddDrawableTask(SeparatorsBrush);
 
             var lyi = drawLocation.Y;
             var lyj = drawLocation.Y + drawMarginSize.Height;

@@ -27,13 +27,20 @@ namespace LiveChartsCore.Context
     public interface IDrawableSeries<TDrawingContext> : ISeries
          where TDrawingContext : DrawingContext
     {
-        IDrawableTask<TDrawingContext>? Stroke { get; }
-        IDrawableTask<TDrawingContext>? Fill { get; }
+        IDrawableTask<TDrawingContext>? Stroke { get; set; }
+        IDrawableTask<TDrawingContext>? Fill { get; set; }
         IDrawableTask<TDrawingContext>? HighlightStroke { get; }
         IDrawableTask<TDrawingContext>? HighlightFill { get; }
 
         PaintContext<TDrawingContext> DefaultPaintContext { get; }
 
         int GetStackGroup();
+    }
+
+    public interface IDrawableSeries<TVisual, TDrawingContext> : ISeries, IDrawableSeries<TDrawingContext>
+        where TDrawingContext : DrawingContext
+        where TVisual : IVisualChartPoint<TDrawingContext>
+    {
+        TransitionsSetterDelegate<TVisual>? TransitionsSetter { get; set; }
     }
 }

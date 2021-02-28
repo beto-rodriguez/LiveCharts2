@@ -33,7 +33,7 @@ namespace LiveChartsCore
 {
     public abstract class Series<TModel, TVisual, TDrawingContext> : ISeries, IDisposable
         where TDrawingContext : DrawingContext
-        where TVisual : class, IHighlightableGeometry<TDrawingContext>, new()
+        where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
     {
         private readonly CollectionDeepObserver<TModel> observerer;
         private object fetchedFor = new object();
@@ -87,6 +87,8 @@ namespace LiveChartsCore
         /// then the <see cref="ChartPoint"/> will be drawn as a point in our chart.
         /// </summary>
         public Action<IChartPoint, TModel, IChartPointContext>? Mapping { get; set; }
+
+        int ISeries.SeriesId { get; set; } = -1;
 
         /// <inheritdoc/>
         public virtual IEnumerable<IChartPoint<TVisual, TDrawingContext>> Fetch(IChart chart)
@@ -142,7 +144,7 @@ namespace LiveChartsCore
         {
             if (values == null) yield break;
 
-            var mapper = Mapping ?? LiveCharts.CurrentSettings.GetMapper<TModel>();
+            var mapper = Mapping ?? LiveCharts.CurrentSettings.GetMap<TModel>();
             var index = 0;
 
             if (isValueType)

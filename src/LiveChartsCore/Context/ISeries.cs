@@ -28,6 +28,8 @@ namespace LiveChartsCore.Context
 {
     public interface ISeries: IDisposable
     {
+        int SeriesId { get; set; }
+
         SeriesProperties SeriesProperties { get; }
 
         string? Name { get; set; }

@@ -14,9 +14,9 @@ namespace ViewModelsSamples
 {
     public class CartesianViewModel
     {
-        public ObservableCollection<ICartesianSeries<SkiaDrawingContext>> Series { get; set; }
-        public List<IAxis<SkiaDrawingContext>> YAxes { get; set; }
-        public List<IAxis<SkiaDrawingContext>> XAxes { get; set; }
+        public ObservableCollection<ICartesianSeries<SkiaSharpDrawingContext>> Series { get; set; }
+        public List<IAxis<SkiaSharpDrawingContext>> YAxes { get; set; }
+        public List<IAxis<SkiaSharpDrawingContext>> XAxes { get; set; }
 
         public CartesianViewModel()
         {
@@ -44,7 +44,7 @@ namespace ViewModelsSamples
             //    new[] { 0f, 0.5f, 1 },
             //    SKShaderTileMode.Repeat);
 
-            Series = new ObservableCollection<ICartesianSeries<SkiaDrawingContext>>
+            Series = new ObservableCollection<ICartesianSeries<SkiaSharpDrawingContext>>
             {
                 new ColumnSeries<double>
                 {
@@ -91,7 +91,7 @@ namespace ViewModelsSamples
                 //},
             };
 
-            YAxes = new List<IAxis<SkiaDrawingContext>>
+            YAxes = new List<IAxis<SkiaSharpDrawingContext>>
             {
                 new Axis
                 {
@@ -101,7 +101,7 @@ namespace ViewModelsSamples
                 }
             };
 
-            XAxes = new List<IAxis<SkiaDrawingContext>>
+            XAxes = new List<IAxis<SkiaSharpDrawingContext>>
             {
                 new Axis
                 {
@@ -116,51 +116,50 @@ namespace ViewModelsSamples
 
     public class PieViewModel
     {
-        public IList<IPieSeries<SkiaDrawingContext>> Series { get; set; }
+        public IList<IPieSeries<SkiaSharpDrawingContext>> Series { get; set; }
 
         public PieViewModel()
         {
             var pushout = 3;
 
-            LiveCharts.Configure(config =>
-            {
-                config.HasMap<Observable>(
-                    (point, model, context) => 
-                    {
-                        point.PrimaryValue = (float)model.Value;
-                        point.SecondaryValue = context.Index;
-                    });
-            });
+            LiveCharts.HasMapFor<Observable>(
+                (point, model, context) =>
+                {
+                    point.PrimaryValue = (float)model.Value;
+                    point.SecondaryValue = context.Index;
+                });
 
-            Series = new List<IPieSeries<SkiaDrawingContext>>
+            var hlb = new SolidColorPaintTask(new SKColor(40, 40, 40));
+
+            Series = new List<IPieSeries<SkiaSharpDrawingContext>>
             {
                 new PieSeries<Observable>
                 {
-                    Name = "pies",
+                    //Name = "pies",
                     Values = new[] { new Observable { Value = 2 } },
                     //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
-                    Fill = new SolidColorPaintTask(new SKColor(217, 47, 47)),
-                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
+                    //Fill = new SolidColorPaintTask(new SKColor(217, 47, 47)),
+                    HighlightFill = hlb,
                     PushOut = pushout,
                     //MaxOuterRadius = 1
                 },
                 new PieSeries<Observable>
                 {
-                    Name = "pies 2",
+                    //Name = "pies 2",
                     Values = new[] {  new Observable { Value = 2 }  },
                     //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
-                    Fill = new SolidColorPaintTask(SKColors.BlueViolet),
-                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
+                    //Fill = new SolidColorPaintTask(SKColors.BlueViolet),
+                    HighlightFill = hlb,
                     PushOut = pushout,
                     //MaxOuterRadius = .9
                 },
                 new PieSeries<Observable>
                 {
-                    Name = "pies 3",
+                    //Name = "pies 3",
                     Values = new[] {  new Observable { Value = 2 }  },
                     //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
-                    Fill = new SolidColorPaintTask(SKColors.DarkOliveGreen),
-                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
+                    //Fill = new SolidColorPaintTask(SKColors.DarkOliveGreen),
+                    HighlightFill = hlb,
                     PushOut = pushout,
                     //MaxOuterRadius = .8
                 },
@@ -169,8 +168,8 @@ namespace ViewModelsSamples
                     Name = "pies 4",
                     Values = new[] {  new Observable { Value = 2 } },
                     //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
-                    Fill = new SolidColorPaintTask(SKColors.Coral),
-                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
+                    //Fill = new SolidColorPaintTask(SKColors.Coral),
+                    HighlightFill = hlb,
                     PushOut = pushout,
                     //MaxOuterRadius = .7
                 },
@@ -179,8 +178,8 @@ namespace ViewModelsSamples
                     Name = "pies 5",
                     Values = new[] {  new Observable { Value = 2 }  },
                     //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
-                    Fill = new SolidColorPaintTask(SKColors.Cyan),
-                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
+                    //Fill = new SolidColorPaintTask(SKColors.Cyan),
+                    HighlightFill = hlb,
                     PushOut = pushout,
                     MaxOuterRadius = .8
                 },
@@ -189,8 +188,8 @@ namespace ViewModelsSamples
                     Name = "pies 5",
                     Values = new[] {  new Observable { Value = 2 }  },
                     //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
-                    Fill = new SolidColorPaintTask(SKColors.DeepPink),
-                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
+                    //Fill = new SolidColorPaintTask(SKColors.DeepPink),
+                    HighlightFill = hlb,
                     PushOut = pushout,
                     MaxOuterRadius = .8
                 }
@@ -201,10 +200,10 @@ namespace ViewModelsSamples
 
         public void Randomize()
         {
-            var r = new Random();
-            var values = ((PieSeries<Observable>)Series[r.Next(Series.Count)]).Values.ToArray();
-            var value = values[r.Next(values.Length)];
-            value.Value = r.NextDouble() * 5;
+            //var r = new Random();
+            //var values = ((PieSeries<Observable>)Series[r.Next(Series.Count)]).Values.ToArray();
+            //var value = values[r.Next(values.Length)];
+            //value.Value = r.NextDouble() * 5;
 
             //var a = r.NextDouble();
             //if (a < 0.1 && Series.Count > 2) Series.RemoveAt(0);

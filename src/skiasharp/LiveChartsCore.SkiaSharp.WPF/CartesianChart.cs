@@ -27,7 +27,7 @@ using System.Windows;
 
 namespace LiveChartsCore.SkiaSharpView.WPF
 {
-    public class CartesianChart : Chart, ICartesianChartView<SkiaDrawingContext>
+    public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext>
     {
         static CartesianChart()
         {
@@ -38,44 +38,44 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty SeriesProperty =
             DependencyProperty.Register(
-                nameof(Series), typeof(IEnumerable<ICartesianSeries<SkiaDrawingContext>>), 
-                typeof(CartesianChart), new PropertyMetadata(new List<ICartesianSeries<SkiaDrawingContext>>()));
+                nameof(Series), typeof(IEnumerable<ICartesianSeries<SkiaSharpDrawingContext>>), 
+                typeof(CartesianChart), new PropertyMetadata(new List<ICartesianSeries<SkiaSharpDrawingContext>>()));
 
         public static readonly DependencyProperty XAxesProperty =
             DependencyProperty.Register(
-                nameof(XAxes), typeof(IEnumerable<IAxis<SkiaDrawingContext>>),
-                typeof(CartesianChart), new PropertyMetadata(new List<IAxis<SkiaDrawingContext>> { new Axis() }));
+                nameof(XAxes), typeof(IEnumerable<IAxis<SkiaSharpDrawingContext>>),
+                typeof(CartesianChart), new PropertyMetadata(new List<IAxis<SkiaSharpDrawingContext>> { new Axis() }));
 
         public static readonly DependencyProperty YAxesProperty =
             DependencyProperty.Register(
-                nameof(YAxes), typeof(IEnumerable<IAxis<SkiaDrawingContext>>),
-                typeof(CartesianChart), new PropertyMetadata(new List<IAxis<SkiaDrawingContext>> { new Axis() }));
+                nameof(YAxes), typeof(IEnumerable<IAxis<SkiaSharpDrawingContext>>),
+                typeof(CartesianChart), new PropertyMetadata(new List<IAxis<SkiaSharpDrawingContext>> { new Axis() }));
 
-        CartesianChart<SkiaDrawingContext> ICartesianChartView<SkiaDrawingContext>.Core => (CartesianChart<SkiaDrawingContext>) core;
+        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>) core;
 
-        public IEnumerable<ICartesianSeries<SkiaDrawingContext>> Series
+        public IEnumerable<ICartesianSeries<SkiaSharpDrawingContext>> Series
         {
-            get { return (IEnumerable<ICartesianSeries<SkiaDrawingContext>>)GetValue(SeriesProperty); }
+            get { return (IEnumerable<ICartesianSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty); }
             set { SetValue(SeriesProperty, value); }
         }
 
-        public IEnumerable<IAxis<SkiaDrawingContext>> XAxes
+        public IEnumerable<IAxis<SkiaSharpDrawingContext>> XAxes
         {
-            get { return (IEnumerable<IAxis<SkiaDrawingContext>>)GetValue(XAxesProperty); }
+            get { return (IEnumerable<IAxis<SkiaSharpDrawingContext>>)GetValue(XAxesProperty); }
             set { SetValue(XAxesProperty, value); }
         }
 
-        public IEnumerable<IAxis<SkiaDrawingContext>> YAxes
+        public IEnumerable<IAxis<SkiaSharpDrawingContext>> YAxes
         {
-            get { return (IEnumerable<IAxis<SkiaDrawingContext>>)GetValue(YAxesProperty); }
+            get { return (IEnumerable<IAxis<SkiaSharpDrawingContext>>)GetValue(YAxesProperty); }
             set { SetValue(YAxesProperty, value); }
         }
 
         public override void InitializeCore()
         {
-            core = new CartesianChart<SkiaDrawingContext>(this, canvas.CanvasCore);
-            legend = Template.FindName("legend", this) as IChartLegend<SkiaDrawingContext>;
-            tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaDrawingContext>;
+            core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
+            tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
             core.Update();
         }
     }

@@ -25,9 +25,10 @@ using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore
 {
-    public abstract class DrawableSeries<TModel, TVisual, TDrawingContext> : Series<TModel, TVisual, TDrawingContext>
+    public abstract class DrawableSeries<TModel, TVisual, TDrawingContext> 
+        : Series<TModel, TVisual, TDrawingContext>, IDrawableSeries<TDrawingContext>, IDrawableSeries<TVisual, TDrawingContext>
         where TDrawingContext : DrawingContext
-        where TVisual : class, IHighlightableGeometry<TDrawingContext>, new()
+        where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
     {
         protected PaintContext<TDrawingContext> paintContext = new PaintContext<TDrawingContext>();
         private IDrawableTask<TDrawingContext>? stroke = null;
@@ -36,7 +37,9 @@ namespace LiveChartsCore
         private IDrawableTask<TDrawingContext>? highlightFill = null;
         private double legendShapeSize = 15;
 
-        public DrawableSeries(SeriesProperties properties) : base(properties) { }
+        public DrawableSeries(SeriesProperties properties) : base(properties)
+        {
+        }
 
         public IDrawableTask<TDrawingContext>? Stroke
         {
@@ -102,6 +105,8 @@ namespace LiveChartsCore
         public PaintContext<TDrawingContext> DefaultPaintContext => paintContext;
 
         public double LegendShapeSize { get => legendShapeSize; set => legendShapeSize = value; }
+
+        public TransitionsSetterDelegate<TVisual>? TransitionsSetter { get; set; }
 
         protected abstract void OnPaintContextChanged();
     }

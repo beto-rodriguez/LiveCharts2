@@ -20,27 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using SkiaSharp;
-
-namespace LiveChartsCore.SkiaSharpView.Drawing
+namespace LiveChartsCore.Drawing
 {
-    public class SkiaDrawingContext : DrawingContext
+    public interface IDoughnutVisualChartPoint<TDrawingContext>: IDoughnutGeometry<TDrawingContext>, IVisualChartPoint<TDrawingContext>
+        where TDrawingContext : DrawingContext
     {
-        public SkiaDrawingContext(SKImageInfo info, SKSurface surface, SKCanvas canvas)
-        {
-            Info = info;
-            Surface = surface;
-            Canvas = canvas;
-        }
-        public SKImageInfo Info { get; set; }
-        public SKSurface Surface { get; set; }
-        public SKCanvas Canvas { get; set; }
-        public SKPaint Paint { get; set; }
 
-        public override void ClearCanvas()
-        {
-            Canvas.Clear();
-        }
     }
 }

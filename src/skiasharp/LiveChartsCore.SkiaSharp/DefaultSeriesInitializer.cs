@@ -20,20 +20,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
+using LiveChartsCore.Context;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
+using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView
 {
-    public class LineSeries<TModel>: LineSeries<TModel, CircleGeometry>
+    public class DefaultSeriesInitializer : SeriesInitializer<SkiaSharpDrawingContext>
     {
+        public override void ApplyDefaultsTo(int nextSeriesCount, Color nextColor, IDrawableSeries<SkiaSharpDrawingContext> series)
+        {
+            if (series.Name == null) series.Name = $"Series {nextSeriesCount + 1}";
 
-    }
+            if ((series.SeriesProperties & SeriesProperties.PieSeries) == SeriesProperties.PieSeries)
+            {
+                // pie special case...
+                var pieSeries = (IPieSeries<SkiaSharpDrawingContext>)series;
 
-    public class LineSeries<TModel, TVisual> 
-        : LineSeries<TModel, TVisual, SkiaSharpDrawingContext, PathGeometry, LineSegment, CubicBezierSegment, MoveToPathCommand, SKPath>
-       where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
-    {
+                if (pieSeries.Fill == null) pieSeries.Fill = new SolidColorPaintTask(ColorAsSKColor(nextColor));
+                if (pieSeries.Stroke == null) pieSeries.Stroke = null;
+                 pieSeries.PushOut = 8;
+
+                return;
+            }
+
+            series.Fill = new SolidColorPaintTask(ColorAsSKColor(nextColor, (byte)(0.7 * 255)));
+            series.Stroke = new SolidColorPaintTask(ColorAsSKColor(nextColor));
+        }
+
+        private SKColor ColorAsSKColor(Color color, byte? alphaOverrides = null)
+        {
+            return new SKColor(color.R, color.G, color.B, alphaOverrides ?? color.A);
+        }
     }
 }
+

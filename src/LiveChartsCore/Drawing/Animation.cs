@@ -93,7 +93,7 @@ namespace LiveChartsCore.Drawing
 
         public Animation WithDuration(TimeSpan duration)
         {
-            this.duration = (long)duration.TotalSeconds;
+            this.duration = (long)duration.TotalMilliseconds;
             return this;
         }
 

@@ -24,8 +24,8 @@ using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Context
 {
-    public class LineSeriesVisualPoint<TDrawingContext, TVisual, TGeometryPath, TBezierSegment, TPathArgs> : IHighlightableGeometry<TDrawingContext>
-        where TVisual: ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new ()
+    public class LineSeriesVisualPoint<TDrawingContext, TVisual, TGeometryPath, TBezierSegment, TPathArgs> : IVisualChartPoint<TDrawingContext>
+        where TVisual: ISizedGeometry<TDrawingContext>, IVisualChartPoint<TDrawingContext>, new ()
         where TGeometryPath: IPathGeometry<TDrawingContext, TPathArgs>
         where TBezierSegment : IBezierSegment<TPathArgs>, new()
         where TDrawingContext : DrawingContext

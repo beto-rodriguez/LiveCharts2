@@ -26,7 +26,7 @@ namespace LiveChartsCore.Context
 {
     public class ChartPoint<TModel, TVisual, TDrawingContext> : IChartPoint<TVisual, TDrawingContext>, IChartPoint
         where TDrawingContext : DrawingContext
-        where TVisual : class, IHighlightableGeometry<TDrawingContext>, new()
+        where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
     {
         private readonly ChartPointContext<TVisual, TDrawingContext> pointContext = new ChartPointContext<TVisual, TDrawingContext>();
 

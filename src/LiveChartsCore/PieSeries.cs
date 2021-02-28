@@ -26,9 +26,10 @@ using System;
 
 namespace LiveChartsCore
 {
-    public class PieSeries<TModel, TVisual, TDrawingContext> : DrawableSeries<TModel, TVisual, TDrawingContext>, IDisposable, IPieSeries<TDrawingContext>
+    public class PieSeries<TModel, TVisual, TDrawingContext> 
+        : DrawableSeries<TModel, TVisual, TDrawingContext>, IDisposable, IPieSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
-        where TVisual : class, IDoughnutGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
+        where TVisual : class, IDoughnutVisualChartPoint<TDrawingContext>, new()
     {
         public PieSeries() : base(SeriesProperties.PieSeries | SeriesProperties.Stacked) { }
 
@@ -36,8 +37,6 @@ namespace LiveChartsCore
         public double PushOut { get; set; } = 5; // pixels
         public double InnerRadius { get; set; } = 0; // pixels
         public double MaxOuterRadius { get; set; } = 1; // 0 - 1
-
-        public TransitionsSetterDelegate<IDoughnutGeometry<TDrawingContext>>? TransitionsSetter { get; set; }
 
         public void Measure(PieChart<TDrawingContext> chart)
         {
@@ -52,8 +51,8 @@ namespace LiveChartsCore
             minDimension = minDimension - (Stroke?.StrokeWidth ?? 0) * 2 -  maxPushout *2;
             minDimension *= maxOuterRadius;
 
-            if (Fill != null) chart.Canvas.AddPaintTask(Fill);
-            if (Stroke != null) chart.Canvas.AddPaintTask(Stroke);
+            if (Fill != null) chart.Canvas.AddDrawableTask(Fill);
+            if (Stroke != null) chart.Canvas.AddDrawableTask(Stroke);
 
             var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
             var ts = TransitionsSetter ?? SetDefaultTransitions;
@@ -116,6 +115,9 @@ namespace LiveChartsCore
 
                 stackedValue += point.PrimaryValue;
             }
+
+            if (HighlightFill != null) chart.Canvas.AddDrawableTask(HighlightFill);
+            if (HighlightStroke != null) chart.Canvas.AddDrawableTask(HighlightStroke);
         }
 
         public DimensinalBounds GetBounds(PieChart<TDrawingContext> chart)

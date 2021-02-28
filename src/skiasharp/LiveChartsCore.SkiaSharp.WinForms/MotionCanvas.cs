@@ -10,7 +10,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     public partial class MotionCanvas : UserControl
     {
         private bool isDrawingLoopRunning = false;
-        private Canvas<SkiaDrawingContext> canvasCore = new Canvas<SkiaDrawingContext>();
+        private Canvas<SkiaSharpDrawingContext> canvasCore = new Canvas<SkiaSharpDrawingContext>();
         private double framesPerSecond = 90;
 
         public MotionCanvas()
@@ -21,14 +21,14 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         public double FramesPerSecond { get => framesPerSecond; set => framesPerSecond = value; }
 
-        public Canvas<SkiaDrawingContext> CanvasCore => canvasCore;
+        public Canvas<SkiaSharpDrawingContext> CanvasCore => canvasCore;
 
         private void SkControl_PaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
-            canvasCore.DrawFrame(new SkiaDrawingContext(e.Info, e.Surface, e.Surface.Canvas));
+            canvasCore.DrawFrame(new SkiaSharpDrawingContext(e.Info, e.Surface, e.Surface.Canvas));
         }
 
-        private void CanvasCore_Invalidated(Canvas<SkiaDrawingContext> sender)
+        private void CanvasCore_Invalidated(Canvas<SkiaSharpDrawingContext> sender)
         {
             RunDrawingLoop();
         }

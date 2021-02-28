@@ -27,16 +27,18 @@ namespace LiveChartsCore.Context
     [Flags]
     public enum SeriesProperties
     {
-        CartesianSeries = 1 << 0,
-        PieSeries = 1 << 1,
+        AllSeries = 0,
 
+        CartesianSeries = 1 << 1,
         Bar = 1 << 2,
         Line = 1 << 3,
         Scatter = 1 << 4,
 
-        Stacked = 1 << 5,
+        PieSeries = 1 << 5,
 
-        VerticalOrientation = 1 << 6,
-        HorizontalOrientation = 1 << 7
+        Stacked = 1 << 6,
+
+        VerticalOrientation = 1 << 7,
+        HorizontalOrientation = 1 << 8
     }
 }

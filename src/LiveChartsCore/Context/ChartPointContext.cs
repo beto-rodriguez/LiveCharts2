@@ -29,7 +29,7 @@ namespace LiveChartsCore.Context
     /// </summary>
     public class ChartPointContext<TVisual, TDrawingContext>: IChartPointContext
         where TDrawingContext : DrawingContext
-        where TVisual : class, IHighlightableGeometry<TDrawingContext>, new()
+        where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
     {
         /// <summary>
         /// Gets the position of the point the collection that was used when the point was drawn.

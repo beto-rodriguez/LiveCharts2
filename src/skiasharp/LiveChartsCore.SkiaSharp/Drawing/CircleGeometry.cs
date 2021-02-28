@@ -31,7 +31,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
             matchDimensions = true;
         }
 
-        public override void OnDraw(SkiaDrawingContext context, SKPaint paint)
+        public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
             var rx = Width / 2f;
             context.Canvas.DrawCircle(X + rx, Y + rx, rx, paint);

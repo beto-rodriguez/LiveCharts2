@@ -32,7 +32,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     /// <summary>
     /// Interaction logic for DefaultLegend.xaml
     /// </summary>
-    public partial class DefaultLegend : UserControl, IChartLegend<SkiaDrawingContext>
+    public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
     {
         public DefaultLegend()
         {
@@ -41,8 +41,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty SeriesProperty =
             DependencyProperty.Register(
-                nameof(Series), typeof(IEnumerable<IDrawableSeries<SkiaDrawingContext>>),
-                typeof(DefaultLegend), new PropertyMetadata(new List<IDrawableSeries<SkiaDrawingContext>>()));
+                nameof(Series), typeof(IEnumerable<IDrawableSeries<SkiaSharpDrawingContext>>),
+                typeof(DefaultLegend), new PropertyMetadata(new List<IDrawableSeries<SkiaSharpDrawingContext>>()));
 
         public static readonly DependencyProperty OrientationProperty =
             DependencyProperty.Register(
@@ -56,9 +56,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
            DependencyProperty.Register(
                nameof(TextColor), typeof(SolidColorBrush), typeof(DefaultLegend), new PropertyMetadata(new SolidColorBrush(Color.FromRgb(35, 35, 35))));
 
-        public IEnumerable<IDrawableSeries<SkiaDrawingContext>> Series
+        public IEnumerable<IDrawableSeries<SkiaSharpDrawingContext>> Series
         {
-            get { return (IEnumerable<IDrawableSeries<SkiaDrawingContext>>)GetValue(SeriesProperty); }
+            get { return (IEnumerable<IDrawableSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty); }
             set { SetValue(SeriesProperty, value); }
         }
 
@@ -80,7 +80,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set { SetValue(TextColorProperty, value); }
         }
 
-        void IChartLegend<SkiaDrawingContext>.Draw(Chart<SkiaDrawingContext> chart)
+        void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
         {
             var series = chart.DrawableSeries;
             var legendOrientation = chart.LegendOrientation;

@@ -27,7 +27,7 @@ using System;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing
 {
-    public class DoughnutGeometry : Geometry, IDoughnutGeometry<SkiaDrawingContext>
+    public class DoughnutGeometry : Geometry, IDoughnutGeometry<SkiaSharpDrawingContext>, IDoughnutVisualChartPoint<SkiaSharpDrawingContext>
     {
         private readonly FloatMotionProperty cxProperty;
         private readonly FloatMotionProperty cyProperty;
@@ -59,12 +59,12 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
         public float PushOut { get => pushoutProperty.GetMovement(this); set => pushoutProperty.SetMovement(value, this); }
         public float InnerRadius { get => innerRadiusProperty.GetMovement(this); set => innerRadiusProperty.SetMovement(value, this); }
 
-        public override SKSize Measure(SkiaDrawingContext context, SKPaint paint)
+        public override SKSize Measure(SkiaSharpDrawingContext context, SKPaint paint)
         {
             return new SKSize(Width, Height);
         }
 
-        public override void OnDraw(SkiaDrawingContext context, SKPaint paint)
+        public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
             SKPath path = new SKPath();
 

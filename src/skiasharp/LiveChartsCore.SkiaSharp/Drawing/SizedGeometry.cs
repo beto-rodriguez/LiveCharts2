@@ -26,7 +26,7 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing
 {
-    public abstract class SizedGeometry : Geometry, ISizedGeometry<SkiaDrawingContext>
+    public abstract class SizedGeometry : Geometry, ISizedVisualChartPoint<SkiaSharpDrawingContext>
     {
         protected readonly FloatMotionProperty width;
         protected readonly FloatMotionProperty height;
@@ -58,7 +58,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
             }
         }
 
-        public override SKSize Measure(SkiaDrawingContext context, SKPaint paint)
+        public override SKSize Measure(SkiaSharpDrawingContext context, SKPaint paint)
         {
             return new SKSize(Width, Height);
         }

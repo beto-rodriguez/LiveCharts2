@@ -27,6 +27,10 @@ namespace LiveChartsCore.Context
     public interface IPieSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        double PushOut { get; set; }
+        double InnerRadius { get; set; }
+        double MaxOuterRadius { get; set; }
+
         DimensinalBounds GetBounds(PieChart<TDrawingContext> chart);
 
         void Measure(PieChart<TDrawingContext> chart);

@@ -81,7 +81,7 @@ namespace LiveChartsCore.Drawing
             Invalidated?.Invoke(this);
         }
 
-        public void AddPaintTask(IDrawableTask<TDrawingContext> task)
+        public void AddDrawableTask(IDrawableTask<TDrawingContext> task)
         {
             paintTasks.Add(task);
             Invalidate();

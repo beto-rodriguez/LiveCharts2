@@ -20,36 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
-using SkiaSharp;
+using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing
+namespace LiveChartsCore.SkiaSharpView
 {
-    public class LineGeometry : Geometry, ILineGeometry<SkiaSharpDrawingContext>
+    public static class LiveChartsSkiaSharp
     {
-        private readonly FloatMotionProperty x1;
-        private readonly FloatMotionProperty y1;
+        public static Action<LiveChartsSettings> DefaultPlatformBuilder => (LiveChartsSettings settings) => settings.AddSkiaSharp();
 
-        public LineGeometry()
+        public static LiveChartsSettings AddSkiaSharp(this LiveChartsSettings settings, Action<StyleBuilder<SkiaSharpDrawingContext>> builder = null)
         {
-            x1 = RegisterMotionProperty(new FloatMotionProperty(nameof(X1), 0f));
-            y1 = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
-        }
+            return settings.AddDefaultStyles((StyleBuilder<SkiaSharpDrawingContext> styleBuilder) =>
+            {
+                // default settings
+                styleBuilder
+                    .UseColors(ColorPacks.MaterialDesign500)
+                    .UseSeriesInitializer(new DefaultSeriesInitializer());
 
-        public float X1 { get => x1.GetMovement(this); set => x1.SetMovement(value, this); }
-
-        public float Y1 { get => y1.GetMovement(this); set => y1.SetMovement(value, this); }
-
-        public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
-        {
-            context.Canvas.DrawLine(X, Y, X1, Y1, paint);
-        }
-
-        public override SKSize Measure(SkiaSharpDrawingContext context, SKPaint paint)
-        {
-            return new SKSize(Math.Abs(X1 - X), Math.Abs(Y1 - Y));
+                // user defined settings
+                builder?.Invoke(styleBuilder);
+            });
         }
     }
 }
+

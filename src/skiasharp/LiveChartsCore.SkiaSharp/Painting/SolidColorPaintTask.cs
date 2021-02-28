@@ -87,7 +87,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             set => shaderTransition.SetMovement(value, this);
         }
 
-        public override IDrawableTask<SkiaDrawingContext> CloneTask()
+        public override IDrawableTask<SkiaSharpDrawingContext> CloneTask()
         {
             var clone = new SolidColorPaintTask
             {
@@ -105,7 +105,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             return clone;
         }
 
-        public override void InitializeTask(SkiaDrawingContext drawingContext)
+        public override void InitializeTask(SkiaSharpDrawingContext drawingContext)
         {
             if (skiaPaint == null) skiaPaint = new SKPaint();
 

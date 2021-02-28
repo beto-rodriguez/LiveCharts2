@@ -35,7 +35,7 @@ namespace LiveChartsCore.Context
 
     public interface IChartPoint<TVisual, TDrawingContext>: IChartPoint
         where TDrawingContext : DrawingContext
-        where TVisual : class, IHighlightableGeometry<TDrawingContext>, new()
+        where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
     {
         new float PrimaryValue { get; set; }
 

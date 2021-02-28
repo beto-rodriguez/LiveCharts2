@@ -27,7 +27,7 @@ using System.Windows;
 
 namespace LiveChartsCore.SkiaSharpView.WPF
 {
-    public class PieChart : Chart, IPieChartView<SkiaDrawingContext>
+    public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     {
         static PieChart()
         {
@@ -35,23 +35,23 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         }
 
         public PieChart() { }
-        PieChart<SkiaDrawingContext> IPieChartView<SkiaDrawingContext>.Core => (PieChart<SkiaDrawingContext>)core;
+        PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => (PieChart<SkiaSharpDrawingContext>)core;
 
         public static readonly DependencyProperty SeriesProperty =
             DependencyProperty.Register(
-                nameof(Series), typeof(IEnumerable<IPieSeries<SkiaDrawingContext>>), typeof(PieChart), new PropertyMetadata(null));
+                nameof(Series), typeof(IEnumerable<IPieSeries<SkiaSharpDrawingContext>>), typeof(PieChart), new PropertyMetadata(null));
 
-        public IEnumerable<IPieSeries<SkiaDrawingContext>> Series
+        public IEnumerable<IPieSeries<SkiaSharpDrawingContext>> Series
         {
-            get { return (IEnumerable<IPieSeries<SkiaDrawingContext>>)GetValue(SeriesProperty); }
+            get { return (IEnumerable<IPieSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty); }
             set { SetValue(SeriesProperty, value); }
         }
 
         public override void InitializeCore()
         {
-            core = new PieChart<SkiaDrawingContext>(this, canvas.CanvasCore);
-            legend = Template.FindName("legend", this) as IChartLegend<SkiaDrawingContext>;
-            tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaDrawingContext>;
+            core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
+            tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
             core.Update();
         }
     }

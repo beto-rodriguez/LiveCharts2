@@ -33,13 +33,13 @@ using System.Windows.Media;
 
 namespace LiveChartsCore.SkiaSharpView.WPF
 {
-    public abstract class Chart: Control, IChartView<SkiaDrawingContext>
+    public abstract class Chart: Control, IChartView<SkiaSharpDrawingContext>
     {
-        protected Chart<SkiaDrawingContext> core;
+        protected Chart<SkiaSharpDrawingContext> core;
         protected NaturalGeometriesCanvas canvas;
 
-        protected IChartLegend<SkiaDrawingContext> legend;
-        protected IChartTooltip<SkiaDrawingContext> tooltip;
+        protected IChartLegend<SkiaSharpDrawingContext> legend;
+        protected IChartTooltip<SkiaSharpDrawingContext> tooltip;
         private readonly ActionThrottler mouseMoveThrottler;
         private PointF mousePosition = new PointF();
 
@@ -51,7 +51,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             mouseMoveThrottler.Unlocked += MouseMoveThrottlerUnlocked;
         }
 
-        SizeF IChartView<SkiaDrawingContext>.ControlSize
+        SizeF IChartView<SkiaSharpDrawingContext>.ControlSize
         {
             get
             {
@@ -62,7 +62,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             }
         }
 
-        public Canvas<SkiaDrawingContext> CoreCanvas => canvas.CanvasCore;
+        public Canvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
 
         public LegendPosition LegendPosition { get; set; }
         public LegendOrientation LegendOrientation { get; set; }
@@ -72,7 +72,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         public FontWeight? LegendFontWeight { get; set; }
         public FontStretch? LegendFontStretch { get; set; }
         public FontStyle? LegendFontStyle { get; set; }
-        public IChartLegend<SkiaDrawingContext> Legend => legend;
+        public IChartLegend<SkiaSharpDrawingContext> Legend => legend;
         public Margin DrawMargin { get; set; }
         public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(500);
         public Func<float, float> EasingFunction { get; set; } = EasingFunctions.Lineal;
@@ -85,7 +85,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         public FontStyle? TooltipFontStyle { get; set; }
         public TooltipPosition TooltipPosition { get; set; }
         public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
-        public IChartTooltip<SkiaDrawingContext> Tooltip => tooltip;
+        public IChartTooltip<SkiaSharpDrawingContext> Tooltip => tooltip;
 
         public abstract void InitializeCore();
 

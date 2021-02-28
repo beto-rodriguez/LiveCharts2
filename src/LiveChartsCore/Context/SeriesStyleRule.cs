@@ -20,20 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
-{
-    // this is the interface I'm am not completely sure about this one...
-    // i don't like it so much...
+using LiveChartsCore.Drawing;
+using System;
 
-    /// <summary>
-    /// Defines an object that contains a <see cref="Geometry"/> to highlight when the point requires so.
-    /// </summary>
-    public interface IHighlightableGeometry<TDrawingContext>
+namespace LiveChartsCore.Context
+{
+    public class SeriesStyleRule<TVisual, TDrawingContext>
         where TDrawingContext : DrawingContext
+        where TVisual : IVisualChartPoint<TDrawingContext>
     {
-        /// <summary>
-        /// Gets the <see cref="Geometry"/> what we need to highlight when te point requires so.
-        /// </summary>
-        IDrawable<TDrawingContext>? HighlightableGeometry { get; }
+        public SeriesProperties SeriesProperties { get; set; }
+
+        public Action<IDrawableSeries<TVisual, TDrawingContext>>? Rule { get; set; }
     }
 }

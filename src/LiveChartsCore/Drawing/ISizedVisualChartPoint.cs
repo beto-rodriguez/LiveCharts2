@@ -20,36 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
-using SkiaSharp;
-using System;
-
-namespace LiveChartsCore.SkiaSharpView.Drawing
+namespace LiveChartsCore.Drawing
 {
-    public class LineGeometry : Geometry, ILineGeometry<SkiaSharpDrawingContext>
+    public interface ISizedVisualChartPoint<TDrawingContext>: ISizedGeometry<TDrawingContext>, IVisualChartPoint<TDrawingContext>
+        where TDrawingContext : DrawingContext
     {
-        private readonly FloatMotionProperty x1;
-        private readonly FloatMotionProperty y1;
 
-        public LineGeometry()
-        {
-            x1 = RegisterMotionProperty(new FloatMotionProperty(nameof(X1), 0f));
-            y1 = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
-        }
-
-        public float X1 { get => x1.GetMovement(this); set => x1.SetMovement(value, this); }
-
-        public float Y1 { get => y1.GetMovement(this); set => y1.SetMovement(value, this); }
-
-        public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
-        {
-            context.Canvas.DrawLine(X, Y, X1, Y1, paint);
-        }
-
-        public override SKSize Measure(SkiaSharpDrawingContext context, SKPaint paint)
-        {
-            return new SKSize(Math.Abs(X1 - X), Math.Abs(Y1 - Y));
-        }
     }
 }

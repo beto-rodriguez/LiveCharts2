@@ -25,7 +25,7 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing
 {
-    public class TextGeometry : Geometry, ITextGeometry<SkiaDrawingContext>
+    public class TextGeometry : Geometry, ITextGeometry<SkiaSharpDrawingContext>
     {
         private string text;
 
@@ -39,19 +39,19 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
 
         public string Text { get => text; set => text = value; }
 
-        public override void OnDraw(SkiaDrawingContext context, SKPaint paint)
+        public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
             context.Canvas.DrawText(text ?? "", GetPosition(context, paint), paint);
         }
 
-        public override SKSize Measure(SkiaDrawingContext context, SKPaint paint)
+        public override SKSize Measure(SkiaSharpDrawingContext context, SKPaint paint)
         {
             var bounds = new SKRect();
             paint.MeasureText(text, ref bounds);
             return bounds.Size;
         }
 
-        public override SKPoint GetPosition(SkiaDrawingContext context, SKPaint paint)
+        public override SKPoint GetPosition(SkiaSharpDrawingContext context, SKPaint paint)
         {
             var size = Measure(context, paint);
             float dx = 0f, dy = 0f;

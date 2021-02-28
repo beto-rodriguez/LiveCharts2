@@ -30,9 +30,8 @@ namespace LiveChartsCore.SkiaSharpView
 
     }
 
-    public class PieSeries<TModel, TVisual>: PieSeries<TModel, TVisual, SkiaDrawingContext>
-        where TVisual : class, IDoughnutGeometry<SkiaDrawingContext>, IHighlightableGeometry<SkiaDrawingContext>, new()
+    public class PieSeries<TModel, TVisual>: PieSeries<TModel, TVisual, SkiaSharpDrawingContext>
+        where TVisual : class, IDoughnutVisualChartPoint<SkiaSharpDrawingContext>, new()
     {
-
     }
 }

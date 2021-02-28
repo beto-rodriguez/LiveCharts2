@@ -33,12 +33,13 @@ using Xamarin.Forms.Xaml;
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class CartesianChart : ContentView, ICartesianChartView<SkiaDrawingContext>
+    public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharpDrawingContext>
     {
-        protected CartesianChart<SkiaDrawingContext> core;
+        protected CartesianChart<SkiaSharpDrawingContext> core;
 
         public CartesianChart()
         {
+            LiveChartsSkiaSharp.Register();
             InitializeComponent();
 
             if (!(FindByName("canvas") is NaturalVisualCanvas canvas))
@@ -46,16 +47,16 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     $"SkiaElement not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
                     $"If you override the template please add an {nameof(NaturalVisualCanvas)} to the template and name it 'canvas'");
 
-            core = new CartesianChart<SkiaDrawingContext>(this, canvas.CanvasCore);
+            core = new CartesianChart<SkiaSharpDrawingContext>(this, canvas.CanvasCore);
             core.Update();
 
             SizeChanged += CartesianChart_SizeChanged;
         }
 
-        CartesianChart<SkiaDrawingContext> ICartesianChartView<SkiaDrawingContext>.Core => core;
-        public Canvas<SkiaDrawingContext> CoreCanvas => canvas.CanvasCore;
+        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => core;
+        public Canvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
 
-        System.Drawing.SizeF ICartesianChartView<SkiaDrawingContext>.ControlSize
+        System.Drawing.SizeF ICartesianChartView<SkiaSharpDrawingContext>.ControlSize
         {
             get
             {
@@ -73,34 +74,34 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public static readonly BindableProperty SeriesProperty =
             BindableProperty.Create(
-                nameof(Series), typeof(IEnumerable<ICartesianSeries<SkiaDrawingContext>>), typeof(CartesianChart),
-                new List<ICartesianSeries<SkiaDrawingContext>>(), BindingMode.Default, null);
+                nameof(Series), typeof(IEnumerable<ICartesianSeries<SkiaSharpDrawingContext>>), typeof(CartesianChart),
+                new List<ICartesianSeries<SkiaSharpDrawingContext>>(), BindingMode.Default, null);
 
         public static readonly BindableProperty XAxesProperty =
             BindableProperty.Create(
-                nameof(XAxes), typeof(IEnumerable<IAxis<SkiaDrawingContext>>),
-                typeof(CartesianChart), new List<IAxis<SkiaDrawingContext>>(), BindingMode.Default, null);
+                nameof(XAxes), typeof(IEnumerable<IAxis<SkiaSharpDrawingContext>>),
+                typeof(CartesianChart), new List<IAxis<SkiaSharpDrawingContext>>(), BindingMode.Default, null);
 
         public static readonly BindableProperty YAxesProperty =
             BindableProperty.Create(
-                nameof(YAxes), typeof(IEnumerable<IAxis<SkiaDrawingContext>>),
-                typeof(CartesianChart), new List<IAxis<SkiaDrawingContext>>(), BindingMode.Default, null);
+                nameof(YAxes), typeof(IEnumerable<IAxis<SkiaSharpDrawingContext>>),
+                typeof(CartesianChart), new List<IAxis<SkiaSharpDrawingContext>>(), BindingMode.Default, null);
 
-        public IEnumerable<ICartesianSeries<SkiaDrawingContext>> Series
+        public IEnumerable<ICartesianSeries<SkiaSharpDrawingContext>> Series
         {
-            get { return (IEnumerable<ICartesianSeries<SkiaDrawingContext>>)GetValue(SeriesProperty); }
+            get { return (IEnumerable<ICartesianSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty); }
             set { SetValue(SeriesProperty, value); }
         }
 
-        public IEnumerable<IAxis<SkiaDrawingContext>> XAxes
+        public IEnumerable<IAxis<SkiaSharpDrawingContext>> XAxes
         {
-            get { return (IEnumerable<IAxis<SkiaDrawingContext>>)GetValue(XAxesProperty); }
+            get { return (IEnumerable<IAxis<SkiaSharpDrawingContext>>)GetValue(XAxesProperty); }
             set { SetValue(XAxesProperty, value); }
         }
 
-        public IEnumerable<IAxis<SkiaDrawingContext>> YAxes
+        public IEnumerable<IAxis<SkiaSharpDrawingContext>> YAxes
         {
-            get { return (IEnumerable<IAxis<SkiaDrawingContext>>)GetValue(YAxesProperty); }
+            get { return (IEnumerable<IAxis<SkiaSharpDrawingContext>>)GetValue(YAxesProperty); }
             set { SetValue(YAxesProperty, value); }
         }
 
@@ -108,7 +109,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public LegendOrientation LegendOrientation { get; set; }
 
-        public IChartLegend<SkiaDrawingContext> Legend => null;
+        public IChartLegend<SkiaSharpDrawingContext> Legend => null;
 
         public Margin DrawMargin { get; set; }
 
@@ -118,7 +119,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
-        public IChartTooltip<SkiaDrawingContext> Tooltip => null;
+        public IChartTooltip<SkiaSharpDrawingContext> Tooltip => null;
 
         public TooltipPosition TooltipPosition { get; set; }
 
