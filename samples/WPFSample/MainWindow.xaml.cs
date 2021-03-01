@@ -30,7 +30,7 @@ namespace WPFSample
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                viewModel.Randomize();
+                viewModel?.Randomize();
             });
         }
     }

@@ -32,6 +32,8 @@ namespace LiveChartsCore
     public abstract class SeriesInitializer<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        public abstract void ApplyDefaultsTo(int nextSeriesCount, Color nextColor, IDrawableSeries<TDrawingContext> series);
+        public abstract void ConstructSeries(IDrawableSeries<TDrawingContext> series);
+
+        public abstract void ResolveDefaults(Color color, IDrawableSeries<TDrawingContext> series);
     }
 }

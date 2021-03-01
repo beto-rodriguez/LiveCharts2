@@ -33,5 +33,10 @@ namespace LiveChartsCore.SkiaSharpView
     public class ScatterSeries<TModel, TVisual>: ScatterSeries<TModel, TVisual, SkiaSharpDrawingContext>
         where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
     {
+        public ScatterSeries()
+        {
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSK.DefaultPlatformBuilder);
+            LiveCharts.CurrentSettings.ConstructSeries(this);
+        }
     }
 }

@@ -21,36 +21,14 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using System;
 
 namespace LiveChartsCore.Context
 {
-    public class AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveTo, TPathContext>
-        where TGeometryPath : IPathGeometry<TDrawingContext, TPathContext>, new()
-        where TLineSegment : ILinePathSegment<TPathContext>, new()
-        where TMoveTo : IMoveToPathCommand<TPathContext>, new()
-        where TDrawingContext : DrawingContext
+    public class EmptyDrawingContext : DrawingContext
     {
-        public IPathGeometry<TDrawingContext, TPathContext> Path { get; set; } = new TGeometryPath();
-
-        public IMoveToPathCommand<TPathContext> StartPoint { get; set; } = new TMoveTo();
-
-        public ILinePathSegment<TPathContext> StartSegment { get; set; } = new TLineSegment();
-
-        public ILinePathSegment<TPathContext> EndSegment { get; set; } = new TLineSegment();
-
-        public bool IsInitialized { get; set; }
-
-        public bool Initialize(
-            Action<AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveTo, TPathContext>, Animation> transitionSetter,
-            Animation defaultAnimation)
+        public override void ClearCanvas()
         {
-            if (IsInitialized) return false;
-
-            IsInitialized = true;
-            transitionSetter(this, defaultAnimation);
-
-            return true;
+            throw new System.NotImplementedException();
         }
     }
 }

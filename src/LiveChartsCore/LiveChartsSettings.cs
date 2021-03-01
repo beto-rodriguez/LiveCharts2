@@ -93,10 +93,10 @@ namespace LiveChartsCore
             return this;
         }
 
-        internal void ApplySeriesStyle<TDrawingContext>(IDrawableSeries<TDrawingContext> series)
+        public void ConstructSeries<TDrawingContext>(IDrawableSeries<TDrawingContext> series)
             where TDrawingContext : DrawingContext
         {
-            if (!seriesStyleBuilder.TryGetValue(typeof(TDrawingContext), out var stylesBuilder)) 
+            if (!seriesStyleBuilder.TryGetValue(typeof(TDrawingContext), out var stylesBuilder))
             {
 #if DEBUG
                 Trace.WriteLine(nameof(TDrawingContext) + " is not registered, the style was not applied.");
@@ -105,7 +105,22 @@ namespace LiveChartsCore
             }
 
             var sb = (StyleBuilder<TDrawingContext>)stylesBuilder;
-            sb.SetNextNameFillAndStroke(series);
+            sb.ConstructSeries(series);
+        }
+
+        public void ResolveSeriesDefaults<TDrawingContext>(IDrawableSeries<TDrawingContext> series)
+            where TDrawingContext : DrawingContext
+        {
+            if (!seriesStyleBuilder.TryGetValue(typeof(TDrawingContext), out var stylesBuilder))
+            {
+#if DEBUG
+                Trace.WriteLine(nameof(TDrawingContext) + " is not registered, the style was not applied.");
+#endif
+                return;
+            }
+
+            var sb = (StyleBuilder<TDrawingContext>)stylesBuilder;
+            sb.ResolveDefaults(series);
         }
 
         /// <summary>

@@ -32,6 +32,9 @@ namespace LiveChartsCore
     {
         private Color[]? colors;
         private SeriesInitializer<TDrawingContext>? seriesInitializer;
+        private readonly DefaultPaintTask<TDrawingContext> defaultPaintTask = new DefaultPaintTask<TDrawingContext>();
+
+        public DefaultPaintTask<TDrawingContext> DefaultPaintTask => defaultPaintTask;
 
         public StyleBuilder<TDrawingContext> UseColors(params Color[] colors)
         {
@@ -45,7 +48,17 @@ namespace LiveChartsCore
             return this;
         }
 
-        internal void SetNextNameFillAndStroke(IDrawableSeries<TDrawingContext> series)
+        internal void ConstructSeries(IDrawableSeries<TDrawingContext> series)
+        {
+            if (seriesInitializer == null)
+                throw new NullReferenceException(
+                    $"An instance of {nameof(SeriesInitializer<TDrawingContext>)} is no configured yet, " +
+                    $"please register an instance using {nameof(UseSeriesInitializer)}() method.");
+
+            seriesInitializer.ConstructSeries(series);
+        }
+
+        internal void ResolveDefaults(IDrawableSeries<TDrawingContext> series)
         {
             if (seriesInitializer == null)
                 throw new NullReferenceException(
@@ -54,9 +67,9 @@ namespace LiveChartsCore
 
             if (colors == null || colors.Length == 0)
                 throw new NullReferenceException(
-                    $"A color pack is not registered yet, please register a pack using the {nameof(UseColors)}() method.");
+                    $"A color pack is not registered yet or is not valid, please register a pack using the {nameof(UseColors)}() method.");
 
-            seriesInitializer.ApplyDefaultsTo(series.SeriesId, colors[series.SeriesId % colors.Length], series);
+            seriesInitializer.ResolveDefaults(colors[series.SeriesId % colors.Length], series);
         }
     }
 }

@@ -33,5 +33,10 @@ namespace LiveChartsCore.SkiaSharpView
     public class PieSeries<TModel, TVisual>: PieSeries<TModel, TVisual, SkiaSharpDrawingContext>
         where TVisual : class, IDoughnutVisualChartPoint<SkiaSharpDrawingContext>, new()
     {
+        public PieSeries()
+        {
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSK.DefaultPlatformBuilder);
+            LiveCharts.CurrentSettings.ConstructSeries(this);
+        }
     }
 }

@@ -18,7 +18,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         public CartesianChart()
         {
-            LiveChartsSkiaSharp.Register();
+            LiveChartsSK.Register();
             InitializeComponent();
         }
 

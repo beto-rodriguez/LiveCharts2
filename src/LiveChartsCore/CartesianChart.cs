@@ -80,11 +80,8 @@ namespace LiveChartsCore
             // get seriesBounds
             foreach (var series in series)
             {
-                if (series.SeriesId == -1)
-                {
-                    series.SeriesId = nextSeries++;
-                    LiveCharts.CurrentSettings.ApplySeriesStyle(series);
-                }
+                if (series.SeriesId == -1) series.SeriesId = nextSeries++;
+                LiveCharts.CurrentSettings.ResolveSeriesDefaults(series);
 
                 var xAxis = xAxes[series.ScalesXAt];
                 var yAxis = yAxes[series.ScalesYAt];

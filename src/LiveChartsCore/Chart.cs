@@ -62,10 +62,7 @@ namespace LiveChartsCore
             updateThrottler = new ActionThrottler(TimeSpan.FromSeconds(300));
             updateThrottler.Unlocked += UpdateThrottlerUnlocked;
             easingFunction = EasingFunctions.QuadraticOut;
-            if (!isPlatformInitialized && !LiveCharts.HasUserConfiguration)
-            {
-                LiveCharts.Configure(defaultPlatformConfig);
-            }
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(defaultPlatformConfig);
         }
 
         public object MeasureWorker => measureWorker;

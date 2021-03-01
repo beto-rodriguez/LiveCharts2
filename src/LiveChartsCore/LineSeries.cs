@@ -92,7 +92,7 @@ namespace LiveChartsCore
 
         public double LineSmoothness { get => lineSmoothness; set => lineSmoothness = value; }
 
-        public TransitionsSetterDelegate<AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveToCommand, TPathArgs>>? PathTransitionsSetter { get; set; }
+        public Action<AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveToCommand, TPathArgs>, Animation>? PathTransitionsSetter { get; set; }
 
         public override void Measure(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext>xAxis, IAxis<TDrawingContext> yAxis)
@@ -112,6 +112,7 @@ namespace LiveChartsCore
 
             var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
             var pts = PathTransitionsSetter ?? SetDefaultPathTransitions;
+
             if (Fill != null)
             {
                 wasFillInitialized = fillPathHelper.Initialize(pts, chartAnimation);

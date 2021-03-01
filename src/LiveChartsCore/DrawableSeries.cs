@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
+using System;
 
 namespace LiveChartsCore
 {
@@ -106,7 +107,7 @@ namespace LiveChartsCore
 
         public double LegendShapeSize { get => legendShapeSize; set => legendShapeSize = value; }
 
-        public TransitionsSetterDelegate<TVisual>? TransitionsSetter { get; set; }
+        public Action<TVisual, Animation>? TransitionsSetter { get; set; }
 
         protected abstract void OnPaintContextChanged();
     }

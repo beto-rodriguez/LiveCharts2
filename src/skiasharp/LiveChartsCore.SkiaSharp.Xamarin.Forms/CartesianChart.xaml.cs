@@ -39,7 +39,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public CartesianChart()
         {
-            LiveChartsSkiaSharp.Register();
+            LiveChartsSK.Register();
             InitializeComponent();
 
             if (!(FindByName("canvas") is NaturalVisualCanvas canvas))

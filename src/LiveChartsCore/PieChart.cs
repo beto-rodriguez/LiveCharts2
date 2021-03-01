@@ -89,11 +89,8 @@ namespace LiveChartsCore
             PushoutBounds = new Bounds();
             foreach (var series in series)
             {
-                if (series.SeriesId == -1)
-                {
-                    series.SeriesId = nextSeries++;
-                    LiveCharts.CurrentSettings.ApplySeriesStyle(series);
-                }
+                if (series.SeriesId == -1) series.SeriesId = nextSeries++;
+                LiveCharts.CurrentSettings.ResolveSeriesDefaults(series);
 
                 var seriesBounds = series.GetBounds(this);
 

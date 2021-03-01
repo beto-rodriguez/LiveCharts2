@@ -30,24 +30,37 @@ namespace LiveChartsCore.SkiaSharpView
 {
     public class DefaultSeriesInitializer : SeriesInitializer<SkiaSharpDrawingContext>
     {
-        public override void ApplyDefaultsTo(int nextSeriesCount, Color nextColor, IDrawableSeries<SkiaSharpDrawingContext> series)
+        public override void ConstructSeries(IDrawableSeries<SkiaSharpDrawingContext> series)
         {
-            if (series.Name == null) series.Name = $"Series {nextSeriesCount + 1}";
-
             if ((series.SeriesProperties & SeriesProperties.PieSeries) == SeriesProperties.PieSeries)
             {
-                // pie special case...
                 var pieSeries = (IPieSeries<SkiaSharpDrawingContext>)series;
 
-                if (pieSeries.Fill == null) pieSeries.Fill = new SolidColorPaintTask(ColorAsSKColor(nextColor));
-                if (pieSeries.Stroke == null) pieSeries.Stroke = null;
-                 pieSeries.PushOut = 8;
+                pieSeries.Fill = LiveChartsSK.DefaultPaint;
+                pieSeries.Stroke = null;
+                pieSeries.PushOut = 6;
 
                 return;
             }
 
-            series.Fill = new SolidColorPaintTask(ColorAsSKColor(nextColor, (byte)(0.7 * 255)));
-            series.Stroke = new SolidColorPaintTask(ColorAsSKColor(nextColor));
+            series.Fill = LiveChartsSK.DefaultPaint;
+            series.Stroke = LiveChartsSK.DefaultPaint;
+        }
+
+        public override void ResolveDefaults(Color color, IDrawableSeries<SkiaSharpDrawingContext> series)
+        {
+            if (series.Name == null) series.Name = $"Series {series.SeriesId + 1}";
+
+            if ((series.SeriesProperties & SeriesProperties.PieSeries) == SeriesProperties.PieSeries)
+            {
+                if (series.Fill == LiveChartsSK.DefaultPaint) series.Fill = new SolidColorPaintTask(ColorAsSKColor(color));
+                if (series.Stroke == LiveChartsSK.DefaultPaint) series.Stroke = new SolidColorPaintTask(ColorAsSKColor(color), 3);
+
+                return;
+            }
+
+            if (series.Fill == LiveChartsSK.DefaultPaint) series.Fill = new SolidColorPaintTask(ColorAsSKColor(color, (byte)(0.7*255)));
+            if (series.Stroke == LiveChartsSK.DefaultPaint) series.Stroke = new SolidColorPaintTask(ColorAsSKColor(color), 3);
         }
 
         private SKColor ColorAsSKColor(Color color, byte? alphaOverrides = null)

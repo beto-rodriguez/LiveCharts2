@@ -35,5 +35,10 @@ namespace LiveChartsCore.SkiaSharpView
         : LineSeries<TModel, TVisual, SkiaSharpDrawingContext, PathGeometry, LineSegment, CubicBezierSegment, MoveToPathCommand, SKPath>
        where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
     {
+        public LineSeries()
+        {
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSK.DefaultPlatformBuilder);
+            LiveCharts.CurrentSettings.ConstructSeries(this);
+        }
     }
 }

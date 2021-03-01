@@ -48,6 +48,7 @@ namespace LiveChartsCore
             var pushout = (float)PushOut;
             var innerRadius = (float)InnerRadius;
             var maxOuterRadius = (float)MaxOuterRadius;
+
             minDimension = minDimension - (Stroke?.StrokeWidth ?? 0) * 2 -  maxPushout *2;
             minDimension *= maxOuterRadius;
 
@@ -141,7 +142,7 @@ namespace LiveChartsCore
         {
             visual
                 .DefinePropertyTransitions(
-                nameof(visual.CenterX), nameof(visual.CenterY),
+                    nameof(visual.CenterX), nameof(visual.CenterY),
                     nameof(visual.X), nameof(visual.Y),
                     nameof(visual.Width), nameof(visual.Height),
                     nameof(visual.StartAngle), nameof(visual.SweepAngle),

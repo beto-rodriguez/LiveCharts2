@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using System;
 
 namespace LiveChartsCore.Context
 {
@@ -41,6 +42,6 @@ namespace LiveChartsCore.Context
         where TDrawingContext : DrawingContext
         where TVisual : IVisualChartPoint<TDrawingContext>
     {
-        TransitionsSetterDelegate<TVisual>? TransitionsSetter { get; set; }
+        Action<TVisual, Animation>? TransitionsSetter { get; set; }
     }
 }

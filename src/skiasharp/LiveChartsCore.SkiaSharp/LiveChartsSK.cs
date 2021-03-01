@@ -20,13 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Context;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 
 namespace LiveChartsCore.SkiaSharpView
 {
-    public static class LiveChartsSkiaSharp
+    public static class LiveChartsSK
     {
+        private static DefaultPaintTask<SkiaSharpDrawingContext> defaultPaintTask = new DefaultPaintTask<SkiaSharpDrawingContext>();
+
+        public static DefaultPaintTask<SkiaSharpDrawingContext> DefaultPaint => defaultPaintTask;
+
         public static Action<LiveChartsSettings> DefaultPlatformBuilder => (LiveChartsSettings settings) => settings.AddSkiaSharp();
 
         public static LiveChartsSettings AddSkiaSharp(this LiveChartsSettings settings, Action<StyleBuilder<SkiaSharpDrawingContext>> builder = null)

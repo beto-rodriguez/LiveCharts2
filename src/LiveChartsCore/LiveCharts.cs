@@ -27,18 +27,18 @@ namespace LiveChartsCore
 {
     public static class LiveCharts
     {
-        private static bool hasUserConfiguration = false;
+        private static bool isConfigured = false;
         private static readonly LiveChartsSettings settings = new LiveChartsSettings();
 
-        public static bool HasUserConfiguration => hasUserConfiguration;
+        public static bool IsConfigured => isConfigured;
 
-        internal static LiveChartsSettings CurrentSettings => settings;
+        public static LiveChartsSettings CurrentSettings => settings;
 
         public static void Configure(Action<LiveChartsSettings> configuration)
         {
             if (configuration == null) throw new NullReferenceException($"{nameof(LiveChartsSettings)} must not be null.");
 
-            hasUserConfiguration = true;
+            isConfigured = true;
             configuration(settings);
         }
 
