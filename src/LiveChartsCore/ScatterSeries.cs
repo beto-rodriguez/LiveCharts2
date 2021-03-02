@@ -25,7 +25,7 @@ using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore
 {
-    public class ScatterSeries<TModel, TVisual, TDrawingContext> : CartesianSeries<TModel, TVisual, TDrawingContext>
+    public class ScatterSeries<TModel, TVisual, TDrawingContext> : CartesianSeries<TModel, TVisual, TDrawingContext>, IScatterSeries<TDrawingContext>
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
@@ -38,6 +38,8 @@ namespace LiveChartsCore
         }
 
         public double GeometrySize { get => geometrySize; set => geometrySize = value; }
+
+        public System.Action<ISizedVisualChartPoint<TDrawingContext>, Animation>? TransitionsSetter { get; set; }
 
         public override void Measure(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
@@ -117,7 +119,7 @@ namespace LiveChartsCore
             };
         }
 
-        protected virtual void SetDefaultTransitions(ISizedGeometry<TDrawingContext> visual, Animation defaultAnimation)
+        protected virtual void SetDefaultTransitions(ISizedVisualChartPoint<TDrawingContext> visual, Animation defaultAnimation)
         {
             visual
                 .DefinePropertyTransitions(nameof(visual.X), nameof(visual.Y), nameof(visual.Width), nameof(visual.Height))

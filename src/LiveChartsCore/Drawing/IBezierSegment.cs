@@ -22,13 +22,7 @@
 
 namespace LiveChartsCore.Drawing
 {
-    public interface IBezierSegment<TPathContext> : IPathCommand<TPathContext>
+    public interface IBezierSegment<TPathContext> : IAnimatableBezierSegment, IPathCommand<TPathContext>
     {
-        float X0 { get; set; }
-        float Y0 { get; set; }
-        float X1 { get; set; }
-        float Y1 { get; set; }
-        float X2 { get; set; }
-        float Y2 { get; set; }
     }
 }

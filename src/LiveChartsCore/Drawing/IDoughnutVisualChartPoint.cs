@@ -22,7 +22,7 @@
 
 namespace LiveChartsCore.Drawing
 {
-    public interface IDoughnutVisualChartPoint<TDrawingContext>: IDoughnutGeometry<TDrawingContext>, IVisualChartPoint<TDrawingContext>
+    public interface IDoughnutVisualChartPoint<TDrawingContext> : IDoughnutGeometry<TDrawingContext>, IVisualChartPoint<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
 

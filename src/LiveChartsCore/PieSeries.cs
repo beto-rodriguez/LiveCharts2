@@ -33,10 +33,10 @@ namespace LiveChartsCore
     {
         public PieSeries() : base(SeriesProperties.PieSeries | SeriesProperties.Stacked) { }
 
-
         public double PushOut { get; set; } = 5; // pixels
         public double InnerRadius { get; set; } = 0; // pixels
         public double MaxOuterRadius { get; set; } = 1; // 0 - 1
+        public Action<IDoughnutVisualChartPoint<TDrawingContext>, Animation>? TransitionsSetter { get; set; }
 
         public void Measure(PieChart<TDrawingContext> chart)
         {
@@ -83,6 +83,12 @@ namespace LiveChartsCore
                     };
 
                     ts(p, chartAnimation);
+                    p.CompleteTransitions(
+                        nameof(p.CenterX), nameof(p.CenterY),
+                        nameof(p.X), nameof(p.Y),
+                        nameof(p.Width), nameof(p.Height),
+                        nameof(p.StartAngle), nameof(p.SweepAngle),
+                        nameof(p.PushOut), nameof(p.InnerRadius));
 
                     point.PointContext.Visual = p;
                     if (Fill != null) Fill.AddGeometyToPaintTask(p);
@@ -147,8 +153,7 @@ namespace LiveChartsCore
                     nameof(visual.Width), nameof(visual.Height),
                     nameof(visual.StartAngle), nameof(visual.SweepAngle),
                     nameof(visual.PushOut), nameof(visual.InnerRadius))
-                .WithAnimation(defaultAnimation)
-                .CompleteCurrentTransitions();
+                .WithAnimation(defaultAnimation);
         }
 
         protected override void OnPaintContextChanged()

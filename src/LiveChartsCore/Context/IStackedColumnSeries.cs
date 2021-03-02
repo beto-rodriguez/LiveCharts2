@@ -21,19 +21,16 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using System;
 
 namespace LiveChartsCore.Context
 {
-    public class LineSeriesVisualPoint<TDrawingContext, TVisual, TGeometryPath, TBezierSegment, TPathArgs> : IVisualChartPoint<TDrawingContext>
-        where TVisual: ISizedGeometry<TDrawingContext>, IVisualChartPoint<TDrawingContext>, new ()
-        where TGeometryPath: IPathGeometry<TDrawingContext, TPathArgs>
-        where TBezierSegment : IBezierSegment<TPathArgs>, new()
+    public interface IStackedColumnSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        public TVisual Geometry { get; set; } = new TVisual();
+        double MaxColumnWidth { get; set; }
+        int StackGroup { get; set; }
 
-        public TBezierSegment Bezier { get; set; } = new TBezierSegment();
-
-        public IDrawable<TDrawingContext>? HighlightableGeometry => Geometry?.HighlightableGeometry;
+        Action<ISizedVisualChartPoint<TDrawingContext>, Animation>? TransitionsSetter { get; set; }
     }
 }

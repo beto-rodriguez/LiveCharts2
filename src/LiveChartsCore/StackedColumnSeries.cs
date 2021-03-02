@@ -26,8 +26,8 @@ using System;
 
 namespace LiveChartsCore
 {
-    public class StackedColumnSeries<TModel, TVisual, TDrawingContext> : CartesianSeries<TModel, TVisual, TDrawingContext>
-        where TVisual : class, ISizedGeometry<TDrawingContext>, IVisualChartPoint<TDrawingContext>, new()
+    public class StackedColumnSeries<TModel, TVisual, TDrawingContext> : CartesianSeries<TModel, TVisual, TDrawingContext>, IStackedColumnSeries<TDrawingContext>
+        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
         private readonly static float pivot = 0;
@@ -41,6 +41,7 @@ namespace LiveChartsCore
 
         public int StackGroup { get => stackGroup; set => stackGroup = value; }
         public double MaxColumnWidth { get; set; } = 30;
+        public Action<ISizedVisualChartPoint<TDrawingContext>, Animation>? TransitionsSetter { get; set; }
 
         public override void Measure(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
@@ -141,7 +142,7 @@ namespace LiveChartsCore
             };
         }
 
-        protected virtual void SetDefaultTransitions(ISizedGeometry<TDrawingContext> visual, Animation defaultAnimation)
+        protected virtual void SetDefaultTransitions(ISizedVisualChartPoint<TDrawingContext> visual, Animation defaultAnimation)
         {
             visual
                 .DefinePropertyTransitions(nameof(visual.X), nameof(visual.Width))
@@ -150,7 +151,7 @@ namespace LiveChartsCore
 
             visual
                 .DefinePropertyTransitions(nameof(visual.Y), nameof(visual.Height))
-                .WithAnimation(animation => animation
+                .DefineAnimation(animation => animation
                     .WithEasingFunction(EasingFunctions.BounceOut)
                     .WithDuration((long)(defaultAnimation.duration * 1.5))
                     .RepeatTimes(defaultAnimation.repeatTimes))

@@ -20,24 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using System;
-
-namespace LiveChartsCore.Context
+namespace LiveChartsCore.Drawing
 {
-    public interface IPieSeries<TDrawingContext>: IDrawableSeries<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public interface IAnimatableBezierSegment: IAnimatable
     {
-        double PushOut { get; set; }
-
-        double InnerRadius { get; set; }
-
-        double MaxOuterRadius { get; set; }
-
-        Action<IDoughnutVisualChartPoint<TDrawingContext>, Animation>? TransitionsSetter { get; set; }
-
-        DimensinalBounds GetBounds(PieChart<TDrawingContext> chart);
-
-        void Measure(PieChart<TDrawingContext> chart);
+        float X0 { get; set; }
+        float Y0 { get; set; }
+        float X1 { get; set; }
+        float Y1 { get; set; }
+        float X2 { get; set; }
+        float Y2 { get; set; }
     }
 }

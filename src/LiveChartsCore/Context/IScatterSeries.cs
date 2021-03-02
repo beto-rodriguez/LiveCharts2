@@ -25,19 +25,11 @@ using System;
 
 namespace LiveChartsCore.Context
 {
-    public interface IPieSeries<TDrawingContext>: IDrawableSeries<TDrawingContext>
+    public interface IScatterSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        double PushOut { get; set; }
+        double GeometrySize { get; set; }
 
-        double InnerRadius { get; set; }
-
-        double MaxOuterRadius { get; set; }
-
-        Action<IDoughnutVisualChartPoint<TDrawingContext>, Animation>? TransitionsSetter { get; set; }
-
-        DimensinalBounds GetBounds(PieChart<TDrawingContext> chart);
-
-        void Measure(PieChart<TDrawingContext> chart);
+        Action<ISizedVisualChartPoint<TDrawingContext>, Animation>? TransitionsSetter { get; set; }
     }
 }

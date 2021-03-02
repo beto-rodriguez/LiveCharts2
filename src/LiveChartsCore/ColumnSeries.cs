@@ -29,7 +29,7 @@ namespace LiveChartsCore
     /// <summary>
     /// Defines the data to plot as columns.
     /// </summary>
-    public class ColumnSeries<TModel, TVisual, TDrawingContext> : CartesianSeries<TModel, TVisual, TDrawingContext>
+    public class ColumnSeries<TModel, TVisual, TDrawingContext> : CartesianSeries<TModel, TVisual, TDrawingContext>, IColumnSeries<TDrawingContext>
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
@@ -39,10 +39,9 @@ namespace LiveChartsCore
         }
 
         public double Pivot { get; set; }
-
         public double MaxColumnWidth { get; set; } = 30;
-
         public bool IgnoresColumnPosition { get; set; } = false;
+        public Action<ISizedVisualChartPoint<TDrawingContext>, Animation>? TransitionsSetter { get; set; }
 
         public override void Measure(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
@@ -143,7 +142,7 @@ namespace LiveChartsCore
             };
         }
 
-        protected virtual void SetDefaultTransitions(ISizedGeometry<TDrawingContext> visual, Animation defaultAnimation)
+        protected virtual void SetDefaultTransitions(ISizedVisualChartPoint<TDrawingContext> visual, Animation defaultAnimation)
         {
             visual
                 .DefinePropertyTransitions(nameof(visual.X),nameof(visual.Width))
@@ -152,7 +151,7 @@ namespace LiveChartsCore
 
             visual
                 .DefinePropertyTransitions(nameof(visual.Y), nameof(visual.Height))
-                .WithAnimation(animation => animation
+                .DefineAnimation(animation => animation
                     .WithEasingFunction(EasingFunctions.BounceOut)
                     .WithDuration((long)(defaultAnimation.duration * 1.5))
                     .RepeatTimes(defaultAnimation.repeatTimes))

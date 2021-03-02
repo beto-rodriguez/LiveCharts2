@@ -22,12 +22,11 @@
 
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
-using System;
 
 namespace LiveChartsCore
 {
     public abstract class DrawableSeries<TModel, TVisual, TDrawingContext> 
-        : Series<TModel, TVisual, TDrawingContext>, IDrawableSeries<TDrawingContext>, IDrawableSeries<TVisual, TDrawingContext>
+        : Series<TModel, TVisual, TDrawingContext>, IDrawableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
     {
@@ -106,8 +105,6 @@ namespace LiveChartsCore
         public PaintContext<TDrawingContext> DefaultPaintContext => paintContext;
 
         public double LegendShapeSize { get => legendShapeSize; set => legendShapeSize = value; }
-
-        public Action<TVisual, Animation>? TransitionsSetter { get; set; }
 
         protected abstract void OnPaintContextChanged();
     }

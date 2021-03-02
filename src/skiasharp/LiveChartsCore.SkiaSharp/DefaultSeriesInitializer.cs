@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Context;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -39,6 +40,18 @@ namespace LiveChartsCore.SkiaSharpView
                 pieSeries.Fill = LiveChartsSK.DefaultPaint;
                 pieSeries.Stroke = null;
                 pieSeries.PushOut = 6;
+
+                pieSeries.TransitionsSetter =
+                    (IDoughnutVisualChartPoint<SkiaSharpDrawingContext> visual, Animation defaultAnimation) =>
+                    {
+                        visual
+                            .DefinePropertyTransitions(nameof(visual.StartAngle), nameof(visual.SweepAngle))
+                            .DefineAnimation(animation =>
+                            {
+                                animation.Duration = defaultAnimation.Duration;
+                                animation.EasingFunction = EasingFunctions.BounceOut;
+                            });
+                    };
 
                 return;
             }

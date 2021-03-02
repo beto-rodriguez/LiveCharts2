@@ -31,6 +31,6 @@ namespace LiveChartsCore.Context
     {
         public SeriesProperties SeriesProperties { get; set; }
 
-        public Action<IDrawableSeries<TVisual, TDrawingContext>>? Rule { get; set; }
+        public Action<IDrawableSeries<TDrawingContext>>? Rule { get; set; }
     }
 }

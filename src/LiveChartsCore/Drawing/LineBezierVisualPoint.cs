@@ -20,24 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using System;
-
-namespace LiveChartsCore.Context
+namespace LiveChartsCore.Drawing
 {
-    public interface IPieSeries<TDrawingContext>: IDrawableSeries<TDrawingContext>
+    public class LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs> : ILineBezierVisualChartPoint<TDrawingContext>
+        where TVisual : ISizedVisualChartPoint<TDrawingContext>, new()
+        where TBezierSegment : IBezierSegment<TPathArgs>, new()
         where TDrawingContext : DrawingContext
     {
-        double PushOut { get; set; }
+        public TVisual Geometry { get; set; } = new TVisual();
 
-        double InnerRadius { get; set; }
+        public TBezierSegment Bezier { get; set; } = new TBezierSegment();
 
-        double MaxOuterRadius { get; set; }
+        public IDrawable<TDrawingContext>? HighlightableGeometry => Geometry?.HighlightableGeometry;
 
-        Action<IDoughnutVisualChartPoint<TDrawingContext>, Animation>? TransitionsSetter { get; set; }
-
-        DimensinalBounds GetBounds(PieChart<TDrawingContext> chart);
-
-        void Measure(PieChart<TDrawingContext> chart);
+        ISizedGeometry<TDrawingContext> ILineBezierVisualChartPoint<TDrawingContext>.Geometry => Geometry;
+        IAnimatableBezierSegment ILineBezierVisualChartPoint<TDrawingContext>.Bezier => Bezier;
     }
 }

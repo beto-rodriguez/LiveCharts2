@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using System;
 
 namespace LiveChartsCore.Context
 {
@@ -36,12 +35,5 @@ namespace LiveChartsCore.Context
         PaintContext<TDrawingContext> DefaultPaintContext { get; }
 
         int GetStackGroup();
-    }
-
-    public interface IDrawableSeries<TVisual, TDrawingContext> : ISeries, IDrawableSeries<TDrawingContext>
-        where TDrawingContext : DrawingContext
-        where TVisual : IVisualChartPoint<TDrawingContext>
-    {
-        Action<TVisual, Animation>? TransitionsSetter { get; set; }
     }
 }
