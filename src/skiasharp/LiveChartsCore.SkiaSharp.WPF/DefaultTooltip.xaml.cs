@@ -3,6 +3,7 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
@@ -19,6 +20,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         private IEasingFunction easingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
         private double hideoutCount = 1500;
         private System.Drawing.PointF previousLocation = new System.Drawing.PointF();
+        private Dictionary<IChartPoint, object> activePoints = new Dictionary<IChartPoint, object>();
 
         public DefaultTooltip()
         {
@@ -117,6 +119,16 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
+            if (!tooltipPoints.Any())
+            {
+                foreach (var key in activePoints.Keys.ToArray())
+                {
+                    key.RemoveFromHoverState();
+                    activePoints.Remove(key);
+                }
+                return;
+            }
+
             System.Drawing.PointF? location = null;
             
             if (chart is CartesianChart<SkiaSharpDrawingContext>)
@@ -130,8 +142,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     chart.TooltipPosition, new System.Drawing.SizeF((float)border.ActualWidth, (float)border.ActualHeight));
             }
 
-            if (location == null) return;
-            if (previousLocation.X == location.Value.X && previousLocation.Y == location.Value.Y) return;
+            if (location == null || (previousLocation.X == location.Value.X && previousLocation.Y == location.Value.Y))
+                return;
+
             previousLocation = location.Value;
 
             IsOpen = true;
@@ -153,9 +166,18 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             FontStyle = wpfChart.TooltipFontStyle ?? FontStyles.Normal;
             FontStretch = wpfChart.TooltipFontStretch ?? FontStretches.Normal;
 
+            var o = new object();
             foreach (var tooltipPoint in tooltipPoints)
             {
                 tooltipPoint.Point.AddToHoverState();
+                activePoints[tooltipPoint.Point] = o;
+            }
+
+            foreach (var key in activePoints.Keys.ToArray())
+            {
+                if (activePoints[key] == o) continue;
+                key.RemoveFromHoverState();
+                activePoints.Remove(key);
             }
 
             wpfChart.CoreCanvas.Invalidate();

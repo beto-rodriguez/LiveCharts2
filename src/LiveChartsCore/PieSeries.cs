@@ -156,7 +156,7 @@ namespace LiveChartsCore
                 stack.StackPoint(point);
                 bounds.PrimaryBounds.AppendValue(point.PrimaryValue);
                 bounds.SecondaryBounds.AppendValue(point.SecondaryValue);
-                bounds.TertiaryBounds.AppendValue(Pushout);
+                bounds.TertiaryBounds.AppendValue(Pushout > HoverPushout ? Pushout : HoverPushout);
             }
 
             return bounds;
