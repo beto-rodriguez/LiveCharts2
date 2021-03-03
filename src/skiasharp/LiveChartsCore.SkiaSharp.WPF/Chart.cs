@@ -51,7 +51,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             mouseMoveThrottler.Unlocked += MouseMoveThrottlerUnlocked;
         }
 
-        SizeF IChartView<SkiaSharpDrawingContext>.ControlSize
+        SizeF IChartView.ControlSize
         {
             get
             {
@@ -87,6 +87,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
         public IChartTooltip<SkiaSharpDrawingContext> Tooltip => tooltip;
 
+        public PointStates<SkiaSharpDrawingContext> PointStates { get; set; }
+
         public abstract void InitializeCore();
 
         public override void OnApplyTemplate()
@@ -116,7 +118,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         private void MouseMoveThrottlerUnlocked()
         {
-            tooltip.Show(core.FindPointsNearTo(mousePosition), this);
+            tooltip.Show(core.FindPointsNearTo(mousePosition), core);
         }
     }
 }

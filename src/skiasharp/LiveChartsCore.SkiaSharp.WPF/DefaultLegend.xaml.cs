@@ -121,7 +121,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     ? Orientation.Horizontal
                     : Orientation.Vertical;
 
-            var wpfChart = (Chart)chart.ChartView;
+            var wpfChart = (Chart)chart.View;
             FontFamily = wpfChart.LegendFontFamily ?? new FontFamily("Trebuchet MS");
             TextColor = wpfChart.LegendTextColor ?? new SolidColorBrush(Color.FromRgb(35, 35, 35));
             FontSize = wpfChart.LegendFontSize ?? 13;

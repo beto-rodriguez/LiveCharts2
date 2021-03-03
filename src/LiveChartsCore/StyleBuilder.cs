@@ -31,7 +31,7 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
     {
         private Color[]? colors;
-        private SeriesInitializer<TDrawingContext>? seriesInitializer;
+        private LiveChartsInitializer<TDrawingContext>? seriesInitializer;
         private readonly DefaultPaintTask<TDrawingContext> defaultPaintTask = new DefaultPaintTask<TDrawingContext>();
 
         public DefaultPaintTask<TDrawingContext> DefaultPaintTask => defaultPaintTask;
@@ -42,7 +42,7 @@ namespace LiveChartsCore
             return this;
         }
 
-        public StyleBuilder<TDrawingContext> UseSeriesInitializer(SeriesInitializer<TDrawingContext> seriesInitializer)
+        public StyleBuilder<TDrawingContext> UseSeriesInitializer(LiveChartsInitializer<TDrawingContext> seriesInitializer)
         {
             this.seriesInitializer = seriesInitializer;
             return this;
@@ -52,7 +52,7 @@ namespace LiveChartsCore
         {
             if (seriesInitializer == null)
                 throw new NullReferenceException(
-                    $"An instance of {nameof(SeriesInitializer<TDrawingContext>)} is no configured yet, " +
+                    $"An instance of {nameof(LiveChartsInitializer<TDrawingContext>)} is no configured yet, " +
                     $"please register an instance using {nameof(UseSeriesInitializer)}() method.");
 
             seriesInitializer.ConstructSeries(series);
@@ -62,14 +62,14 @@ namespace LiveChartsCore
         {
             if (seriesInitializer == null)
                 throw new NullReferenceException(
-                    $"An instance of {nameof(SeriesInitializer<TDrawingContext>)} is no configured yet, " +
+                    $"An instance of {nameof(LiveChartsInitializer<TDrawingContext>)} is no configured yet, " +
                     $"please register an instance using {nameof(UseSeriesInitializer)}() method.");
 
             if (colors == null || colors.Length == 0)
                 throw new NullReferenceException(
                     $"A color pack is not registered yet or is not valid, please register a pack using the {nameof(UseColors)}() method.");
 
-            seriesInitializer.ResolveDefaults(colors[series.SeriesId % colors.Length], series);
+            seriesInitializer.ResolveSeriesDefaults(colors[series.SeriesId % colors.Length], series);
         }
     }
 }

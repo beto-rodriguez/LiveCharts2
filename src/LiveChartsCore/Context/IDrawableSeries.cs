@@ -29,8 +29,6 @@ namespace LiveChartsCore.Context
     {
         IDrawableTask<TDrawingContext>? Stroke { get; set; }
         IDrawableTask<TDrawingContext>? Fill { get; set; }
-        IDrawableTask<TDrawingContext>? HighlightStroke { get; }
-        IDrawableTask<TDrawingContext>? HighlightFill { get; }
 
         PaintContext<TDrawingContext> DefaultPaintContext { get; }
 

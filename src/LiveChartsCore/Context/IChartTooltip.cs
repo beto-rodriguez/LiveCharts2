@@ -28,6 +28,6 @@ namespace LiveChartsCore.Context
     public interface IChartTooltip<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        void Show(IEnumerable<TooltipPoint> foundPoints, IChartView<TDrawingContext> view);
+        void Show(IEnumerable<TooltipPoint> foundPoints, Chart<TDrawingContext> chart);
     }
 }

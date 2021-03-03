@@ -20,24 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore
+namespace LiveChartsCore.Context
 {
-    public abstract class DrawableSeries<TModel, TVisual, TDrawingContext> 
-        : Series<TModel, TVisual, TDrawingContext>, IDrawableSeries<TDrawingContext>
-        where TDrawingContext : DrawingContext
-        where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
+    public class StrokeAndFillDrawable<TDrawingContext>
+        where TDrawingContext: DrawingContext
     {
-        protected PaintContext<TDrawingContext> paintContext = new PaintContext<TDrawingContext>();
         private IDrawableTask<TDrawingContext>? stroke = null;
         private IDrawableTask<TDrawingContext>? fill = null;
-        private double legendShapeSize = 15;
-
-        public DrawableSeries(SeriesProperties properties) : base(properties)
-        {
-        }
 
         public IDrawableTask<TDrawingContext>? Stroke
         {
@@ -50,7 +41,6 @@ namespace LiveChartsCore
                     stroke.IsStroke = true;
                     stroke.IsFill = false;
                 }
-                OnPaintContextChanged();
             }
         }
 
@@ -66,14 +56,7 @@ namespace LiveChartsCore
                     fill.IsFill = true;
                     fill.StrokeWidth = 0;
                 }
-                OnPaintContextChanged();
             }
         }
-
-        public PaintContext<TDrawingContext> DefaultPaintContext => paintContext;
-
-        public double LegendShapeSize { get => legendShapeSize; set => legendShapeSize = value; }
-
-        protected abstract void OnPaintContextChanged();
     }
 }

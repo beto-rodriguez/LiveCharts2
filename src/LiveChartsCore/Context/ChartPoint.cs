@@ -28,7 +28,12 @@ namespace LiveChartsCore.Context
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
     {
-        private readonly ChartPointContext<TVisual, TDrawingContext> pointContext = new ChartPointContext<TVisual, TDrawingContext>();
+        private readonly ChartPointContext<TVisual, TDrawingContext> pointContext;
+
+        public ChartPoint(IChartView chart, ISeries series)
+        {
+            pointContext = new ChartPointContext<TVisual, TDrawingContext>(chart, series);
+        }
 
         /// <inheritdoc/>
         public float PrimaryValue { get; set; }
@@ -39,6 +44,6 @@ namespace LiveChartsCore.Context
         /// <inheritdoc/>
         public ChartPointContext<TVisual, TDrawingContext> PointContext => pointContext;
 
-        IChartPointContext IChartPoint.PointContext => pointContext;
+        IChartPointContext IChartPoint.Context => pointContext;
     }
 }

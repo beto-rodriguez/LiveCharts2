@@ -53,6 +53,7 @@ namespace LiveChartsCore
         public LineSeries()
             : base(SeriesProperties.Line | SeriesProperties.VerticalOrientation)
         {
+            HoverState = LiveCharts.LineSeriesHoverKey;
         }
 
         public IDrawableTask<TDrawingContext>? ShapesFill
@@ -231,8 +232,6 @@ namespace LiveChartsCore
                 chart.MeasuredDrawables.Add(visual.Geometry);
             }
 
-            if (HighlightFill != null) chart.Canvas.AddDrawableTask(HighlightFill);
-            if (HighlightStroke != null) chart.Canvas.AddDrawableTask(HighlightStroke);
             if (ShapesFill != null) chart.Canvas.AddDrawableTask(ShapesFill);
             if (ShapesStroke != null) chart.Canvas.AddDrawableTask(ShapesStroke);
         }
@@ -383,17 +382,17 @@ namespace LiveChartsCore
             AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs> areaHelper, Animation defaultAnimation)
         {
             areaHelper.StartPoint
-                .DefinePropertyTransitions(nameof(areaHelper.StartPoint.X), nameof(areaHelper.StartPoint.Y))
+                .TransitionateProperties(nameof(areaHelper.StartPoint.X), nameof(areaHelper.StartPoint.Y))
                 .WithAnimation(defaultAnimation)
                 .CompleteCurrentTransitions();
 
             areaHelper.StartSegment
-                .DefinePropertyTransitions(nameof(areaHelper.StartSegment.X), nameof(areaHelper.StartSegment.Y))
+                .TransitionateProperties(nameof(areaHelper.StartSegment.X), nameof(areaHelper.StartSegment.Y))
                 .WithAnimation(defaultAnimation)
                 .CompleteCurrentTransitions();
 
             areaHelper.EndSegment
-                .DefinePropertyTransitions(nameof(areaHelper.EndSegment.X), nameof(areaHelper.EndSegment.Y))
+                .TransitionateProperties(nameof(areaHelper.EndSegment.X), nameof(areaHelper.EndSegment.Y))
                 .WithAnimation(defaultAnimation)
                 .CompleteCurrentTransitions();
         }

@@ -29,8 +29,20 @@ using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView
 {
-    public class DefaultSeriesInitializer : SeriesInitializer<SkiaSharpDrawingContext>
+    public class DefaultSeriesInitializer : LiveChartsInitializer<SkiaSharpDrawingContext>
     {
+        public override void ConstructChart(IChartView<SkiaSharpDrawingContext> chart)
+        {
+            chart.PointStates = new PointStates<SkiaSharpDrawingContext>
+            {
+                [LiveCharts.PieSeriesHoverKey] = new StrokeAndFillDrawable<SkiaSharpDrawingContext>
+                {
+                    Fill = new SolidColorPaintTask(new SKColor(255, 255, 255, 180)),
+                    Stroke = null
+                }
+            };
+        }
+
         public override void ConstructSeries(IDrawableSeries<SkiaSharpDrawingContext> series)
         {
             if ((series.SeriesProperties & SeriesProperties.PieSeries) == SeriesProperties.PieSeries)
@@ -39,18 +51,20 @@ namespace LiveChartsCore.SkiaSharpView
 
                 pieSeries.Fill = LiveChartsSK.DefaultPaint;
                 pieSeries.Stroke = null;
-                pieSeries.PushOut = 6;
+                pieSeries.Pushout = 6;
 
-                pieSeries.TransitionsSetter =
-                    (IDoughnutVisualChartPoint<SkiaSharpDrawingContext> visual, Animation defaultAnimation) =>
+                pieSeries.OnPointCreated =
+                    (IDoughnutVisualChartPoint<SkiaSharpDrawingContext> visual, IChartView<SkiaSharpDrawingContext> chart) =>
                     {
                         visual
-                            .DefinePropertyTransitions(nameof(visual.StartAngle), nameof(visual.SweepAngle))
-                            .DefineAnimation(animation =>
-                            {
-                                animation.Duration = defaultAnimation.Duration;
-                                animation.EasingFunction = EasingFunctions.BounceOut;
-                            });
+                            .TransitionateProperties(
+                                nameof(visual.StartAngle),
+                                nameof(visual.SweepAngle),
+                                nameof(visual.PushOut))
+                            .WithAnimation(animation =>
+                                animation
+                                    .WithDuration(chart.AnimationsSpeed)
+                                    .WithEasingFunction(EasingFunctions.BounceOut));
                     };
 
                 return;
@@ -60,7 +74,7 @@ namespace LiveChartsCore.SkiaSharpView
             series.Stroke = LiveChartsSK.DefaultPaint;
         }
 
-        public override void ResolveDefaults(Color color, IDrawableSeries<SkiaSharpDrawingContext> series)
+        public override void ResolveSeriesDefaults(Color color, IDrawableSeries<SkiaSharpDrawingContext> series)
         {
             if (series.Name == null) series.Name = $"Series {series.SeriesId + 1}";
 

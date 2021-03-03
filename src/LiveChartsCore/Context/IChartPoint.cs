@@ -30,12 +30,12 @@ namespace LiveChartsCore.Context
 
         float SecondaryValue { get; set; }
 
-        IChartPointContext PointContext { get; }
+        IChartPointContext Context { get; }
     }
 
     public interface IChartPoint<TVisual, TDrawingContext>: IChartPoint
         where TDrawingContext : DrawingContext
-        where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
+        where TVisual : IVisualChartPoint<TDrawingContext>
     {
         new float PrimaryValue { get; set; }
 

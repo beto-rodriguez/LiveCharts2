@@ -29,11 +29,13 @@ namespace LiveChartsCore
     /// <summary>
     /// Defines an object that must set the default Fil, Stroke and series name.
     /// </summary>
-    public abstract class SeriesInitializer<TDrawingContext>
+    public abstract class LiveChartsInitializer<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        public abstract void ConstructChart(IChartView<TDrawingContext> chart);
+
         public abstract void ConstructSeries(IDrawableSeries<TDrawingContext> series);
 
-        public abstract void ResolveDefaults(Color color, IDrawableSeries<TDrawingContext> series);
+        public abstract void ResolveSeriesDefaults(Color color, IDrawableSeries<TDrawingContext> series);
     }
 }

@@ -89,6 +89,13 @@ namespace LiveChartsCore
         public Action<IChartPoint, TModel, IChartPointContext>? Mapping { get; set; }
 
         int ISeries.SeriesId { get; set; } = -1;
+        public string HoverState { get; set; }
+
+        public Action<TVisual, IChartView<TDrawingContext>>? OnPointCreated { get; set; }
+        public Action<TVisual, IChartView<TDrawingContext>>? OnPointAddedToState { get; set; }
+        public Action<TVisual, IChartView<TDrawingContext>>? OnPointRemovedFromState { get; set; }
+
+        public abstract int GetStackGroup();
 
         /// <inheritdoc/>
         public virtual IEnumerable<IChartPoint<TVisual, TDrawingContext>> Fetch(IChart chart)
@@ -96,7 +103,9 @@ namespace LiveChartsCore
             if (fetchedFor == chart.MeasureWorker) return fetched;
 
             subscribedTo.Add(chart);
-            fetched = implementsICP ? GetPointsFromICP() : GetMappedPoints();
+            fetched = implementsICP
+                ? GetPointsFromICP(chart) // this method is experimental, it should improve performance, but how much? that is the question...
+                : GetMappedPoints(chart);
             fetchedFor = chart.MeasureWorker;
 
             return fetched;
@@ -109,17 +118,81 @@ namespace LiveChartsCore
                 .Where(point => point.PointContext.HoverArea?.IsTriggerBy(pointerPosition, chart.TooltipFindingStrategy) ?? false)
                 .Select(point => new TooltipPoint(this, point));
 
+        public void AddPointToState(IChartPoint chartPoint, string state)
+        {
+            var chart = (IChartView<TDrawingContext>)chartPoint.Context.Chart;
+            if (chart.PointStates == null) return;
+
+            var s = chart.PointStates[state];
+
+            if (s == null)
+                throw new Exception($"The state '{state}' was not found");
+
+            if (chartPoint.Context.Visual == null)
+                throw new Exception(
+                    $"The {nameof(IChartPoint)}.{nameof(IChartPoint.Context)}.{nameof(IChartPoint.Context.Visual)} property is null, " +
+                    $"this is probably due the point was not measured yet.");
+
+            var visual = (TVisual)chartPoint.Context.Visual;
+            var highlitable = visual.HighlightableGeometry;
+
+            if (highlitable == null)
+                throw new Exception(
+                    $"The {nameof(IChartPoint)}.{nameof(IChartPoint.Context)}.{nameof(IChartPoint.Context.Visual)}" +
+                    $".{nameof(IVisualChartPoint<TDrawingContext>.HighlightableGeometry)} property is null, " +
+                    $"this is probably due the point was not measured yet.");
+
+            OnAddedToState(visual, chart);
+
+            if (s.Fill != null) s.Fill.AddGeometyToPaintTask(highlitable);
+            if (s.Stroke != null) s.Stroke.AddGeometyToPaintTask(highlitable);
+        }
+
+        public virtual void RemovePointFromState(IChartPoint chartPoint, string state)
+        {
+            var chart = (IChartView<TDrawingContext>)chartPoint.Context.Chart;
+            var s = chart.PointStates[state];
+
+            if (s == null)
+                throw new Exception($"The state '{state}' was not found");
+
+            if (chartPoint.Context.Visual == null)
+                throw new Exception(
+                    $"The {nameof(IChartPoint)}.{nameof(IChartPoint.Context)}.{nameof(IChartPoint.Context.Visual)} property is null, " +
+                    $"this is probably due the point was not measured yet.");
+
+            var visual = (TVisual)chartPoint.Context.Visual;
+            var highlitable = visual.HighlightableGeometry;
+
+            if (highlitable == null)
+                throw new Exception(
+                    $"The {nameof(IChartPoint)}.{nameof(IChartPoint.Context)}.{nameof(IChartPoint.Context.Visual)}" +
+                    $".{nameof(IVisualChartPoint<TDrawingContext>.HighlightableGeometry)} property is null, " +
+                    $"this is probably due the point was not measured yet.");
+
+            OnRemovedFromState(visual, chart);
+
+            if (s.Fill != null) s.Fill.RemoveGeometryFromPainTask(highlitable);
+            if (s.Stroke != null) s.Stroke.RemoveGeometryFromPainTask(highlitable);
+        }
+
         /// <inheritdoc/>
         public void Dispose()
         {
             observerer.Dispose(values);
         }
 
-        protected virtual void OnPointMeasured(IChartPoint<TVisual, TDrawingContext> chartPoint, TVisual visual)
-        {
-        }
+        protected virtual void OnPointMeasured(IChartPoint<TVisual, TDrawingContext> chartPoint, TVisual visual) { }
 
-        private IEnumerable<IChartPoint<TVisual, TDrawingContext>> GetPointsFromICP()
+        protected void OnAddedToState(TVisual visual, IChartView<TDrawingContext> chart) => (OnPointAddedToState ?? DefaultOnPointAddedToSate)(visual, chart);
+
+        protected void OnRemovedFromState(TVisual visual, IChartView<TDrawingContext> chart) => (OnPointRemovedFromState ?? DefaultOnRemovedFromState)(visual, chart);
+
+        protected virtual void DefaultOnPointAddedToSate(TVisual visual, IChartView<TDrawingContext> chart) { }
+
+        protected virtual void DefaultOnRemovedFromState(TVisual visual, IChartView<TDrawingContext> chart) { }
+
+        private IEnumerable<IChartPoint<TVisual, TDrawingContext>> GetPointsFromICP(IChart chart)
         {
             if (values == null) yield break;
 
@@ -127,20 +200,14 @@ namespace LiveChartsCore
 
             foreach (var item in values)
             {
-                // it will never be null at this point, becuase in the constructor
-                // we forced the implementation of ICP
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 var cp = (IChartPoint<TVisual, TDrawingContext>)item;
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
                 cp.PointContext.Index = index++;
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 cp.PointContext.DataSource = item;
                 yield return cp;
             }
         }
 
-        private IEnumerable<IChartPoint<TVisual, TDrawingContext>> GetMappedPoints()
+        private IEnumerable<IChartPoint<TVisual, TDrawingContext>> GetMappedPoints(IChart chart)
         {
             if (values == null) yield break;
 
@@ -152,7 +219,7 @@ namespace LiveChartsCore
                 foreach (var item in values)
                 {
                     if (!byValueVisualMap.TryGetValue(index, out ChartPoint<TModel, TVisual, TDrawingContext> cp))
-                        byValueVisualMap[index] = (cp = new ChartPoint<TModel, TVisual, TDrawingContext>());
+                        byValueVisualMap[index] = cp = new ChartPoint<TModel, TVisual, TDrawingContext>(chart.View, this);
 
                     cp.PointContext.Index = index++;
                     cp.PointContext.DataSource = item;
@@ -166,7 +233,7 @@ namespace LiveChartsCore
                 foreach (var item in values)
                 {
                     if (!byReferenceVisualMap.TryGetValue(item, out ChartPoint<TModel, TVisual, TDrawingContext> cp))
-                        byReferenceVisualMap[item] = (cp = new ChartPoint<TModel, TVisual, TDrawingContext>());
+                        byReferenceVisualMap[item] = cp = new ChartPoint<TModel, TVisual, TDrawingContext>(chart.View, this);
 
                     cp.PointContext.Index = index++;
                     cp.PointContext.DataSource = item;
@@ -181,7 +248,5 @@ namespace LiveChartsCore
         {
             foreach (var chart in subscribedTo) chart.Update();
         }
-
-        public abstract int GetStackGroup();
     }
 }

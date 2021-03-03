@@ -25,25 +25,27 @@ using System;
 
 namespace LiveChartsCore.Context
 {
-    public interface IChartView<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public interface IChartView
     {
-        Canvas<TDrawingContext> CoreCanvas { get; }
-
         System.Drawing.SizeF ControlSize { get; }
-
-        LegendPosition LegendPosition { get; set; }
-        LegendOrientation LegendOrientation { get; set; }
-        IChartLegend<TDrawingContext> Legend { get; }
-
-        TooltipPosition TooltipPosition { get; set; }
-        TooltipFindingStrategy TooltipFindingStrategy { get; set; }
-        IChartTooltip<TDrawingContext> Tooltip { get; }
-
         Margin DrawMargin { get; set; }
 
         TimeSpan AnimationsSpeed { get; set; }
-
         Func<float, float> EasingFunction { get; set; }
+
+        LegendPosition LegendPosition { get; set; }
+        LegendOrientation LegendOrientation { get; set; }
+
+        TooltipPosition TooltipPosition { get; set; }
+        TooltipFindingStrategy TooltipFindingStrategy { get; set; }
+    }
+
+    public interface IChartView<TDrawingContext>: IChartView
+        where TDrawingContext : DrawingContext
+    {
+        Canvas<TDrawingContext> CoreCanvas { get; }
+        IChartLegend<TDrawingContext> Legend { get; }
+        IChartTooltip<TDrawingContext> Tooltip { get; }
+        PointStates<TDrawingContext> PointStates { get; set; }
     }
 }

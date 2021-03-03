@@ -48,8 +48,8 @@ namespace LiveChartsCore.Context
 
             foreach (var point in foundPoints)
             {
-                if (point.Point.PointContext.HoverArea == null) continue;
-                point.Point.PointContext.HoverArea.SuggestTooltipPlacement(placementContext);
+                if (point.Point.Context.HoverArea == null) continue;
+                point.Point.Context.HoverArea.SuggestTooltipPlacement(placementContext);
                 count++;
             }
 
@@ -77,8 +77,8 @@ namespace LiveChartsCore.Context
 
             foreach (var foundPoint in foundPoints)
             {
-                if (foundPoint.Point.PointContext.HoverArea == null) continue;
-                foundPoint.Point.PointContext.HoverArea.SuggestTooltipPlacement(placementContext);
+                if (foundPoint.Point.Context.HoverArea == null) continue;
+                foundPoint.Point.Context.HoverArea.SuggestTooltipPlacement(placementContext);
                 found = true;
                 break; // we only care about the first one.
             }
@@ -114,7 +114,7 @@ namespace LiveChartsCore.Context
             return new AxisTick { Value = tick, Magnitude = magnitude };
         }
 
-        public static TransitionBuilder DefinePropertyTransitions(this IAnimatable animatable, params string[] properties)
+        public static TransitionBuilder TransitionateProperties(this IAnimatable animatable, params string[] properties)
         {
             return new TransitionBuilder(animatable, properties);
         }
@@ -136,5 +136,25 @@ namespace LiveChartsCore.Context
 
         public static bool IsHorizontalSeries(this ISeries series)
             => (series.SeriesProperties & (SeriesProperties.HorizontalOrientation)) != 0;
+
+        public static void AddToState(this IChartPoint chartPoint, string state) 
+        {
+            chartPoint.Context.Series.AddPointToState(chartPoint, state);
+        }
+
+        public static void RemoveFromState(this IChartPoint chartPoint, string state) 
+        {
+            chartPoint.Context.Series.RemovePointFromState(chartPoint, state);
+        }
+
+        public static void AddToHoverState(this IChartPoint chartPoint)
+        {
+            chartPoint.Context.Series.AddPointToState(chartPoint, chartPoint.Context.Series.HoverState);
+        }
+
+        public static void RemoveFromHoverState(this IChartPoint chartPoint)
+        {
+            chartPoint.Context.Series.RemovePointFromState(chartPoint, chartPoint.Context.Series.HoverState);
+        }
     }
 }

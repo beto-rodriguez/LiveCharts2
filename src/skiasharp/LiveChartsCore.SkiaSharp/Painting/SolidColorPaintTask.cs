@@ -93,6 +93,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             {
                 Style = Style,
                 IsStroke = IsStroke,
+                IsFill = IsFill,
                 Color = Color,
                 IsAntialias = IsAntialias,
                 PathEffect = PathEffect,

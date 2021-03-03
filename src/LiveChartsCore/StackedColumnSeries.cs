@@ -36,7 +36,7 @@ namespace LiveChartsCore
         public StackedColumnSeries()
             : base(SeriesProperties.Bar | SeriesProperties.Stacked | SeriesProperties.VerticalOrientation)
         {
-
+            HoverState = LiveCharts.StackedColumnSeriesHoverKey;
         }
 
         public int StackGroup { get => stackGroup; set => stackGroup = value; }
@@ -145,13 +145,13 @@ namespace LiveChartsCore
         protected virtual void SetDefaultTransitions(ISizedVisualChartPoint<TDrawingContext> visual, Animation defaultAnimation)
         {
             visual
-                .DefinePropertyTransitions(nameof(visual.X), nameof(visual.Width))
+                .TransitionateProperties(nameof(visual.X), nameof(visual.Width))
                 .WithAnimation(defaultAnimation)
                 .CompleteCurrentTransitions();
 
             visual
-                .DefinePropertyTransitions(nameof(visual.Y), nameof(visual.Height))
-                .DefineAnimation(animation => animation
+                .TransitionateProperties(nameof(visual.Y), nameof(visual.Height))
+                .WithAnimation(animation => animation
                     .WithEasingFunction(EasingFunctions.BounceOut)
                     .WithDuration((long)(defaultAnimation.duration * 1.5))
                     .RepeatTimes(defaultAnimation.repeatTimes))

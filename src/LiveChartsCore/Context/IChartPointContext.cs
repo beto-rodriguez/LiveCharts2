@@ -24,6 +24,10 @@ namespace LiveChartsCore.Context
 {
     public interface IChartPointContext
     {
+        IChartView Chart { get; }
+
+        ISeries Series { get; }
+
         /// <summary>
         /// Gets the position of the point the collection that was used when the point was drawn.
         /// </summary>

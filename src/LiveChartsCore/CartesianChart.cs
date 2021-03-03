@@ -51,7 +51,7 @@ namespace LiveChartsCore
         public IAxis<TDrawingContext>[] YAxes => yAxes;
         public ICartesianSeries<TDrawingContext>[] Series => series;
         public override IEnumerable<IDrawableSeries<TDrawingContext>> DrawableSeries => series;
-        public override IChartView<TDrawingContext> ChartView => chartView;
+        public override IChartView<TDrawingContext> View => chartView;
 
         public override void Update()
         {

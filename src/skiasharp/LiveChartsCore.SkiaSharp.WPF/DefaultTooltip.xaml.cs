@@ -4,7 +4,6 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
@@ -19,9 +18,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     {
         private TimeSpan animationsSpeed = TimeSpan.FromMilliseconds(200);
         private IEasingFunction easingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
-        private Timer clearHighlightTimer = new Timer();
-        private Dictionary<IDrawableTask<SkiaSharpDrawingContext>, HashSet<IDrawable<SkiaSharpDrawingContext>>> highlited;
-        private Chart chart;
         private double hideoutCount = 1500;
         private System.Drawing.PointF previousLocation = new System.Drawing.PointF();
 
@@ -30,9 +26,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             InitializeComponent();
             PopupAnimation = PopupAnimation.Fade;
             Placement = PlacementMode.Relative;
-
-            clearHighlightTimer.Interval = hideoutCount;
-            clearHighlightTimer.Elapsed += clearHidelightTimerElapsed;
         }
 
         private void DefaultTooltip_LayoutUpdated(object sender, EventArgs e)
@@ -123,19 +116,19 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         #endregion
 
-        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> foundPoints, IChartView<SkiaSharpDrawingContext> view)
+        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             System.Drawing.PointF? location = null;
             
-            if (view is ICartesianChartView<SkiaSharpDrawingContext>)
+            if (chart is CartesianChart<SkiaSharpDrawingContext>)
             {
-                location = foundPoints.GetCartesianTooltipLocation(
-                    view.TooltipPosition, new System.Drawing.SizeF((float)border.ActualWidth, (float)border.ActualHeight));
+                location = tooltipPoints.GetCartesianTooltipLocation(
+                    chart.TooltipPosition, new System.Drawing.SizeF((float)border.ActualWidth, (float)border.ActualHeight));
             }
-            if (view is IPieChartView<SkiaSharpDrawingContext>)
+            if (chart is PieChart<SkiaSharpDrawingContext>)
             {
-                location = foundPoints.GetPieTooltipLocation(
-                    view.TooltipPosition, new System.Drawing.SizeF((float)border.ActualWidth, (float)border.ActualHeight));
+                location = tooltipPoints.GetPieTooltipLocation(
+                    chart.TooltipPosition, new System.Drawing.SizeF((float)border.ActualWidth, (float)border.ActualHeight));
             }
 
             if (location == null) return;
@@ -143,9 +136,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             previousLocation = location.Value;
 
             IsOpen = true;
-            Points = foundPoints;
+            Points = tooltipPoints;
 
-            //UpdateLayout();
             Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
             var from = PlacementRectangle;
@@ -154,7 +146,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             var animation = new RectAnimation(from, to, animationsSpeed) { EasingFunction = easingFunction };
             BeginAnimation(PlacementRectangleProperty, animation);
 
-            var wpfChart = (Chart)view;
+            var wpfChart = (Chart)chart.View;
             FontFamily = wpfChart.TooltipFontFamily ?? new FontFamily("Trebuchet MS");
             TextColor = wpfChart.TooltipTextColor ?? new SolidColorBrush(Color.FromRgb(35, 35, 35));
             FontSize = wpfChart.TooltipFontSize ?? 13;
@@ -162,52 +154,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             FontStyle = wpfChart.TooltipFontStyle ?? FontStyles.Normal;
             FontStretch = wpfChart.TooltipFontStretch ?? FontStretches.Normal;
 
-            var highlightTasks = new Dictionary<IDrawableTask<SkiaSharpDrawingContext>, HashSet<IDrawable<SkiaSharpDrawingContext>>>();
-            highlited = highlightTasks;
-
-            void highlightGeometries(TooltipPoint point, IDrawableTask<SkiaSharpDrawingContext> highlightPaintTask)
+            foreach (var tooltipPoint in tooltipPoints)
             {
-                // if we have not cleared the geometries of the current series... we do it!
-                if (!highlightTasks.TryGetValue(highlightPaintTask, out var highlighPaint))
-                {
-                    // create a new empty collection (hashSet) to draw our geometries using the highlight paint.
-                    highlighPaint = new HashSet<IDrawable<SkiaSharpDrawingContext>>();
-                    highlightPaintTask.SetGeometries(highlighPaint);
-                    highlightTasks.Add(highlightPaintTask, highlighPaint);
-                }
-
-                highlighPaint.Add(((IVisualChartPoint<SkiaSharpDrawingContext>) point.Point.PointContext.Visual).HighlightableGeometry);
-            }
-
-            foreach (var point in foundPoints)
-            {
-                var hlf = (point.Series as IDrawableSeries<SkiaSharpDrawingContext>)?.HighlightFill;
-                var hls = (point.Series as IDrawableSeries<SkiaSharpDrawingContext>)?.HighlightStroke;
-
-                if (hlf != null) highlightGeometries(point, hlf);
-                if (hls != null) highlightGeometries(point, hls);
+                tooltipPoint.Point.AddToHoverState();
             }
 
             wpfChart.CoreCanvas.Invalidate();
-            chart = wpfChart;
-
-            clearHighlightTimer.Stop();
-            clearHighlightTimer.Start();
-        }
-
-        private void clearHidelightTimerElapsed(object sender, ElapsedEventArgs e)
-        {
-            clearHighlightTimer.Stop();
-            Dispatcher.Invoke(() =>
-            {
-                IsOpen = false;
-
-                if (highlited == null || highlited.Count == 0) return;
-
-                foreach (var item in highlited) item.Value.Clear();
-
-                chart.CoreCanvas.Invalidate();
-            });
         }
     }
 }

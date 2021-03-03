@@ -29,8 +29,17 @@ namespace LiveChartsCore.Context
     /// </summary>
     public class ChartPointContext<TVisual, TDrawingContext>: IChartPointContext
         where TDrawingContext : DrawingContext
-        where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
+        where TVisual : IVisualChartPoint<TDrawingContext>
     {
+        private readonly IChartView chart;
+        private readonly ISeries series;
+
+        public ChartPointContext(IChartView chart, ISeries series)
+        {
+            this.chart = chart;
+            this.series = series;
+        }
+
         /// <summary>
         /// Gets the position of the point the collection that was used when the point was drawn.
         /// </summary>
@@ -52,5 +61,9 @@ namespace LiveChartsCore.Context
         /// Gets or sets the area that triggers the ToolTip.
         /// </summary>
         public HoverArea? HoverArea { get; internal set; }
+
+        public IChartView Chart => chart;
+
+        public ISeries Series => series;
     }
 }

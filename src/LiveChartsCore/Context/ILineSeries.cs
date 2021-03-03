@@ -25,15 +25,15 @@ using System;
 
 namespace LiveChartsCore.Context
 {
-    public interface IColumnSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
+    public interface ILineSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         double Pivot { get; set; }
+        double GeometrySize { get; set; }
+        double LineSmoothness { get; set; }
 
-        double MaxColumnWidth { get; set; }
-
-        bool IgnoresColumnPosition { get; set; }
-
-        Action<ISizedVisualChartPoint<TDrawingContext>, Animation>? TransitionsSetter { get; set; }
+        IDrawableTask<TDrawingContext>? ShapesFill { get; set; }
+        IDrawableTask<TDrawingContext>? ShapesStroke { get; set; }
+        Action<ILineBezierVisualChartPoint<TDrawingContext>, Animation>? TransitionsSetter { get; set; }
     }
 }

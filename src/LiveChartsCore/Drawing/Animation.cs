@@ -85,15 +85,15 @@ namespace LiveChartsCore.Drawing
             return this;
         }
 
-        public Animation WithDuration(long duration)
-        {
-            this.duration = duration;
-            return this;
-        }
-
         public Animation WithDuration(TimeSpan duration)
         {
             this.duration = (long)duration.TotalMilliseconds;
+            return this;
+        }
+
+        public Animation WithDuration(long duration)
+        {
+            this.duration = duration;
             return this;
         }
 

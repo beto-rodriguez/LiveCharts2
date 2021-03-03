@@ -41,7 +41,7 @@ namespace LiveChartsCore.Drawing.Common
             return this;
         }
 
-        public TransitionBuilder DefineAnimation(Action<Animation> animationBuilder)
+        public TransitionBuilder WithAnimation(Action<Animation> animationBuilder)
         {
             var animation = new Animation();
             animationBuilder(animation);

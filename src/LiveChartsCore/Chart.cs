@@ -33,8 +33,6 @@ namespace LiveChartsCore
     public abstract class Chart<TDrawingContext> : IChart
         where TDrawingContext : DrawingContext
     {
-        private static bool isPlatformInitialized = false;
-
         protected object measureWorker = new object();
         protected HashSet<IDrawable<TDrawingContext>> measuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
         protected SeriesContext<TDrawingContext> seriesContext = new SeriesContext<TDrawingContext>(Enumerable.Empty<IDrawableSeries<TDrawingContext>>());
@@ -70,7 +68,8 @@ namespace LiveChartsCore
         public SeriesContext<TDrawingContext> SeriesContext => seriesContext;
         public Canvas<TDrawingContext> Canvas => canvas;
         public abstract IEnumerable<IDrawableSeries<TDrawingContext>> DrawableSeries { get; }
-        public abstract IChartView<TDrawingContext> ChartView { get; }
+        public abstract IChartView<TDrawingContext> View { get; }
+        IChartView IChart.View => View;
 
         public SizeF ControlSize => controlSize;
         public PointF DrawMaringLocation => drawMaringLocation;
@@ -102,18 +101,6 @@ namespace LiveChartsCore
             };
 
             drawMaringLocation = new PointF(margin.Left, margin.Top);
-        }
-
-        public void DefinePointState(string pointStateName, IDrawableTask<TDrawingContext> drawableTask)
-        {
-            states[pointStateName] = drawableTask;
-            canvas.AddDrawableTask(drawableTask);
-        }
-
-        public void RemovePointState(string pointStateName)
-        {
-            canvas.RemovePaintTask(states[pointStateName]);
-            states.Remove(pointStateName);
         }
     }
 }

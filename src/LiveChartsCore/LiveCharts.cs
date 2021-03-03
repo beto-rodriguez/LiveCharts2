@@ -34,6 +34,12 @@ namespace LiveChartsCore
 
         public static LiveChartsSettings CurrentSettings => settings;
 
+        public static string ColumnSeriesHoverKey => nameof(ColumnSeriesHoverKey);
+        public static string LineSeriesHoverKey => nameof(LineSeriesHoverKey);
+        public static string PieSeriesHoverKey => nameof(PieSeriesHoverKey);
+        public static string ScatterSeriesHoverKey => nameof(ScatterSeriesHoverKey);
+        public static string StackedColumnSeriesHoverKey => nameof(StackedColumnSeriesHoverKey);
+
         public static void Configure(Action<LiveChartsSettings> configuration)
         {
             if (configuration == null) throw new NullReferenceException($"{nameof(LiveChartsSettings)} must not be null.");

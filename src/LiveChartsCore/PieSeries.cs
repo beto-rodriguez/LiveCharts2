@@ -26,17 +26,38 @@ using System;
 
 namespace LiveChartsCore
 {
-    public class PieSeries<TModel, TVisual, TDrawingContext> 
+    public class PieSeries<TModel, TVisual, TDrawingContext>
         : DrawableSeries<TModel, TVisual, TDrawingContext>, IDisposable, IPieSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TVisual : class, IDoughnutVisualChartPoint<TDrawingContext>, new()
     {
-        public PieSeries() : base(SeriesProperties.PieSeries | SeriesProperties.Stacked) { }
+        public PieSeries() : base(SeriesProperties.PieSeries | SeriesProperties.Stacked) 
+        {
+            HoverState = LiveCharts.PieSeriesHoverKey;
+        }
 
-        public double PushOut { get; set; } = 5; // pixels
+        public double Pushout { get; set; } = 5; // pixels
         public double InnerRadius { get; set; } = 0; // pixels
         public double MaxOuterRadius { get; set; } = 1; // 0 - 1
-        public Action<IDoughnutVisualChartPoint<TDrawingContext>, Animation>? TransitionsSetter { get; set; }
+        public double HoverPushout { get; set; } = 20; // pixels
+
+        Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? IPieSeries<TDrawingContext>.OnPointCreated 
+        { 
+            get => OnPointCreated as Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>;
+            set => OnPointCreated = value;
+        }
+
+        Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? IPieSeries<TDrawingContext>.OnPointAddedToState 
+        { 
+            get => OnPointAddedToState as Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>;
+            set => OnPointAddedToState = value;
+        }
+
+        Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? IPieSeries<TDrawingContext>.OnPointRemovedFromState 
+        { 
+            get => OnPointRemovedFromState as Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>;
+            set => OnPointRemovedFromState = value;
+        }
 
         public void Measure(PieChart<TDrawingContext> chart)
         {
@@ -45,18 +66,18 @@ namespace LiveChartsCore
             var minDimension = drawMarginSize.Width < drawMarginSize.Height ? drawMarginSize.Width : drawMarginSize.Height;
 
             var maxPushout = (float)chart.PushoutBounds.Max;
-            var pushout = (float)PushOut;
+            var pushout = (float)Pushout;
             var innerRadius = (float)InnerRadius;
             var maxOuterRadius = (float)MaxOuterRadius;
 
-            minDimension = minDimension - (Stroke?.StrokeWidth ?? 0) * 2 -  maxPushout *2;
+            minDimension = minDimension - (Stroke?.StrokeWidth ?? 0) * 2 - maxPushout * 2;
             minDimension *= maxOuterRadius;
 
             if (Fill != null) chart.Canvas.AddDrawableTask(Fill);
             if (Stroke != null) chart.Canvas.AddDrawableTask(Stroke);
 
             var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
-            var ts = TransitionsSetter ?? SetDefaultTransitions;
+            var ts = OnPointCreated ?? DefaultOnPointCreated;
 
             var cx = drawLocation.X + drawMarginSize.Width * 0.5f;
             var cy = drawLocation.Y + drawMarginSize.Height * 0.5f;
@@ -68,7 +89,7 @@ namespace LiveChartsCore
             {
                 if (point.PointContext.Visual == null)
                 {
-                    var p = new TVisual 
+                    var p = new TVisual
                     {
                         CenterX = drawLocation.X + drawMarginSize.Width * 0.5f,
                         CenterY = drawLocation.Y + drawMarginSize.Height * 0.5f,
@@ -82,7 +103,7 @@ namespace LiveChartsCore
                         InnerRadius = 0
                     };
 
-                    ts(p, chartAnimation);
+                    ts(p, chart.View);
                     p.CompleteTransitions(
                         nameof(p.CenterX), nameof(p.CenterY),
                         nameof(p.X), nameof(p.Y),
@@ -122,9 +143,6 @@ namespace LiveChartsCore
 
                 stackedValue += point.PrimaryValue;
             }
-
-            if (HighlightFill != null) chart.Canvas.AddDrawableTask(HighlightFill);
-            if (HighlightStroke != null) chart.Canvas.AddDrawableTask(HighlightStroke);
         }
 
         public DimensinalBounds GetBounds(PieChart<TDrawingContext> chart)
@@ -138,22 +156,40 @@ namespace LiveChartsCore
                 stack.StackPoint(point);
                 bounds.PrimaryBounds.AppendValue(point.PrimaryValue);
                 bounds.SecondaryBounds.AppendValue(point.SecondaryValue);
-                bounds.TertiaryBounds.AppendValue(PushOut);
+                bounds.TertiaryBounds.AppendValue(Pushout);
             }
 
             return bounds;
         }
 
-        protected virtual void SetDefaultTransitions(IDoughnutGeometry<TDrawingContext> visual, Animation defaultAnimation)
+        protected virtual void DefaultOnPointCreated(TVisual visual, IChartView<TDrawingContext> chart)
         {
             visual
-                .DefinePropertyTransitions(
-                    nameof(visual.CenterX), nameof(visual.CenterY),
-                    nameof(visual.X), nameof(visual.Y),
-                    nameof(visual.Width), nameof(visual.Height),
-                    nameof(visual.StartAngle), nameof(visual.SweepAngle),
-                    nameof(visual.PushOut), nameof(visual.InnerRadius))
-                .WithAnimation(defaultAnimation);
+                .TransitionateProperties(
+                    nameof(visual.CenterX),
+                    nameof(visual.CenterY),
+                    nameof(visual.X),
+                    nameof(visual.Y),
+                    nameof(visual.Width),
+                    nameof(visual.Height),
+                    nameof(visual.StartAngle),
+                    nameof(visual.SweepAngle),
+                    nameof(visual.PushOut),
+                    nameof(visual.InnerRadius))
+                .WithAnimation(animation =>
+                    animation
+                        .WithDuration(chart.AnimationsSpeed)
+                        .WithEasingFunction(chart.EasingFunction));
+        }
+
+        protected override void DefaultOnPointAddedToSate(TVisual visual, IChartView<TDrawingContext> chart)
+        {
+            visual.PushOut = (float)HoverPushout;
+        }
+
+        protected override void DefaultOnRemovedFromState(TVisual visual, IChartView<TDrawingContext> chart)
+        {
+            visual.PushOut = (float)Pushout;
         }
 
         protected override void OnPaintContextChanged()
@@ -163,14 +199,14 @@ namespace LiveChartsCore
             if (Fill != null)
             {
                 var fillClone = Fill.CloneTask();
-                var visual = new TVisual 
+                var visual = new TVisual
                 {
-                    X = 0, 
-                    Y = 0, 
-                    Height = (float)LegendShapeSize, 
+                    X = 0,
+                    Y = 0,
+                    Height = (float)LegendShapeSize,
                     Width = (float)LegendShapeSize,
-                    CenterX = (float) LegendShapeSize *0.5f,
-                    CenterY= (float)LegendShapeSize * 0.5f,
+                    CenterX = (float)LegendShapeSize * 0.5f,
+                    CenterY = (float)LegendShapeSize * 0.5f,
                     StartAngle = 0,
                     SweepAngle = 359.9999f
                 };

@@ -20,10 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
+using System;
+using System.Collections.Generic;
+
 namespace LiveChartsCore.Context
 {
-    public static class PointStates
+    public class PointStates<TDrawingContext>
+        where TDrawingContext : DrawingContext
     {
-        public static string PointHovered => nameof(PointHovered);
+        private Dictionary<string, StrokeAndFillDrawable<TDrawingContext>> states = new Dictionary<string, StrokeAndFillDrawable<TDrawingContext>>();
+
+        public StrokeAndFillDrawable<TDrawingContext>? this[string stateName]
+        {
+            get
+            {
+                if (!states.TryGetValue(stateName, out var state)) return null;
+                return state;
+            }
+            set 
+            {
+                if (value == null)
+                    throw new InvalidOperationException(
+                        $"A null intance is not valid at this point, to delete a key please use the {nameof(DeleteState)}() method.");
+
+                states[stateName] = value; 
+            }
+        }
+
+        public void DeleteState(string stateName)
+        {
+            states.Remove(stateName);
+        }
     }
 }

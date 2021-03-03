@@ -36,6 +36,7 @@ namespace LiveChartsCore
         public ColumnSeries()
             : base (SeriesProperties.Bar | SeriesProperties.VerticalOrientation)
         {
+            HoverState = LiveCharts.ColumnSeriesHoverKey;
         }
 
         public double Pivot { get; set; }
@@ -115,9 +116,6 @@ namespace LiveChartsCore
                 OnPointMeasured(point, sizedGeometry);
                 chart.MeasuredDrawables.Add(sizedGeometry);
             }
-
-            if (HighlightFill != null) chart.Canvas.AddDrawableTask(HighlightFill);
-            if (HighlightStroke != null) chart.Canvas.AddDrawableTask(HighlightStroke);
         }
 
         public override DimensinalBounds GetBounds(
@@ -145,13 +143,13 @@ namespace LiveChartsCore
         protected virtual void SetDefaultTransitions(ISizedVisualChartPoint<TDrawingContext> visual, Animation defaultAnimation)
         {
             visual
-                .DefinePropertyTransitions(nameof(visual.X),nameof(visual.Width))
+                .TransitionateProperties(nameof(visual.X),nameof(visual.Width))
                 .WithAnimation(defaultAnimation)
                 .CompleteCurrentTransitions();
 
             visual
-                .DefinePropertyTransitions(nameof(visual.Y), nameof(visual.Height))
-                .DefineAnimation(animation => animation
+                .TransitionateProperties(nameof(visual.Y), nameof(visual.Height))
+                .WithAnimation(animation => animation
                     .WithEasingFunction(EasingFunctions.BounceOut)
                     .WithDuration((long)(defaultAnimation.duration * 1.5))
                     .RepeatTimes(defaultAnimation.repeatTimes))

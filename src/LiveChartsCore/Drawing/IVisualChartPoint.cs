@@ -22,9 +22,6 @@
 
 namespace LiveChartsCore.Drawing
 {
-    // this is the interface I'm am not completely sure about this one...
-    // i don't like it so much...
-
     /// <summary>
     /// Defines an object that contains a <see cref="Geometry"/> to highlight when the point requires so.
     /// </summary>
@@ -32,7 +29,7 @@ namespace LiveChartsCore.Drawing
         where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Gets the <see cref="Geometry"/> what we need to highlight when te point requires so.
+        /// Gets the main <see cref="Geometry"/>.
         /// </summary>
         IDrawable<TDrawingContext>? HighlightableGeometry { get; }
     }

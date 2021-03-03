@@ -52,7 +52,7 @@ namespace ViewModelsSamples
                     Values = new[]{ 2d, 5, 3, -6, 2, 8, -4, 2, 9, -6, 9, 3},
                     Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
                     Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
-                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
+                    //HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
                 },
                 //new StackedColumnSeries<double>
                 //{
@@ -139,8 +139,8 @@ namespace ViewModelsSamples
                     Values = new[] { new Observable { Value = 2 } },
                     //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
                     //Fill = new SolidColorPaintTask(new SKColor(217, 47, 47)),
-                    HighlightFill = hlb,
-                    PushOut = pushout,
+                    // HighlightFill = new SolidColorPaintTask(new SKColor(40, 40, 40)),// hlb,
+                    Pushout = pushout,
                     //MaxOuterRadius = 1
                 },
                 new PieSeries<Observable>
@@ -149,8 +149,8 @@ namespace ViewModelsSamples
                     Values = new[] {  new Observable { Value = 2 }  },
                     //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
                     //Fill = new SolidColorPaintTask(SKColors.BlueViolet),
-                    HighlightFill = hlb,
-                    PushOut = pushout,
+                    // HighlightFill = new SolidColorPaintTask(new SKColor(40, 40, 40)),// hlb,
+                    Pushout = pushout,
                     //MaxOuterRadius = .9
                 },
                 new PieSeries<Observable>
@@ -159,8 +159,8 @@ namespace ViewModelsSamples
                     Values = new[] {  new Observable { Value = 2 }  },
                     //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
                     //Fill = new SolidColorPaintTask(SKColors.DarkOliveGreen),
-                    HighlightFill = hlb,
-                    PushOut = pushout,
+                    // HighlightFill = new SolidColorPaintTask(new SKColor(40, 40, 40)),// hlb,
+                    Pushout = pushout,
                     //MaxOuterRadius = .8
                 },
                 new PieSeries<Observable>
@@ -169,8 +169,8 @@ namespace ViewModelsSamples
                     Values = new[] {  new Observable { Value = 2 } },
                     //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
                     //Fill = new SolidColorPaintTask(SKColors.Coral),
-                    HighlightFill = hlb,
-                    PushOut = pushout,
+                    // HighlightFill = new SolidColorPaintTask(new SKColor(40, 40, 40)),// hlb,
+                    Pushout = pushout,
                     //MaxOuterRadius = .7
                 },
                 new PieSeries<Observable>
@@ -179,8 +179,8 @@ namespace ViewModelsSamples
                     Values = new[] {  new Observable { Value = 2 }  },
                     //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
                     //Fill = new SolidColorPaintTask(SKColors.Cyan),
-                    HighlightFill = hlb,
-                    PushOut = pushout,
+                    // HighlightFill = new SolidColorPaintTask(new SKColor(40, 40, 40)),// hlb,
+                    Pushout = pushout,
                     MaxOuterRadius = .8
                 },
                 new PieSeries<Observable>
@@ -189,8 +189,8 @@ namespace ViewModelsSamples
                     Values = new[] {  new Observable { Value = 2 }  },
                     //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
                     //Fill = new SolidColorPaintTask(SKColors.DeepPink),
-                    HighlightFill = hlb,
-                    PushOut = pushout,
+                    // HighlightFill = new SolidColorPaintTask(new SKColor(40, 40, 40)),// hlb,
+                    Pushout = pushout,
                     MaxOuterRadius = .8
                 }
             };

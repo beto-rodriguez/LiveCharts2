@@ -28,13 +28,19 @@ namespace LiveChartsCore.Context
     public interface IPieSeries<TDrawingContext>: IDrawableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        double PushOut { get; set; }
+        double Pushout { get; set; }
 
         double InnerRadius { get; set; }
 
         double MaxOuterRadius { get; set; }
 
-        Action<IDoughnutVisualChartPoint<TDrawingContext>, Animation>? TransitionsSetter { get; set; }
+        double HoverPushout { get; set; }
+
+        Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? OnPointCreated { get; set; }
+
+        Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? OnPointAddedToState { get; set; }
+
+        Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? OnPointRemovedFromState { get; set; }
 
         DimensinalBounds GetBounds(PieChart<TDrawingContext> chart);
 

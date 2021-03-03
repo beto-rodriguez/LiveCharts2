@@ -34,7 +34,7 @@ namespace LiveChartsCore
         public ScatterSeries()
             : base(SeriesProperties.Scatter)
         {
-
+            HoverState = LiveCharts.ScatterSeriesHoverKey;
         }
 
         public double GeometrySize { get => geometrySize; set => geometrySize = value; }
@@ -92,9 +92,6 @@ namespace LiveChartsCore
                 OnPointMeasured(point, sizedGeometry);
                 chart.MeasuredDrawables.Add(sizedGeometry);
             }
-
-            if (HighlightFill != null) chart.Canvas.AddDrawableTask(HighlightFill);
-            if (HighlightStroke != null) chart.Canvas.AddDrawableTask(HighlightStroke);
         }
 
         public override DimensinalBounds GetBounds(
@@ -122,7 +119,7 @@ namespace LiveChartsCore
         protected virtual void SetDefaultTransitions(ISizedVisualChartPoint<TDrawingContext> visual, Animation defaultAnimation)
         {
             visual
-                .DefinePropertyTransitions(nameof(visual.X), nameof(visual.Y), nameof(visual.Width), nameof(visual.Height))
+                .TransitionateProperties(nameof(visual.X), nameof(visual.Y), nameof(visual.Width), nameof(visual.Height))
                 .WithAnimation(defaultAnimation)
                 .CompleteCurrentTransitions();
         }

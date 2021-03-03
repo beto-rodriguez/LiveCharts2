@@ -29,13 +29,13 @@ namespace LiveChartsCore.Context
     public interface ISeries: IDisposable
     {
         int SeriesId { get; set; }
-
+        string HoverState { get; set; }
         SeriesProperties SeriesProperties { get; }
-
         string? Name { get; set; }
 
         IEnumerable<IChartPoint> Fetch(IChart chart);
-
         IEnumerable<TooltipPoint> FindPointsNearTo(IChart chart, PointF pointerPosition);
+        void AddPointToState(IChartPoint chartPoint, string state);
+        void RemovePointFromState(IChartPoint chartPoint, string state);
     }
 }
