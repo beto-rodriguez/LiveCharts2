@@ -44,8 +44,9 @@ namespace LiveChartsCore
             new AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>();
         private readonly AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs> strokePathHelper =
             new AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>();
-        private double lineSmoothness = 0.65;
-        private double geometrySize = 18d;
+        private float lineSmoothness = 0.65f;
+        private float geometrySize = 14f;
+        private float pivot = 0f;
         private IDrawableTask<TDrawingContext>? shapesFill;
         private IDrawableTask<TDrawingContext>? shapesStroke;
 
@@ -55,11 +56,11 @@ namespace LiveChartsCore
             HoverState = LiveCharts.LineSeriesHoverKey;
         }
 
-        public double Pivot { get; set; }
+        public double Pivot { get => pivot; set => pivot = (float)value; }
 
-        public double GeometrySize { get => geometrySize; set => geometrySize = value; }
+        public double GeometrySize { get => geometrySize; set => geometrySize = (float)value; }
 
-        public double LineSmoothness { get => lineSmoothness; set => lineSmoothness = value; }
+        public double LineSmoothness { get => lineSmoothness; set => lineSmoothness = (float)value; }
 
         public IDrawableTask<TDrawingContext>? ShapesFill
         {
@@ -110,17 +111,17 @@ namespace LiveChartsCore
         }
 
         public override void Measure(
-            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext>xAxis, IAxis<TDrawingContext> yAxis)
+            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
         {
             var drawLocation = chart.DrawMaringLocation;
             var drawMarginSize = chart.DrawMarginSize;
             var xScale = new ScaleContext(drawLocation, drawMarginSize, xAxis.Orientation, xAxis.DataBounds);
             var yScale = new ScaleContext(drawLocation, drawMarginSize, yAxis.Orientation, yAxis.DataBounds);
 
-            var gs = unchecked((float)geometrySize);
+            var gs = geometrySize;
             var hgs = gs / 2f;
             float sw = Stroke?.StrokeWidth ?? 0;
-            float p = yScale.ScaleToUi(unchecked((float)Pivot));
+            float p = yScale.ScaleToUi(pivot);
 
             var wasFillInitialized = false;
             var wasStrokeInitialized = false;
@@ -295,7 +296,7 @@ namespace LiveChartsCore
                     nameof(visual.Bezier.Y1),
                     nameof(visual.Bezier.X2),
                     nameof(visual.Bezier.Y2))
-                .WithAnimation(animation => 
+                .WithAnimation(animation =>
                     animation
                          .WithDuration(chart.AnimationsSpeed)
                         .WithEasingFunction(chart.EasingFunction));
@@ -398,51 +399,51 @@ namespace LiveChartsCore
             if (points.Length == 0) yield break;
             IChartPoint<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext> previous, current, next, next2;
 
-            for (int i = 0; i < points.Length; i++)
+            unchecked
             {
-                previous = points[i - 1 < 0 ? 0 : i - 1];
-                current = points[i];
-                next = points[i + 1 > points.Length - 1 ? points.Length - 1 : i + 1];
-                next2 = points[i + 2 > points.Length - 1 ? points.Length - 1 : i + 2];
+                for (int i = 0; i < points.Length; i++)
+                {
+                    previous = points[i - 1 < 0 ? 0 : i - 1];
+                    current = points[i];
+                    next = points[i + 1 > points.Length - 1 ? points.Length - 1 : i + 1];
+                    next2 = points[i + 2 > points.Length - 1 ? points.Length - 1 : i + 2];
 
-                var xc1 = (previous.SecondaryValue + current.SecondaryValue) / 2.0;
-                var yc1 = (previous.PrimaryValue + current.PrimaryValue) / 2.0;
-                var xc2 = (current.SecondaryValue + next.SecondaryValue) / 2.0;
-                var yc2 = (current.PrimaryValue + next.PrimaryValue) / 2.0;
-                var xc3 = (next.SecondaryValue + next2.SecondaryValue) / 2.0;
-                var yc3 = (next.PrimaryValue + next2.PrimaryValue) / 2.0;
+                    var xc1 = (previous.SecondaryValue + current.SecondaryValue) / 2.0f;
+                    var yc1 = (previous.PrimaryValue + current.PrimaryValue) / 2.0f;
+                    var xc2 = (current.SecondaryValue + next.SecondaryValue) / 2.0f;
+                    var yc2 = (current.PrimaryValue + next.PrimaryValue) / 2.0f;
+                    var xc3 = (next.SecondaryValue + next2.SecondaryValue) / 2.0f;
+                    var yc3 = (next.PrimaryValue + next2.PrimaryValue) / 2.0f;
 
-                var len1 = Math.Sqrt(
+                    var len1 = (float)Math.Sqrt(
                     (current.SecondaryValue - previous.SecondaryValue) *
                     (current.SecondaryValue - previous.SecondaryValue) +
                     (current.PrimaryValue - previous.PrimaryValue) * (current.PrimaryValue - previous.PrimaryValue));
-                var len2 = Math.Sqrt(
-                    (next.SecondaryValue - current.SecondaryValue) *
-                    (next.SecondaryValue - current.SecondaryValue) +
-                    (next.PrimaryValue - current.PrimaryValue) * (next.PrimaryValue - current.PrimaryValue));
-                var len3 = Math.Sqrt(
-                    (next2.SecondaryValue - next.SecondaryValue) *
-                    (next2.SecondaryValue - next.SecondaryValue) +
-                    (next2.PrimaryValue - next.PrimaryValue) * (next2.PrimaryValue - next.PrimaryValue));
+                    var len2 = (float)Math.Sqrt(
+                        (next.SecondaryValue - current.SecondaryValue) *
+                        (next.SecondaryValue - current.SecondaryValue) +
+                        (next.PrimaryValue - current.PrimaryValue) * (next.PrimaryValue - current.PrimaryValue));
+                    var len3 = (float)Math.Sqrt(
+                        (next2.SecondaryValue - next.SecondaryValue) *
+                        (next2.SecondaryValue - next.SecondaryValue) +
+                        (next2.PrimaryValue - next.PrimaryValue) * (next2.PrimaryValue - next.PrimaryValue));
 
-                var k1 = len1 / (len1 + len2);
-                var k2 = len2 / (len2 + len3);
+                    var k1 = len1 / (len1 + len2);
+                    var k2 = len2 / (len2 + len3);
 
-                if (double.IsNaN(k1)) k1 = 0d;
-                if (double.IsNaN(k2)) k2 = 0d;
+                    if (float.IsNaN(k1)) k1 = 0f;
+                    if (float.IsNaN(k2)) k2 = 0f;
 
-                var xm1 = xc1 + (xc2 - xc1) * k1;
-                var ym1 = yc1 + (yc2 - yc1) * k1;
-                var xm2 = xc2 + (xc3 - xc2) * k2;
-                var ym2 = yc2 + (yc3 - yc2) * k2;
+                    var xm1 = xc1 + (xc2 - xc1) * k1;
+                    var ym1 = yc1 + (yc2 - yc1) * k1;
+                    var xm2 = xc2 + (xc3 - xc2) * k2;
+                    var ym2 = yc2 + (yc3 - yc2) * k2;
 
-                var c1X = xm1 + (xc2 - xm1) * lineSmoothness + current.SecondaryValue - xm1;
-                var c1Y = ym1 + (yc2 - ym1) * lineSmoothness + current.PrimaryValue - ym1;
-                var c2X = xm2 + (xc2 - xm2) * lineSmoothness + next.SecondaryValue - xm2;
-                var c2Y = ym2 + (yc2 - ym2) * lineSmoothness + next.PrimaryValue - ym2;
+                    var c1X = xm1 + (xc2 - xm1) * lineSmoothness + current.SecondaryValue - xm1;
+                    var c1Y = ym1 + (yc2 - ym1) * lineSmoothness + current.PrimaryValue - ym1;
+                    var c2X = xm2 + (xc2 - xm2) * lineSmoothness + next.SecondaryValue - xm2;
+                    var c2Y = ym2 + (yc2 - ym2) * lineSmoothness + next.PrimaryValue - ym2;
 
-                unchecked
-                {
                     float x0, y0;
 
                     if (i == 0)
@@ -452,8 +453,8 @@ namespace LiveChartsCore
                     }
                     else
                     {
-                        x0 = (float)c1X;
-                        y0 = (float)c1Y;
+                        x0 = c1X;
+                        y0 = c1Y;
                     }
 
                     yield return new BezierData<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>(points[i])
@@ -462,8 +463,8 @@ namespace LiveChartsCore
                         IsLast = i == points.Length - 1,
                         X0 = xScale.ScaleToUi(x0),
                         Y0 = yScale.ScaleToUi(y0),
-                        X1 = xScale.ScaleToUi((float)c2X),
-                        Y1 = yScale.ScaleToUi((float)c2Y),
+                        X1 = xScale.ScaleToUi(c2X),
+                        Y1 = yScale.ScaleToUi(c2Y),
                         X2 = xScale.ScaleToUi(next.SecondaryValue),
                         Y2 = yScale.ScaleToUi(next.PrimaryValue)
                     };
