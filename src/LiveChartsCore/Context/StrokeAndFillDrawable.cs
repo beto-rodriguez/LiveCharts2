@@ -30,33 +30,26 @@ namespace LiveChartsCore.Context
         private IDrawableTask<TDrawingContext>? stroke = null;
         private IDrawableTask<TDrawingContext>? fill = null;
 
-        public IDrawableTask<TDrawingContext>? Stroke
+        public StrokeAndFillDrawable(IDrawableTask<TDrawingContext>? stroke, IDrawableTask<TDrawingContext>? fill)
         {
-            get => stroke;
-            set
+            this.stroke = stroke;
+            if (stroke != null)
             {
-                stroke = value;
-                if (stroke != null)
-                {
-                    stroke.IsStroke = true;
-                    stroke.IsFill = false;
-                }
+                stroke.IsStroke = true;
+                stroke.IsFill = false;
+            }
+
+            this.fill = fill;
+            if (fill != null)
+            {
+                fill.IsStroke = false;
+                fill.IsFill = true;
+                fill.StrokeWidth = 0;
             }
         }
 
-        public IDrawableTask<TDrawingContext>? Fill
-        {
-            get => fill;
-            set
-            {
-                fill = value;
-                if (fill != null)
-                {
-                    fill.IsStroke = false;
-                    fill.IsFill = true;
-                    fill.StrokeWidth = 0;
-                }
-            }
-        }
+        public IDrawableTask<TDrawingContext>? Stroke => stroke;
+
+        public IDrawableTask<TDrawingContext>? Fill => fill;
     }
 }

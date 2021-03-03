@@ -93,7 +93,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
         public IChartTooltip<SkiaSharpDrawingContext> Tooltip => tooltip;
 
-        public PointStates<SkiaSharpDrawingContext> PointStates { get; set; }
+        public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; }
 
         public abstract void InitializeCore();
 

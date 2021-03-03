@@ -130,7 +130,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             }
 
             System.Drawing.PointF? location = null;
-            
+
             if (chart is CartesianChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetCartesianTooltipLocation(

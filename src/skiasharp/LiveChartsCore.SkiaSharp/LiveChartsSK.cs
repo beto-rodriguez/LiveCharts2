@@ -36,16 +36,18 @@ namespace LiveChartsCore.SkiaSharpView
 
         public static LiveChartsSettings AddSkiaSharp(this LiveChartsSettings settings, Action<StyleBuilder<SkiaSharpDrawingContext>> builder = null)
         {
-            return settings.AddDefaultStyles((StyleBuilder<SkiaSharpDrawingContext> styleBuilder) =>
-            {
-                // default settings
-                styleBuilder
-                    .UseColors(ColorPacks.MaterialDesign500)
-                    .UseSeriesInitializer(new DefaultSeriesInitializer());
+            return settings
+                .AddDefaultMappers()
+                .AddDefaultStyles((StyleBuilder<SkiaSharpDrawingContext> styleBuilder) =>
+                {
+                    // default settings
+                    styleBuilder
+                        .UseColors(ColorPacks.MaterialDesign500)
+                        .UseSeriesInitializer(new DefaultSeriesInitializer());
 
-                // user defined settings
-                builder?.Invoke(styleBuilder);
-            });
+                    // user defined settings
+                    builder?.Invoke(styleBuilder);
+                });
         }
     }
 }

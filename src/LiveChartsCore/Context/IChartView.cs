@@ -46,6 +46,6 @@ namespace LiveChartsCore.Context
         Canvas<TDrawingContext> CoreCanvas { get; }
         IChartLegend<TDrawingContext> Legend { get; }
         IChartTooltip<TDrawingContext> Tooltip { get; }
-        PointStates<TDrawingContext> PointStates { get; set; }
+        PointStatesDictionary<TDrawingContext> PointStates { get; set; }
     }
 }

@@ -33,13 +33,14 @@ namespace LiveChartsCore.SkiaSharpView
     {
         public override void ConstructChart(IChartView<SkiaSharpDrawingContext> chart)
         {
-            chart.PointStates = new PointStates<SkiaSharpDrawingContext>
+            var defaultHoverColor = new SKColor(255, 255, 255, 180);
+            chart.PointStates = new PointStatesDictionary<SkiaSharpDrawingContext>
             {
-                [LiveCharts.PieSeriesHoverKey] = new StrokeAndFillDrawable<SkiaSharpDrawingContext>
-                {
-                    Fill = new SolidColorPaintTask(new SKColor(255, 255, 255, 180)),
-                    Stroke = null
-                }
+                [LiveCharts.ColumnSeriesHoverKey] = new StrokeAndFillDrawable<SkiaSharpDrawingContext>(null, new SolidColorPaintTask(defaultHoverColor)),
+                [LiveCharts.LineSeriesHoverKey] = new StrokeAndFillDrawable<SkiaSharpDrawingContext>(null, new SolidColorPaintTask(defaultHoverColor)),
+                [LiveCharts.PieSeriesHoverKey] = new StrokeAndFillDrawable<SkiaSharpDrawingContext>(null, new SolidColorPaintTask(defaultHoverColor)),
+                [LiveCharts.ScatterSeriesHoverKey] = new StrokeAndFillDrawable<SkiaSharpDrawingContext>(null, new SolidColorPaintTask(defaultHoverColor)),
+                [LiveCharts.StackedColumnSeriesHoverKey] = new StrokeAndFillDrawable<SkiaSharpDrawingContext>(null, new SolidColorPaintTask(defaultHoverColor)),
             };
         }
 
@@ -51,7 +52,7 @@ namespace LiveChartsCore.SkiaSharpView
 
                 pieSeries.Fill = LiveChartsSK.DefaultPaint;
                 pieSeries.Stroke = null;
-                pieSeries.Pushout = 6;
+                pieSeries.Pushout = 0;
 
                 pieSeries.OnPointCreated =
                     (IDoughnutVisualChartPoint<SkiaSharpDrawingContext> visual, IChartView<SkiaSharpDrawingContext> chart) =>
@@ -64,7 +65,7 @@ namespace LiveChartsCore.SkiaSharpView
                             .WithAnimation(animation =>
                                 animation
                                     .WithDuration(chart.AnimationsSpeed)
-                                    .WithEasingFunction(EasingFunctions.BounceOut));
+                                    .WithEasingFunction(EasingFunctions.SinOut));
                     };
 
                 return;

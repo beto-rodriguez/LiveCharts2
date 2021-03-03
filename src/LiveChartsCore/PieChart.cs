@@ -43,6 +43,20 @@ namespace LiveChartsCore
             : base(canvas, defaultPlatformConfig)
         {
             chartView = view;
+
+            view.PointStates.Chart = this;
+            foreach (var item in view.PointStates.GetStates())
+            {
+                if (item.Fill != null)
+                {
+                    item.Fill.ZIndex += 1000000;
+                    canvas.AddDrawableTask(item.Fill);
+                }
+                if (item.Stroke != null) {
+                    item.Stroke.ZIndex += 1000000;
+                    canvas.AddDrawableTask(item.Stroke); 
+                }
+            }
         }
 
         public IPieSeries<TDrawingContext>[] Series => series;

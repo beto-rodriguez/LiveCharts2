@@ -23,10 +23,11 @@
 using LiveChartsCore.Drawing;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LiveChartsCore.Context
 {
-    public class PointStates<TDrawingContext>
+    public class PointStatesDictionary<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         private Dictionary<string, StrokeAndFillDrawable<TDrawingContext>> states = new Dictionary<string, StrokeAndFillDrawable<TDrawingContext>>();
@@ -38,19 +39,38 @@ namespace LiveChartsCore.Context
                 if (!states.TryGetValue(stateName, out var state)) return null;
                 return state;
             }
-            set 
+            set
             {
                 if (value == null)
                     throw new InvalidOperationException(
-                        $"A null intance is not valid at this point, to delete a key please use the {nameof(DeleteState)}() method.");
+                        $"A null instance is not valid at this point, to delete a key please use the {nameof(DeleteState)}() method.");
 
-                states[stateName] = value; 
+                if (states.ContainsKey(stateName)) RemoveState(states[stateName]);
+
+                states[stateName] = value;
+                if (Chart == null) return;
+
+                if (value.Fill != null) Chart.Canvas.AddDrawableTask(value.Fill);
+                if (value.Stroke != null) Chart.Canvas.AddDrawableTask(value.Stroke);
             }
         }
 
+        public Chart<TDrawingContext>? Chart { get; internal set; }
+
+        public StrokeAndFillDrawable<TDrawingContext>[] GetStates() => states.Values.ToArray();
+
         public void DeleteState(string stateName)
         {
+            RemoveState(states[stateName]);
             states.Remove(stateName);
+        }
+
+        private void RemoveState(StrokeAndFillDrawable<TDrawingContext> state)
+        {
+            if (Chart == null) return;
+
+            if (state.Fill != null) Chart.Canvas.AddDrawableTask(state.Fill);
+            if (state.Stroke != null) Chart.Canvas.AddDrawableTask(state.Stroke);
         }
     }
 }
