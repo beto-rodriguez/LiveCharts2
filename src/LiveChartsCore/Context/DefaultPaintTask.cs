@@ -91,5 +91,10 @@ namespace LiveChartsCore.Context
         {
             throw new System.NotImplementedException();
         }
+
+        public void CompleteAllTransitions()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

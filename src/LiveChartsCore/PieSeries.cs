@@ -104,12 +104,7 @@ namespace LiveChartsCore
                     };
 
                     ts(p, chart.View);
-                    p.CompleteTransitions(
-                        nameof(p.CenterX), nameof(p.CenterY),
-                        nameof(p.X), nameof(p.Y),
-                        nameof(p.Width), nameof(p.Height),
-                        nameof(p.StartAngle), nameof(p.SweepAngle),
-                        nameof(p.PushOut), nameof(p.InnerRadius));
+                    p.CompleteAllTransitions();
 
                     point.PointContext.Visual = p;
                     if (Fill != null) Fill.AddGeometyToPaintTask(p);

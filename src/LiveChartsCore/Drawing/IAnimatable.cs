@@ -34,6 +34,7 @@ namespace LiveChartsCore.Drawing
         void SetPropertiesTransitions(Animation animation, params string[] propertyName);
         void RemovePropertyTransition(string propertyName);
 
+        void CompleteAllTransitions();
         void CompleteTransitions(params string[] propertyName);
         IMotionProperty GetTransitionProperty(string propertyName);
     }

@@ -46,14 +46,14 @@ namespace ViewModelsSamples
 
             Series = new ObservableCollection<ICartesianSeries<SkiaSharpDrawingContext>>
             {
-                new ColumnSeries<double>
-                {
-                    Name = "columns",
-                    Values = new[]{ 2d, 5, 3, -6, 2, 8, -4, 2, 9, -6, 9, 3},
-                    Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
-                    Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
-                    //HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
-                },
+                //new ColumnSeries<double>
+                //{
+                //    Name = "columns",
+                //    Values = new[]{ 2d, 5, 3, -6, 2, 8, -4, 2, 9, -6, 9, 3},
+                //    Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
+                //    Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
+                //    //HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
+                //},
                 //new StackedColumnSeries<double>
                 //{
                 //    Name = "columns 2",

@@ -40,8 +40,26 @@ namespace LiveChartsCore
         }
 
         public int StackGroup { get => stackGroup; set => stackGroup = value; }
+
         public double MaxColumnWidth { get; set; } = 30;
-        public Action<ISizedVisualChartPoint<TDrawingContext>, Animation>? TransitionsSetter { get; set; }
+
+        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IStackedColumnSeries<TDrawingContext>.OnPointCreated
+        {
+            get => OnPointCreated as Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>;
+            set => OnPointCreated = value;
+        }
+
+        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IStackedColumnSeries<TDrawingContext>.OnPointAddedToState
+        {
+            get => OnPointAddedToState as Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>;
+            set => OnPointAddedToState = value;
+        }
+
+        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IStackedColumnSeries<TDrawingContext>.OnPointRemovedFromState
+        {
+            get => OnPointRemovedFromState as Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>;
+            set => OnPointRemovedFromState = value;
+        }
 
         public override void Measure(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
@@ -77,7 +95,7 @@ namespace LiveChartsCore
             if (Stroke != null) chart.Canvas.AddDrawableTask(Stroke);
 
             var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
-            var ts = TransitionsSetter ?? SetDefaultTransitions;
+            var ts = OnPointCreated ?? DefaultOnPointCreated;
 
             var stacker = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
             if (stacker == null) throw new NullReferenceException("Unexpected null stacker");
@@ -96,7 +114,8 @@ namespace LiveChartsCore
                         Height = 0
                     };
 
-                    ts(r, chartAnimation);
+                    ts(r, chart.View);
+                    r.CompleteAllTransitions();
 
                     point.PointContext.Visual = r;
                     if (Fill != null) Fill.AddGeometyToPaintTask(r);
@@ -142,20 +161,15 @@ namespace LiveChartsCore
             };
         }
 
-        protected virtual void SetDefaultTransitions(ISizedVisualChartPoint<TDrawingContext> visual, Animation defaultAnimation)
+        protected virtual void DefaultOnPointCreated(ISizedVisualChartPoint<TDrawingContext> visual, IChartView<TDrawingContext> chart)
         {
             visual
                 .TransitionateProperties(nameof(visual.X), nameof(visual.Width))
-                .WithAnimation(defaultAnimation)
-                .CompleteCurrentTransitions();
+                .WithAnimation(a => a.WithDuration(chart.AnimationsSpeed).WithEasingFunction(chart.EasingFunction));
 
             visual
                 .TransitionateProperties(nameof(visual.Y), nameof(visual.Height))
-                .WithAnimation(animation => animation
-                    .WithEasingFunction(EasingFunctions.BounceOut)
-                    .WithDuration((long)(defaultAnimation.duration * 1.5))
-                    .RepeatTimes(defaultAnimation.repeatTimes))
-                .CompleteCurrentTransitions();
+                .WithAnimation(a => a.WithDuration((long)(chart.AnimationsSpeed.TotalMilliseconds * 1.5)).WithEasingFunction(chart.EasingFunction));
         }
 
         protected override void OnPaintContextChanged()

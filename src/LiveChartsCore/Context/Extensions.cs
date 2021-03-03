@@ -116,6 +116,9 @@ namespace LiveChartsCore.Context
 
         public static TransitionBuilder TransitionateProperties(this IAnimatable animatable, params string[] properties)
         {
+            if (properties == null || properties.Length == 0)
+                throw new Exception($"At least one property is required when calling {nameof(TransitionateProperties)}"); 
+
             return new TransitionBuilder(animatable, properties);
         }
 

@@ -34,6 +34,9 @@ namespace LiveChartsCore.Context
 
         IDrawableTask<TDrawingContext>? ShapesFill { get; set; }
         IDrawableTask<TDrawingContext>? ShapesStroke { get; set; }
-        Action<ILineBezierVisualChartPoint<TDrawingContext>, Animation>? TransitionsSetter { get; set; }
+
+        Action<ILineBezierVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? OnPointCreated { get; set; }
+        Action<ILineBezierVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? OnPointAddedToState { get; set; }
+        Action<ILineBezierVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? OnPointRemovedFromState { get; set; }
     }
 }

@@ -95,7 +95,7 @@ namespace LiveChartsCore
         public Action<TVisual, IChartView<TDrawingContext>>? OnPointAddedToState { get; set; }
         public Action<TVisual, IChartView<TDrawingContext>>? OnPointRemovedFromState { get; set; }
 
-        public abstract int GetStackGroup();
+        public virtual int GetStackGroup() => 0;
 
         /// <inheritdoc/>
         public virtual IEnumerable<IChartPoint<TVisual, TDrawingContext>> Fetch(IChart chart)
