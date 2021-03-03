@@ -38,7 +38,6 @@ namespace LiveChartsCore
         protected SeriesContext<TDrawingContext> seriesContext = new SeriesContext<TDrawingContext>(Enumerable.Empty<IDrawableSeries<TDrawingContext>>());
         protected readonly Canvas<TDrawingContext> canvas;
         protected readonly ActionThrottler updateThrottler;
-        private readonly Dictionary<string, IDrawableTask<TDrawingContext>> states = new Dictionary<string, IDrawableTask<TDrawingContext>>();
 
         // view copied properties
         protected SizeF controlSize = new SizeF();

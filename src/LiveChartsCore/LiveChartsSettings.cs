@@ -24,7 +24,6 @@ using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace LiveChartsCore
 {
@@ -93,34 +92,13 @@ namespace LiveChartsCore
             return this;
         }
 
-        public void ConstructSeries<TDrawingContext>(IDrawableSeries<TDrawingContext> series)
+        public StyleBuilder<TDrawingContext> GetStylesBuilder<TDrawingContext>()
             where TDrawingContext : DrawingContext
         {
             if (!seriesStyleBuilder.TryGetValue(typeof(TDrawingContext), out var stylesBuilder))
-            {
-#if DEBUG
-                Trace.WriteLine(nameof(TDrawingContext) + " is not registered, the style was not applied.");
-#endif
-                return;
-            }
+                throw new Exception($"The type {nameof(TDrawingContext)} is not registered.");
 
-            var sb = (StyleBuilder<TDrawingContext>)stylesBuilder;
-            sb.ConstructSeries(series);
-        }
-
-        public void ResolveSeriesDefaults<TDrawingContext>(IDrawableSeries<TDrawingContext> series)
-            where TDrawingContext : DrawingContext
-        {
-            if (!seriesStyleBuilder.TryGetValue(typeof(TDrawingContext), out var stylesBuilder))
-            {
-#if DEBUG
-                Trace.WriteLine(nameof(TDrawingContext) + " is not registered, the style was not applied.");
-#endif
-                return;
-            }
-
-            var sb = (StyleBuilder<TDrawingContext>)stylesBuilder;
-            sb.ResolveDefaults(series);
+            return (StyleBuilder<TDrawingContext>)stylesBuilder;
         }
 
         /// <summary>

@@ -89,7 +89,7 @@ namespace LiveChartsCore
         public Action<IChartPoint, TModel, IChartPointContext>? Mapping { get; set; }
 
         int ISeries.SeriesId { get; set; } = -1;
-        public string HoverState { get; set; }
+        public string HoverState { get; set; } = "Unknown";
 
         public Action<TVisual, IChartView<TDrawingContext>>? OnPointCreated { get; set; }
         public Action<TVisual, IChartView<TDrawingContext>>? OnPointAddedToState { get; set; }

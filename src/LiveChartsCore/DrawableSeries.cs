@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
+using System;
 
 namespace LiveChartsCore
 {
@@ -75,5 +76,15 @@ namespace LiveChartsCore
         public double LegendShapeSize { get => legendShapeSize; set => legendShapeSize = value; }
 
         protected abstract void OnPaintContextChanged();
+
+        protected void InitializeSeries()
+        {
+            var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<TDrawingContext>();
+            var initializer = stylesBuilder.GetInitializer();
+            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
+                throw new Exception("Default colors are not valid");
+
+            initializer.ConstructSeries(this);
+        }
     }
 }

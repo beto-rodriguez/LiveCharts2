@@ -36,7 +36,7 @@ namespace LiveChartsCore.SkiaSharpView
         public StackedColumnSeries()
         {
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSK.DefaultPlatformBuilder);
-            LiveCharts.CurrentSettings.ConstructSeries(this);
+            InitializeSeries();
         }
     }
 }

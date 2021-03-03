@@ -38,7 +38,7 @@ namespace LiveChartsCore.SkiaSharpView
         public LineSeries()
         {
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSK.DefaultPlatformBuilder);
-            LiveCharts.CurrentSettings.ConstructSeries(this);
+            InitializeSeries();
         }
     }
 }

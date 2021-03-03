@@ -77,11 +77,16 @@ namespace LiveChartsCore
             foreach (var axis in xAxes) axis.Initialize(AxisOrientation.X);
             foreach (var axis in yAxes) axis.Initialize(AxisOrientation.Y);
 
+            var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<TDrawingContext>();
+            var initializer = stylesBuilder.GetInitializer();
+            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
+                throw new Exception("Default colors are not valid");
+
             // get seriesBounds
             foreach (var series in series)
             {
                 if (series.SeriesId == -1) series.SeriesId = nextSeries++;
-                LiveCharts.CurrentSettings.ResolveSeriesDefaults(series);
+                initializer.ResolveSeriesDefaults(stylesBuilder.CurrentColors, series);
 
                 var xAxis = xAxes[series.ScalesXAt];
                 var yAxis = yAxes[series.ScalesYAt];

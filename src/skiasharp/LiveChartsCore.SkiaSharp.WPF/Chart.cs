@@ -45,6 +45,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public Chart()
         {
+            var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<SkiaSharpDrawingContext>();
+            var initializer = stylesBuilder.GetInitializer();
+            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
+                throw new Exception("Default colors are not valid");
+            initializer.ConstructChart(this);
+
             SizeChanged += OnSizeChanged;
             MouseMove += OnMouseMove;
             mouseMoveThrottler = new ActionThrottler(TimeSpan.FromMilliseconds(10));

@@ -84,13 +84,18 @@ namespace LiveChartsCore
 
             if (legend != null) legend.Draw(this);
 
+            var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<TDrawingContext>();
+            var initializer = stylesBuilder.GetInitializer();
+            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
+                throw new Exception("Default colors are not valid");
+
             ValueBounds = new Bounds();
             IndexBounds = new Bounds();
             PushoutBounds = new Bounds();
             foreach (var series in series)
             {
                 if (series.SeriesId == -1) series.SeriesId = nextSeries++;
-                LiveCharts.CurrentSettings.ResolveSeriesDefaults(series);
+                initializer.ResolveSeriesDefaults(stylesBuilder.CurrentColors, series);
 
                 var seriesBounds = series.GetBounds(this);
 
