@@ -34,8 +34,8 @@ namespace LiveChartsCore
     {
         private readonly ICartesianChartView<TDrawingContext> chartView;
         private int nextSeries = 0;
-        private IAxis<TDrawingContext>[] xAxes = new IAxis<TDrawingContext>[0];
-        private IAxis<TDrawingContext>[] yAxes = new IAxis<TDrawingContext>[0];
+        private IAxis<TDrawingContext>[] secondaryAxes = new IAxis<TDrawingContext>[0];
+        private IAxis<TDrawingContext>[] primaryAxes = new IAxis<TDrawingContext>[0];
         private ICartesianSeries<TDrawingContext>[] series = new ICartesianSeries<TDrawingContext>[0];
 
         public CartesianChart(
@@ -62,8 +62,8 @@ namespace LiveChartsCore
             }
         }
 
-        public IAxis<TDrawingContext>[] XAxes => xAxes;
-        public IAxis<TDrawingContext>[] YAxes => yAxes;
+        public IAxis<TDrawingContext>[] XAxes => secondaryAxes;
+        public IAxis<TDrawingContext>[] YAxes => primaryAxes;
         public ICartesianSeries<TDrawingContext>[] Series => series;
         public override IEnumerable<IDrawableSeries<TDrawingContext>> DrawableSeries => series;
         public override IChartView<TDrawingContext> View => chartView;
@@ -89,8 +89,8 @@ namespace LiveChartsCore
             if (legend != null) legend.Draw(this);
 
             // restart axes bounds and meta data
-            foreach (var axis in xAxes) axis.Initialize(AxisOrientation.X);
-            foreach (var axis in yAxes) axis.Initialize(AxisOrientation.Y);
+            foreach (var axis in secondaryAxes) axis.Initialize(AxisOrientation.X);
+            foreach (var axis in primaryAxes) axis.Initialize(AxisOrientation.Y);
 
             var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<TDrawingContext>();
             var initializer = stylesBuilder.GetInitializer();
@@ -103,15 +103,15 @@ namespace LiveChartsCore
                 if (series.SeriesId == -1) series.SeriesId = nextSeries++;
                 initializer.ResolveSeriesDefaults(stylesBuilder.CurrentColors, series);
 
-                var xAxis = xAxes[series.ScalesXAt];
-                var yAxis = yAxes[series.ScalesYAt];
+                var secondaryAxis = secondaryAxes[series.ScalesXAt];
+                var primaryAxis = primaryAxes[series.ScalesYAt];
 
-                var seriesBounds = series.GetBounds(this, xAxis, yAxis);
+                var seriesBounds = series.GetBounds(this, secondaryAxis, primaryAxis);
 
-                xAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.max);
-                xAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.min);
-                yAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.max);
-                yAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.min);
+                secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.max);
+                secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.min);
+                primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.max);
+                primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.min);
             }
 
             if (viewDrawMargin == null)
@@ -120,7 +120,7 @@ namespace LiveChartsCore
                 float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
                 SetDrawMargin(controlSize, m);
 
-                foreach (var axis in xAxes)
+                foreach (var axis in secondaryAxes)
                 {
                     var s = axis.GetPossibleSize(this);
                     if (axis.Position == AxisPosition.LeftOrBottom)
@@ -142,7 +142,7 @@ namespace LiveChartsCore
                         //if (rs + s.Width * 0.5f > m.Right) m.Right = rs + s.Width * 0.5f;
                     }
                 }
-                foreach (var axis in yAxes)
+                foreach (var axis in primaryAxes)
                 {
                     var s = axis.GetPossibleSize(this);
                     var w = s.Width > m.Left ? s.Width : m.Left;
@@ -173,19 +173,19 @@ namespace LiveChartsCore
             // or it is initializing in the UI and has no dimensions yet
             if (drawMarginSize.Width <= 0 || drawMarginSize.Height <= 0) return;
 
-            foreach (var axis in xAxes)
+            foreach (var axis in secondaryAxes)
             {
                 axis.Measure(this);
             }
-            foreach (var axis in yAxes)
+            foreach (var axis in primaryAxes)
             {
                 axis.Measure(this);
             }
             foreach (var series in series)
             {
-                var x = xAxes[series.ScalesXAt];
-                var y = yAxes[series.ScalesYAt];
-                series.Measure(this, x, y);
+                var secondaryAxis = secondaryAxes[series.ScalesXAt];
+                var primaryAxis = primaryAxes[series.ScalesYAt];
+                series.Measure(this, secondaryAxis, primaryAxis);
             }
 
             chartView.CoreCanvas.ForEachGeometry((geometry, drawable) =>
@@ -208,8 +208,8 @@ namespace LiveChartsCore
 
             viewDrawMargin = chartView.DrawMargin;
             controlSize = chartView.ControlSize;
-            yAxes = chartView.YAxes.Select(x => x.Copy()).ToArray();
-            xAxes = chartView.XAxes.Select(x => x.Copy()).ToArray();
+            primaryAxes = chartView.YAxes.Select(x => x.Copy()).ToArray();
+            secondaryAxes = chartView.XAxes.Select(x => x.Copy()).ToArray();
 
             measureWorker = new object();
             series = chartView.Series.Select(series =>

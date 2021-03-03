@@ -46,14 +46,14 @@ namespace ViewModelsSamples
 
             Series = new ObservableCollection<ICartesianSeries<SkiaSharpDrawingContext>>
             {
-                //new ColumnSeries<double>
-                //{
-                //    Name = "columns",
-                //    Values = new[]{ 2d, 5, 3, -6, 2, 8, -4, 2, 9, -6, 9, 3},
-                //    Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
-                //    Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
-                //    //HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
-                //},
+                new RowSeries<double>
+                {
+                    Name = "rows",
+                    Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
+                    Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
+                    Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
+                    //HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
+                },
                 //new StackedColumnSeries<double>
                 //{
                 //    Name = "columns 2",
@@ -78,13 +78,13 @@ namespace ViewModelsSamples
                 //    Stroke = new SolidColorPaintTask(new SKColor(239, 108, 0), 2),
                 //    Fill = new SolidColorPaintTask(new SKColor(239, 108, 0, 30)),
                 //},
-                 new LineSeries<double>
-                {
-                    Name = "lines",
-                    Values = new[]{ 1d, 4, 2, 1, 7, 3, 5, 6, 3, 6, 8, 3},
-                    //ShapesFill = new SolidColorPaintTask(new SKColor(255, 255, 255)),
-                    //ShapesStroke =  new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
-                },
+                // new LineSeries<double>
+                //{
+                //    Name = "lines",
+                //    Values = new[]{ 1d, 4, 2, 1, 7, 3, 5, 6, 3, 6, 8, 3},
+                //    //ShapesFill = new SolidColorPaintTask(new SKColor(255, 255, 255)),
+                //    //ShapesStroke =  new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
+                //},
             };
 
             YAxes = new List<IAxis<SkiaSharpDrawingContext>>

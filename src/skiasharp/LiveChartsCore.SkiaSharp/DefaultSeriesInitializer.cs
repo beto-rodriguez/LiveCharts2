@@ -36,7 +36,7 @@ namespace LiveChartsCore.SkiaSharpView
             var defaultHoverColor = new SKColor(255, 255, 255, 180);
             chart.PointStates = new PointStatesDictionary<SkiaSharpDrawingContext>
             {
-                [LiveCharts.ColumnSeriesHoverKey] = new StrokeAndFillDrawable<SkiaSharpDrawingContext>(null, new SolidColorPaintTask(defaultHoverColor)),
+                [LiveCharts.BarSeriesHoverKey] = new StrokeAndFillDrawable<SkiaSharpDrawingContext>(null, new SolidColorPaintTask(defaultHoverColor)),
                 [LiveCharts.LineSeriesHoverKey] = new StrokeAndFillDrawable<SkiaSharpDrawingContext>(null, new SolidColorPaintTask(defaultHoverColor)),
                 [LiveCharts.PieSeriesHoverKey] = new StrokeAndFillDrawable<SkiaSharpDrawingContext>(null, new SolidColorPaintTask(defaultHoverColor)),
                 [LiveCharts.ScatterSeriesHoverKey] = new StrokeAndFillDrawable<SkiaSharpDrawingContext>(null, new SolidColorPaintTask(defaultHoverColor)),

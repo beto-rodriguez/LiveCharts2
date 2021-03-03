@@ -34,7 +34,7 @@ namespace LiveChartsCore
 
         public static LiveChartsSettings CurrentSettings => settings;
 
-        public static string ColumnSeriesHoverKey => nameof(ColumnSeriesHoverKey);
+        public static string BarSeriesHoverKey => nameof(BarSeriesHoverKey);
         public static string LineSeriesHoverKey => nameof(LineSeriesHoverKey);
         public static string PieSeriesHoverKey => nameof(PieSeriesHoverKey);
         public static string ScatterSeriesHoverKey => nameof(ScatterSeriesHoverKey);

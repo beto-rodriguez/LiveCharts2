@@ -21,24 +21,22 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using System;
+using LiveChartsCore.SkiaSharpView.Drawing;
 
-namespace LiveChartsCore.Context
+namespace LiveChartsCore.SkiaSharpView
 {
-    public interface IColumnSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public class RowSeries<TModel>: RowSeries<TModel, RectangleGeometry>
     {
-        double Pivot { get; set; }
 
-        double MaxColumnWidth { get; set; }
+    }
 
-        bool IgnoresColumnPosition { get; set; }
-
-        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? OnPointCreated { get; set; }
-
-        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? OnPointAddedToState { get; set; }
-
-        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? OnPointRemovedFromState { get; set; }
-
+    public class RowSeries<TModel, TVisual> : RowSeries<TModel, TVisual, SkiaSharpDrawingContext>
+        where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+    {
+        public RowSeries()
+        {
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSK.DefaultPlatformBuilder);
+            InitializeSeries();
+        }
     }
 }
