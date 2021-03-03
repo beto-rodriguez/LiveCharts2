@@ -71,6 +71,14 @@ namespace LiveChartsCore.SkiaSharpView
                 return;
             }
 
+            if ((series.SeriesProperties & SeriesProperties.Line) == SeriesProperties.Line)
+            {
+                var lineSeries = (ILineSeries<SkiaSharpDrawingContext>)series;
+                lineSeries.ShapesFill = LiveChartsSK.DefaultPaint;
+                lineSeries.ShapesStroke = null;
+            }
+
+
             series.Fill = LiveChartsSK.DefaultPaint;
             series.Stroke = LiveChartsSK.DefaultPaint;
         }
@@ -96,7 +104,7 @@ namespace LiveChartsCore.SkiaSharpView
                 if (lineSeries.ShapesStroke == LiveChartsSK.DefaultPaint) lineSeries.ShapesStroke = null;
             }
 
-            if (series.Fill == LiveChartsSK.DefaultPaint) series.Fill = new SolidColorPaintTask(ColorAsSKColor(color, (byte)(0.7*255)));
+            if (series.Fill == LiveChartsSK.DefaultPaint) series.Fill = new SolidColorPaintTask(ColorAsSKColor(color, (byte)(0.5*255)));
             if (series.Stroke == LiveChartsSK.DefaultPaint) series.Stroke = new SolidColorPaintTask(ColorAsSKColor(color), 3);
         }
 

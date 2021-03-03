@@ -82,8 +82,6 @@ namespace ViewModelsSamples
                 {
                     Name = "lines",
                     Values = new[]{ 1d, 4, 2, 1, 7, 3, 5, 6, 3, 6, 8, 3},
-                    Stroke = new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
-                    Fill = new SolidColorPaintTask(new SKColor(2, 136, 209, 200)),
                     //ShapesFill = new SolidColorPaintTask(new SKColor(255, 255, 255)),
                     //ShapesStroke =  new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
                 },
