@@ -81,6 +81,19 @@ namespace LiveChartsCore
                 var x = xScale.ScaleToUi(point.SecondaryValue);
                 var y = yScale.ScaleToUi(point.PrimaryValue);
 
+                if (point.IsNull)
+                {
+                    if (point.Context.Visual != null)
+                    {
+                        point.Context.Visual.X = x - hgs;
+                        point.Context.Visual.Y = y - hgs;
+                        point.Context.Visual.Width = 0;
+                        point.Context.Visual.Height = 0;
+                        point.Context.Visual.RemoveOnCompleted = true;
+                    }
+                    continue;
+                }
+
                 if (point.Context.Visual == null)
                 {
                     var r = new TVisual
