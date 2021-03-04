@@ -32,6 +32,10 @@ namespace LiveChartsCore.Context
 
         float SecondaryValue { get; set; }
 
+        float TertiaryValue { get; set; }
+
+        float QuaternaryValue { get; set; }
+
         IChartPointContext Context { get; }
     }
 

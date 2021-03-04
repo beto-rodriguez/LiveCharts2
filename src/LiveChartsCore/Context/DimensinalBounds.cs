@@ -30,6 +30,7 @@ namespace LiveChartsCore.Context
         private Bounds secondaryBounds;
         private Bounds primaryBounds;
         private Bounds tertiaryBounds;
+        private Bounds quaternaryBounds;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DimensinalBounds"/> class.
@@ -39,6 +40,7 @@ namespace LiveChartsCore.Context
             secondaryBounds = new Bounds();
             primaryBounds = new Bounds();
             tertiaryBounds = new Bounds();
+            quaternaryBounds = new Bounds();
         }
 
         /// <summary>
@@ -52,8 +54,13 @@ namespace LiveChartsCore.Context
         public Bounds SecondaryBounds { get => secondaryBounds; set =>  secondaryBounds = value; } 
 
         /// <summary>
-        /// Gets or sets the secondary bounds.
+        /// Gets or sets the tertiary bounds.
         /// </summary>
-        public Bounds TertiaryBounds { get => tertiaryBounds; set => tertiaryBounds = value; } 
+        public Bounds TertiaryBounds { get => tertiaryBounds; set => tertiaryBounds = value; }
+
+        /// <summary>
+        /// Gets or sets the quaternary bounds.
+        /// </summary>
+        public Bounds QuaternaryBounds { get => quaternaryBounds; set => quaternaryBounds = value; }
     }
 }

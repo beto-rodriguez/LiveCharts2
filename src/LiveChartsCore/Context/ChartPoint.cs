@@ -45,6 +45,12 @@ namespace LiveChartsCore.Context
         public float SecondaryValue { get; set; }
 
         /// <inheritdoc/>
+        public float TertiaryValue { get; set; }
+
+        /// <inheritdoc/>
+        public float QuaternaryValue { get; set; }
+
+        /// <inheritdoc/>
         public ChartPointContext<TVisual, TDrawingContext> Context => pointContext;
 
         IChartPointContext IChartPoint.Context => pointContext;

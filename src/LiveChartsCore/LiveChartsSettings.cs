@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Context;
+using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
 using System;
 using System.Collections.Generic;
@@ -202,6 +203,21 @@ namespace LiveChartsCore
                      point.IsNull = false;
                      point.PrimaryValue = unchecked((float)model.Value);
                      point.SecondaryValue = context.Index;
+                 })
+                 .HasMap<WeightedPoint>((point, model, context) =>
+                 {
+                     if (model == null)
+                     {
+                         point.IsNull = true;
+                         return;
+                     }
+                     point.IsNull = false;
+                     unchecked
+                     {
+                         point.PrimaryValue = (float)model.Y;
+                         point.SecondaryValue = (float)model.X;
+                         point.TertiaryValue = (float)model.Weight;
+                     }
                  });
         }
     }

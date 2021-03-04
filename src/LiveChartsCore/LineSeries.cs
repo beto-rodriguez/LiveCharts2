@@ -131,8 +131,7 @@ namespace LiveChartsCore
 
             var segments = enableNullSplitting
                 ? SplitEachNull(points, xScale, yScale)
-                : new ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>[][] { points };
-            var segmentI = 0;
+                : new ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>[][] { points };            
 
             StackPosition<TDrawingContext>? stacker = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked
                 ? chart.SeriesContext.GetStackPosition(this, GetStackGroup())
@@ -141,8 +140,12 @@ namespace LiveChartsCore
             if (stacker != null && Fill != null)
             {
                 // easy workaround to set an automatic and valid z-index for stacked area series
+                // the problem of this solution is that the user needs to set z-indexes above 100,000
+                // if the user needs to add more series to the chart.
                 Fill.ZIndex = 100000 - stacker.Position;
             }
+
+            var segmentI = 0;
 
             foreach (var segment in segments)
             {

@@ -20,21 +20,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using System;
 
-namespace LiveChartsCore.Context
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
+namespace LiveChartsCore.Defaults
 {
-    public interface IScatterSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public class WeightedPoint : INotifyPropertyChanged
     {
-        double GeometrySize { get; set; }
-        double MinGeometrySize { get; set; }
+        private double x;
+        private double y;
+        private double weight;
 
-        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? OnPointCreated { get; set; }
+        public WeightedPoint()
+        {
 
-        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? OnPointAddedToState { get; set; }
+        }
 
-        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? OnPointRemovedFromState { get; set; }
+        public WeightedPoint(double x, double y, double weight)
+        {
+            this.x = x;
+            this.y = y;
+            this.weight = weight;
+        }
+
+        public double X { get => x; set { x = value; OnPropertyChanged(); } }
+
+        public double Y { get => y; set { y = value; OnPropertyChanged(); } }
+
+        public double Weight { get => weight; set { weight = value; OnPropertyChanged(); } }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

@@ -54,9 +54,10 @@ namespace LiveChartsCore
             var bounds = new DimensinalBounds();
             foreach (var point in Fetch(chart))
             {
-                var secondary = point.SecondaryValue;
                 var primary = point.PrimaryValue;
+                var secondary = point.SecondaryValue;
 
+                // it has more sense to override this method and call the stack, only if the series requires so.
                 if (stack != null) primary = stack.StackPoint(point);
 
                 bounds.PrimaryBounds.AppendValue(primary);

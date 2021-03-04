@@ -1,5 +1,6 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.Context;
+using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -53,16 +54,16 @@ namespace ViewModelsSamples
                 //    Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
                 //    Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
                 //},
-                new StackedAreaSeries<double>
-                {
-                    Name = "columns 2",
-                    Values = new[]{ 2d, 6, 4, 2, 7, 2, 8, 4, 2, 1, 3, 5},
-                },
-                new StackedAreaSeries<double>
-                {
-                    Name = "columns 3",
-                    Values = new[]{ 7d, 3, 5, 6, 6, 9, 5, 1, 2, 4, 6, 7},
-                },
+                //new StackedAreaSeries<double>
+                //{
+                //    Name = "columns 2",
+                //    Values = new[]{ 2d, 6, 4, 2, 7, 2, 8, 4, 2, 1, 3, 5},
+                //},
+                //new StackedAreaSeries<double>
+                //{
+                //    Name = "columns 3",
+                //    Values = new[]{ 7d, 3, 5, 6, 6, 9, 5, 1, 2, 4, 6, 7},
+                //},
                 //new ColumnSeries<int?>
                 //{
                 //    Name = "scatter",
@@ -77,6 +78,30 @@ namespace ViewModelsSamples
                 //    //ShapesFill = new SolidColorPaintTask(new SKColor(255, 255, 255)),
                 //    //ShapesStroke =  new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
                 //},
+                new ScatterSeries<WeightedPoint>
+                {
+                    Name = "scatter 3",
+                    Values = new[]
+                    {
+                        new WeightedPoint(1, 1, 1),
+                        new WeightedPoint(2, 2, 2),
+                        new WeightedPoint(3, 3, 3),
+                        new WeightedPoint(4, 4, 4),
+                        new WeightedPoint(5, 5, 5),
+                    },
+                },
+                new ScatterSeries<double>
+                {
+                    Name = "scatter 3",
+                    Values = new[]
+                    {
+                        2d,
+                        4,
+                        6,
+                        8,
+                        8,
+                    },
+                },
             };
 
             YAxes = new List<IAxis<SkiaSharpDrawingContext>>

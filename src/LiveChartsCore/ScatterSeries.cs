@@ -30,13 +30,17 @@ namespace LiveChartsCore
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
-        private double geometrySize = 18d;
+        private double geometrySize = 24d;
+        private double minGeometrySize = 6d;
+        private Bounds weightBounds = new Bounds();
 
         public ScatterSeries()
             : base(SeriesProperties.Scatter)
         {
             HoverState = LiveCharts.ScatterSeriesHoverKey;
         }
+
+        public double MinGeometrySize { get => minGeometrySize; set => minGeometrySize = value; }
 
         public double GeometrySize { get => geometrySize; set => geometrySize = value; }
 
@@ -72,6 +76,8 @@ namespace LiveChartsCore
             var gs = unchecked((float)geometrySize);
             var hgs = gs / 2f;
             float sw = Stroke?.StrokeWidth ?? 0;
+            var requiresWScale = weightBounds.max - weightBounds.min > 0;
+            var wm = -(geometrySize - minGeometrySize) / (weightBounds.max - weightBounds.min);
 
             var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
             var ts = OnPointCreated ?? DefaultOnPointCreated;
@@ -93,6 +99,12 @@ namespace LiveChartsCore
                         point.Context.Visual = null;
                     }
                     continue;
+                }
+
+                if (requiresWScale)
+                {
+                    gs = (float)((wm * (weightBounds.max - point.TertiaryValue) + geometrySize));
+                    hgs = gs / 2f;
                 }
 
                 if (point.Context.Visual == null)
@@ -118,7 +130,7 @@ namespace LiveChartsCore
                 sizedGeometry.X = x - hgs;
                 sizedGeometry.Y = y - hgs;
                 sizedGeometry.Width = gs;
-                sizedGeometry.Height =  gs;
+                sizedGeometry.Height = gs;
                 sizedGeometry.RemoveOnCompleted = false;
 
                 point.Context.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs, y - hgs, gs + 2 * sw, gs + 2 * sw);
@@ -130,11 +142,22 @@ namespace LiveChartsCore
         public override DimensinalBounds GetBounds(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
-            var baseBounds = base.GetBounds(chart, x, y);
+            var baseBounds = new DimensinalBounds();
+            weightBounds = new Bounds();
+            foreach (var point in Fetch(chart))
+            {
+                var primary = point.PrimaryValue;
+                var secondary = point.SecondaryValue;
+                var tertiary = point.TertiaryValue;
+
+                baseBounds.PrimaryBounds.AppendValue(primary);
+                baseBounds.SecondaryBounds.AppendValue(secondary);
+                weightBounds.AppendValue(tertiary);
+            }
 
             var tick = y.GetTick(chart.ControlSize, baseBounds.PrimaryBounds);
 
-            return new DimensinalBounds
+            return  new DimensinalBounds
             {
                 SecondaryBounds = new Bounds
                 {
