@@ -50,8 +50,8 @@ namespace LiveChartsCore
         private IDrawableTask<TDrawingContext>? shapesFill;
         private IDrawableTask<TDrawingContext>? shapesStroke;
 
-        public LineSeries()
-            : base(SeriesProperties.Line | SeriesProperties.VerticalOrientation)
+        public LineSeries(bool isStacked = false)
+            : base(SeriesProperties.Line | SeriesProperties.VerticalOrientation | (isStacked ? SeriesProperties.Stacked : 0))
         {
             HoverState = LiveCharts.LineSeriesHoverKey;
         }
@@ -134,6 +134,16 @@ namespace LiveChartsCore
                 : new ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>[][] { points };
             var segmentI = 0;
 
+            StackPosition<TDrawingContext>? stacker = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked
+                ? chart.SeriesContext.GetStackPosition(this, GetStackGroup())
+                : null;
+
+            if (stacker != null && Fill != null)
+            {
+                // easy workaround to set an automatic and valid z-index for stacked area series
+                Fill.ZIndex = 100000 - stacker.Position;
+            }
+
             foreach (var segment in segments)
             {
                 var wasFillInitialized = false;
@@ -148,7 +158,7 @@ namespace LiveChartsCore
                     strokePathHelper = new AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>();
                     fillPathHelperContainer.Add(fillPathHelper);
                     strokePathHelperContainer.Add(strokePathHelper);
-                } 
+                }
                 else
                 {
                     fillPathHelper = fillPathHelperContainer[segmentI];
@@ -173,10 +183,16 @@ namespace LiveChartsCore
                 }
                 var ts = OnPointCreated ?? DefaultOnPointCreated;
 
-                foreach (var data in GetSpline(segment, chart, xScale, yScale))
+                foreach (var data in GetSpline(segment, xScale, yScale, stacker))
                 {
+                    var s = 0f;
+                    if (stacker != null)
+                    {
+                        s = stacker.GetStack(data.TargetPoint).Start;
+                    }
+
                     var x = xScale.ScaleToUi(data.TargetPoint.SecondaryValue);
-                    var y = yScale.ScaleToUi(data.TargetPoint.PrimaryValue);
+                    var y = yScale.ScaleToUi(data.TargetPoint.PrimaryValue + s);
 
                     if (data.TargetPoint.Context.Visual == null)
                     {
@@ -281,20 +297,17 @@ namespace LiveChartsCore
                 segmentI++;
             }
 
-            if (segmentI > fillPathHelperContainer.Count)
+            while (segmentI > fillPathHelperContainer.Count)
             {
-                while (segmentI > fillPathHelperContainer.Count)
-                {
-                    var iFill = fillPathHelperContainer.Count - 1;
-                    var fillHelper = fillPathHelperContainer[iFill];
-                    if (Fill != null) Fill.RemoveGeometryFromPainTask(fillHelper.Path);
-                    fillPathHelperContainer.RemoveAt(iFill);
+                var iFill = fillPathHelperContainer.Count - 1;
+                var fillHelper = fillPathHelperContainer[iFill];
+                if (Fill != null) Fill.RemoveGeometryFromPainTask(fillHelper.Path);
+                fillPathHelperContainer.RemoveAt(iFill);
 
-                    var iStroke = strokePathHelperContainer.Count - 1;
-                    var strokeHelper = strokePathHelperContainer[iStroke];
-                    if (Stroke != null) Stroke.RemoveGeometryFromPainTask(strokeHelper.Path);
-                    strokePathHelperContainer.RemoveAt(iStroke);
-                }
+                var iStroke = strokePathHelperContainer.Count - 1;
+                var strokeHelper = strokePathHelperContainer[iStroke];
+                if (Stroke != null) Stroke.RemoveGeometryFromPainTask(strokeHelper.Path);
+                strokePathHelperContainer.RemoveAt(iStroke);
             }
         }
 
@@ -438,9 +451,9 @@ namespace LiveChartsCore
 
         private IEnumerable<BezierData<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>> GetSpline(
             ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>[] points,
-            CartesianChart<TDrawingContext> chart,
             ScaleContext xScale,
-            ScaleContext yScale)
+            ScaleContext yScale,
+            StackPosition<TDrawingContext>? stacker)
         {
             if (points.Length == 0) yield break;
             IChartPoint<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext> previous, current, next, next2;
@@ -454,25 +467,38 @@ namespace LiveChartsCore
                     next = points[i + 1 > points.Length - 1 ? points.Length - 1 : i + 1];
                     next2 = points[i + 2 > points.Length - 1 ? points.Length - 1 : i + 2];
 
+                    var pys = 0f;
+                    var cys = 0f;
+                    var nys = 0f;
+                    var nnys = 0f;
+
+                    if (stacker != null)
+                    {
+                        pys = stacker.GetStack(previous).Start;
+                        cys = stacker.GetStack(current).Start;
+                        nys = stacker.GetStack(next).Start;
+                        nnys = stacker.GetStack(next2).Start;
+                    }
+
                     var xc1 = (previous.SecondaryValue + current.SecondaryValue) / 2.0f;
-                    var yc1 = (previous.PrimaryValue + current.PrimaryValue) / 2.0f;
+                    var yc1 = (previous.PrimaryValue + pys + current.PrimaryValue + cys) / 2.0f;
                     var xc2 = (current.SecondaryValue + next.SecondaryValue) / 2.0f;
-                    var yc2 = (current.PrimaryValue + next.PrimaryValue) / 2.0f;
+                    var yc2 = (current.PrimaryValue + cys + next.PrimaryValue + nys) / 2.0f;
                     var xc3 = (next.SecondaryValue + next2.SecondaryValue) / 2.0f;
-                    var yc3 = (next.PrimaryValue + next2.PrimaryValue) / 2.0f;
+                    var yc3 = (next.PrimaryValue + nys + next2.PrimaryValue + nnys) / 2.0f;
 
                     var len1 = (float)Math.Sqrt(
-                    (current.SecondaryValue - previous.SecondaryValue) *
-                    (current.SecondaryValue - previous.SecondaryValue) +
-                    (current.PrimaryValue - previous.PrimaryValue) * (current.PrimaryValue - previous.PrimaryValue));
+                        (current.SecondaryValue - previous.SecondaryValue) *
+                        (current.SecondaryValue - previous.SecondaryValue) +
+                        (current.PrimaryValue + cys - previous.PrimaryValue + pys) * (current.PrimaryValue + cys - previous.PrimaryValue + pys));
                     var len2 = (float)Math.Sqrt(
                         (next.SecondaryValue - current.SecondaryValue) *
                         (next.SecondaryValue - current.SecondaryValue) +
-                        (next.PrimaryValue - current.PrimaryValue) * (next.PrimaryValue - current.PrimaryValue));
+                        (next.PrimaryValue + nys - current.PrimaryValue + cys) * (next.PrimaryValue + nys - current.PrimaryValue + cys));
                     var len3 = (float)Math.Sqrt(
                         (next2.SecondaryValue - next.SecondaryValue) *
                         (next2.SecondaryValue - next.SecondaryValue) +
-                        (next2.PrimaryValue - next.PrimaryValue) * (next2.PrimaryValue - next.PrimaryValue));
+                        (next2.PrimaryValue + nnys - next.PrimaryValue + nys) * (next2.PrimaryValue + nnys - next.PrimaryValue + nys));
 
                     var k1 = len1 / (len1 + len2);
                     var k2 = len2 / (len2 + len3);
@@ -486,16 +512,16 @@ namespace LiveChartsCore
                     var ym2 = yc2 + (yc3 - yc2) * k2;
 
                     var c1X = xm1 + (xc2 - xm1) * lineSmoothness + current.SecondaryValue - xm1;
-                    var c1Y = ym1 + (yc2 - ym1) * lineSmoothness + current.PrimaryValue - ym1;
+                    var c1Y = ym1 + (yc2 - ym1) * lineSmoothness + current.PrimaryValue + cys - ym1;
                     var c2X = xm2 + (xc2 - xm2) * lineSmoothness + next.SecondaryValue - xm2;
-                    var c2Y = ym2 + (yc2 - ym2) * lineSmoothness + next.PrimaryValue - ym2;
+                    var c2Y = ym2 + (yc2 - ym2) * lineSmoothness + next.PrimaryValue + nys - ym2;
 
                     float x0, y0;
 
                     if (i == 0)
                     {
                         x0 = current.SecondaryValue;
-                        y0 = current.PrimaryValue;
+                        y0 = current.PrimaryValue + cys;
                     }
                     else
                     {
@@ -512,7 +538,7 @@ namespace LiveChartsCore
                         X1 = xScale.ScaleToUi(c2X),
                         Y1 = yScale.ScaleToUi(c2Y),
                         X2 = xScale.ScaleToUi(next.SecondaryValue),
-                        Y2 = yScale.ScaleToUi(next.PrimaryValue)
+                        Y2 = yScale.ScaleToUi(next.PrimaryValue + nys)
                     };
                 }
             }

@@ -74,11 +74,22 @@ namespace LiveChartsCore.SkiaSharpView
             if ((series.SeriesProperties & SeriesProperties.Line) == SeriesProperties.Line)
             {
                 var lineSeries = (ILineSeries<SkiaSharpDrawingContext>)series;
+
+                if ((series.SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked)
+                {
+                    lineSeries.GeometrySize = 0;
+                    lineSeries.ShapesFill = null;
+                    lineSeries.ShapesStroke = null;
+                    lineSeries.Stroke = null;
+                    series.Fill = LiveChartsSK.DefaultPaint;
+
+                    return;
+                }
+
                 lineSeries.GeometrySize = 18;
                 lineSeries.ShapesFill = new SolidColorPaintTask(new SKColor(250, 250, 250));
                 lineSeries.ShapesStroke = LiveChartsSK.DefaultPaint;
             }
-
 
             series.Fill = LiveChartsSK.DefaultPaint;
             series.Stroke = LiveChartsSK.DefaultPaint;
@@ -98,17 +109,20 @@ namespace LiveChartsCore.SkiaSharpView
                 return;
             }
 
-            if (series.Fill == LiveChartsSK.DefaultPaint) series.Fill = new SolidColorPaintTask(ColorAsSKColor(color, (byte)(0.5 * 255)));
-            if (series.Stroke == LiveChartsSK.DefaultPaint) series.Stroke = new SolidColorPaintTask(ColorAsSKColor(color), 4);
+            if (series.Fill == LiveChartsSK.DefaultPaint)
+            {
+                var opacity = (series.SeriesProperties & (SeriesProperties.Line | SeriesProperties.Stacked)) != 0 ? 1 : 0.5;
+                series.Fill = new SolidColorPaintTask(ColorAsSKColor(color, (byte)(opacity * 255)));
+            }
+            if (series.Stroke == LiveChartsSK.DefaultPaint) series.Stroke = new SolidColorPaintTask(ColorAsSKColor(color), 3.5f);
 
             if ((series.SeriesProperties & SeriesProperties.Line) == SeriesProperties.Line)
             {
                 var lineSeries = (ILineSeries<SkiaSharpDrawingContext>)series;
-
                 if (lineSeries.ShapesFill == LiveChartsSK.DefaultPaint)
                     lineSeries.ShapesFill = new SolidColorPaintTask(ColorAsSKColor(color));
                 if (lineSeries.ShapesStroke == LiveChartsSK.DefaultPaint)
-                    lineSeries.ShapesStroke = new SolidColorPaintTask(ColorAsSKColor(color), lineSeries.Stroke?.StrokeWidth ?? 3);
+                    lineSeries.ShapesStroke = new SolidColorPaintTask(ColorAsSKColor(color), lineSeries.Stroke?.StrokeWidth ?? 3.5f);
             }
         }
 

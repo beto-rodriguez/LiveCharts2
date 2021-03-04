@@ -53,20 +53,16 @@ namespace ViewModelsSamples
                 //    Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
                 //    Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
                 //},
-                //new StackedRowSeries<double>
-                //{
-                //    Name = "columns 2",
-                //    Values = new[]{ 2d, 6, 4, 2, 7, 2, 8, 4, 2, 1, 3, 5},
-                //    Stroke = new SolidColorPaintTask(new SKColor(2, 136, 209), 2),
-                //    Fill = new SolidColorPaintTask(new SKColor(2, 136, 209, 30)),
-                //},
-                //new StackedRowSeries<double>
-                //{
-                //    Name = "columns 3",
-                //    Values = new[]{ 7d, 3, 5, 6, 6, 9, 5, 1, 2, 4, 6, 7},
-                //    Stroke = new SolidColorPaintTask(new SKColor(67, 160, 61), 2),
-                //    Fill = new SolidColorPaintTask(new SKColor(67, 160, 61, 30)),
-                //},
+                new StackedAreaSeries<double>
+                {
+                    Name = "columns 2",
+                    Values = new[]{ 2d, 6, 4, 2, 7, 2, 8, 4, 2, 1, 3, 5},
+                },
+                new StackedAreaSeries<double>
+                {
+                    Name = "columns 3",
+                    Values = new[]{ 7d, 3, 5, 6, 6, 9, 5, 1, 2, 4, 6, 7},
+                },
                 //new ColumnSeries<int?>
                 //{
                 //    Name = "scatter",
@@ -74,13 +70,13 @@ namespace ViewModelsSamples
                 //    Stroke = new SolidColorPaintTask(new SKColor(239, 108, 0), 2),
                 //    Fill = new SolidColorPaintTask(new SKColor(239, 108, 0, 30)),
                 //},
-                 new LineSeries<int?>
-                {
-                    Name = "lines",
-                    Values = new ObservableCollection<int?>{ 1, 4, 2, null, 7, 5, 5, null, null, 6, 8, 3},
-                    //ShapesFill = new SolidColorPaintTask(new SKColor(255, 255, 255)),
-                    //ShapesStroke =  new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
-                },
+                // new LineSeries<int?>
+                //{
+                //    Name = "lines",
+                //    Values = new ObservableCollection<int?>{ 1, 4, 2, null, 7, 5, 5, null, null, 6, 8, 3},
+                //    //ShapesFill = new SolidColorPaintTask(new SKColor(255, 255, 255)),
+                //    //ShapesStroke =  new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
+                //},
             };
 
             YAxes = new List<IAxis<SkiaSharpDrawingContext>>
@@ -107,16 +103,16 @@ namespace ViewModelsSamples
 
         public void Randomize()
         {
-            var r = new Random();
-            var values = (ObservableCollection<int?>)((LineSeries<int?>)Series[0]).Values;
-            var i = r.Next(values.Count);
-            var d = r.NextDouble();
-            values[i] = (int)(d * 15);
+            //var r = new Random();
+            //var values = (ObservableCollection<int?>)((LineSeries<int?>)Series[0]).Values;
+            //var i = r.Next(values.Count);
+            //var d = r.NextDouble();
+            //values[i] = (int)(d * 15);
 
-            if (d > 0.3)
-            {
-                values[i] = null;
-            }
+            //if (d > 0.3)
+            //{
+            //    values[i] = null;
+            //}
 
             //var a = r.NextDouble();
             //if (a < 0.1 && Series.Count > 2) Series.RemoveAt(0);

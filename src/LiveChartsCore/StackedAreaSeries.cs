@@ -20,33 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Context
+namespace LiveChartsCore
 {
-    public class ChartPoint<TModel, TVisual, TDrawingContext> : IChartPoint<TVisual, TDrawingContext>, IChartPoint
+    public class StackedAreaSeries<TModel, TVisual, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>
+        : LineSeries<TModel, TVisual, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>
+        where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
+        where TLineSegment : ILinePathSegment<TPathArgs>, new()
+        where TBezierSegment : IBezierSegment<TPathArgs>, new()
+        where TMoveToCommand : IMoveToPathCommand<TPathArgs>, new()
+        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
-        where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
     {
-        private readonly ChartPointContext<TVisual, TDrawingContext> pointContext;
-
-        public ChartPoint(IChartView chart, ISeries series)
+        public StackedAreaSeries()
+            : base(true)
         {
-            pointContext = new ChartPointContext<TVisual, TDrawingContext>(chart, series);
+            ShapesFill = null;
+            ShapesStroke = null;
+            GeometrySize = 0;
         }
-
-        /// <inheritdoc/>
-        public bool IsNull { get; set; }
-
-        /// <inheritdoc/>
-        public float PrimaryValue { get; set; }
-
-        /// <inheritdoc/>
-        public float SecondaryValue { get; set; }
-
-        /// <inheritdoc/>
-        public ChartPointContext<TVisual, TDrawingContext> Context => pointContext;
-
-        IChartPointContext IChartPoint.Context => pointContext;
     }
 }

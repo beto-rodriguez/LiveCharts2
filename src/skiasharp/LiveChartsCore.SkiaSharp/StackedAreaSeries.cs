@@ -21,32 +21,24 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing;
+using SkiaSharp;
 
-namespace LiveChartsCore.Context
+namespace LiveChartsCore.SkiaSharpView
 {
-    public class ChartPoint<TModel, TVisual, TDrawingContext> : IChartPoint<TVisual, TDrawingContext>, IChartPoint
-        where TDrawingContext : DrawingContext
-        where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
+    public class StackedAreaSeries<TModel> : StackedAreaSeries<TModel, CircleGeometry>
     {
-        private readonly ChartPointContext<TVisual, TDrawingContext> pointContext;
 
-        public ChartPoint(IChartView chart, ISeries series)
+    }
+
+    public class StackedAreaSeries<TModel, TVisual>
+        : StackedAreaSeries<TModel, TVisual, SkiaSharpDrawingContext, PathGeometry, LineSegment, CubicBezierSegment, MoveToPathCommand, SKPath>
+       where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+    {
+        public StackedAreaSeries()
         {
-            pointContext = new ChartPointContext<TVisual, TDrawingContext>(chart, series);
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSK.DefaultPlatformBuilder);
+            InitializeSeries();
         }
-
-        /// <inheritdoc/>
-        public bool IsNull { get; set; }
-
-        /// <inheritdoc/>
-        public float PrimaryValue { get; set; }
-
-        /// <inheritdoc/>
-        public float SecondaryValue { get; set; }
-
-        /// <inheritdoc/>
-        public ChartPointContext<TVisual, TDrawingContext> Context => pointContext;
-
-        IChartPointContext IChartPoint.Context => pointContext;
     }
 }

@@ -27,9 +27,9 @@ namespace LiveChartsCore.Context
     /// <summary>
     /// Defines all the involved variables a point inside a chart requires.
     /// </summary>
-    public class ChartPointContext<TVisual, TDrawingContext>: IChartPointContext
+    public class ChartPointContext<TVisual, TDrawingContext>: IChartPointContext<TVisual>
         where TDrawingContext : DrawingContext
-        where TVisual : IVisualChartPoint<TDrawingContext>
+        where TVisual : class, IVisualChartPoint<TDrawingContext>
     {
         private readonly IChartView chart;
         private readonly ISeries series;

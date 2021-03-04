@@ -49,6 +49,6 @@ namespace LiveChartsCore.Context
     public interface IChartPointContext<TVisual>: IChartPointContext
         where TVisual: class
     {
-        new TVisual? Visual { get; set; }
+        new TVisual? Visual { get; }
     }
 }
