@@ -9,13 +9,13 @@ namespace WPFSample
     /// </summary>
     public partial class MainWindow : Window
     {
-        private PieViewModel viewModel;
+        private CartesianViewModel viewModel;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            var c = DataContext as PieViewModel;
+            var c = DataContext as CartesianViewModel;
             if (c == null) return;
 
             viewModel = c;

@@ -78,7 +78,7 @@ namespace LiveChartsCore
         }
 
         public LiveChartsSettings AddDefaultStyles<TDrawingContext>(Action<StyleBuilder<TDrawingContext>> builder)
-            where TDrawingContext: DrawingContext
+            where TDrawingContext : DrawingContext
         {
             if (!seriesStyleBuilder.TryGetValue(typeof(TDrawingContext), out var stylesBuilder))
             {
@@ -129,12 +129,78 @@ namespace LiveChartsCore
                  })
                  .HasMap<double>((point, model, context) =>
                  {
-                     point.PrimaryValue = unchecked((float) model);
+                     point.PrimaryValue = unchecked((float)model);
                      point.SecondaryValue = context.Index;
                  })
                  .HasMap<decimal>((point, model, context) =>
                  {
-                     point.PrimaryValue = unchecked((float) model);
+                     point.PrimaryValue = unchecked((float)model);
+                     point.SecondaryValue = context.Index;
+                 })
+                 .HasMap<short?>((point, model, context) =>
+                 {
+                     if (model == null)
+                     {
+                         point.IsNull = true;
+                         return;
+                     }
+                     point.IsNull = false;
+                     point.PrimaryValue = model.Value;
+                     point.SecondaryValue = context.Index;
+                 })
+                 .HasMap<int?>((point, model, context) =>
+                 {
+                     if (model == null)
+                     {
+                         point.IsNull = true;
+                         return;
+                     }
+                     point.IsNull = false;
+                     point.PrimaryValue = model.Value;
+                     point.SecondaryValue = context.Index;
+                 })
+                 .HasMap<long?>((point, model, context) =>
+                 {
+                     if (model == null)
+                     {
+                         point.IsNull = true;
+                         return;
+                     }
+                     point.IsNull = false;
+                     point.PrimaryValue = model.Value;
+                     point.SecondaryValue = context.Index;
+                 })
+                 .HasMap<float?>((point, model, context) =>
+                 {
+                     if (model == null)
+                     {
+                         point.IsNull = true;
+                         return;
+                     }
+                     point.IsNull = false;
+                     point.PrimaryValue = model.Value;
+                     point.SecondaryValue = context.Index;
+                 })
+                 .HasMap<double?>((point, model, context) =>
+                 {
+                     if (model == null)
+                     {
+                         point.IsNull = true;
+                         return;
+                     }
+                     point.IsNull = false;
+                     point.PrimaryValue = unchecked((float)model.Value);
+                     point.SecondaryValue = context.Index;
+                 })
+                 .HasMap<decimal?>((point, model, context) =>
+                 {
+                     if (model == null)
+                     {
+                         point.IsNull = true;
+                         return;
+                     }
+                     point.IsNull = false;
+                     point.PrimaryValue = unchecked((float)model.Value);
                      point.SecondaryValue = context.Index;
                  });
         }

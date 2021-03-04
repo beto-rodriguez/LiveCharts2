@@ -87,7 +87,7 @@ namespace LiveChartsCore
 
             foreach (var point in Fetch(chart))
             {
-                if (point.PointContext.Visual == null)
+                if (point.Context.Visual == null)
                 {
                     var p = new TVisual
                     {
@@ -106,12 +106,12 @@ namespace LiveChartsCore
                     ts(p, chart.View);
                     p.CompleteAllTransitions();
 
-                    point.PointContext.Visual = p;
+                    point.Context.Visual = p;
                     if (Fill != null) Fill.AddGeometyToPaintTask(p);
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(p);
                 }
 
-                var dougnutGeometry = point.PointContext.Visual;
+                var dougnutGeometry = point.Context.Visual;
 
                 var stack = stacker.GetStack(point);
                 var stackedValue = stack.Start;
@@ -132,7 +132,7 @@ namespace LiveChartsCore
                 dougnutGeometry.SweepAngle = end;
                 if (start == 0 && end == 360) dougnutGeometry.SweepAngle = 359.9999f;
 
-                point.PointContext.HoverArea = new SemicircleHoverArea().SetDimensions(cx, cy, start, start + end, minDimension * 0.5f);
+                point.Context.HoverArea = new SemicircleHoverArea().SetDimensions(cx, cy, start, start + end, minDimension * 0.5f);
                 OnPointMeasured(point, dougnutGeometry);
                 chart.MeasuredDrawables.Add(dougnutGeometry);
 

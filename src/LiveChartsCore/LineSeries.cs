@@ -151,7 +151,7 @@ namespace LiveChartsCore
                 var x = xScale.ScaleToUi(data.TargetPoint.SecondaryValue);
                 var y = yScale.ScaleToUi(data.TargetPoint.PrimaryValue);
 
-                if (data.TargetPoint.PointContext.Visual == null)
+                if (data.TargetPoint.Context.Visual == null)
                 {
                     var v = new LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>();
 
@@ -172,13 +172,13 @@ namespace LiveChartsCore
                     v.Geometry.CompleteAllTransitions();
                     v.Bezier.CompleteAllTransitions();
 
-                    data.TargetPoint.PointContext.Visual = v;
+                    data.TargetPoint.Context.Visual = v;
 
                     if (ShapesFill != null) ShapesFill.AddGeometyToPaintTask(v.Geometry);
                     if (ShapesStroke != null) ShapesStroke.AddGeometyToPaintTask(v.Geometry);
                 }
 
-                var visual = data.TargetPoint.PointContext.Visual;
+                var visual = data.TargetPoint.Context.Visual;
 
                 visual.Bezier.X0 = data.X0;
                 visual.Bezier.Y0 = data.Y0;
@@ -244,7 +244,7 @@ namespace LiveChartsCore
                 visual.Geometry.Width = gs;
                 visual.Geometry.Height = gs;
 
-                data.TargetPoint.PointContext.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs, y - hgs + 2 * sw, gs, gs + 2 * sw);
+                data.TargetPoint.Context.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs, y - hgs + 2 * sw, gs, gs + 2 * sw);
                 OnPointMeasured(data.TargetPoint, visual);
                 chart.MeasuredDrawables.Add(visual.Geometry);
             }
@@ -394,7 +394,7 @@ namespace LiveChartsCore
         private IEnumerable<BezierData<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>> GetSpline(
             CartesianChart<TDrawingContext> chart, ScaleContext xScale, ScaleContext yScale)
         {
-            var points = Fetch(chart).ToArray();
+            var points = Fetch(chart);
 
             if (points.Length == 0) yield break;
             IChartPoint<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext> previous, current, next, next2;

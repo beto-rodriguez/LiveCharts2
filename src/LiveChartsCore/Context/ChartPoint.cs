@@ -36,13 +36,16 @@ namespace LiveChartsCore.Context
         }
 
         /// <inheritdoc/>
+        public bool IsNull { get; set; }
+
+        /// <inheritdoc/>
         public float PrimaryValue { get; set; }
 
         /// <inheritdoc/>
         public float SecondaryValue { get; set; }
 
         /// <inheritdoc/>
-        public ChartPointContext<TVisual, TDrawingContext> PointContext => pointContext;
+        public ChartPointContext<TVisual, TDrawingContext> Context => pointContext;        
 
         IChartPointContext IChartPoint.Context => pointContext;
     }

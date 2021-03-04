@@ -74,10 +74,23 @@ namespace LiveChartsCore
             foreach (var point in Fetch(chart))
             {
                 var primary = primaryScale.ScaleToUi(point.PrimaryValue);
-                var secondary = secondaryScale.ScaleToUi(point.SecondaryValue);                
+                var secondary = secondaryScale.ScaleToUi(point.SecondaryValue);
                 float b = Math.Abs(primary - p);
 
-                if (point.PointContext.Visual == null)
+                if (point.IsNull)
+                {
+                    if (point.Context.Visual != null)
+                    {
+                        point.Context.Visual.X = secondary - uwm + cp;
+                        point.Context.Visual.Y = p;
+                        point.Context.Visual.Width = uw;
+                        point.Context.Visual.Height = 0;
+                        point.Context.Visual.RemoveOnCompleted = true;
+                    }
+                    continue;
+                }
+
+                if (point.Context.Visual == null)
                 {
                     var r = new TVisual
                     {
@@ -90,12 +103,12 @@ namespace LiveChartsCore
                     ts(r, chart.View);
                     r.CompleteAllTransitions();
 
-                    point.PointContext.Visual = r;
+                    point.Context.Visual = r;
                     if (Fill != null) Fill.AddGeometyToPaintTask(r);
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(r);
                 }
 
-                var sizedGeometry = point.PointContext.Visual;
+                var sizedGeometry = point.Context.Visual;
 
                 var cy = point.PrimaryValue > Pivot ? primary : primary - b;
 
@@ -103,8 +116,9 @@ namespace LiveChartsCore
                 sizedGeometry.Y = cy;
                 sizedGeometry.Width = uw;
                 sizedGeometry.Height = b;
+                sizedGeometry.RemoveOnCompleted = false;
 
-                point.PointContext.HoverArea = new RectangleHoverArea().SetDimensions(secondary - uwm + cp, cy, uw, b);
+                point.Context.HoverArea = new RectangleHoverArea().SetDimensions(secondary - uwm + cp, cy, uw, b);
                 OnPointMeasured(point, sizedGeometry);
                 chart.MeasuredDrawables.Add(sizedGeometry);
             }
@@ -144,8 +158,8 @@ namespace LiveChartsCore
             visual
                 .TransitionateProperties(nameof(visual.Y), nameof(visual.Height))
                 .WithAnimation(animation => animation
-                    .WithDuration((long)(chart.AnimationsSpeed.TotalMilliseconds * 1.5))
-                    .WithEasingFunction(EasingFunctions.BounceOut));
+                    .WithDuration(chart.AnimationsSpeed)
+                    .WithEasingFunction(EasingFunctions.ElasticOut));
         }
     }
 }

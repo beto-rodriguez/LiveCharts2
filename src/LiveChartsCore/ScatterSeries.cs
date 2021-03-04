@@ -81,7 +81,7 @@ namespace LiveChartsCore
                 var x = xScale.ScaleToUi(point.SecondaryValue);
                 var y = yScale.ScaleToUi(point.PrimaryValue);
 
-                if (point.PointContext.Visual == null)
+                if (point.Context.Visual == null)
                 {
                     var r = new TVisual
                     {
@@ -94,19 +94,19 @@ namespace LiveChartsCore
                     ts(r, chart.View);
                     r.CompleteAllTransitions();
 
-                    point.PointContext.Visual = r;
+                    point.Context.Visual = r;
                     if (Fill != null) Fill.AddGeometyToPaintTask(r);
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(r);
                 }
 
-                var sizedGeometry = point.PointContext.Visual;
+                var sizedGeometry = point.Context.Visual;
 
                 sizedGeometry.X = x - hgs;
                 sizedGeometry.Y = y - hgs;
                 sizedGeometry.Width = gs;
                 sizedGeometry.Height =  gs;
 
-                point.PointContext.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs, y - hgs, gs + 2 * sw, gs + 2 * sw);
+                point.Context.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs, y - hgs, gs + 2 * sw, gs + 2 * sw);
                 OnPointMeasured(point, sizedGeometry);
                 chart.MeasuredDrawables.Add(sizedGeometry);
             }

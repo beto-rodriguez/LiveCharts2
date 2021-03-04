@@ -35,9 +35,9 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
     {
-        private readonly CollectionDeepObserver<TModel> observerer;
+        private readonly CollectionDeepObserver<TModel> observer;
         private object fetchedFor = new object();
-        private IEnumerable<IChartPoint<TVisual, TDrawingContext>> fetched = Enumerable.Empty<IChartPoint<TVisual, TDrawingContext>>();
+        private ChartPoint<TModel, TVisual, TDrawingContext>[] fetched = new ChartPoint<TModel, TVisual, TDrawingContext>[0];
         protected readonly bool isValueType;
         protected readonly bool implementsICP;
         protected readonly Dictionary<int, ChartPoint<TModel, TVisual, TDrawingContext>> byValueVisualMap = new Dictionary<int, ChartPoint<TModel, TVisual, TDrawingContext>>();
@@ -49,7 +49,7 @@ namespace LiveChartsCore
         public Series(SeriesProperties properties)
         {
             this.properties = properties;
-            observerer = new CollectionDeepObserver<TModel>(
+            observer = new CollectionDeepObserver<TModel>(
                 (object sender, NotifyCollectionChangedEventArgs e) =>
                 {
                     NotifySubscribers();
@@ -76,8 +76,8 @@ namespace LiveChartsCore
             get => values;
             set
             {
-                observerer.Dispose(values);
-                observerer.Initialize(value);
+                observer.Dispose(values);
+                observer.Initialize(value);
                 values = value;
             }
         }
@@ -98,25 +98,23 @@ namespace LiveChartsCore
         public virtual int GetStackGroup() => 0;
 
         /// <inheritdoc/>
-        public virtual IEnumerable<IChartPoint<TVisual, TDrawingContext>> Fetch(IChart chart)
+        public virtual ChartPoint<TModel, TVisual, TDrawingContext>[] Fetch(IChart chart)
         {
             if (fetchedFor == chart.MeasureWorker) return fetched;
 
             subscribedTo.Add(chart);
             fetched = implementsICP
-                ? GetPointsFromICP(chart) // this method is experimental, it should improve performance, but how much? that is the question...
-                : GetMappedPoints(chart);
+                ? GetPointsFromICP(chart).ToArray() // this method is experimental, it should improve performance, but how much? that is the question...
+                : GetMappedPoints(chart).ToArray();
             fetchedFor = chart.MeasureWorker;
 
             return fetched;
         }
 
-        IEnumerable<IChartPoint> ISeries.Fetch(IChart chart) => Fetch(chart);
+        IChartPoint[] ISeries.Fetch(IChart chart) => Fetch(chart);
 
         IEnumerable<TooltipPoint> ISeries.FindPointsNearTo(IChart chart, PointF pointerPosition) =>
-            Fetch(chart)
-                .Where(point => point.PointContext.HoverArea?.IsTriggerBy(pointerPosition, chart.TooltipFindingStrategy) ?? false)
-                .Select(point => new TooltipPoint(this, point));
+            FilterTooltipPoints(Fetch(chart), chart, pointerPosition);
 
         public void AddPointToState(IChartPoint chartPoint, string state)
         {
@@ -179,7 +177,7 @@ namespace LiveChartsCore
         /// <inheritdoc/>
         public void Dispose()
         {
-            observerer.Dispose(values);
+            observer.Dispose(values);
         }
 
         protected virtual void OnPointMeasured(IChartPoint<TVisual, TDrawingContext> chartPoint, TVisual visual) { }
@@ -192,22 +190,24 @@ namespace LiveChartsCore
 
         protected virtual void DefaultOnRemovedFromState(TVisual visual, IChartView<TDrawingContext> chart) { }
 
-        private IEnumerable<IChartPoint<TVisual, TDrawingContext>> GetPointsFromICP(IChart chart)
+        private IEnumerable<ChartPoint<TModel, TVisual, TDrawingContext>> GetPointsFromICP(IChart chart)
         {
-            if (values == null) yield break;
+            throw new NotImplementedException();
 
-            var index = 0;
+            //if (values == null) yield break;
 
-            foreach (var item in values)
-            {
-                var cp = (IChartPoint<TVisual, TDrawingContext>)item;
-                cp.PointContext.Index = index++;
-                cp.PointContext.DataSource = item;
-                yield return cp;
-            }
+            //var index = 0;
+
+            //foreach (var item in values)
+            //{
+            //    var cp = (IChartPoint<TVisual, TDrawingContext>)item;
+            //    cp.Context.Index = index++;
+            //    cp.Context.DataSource = item;
+            //    yield return cp;
+            //}
         }
 
-        private IEnumerable<IChartPoint<TVisual, TDrawingContext>> GetMappedPoints(IChart chart)
+        private IEnumerable<ChartPoint<TModel, TVisual, TDrawingContext>> GetMappedPoints(IChart chart)
         {
             if (values == null) yield break;
 
@@ -221,9 +221,9 @@ namespace LiveChartsCore
                     if (!byValueVisualMap.TryGetValue(index, out ChartPoint<TModel, TVisual, TDrawingContext> cp))
                         byValueVisualMap[index] = cp = new ChartPoint<TModel, TVisual, TDrawingContext>(chart.View, this);
 
-                    cp.PointContext.Index = index++;
-                    cp.PointContext.DataSource = item;
-                    mapper(cp, item, cp.PointContext);
+                    cp.Context.Index = index++;
+                    cp.Context.DataSource = item;
+                    mapper(cp, item, cp.Context);
 
                     yield return cp;
                 }
@@ -235,12 +235,23 @@ namespace LiveChartsCore
                     if (!byReferenceVisualMap.TryGetValue(item, out ChartPoint<TModel, TVisual, TDrawingContext> cp))
                         byReferenceVisualMap[item] = cp = new ChartPoint<TModel, TVisual, TDrawingContext>(chart.View, this);
 
-                    cp.PointContext.Index = index++;
-                    cp.PointContext.DataSource = item;
-                    mapper(cp, item, cp.PointContext);
+                    cp.Context.Index = index++;
+                    cp.Context.DataSource = item;
+                    mapper(cp, item, cp.Context);
 
                     yield return cp;
                 }
+            }
+        }
+
+        private IEnumerable<TooltipPoint> FilterTooltipPoints(ChartPoint<TModel, TVisual, TDrawingContext>?[] points, IChart chart, PointF pointerPosition)
+        {
+            foreach (var point in points)
+            {
+                if (point == null || point.Context.HoverArea == null) continue;
+                if (!point.Context.HoverArea.IsTriggerBy(pointerPosition, chart.TooltipFindingStrategy)) continue;
+
+                yield return new TooltipPoint(this, point);
             }
         }
 

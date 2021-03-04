@@ -33,7 +33,7 @@ namespace LiveChartsCore.Context
         SeriesProperties SeriesProperties { get; }
         string? Name { get; set; }
 
-        IEnumerable<IChartPoint> Fetch(IChart chart);
+        IChartPoint[] Fetch(IChart chart);
         IEnumerable<TooltipPoint> FindPointsNearTo(IChart chart, PointF pointerPosition);
         void AddPointToState(IChartPoint chartPoint, string state);
         void RemovePointFromState(IChartPoint chartPoint, string state);

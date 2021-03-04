@@ -53,27 +53,27 @@ namespace ViewModelsSamples
                 //    Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
                 //    Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
                 //},
-                new StackedRowSeries<double>
-                {
-                    Name = "columns 2",
-                    Values = new[]{ 2d, 6, 4, 2, 7, 2, 8, 4, 2, 1, 3, 5},
-                    Stroke = new SolidColorPaintTask(new SKColor(2, 136, 209), 2),
-                    Fill = new SolidColorPaintTask(new SKColor(2, 136, 209, 30)),
-                },
-                new StackedRowSeries<double>
-                {
-                    Name = "columns 3",
-                    Values = new[]{ 7d, 3, 5, 6, 6, 9, 5, 1, 2, 4, 6, 7},
-                    Stroke = new SolidColorPaintTask(new SKColor(67, 160, 61), 2),
-                    Fill = new SolidColorPaintTask(new SKColor(67, 160, 61, 30)),
-                },
-                //new ColumnSeries<double>
+                //new StackedRowSeries<double>
                 //{
-                //    Name = "scatter",
-                //    Values = new[]{ 2d, 4, 3, 1, 8, 3, 7, 2, 6, 3, 7, 3},
-                //    Stroke = new SolidColorPaintTask(new SKColor(239, 108, 0), 2),
-                //    Fill = new SolidColorPaintTask(new SKColor(239, 108, 0, 30)),
+                //    Name = "columns 2",
+                //    Values = new[]{ 2d, 6, 4, 2, 7, 2, 8, 4, 2, 1, 3, 5},
+                //    Stroke = new SolidColorPaintTask(new SKColor(2, 136, 209), 2),
+                //    Fill = new SolidColorPaintTask(new SKColor(2, 136, 209, 30)),
                 //},
+                //new StackedRowSeries<double>
+                //{
+                //    Name = "columns 3",
+                //    Values = new[]{ 7d, 3, 5, 6, 6, 9, 5, 1, 2, 4, 6, 7},
+                //    Stroke = new SolidColorPaintTask(new SKColor(67, 160, 61), 2),
+                //    Fill = new SolidColorPaintTask(new SKColor(67, 160, 61, 30)),
+                //},
+                new ColumnSeries<int?>
+                {
+                    Name = "scatter",
+                    Values = new ObservableCollection<int?>{ 2, null, null, null, null, null, null, null, null, null, null, 3},
+                    Stroke = new SolidColorPaintTask(new SKColor(239, 108, 0), 2),
+                    Fill = new SolidColorPaintTask(new SKColor(239, 108, 0, 30)),
+                },
                 // new LineSeries<double>
                 //{
                 //    Name = "lines",
@@ -103,6 +103,24 @@ namespace ViewModelsSamples
                     Labeler = (value, tick) => $"this {value}"
                 }
             };
+        }
+
+        public void Randomize()
+        {
+            var r = new Random();
+            var values = (ObservableCollection<int?>)((ColumnSeries<int?>)Series[0]).Values;
+            var i = r.Next(values.Count);
+            var d = r.NextDouble();
+            values[i] = (int)(d * 15);
+
+            if (d > 0.9)
+            {
+                values[i] = null;
+            }
+
+            //var a = r.NextDouble();
+            //if (a < 0.1 && Series.Count > 2) Series.RemoveAt(0);
+            //if (a > 0.9 && Series.Count < 10) Series.Add(new PieSeries<Observable> { Values = new[] { new Observable { Value = 2 } } });
         }
     }
 
@@ -205,9 +223,9 @@ namespace ViewModelsSamples
 
     public class Observable : INotifyPropertyChanged
     {
-        private double value;
+        private double? value;
 
-        public double Value { get => value; set { this.value = value; OnPropertyChanged(nameof(Value)); } }
+        public double? Value { get => value; set { this.value = value; OnPropertyChanged(nameof(Value)); } }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

@@ -26,6 +26,8 @@ namespace LiveChartsCore.Context
 {
     public interface IChartPoint
     {
+        bool IsNull { get; set; }
+
         float PrimaryValue { get; set; }
 
         float SecondaryValue { get; set; }
@@ -33,14 +35,16 @@ namespace LiveChartsCore.Context
         IChartPointContext Context { get; }
     }
 
-    public interface IChartPoint<TVisual, TDrawingContext>: IChartPoint
+    public interface IChartPoint<TVisual, TDrawingContext>
         where TDrawingContext : DrawingContext
         where TVisual : IVisualChartPoint<TDrawingContext>
     {
-        new float PrimaryValue { get; set; }
+        bool IsNull { get; set; }
 
-        new float SecondaryValue { get; set; }
+        float PrimaryValue { get; set; }
 
-        new ChartPointContext<TVisual, TDrawingContext> PointContext { get; }
+        float SecondaryValue { get; set; }
+
+        ChartPointContext<TVisual, TDrawingContext> Context { get; }
     }
 }
