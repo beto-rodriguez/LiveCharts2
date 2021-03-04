@@ -67,20 +67,20 @@ namespace ViewModelsSamples
                 //    Stroke = new SolidColorPaintTask(new SKColor(67, 160, 61), 2),
                 //    Fill = new SolidColorPaintTask(new SKColor(67, 160, 61, 30)),
                 //},
-                new ColumnSeries<int?>
-                {
-                    Name = "scatter",
-                    Values = new ObservableCollection<int?>{ 2, null, null, null, null, null, null, null, null, null, null, 3},
-                    Stroke = new SolidColorPaintTask(new SKColor(239, 108, 0), 2),
-                    Fill = new SolidColorPaintTask(new SKColor(239, 108, 0, 30)),
-                },
-                // new LineSeries<double>
+                //new ColumnSeries<int?>
                 //{
-                //    Name = "lines",
-                //    Values = new[]{ 1d, 4, 2, 1, 7, 3, 5, 6, 3, 6, 8, 3},
-                //    //ShapesFill = new SolidColorPaintTask(new SKColor(255, 255, 255)),
-                //    //ShapesStroke =  new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
+                //    Name = "scatter",
+                //    Values = new ObservableCollection<int?>{ 2, null, null, null, null, null, null, null, null, null, null, 3},
+                //    Stroke = new SolidColorPaintTask(new SKColor(239, 108, 0), 2),
+                //    Fill = new SolidColorPaintTask(new SKColor(239, 108, 0, 30)),
                 //},
+                 new LineSeries<int?>
+                {
+                    Name = "lines",
+                    Values = new int?[]{ 1, 4, 2, null, 7, 3, 5, 6, null, 6, 8, 3},
+                    //ShapesFill = new SolidColorPaintTask(new SKColor(255, 255, 255)),
+                    //ShapesStroke =  new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
+                },
             };
 
             YAxes = new List<IAxis<SkiaSharpDrawingContext>>
@@ -107,16 +107,16 @@ namespace ViewModelsSamples
 
         public void Randomize()
         {
-            var r = new Random();
-            var values = (ObservableCollection<int?>)((ColumnSeries<int?>)Series[0]).Values;
-            var i = r.Next(values.Count);
-            var d = r.NextDouble();
-            values[i] = (int)(d * 15);
+            //var r = new Random();
+            //var values = (ObservableCollection<int?>)((ColumnSeries<int?>)Series[0]).Values;
+            //var i = r.Next(values.Count);
+            //var d = r.NextDouble();
+            //values[i] = (int)(d * 15);
 
-            if (d > 0.9)
-            {
-                values[i] = null;
-            }
+            //if (d > 0.9)
+            //{
+            //    values[i] = null;
+            //}
 
             //var a = r.NextDouble();
             //if (a < 0.1 && Series.Count > 2) Series.RemoveAt(0);

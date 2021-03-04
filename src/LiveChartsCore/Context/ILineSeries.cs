@@ -31,6 +31,7 @@ namespace LiveChartsCore.Context
         double Pivot { get; set; }
         double GeometrySize { get; set; }
         double LineSmoothness { get; set; }
+        bool EnableNullSplitting { get; set; }
 
         IDrawableTask<TDrawingContext>? ShapesFill { get; set; }
         IDrawableTask<TDrawingContext>? ShapesStroke { get; set; }

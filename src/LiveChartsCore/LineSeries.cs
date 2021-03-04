@@ -24,7 +24,6 @@ using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace LiveChartsCore
 {
@@ -40,13 +39,14 @@ namespace LiveChartsCore
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
-        private readonly AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs> fillPathHelper =
-            new AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>();
-        private readonly AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs> strokePathHelper =
-            new AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>();
+        private readonly List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>> fillPathHelperContainer =
+            new List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>();
+        private readonly List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>> strokePathHelperContainer =
+            new List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>();
         private float lineSmoothness = 0.65f;
         private float geometrySize = 14f;
         private float pivot = 0f;
+        private bool enableNullSplitting = true;
         private IDrawableTask<TDrawingContext>? shapesFill;
         private IDrawableTask<TDrawingContext>? shapesStroke;
 
@@ -61,6 +61,8 @@ namespace LiveChartsCore
         public double GeometrySize { get => geometrySize; set => geometrySize = (float)value; }
 
         public double LineSmoothness { get => lineSmoothness; set => lineSmoothness = (float)value; }
+
+        public bool EnableNullSplitting { get => enableNullSplitting; set => enableNullSplitting = value; }
 
         public IDrawableTask<TDrawingContext>? ShapesFill
         {
@@ -123,134 +125,161 @@ namespace LiveChartsCore
             float sw = Stroke?.StrokeWidth ?? 0;
             float p = yScale.ScaleToUi(pivot);
 
-            var wasFillInitialized = false;
-            var wasStrokeInitialized = false;
-
             var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
 
-            if (Fill != null)
-            {
-                wasFillInitialized = fillPathHelper.Initialize(SetDefaultPathTransitions, chartAnimation);
-                Fill.AddGeometyToPaintTask(fillPathHelper.Path);
-                chart.MeasuredDrawables.Add(fillPathHelper.Path);
-                chart.Canvas.AddDrawableTask(Fill);
-                fillPathHelper.Path.ClearCommands();
-            }
-            if (Stroke != null)
-            {
-                wasStrokeInitialized = strokePathHelper.Initialize(SetDefaultPathTransitions, chartAnimation);
-                Stroke.AddGeometyToPaintTask(strokePathHelper.Path);
-                chart.MeasuredDrawables.Add(strokePathHelper.Path);
-                chart.Canvas.AddDrawableTask(Stroke);
-                strokePathHelper.Path.ClearCommands();
-            }
-            var ts = OnPointCreated ?? DefaultOnPointCreated;
+            var points = Fetch(chart);
 
-            foreach (var data in GetSpline(chart, xScale, yScale))
-            {
-                var x = xScale.ScaleToUi(data.TargetPoint.SecondaryValue);
-                var y = yScale.ScaleToUi(data.TargetPoint.PrimaryValue);
+            var segments = enableNullSplitting
+                ? SplitEachNull(points)
+                : new ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>[][] { points };
+            var segmentI = 0;
 
-                if (data.TargetPoint.Context.Visual == null)
+            foreach (var segment in segments)
+            {
+                var wasFillInitialized = false;
+                var wasStrokeInitialized = false;
+
+                AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs> fillPathHelper;
+                AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs> strokePathHelper;
+
+                if (segmentI >= fillPathHelperContainer.Count)
                 {
-                    var v = new LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>();
-
-                    v.Geometry.X = x - hgs;
-                    v.Geometry.Y = p - hgs;
-                    v.Geometry.Width = gs;
-                    v.Geometry.Height = gs;
-
-                    v.Bezier.X0 = data.X0;
-                    v.Bezier.Y0 = p - hgs;
-                    v.Bezier.X1 = data.X1;
-                    v.Bezier.Y1 = p - hgs;
-                    v.Bezier.X2 = data.X2;
-                    v.Bezier.Y2 = p - hgs;
-
-                    ts(v, chart.View);
-
-                    v.Geometry.CompleteAllTransitions();
-                    v.Bezier.CompleteAllTransitions();
-
-                    data.TargetPoint.Context.Visual = v;
-
-                    if (ShapesFill != null) ShapesFill.AddGeometyToPaintTask(v.Geometry);
-                    if (ShapesStroke != null) ShapesStroke.AddGeometyToPaintTask(v.Geometry);
+                    fillPathHelper = new AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>();
+                    strokePathHelper = new AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>();
+                    fillPathHelperContainer.Add(fillPathHelper);
+                    strokePathHelperContainer.Add(strokePathHelper);
+                } 
+                else
+                {
+                    fillPathHelper = fillPathHelperContainer[segmentI];
+                    strokePathHelper = strokePathHelperContainer[segmentI];
                 }
-
-                var visual = data.TargetPoint.Context.Visual;
-
-                visual.Bezier.X0 = data.X0;
-                visual.Bezier.Y0 = data.Y0;
-                visual.Bezier.X1 = data.X1;
-                visual.Bezier.Y1 = data.Y1;
-                visual.Bezier.X2 = data.X2;
-                visual.Bezier.Y2 = data.Y2;
 
                 if (Fill != null)
                 {
-                    if (data.IsFirst)
-                    {
-                        fillPathHelper.StartPoint.X = data.X0;
-                        fillPathHelper.StartPoint.Y = p;
-                        fillPathHelper.Path.AddCommand(fillPathHelper.StartPoint);
-
-                        fillPathHelper.StartSegment.X = data.X0;
-                        fillPathHelper.StartSegment.Y = data.Y0;
-                        fillPathHelper.Path.AddCommand(fillPathHelper.StartSegment);
-
-                        if (wasFillInitialized)
-                        {
-                            fillPathHelper.StartPoint.CompleteTransitions(
-                                nameof(fillPathHelper.StartPoint.Y), nameof(fillPathHelper.StartPoint.X));
-                            fillPathHelper.StartSegment.CompleteTransitions(
-                                nameof(fillPathHelper.StartSegment.Y), nameof(fillPathHelper.StartSegment.X));
-                        }
-                    }
-
-                    fillPathHelper.Path.AddCommand(visual.Bezier);
-
-                    if (data.IsLast)
-                    {
-                        fillPathHelper.EndSegment.X = data.X0;
-                        fillPathHelper.EndSegment.Y = p;
-                        fillPathHelper.Path.AddCommand(fillPathHelper.EndSegment);
-
-                        if (wasFillInitialized)
-                            fillPathHelper.EndSegment.CompleteTransitions(
-                                nameof(fillPathHelper.EndSegment.Y), nameof(fillPathHelper.EndSegment.X));
-                    }
+                    wasFillInitialized = fillPathHelper.Initialize(SetDefaultPathTransitions, chartAnimation);
+                    Fill.AddGeometyToPaintTask(fillPathHelper.Path);
+                    chart.MeasuredDrawables.Add(fillPathHelper.Path);
+                    chart.Canvas.AddDrawableTask(Fill);
+                    fillPathHelper.Path.ClearCommands();
                 }
                 if (Stroke != null)
                 {
-                    if (data.IsFirst)
-                    {
-                        strokePathHelper.StartPoint.X = data.X0;
-                        strokePathHelper.StartPoint.Y = data.Y0;
-                        strokePathHelper.Path.AddCommand(strokePathHelper.StartPoint);
+                    wasStrokeInitialized = strokePathHelper.Initialize(SetDefaultPathTransitions, chartAnimation);
+                    Stroke.AddGeometyToPaintTask(strokePathHelper.Path);
+                    chart.MeasuredDrawables.Add(strokePathHelper.Path);
+                    chart.Canvas.AddDrawableTask(Stroke);
+                    strokePathHelper.Path.ClearCommands();
+                }
+                var ts = OnPointCreated ?? DefaultOnPointCreated;
 
-                        if (wasStrokeInitialized)
-                        {
-                            strokePathHelper.StartPoint.CompleteTransitions(
-                               nameof(fillPathHelper.StartPoint.Y), nameof(fillPathHelper.StartPoint.X));
-                        }
+                foreach (var data in GetSpline(segment, chart, xScale, yScale))
+                {
+                    var x = xScale.ScaleToUi(data.TargetPoint.SecondaryValue);
+                    var y = yScale.ScaleToUi(data.TargetPoint.PrimaryValue);
+
+                    if (data.TargetPoint.Context.Visual == null)
+                    {
+                        var v = new LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>();
+
+                        v.Geometry.X = x - hgs;
+                        v.Geometry.Y = p - hgs;
+                        v.Geometry.Width = gs;
+                        v.Geometry.Height = gs;
+
+                        v.Bezier.X0 = data.X0;
+                        v.Bezier.Y0 = p - hgs;
+                        v.Bezier.X1 = data.X1;
+                        v.Bezier.Y1 = p - hgs;
+                        v.Bezier.X2 = data.X2;
+                        v.Bezier.Y2 = p - hgs;
+
+                        ts(v, chart.View);
+
+                        v.Geometry.CompleteAllTransitions();
+                        v.Bezier.CompleteAllTransitions();
+
+                        data.TargetPoint.Context.Visual = v;
+
+                        if (ShapesFill != null) ShapesFill.AddGeometyToPaintTask(v.Geometry);
+                        if (ShapesStroke != null) ShapesStroke.AddGeometyToPaintTask(v.Geometry);
                     }
 
-                    strokePathHelper.Path.AddCommand(visual.Bezier);
+                    var visual = data.TargetPoint.Context.Visual;
+
+                    visual.Bezier.X0 = data.X0;
+                    visual.Bezier.Y0 = data.Y0;
+                    visual.Bezier.X1 = data.X1;
+                    visual.Bezier.Y1 = data.Y1;
+                    visual.Bezier.X2 = data.X2;
+                    visual.Bezier.Y2 = data.Y2;
+
+                    if (Fill != null)
+                    {
+                        if (data.IsFirst)
+                        {
+                            fillPathHelper.StartPoint.X = data.X0;
+                            fillPathHelper.StartPoint.Y = p;
+                            fillPathHelper.Path.AddCommand(fillPathHelper.StartPoint);
+
+                            fillPathHelper.StartSegment.X = data.X0;
+                            fillPathHelper.StartSegment.Y = data.Y0;
+                            fillPathHelper.Path.AddCommand(fillPathHelper.StartSegment);
+
+                            if (wasFillInitialized)
+                            {
+                                fillPathHelper.StartPoint.CompleteTransitions(
+                                    nameof(fillPathHelper.StartPoint.Y), nameof(fillPathHelper.StartPoint.X));
+                                fillPathHelper.StartSegment.CompleteTransitions(
+                                    nameof(fillPathHelper.StartSegment.Y), nameof(fillPathHelper.StartSegment.X));
+                            }
+                        }
+
+                        fillPathHelper.Path.AddCommand(visual.Bezier);
+
+                        if (data.IsLast)
+                        {
+                            fillPathHelper.EndSegment.X = data.X0;
+                            fillPathHelper.EndSegment.Y = p;
+                            fillPathHelper.Path.AddCommand(fillPathHelper.EndSegment);
+
+                            if (wasFillInitialized)
+                                fillPathHelper.EndSegment.CompleteTransitions(
+                                    nameof(fillPathHelper.EndSegment.Y), nameof(fillPathHelper.EndSegment.X));
+                        }
+                    }
+                    if (Stroke != null)
+                    {
+                        if (data.IsFirst)
+                        {
+                            strokePathHelper.StartPoint.X = data.X0;
+                            strokePathHelper.StartPoint.Y = data.Y0;
+                            strokePathHelper.Path.AddCommand(strokePathHelper.StartPoint);
+
+                            if (wasStrokeInitialized)
+                            {
+                                strokePathHelper.StartPoint.CompleteTransitions(
+                                   nameof(fillPathHelper.StartPoint.Y), nameof(fillPathHelper.StartPoint.X));
+                            }
+                        }
+
+                        strokePathHelper.Path.AddCommand(visual.Bezier);
+                    }
+
+                    visual.Geometry.X = x - hgs;
+                    visual.Geometry.Y = y - hgs;
+                    visual.Geometry.Width = gs;
+                    visual.Geometry.Height = gs;
+
+                    data.TargetPoint.Context.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs, y - hgs + 2 * sw, gs, gs + 2 * sw);
+                    OnPointMeasured(data.TargetPoint, visual);
+                    chart.MeasuredDrawables.Add(visual.Geometry);
                 }
 
-                visual.Geometry.X = x - hgs;
-                visual.Geometry.Y = y - hgs;
-                visual.Geometry.Width = gs;
-                visual.Geometry.Height = gs;
-
-                data.TargetPoint.Context.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs, y - hgs + 2 * sw, gs, gs + 2 * sw);
-                OnPointMeasured(data.TargetPoint, visual);
-                chart.MeasuredDrawables.Add(visual.Geometry);
+                if (ShapesFill != null) chart.Canvas.AddDrawableTask(ShapesFill);
+                if (ShapesStroke != null) chart.Canvas.AddDrawableTask(ShapesStroke);
+                segmentI++;
             }
-
-            if (ShapesFill != null) chart.Canvas.AddDrawableTask(ShapesFill);
-            if (ShapesStroke != null) chart.Canvas.AddDrawableTask(ShapesStroke);
         }
 
         public override DimensinalBounds GetBounds(
@@ -392,10 +421,11 @@ namespace LiveChartsCore
         }
 
         private IEnumerable<BezierData<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>> GetSpline(
-            CartesianChart<TDrawingContext> chart, ScaleContext xScale, ScaleContext yScale)
+            ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>[] points,
+            CartesianChart<TDrawingContext> chart,
+            ScaleContext xScale,
+            ScaleContext yScale)
         {
-            var points = Fetch(chart);
-
             if (points.Length == 0) yield break;
             IChartPoint<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext> previous, current, next, next2;
 
@@ -470,6 +500,27 @@ namespace LiveChartsCore
                     };
                 }
             }
+        }
+
+        private IEnumerable<ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>[]> SplitEachNull(
+            ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>[] points)
+        {
+            List<ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>> l =
+                new List<ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>>(points.Length);
+
+            foreach (var point in points)
+            {
+                if (point.IsNull)
+                {
+                    if (l.Count > 0) yield return l.ToArray();
+                    l = new List<ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>>(points.Length);
+                    continue;
+                }
+
+                l.Add(point);
+            }
+
+            if (l.Count > 0) yield return l.ToArray();
         }
     }
 }
