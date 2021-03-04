@@ -33,7 +33,6 @@ namespace LiveChartsCore
         public ColumnSeries()
             : base(SeriesProperties.Bar | SeriesProperties.VerticalOrientation)
         {
-
         }
 
         public override void Measure(
@@ -74,15 +73,15 @@ namespace LiveChartsCore
 
             foreach (var point in Fetch(chart))
             {
-                var primary = secondaryScale.ScaleToUi(point.SecondaryValue);
-                var secondary = primaryScale.ScaleToUi(point.PrimaryValue);
-                float b = Math.Abs(secondary - p);
+                var primary = primaryScale.ScaleToUi(point.PrimaryValue);
+                var secondary = secondaryScale.ScaleToUi(point.SecondaryValue);                
+                float b = Math.Abs(primary - p);
 
                 if (point.PointContext.Visual == null)
                 {
                     var r = new TVisual
                     {
-                        X = primary - uwm + cp,
+                        X = secondary - uwm + cp,
                         Y = p,
                         Width = uw,
                         Height = 0
@@ -98,14 +97,14 @@ namespace LiveChartsCore
 
                 var sizedGeometry = point.PointContext.Visual;
 
-                var cy = point.PrimaryValue > Pivot ? secondary : secondary - b;
+                var cy = point.PrimaryValue > Pivot ? primary : primary - b;
 
-                sizedGeometry.X = primary - uwm + cp;
+                sizedGeometry.X = secondary - uwm + cp;
                 sizedGeometry.Y = cy;
                 sizedGeometry.Width = uw;
                 sizedGeometry.Height = b;
 
-                point.PointContext.HoverArea = new RectangleHoverArea().SetDimensions(primary - uwm + cp, cy, uw, b);
+                point.PointContext.HoverArea = new RectangleHoverArea().SetDimensions(secondary - uwm + cp, cy, uw, b);
                 OnPointMeasured(point, sizedGeometry);
                 chart.MeasuredDrawables.Add(sizedGeometry);
             }

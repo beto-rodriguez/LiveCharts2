@@ -46,31 +46,27 @@ namespace ViewModelsSamples
 
             Series = new ObservableCollection<ICartesianSeries<SkiaSharpDrawingContext>>
             {
-                new RowSeries<double>
+                //new RowSeries<double>
+                //{
+                //    Name = "bars",
+                //    Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
+                //    Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
+                //    Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
+                //},
+                new StackedRowSeries<double>
                 {
-                    Name = "rows",
-                    Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
-                    Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
-                    Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
-                    //HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
+                    Name = "columns 2",
+                    Values = new[]{ 2d, 6, 4, 2, 7, 2, 8, 4, 2, 1, 3, 5},
+                    Stroke = new SolidColorPaintTask(new SKColor(2, 136, 209), 2),
+                    Fill = new SolidColorPaintTask(new SKColor(2, 136, 209, 30)),
                 },
-                //new StackedColumnSeries<double>
-                //{
-                //    Name = "columns 2",
-                //    Values = new[]{ 2d, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                //    Stroke = new SolidColorPaintTask(new SKColor(2, 136, 209), 2),
-                //    Fill = new SolidColorPaintTask(new SKColor(2, 136, 209, 30)),
-                //    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
-                //},
-                //new StackedColumnSeries<double>
-                //{
-                //    Name = "columns 3",
-                //    Values = new[]{ 2d, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                //    Stroke = new SolidColorPaintTask(new SKColor(67, 160, 61), 2),
-                //    Fill = new SolidColorPaintTask(new SKColor(67, 160, 61, 30)),
-                //    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
-                //    StackGroup = 1
-                //},
+                new StackedRowSeries<double>
+                {
+                    Name = "columns 3",
+                    Values = new[]{ 7d, 3, 5, 6, 6, 9, 5, 1, 2, 4, 6, 7},
+                    Stroke = new SolidColorPaintTask(new SKColor(67, 160, 61), 2),
+                    Fill = new SolidColorPaintTask(new SKColor(67, 160, 61, 30)),
+                },
                 //new ColumnSeries<double>
                 //{
                 //    Name = "scatter",

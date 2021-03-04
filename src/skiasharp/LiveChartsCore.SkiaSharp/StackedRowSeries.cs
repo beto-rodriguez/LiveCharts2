@@ -21,20 +21,26 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using System;
+using LiveChartsCore.SkiaSharpView.Drawing;
 
-namespace LiveChartsCore.Context
+namespace LiveChartsCore.SkiaSharpView
 {
-    public interface IStackedColumnSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public class StackedRowSeries<TModel> : StackedRowSeries<TModel, RectangleGeometry, SkiaSharpDrawingContext>
     {
-        double MaxColumnWidth { get; set; }
-        int StackGroup { get; set; }
+        public StackedRowSeries()
+        {
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSK.DefaultPlatformBuilder);
+            InitializeSeries();
+        }
+    }
 
-        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? OnPointCreated { get; set; }
-
-        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? OnPointAddedToState { get; set; }
-
-        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? OnPointRemovedFromState { get; set; }
+    public class StackedRowSeries<TModel, TVisual> : StackedRowSeries<TModel, TVisual, SkiaSharpDrawingContext>
+        where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+    {
+        public StackedRowSeries()
+        {
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSK.DefaultPlatformBuilder);
+            InitializeSeries();
+        }
     }
 }
