@@ -87,6 +87,25 @@ namespace LiveChartsCore
 
             foreach (var point in Fetch(chart))
             {
+                if (point.IsNull)
+                {
+                    if (point.Context.Visual != null)
+                    {
+                        point.Context.Visual.CenterX = drawLocation.X + drawMarginSize.Width * 0.5f;
+                        point.Context.Visual.CenterY = drawLocation.Y + drawMarginSize.Height * 0.5f;
+                        point.Context.Visual.X = cx;
+                        point.Context.Visual.Y = cy;
+                        point.Context.Visual.Width = 0;
+                        point.Context.Visual.Height = 0;
+                        point.Context.Visual.SweepAngle = 0;
+                        point.Context.Visual.StartAngle = 0;
+                        point.Context.Visual.PushOut = 0;
+                        point.Context.Visual.InnerRadius = 0;
+                        point.Context.Visual.RemoveOnCompleted = true;
+                    }
+                    continue;
+                }
+
                 if (point.Context.Visual == null)
                 {
                     var p = new TVisual
