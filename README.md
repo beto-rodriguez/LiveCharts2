@@ -110,13 +110,13 @@ The following topics will work on any platform.
   - [x] ~~Draw a basic column ~~
   - [x] ~~Allow the user to define a custom geometry for every column in the series~~
   - [x] ~~Layered columns~~
-  - [ ] allow vertical mode
+  - [x] ~~allow vertical mode~~
   - [ ] allow data labels and make them cutomizable
   
 - [ ] StackedColumnSeries
   - [x] ~~Draw a basic stacked column~~
   - [x] ~~Allow the user to define a custom geometry for every column in the series~~
-  - [ ] allow vertical mode
+  - [x] ~~allow vertical mode~~
   - [ ] allow data labels and make them cutomizable
   
 - [ ] StackedAreaSeries
