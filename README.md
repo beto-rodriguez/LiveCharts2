@@ -119,7 +119,7 @@ The following topics will work on any platform.
   - [ ] allow data labels and make them cutomizable
   
 - [ ] StackedAreaSeries
-  - [x] Draw a basic stacked area
+  - [x] ~~Draw a basic stacked area~~
   - [ ] allow data labels and make them cutomizable
   
 - [ ] ScatteredSeries
