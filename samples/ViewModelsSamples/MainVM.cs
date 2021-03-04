@@ -77,7 +77,7 @@ namespace ViewModelsSamples
                  new LineSeries<int?>
                 {
                     Name = "lines",
-                    Values = new int?[]{ 1, 4, 2, null, 7, 3, 5, 6, null, 6, 8, 3},
+                    Values = new ObservableCollection<int?>{ 1, 4, 2, null, 7, 5, 5, null, null, 6, 8, 3},
                     //ShapesFill = new SolidColorPaintTask(new SKColor(255, 255, 255)),
                     //ShapesStroke =  new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
                 },
@@ -107,16 +107,16 @@ namespace ViewModelsSamples
 
         public void Randomize()
         {
-            //var r = new Random();
-            //var values = (ObservableCollection<int?>)((ColumnSeries<int?>)Series[0]).Values;
-            //var i = r.Next(values.Count);
-            //var d = r.NextDouble();
-            //values[i] = (int)(d * 15);
+            var r = new Random();
+            var values = (ObservableCollection<int?>)((LineSeries<int?>)Series[0]).Values;
+            var i = r.Next(values.Count);
+            var d = r.NextDouble();
+            values[i] = (int)(d * 15);
 
-            //if (d > 0.9)
-            //{
-            //    values[i] = null;
-            //}
+            if (d > 0.3)
+            {
+                values[i] = null;
+            }
 
             //var a = r.NextDouble();
             //if (a < 0.1 && Series.Count > 2) Series.RemoveAt(0);

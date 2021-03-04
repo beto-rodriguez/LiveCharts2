@@ -102,6 +102,7 @@ namespace LiveChartsCore
                         point.Context.Visual.PushOut = 0;
                         point.Context.Visual.InnerRadius = 0;
                         point.Context.Visual.RemoveOnCompleted = true;
+                        point.Context.Visual = null;
                     }
                     continue;
                 }
@@ -145,6 +146,7 @@ namespace LiveChartsCore
                 dougnutGeometry.Height = minDimension;
                 dougnutGeometry.InnerRadius = innerRadius;
                 dougnutGeometry.PushOut = pushout;
+                dougnutGeometry.RemoveOnCompleted = false;
                 var start = (stackedValue / total) * 360;
                 var end = ((stackedValue + point.PrimaryValue) / total) * 360 - start;
                 dougnutGeometry.StartAngle = start;

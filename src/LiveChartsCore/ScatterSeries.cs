@@ -90,6 +90,7 @@ namespace LiveChartsCore
                         point.Context.Visual.Width = 0;
                         point.Context.Visual.Height = 0;
                         point.Context.Visual.RemoveOnCompleted = true;
+                        point.Context.Visual = null;
                     }
                     continue;
                 }
@@ -118,6 +119,7 @@ namespace LiveChartsCore
                 sizedGeometry.Y = y - hgs;
                 sizedGeometry.Width = gs;
                 sizedGeometry.Height =  gs;
+                sizedGeometry.RemoveOnCompleted = false;
 
                 point.Context.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs, y - hgs, gs + 2 * sw, gs + 2 * sw);
                 OnPointMeasured(point, sizedGeometry);

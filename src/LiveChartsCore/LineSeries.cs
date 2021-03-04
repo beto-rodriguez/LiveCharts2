@@ -130,7 +130,7 @@ namespace LiveChartsCore
             var points = Fetch(chart);
 
             var segments = enableNullSplitting
-                ? SplitEachNull(points)
+                ? SplitEachNull(points, xScale, yScale)
                 : new ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>[][] { points };
             var segmentI = 0;
 
@@ -279,6 +279,22 @@ namespace LiveChartsCore
                 if (ShapesFill != null) chart.Canvas.AddDrawableTask(ShapesFill);
                 if (ShapesStroke != null) chart.Canvas.AddDrawableTask(ShapesStroke);
                 segmentI++;
+            }
+
+            if (segmentI > fillPathHelperContainer.Count)
+            {
+                while (segmentI > fillPathHelperContainer.Count)
+                {
+                    var iFill = fillPathHelperContainer.Count - 1;
+                    var fillHelper = fillPathHelperContainer[iFill];
+                    if (Fill != null) Fill.RemoveGeometryFromPainTask(fillHelper.Path);
+                    fillPathHelperContainer.RemoveAt(iFill);
+
+                    var iStroke = strokePathHelperContainer.Count - 1;
+                    var strokeHelper = strokePathHelperContainer[iStroke];
+                    if (Stroke != null) Stroke.RemoveGeometryFromPainTask(strokeHelper.Path);
+                    strokePathHelperContainer.RemoveAt(iStroke);
+                }
             }
         }
 
@@ -503,7 +519,9 @@ namespace LiveChartsCore
         }
 
         private IEnumerable<ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>[]> SplitEachNull(
-            ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>[] points)
+            ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>[] points,
+            ScaleContext xScale,
+            ScaleContext yScale)
         {
             List<ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>> l =
                 new List<ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>>(points.Length);
@@ -512,6 +530,22 @@ namespace LiveChartsCore
             {
                 if (point.IsNull)
                 {
+                    if (point.Context.Visual != null)
+                    {
+                        var x = xScale.ScaleToUi(point.SecondaryValue);
+                        var y = yScale.ScaleToUi(point.PrimaryValue);
+                        var gs = geometrySize;
+                        var hgs = gs / 2f;
+                        float sw = Stroke?.StrokeWidth ?? 0;
+                        float p = yScale.ScaleToUi(pivot);
+                        point.Context.Visual.Geometry.X = x - hgs;
+                        point.Context.Visual.Geometry.Y = p - hgs;
+                        point.Context.Visual.Geometry.Width = gs;
+                        point.Context.Visual.Geometry.Height = gs;
+                        point.Context.Visual.Geometry.RemoveOnCompleted = true;
+                        point.Context.Visual = null;
+                    }
+
                     if (l.Count > 0) yield return l.ToArray();
                     l = new List<ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>>(points.Length);
                     continue;

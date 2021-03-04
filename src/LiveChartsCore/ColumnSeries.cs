@@ -86,6 +86,7 @@ namespace LiveChartsCore
                         point.Context.Visual.Width = uw;
                         point.Context.Visual.Height = 0;
                         point.Context.Visual.RemoveOnCompleted = true;
+                        point.Context.Visual = null;
                     }
                     continue;
                 }
