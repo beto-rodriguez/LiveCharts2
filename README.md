@@ -102,7 +102,6 @@ The following topics will work on any platform.
 - [ ] LineSeries
   - [x] ~~Draw a basic Spline that allows to customize the curve smoothness~~
   - [x] ~~Allow the user to define a custom geometry for every point in the line~~
-  - [ ] allow vertical mode
   - [x] ~~allow gaps in the line series~~
   - [ ] allow data labels and make them cutomizable
     
@@ -120,8 +119,7 @@ The following topics will work on any platform.
   - [ ] allow data labels and make them cutomizable
   
 - [ ] StackedAreaSeries
-  - [ ] Draw a basic stacked area
-  - [ ] allow vertical mode
+  - [x] Draw a basic stacked area
   - [ ] allow data labels and make them cutomizable
   
 - [ ] ScatteredSeries
