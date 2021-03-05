@@ -36,7 +36,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     {
         protected SKElement skiaElement;
         private bool isDrawingLoopRunning = false;
-        private Canvas<SkiaDrawingContext> canvasCore = new Canvas<SkiaDrawingContext>();
+        private Canvas<SkiaSharpDrawingContext> canvasCore = new Canvas<SkiaSharpDrawingContext>();
         private double framesPerSecond = 90;
 
         static NaturalGeometriesCanvas()
@@ -52,18 +52,18 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty PaintTasksProperty =
             DependencyProperty.Register(
-                nameof(PaintTasks), typeof(HashSet<IDrawableTask<SkiaDrawingContext>>), typeof(NaturalGeometriesCanvas),
-                new PropertyMetadata(new HashSet<IDrawableTask<SkiaDrawingContext>>(), new PropertyChangedCallback(OnPaintTaskChanged)));
+                nameof(PaintTasks), typeof(HashSet<IDrawableTask<SkiaSharpDrawingContext>>), typeof(NaturalGeometriesCanvas),
+                new PropertyMetadata(new HashSet<IDrawableTask<SkiaSharpDrawingContext>>(), new PropertyChangedCallback(OnPaintTaskChanged)));
 
-        public HashSet<IDrawableTask<SkiaDrawingContext>> PaintTasks
+        public HashSet<IDrawableTask<SkiaSharpDrawingContext>> PaintTasks
         {
-            get { return (HashSet<IDrawableTask<SkiaDrawingContext>>)GetValue(PaintTasksProperty); }
+            get { return (HashSet<IDrawableTask<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty); }
             set { SetValue(PaintTasksProperty, value); }
         }
 
         public double FramesPerSecond { get => framesPerSecond; set => framesPerSecond = value; }
 
-        public Canvas<SkiaDrawingContext> CanvasCore => canvasCore;
+        public Canvas<SkiaSharpDrawingContext> CanvasCore => canvasCore;
 
         public override void OnApplyTemplate()
         {
@@ -78,7 +78,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             skiaElement.PaintSurface += OnPaintSurface;
         }
 
-        public void SetPaintTasks(HashSet<IDrawableTask<SkiaDrawingContext>> tasks)
+        public void SetPaintTasks(HashSet<IDrawableTask<SkiaSharpDrawingContext>> tasks)
         {
             canvasCore.SetPaintTasks(tasks);
         }
@@ -90,10 +90,10 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         protected virtual void OnPaintSurface(object sender, SKPaintSurfaceEventArgs args)
         {
-            canvasCore.DrawFrame(new SkiaDrawingContext(args.Info, args.Surface, args.Surface.Canvas));
+            canvasCore.DrawFrame(new SkiaSharpDrawingContext(args.Info, args.Surface, args.Surface.Canvas));
         }
 
-        private void OnCanvasCoreInvalidated(Canvas<SkiaDrawingContext> sender)
+        private void OnCanvasCoreInvalidated(Canvas<SkiaSharpDrawingContext> sender)
         {
             Invalidate();
         }

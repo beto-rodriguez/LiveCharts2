@@ -22,47 +22,92 @@
 
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
+using System;
+
 namespace LiveChartsCore
 {
-    public class ScatterSeries<TModel, TVisual, TDrawingContext> : CartesianSeries<TModel, TVisual, TDrawingContext>
-        where TVisual : class, ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
+    public class ScatterSeries<TModel, TVisual, TDrawingContext> : CartesianSeries<TModel, TVisual, TDrawingContext>, IScatterSeries<TDrawingContext>
+        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
-        private double geometrySize = 18d;
+        private double geometrySize = 24d;
+        private double minGeometrySize = 6d;
+        private Bounds weightBounds = new Bounds();
 
         public ScatterSeries()
             : base(SeriesProperties.Scatter)
         {
-
+            HoverState = LiveCharts.ScatterSeriesHoverKey;
         }
 
+        public double MinGeometrySize { get => minGeometrySize; set => minGeometrySize = value; }
+
         public double GeometrySize { get => geometrySize; set => geometrySize = value; }
-        public TransitionsSetterDelegate<ISizedGeometry<TDrawingContext>>? TransitionsSetter { get; set; }
+
+        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IScatterSeries<TDrawingContext>.OnPointCreated
+        {
+            get => OnPointCreated as Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>;
+            set => OnPointCreated = value;
+        }
+
+        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IScatterSeries<TDrawingContext>.OnPointAddedToState
+        {
+            get => OnPointAddedToState as Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>;
+            set => OnPointAddedToState = value;
+        }
+
+        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IScatterSeries<TDrawingContext>.OnPointRemovedFromState
+        {
+            get => OnPointRemovedFromState as Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>;
+            set => OnPointRemovedFromState = value;
+        }
 
         public override void Measure(
-            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
+            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
         {
             var drawLocation = chart.DrawMaringLocation;
             var drawMarginSize = chart.DrawMarginSize;
             var xScale = new ScaleContext(drawLocation, drawMarginSize, xAxis.Orientation, xAxis.DataBounds);
             var yScale = new ScaleContext(drawLocation, drawMarginSize, yAxis.Orientation, yAxis.DataBounds);
 
-            if (Fill != null) chart.Canvas.AddPaintTask(Fill);
-            if (Stroke != null) chart.Canvas.AddPaintTask(Stroke);
+            if (Fill != null) chart.Canvas.AddDrawableTask(Fill);
+            if (Stroke != null) chart.Canvas.AddDrawableTask(Stroke);
 
             var gs = unchecked((float)geometrySize);
             var hgs = gs / 2f;
             float sw = Stroke?.StrokeWidth ?? 0;
+            var requiresWScale = weightBounds.max - weightBounds.min > 0;
+            var wm = -(geometrySize - minGeometrySize) / (weightBounds.max - weightBounds.min);
 
             var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
-            var ts = TransitionsSetter ?? SetDefaultTransitions;
+            var ts = OnPointCreated ?? DefaultOnPointCreated;
 
             foreach (var point in Fetch(chart))
             {
                 var x = xScale.ScaleToUi(point.SecondaryValue);
                 var y = yScale.ScaleToUi(point.PrimaryValue);
 
-                if (point.PointContext.Visual == null)
+                if (point.IsNull)
+                {
+                    if (point.Context.Visual != null)
+                    {
+                        point.Context.Visual.X = x - hgs;
+                        point.Context.Visual.Y = y - hgs;
+                        point.Context.Visual.Width = 0;
+                        point.Context.Visual.Height = 0;
+                        point.Context.Visual.RemoveOnCompleted = true;
+                        point.Context.Visual = null;
+                    }
+                    continue;
+                }
+
+                if (requiresWScale)
+                {
+                    gs = (float)((wm * (weightBounds.max - point.TertiaryValue) + geometrySize));
+                    hgs = gs / 2f;
+                }
+
+                if (point.Context.Visual == null)
                 {
                     var r = new TVisual
                     {
@@ -72,37 +117,47 @@ namespace LiveChartsCore
                         Height = 0
                     };
 
-                    ts(r, chartAnimation);
+                    ts(r, chart.View);
+                    r.CompleteAllTransitions();
 
-                    point.PointContext.Visual = r;
+                    point.Context.Visual = r;
                     if (Fill != null) Fill.AddGeometyToPaintTask(r);
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(r);
                 }
 
-                var sizedGeometry = point.PointContext.Visual;
+                var sizedGeometry = point.Context.Visual;
 
                 sizedGeometry.X = x - hgs;
                 sizedGeometry.Y = y - hgs;
                 sizedGeometry.Width = gs;
-                sizedGeometry.Height =  gs;
+                sizedGeometry.Height = gs;
+                sizedGeometry.RemoveOnCompleted = false;
 
-                point.PointContext.HoverArea.SetDimensions(x - hgs, y - hgs, gs + 2 * sw, gs + 2 * sw);
+                point.Context.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs, y - hgs, gs + 2 * sw, gs + 2 * sw);
                 OnPointMeasured(point, sizedGeometry);
                 chart.MeasuredDrawables.Add(sizedGeometry);
             }
-
-            if (HighlightFill != null) chart.Canvas.AddPaintTask(HighlightFill);
-            if (HighlightStroke != null) chart.Canvas.AddPaintTask(HighlightStroke);
         }
 
-        public override CartesianBounds GetBounds(
-            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
+        public override DimensinalBounds GetBounds(
+            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
-            var baseBounds = base.GetBounds(chart, x, y);
+            var baseBounds = new DimensinalBounds();
+            weightBounds = new Bounds();
+            foreach (var point in Fetch(chart))
+            {
+                var primary = point.PrimaryValue;
+                var secondary = point.SecondaryValue;
+                var tertiary = point.TertiaryValue;
+
+                baseBounds.PrimaryBounds.AppendValue(primary);
+                baseBounds.SecondaryBounds.AppendValue(secondary);
+                weightBounds.AppendValue(tertiary);
+            }
 
             var tick = y.GetTick(chart.ControlSize, baseBounds.PrimaryBounds);
 
-            return new CartesianBounds
+            return  new DimensinalBounds
             {
                 SecondaryBounds = new Bounds
                 {
@@ -117,17 +172,18 @@ namespace LiveChartsCore
             };
         }
 
-        protected virtual void SetDefaultTransitions(ISizedGeometry<TDrawingContext> visual, Animation defaultAnimation)
+        protected virtual void DefaultOnPointCreated(ISizedVisualChartPoint<TDrawingContext> visual, IChartView<TDrawingContext> chart)
         {
-            var defaultProperties = new string[]
-            {
-                nameof(visual.X),
-                nameof(visual.Y),
-                nameof(visual.Width),
-                nameof(visual.Height),
-            };
-            visual.SetPropertyTransition(defaultAnimation, defaultProperties);
-            visual.CompleteTransition(defaultProperties);
+            visual
+                .TransitionateProperties(
+                    nameof(visual.X),
+                    nameof(visual.Y),
+                    nameof(visual.Width),
+                    nameof(visual.Height))
+                .WithAnimation(animation =>
+                    animation
+                        .WithDuration(chart.AnimationsSpeed)
+                        .WithEasingFunction(chart.EasingFunction));
         }
 
         protected override void OnPaintContextChanged()
@@ -163,7 +219,5 @@ namespace LiveChartsCore
 
             paintContext = context;
         }
-
-        public override int GetStackGroup() => 0;
     }
 }

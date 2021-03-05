@@ -1,20 +1,25 @@
-﻿using LiveChartsCore.Context;
+﻿using LiveChartsCore;
+using LiveChartsCore.Context;
+using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
 
 namespace ViewModelsSamples
 {
-    public class MainVM
+    public class CartesianViewModel
     {
-        public ObservableCollection<ICartesianSeries<SkiaDrawingContext>> Series { get; set; }
-        public List<IAxis<SkiaDrawingContext>> YAxes { get; set; }
-        public List<IAxis<SkiaDrawingContext>> XAxes { get; set; }
+        public ObservableCollection<ICartesianSeries<SkiaSharpDrawingContext>> Series { get; set; }
+        public List<IAxis<SkiaSharpDrawingContext>> YAxes { get; set; }
+        public List<IAxis<SkiaSharpDrawingContext>> XAxes { get; set; }
 
-        public MainVM()
+        public CartesianViewModel()
         {
             //var animatedStrokeDash = new SolidColorPaintTask(new SKColor(217, 47, 47), 2);
             //animatedStrokeDash.SetPropertyTransition(
@@ -40,54 +45,66 @@ namespace ViewModelsSamples
             //    new[] { 0f, 0.5f, 1 },
             //    SKShaderTileMode.Repeat);
 
-            Series = new ObservableCollection<ICartesianSeries<SkiaDrawingContext>>
+            Series = new ObservableCollection<ICartesianSeries<SkiaSharpDrawingContext>>
             {
-                new ColumnSeries<double>
-                {
-                    Name = "columns",
-                    Values = new[]{ 2d, 5, 3, 6, 2, 8, 4, 2, 9, 6, 9, 3},
-                    Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
-                    Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
-                    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80))
-                },
-                //new StackedColumnSeries<double>
+                //new RowSeries<double>
+                //{
+                //    Name = "bars",
+                //    Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
+                //    Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
+                //    Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
+                //},
+                //new StackedAreaSeries<double>
                 //{
                 //    Name = "columns 2",
-                //    Values = new[]{ 2d, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                //    Stroke = new SolidColorPaintTask(new SKColor(2, 136, 209), 2),
-                //    Fill = new SolidColorPaintTask(new SKColor(2, 136, 209, 30)),
-                //    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
+                //    Values = new[]{ 2d, 6, 4, 2, 7, 2, 8, 4, 2, 1, 3, 5},
                 //},
-                //new StackedColumnSeries<double>
+                //new StackedAreaSeries<double>
                 //{
                 //    Name = "columns 3",
-                //    Values = new[]{ 2d, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                //    Stroke = new SolidColorPaintTask(new SKColor(67, 160, 61), 2),
-                //    Fill = new SolidColorPaintTask(new SKColor(67, 160, 61, 30)),
-                //    HighlightFill = new SolidColorPaintTask(new SKColor(217, 47, 47, 80)),
-                //    StackGroup = 1
+                //    Values = new[]{ 7d, 3, 5, 6, 6, 9, 5, 1, 2, 4, 6, 7},
                 //},
-                //new ColumnSeries<double>
+                //new ColumnSeries<int?>
                 //{
                 //    Name = "scatter",
-                //    Values = new[]{ 2d, 4, 3, 1, 8, 3, 7, 2, 6, 3, 7, 3},
+                //    Values = new ObservableCollection<int?>{ 2, null, null, null, null, null, null, null, null, null, null, 3},
                 //    Stroke = new SolidColorPaintTask(new SKColor(239, 108, 0), 2),
                 //    Fill = new SolidColorPaintTask(new SKColor(239, 108, 0, 30)),
                 //},
-                // new LineSeries<double>
+                // new LineSeries<int?>
                 //{
                 //    Name = "lines",
-                //    Values = new[]{ 1d, 4, 2, 1, 7, 3, 5, 6, 3, 6, 8, 3},
-                //    Stroke = new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
-                //    Fill = new SolidColorPaintTask(new SKColor(2, 136, 209, 200)),
-                //    ShapesFill = new SolidColorPaintTask(new SKColor(255, 255, 255)),
-                //    ShapesStroke =  new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
-                //    HighlightFill = new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
-                //    HighlightStroke = new SolidColorPaintTask(new SKColor(20, 20, 20), 3)
+                //    Values = new ObservableCollection<int?>{ 1, 4, 2, null, 7, 5, 5, null, null, 6, 8, 3},
+                //    //ShapesFill = new SolidColorPaintTask(new SKColor(255, 255, 255)),
+                //    //ShapesStroke =  new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
                 //},
+                new ScatterSeries<WeightedPoint>
+                {
+                    Name = "scatter 3",
+                    Values = new[]
+                    {
+                        new WeightedPoint(1, 1, 1),
+                        new WeightedPoint(2, 2, 2),
+                        new WeightedPoint(3, 3, 3),
+                        new WeightedPoint(4, 4, 4),
+                        new WeightedPoint(5, 5, 5),
+                    },
+                },
+                new ScatterSeries<double>
+                {
+                    Name = "scatter 3",
+                    Values = new[]
+                    {
+                        2d,
+                        4,
+                        6,
+                        8,
+                        8,
+                    },
+                },
             };
 
-            YAxes = new List<IAxis<SkiaDrawingContext>>
+            YAxes = new List<IAxis<SkiaSharpDrawingContext>>
             {
                 new Axis
                 {
@@ -97,7 +114,7 @@ namespace ViewModelsSamples
                 }
             };
 
-            XAxes = new List<IAxis<SkiaDrawingContext>>
+            XAxes = new List<IAxis<SkiaSharpDrawingContext>>
             {
                 new Axis
                 {
@@ -107,6 +124,135 @@ namespace ViewModelsSamples
                     Labeler = (value, tick) => $"this {value}"
                 }
             };
+        }
+
+        public void Randomize()
+        {
+            //var r = new Random();
+            //var values = (ObservableCollection<int?>)((LineSeries<int?>)Series[0]).Values;
+            //var i = r.Next(values.Count);
+            //var d = r.NextDouble();
+            //values[i] = (int)(d * 15);
+
+            //if (d > 0.3)
+            //{
+            //    values[i] = null;
+            //}
+
+            //var a = r.NextDouble();
+            //if (a < 0.1 && Series.Count > 2) Series.RemoveAt(0);
+            //if (a > 0.9 && Series.Count < 10) Series.Add(new PieSeries<Observable> { Values = new[] { new Observable { Value = 2 } } });
+        }
+    }
+
+    public class PieViewModel
+    {
+        public IList<IPieSeries<SkiaSharpDrawingContext>> Series { get; set; }
+
+        public PieViewModel()
+        {
+            var pushout = 3;
+
+            LiveCharts.HasMapFor<Observable>(
+                (point, model, context) =>
+                {
+                    point.PrimaryValue = (float)model.Value;
+                    point.SecondaryValue = context.Index;
+                });
+
+            var hlb = new SolidColorPaintTask(new SKColor(40, 40, 40));
+
+            Series = new List<IPieSeries<SkiaSharpDrawingContext>>
+            {
+                new PieSeries<Observable>
+                {
+                    //Name = "pies",
+                    Values = new[] { new Observable { Value = 2 } },
+                    //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
+                    //Fill = new SolidColorPaintTask(new SKColor(217, 47, 47)),
+                    // HighlightFill = new SolidColorPaintTask(new SKColor(40, 40, 40)),// hlb,
+                    Pushout = pushout,
+                    //MaxOuterRadius = 1
+                },
+                new PieSeries<Observable>
+                {
+                    //Name = "pies 2",
+                    Values = new[] {  new Observable { Value = 2 }  },
+                    //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
+                    //Fill = new SolidColorPaintTask(SKColors.BlueViolet),
+                    // HighlightFill = new SolidColorPaintTask(new SKColor(40, 40, 40)),// hlb,
+                    Pushout = pushout,
+                    //MaxOuterRadius = .9
+                },
+                new PieSeries<Observable>
+                {
+                    //Name = "pies 3",
+                    Values = new[] {  new Observable { Value = 2 }  },
+                    //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
+                    //Fill = new SolidColorPaintTask(SKColors.DarkOliveGreen),
+                    // HighlightFill = new SolidColorPaintTask(new SKColor(40, 40, 40)),// hlb,
+                    Pushout = pushout,
+                    //MaxOuterRadius = .8
+                },
+                new PieSeries<Observable>
+                {
+                    Name = "pies 4",
+                    Values = new[] {  new Observable { Value = 2 } },
+                    //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
+                    //Fill = new SolidColorPaintTask(SKColors.Coral),
+                    // HighlightFill = new SolidColorPaintTask(new SKColor(40, 40, 40)),// hlb,
+                    Pushout = pushout,
+                    //MaxOuterRadius = .7
+                },
+                new PieSeries<Observable>
+                {
+                    Name = "pies 5",
+                    Values = new[] {  new Observable { Value = 2 }  },
+                    //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
+                    //Fill = new SolidColorPaintTask(SKColors.Cyan),
+                    // HighlightFill = new SolidColorPaintTask(new SKColor(40, 40, 40)),// hlb,
+                    Pushout = pushout,
+                    MaxOuterRadius = .8
+                },
+                new PieSeries<Observable>
+                {
+                    Name = "pies 5",
+                    Values = new[] {  new Observable { Value = 2 }  },
+                    //Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 1),
+                    //Fill = new SolidColorPaintTask(SKColors.DeepPink),
+                    // HighlightFill = new SolidColorPaintTask(new SKColor(40, 40, 40)),// hlb,
+                    Pushout = pushout,
+                    MaxOuterRadius = .8
+                }
+            };
+
+            Randomize();
+        }
+
+        public void Randomize()
+        {
+            //var r = new Random();
+            //var values = ((PieSeries<Observable>)Series[r.Next(Series.Count)]).Values.ToArray();
+            //var value = values[r.Next(values.Length)];
+            //value.Value = r.NextDouble() * 5;
+
+            //var a = r.NextDouble();
+            //if (a < 0.1 && Series.Count > 2) Series.RemoveAt(0);
+            //if (a > 0.9 && Series.Count < 10) Series.Add(new PieSeries<Observable> { Values = new[] { new Observable { Value = 2 } } });
+        }
+    }
+
+    public class Observable : INotifyPropertyChanged
+    {
+        private double? value;
+
+        public double? Value { get => value; set { this.value = value; OnPropertyChanged(nameof(Value)); } }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 

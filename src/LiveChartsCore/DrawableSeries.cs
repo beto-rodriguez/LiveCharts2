@@ -22,21 +22,23 @@
 
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
+using System;
 
 namespace LiveChartsCore
 {
-    public abstract class DrawableSeries<TModel, TVisual, TDrawingContext> : Series<TModel, TVisual, TDrawingContext>
+    public abstract class DrawableSeries<TModel, TVisual, TDrawingContext> 
+        : Series<TModel, TVisual, TDrawingContext>, IDrawableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
-        where TVisual : class, IHighlightableGeometry<TDrawingContext>, new()
+        where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
     {
         protected PaintContext<TDrawingContext> paintContext = new PaintContext<TDrawingContext>();
         private IDrawableTask<TDrawingContext>? stroke = null;
         private IDrawableTask<TDrawingContext>? fill = null;
-        private IDrawableTask<TDrawingContext>? highlightStroke = null;
-        private IDrawableTask<TDrawingContext>? highlightFill = null;
         private double legendShapeSize = 15;
 
-        public DrawableSeries(SeriesProperties properties) : base(properties) { }
+        public DrawableSeries(SeriesProperties properties) : base(properties)
+        {
+        }
 
         public IDrawableTask<TDrawingContext>? Stroke
         {
@@ -47,8 +49,8 @@ namespace LiveChartsCore
                 if (stroke != null)
                 {
                     stroke.IsStroke = true;
+                    stroke.IsFill = false;
                 }
-
                 OnPaintContextChanged();
             }
         }
@@ -62,38 +64,8 @@ namespace LiveChartsCore
                 if (fill != null)
                 {
                     fill.IsStroke = false;
+                    fill.IsFill = true;
                     fill.StrokeWidth = 0;
-                }
-                OnPaintContextChanged();
-            }
-        }
-
-        public IDrawableTask<TDrawingContext>? HighlightStroke
-        {
-            get => highlightStroke;
-            set
-            {
-                highlightStroke = value;
-                if (highlightStroke != null)
-                {
-                    highlightStroke.IsStroke = true;
-                    highlightStroke.ZIndex = 1;
-                }
-                OnPaintContextChanged();
-            }
-        }
-
-        public IDrawableTask<TDrawingContext>? HighlightFill
-        {
-            get => highlightFill;
-            set
-            {
-                highlightFill = value;
-                if (highlightFill != null)
-                {
-                    highlightFill.IsStroke = false;
-                    highlightFill.StrokeWidth = 0;
-                    highlightFill.ZIndex = 1;
                 }
                 OnPaintContextChanged();
             }
@@ -104,5 +76,15 @@ namespace LiveChartsCore
         public double LegendShapeSize { get => legendShapeSize; set => legendShapeSize = value; }
 
         protected abstract void OnPaintContextChanged();
+
+        protected void InitializeSeries()
+        {
+            var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<TDrawingContext>();
+            var initializer = stylesBuilder.GetInitializer();
+            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
+                throw new Exception("Default colors are not valid");
+
+            initializer.ConstructSeries(this);
+        }
     }
 }

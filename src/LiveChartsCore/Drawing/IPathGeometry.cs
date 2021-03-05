@@ -22,14 +22,14 @@
 
 namespace LiveChartsCore.Drawing
 {
-    public interface IPathGeometry<TDrawingContext, TPath> : IDrawable<TDrawingContext>
+    public interface IPathGeometry<TDrawingContext, TPathArgs> : IDrawable<TDrawingContext>
          where TDrawingContext : DrawingContext
     {
         bool IsClosed { get; set; }
 
-        void AddCommand(IPathCommand<TPath> command);
-        bool ContainsCommand(IPathCommand<TPath> command);
-        void RemoveCommand(IPathCommand<TPath> command);
+        void AddCommand(IPathCommand<TPathArgs> command);
+        bool ContainsCommand(IPathCommand<TPathArgs> command);
+        void RemoveCommand(IPathCommand<TPathArgs> command);
 
         void ClearCommands();
     }

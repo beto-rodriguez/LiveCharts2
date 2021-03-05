@@ -31,9 +31,9 @@ namespace LiveChartsCore.Motion
     /// <typeparam name="T"></typeparam>
     public abstract class MotionProperty<T> : IMotionProperty
     {
-        private Animation animation;
-        protected internal T fromValue;
-        protected internal T toValue;
+        private Animation? animation;
+        protected internal T? fromValue = default;
+        protected internal T? toValue = default;
         internal long startTime;
         internal long endTime;
         private bool isTransitionCompleted = false;
@@ -48,17 +48,17 @@ namespace LiveChartsCore.Motion
         /// <summary>
         /// Gets the value where the transition began.
         /// </summary>
-        public T FromValue { get => fromValue; }
+        public T? FromValue { get => fromValue; }
 
         /// <summary>
         /// Gets the value where the transition finished or will finish.
         /// </summary>
-        public T ToValue { get => toValue; }
+        public T? ToValue { get => toValue; }
 
         /// <summary>
         /// Gets or sets the animation to define the transition.
         /// </summary>
-        public Animation Animation { get => animation; set => animation = value; }
+        public Animation? Animation { get => animation; set => animation = value; }
 
         /// <summary>
         /// Gets the property name.
@@ -100,7 +100,7 @@ namespace LiveChartsCore.Motion
         /// <returns></returns>
         public T GetMovement(Animatable animatable)
         {
-            if (animation == null || isTransitionCompleted) return OnGetMovement(1);
+            if (animation == null || fromValue == null || isTransitionCompleted) return OnGetMovement(1);
 
             if (requiresToInitialize)
             {
@@ -112,7 +112,8 @@ namespace LiveChartsCore.Motion
             // at this points we are sure that the animatable has not finished at least with this property.
             animatable.isCompleted = false;
 
-            if (animatable.currentTime - startTime <= 0) return OnGetMovement(0);
+            // is this line necessary? ...
+            //if (animatable.currentTime - startTime <= 0) return OnGetMovement(0);
 
             unchecked
             {

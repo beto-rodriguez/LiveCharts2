@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Common;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -38,37 +39,51 @@ namespace LiveChartsCore.Context
         /// <param name="position"></param>
         /// <param name="tooltipSize"></param>
         /// <returns></returns>
-        public static PointF? GetTooltipLocation(
-            this IEnumerable<TooltipPoint> foundPoints,
-            TooltipPosition position,
-            SizeF tooltipSize)
+        public static PointF? GetCartesianTooltipLocation(
+            this IEnumerable<TooltipPoint> foundPoints, TooltipPosition position, SizeF tooltipSize)
         {
-            float count = 0f, mostTop = float.MaxValue, mostBottom = float.MinValue, mostRight = float.MinValue, mostLeft = float.MaxValue;
+            float count = 0f;
+
+            var placementContext = new TooltipPlacementContext();
 
             foreach (var point in foundPoints)
             {
-                var ha = point.Point.PointContext.HoverArea;
-                if (ha.Y < mostTop) mostTop = ha.Y;
-                if (ha.Y + ha.Height > mostBottom) mostBottom = ha.Y + ha.Height;
-                if (ha.X + ha.Width > mostRight) mostRight = ha.X + ha.Width;
-                if (ha.X < mostLeft) mostLeft = ha.X;
+                if (point.Point.Context.HoverArea == null) continue;
+                point.Point.Context.HoverArea.SuggestTooltipPlacement(placementContext);
                 count++;
             }
 
             if (count == 0) return null;
 
-            var avrgX = ((mostRight + mostLeft) / 2f) - tooltipSize.Width * 0.5f;
-            var avrgY = ((mostTop + mostBottom) / 2f) - tooltipSize.Height * 0.5f;
+            var avrgX = ((placementContext.MostRight + placementContext.MostLeft) / 2f) - tooltipSize.Width * 0.5f;
+            var avrgY = ((placementContext.MostTop + placementContext.MostBottom) / 2f) - tooltipSize.Height * 0.5f;
 
             switch (position)
             {
-                case TooltipPosition.Top: return new PointF(avrgX, mostTop - tooltipSize.Height);
-                case TooltipPosition.Bottom: return new PointF(avrgX, mostBottom);
-                case TooltipPosition.Left: return new PointF(mostLeft - tooltipSize.Width, avrgY);
-                case TooltipPosition.Right: return new PointF(mostRight, avrgY);
+                case TooltipPosition.Top: return new PointF(avrgX, placementContext.MostTop - tooltipSize.Height);
+                case TooltipPosition.Bottom: return new PointF(avrgX, placementContext.MostBottom);
+                case TooltipPosition.Left: return new PointF(placementContext.MostLeft - tooltipSize.Width, avrgY);
+                case TooltipPosition.Right: return new PointF(placementContext.MostRight, avrgY);
                 case TooltipPosition.Center: return new PointF(avrgX, avrgY);
                 default: throw new NotImplementedException();
             }
+        }
+
+        public static PointF? GetPieTooltipLocation(
+            this IEnumerable<TooltipPoint> foundPoints, TooltipPosition position, SizeF tooltipSize) 
+        {
+            var placementContext = new TooltipPlacementContext();
+            var found = false;
+
+            foreach (var foundPoint in foundPoints)
+            {
+                if (foundPoint.Point.Context.HoverArea == null) continue;
+                foundPoint.Point.Context.HoverArea.SuggestTooltipPlacement(placementContext);
+                found = true;
+                break; // we only care about the first one.
+            }
+
+            return found ? new PointF(placementContext.PieX, placementContext.PieY) : null;
         }
 
         public static AxisTick GetTick<TDrawingContext>(this IAxis<TDrawingContext> axis, SizeF controlSize)
@@ -99,6 +114,14 @@ namespace LiveChartsCore.Context
             return new AxisTick { Value = tick, Magnitude = magnitude };
         }
 
+        public static TransitionBuilder TransitionateProperties(this IAnimatable animatable, params string[] properties)
+        {
+            if (properties == null || properties.Length == 0)
+                throw new Exception($"At least one property is required when calling {nameof(TransitionateProperties)}"); 
+
+            return new TransitionBuilder(animatable, properties);
+        }
+
         public static bool IsBarSeries(this ISeries series)
             => (series.SeriesProperties & SeriesProperties.Bar) != 0;
 
@@ -116,5 +139,25 @@ namespace LiveChartsCore.Context
 
         public static bool IsHorizontalSeries(this ISeries series)
             => (series.SeriesProperties & (SeriesProperties.HorizontalOrientation)) != 0;
+
+        public static void AddToState(this IChartPoint chartPoint, string state) 
+        {
+            chartPoint.Context.Series.AddPointToState(chartPoint, state);
+        }
+
+        public static void RemoveFromState(this IChartPoint chartPoint, string state) 
+        {
+            chartPoint.Context.Series.RemovePointFromState(chartPoint, state);
+        }
+
+        public static void AddToHoverState(this IChartPoint chartPoint)
+        {
+            chartPoint.Context.Series.AddPointToState(chartPoint, chartPoint.Context.Series.HoverState);
+        }
+
+        public static void RemoveFromHoverState(this IChartPoint chartPoint)
+        {
+            chartPoint.Context.Series.RemovePointFromState(chartPoint, chartPoint.Context.Series.HoverState);
+        }
     }
 }

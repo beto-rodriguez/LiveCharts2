@@ -21,30 +21,15 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using System;
+using System.Collections.Generic;
 
 namespace LiveChartsCore.Context
 {
-    public interface IPieChartView<TDrawingContext>
+    public interface IPieChartView<TDrawingContext>: IChartView<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        PieChartCore<TDrawingContext> Core { get; }
-        Canvas<TDrawingContext> CoreCanvas { get; }
+        PieChart<TDrawingContext> Core { get; }
 
-        System.Drawing.SizeF ControlSize { get; }
-
-        LegendPosition LegendPosition { get; set; }
-        LegendOrientation LegendOrientation { get; set; }
-        IChartLegend<TDrawingContext> Legend { get; }
-
-        TooltipPosition TooltipPosition { get; set; }
-        TooltipFindingStrategy TooltipFindingStrategy { get; set; }
-        IChartTooltip<TDrawingContext> Tooltip { get; }
-
-        Margin DrawMargin { get; set; }
-
-        TimeSpan AnimationsSpeed { get; set; }
-
-        Func<float, float> EasingFunction { get; set; }
+        IEnumerable<IPieSeries<TDrawingContext>> Series { get; set; }
     }
 }

@@ -32,9 +32,13 @@ namespace LiveChartsCore.SkiaSharpView
     }
 
     public class LineSeries<TModel, TVisual> 
-        : LineSeries<TModel, TVisual, SkiaDrawingContext, PathGeometry, LineSegment, CubicBezierSegment, MoveToPathCommand, SKPath>
-       where TVisual : class, ISizedGeometry<SkiaDrawingContext>, IHighlightableGeometry<SkiaDrawingContext>, new()
+        : LineSeries<TModel, TVisual, SkiaSharpDrawingContext, PathGeometry, LineSegment, CubicBezierSegment, MoveToPathCommand, SKPath>
+       where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
     {
-
+        public LineSeries()
+        {
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSK.DefaultPlatformBuilder);
+            InitializeSeries();
+        }
     }
 }

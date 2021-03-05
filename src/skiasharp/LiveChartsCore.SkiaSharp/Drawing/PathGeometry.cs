@@ -22,12 +22,11 @@
 
 using LiveChartsCore.Drawing;
 using SkiaSharp;
-using System;
 using System.Collections.Generic;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing
 {
-    public class PathGeometry : Drawable, IPathGeometry<SkiaDrawingContext, SKPath>
+    public class PathGeometry : Drawable, IPathGeometry<SkiaSharpDrawingContext, SKPath>
     {
         private readonly HashSet<IPathCommand<SKPath>> commands = new HashSet<IPathCommand<SKPath>>();
 
@@ -37,7 +36,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
 
         public bool IsClosed { get; set; }
 
-        public override void Draw(SkiaDrawingContext context)
+        public override void Draw(SkiaSharpDrawingContext context)
         {
             if (commands.Count == 0) return;
 

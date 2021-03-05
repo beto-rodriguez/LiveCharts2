@@ -20,16 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Context;
 using System;
 
 namespace LiveChartsCore
 {
     public static class LiveCharts
     {
-        private static readonly LiveChartsSettings _settings = new LiveChartsSettings();
+        private static bool isConfigured = false;
+        private static readonly LiveChartsSettings settings = new LiveChartsSettings();
 
-        public static void Configure(Action<LiveChartsSettings> configuration) => configuration(_settings);
+        public static bool IsConfigured => isConfigured;
 
-        internal static LiveChartsSettings CurrentSettings => _settings;
+        public static LiveChartsSettings CurrentSettings => settings;
+
+        public static string BarSeriesHoverKey => nameof(BarSeriesHoverKey);
+        public static string LineSeriesHoverKey => nameof(LineSeriesHoverKey);
+        public static string PieSeriesHoverKey => nameof(PieSeriesHoverKey);
+        public static string ScatterSeriesHoverKey => nameof(ScatterSeriesHoverKey);
+        public static string StackedBarSeriesHoverKey => nameof(StackedBarSeriesHoverKey);
+
+        public static void Configure(Action<LiveChartsSettings> configuration)
+        {
+            if (configuration == null) throw new NullReferenceException($"{nameof(LiveChartsSettings)} must not be null.");
+
+            isConfigured = true;
+            configuration(settings);
+        }
+
+        public static LiveChartsSettings HasMapFor<TModel>(Action<IChartPoint, TModel, IChartPointContext> mapper)
+        {
+            return settings.HasMap(mapper);
+        }
     }
 }

@@ -26,112 +26,113 @@ using System;
 
 namespace LiveChartsCore
 {
-    /// <summary>
-    /// Defines the data to plot as columns.
-    /// </summary>
-    public class ColumnSeries<TModel, TVisual, TDrawingContext> : CartesianSeries<TModel, TVisual, TDrawingContext>
-        where TVisual : class, ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>, new()
+    public class ColumnSeries<TModel, TVisual, TDrawingContext>: BarSeries<TModel, TVisual, TDrawingContext>
+        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
         public ColumnSeries()
-            : base (SeriesProperties.Bar | SeriesProperties.VerticalOrientation)
+            : base(SeriesProperties.Bar | SeriesProperties.VerticalOrientation)
         {
-
         }
 
-        public double Pivot { get; set; }
-
-        public double MaxColumnWidth { get; set; } = 30;
-
-        public bool IgnoresColumnPosition { get; set; } = false;
-
-        public TransitionsSetterDelegate<ISizedGeometry<TDrawingContext>>? TransitionsSetter { get; set; }
-
         public override void Measure(
-            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
+           CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> secondaryAxis, IAxis<TDrawingContext> primaryAxis)
         {
             var drawLocation = chart.DrawMaringLocation;
             var drawMarginSize = chart.DrawMarginSize;
-            var xScale = new ScaleContext(drawLocation, drawMarginSize, xAxis.Orientation, xAxis.DataBounds);
-            var yScale = new ScaleContext(drawLocation, drawMarginSize, yAxis.Orientation, yAxis.DataBounds);
+            var secondaryScale = new ScaleContext(drawLocation, drawMarginSize, secondaryAxis.Orientation, secondaryAxis.DataBounds);
+            var primaryScale = new ScaleContext(drawLocation, drawMarginSize, primaryAxis.Orientation, primaryAxis.DataBounds);
 
-            float uw = xScale.ScaleToUi(1f) - xScale.ScaleToUi(0f);
+            float uw = secondaryScale.ScaleToUi(1f) - secondaryScale.ScaleToUi(0f);
             float uwm = 0.5f * uw;
             float sw = Stroke?.StrokeWidth ?? 0;
-            float p = yScale.ScaleToUi(unchecked((float)Pivot));
-             
+            float p = primaryScale.ScaleToUi(unchecked((float)Pivot));
+
             var pos = chart.SeriesContext.GetColumnPostion(this);
             var count = chart.SeriesContext.GetColumnSeriesCount();
             float cp = 0f;
 
-            if (!IgnoresColumnPosition && count > 1)
+            if (!IgnoresBarPosition && count > 1)
             {
                 uw = uw / count;
                 uwm = 0.5f * uw;
-                cp = (pos - (count/2f)) * uw + uwm;
+                cp = (pos - (count / 2f)) * uw + uwm;
             }
 
-            if (uw > MaxColumnWidth)
+            if (uw > MaxBarWidth)
             {
-                uw = unchecked((float)MaxColumnWidth);
+                uw = unchecked((float)MaxBarWidth);
                 uwm = uw / 2f;
             }
 
-            if (Fill != null) chart.Canvas.AddPaintTask(Fill);
-            if (Stroke != null) chart.Canvas.AddPaintTask(Stroke);
+            if (Fill != null) chart.Canvas.AddDrawableTask(Fill);
+            if (Stroke != null) chart.Canvas.AddDrawableTask(Stroke);
 
             var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
-            var ts = TransitionsSetter ?? SetDefaultTransitions;
+            var ts = OnPointCreated ?? DefaultOnPointCreated;
 
             foreach (var point in Fetch(chart))
             {
-                var x = xScale.ScaleToUi(point.SecondaryValue);
-                var y = yScale.ScaleToUi(point.PrimaryValue);
-                float b = Math.Abs(y - p);
+                var primary = primaryScale.ScaleToUi(point.PrimaryValue);
+                var secondary = secondaryScale.ScaleToUi(point.SecondaryValue);
+                float b = Math.Abs(primary - p);
 
-                if (point.PointContext.Visual == null)
+                if (point.IsNull)
+                {
+                    if (point.Context.Visual != null)
+                    {
+                        point.Context.Visual.X = secondary - uwm + cp;
+                        point.Context.Visual.Y = p;
+                        point.Context.Visual.Width = uw;
+                        point.Context.Visual.Height = 0;
+                        point.Context.Visual.RemoveOnCompleted = true;
+                        point.Context.Visual = null;
+                    }
+                    continue;
+                }
+
+                if (point.Context.Visual == null)
                 {
                     var r = new TVisual
                     {
-                        X = x - uwm + cp,
+                        X = secondary - uwm + cp,
                         Y = p,
                         Width = uw,
                         Height = 0
                     };
 
-                    ts(r, chartAnimation);
+                    ts(r, chart.View);
+                    r.CompleteAllTransitions();
 
-                    point.PointContext.Visual = r;
+                    point.Context.Visual = r;
                     if (Fill != null) Fill.AddGeometyToPaintTask(r);
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(r);
                 }
 
-                var sizedGeometry = point.PointContext.Visual;
+                var sizedGeometry = point.Context.Visual;
 
-                var cy = point.PrimaryValue > Pivot ? y : y - b;
+                var cy = point.PrimaryValue > Pivot ? primary : primary - b;
 
-                sizedGeometry.X = x - uwm + cp;
+                sizedGeometry.X = secondary - uwm + cp;
                 sizedGeometry.Y = cy;
                 sizedGeometry.Width = uw;
                 sizedGeometry.Height = b;
+                sizedGeometry.RemoveOnCompleted = false;
 
-                point.PointContext.HoverArea.SetDimensions(x - uwm + cp, cy, uw, b);
+                point.Context.HoverArea = new RectangleHoverArea().SetDimensions(secondary - uwm + cp, cy, uw, b);
                 OnPointMeasured(point, sizedGeometry);
                 chart.MeasuredDrawables.Add(sizedGeometry);
             }
-
-            if (HighlightFill != null) chart.Canvas.AddPaintTask(HighlightFill);
-            if (HighlightStroke != null) chart.Canvas.AddPaintTask(HighlightStroke);
         }
 
-        public override CartesianBounds GetBounds(
-            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
+        public override DimensinalBounds GetBounds(
+            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> secondaryAxis, IAxis<TDrawingContext> primaryAxis)
         {
-            var baseBounds = base.GetBounds(chart, x, y);
+            var baseBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
 
-            var tick = y.GetTick(chart.ControlSize, baseBounds.PrimaryBounds);
+            var tick = secondaryAxis.GetTick(chart.ControlSize, baseBounds.PrimaryBounds);
 
-            return new CartesianBounds
+            return new DimensinalBounds
             {
                 SecondaryBounds = new Bounds
                 {
@@ -146,61 +147,20 @@ namespace LiveChartsCore
             };
         }
 
-        protected virtual void SetDefaultTransitions(ISizedGeometry<TDrawingContext> visual, Animation defaultAnimation)
+        protected virtual void DefaultOnPointCreated(TVisual visual, IChartView<TDrawingContext> chart)
         {
-            var defaultProperties = new string[]
-            {
-                nameof(visual.X),
-                nameof(visual.Width)
-            };
-            visual.SetPropertyTransition(defaultAnimation, defaultProperties);
-            visual.CompleteTransition(defaultProperties);
+            visual
+                .TransitionateProperties(nameof(visual.X), nameof(visual.Width))
+                .WithAnimation(animation =>
+                    animation
+                        .WithDuration(chart.AnimationsSpeed)
+                        .WithEasingFunction(chart.EasingFunction));
 
-            var bounceProperties = new string[]
-            {
-                nameof(visual.Y),
-                nameof(visual.Height),
-            };
-            visual.SetPropertyTransition(
-                new Animation(EasingFunctions.BounceIn, (long)(defaultAnimation.duration * 1.5), defaultAnimation.RepeatTimes),
-                bounceProperties);
-            visual.CompleteTransition(bounceProperties);
+            visual
+                .TransitionateProperties(nameof(visual.Y), nameof(visual.Height))
+                .WithAnimation(animation => animation
+                    .WithDuration(chart.AnimationsSpeed)
+                    .WithEasingFunction(EasingFunctions.ElasticOut));
         }
-
-        protected override void OnPaintContextChanged()
-        {
-            var context = new PaintContext<TDrawingContext>();
-
-            if (Fill != null)
-            {
-                var fillClone = Fill.CloneTask();
-                var visual = new TVisual { X = 0, Y = 0, Height = (float)LegendShapeSize, Width = (float)LegendShapeSize };
-                fillClone.AddGeometyToPaintTask(visual);
-                context.PaintTasks.Add(fillClone);
-            }
-
-            var w = LegendShapeSize;
-            if (Stroke != null)
-            {
-                var strokeClone = Stroke.CloneTask();
-                var visual = new TVisual
-                {
-                    X = strokeClone.StrokeWidth,
-                    Y = strokeClone.StrokeWidth,
-                    Height = (float)LegendShapeSize,
-                    Width = (float)LegendShapeSize
-                };
-                w += 2 * strokeClone.StrokeWidth;
-                strokeClone.AddGeometyToPaintTask(visual);
-                context.PaintTasks.Add(strokeClone);
-            }
-
-            context.Width = w;
-            context.Height = w;
-
-            paintContext = context;
-        }
-
-        public override int GetStackGroup() => 0;
     }
 }

@@ -26,5 +26,6 @@ namespace LiveChartsCore.Context
     {
         public float Start { get; set; }
         public float End { get; set; }
+        public float Total { get; set; }
     }
 }

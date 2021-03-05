@@ -27,7 +27,7 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing
 {
-    public abstract class Geometry : Drawable, IGeometry<SkiaDrawingContext>, IHighlightableGeometry<SkiaDrawingContext>
+    public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>, IVisualChartPoint<SkiaSharpDrawingContext>
     {
         private bool hasTransform = false;
 
@@ -60,9 +60,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
 
         public float Rotation { get => rotation.GetMovement(this); set => rotation.SetMovement(value, this); }
 
-        public IDrawable<SkiaDrawingContext> HighlightableGeometry => GetHighlitableGeometry();
+        public IDrawable<SkiaSharpDrawingContext> HighlightableGeometry => GetHighlitableGeometry();
 
-        public override void Draw(SkiaDrawingContext context)
+        public override void Draw(SkiaSharpDrawingContext context)
         {
             var hasRotation = Rotation != 0;
 
@@ -102,12 +102,12 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
             if (hasTransform || hasRotation) context.Canvas.Restore();
         }
 
-        public abstract void OnDraw(SkiaDrawingContext context, SKPaint paint);
+        public abstract void OnDraw(SkiaSharpDrawingContext context, SKPaint paint);
 
-        public abstract SKSize Measure(SkiaDrawingContext context, SKPaint paint);
+        public abstract SKSize Measure(SkiaSharpDrawingContext context, SKPaint paint);
 
-        public virtual SKPoint GetPosition(SkiaDrawingContext context, SKPaint paint) => new SKPoint(X, Y);
+        public virtual SKPoint GetPosition(SkiaSharpDrawingContext context, SKPaint paint) => new SKPoint(X, Y);
 
-        protected virtual IGeometry<SkiaDrawingContext> GetHighlitableGeometry() => this;
+        protected virtual IGeometry<SkiaSharpDrawingContext> GetHighlitableGeometry() => this;
     }
 }

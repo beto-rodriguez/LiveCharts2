@@ -33,7 +33,7 @@ namespace LiveChartsCore.Drawing
 
         public Animation()
         {
-
+            easingFunction = t => t;
         }
 
         public Animation(Func<float, float> easingFunction, TimeSpan duration)
@@ -77,6 +77,36 @@ namespace LiveChartsCore.Drawing
         /// Gets or sets how many times the animation needs to repeat before it is completed, 
         /// use int.MaxValue to repeat it indefinitely number of times.
         /// </summary>
-        public int RepeatTimes { get => repeatTimes; set => repeatTimes = value; }
+        public int Repeat { get => repeatTimes; set => repeatTimes = value; }
+
+        public Animation WithEasingFunction(Func<float, float> easing)
+        {
+            easingFunction = easing;
+            return this;
+        }
+
+        public Animation WithDuration(TimeSpan duration)
+        {
+            this.duration = (long)duration.TotalMilliseconds;
+            return this;
+        }
+
+        public Animation WithDuration(long duration)
+        {
+            this.duration = duration;
+            return this;
+        }
+
+        public Animation RepeatTimes(int times)
+        {
+            repeatTimes = times;
+            return this;
+        }
+
+        public Animation RepeatIndefinitely()
+        {
+            repeatTimes = int.MaxValue;
+            return this;
+        }
     }
 }

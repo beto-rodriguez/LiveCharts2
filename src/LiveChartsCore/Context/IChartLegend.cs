@@ -27,6 +27,6 @@ namespace LiveChartsCore.Context
     public interface IChartLegend<TDrawingContext>
         where TDrawingContext: DrawingContext
     {
-        void Draw(ICartesianChartView<TDrawingContext> view);
+        void Draw(Chart<TDrawingContext> view);
     }
 }

@@ -41,18 +41,18 @@ namespace LiveChartsCore.Context
         AxisPosition Position { get; set; }
         double LabelsRotation { get; set; }
 
-        IWritableTask<TDrawingContext> TextBrush { get; set; }
+        IWritableTask<TDrawingContext>? TextBrush { get; set; }
 
-        IDrawableTask<TDrawingContext> SeparatorsBrush { get; set; }
+        IDrawableTask<TDrawingContext>? SeparatorsBrush { get; set; }
 
         bool ShowSeparatorLines { get; set; }
         bool ShowSeparatorWedges { get; set; }
 
-        IDrawableTask<TDrawingContext> AlternativeSeparatorForeground { get; set; }
+        IDrawableTask<TDrawingContext>? AlternativeSeparatorForeground { get; set; }
 
         void Initialize(AxisOrientation orientation);
-        void Measure(CartesianChartCore<TDrawingContext> chart);
-        SizeF GetPossibleSize(CartesianChartCore<TDrawingContext> chart);
+        void Measure(CartesianChart<TDrawingContext> chart);
+        SizeF GetPossibleSize(CartesianChart<TDrawingContext> chart);
 
         IAxis<TDrawingContext> Copy();
     }

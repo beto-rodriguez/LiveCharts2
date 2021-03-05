@@ -28,6 +28,6 @@ namespace LiveChartsCore.Motion
     {
         bool IsCompleted { get; set; }
         string PropertyName { get; }
-        Animation Animation { get; set; }
+        Animation? Animation { get; set; }
     }
 }

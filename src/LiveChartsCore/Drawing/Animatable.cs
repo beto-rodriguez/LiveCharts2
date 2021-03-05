@@ -21,7 +21,9 @@
 // SOFTWARE.
 
 using LiveChartsCore.Motion;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LiveChartsCore.Drawing.Common
 {
@@ -44,9 +46,9 @@ namespace LiveChartsCore.Drawing.Common
         /// </summary>
         public bool RemoveOnCompleted { get => removeOnCompleted; set => removeOnCompleted = value; }
 
-        public void SetPropertyTransition(Animation animation, params string[] propertyName)
+        public void SetPropertiesTransitions(Animation animation, params string[] properties)
         {
-            foreach (var name in propertyName)
+            foreach (var name in properties)
             {
                 transitionProperties[name].Animation = animation;
             }
@@ -62,17 +64,26 @@ namespace LiveChartsCore.Drawing.Common
             isCompleted = false;
         }
 
-        public void CompleteTransition(params string[] propertyName)
+        public void CompleteTransitions(params string[] propertyNames)
         {
-            foreach (var property in propertyName)
+            if (propertyNames == null || propertyNames.Length == 0)
+                throw new Exception(
+                    $"At least one property is required to call {nameof(CompleteTransitions)}");
+
+            foreach (var property in propertyNames)
             {
                 if (!transitionProperties.TryGetValue(property, out var transitionProperty))
-                    throw new System.Exception(
+                    throw new Exception(
                         $"The property {property} is not a transition property of this instance.");
 
                 if (transitionProperty.Animation == null) continue;
                 transitionProperty.IsCompleted = true;
             }
+        }
+
+        public void CompleteAllTransitions()
+        {
+            CompleteTransitions(transitionProperties.Keys.ToArray());
         }
 
         public IMotionProperty GetTransitionProperty(string propertyName)

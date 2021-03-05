@@ -20,19 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
 namespace LiveChartsCore.Context
 {
-    public interface ISeries
+    public interface ISeries: IDisposable
     {
+        int SeriesId { get; set; }
+        string HoverState { get; set; }
         SeriesProperties SeriesProperties { get; }
-
         string? Name { get; set; }
 
-        IEnumerable<IChartPoint> Fetch(IChart chart);
-
+        IChartPoint[] Fetch(IChart chart);
         IEnumerable<TooltipPoint> FindPointsNearTo(IChart chart, PointF pointerPosition);
+        void AddPointToState(IChartPoint chartPoint, string state);
+        void RemovePointFromState(IChartPoint chartPoint, string state);
     }
 }

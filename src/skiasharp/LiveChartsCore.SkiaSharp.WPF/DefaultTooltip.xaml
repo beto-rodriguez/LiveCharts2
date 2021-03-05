@@ -32,9 +32,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" AllowsTransparency="True">
     <Border Background="Transparent" Padding="8" Name="border">
-        <Border Background="White" CornerRadius="8">
+        <Border Background="#fafafa" CornerRadius="4">
             <Border.Effect>
-                <DropShadowEffect ShadowDepth="4" Direction="330" Color="Black" Opacity="0.3" BlurRadius="4" />
+                <DropShadowEffect ShadowDepth="3" Direction="0" Color="Black" Opacity="0.20" BlurRadius="6" />
             </Border.Effect>
             <ItemsControl ItemsSource="{Binding Points, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}">
                 <ItemsControl.ItemsPanel>

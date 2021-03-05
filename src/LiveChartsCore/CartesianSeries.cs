@@ -32,7 +32,7 @@ namespace LiveChartsCore
     public abstract class CartesianSeries<TModel, TVisual, TDrawingContext>
         : DrawableSeries<TModel, TVisual, TDrawingContext>, IDisposable, ICartesianSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
-        where TVisual : class, IHighlightableGeometry<TDrawingContext>, new()
+        where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Series{T}"/> class.
@@ -46,25 +46,22 @@ namespace LiveChartsCore
         public int ScalesYAt { get; set; }
 
         /// <inheritdoc/>
-        public virtual CartesianBounds GetBounds(
-            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
+        public virtual DimensinalBounds GetBounds(
+            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
-            var seriesLength = 0;
             var stack = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
 
-            var bounds = new CartesianBounds();
+            var bounds = new DimensinalBounds();
             foreach (var point in Fetch(chart))
             {
-                var secondary = point.SecondaryValue;
                 var primary = point.PrimaryValue;
+                var secondary = point.SecondaryValue;
 
-                if (stack != null)
-                    primary = stack.StackPoint(point);
+                // it has more sense to override this method and call the stack, only if the series requires so.
+                if (stack != null) primary = stack.StackPoint(point);
 
-                var abx = bounds.SecondaryBounds.AppendValue(secondary);
-                var aby = bounds.PrimaryBounds.AppendValue(primary);
-
-                seriesLength++;
+                bounds.PrimaryBounds.AppendValue(primary);
+                bounds.SecondaryBounds.AppendValue(secondary);
             }
 
             return bounds;
@@ -72,6 +69,6 @@ namespace LiveChartsCore
 
         /// <inheritdoc/>
         public abstract void Measure(
-            CartesianChartCore<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
+            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
     }
 }

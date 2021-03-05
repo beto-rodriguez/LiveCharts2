@@ -64,7 +64,7 @@ namespace LiveChartsCore.Context
             if (si.Count < point.SecondaryValue + 1)
             {
                 si.Add(new StackedValue { Start = start, End = start + value });
-                totals.Add(value);
+                totals.Add(0);
                 knownMaxLenght++;
             }
             else
@@ -86,7 +86,8 @@ namespace LiveChartsCore.Context
             return new StackedValue
             {
                 Start = p.Start,
-                End = p.End
+                End = p.End,
+                Total = totals[index]
             };
         }
     }

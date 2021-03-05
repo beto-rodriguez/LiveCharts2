@@ -20,19 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-
-namespace LiveChartsCore.Context
+namespace LiveChartsCore.Drawing
 {
-    public class LineSeriesVisualPoint<TDrawingContext, TVisual, TGeometryPath, TPath>: IHighlightableGeometry<TDrawingContext>
-        where TVisual: ISizedGeometry<TDrawingContext>, IHighlightableGeometry<TDrawingContext>
-        where TDrawingContext: DrawingContext
-        where TGeometryPath: IPathGeometry<TDrawingContext, TPath>
+    public interface IDoughnutVisualChartPoint<TDrawingContext> : IDoughnutGeometry<TDrawingContext>, IVisualChartPoint<TDrawingContext>
+        where TDrawingContext : DrawingContext
     {
-        public TVisual Geometry { get; set; }
-        public IBezierSegment<TPath> Bezier { get; set; }
-        public IDrawable<TDrawingContext> HighlightableGeometry => Geometry.HighlightableGeometry;
+
     }
 }
-
-

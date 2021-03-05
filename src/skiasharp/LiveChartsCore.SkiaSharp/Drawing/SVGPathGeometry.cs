@@ -41,7 +41,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
 
         public string SVG { get => svg; set { svg = value; OnSVGPropertyChanged(); } }
 
-        public override void OnDraw(SkiaDrawingContext context, SKPaint paint)
+        public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
             if (svgPath == null && svg == null)
                 throw new System.NullReferenceException(

@@ -31,7 +31,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
 
         }
 
-        public override void OnDraw(SkiaDrawingContext context, SKPaint paint)
+        public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
             context.Canvas.DrawRect(
                 new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } }, paint);

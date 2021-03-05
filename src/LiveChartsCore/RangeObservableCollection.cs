@@ -644,7 +644,9 @@ namespace LiveChartsCore // we use this namespace, because .Net might officially
             public DeferredEventsCollection(RangeObservableCollection<T> collection)
             {
                 Debug.Assert(collection != null);
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                 Debug.Assert(collection._deferredEvents == null);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 _collection = collection;
                 _collection._deferredEvents = this;
             }

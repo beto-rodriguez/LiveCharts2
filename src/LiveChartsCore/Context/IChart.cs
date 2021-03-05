@@ -26,6 +26,8 @@ namespace LiveChartsCore.Context
     {
         object MeasureWorker { get; }
 
+        IChartView View { get; }
+
         LegendPosition LegendPosition { get; }
         LegendOrientation LegendOrientation { get; }
 

@@ -32,7 +32,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     /// <summary>
     /// Interaction logic for DefaultLegend.xaml
     /// </summary>
-    public partial class DefaultLegend : UserControl, IChartLegend<SkiaDrawingContext>
+    public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
     {
         public DefaultLegend()
         {
@@ -41,8 +41,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty SeriesProperty =
             DependencyProperty.Register(
-                nameof(Series), typeof(IEnumerable<ICartesianSeries<SkiaDrawingContext>>),
-                typeof(DefaultLegend), new PropertyMetadata(new List<ICartesianSeries<SkiaDrawingContext>>()));
+                nameof(Series), typeof(IEnumerable<IDrawableSeries<SkiaSharpDrawingContext>>),
+                typeof(DefaultLegend), new PropertyMetadata(new List<IDrawableSeries<SkiaSharpDrawingContext>>()));
 
         public static readonly DependencyProperty OrientationProperty =
             DependencyProperty.Register(
@@ -56,9 +56,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
            DependencyProperty.Register(
                nameof(TextColor), typeof(SolidColorBrush), typeof(DefaultLegend), new PropertyMetadata(new SolidColorBrush(Color.FromRgb(35, 35, 35))));
 
-        public IEnumerable<ICartesianSeries<SkiaDrawingContext>> Series
+        public IEnumerable<IDrawableSeries<SkiaSharpDrawingContext>> Series
         {
-            get { return (IEnumerable<ICartesianSeries<SkiaDrawingContext>>)GetValue(SeriesProperty); }
+            get { return (IEnumerable<IDrawableSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty); }
             set { SetValue(SeriesProperty, value); }
         }
 
@@ -80,11 +80,11 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set { SetValue(TextColorProperty, value); }
         }
 
-        void IChartLegend<SkiaDrawingContext>.Draw(ICartesianChartView<SkiaDrawingContext> view)
+        void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
         {
-            var series = view.Series;
-            var legendOrientation = view.LegendOrientation;
-            var legendPosition = view.LegendPosition;
+            var series = chart.DrawableSeries;
+            var legendOrientation = chart.LegendOrientation;
+            var legendPosition = chart.LegendPosition;
             Series = series;
 
             switch (legendPosition)
@@ -121,7 +121,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     ? Orientation.Horizontal
                     : Orientation.Vertical;
 
-            var wpfChart = (CartesianChart)view;
+            var wpfChart = (Chart)chart.View;
             FontFamily = wpfChart.LegendFontFamily ?? new FontFamily("Trebuchet MS");
             TextColor = wpfChart.LegendTextColor ?? new SolidColorBrush(Color.FromRgb(35, 35, 35));
             FontSize = wpfChart.LegendFontSize ?? 13;

@@ -24,7 +24,7 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView
 {
-    public class Axis: Axis<SkiaDrawingContext, TextGeometry, LineGeometry>
+    public class Axis: Axis<SkiaSharpDrawingContext, TextGeometry, LineGeometry>
     {
     }
 }

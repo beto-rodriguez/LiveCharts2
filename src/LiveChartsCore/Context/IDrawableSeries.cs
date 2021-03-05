@@ -27,10 +27,8 @@ namespace LiveChartsCore.Context
     public interface IDrawableSeries<TDrawingContext> : ISeries
          where TDrawingContext : DrawingContext
     {
-        IDrawableTask<TDrawingContext>? Stroke { get; }
-        IDrawableTask<TDrawingContext>? Fill { get; }
-        IDrawableTask<TDrawingContext>? HighlightStroke { get; }
-        IDrawableTask<TDrawingContext>? HighlightFill { get; }
+        IDrawableTask<TDrawingContext>? Stroke { get; set; }
+        IDrawableTask<TDrawingContext>? Fill { get; set; }
 
         PaintContext<TDrawingContext> DefaultPaintContext { get; }
 

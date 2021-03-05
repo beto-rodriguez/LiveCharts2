@@ -21,35 +21,18 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using System;
 using System.Collections.Generic;
 
 namespace LiveChartsCore.Context
 {
-    public interface ICartesianChartView<TDrawingContext>
+    public interface ICartesianChartView<TDrawingContext>: IChartView<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        CartesianChartCore<TDrawingContext> Core { get; }
-        Canvas<TDrawingContext> CoreCanvas { get; }
+        CartesianChart<TDrawingContext> Core { get; }
 
-        System.Drawing.SizeF ControlSize { get; }
         IEnumerable<IAxis<TDrawingContext>> XAxes { get; set; }
         IEnumerable<IAxis<TDrawingContext>> YAxes { get; set; }
 
         IEnumerable<ICartesianSeries<TDrawingContext>> Series { get; set; }
-
-        LegendPosition LegendPosition { get; set; }
-        LegendOrientation LegendOrientation { get; set; }
-        IChartLegend<TDrawingContext> Legend { get; }
-
-        TooltipPosition TooltipPosition { get; set; }
-        TooltipFindingStrategy TooltipFindingStrategy { get; set; }
-        IChartTooltip<TDrawingContext> Tooltip { get; }
-
-        Margin DrawMargin { get; set; }
-
-        TimeSpan AnimationsSpeed { get; set; }
-
-        Func<float, float> EasingFunction { get; set; }
     }
 }

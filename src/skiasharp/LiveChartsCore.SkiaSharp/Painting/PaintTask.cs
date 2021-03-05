@@ -34,10 +34,10 @@ namespace LiveChartsCore.SkiaSharpView.Painting
     /// Defines a brush that support animations, this class is based on <see cref="SKPaint"/> 
     /// class (https://docs.microsoft.com/en-us/dotnet/api/skiasharp.skpaint?view=skiasharp-1.68.2). Also see https://api.skia.org/classSkPaint.html
     /// </summary>
-    public abstract class PaintTask : Animatable, IDisposable, IDrawableTask<SkiaDrawingContext>
+    public abstract class PaintTask : Animatable, IDisposable, IDrawableTask<SkiaSharpDrawingContext>
     {
         protected SKPaint skiaPaint;
-        private HashSet<IDrawable<SkiaDrawingContext>> geometries = new HashSet<IDrawable<SkiaDrawingContext>>();
+        private HashSet<IDrawable<SkiaSharpDrawingContext>> geometries = new HashSet<IDrawable<SkiaSharpDrawingContext>>();
         protected FloatMotionProperty strokeWidthTransition;
 
         public PaintTask()
@@ -50,11 +50,10 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         public SKPaintStyle Style { get; set; }
         public bool IsStroke { get; set; }
         public bool IsFill { get; set; }
-        
 
-        public abstract void InitializeTask(SkiaDrawingContext drawingContext);
+        public abstract void InitializeTask(SkiaSharpDrawingContext drawingContext);
 
-        public IEnumerable<IDrawable<SkiaDrawingContext>> GetGeometries()
+        public IEnumerable<IDrawable<SkiaSharpDrawingContext>> GetGeometries()
         {
             foreach (var item in geometries)
             {
@@ -62,25 +61,25 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             }
         }
 
-        public void SetGeometries(HashSet<IDrawable<SkiaDrawingContext>> geometries)
+        public void SetGeometries(HashSet<IDrawable<SkiaSharpDrawingContext>> geometries)
         {
             this.geometries = geometries;
             Invalidate();
         }
 
-        public void AddGeometyToPaintTask(IDrawable<SkiaDrawingContext> geometry)
+        public void AddGeometyToPaintTask(IDrawable<SkiaSharpDrawingContext> geometry)
         {
             geometries.Add(geometry);
             Invalidate();
         }
 
-        public void RemoveGeometryFromPainTask(IDrawable<SkiaDrawingContext> geometry)
+        public void RemoveGeometryFromPainTask(IDrawable<SkiaSharpDrawingContext> geometry)
         {
             geometries.Remove(geometry);
             Invalidate();
         }
 
-        public abstract IDrawableTask<SkiaDrawingContext> CloneTask();
+        public abstract IDrawableTask<SkiaSharpDrawingContext> CloneTask();
 
         public void Dispose()
         {

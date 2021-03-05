@@ -26,21 +26,23 @@ namespace LiveChartsCore.Context
 {
     public interface IChartPoint
     {
+        bool IsNull { get; set; }
+
         float PrimaryValue { get; set; }
 
         float SecondaryValue { get; set; }
 
-        IChartPointContext PointContext { get; }
+        float TertiaryValue { get; set; }
+
+        float QuaternaryValue { get; set; }
+
+        IChartPointContext Context { get; }
     }
 
     public interface IChartPoint<TVisual, TDrawingContext>: IChartPoint
         where TDrawingContext : DrawingContext
-        where TVisual : class, IHighlightableGeometry<TDrawingContext>, new()
+        where TVisual : class, IVisualChartPoint<TDrawingContext>
     {
-        new float PrimaryValue { get; set; }
-
-        new float SecondaryValue { get; set; }
-
-        new ChartPointContext<TVisual, TDrawingContext> PointContext { get; }
+        new ChartPointContext<TVisual, TDrawingContext> Context { get; }
     }
 }

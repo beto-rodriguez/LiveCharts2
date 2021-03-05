@@ -21,26 +21,20 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using SkiaSharp;
+using System;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing
+namespace LiveChartsCore.Context
 {
-    public class SkiaDrawingContext : DrawingContext
+    public interface IScatterSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
+        where TDrawingContext : DrawingContext
     {
-        public SkiaDrawingContext(SKImageInfo info, SKSurface surface, SKCanvas canvas)
-        {
-            Info = info;
-            Surface = surface;
-            Canvas = canvas;
-        }
-        public SKImageInfo Info { get; set; }
-        public SKSurface Surface { get; set; }
-        public SKCanvas Canvas { get; set; }
-        public SKPaint Paint { get; set; }
+        double GeometrySize { get; set; }
+        double MinGeometrySize { get; set; }
 
-        public override void ClearCanvas()
-        {
-            Canvas.Clear();
-        }
+        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? OnPointCreated { get; set; }
+
+        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? OnPointAddedToState { get; set; }
+
+        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? OnPointRemovedFromState { get; set; }
     }
 }

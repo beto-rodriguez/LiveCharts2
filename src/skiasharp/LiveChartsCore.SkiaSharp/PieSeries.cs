@@ -20,20 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
-{
-    // this is the interface I'm am not completely sure about this one...
-    // i don't like it so much...
+using LiveChartsCore.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing;
 
-    /// <summary>
-    /// Defines an object that contains a <see cref="Geometry"/> to highlight when the point requires so.
-    /// </summary>
-    public interface IHighlightableGeometry<TDrawingContext>
-        where TDrawingContext : DrawingContext
+namespace LiveChartsCore.SkiaSharpView
+{
+    public class PieSeries<TModel>: PieSeries<TModel, DoughnutGeometry>
     {
-        /// <summary>
-        /// Gets the <see cref="Geometry"/> what we need to highlight when te point requires so.
-        /// </summary>
-        IDrawable<TDrawingContext> HighlightableGeometry { get; }
+
+    }
+
+    public class PieSeries<TModel, TVisual>: PieSeries<TModel, TVisual, SkiaSharpDrawingContext>
+        where TVisual : class, IDoughnutVisualChartPoint<SkiaSharpDrawingContext>, new()
+    {
+        public PieSeries()
+        {
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSK.DefaultPlatformBuilder);
+            InitializeSeries();
+        }
     }
 }

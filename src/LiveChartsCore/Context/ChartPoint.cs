@@ -26,9 +26,17 @@ namespace LiveChartsCore.Context
 {
     public class ChartPoint<TModel, TVisual, TDrawingContext> : IChartPoint<TVisual, TDrawingContext>, IChartPoint
         where TDrawingContext : DrawingContext
-        where TVisual : class, IHighlightableGeometry<TDrawingContext>, new()
+        where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
     {
-        private readonly ChartPointContext<TVisual, TDrawingContext> pointContext = new ChartPointContext<TVisual, TDrawingContext>();
+        private readonly ChartPointContext<TVisual, TDrawingContext> pointContext;
+
+        public ChartPoint(IChartView chart, ISeries series)
+        {
+            pointContext = new ChartPointContext<TVisual, TDrawingContext>(chart, series);
+        }
+
+        /// <inheritdoc/>
+        public bool IsNull { get; set; }
 
         /// <inheritdoc/>
         public float PrimaryValue { get; set; }
@@ -37,8 +45,14 @@ namespace LiveChartsCore.Context
         public float SecondaryValue { get; set; }
 
         /// <inheritdoc/>
-        public ChartPointContext<TVisual, TDrawingContext> PointContext => pointContext;
+        public float TertiaryValue { get; set; }
 
-        IChartPointContext IChartPoint.PointContext => pointContext;
+        /// <inheritdoc/>
+        public float QuaternaryValue { get; set; }
+
+        /// <inheritdoc/>
+        public ChartPointContext<TVisual, TDrawingContext> Context => pointContext;
+
+        IChartPointContext IChartPoint.Context => pointContext;
     }
 }

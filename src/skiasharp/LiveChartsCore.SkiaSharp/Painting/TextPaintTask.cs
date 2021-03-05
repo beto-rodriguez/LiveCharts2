@@ -30,7 +30,7 @@ using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Painting
 {
-    public class TextPaintTask : PaintTask, IWritableTask<SkiaDrawingContext>
+    public class TextPaintTask : PaintTask, IWritableTask<SkiaSharpDrawingContext>
     {
         private readonly ColorMotionProperty colorTransition;
         private readonly FloatMotionProperty textSizeTransition;
@@ -51,7 +51,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         public bool IsAntialias { get; set; } = true;
         public float TextSize { get => textSizeTransition.GetMovement(this); set { textSizeTransition.SetMovement(value, this); } }
 
-        public override IDrawableTask<SkiaDrawingContext> CloneTask()
+        public override IDrawableTask<SkiaSharpDrawingContext> CloneTask()
         {
             var clone = new TextPaintTask
             {
@@ -66,7 +66,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             return clone;
         }
 
-        public override void InitializeTask(SkiaDrawingContext drawingContext)
+        public override void InitializeTask(SkiaSharpDrawingContext drawingContext)
         {
             if (skiaPaint == null) skiaPaint = new SKPaint();
 

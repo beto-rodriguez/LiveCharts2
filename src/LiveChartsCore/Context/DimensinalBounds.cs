@@ -25,39 +25,42 @@ namespace LiveChartsCore.Context
     /// <summary>
     /// Defines bounds for both, X and Y axes.
     /// </summary>
-    public class CartesianBounds
+    public class DimensinalBounds
     {
         private Bounds secondaryBounds;
         private Bounds primaryBounds;
+        private Bounds tertiaryBounds;
+        private Bounds quaternaryBounds;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CartesianBounds"/> class.
+        /// Initializes a new instance of the <see cref="DimensinalBounds"/> class.
         /// </summary>
-        public CartesianBounds()
+        public DimensinalBounds()
         {
             secondaryBounds = new Bounds();
             primaryBounds = new Bounds();
+            tertiaryBounds = new Bounds();
+            quaternaryBounds = new Bounds();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CartesianBounds"/> class with given bounds.
+        /// Gets or sets the primary bounds.
         /// </summary>
-        /// <param name="secondaryBounds">The secondary axis bounds.</param>
-        /// <param name="primaryBounds">The primaty axis bounds.</param>
-        public CartesianBounds(Bounds secondaryBounds, Bounds primaryBounds)
-        {
-            this.secondaryBounds = secondaryBounds;
-            this.primaryBounds = primaryBounds;
-        }
+        public Bounds PrimaryBounds { get => primaryBounds; set => primaryBounds = value; } 
 
         /// <summary>
-        /// Gets or sets the X axis bounds.
+        /// Gets or sets the secondary bounds.
         /// </summary>
-        public Bounds SecondaryBounds { get => secondaryBounds; set {  secondaryBounds = value; } }
+        public Bounds SecondaryBounds { get => secondaryBounds; set =>  secondaryBounds = value; } 
 
         /// <summary>
-        /// Gets or sets the Y axis bounds.
+        /// Gets or sets the tertiary bounds.
         /// </summary>
-        public Bounds PrimaryBounds { get => primaryBounds; set { primaryBounds = value; } }
+        public Bounds TertiaryBounds { get => tertiaryBounds; set => tertiaryBounds = value; }
+
+        /// <summary>
+        /// Gets or sets the quaternary bounds.
+        /// </summary>
+        public Bounds QuaternaryBounds { get => quaternaryBounds; set => quaternaryBounds = value; }
     }
 }

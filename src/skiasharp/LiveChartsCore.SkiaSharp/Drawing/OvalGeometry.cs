@@ -31,7 +31,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
 
         }
 
-        public override void OnDraw(SkiaDrawingContext context, SKPaint paint)
+        public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
             var rx = Width / 2f;
             var ry = Height / 2f;

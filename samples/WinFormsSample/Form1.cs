@@ -20,7 +20,7 @@ namespace WinFormsSample
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            var vm = new MainVM();
+            var vm = new CartesianViewModel();
 
             cartesianChart1.Series = vm.Series;
             cartesianChart1.XAxes = vm.XAxes;

@@ -39,7 +39,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
         public float Rx { get => rx.GetMovement(this); set => rx.SetMovement(value, this); }
         public float Ry { get => ry.GetMovement(this); set => ry.SetMovement(value, this); }
 
-        public override void OnDraw(SkiaDrawingContext context, SKPaint paint)
+        public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
             context.Canvas.DrawRoundRect(
                 new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } }, Rx, Ry, paint);

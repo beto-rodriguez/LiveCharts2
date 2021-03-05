@@ -27,7 +27,7 @@ using System;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing
 {
-    public class LineGeometry : Geometry, ILineGeometry<SkiaDrawingContext>
+    public class LineGeometry : Geometry, ILineGeometry<SkiaSharpDrawingContext>
     {
         private readonly FloatMotionProperty x1;
         private readonly FloatMotionProperty y1;
@@ -42,12 +42,12 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
 
         public float Y1 { get => y1.GetMovement(this); set => y1.SetMovement(value, this); }
 
-        public override void OnDraw(SkiaDrawingContext context, SKPaint paint)
+        public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
             context.Canvas.DrawLine(X, Y, X1, Y1, paint);
         }
 
-        public override SKSize Measure(SkiaDrawingContext context, SKPaint paint)
+        public override SKSize Measure(SkiaSharpDrawingContext context, SKPaint paint)
         {
             return new SKSize(Math.Abs(X1 - X), Math.Abs(Y1 - Y));
         }
