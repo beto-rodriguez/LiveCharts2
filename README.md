@@ -125,7 +125,7 @@ The following topics will work on any platform.
 - [ ] ScatteredSeries
   - [x] ~~Draw a basic scatered series~~
   - [x] ~~Allow the user to define a custom geometry for every point in the series~~
-  - [ ] Allow points to have a "weight" so we can scale on "Z", see  [bubble chart](https://lvcharts.net/App/examples/v1/wpf/Bubble%20Chart)
+  - [x] ~~Allow points to have a "weight" so we can scale on "Z", see  [bubble chart](https://lvcharts.net/App/examples/v1/wpf/Bubble%20Chart)~~
   - [ ] allow data labels and make them cutomizable
   
 - [ ] PieChart and Pie Series
