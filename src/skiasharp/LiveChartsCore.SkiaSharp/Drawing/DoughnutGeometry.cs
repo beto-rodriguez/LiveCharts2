@@ -22,8 +22,10 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
+using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System;
+using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing
 {
@@ -59,9 +61,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
         public float PushOut { get => pushoutProperty.GetMovement(this); set => pushoutProperty.SetMovement(value, this); }
         public float InnerRadius { get => innerRadiusProperty.GetMovement(this); set => innerRadiusProperty.SetMovement(value, this); }
 
-        public override SKSize Measure(SkiaSharpDrawingContext context, SKPaint paint)
+        protected override SizeF OnMeasure(PaintTask paint)
         {
-            return new SKSize(Width, Height);
+            return new SizeF(Width, Height);
         }
 
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)

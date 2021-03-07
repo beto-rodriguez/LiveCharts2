@@ -26,9 +26,10 @@ using System;
 
 namespace LiveChartsCore
 {
-    public class ColumnSeries<TModel, TVisual, TDrawingContext>: BarSeries<TModel, TVisual, TDrawingContext>
+    public class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext>: BarSeries<TModel, TVisual, TLabel, TDrawingContext>
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
+        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         public ColumnSeries()
             : base(SeriesProperties.Bar | SeriesProperties.VerticalOrientation)

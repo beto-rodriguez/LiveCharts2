@@ -26,8 +26,9 @@ using System;
 
 namespace LiveChartsCore
 {
-    public class StackedRowSeries<TModel, TVisual, TDrawingContext> : StackedBarSeries<TModel, TVisual, TDrawingContext>
+    public class StackedRowSeries<TModel, TVisual, TLabel, TDrawingContext> : StackedBarSeries<TModel, TVisual, TLabel, TDrawingContext>
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
         public StackedRowSeries()

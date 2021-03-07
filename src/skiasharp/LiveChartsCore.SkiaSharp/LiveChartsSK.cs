@@ -32,12 +32,14 @@ namespace LiveChartsCore.SkiaSharpView
 
         public static DefaultPaintTask<SkiaSharpDrawingContext> DefaultPaint => defaultPaintTask;
 
-        public static Action<LiveChartsSettings> DefaultPlatformBuilder => (LiveChartsSettings settings) => settings.AddSkiaSharp();
+        public static Action<LiveChartsSettings> DefaultPlatformBuilder =>
+            (LiveChartsSettings settings) => settings
+                .AddDefaultMappers()
+                .AddSkiaSharp();
 
         public static LiveChartsSettings AddSkiaSharp(this LiveChartsSettings settings, Action<StyleBuilder<SkiaSharpDrawingContext>> builder = null)
         {
             return settings
-                .AddDefaultMappers()
                 .AddDefaultStyles((StyleBuilder<SkiaSharpDrawingContext> styleBuilder) =>
                 {
                     // default settings

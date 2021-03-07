@@ -26,10 +26,11 @@ using System;
 
 namespace LiveChartsCore
 {
-    public abstract class DrawableSeries<TModel, TVisual, TDrawingContext> 
-        : Series<TModel, TVisual, TDrawingContext>, IDrawableSeries<TDrawingContext>
+    public abstract class DrawableSeries<TModel, TVisual, TLabel, TDrawingContext> 
+        : Series<TModel, TVisual, TLabel, TDrawingContext>, IDrawableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         protected PaintContext<TDrawingContext> paintContext = new PaintContext<TDrawingContext>();
         private IDrawableTask<TDrawingContext>? stroke = null;

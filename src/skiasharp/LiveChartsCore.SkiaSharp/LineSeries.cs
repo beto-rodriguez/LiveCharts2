@@ -26,14 +26,21 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView
 {
-    public class LineSeries<TModel>: LineSeries<TModel, CircleGeometry>
+    public class LineSeries<TModel>: LineSeries<TModel, CircleGeometry, LabelGeometry>
     {
 
     }
 
-    public class LineSeries<TModel, TVisual> 
-        : LineSeries<TModel, TVisual, SkiaSharpDrawingContext, PathGeometry, LineSegment, CubicBezierSegment, MoveToPathCommand, SKPath>
-       where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+    public class LineSeries<TModel, TVisual> : LineSeries<TModel, TVisual, LabelGeometry>
+        where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+    {
+
+    }
+
+    public class LineSeries<TModel, TVisual, TLabel> 
+        : LineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, PathGeometry, LineSegment, CubicBezierSegment, MoveToPathCommand, SKPath>
+        where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+        where TLabel: class, ILabelGeometry<SkiaSharpDrawingContext>, new()
     {
         public LineSeries()
         {

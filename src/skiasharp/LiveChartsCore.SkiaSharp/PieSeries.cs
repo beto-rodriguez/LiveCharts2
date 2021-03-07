@@ -25,13 +25,20 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView
 {
-    public class PieSeries<TModel>: PieSeries<TModel, DoughnutGeometry>
+    public class PieSeries<TModel> : PieSeries<TModel, DoughnutGeometry, LabelGeometry>
     {
 
     }
 
-    public class PieSeries<TModel, TVisual>: PieSeries<TModel, TVisual, SkiaSharpDrawingContext>
+    public class PieSeries<TModel, TVisual> : PieSeries<TModel, TVisual, LabelGeometry>
         where TVisual : class, IDoughnutVisualChartPoint<SkiaSharpDrawingContext>, new()
+    {
+
+    }
+
+    public class PieSeries<TModel, TVisual, TLabel> : PieSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext>
+        where TVisual : class, IDoughnutVisualChartPoint<SkiaSharpDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
     {
         public PieSeries()
         {

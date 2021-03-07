@@ -31,46 +31,39 @@ namespace LiveChartsCore.SkiaSharpView.Painting
 {
     public class SolidColorPaintTask : PaintTask
     {
-        private readonly ColorMotionProperty colorTransition;
         private readonly FloatMotionProperty strokeMiterTransition;
         private readonly PathEffectMotionProperty pathEffectTransition;
         private readonly ShaderMotionProperty shaderTransition;
 
         public SolidColorPaintTask()
         {
-            colorTransition = RegisterMotionProperty(new ColorMotionProperty(nameof(Color), new SKColor()));
+            
             strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
             pathEffectTransition = RegisterMotionProperty(new PathEffectMotionProperty(nameof(PathEffect)));
             shaderTransition = RegisterMotionProperty(new ShaderMotionProperty(nameof(Shader)));
         }
 
         public SolidColorPaintTask(SKColor color)
+            : base(color)
         {
-            colorTransition = RegisterMotionProperty(
-                new ColorMotionProperty(nameof(Color), new SKColor(color.Red, color.Green, color.Blue, color.Alpha)));
             strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
             pathEffectTransition = RegisterMotionProperty(new PathEffectMotionProperty(nameof(PathEffect)));
             shaderTransition = RegisterMotionProperty(new ShaderMotionProperty(nameof(Shader)));
         }
 
         public SolidColorPaintTask(SKColor color, float strokeWidth)
+            : base(color)
         {
-            colorTransition = RegisterMotionProperty(
-                new ColorMotionProperty(nameof(Color), new SKColor(color.Red, color.Green, color.Blue, color.Alpha)));
             strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeWidth), strokeWidth));
             strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
             pathEffectTransition = RegisterMotionProperty(new PathEffectMotionProperty(nameof(PathEffect)));
             shaderTransition = RegisterMotionProperty(new ShaderMotionProperty(nameof(Shader)));
         }
 
-        public bool IsAntialias { get; set; } = true;
         public SKStrokeCap StrokeCap { get; set; }
+
         public SKStrokeJoin StrokeJoin { get; set; }
-        public SKColor Color
-        { 
-            get => colorTransition.GetMovement(this); 
-            set => colorTransition.SetMovement(value, this); 
-        }
+
         public float StrokeMiter 
         {
             get => strokeMiterTransition.GetMovement(this); 
@@ -122,6 +115,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             if (Shader != null) skiaPaint.Shader = Shader.GetSKShader();
 
             drawingContext.Paint = skiaPaint;
+            drawingContext.PaintTask = this;
         }
     }
 }

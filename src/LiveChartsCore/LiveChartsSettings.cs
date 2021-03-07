@@ -218,6 +218,34 @@ namespace LiveChartsCore
                          point.SecondaryValue = (float)model.X;
                          point.TertiaryValue = (float)model.Weight;
                      }
+                 })
+                 .HasMap<ObservablePoint>((point, model, context) =>
+                 {
+                     if (model == null)
+                     {
+                         point.IsNull = true;
+                         return;
+                     }
+                     point.IsNull = false;
+                     unchecked
+                     {
+                         point.PrimaryValue = (float)model.Value;
+                         point.SecondaryValue = context.Index;
+                     }
+                 })
+                 .HasMap<ObservablePointF>((point, model, context) =>
+                 {
+                     if (model == null)
+                     {
+                         point.IsNull = true;
+                         return;
+                     }
+                     point.IsNull = false;
+                     unchecked
+                     {
+                         point.PrimaryValue = model.Value;
+                         point.SecondaryValue = context.Index;
+                     }
                  });
         }
     }

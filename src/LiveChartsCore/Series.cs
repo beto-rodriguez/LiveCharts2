@@ -31,9 +31,10 @@ using System.Linq;
 
 namespace LiveChartsCore
 {
-    public abstract class Series<TModel, TVisual, TDrawingContext> : ISeries, IDisposable
+    public abstract class Series<TModel, TVisual, TLabel, TDrawingContext> : ISeries, IDisposable
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         private readonly CollectionDeepObserver<TModel> observer;
         private object fetchedFor = new object();

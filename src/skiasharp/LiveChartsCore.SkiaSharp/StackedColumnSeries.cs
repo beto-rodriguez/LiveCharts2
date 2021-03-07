@@ -25,13 +25,20 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView
 {
-    public class StackedColumnSeries<TModel>: StackedColumnSeries<TModel, RectangleGeometry>
+    public class StackedColumnSeries<TModel> : StackedColumnSeries<TModel, RectangleGeometry, LabelGeometry>
     {
 
     }
 
-    public class StackedColumnSeries<TModel, TVisual> : StackedColumnSeries<TModel, TVisual, SkiaSharpDrawingContext>
+    public class StackedColumnSeries<TModel, TVisual> : StackedColumnSeries<TModel, TVisual, LabelGeometry>
         where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+    {
+
+    }
+
+    public class StackedColumnSeries<TModel, TVisual, TLabel> : StackedColumnSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext>
+        where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
     {
         public StackedColumnSeries()
         {

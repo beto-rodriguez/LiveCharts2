@@ -26,14 +26,21 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView
 {
-    public class StackedAreaSeries<TModel> : StackedAreaSeries<TModel, CircleGeometry>
+    public class StackedAreaSeries<TModel> : StackedAreaSeries<TModel, CircleGeometry, LabelGeometry>
     {
 
     }
 
-    public class StackedAreaSeries<TModel, TVisual>
-        : StackedAreaSeries<TModel, TVisual, SkiaSharpDrawingContext, PathGeometry, LineSegment, CubicBezierSegment, MoveToPathCommand, SKPath>
-       where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+    public class StackedAreaSeries<TModel, TVisual> : StackedAreaSeries<TModel, TVisual, LabelGeometry>
+        where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+    {
+
+    }
+
+    public class StackedAreaSeries<TModel, TVisual, TLabel>
+        : StackedAreaSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, PathGeometry, LineSegment, CubicBezierSegment, MoveToPathCommand, SKPath>
+        where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
     {
         public StackedAreaSeries()
         {

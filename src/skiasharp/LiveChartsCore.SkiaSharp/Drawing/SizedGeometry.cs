@@ -22,7 +22,9 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
+using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
+using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing
 {
@@ -58,9 +60,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
             }
         }
 
-        public override SKSize Measure(SkiaSharpDrawingContext context, SKPaint paint)
+        protected override SizeF OnMeasure(PaintTask paint)
         {
-            return new SKSize(Width, Height);
+            return new SizeF(Width, Height);
         }
     }
 }

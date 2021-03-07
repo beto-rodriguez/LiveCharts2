@@ -28,5 +28,7 @@ namespace LiveChartsCore.Drawing
         float Rotation { get; set; }
         float X { get; set; }
         float Y { get; set; }
+
+        System.Drawing.SizeF Measure(IDrawableTask<TDrawingContext> drawableTask);
     }
 }

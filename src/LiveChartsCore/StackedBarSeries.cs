@@ -26,9 +26,11 @@ using System;
 
 namespace LiveChartsCore
 {
-    public abstract class StackedBarSeries<TModel, TVisual, TDrawingContext> : CartesianSeries<TModel, TVisual, TDrawingContext>, IStackedBarSeries<TDrawingContext>
+    public abstract class StackedBarSeries<TModel, TVisual, TLabel, TDrawingContext> 
+        : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IStackedBarSeries<TDrawingContext>
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
+        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         protected static float pivot = 0;
         protected int stackGroup;

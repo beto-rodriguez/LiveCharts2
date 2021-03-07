@@ -22,9 +22,10 @@
 
 namespace LiveChartsCore.Drawing
 {
-    public interface ITextGeometry<TDrawingContext> : IGeometry<TDrawingContext>
+    public interface ILabelGeometry<TDrawingContext> : IGeometry<TDrawingContext>
          where TDrawingContext : DrawingContext
     {
         string Text { get; set; }
+        float TextSize { get; set; }
     }
 }

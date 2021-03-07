@@ -25,13 +25,20 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView
 {
-    public class ScatterSeries<TModel>: ScatterSeries<TModel, CircleGeometry>
+    public class ScatterSeries<TModel>: ScatterSeries<TModel, CircleGeometry, LabelGeometry>
     {
 
     }
 
-    public class ScatterSeries<TModel, TVisual>: ScatterSeries<TModel, TVisual, SkiaSharpDrawingContext>
+    public class ScatterSeries<TModel, TVisual> : ScatterSeries<TModel, TVisual, LabelGeometry>
         where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+    {
+
+    }
+
+    public class ScatterSeries<TModel, TVisual, TLabel>: ScatterSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext>
+        where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
     {
         public ScatterSeries()
         {

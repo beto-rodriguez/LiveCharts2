@@ -21,16 +21,21 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Motion;
+using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
+using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing
 {
-    public class TextGeometry : Geometry, ITextGeometry<SkiaSharpDrawingContext>
+    public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     {
         private string text;
+        private FloatMotionProperty textSizeProperty;
 
-        public TextGeometry()
+        public LabelGeometry()
         {
+            textSizeProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize)));
         }
 
         public Align VerticalAlign { get; set; } = Align.Middle;
@@ -38,22 +43,33 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
         public Align HorizontalAlign { get; set; } = Align.Middle;
 
         public string Text { get => text; set => text = value; }
+        public float TextSize { get => textSizeProperty.GetMovement(this); set => textSizeProperty.SetMovement(value, this); }
 
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
             context.Canvas.DrawText(text ?? "", GetPosition(context, paint), paint);
         }
 
-        public override SKSize Measure(SkiaSharpDrawingContext context, SKPaint paint)
+        protected override SizeF OnMeasure(PaintTask drawable)
         {
+            var p = new SKPaint
+            {
+                Color = drawable.Color,
+                IsAntialias = drawable.IsAntialias,
+                IsStroke = drawable.IsStroke,
+                StrokeWidth = drawable.StrokeWidth,
+                TextSize = TextSize
+            };
+
             var bounds = new SKRect();
-            paint.MeasureText(text, ref bounds);
-            return bounds.Size;
+
+            p.MeasureText(text, ref bounds);
+            return new SizeF(bounds.Size.Width, bounds.Size.Height);
         }
 
         public override SKPoint GetPosition(SkiaSharpDrawingContext context, SKPaint paint)
         {
-            var size = Measure(context, paint);
+            var size = OnMeasure(context.PaintTask);
             float dx = 0f, dy = 0f;
             switch (VerticalAlign)
             {

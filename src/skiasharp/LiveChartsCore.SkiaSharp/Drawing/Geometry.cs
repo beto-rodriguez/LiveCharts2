@@ -23,7 +23,9 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Motion;
+using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
+using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing
 {
@@ -104,7 +106,12 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
 
         public abstract void OnDraw(SkiaSharpDrawingContext context, SKPaint paint);
 
-        public abstract SKSize Measure(SkiaSharpDrawingContext context, SKPaint paint);
+        public SizeF Measure(IDrawableTask<SkiaSharpDrawingContext> drawableTask)
+        {
+            return OnMeasure((PaintTask) drawableTask);
+        }
+
+        protected abstract SizeF OnMeasure(PaintTask paintTaks);
 
         public virtual SKPoint GetPosition(SkiaSharpDrawingContext context, SKPaint paint) => new SKPoint(X, Y);
 

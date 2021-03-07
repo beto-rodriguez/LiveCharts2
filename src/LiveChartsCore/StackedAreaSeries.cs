@@ -24,13 +24,14 @@ using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore
 {
-    public class StackedAreaSeries<TModel, TVisual, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>
-        : LineSeries<TModel, TVisual, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>
+    public class StackedAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>
+        : LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>
         where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
         where TLineSegment : ILinePathSegment<TPathArgs>, new()
         where TBezierSegment : IBezierSegment<TPathArgs>, new()
         where TMoveToCommand : IMoveToPathCommand<TPathArgs>, new()
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
         public StackedAreaSeries()

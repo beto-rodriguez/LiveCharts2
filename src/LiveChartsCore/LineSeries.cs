@@ -30,13 +30,14 @@ namespace LiveChartsCore
     /// <summary>
     /// Defines the data to plot as a line.
     /// </summary>
-    public class LineSeries<TModel, TVisual, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>
-        : CartesianSeries<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>, ILineSeries<TDrawingContext>
+    public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>
+        : CartesianSeries<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>, ILineSeries<TDrawingContext>
         where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
         where TLineSegment : ILinePathSegment<TPathArgs>, new()
         where TBezierSegment : IBezierSegment<TPathArgs>, new()
         where TMoveToCommand : IMoveToPathCommand<TPathArgs>, new()
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
         private readonly List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>> fillPathHelperContainer =

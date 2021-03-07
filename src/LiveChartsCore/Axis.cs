@@ -31,7 +31,7 @@ namespace LiveChartsCore
 {
     public class Axis<TDrawingContext, TTextGeometry, TLineGeometry>: IAxis<TDrawingContext>
         where TDrawingContext: DrawingContext
-        where TTextGeometry: ITextGeometry<TDrawingContext>, new()
+        where TTextGeometry: ILabelGeometry<TDrawingContext>, new()
         where TLineGeometry: ILineGeometry<TDrawingContext>, new()
     {
         private const float wedgeLength = 8;
@@ -70,7 +70,7 @@ namespace LiveChartsCore
         public AxisPosition Position { get => position; set => position = value; }
         public double LabelsRotation { get => labelsRotation; set => labelsRotation = value; }
 
-        public IWritableTask<TDrawingContext>? TextBrush { get; set; }
+        public IDrawableTask<TDrawingContext>? TextBrush { get; set; }
 
         public IDrawableTask<TDrawingContext>? SeparatorsBrush { get; set; }
 
@@ -231,7 +231,9 @@ namespace LiveChartsCore
 
             for (var i = start; i <= dataBounds.max; i += s)
             {
-                var m = TextBrush.MeasureText(labeler(i, axisTick));
+                var textGeometry = new TTextGeometry();
+
+                var m = textGeometry.Measure(TextBrush); // TextBrush.MeasureText(labeler(i, axisTick));
                 if (m.Width > w) w = m.Width;
                 if (m.Height > h) h = m.Height;
             }

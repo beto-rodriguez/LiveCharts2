@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing
@@ -36,6 +37,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
         public SKImageInfo Info { get; set; }
         public SKSurface Surface { get; set; }
         public SKCanvas Canvas { get; set; }
+        public PaintTask PaintTask { get; set; }
         public SKPaint Paint { get; set; }
 
         public override void ClearCanvas()

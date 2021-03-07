@@ -24,6 +24,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Motion;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -39,10 +40,19 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         protected SKPaint skiaPaint;
         private HashSet<IDrawable<SkiaSharpDrawingContext>> geometries = new HashSet<IDrawable<SkiaSharpDrawingContext>>();
         protected FloatMotionProperty strokeWidthTransition;
+        private readonly ColorMotionProperty colorTransition;
 
         public PaintTask()
         {
             strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeWidth), 0f));
+            colorTransition = RegisterMotionProperty(new ColorMotionProperty(nameof(Color), new SKColor()));
+        }
+
+        public PaintTask(SKColor color)
+        {
+            strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeWidth), 0f));
+            colorTransition = RegisterMotionProperty(
+                new ColorMotionProperty(nameof(Color), new SKColor(color.Red, color.Green, color.Blue, color.Alpha)));
         }
 
         public int ZIndex { get; set; }
@@ -50,6 +60,13 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         public SKPaintStyle Style { get; set; }
         public bool IsStroke { get; set; }
         public bool IsFill { get; set; }
+        public bool IsAntialias { get; set; } = true;
+
+        public SKColor Color
+        {
+            get => colorTransition.GetMovement(this);
+            set => colorTransition.SetMovement(value, this);
+        }
 
         public abstract void InitializeTask(SkiaSharpDrawingContext drawingContext);
 

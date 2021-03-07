@@ -26,12 +26,13 @@ using System;
 
 namespace LiveChartsCore
 {
-    public class PieSeries<TModel, TVisual, TDrawingContext>
-        : DrawableSeries<TModel, TVisual, TDrawingContext>, IDisposable, IPieSeries<TDrawingContext>
+    public class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
+        : DrawableSeries<TModel, TVisual, TLabel, TDrawingContext>, IDisposable, IPieSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TVisual : class, IDoughnutVisualChartPoint<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
-        public PieSeries() : base(SeriesProperties.PieSeries | SeriesProperties.Stacked) 
+        public PieSeries() : base(SeriesProperties.PieSeries | SeriesProperties.Stacked)
         {
             HoverState = LiveCharts.PieSeriesHoverKey;
         }

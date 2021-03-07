@@ -20,40 +20,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using System;
-using System.Drawing;
 
-namespace LiveChartsCore.Context
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
+namespace LiveChartsCore.Defaults
 {
-    public interface IAxis<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public class ObservablePointF : INotifyPropertyChanged
     {
-        Bounds DataBounds { get; }
-        AxisOrientation Orientation { get; }
-        float Xo { get; set; }
-        float Yo { get; set; }
+        private float value;
 
-        Func<double, AxisTick, string> Labeler { get; set; }
-        double Step { get; set; }
-        double UnitWith { get; set; }
+        public ObservablePointF()
+        {
 
-        AxisPosition Position { get; set; }
-        double LabelsRotation { get; set; }
+        }
 
-        IDrawableTask<TDrawingContext>? TextBrush { get; set; }
+        public ObservablePointF(float value)
+        {
+            this.value = value;
+        }
 
-        IDrawableTask<TDrawingContext>? SeparatorsBrush { get; set; }
+        public float Value { get => value; set { this.value = value; OnPropertyChanged(); } }
 
-        bool ShowSeparatorLines { get; set; }
-        bool ShowSeparatorWedges { get; set; }
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-        IDrawableTask<TDrawingContext>? AlternativeSeparatorForeground { get; set; }
-
-        void Initialize(AxisOrientation orientation);
-        void Measure(CartesianChart<TDrawingContext> chart);
-        SizeF GetPossibleSize(CartesianChart<TDrawingContext> chart);
-
-        IAxis<TDrawingContext> Copy();
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

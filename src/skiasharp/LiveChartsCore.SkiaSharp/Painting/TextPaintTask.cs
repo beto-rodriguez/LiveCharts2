@@ -23,32 +23,26 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Motion;
 using SkiaSharp;
-using System;
 using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Painting
 {
-    public class TextPaintTask : PaintTask, IWritableTask<SkiaSharpDrawingContext>
+    public class TextPaintTask : PaintTask
     {
-        private readonly ColorMotionProperty colorTransition;
         private readonly FloatMotionProperty textSizeTransition;
 
         public TextPaintTask()
         {
-            colorTransition = RegisterMotionProperty(new ColorMotionProperty(nameof(Color), new SKColor()));
             textSizeTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize), 13f));
         }
 
         public TextPaintTask(SKColor color, float fontSize)
+            : base(color)
         {
-            colorTransition = RegisterMotionProperty(new ColorMotionProperty(nameof(Color), color));
             textSizeTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize), fontSize));
         }
 
-        public SKColor Color { get => colorTransition.GetMovement(this); set { colorTransition.SetMovement(value, this); } }
-        public bool IsAntialias { get; set; } = true;
         public float TextSize { get => textSizeTransition.GetMovement(this); set { textSizeTransition.SetMovement(value, this); } }
 
         public override IDrawableTask<SkiaSharpDrawingContext> CloneTask()
@@ -77,23 +71,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             skiaPaint.TextSize = TextSize;
 
             drawingContext.Paint = skiaPaint;
-        }
-
-        public SizeF MeasureText(string content)
-        {
-            var p = new SKPaint
-            {
-                Color = Color,
-                IsAntialias = IsAntialias,
-                IsStroke = IsStroke,
-                StrokeWidth = StrokeWidth,
-                TextSize = TextSize
-            };
-
-            var bounds = new SKRect();
-            p.MeasureText(content, ref bounds);
-            Dispose();
-            return new SizeF(bounds.Size.Width, bounds.Size.Height);
+            drawingContext.PaintTask = this;
         }
     }
 }

@@ -20,11 +20,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
+namespace LiveChartsCore.Defaults
 {
-    public interface IWritableTask<TDrawingContext> : IDrawableTask<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public class ObservablePoint : INotifyPropertyChanged
     {
-        System.Drawing.SizeF MeasureText(string text);
+        private double value;
+
+        public ObservablePoint()
+        {
+
+        }
+
+        public ObservablePoint(double value)
+        {
+            this.value = value;
+        }
+
+        public double Value { get => value; set { this.value = value; OnPropertyChanged(); } }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

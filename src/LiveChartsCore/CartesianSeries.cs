@@ -29,10 +29,11 @@ namespace LiveChartsCore
     /// <summary>
     /// Defines data to plot in a chart.
     /// </summary>
-    public abstract class CartesianSeries<TModel, TVisual, TDrawingContext>
-        : DrawableSeries<TModel, TVisual, TDrawingContext>, IDisposable, ICartesianSeries<TDrawingContext>
+    public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
+        : DrawableSeries<TModel, TVisual, TLabel, TDrawingContext>, IDisposable, ICartesianSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Series{T}"/> class.

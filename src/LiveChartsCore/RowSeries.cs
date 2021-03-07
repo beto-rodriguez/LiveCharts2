@@ -26,8 +26,9 @@ using System;
 
 namespace LiveChartsCore
 {
-    public class RowSeries<TModel, TVisual, TDrawingContext> : BarSeries<TModel, TVisual, TDrawingContext>
+    public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
         public RowSeries()
