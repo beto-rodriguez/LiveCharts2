@@ -47,6 +47,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
 
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
+            paint.TextSize = TextSize;
             context.Canvas.DrawText(text ?? "", GetPosition(context, paint), paint);
         }
 

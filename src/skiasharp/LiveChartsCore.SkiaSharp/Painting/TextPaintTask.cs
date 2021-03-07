@@ -24,7 +24,6 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
-using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Painting
 {
@@ -34,16 +33,14 @@ namespace LiveChartsCore.SkiaSharpView.Painting
 
         public TextPaintTask()
         {
-            textSizeTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize), 13f));
+
         }
 
-        public TextPaintTask(SKColor color, float fontSize)
+        public TextPaintTask(SKColor color)
             : base(color)
         {
-            textSizeTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize), fontSize));
-        }
 
-        public float TextSize { get => textSizeTransition.GetMovement(this); set { textSizeTransition.SetMovement(value, this); } }
+        }
 
         public override IDrawableTask<SkiaSharpDrawingContext> CloneTask()
         {
@@ -53,7 +50,6 @@ namespace LiveChartsCore.SkiaSharpView.Painting
                 IsStroke = IsStroke,
                 Color = Color,
                 IsAntialias = IsAntialias,
-                TextSize = TextSize,
                 StrokeWidth = StrokeWidth
             };
 
@@ -68,7 +64,6 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             skiaPaint.IsAntialias = IsAntialias;
             skiaPaint.IsStroke = IsStroke;
             skiaPaint.StrokeWidth = StrokeWidth;
-            skiaPaint.TextSize = TextSize;
 
             drawingContext.Paint = skiaPaint;
             drawingContext.PaintTask = this;

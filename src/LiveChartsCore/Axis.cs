@@ -71,6 +71,7 @@ namespace LiveChartsCore
         public double LabelsRotation { get => labelsRotation; set => labelsRotation = value; }
 
         public IDrawableTask<TDrawingContext>? TextBrush { get; set; }
+        public double TextSize { get; set; } = 16;
 
         public IDrawableTask<TDrawingContext>? SeparatorsBrush { get; set; }
 
@@ -116,6 +117,7 @@ namespace LiveChartsCore
                     : controlSize.Width - xo;
             }
 
+            var size = unchecked((float)TextSize);
             var r = unchecked((float)labelsRotation);
             var hasRotation = Math.Abs(r) > 0.01f;
 
@@ -144,6 +146,7 @@ namespace LiveChartsCore
                     if (TextBrush != null)
                     {
                         var textGeometry = new TTextGeometry();
+                        textGeometry.TextSize = size;
                         visualSeparator.Text = textGeometry;
                         if (hasRotation) textGeometry.Rotation = r;
 
@@ -219,6 +222,7 @@ namespace LiveChartsCore
         {
             if (TextBrush == null) return new SizeF(0f, 0f);
 
+            var ts = (float)TextSize;
             var labeler = Labeler;
             var axisTick = this.GetTick(chart.DrawMarginSize);
             var s = double.IsNaN(step) || step == 0
@@ -232,6 +236,8 @@ namespace LiveChartsCore
             for (var i = start; i <= dataBounds.max; i += s)
             {
                 var textGeometry = new TTextGeometry();
+                textGeometry.Text = labeler(i, axisTick);
+                textGeometry.TextSize = ts;
 
                 var m = textGeometry.Measure(TextBrush); // TextBrush.MeasureText(labeler(i, axisTick));
                 if (m.Width > w) w = m.Width;
