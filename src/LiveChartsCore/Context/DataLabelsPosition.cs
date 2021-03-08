@@ -26,6 +26,10 @@ namespace LiveChartsCore.Context
     {
         End,
         Start,
-        Middle
+        Middle,
+        Top,
+        Bottom,
+        Left,
+        Right
     }
 }

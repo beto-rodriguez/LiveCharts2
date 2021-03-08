@@ -37,8 +37,8 @@ namespace LiveChartsCore
             HoverState = LiveCharts.BarSeriesHoverKey;
         }
 
-        public double Pivot { get; set; }
         public double MaxBarWidth { get; set; } = 30;
+
         public bool IgnoresBarPosition { get; set; } = false;
 
         Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IBarSeries<TDrawingContext>.OnPointCreated

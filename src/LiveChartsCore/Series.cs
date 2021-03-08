@@ -45,6 +45,7 @@ namespace LiveChartsCore
         protected readonly Dictionary<TModel, ChartPoint<TModel, TVisual, TLabel, TDrawingContext>> byReferenceVisualMap = new Dictionary<TModel, ChartPoint<TModel, TVisual, TLabel, TDrawingContext>>();
         private readonly HashSet<IChart> subscribedTo = new HashSet<IChart>();
         private readonly SeriesProperties properties;
+        protected float pivot = 0f;
         private IEnumerable<TModel>? values;
 
         public Series(SeriesProperties properties)
@@ -82,6 +83,8 @@ namespace LiveChartsCore
                 values = value;
             }
         }
+
+        public double Pivot { get => pivot; set => pivot = (float)value; }
 
         /// <summary>
         /// Gets or sets the mapping that defines how a type is mapped to a <see cref="ChartPoint"/> instance, 
@@ -204,34 +207,35 @@ namespace LiveChartsCore
             var middleX = (x + x + width) * 0.5f;
             var middleY = (y + y + height) * 0.5f;
 
-            if ((seriesProperties & SeriesProperties.VerticalOrientation) == SeriesProperties.VerticalOrientation)
+            return position switch
             {
-                return position switch
-                {
-                    DataLabelsPosition.End => isGreaterThanPivot
-                        ? new PointF(middleX, y - labelSize.Height * 0.5f)
-                        : new PointF(middleX, y + height + labelSize.Height * 0.5f),
-                    DataLabelsPosition.Start => isGreaterThanPivot
-                        ? new PointF(middleX, y + height + labelSize.Height * 0.5f)
-                        : new PointF(middleX, y - labelSize.Height * 0.5f),
-                    DataLabelsPosition.Middle => new PointF(middleX, middleY),
-                    _ => throw new NotImplementedException(),
-                };
-            }
-            else
-            {
-                return position switch
-                {
-                    DataLabelsPosition.End => isGreaterThanPivot
-                        ? new PointF(x + width + labelSize.Width *0.5f, middleY)
-                        : new PointF(x - labelSize.Width * 0.5f, middleY),
-                    DataLabelsPosition.Start => isGreaterThanPivot
-                        ? new PointF(x - labelSize.Width * 0.5f, middleY)
-                        : new PointF(x + width + labelSize.Width * 0.5f, middleY),
-                    DataLabelsPosition.Middle => new PointF(middleX, middleY),
-                    _ => throw new NotImplementedException(),
-                };
-            }
+                DataLabelsPosition.Top => new PointF(middleX, y - labelSize.Height * 0.5f),
+                DataLabelsPosition.Bottom => new PointF(middleX, y + height + labelSize.Height * 0.5f),
+                DataLabelsPosition.Left => new PointF(x - labelSize.Width * 0.5f, middleY),
+                DataLabelsPosition.Right => new PointF(x + width + labelSize.Width * 0.5f, middleY),
+                DataLabelsPosition.Middle => new PointF(middleX, middleY),
+                _ => ((seriesProperties & SeriesProperties.HorizontalOrientation) == SeriesProperties.HorizontalOrientation)
+                    ? position switch
+                    {
+                        DataLabelsPosition.End => isGreaterThanPivot
+                            ? new PointF(x + width + labelSize.Width * 0.5f, middleY)
+                            : new PointF(x - labelSize.Width * 0.5f, middleY),
+                        DataLabelsPosition.Start => isGreaterThanPivot
+                            ? new PointF(x - labelSize.Width * 0.5f, middleY)
+                            : new PointF(x + width + labelSize.Width * 0.5f, middleY),
+                        _ => throw new NotImplementedException(),
+                    }
+                    : position switch
+                    {
+                        DataLabelsPosition.End => isGreaterThanPivot
+                            ? new PointF(middleX, y - labelSize.Height * 0.5f)
+                            : new PointF(middleX, y + height + labelSize.Height * 0.5f),
+                        DataLabelsPosition.Start => isGreaterThanPivot
+                            ? new PointF(middleX, y + height + labelSize.Height * 0.5f)
+                            : new PointF(middleX, y - labelSize.Height * 0.5f),
+                        _ => throw new NotImplementedException(),
+                    }
+            };
         }
 
         private IEnumerable<ChartPoint<TModel, TVisual, TLabel, TDrawingContext>> GetPointsFromICP(IChart chart)

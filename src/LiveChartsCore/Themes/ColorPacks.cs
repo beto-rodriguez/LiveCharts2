@@ -54,28 +54,28 @@ namespace LiveChartsCore
 
         public static Color[] MaterialDesign200 => new Color[]
         {
-            RGB(144,202,249),    // blue
-            RGB(239,154,154),     // red
-            RGB(197,225,165),    // light green
-            RGB(128,222,234),     // cyan
-            RGB(159,168,218),     // indigo
-            RGB(255,224,130),     // ambar
-            RGB(128,203,196),     // teal
-            RGB(244,143,177),     // pink
-            RGB(176,190,197),    // blue gray
+            RGB(144,202,249),   // blue
+            RGB(239,154,154),   // red
+            RGB(197,225,165),   // light green
+            RGB(128,222,234),   // cyan
+            RGB(159,168,218),   // indigo
+            RGB(255,224,130),   // ambar
+            RGB(128,203,196),   // teal
+            RGB(244,143,177),   // pink
+            RGB(176,190,197),   // blue gray
         };
 
         public static Color[] MaterialDesign800 => new Color[]
         {
             RGB(21,101,192),    // blue
             RGB(198,40,40),     // red
-            RGB(85,139,47),    // light green
+            RGB(85,139,47),     // light green
             RGB(0,131,143),     // cyan
             RGB(40,53,147),     // indigo
             RGB(255,143,0),     // ambar
-            RGB(0,105,92),     // teal
+            RGB(0,105,92),      // teal
             RGB(173,20,87),     // pink
-            RGB(55,71,79),    // blue gray
+            RGB(55,71,79),      // blue gray
         };
 
         public static Color[] Blues => new Color[]

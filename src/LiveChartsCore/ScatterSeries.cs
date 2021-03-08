@@ -73,6 +73,8 @@ namespace LiveChartsCore
 
             if (Fill != null) chart.Canvas.AddDrawableTask(Fill);
             if (Stroke != null) chart.Canvas.AddDrawableTask(Stroke);
+            if (DataLabelsBrush != null) chart.Canvas.AddDrawableTask(DataLabelsBrush);
+            var dls = unchecked((float)DataLabelsSize);
 
             var gs = unchecked((float)geometrySize);
             var hgs = gs / 2f;
@@ -137,6 +139,33 @@ namespace LiveChartsCore
                 point.Context.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs, y - hgs, gs + 2 * sw, gs + 2 * sw);
                 OnPointMeasured(point, sizedGeometry);
                 chart.MeasuredDrawables.Add(sizedGeometry);
+
+                if (DataLabelsBrush != null)
+                {
+                    if (point.Context.Label == null)
+                    {
+                        var l = new TLabel { X = x - hgs, Y = y - hgs };
+
+                        l.TransitionateProperties(nameof(l.X), nameof(l.Y))
+                            .WithAnimation(a =>
+                                a.WithDuration(chart.AnimationsSpeed)
+                                .WithEasingFunction(chart.EasingFunction));
+
+                        l.CompleteAllTransitions();
+                        point.Context.Label = l;
+                        DataLabelsBrush.AddGeometyToPaintTask(l);
+                    }
+
+                    point.Context.Label.Text = DataLabelFormatter(point);
+                    point.Context.Label.TextSize = dls;
+                    point.Context.Label.Padding = DataLabelsPadding;
+                    var labelPosition = GetLabelPosition(
+                        x - hgs, y - hgs, gs, gs, point.Context.Label.Measure(DataLabelsBrush), DataLabelsPosition, SeriesProperties, point.PrimaryValue > 0);
+                    point.Context.Label.X = labelPosition.X;
+                    point.Context.Label.Y = labelPosition.Y;
+
+                    chart.MeasuredDrawables.Add(point.Context.Label);
+                }
             }
         }
 

@@ -46,7 +46,6 @@ namespace LiveChartsCore
             new List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>();
         private float lineSmoothness = 0.65f;
         private float geometrySize = 14f;
-        private float pivot = 0f;
         private bool enableNullSplitting = true;
         private IDrawableTask<TDrawingContext>? shapesFill;
         private IDrawableTask<TDrawingContext>? shapesStroke;
@@ -56,8 +55,6 @@ namespace LiveChartsCore
         {
             HoverState = LiveCharts.LineSeriesHoverKey;
         }
-
-        public double Pivot { get => pivot; set => pivot = (float)value; }
 
         public double GeometrySize { get => geometrySize; set => geometrySize = (float)value; }
 

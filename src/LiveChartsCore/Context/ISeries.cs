@@ -32,6 +32,7 @@ namespace LiveChartsCore.Context
         string HoverState { get; set; }
         SeriesProperties SeriesProperties { get; }
         string? Name { get; set; }
+        double Pivot { get; set; }
 
         IChartPoint[] Fetch(IChart chart);
         IEnumerable<TooltipPoint> FindPointsNearTo(IChart chart, PointF pointerPosition);
