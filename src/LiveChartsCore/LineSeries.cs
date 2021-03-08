@@ -146,6 +146,8 @@ namespace LiveChartsCore
                 Fill.ZIndex = 100000 - stacker.Position;
             }
 
+            var dls = unchecked((float)DataLabelsSize);
+
             var segmentI = 0;
 
             foreach (var segment in segments)
@@ -294,6 +296,34 @@ namespace LiveChartsCore
                     data.TargetPoint.Context.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs, y - hgs + 2 * sw, gs, gs + 2 * sw);
                     OnPointMeasured(data.TargetPoint, visual);
                     chart.MeasuredDrawables.Add(visual.Geometry);
+
+                    if (DataLabelsBrush != null)
+                    {
+                        if (data.TargetPoint.Context.Label == null)
+                        {
+                            var l = new TLabel { X = x - hgs, Y = p - hgs };
+
+                            l.TransitionateProperties(nameof(l.X), nameof(l.Y))
+                                .WithAnimation(a =>
+                                    a.WithDuration(chart.AnimationsSpeed)
+                                    .WithEasingFunction(chart.EasingFunction));
+
+                            l.CompleteAllTransitions();
+                            data.TargetPoint.Context.Label = l;
+                            DataLabelsBrush.AddGeometyToPaintTask(l);
+                        }
+
+                        data.TargetPoint.Context.Label.Text = DataLabelFormatter(data.TargetPoint);
+                        data.TargetPoint.Context.Label.TextSize = dls;
+                        data.TargetPoint.Context.Label.Padding = DataLabelsPadding;
+                        var labelPosition = GetLabelPosition(
+                            x - hgs, y - hgs, gs, gs, data.TargetPoint.Context.Label.Measure(DataLabelsBrush), DataLabelsPosition, 
+                            SeriesProperties, data.TargetPoint.PrimaryValue > Pivot);
+                        data.TargetPoint.Context.Label.X = labelPosition.X;
+                        data.TargetPoint.Context.Label.Y = labelPosition.Y;
+
+                        chart.MeasuredDrawables.Add(data.TargetPoint.Context.Label);
+                    }
                 }
 
                 if (ShapesFill != null) chart.Canvas.AddDrawableTask(ShapesFill);
@@ -313,6 +343,8 @@ namespace LiveChartsCore
                 if (Stroke != null) Stroke.RemoveGeometryFromPainTask(strokeHelper.Path);
                 strokePathHelperContainer.RemoveAt(iStroke);
             }
+
+            if (DataLabelsBrush != null) chart.Canvas.AddDrawableTask(DataLabelsBrush);
         }
 
         public override DimensinalBounds GetBounds(
@@ -321,13 +353,14 @@ namespace LiveChartsCore
             var baseBounds = base.GetBounds(chart, x, y);
 
             var tick = y.GetTick(chart.ControlSize, baseBounds.PrimaryBounds);
+            var xTick = x.GetTick(chart.ControlSize, baseBounds.SecondaryBounds);
 
             return new DimensinalBounds
             {
                 SecondaryBounds = new Bounds
                 {
-                    Max = baseBounds.SecondaryBounds.Max,
-                    Min = baseBounds.SecondaryBounds.Min
+                    Max = baseBounds.SecondaryBounds.Max + 0.5f * xTick.Value,
+                    Min = baseBounds.SecondaryBounds.Min - 0.5f * xTick.Value
                 },
                 PrimaryBounds = new Bounds
                 {

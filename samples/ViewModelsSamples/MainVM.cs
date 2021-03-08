@@ -47,19 +47,19 @@ namespace ViewModelsSamples
 
             Series = new ObservableCollection<ICartesianSeries<SkiaSharpDrawingContext>>
             {
-                new RowSeries<double>
+                new LineSeries<double>
                 {
                     Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
                     DataLabelsBrush = new SolidColorPaintTask(new SKColor(0, 47, 255)),
                     DataLabelFormatter = p => $"value: {p.PrimaryValue}"
                 },
-                new RowSeries<double>
+                new LineSeries<double>
                 {
                     Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
                     DataLabelsBrush = new SolidColorPaintTask(new SKColor(255, 0, 47)),
                     DataLabelsPosition = DataLabelsPosition.Start
                 },
-                 new RowSeries<double>
+                 new LineSeries<double>
                 {
                     Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
                     DataLabelsBrush = new SolidColorPaintTask(new SKColor(30, 30, 30)),

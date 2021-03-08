@@ -146,7 +146,7 @@ namespace LiveChartsCore
 
                     point.Context.Label.Text = DataLabelFormatter(point);
                     point.Context.Label.TextSize = dls;
-                    point.Context.Label.Padding = new Padding { Left = 10, Right = 10, Top = 10, Bottom = 10 };
+                    point.Context.Label.Padding = DataLabelsPadding;
                     var labelPosition = GetLabelPosition(
                         x, cy, uw, b, point.Context.Label.Measure(DataLabelsBrush), DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot);
                     point.Context.Label.X = labelPosition.X;
