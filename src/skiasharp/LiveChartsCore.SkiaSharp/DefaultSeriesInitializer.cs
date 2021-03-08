@@ -113,6 +113,7 @@ namespace LiveChartsCore.SkiaSharpView
             {
                 var mask = SeriesProperties.Line | SeriesProperties.Stacked;
                 var opacity = (series.SeriesProperties & mask) == mask ? 1 : 0.5;
+
                 series.Fill = new SolidColorPaintTask(ColorAsSKColor(color, (byte)(opacity * 255)));
             }
             if (series.Stroke == LiveChartsSK.DefaultPaint) series.Stroke = new SolidColorPaintTask(ColorAsSKColor(color), 3.5f);

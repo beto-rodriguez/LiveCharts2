@@ -50,21 +50,21 @@ namespace ViewModelsSamples
                 new StackedAreaSeries<double>
                 {
                     Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
-                    DataLabelsBrush = new SolidColorPaintTask(new SKColor(0, 47, 255)),
-                    DataLabelFormatter = p => $"value: {p.PrimaryValue}",
-                    DataLabelsPosition = DataLabelsPosition.End
+                    //DataLabelsBrush = new SolidColorPaintTask(new SKColor(0, 47, 255)),
+                    //DataLabelFormatter = p => $"value: {p.PrimaryValue}",
+                    //DataLabelsPosition = DataLabelsPosition.End
                 },
                 new StackedAreaSeries<double>
                 {
                     Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
-                    DataLabelsBrush = new SolidColorPaintTask(new SKColor(255, 0, 47)),
-                    DataLabelsPosition = DataLabelsPosition.Start
+                    //DataLabelsBrush = new SolidColorPaintTask(new SKColor(255, 0, 47)),
+                    //DataLabelsPosition = DataLabelsPosition.Start
                 },
                  new StackedAreaSeries<double>
                 {
                     Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
-                    DataLabelsBrush = new SolidColorPaintTask(new SKColor(30, 30, 30)),
-                    DataLabelsPosition = DataLabelsPosition.Middle
+                    //DataLabelsBrush = new SolidColorPaintTask(new SKColor(30, 30, 30)),
+                    //DataLabelsPosition = DataLabelsPosition.Middle
                 },
                 //new StackedAreaSeries<double>
                 //{

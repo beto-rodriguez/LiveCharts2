@@ -135,12 +135,13 @@ namespace LiveChartsCore
                 ? chart.SeriesContext.GetStackPosition(this, GetStackGroup())
                 : null;
 
-            if (stacker != null && Fill != null)
+            if (stacker != null)
             {
                 // easy workaround to set an automatic and valid z-index for stacked area series
-                // the problem of this solution is that the user needs to set z-indexes above 100,000
+                // the problem of this solution is that the user needs to set z-indexes above 1000
                 // if the user needs to add more series to the chart.
-                Fill.ZIndex = 100000 - stacker.Position;
+                if (Fill != null) Fill.ZIndex = 1000 - stacker.Position;
+                if (Stroke != null) Stroke.ZIndex = 1000 - stacker.Position;
             }
 
             var dls = unchecked((float)DataLabelsSize);
@@ -258,7 +259,7 @@ namespace LiveChartsCore
 
                         if (data.IsLast)
                         {
-                            fillPathHelper.EndSegment.X = data.X0;
+                            fillPathHelper.EndSegment.X = data.X2;
                             fillPathHelper.EndSegment.Y = p;
                             fillPathHelper.Path.AddCommand(fillPathHelper.EndSegment);
 
@@ -314,7 +315,7 @@ namespace LiveChartsCore
                         data.TargetPoint.Context.Label.TextSize = dls;
                         data.TargetPoint.Context.Label.Padding = DataLabelsPadding;
                         var labelPosition = GetLabelPosition(
-                            x - hgs, y - hgs, gs, gs, data.TargetPoint.Context.Label.Measure(DataLabelsBrush), DataLabelsPosition, 
+                            x - hgs, y - hgs, gs, gs, data.TargetPoint.Context.Label.Measure(DataLabelsBrush), DataLabelsPosition,
                             SeriesProperties, data.TargetPoint.PrimaryValue > Pivot);
                         data.TargetPoint.Context.Label.X = labelPosition.X;
                         data.TargetPoint.Context.Label.Y = labelPosition.Y;
@@ -492,89 +493,87 @@ namespace LiveChartsCore
             if (points.Length == 0) yield break;
             IChartPoint<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext> previous, current, next, next2;
 
-            unchecked
+
+            for (int i = 0; i < points.Length; i++)
             {
-                for (int i = 0; i < points.Length; i++)
+                previous = points[i - 1 < 0 ? 0 : i - 1];
+                current = points[i];
+                next = points[i + 1 > points.Length - 1 ? points.Length - 1 : i + 1];
+                next2 = points[i + 2 > points.Length - 1 ? points.Length - 1 : i + 2];
+
+                var pys = 0f;
+                var cys = 0f;
+                var nys = 0f;
+                var nnys = 0f;
+
+                if (stacker != null)
                 {
-                    previous = points[i - 1 < 0 ? 0 : i - 1];
-                    current = points[i];
-                    next = points[i + 1 > points.Length - 1 ? points.Length - 1 : i + 1];
-                    next2 = points[i + 2 > points.Length - 1 ? points.Length - 1 : i + 2];
-
-                    var pys = 0f;
-                    var cys = 0f;
-                    var nys = 0f;
-                    var nnys = 0f;
-
-                    if (stacker != null)
-                    {
-                        pys = stacker.GetStack(previous).Start;
-                        cys = stacker.GetStack(current).Start;
-                        nys = stacker.GetStack(next).Start;
-                        nnys = stacker.GetStack(next2).Start;
-                    }
-
-                    var xc1 = (previous.SecondaryValue + current.SecondaryValue) / 2.0f;
-                    var yc1 = (previous.PrimaryValue + pys + current.PrimaryValue + cys) / 2.0f;
-                    var xc2 = (current.SecondaryValue + next.SecondaryValue) / 2.0f;
-                    var yc2 = (current.PrimaryValue + cys + next.PrimaryValue + nys) / 2.0f;
-                    var xc3 = (next.SecondaryValue + next2.SecondaryValue) / 2.0f;
-                    var yc3 = (next.PrimaryValue + nys + next2.PrimaryValue + nnys) / 2.0f;
-
-                    var len1 = (float)Math.Sqrt(
-                        (current.SecondaryValue - previous.SecondaryValue) *
-                        (current.SecondaryValue - previous.SecondaryValue) +
-                        (current.PrimaryValue + cys - previous.PrimaryValue + pys) * (current.PrimaryValue + cys - previous.PrimaryValue + pys));
-                    var len2 = (float)Math.Sqrt(
-                        (next.SecondaryValue - current.SecondaryValue) *
-                        (next.SecondaryValue - current.SecondaryValue) +
-                        (next.PrimaryValue + nys - current.PrimaryValue + cys) * (next.PrimaryValue + nys - current.PrimaryValue + cys));
-                    var len3 = (float)Math.Sqrt(
-                        (next2.SecondaryValue - next.SecondaryValue) *
-                        (next2.SecondaryValue - next.SecondaryValue) +
-                        (next2.PrimaryValue + nnys - next.PrimaryValue + nys) * (next2.PrimaryValue + nnys - next.PrimaryValue + nys));
-
-                    var k1 = len1 / (len1 + len2);
-                    var k2 = len2 / (len2 + len3);
-
-                    if (float.IsNaN(k1)) k1 = 0f;
-                    if (float.IsNaN(k2)) k2 = 0f;
-
-                    var xm1 = xc1 + (xc2 - xc1) * k1;
-                    var ym1 = yc1 + (yc2 - yc1) * k1;
-                    var xm2 = xc2 + (xc3 - xc2) * k2;
-                    var ym2 = yc2 + (yc3 - yc2) * k2;
-
-                    var c1X = xm1 + (xc2 - xm1) * lineSmoothness + current.SecondaryValue - xm1;
-                    var c1Y = ym1 + (yc2 - ym1) * lineSmoothness + current.PrimaryValue + cys - ym1;
-                    var c2X = xm2 + (xc2 - xm2) * lineSmoothness + next.SecondaryValue - xm2;
-                    var c2Y = ym2 + (yc2 - ym2) * lineSmoothness + next.PrimaryValue + nys - ym2;
-
-                    float x0, y0;
-
-                    if (i == 0)
-                    {
-                        x0 = current.SecondaryValue;
-                        y0 = current.PrimaryValue + cys;
-                    }
-                    else
-                    {
-                        x0 = c1X;
-                        y0 = c1Y;
-                    }
-
-                    yield return new BezierData<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>(points[i])
-                    {
-                        IsFirst = i == 0,
-                        IsLast = i == points.Length - 1,
-                        X0 = xScale.ScaleToUi(x0),
-                        Y0 = yScale.ScaleToUi(y0),
-                        X1 = xScale.ScaleToUi(c2X),
-                        Y1 = yScale.ScaleToUi(c2Y),
-                        X2 = xScale.ScaleToUi(next.SecondaryValue),
-                        Y2 = yScale.ScaleToUi(next.PrimaryValue + nys)
-                    };
+                    pys = stacker.GetStack(previous).Start;
+                    cys = stacker.GetStack(current).Start;
+                    nys = stacker.GetStack(next).Start;
+                    nnys = stacker.GetStack(next2).Start;
                 }
+
+                var xc1 = (previous.SecondaryValue + current.SecondaryValue) / 2.0f;
+                var yc1 = (previous.PrimaryValue + pys + current.PrimaryValue + cys) / 2.0f;
+                var xc2 = (current.SecondaryValue + next.SecondaryValue) / 2.0f;
+                var yc2 = (current.PrimaryValue + cys + next.PrimaryValue + nys) / 2.0f;
+                var xc3 = (next.SecondaryValue + next2.SecondaryValue) / 2.0f;
+                var yc3 = (next.PrimaryValue + nys + next2.PrimaryValue + nnys) / 2.0f;
+
+                var len1 = (float)Math.Sqrt(
+                    (current.SecondaryValue - previous.SecondaryValue) *
+                    (current.SecondaryValue - previous.SecondaryValue) +
+                    (current.PrimaryValue + cys - previous.PrimaryValue + pys) * (current.PrimaryValue + cys - previous.PrimaryValue + pys));
+                var len2 = (float)Math.Sqrt(
+                    (next.SecondaryValue - current.SecondaryValue) *
+                    (next.SecondaryValue - current.SecondaryValue) +
+                    (next.PrimaryValue + nys - current.PrimaryValue + cys) * (next.PrimaryValue + nys - current.PrimaryValue + cys));
+                var len3 = (float)Math.Sqrt(
+                    (next2.SecondaryValue - next.SecondaryValue) *
+                    (next2.SecondaryValue - next.SecondaryValue) +
+                    (next2.PrimaryValue + nnys - next.PrimaryValue + nys) * (next2.PrimaryValue + nnys - next.PrimaryValue + nys));
+
+                var k1 = len1 / (len1 + len2);
+                var k2 = len2 / (len2 + len3);
+
+                if (float.IsNaN(k1)) k1 = 0f;
+                if (float.IsNaN(k2)) k2 = 0f;
+
+                var xm1 = xc1 + (xc2 - xc1) * k1;
+                var ym1 = yc1 + (yc2 - yc1) * k1;
+                var xm2 = xc2 + (xc3 - xc2) * k2;
+                var ym2 = yc2 + (yc3 - yc2) * k2;
+
+                var c1X = xm1 + (xc2 - xm1) * lineSmoothness + current.SecondaryValue - xm1;
+                var c1Y = ym1 + (yc2 - ym1) * lineSmoothness + current.PrimaryValue + cys - ym1;
+                var c2X = xm2 + (xc2 - xm2) * lineSmoothness + next.SecondaryValue - xm2;
+                var c2Y = ym2 + (yc2 - ym2) * lineSmoothness + next.PrimaryValue + nys - ym2;
+
+                float x0, y0;
+
+                if (i == 0)
+                {
+                    x0 = current.SecondaryValue;
+                    y0 = current.PrimaryValue + cys;
+                }
+                else
+                {
+                    x0 = c1X;
+                    y0 = c1Y;
+                }
+
+                yield return new BezierData<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>(points[i])
+                {
+                    IsFirst = i == 0,
+                    IsLast = i == points.Length - 1,
+                    X0 = xScale.ScaleToUi(x0),
+                    Y0 = yScale.ScaleToUi(y0),
+                    X1 = xScale.ScaleToUi(c2X),
+                    Y1 = yScale.ScaleToUi(c2Y),
+                    X2 = xScale.ScaleToUi(next.SecondaryValue),
+                    Y2 = yScale.ScaleToUi(next.PrimaryValue + nys)
+                };
             }
         }
 
