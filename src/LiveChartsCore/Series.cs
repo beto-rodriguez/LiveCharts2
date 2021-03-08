@@ -223,11 +223,11 @@ namespace LiveChartsCore
                 return position switch
                 {
                     DataLabelsPosition.End => isGreaterThanPivot
-                        ? new PointF(middleX - labelSize.Width * 0.5f, y - labelSize.Height * 0.5f)
-                        : new PointF(middleX - labelSize.Width * 0.5f, y + height + labelSize.Height * 0.5f),
+                        ? new PointF(x + width + labelSize.Width *0.5f, middleY)
+                        : new PointF(x - labelSize.Width * 0.5f, middleY),
                     DataLabelsPosition.Start => isGreaterThanPivot
-                        ? new PointF(middleX, y)
-                        : new PointF(middleX, y + height),
+                        ? new PointF(x - labelSize.Width * 0.5f, middleY)
+                        : new PointF(x + width + labelSize.Width * 0.5f, middleY),
                     DataLabelsPosition.Middle => new PointF(middleX, middleY),
                     _ => throw new NotImplementedException(),
                 };
