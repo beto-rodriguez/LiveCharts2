@@ -178,7 +178,7 @@ namespace LiveChartsCore
                 PrimaryBounds = new Bounds
                 {
                     Max = baseBounds.PrimaryBounds.Max + tick.Value,
-                    min = 0
+                    Min = baseBounds.PrimaryBounds.Min < 0 ? baseBounds.PrimaryBounds.Min - tick.Value : 0
                 }
             };
         }
