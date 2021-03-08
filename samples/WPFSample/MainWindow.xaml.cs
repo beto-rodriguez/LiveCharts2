@@ -21,17 +21,17 @@ namespace WPFSample
             viewModel = c;
 
             var t = new Timer();
-            t.Interval = 1000;
+            t.Interval = 3000;
             t.Elapsed += T_Elapsed;
             t.Start();
         }
 
         private void T_Elapsed(object sender, ElapsedEventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                viewModel?.Randomize();
-            });
+            //Application.Current.Dispatcher.Invoke(() =>
+            //{
+            //    viewModel?.Randomize();
+            //});
         }
     }
 }

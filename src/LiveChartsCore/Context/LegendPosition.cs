@@ -24,7 +24,7 @@ namespace LiveChartsCore.Context
 {
     public enum LegendPosition
     {
-        None,
+        Hidden,
         Top,
         Left,
         Right,

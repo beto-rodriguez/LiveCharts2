@@ -36,7 +36,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     public abstract class Chart: Control, IChartView<SkiaSharpDrawingContext>
     {
         protected Chart<SkiaSharpDrawingContext> core;
-        protected NaturalGeometriesCanvas canvas;
+        protected MotionCanvas canvas;
 
         protected IChartLegend<SkiaSharpDrawingContext> legend;
         protected IChartTooltip<SkiaSharpDrawingContext> tooltip;
@@ -101,10 +101,10 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         {
             base.OnApplyTemplate();
 
-            if (!(Template.FindName("canvas", this) is NaturalGeometriesCanvas canvas))
+            if (!(Template.FindName("canvas", this) is MotionCanvas canvas))
                 throw new Exception(
                     $"{nameof(SKElement)} not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
-                    $"If you override the template please add an {nameof(NaturalGeometriesCanvas)} to the template and name it 'canvas'");
+                    $"If you override the template please add an {nameof(MotionCanvas)} to the template and name it 'canvas'");
 
             this.canvas = canvas;
             InitializeCore();
@@ -124,6 +124,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         private void MouseMoveThrottlerUnlocked()
         {
+            if (TooltipPosition == TooltipPosition.Hidden) return;
             tooltip.Show(core.FindPointsNearTo(mousePosition), core);
         }
     }

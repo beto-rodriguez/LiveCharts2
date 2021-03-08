@@ -11,7 +11,7 @@
                                              DockPanel.Dock="{Binding ElementName=legend, Path=Dock}"
                                              Orientation="{Binding ElementName=legend, Path=Orientation}"
                                              Visibility="{Binding ElementName=legend, Path=Visibility}" />
-            <local:NaturalGeometriesCanvas x:Name="canvas"/>
+            <local:MotionCanvas x:Name="canvas"/>
         </DockPanel>
     </ControlTemplate>
 
@@ -23,10 +23,10 @@
         <Setter Property="Template" Value="{StaticResource DefaultChartTempalte}" />
     </Style>
     
-    <Style TargetType="{x:Type local:NaturalGeometriesCanvas}">
+    <Style TargetType="{x:Type local:MotionCanvas}">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:NaturalGeometriesCanvas}">
+                <ControlTemplate TargetType="{x:Type local:MotionCanvas}">
                     <skia:SKElement x:Name="skiaElement" />
                 </ControlTemplate>
             </Setter.Value>

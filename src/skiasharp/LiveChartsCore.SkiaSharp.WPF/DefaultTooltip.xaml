@@ -46,7 +46,7 @@
                     <DataTemplate DataType="{x:Type ctx:TooltipPoint}">
                         <Border Padding="7 5">
                             <StackPanel Orientation="Horizontal">
-                                <local:NaturalGeometriesCanvas Margin="0 0 8 0" 
+                                <local:MotionCanvas Margin="0 0 8 0" 
                                                            PaintTasks="{Binding Series.DefaultPaintContext.PaintTasks}"
                                                            Width="{Binding Series.DefaultPaintContext.Width}"
                                                            Height="{Binding Series.DefaultPaintContext.Height}"

@@ -32,19 +32,19 @@ using System.Windows.Controls;
 
 namespace LiveChartsCore.SkiaSharpView.WPF
 {
-    public class NaturalGeometriesCanvas : Control
+    public class MotionCanvas : Control
     {
         protected SKElement skiaElement;
         private bool isDrawingLoopRunning = false;
         private Canvas<SkiaSharpDrawingContext> canvasCore = new Canvas<SkiaSharpDrawingContext>();
         private double framesPerSecond = 90;
 
-        static NaturalGeometriesCanvas()
+        static MotionCanvas()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(NaturalGeometriesCanvas), new FrameworkPropertyMetadata(typeof(NaturalGeometriesCanvas)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(MotionCanvas), new FrameworkPropertyMetadata(typeof(MotionCanvas)));
         }
 
-        public NaturalGeometriesCanvas()
+        public MotionCanvas()
         {
             canvasCore.Invalidated += OnCanvasCoreInvalidated;
             Unloaded += OnUnloaded;
@@ -52,7 +52,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty PaintTasksProperty =
             DependencyProperty.Register(
-                nameof(PaintTasks), typeof(HashSet<IDrawableTask<SkiaSharpDrawingContext>>), typeof(NaturalGeometriesCanvas),
+                nameof(PaintTasks), typeof(HashSet<IDrawableTask<SkiaSharpDrawingContext>>), typeof(MotionCanvas),
                 new PropertyMetadata(new HashSet<IDrawableTask<SkiaSharpDrawingContext>>(), new PropertyChangedCallback(OnPaintTaskChanged)));
 
         public HashSet<IDrawableTask<SkiaSharpDrawingContext>> PaintTasks
@@ -72,7 +72,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             skiaElement = Template.FindName("skiaElement", this) as SKElement;
             if (skiaElement == null)
                 throw new Exception(
-                    $"SkiaElement not found. This was probably caused because the control {nameof(NaturalGeometriesCanvas)} template was overridden, " +
+                    $"SkiaElement not found. This was probably caused because the control {nameof(MotionCanvas)} template was overridden, " +
                     $"If you override the template please add an {nameof(SKElement)} to the template and name it 'skiaElement'");
 
             skiaElement.PaintSurface += OnPaintSurface;
@@ -120,7 +120,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         private static void OnPaintTaskChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            var naturalGeometries = (NaturalGeometriesCanvas)sender;
+            var naturalGeometries = (MotionCanvas)sender;
             naturalGeometries.canvasCore.SetPaintTasks(naturalGeometries.PaintTasks);
         }
     }

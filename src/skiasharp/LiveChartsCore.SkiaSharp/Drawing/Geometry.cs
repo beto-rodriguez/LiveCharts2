@@ -117,7 +117,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
                 const double toRadias = Math.PI / 180;
 
                 if (r < 0) r += 360;
-                r = r % 90;
+                r %= 90;
 
                 var w = (float) (Math.Cos(r * toRadias) * measure.Width + Math.Sin(r * toRadias) * measure.Height);
                 var h = (float) (Math.Sin(r * toRadias) * measure.Width + Math.Cos(r * toRadias) * measure.Height);

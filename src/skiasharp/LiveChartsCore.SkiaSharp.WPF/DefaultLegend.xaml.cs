@@ -89,7 +89,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
             switch (legendPosition)
             {
-                case LegendPosition.None:
+                case LegendPosition.Hidden:
                     Visibility = Visibility.Collapsed;
                     break;
                 case LegendPosition.Top:

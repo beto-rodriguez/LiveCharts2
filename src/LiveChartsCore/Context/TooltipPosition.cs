@@ -24,6 +24,7 @@ namespace LiveChartsCore.Context
 {
     public enum TooltipPosition
     {
+        Hidden,
         Top,
         Bottom,
         Left,

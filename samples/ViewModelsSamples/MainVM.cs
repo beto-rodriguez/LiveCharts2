@@ -45,76 +45,90 @@ namespace ViewModelsSamples
             //    new[] { 0f, 0.5f, 1 },
             //    SKShaderTileMode.Repeat);
 
-            Series = new ObservableCollection<ICartesianSeries<SkiaSharpDrawingContext>>
+            //Series = new ObservableCollection<ICartesianSeries<SkiaSharpDrawingContext>>
+            //{
+            //    new LineSeries<double>
+            //    {
+            //        Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
+            //        //DataLabelsBrush = new SolidColorPaintTask(new SKColor(0, 47, 255)),
+            //        //DataLabelFormatter = p => $"value: {p.PrimaryValue}",
+            //        //DataLabelsPosition = DataLabelsPosition.End
+            //    },
+            //    //new StackedAreaSeries<double>
+            //    //{
+            //    //    Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
+            //    //    //DataLabelsBrush = new SolidColorPaintTask(new SKColor(255, 0, 47)),
+            //    //    //DataLabelsPosition = DataLabelsPosition.Start
+            //    //},
+            //    // new StackedAreaSeries<double>
+            //    //{
+            //    //    Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
+            //    //    //DataLabelsBrush = new SolidColorPaintTask(new SKColor(30, 30, 30)),
+            //    //    //DataLabelsPosition = DataLabelsPosition.Middle
+            //    //},
+            //    //new StackedAreaSeries<double>
+            //    //{
+            //    //    Name = "columns 2",
+            //    //    Values = new[]{ 2d, 6, 4, 2, 7, 2, 8, 4, 2, 1, 3, 5},
+            //    //},
+            //    //new StackedAreaSeries<double>
+            //    //{
+            //    //    Name = "columns 3",
+            //    //    Values = new[]{ 7d, 3, 5, 6, 6, 9, 5, 1, 2, 4, 6, 7},
+            //    //},
+            //    //new ColumnSeries<int?>
+            //    //{
+            //    //    Name = "scatter",
+            //    //    Values = new ObservableCollection<int?>{ 2, null, null, null, null, null, null, null, null, null, null, 3},
+            //    //    Stroke = new SolidColorPaintTask(new SKColor(239, 108, 0), 2),
+            //    //    Fill = new SolidColorPaintTask(new SKColor(239, 108, 0, 30)),
+            //    //},
+            //    // new LineSeries<int?>
+            //    //{
+            //    //    Name = "lines",
+            //    //    Values = new ObservableCollection<int?>{ 1, 4, 2, null, 7, 5, 5, null, null, 6, 8, 3},
+            //    //    //ShapesFill = new SolidColorPaintTask(new SKColor(255, 255, 255)),
+            //    //    //ShapesStroke =  new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
+            //    //},
+            //    //new ScatterSeries<WeightedPoint>
+            //    //{
+            //    //    Name = "scatter 3",
+            //    //    Values = new[]
+            //    //    {
+            //    //        new WeightedPoint(1, 1, 1),
+            //    //        new WeightedPoint(2, 2, 2),
+            //    //        new WeightedPoint(3, 3, 3),
+            //    //        new WeightedPoint(4, 4, 4),
+            //    //        new WeightedPoint(5, 5, 5),
+            //    //    },
+            //    //},
+            //    //new ScatterSeries<double>
+            //    //{
+            //    //    Name = "scatter 3",
+            //    //    Values = new[]
+            //    //    {
+            //    //        2d,
+            //    //        4,
+            //    //        6,
+            //    //        8,
+            //    //        8,
+            //    //    },
+            //    //},
+            //};
+
+            var r = new Random();
+            Series = new ObservableCollection<ICartesianSeries<SkiaSharpDrawingContext>>();
+            for (int i = 0; i < 1; i++)
             {
-                new StackedAreaSeries<double>
+                var values = new ObservableCollection<int>();
+                var t = 0;
+                for (int j = 0; j < 50; j++)
                 {
-                    Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
-                    //DataLabelsBrush = new SolidColorPaintTask(new SKColor(0, 47, 255)),
-                    //DataLabelFormatter = p => $"value: {p.PrimaryValue}",
-                    //DataLabelsPosition = DataLabelsPosition.End
-                },
-                new StackedAreaSeries<double>
-                {
-                    Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
-                    //DataLabelsBrush = new SolidColorPaintTask(new SKColor(255, 0, 47)),
-                    //DataLabelsPosition = DataLabelsPosition.Start
-                },
-                 new StackedAreaSeries<double>
-                {
-                    Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
-                    //DataLabelsBrush = new SolidColorPaintTask(new SKColor(30, 30, 30)),
-                    //DataLabelsPosition = DataLabelsPosition.Middle
-                },
-                //new StackedAreaSeries<double>
-                //{
-                //    Name = "columns 2",
-                //    Values = new[]{ 2d, 6, 4, 2, 7, 2, 8, 4, 2, 1, 3, 5},
-                //},
-                //new StackedAreaSeries<double>
-                //{
-                //    Name = "columns 3",
-                //    Values = new[]{ 7d, 3, 5, 6, 6, 9, 5, 1, 2, 4, 6, 7},
-                //},
-                //new ColumnSeries<int?>
-                //{
-                //    Name = "scatter",
-                //    Values = new ObservableCollection<int?>{ 2, null, null, null, null, null, null, null, null, null, null, 3},
-                //    Stroke = new SolidColorPaintTask(new SKColor(239, 108, 0), 2),
-                //    Fill = new SolidColorPaintTask(new SKColor(239, 108, 0, 30)),
-                //},
-                // new LineSeries<int?>
-                //{
-                //    Name = "lines",
-                //    Values = new ObservableCollection<int?>{ 1, 4, 2, null, 7, 5, 5, null, null, 6, 8, 3},
-                //    //ShapesFill = new SolidColorPaintTask(new SKColor(255, 255, 255)),
-                //    //ShapesStroke =  new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
-                //},
-                //new ScatterSeries<WeightedPoint>
-                //{
-                //    Name = "scatter 3",
-                //    Values = new[]
-                //    {
-                //        new WeightedPoint(1, 1, 1),
-                //        new WeightedPoint(2, 2, 2),
-                //        new WeightedPoint(3, 3, 3),
-                //        new WeightedPoint(4, 4, 4),
-                //        new WeightedPoint(5, 5, 5),
-                //    },
-                //},
-                //new ScatterSeries<double>
-                //{
-                //    Name = "scatter 3",
-                //    Values = new[]
-                //    {
-                //        2d,
-                //        4,
-                //        6,
-                //        8,
-                //        8,
-                //    },
-                //},
-            };
+                    values.Add(t += r.Next(-10, 10));
+                }
+
+                Series.Add(new LineSeries<int> { Values = values, Fill = null, ShapesFill = null, ShapesStroke = null });
+            }
 
             YAxes = new List<IAxis<SkiaSharpDrawingContext>>
             {
@@ -122,7 +136,7 @@ namespace ViewModelsSamples
                 {
                     TextBrush = new TextPaintTask(new SKColor(90,90,90)),
                     SeparatorsBrush = new SolidColorPaintTask(new SKColor(180, 180, 180)),
-                    LabelsRotation = 45,
+                    //LabelsRotation = 10,
                     Labeler = (value, tick) => $"this {value}"
                 }
             };
@@ -133,7 +147,7 @@ namespace ViewModelsSamples
                 {
                     TextBrush = new TextPaintTask(new SKColor(90,90,90)),
                     SeparatorsBrush = new SolidColorPaintTask(new SKColor(180, 180, 180)),
-                    LabelsRotation = -45,
+                    //LabelsRotation = 80,
                     Labeler = (value, tick) => $"this {value}"
                 }
             };
@@ -141,11 +155,13 @@ namespace ViewModelsSamples
 
         public void Randomize()
         {
-            //var r = new Random();
-            //var values = (ObservableCollection<int?>)((LineSeries<int?>)Series[0]).Values;
-            //var i = r.Next(values.Count);
-            //var d = r.NextDouble();
-            //values[i] = (int)(d * 15);
+            var r = new Random();
+            var values = (ObservableCollection<int>)((LineSeries<int>)Series[r.Next(Series.Count)]).Values;
+
+            for (int i = 0; i < values.Count; i++)
+            {
+                values[i] = (int)(r.NextDouble() * 11);
+            }
 
             //if (d > 0.3)
             //{
