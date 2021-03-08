@@ -57,11 +57,13 @@ namespace ViewModelsSamples
                 {
                     Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
                     DataLabelsBrush = new SolidColorPaintTask(new SKColor(255, 0, 47)),
+                    DataLabelsPosition = DataLabelsPosition.Start
                 },
                  new ColumnSeries<double>
                 {
                     Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
-                    DataLabelsBrush = new SolidColorPaintTask(new SKColor(255, 0, 47)),
+                    DataLabelsBrush = new SolidColorPaintTask(new SKColor(30, 30, 30)),
+                    DataLabelsPosition = DataLabelsPosition.Middle
                 },
                 //new StackedAreaSeries<double>
                 //{

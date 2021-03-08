@@ -212,8 +212,8 @@ namespace LiveChartsCore
                         ? new PointF(middleX, y - labelSize.Height * 0.5f)
                         : new PointF(middleX, y + height + labelSize.Height * 0.5f),
                     DataLabelsPosition.Start => isGreaterThanPivot
-                        ? new PointF(middleX, y)
-                        : new PointF(middleX, y + height),
+                        ? new PointF(middleX, y + height + labelSize.Height * 0.5f)
+                        : new PointF(middleX, y - labelSize.Height * 0.5f),
                     DataLabelsPosition.Middle => new PointF(middleX, middleY),
                     _ => throw new NotImplementedException(),
                 };
