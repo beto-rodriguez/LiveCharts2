@@ -69,6 +69,8 @@ namespace LiveChartsCore
 
             if (Fill != null) chart.Canvas.AddDrawableTask(Fill);
             if (Stroke != null) chart.Canvas.AddDrawableTask(Stroke);
+            if (DataLabelsBrush != null) chart.Canvas.AddDrawableTask(DataLabelsBrush);
+            var dls = unchecked((float)DataLabelsSize);
 
             var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
             var ts = OnPointCreated ?? DefaultOnPointCreated;
@@ -117,8 +119,9 @@ namespace LiveChartsCore
                 var sy = stacker.GetStack(point);
                 var primaryI = primaryScale.ScaleToUi(sy.Start);
                 var primaryJ = primaryScale.ScaleToUi(sy.End);
+                var x = secondary - uwm + cp;
 
-                sizedGeometry.X = secondary - uwm + cp;
+                sizedGeometry.X = x;
                 sizedGeometry.Y = primaryJ;
                 sizedGeometry.Width = uw;
                 sizedGeometry.Height = primaryI - primaryJ;
@@ -127,6 +130,34 @@ namespace LiveChartsCore
                 point.Context.HoverArea = new RectangleHoverArea().SetDimensions(secondary - uwm + cp, primaryJ, uw, primaryI - primaryJ);
                 OnPointMeasured(point, sizedGeometry);
                 chart.MeasuredDrawables.Add(sizedGeometry);
+
+                if (DataLabelsBrush != null)
+                {
+                    if (point.Context.Label == null)
+                    {
+                        var l = new TLabel { X = secondary - uwm + cp, Y = p };
+
+                        l.TransitionateProperties(nameof(l.X), nameof(l.Y))
+                            .WithAnimation(a =>
+                                a.WithDuration(chart.AnimationsSpeed)
+                                .WithEasingFunction(chart.EasingFunction));
+
+                        l.CompleteAllTransitions();
+                        point.Context.Label = l;
+                        DataLabelsBrush.AddGeometyToPaintTask(l);
+                    }
+
+                    point.Context.Label.Text = DataLabelFormatter(point);
+                    point.Context.Label.TextSize = dls;
+                    point.Context.Label.Padding = DataLabelsPadding;
+                    var labelPosition = GetLabelPosition(
+                        x, primaryJ, uw, primaryI - primaryJ, point.Context.Label.Measure(DataLabelsBrush), DataLabelsPosition,
+                        SeriesProperties, point.PrimaryValue > Pivot);
+                    point.Context.Label.X = labelPosition.X;
+                    point.Context.Label.Y = labelPosition.Y;
+
+                    chart.MeasuredDrawables.Add(point.Context.Label);
+                }
             }
         }
 
