@@ -122,7 +122,8 @@ namespace ViewModelsSamples
                 {
                     TextBrush = new TextPaintTask(new SKColor(90,90,90)),
                     SeparatorsBrush = new SolidColorPaintTask(new SKColor(180, 180, 180)),
-                    LabelsRotation = 0
+                    LabelsRotation = 45,
+                    Labeler = (value, tick) => $"this {value}"
                 }
             };
 
@@ -132,7 +133,7 @@ namespace ViewModelsSamples
                 {
                     TextBrush = new TextPaintTask(new SKColor(90,90,90)),
                     SeparatorsBrush = new SolidColorPaintTask(new SKColor(180, 180, 180)),
-                    LabelsRotation = 0,
+                    LabelsRotation = -45,
                     Labeler = (value, tick) => $"this {value}"
                 }
             };

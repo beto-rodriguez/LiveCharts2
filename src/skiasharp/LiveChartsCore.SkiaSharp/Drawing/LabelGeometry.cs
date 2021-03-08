@@ -74,7 +74,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
 
         public override SKPoint GetPosition(SkiaSharpDrawingContext context, SKPaint paint)
         {
-            var size = OnMeasure(context.PaintTask);
+            var size = Measure(context.PaintTask);
             float dx = 0f, dy = 0f;
             switch (VerticalAlign)
             {

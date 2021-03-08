@@ -237,13 +237,17 @@ namespace LiveChartsCore
 
             var w = 0f;
             var h = 0f;
+            var r = (float)LabelsRotation;
 
             for (var i = start; i <= dataBounds.max; i += s)
             {
-                var textGeometry = new TTextGeometry();
-                textGeometry.Text = labeler(i, axisTick);
-                textGeometry.TextSize = ts;
-                textGeometry.Padding = padding;
+                var textGeometry = new TTextGeometry
+                {
+                    Text = labeler(i, axisTick),
+                    TextSize = ts,
+                    Rotation = r,
+                    Padding = padding
+                };
                 var m = textGeometry.Measure(TextBrush); // TextBrush.MeasureText(labeler(i, axisTick));
                 if (m.Width > w) w = m.Width;
                 if (m.Height > h) h = m.Height;

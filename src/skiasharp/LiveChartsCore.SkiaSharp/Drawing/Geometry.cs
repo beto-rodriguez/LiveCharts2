@@ -25,6 +25,7 @@ using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
+using System;
 using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing
@@ -108,7 +109,23 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
 
         public SizeF Measure(IDrawableTask<SkiaSharpDrawingContext> drawableTask)
         {
-            return OnMeasure((PaintTask) drawableTask);
+            var measure = OnMeasure((PaintTask)drawableTask);
+
+            var r = Rotation;
+            if (Math.Abs(r) > 0)
+            {
+                const double toRadias = Math.PI / 180;
+
+                if (r < 0) r += 360;
+                r = r % 90;
+
+                var w = (float) (Math.Cos(r * toRadias) * measure.Width + Math.Sin(r * toRadias) * measure.Height);
+                var h = (float) (Math.Sin(r * toRadias) * measure.Width + Math.Cos(r * toRadias) * measure.Height);
+
+                measure = new SizeF(w, h);
+            }
+
+            return measure;
         }
 
         protected abstract SizeF OnMeasure(PaintTask paintTaks);
