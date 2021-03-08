@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Common;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -43,7 +44,10 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
         public Align HorizontalAlign { get; set; } = Align.Middle;
 
         public string Text { get => text; set => text = value; }
+
         public float TextSize { get => textSizeProperty.GetMovement(this); set => textSizeProperty.SetMovement(value, this); }
+
+        public Padding Padding { get; set; }
 
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
@@ -65,7 +69,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
             var bounds = new SKRect();
 
             p.MeasureText(text, ref bounds);
-            return new SizeF(bounds.Size.Width, bounds.Size.Height);
+            return new SizeF(bounds.Size.Width + Padding.Left + Padding.Right, bounds.Size.Height + Padding.Top + Padding.Bottom);
         }
 
         public override SKPoint GetPosition(SkiaSharpDrawingContext context, SKPaint paint)
@@ -84,7 +88,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
                 case Align.Middle: dx = size.Width * 0.5f; break;
                 case Align.End: dx = size.Width; break;
             }
-            return new SKPoint(X - dx, Y + dy);
+            return new SKPoint(X - dx + Padding.Left, Y + dy - Padding.Top);
         }
     }
 }

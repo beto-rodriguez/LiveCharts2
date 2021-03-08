@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
@@ -29,8 +28,6 @@ namespace LiveChartsCore.SkiaSharpView.Painting
 {
     public class TextPaintTask : PaintTask
     {
-        private readonly FloatMotionProperty textSizeTransition;
-
         public TextPaintTask()
         {
 

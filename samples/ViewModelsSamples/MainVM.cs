@@ -47,13 +47,22 @@ namespace ViewModelsSamples
 
             Series = new ObservableCollection<ICartesianSeries<SkiaSharpDrawingContext>>
             {
-                //new RowSeries<double>
-                //{
-                //    Name = "bars",
-                //    Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
-                //    Stroke = new SolidColorPaintTask(new SKColor(217, 47, 47), 2),
-                //    Fill = new SolidColorPaintTask(new SKColor(217, 47, 47, 30)),
-                //},
+                new ColumnSeries<double>
+                {
+                    Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
+                    DataLabelsBrush = new SolidColorPaintTask(new SKColor(0, 47, 255)),
+                    DataLabelFormatter = p => $"value: {p.PrimaryValue}"
+                },
+                new ColumnSeries<double>
+                {
+                    Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
+                    DataLabelsBrush = new SolidColorPaintTask(new SKColor(255, 0, 47)),
+                },
+                 new ColumnSeries<double>
+                {
+                    Values = new[]{ 1d, 2, 3, -1, -2, -3, 1, 2, 3, -1, -2, -3},
+                    DataLabelsBrush = new SolidColorPaintTask(new SKColor(255, 0, 47)),
+                },
                 //new StackedAreaSeries<double>
                 //{
                 //    Name = "columns 2",
@@ -78,30 +87,30 @@ namespace ViewModelsSamples
                 //    //ShapesFill = new SolidColorPaintTask(new SKColor(255, 255, 255)),
                 //    //ShapesStroke =  new SolidColorPaintTask(new SKColor(2, 136, 209), 3),
                 //},
-                new ScatterSeries<WeightedPoint>
-                {
-                    Name = "scatter 3",
-                    Values = new[]
-                    {
-                        new WeightedPoint(1, 1, 1),
-                        new WeightedPoint(2, 2, 2),
-                        new WeightedPoint(3, 3, 3),
-                        new WeightedPoint(4, 4, 4),
-                        new WeightedPoint(5, 5, 5),
-                    },
-                },
-                new ScatterSeries<double>
-                {
-                    Name = "scatter 3",
-                    Values = new[]
-                    {
-                        2d,
-                        4,
-                        6,
-                        8,
-                        8,
-                    },
-                },
+                //new ScatterSeries<WeightedPoint>
+                //{
+                //    Name = "scatter 3",
+                //    Values = new[]
+                //    {
+                //        new WeightedPoint(1, 1, 1),
+                //        new WeightedPoint(2, 2, 2),
+                //        new WeightedPoint(3, 3, 3),
+                //        new WeightedPoint(4, 4, 4),
+                //        new WeightedPoint(5, 5, 5),
+                //    },
+                //},
+                //new ScatterSeries<double>
+                //{
+                //    Name = "scatter 3",
+                //    Values = new[]
+                //    {
+                //        2d,
+                //        4,
+                //        6,
+                //        8,
+                //        8,
+                //    },
+                //},
             };
 
             YAxes = new List<IAxis<SkiaSharpDrawingContext>>

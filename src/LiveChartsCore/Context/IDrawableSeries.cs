@@ -21,6 +21,8 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Common;
+using System;
 
 namespace LiveChartsCore.Context
 {
@@ -29,6 +31,11 @@ namespace LiveChartsCore.Context
     {
         IDrawableTask<TDrawingContext>? Stroke { get; set; }
         IDrawableTask<TDrawingContext>? Fill { get; set; }
+        IDrawableTask<TDrawingContext>? DataLabelsBrush { get; set; }
+        double DataLabelsSize { get; set; }
+        DataLabelsPosition DataLabelsPosition { get; set; }
+        Padding DataLabelsPadding { get; set; }
+        Func<IChartPoint, string> DataLabelFormatter { get; set; }
 
         PaintContext<TDrawingContext> DefaultPaintContext { get; }
 

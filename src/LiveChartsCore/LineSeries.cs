@@ -132,7 +132,7 @@ namespace LiveChartsCore
 
             var segments = enableNullSplitting
                 ? SplitEachNull(points, xScale, yScale)
-                : new ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>[][] { points };            
+                : new ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>[][] { points };
 
             StackPosition<TDrawingContext>? stacker = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked
                 ? chart.SeriesContext.GetStackPosition(this, GetStackGroup())
@@ -453,14 +453,14 @@ namespace LiveChartsCore
             paintContext = context;
         }
 
-        private IEnumerable<BezierData<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>> GetSpline(
-            ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>[] points,
+        private IEnumerable<BezierData<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>> GetSpline(
+            ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>[] points,
             ScaleContext xScale,
             ScaleContext yScale,
             StackPosition<TDrawingContext>? stacker)
         {
             if (points.Length == 0) yield break;
-            IChartPoint<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext> previous, current, next, next2;
+            IChartPoint<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext> previous, current, next, next2;
 
             unchecked
             {
@@ -533,7 +533,7 @@ namespace LiveChartsCore
                         y0 = c1Y;
                     }
 
-                    yield return new BezierData<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>(points[i])
+                    yield return new BezierData<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>(points[i])
                     {
                         IsFirst = i == 0,
                         IsLast = i == points.Length - 1,
@@ -548,13 +548,13 @@ namespace LiveChartsCore
             }
         }
 
-        private IEnumerable<ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>[]> SplitEachNull(
-            ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>[] points,
+        private IEnumerable<ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>[]> SplitEachNull(
+            ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>[] points,
             ScaleContext xScale,
             ScaleContext yScale)
         {
-            List<ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>> l =
-                new List<ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>>(points.Length);
+            List<ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>> l =
+                new List<ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>>(points.Length);
 
             foreach (var point in points)
             {
@@ -577,7 +577,7 @@ namespace LiveChartsCore
                     }
 
                     if (l.Count > 0) yield return l.ToArray();
-                    l = new List<ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TDrawingContext>>(points.Length);
+                    l = new List<ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>>(points.Length);
                     continue;
                 }
 

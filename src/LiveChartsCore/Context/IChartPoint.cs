@@ -39,10 +39,11 @@ namespace LiveChartsCore.Context
         IChartPointContext Context { get; }
     }
 
-    public interface IChartPoint<TVisual, TDrawingContext>: IChartPoint
+    public interface IChartPoint<TVisual, TLabel, TDrawingContext>: IChartPoint
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>
+        where TLabel : class,  ILabelGeometry<TDrawingContext>
     {
-        new ChartPointContext<TVisual, TDrawingContext> Context { get; }
+        new ChartPointContext<TVisual, TLabel, TDrawingContext> Context { get; }
     }
 }

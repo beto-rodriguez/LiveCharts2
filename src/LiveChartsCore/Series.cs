@@ -38,11 +38,11 @@ namespace LiveChartsCore
     {
         private readonly CollectionDeepObserver<TModel> observer;
         private object fetchedFor = new object();
-        private ChartPoint<TModel, TVisual, TDrawingContext>[] fetched = new ChartPoint<TModel, TVisual, TDrawingContext>[0];
+        private ChartPoint<TModel, TVisual, TLabel, TDrawingContext>[] fetched = new ChartPoint<TModel, TVisual, TLabel, TDrawingContext>[0];
         protected readonly bool isValueType;
         protected readonly bool implementsICP;
-        protected readonly Dictionary<int, ChartPoint<TModel, TVisual, TDrawingContext>> byValueVisualMap = new Dictionary<int, ChartPoint<TModel, TVisual, TDrawingContext>>();
-        protected readonly Dictionary<TModel, ChartPoint<TModel, TVisual, TDrawingContext>> byReferenceVisualMap = new Dictionary<TModel, ChartPoint<TModel, TVisual, TDrawingContext>>();
+        protected readonly Dictionary<int, ChartPoint<TModel, TVisual, TLabel, TDrawingContext>> byValueVisualMap = new Dictionary<int, ChartPoint<TModel, TVisual, TLabel, TDrawingContext>>();
+        protected readonly Dictionary<TModel, ChartPoint<TModel, TVisual, TLabel, TDrawingContext>> byReferenceVisualMap = new Dictionary<TModel, ChartPoint<TModel, TVisual, TLabel, TDrawingContext>>();
         private readonly HashSet<IChart> subscribedTo = new HashSet<IChart>();
         private readonly SeriesProperties properties;
         private IEnumerable<TModel>? values;
@@ -60,7 +60,7 @@ namespace LiveChartsCore
                     NotifySubscribers();
                 });
             var t = typeof(TModel);
-            implementsICP = typeof(IChartPoint<TVisual, TDrawingContext>).IsAssignableFrom(t);
+            implementsICP = typeof(IChartPoint<TVisual, TLabel, TDrawingContext>).IsAssignableFrom(t);
             isValueType = t.IsValueType;
         }
 
@@ -99,7 +99,7 @@ namespace LiveChartsCore
         public virtual int GetStackGroup() => 0;
 
         /// <inheritdoc/>
-        public virtual ChartPoint<TModel, TVisual, TDrawingContext>[] Fetch(IChart chart)
+        public virtual ChartPoint<TModel, TVisual, TLabel, TDrawingContext>[] Fetch(IChart chart)
         {
             if (fetchedFor == chart.MeasureWorker) return fetched;
 
@@ -181,7 +181,7 @@ namespace LiveChartsCore
             observer.Dispose(values);
         }
 
-        protected virtual void OnPointMeasured(IChartPoint<TVisual, TDrawingContext> chartPoint, TVisual visual) { }
+        protected virtual void OnPointMeasured(IChartPoint<TVisual, TLabel, TDrawingContext> chartPoint, TVisual visual) { }
 
         protected void OnAddedToState(TVisual visual, IChartView<TDrawingContext> chart) => (OnPointAddedToState ?? DefaultOnPointAddedToSate)(visual, chart);
 
@@ -191,7 +191,50 @@ namespace LiveChartsCore
 
         protected virtual void DefaultOnRemovedFromState(TVisual visual, IChartView<TDrawingContext> chart) { }
 
-        private IEnumerable<ChartPoint<TModel, TVisual, TDrawingContext>> GetPointsFromICP(IChart chart)
+        protected virtual PointF GetLabelPosition(
+            float x,
+            float y,
+            float width,
+            float height,
+            SizeF labelSize,
+            DataLabelsPosition position,
+            SeriesProperties seriesProperties,
+            bool isGreaterThanPivot)
+        {
+            var middleX = (x + x + width) * 0.5f;
+            var middleY = (y + y + height) * 0.5f;
+
+            if ((seriesProperties & SeriesProperties.VerticalOrientation) == SeriesProperties.VerticalOrientation)
+            {
+                return position switch
+                {
+                    DataLabelsPosition.End => isGreaterThanPivot
+                        ? new PointF(middleX, y - labelSize.Height * 0.5f)
+                        : new PointF(middleX, y + height + labelSize.Height * 0.5f),
+                    DataLabelsPosition.Start => isGreaterThanPivot
+                        ? new PointF(middleX, y)
+                        : new PointF(middleX, y + height),
+                    DataLabelsPosition.Middle => new PointF(middleX, middleY),
+                    _ => throw new NotImplementedException(),
+                };
+            }
+            else
+            {
+                return position switch
+                {
+                    DataLabelsPosition.End => isGreaterThanPivot
+                        ? new PointF(middleX - labelSize.Width * 0.5f, y - labelSize.Height * 0.5f)
+                        : new PointF(middleX - labelSize.Width * 0.5f, y + height + labelSize.Height * 0.5f),
+                    DataLabelsPosition.Start => isGreaterThanPivot
+                        ? new PointF(middleX, y)
+                        : new PointF(middleX, y + height),
+                    DataLabelsPosition.Middle => new PointF(middleX, middleY),
+                    _ => throw new NotImplementedException(),
+                };
+            }
+        }
+
+        private IEnumerable<ChartPoint<TModel, TVisual, TLabel, TDrawingContext>> GetPointsFromICP(IChart chart)
         {
             throw new NotImplementedException();
 
@@ -208,7 +251,7 @@ namespace LiveChartsCore
             //}
         }
 
-        private IEnumerable<ChartPoint<TModel, TVisual, TDrawingContext>> GetMappedPoints(IChart chart)
+        private IEnumerable<ChartPoint<TModel, TVisual, TLabel, TDrawingContext>> GetMappedPoints(IChart chart)
         {
             if (values == null) yield break;
 
@@ -219,8 +262,8 @@ namespace LiveChartsCore
             {
                 foreach (var item in values)
                 {
-                    if (!byValueVisualMap.TryGetValue(index, out ChartPoint<TModel, TVisual, TDrawingContext> cp))
-                        byValueVisualMap[index] = cp = new ChartPoint<TModel, TVisual, TDrawingContext>(chart.View, this);
+                    if (!byValueVisualMap.TryGetValue(index, out var cp))
+                        byValueVisualMap[index] = cp = new ChartPoint<TModel, TVisual, TLabel, TDrawingContext>(chart.View, this);
 
                     cp.Context.Index = index++;
                     cp.Context.DataSource = item;
@@ -233,8 +276,8 @@ namespace LiveChartsCore
             {
                 foreach (var item in values)
                 {
-                    if (!byReferenceVisualMap.TryGetValue(item, out ChartPoint<TModel, TVisual, TDrawingContext> cp))
-                        byReferenceVisualMap[item] = cp = new ChartPoint<TModel, TVisual, TDrawingContext>(chart.View, this);
+                    if (!byReferenceVisualMap.TryGetValue(item, out var cp))
+                        byReferenceVisualMap[item] = cp = new ChartPoint<TModel, TVisual, TLabel, TDrawingContext>(chart.View, this);
 
                     cp.Context.Index = index++;
                     cp.Context.DataSource = item;
@@ -245,7 +288,7 @@ namespace LiveChartsCore
             }
         }
 
-        private IEnumerable<TooltipPoint> FilterTooltipPoints(ChartPoint<TModel, TVisual, TDrawingContext>?[] points, IChart chart, PointF pointerPosition)
+        private IEnumerable<TooltipPoint> FilterTooltipPoints(ChartPoint<TModel, TVisual, TLabel, TDrawingContext>?[] points, IChart chart, PointF pointerPosition)
         {
             foreach (var point in points)
             {

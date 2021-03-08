@@ -24,15 +24,16 @@ using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Context
 {
-    public class ChartPoint<TModel, TVisual, TDrawingContext> : IChartPoint<TVisual, TDrawingContext>, IChartPoint
+    public class ChartPoint<TModel, TVisual, TLabel, TDrawingContext> : IChartPoint<TVisual, TLabel, TDrawingContext>, IChartPoint
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
-        private readonly ChartPointContext<TVisual, TDrawingContext> pointContext;
+        private readonly ChartPointContext<TVisual, TLabel, TDrawingContext> pointContext;
 
         public ChartPoint(IChartView chart, ISeries series)
         {
-            pointContext = new ChartPointContext<TVisual, TDrawingContext>(chart, series);
+            pointContext = new ChartPointContext<TVisual, TLabel, TDrawingContext>(chart, series);
         }
 
         /// <inheritdoc/>
@@ -51,7 +52,7 @@ namespace LiveChartsCore.Context
         public float QuaternaryValue { get; set; }
 
         /// <inheritdoc/>
-        public ChartPointContext<TVisual, TDrawingContext> Context => pointContext;
+        public ChartPointContext<TVisual, TLabel, TDrawingContext> Context => pointContext;
 
         IChartPointContext IChartPoint.Context => pointContext;
     }

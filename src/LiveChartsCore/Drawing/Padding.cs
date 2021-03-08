@@ -20,15 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing.Common;
-
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Drawing.Common
 {
-    public interface ILabelGeometry<TDrawingContext> : IGeometry<TDrawingContext>
-         where TDrawingContext : DrawingContext
+    public struct Padding
     {
-        Padding Padding { get; set; }
-        string Text { get; set; }
-        float TextSize { get; set; }
+        public float Left { get; set; }
+        public float Right { get; set; }
+        public float Top { get; set; }
+        public float Bottom { get; set; }
     }
 }

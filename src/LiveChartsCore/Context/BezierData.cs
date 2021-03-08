@@ -24,18 +24,19 @@ using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Context
 {
-    public class BezierData<TVisual, TDrawingContext>
+    public class BezierData<TVisual, TLabel, TDrawingContext>
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
-        private IChartPoint<TVisual, TDrawingContext> targetPoint;
+        private IChartPoint<TVisual, TLabel, TDrawingContext> targetPoint;
 
-        public BezierData(IChartPoint<TVisual, TDrawingContext> chartPoint)
+        public BezierData(IChartPoint<TVisual, TLabel, TDrawingContext> chartPoint)
         {
             targetPoint = chartPoint;
         }
 
-        public IChartPoint<TVisual, TDrawingContext> TargetPoint { get => targetPoint; set => targetPoint = value; }
+        public IChartPoint<TVisual, TLabel, TDrawingContext> TargetPoint { get => targetPoint; set => targetPoint = value; }
         public float X0 { get; set; }
         public float Y0 { get; set; }
         public float X1 { get; set; }

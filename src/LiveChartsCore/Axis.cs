@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Common;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -29,10 +30,10 @@ using System.Linq;
 
 namespace LiveChartsCore
 {
-    public class Axis<TDrawingContext, TTextGeometry, TLineGeometry>: IAxis<TDrawingContext>
-        where TDrawingContext: DrawingContext
-        where TTextGeometry: ILabelGeometry<TDrawingContext>, new()
-        where TLineGeometry: ILineGeometry<TDrawingContext>, new()
+    public class Axis<TDrawingContext, TTextGeometry, TLineGeometry> : IAxis<TDrawingContext>
+        where TDrawingContext : DrawingContext
+        where TTextGeometry : ILabelGeometry<TDrawingContext>, new()
+        where TLineGeometry : ILineGeometry<TDrawingContext>, new()
     {
         private const float wedgeLength = 8;
         internal AxisOrientation orientation;
@@ -40,12 +41,13 @@ namespace LiveChartsCore
         private Bounds dataBounds = new Bounds();
         private Bounds previousDataBounds = new Bounds();
         private double labelsRotation;
-        private readonly Dictionary<string, AxisVisualSeprator<TDrawingContext>> activeSeparators = 
+        private readonly Dictionary<string, AxisVisualSeprator<TDrawingContext>> activeSeparators =
             new Dictionary<string, AxisVisualSeprator<TDrawingContext>>();
         // xo (x origin) and yo (y origin) are the distance to the center of the axis to the control bounds
         internal float xo = 0f, yo = 0f;
         private AxisPosition position = AxisPosition.LeftOrBottom;
         private Func<double, AxisTick, string>? labeler;
+        private Padding padding = new Padding { Left = 8, Top = 8, Bottom = 8, Right = 9 };
 
         public Bounds DataBounds
         {
@@ -61,12 +63,13 @@ namespace LiveChartsCore
         float IAxis<TDrawingContext>.Xo { get => xo; set => xo = value; }
         float IAxis<TDrawingContext>.Yo { get => yo; set => yo = value; }
 
+        public Padding Padding { get => padding; set => padding = value; }
         public Func<double, AxisTick, string> Labeler { get => labeler ?? Labelers.Default; set => labeler = value; }
 
         public double Step { get => step; set => step = value; }
 
         public double UnitWith { get; set; } = 1;
-        
+
         public AxisPosition Position { get => position; set => position = value; }
         public double LabelsRotation { get => labelsRotation; set => labelsRotation = value; }
 
@@ -162,7 +165,8 @@ namespace LiveChartsCore
                             lineGeometry.X1 = x;
                             lineGeometry.Y = lyi;
                             lineGeometry.Y1 = lyj;
-                        } else
+                        }
+                        else
                         {
                             lineGeometry.X = lxi;
                             lineGeometry.X1 = lxj;
@@ -179,6 +183,7 @@ namespace LiveChartsCore
                 if (visualSeparator.Text != null)
                 {
                     visualSeparator.Text.Text = label;
+                    visualSeparator.Text.Padding = padding;
                     visualSeparator.Text.X = x;
                     visualSeparator.Text.Y = y;
                     if (hasRotation) visualSeparator.Text.Rotation = r;
@@ -238,7 +243,7 @@ namespace LiveChartsCore
                 var textGeometry = new TTextGeometry();
                 textGeometry.Text = labeler(i, axisTick);
                 textGeometry.TextSize = ts;
-
+                textGeometry.Padding = padding;
                 var m = textGeometry.Measure(TextBrush); // TextBrush.MeasureText(labeler(i, axisTick));
                 if (m.Width > w) w = m.Width;
                 if (m.Height > h) h = m.Height;
@@ -257,16 +262,16 @@ namespace LiveChartsCore
         {
             return new Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             {
-               Labeler = labeler ?? Labelers.Default,
-               Step = step,
-               UnitWith = UnitWith,
-               Position = position,
-               LabelsRotation = labelsRotation,
-               TextBrush = TextBrush,
-               SeparatorsBrush = SeparatorsBrush,
-               ShowSeparatorLines = ShowSeparatorLines,
-               ShowSeparatorWedges = ShowSeparatorWedges,
-               AlternativeSeparatorForeground = AlternativeSeparatorForeground
+                Labeler = labeler ?? Labelers.Default,
+                Step = step,
+                UnitWith = UnitWith,
+                Position = position,
+                LabelsRotation = labelsRotation,
+                TextBrush = TextBrush,
+                SeparatorsBrush = SeparatorsBrush,
+                ShowSeparatorLines = ShowSeparatorLines,
+                ShowSeparatorWedges = ShowSeparatorWedges,
+                AlternativeSeparatorForeground = AlternativeSeparatorForeground
             };
         }
     }

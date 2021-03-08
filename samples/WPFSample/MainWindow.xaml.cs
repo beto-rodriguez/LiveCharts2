@@ -11,7 +11,7 @@ namespace WPFSample
     {
         private CartesianViewModel viewModel;
 
-        public MainWindow()
+       public MainWindow()
         {
             InitializeComponent();
 

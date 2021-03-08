@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Common;
 using System;
 
 namespace LiveChartsCore
@@ -71,6 +72,15 @@ namespace LiveChartsCore
                 OnPaintContextChanged();
             }
         }
+        public IDrawableTask<TDrawingContext>? DataLabelsBrush { get; set; }
+
+        public double DataLabelsSize { get; set; } = 16;
+
+        public DataLabelsPosition DataLabelsPosition { get; set; }
+
+        public Padding DataLabelsPadding { get; set; } = new Padding { Left = 6, Top = 8, Right = 6, Bottom = 8 };
+
+        public Func<IChartPoint, string> DataLabelFormatter { get; set; } = (point) => $"{point.PrimaryValue}";
 
         public PaintContext<TDrawingContext> DefaultPaintContext => paintContext;
 

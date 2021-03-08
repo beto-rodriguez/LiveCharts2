@@ -27,9 +27,10 @@ namespace LiveChartsCore.Context
     /// <summary>
     /// Defines all the involved variables a point inside a chart requires.
     /// </summary>
-    public class ChartPointContext<TVisual, TDrawingContext>: IChartPointContext<TVisual>
+    public class ChartPointContext<TVisual, TLabel, TDrawingContext>: IChartPointContext<TVisual, TLabel>
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>
+        where TLabel : class, ILabelGeometry<TDrawingContext>
     {
         private readonly IChartView chart;
         private readonly ISeries series;
@@ -56,6 +57,13 @@ namespace LiveChartsCore.Context
         public TVisual? Visual { get; internal set; }
 
         object? IChartPointContext.Visual => Visual;
+
+        /// <summary>
+        /// Gets the label element in the UI.
+        /// </summary>
+        public TLabel? Label { get; internal set; }
+
+        object? IChartPointContext.Label => Label;
 
         /// <summary>
         /// Gets or sets the area that triggers the ToolTip.

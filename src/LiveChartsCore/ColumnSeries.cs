@@ -22,11 +22,12 @@
 
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Common;
 using System;
 
 namespace LiveChartsCore
 {
-    public class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext>: BarSeries<TModel, TVisual, TLabel, TDrawingContext>
+    public class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
@@ -47,6 +48,7 @@ namespace LiveChartsCore
             float uw = secondaryScale.ScaleToUi(1f) - secondaryScale.ScaleToUi(0f);
             float uwm = 0.5f * uw;
             float sw = Stroke?.StrokeWidth ?? 0;
+            float swh = sw * 0.5f;
             float p = primaryScale.ScaleToUi(unchecked((float)Pivot));
 
             var pos = chart.SeriesContext.GetColumnPostion(this);
@@ -68,6 +70,8 @@ namespace LiveChartsCore
 
             if (Fill != null) chart.Canvas.AddDrawableTask(Fill);
             if (Stroke != null) chart.Canvas.AddDrawableTask(Stroke);
+            if (DataLabelsBrush != null) chart.Canvas.AddDrawableTask(DataLabelsBrush);
+            var dls = unchecked((float)DataLabelsSize);
 
             var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
             var ts = OnPointCreated ?? DefaultOnPointCreated;
@@ -111,18 +115,46 @@ namespace LiveChartsCore
                 }
 
                 var sizedGeometry = point.Context.Visual;
-
                 var cy = point.PrimaryValue > Pivot ? primary : primary - b;
+                var x = secondary - uwm + cp;
 
-                sizedGeometry.X = secondary - uwm + cp;
+                sizedGeometry.X = x;
                 sizedGeometry.Y = cy;
                 sizedGeometry.Width = uw;
                 sizedGeometry.Height = b;
                 sizedGeometry.RemoveOnCompleted = false;
 
-                point.Context.HoverArea = new RectangleHoverArea().SetDimensions(secondary - uwm + cp, cy, uw, b);
+                var ha = new RectangleHoverArea().SetDimensions(secondary - uwm + cp, cy, uw, b);
+                point.Context.HoverArea = ha;
                 OnPointMeasured(point, sizedGeometry);
                 chart.MeasuredDrawables.Add(sizedGeometry);
+
+                if (DataLabelsBrush != null)
+                {
+                    if (point.Context.Label == null)
+                    {
+                        var l = new TLabel { X = secondary - uwm + cp, Y = p };
+
+                        l.TransitionateProperties(nameof(l.X), nameof(l.Y))
+                            .WithAnimation(a =>
+                                a.WithDuration(chart.AnimationsSpeed)
+                                .WithEasingFunction(chart.EasingFunction));
+
+                        l.CompleteAllTransitions();
+                        point.Context.Label = l;
+                        DataLabelsBrush.AddGeometyToPaintTask(l);
+                    }
+
+                    point.Context.Label.Text = DataLabelFormatter(point);
+                    point.Context.Label.TextSize = dls;
+                    point.Context.Label.Padding = new Padding { Left = 10, Right = 10, Top = 10, Bottom = 10 };
+                    var labelPosition = GetLabelPosition(
+                        x, cy, uw, b, point.Context.Label.Measure(DataLabelsBrush), DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot);
+                    point.Context.Label.X = labelPosition.X;
+                    point.Context.Label.Y = labelPosition.Y;
+
+                    chart.MeasuredDrawables.Add(point.Context.Label);
+                }
             }
         }
 
