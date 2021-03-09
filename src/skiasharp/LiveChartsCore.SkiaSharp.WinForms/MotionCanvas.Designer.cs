@@ -51,7 +51,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             this.Controls.Add(this.skControl2);
             this.Name = "MotionCanvas";
             this.ResumeLayout(false);
-
         }
 
         #endregion

@@ -71,7 +71,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set { SetValue(YAxesProperty, value); }
         }
 
-        public override void InitializeCore()
+        protected override void InitializeCore()
         {
             core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSK.DefaultPlatformBuilder, canvas.CanvasCore);
             legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;

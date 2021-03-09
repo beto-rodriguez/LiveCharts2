@@ -37,7 +37,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     {
         protected Chart<SkiaSharpDrawingContext> core;
         protected MotionCanvas canvas;
-
         protected IChartLegend<SkiaSharpDrawingContext> legend;
         protected IChartTooltip<SkiaSharpDrawingContext> tooltip;
         private readonly ActionThrottler mouseMoveThrottler;
@@ -45,6 +44,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public Chart()
         {
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSK.DefaultPlatformBuilder);
+
             var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<SkiaSharpDrawingContext>();
             var initializer = stylesBuilder.GetInitializer();
             if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
@@ -95,7 +96,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; }
 
-        public abstract void InitializeCore();
+        protected abstract void InitializeCore();
 
         public override void OnApplyTemplate()
         {

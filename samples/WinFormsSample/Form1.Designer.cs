@@ -40,7 +40,7 @@ namespace WinFormsSample
             this.cartesianChart1.AnimationsSpeed = System.TimeSpan.Parse("00:00:00.5000000");
             this.cartesianChart1.DrawMargin = null;
             this.cartesianChart1.LegendOrientation = LiveChartsCore.Context.LegendOrientation.Auto;
-            this.cartesianChart1.LegendPosition = LiveChartsCore.Context.LegendPosition.None;
+            this.cartesianChart1.LegendPosition = LiveChartsCore.Context.LegendPosition.Hidden;
             this.cartesianChart1.Location = new System.Drawing.Point(12, 12);
             this.cartesianChart1.Name = "cartesianChart1";
             this.cartesianChart1.Size = new System.Drawing.Size(761, 421);
