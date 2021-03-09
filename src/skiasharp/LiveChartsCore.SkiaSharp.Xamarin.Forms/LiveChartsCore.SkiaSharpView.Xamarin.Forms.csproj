@@ -15,10 +15,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="MotionCanvas.xaml.cs">
+      <DependentUpon>MotionCanvas.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Update="CartesianChart.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="NaturalVisualCanvas.xaml">
+    <EmbeddedResource Update="MotionCanvas.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="PieChart.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

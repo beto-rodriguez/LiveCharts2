@@ -22,10 +22,11 @@
 
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.Rx;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -35,47 +36,37 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharpDrawingContext>
     {
-        protected CartesianChart<SkiaSharpDrawingContext> core;
+        protected Chart<SkiaSharpDrawingContext> core;
+        //protected MotionCanvas motionCanvas;
+        protected IChartLegend<SkiaSharpDrawingContext> legend;
+        protected IChartTooltip<SkiaSharpDrawingContext> tooltip;
+        private readonly ActionThrottler mouseMoveThrottler;
+        private PointF mousePosition = new PointF();
 
         public CartesianChart()
         {
-            LiveChartsSK.Register();
             InitializeComponent();
 
-            if (!(FindByName("canvas") is NaturalVisualCanvas canvas))
-                throw new Exception(
-                    $"SkiaElement not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
-                    $"If you override the template please add an {nameof(NaturalVisualCanvas)} to the template and name it 'canvas'");
+             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSK.DefaultPlatformBuilder);
 
-            core = new CartesianChart<SkiaSharpDrawingContext>(this, canvas.CanvasCore);
-            core.Update();
+            var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<SkiaSharpDrawingContext>();
+            var initializer = stylesBuilder.GetInitializer();
+            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
+                throw new Exception("Default colors are not valid");
+            initializer.ConstructChart(this);
 
-            SizeChanged += CartesianChart_SizeChanged;
+            InitializeCore();
+            SizeChanged += OnSizeChanged;
+            mouseMoveThrottler = new ActionThrottler(TimeSpan.FromMilliseconds(10));
+            mouseMoveThrottler.Unlocked += MouseMoveThrottlerUnlocked;
         }
 
-        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => core;
-        public Canvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
-
-        System.Drawing.SizeF ICartesianChartView<SkiaSharpDrawingContext>.ControlSize
-        {
-            get
-            {
-                var i = DeviceDisplay.MainDisplayInfo;
-                unchecked
-                {
-                    return new System.Drawing.SizeF
-                    {
-                        Width = (float)(i.Width),
-                        Height = (float)(i.Height)
-                    };
-                }
-            }
-        }
+        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;
 
         public static readonly BindableProperty SeriesProperty =
             BindableProperty.Create(
-                nameof(Series), typeof(IEnumerable<ICartesianSeries<SkiaSharpDrawingContext>>), typeof(CartesianChart),
-                new List<ICartesianSeries<SkiaSharpDrawingContext>>(), BindingMode.Default, null);
+                nameof(Series), typeof(IEnumerable<ICartesianSeries<SkiaSharpDrawingContext>>), 
+                typeof(CartesianChart), new List<ICartesianSeries<SkiaSharpDrawingContext>>(), BindingMode.Default, null);
 
         public static readonly BindableProperty XAxesProperty =
             BindableProperty.Create(
@@ -105,6 +96,21 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             set { SetValue(YAxesProperty, value); }
         }
 
+        SizeF IChartView.ControlSize
+        {
+            get
+            {
+                var i = DeviceDisplay.MainDisplayInfo;
+                return new SizeF
+                {
+                    Width = (float)i.Width,
+                    Height = (float)i.Height
+                };
+            }
+        }
+
+        public Canvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
+
         public LegendPosition LegendPosition { get; set; }
 
         public LegendOrientation LegendOrientation { get; set; }
@@ -117,20 +123,42 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public Func<float, float> EasingFunction { get; set; } = EasingFunctions.Lineal;
 
+        public TooltipPosition TooltipPosition { get; set; }
+
         public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
         public IChartTooltip<SkiaSharpDrawingContext> Tooltip => null;
 
-        public TooltipPosition TooltipPosition { get; set; }
+        public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; }
 
-        private void CartesianChart_SizeChanged(object sender, EventArgs e)
+        protected void InitializeCore()
         {
+            //if (!(FindByName("canvas") is MotionCanvas canvas))
+            //    throw new Exception(
+            //        $"SkiaElement not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
+            //        $"If you override the template please add an {nameof(MotionCanvas)} to the template and name it 'canvas'");
+
+            core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSK.DefaultPlatformBuilder, canvas.CanvasCore);
+            //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
+            //tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
             core.Update();
         }
 
         private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
+            // show tooltip ??
             core.Update();
+        }
+
+        private void OnSizeChanged(object sender, EventArgs e)
+        {
+            core.Update();
+        }
+
+        private void MouseMoveThrottlerUnlocked()
+        {
+            if (TooltipPosition == TooltipPosition.Hidden) return;
+            tooltip.Show(core.FindPointsNearTo(mousePosition), core);
         }
     }
 }

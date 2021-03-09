@@ -6,7 +6,7 @@
              x:Class="XamarinSample.MainPage">
 
     <ContentPage.BindingContext>
-        <vm:MainVM></vm:MainVM>
+        <vm:CartesianViewModel></vm:CartesianViewModel>
     </ContentPage.BindingContext>
 
     <Grid>
@@ -17,8 +17,7 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <lvc:CartesianChart Grid.Row="0" Grid.Column="0" 
-                            
+        <lvc:CartesianChart Grid.Row="0" Grid.Column="0"                             
                             Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}">
         </lvc:CartesianChart>
     </Grid>

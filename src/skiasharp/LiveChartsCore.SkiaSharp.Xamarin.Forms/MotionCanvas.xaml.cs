@@ -31,18 +31,18 @@ using Xamarin.Forms.Xaml;
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class NaturalVisualCanvas : ContentView
+    public partial class MotionCanvas : ContentView
     {
         private bool isDrawingLoopRunning = false;
         private Canvas<SkiaSharpDrawingContext> canvasCore = new Canvas<SkiaSharpDrawingContext>();
         private double framesPerSecond = 90;
 
-        public NaturalVisualCanvas()
+        public MotionCanvas()
         {
             InitializeComponent();
             if (skiaElement == null)
                 throw new Exception(
-                    $"SkiaElement not found. This was probably caused because the control {nameof(NaturalVisualCanvas)} template was overridden, " +
+                    $"SkiaElement not found. This was probably caused because the control {nameof(MotionCanvas)} template was overridden, " +
                     $"If you override the template please add an {nameof(SKCanvasView)} to the template and name it 'skiaElement'");
 
             skiaElement.PaintSurface += OnCanvasViewPaintSurface;
