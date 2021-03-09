@@ -24,6 +24,20 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         public PieChart()
         {
             InitializeComponent();
+
+
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSK.DefaultPlatformBuilder);
+
+            var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<SkiaSharpDrawingContext>();
+            var initializer = stylesBuilder.GetInitializer();
+            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
+                throw new Exception("Default colors are not valid");
+            initializer.ConstructChart(this);
+
+            InitializeCore();
+            SizeChanged += OnSizeChanged;
+            mouseMoveThrottler = new ActionThrottler(TimeSpan.FromMilliseconds(10));
+            mouseMoveThrottler.Unlocked += MouseMoveThrottlerUnlocked;
         }
 
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => (PieChart<SkiaSharpDrawingContext>)core;
