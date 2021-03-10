@@ -109,7 +109,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             }
         }
 
-        public Canvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
+        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
 
         public LegendPosition LegendPosition { get; set; }
 

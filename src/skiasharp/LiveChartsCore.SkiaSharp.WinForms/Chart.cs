@@ -71,7 +71,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         SizeF IChartView.ControlSize => new SizeF { Width = motionCanvas.Width, Height = motionCanvas.Height };
 
-        public Canvas<SkiaSharpDrawingContext> CoreCanvas => motionCanvas.CanvasCore;
+        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => motionCanvas.CanvasCore;
 
         public LegendPosition LegendPosition { get; set; }
 

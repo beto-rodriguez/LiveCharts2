@@ -35,6 +35,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         }
 
         public PieChart() { }
+
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => (PieChart<SkiaSharpDrawingContext>)core;
 
         public static readonly DependencyProperty SeriesProperty =

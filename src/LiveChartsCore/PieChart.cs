@@ -39,7 +39,7 @@ namespace LiveChartsCore
         public PieChart(
             IPieChartView<TDrawingContext> view,
             Action<LiveChartsSettings> defaultPlatformConfig,
-            Canvas<TDrawingContext> canvas)
+            MotionCanvas<TDrawingContext> canvas)
             : base(canvas, defaultPlatformConfig)
         {
             chartView = view;

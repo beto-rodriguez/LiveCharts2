@@ -69,7 +69,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             }
         }
 
-        public Canvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
+        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
 
         public LegendPosition LegendPosition { get; set; }
         public LegendOrientation LegendOrientation { get; set; }
@@ -104,7 +104,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
             if (!(Template.FindName("canvas", this) is MotionCanvas canvas))
                 throw new Exception(
-                    $"{nameof(SKElement)} not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
+                    $"{nameof(MotionCanvas)} not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
                     $"If you override the template please add an {nameof(MotionCanvas)} to the template and name it 'canvas'");
 
             this.canvas = canvas;
@@ -119,7 +119,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             var p = e.GetPosition(canvas);
-            mousePosition = unchecked(new PointF((float)p.X, (float)p.Y));
+            mousePosition = new PointF((float)p.X, (float)p.Y);
             mouseMoveThrottler.TryRun();
         }
 

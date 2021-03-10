@@ -43,7 +43,7 @@ namespace LiveChartsCore.Context
     public interface IChartView<TDrawingContext>: IChartView
         where TDrawingContext : DrawingContext
     {
-        Canvas<TDrawingContext> CoreCanvas { get; }
+        MotionCanvas<TDrawingContext> CoreCanvas { get; }
         IChartLegend<TDrawingContext> Legend { get; }
         IChartTooltip<TDrawingContext> Tooltip { get; }
         PointStatesDictionary<TDrawingContext> PointStates { get; set; }

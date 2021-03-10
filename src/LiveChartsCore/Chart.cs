@@ -36,7 +36,7 @@ namespace LiveChartsCore
         protected object measureWorker = new object();
         protected HashSet<IDrawable<TDrawingContext>> measuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
         protected SeriesContext<TDrawingContext> seriesContext = new SeriesContext<TDrawingContext>(Enumerable.Empty<IDrawableSeries<TDrawingContext>>());
-        protected readonly Canvas<TDrawingContext> canvas;
+        protected readonly MotionCanvas<TDrawingContext> canvas;
         protected readonly ActionThrottler updateThrottler;
 
         // view copied properties
@@ -53,7 +53,7 @@ namespace LiveChartsCore
         protected SizeF drawMarginSize;
         protected PointF drawMaringLocation;
 
-        public Chart(Canvas<TDrawingContext> canvas, Action<LiveChartsSettings> defaultPlatformConfig)
+        public Chart(MotionCanvas<TDrawingContext> canvas, Action<LiveChartsSettings> defaultPlatformConfig)
         {
             this.canvas = canvas;
             updateThrottler = new ActionThrottler(TimeSpan.FromSeconds(300));
@@ -65,7 +65,7 @@ namespace LiveChartsCore
         public object MeasureWorker => measureWorker;
         public HashSet<IDrawable<TDrawingContext>> MeasuredDrawables => measuredDrawables;
         public SeriesContext<TDrawingContext> SeriesContext => seriesContext;
-        public Canvas<TDrawingContext> Canvas => canvas;
+        public MotionCanvas<TDrawingContext> Canvas => canvas;
         public abstract IEnumerable<IDrawableSeries<TDrawingContext>> DrawableSeries { get; }
         public abstract IChartView<TDrawingContext> View { get; }
         IChartView IChart.View => View;

@@ -34,7 +34,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
     public partial class MotionCanvas : ContentView
     {
         private bool isDrawingLoopRunning = false;
-        private Canvas<SkiaSharpDrawingContext> canvasCore = new Canvas<SkiaSharpDrawingContext>();
+        private MotionCanvas<SkiaSharpDrawingContext> canvasCore = new MotionCanvas<SkiaSharpDrawingContext>();
         private double framesPerSecond = 90;
 
         public MotionCanvas()
@@ -51,14 +51,14 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public double FramesPerSecond { get => framesPerSecond; set => framesPerSecond = value; }
 
-        public Canvas<SkiaSharpDrawingContext> CanvasCore => canvasCore;
+        public MotionCanvas<SkiaSharpDrawingContext> CanvasCore => canvasCore;
 
         void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs args)
         {
             canvasCore.DrawFrame(new SkiaSharpDrawingContext(args.Info, args.Surface, args.Surface.Canvas));
         }
 
-        private void OnCanvasCoreInvalidated(Canvas<SkiaSharpDrawingContext> sender)
+        private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
         {
             Invalidate();
         }

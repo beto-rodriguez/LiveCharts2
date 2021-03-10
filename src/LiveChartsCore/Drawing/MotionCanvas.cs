@@ -27,19 +27,19 @@ using System.Linq;
 
 namespace LiveChartsCore.Drawing
 {
-    public class Canvas<TDrawingContext>
+    public class MotionCanvas<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         public readonly Stopwatch stopwatch = new Stopwatch();
         private HashSet<IDrawableTask<TDrawingContext>> paintTasks = new HashSet<IDrawableTask<TDrawingContext>>();
         private bool isValid;
 
-        public Canvas()
+        public MotionCanvas()
         {
             stopwatch.Start();
         }
 
-        public event Action<Canvas<TDrawingContext>>? Invalidated;
+        public event Action<MotionCanvas<TDrawingContext>>? Invalidated;
         public bool IsValid { get => isValid; }
 
         public void DrawFrame(TDrawingContext context)
