@@ -28,6 +28,7 @@ using LiveChartsCore.SkiaSharpView.Motion;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LiveChartsCore.SkiaSharpView.Painting
 {
@@ -72,7 +73,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
 
         public IEnumerable<IDrawable<SkiaSharpDrawingContext>> GetGeometries()
         {
-            foreach (var item in geometries)
+            foreach (var item in geometries.ToArray())
             {
                 yield return item;
             }
