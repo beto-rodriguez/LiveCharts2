@@ -45,7 +45,7 @@ Net 5 is required, latest Visual studio, Xamarin SDK might be required if you ne
 
 To compile Uno WASM you require to install a [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10),
 once done install netcore 3 and 5 in your linux terminal, if you have never done a Uno WASM build, you could start with
-https://github.com/unoplatform/uno then try to get all the requirements to compile the SkiaShap sample https://github.com/unoplatform/Uno.Samples/tree/master/UI/SkiaSharpTest, once you got these 2, this repo should also compile the Uno WASM sample.
+https://github.com/unoplatform/uno then try to get all the requirements to compile the SkiaShap sample https://github.com/unoplatform/Uno.Samples/tree/master/UI/SkiaSharpTest, once you got these 2, you will be able also compile the LiveCharts Uno WASM sample.
 
 The project contains 3 folders:
 
