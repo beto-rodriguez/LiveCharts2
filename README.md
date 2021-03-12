@@ -82,7 +82,7 @@ The following topics require a solution that will only work for an specific plat
 - [x] ~~Buid an UnoPlatform View~~
 - [ ] Buid an UnoPlatform default tooltip
 - [ ] Buid an UnoPlatform default legend
-- [ ] Buid an Avalonia View
+- [x] ~~Buid an Avalonia View~~
 - [ ] Buid an Avalonia default tooltip
 - [ ] Buid an Avalonia default legend
 - [ ] Buid or at least try a view for WASM, Blazor... and the tooltip and legend
