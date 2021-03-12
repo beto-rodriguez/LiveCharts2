@@ -115,27 +115,24 @@ namespace LiveChartsCore.Motion
             // is this line necessary? ...
             //if (animatable.currentTime - startTime <= 0) return OnGetMovement(0);
 
-            unchecked
+            var p = (animatable.currentTime - startTime) / unchecked((float)(endTime - startTime));
+
+            if (p >= 1)
             {
-                var p = (animatable.currentTime - startTime) / (float)(endTime - startTime);
-
-                if (p >= 1)
+                // at this point the animation is completed
+                p = 1;
+                animation.animationCompletedCount++;
+                isTransitionCompleted = animation.repeatTimes != int.MaxValue && animation.repeatTimes < animation.animationCompletedCount;
+                if (!isTransitionCompleted)
                 {
-                    // at this point the animation is completed
-                    p = 1;
-                    animation.animationCompletedCount++;
-                    isTransitionCompleted = animation.repeatTimes != int.MaxValue && animation.repeatTimes < animation.animationCompletedCount;
-                    if (!isTransitionCompleted)
-                    {
-                        startTime = animatable.currentTime;
-                        endTime = animatable.currentTime + animation.duration;
-                        isTransitionCompleted = false;
-                    }
+                    startTime = animatable.currentTime;
+                    endTime = animatable.currentTime + animation.duration;
+                    isTransitionCompleted = false;
                 }
-
-                var fp = animation.EasingFunction(p);
-                return OnGetMovement(fp);
             }
+
+            var fp = animation.EasingFunction(p);
+            return OnGetMovement(fp);
         }
 
         protected abstract T OnGetMovement(float progress);

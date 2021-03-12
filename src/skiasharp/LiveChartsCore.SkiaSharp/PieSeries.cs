@@ -42,7 +42,7 @@ namespace LiveChartsCore.SkiaSharpView
     {
         public PieSeries()
         {
-            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSK.DefaultPlatformBuilder);
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
             InitializeSeries();
         }
     }

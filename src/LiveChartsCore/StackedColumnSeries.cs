@@ -47,7 +47,7 @@ namespace LiveChartsCore
 
             float uw = secondaryScale.ScaleToUi(1f) - secondaryScale.ScaleToUi(0f);
             float uwm = 0.5f * uw;
-            float sw = Stroke?.StrokeWidth ?? 0;
+            float sw = Stroke?.StrokeThickness ?? 0;
             float p = primaryScale.ScaleToUi(pivot);
 
             var pos = chart.SeriesContext.GetStackedColumnPostion(this);

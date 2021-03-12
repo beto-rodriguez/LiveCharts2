@@ -42,7 +42,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         protected override void InitializeCore()
         {
-            core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSK.DefaultPlatformBuilder, motionCanvas.CanvasCore);
+            core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore);
             //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
             //tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
             core.Update();

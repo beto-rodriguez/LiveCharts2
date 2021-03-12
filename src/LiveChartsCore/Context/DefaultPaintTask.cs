@@ -32,7 +32,7 @@ namespace LiveChartsCore.Context
         public bool IsStroke { get; set; }
         public bool IsFill { get; set; }
         public int ZIndex { get; set; }
-        public float StrokeWidth { get; set; }
+        public float StrokeThickness { get; set; }
         public bool IsCompleted { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
         public long CurrentTime { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
         public bool RemoveOnCompleted { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }

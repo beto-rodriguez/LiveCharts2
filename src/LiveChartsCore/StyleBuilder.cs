@@ -32,7 +32,7 @@ namespace LiveChartsCore
     {
         private Color[]? colors;
         private LiveChartsInitializer<TDrawingContext>? seriesInitializer;
-        private readonly DefaultPaintTask<TDrawingContext> defaultPaintTask = new DefaultPaintTask<TDrawingContext>();
+        private DefaultPaintTask<TDrawingContext> defaultPaintTask = new DefaultPaintTask<TDrawingContext>();
 
         public DefaultPaintTask<TDrawingContext> DefaultPaintTask => defaultPaintTask;
 

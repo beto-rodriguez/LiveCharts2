@@ -134,7 +134,7 @@ namespace ViewModelsSamples
             {
                 new Axis
                 {
-                    TextBrush = new TextPaintTask(new SKColor(90,90,90)),
+                    TextBrush = new SolidColorPaintTask(new SKColor(90,90,90)),
                     SeparatorsBrush = new SolidColorPaintTask(new SKColor(180, 180, 180)),
                     //LabelsRotation = 10,
                     Labeler = (value, tick) => $"this {value}"
@@ -145,7 +145,7 @@ namespace ViewModelsSamples
             {
                 new Axis
                 {
-                    TextBrush = new TextPaintTask(new SKColor(90,90,90)),
+                    TextBrush = new SolidColorPaintTask(new SKColor(90,90,90)),
                     SeparatorsBrush = new SolidColorPaintTask(new SKColor(180, 180, 180)),
                     //LabelsRotation = 80,
                     Labeler = (value, tick) => $"this {value}"

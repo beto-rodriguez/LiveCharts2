@@ -54,7 +54,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         public SolidColorPaintTask(SKColor color, float strokeWidth)
             : base(color)
         {
-            strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeWidth), strokeWidth));
+            strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness), strokeWidth));
             strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
             pathEffectTransition = RegisterMotionProperty(new PathEffectMotionProperty(nameof(PathEffect)));
             shaderTransition = RegisterMotionProperty(new ShaderMotionProperty(nameof(Shader)));
@@ -93,7 +93,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
                 StrokeCap = StrokeCap,
                 StrokeJoin = StrokeJoin,
                 StrokeMiter = StrokeMiter,
-                StrokeWidth = StrokeWidth
+                StrokeThickness = StrokeThickness
             };
 
             return clone;
@@ -109,7 +109,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             skiaPaint.StrokeCap = StrokeCap;
             skiaPaint.StrokeJoin = StrokeJoin;
             skiaPaint.StrokeMiter = StrokeMiter;
-            skiaPaint.StrokeWidth = StrokeWidth;
+            skiaPaint.StrokeWidth = StrokeThickness;
             skiaPaint.Style = IsStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
             if (PathEffect != null) skiaPaint.PathEffect = PathEffect.GetSKPath();
             if (Shader != null) skiaPaint.Shader = Shader.GetSKShader();

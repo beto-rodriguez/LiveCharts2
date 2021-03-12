@@ -44,7 +44,7 @@ namespace LiveChartsCore.SkiaSharpView
     {
         public LineSeries()
         {
-            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSK.DefaultPlatformBuilder);
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
             InitializeSeries();
         }
     }

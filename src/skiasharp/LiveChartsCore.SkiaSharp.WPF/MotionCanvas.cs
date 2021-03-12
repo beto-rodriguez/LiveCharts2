@@ -78,11 +78,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             skiaElement.PaintSurface += OnPaintSurface;
         }
 
-        public void Invalidate()
-        {
-            RunDrawingLoop();
-        }
-
         protected virtual void OnPaintSurface(object sender, SKPaintSurfaceEventArgs args)
         {
             canvasCore.DrawFrame(new SkiaSharpDrawingContext(args.Info, args.Surface, args.Surface.Canvas));
@@ -90,7 +85,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
         {
-            Invalidate();
+            RunDrawingLoop();
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e)

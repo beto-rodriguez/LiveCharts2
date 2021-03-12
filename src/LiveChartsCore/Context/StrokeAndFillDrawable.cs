@@ -44,7 +44,7 @@ namespace LiveChartsCore.Context
             {
                 fill.IsStroke = false;
                 fill.IsFill = true;
-                fill.StrokeWidth = 0;
+                fill.StrokeThickness = 0;
             }
         }
 

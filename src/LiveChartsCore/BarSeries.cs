@@ -77,12 +77,12 @@ namespace LiveChartsCore
                 var strokeClone = Stroke.CloneTask();
                 var visual = new TVisual
                 {
-                    X = strokeClone.StrokeWidth,
-                    Y = strokeClone.StrokeWidth,
+                    X = strokeClone.StrokeThickness,
+                    Y = strokeClone.StrokeThickness,
                     Height = (float)LegendShapeSize,
                     Width = (float)LegendShapeSize
                 };
-                w += 2 * strokeClone.StrokeWidth;
+                w += 2 * strokeClone.StrokeThickness;
                 strokeClone.AddGeometyToPaintTask(visual);
                 context.PaintTasks.Add(strokeClone);
             }

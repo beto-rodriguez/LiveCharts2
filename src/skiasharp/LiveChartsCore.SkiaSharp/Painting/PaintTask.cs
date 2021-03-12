@@ -45,29 +45,25 @@ namespace LiveChartsCore.SkiaSharpView.Painting
 
         public PaintTask()
         {
-            strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeWidth), 0f));
+            strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness), 0f));
             colorTransition = RegisterMotionProperty(new ColorMotionProperty(nameof(Color), new SKColor()));
         }
 
         public PaintTask(SKColor color)
         {
-            strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeWidth), 0f));
+            strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness), 0f));
             colorTransition = RegisterMotionProperty(
                 new ColorMotionProperty(nameof(Color), new SKColor(color.Red, color.Green, color.Blue, color.Alpha)));
         }
 
         public int ZIndex { get; set; }
-        public float StrokeWidth { get => strokeWidthTransition.GetMovement(this); set => strokeWidthTransition.SetMovement(value, this); }
+        public float StrokeThickness { get => strokeWidthTransition.GetMovement(this); set => strokeWidthTransition.SetMovement(value, this); }
         public SKPaintStyle Style { get; set; }
         public bool IsStroke { get; set; }
         public bool IsFill { get; set; }
         public bool IsAntialias { get; set; } = true;
 
-        public SKColor Color
-        {
-            get => colorTransition.GetMovement(this);
-            set => colorTransition.SetMovement(value, this);
-        }
+        public SKColor Color { get => colorTransition.GetMovement(this); set => colorTransition.SetMovement(value, this); }
 
         public abstract void InitializeTask(SkiaSharpDrawingContext drawingContext);
 

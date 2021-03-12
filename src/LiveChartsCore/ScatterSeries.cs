@@ -78,7 +78,7 @@ namespace LiveChartsCore
 
             var gs = unchecked((float)geometrySize);
             var hgs = gs / 2f;
-            float sw = Stroke?.StrokeWidth ?? 0;
+            float sw = Stroke?.StrokeThickness ?? 0;
             var requiresWScale = weightBounds.max - weightBounds.min > 0;
             var wm = -(geometrySize - minGeometrySize) / (weightBounds.max - weightBounds.min);
 
@@ -234,12 +234,12 @@ namespace LiveChartsCore
                 var strokeClone = Stroke.CloneTask();
                 var visual = new TVisual
                 {
-                    X = strokeClone.StrokeWidth,
-                    Y = strokeClone.StrokeWidth,
+                    X = strokeClone.StrokeThickness,
+                    Y = strokeClone.StrokeThickness,
                     Height = (float)LegendShapeSize,
                     Width = (float)LegendShapeSize
                 };
-                w += 2 * strokeClone.StrokeWidth;
+                w += 2 * strokeClone.StrokeThickness;
                 strokeClone.AddGeometyToPaintTask(visual);
                 context.PaintTasks.Add(strokeClone);
             }

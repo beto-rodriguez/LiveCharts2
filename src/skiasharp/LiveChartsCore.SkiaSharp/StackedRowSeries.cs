@@ -40,7 +40,7 @@ namespace LiveChartsCore.SkiaSharpView
     {
         public StackedRowSeries()
         {
-            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSK.DefaultPlatformBuilder);
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
             InitializeSeries();
         }
     }

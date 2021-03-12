@@ -44,7 +44,7 @@ namespace LiveChartsCore.SkiaSharpView.Uno
         {
             DefaultStyleKey = typeof(Chart);
 
-            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSK.DefaultPlatformBuilder);
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
             var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<SkiaSharpDrawingContext>();
             var initializer = stylesBuilder.GetInitializer();

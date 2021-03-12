@@ -1,0 +1,19 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:lvc="using:LiveChartsCore.AvaloniaView"
+        xmlns:local="using:AvaloniaSample"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="AvaloniaSample.MainWindow"
+        Title="AvaloniaSample">
+  <Window.DataContext>
+    <local:CartesianViewModel></local:CartesianViewModel>
+  </Window.DataContext>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*"></RowDefinition>
+    </Grid.RowDefinitions>
+    <lvc:CartesianChart Grid.Row="0" Series="{Binding Series}" YAxes="{Binding YAxes}" XAxes="{Binding XAxes}"></lvc:CartesianChart>
+  </Grid>
+</Window>

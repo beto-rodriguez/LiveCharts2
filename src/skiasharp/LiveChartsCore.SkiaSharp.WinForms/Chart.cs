@@ -56,7 +56,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             Name = "CartesianChart";
             ResumeLayout(false);
 
-            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSK.DefaultPlatformBuilder);
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
             var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<SkiaSharpDrawingContext>();
             var initializer = stylesBuilder.GetInitializer();

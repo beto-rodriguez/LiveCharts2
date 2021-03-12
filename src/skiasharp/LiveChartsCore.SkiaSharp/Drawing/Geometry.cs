@@ -33,6 +33,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
     public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>, IVisualChartPoint<SkiaSharpDrawingContext>
     {
         private bool hasTransform = false;
+        private bool hasRotation = false;
 
         protected readonly MatrixMotionProperty transform;
         protected readonly FloatMotionProperty x;
@@ -57,11 +58,19 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
             set
             {
                 transform.SetMovement(value, this);
-                if (value != SKMatrix.Identity) hasTransform = true;
+                hasTransform = !value.IsIdentity;
             }
         }
 
-        public float Rotation { get => rotation.GetMovement(this); set => rotation.SetMovement(value, this); }
+        public float Rotation
+        {
+            get => rotation.GetMovement(this);
+            set
+            {
+                rotation.SetMovement(value, this);
+                hasRotation = Math.Abs(value) > 0.01;
+            }
+        }
 
         public IDrawable<SkiaSharpDrawingContext> HighlightableGeometry => GetHighlitableGeometry();
 
@@ -130,7 +139,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
 
         protected abstract SizeF OnMeasure(PaintTask paintTaks);
 
-        public virtual SKPoint GetPosition(SkiaSharpDrawingContext context, SKPaint paint) => new SKPoint(X, Y);
+        protected virtual SKPoint GetPosition(SkiaSharpDrawingContext context, SKPaint paint) => new SKPoint(X, Y);
 
         protected virtual IGeometry<SkiaSharpDrawingContext> GetHighlitableGeometry() => this;
     }

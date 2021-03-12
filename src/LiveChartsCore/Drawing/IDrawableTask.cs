@@ -34,7 +34,7 @@ namespace LiveChartsCore.Drawing
 
         int ZIndex { get; set; }
 
-        float StrokeWidth { get; set; }
+        float StrokeThickness { get; set; }
 
         void InitializeTask(TDrawingContext context);
 

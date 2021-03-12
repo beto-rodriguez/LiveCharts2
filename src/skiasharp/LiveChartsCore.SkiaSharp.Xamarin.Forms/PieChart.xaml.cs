@@ -26,7 +26,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             InitializeComponent();
 
 
-            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSK.DefaultPlatformBuilder);
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
             var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<SkiaSharpDrawingContext>();
             var initializer = stylesBuilder.GetInitializer();
@@ -95,7 +95,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             //        $"SkiaElement not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
             //        $"If you override the template please add an {nameof(MotionCanvas)} to the template and name it 'canvas'");
 
-            core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSK.DefaultPlatformBuilder, canvas.CanvasCore);
+            core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
             //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
             //tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
             core.Update();

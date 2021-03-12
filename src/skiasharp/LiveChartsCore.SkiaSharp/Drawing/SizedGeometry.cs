@@ -23,7 +23,6 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing

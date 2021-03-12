@@ -50,7 +50,7 @@ namespace LiveChartsCore.SkiaSharpView
             {
                 var pieSeries = (IPieSeries<SkiaSharpDrawingContext>)series;
 
-                pieSeries.Fill = LiveChartsSK.DefaultPaint;
+                pieSeries.Fill = LiveChartsSkiaSharp.DefaultPaint;
                 pieSeries.Stroke = null;
                 pieSeries.Pushout = 0;
 
@@ -81,18 +81,18 @@ namespace LiveChartsCore.SkiaSharpView
                     lineSeries.ShapesFill = null;
                     lineSeries.ShapesStroke = null;
                     lineSeries.Stroke = null;
-                    series.Fill = LiveChartsSK.DefaultPaint;
+                    series.Fill = LiveChartsSkiaSharp.DefaultPaint;
 
                     return;
                 }
 
                 lineSeries.GeometrySize = 18;
                 lineSeries.ShapesFill = new SolidColorPaintTask(new SKColor(250, 250, 250));
-                lineSeries.ShapesStroke = LiveChartsSK.DefaultPaint;
+                lineSeries.ShapesStroke = LiveChartsSkiaSharp.DefaultPaint;
             }
 
-            series.Fill = LiveChartsSK.DefaultPaint;
-            series.Stroke = LiveChartsSK.DefaultPaint;
+            series.Fill = LiveChartsSkiaSharp.DefaultPaint;
+            series.Stroke = LiveChartsSkiaSharp.DefaultPaint;
         }
 
         public override void ResolveSeriesDefaults(Color[] colors, IDrawableSeries<SkiaSharpDrawingContext> series)
@@ -103,28 +103,28 @@ namespace LiveChartsCore.SkiaSharpView
 
             if ((series.SeriesProperties & SeriesProperties.PieSeries) == SeriesProperties.PieSeries)
             {
-                if (series.Fill == LiveChartsSK.DefaultPaint) series.Fill = new SolidColorPaintTask(ColorAsSKColor(color));
-                if (series.Stroke == LiveChartsSK.DefaultPaint) series.Stroke = new SolidColorPaintTask(ColorAsSKColor(color), 3);
+                if (series.Fill == LiveChartsSkiaSharp.DefaultPaint) series.Fill = new SolidColorPaintTask(ColorAsSKColor(color));
+                if (series.Stroke == LiveChartsSkiaSharp.DefaultPaint) series.Stroke = new SolidColorPaintTask(ColorAsSKColor(color), 3);
 
                 return;
             }
 
-            if (series.Fill == LiveChartsSK.DefaultPaint)
+            if (series.Fill == LiveChartsSkiaSharp.DefaultPaint)
             {
                 var mask = SeriesProperties.Line | SeriesProperties.Stacked;
                 var opacity = (series.SeriesProperties & mask) == mask ? 1 : 0.5;
 
                 series.Fill = new SolidColorPaintTask(ColorAsSKColor(color, (byte)(opacity * 255)));
             }
-            if (series.Stroke == LiveChartsSK.DefaultPaint) series.Stroke = new SolidColorPaintTask(ColorAsSKColor(color), 3.5f);
+            if (series.Stroke == LiveChartsSkiaSharp.DefaultPaint) series.Stroke = new SolidColorPaintTask(ColorAsSKColor(color), 3.5f);
 
             if ((series.SeriesProperties & SeriesProperties.Line) == SeriesProperties.Line)
             {
                 var lineSeries = (ILineSeries<SkiaSharpDrawingContext>)series;
-                if (lineSeries.ShapesFill == LiveChartsSK.DefaultPaint)
+                if (lineSeries.ShapesFill == LiveChartsSkiaSharp.DefaultPaint)
                     lineSeries.ShapesFill = new SolidColorPaintTask(ColorAsSKColor(color));
-                if (lineSeries.ShapesStroke == LiveChartsSK.DefaultPaint)
-                    lineSeries.ShapesStroke = new SolidColorPaintTask(ColorAsSKColor(color), lineSeries.Stroke?.StrokeWidth ?? 3.5f);
+                if (lineSeries.ShapesStroke == LiveChartsSkiaSharp.DefaultPaint)
+                    lineSeries.ShapesStroke = new SolidColorPaintTask(ColorAsSKColor(color), lineSeries.Stroke?.StrokeThickness ?? 3.5f);
             }
         }
 

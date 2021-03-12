@@ -71,7 +71,7 @@ namespace LiveChartsCore
                 if (shapesFill != null)
                 {
                     shapesFill.IsStroke = false;
-                    shapesFill.StrokeWidth = 0;
+                    shapesFill.StrokeThickness = 0;
                 }
 
                 OnPaintContextChanged();
@@ -120,7 +120,7 @@ namespace LiveChartsCore
 
             var gs = geometrySize;
             var hgs = gs / 2f;
-            float sw = Stroke?.StrokeWidth ?? 0;
+            float sw = Stroke?.StrokeThickness ?? 0;
             float p = yScale.ScaleToUi(pivot);
 
             var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
@@ -454,12 +454,12 @@ namespace LiveChartsCore
                 var strokeClone = shapesStroke.CloneTask();
                 var visual = new TVisual
                 {
-                    X = shapesStroke.StrokeWidth,
-                    Y = shapesStroke.StrokeWidth,
+                    X = shapesStroke.StrokeThickness,
+                    Y = shapesStroke.StrokeThickness,
                     Height = lss,
                     Width = lss
                 };
-                w += 2 * shapesStroke.StrokeWidth;
+                w += 2 * shapesStroke.StrokeThickness;
                 strokeClone.AddGeometyToPaintTask(visual);
                 context.PaintTasks.Add(strokeClone);
             }
@@ -468,12 +468,12 @@ namespace LiveChartsCore
                 var strokeClone = Stroke.CloneTask();
                 var visual = new TVisual
                 {
-                    X = strokeClone.StrokeWidth,
-                    Y = strokeClone.StrokeWidth,
+                    X = strokeClone.StrokeThickness,
+                    Y = strokeClone.StrokeThickness,
                     Height = lss,
                     Width = lss
                 };
-                w += 2 * strokeClone.StrokeWidth;
+                w += 2 * strokeClone.StrokeThickness;
                 strokeClone.AddGeometyToPaintTask(visual);
                 context.PaintTasks.Add(strokeClone);
             }
@@ -595,7 +595,7 @@ namespace LiveChartsCore
                         var y = yScale.ScaleToUi(point.PrimaryValue);
                         var gs = geometrySize;
                         var hgs = gs / 2f;
-                        float sw = Stroke?.StrokeWidth ?? 0;
+                        float sw = Stroke?.StrokeThickness ?? 0;
                         float p = yScale.ScaleToUi(pivot);
                         point.Context.Visual.Geometry.X = x - hgs;
                         point.Context.Visual.Geometry.Y = p - hgs;

@@ -20,50 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing;
-using SkiaSharp;
+using Avalonia;
 
-namespace LiveChartsCore.SkiaSharpView.Painting
+namespace LiveChartsCore.AvaloniaView.Drawing
 {
-    public class TextPaintTask : PaintTask
+    public class SquareGeometry : SizedGeometry
     {
-        public TextPaintTask()
+        public SquareGeometry() : base()
         {
-
+            matchDimensions = true;
         }
 
-        public TextPaintTask(SKColor color)
-            : base(color)
+        public override void OnDraw(AvaloniaDrawingContext context)
         {
-
-        }
-
-        public override IDrawableTask<SkiaSharpDrawingContext> CloneTask()
-        {
-            var clone = new TextPaintTask
-            {
-                Style = Style,
-                IsStroke = IsStroke,
-                Color = Color,
-                IsAntialias = IsAntialias,
-                StrokeWidth = StrokeWidth
-            };
-
-            return clone;
-        }
-
-        public override void InitializeTask(SkiaSharpDrawingContext drawingContext)
-        {
-            if (skiaPaint == null) skiaPaint = new SKPaint();
-
-            skiaPaint.Color = Color;
-            skiaPaint.IsAntialias = IsAntialias;
-            skiaPaint.IsStroke = IsStroke;
-            skiaPaint.StrokeWidth = StrokeWidth;
-
-            drawingContext.Paint = skiaPaint;
-            drawingContext.PaintTask = this;
+            var w = Width;
+            context.AvaloniaContext.DrawGeometry(
+                 context.Brush, context.Pen, new Avalonia.Media.RectangleGeometry(new Rect(X, Y, w, w)));
         }
     }
 }

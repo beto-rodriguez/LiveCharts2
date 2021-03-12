@@ -62,7 +62,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
                 Color = drawable.Color,
                 IsAntialias = drawable.IsAntialias,
                 IsStroke = drawable.IsStroke,
-                StrokeWidth = drawable.StrokeWidth,
+                StrokeWidth = drawable.StrokeThickness,
                 TextSize = TextSize
             };
 
@@ -72,7 +72,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
             return new SizeF(bounds.Size.Width + Padding.Left + Padding.Right, bounds.Size.Height + Padding.Top + Padding.Bottom);
         }
 
-        public override SKPoint GetPosition(SkiaSharpDrawingContext context, SKPaint paint)
+        protected override SKPoint GetPosition(SkiaSharpDrawingContext context, SKPaint paint)
         {
             var size = Measure(context.PaintTask);
             float dx = 0f, dy = 0f;

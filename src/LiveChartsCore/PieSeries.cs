@@ -71,7 +71,7 @@ namespace LiveChartsCore
             var innerRadius = (float)InnerRadius;
             var maxOuterRadius = (float)MaxOuterRadius;
 
-            minDimension = minDimension - (Stroke?.StrokeWidth ?? 0) * 2 - maxPushout * 2;
+            minDimension = minDimension - (Stroke?.StrokeThickness ?? 0) * 2 - maxPushout * 2;
             minDimension *= maxOuterRadius;
 
             if (Fill != null) chart.Canvas.AddDrawableTask(Fill);
@@ -246,7 +246,7 @@ namespace LiveChartsCore
                     StartAngle = 0,
                     SweepAngle = 359.9999f
                 };
-                w += 2 * strokeClone.StrokeWidth;
+                w += 2 * strokeClone.StrokeThickness;
                 strokeClone.AddGeometyToPaintTask(visual);
                 context.PaintTasks.Add(strokeClone);
             }

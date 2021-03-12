@@ -26,9 +26,9 @@ using System;
 
 namespace LiveChartsCore.SkiaSharpView
 {
-    public static class LiveChartsSK
+    public static class LiveChartsSkiaSharp
     {
-        private static DefaultPaintTask<SkiaSharpDrawingContext> defaultPaintTask = new DefaultPaintTask<SkiaSharpDrawingContext>();
+        private static readonly DefaultPaintTask<SkiaSharpDrawingContext> defaultPaintTask = new DefaultPaintTask<SkiaSharpDrawingContext>();
 
         public static DefaultPaintTask<SkiaSharpDrawingContext> DefaultPaint => defaultPaintTask;
 
