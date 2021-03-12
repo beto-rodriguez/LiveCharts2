@@ -28,7 +28,6 @@ namespace LiveChartsCore.Context
     public interface ILineSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        double Pivot { get; set; }
         double GeometrySize { get; set; }
         double LineSmoothness { get; set; }
         bool EnableNullSplitting { get; set; }

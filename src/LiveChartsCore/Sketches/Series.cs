@@ -29,7 +29,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 
-namespace LiveChartsCore
+namespace LiveChartsCore.Sketches
 {
     public abstract class Series<TModel, TVisual, TLabel, TDrawingContext> : ISeries, IDisposable
         where TDrawingContext : DrawingContext
@@ -52,11 +52,11 @@ namespace LiveChartsCore
         {
             this.properties = properties;
             observer = new CollectionDeepObserver<TModel>(
-                (object sender, NotifyCollectionChangedEventArgs e) =>
+                (sender, e) =>
                 {
                     NotifySubscribers();
                 },
-                (object sender, PropertyChangedEventArgs e) =>
+                (sender, e) =>
                 {
                     NotifySubscribers();
                 });
@@ -214,7 +214,7 @@ namespace LiveChartsCore
                 DataLabelsPosition.Left => new PointF(x - labelSize.Width * 0.5f, middleY),
                 DataLabelsPosition.Right => new PointF(x + width + labelSize.Width * 0.5f, middleY),
                 DataLabelsPosition.Middle => new PointF(middleX, middleY),
-                _ => ((seriesProperties & SeriesProperties.HorizontalOrientation) == SeriesProperties.HorizontalOrientation)
+                _ => (seriesProperties & SeriesProperties.HorizontalOrientation) == SeriesProperties.HorizontalOrientation
                     ? position switch
                     {
                         DataLabelsPosition.End => isGreaterThanPivot

@@ -13,7 +13,7 @@ namespace LiveChartsCore.AvaloniaView
     {
         private bool isDrawingLoopRunning = false;
         private MotionCanvas<AvaloniaDrawingContext> canvasCore = new MotionCanvas<AvaloniaDrawingContext>();
-        private double framesPerSecond = 1;
+        private double framesPerSecond = 60;
 
         public MotionCanvas()
         {
@@ -43,7 +43,6 @@ namespace LiveChartsCore.AvaloniaView
 
         private async void RunDrawingLoop()
         {
-            //var w = Bounds.Width;
             if (isDrawingLoopRunning) return;
             isDrawingLoopRunning = true;
 

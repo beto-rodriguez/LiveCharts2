@@ -26,8 +26,7 @@ using System.Drawing;
 
 namespace LiveChartsCore.Context
 {
-    public interface IAxis<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public interface IAxis
     {
         Bounds DataBounds { get; }
         AxisOrientation Orientation { get; }
@@ -41,16 +40,21 @@ namespace LiveChartsCore.Context
         AxisPosition Position { get; set; }
         double LabelsRotation { get; set; }
 
+        bool ShowSeparatorLines { get; set; }
+        bool ShowSeparatorWedges { get; set; }
+
+        void Initialize(AxisOrientation orientation);
+    }
+
+    public interface IAxis<TDrawingContext> : IAxis
+        where TDrawingContext : DrawingContext
+    {
         IDrawableTask<TDrawingContext>? TextBrush { get; set; }
 
         IDrawableTask<TDrawingContext>? SeparatorsBrush { get; set; }
 
-        bool ShowSeparatorLines { get; set; }
-        bool ShowSeparatorWedges { get; set; }
-
         IDrawableTask<TDrawingContext>? AlternativeSeparatorForeground { get; set; }
 
-        void Initialize(AxisOrientation orientation);
         void Measure(CartesianChart<TDrawingContext> chart);
         SizeF GetPossibleSize(CartesianChart<TDrawingContext> chart);
 

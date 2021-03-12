@@ -24,25 +24,23 @@ using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 using System;
 
-namespace LiveChartsCore
+namespace LiveChartsCore.Sketches
 {
-    public class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
+    public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
-        where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        where TDrawingContext : DrawingContext
     {
-        public ColumnSeries()
-            : base(SeriesProperties.Bar | SeriesProperties.VerticalOrientation)
-        {
-        }
+        public RowSeries()
+            : base(SeriesProperties.Bar | SeriesProperties.HorizontalOrientation) { }
 
         public override void Measure(
            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> secondaryAxis, IAxis<TDrawingContext> primaryAxis)
         {
             var drawLocation = chart.DrawMaringLocation;
             var drawMarginSize = chart.DrawMarginSize;
-            var secondaryScale = new ScaleContext(drawLocation, drawMarginSize, secondaryAxis.Orientation, secondaryAxis.DataBounds);
-            var primaryScale = new ScaleContext(drawLocation, drawMarginSize, primaryAxis.Orientation, primaryAxis.DataBounds);
+            var secondaryScale = new ScaleContext(drawLocation, drawMarginSize, primaryAxis.Orientation, primaryAxis.DataBounds);
+            var primaryScale = new ScaleContext(drawLocation, drawMarginSize, secondaryAxis.Orientation, secondaryAxis.DataBounds);
 
             float uw = secondaryScale.ScaleToUi(1f) - secondaryScale.ScaleToUi(0f);
             float uwm = 0.5f * uw;
@@ -57,7 +55,7 @@ namespace LiveChartsCore
             {
                 uw = uw / count;
                 uwm = 0.5f * uw;
-                cp = (pos - (count / 2f)) * uw + uwm;
+                cp = (pos - count / 2f) * uw + uwm;
             }
 
             if (uw > MaxBarWidth)
@@ -84,12 +82,11 @@ namespace LiveChartsCore
                 {
                     if (point.Context.Visual != null)
                     {
-                        point.Context.Visual.X = secondary - uwm + cp;
-                        point.Context.Visual.Y = p;
-                        point.Context.Visual.Width = uw;
-                        point.Context.Visual.Height = 0;
+                        point.Context.Visual.X = p;
+                        point.Context.Visual.Y = secondary - uwm + cp;
+                        point.Context.Visual.Width = 0;
+                        point.Context.Visual.Height = uw;
                         point.Context.Visual.RemoveOnCompleted = true;
-                        point.Context.Visual = null;
                     }
                     continue;
                 }
@@ -98,10 +95,10 @@ namespace LiveChartsCore
                 {
                     var r = new TVisual
                     {
-                        X = secondary - uwm + cp,
-                        Y = p,
-                        Width = uw,
-                        Height = 0
+                        X = p,
+                        Y = secondary - uwm + cp,
+                        Width = 0,
+                        Height = uw
                     };
 
                     ts(r, chart.View);
@@ -113,17 +110,16 @@ namespace LiveChartsCore
                 }
 
                 var sizedGeometry = point.Context.Visual;
-                var cy = point.PrimaryValue > Pivot ? primary : primary - b;
-                var x = secondary - uwm + cp;
 
-                sizedGeometry.X = x;
-                sizedGeometry.Y = cy;
-                sizedGeometry.Width = uw;
-                sizedGeometry.Height = b;
-                sizedGeometry.RemoveOnCompleted = false;
+                var cx = point.PrimaryValue > Pivot ? primary - b : primary;
+                var y = secondary - uwm + cp;
 
-                var ha = new RectangleHoverArea().SetDimensions(secondary - uwm + cp, cy, uw, b);
-                point.Context.HoverArea = ha;
+                sizedGeometry.X = cx;
+                sizedGeometry.Y = y;
+                sizedGeometry.Width = b;
+                sizedGeometry.Height = uw;
+
+                point.Context.HoverArea = new RectangleHoverArea().SetDimensions(primary, secondary - uwm + cp, b, uw);
                 OnPointMeasured(point, sizedGeometry);
                 chart.MeasuredDrawables.Add(sizedGeometry);
 
@@ -131,7 +127,7 @@ namespace LiveChartsCore
                 {
                     if (point.Context.Label == null)
                     {
-                        var l = new TLabel { X = secondary - uwm + cp, Y = p };
+                        var l = new TLabel { X = p, Y = secondary - uwm + cp };
 
                         l.TransitionateProperties(nameof(l.X), nameof(l.Y))
                             .WithAnimation(a =>
@@ -147,7 +143,7 @@ namespace LiveChartsCore
                     point.Context.Label.TextSize = dls;
                     point.Context.Label.Padding = DataLabelsPadding;
                     var labelPosition = GetLabelPosition(
-                        x, cy, uw, b, point.Context.Label.Measure(DataLabelsBrush), DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot);
+                        cx, y, b, uw, point.Context.Label.Measure(DataLabelsBrush), DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot);
                     point.Context.Label.X = labelPosition.X;
                     point.Context.Label.Y = labelPosition.Y;
 
@@ -165,12 +161,12 @@ namespace LiveChartsCore
 
             return new DimensinalBounds
             {
-                SecondaryBounds = new Bounds
+                PrimaryBounds = new Bounds
                 {
                     Max = baseBounds.SecondaryBounds.Max + 0.5,
                     Min = baseBounds.SecondaryBounds.Min - 0.5
                 },
-                PrimaryBounds = new Bounds
+                SecondaryBounds = new Bounds
                 {
                     Max = baseBounds.PrimaryBounds.Max + tick.Value,
                     min = baseBounds.PrimaryBounds.min - tick.Value
@@ -181,17 +177,22 @@ namespace LiveChartsCore
         protected virtual void DefaultOnPointCreated(TVisual visual, IChartView<TDrawingContext> chart)
         {
             visual
-                .TransitionateProperties(nameof(visual.X), nameof(visual.Width))
+                .TransitionateProperties(
+                    nameof(visual.X),
+                    nameof(visual.Width))
+                .WithAnimation(animation =>
+                    animation
+                        .WithDuration((long)(chart.AnimationsSpeed.TotalMilliseconds * 1.5))
+                        .WithEasingFunction(EasingFunctions.BounceOut));
+
+            visual
+                .TransitionateProperties(
+                    nameof(visual.Y),
+                    nameof(visual.Height))
                 .WithAnimation(animation =>
                     animation
                         .WithDuration(chart.AnimationsSpeed)
                         .WithEasingFunction(chart.EasingFunction));
-
-            visual
-                .TransitionateProperties(nameof(visual.Y), nameof(visual.Height))
-                .WithAnimation(animation => animation
-                    .WithDuration(chart.AnimationsSpeed)
-                    .WithEasingFunction(EasingFunctions.ElasticOut));
         }
     }
 }

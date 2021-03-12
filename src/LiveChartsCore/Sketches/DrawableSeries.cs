@@ -25,9 +25,9 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
 using System;
 
-namespace LiveChartsCore
+namespace LiveChartsCore.Sketches
 {
-    public abstract class DrawableSeries<TModel, TVisual, TLabel, TDrawingContext> 
+    public abstract class DrawableSeries<TModel, TVisual, TLabel, TDrawingContext>
         : Series<TModel, TVisual, TLabel, TDrawingContext>, IDrawableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()

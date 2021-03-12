@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 using System;
 using System.Drawing;
@@ -32,9 +31,6 @@ namespace LiveChartsCore
     {
         private Color[]? colors;
         private LiveChartsInitializer<TDrawingContext>? seriesInitializer;
-        private DefaultPaintTask<TDrawingContext> defaultPaintTask = new DefaultPaintTask<TDrawingContext>();
-
-        public DefaultPaintTask<TDrawingContext> DefaultPaintTask => defaultPaintTask;
 
         public Color[]? CurrentColors => colors;
 

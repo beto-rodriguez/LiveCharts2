@@ -32,7 +32,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => (PieChart<SkiaSharpDrawingContext>)core;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<IPieSeries<SkiaSharpDrawingContext>> Series { get; set; }
+        public IEnumerable<ISeries> Series { get; set; }
 
         protected override void InitializeCore()
         {

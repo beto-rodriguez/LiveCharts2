@@ -32,13 +32,13 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<ICartesianSeries<SkiaSharpDrawingContext>> Series { get; set; } = new List<ICartesianSeries<SkiaSharpDrawingContext>>();
+        public IEnumerable<ISeries> Series { get; set; } = new List<ISeries>();
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<IAxis<SkiaSharpDrawingContext>> XAxes { get; set; } = new List<Axis>();
+        public IEnumerable<IAxis> XAxes { get; set; } = new List<Axis>();
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<IAxis<SkiaSharpDrawingContext>> YAxes { get; set; } = new List<Axis>();
+        public IEnumerable<IAxis> YAxes { get; set; } = new List<Axis>();
 
         protected override void InitializeCore()
         {

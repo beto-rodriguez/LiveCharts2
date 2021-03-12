@@ -159,19 +159,21 @@ namespace LiveChartsCore
             controlSize = chartView.ControlSize;
 
             measureWorker = new object();
-            series = chartView.Series.Select(series =>
-            {
-                // a good implementation of ISeries<T>
-                // must use the measureWorker to identify
-                // if the points are already fetched.
+            series = chartView.Series
+                .Cast<IPieSeries<TDrawingContext>>()
+                .Select(series =>
+                {
+                    // a good implementation of ISeries<T>
+                    // must use the measureWorker to identify
+                    // if the points are already fetched.
 
-                // this way no matter if the Series.Values collection changes
-                // the fetch method will always return the same collection for the
-                // current measureWorker instance
+                    // this way no matter if the Series.Values collection changes
+                    // the fetch method will always return the same collection for the
+                    // current measureWorker instance
 
-                series.Fetch(this);
-                return series;
-            }).ToArray();
+                    series.Fetch(this);
+                    return series;
+                }).ToArray();
 
             legendPosition = chartView.LegendPosition;
             legendOrientation = chartView.LegendOrientation;

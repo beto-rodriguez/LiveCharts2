@@ -44,12 +44,11 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public static readonly BindableProperty SeriesProperty =
           BindableProperty.Create(
-              nameof(Series), typeof(IEnumerable<IPieSeries<SkiaSharpDrawingContext>>), typeof(CartesianChart),
-              new List<IPieSeries<SkiaSharpDrawingContext>>(), BindingMode.Default, null);
+              nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new List<ISeries>(), BindingMode.Default, null);
 
-        public IEnumerable<IPieSeries<SkiaSharpDrawingContext>> Series
+        public IEnumerable<ISeries> Series
         {
-            get { return (IEnumerable<IPieSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty); }
+            get { return (IEnumerable<ISeries>)GetValue(SeriesProperty); }
             set { SetValue(SeriesProperty, value); }
         }
 

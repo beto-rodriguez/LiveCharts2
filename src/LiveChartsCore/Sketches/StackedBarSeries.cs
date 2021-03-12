@@ -24,36 +24,40 @@ using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 using System;
 
-namespace LiveChartsCore
+namespace LiveChartsCore.Sketches
 {
-    public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext> : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IBarSeries<TDrawingContext>
+    public abstract class StackedBarSeries<TModel, TVisual, TLabel, TDrawingContext>
+        : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IStackedBarSeries<TDrawingContext>
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
-        public BarSeries(SeriesProperties properties)
+        protected static float pivot = 0;
+        protected int stackGroup;
+
+        public StackedBarSeries(SeriesProperties properties)
             : base(properties)
         {
-            HoverState = LiveCharts.BarSeriesHoverKey;
+            HoverState = LiveCharts.StackedBarSeriesHoverKey;
         }
 
-        public double MaxBarWidth { get; set; } = 30;
+        public int StackGroup { get => stackGroup; set => stackGroup = value; }
 
-        public bool IgnoresBarPosition { get; set; } = false;
+        public double MaxColumnWidth { get; set; } = 30;
 
-        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IBarSeries<TDrawingContext>.OnPointCreated
+        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IStackedBarSeries<TDrawingContext>.OnPointCreated
         {
             get => OnPointCreated as Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>;
             set => OnPointCreated = value;
         }
 
-        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IBarSeries<TDrawingContext>.OnPointAddedToState
+        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IStackedBarSeries<TDrawingContext>.OnPointAddedToState
         {
             get => OnPointAddedToState as Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>;
             set => OnPointAddedToState = value;
         }
 
-        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IBarSeries<TDrawingContext>.OnPointRemovedFromState
+        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IStackedBarSeries<TDrawingContext>.OnPointRemovedFromState
         {
             get => OnPointRemovedFromState as Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>;
             set => OnPointRemovedFromState = value;
@@ -92,5 +96,7 @@ namespace LiveChartsCore
 
             paintContext = context;
         }
+
+        public override int GetStackGroup() => stackGroup;
     }
 }

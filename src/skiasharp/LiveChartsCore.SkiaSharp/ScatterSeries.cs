@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView

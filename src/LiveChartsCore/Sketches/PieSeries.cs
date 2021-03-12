@@ -24,7 +24,7 @@ using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 using System;
 
-namespace LiveChartsCore
+namespace LiveChartsCore.Sketches
 {
     public class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
         : DrawableSeries<TModel, TVisual, TLabel, TDrawingContext>, IDisposable, IPieSeries<TDrawingContext>
@@ -42,20 +42,20 @@ namespace LiveChartsCore
         public double MaxOuterRadius { get; set; } = 1; // 0 - 1
         public double HoverPushout { get; set; } = 20; // pixels
 
-        Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? IPieSeries<TDrawingContext>.OnPointCreated 
-        { 
+        Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? IPieSeries<TDrawingContext>.OnPointCreated
+        {
             get => OnPointCreated as Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>;
             set => OnPointCreated = value;
         }
 
-        Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? IPieSeries<TDrawingContext>.OnPointAddedToState 
-        { 
+        Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? IPieSeries<TDrawingContext>.OnPointAddedToState
+        {
             get => OnPointAddedToState as Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>;
             set => OnPointAddedToState = value;
         }
 
-        Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? IPieSeries<TDrawingContext>.OnPointRemovedFromState 
-        { 
+        Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? IPieSeries<TDrawingContext>.OnPointRemovedFromState
+        {
             get => OnPointRemovedFromState as Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>;
             set => OnPointRemovedFromState = value;
         }
@@ -148,8 +148,8 @@ namespace LiveChartsCore
                 dougnutGeometry.InnerRadius = innerRadius;
                 dougnutGeometry.PushOut = pushout;
                 dougnutGeometry.RemoveOnCompleted = false;
-                var start = (stackedValue / total) * 360;
-                var end = ((stackedValue + point.PrimaryValue) / total) * 360 - start;
+                var start = stackedValue / total * 360;
+                var end = (stackedValue + point.PrimaryValue) / total * 360 - start;
                 dougnutGeometry.StartAngle = start;
                 dougnutGeometry.SweepAngle = end;
                 if (start == 0 && end == 360) dougnutGeometry.SweepAngle = 359.9999f;

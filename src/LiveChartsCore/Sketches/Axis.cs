@@ -28,7 +28,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace LiveChartsCore
+namespace LiveChartsCore.Sketches
 {
     public class Axis<TDrawingContext, TTextGeometry, TLineGeometry> : IAxis<TDrawingContext>
         where TDrawingContext : DrawingContext
@@ -60,8 +60,8 @@ namespace LiveChartsCore
         }
 
         public AxisOrientation Orientation { get => orientation; }
-        float IAxis<TDrawingContext>.Xo { get => xo; set => xo = value; }
-        float IAxis<TDrawingContext>.Yo { get => yo; set => yo = value; }
+        float IAxis.Xo { get => xo; set => xo = value; }
+        float IAxis.Yo { get => yo; set => yo = value; }
 
         public Padding Padding { get => padding; set => padding = value; }
         public Func<double, AxisTick, string> Labeler { get => labeler ?? Labelers.Default; set => labeler = value; }

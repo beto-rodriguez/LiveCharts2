@@ -29,7 +29,7 @@ namespace AvaloniaSample
                     values.Add(t += r.Next(-10, 10));
                 }
 
-                Series.Add(new ColumnSeries<int> { Values = values, Fill = null });
+                Series.Add(new LineSeries<int> { Values = values, Fill = null });
             }
 
             YAxes = new List<IAxis<AvaloniaDrawingContext>>

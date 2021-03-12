@@ -25,7 +25,7 @@ using LiveChartsCore.Drawing;
 using System;
 using System.Collections.Generic;
 
-namespace LiveChartsCore
+namespace LiveChartsCore.Sketches
 {
     /// <summary>
     /// Defines the data to plot as a line.

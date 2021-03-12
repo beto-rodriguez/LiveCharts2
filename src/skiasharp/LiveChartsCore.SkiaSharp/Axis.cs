@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView

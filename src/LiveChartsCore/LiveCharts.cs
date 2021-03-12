@@ -28,10 +28,10 @@ namespace LiveChartsCore
     public static class LiveCharts
     {
         private static bool isConfigured = false;
-        private static readonly LiveChartsSettings settings = new LiveChartsSettings();
+        private static object defaultPaintTask = new();
+        private static readonly LiveChartsSettings settings = new();
 
         public static bool IsConfigured => isConfigured;
-
         public static LiveChartsSettings CurrentSettings => settings;
 
         public static string BarSeriesHoverKey => nameof(BarSeriesHoverKey);

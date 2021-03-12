@@ -35,37 +35,36 @@ namespace LiveChartsCore.SkiaSharpView.Uno
         }
 
         public static readonly DependencyProperty SeriesProperty =
-                    DependencyProperty.Register(
-                        nameof(Series), typeof(IEnumerable<ICartesianSeries<SkiaSharpDrawingContext>>),
-                        typeof(CartesianChart), new PropertyMetadata(new List<ICartesianSeries<SkiaSharpDrawingContext>>()));
+            DependencyProperty.Register(
+                nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new PropertyMetadata(new List<ISeries>()));
 
         public static readonly DependencyProperty XAxesProperty =
             DependencyProperty.Register(
-                nameof(XAxes), typeof(IEnumerable<IAxis<SkiaSharpDrawingContext>>),
-                typeof(CartesianChart), new PropertyMetadata(new List<IAxis<SkiaSharpDrawingContext>> { new Axis() }));
+                nameof(XAxes), typeof(IEnumerable<IAxis>),
+                typeof(CartesianChart), new PropertyMetadata(new List<IAxis> { new Axis() }));
 
         public static readonly DependencyProperty YAxesProperty =
             DependencyProperty.Register(
-                nameof(YAxes), typeof(IEnumerable<IAxis<SkiaSharpDrawingContext>>),
-                typeof(CartesianChart), new PropertyMetadata(new List<IAxis<SkiaSharpDrawingContext>> { new Axis() }));
+                nameof(YAxes), typeof(IEnumerable<IAxis>),
+                typeof(CartesianChart), new PropertyMetadata(new List<IAxis> { new Axis() }));
 
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;
 
-        public IEnumerable<ICartesianSeries<SkiaSharpDrawingContext>> Series
+        public IEnumerable<ISeries> Series
         {
-            get { return (IEnumerable<ICartesianSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty); }
+            get { return (IEnumerable<ISeries>)GetValue(SeriesProperty); }
             set { SetValue(SeriesProperty, value); }
         }
 
-        public IEnumerable<IAxis<SkiaSharpDrawingContext>> XAxes
+        public IEnumerable<IAxis> XAxes
         {
-            get { return (IEnumerable<IAxis<SkiaSharpDrawingContext>>)GetValue(XAxesProperty); }
+            get { return (IEnumerable<IAxis>)GetValue(XAxesProperty); }
             set { SetValue(XAxesProperty, value); }
         }
 
-        public IEnumerable<IAxis<SkiaSharpDrawingContext>> YAxes
+        public IEnumerable<IAxis> YAxes
         {
-            get { return (IEnumerable<IAxis<SkiaSharpDrawingContext>>)GetValue(YAxesProperty); }
+            get { return (IEnumerable<IAxis>)GetValue(YAxesProperty); }
             set { SetValue(YAxesProperty, value); }
         }
 

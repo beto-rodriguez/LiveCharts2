@@ -24,7 +24,7 @@ using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 using System;
 
-namespace LiveChartsCore
+namespace LiveChartsCore.Sketches
 {
     public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext> : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IScatterSeries<TDrawingContext>
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
@@ -106,7 +106,7 @@ namespace LiveChartsCore
 
                 if (requiresWScale)
                 {
-                    gs = (float)((wm * (weightBounds.max - point.TertiaryValue) + geometrySize));
+                    gs = (float)(wm * (weightBounds.max - point.TertiaryValue) + geometrySize);
                     hgs = gs / 2f;
                 }
 
@@ -187,7 +187,7 @@ namespace LiveChartsCore
 
             var tick = y.GetTick(chart.ControlSize, baseBounds.PrimaryBounds);
 
-            return  new DimensinalBounds
+            return new DimensinalBounds
             {
                 SecondaryBounds = new Bounds
                 {

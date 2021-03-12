@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.AvaloniaView.Drawing;
+using LiveChartsCore.Sketches;
 
 namespace LiveChartsCore.AvaloniaView
 {

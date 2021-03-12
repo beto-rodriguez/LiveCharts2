@@ -35,7 +35,6 @@ namespace LiveChartsCore
     {
         private readonly Dictionary<Type, object> mappers = new Dictionary<Type, object>();
         private readonly Dictionary<Type, object> seriesStyleBuilder = new Dictionary<Type, object>();
-        private Animation? defaultAnimation;
 
         /// <summary>
         /// Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a <see cref="ChartPoint"/> instance, 
@@ -69,12 +68,6 @@ namespace LiveChartsCore
         public LiveChartsSettings RemoveMap<TModel>()
         {
             mappers.Remove(typeof(TModel));
-            return this;
-        }
-
-        public LiveChartsSettings HasDefaultAnimation(Animation? animation)
-        {
-            defaultAnimation = animation;
             return this;
         }
 

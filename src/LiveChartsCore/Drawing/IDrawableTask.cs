@@ -25,8 +25,7 @@ using System.Collections.Generic;
 
 namespace LiveChartsCore.Drawing
 {
-    public interface IDrawableTask<TDrawingContext> : IAnimatable, IDisposable
-        where TDrawingContext : DrawingContext
+    public interface IDrawable: IAnimatable, IDisposable
     {
         bool IsStroke { get; set; }
 
@@ -35,7 +34,11 @@ namespace LiveChartsCore.Drawing
         int ZIndex { get; set; }
 
         float StrokeThickness { get; set; }
+    }
 
+    public interface IDrawableTask<TDrawingContext> : IDrawable
+        where TDrawingContext : DrawingContext
+    {
         void InitializeTask(TDrawingContext context);
 
         IEnumerable<IDrawable<TDrawingContext>> GetGeometries();

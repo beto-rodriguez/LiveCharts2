@@ -30,6 +30,6 @@ namespace LiveChartsCore.Context
     {
         PieChart<TDrawingContext> Core { get; }
 
-        IEnumerable<IPieSeries<TDrawingContext>> Series { get; set; }
+        IEnumerable<ISeries> Series { get; set; }
     }
 }

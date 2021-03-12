@@ -39,12 +39,11 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => (PieChart<SkiaSharpDrawingContext>)core;
 
         public static readonly DependencyProperty SeriesProperty =
-            DependencyProperty.Register(
-                nameof(Series), typeof(IEnumerable<IPieSeries<SkiaSharpDrawingContext>>), typeof(PieChart), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(Series), typeof(IEnumerable<ISeries>), typeof(PieChart), new PropertyMetadata(null));
 
-        public IEnumerable<IPieSeries<SkiaSharpDrawingContext>> Series
+        public IEnumerable<ISeries> Series
         {
-            get { return (IEnumerable<IPieSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty); }
+            get { return (IEnumerable<ISeries>)GetValue(SeriesProperty); }
             set { SetValue(SeriesProperty, value); }
         }
 

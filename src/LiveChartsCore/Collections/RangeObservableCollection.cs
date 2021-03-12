@@ -16,7 +16,7 @@ using System.Linq;
 // https://github.com/dotnet/runtime/issues/18087#issuecomment-359197102
 // namespace System.Collections.ObjectModel
 // {
-namespace LiveChartsCore // we use this namespace, because .Net might officially include it in the framework
+namespace LiveChartsCore.Collections // we use this namespace, because .Net might officially include it in the framework
 {
 
     /// <summary>

@@ -22,7 +22,7 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore
+namespace LiveChartsCore.Sketches
 {
     public class StackedAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>
         : LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>

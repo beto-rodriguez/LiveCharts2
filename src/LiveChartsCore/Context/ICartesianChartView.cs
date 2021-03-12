@@ -30,9 +30,9 @@ namespace LiveChartsCore.Context
     {
         CartesianChart<TDrawingContext> Core { get; }
 
-        IEnumerable<IAxis<TDrawingContext>> XAxes { get; set; }
-        IEnumerable<IAxis<TDrawingContext>> YAxes { get; set; }
+        IEnumerable<IAxis> XAxes { get; set; }
+        IEnumerable<IAxis> YAxes { get; set; }
 
-        IEnumerable<ICartesianSeries<TDrawingContext>> Series { get; set; }
+        IEnumerable<ISeries> Series { get; set; }
     }
 }
