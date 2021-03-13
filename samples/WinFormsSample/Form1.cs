@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using ViewModelsSamples;
 
 namespace WinFormsSample
 {
     public partial class Form1 : Form
     {
+        private UserControl activeControl = null;
+
         public Form1()
         {
             InitializeComponent();
@@ -20,11 +14,29 @@ namespace WinFormsSample
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            var vm = new CartesianViewModel();
+            foreach (var item in ViewModelsSamples.Index.Samples)
+            {
+                listBox1.Items.Add(item);
+            }
+        }
 
-            cartesianChart1.Series = vm.Series;
-            cartesianChart1.XAxes = vm.XAxes;
-            cartesianChart1.YAxes = vm.YAxes;
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (activeControl != null)
+            {
+                Controls.Remove(activeControl);
+                activeControl.Dispose();
+            }
+
+            var selected = listBox1.SelectedItem.ToString();
+            activeControl = (UserControl) Activator.CreateInstance(null, $"WinFormsSample.{selected.Replace('/', '.')}.View").Unwrap();
+
+            var padding = 8;
+            activeControl.Location = new System.Drawing.Point(listBox1.Width + padding, padding);
+            activeControl.Width = Width - listBox1.Width;
+            activeControl.Height = Height;
+            activeControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            Controls.Add(activeControl);
         }
     }
 }

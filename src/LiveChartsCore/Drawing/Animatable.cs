@@ -68,7 +68,7 @@ namespace LiveChartsCore.Drawing.Common
         {
             if (propertyNames == null || propertyNames.Length == 0)
                 throw new Exception(
-                    $"At least one property is required to call {nameof(CompleteTransitions)}");
+                    $"At least one property is required to call {nameof(CompleteTransitions)}.");
 
             foreach (var property in propertyNames)
             {

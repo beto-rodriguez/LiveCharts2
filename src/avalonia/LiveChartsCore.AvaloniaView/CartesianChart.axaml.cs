@@ -4,7 +4,6 @@ using Avalonia.Markup.Xaml;
 using LiveChartsCore.AvaloniaView.Drawing;
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Rx;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

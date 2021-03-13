@@ -44,6 +44,13 @@ namespace LiveChartsCore.SkiaSharpView
             };
         }
 
+        public override void ConstructAxis(IAxis<SkiaSharpDrawingContext> axis)
+        {
+            axis.ShowSeparatorLines = true;
+            axis.TextBrush = LiveChartsSkiaSharp.DefaultPaint;
+            axis.SeparatorsBrush = LiveChartsSkiaSharp.DefaultPaint;
+        }
+
         public override void ConstructSeries(IDrawableSeries<SkiaSharpDrawingContext> series)
         {
             if ((series.SeriesProperties & SeriesProperties.PieSeries) == SeriesProperties.PieSeries)
@@ -126,6 +133,17 @@ namespace LiveChartsCore.SkiaSharpView
                 if (lineSeries.ShapesStroke == LiveChartsSkiaSharp.DefaultPaint)
                     lineSeries.ShapesStroke = new SolidColorPaintTask(ColorAsSKColor(color), lineSeries.Stroke?.StrokeThickness ?? 3.5f);
             }
+        }
+
+        public override void ResolveAxisDefaults(IAxis<SkiaSharpDrawingContext> axis)
+        {
+            if (axis.SeparatorsBrush == LiveChartsSkiaSharp.DefaultPaint)
+                axis.SeparatorsBrush = axis.Orientation == AxisOrientation.X
+                    ? null
+                    : new SolidColorPaintTask(new SKColor(240, 240, 240));
+
+            if (axis.TextBrush == LiveChartsSkiaSharp.DefaultPaint)
+                axis.TextBrush = new SolidColorPaintTask(new SKColor(180, 180, 180));
         }
 
         private SKColor ColorAsSKColor(Color color, byte? alphaOverrides = null)

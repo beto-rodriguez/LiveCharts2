@@ -1,6 +1,5 @@
 ﻿using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Rx;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
@@ -56,11 +55,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             get
             {
-                var i = DeviceDisplay.MainDisplayInfo;
                 return new SizeF
                 {
-                    Width = (float)i.Width,
-                    Height = (float)i.Height
+                    Width = (float)(Width * DeviceDisplay.MainDisplayInfo.Density),
+                    Height = (float)(Height * DeviceDisplay.MainDisplayInfo.Density)
                 };
             }
         }

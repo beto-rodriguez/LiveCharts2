@@ -1,37 +1,38 @@
-﻿using System.Timers;
+﻿using SourceChord.FluentWPF;
+using System;
+using System.Runtime.InteropServices;
 using System.Windows;
-using ViewModelsSamples;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Interop;
 
 namespace WPFSample
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : AcrylicWindow
     {
-        private CartesianViewModel viewModel;
-
-       public MainWindow()
+        public MainWindow()
         {
             InitializeComponent();
-
-            var c = DataContext as CartesianViewModel;
-            if (c == null) return;
-
-            viewModel = c;
-
-            var t = new Timer();
-            t.Interval = 3000;
-            t.Elapsed += T_Elapsed;
-            t.Start();
+            Samples = ViewModelsSamples.Index.Samples;
+            DataContext = this;
         }
 
-        private void T_Elapsed(object sender, ElapsedEventArgs e)
+        public string[] Samples { get; set; }
+
+        private void AcrylicWindow_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            //Application.Current.Dispatcher.Invoke(() =>
-            //{
-            //    viewModel?.Randomize();
-            //});
+            if (e.ChangedButton == MouseButton.Left)
+                DragMove();
+        }
+
+        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var ctx = (sender as FrameworkElement).DataContext as string;
+            if (ctx == null) throw new Exception("Sample not found");
+            content.Content = Activator.CreateInstance(null, $"WPFSample.{ctx.Replace('/', '.')}.View").Unwrap();
         }
     }
 }

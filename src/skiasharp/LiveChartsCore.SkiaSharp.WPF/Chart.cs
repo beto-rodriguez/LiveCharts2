@@ -22,7 +22,6 @@
 
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Rx;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp.Views.WPF;
 using System;

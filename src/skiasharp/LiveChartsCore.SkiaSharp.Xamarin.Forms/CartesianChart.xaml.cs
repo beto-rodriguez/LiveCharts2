@@ -22,7 +22,6 @@
 
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Rx;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
@@ -65,15 +64,18 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public static readonly BindableProperty SeriesProperty =
             BindableProperty.Create(
-                nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new List<ISeries>(), BindingMode.Default, null);
+                nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart),
+                new List<ISeries>(), BindingMode.Default, null);
 
         public static readonly BindableProperty XAxesProperty =
             BindableProperty.Create(
-                nameof(XAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>(), BindingMode.Default, null);
+                nameof(XAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), 
+                new List<IAxis> { new Axis() }, BindingMode.Default, null);
 
         public static readonly BindableProperty YAxesProperty =
             BindableProperty.Create(
-                nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>(), BindingMode.Default, null);
+                nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart),
+                new List<IAxis> { new Axis() }, BindingMode.Default, null);
 
         public IEnumerable<ISeries> Series
         {
@@ -97,11 +99,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             get
             {
-                var i = DeviceDisplay.MainDisplayInfo;
                 return new SizeF
                 {
-                    Width = (float)i.Width,
-                    Height = (float)i.Height
+                    Width = (float)(Width* DeviceDisplay.MainDisplayInfo.Density),
+                    Height = (float)(Height * DeviceDisplay.MainDisplayInfo.Density)
                 };
             }
         }

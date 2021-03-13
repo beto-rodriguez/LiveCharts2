@@ -22,10 +22,10 @@
 
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Rx;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Drawing;
+using Windows.Graphics.Display;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -62,10 +62,12 @@ namespace LiveChartsCore.SkiaSharpView.Uno
         {
             get
             {
-                unchecked
+                var i = DisplayInformation.GetForCurrentView();
+                return new SizeF
                 {
-                    return new SizeF { Width = (float)canvas.ActualWidth, Height = (float)canvas.ActualHeight };
-                }
+                    Width = (float)(ActualWidth*i.RawPixelsPerViewPixel),
+                    Height = (float)(ActualHeight*i.RawPixelsPerViewPixel)
+                };
             }
         }
 

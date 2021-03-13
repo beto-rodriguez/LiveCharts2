@@ -37,7 +37,6 @@ namespace LiveChartsCore.SkiaSharpView.Painting
 
         public SolidColorPaintTask()
         {
-            
             strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
             pathEffectTransition = RegisterMotionProperty(new PathEffectMotionProperty(nameof(PathEffect)));
             shaderTransition = RegisterMotionProperty(new ShaderMotionProperty(nameof(Shader)));

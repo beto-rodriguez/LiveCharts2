@@ -36,6 +36,10 @@ namespace LiveChartsCore
 
         public abstract void ConstructSeries(IDrawableSeries<TDrawingContext> series);
 
+        public abstract void ConstructAxis(IAxis<TDrawingContext> axis);
+
         public abstract void ResolveSeriesDefaults(Color[] colors, IDrawableSeries<TDrawingContext> series);
+
+        public abstract void ResolveAxisDefaults(IAxis<TDrawingContext> axis);
     }
 }

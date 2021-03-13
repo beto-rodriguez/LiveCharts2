@@ -148,10 +148,14 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
-    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.12"/>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.12" />
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\ViewModelsSamples\ViewModelsSamples.csproj">
+      <Project>{bde9c3d2-5801-4be1-b79e-63686d04ce0f}</Project>
+      <Name>ViewModelsSamples</Name>
+    </ProjectReference>
     <ProjectReference Include="..\XamarinSample\XamarinSample.csproj">
       <Project>{EC154436-ED83-4EBD-8021-26CD4B758F70}</Project>
       <Name>XamarinSample</Name>

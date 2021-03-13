@@ -4,16 +4,59 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:lvc="using:LiveChartsCore.SkiaSharp.Avalonia"
         xmlns:vms="using:ViewModelsSamples"
+        Background="#b9ffffff"
+        TransparencyLevelHint="Blur"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaTitleBarHeightHint="50"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="AvaloniaSample.MainWindow"
-        Title="AvaloniaSample">
-  <Window.DataContext>
-    <vms:CartesianViewModel></vms:CartesianViewModel>
-  </Window.DataContext>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="*"></RowDefinition>
-    </Grid.RowDefinitions>
-    <lvc:CartesianChart Grid.Row="0" Series="{Binding Series}" YAxes="{Binding YAxes}" XAxes="{Binding XAxes}"></lvc:CartesianChart>
-  </Grid>
+        HasSystemDecorations="False"
+        WindowStartupLocation="CenterScreen">
+
+  <Border BorderBrush="#eeeeee" BorderThickness="1">
+    <Grid Margin="25 0 0 0" >
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="250"></ColumnDefinition>
+        <ColumnDefinition Width="*"></ColumnDefinition>
+      </Grid.ColumnDefinitions>
+
+      <Grid Grid.Column="0" Margin="0 20 0 0">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="40"></RowDefinition>
+          <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0">
+          <Image Source="/Assets/livecharts.png" />
+        </Border>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0 20">
+
+          <ItemsControl Name="items" Items="{Binding Samples}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Orientation="Vertical"/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Border Padding="0 8" Cursor="Hand"  PointerPressed="OnPointerPressed">
+                  <TextBlock Text="{Binding}" FontSize="15" FontFamily="Trebuchet MS" FontWeight="Regular"></TextBlock>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
+        </ScrollViewer>
+      </Grid>
+
+      <Border Grid.Column="1" >
+        <Border Background="White" Margin="20 80 20 20" Padding="20" CornerRadius="8"
+                BoxShadow="0 0 10 0 #05000000, 0 0 10 0 #05000000, 0 0 10 0 #05000000, 0 0 10 0 #05000000">
+          <ContentControl x:Name="content"></ContentControl>
+        </Border>
+      </Border>
+
+    </Grid>
+  </Border>
+
 </Window>

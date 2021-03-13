@@ -35,10 +35,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         public IEnumerable<ISeries> Series { get; set; } = new List<ISeries>();
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<IAxis> XAxes { get; set; } = new List<Axis>();
+        public IEnumerable<IAxis> XAxes { get; set; } = new List<Axis> { new Axis() };
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<IAxis> YAxes { get; set; } = new List<Axis>();
+        public IEnumerable<IAxis> YAxes { get; set; } = new List<Axis> { new Axis() };
 
         protected override void InitializeCore()
         {

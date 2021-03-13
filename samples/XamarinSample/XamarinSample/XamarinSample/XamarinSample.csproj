@@ -14,4 +14,19 @@
     <ProjectReference Include="..\..\..\..\src\skiasharp\LiveChartsCore.SkiaSharp.Xamarin.Forms\LiveChartsCore.SkiaSharpView.Xamarin.Forms.csproj" />
     <ProjectReference Include="..\..\..\ViewModelsSamples\ViewModelsSamples.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Lines\Basic\View.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Bars\Basic\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Pies\Basic\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

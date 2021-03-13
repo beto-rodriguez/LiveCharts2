@@ -20,12 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView
 {
     public class Axis: Axis<SkiaSharpDrawingContext, LabelGeometry, LineGeometry>
     {
+        public Axis()
+        {
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+            var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<SkiaSharpDrawingContext>();
+            var initializer = stylesBuilder.GetInitializer();
+
+            initializer.ConstructAxis(this);
+        }
     }
 }

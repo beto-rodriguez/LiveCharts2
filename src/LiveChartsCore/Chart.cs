@@ -22,7 +22,6 @@
 
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Rx;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

@@ -27,7 +27,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:coreCtx="clr-namespace:LiveChartsCore.Context;assembly=LiveChartsCore"
+             xmlns:ctx="clr-namespace:LiveChartsCore;assembly=LiveChartsCore"
              xmlns:local="clr-namespace:LiveChartsCore.SkiaSharpView.WPF"
              mc:Ignorable="d"
              d:DesignHeight="100" d:DesignWidth="200">
@@ -39,7 +39,7 @@
             </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate>
-            <DataTemplate DataType="{x:Type coreCtx:ISeries}">
+            <DataTemplate DataType="{x:Type ctx:ISeries}">
                 <Border Padding="15 4">
                     <StackPanel Orientation="Horizontal">
                         <local:MotionCanvas Margin="0 0 8 0" 

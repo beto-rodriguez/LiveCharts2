@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using a = Avalonia.Media;
-using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
@@ -27,7 +26,6 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             InitializeComponent();
             canvasCore.Invalidated += OnCanvasCoreInvalidated;
         }
-
 
         private void InitializeComponent()
         {

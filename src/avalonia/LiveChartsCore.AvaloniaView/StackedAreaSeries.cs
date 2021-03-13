@@ -23,7 +23,6 @@
 using Avalonia.Media;
 using LiveChartsCore.AvaloniaView.Drawing;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Sketches;
 using System;
 
 namespace LiveChartsCore.AvaloniaView

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -87,10 +87,14 @@
     <AndroidResource Include="Resources\drawable\icon_feed.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\ViewModelsSamples\ViewModelsSamples.csproj">
+      <Project>{bde9c3d2-5801-4be1-b79e-63686d04ce0f}</Project>
+      <Name>ViewModelsSamples</Name>
+    </ProjectReference>
     <ProjectReference Include="..\XamarinSample\XamarinSample.csproj">
       <Project>{EC154436-ED83-4EBD-8021-26CD4B758F70}</Project>
       <Name>XamarinSample</Name>
     </ProjectReference>
   </ItemGroup>
- <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

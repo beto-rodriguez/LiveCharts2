@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Rx;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
@@ -46,10 +45,12 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
                 nameof(Series), new List<ISeries>(), inherits: true);
 
         public static readonly AvaloniaProperty<IEnumerable<IAxis>> XAxesProperty =
-            AvaloniaProperty.Register<CartesianChart, IEnumerable<IAxis>>(nameof(XAxes), new List<IAxis>(), inherits: true);
+            AvaloniaProperty.Register<CartesianChart, IEnumerable<IAxis>>(
+                nameof(XAxes), new List<IAxis> { new Axis() }, inherits: true);
 
         public static readonly AvaloniaProperty<IEnumerable<IAxis>> YAxesProperty =
-            AvaloniaProperty.Register<CartesianChart, IEnumerable<IAxis>>(nameof(YAxes), new List<IAxis>(), inherits: true);
+            AvaloniaProperty.Register<CartesianChart, IEnumerable<IAxis>>(
+                nameof(YAxes), new List<IAxis> { new Axis() }, inherits: true);
 
         public IEnumerable<ISeries> Series
         {

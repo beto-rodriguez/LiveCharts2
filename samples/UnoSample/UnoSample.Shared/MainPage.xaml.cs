@@ -13,8 +13,6 @@ namespace UnoSample
         public MainPage()
         {
             InitializeComponent();
-
-            DataContext = new CartesianViewModel();
         }
     }
 }

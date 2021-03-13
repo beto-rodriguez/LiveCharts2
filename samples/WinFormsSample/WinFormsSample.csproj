@@ -11,4 +11,13 @@
     <ProjectReference Include="..\ViewModelsSamples\ViewModelsSamples.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Bars\Basic\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Pies\Basic\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>

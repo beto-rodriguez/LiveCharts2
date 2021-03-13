@@ -88,14 +88,22 @@ namespace LiveChartsCore
 
             if (legend != null) legend.Draw(this);
 
-            // restart axes bounds and meta data
-            foreach (var axis in secondaryAxes) axis.Initialize(AxisOrientation.X);
-            foreach (var axis in primaryAxes) axis.Initialize(AxisOrientation.Y);
-
             var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<TDrawingContext>();
             var initializer = stylesBuilder.GetInitializer();
             if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
                 throw new Exception("Default colors are not valid");
+
+            // restart axes bounds and meta data
+            foreach (var axis in secondaryAxes)
+            { 
+                axis.Initialize(AxisOrientation.X);
+                initializer.ResolveAxisDefaults(axis);
+            }
+            foreach (var axis in primaryAxes)
+            { 
+                axis.Initialize(AxisOrientation.Y);
+                initializer.ResolveAxisDefaults(axis);
+            }
 
             // get seriesBounds
             foreach (var series in series)

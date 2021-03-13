@@ -1,29 +1,69 @@
-﻿<Window x:Class="WPFSample.MainWindow"
+﻿<fw:AcrylicWindow x:Class="WPFSample.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WPFSample"
-        xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF" 
-        xmlns:vm="clr-namespace:ViewModelsSamples;assembly=ViewModelsSamples"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowStartupLocation="CenterScreen"
+        BorderThickness="1"
+        BorderBrush="#eeeeee"
+        MouseDown="AcrylicWindow_MouseDown"
+        AcrylicWindowStyle="NoIcon"
+        xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+        TintOpacity="0.8">
 
-    <Window.DataContext>
-        <!--<vm:PieViewModel></vm:PieViewModel>-->
-        <vm:CartesianViewModel></vm:CartesianViewModel>
-    </Window.DataContext>
+    <Grid Margin="25 0 0 0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <!--<RowDefinition Height="40"></RowDefinition>-->
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
-        <!--<StackPanel Orientation="Horizontal" Background="Red">
-            <Button>Action!</Button>
-        </StackPanel>-->
-        <!--<lvc:PieChart Grid.Row="1" Series="{Binding Series}" LegendPosition="Right"> </lvc:PieChart>-->
-        <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" YAxes="{Binding YAxes}" XAxes="{Binding XAxes}"  TooltipFindingStrategy="CompareOnlyX">
-        </lvc:CartesianChart>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0">
+                <Image>
+                    <Image.Source>
+                        <BitmapImage  UriSource="/Images/livecharts.png" />
+                    </Image.Source>
+                </Image>
+            </Border>
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0 20">
+
+                <ItemsControl ItemsSource="{Binding Samples}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="0 8" Cursor="Hand" MouseDown="Border_MouseDown">
+                                <TextBlock Text="{Binding}" FontSize="15" FontFamily="Trebuchet MS" FontWeight="Regular"></TextBlock>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+            </ScrollViewer>
+        </Grid>
+
+        <Border Grid.Column="1" >
+            <Border Background="White" Margin="20 60 20 20" Padding="20" CornerRadius="8">
+                <Border.Effect>
+                    <DropShadowEffect 
+                           BlurRadius="10" 
+                           ShadowDepth="0" 
+                           Opacity="0.1"
+                           Color="#303030"/>
+                </Border.Effect>
+                <ContentControl x:Name="content"></ContentControl>
+            </Border>
+        </Border>
+
     </Grid>
-</Window>
+
+</fw:AcrylicWindow>

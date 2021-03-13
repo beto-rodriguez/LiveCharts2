@@ -7,8 +7,41 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\livecharts.png" />
+    <None Remove="Quicksand-Regular.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentWPF" Version="0.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharp.WPF\LiveChartsCore.SkiaSharpView.WPF.csproj" />
     <ProjectReference Include="..\ViewModelsSamples\ViewModelsSamples.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\livecharts.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Bars\Basic\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Pies\Basic\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Bars\Basic\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pies\Basic\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>

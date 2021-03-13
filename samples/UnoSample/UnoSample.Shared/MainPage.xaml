@@ -6,15 +6,19 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Uno"
-    xmlns:vms="using:ViewModelsSamples"
+    xmlns:vms="using:ViewModelsSamples.Lines.Basic"
     mc:Ignorable="d">
 
+    <Page.DataContext>
+        <vms:ViewModel/>
+    </Page.DataContext>
+    
     <Page.Content>
+
         <Grid>
             <Grid.Children>
                 
-                <!--<TextBlock Text="Hello, world!" Margin="20" FontSize="30" />-->
-                <lvc:CartesianChart Series="{Binding Series}" YAxes="{Binding YAxes}" XAxes="{Binding XAxes}"></lvc:CartesianChart>
+                <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
 
             </Grid.Children>
         </Grid>

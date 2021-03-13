@@ -9,9 +9,4 @@
     <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Avalonia\" />
-    <Folder Include="SkiaSharp\" />
-  </ItemGroup>
-
 </Project>
