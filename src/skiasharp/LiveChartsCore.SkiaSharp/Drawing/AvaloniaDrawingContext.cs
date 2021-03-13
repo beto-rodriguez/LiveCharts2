@@ -20,35 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.AvaloniaView.Drawing;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Sketches;
-using System;
+using SkiaSharp;
 
-namespace LiveChartsCore.AvaloniaView
+namespace LiveChartsCore.SkiaSharpView.Drawing
 {
-    [Obsolete("Instead use LiveChartsCore.SkiaSharpView")]
-    public class StackedColumnSeries<TModel> : StackedColumnSeries<TModel, RectangleGeometry, LabelGeometry>
+    public class AvaloniaDrawingContext: SkiaSharpDrawingContext
     {
-
-    }
-
-    [Obsolete("Instead use LiveChartsCore.SkiaSharpView")]
-    public class StackedColumnSeries<TModel, TVisual> : StackedColumnSeries<TModel, TVisual, LabelGeometry>
-        where TVisual : class, ISizedVisualChartPoint<AvaloniaDrawingContext>, new()
-    {
-
-    }
-
-    [Obsolete("Instead use LiveChartsCore.SkiaSharpView")]
-    public class StackedColumnSeries<TModel, TVisual, TLabel> : StackedColumnSeries<TModel, TVisual, TLabel, AvaloniaDrawingContext>
-        where TVisual : class, ISizedVisualChartPoint<AvaloniaDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<AvaloniaDrawingContext>, new()
-    {
-        public StackedColumnSeries()
+        public AvaloniaDrawingContext(SKImageInfo info, SKSurface surface, SKCanvas canvas) 
+            :base(info, surface, canvas) 
         {
-            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsAvalonia.DefaultPlatformBuilder);
-            InitializeSeries();
+
+        }
+        public override void ClearCanvas()
+        {
+            // work arround becauase avalonia clears the canvas to black
+            Canvas.Clear(new SKColor(255, 255, 255));
         }
     }
 }

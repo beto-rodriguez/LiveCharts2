@@ -23,20 +23,24 @@
 using LiveChartsCore.AvaloniaView.Drawing;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Sketches;
+using System;
 
 namespace LiveChartsCore.AvaloniaView
 {
+    [Obsolete("Instead use LiveChartsCore.SkiaSharpView")]
     public class PieSeries<TModel> : PieSeries<TModel, DoughnutGeometry, LabelGeometry>
     {
 
     }
 
+    [Obsolete("Instead use LiveChartsCore.SkiaSharpView")]
     public class PieSeries<TModel, TVisual> : PieSeries<TModel, TVisual, LabelGeometry>
         where TVisual : class, IDoughnutVisualChartPoint<AvaloniaDrawingContext>, new()
     {
 
     }
 
+    [Obsolete("Instead use LiveChartsCore.SkiaSharpView")]
     public class PieSeries<TModel, TVisual, TLabel> : PieSeries<TModel, TVisual, TLabel, AvaloniaDrawingContext>
         where TVisual : class, IDoughnutVisualChartPoint<AvaloniaDrawingContext>, new()
         where TLabel : class, ILabelGeometry<AvaloniaDrawingContext>, new()

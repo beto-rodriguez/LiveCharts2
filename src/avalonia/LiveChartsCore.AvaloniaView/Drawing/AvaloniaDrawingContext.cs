@@ -23,9 +23,11 @@
 
 using Avalonia.Media;
 using LiveChartsCore.Drawing;
+using System;
 
 namespace LiveChartsCore.AvaloniaView.Drawing
 {
+    [Obsolete("Instead use LiveChartsCore.SkiaSharpView")]
     public class AvaloniaDrawingContext : LiveChartsCore.Drawing.DrawingContext
     {
         private readonly Avalonia.Media.DrawingContext avaloniaContext;

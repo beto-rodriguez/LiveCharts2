@@ -24,20 +24,24 @@ using Avalonia.Media;
 using LiveChartsCore.AvaloniaView.Drawing;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Sketches;
+using System;
 
 namespace LiveChartsCore.AvaloniaView
 {
+    [Obsolete("Instead use LiveChartsCore.SkiaSharpView")]
     public class StackedAreaSeries<TModel> : StackedAreaSeries<TModel, CircleGeometry, LabelGeometry>
     {
 
     }
 
+    [Obsolete("Instead use LiveChartsCore.SkiaSharpView")]
     public class StackedAreaSeries<TModel, TVisual> : StackedAreaSeries<TModel, TVisual, LabelGeometry>
         where TVisual : class, ISizedVisualChartPoint<AvaloniaDrawingContext>, new()
     {
 
     }
 
+    [Obsolete("Instead use LiveChartsCore.SkiaSharpView")]
     public class StackedAreaSeries<TModel, TVisual, TLabel>
         : StackedAreaSeries<TModel, TVisual, TLabel, AvaloniaDrawingContext, Drawing.PathGeometry, Drawing.LineSegment, CubicBezierSegment, MoveToPathCommand, StreamGeometryContext>
         where TVisual : class, ISizedVisualChartPoint<AvaloniaDrawingContext>, new()

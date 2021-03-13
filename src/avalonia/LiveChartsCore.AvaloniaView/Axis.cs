@@ -22,9 +22,11 @@
 
 using LiveChartsCore.AvaloniaView.Drawing;
 using LiveChartsCore.Sketches;
+using System;
 
 namespace LiveChartsCore.AvaloniaView
 {
+    [Obsolete("Instead use LiveChartsCore.SkiaSharpView")]
     public class Axis : Axis<AvaloniaDrawingContext, LabelGeometry, LineGeometry>
     {
     }
