@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net5.0</TargetFramework>
@@ -13,6 +13,9 @@
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="PieChart.axaml.cs">
+      <DependentUpon>PieChart.axaml</DependentUpon>
+    </Compile>
     <Compile Update="CartesianChart.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
