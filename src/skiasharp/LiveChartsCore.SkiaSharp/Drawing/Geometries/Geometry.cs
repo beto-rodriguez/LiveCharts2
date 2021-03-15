@@ -28,7 +28,7 @@ using SkiaSharp;
 using System;
 using System.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
     public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>, IVisualChartPoint<SkiaSharpDrawingContext>
     {
@@ -51,7 +51,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
         public float X { get => x.GetMovement(this); set => x.SetMovement(value, this); }
 
         public float Y { get => y.GetMovement(this); set => y.SetMovement(value, this); }
-        
+
         public SKMatrix Transform
         {
             get => transform.GetMovement(this);
@@ -128,8 +128,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
                 if (r < 0) r += 360;
                 r %= 90;
 
-                var w = (float) (Math.Cos(r * toRadias) * measure.Width + Math.Sin(r * toRadias) * measure.Height);
-                var h = (float) (Math.Sin(r * toRadias) * measure.Width + Math.Cos(r * toRadias) * measure.Height);
+                var w = (float)(Math.Cos(r * toRadias) * measure.Width + Math.Sin(r * toRadias) * measure.Height);
+                var h = (float)(Math.Sin(r * toRadias) * measure.Width + Math.Cos(r * toRadias) * measure.Height);
 
                 measure = new SizeF(w, h);
             }

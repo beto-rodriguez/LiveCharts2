@@ -22,6 +22,8 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView

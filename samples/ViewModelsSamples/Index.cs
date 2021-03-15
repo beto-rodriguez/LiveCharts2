@@ -5,6 +5,7 @@
         public static string[] Samples = new[]
         {
             "Lines/Basic",
+            "Lines/Highlights",
 
             "Bars/Basic",
 

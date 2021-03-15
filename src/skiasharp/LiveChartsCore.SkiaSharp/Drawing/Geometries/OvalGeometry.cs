@@ -22,19 +22,20 @@
 
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
-    public class CircleGeometry : SizedGeometry
+    public class OvalGeometry : SizedGeometry
     {
-        public CircleGeometry() : base()
+        public OvalGeometry() : base()
         {
-            matchDimensions = true;
+
         }
 
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
             var rx = Width / 2f;
-            context.Canvas.DrawCircle(X + rx, Y + rx, rx, paint);
+            var ry = Height / 2f;
+            context.Canvas.DrawOval(X + rx, Y + ry, rx, ry, paint);
         }
     }
 }

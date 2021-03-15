@@ -27,7 +27,7 @@ using SkiaSharp;
 using System;
 using System.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
     public class DoughnutGeometry : Geometry, IDoughnutGeometry<SkiaSharpDrawingContext>, IDoughnutVisualChartPoint<SkiaSharpDrawingContext>
     {
@@ -83,7 +83,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
                 (float)(cx + Math.Cos(startAngle * toRadians) * wedge),
                 (float)(cy + Math.Sin(startAngle * toRadians) * wedge));
             path.LineTo(
-                (float)(cx + Math.Cos(startAngle * toRadians) * (r + pushout)), 
+                (float)(cx + Math.Cos(startAngle * toRadians) * (r + pushout)),
                 (float)(cy + Math.Sin(startAngle * toRadians) * (r + pushout)));
             path.ArcTo(
                 new SKRect { Left = X, Top = Y, Size = new SKSize { Width = Width, Height = Height } },
@@ -94,7 +94,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
                 (float)(cx + Math.Cos((sweepAngle + startAngle) * toRadians) * wedge),
                 (float)(cy + Math.Sin((sweepAngle + startAngle) * toRadians) * wedge));
             path.ArcTo(
-                new SKPoint { X = wedge + pushout, Y = wedge + pushout},
+                new SKPoint { X = wedge + pushout, Y = wedge + pushout },
                 0,
                 SKPathArcSize.Small,
                 SKPathDirection.CounterClockwise,

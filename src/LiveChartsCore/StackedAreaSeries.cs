@@ -37,8 +37,8 @@ namespace LiveChartsCore
         public StackedAreaSeries()
             : base(true)
         {
-            ShapesFill = null;
-            ShapesStroke = null;
+            GeometryFill = null;
+            GeometryStroke = null;
             GeometrySize = 0;
         }
     }

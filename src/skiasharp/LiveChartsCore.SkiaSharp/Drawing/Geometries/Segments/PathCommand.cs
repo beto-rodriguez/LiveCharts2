@@ -20,29 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Motion;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Common;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments
 {
-    public class RoundedRectangleGeometry : SizedGeometry
+    public abstract class PathCommand : Animatable, IPathCommand<SKPath>
     {
-        private readonly FloatMotionProperty rx;
-        private readonly FloatMotionProperty ry;
-
-        public RoundedRectangleGeometry()
-        {
-            rx = RegisterMotionProperty(new FloatMotionProperty(nameof(Rx), 0f));
-            ry = RegisterMotionProperty(new FloatMotionProperty(nameof(Ry), 0f));
-        }
-
-        public float Rx { get => rx.GetMovement(this); set => rx.SetMovement(value, this); }
-        public float Ry { get => ry.GetMovement(this); set => ry.SetMovement(value, this); }
-
-        public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
-        {
-            context.Canvas.DrawRoundRect(
-                new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } }, Rx, Ry, paint);
-        }
+        public abstract void Execute(SKPath path, long currentTime, Animatable pathGeometry);
     }
 }

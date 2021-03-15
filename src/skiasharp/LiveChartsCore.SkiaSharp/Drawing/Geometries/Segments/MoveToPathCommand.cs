@@ -25,7 +25,7 @@ using LiveChartsCore.Drawing.Common;
 using LiveChartsCore.Motion;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments
 {
     public class MoveToPathCommand : PathCommand, IMoveToPathCommand<SKPath>
     {

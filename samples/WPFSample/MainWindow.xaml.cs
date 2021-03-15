@@ -1,17 +1,13 @@
-﻿using SourceChord.FluentWPF;
-using System;
-using System.Runtime.InteropServices;
+﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Interop;
 
 namespace WPFSample
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : AcrylicWindow
+    public partial class MainWindow : Window
     {
         public MainWindow()
         {

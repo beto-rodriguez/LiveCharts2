@@ -25,18 +25,67 @@ using System;
 
 namespace LiveChartsCore.Context
 {
+    /// <summary>
+    /// Defines a line series plot.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="LiveChartsCore.Context.IDrawableSeries{TDrawingContext}" />
     public interface ILineSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Gets or sets the size of the geometry.
+        /// </summary>
+        /// <value>
+        /// The size of the geometry.
+        /// </value>
         double GeometrySize { get; set; }
+
+        /// <summary>
+        /// Gets or sets the line smoothness, where 0 is a staright line, and 1 the most curved line, default is 0.65
+        /// </summary>
+        /// <value>
+        /// The line smoothness.
+        /// </value>
         double LineSmoothness { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the line should split every null point, 
+        /// enabling it has a performance impact, defaulty is true.
+        /// </summary>
         bool EnableNullSplitting { get; set; }
 
-        IDrawableTask<TDrawingContext>? ShapesFill { get; set; }
-        IDrawableTask<TDrawingContext>? ShapesStroke { get; set; }
+        /// <summary>
+        /// Gets or sets the geometry fill.
+        /// </summary>
+        /// <value>
+        /// The shapes fill.
+        /// </value>
+        IDrawableTask<TDrawingContext>? GeometryFill { get; set; }
 
+        /// <summary>
+        /// Gets or sets the geometry stroke.
+        /// </summary>
+        /// <value>
+        /// The shapes stroke.
+        /// </value>
+        IDrawableTask<TDrawingContext>? GeometryStroke { get; set; }
+
+        /// Gets or sets a delegate that will be called everytime a <see cref="ChartPoint{TModel, TVisual, TLabel, TDrawingContext}"/>
+        /// instance is created by this series.
+        /// </summary>
         Action<ILineBezierVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? OnPointCreated { get; set; }
+
+        /// <summary>
+        /// Gets or sets a delegate that will be called everytime a <see cref="ChartPoint{TModel, TVisual, TLabel, TDrawingContext}"/> instance
+        /// is added to a state.
+        /// </summary>
         Action<ILineBezierVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? OnPointAddedToState { get; set; }
+
+        /// <summary>
+        /// Gets or sets a delegate that will be called everytime a <see cref="ChartPoint{TModel, TVisual, TLabel, TDrawingContext}"/> instance
+        /// is removed from a state.
+        /// </summary>
         Action<ILineBezierVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? OnPointRemovedFromState { get; set; }
     }
 }

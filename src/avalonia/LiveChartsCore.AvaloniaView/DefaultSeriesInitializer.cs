@@ -77,8 +77,8 @@ namespace LiveChartsCore.AvaloniaView
                 if ((series.SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked)
                 {
                     lineSeries.GeometrySize = 0;
-                    lineSeries.ShapesFill = null;
-                    lineSeries.ShapesStroke = null;
+                    lineSeries.GeometryFill = null;
+                    lineSeries.GeometryStroke = null;
                     lineSeries.Stroke = null;
                     series.Fill = LiveChartsAvalonia.DefaultPaint;
 
@@ -86,8 +86,8 @@ namespace LiveChartsCore.AvaloniaView
                 }
 
                 lineSeries.GeometrySize = 18;
-                lineSeries.ShapesFill = new SolidColorPaintTask(new Avalonia.Media.Color(255, 250, 250, 250));
-                lineSeries.ShapesStroke = LiveChartsAvalonia.DefaultPaint;
+                lineSeries.GeometryFill = new SolidColorPaintTask(new Avalonia.Media.Color(255, 250, 250, 250));
+                lineSeries.GeometryStroke = LiveChartsAvalonia.DefaultPaint;
             }
 
             series.Fill = LiveChartsAvalonia.DefaultPaint;
@@ -120,10 +120,10 @@ namespace LiveChartsCore.AvaloniaView
             if ((series.SeriesProperties & SeriesProperties.Line) == SeriesProperties.Line)
             {
                 var lineSeries = (ILineSeries<AvaloniaDrawingContext>)series;
-                if (lineSeries.ShapesFill == LiveChartsAvalonia.DefaultPaint)
-                    lineSeries.ShapesFill = new SolidColorPaintTask(ColorAsAvaloniaColor(color));
-                if (lineSeries.ShapesStroke == LiveChartsAvalonia.DefaultPaint)
-                    lineSeries.ShapesStroke = new SolidColorPaintTask(ColorAsAvaloniaColor(color), lineSeries.Stroke?.StrokeThickness ?? 3.5f);
+                if (lineSeries.GeometryFill == LiveChartsAvalonia.DefaultPaint)
+                    lineSeries.GeometryFill = new SolidColorPaintTask(ColorAsAvaloniaColor(color));
+                if (lineSeries.GeometryStroke == LiveChartsAvalonia.DefaultPaint)
+                    lineSeries.GeometryStroke = new SolidColorPaintTask(ColorAsAvaloniaColor(color), lineSeries.Stroke?.StrokeThickness ?? 3.5f);
             }
         }
 

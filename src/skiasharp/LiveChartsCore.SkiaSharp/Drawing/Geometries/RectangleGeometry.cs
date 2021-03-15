@@ -22,19 +22,19 @@
 
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
-    public class SquareGeometry : SizedGeometry
+    public class RectangleGeometry : SizedGeometry
     {
-        public SquareGeometry() : base()
+        public RectangleGeometry() : base()
         {
-            matchDimensions = true;
+
         }
 
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
             context.Canvas.DrawRect(
-                new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Width, Width = Width } }, paint);
+                new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } }, paint);
         }
     }
 }

@@ -1,16 +1,11 @@
-﻿<fw:AcrylicWindow x:Class="WPFSample.MainWindow"
+﻿<Window x:Class="WPFSample.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        WindowStyle="None"
-        AllowsTransparency="True"
-        Background="Transparent"
+        Background="#fafafa"
         WindowStartupLocation="CenterScreen"
         BorderThickness="1"
         BorderBrush="#eeeeee"
-        MouseDown="AcrylicWindow_MouseDown"
-        AcrylicWindowStyle="NoIcon"
-        xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
-        TintOpacity="0.8">
+        MouseDown="AcrylicWindow_MouseDown">
 
     <Grid Margin="25 0 0 0">
         <Grid.ColumnDefinitions>
@@ -52,7 +47,7 @@
         </Grid>
 
         <Border Grid.Column="1" >
-            <Border Background="White" Margin="20 60 20 20" Padding="20" CornerRadius="8">
+            <Border Background="White" Margin="20 60 20 20" Padding="20" CornerRadius="8" MaxWidth="900" MaxHeight="600">
                 <Border.Effect>
                     <DropShadowEffect 
                            BlurRadius="10" 
@@ -66,4 +61,4 @@
 
     </Grid>
 
-</fw:AcrylicWindow>
+</Window>

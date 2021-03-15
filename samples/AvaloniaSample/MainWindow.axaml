@@ -51,7 +51,8 @@
 
       <Border Grid.Column="1" >
         <Border Background="White" Margin="20 80 20 20" Padding="20" CornerRadius="8"
-                BoxShadow="0 0 10 0 #05000000, 0 0 10 0 #05000000, 0 0 10 0 #05000000, 0 0 10 0 #05000000">
+                BoxShadow="0 0 10 0 #05000000, 0 0 10 0 #05000000, 0 0 10 0 #05000000, 0 0 10 0 #05000000"
+                MaxWidth="900" MaxHeight="600">
           <ContentControl x:Name="content"></ContentControl>
         </Border>
       </Border>

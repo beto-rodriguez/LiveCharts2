@@ -26,27 +26,22 @@ using System;
 
 namespace LiveChartsCore
 {
-    /// <summary>
-    /// Defines data to plot in a chart.
-    /// </summary>
+    /// <inheritdoc cref="ICartesianSeries{TDrawingContext}"/>
     public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
         : DrawableSeries<TModel, TVisual, TLabel, TDrawingContext>, IDisposable, ICartesianSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Series{T}"/> class.
-        /// </summary>
         public CartesianSeries(SeriesProperties properties): base(properties) { }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.ScalesXAt"/>
         public int ScalesXAt { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.ScalesYAt"/>
         public int ScalesYAt { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
         public virtual DimensinalBounds GetBounds(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
@@ -68,7 +63,7 @@ namespace LiveChartsCore
             return bounds;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.Measure(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
         public abstract void Measure(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
     }

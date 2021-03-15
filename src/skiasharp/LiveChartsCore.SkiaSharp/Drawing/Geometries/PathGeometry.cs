@@ -24,7 +24,7 @@ using LiveChartsCore.Drawing;
 using SkiaSharp;
 using System.Collections.Generic;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
     public class PathGeometry : Drawable, IPathGeometry<SkiaSharpDrawingContext, SKPath>
     {

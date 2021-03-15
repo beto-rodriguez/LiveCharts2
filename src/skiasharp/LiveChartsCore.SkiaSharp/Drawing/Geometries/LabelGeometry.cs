@@ -27,7 +27,7 @@ using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
     public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     {

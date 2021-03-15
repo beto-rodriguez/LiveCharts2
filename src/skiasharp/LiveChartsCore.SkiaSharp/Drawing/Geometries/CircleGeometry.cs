@@ -22,49 +22,19 @@
 
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
-    public class SVGPathGeometry : SizedGeometry
+    public class CircleGeometry : SizedGeometry
     {
-        private string svg;
-        private SKPath svgPath;
-
-        public SVGPathGeometry() : base()
+        public CircleGeometry() : base()
         {
-
+            matchDimensions = true;
         }
-
-        public SVGPathGeometry(SKPath svgPath)
-        {
-            this.svgPath = svgPath;
-        }
-
-        public string SVG { get => svg; set { svg = value; OnSVGPropertyChanged(); } }
 
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
-            if (svgPath == null && svg == null)
-                throw new System.NullReferenceException(
-                    $"{nameof(SVG)} property is null and there is not a defined path to draw.");
-
-            context.Canvas.Save();
-
-            var canvas = context.Canvas;
-            svgPath.GetTightBounds(out SKRect bounds);
-
-            canvas.Translate(X + Width / 2, Y + Height / 2);
-            canvas.Scale(Width / (bounds.Width + paint.StrokeWidth),
-                         Height / (bounds.Height + paint.StrokeWidth));
-            canvas.Translate(-bounds.MidX, -bounds.MidY);
-
-            canvas.DrawPath(svgPath, paint);
-
-            context.Canvas.Restore();
-        }
-
-        private void OnSVGPropertyChanged()
-        {
-            svgPath = SKPath.ParseSvgPathData(svg);
+            var rx = Width / 2f;
+            context.Canvas.DrawCircle(X + rx, Y + rx, rx, paint);
         }
     }
 }

@@ -22,19 +22,49 @@
 
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
-    public class RectangleGeometry : SizedGeometry
+    public class SVGPathGeometry : SizedGeometry
     {
-        public RectangleGeometry() : base()
+        private string svg;
+        private SKPath svgPath;
+
+        public SVGPathGeometry() : base()
         {
 
         }
 
+        public SVGPathGeometry(SKPath svgPath)
+        {
+            this.svgPath = svgPath;
+        }
+
+        public string SVG { get => svg; set { svg = value; OnSVGPropertyChanged(); } }
+
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
-            context.Canvas.DrawRect(
-                new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } }, paint);
+            if (svgPath == null && svg == null)
+                throw new System.NullReferenceException(
+                    $"{nameof(SVG)} property is null and there is not a defined path to draw.");
+
+            context.Canvas.Save();
+
+            var canvas = context.Canvas;
+            svgPath.GetTightBounds(out SKRect bounds);
+
+            canvas.Translate(X + Width / 2, Y + Height / 2);
+            canvas.Scale(Width / (bounds.Width + paint.StrokeWidth),
+                         Height / (bounds.Height + paint.StrokeWidth));
+            canvas.Translate(-bounds.MidX, -bounds.MidY);
+
+            canvas.DrawPath(svgPath, paint);
+
+            context.Canvas.Restore();
+        }
+
+        private void OnSVGPropertyChanged()
+        {
+            svgPath = SKPath.ParseSvgPathData(svg);
         }
     }
 }

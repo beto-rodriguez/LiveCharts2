@@ -24,14 +24,47 @@ using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Context
 {
+    /// <summary>
+    /// Defines a Cartesian series.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="LiveChartsCore.Context.IDrawableSeries{TDrawingContext}" />
     public interface ICartesianSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Gets or sets the axis index where the series is scaled in the X plane, the index must exist 
+        /// in the <see cref="ICartesianChartView{TDrawingContext}.XAxes"/> collection.
+        /// </summary>
+        /// <value>
+        /// The index of the axis.
+        /// </value>
         int ScalesXAt { get; set; }
+
+        /// <summary>
+        /// Gets or sets the axis index where the series is scaled in the Y plane, the index must exist 
+        /// in the <see cref="ICartesianChartView{TDrawingContext}.YAxes"/> collection.
+        /// </summary>
+        /// <value>
+        /// The index of the axis.
+        /// </value>
         int ScalesYAt { get; set; }
 
+        /// <summary>
+        /// Gets the series bounds bounds.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
         DimensinalBounds GetBounds(CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
 
+        /// <summary>
+        /// Measures the series and schedules the draw in specified chart.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
+        /// <param name="x">The x axis.</param>
+        /// <param name="y">The y axis.</param>
         void Measure(CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
     }
 }

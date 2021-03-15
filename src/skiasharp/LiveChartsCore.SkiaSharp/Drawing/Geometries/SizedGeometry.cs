@@ -25,7 +25,7 @@ using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
 using System.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
     public abstract class SizedGeometry : Geometry, ISizedVisualChartPoint<SkiaSharpDrawingContext>
     {

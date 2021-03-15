@@ -56,13 +56,27 @@ namespace LiveChartsCore
             HoverState = LiveCharts.LineSeriesHoverKey;
         }
 
+        /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometrySize"/>
         public double GeometrySize { get => geometrySize; set => geometrySize = (float)value; }
 
-        public double LineSmoothness { get => lineSmoothness; set => lineSmoothness = (float)value; }
+        /// <inheritdoc cref="ILineSeries{TDrawingContext}.LineSmoothness"/>
+        public double LineSmoothness 
+        { 
+            get => lineSmoothness;
+            set 
+            {
+                var v = value;
+                if (value > 1) v = 1;
+                if (value < 0) v = 0;
+                lineSmoothness = (float)v; 
+            }
+        }
 
+        /// <inheritdoc cref="ILineSeries{TDrawingContext}.EnableNullSplitting"/>
         public bool EnableNullSplitting { get => enableNullSplitting; set => enableNullSplitting = value; }
 
-        public IDrawableTask<TDrawingContext>? ShapesFill
+        /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometryFill"/>
+        public IDrawableTask<TDrawingContext>? GeometryFill
         {
             get => shapesFill;
             set
@@ -78,7 +92,8 @@ namespace LiveChartsCore
             }
         }
 
-        public IDrawableTask<TDrawingContext>? ShapesStroke
+        /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometrySize"/>
+        public IDrawableTask<TDrawingContext>? GeometryStroke
         {
             get => shapesStroke;
             set
@@ -92,24 +107,28 @@ namespace LiveChartsCore
             }
         }
 
+        /// <inheritdoc cref="ILineSeries{TDrawingContext}.OnPointCreated"/>
         Action<ILineBezierVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? ILineSeries<TDrawingContext>.OnPointCreated
         {
             get => OnPointCreated as Action<ILineBezierVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>;
             set => OnPointCreated = value;
         }
 
+        /// <inheritdoc cref="ILineSeries{TDrawingContext}.OnPointAddedToState"/>
         Action<ILineBezierVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? ILineSeries<TDrawingContext>.OnPointAddedToState
         {
             get => OnPointAddedToState as Action<ILineBezierVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>;
             set => OnPointAddedToState = value;
         }
 
+        /// <inheritdoc cref="ILineSeries{TDrawingContext}.OnPointRemovedFromState"/>
         Action<ILineBezierVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? ILineSeries<TDrawingContext>.OnPointRemovedFromState
         {
             get => OnPointRemovedFromState as Action<ILineBezierVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>;
             set => OnPointRemovedFromState = value;
         }
 
+        /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.Measure(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})" />
         public override void Measure(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
         {
@@ -221,8 +240,8 @@ namespace LiveChartsCore
 
                         data.TargetPoint.Context.Visual = v;
 
-                        if (ShapesFill != null) ShapesFill.AddGeometyToPaintTask(v.Geometry);
-                        if (ShapesStroke != null) ShapesStroke.AddGeometyToPaintTask(v.Geometry);
+                        if (GeometryFill != null) GeometryFill.AddGeometyToPaintTask(v.Geometry);
+                        if (GeometryStroke != null) GeometryStroke.AddGeometyToPaintTask(v.Geometry);
                     }
 
                     var visual = data.TargetPoint.Context.Visual;
@@ -324,8 +343,8 @@ namespace LiveChartsCore
                     }
                 }
 
-                if (ShapesFill != null) chart.Canvas.AddDrawableTask(ShapesFill);
-                if (ShapesStroke != null) chart.Canvas.AddDrawableTask(ShapesStroke);
+                if (GeometryFill != null) chart.Canvas.AddDrawableTask(GeometryFill);
+                if (GeometryStroke != null) chart.Canvas.AddDrawableTask(GeometryStroke);
                 segmentI++;
             }
 
@@ -345,6 +364,7 @@ namespace LiveChartsCore
             if (DataLabelsBrush != null) chart.Canvas.AddDrawableTask(DataLabelsBrush);
         }
 
+        /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
         public override DimensinalBounds GetBounds(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {

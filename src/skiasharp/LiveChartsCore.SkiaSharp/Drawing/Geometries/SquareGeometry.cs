@@ -20,38 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
-using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
-using System;
-using System.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
-    public class LineGeometry : Geometry, ILineGeometry<SkiaSharpDrawingContext>
+    public class SquareGeometry : SizedGeometry
     {
-        private readonly FloatMotionProperty x1;
-        private readonly FloatMotionProperty y1;
-
-        public LineGeometry()
+        public SquareGeometry() : base()
         {
-            x1 = RegisterMotionProperty(new FloatMotionProperty(nameof(X1), 0f));
-            y1 = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
+            matchDimensions = true;
         }
-
-        public float X1 { get => x1.GetMovement(this); set => x1.SetMovement(value, this); }
-
-        public float Y1 { get => y1.GetMovement(this); set => y1.SetMovement(value, this); }
 
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
-            context.Canvas.DrawLine(X, Y, X1, Y1, paint);
-        }
-
-        protected override SizeF OnMeasure(PaintTask drawable)
-        {
-            return new SizeF(Math.Abs(X1 - X), Math.Abs(Y1 - Y));
+            context.Canvas.DrawRect(
+                new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Width, Width = Width } }, paint);
         }
     }
 }

@@ -85,8 +85,8 @@ namespace LiveChartsCore.SkiaSharpView
                 if ((series.SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked)
                 {
                     lineSeries.GeometrySize = 0;
-                    lineSeries.ShapesFill = null;
-                    lineSeries.ShapesStroke = null;
+                    lineSeries.GeometryFill = null;
+                    lineSeries.GeometryStroke = null;
                     lineSeries.Stroke = null;
                     series.Fill = LiveChartsSkiaSharp.DefaultPaint;
 
@@ -94,8 +94,8 @@ namespace LiveChartsCore.SkiaSharpView
                 }
 
                 lineSeries.GeometrySize = 18;
-                lineSeries.ShapesFill = new SolidColorPaintTask(new SKColor(250, 250, 250));
-                lineSeries.ShapesStroke = LiveChartsSkiaSharp.DefaultPaint;
+                lineSeries.GeometryFill = new SolidColorPaintTask(new SKColor(250, 250, 250));
+                lineSeries.GeometryStroke = LiveChartsSkiaSharp.DefaultPaint;
             }
 
             series.Fill = LiveChartsSkiaSharp.DefaultPaint;
@@ -128,10 +128,10 @@ namespace LiveChartsCore.SkiaSharpView
             if ((series.SeriesProperties & SeriesProperties.Line) == SeriesProperties.Line)
             {
                 var lineSeries = (ILineSeries<SkiaSharpDrawingContext>)series;
-                if (lineSeries.ShapesFill == LiveChartsSkiaSharp.DefaultPaint)
-                    lineSeries.ShapesFill = new SolidColorPaintTask(ColorAsSKColor(color));
-                if (lineSeries.ShapesStroke == LiveChartsSkiaSharp.DefaultPaint)
-                    lineSeries.ShapesStroke = new SolidColorPaintTask(ColorAsSKColor(color), lineSeries.Stroke?.StrokeThickness ?? 3.5f);
+                if (lineSeries.GeometryFill == LiveChartsSkiaSharp.DefaultPaint)
+                    lineSeries.GeometryFill = new SolidColorPaintTask(ColorAsSKColor(color));
+                if (lineSeries.GeometryStroke == LiveChartsSkiaSharp.DefaultPaint)
+                    lineSeries.GeometryStroke = new SolidColorPaintTask(ColorAsSKColor(color), lineSeries.Stroke?.StrokeThickness ?? 3.5f);
             }
         }
 
