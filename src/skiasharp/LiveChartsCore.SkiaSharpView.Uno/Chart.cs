@@ -63,6 +63,8 @@ namespace LiveChartsCore.SkiaSharpView.Uno
             get
             {
                 var i = DisplayInformation.GetForCurrentView();
+                var w = Width;
+                var h = Height;
                 return new SizeF
                 {
                     Width = (float)(ActualWidth*i.RawPixelsPerViewPixel),

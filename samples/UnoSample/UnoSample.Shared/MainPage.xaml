@@ -7,21 +7,65 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Uno"
     xmlns:vms="using:ViewModelsSamples.Lines.Basic"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Name="page"
+    SizeChanged="page_SizeChanged">
 
-    <Page.DataContext>
-        <vms:ViewModel/>
-    </Page.DataContext>
-    
     <Page.Content>
 
-        <Grid>
-            <Grid.Children>
-                
-                <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
+        <Canvas Width="{Binding Path=PageWidth}"
+                Height="{Binding Path=PageHeight}"
+                Background="#fafafa">
 
-            </Grid.Children>
-        </Grid>
+            <Border Canvas.ZIndex="2" Width="{Binding Path=PageWidth}" Height="32" PointerPressed="OnPointerPressed">
+                <PathIcon Margin="8 0" Width="32" Height="32" Data="M4,10h24c1.104,0,2-0.896,2-2s-0.896-2-2-2H4C2.896,6,2,6.896,2,8S2.896,10,4,10z M28,14H4c-1.104,0-2,0.896-2,2  s0.896,2,2,2h24c1.104,0,2-0.896,2-2S29.104,14,28,14z M28,22H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h24c1.104,0,2-0.896,2-2  S29.104,22,28,22z" HorizontalAlignment="Left" Foreground="#303030"/>
+            </Border>
+
+            <Border Padding="0 32 0 0" Canvas.ZIndex="1" Canvas.Left="{Binding Path=MenuLeft}"
+                    Width="{Binding Path=MenuWidth}"
+                    Height="{Binding Path=PageHeight}">
+
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+
+                    <ItemsControl ItemsSource="{Binding Samples}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="8" PointerPressed="OnItemPointerPressed">
+                                    <TextBlock Text="{Binding}" FontSize="15" FontFamily="Trebuchet MS"></TextBlock>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                </ScrollViewer>
+
+            </Border>
+
+            <Border Canvas.Left="{Binding Path=ContentLeft}"
+                    Width="{Binding Path=ContentWidth}"
+                    Height="{Binding Path=PageHeight}">
+                <Grid Padding="0 32 0 0">
+                    <Border Background="White" Margin="20 0 20 20" 
+                            Padding="20" CornerRadius="8"  BorderBrush="#eeeeee" BorderThickness="1">
+                        <!--<Border.drop>
+                            <DropShadowEffect 
+                           BlurRadius="10" 
+                           ShadowDepth="0" 
+                           Opacity="0.1"
+                           Color="#303030"/>
+                        </Border.drop>-->
+                        <ContentControl Name="content"></ContentControl>
+                    </Border>
+                </Grid>
+            </Border>
+
+        </Canvas>
+
     </Page.Content>
     
 </Page>

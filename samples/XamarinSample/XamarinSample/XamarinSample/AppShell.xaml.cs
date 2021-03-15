@@ -10,9 +10,6 @@ namespace XamarinSample
         public AppShell()
         {
             InitializeComponent();
-            //Routing.RegisterRoute(nameof(ItemDetailPage), typeof(ItemDetailPage));
-            //Routing.RegisterRoute(nameof(NewItemPage), typeof(NewItemPage));
-
             SizeChanged += AppShell_SizeChanged;
         }
 
@@ -27,7 +24,6 @@ namespace XamarinSample
             {
                 var shell_section = new ShellSection { Title = item };
 
-                // content.Content = Activator.CreateInstance(null, $"WPFSample.{ctx.Replace('/', '.')}.View").Unwrap();
                 var t = Type.GetType($"XamarinSample.{item.Replace('/', '.')}.View");
                 var i = Activator.CreateInstance(t);
 
