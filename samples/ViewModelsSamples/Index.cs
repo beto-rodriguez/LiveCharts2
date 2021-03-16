@@ -9,6 +9,7 @@
 
             "Bars/Basic",
             "Bars/Custom",
+            "Bars/WithBackground",
 
             "Pies/Basic",
 

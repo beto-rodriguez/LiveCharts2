@@ -28,6 +28,9 @@
     <Compile Update="Bars\Custom\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Bars\WithBackground\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="General\UserDefinedTypes\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

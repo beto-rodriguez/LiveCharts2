@@ -12,7 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Bars\Basic\View.cs">
+    <Compile Update="Bars\Basic - Copy\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Bars\WithBackground\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Bars\Custom\View.cs">
