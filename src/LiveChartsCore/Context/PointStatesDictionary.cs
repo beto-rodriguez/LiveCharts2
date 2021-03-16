@@ -48,6 +48,7 @@ namespace LiveChartsCore.Context
                 if (states.ContainsKey(stateName)) RemoveState(states[stateName]);
 
                 states[stateName] = value;
+
                 if (Chart == null) return;
 
                 if (value.Fill != null) Chart.Canvas.AddDrawableTask(value.Fill);
@@ -69,8 +70,8 @@ namespace LiveChartsCore.Context
         {
             if (Chart == null) return;
 
-            if (state.Fill != null) Chart.Canvas.AddDrawableTask(state.Fill);
-            if (state.Stroke != null) Chart.Canvas.AddDrawableTask(state.Stroke);
+            if (state.Fill != null) Chart.Canvas.RemovePaintTask(state.Fill);
+            if (state.Stroke != null) Chart.Canvas.RemovePaintTask(state.Stroke);
         }
     }
 }

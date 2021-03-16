@@ -105,6 +105,12 @@ namespace LiveChartsCore.Sketches
         public Action<TVisual, IChartView<TDrawingContext>>? OnPointCreated { get; set; }
 
         /// <summary>
+        /// Gets or sets a delegate that will be called everytime a <see cref="ChartPoint{TModel, TVisual, TLabel, TDrawingContext}"/>
+        /// instance is measured.
+        /// </summary>
+        public event Action<IChartPoint<TVisual, TLabel, TDrawingContext>>? PointMeasured;
+
+        /// <summary>
         /// Gets or sets a delegate that will be called everytime a <see cref="ChartPoint{TModel, TVisual, TLabel, TDrawingContext}"/> instance
         /// is added to a state.
         /// </summary>
@@ -151,10 +157,10 @@ namespace LiveChartsCore.Sketches
             if (s == null)
                 throw new Exception($"The state '{state}' was not found");
 
-            if (chartPoint.Context.Visual == null)
-                throw new Exception(
-                    $"The {nameof(IChartPoint)}.{nameof(IChartPoint.Context)}.{nameof(IChartPoint.Context.Visual)} property is null, " +
-                    $"this is probably due the point was not measured yet.");
+            if (chartPoint.Context.Visual == null) return;
+                //throw new Exception(
+                //    $"The {nameof(IChartPoint)}.{nameof(IChartPoint.Context)}.{nameof(IChartPoint.Context.Visual)} property is null, " +
+                //    $"this is probably due the point was not measured yet.");
 
             var visual = (TVisual)chartPoint.Context.Visual;
             var highlitable = visual.HighlightableGeometry;
@@ -180,10 +186,10 @@ namespace LiveChartsCore.Sketches
             if (s == null)
                 throw new Exception($"The state '{state}' was not found");
 
-            if (chartPoint.Context.Visual == null)
-                throw new Exception(
-                    $"The {nameof(IChartPoint)}.{nameof(IChartPoint.Context)}.{nameof(IChartPoint.Context.Visual)} property is null, " +
-                    $"this is probably due the point was not measured yet.");
+            if (chartPoint.Context.Visual == null) return;
+                //throw new Exception(
+                //    $"The {nameof(IChartPoint)}.{nameof(IChartPoint.Context)}.{nameof(IChartPoint.Context.Visual)} property is null, " +
+                //    $"this is probably due the point was not measured yet.");
 
             var visual = (TVisual)chartPoint.Context.Visual;
             var highlitable = visual.HighlightableGeometry;
@@ -211,7 +217,10 @@ namespace LiveChartsCore.Sketches
         /// </summary>
         /// <param name="chartPoint">The chart point.</param>
         /// <param name="visual">The visual.</param>
-        protected virtual void OnPointMeasured(IChartPoint<TVisual, TLabel, TDrawingContext> chartPoint, TVisual visual) { }
+        protected virtual void OnPointMeasured(IChartPoint<TVisual, TLabel, TDrawingContext> chartPoint, TVisual visual) 
+        {
+            PointMeasured?.Invoke(chartPoint);
+        }
 
         /// <summary>
         /// Called when a point was added to a sate.
