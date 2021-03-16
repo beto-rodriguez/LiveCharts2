@@ -12,6 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Bars\Layered\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Bars\States\View.cs">
       <SubType>UserControl</SubType>
     </Compile>

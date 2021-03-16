@@ -28,6 +28,9 @@
     <Compile Update="Bars\Basic\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Bars\Layered\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Bars\States\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -53,6 +56,10 @@
 
   <ItemGroup>
     <Page Update="Bars\Basic\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Bars\Layered\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
