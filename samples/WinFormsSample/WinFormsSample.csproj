@@ -42,6 +42,12 @@
     <Compile Update="Pies\Basic\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="StackedBars\Groups\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="StackedBars\Basic\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
   </ItemGroup>
 
 </Project>

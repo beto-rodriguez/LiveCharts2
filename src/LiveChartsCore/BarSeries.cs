@@ -38,7 +38,7 @@ namespace LiveChartsCore
         }
 
         /// <inheritdoc cref="IBarSeries{TDrawingContext}.MaxBarWidth"/>
-        public double MaxBarWidth { get; set; } = 30;
+        public double MaxBarWidth { get; set; } = 50;
 
         /// <inheritdoc cref="IBarSeries{TDrawingContext}.IgnoresBarPosition"/>
         public bool IgnoresBarPosition { get; set; } = false;

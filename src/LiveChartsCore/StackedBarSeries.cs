@@ -32,7 +32,6 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
-        protected static float pivot = 0;
         protected int stackGroup;
 
         public StackedBarSeries(SeriesProperties properties)
@@ -43,7 +42,7 @@ namespace LiveChartsCore
 
         public int StackGroup { get => stackGroup; set => stackGroup = value; }
 
-        public double MaxColumnWidth { get; set; } = 30;
+        public double MaxBarWidth { get; set; } = 50;
 
         Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IStackedBarSeries<TDrawingContext>.OnPointCreated
         {

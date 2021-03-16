@@ -61,9 +61,9 @@ namespace LiveChartsCore
                 cp = (pos - count / 2f) * uw + uwm;
             }
 
-            if (uw > MaxColumnWidth)
+            if (uw > MaxBarWidth)
             {
-                uw = unchecked((float)MaxColumnWidth);
+                uw = unchecked((float)MaxBarWidth);
                 uwm = uw / 2f;
             }
 

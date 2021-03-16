@@ -14,6 +14,9 @@
             "Bars/Layered",
             "Bars/States",
 
+            "StackedBars/Basic",
+            "StackedBars/Groups",
+
             "Pies/Basic",
 
             "General/UserDefinedTypes",

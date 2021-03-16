@@ -28,7 +28,7 @@ namespace LiveChartsCore.Context
     public interface IStackedBarSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        double MaxColumnWidth { get; set; }
+        double MaxBarWidth { get; set; }
         int StackGroup { get; set; }
 
         Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? OnPointCreated { get; set; }

@@ -61,7 +61,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnoSample.Skia.Wpf.Host", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnoSample.Skia.Wpf", "samples\UnoSample\UnoSample.Skia.Wpf\UnoSample.Skia.Wpf.csproj", "{F54667C3-1792-40BD-9C59-2C6943CEA7A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnoSample.Skia.Gtk", "samples\UnoSample\UnoSample.Skia.Gtk\UnoSample.Skia.Gtk.csproj", "{5B83BB33-8D21-4591-96A6-1AE7A17CC774}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnoSample.Skia.Gtk", "samples\UnoSample\UnoSample.Skia.Gtk\UnoSample.Skia.Gtk.csproj", "{5B83BB33-8D21-4591-96A6-1AE7A17CC774}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnoSample.Skia.Tizen", "samples\UnoSample\UnoSample.Skia.Tizen\UnoSample.Skia.Tizen.csproj", "{22A5B01A-D6DF-4794-861F-BBB8050752AF}"
 EndProject
