@@ -5,11 +5,15 @@
         public static string[] Samples = new[]
         {
             "Lines/Basic",
-            "Lines/Highlights",
+            "Lines/Custom",
 
             "Bars/Basic",
+            "Bars/Custom",
 
             "Pies/Basic",
+
+            "General/UserDefinedTypes",
+            "General/NullPoints",
         };
     }
 }

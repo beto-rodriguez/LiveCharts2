@@ -32,8 +32,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 
         public RoundedRectangleGeometry()
         {
-            rx = RegisterMotionProperty(new FloatMotionProperty(nameof(Rx), 0f));
-            ry = RegisterMotionProperty(new FloatMotionProperty(nameof(Ry), 0f));
+            rx = RegisterMotionProperty(new FloatMotionProperty(nameof(Rx), 8f));
+            ry = RegisterMotionProperty(new FloatMotionProperty(nameof(Ry), 8f));
         }
 
         public float Rx { get => rx.GetMovement(this); set => rx.SetMovement(value, this); }

@@ -1,8 +1,8 @@
 ﻿using LiveChartsCore.SkiaSharpView.WinForms;
 using System.Windows.Forms;
-using ViewModelsSamples.Lines.Highlights;
+using ViewModelsSamples.General.NullPoints;
 
-namespace WinFormsSample.Lines.Highlights
+namespace WinFormsSample.General.NullPoints
 {
     public partial class View : UserControl
     {

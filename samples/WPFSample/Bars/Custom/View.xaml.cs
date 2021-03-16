@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace WPFSample.Lines.Highlights
+namespace WPFSample.Bars.Custom
 {
     /// <summary>
     /// Interaction logic for View.xaml

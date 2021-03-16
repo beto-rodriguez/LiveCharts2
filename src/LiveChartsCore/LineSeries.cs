@@ -314,7 +314,7 @@ namespace LiveChartsCore
                     OnPointMeasured(data.TargetPoint, visual);
                     chart.MeasuredDrawables.Add(visual.Geometry);
 
-                    if (DataLabelsBrush != null)
+                    if (DataLabelsDrawableTask != null)
                     {
                         if (data.TargetPoint.Context.Label == null)
                         {
@@ -327,14 +327,14 @@ namespace LiveChartsCore
 
                             l.CompleteAllTransitions();
                             data.TargetPoint.Context.Label = l;
-                            DataLabelsBrush.AddGeometyToPaintTask(l);
+                            DataLabelsDrawableTask.AddGeometyToPaintTask(l);
                         }
 
                         data.TargetPoint.Context.Label.Text = DataLabelFormatter(data.TargetPoint);
                         data.TargetPoint.Context.Label.TextSize = dls;
                         data.TargetPoint.Context.Label.Padding = DataLabelsPadding;
                         var labelPosition = GetLabelPosition(
-                            x - hgs, y - hgs, gs, gs, data.TargetPoint.Context.Label.Measure(DataLabelsBrush), DataLabelsPosition,
+                            x - hgs, y - hgs, gs, gs, data.TargetPoint.Context.Label.Measure(DataLabelsDrawableTask), DataLabelsPosition,
                             SeriesProperties, data.TargetPoint.PrimaryValue > Pivot);
                         data.TargetPoint.Context.Label.X = labelPosition.X;
                         data.TargetPoint.Context.Label.Y = labelPosition.Y;
@@ -361,7 +361,7 @@ namespace LiveChartsCore
                 strokePathHelperContainer.RemoveAt(iStroke);
             }
 
-            if (DataLabelsBrush != null) chart.Canvas.AddDrawableTask(DataLabelsBrush);
+            if (DataLabelsDrawableTask != null) chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
         }
 
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>

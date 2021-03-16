@@ -28,31 +28,31 @@ namespace LiveChartsCore.Defaults
 {
     public class WeightedPoint : INotifyPropertyChanged
     {
-        private double x;
-        private double y;
-        private double weight;
+        private double? x;
+        private double? y;
+        private double? weight;
 
         public WeightedPoint()
         {
 
         }
 
-        public WeightedPoint(double x, double y, double weight)
+        public WeightedPoint(double? x, double? y, double? weight)
         {
             this.x = x;
             this.y = y;
             this.weight = weight;
         }
 
-        public double X { get => x; set { x = value; OnPropertyChanged(); } }
+        public double? X { get => x; set { x = value; OnPropertyChanged(); } }
 
-        public double Y { get => y; set { y = value; OnPropertyChanged(); } }
+        public double? Y { get => y; set { y = value; OnPropertyChanged(); } }
 
-        public double Weight { get => weight; set { weight = value; OnPropertyChanged(); } }
+        public double? Weight { get => weight; set { weight = value; OnPropertyChanged(); } }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
         }

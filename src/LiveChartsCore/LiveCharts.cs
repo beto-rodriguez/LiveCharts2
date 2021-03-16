@@ -48,7 +48,7 @@ namespace LiveChartsCore
             configuration(settings);
         }
 
-        public static LiveChartsSettings HasMapFor<TModel>(Action<IChartPoint, TModel, IChartPointContext> mapper)
+        public static LiveChartsSettings HasMapFor<TModel>(Action<TModel, IChartPoint> mapper)
         {
             return settings.HasMap(mapper);
         }

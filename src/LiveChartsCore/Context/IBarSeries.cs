@@ -25,20 +25,46 @@ using System;
 
 namespace LiveChartsCore.Context
 {
+    /// <summary>
+    /// Defines a bar series point.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="LiveChartsCore.Context.IDrawableSeries{TDrawingContext}" />
     public interface IBarSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        double Pivot { get; set; }
-
+        /// <summary>
+        /// Gets or sets the maximum width of the bar.
+        /// </summary>
+        /// <value>
+        /// The maximum width of the bar.
+        /// </value>
         double MaxBarWidth { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the bar position respects the other bars that share 
+        /// the same <see cref="IChartPoint.SecondaryValue"/>.
+        /// </summary>
         bool IgnoresBarPosition { get; set; }
 
+        /// <summary>
+        /// Gets or sets the geometry stroke.
+        /// </summary>
+        /// <value>
+        /// The shapes stroke.
+        /// </value>
         Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? OnPointCreated { get; set; }
 
+        /// <summary>
+        /// Gets or sets a delegate that will be called everytime a <see cref="ChartPoint{TModel, TVisual, TLabel, TDrawingContext}"/> instance
+        /// is added to a state.
+        /// </summary>
         Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? OnPointAddedToState { get; set; }
 
+        /// <summary>
+        /// Gets or sets a delegate that will be called everytime a <see cref="ChartPoint{TModel, TVisual, TLabel, TDrawingContext}"/> instance
+        /// is removed from a state.
+        /// </summary>
         Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? OnPointRemovedFromState { get; set; }
-
     }
 }

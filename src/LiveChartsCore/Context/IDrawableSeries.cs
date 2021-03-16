@@ -26,19 +26,79 @@ using System;
 
 namespace LiveChartsCore.Context
 {
+    /// <summary>
+    /// Defines a series a chart series that has a visual representation in the user interface.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="LiveChartsCore.ISeries" />
     public interface IDrawableSeries<TDrawingContext> : ISeries
          where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Gets or sets the stroke drawable task.
+        /// </summary>
+        /// <value>
+        /// The stroke.
+        /// </value>
         IDrawableTask<TDrawingContext>? Stroke { get; set; }
+
+        /// <summary>
+        /// Gets or sets the fill  drawable task.
+        /// </summary>
+        /// <value>
+        /// The fill.
+        /// </value>
         IDrawableTask<TDrawingContext>? Fill { get; set; }
-        IDrawableTask<TDrawingContext>? DataLabelsBrush { get; set; }
+
+        /// <summary>
+        /// Gets or sets the data labels  drawable task.
+        /// </summary>
+        IDrawableTask<TDrawingContext>? DataLabelsDrawableTask { get; set; }
+
+        /// <summary>
+        /// Gets or sets the size of the data labels.
+        /// </summary>
+        /// <value>
+        /// The size of the data labels.
+        /// </value>
         double DataLabelsSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets the data labels position.
+        /// </summary>
+        /// <value>
+        /// The data labels position.
+        /// </value>
         DataLabelsPosition DataLabelsPosition { get; set; }
+
+        /// <summary>
+        /// Gets or sets the data labels padding.
+        /// </summary>
+        /// <value>
+        /// The data labels padding.
+        /// </value>
         Padding DataLabelsPadding { get; set; }
+
+        /// <summary>
+        /// Gets or sets the data label formatter, it is a delegate that takes the point as parameter, and returns the label as string.
+        /// </summary>
+        /// <value>
+        /// The data label formatter.
+        /// </value>
         Func<IChartPoint, string> DataLabelFormatter { get; set; }
 
+        /// <summary>
+        /// Gets the default paint context, normally handled internally to display tooltips and legends.
+        /// </summary>
+        /// <value>
+        /// The default paint context.
+        /// </value>
         PaintContext<TDrawingContext> DefaultPaintContext { get; }
 
+        /// <summary>
+        /// Gets the stack group, normally used internally to handled the stacked series.
+        /// </summary>
+        /// <returns></returns>
         int GetStackGroup();
     }
 }

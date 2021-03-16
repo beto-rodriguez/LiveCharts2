@@ -43,7 +43,7 @@ namespace LiveChartsCore
         /// <typeparam name="T">The type</typeparam>
         /// <param name="predicate">The mapper</param>
         /// <returns></returns>
-        public LiveChartsSettings HasMap<TModel>(Action<IChartPoint, TModel, IChartPointContext> mapper)
+        public LiveChartsSettings HasMap<TModel>(Action<TModel, IChartPoint> mapper)
         {
             mappers[typeof(TModel)] = mapper;
             return this;
@@ -54,7 +54,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <typeparam name="T">The type</typeparam>
         /// <returns>The current mapper</returns>
-        internal Action<IChartPoint, TModel, IChartPointContext> GetMap<TModel>()
+        internal Action<TModel, IChartPoint> GetMap<TModel>()
         {
             if (!mappers.TryGetValue(typeof(TModel), out var mapper))
                 throw new NotImplementedException(
@@ -62,7 +62,7 @@ namespace LiveChartsCore
                     $"{nameof(LiveCharts)}.{nameof(LiveCharts.Configure)}() " +
                     $"method to call {nameof(HasMap)}() with the type you are trying to plot.");
 
-            return (Action<IChartPoint, TModel, IChartPointContext>)mapper;
+            return (Action<TModel, IChartPoint>)mapper;
         }
 
         public LiveChartsSettings RemoveMap<TModel>()
@@ -101,37 +101,37 @@ namespace LiveChartsCore
         /// <returns></returns>
         public LiveChartsSettings AddDefaultMappers()
         {
-            return HasMap<short>((point, model, context) =>
+            return HasMap<short>((model, point) =>
                  {
                      point.PrimaryValue = model;
-                     point.SecondaryValue = context.Index;
+                     point.SecondaryValue = point.Context.Index;
                  })
-                 .HasMap<int>((point, model, context) =>
+                 .HasMap<int>((model, point) =>
                  {
                      point.PrimaryValue = model;
-                     point.SecondaryValue = context.Index;
+                     point.SecondaryValue = point.Context.Index;
                  })
-                 .HasMap<long>((point, model, context) =>
+                 .HasMap<long>((model, point) =>
                  {
                      point.PrimaryValue = model;
-                     point.SecondaryValue = context.Index;
+                     point.SecondaryValue = point.Context.Index;
                  })
-                 .HasMap<float>((point, model, context) =>
+                 .HasMap<float>((model, point) =>
                  {
                      point.PrimaryValue = model;
-                     point.SecondaryValue = context.Index;
+                     point.SecondaryValue = point.Context.Index;
                  })
-                 .HasMap<double>((point, model, context) =>
+                 .HasMap<double>((model, point) =>
                  {
                      point.PrimaryValue = unchecked((float)model);
-                     point.SecondaryValue = context.Index;
+                     point.SecondaryValue = point.Context.Index;
                  })
-                 .HasMap<decimal>((point, model, context) =>
+                 .HasMap<decimal>((model, point) =>
                  {
                      point.PrimaryValue = unchecked((float)model);
-                     point.SecondaryValue = context.Index;
+                     point.SecondaryValue = point.Context.Index;
                  })
-                 .HasMap<short?>((point, model, context) =>
+                 .HasMap<short?>((model, point) =>
                  {
                      if (model == null)
                      {
@@ -140,9 +140,9 @@ namespace LiveChartsCore
                      }
                      point.IsNull = false;
                      point.PrimaryValue = model.Value;
-                     point.SecondaryValue = context.Index;
+                     point.SecondaryValue = point.Context.Index;
                  })
-                 .HasMap<int?>((point, model, context) =>
+                 .HasMap<int?>((model, point) =>
                  {
                      if (model == null)
                      {
@@ -151,9 +151,9 @@ namespace LiveChartsCore
                      }
                      point.IsNull = false;
                      point.PrimaryValue = model.Value;
-                     point.SecondaryValue = context.Index;
+                     point.SecondaryValue = point.Context.Index;
                  })
-                 .HasMap<long?>((point, model, context) =>
+                 .HasMap<long?>((model, point) =>
                  {
                      if (model == null)
                      {
@@ -162,9 +162,9 @@ namespace LiveChartsCore
                      }
                      point.IsNull = false;
                      point.PrimaryValue = model.Value;
-                     point.SecondaryValue = context.Index;
+                     point.SecondaryValue = point.Context.Index;
                  })
-                 .HasMap<float?>((point, model, context) =>
+                 .HasMap<float?>((model, point) =>
                  {
                      if (model == null)
                      {
@@ -173,9 +173,9 @@ namespace LiveChartsCore
                      }
                      point.IsNull = false;
                      point.PrimaryValue = model.Value;
-                     point.SecondaryValue = context.Index;
+                     point.SecondaryValue = point.Context.Index;
                  })
-                 .HasMap<double?>((point, model, context) =>
+                 .HasMap<double?>((model, point) =>
                  {
                      if (model == null)
                      {
@@ -184,9 +184,9 @@ namespace LiveChartsCore
                      }
                      point.IsNull = false;
                      point.PrimaryValue = unchecked((float)model.Value);
-                     point.SecondaryValue = context.Index;
+                     point.SecondaryValue = point.Context.Index;
                  })
-                 .HasMap<decimal?>((point, model, context) =>
+                 .HasMap<decimal?>((model, point) =>
                  {
                      if (model == null)
                      {
@@ -195,49 +195,64 @@ namespace LiveChartsCore
                      }
                      point.IsNull = false;
                      point.PrimaryValue = unchecked((float)model.Value);
-                     point.SecondaryValue = context.Index;
+                     point.SecondaryValue = point.Context.Index;
                  })
-                 .HasMap<WeightedPoint>((point, model, context) =>
+                 .HasMap<WeightedPoint>((model, point) =>
                  {
                      if (model == null)
+                         throw new Exception(
+                             $"A {nameof(WeightedPoint)} can not be null, instead set to null to any of its properties.");
+
+                     if (model.Weight == null || model.X == null || model.Y == null)
                      {
                          point.IsNull = true;
                          return;
                      }
+
                      point.IsNull = false;
                      unchecked
                      {
-                         point.PrimaryValue = (float)model.Y;
-                         point.SecondaryValue = (float)model.X;
-                         point.TertiaryValue = (float)model.Weight;
+                         point.PrimaryValue = (float)model.Y.Value;
+                         point.SecondaryValue = (float)model.X.Value;
+                         point.TertiaryValue = (float)model.Weight.Value;
                      }
                  })
-                 .HasMap<ObservablePoint>((point, model, context) =>
+                 .HasMap<ObservableValue>((model, point) =>
                  {
                      if (model == null)
+                         throw new Exception(
+                             $"A {nameof(ObservableValue)} can not be null, instead set to null to any of its properties.");
+
+                     if (model.Value == null)
                      {
                          point.IsNull = true;
                          return;
                      }
+
                      point.IsNull = false;
                      unchecked
                      {
-                         point.PrimaryValue = (float)model.Value;
-                         point.SecondaryValue = context.Index;
+                         point.PrimaryValue = (float)model.Value.Value;
+                         point.SecondaryValue = point.Context.Index;
                      }
                  })
-                 .HasMap<ObservablePointF>((point, model, context) =>
+                 .HasMap<ObservableValueF>((model, point) =>
                  {
                      if (model == null)
+                         throw new Exception(
+                             $"A {nameof(ObservableValueF)} can not be null, instead set to null to any of its properties.");
+
+                     if (model.Value == null)
                      {
                          point.IsNull = true;
                          return;
                      }
+
                      point.IsNull = false;
                      unchecked
                      {
-                         point.PrimaryValue = model.Value;
-                         point.SecondaryValue = context.Index;
+                         point.PrimaryValue = model.Value.Value;
+                         point.SecondaryValue = point.Context.Index;
                      }
                  });
         }

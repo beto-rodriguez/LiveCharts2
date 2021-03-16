@@ -37,22 +37,27 @@ namespace LiveChartsCore
             HoverState = LiveCharts.BarSeriesHoverKey;
         }
 
+        /// <inheritdoc cref="IBarSeries{TDrawingContext}.MaxBarWidth"/>
         public double MaxBarWidth { get; set; } = 30;
 
+        /// <inheritdoc cref="IBarSeries{TDrawingContext}.IgnoresBarPosition"/>
         public bool IgnoresBarPosition { get; set; } = false;
 
+        /// <inheritdoc cref="IBarSeries{TDrawingContext}.OnPointAddedToState"/>
         Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IBarSeries<TDrawingContext>.OnPointCreated
         {
             get => OnPointCreated as Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>;
             set => OnPointCreated = value;
         }
 
+        /// <inheritdoc cref="IBarSeries{TDrawingContext}.OnPointAddedToState" />
         Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IBarSeries<TDrawingContext>.OnPointAddedToState
         {
             get => OnPointAddedToState as Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>;
             set => OnPointAddedToState = value;
         }
 
+        /// <inheritdoc cref="IBarSeries{TDrawingContext}.OnPointRemovedFromState"/>
         Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IBarSeries<TDrawingContext>.OnPointRemovedFromState
         {
             get => OnPointRemovedFromState as Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>;

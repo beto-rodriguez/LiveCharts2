@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Lines.Highlights
+namespace WinFormsSample.General.NullPoints
 {
     partial class View
     {

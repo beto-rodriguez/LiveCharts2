@@ -28,7 +28,16 @@
     <Compile Update="Bars\Basic\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Lines\Highlights\View.xaml.cs">
+    <Compile Update="Bars\Custom\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="General\UserDefinedTypes\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="General\NullPoints\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Lines\Custom\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Pies\Basic\View.xaml.cs">
@@ -41,7 +50,19 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Lines\Highlights\View.xaml">
+    <Page Update="Bars\Custom\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="General\UserDefinedTypes\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="General\NullPoints\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Lines\Custom\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

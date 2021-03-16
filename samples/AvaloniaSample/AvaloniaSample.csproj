@@ -26,7 +26,16 @@
     <Compile Update="Bars\Basic\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Lines\Highlights\View.axaml.cs">
+    <Compile Update="Bars\Custom\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="General\UserDefinedTypes\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="General\NullPoints\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Lines\Custom\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Pies\Basic\View.axaml.cs">

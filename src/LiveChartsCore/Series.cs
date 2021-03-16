@@ -90,7 +90,7 @@ namespace LiveChartsCore.Sketches
         /// Gets or sets the mapping that defines how a type is mapped to a <see cref="IChartPoint"/> instance, 
         /// then the <see cref="IChartPoint"/> will be drawn as a point in the chart.
         /// </summary>
-        public Action<IChartPoint, TModel, IChartPointContext>? Mapping { get; set; }
+        public Action<TModel, IChartPoint>? Mapping { get; set; }
 
         /// <inheritdoc />
         int ISeries.SeriesId { get; set; } = -1;
@@ -331,7 +331,7 @@ namespace LiveChartsCore.Sketches
 
                     cp.Context.Index = index++;
                     cp.Context.DataSource = item;
-                    mapper(cp, item, cp.Context);
+                    mapper(item, cp);
 
                     yield return cp;
                 }
@@ -345,7 +345,7 @@ namespace LiveChartsCore.Sketches
 
                     cp.Context.Index = index++;
                     cp.Context.DataSource = item;
-                    mapper(cp, item, cp.Context);
+                    mapper(item, cp);
 
                     yield return cp;
                 }

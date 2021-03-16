@@ -29,7 +29,7 @@ namespace LiveChartsCore.Context
     /// Defines a line series plot.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="LiveChartsCore.Context.IDrawableSeries{TDrawingContext}" />
+    /// <seealso cref="IDrawableSeries{TDrawingContext}" />
     public interface ILineSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {

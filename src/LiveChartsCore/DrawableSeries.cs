@@ -73,7 +73,7 @@ namespace LiveChartsCore
                 OnPaintContextChanged();
             }
         }
-        public IDrawableTask<TDrawingContext>? DataLabelsBrush { get; set; }
+        public IDrawableTask<TDrawingContext>? DataLabelsDrawableTask { get; set; }
 
         public double DataLabelsSize { get; set; } = 16;
 

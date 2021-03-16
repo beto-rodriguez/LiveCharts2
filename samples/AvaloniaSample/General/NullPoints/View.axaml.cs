@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace AvaloniaSample.Lines.Highlights
+namespace AvaloniaSample.General.NullPoint
 {
     public class View : UserControl
     {

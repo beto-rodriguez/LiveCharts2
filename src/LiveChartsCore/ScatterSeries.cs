@@ -73,7 +73,7 @@ namespace LiveChartsCore
 
             if (Fill != null) chart.Canvas.AddDrawableTask(Fill);
             if (Stroke != null) chart.Canvas.AddDrawableTask(Stroke);
-            if (DataLabelsBrush != null) chart.Canvas.AddDrawableTask(DataLabelsBrush);
+            if (DataLabelsDrawableTask != null) chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
             var dls = unchecked((float)DataLabelsSize);
 
             var gs = unchecked((float)geometrySize);
@@ -140,7 +140,7 @@ namespace LiveChartsCore
                 OnPointMeasured(point, sizedGeometry);
                 chart.MeasuredDrawables.Add(sizedGeometry);
 
-                if (DataLabelsBrush != null)
+                if (DataLabelsDrawableTask != null)
                 {
                     if (point.Context.Label == null)
                     {
@@ -153,14 +153,14 @@ namespace LiveChartsCore
 
                         l.CompleteAllTransitions();
                         point.Context.Label = l;
-                        DataLabelsBrush.AddGeometyToPaintTask(l);
+                        DataLabelsDrawableTask.AddGeometyToPaintTask(l);
                     }
 
                     point.Context.Label.Text = DataLabelFormatter(point);
                     point.Context.Label.TextSize = dls;
                     point.Context.Label.Padding = DataLabelsPadding;
                     var labelPosition = GetLabelPosition(
-                        x - hgs, y - hgs, gs, gs, point.Context.Label.Measure(DataLabelsBrush), DataLabelsPosition, SeriesProperties, point.PrimaryValue > 0);
+                        x - hgs, y - hgs, gs, gs, point.Context.Label.Measure(DataLabelsDrawableTask), DataLabelsPosition, SeriesProperties, point.PrimaryValue > 0);
                     point.Context.Label.X = labelPosition.X;
                     point.Context.Label.Y = labelPosition.Y;
 

@@ -4,7 +4,7 @@ using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System.Collections.Generic;
 
-namespace ViewModelsSamples.Lines.Highlights
+namespace ViewModelsSamples.Lines.Custom
 {
     public class ViewModel
     {
@@ -69,7 +69,7 @@ namespace ViewModelsSamples.Lines.Highlights
             "M391.111,267.175H120.889c-8.416,0-15.238,6.823-15.238,15.238c0,82.902,67.447,150.349,150.349,150.349    s150.349-67.447,150.349-150.349C406.349,273.997,399.527,267.175,391.111,267.175z M256,402.286    c-60.938,0-111.402-45.703-118.909-104.635H374.91C367.402,356.583,316.938,402.286,256,402.286z");
 
         public MyGeomeometry()
-            :base(svgPath)
+            : base(svgPath)
         {
 
         }

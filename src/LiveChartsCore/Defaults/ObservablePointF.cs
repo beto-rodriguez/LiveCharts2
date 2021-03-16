@@ -28,23 +28,27 @@ namespace LiveChartsCore.Defaults
 {
     public class ObservablePointF : INotifyPropertyChanged
     {
-        private float value;
+        private float? x;
+        private float? y;
 
         public ObservablePointF()
         {
 
         }
 
-        public ObservablePointF(float value)
+        public ObservablePointF(float? x, float? y)
         {
-            this.value = value;
+            this.x = x;
+            this.y = y;
         }
 
-        public float Value { get => value; set { this.value = value; OnPropertyChanged(); } }
+        public float? X { get => x; set { x = value; OnPropertyChanged(); } }
+
+        public float? Y { get => y; set { y = value; OnPropertyChanged(); } }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
         }
