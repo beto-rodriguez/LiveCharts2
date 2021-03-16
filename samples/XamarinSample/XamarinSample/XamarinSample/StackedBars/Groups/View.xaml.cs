@@ -2,7 +2,7 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace XamarinSample.StackedBars.Basic
+namespace XamarinSample.StackedBars.Groups
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class View : ContentPage

@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Context;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -52,6 +53,14 @@ namespace LiveChartsCore
         /// <see cref="IChartLegend{TDrawingContext}"/>, the default value is set automatically by the library.
         /// </summary>
         string? Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the values.
+        /// </summary>
+        /// <value>
+        /// The values.
+        /// </value>
+        IEnumerable? Values { get; set; }
 
         /// <summary>
         /// Gets or sets the value where the direction of the axis changes, by default is 0.

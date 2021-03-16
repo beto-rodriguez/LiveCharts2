@@ -23,6 +23,7 @@
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -82,6 +83,8 @@ namespace LiveChartsCore.Sketches
                 values = value;
             }
         }
+
+        IEnumerable? ISeries.Values { get => Values; set => Values = (IEnumerable<TModel>?)value; }
 
         /// <inheritdoc />
         public double Pivot { get => pivot; set => pivot = (float)value; }
