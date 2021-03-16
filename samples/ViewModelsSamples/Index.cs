@@ -10,6 +10,7 @@
             "Bars/Basic",
             "Bars/Custom",
             "Bars/WithBackground",
+            "Bars/RowsWithLabels",
             "Bars/Layered",
             "Bars/States",
 

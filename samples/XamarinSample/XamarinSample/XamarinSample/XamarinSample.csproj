@@ -22,6 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Bars\RowsWithLabels\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Bars\Layered\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
