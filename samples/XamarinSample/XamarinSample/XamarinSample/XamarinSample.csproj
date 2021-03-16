@@ -28,7 +28,7 @@
     <Compile Update="Bars\Custom\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="General\UserDefinedPoints\View.xaml.cs">
+    <Compile Update="General\UserDefinedTypes\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="General\NullPoints\View.xaml.cs">

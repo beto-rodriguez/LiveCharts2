@@ -2,7 +2,7 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace XamarinSample.General.UserDefinedPoints
+namespace XamarinSample.General.UserDefinedTypes
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class View : ContentPage

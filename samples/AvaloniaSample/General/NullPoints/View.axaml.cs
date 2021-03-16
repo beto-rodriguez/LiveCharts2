@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace AvaloniaSample.General.NullPoint
+namespace AvaloniaSample.General.NullPoints
 {
     public class View : UserControl
     {
