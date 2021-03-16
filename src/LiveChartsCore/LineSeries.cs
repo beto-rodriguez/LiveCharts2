@@ -107,27 +107,6 @@ namespace LiveChartsCore
             }
         }
 
-        /// <inheritdoc cref="ILineSeries{TDrawingContext}.OnPointCreated"/>
-        Action<ILineBezierVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? ILineSeries<TDrawingContext>.OnPointCreated
-        {
-            get => OnPointCreated as Action<ILineBezierVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>;
-            set => OnPointCreated = value;
-        }
-
-        /// <inheritdoc cref="ILineSeries{TDrawingContext}.OnPointAddedToState"/>
-        Action<ILineBezierVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? ILineSeries<TDrawingContext>.OnPointAddedToState
-        {
-            get => OnPointAddedToState as Action<ILineBezierVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>;
-            set => OnPointAddedToState = value;
-        }
-
-        /// <inheritdoc cref="ILineSeries{TDrawingContext}.OnPointRemovedFromState"/>
-        Action<ILineBezierVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? ILineSeries<TDrawingContext>.OnPointRemovedFromState
-        {
-            get => OnPointRemovedFromState as Action<ILineBezierVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>;
-            set => OnPointRemovedFromState = value;
-        }
-
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.Measure(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})" />
         public override void Measure(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
@@ -204,7 +183,6 @@ namespace LiveChartsCore
                     chart.Canvas.AddDrawableTask(Stroke);
                     strokePathHelper.Path.ClearCommands();
                 }
-                var ts = OnPointCreated ?? DefaultOnPointCreated;
 
                 foreach (var data in GetSpline(segment, xScale, yScale, stacker))
                 {
@@ -233,12 +211,10 @@ namespace LiveChartsCore
                         v.Bezier.X2 = data.X2;
                         v.Bezier.Y2 = p - hgs;
 
-                        ts(v, chart.View);
-
+                        data.TargetPoint.Context.Visual = v;
+                        OnPointCreated(data.TargetPoint);
                         v.Geometry.CompleteAllTransitions();
                         v.Bezier.CompleteAllTransitions();
-
-                        data.TargetPoint.Context.Visual = v;
 
                         if (GeometryFill != null) GeometryFill.AddGeometyToPaintTask(v.Geometry);
                         if (GeometryStroke != null) GeometryStroke.AddGeometyToPaintTask(v.Geometry);
@@ -311,7 +287,8 @@ namespace LiveChartsCore
                     visual.Geometry.Height = gs;
 
                     data.TargetPoint.Context.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs, y - hgs + 2 * sw, gs, gs + 2 * sw);
-                    OnPointMeasured(data.TargetPoint, visual);
+
+                    OnPointMeasured(data.TargetPoint);
                     chart.MeasuredDrawables.Add(visual.Geometry);
 
                     if (DataLabelsDrawableTask != null)
@@ -386,33 +363,6 @@ namespace LiveChartsCore
                     min = baseBounds.PrimaryBounds.min - tick.Value
                 }
             };
-        }
-
-        protected virtual void DefaultOnPointCreated(ILineBezierVisualChartPoint<TDrawingContext> visual, IChartView<TDrawingContext> chart)
-        {
-            visual.Geometry
-                .TransitionateProperties(
-                    nameof(visual.Geometry.X),
-                    nameof(visual.Geometry.Y),
-                    nameof(visual.Geometry.Width),
-                    nameof(visual.Geometry.Height))
-                .WithAnimation(animation =>
-                    animation
-                        .WithDuration(chart.AnimationsSpeed)
-                        .WithEasingFunction(chart.EasingFunction));
-
-            visual.Bezier
-                .TransitionateProperties(
-                    nameof(visual.Bezier.X0),
-                    nameof(visual.Bezier.Y0),
-                    nameof(visual.Bezier.X1),
-                    nameof(visual.Bezier.Y1),
-                    nameof(visual.Bezier.X2),
-                    nameof(visual.Bezier.Y2))
-                .WithAnimation(animation =>
-                    animation
-                         .WithDuration(chart.AnimationsSpeed)
-                        .WithEasingFunction(chart.EasingFunction));
         }
 
         protected virtual void SetDefaultPathTransitions(
@@ -634,6 +584,38 @@ namespace LiveChartsCore
             }
 
             if (l.Count > 0) yield return l.ToArray();
+        }
+
+        protected override void SetDefaultPointTransitions(IChartPoint<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext> chartPoint)
+        {
+            var visual = chartPoint.Context.Visual;
+            var chart = chartPoint.Context.Chart;
+
+            if (visual == null) throw new Exception("Unable to initialize the point instance.");
+
+            visual.Geometry
+                .TransitionateProperties(
+                    nameof(visual.Geometry.X),
+                    nameof(visual.Geometry.Y),
+                    nameof(visual.Geometry.Width),
+                    nameof(visual.Geometry.Height))
+                .WithAnimation(animation =>
+                    animation
+                        .WithDuration(chart.AnimationsSpeed)
+                        .WithEasingFunction(chart.EasingFunction));
+
+            visual.Bezier
+                .TransitionateProperties(
+                    nameof(visual.Bezier.X0),
+                    nameof(visual.Bezier.Y0),
+                    nameof(visual.Bezier.X1),
+                    nameof(visual.Bezier.Y1),
+                    nameof(visual.Bezier.X2),
+                    nameof(visual.Bezier.Y2))
+                .WithAnimation(animation =>
+                    animation
+                         .WithDuration(chart.AnimationsSpeed)
+                        .WithEasingFunction(chart.EasingFunction));
         }
     }
 }

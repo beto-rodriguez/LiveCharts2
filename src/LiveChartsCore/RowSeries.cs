@@ -69,9 +69,6 @@ namespace LiveChartsCore
             if (DataLabelsDrawableTask != null) chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
             var dls = unchecked((float)DataLabelsSize);
 
-            var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
-            var ts = OnPointCreated ?? DefaultOnPointCreated;
-
             foreach (var point in Fetch(chart))
             {
                 var primary = primaryScale.ScaleToUi(point.PrimaryValue);
@@ -101,10 +98,10 @@ namespace LiveChartsCore
                         Height = uw
                     };
 
-                    ts(r, chart.View);
+                    point.Context.Visual = r;
+                    OnPointCreated(point);
                     r.CompleteAllTransitions();
 
-                    point.Context.Visual = r;
                     if (Fill != null) Fill.AddGeometyToPaintTask(r);
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(r);
                 }
@@ -120,7 +117,8 @@ namespace LiveChartsCore
                 sizedGeometry.Height = uw;
 
                 point.Context.HoverArea = new RectangleHoverArea().SetDimensions(primary, secondary - uwm + cp, b, uw);
-                OnPointMeasured(point, sizedGeometry);
+
+                OnPointMeasured(point);
                 chart.MeasuredDrawables.Add(sizedGeometry);
 
                 if (DataLabelsDrawableTask != null)
@@ -176,6 +174,16 @@ namespace LiveChartsCore
 
         protected virtual void DefaultOnPointCreated(TVisual visual, IChartView<TDrawingContext> chart)
         {
+            
+        }
+
+        protected override void SetDefaultPointTransitions(IChartPoint<TVisual, TLabel, TDrawingContext> chartPoint)
+        {
+            var visual = chartPoint.Context.Visual;
+            var chart = chartPoint.Context.Chart;
+
+            if (visual == null) throw new Exception("Unable to initialize the point instance.");
+
             visual
                 .TransitionateProperties(
                     nameof(visual.X),
@@ -183,7 +191,7 @@ namespace LiveChartsCore
                 .WithAnimation(animation =>
                     animation
                         .WithDuration((long)(chart.AnimationsSpeed.TotalMilliseconds * 1.5))
-                        .WithEasingFunction(EasingFunctions.BounceOut));
+                        .WithEasingFunction(elasticFunction));
 
             visual
                 .TransitionateProperties(

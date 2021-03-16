@@ -45,24 +45,6 @@ namespace LiveChartsCore
 
         public double GeometrySize { get => geometrySize; set => geometrySize = value; }
 
-        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IScatterSeries<TDrawingContext>.OnPointCreated
-        {
-            get => OnPointCreated as Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>;
-            set => OnPointCreated = value;
-        }
-
-        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IScatterSeries<TDrawingContext>.OnPointAddedToState
-        {
-            get => OnPointAddedToState as Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>;
-            set => OnPointAddedToState = value;
-        }
-
-        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IScatterSeries<TDrawingContext>.OnPointRemovedFromState
-        {
-            get => OnPointRemovedFromState as Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>;
-            set => OnPointRemovedFromState = value;
-        }
-
         public override void Measure(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
         {
@@ -81,9 +63,6 @@ namespace LiveChartsCore
             float sw = Stroke?.StrokeThickness ?? 0;
             var requiresWScale = weightBounds.max - weightBounds.min > 0;
             var wm = -(geometrySize - minGeometrySize) / (weightBounds.max - weightBounds.min);
-
-            var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
-            var ts = OnPointCreated ?? DefaultOnPointCreated;
 
             foreach (var point in Fetch(chart))
             {
@@ -120,10 +99,10 @@ namespace LiveChartsCore
                         Height = 0
                     };
 
-                    ts(r, chart.View);
+                    point.Context.Visual = r;
+                    OnPointCreated(point);
                     r.CompleteAllTransitions();
 
-                    point.Context.Visual = r;
                     if (Fill != null) Fill.AddGeometyToPaintTask(r);
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(r);
                 }
@@ -137,7 +116,8 @@ namespace LiveChartsCore
                 sizedGeometry.RemoveOnCompleted = false;
 
                 point.Context.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs, y - hgs, gs + 2 * sw, gs + 2 * sw);
-                OnPointMeasured(point, sizedGeometry);
+
+                OnPointMeasured(point);
                 chart.MeasuredDrawables.Add(sizedGeometry);
 
                 if (DataLabelsDrawableTask != null)
@@ -202,20 +182,6 @@ namespace LiveChartsCore
             };
         }
 
-        protected virtual void DefaultOnPointCreated(ISizedVisualChartPoint<TDrawingContext> visual, IChartView<TDrawingContext> chart)
-        {
-            visual
-                .TransitionateProperties(
-                    nameof(visual.X),
-                    nameof(visual.Y),
-                    nameof(visual.Width),
-                    nameof(visual.Height))
-                .WithAnimation(animation =>
-                    animation
-                        .WithDuration(chart.AnimationsSpeed)
-                        .WithEasingFunction(chart.EasingFunction));
-        }
-
         protected override void OnPaintContextChanged()
         {
             var context = new PaintContext<TDrawingContext>();
@@ -248,6 +214,25 @@ namespace LiveChartsCore
             context.Height = w;
 
             paintContext = context;
+        }
+
+        protected override void SetDefaultPointTransitions(IChartPoint<TVisual, TLabel, TDrawingContext> chartPoint)
+        {
+            var visual = chartPoint.Context.Visual;
+            var chart = chartPoint.Context.Chart;
+
+            if (visual == null) throw new Exception("Unable to initialize the point instance.");
+
+            visual
+               .TransitionateProperties(
+                   nameof(visual.X),
+                   nameof(visual.Y),
+                   nameof(visual.Width),
+                   nameof(visual.Height))
+               .WithAnimation(animation =>
+                   animation
+                       .WithDuration(chart.AnimationsSpeed)
+                       .WithEasingFunction(chart.EasingFunction));
         }
     }
 }

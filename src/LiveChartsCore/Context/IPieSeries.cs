@@ -36,12 +36,6 @@ namespace LiveChartsCore.Context
 
         double HoverPushout { get; set; }
 
-        Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? OnPointCreated { get; set; }
-
-        Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? OnPointAddedToState { get; set; }
-
-        Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? OnPointRemovedFromState { get; set; }
-
         DimensinalBounds GetBounds(PieChart<TDrawingContext> chart);
 
         void Measure(PieChart<TDrawingContext> chart);

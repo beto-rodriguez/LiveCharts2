@@ -12,6 +12,7 @@
             "Bars/WithBackground",
             "Bars/RowsWithLabels",
             "Bars/Layered",
+            "Bars/DelayedAnimation",
             "Bars/States",
 
             "StackedBars/Basic",

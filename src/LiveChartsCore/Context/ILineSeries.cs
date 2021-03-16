@@ -70,22 +70,5 @@ namespace LiveChartsCore.Context
         /// The shapes stroke.
         /// </value>
         IDrawableTask<TDrawingContext>? GeometryStroke { get; set; }
-
-        /// Gets or sets a delegate that will be called everytime a <see cref="ChartPoint{TModel, TVisual, TLabel, TDrawingContext}"/>
-        /// instance is created by this series.
-        /// </summary>
-        Action<ILineBezierVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? OnPointCreated { get; set; }
-
-        /// <summary>
-        /// Gets or sets a delegate that will be called everytime a <see cref="ChartPoint{TModel, TVisual, TLabel, TDrawingContext}"/> instance
-        /// is added to a state.
-        /// </summary>
-        Action<ILineBezierVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? OnPointAddedToState { get; set; }
-
-        /// <summary>
-        /// Gets or sets a delegate that will be called everytime a <see cref="ChartPoint{TModel, TVisual, TLabel, TDrawingContext}"/> instance
-        /// is removed from a state.
-        /// </summary>
-        Action<ILineBezierVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? OnPointRemovedFromState { get; set; }
     }
 }

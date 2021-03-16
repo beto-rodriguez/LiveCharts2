@@ -31,6 +31,8 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
+        protected static Func<float, float> elasticFunction = EasingFunctions.BuildCustomElasticOut(1.5f, 0.60f);
+
         public BarSeries(SeriesProperties properties)
             : base(properties)
         {
@@ -42,27 +44,6 @@ namespace LiveChartsCore
 
         /// <inheritdoc cref="IBarSeries{TDrawingContext}.IgnoresBarPosition"/>
         public bool IgnoresBarPosition { get; set; } = false;
-
-        /// <inheritdoc cref="IBarSeries{TDrawingContext}.OnPointAddedToState"/>
-        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IBarSeries<TDrawingContext>.OnPointCreated
-        {
-            get => OnPointCreated as Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>;
-            set => OnPointCreated = value;
-        }
-
-        /// <inheritdoc cref="IBarSeries{TDrawingContext}.OnPointAddedToState" />
-        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IBarSeries<TDrawingContext>.OnPointAddedToState
-        {
-            get => OnPointAddedToState as Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>;
-            set => OnPointAddedToState = value;
-        }
-
-        /// <inheritdoc cref="IBarSeries{TDrawingContext}.OnPointRemovedFromState"/>
-        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IBarSeries<TDrawingContext>.OnPointRemovedFromState
-        {
-            get => OnPointRemovedFromState as Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>;
-            set => OnPointRemovedFromState = value;
-        }
 
         protected override void OnPaintContextChanged()
         {

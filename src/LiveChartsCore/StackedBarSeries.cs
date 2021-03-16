@@ -32,6 +32,7 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
+        protected static Func<float, float> elasticFunction = EasingFunctions.BuildCustomElasticOut(1.5f, 0.60f);
         protected int stackGroup;
 
         public StackedBarSeries(SeriesProperties properties)
@@ -43,24 +44,6 @@ namespace LiveChartsCore
         public int StackGroup { get => stackGroup; set => stackGroup = value; }
 
         public double MaxBarWidth { get; set; } = 50;
-
-        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IStackedBarSeries<TDrawingContext>.OnPointCreated
-        {
-            get => OnPointCreated as Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>;
-            set => OnPointCreated = value;
-        }
-
-        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IStackedBarSeries<TDrawingContext>.OnPointAddedToState
-        {
-            get => OnPointAddedToState as Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>;
-            set => OnPointAddedToState = value;
-        }
-
-        Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>? IStackedBarSeries<TDrawingContext>.OnPointRemovedFromState
-        {
-            get => OnPointRemovedFromState as Action<ISizedGeometry<TDrawingContext>, IChartView<TDrawingContext>>;
-            set => OnPointRemovedFromState = value;
-        }
 
         protected override void OnPaintContextChanged()
         {

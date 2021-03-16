@@ -72,9 +72,6 @@ namespace LiveChartsCore
             if (DataLabelsDrawableTask != null) chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
             var dls = unchecked((float)DataLabelsSize);
 
-            var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
-            var ts = OnPointCreated ?? DefaultOnPointCreated;
-
             var stacker = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
             if (stacker == null) throw new NullReferenceException("Unexpected null stacker");
 
@@ -106,10 +103,10 @@ namespace LiveChartsCore
                         Height = uw
                     };
 
-                    ts(r, chart.View);
+                    point.Context.Visual = r;
+                    OnPointCreated(point);
                     r.CompleteAllTransitions();
 
-                    point.Context.Visual = r;
                     if (Fill != null) Fill.AddGeometyToPaintTask(r);
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(r);
                 }
@@ -128,7 +125,8 @@ namespace LiveChartsCore
                 sizedGeometry.RemoveOnCompleted = false;
 
                 point.Context.HoverArea = new RectangleHoverArea().SetDimensions(secondary - uwm + cp, primaryJ, uw, primaryI - primaryJ);
-                OnPointMeasured(point, sizedGeometry);
+
+                OnPointMeasured(point);
                 chart.MeasuredDrawables.Add(sizedGeometry);
 
                 if (DataLabelsDrawableTask != null)
@@ -182,14 +180,19 @@ namespace LiveChartsCore
             };
         }
 
-        protected virtual void DefaultOnPointCreated(ISizedVisualChartPoint<TDrawingContext> visual, IChartView<TDrawingContext> chart)
+        protected override void SetDefaultPointTransitions(IChartPoint<TVisual, TLabel, TDrawingContext> chartPoint)
         {
+            var visual = chartPoint.Context.Visual;
+            var chart = chartPoint.Context.Chart;
+
+            if (visual == null) throw new Exception("Unable to initialize the point instance.");
+
             visual
                 .TransitionateProperties(
                     nameof(visual.X),
                     nameof(visual.Width))
                 .WithAnimation(a =>
-                a.WithDuration((long)(chart.AnimationsSpeed.TotalMilliseconds * 1.5)).WithEasingFunction(EasingFunctions.BounceOut));
+                a.WithDuration((long)(chart.AnimationsSpeed.TotalMilliseconds * 1.5)).WithEasingFunction(elasticFunction));
 
             visual
                 .TransitionateProperties(

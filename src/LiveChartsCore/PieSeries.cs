@@ -42,24 +42,6 @@ namespace LiveChartsCore
         public double MaxOuterRadius { get; set; } = 1; // 0 - 1
         public double HoverPushout { get; set; } = 20; // pixels
 
-        Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? IPieSeries<TDrawingContext>.OnPointCreated
-        {
-            get => OnPointCreated as Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>;
-            set => OnPointCreated = value;
-        }
-
-        Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? IPieSeries<TDrawingContext>.OnPointAddedToState
-        {
-            get => OnPointAddedToState as Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>;
-            set => OnPointAddedToState = value;
-        }
-
-        Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>? IPieSeries<TDrawingContext>.OnPointRemovedFromState
-        {
-            get => OnPointRemovedFromState as Action<IDoughnutVisualChartPoint<TDrawingContext>, IChartView<TDrawingContext>>;
-            set => OnPointRemovedFromState = value;
-        }
-
         public void Measure(PieChart<TDrawingContext> chart)
         {
             var drawLocation = chart.DrawMaringLocation;
@@ -76,9 +58,6 @@ namespace LiveChartsCore
 
             if (Fill != null) chart.Canvas.AddDrawableTask(Fill);
             if (Stroke != null) chart.Canvas.AddDrawableTask(Stroke);
-
-            var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
-            var ts = OnPointCreated ?? DefaultOnPointCreated;
 
             var cx = drawLocation.X + drawMarginSize.Width * 0.5f;
             var cy = drawLocation.Y + drawMarginSize.Height * 0.5f;
@@ -124,10 +103,10 @@ namespace LiveChartsCore
                         InnerRadius = 0
                     };
 
-                    ts(p, chart.View);
+                    point.Context.Visual = p;
+                    OnPointCreated(point);
                     p.CompleteAllTransitions();
 
-                    point.Context.Visual = p;
                     if (Fill != null) Fill.AddGeometyToPaintTask(p);
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(p);
                 }
@@ -155,10 +134,9 @@ namespace LiveChartsCore
                 if (start == 0 && end == 360) dougnutGeometry.SweepAngle = 359.9999f;
 
                 point.Context.HoverArea = new SemicircleHoverArea().SetDimensions(cx, cy, start, start + end, minDimension * 0.5f);
-                OnPointMeasured(point, dougnutGeometry);
-                chart.MeasuredDrawables.Add(dougnutGeometry);
 
-                stackedValue += point.PrimaryValue;
+                OnPointMeasured(point);
+                chart.MeasuredDrawables.Add(dougnutGeometry);
             }
         }
 
@@ -177,26 +155,6 @@ namespace LiveChartsCore
             }
 
             return bounds;
-        }
-
-        protected virtual void DefaultOnPointCreated(TVisual visual, IChartView<TDrawingContext> chart)
-        {
-            visual
-                .TransitionateProperties(
-                    nameof(visual.CenterX),
-                    nameof(visual.CenterY),
-                    nameof(visual.X),
-                    nameof(visual.Y),
-                    nameof(visual.Width),
-                    nameof(visual.Height),
-                    nameof(visual.StartAngle),
-                    nameof(visual.SweepAngle),
-                    nameof(visual.PushOut),
-                    nameof(visual.InnerRadius))
-                .WithAnimation(animation =>
-                    animation
-                        .WithDuration(chart.AnimationsSpeed)
-                        .WithEasingFunction(chart.EasingFunction));
         }
 
         protected override void DefaultOnPointAddedToSate(TVisual visual, IChartView<TDrawingContext> chart)
@@ -259,5 +217,30 @@ namespace LiveChartsCore
 
         // for now multiple stack levels at a pie chart is not supported.
         public override int GetStackGroup() => 0;
+
+        protected override void SetDefaultPointTransitions(IChartPoint<TVisual, TLabel, TDrawingContext> chartPoint)
+        {
+            var visual = chartPoint.Context.Visual;
+            var chart = chartPoint.Context.Chart;
+
+            if (visual == null) throw new Exception("Unable to initialize the point instance.");
+
+            visual
+                .TransitionateProperties(
+                    nameof(visual.CenterX),
+                    nameof(visual.CenterY),
+                    nameof(visual.X),
+                    nameof(visual.Y),
+                    nameof(visual.Width),
+                    nameof(visual.Height),
+                    nameof(visual.StartAngle),
+                    nameof(visual.SweepAngle),
+                    nameof(visual.PushOut),
+                    nameof(visual.InnerRadius))
+                .WithAnimation(animation =>
+                    animation
+                        .WithDuration(chart.AnimationsSpeed)
+                        .WithEasingFunction(chart.EasingFunction));
+        }
     }
 }

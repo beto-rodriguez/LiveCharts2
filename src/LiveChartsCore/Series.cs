@@ -98,17 +98,16 @@ namespace LiveChartsCore.Sketches
         /// <inheritdoc />
         public string HoverState { get; set; } = "Unknown";
 
-        /// <summary>
-        /// Gets or sets a delegate that will be called everytime a <see cref="ChartPoint{TModel, TVisual, TLabel, TDrawingContext}"/>
-        /// instance is created by this series.
-        /// </summary>
-        public Action<TVisual, IChartView<TDrawingContext>>? OnPointCreated { get; set; }
 
         /// <summary>
-        /// Gets or sets a delegate that will be called everytime a <see cref="ChartPoint{TModel, TVisual, TLabel, TDrawingContext}"/>
-        /// instance is measured.
+        /// Occurs when an instance of <see cref="ChartPoint{TModel, TVisual, TLabel, TDrawingContext}"/> is measured.
         /// </summary>
         public event Action<IChartPoint<TVisual, TLabel, TDrawingContext>>? PointMeasured;
+
+        /// <summary>
+        /// Occurs when an instance of <see cref="ChartPoint{TModel, TVisual, TLabel, TDrawingContext}"/> is created.
+        /// </summary>
+        public event Action<IChartPoint<TVisual, TLabel, TDrawingContext>>? PointCreated;
 
         /// <summary>
         /// Gets or sets a delegate that will be called everytime a <see cref="ChartPoint{TModel, TVisual, TLabel, TDrawingContext}"/> instance
@@ -217,10 +216,22 @@ namespace LiveChartsCore.Sketches
         /// </summary>
         /// <param name="chartPoint">The chart point.</param>
         /// <param name="visual">The visual.</param>
-        protected virtual void OnPointMeasured(IChartPoint<TVisual, TLabel, TDrawingContext> chartPoint, TVisual visual) 
+        protected virtual void OnPointMeasured(IChartPoint<TVisual, TLabel, TDrawingContext> chartPoint)
         {
             PointMeasured?.Invoke(chartPoint);
         }
+
+        /// <summary>
+        /// Called when a point is created.
+        /// </summary>
+        /// <param name="chartPoint">The chart point.</param>
+        protected virtual void OnPointCreated(IChartPoint<TVisual, TLabel, TDrawingContext> chartPoint)
+        {
+            SetDefaultPointTransitions(chartPoint);
+            PointCreated?.Invoke(chartPoint);
+        }
+
+        protected abstract void SetDefaultPointTransitions(IChartPoint<TVisual, TLabel, TDrawingContext> chartPoint);
 
         /// <summary>
         /// Called when a point was added to a sate.

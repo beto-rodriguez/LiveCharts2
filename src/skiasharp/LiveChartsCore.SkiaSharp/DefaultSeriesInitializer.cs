@@ -61,20 +61,6 @@ namespace LiveChartsCore.SkiaSharpView
                 pieSeries.Stroke = null;
                 pieSeries.Pushout = 0;
 
-                pieSeries.OnPointCreated =
-                    (IDoughnutVisualChartPoint<SkiaSharpDrawingContext> visual, IChartView<SkiaSharpDrawingContext> chart) =>
-                    {
-                        visual
-                            .TransitionateProperties(
-                                nameof(visual.StartAngle),
-                                nameof(visual.SweepAngle),
-                                nameof(visual.PushOut))
-                            .WithAnimation(animation =>
-                                animation
-                                    .WithDuration(chart.AnimationsSpeed)
-                                    .WithEasingFunction(EasingFunctions.SinOut));
-                    };
-
                 return;
             }
 
