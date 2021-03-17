@@ -25,6 +25,7 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp.Views.Forms;
 using System;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -80,7 +81,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public void Invalidate()
         {
-            RunDrawingLoop();
+            MainThread.BeginInvokeOnMainThread(RunDrawingLoop);
         }
     }
 }

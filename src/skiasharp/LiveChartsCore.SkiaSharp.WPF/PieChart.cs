@@ -23,18 +23,35 @@
 using LiveChartsCore.Context;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Windows;
 
 namespace LiveChartsCore.SkiaSharpView.WPF
 {
     public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     {
+        private readonly CollectionDeepObserver<ISeries> seriesObserver;
+
         static PieChart()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(PieChart), new FrameworkPropertyMetadata(typeof(PieChart)));
         }
 
-        public PieChart() { }
+        public PieChart() 
+        {
+            seriesObserver = new CollectionDeepObserver<ISeries>(
+                (object sender, NotifyCollectionChangedEventArgs e) =>
+                {
+                    if (core == null) return;
+                    Application.Current.Dispatcher.Invoke(core.Update);
+                },
+                (object sender, PropertyChangedEventArgs e) =>
+                {
+                    if (core == null) return;
+                    Application.Current.Dispatcher.Invoke(core.Update);
+                });
+        }
 
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => (PieChart<SkiaSharpDrawingContext>)core;
 
@@ -44,7 +61,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         public IEnumerable<ISeries> Series
         {
             get { return (IEnumerable<ISeries>)GetValue(SeriesProperty); }
-            set { SetValue(SeriesProperty, value); }
+            set
+            {
+                seriesObserver.Dispose((IEnumerable<ISeries>)GetValue(SeriesProperty));
+                seriesObserver.Initialize(value);
+                SetValue(SeriesProperty, value);
+            }
         }
 
         protected override void InitializeCore()

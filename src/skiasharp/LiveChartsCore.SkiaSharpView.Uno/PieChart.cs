@@ -23,15 +23,31 @@
 using LiveChartsCore.Context;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using Windows.UI.Xaml;
 
 namespace LiveChartsCore.SkiaSharpView.Uno
 {
     public partial class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     {
+        private CollectionDeepObserver<ISeries> seriesObserver;
+
         public PieChart()
         {
             DefaultStyleKey = typeof(PieChart);
+
+            seriesObserver = new CollectionDeepObserver<ISeries>(
+               (object sender, NotifyCollectionChangedEventArgs e) =>
+               {
+                   if (core == null) return;
+                   core.Update();
+               },
+               (object sender, PropertyChangedEventArgs e) =>
+               {
+                   if (core == null) return;
+                   core.Update();
+               });
         }
 
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => (PieChart<SkiaSharpDrawingContext>)core;
@@ -42,7 +58,12 @@ namespace LiveChartsCore.SkiaSharpView.Uno
         public IEnumerable<ISeries> Series
         {
             get { return (IEnumerable<ISeries>)GetValue(SeriesProperty); }
-            set { SetValue(SeriesProperty, value); }
+            set 
+            {
+                seriesObserver.Dispose((IEnumerable<ISeries>)GetValue(SeriesProperty));
+                seriesObserver.Initialize(value);
+                SetValue(SeriesProperty, value);
+            }
         }
 
         protected override void InitializeCore()

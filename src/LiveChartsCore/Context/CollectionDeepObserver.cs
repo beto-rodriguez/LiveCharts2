@@ -31,7 +31,7 @@ namespace LiveChartsCore.Context
     {
         private readonly NotifyCollectionChangedEventHandler onCollectionChanged;
         private readonly PropertyChangedEventHandler onItemPropertyChanged;
-        private readonly HashSet<INotifyPropertyChanged> itemsListening = new HashSet<INotifyPropertyChanged>();
+        private readonly HashSet<INotifyPropertyChanged> itemsListening = new();
 
         protected bool implementsINPC;
 

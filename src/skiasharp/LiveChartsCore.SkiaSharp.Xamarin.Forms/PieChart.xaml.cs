@@ -3,6 +3,8 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Drawing;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -13,6 +15,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingContext>
     {
+        private CollectionDeepObserver<ISeries> seriesObserver;
         protected Chart<SkiaSharpDrawingContext> core;
         //protected MotionCanvas motionCanvas;
         protected IChartLegend<SkiaSharpDrawingContext> legend;
@@ -37,6 +40,18 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             SizeChanged += OnSizeChanged;
             mouseMoveThrottler = new ActionThrottler(TimeSpan.FromMilliseconds(10));
             mouseMoveThrottler.Unlocked += MouseMoveThrottlerUnlocked;
+
+            seriesObserver = new CollectionDeepObserver<ISeries>(
+               (object sender, NotifyCollectionChangedEventArgs e) =>
+               {
+                   if (core == null) return;
+                   MainThread.BeginInvokeOnMainThread(core.Update);
+               },
+               (object sender, PropertyChangedEventArgs e) =>
+               {
+                   if (core == null) return;
+                   MainThread.BeginInvokeOnMainThread(core.Update);
+               });
         }
 
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => (PieChart<SkiaSharpDrawingContext>)core;
@@ -48,7 +63,12 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         public IEnumerable<ISeries> Series
         {
             get { return (IEnumerable<ISeries>)GetValue(SeriesProperty); }
-            set { SetValue(SeriesProperty, value); }
+            set 
+            {
+                seriesObserver.Dispose((IEnumerable<ISeries>)GetValue(SeriesProperty));
+                seriesObserver.Initialize(value);
+                SetValue(SeriesProperty, value); 
+            }
         }
 
         SizeF IChartView.ControlSize
@@ -95,18 +115,18 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
             //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
             //tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
-            core.Update();
+            MainThread.BeginInvokeOnMainThread(core.Update);
         }
 
         private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
             // show tooltip ??
-            core.Update();
+            // core.Update();
         }
 
         private void OnSizeChanged(object sender, EventArgs e)
         {
-            core.Update();
+            MainThread.BeginInvokeOnMainThread(core.Update);
         }
 
         private void MouseMoveThrottlerUnlocked()

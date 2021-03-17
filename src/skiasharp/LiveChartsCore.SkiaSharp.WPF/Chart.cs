@@ -23,7 +23,6 @@
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using SkiaSharp.Views.WPF;
 using System;
 using System.Drawing;
 using System.Windows;
@@ -112,7 +111,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            core.Update();
+            Application.Current.Dispatcher.Invoke(core.Update);
         }
 
         private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)

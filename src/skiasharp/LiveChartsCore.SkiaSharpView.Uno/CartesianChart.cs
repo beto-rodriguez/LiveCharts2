@@ -23,15 +23,31 @@
 using LiveChartsCore.Context;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using Windows.UI.Xaml;
 
 namespace LiveChartsCore.SkiaSharpView.Uno
 {
     public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext>
     {
+        private CollectionDeepObserver<ISeries> seriesObserver;
+
         public CartesianChart()
         {
             DefaultStyleKey = typeof(CartesianChart);
+
+            seriesObserver = new CollectionDeepObserver<ISeries>(
+               (object sender, NotifyCollectionChangedEventArgs e) =>
+               {
+                   if (core == null) return;
+                   core.Update();
+               },
+               (object sender, PropertyChangedEventArgs e) =>
+               {
+                   if (core == null) return;
+                   core.Update();
+               });
         }
 
         public static readonly DependencyProperty SeriesProperty =
@@ -53,7 +69,12 @@ namespace LiveChartsCore.SkiaSharpView.Uno
         public IEnumerable<ISeries> Series
         {
             get { return (IEnumerable<ISeries>)GetValue(SeriesProperty); }
-            set { SetValue(SeriesProperty, value); }
+            set 
+            {
+                seriesObserver.Dispose((IEnumerable<ISeries>)GetValue(SeriesProperty));
+                seriesObserver.Initialize(value);
+                SetValue(SeriesProperty, value);
+            }
         }
 
         public IEnumerable<IAxis> XAxes

@@ -23,16 +23,44 @@
 using LiveChartsCore.Context;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms
 {
-    public class PieChart: Chart, IPieChartView<SkiaSharpDrawingContext>
+    public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     {
+        private CollectionDeepObserver<ISeries> seriesObserver;
+        private IEnumerable<ISeries> series = new List<ISeries>();
+
+        public PieChart()
+        {
+            seriesObserver = new CollectionDeepObserver<ISeries>(
+               (object sender, NotifyCollectionChangedEventArgs e) =>
+               {
+                   if (core == null) return;
+                   core.Update();
+               },
+               (object sender, PropertyChangedEventArgs e) =>
+               {
+                   if (core == null) return;
+                   core.Update();
+               });
+        }
+
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => (PieChart<SkiaSharpDrawingContext>)core;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<ISeries> Series { get; set; } = new List<ISeries>();
+        public IEnumerable<ISeries> Series 
+        {
+            get => series;
+            set 
+            {
+                seriesObserver.Dispose(series);
+                seriesObserver.Initialize(value);
+                series = value;
+            }
+        }
 
         protected override void InitializeCore()
         {

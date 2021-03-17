@@ -1,12 +1,15 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharp.Avalonia
@@ -19,6 +22,7 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
         protected IChartTooltip<SkiaSharpDrawingContext> tooltip;
         private readonly ActionThrottler mouseMoveThrottler;
         private PointF mousePosition = new PointF();
+        private CollectionDeepObserver<ISeries> seriesObserver;
 
         public CartesianChart()
         {
@@ -36,6 +40,18 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
 
             mouseMoveThrottler = new ActionThrottler(TimeSpan.FromMilliseconds(10));
             mouseMoveThrottler.Unlocked += MouseMoveThrottlerUnlocked;
+
+            seriesObserver = new CollectionDeepObserver<ISeries>(
+                (object? sender, NotifyCollectionChangedEventArgs e) =>
+                {
+                    if (core == null) return;
+                    Dispatcher.UIThread.InvokeAsync(core.Update, DispatcherPriority.Background);
+                },
+                (object? sender, PropertyChangedEventArgs e) =>
+                {
+                    if (core == null) return;
+                    Dispatcher.UIThread.InvokeAsync(core.Update, DispatcherPriority.Background);
+                });
         }
 
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;
@@ -55,7 +71,12 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
         public IEnumerable<ISeries> Series
         {
             get { return (IEnumerable<ISeries>)GetValue(SeriesProperty); }
-            set { SetValue(SeriesProperty, value); }
+            set
+            {
+                seriesObserver.Dispose((IEnumerable<ISeries>)GetValue(SeriesProperty));
+                seriesObserver.Initialize(value);
+                SetValue(SeriesProperty, value);
+            }
         }
 
         public IEnumerable<IAxis> XAxes
@@ -111,7 +132,7 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
             //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
             //tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
-            core.Update();
+            Dispatcher.UIThread.InvokeAsync(core.Update, DispatcherPriority.Background);
         }
 
         private void MouseMoveThrottlerUnlocked()
@@ -133,7 +154,7 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             // https://github.com/AvaloniaUI/Avalonia/issues/3237
 
             if (change.Property.Name != nameof(Bounds)) return;
-            core.Update();
+            Dispatcher.UIThread.InvokeAsync(core.Update, DispatcherPriority.Background);
         }
     }
 }

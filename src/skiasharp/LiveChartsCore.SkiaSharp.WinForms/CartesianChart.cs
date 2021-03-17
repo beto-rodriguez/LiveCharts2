@@ -23,16 +23,44 @@
 using LiveChartsCore.Context;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms
 {
-    public class CartesianChart: Chart, ICartesianChartView<SkiaSharpDrawingContext>
+    public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext>
     {
+        private CollectionDeepObserver<ISeries> seriesObserver;
+        private IEnumerable<ISeries> series = new List<ISeries>();
+
+        public CartesianChart()
+        {
+            seriesObserver = new CollectionDeepObserver<ISeries>(
+               (object sender, NotifyCollectionChangedEventArgs e) =>
+               {
+                   if (core == null) return;
+                   core.Update();
+               },
+               (object sender, PropertyChangedEventArgs e) =>
+               {
+                   if (core == null) return;
+                   core.Update();
+               });
+        }
+
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<ISeries> Series { get; set; } = new List<ISeries>();
+        public IEnumerable<ISeries> Series
+        {
+            get => series;
+            set
+            {
+                seriesObserver.Dispose(series);
+                seriesObserver.Initialize(value);
+                series = value;
+            }
+        }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IEnumerable<IAxis> XAxes { get; set; } = new List<Axis> { new Axis() };

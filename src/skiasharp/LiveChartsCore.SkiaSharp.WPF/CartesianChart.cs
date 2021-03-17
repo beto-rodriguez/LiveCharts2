@@ -23,18 +23,35 @@
 using LiveChartsCore.Context;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Windows;
 
 namespace LiveChartsCore.SkiaSharpView.WPF
 {
     public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext>
     {
+        private readonly CollectionDeepObserver<ISeries> seriesObserver;
+
         static CartesianChart()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(CartesianChart), new FrameworkPropertyMetadata(typeof(CartesianChart)));
         }
 
-        public CartesianChart() { }
+        public CartesianChart()
+        {
+            seriesObserver = new CollectionDeepObserver<ISeries>(
+                (object sender, NotifyCollectionChangedEventArgs e) =>
+                {
+                    if (core == null) return;
+                    Application.Current.Dispatcher.Invoke(core.Update);
+                },
+                (object sender, PropertyChangedEventArgs e) =>
+                {
+                    if (core == null) return;
+                    Application.Current.Dispatcher.Invoke(core.Update);
+                });
+        }
 
         public static readonly DependencyProperty SeriesProperty =
             DependencyProperty.Register(
@@ -53,7 +70,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         public IEnumerable<ISeries> Series
         {
             get { return (IEnumerable<ISeries>)GetValue(SeriesProperty); }
-            set { SetValue(SeriesProperty, value); }
+            set 
+            {
+                seriesObserver.Dispose((IEnumerable<ISeries>)GetValue(SeriesProperty));
+                seriesObserver.Initialize(value);
+                SetValue(SeriesProperty, value);
+            }
         }
 
         public IEnumerable<IAxis> XAxes
@@ -73,7 +95,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
             legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
             tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
-            core.Update();
+            Application.Current.Dispatcher.Invoke(core.Update);
         }
     }
 }
