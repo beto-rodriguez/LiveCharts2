@@ -5,12 +5,12 @@ namespace LiveChartsCore.Easing
 {
     public class DelayedFunction
     {
-        public DelayedFunction(Func<float, float> baseFunction, IChartPoint point)
+        public DelayedFunction(Func<float, float> baseFunction, IChartPoint point, float perPointDelay = 10)
         {
             var visual = point.Context.Visual;
             var chart = point.Context.Chart;
 
-            var delay = point.Context.Index * 10;
+            var delay = point.Context.Index * perPointDelay;
             var speed = (float)chart.AnimationsSpeed.TotalMilliseconds + delay;
 
             var d = delay / speed;

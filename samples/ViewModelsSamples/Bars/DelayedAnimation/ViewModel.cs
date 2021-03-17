@@ -49,7 +49,7 @@ namespace ViewModelsSamples.Bars.DelayedAnimation
         private void OnPointMeasured(IChartPoint<RectangleGeometry, LabelGeometry, SkiaSharpDrawingContext> point)
         {
             var visual = point.Context.Visual;
-            var delayedFunction = new DelayedFunction(EasingFunctions.BuildCustomElasticOut(1.5f, 0.60f), point);
+            var delayedFunction = new DelayedFunction(EasingFunctions.BuildCustomElasticOut(1.5f, 0.60f), point, 15f);
 
             visual
                 .TransitionateProperties(

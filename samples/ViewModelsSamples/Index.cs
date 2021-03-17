@@ -5,7 +5,11 @@
         public static string[] Samples = new[]
         {
             "Lines/Basic",
+            "Lines/Straight",
+            "Lines/Area",
             "Lines/Custom",
+
+            "StackedArea/Basic",
 
             "Bars/Basic",
             "Bars/Custom",

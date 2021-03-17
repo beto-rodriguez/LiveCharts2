@@ -40,7 +40,8 @@ namespace ViewModelsSamples.Lines.Custom
             new LineSeries<double, LiveChartsCore.SkiaSharpView.Drawing.Geometries.RectangleGeometry>
             {
                 Values = new List<double> { 3, 3, -3, -2, -4, -3, -1 },
-                Fill = null
+                Fill = null,
+                LineSmoothness = 1
             },
 
             // you can also define your own geometry using SVG

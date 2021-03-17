@@ -55,10 +55,19 @@
     <Compile Update="General\NullPoints\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Lines\Area\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Lines\Straight\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Lines\Custom\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Pies\Basic\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="StackedArea\Basic\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="StackedBars\Groups\View.xaml.cs">
@@ -110,11 +119,23 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Lines\Area\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Lines\Straight\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Lines\Custom\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Pies\Basic\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="StackedArea\Basic\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
