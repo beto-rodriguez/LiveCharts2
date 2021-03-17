@@ -12,6 +12,7 @@
             "StackedArea/Basic",
 
             "Bars/Basic",
+            "Bars/AutoUpdate",
             "Bars/Custom",
             "Bars/WithBackground",
             "Bars/DelayedAnimation",

@@ -56,7 +56,14 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => (PieChart<SkiaSharpDrawingContext>)core;
 
         public static readonly DependencyProperty SeriesProperty =
-            DependencyProperty.Register(nameof(Series), typeof(IEnumerable<ISeries>), typeof(PieChart), new PropertyMetadata(null));
+            DependencyProperty.Register(
+                nameof(Series), typeof(IEnumerable<ISeries>), typeof(PieChart), new PropertyMetadata(new List<ISeries>(),
+                    (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                    {
+                        var seriesObserver = ((PieChart)o).seriesObserver;
+                        seriesObserver.Dispose((IEnumerable<ISeries>)args.OldValue);
+                        seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
+                    }));
 
         public IEnumerable<ISeries> Series
         {

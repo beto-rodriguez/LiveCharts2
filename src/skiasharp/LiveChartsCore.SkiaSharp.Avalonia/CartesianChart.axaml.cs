@@ -71,12 +71,7 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
         public IEnumerable<ISeries> Series
         {
             get { return (IEnumerable<ISeries>)GetValue(SeriesProperty); }
-            set
-            {
-                seriesObserver.Dispose((IEnumerable<ISeries>)GetValue(SeriesProperty));
-                seriesObserver.Initialize(value);
-                SetValue(SeriesProperty, value);
-            }
+            set { SetValue(SeriesProperty, value); }
         }
 
         public IEnumerable<IAxis> XAxes
@@ -150,9 +145,15 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
         {
             base.OnPropertyChanged(change);
 
+            if (change.Property.Name == nameof(Series))
+            {
+                seriesObserver.Dispose((IEnumerable<ISeries>)change.OldValue.Value);
+                seriesObserver.Initialize((IEnumerable<ISeries>)change.NewValue.Value);
+                return;
+            }
+
             // is this how the size event is handled?
             // https://github.com/AvaloniaUI/Avalonia/issues/3237
-
             if (change.Property.Name != nameof(Bounds)) return;
             Dispatcher.UIThread.InvokeAsync(core.Update, DispatcherPriority.Background);
         }

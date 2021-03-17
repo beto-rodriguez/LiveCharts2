@@ -55,7 +55,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty SeriesProperty =
             DependencyProperty.Register(
-                nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new PropertyMetadata(new List<ISeries>()));
+                nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new PropertyMetadata(new List<ISeries>(),
+                    (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                    {
+                        var seriesObserver = ((CartesianChart)o).seriesObserver;
+                        seriesObserver.Dispose((IEnumerable<ISeries>)args.OldValue);
+                        seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
+                    }));
 
         public static readonly DependencyProperty XAxesProperty =
             DependencyProperty.Register(
@@ -65,17 +71,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             DependencyProperty.Register(
                 nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new PropertyMetadata(new List<IAxis> { new Axis() }));
 
-        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>) core;
+        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;
 
         public IEnumerable<ISeries> Series
         {
             get { return (IEnumerable<ISeries>)GetValue(SeriesProperty); }
-            set 
-            {
-                seriesObserver.Dispose((IEnumerable<ISeries>)GetValue(SeriesProperty));
-                seriesObserver.Initialize(value);
-                SetValue(SeriesProperty, value);
-            }
+            set { SetValue(SeriesProperty, value); }
         }
 
         public IEnumerable<IAxis> XAxes
