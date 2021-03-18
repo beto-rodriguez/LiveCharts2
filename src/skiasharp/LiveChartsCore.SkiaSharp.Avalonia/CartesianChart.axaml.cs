@@ -57,16 +57,33 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;
 
         public static readonly AvaloniaProperty<IEnumerable<ISeries>> SeriesProperty =
-            AvaloniaProperty.Register<CartesianChart, IEnumerable<ISeries>>(
-                nameof(Series), new List<ISeries>(), inherits: true);
+            AvaloniaProperty.Register<CartesianChart, IEnumerable<ISeries>>(nameof(Series), new List<ISeries>(), inherits: true);
 
         public static readonly AvaloniaProperty<IEnumerable<IAxis>> XAxesProperty =
-            AvaloniaProperty.Register<CartesianChart, IEnumerable<IAxis>>(
-                nameof(XAxes), new List<IAxis> { new Axis() }, inherits: true);
+            AvaloniaProperty.Register<CartesianChart, IEnumerable<IAxis>>(nameof(XAxes), new List<IAxis> { new Axis() }, inherits: true);
 
         public static readonly AvaloniaProperty<IEnumerable<IAxis>> YAxesProperty =
-            AvaloniaProperty.Register<CartesianChart, IEnumerable<IAxis>>(
-                nameof(YAxes), new List<IAxis> { new Axis() }, inherits: true);
+            AvaloniaProperty.Register<CartesianChart, IEnumerable<IAxis>>(nameof(YAxes), new List<IAxis> { new Axis() }, inherits: true);
+
+        public static readonly AvaloniaProperty<TimeSpan> AnimationsSpeedProperty =
+            AvaloniaProperty.Register<CartesianChart, TimeSpan>(nameof(AnimationsSpeed), TimeSpan.FromMilliseconds(500), inherits: true);
+
+        public static readonly AvaloniaProperty<Func<float, float>> EasingFunctionProperty =
+            AvaloniaProperty.Register<CartesianChart, Func<float, float>>(
+                nameof(AnimationsSpeed), EasingFunctions.SinOut, inherits: true);
+
+        public static readonly AvaloniaProperty<LegendPosition> LegendPositionProperty =
+            AvaloniaProperty.Register<CartesianChart, LegendPosition>(nameof(LegendPosition), LegendPosition.Hidden, inherits: true);
+
+        public static readonly AvaloniaProperty<LegendOrientation> LegendOrientationProperty =
+            AvaloniaProperty.Register<CartesianChart, LegendOrientation>(nameof(LegendOrientation), LegendOrientation.Auto, inherits: true);
+
+        public static readonly AvaloniaProperty<TooltipPosition> TooltipPositionProperty =
+            AvaloniaProperty.Register<CartesianChart, TooltipPosition>(nameof(TooltipPosition), TooltipPosition.Hidden, inherits: true);
+
+        public static readonly AvaloniaProperty<TooltipFindingStrategy> TooltipFindingStrategyProperty =
+            AvaloniaProperty.Register<CartesianChart, TooltipFindingStrategy>(
+                nameof(LegendPosition), TooltipFindingStrategy.CompareOnlyX, inherits: true);
 
         public IEnumerable<ISeries> Series
         {
@@ -86,6 +103,42 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             set { SetValue(YAxesProperty, value); }
         }
 
+        public TimeSpan AnimationsSpeed
+        {
+            get { return (TimeSpan)GetValue(AnimationsSpeedProperty); }
+            set { SetValue(AnimationsSpeedProperty, value); }
+        }
+
+        public Func<float, float> EasingFunction
+        {
+            get { return (Func<float, float>)GetValue(EasingFunctionProperty); }
+            set { SetValue(AnimationsSpeedProperty, value); }
+        }
+
+        public LegendPosition LegendPosition
+        {
+            get { return (LegendPosition)GetValue(LegendPositionProperty); }
+            set { SetValue(LegendPositionProperty, value); }
+        }
+
+        public LegendOrientation LegendOrientation
+        {
+            get { return (LegendOrientation)GetValue(LegendOrientationProperty); }
+            set { SetValue(LegendOrientationProperty, value); }
+        }
+
+        public TooltipPosition TooltipPosition
+        {
+            get { return (TooltipPosition)GetValue(TooltipPositionProperty); }
+            set { SetValue(TooltipPositionProperty, value); }
+        }
+
+        public TooltipFindingStrategy TooltipFindingStrategy
+        {
+            get { return (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty); }
+            set { SetValue(TooltipFindingStrategyProperty, value); }
+        }
+
         SizeF IChartView.ControlSize
         {
             get
@@ -101,21 +154,9 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
 
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => core.Canvas;
 
-        public LegendPosition LegendPosition { get; set; }
-
-        public LegendOrientation LegendOrientation { get; set; }
-
         public IChartLegend<SkiaSharpDrawingContext> Legend => null;
 
         public Margin DrawMargin { get; set; }
-
-        public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(500);
-
-        public Func<float, float> EasingFunction { get; set; } = EasingFunctions.Lineal;
-
-        public TooltipPosition TooltipPosition { get; set; }
-
-        public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
         public IChartTooltip<SkiaSharpDrawingContext> Tooltip => null;
 

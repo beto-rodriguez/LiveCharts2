@@ -65,6 +65,18 @@
     <Compile Update="Lines\Custom\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Pies\Pushout\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Pies\NightingaleRose\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Pies\Custom\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Pies\Doughnut\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Pies\Basic\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

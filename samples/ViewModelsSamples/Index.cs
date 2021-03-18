@@ -25,6 +25,10 @@
             "StackedBars/Groups",
 
             "Pies/Basic",
+            "Pies/Doughnut",
+            "Pies/Pushout",
+            "Pies/Custom",
+            "Pies/NightingaleRose",
 
             "General/UserDefinedTypes",
             "General/NullPoints",

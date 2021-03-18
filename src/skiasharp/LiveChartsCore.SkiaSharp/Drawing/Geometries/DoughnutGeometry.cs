@@ -118,7 +118,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 
             context.Canvas.DrawPath(path, context.Paint);
 
-            context.Canvas.Restore();
+            if (pushout > 0) context.Canvas.Restore();
         }
     }
 }

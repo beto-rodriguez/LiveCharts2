@@ -56,40 +56,98 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             mouseMoveThrottler.Unlocked += MouseMoveThrottlerUnlocked;
         }
 
-        SizeF IChartView.ControlSize
+        public static readonly DependencyProperty AnimationsSpeedProperty =
+            DependencyProperty.Register(
+                nameof(AnimationsSpeed), typeof(TimeSpan), typeof(Chart), new PropertyMetadata(TimeSpan.FromMilliseconds(500)));
+
+        public static readonly DependencyProperty EasingFunctionProperty =
+            DependencyProperty.Register(
+                nameof(EasingFunction), typeof(Func<float, float>), typeof(Chart), new PropertyMetadata(EasingFunctions.SinOut));
+
+        public static readonly DependencyProperty LegendPositionProperty =
+            DependencyProperty.Register(
+                nameof(LegendPosition), typeof(LegendPosition), typeof(Chart), new PropertyMetadata(LegendPosition.Hidden));
+
+        public static readonly DependencyProperty LegendOrientationProperty =
+            DependencyProperty.Register(
+                nameof(LegendOrientation), typeof(LegendOrientation), typeof(Chart), new PropertyMetadata(LegendOrientation.Auto));
+
+        public static readonly DependencyProperty TooltipPositionProperty =
+           DependencyProperty.Register(
+               nameof(TooltipPosition), typeof(TooltipPosition), typeof(Chart), new PropertyMetadata(TooltipPosition.Hidden));
+
+        public static readonly DependencyProperty TooltipFindingStrategyProperty =
+            DependencyProperty.Register(
+                nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(Chart), new PropertyMetadata(TooltipFindingStrategy.CompareOnlyX));
+
+        public TimeSpan AnimationsSpeed
         {
-            get
-            {
-                unchecked
-                {
-                    return new SizeF { Width = (float)canvas.ActualWidth, Height = (float)canvas.ActualHeight };
-                }
-            }
+            get { return (TimeSpan)GetValue(AnimationsSpeedProperty); }
+            set { SetValue(AnimationsSpeedProperty, value); }
         }
+
+        public Func<float, float> EasingFunction
+        {
+            get { return (Func<float, float>)GetValue(EasingFunctionProperty); }
+            set { SetValue(AnimationsSpeedProperty, value); }
+        }
+
+        public LegendPosition LegendPosition
+        {
+            get { return (LegendPosition)GetValue(LegendPositionProperty); }
+            set { SetValue(LegendPositionProperty, value); }
+        }
+
+        public LegendOrientation LegendOrientation
+        {
+            get { return (LegendOrientation)GetValue(LegendOrientationProperty); }
+            set { SetValue(LegendOrientationProperty, value); }
+        }
+
+        public TooltipPosition TooltipPosition
+        {
+            get { return (TooltipPosition)GetValue(TooltipPositionProperty); }
+            set { SetValue(TooltipPositionProperty, value); }
+        }
+
+        public TooltipFindingStrategy TooltipFindingStrategy
+        {
+            get { return (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty); }
+            set { SetValue(TooltipFindingStrategyProperty, value); }
+        }
+
+        SizeF IChartView.ControlSize => new SizeF { Width = (float)canvas.ActualWidth, Height = (float)canvas.ActualHeight };
 
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
 
-        public LegendPosition LegendPosition { get; set; }
-        public LegendOrientation LegendOrientation { get; set; }
         public FontFamily LegendFontFamily { get; set; }
+
         public SolidColorBrush LegendTextColor { get; set; }
+
         public double? LegendFontSize { get; set; }
+
         public FontWeight? LegendFontWeight { get; set; }
+
         public FontStretch? LegendFontStretch { get; set; }
+
         public FontStyle? LegendFontStyle { get; set; }
+
         public IChartLegend<SkiaSharpDrawingContext> Legend => legend;
+
         public Margin DrawMargin { get; set; }
-        public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(500);
-        public Func<float, float> EasingFunction { get; set; } = EasingFunctions.Lineal;
 
         public FontFamily TooltipFontFamily { get; set; }
+
         public SolidColorBrush TooltipTextColor { get; set; }
+
         public double? TooltipFontSize { get; set; }
+
         public FontWeight? TooltipFontWeight { get; set; }
+
         public FontStretch? TooltipFontStretch { get; set; }
+
         public FontStyle? TooltipFontStyle { get; set; }
-        public TooltipPosition TooltipPosition { get; set; }
-        public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
+
         public IChartTooltip<SkiaSharpDrawingContext> Tooltip => tooltip;
 
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; }

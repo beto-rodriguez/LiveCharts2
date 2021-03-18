@@ -58,7 +58,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public static readonly BindableProperty SeriesProperty =
           BindableProperty.Create(
-              nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new List<ISeries>(), BindingMode.Default, null,
+              nameof(Series), typeof(IEnumerable<ISeries>), typeof(PieChart), new List<ISeries>(), BindingMode.Default, null,
               (BindableObject o, object oldValue, object newValue) =>
               {
                   var seriesObserver = ((PieChart)o).seriesObserver;
@@ -66,10 +66,70 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                   seriesObserver.Initialize((IEnumerable<ISeries>)newValue);
               });
 
+        public static readonly BindableProperty AnimationsSpeedProperty =
+          BindableProperty.Create(
+              nameof(AnimationsSpeed), typeof(TimeSpan), typeof(PieChart), TimeSpan.FromMilliseconds(500));
+
+        public static readonly BindableProperty EasingFunctionProperty =
+            BindableProperty.Create(
+                nameof(EasingFunction), typeof(Func<float, float>), typeof(PieChart), EasingFunctions.SinOut);
+
+        public static readonly BindableProperty LegendPositionProperty =
+            BindableProperty.Create(
+                nameof(LegendPosition), typeof(LegendPosition), typeof(PieChart), LegendPosition.Hidden);
+
+        public static readonly BindableProperty LegendOrientationProperty =
+            BindableProperty.Create(
+                nameof(LegendOrientation), typeof(LegendOrientation), typeof(PieChart), LegendOrientation.Auto);
+
+        public static readonly BindableProperty TooltipPositionProperty =
+           BindableProperty.Create(
+               nameof(TooltipPosition), typeof(TooltipPosition), typeof(PieChart), TooltipPosition.Hidden);
+
+        public static readonly BindableProperty TooltipFindingStrategyProperty =
+            BindableProperty.Create(
+                nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(PieChart), TooltipFindingStrategy.CompareOnlyX);
+
         public IEnumerable<ISeries> Series
         {
             get { return (IEnumerable<ISeries>)GetValue(SeriesProperty); }
             set { SetValue(SeriesProperty, value); }
+        }
+
+        public TimeSpan AnimationsSpeed
+        {
+            get { return (TimeSpan)GetValue(AnimationsSpeedProperty); }
+            set { SetValue(AnimationsSpeedProperty, value); }
+        }
+
+        public Func<float, float> EasingFunction
+        {
+            get { return (Func<float, float>)GetValue(EasingFunctionProperty); }
+            set { SetValue(AnimationsSpeedProperty, value); }
+        }
+
+        public LegendPosition LegendPosition
+        {
+            get { return (LegendPosition)GetValue(LegendPositionProperty); }
+            set { SetValue(LegendPositionProperty, value); }
+        }
+
+        public LegendOrientation LegendOrientation
+        {
+            get { return (LegendOrientation)GetValue(LegendOrientationProperty); }
+            set { SetValue(LegendOrientationProperty, value); }
+        }
+
+        public TooltipPosition TooltipPosition
+        {
+            get { return (TooltipPosition)GetValue(TooltipPositionProperty); }
+            set { SetValue(TooltipPositionProperty, value); }
+        }
+
+        public TooltipFindingStrategy TooltipFindingStrategy
+        {
+            get { return (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty); }
+            set { SetValue(TooltipFindingStrategyProperty, value); }
         }
 
         SizeF IChartView.ControlSize
@@ -86,21 +146,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
 
-        public LegendPosition LegendPosition { get; set; }
-
-        public LegendOrientation LegendOrientation { get; set; }
-
         public IChartLegend<SkiaSharpDrawingContext> Legend => null;
 
         public Margin DrawMargin { get; set; }
-
-        public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(500);
-
-        public Func<float, float> EasingFunction { get; set; } = EasingFunctions.Lineal;
-
-        public TooltipPosition TooltipPosition { get; set; }
-
-        public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
         public IChartTooltip<SkiaSharpDrawingContext> Tooltip => null;
 

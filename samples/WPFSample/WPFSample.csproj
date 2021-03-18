@@ -67,6 +67,18 @@
     <Compile Update="Lines\Custom\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Pies\Pushout\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Pies\Custom\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Pies\NightingaleRose\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Pies\Doughnut\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Pies\Basic\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -135,6 +147,22 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Lines\Custom\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pies\Pushout\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pies\Custom\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pies\NightingaleRose\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pies\Doughnut\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

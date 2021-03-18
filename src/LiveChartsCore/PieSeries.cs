@@ -26,6 +26,7 @@ using System;
 
 namespace LiveChartsCore
 {
+    /// <inheritdoc cref="IPieSeries{TDrawingContext}" />
     public class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
         : DrawableSeries<TModel, TVisual, TLabel, TDrawingContext>, IDisposable, IPieSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
@@ -37,11 +38,19 @@ namespace LiveChartsCore
             HoverState = LiveCharts.PieSeriesHoverKey;
         }
 
-        public double Pushout { get; set; } = 5; // pixels
-        public double InnerRadius { get; set; } = 0; // pixels
-        public double MaxOuterRadius { get; set; } = 1; // 0 - 1
-        public double HoverPushout { get; set; } = 20; // pixels
+        /// <inheritdoc cref="IPieSeries{TDrawingContext}.Pushout"/>
+        public double Pushout { get; set; } = 5;
 
+        /// <inheritdoc cref="IPieSeries{TDrawingContext}.InnerRadius"/>
+        public double InnerRadius { get; set; } = 0;
+
+        /// <inheritdoc cref="IPieSeries{TDrawingContext}.MaxOuterRadius"/>
+        public double MaxOuterRadius { get; set; } = 1;
+
+        /// <inheritdoc cref="IPieSeries{TDrawingContext}.HoverPushout"/>
+        public double HoverPushout { get; set; } = 20;
+
+        /// <inheritdoc cref="IPieSeries{TDrawingContext}.Measure(PieChart{TDrawingContext})"/>
         public void Measure(PieChart<TDrawingContext> chart)
         {
             var drawLocation = chart.DrawMaringLocation;
@@ -140,6 +149,7 @@ namespace LiveChartsCore
             }
         }
 
+        /// <inheritdoc cref="IPieSeries{TDrawingContext}.GetBounds(PieChart{TDrawingContext})"/>
         public DimensinalBounds GetBounds(PieChart<TDrawingContext> chart)
         {
             var stack = chart.SeriesContext.GetStackPosition(this, GetStackGroup());

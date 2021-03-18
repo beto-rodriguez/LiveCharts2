@@ -57,13 +57,69 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => (PieChart<SkiaSharpDrawingContext>)core;
 
         public static readonly AvaloniaProperty<IEnumerable<ISeries>> SeriesProperty =
-            AvaloniaProperty.Register<CartesianChart, IEnumerable<ISeries>>(
+            AvaloniaProperty.Register<PieChart, IEnumerable<ISeries>>(
                 nameof(Series), new List<ISeries>(), inherits: true);
+
+        public static readonly AvaloniaProperty<TimeSpan> AnimationsSpeedProperty =
+            AvaloniaProperty.Register<PieChart, TimeSpan>(nameof(AnimationsSpeed), TimeSpan.FromMilliseconds(500), inherits: true);
+
+        public static readonly AvaloniaProperty<Func<float, float>> EasingFunctionProperty =
+            AvaloniaProperty.Register<PieChart, Func<float, float>>(
+                nameof(AnimationsSpeed), EasingFunctions.SinOut, inherits: true);
+
+        public static readonly AvaloniaProperty<LegendPosition> LegendPositionProperty =
+            AvaloniaProperty.Register<PieChart, LegendPosition>(nameof(LegendPosition), LegendPosition.Hidden, inherits: true);
+
+        public static readonly AvaloniaProperty<LegendOrientation> LegendOrientationProperty =
+            AvaloniaProperty.Register<PieChart, LegendOrientation>(nameof(LegendOrientation), LegendOrientation.Auto, inherits: true);
+
+        public static readonly AvaloniaProperty<TooltipPosition> TooltipPositionProperty =
+            AvaloniaProperty.Register<PieChart, TooltipPosition>(nameof(TooltipPosition), TooltipPosition.Hidden, inherits: true);
+
+        public static readonly AvaloniaProperty<TooltipFindingStrategy> TooltipFindingStrategyProperty =
+            AvaloniaProperty.Register<PieChart, TooltipFindingStrategy>(
+                nameof(LegendPosition), TooltipFindingStrategy.CompareOnlyX, inherits: true);
 
         public IEnumerable<ISeries> Series
         {
             get { return (IEnumerable<ISeries>)GetValue(SeriesProperty); }
             set { SetValue(SeriesProperty, value); }
+        }
+
+        public TimeSpan AnimationsSpeed
+        {
+            get { return (TimeSpan)GetValue(AnimationsSpeedProperty); }
+            set { SetValue(AnimationsSpeedProperty, value); }
+        }
+
+        public Func<float, float> EasingFunction
+        {
+            get { return (Func<float, float>)GetValue(EasingFunctionProperty); }
+            set { SetValue(AnimationsSpeedProperty, value); }
+        }
+
+        public LegendPosition LegendPosition
+        {
+            get { return (LegendPosition)GetValue(LegendPositionProperty); }
+            set { SetValue(LegendPositionProperty, value); }
+        }
+
+        public LegendOrientation LegendOrientation
+        {
+            get { return (LegendOrientation)GetValue(LegendOrientationProperty); }
+            set { SetValue(LegendOrientationProperty, value); }
+        }
+
+        public TooltipPosition TooltipPosition
+        {
+            get { return (TooltipPosition)GetValue(TooltipPositionProperty); }
+            set { SetValue(TooltipPositionProperty, value); }
+        }
+
+        public TooltipFindingStrategy TooltipFindingStrategy
+        {
+            get { return (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty); }
+            set { SetValue(TooltipFindingStrategyProperty, value); }
         }
 
         SizeF IChartView.ControlSize
@@ -81,21 +137,9 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
 
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => core.Canvas;
 
-        public LegendPosition LegendPosition { get; set; }
-
-        public LegendOrientation LegendOrientation { get; set; }
-
         public IChartLegend<SkiaSharpDrawingContext> Legend => null;
 
         public Margin DrawMargin { get; set; }
-
-        public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(500);
-
-        public Func<float, float> EasingFunction { get; set; } = EasingFunctions.Lineal;
-
-        public TooltipPosition TooltipPosition { get; set; }
-
-        public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
         public IChartTooltip<SkiaSharpDrawingContext> Tooltip => null;
 

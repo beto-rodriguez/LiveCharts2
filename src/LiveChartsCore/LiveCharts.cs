@@ -40,6 +40,8 @@ namespace LiveChartsCore
         public static string ScatterSeriesHoverKey => nameof(ScatterSeriesHoverKey);
         public static string StackedBarSeriesHoverKey => nameof(StackedBarSeriesHoverKey);
 
+        public static TimeSpan DisableAnimations = TimeSpan.FromMilliseconds(1);
+
         public static void Configure(Action<LiveChartsSettings> configuration)
         {
             if (configuration == null) throw new NullReferenceException($"{nameof(LiveChartsSettings)} must not be null.");

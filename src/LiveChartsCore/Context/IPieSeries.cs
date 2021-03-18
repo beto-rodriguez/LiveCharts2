@@ -21,23 +21,60 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using System;
 
 namespace LiveChartsCore.Context
 {
+    /// <summary>
+    /// Defines a pie series.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="LiveChartsCore.Context.IDrawableSeries{TDrawingContext}" />
     public interface IPieSeries<TDrawingContext>: IDrawableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Gets or sets the pushout, it is the distance in pixels between the center of the control and the pie slice.
+        /// </summary>
+        /// <value>
+        /// The pushout.
+        /// </value>
         double Pushout { get; set; }
 
+        /// <summary>
+        /// Gets or sets the inner radius of the slice in pixels.
+        /// </summary>
+        /// <value>
+        /// The inner radius.
+        /// </value>
         double InnerRadius { get; set; }
 
+        /// <summary>
+        /// Gets or sets the maximum outer, the value goes from 0 to 1, where 1 is the full available radius and 0 is none.
+        /// </summary>
+        /// <value>
+        /// The maximum outer radius.
+        /// </value>
         double MaxOuterRadius { get; set; }
 
+        /// <summary>
+        /// Gets or sets the hover pushout in pixes, it defines the <see cref="Pushout"/> where the pointer is over the slice.
+        /// </summary>
+        /// <value>
+        /// The hover pushout.
+        /// </value>
         double HoverPushout { get; set; }
 
+        /// <summary>
+        /// Gets the series bounds.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
+        /// <returns></returns>
         DimensinalBounds GetBounds(PieChart<TDrawingContext> chart);
 
+        /// <summary>
+        /// Measures the series and schedules the draw in specified chart.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
         void Measure(PieChart<TDrawingContext> chart);
     }
 }

@@ -54,6 +54,18 @@
     <Compile Update="Lines\Custom\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Pies\Pushout\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Pies\NightingaleRose\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Pies\Doughnut\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Pies\Custom\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Pies\Basic\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
