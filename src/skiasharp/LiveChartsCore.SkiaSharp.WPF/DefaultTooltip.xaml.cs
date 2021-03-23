@@ -1,4 +1,4 @@
-﻿using LiveChartsCore.Context;
+﻿using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         private IEasingFunction easingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
         private double hideoutCount = 1500;
         private System.Drawing.PointF previousLocation = new System.Drawing.PointF();
-        private Dictionary<IChartPoint, object> activePoints = new Dictionary<IChartPoint, object>();
+        private Dictionary<ChartPoint, object> activePoints = new Dictionary<ChartPoint, object>();
 
         public DefaultTooltip()
         {

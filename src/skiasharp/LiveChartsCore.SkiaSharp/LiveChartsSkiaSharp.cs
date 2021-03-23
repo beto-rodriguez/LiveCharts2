@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Context;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 
@@ -37,9 +37,11 @@ namespace LiveChartsCore.SkiaSharpView
                 .AddDefaultMappers()
                 .AddSkiaSharp();
 
-        public static LiveChartsSettings AddSkiaSharp(this LiveChartsSettings settings, Action<StyleBuilder<SkiaSharpDrawingContext>> builder = null)
+        public static LiveChartsSettings AddSkiaSharp(
+            this LiveChartsSettings settings, Action<StyleBuilder<SkiaSharpDrawingContext>> builder = null)
         {
             return settings
+                .HasDataFactory(new DataFactory<SkiaSharpDrawingContext>())
                 .AddDefaultStyles((StyleBuilder<SkiaSharpDrawingContext> styleBuilder) =>
                 {
                     // default settings

@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
 using System;
 using System.Drawing;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore
 {
@@ -37,6 +37,9 @@ namespace LiveChartsCore
         Func<double, AxisTick, string> Labeler { get; set; }
         double Step { get; set; }
         double UnitWith { get; set; }
+        double? MinValue { get; set; }
+        double? MaxValue { get; set; }
+        bool IsInverted { get; set; }
 
         AxisPosition Position { get; set; }
         double LabelsRotation { get; set; }

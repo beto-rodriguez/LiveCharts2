@@ -28,7 +28,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LiveChartsCore.SkiaSharpView.WPF"
-             xmlns:ctx="clr-namespace:LiveChartsCore.Context;assembly=LiveChartsCore"
+             xmlns:ctx="clr-namespace:LiveChartsCore.Kernel;assembly=LiveChartsCore"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" AllowsTransparency="True">
     <Border Background="Transparent" Padding="8" Name="border">

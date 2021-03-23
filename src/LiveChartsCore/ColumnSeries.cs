@@ -20,13 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Context;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using System;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore
 {
-    public class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
+    public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
@@ -41,13 +42,15 @@ namespace LiveChartsCore
         {
             var drawLocation = chart.DrawMaringLocation;
             var drawMarginSize = chart.DrawMarginSize;
-            var secondaryScale = new ScaleContext(drawLocation, drawMarginSize, secondaryAxis.Orientation, secondaryAxis.DataBounds);
-            var primaryScale = new ScaleContext(drawLocation, drawMarginSize, primaryAxis.Orientation, primaryAxis.DataBounds);
+            var secondaryScale = new Scaler(
+                drawLocation, drawMarginSize, secondaryAxis.Orientation, secondaryAxis.DataBounds, secondaryAxis.IsInverted);
+            var primaryScale = new Scaler(
+                drawLocation, drawMarginSize, primaryAxis.Orientation, primaryAxis.DataBounds, primaryAxis.IsInverted);
 
-            float uw = secondaryScale.ScaleToUi(1f) - secondaryScale.ScaleToUi(0f);
+            float uw = secondaryScale.ToPixels(1f) - secondaryScale.ToPixels(0f);
             float uwm = 0.5f * uw;
             float sw = Stroke?.StrokeThickness ?? 0;
-            float p = primaryScale.ScaleToUi(unchecked((float)Pivot));
+            float p = primaryScale.ToPixels(unchecked((float)Pivot));
 
             var pos = chart.SeriesContext.GetColumnPostion(this);
             var count = chart.SeriesContext.GetColumnSeriesCount();
@@ -75,25 +78,26 @@ namespace LiveChartsCore
 
             foreach (var point in Fetch(chart))
             {
-                var primary = primaryScale.ScaleToUi(point.PrimaryValue);
-                var secondary = secondaryScale.ScaleToUi(point.SecondaryValue);
+                var visual = point.Context.Visual as TVisual;
+                var primary = primaryScale.ToPixels(point.PrimaryValue);
+                var secondary = secondaryScale.ToPixels(point.SecondaryValue);
                 float b = Math.Abs(primary - p);
 
                 if (point.IsNull)
                 {
-                    if (point.Context.Visual != null)
+                    if (visual != null)
                     {
-                        point.Context.Visual.X = secondary - uwm + cp;
-                        point.Context.Visual.Y = p;
-                        point.Context.Visual.Width = uw;
-                        point.Context.Visual.Height = 0;
-                        point.Context.Visual.RemoveOnCompleted = true;
+                        visual.X = secondary - uwm + cp;
+                        visual.Y = p;
+                        visual.Width = uw;
+                        visual.Height = 0;
+                        visual.RemoveOnCompleted = true;
                         point.Context.Visual = null;
                     }
                     continue;
                 }
 
-                if (point.Context.Visual == null)
+                if (visual == null)
                 {
                     var r = new TVisual
                     {
@@ -103,7 +107,8 @@ namespace LiveChartsCore
                         Height = 0
                     };
 
-                    point.Context.Visual = r;
+                    visual = r;
+                    point.Context.Visual = visual;
                     OnPointCreated(point);
                     r.CompleteAllTransitions();
 
@@ -111,7 +116,7 @@ namespace LiveChartsCore
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(r);
                 }
 
-                var sizedGeometry = point.Context.Visual;
+                var sizedGeometry = visual;
                 var cy = point.PrimaryValue > Pivot ? primary : primary - b;
                 var x = secondary - uwm + cp;
 
@@ -129,7 +134,9 @@ namespace LiveChartsCore
 
                 if (DataLabelsDrawableTask != null)
                 {
-                    if (point.Context.Label == null)
+                    var label = point.Context.Label as TLabel;
+
+                    if (label == null)
                     {
                         var l = new TLabel { X = secondary - uwm + cp, Y = p };
 
@@ -139,19 +146,20 @@ namespace LiveChartsCore
                                 .WithEasingFunction(chart.EasingFunction));
 
                         l.CompleteAllTransitions();
+                        label = l;
                         point.Context.Label = l;
                         DataLabelsDrawableTask.AddGeometyToPaintTask(l);
                     }
 
-                    point.Context.Label.Text = DataLabelFormatter(point);
-                    point.Context.Label.TextSize = dls;
-                    point.Context.Label.Padding = DataLabelsPadding;
+                    label.Text = DataLabelFormatter(point);
+                    label.TextSize = dls;
+                    label.Padding = DataLabelsPadding;
                     var labelPosition = GetLabelPosition(
-                        x, cy, uw, b, point.Context.Label.Measure(DataLabelsDrawableTask), DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot);
-                    point.Context.Label.X = labelPosition.X;
-                    point.Context.Label.Y = labelPosition.Y;
+                        x, cy, uw, b, label.Measure(DataLabelsDrawableTask), DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot);
+                    label.X = labelPosition.X;
+                    label.Y = labelPosition.Y;
 
-                    chart.MeasuredDrawables.Add(point.Context.Label);
+                    chart.MeasuredDrawables.Add(label);
                 }
             }
         }
@@ -178,9 +186,9 @@ namespace LiveChartsCore
             };
         }
 
-        protected override void SetDefaultPointTransitions(IChartPoint<TVisual, TLabel, TDrawingContext> chartPoint)
+        protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
         {
-            var visual = chartPoint.Context.Visual;
+            var visual = chartPoint.Context.Visual as TVisual;
             var chart = chartPoint.Context.Chart;
 
             if (visual == null) throw new Exception("Unable to initialize the point instance.");

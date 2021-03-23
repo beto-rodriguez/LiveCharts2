@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Context;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using System;
 
@@ -44,24 +44,7 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
         public virtual DimensinalBounds GetBounds(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
-        {
-            var stack = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
-
-            var bounds = new DimensinalBounds();
-            foreach (var point in Fetch(chart))
-            {
-                var primary = point.PrimaryValue;
-                var secondary = point.SecondaryValue;
-
-                // it has more sense to override this method and call the stack, only if the series requires so.
-                if (stack != null) primary = stack.StackPoint(point);
-
-                bounds.PrimaryBounds.AppendValue(primary);
-                bounds.SecondaryBounds.AppendValue(secondary);
-            }
-
-            return bounds;
-        }
+                => dataProvider.GetCartesianBounds(chart, this, x, y); 
 
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.Measure(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
         public abstract void Measure(

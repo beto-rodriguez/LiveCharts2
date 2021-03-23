@@ -30,6 +30,8 @@
             "Pies/Custom",
             "Pies/NightingaleRose",
 
+            "Scatter/Basic",
+
             "General/UserDefinedTypes",
             "General/NullPoints",
         };

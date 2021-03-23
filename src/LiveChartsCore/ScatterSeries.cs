@@ -20,9 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Context;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using System;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore
 {
@@ -50,8 +51,10 @@ namespace LiveChartsCore
         {
             var drawLocation = chart.DrawMaringLocation;
             var drawMarginSize = chart.DrawMarginSize;
-            var xScale = new ScaleContext(drawLocation, drawMarginSize, xAxis.Orientation, xAxis.DataBounds);
-            var yScale = new ScaleContext(drawLocation, drawMarginSize, yAxis.Orientation, yAxis.DataBounds);
+            var xScale = new Scaler(
+                drawLocation, drawMarginSize, xAxis.Orientation, xAxis.DataBounds, xAxis.IsInverted);
+            var yScale = new Scaler(
+                drawLocation, drawMarginSize, yAxis.Orientation, yAxis.DataBounds, yAxis.IsInverted);
 
             if (Fill != null) chart.Canvas.AddDrawableTask(Fill);
             if (Stroke != null) chart.Canvas.AddDrawableTask(Stroke);
@@ -66,18 +69,20 @@ namespace LiveChartsCore
 
             foreach (var point in Fetch(chart))
             {
-                var x = xScale.ScaleToUi(point.SecondaryValue);
-                var y = yScale.ScaleToUi(point.PrimaryValue);
+                var visual = point.Context.Visual as TVisual;
+
+                var x = xScale.ToPixels(point.SecondaryValue);
+                var y = yScale.ToPixels(point.PrimaryValue);
 
                 if (point.IsNull)
                 {
-                    if (point.Context.Visual != null)
+                    if (visual != null)
                     {
-                        point.Context.Visual.X = x - hgs;
-                        point.Context.Visual.Y = y - hgs;
-                        point.Context.Visual.Width = 0;
-                        point.Context.Visual.Height = 0;
-                        point.Context.Visual.RemoveOnCompleted = true;
+                        visual.X = x - hgs;
+                        visual.Y = y - hgs;
+                        visual.Width = 0;
+                        visual.Height = 0;
+                        visual.RemoveOnCompleted = true;
                         point.Context.Visual = null;
                     }
                     continue;
@@ -89,7 +94,7 @@ namespace LiveChartsCore
                     hgs = gs / 2f;
                 }
 
-                if (point.Context.Visual == null)
+                if (visual == null)
                 {
                     var r = new TVisual
                     {
@@ -99,7 +104,8 @@ namespace LiveChartsCore
                         Height = 0
                     };
 
-                    point.Context.Visual = r;
+                    visual = r;
+                    point.Context.Visual = visual;
                     OnPointCreated(point);
                     r.CompleteAllTransitions();
 
@@ -107,7 +113,7 @@ namespace LiveChartsCore
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(r);
                 }
 
-                var sizedGeometry = point.Context.Visual;
+                var sizedGeometry = visual;
 
                 sizedGeometry.X = x - hgs;
                 sizedGeometry.Y = y - hgs;
@@ -122,7 +128,9 @@ namespace LiveChartsCore
 
                 if (DataLabelsDrawableTask != null)
                 {
-                    if (point.Context.Label == null)
+                    var label = point.Context.Label as TLabel;
+
+                    if (label == null)
                     {
                         var l = new TLabel { X = x - hgs, Y = y - hgs };
 
@@ -132,19 +140,20 @@ namespace LiveChartsCore
                                 .WithEasingFunction(chart.EasingFunction));
 
                         l.CompleteAllTransitions();
+                        label = l;
                         point.Context.Label = l;
                         DataLabelsDrawableTask.AddGeometyToPaintTask(l);
                     }
 
-                    point.Context.Label.Text = DataLabelFormatter(point);
-                    point.Context.Label.TextSize = dls;
-                    point.Context.Label.Padding = DataLabelsPadding;
+                    label.Text = DataLabelFormatter(point);
+                    label.TextSize = dls;
+                    label.Padding = DataLabelsPadding;
                     var labelPosition = GetLabelPosition(
-                        x - hgs, y - hgs, gs, gs, point.Context.Label.Measure(DataLabelsDrawableTask), DataLabelsPosition, SeriesProperties, point.PrimaryValue > 0);
-                    point.Context.Label.X = labelPosition.X;
-                    point.Context.Label.Y = labelPosition.Y;
+                        x - hgs, y - hgs, gs, gs, label.Measure(DataLabelsDrawableTask), DataLabelsPosition, SeriesProperties, point.PrimaryValue > 0);
+                    label.X = labelPosition.X;
+                    label.Y = labelPosition.Y;
 
-                    chart.MeasuredDrawables.Add(point.Context.Label);
+                    chart.MeasuredDrawables.Add(label);
                 }
             }
         }
@@ -216,9 +225,9 @@ namespace LiveChartsCore
             paintContext = context;
         }
 
-        protected override void SetDefaultPointTransitions(IChartPoint<TVisual, TLabel, TDrawingContext> chartPoint)
+        protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
         {
-            var visual = chartPoint.Context.Visual;
+            var visual = chartPoint.Context.Visual as TVisual;
             var chart = chartPoint.Context.Chart;
 
             if (visual == null) throw new Exception("Unable to initialize the point instance.");

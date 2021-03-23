@@ -20,11 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Context;
+using LiveChartsCore.Kernel;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows;
 
 namespace LiveChartsCore.SkiaSharpView.WPF
@@ -71,6 +73,14 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             DependencyProperty.Register(
                 nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new PropertyMetadata(new List<IAxis> { new Axis() }));
 
+        public static readonly DependencyProperty ZoomModeProperty =
+            DependencyProperty.Register(
+                nameof(ZoomMode), typeof(ZoomMode), typeof(CartesianChart), new PropertyMetadata(ZoomMode.Both));
+
+        public static readonly DependencyProperty ZoomingSpeedProperty =
+            DependencyProperty.Register(
+                nameof(ZoomingSpeed), typeof(double), typeof(CartesianChart), new PropertyMetadata(0.5d));
+
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;
 
         public IEnumerable<ISeries> Series
@@ -91,12 +101,30 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set { SetValue(YAxesProperty, value); }
         }
 
+        public ZoomMode ZoomMode
+        {
+            get { return (ZoomMode)GetValue(ZoomModeProperty); }
+            set { SetValue(ZoomModeProperty, value); }
+        }
+
+        public double ZoomingSpeed
+        {
+            get { return (double)GetValue(ZoomingSpeedProperty); }
+            set { SetValue(ZoomingSpeedProperty, value); }
+        }
+
         protected override void InitializeCore()
         {
             core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
             legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
             tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
             Application.Current.Dispatcher.Invoke(core.Update);
+        }
+
+        public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
+        {
+            var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
+            return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
         }
     }
 }

@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Context;
+using LiveChartsCore.Kernel;
 using System;
 
 namespace LiveChartsCore
@@ -50,7 +50,7 @@ namespace LiveChartsCore
             configuration(settings);
         }
 
-        public static LiveChartsSettings HasMapFor<TModel>(Action<TModel, IChartPoint> mapper)
+        public static LiveChartsSettings HasMapFor<TModel>(Action<TModel, ChartPoint> mapper)
         {
             return settings.HasMap(mapper);
         }

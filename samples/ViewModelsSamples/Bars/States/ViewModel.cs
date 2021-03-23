@@ -1,5 +1,5 @@
 ﻿using LiveChartsCore;
-using LiveChartsCore.Context;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -35,14 +35,14 @@ namespace ViewModelsSamples.Bars.States
             {
                 if (!isStateDefined)
                 {
-                    var skiaChart = (IChartView<SkiaSharpDrawingContext>)point.Context.Chart;
+                    var skiaChart = (IChartView<SkiaSharpDrawingContext>)point.ChartPoint.Context.Chart;
                     skiaChart.PointStates["hotDay"] =
                         new StrokeAndFillDrawable<SkiaSharpDrawingContext>(null, new SolidColorPaintTask(SKColors.OrangeRed));
                     isStateDefined = true;
                 }
 
-                if (point.PrimaryValue > 30) point.AddToState("hotDay");
-                else point.RemoveFromState("hotDay");
+                if (point.ChartPoint.PrimaryValue > 30) point.ChartPoint.AddToState("hotDay");
+                else point.ChartPoint.RemoveFromState("hotDay");
             };
 
             Series = new List<ISeries> { columnSeries };

@@ -1,11 +1,11 @@
-﻿using LiveChartsCore.Context;
+﻿using LiveChartsCore.Kernel;
 using System;
 
 namespace LiveChartsCore.Easing
 {
     public class DelayedFunction
     {
-        public DelayedFunction(Func<float, float> baseFunction, IChartPoint point, float perPointDelay = 10)
+        public DelayedFunction(Func<float, float> baseFunction, ChartPoint point, float perPointDelay = 10)
         {
             var visual = point.Context.Visual;
             var chart = point.Context.Chart;

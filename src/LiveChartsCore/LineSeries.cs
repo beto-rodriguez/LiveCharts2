@@ -20,10 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Context;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Measure;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LiveChartsCore
 {
@@ -113,21 +115,24 @@ namespace LiveChartsCore
         {
             var drawLocation = chart.DrawMaringLocation;
             var drawMarginSize = chart.DrawMarginSize;
-            var xScale = new ScaleContext(drawLocation, drawMarginSize, xAxis.Orientation, xAxis.DataBounds);
-            var yScale = new ScaleContext(drawLocation, drawMarginSize, yAxis.Orientation, yAxis.DataBounds);
+            var xScale = new Scaler(
+                drawLocation, drawMarginSize, xAxis.Orientation, xAxis.DataBounds, xAxis.IsInverted);
+            var yScale = new Scaler(
+                drawLocation, drawMarginSize, yAxis.Orientation, yAxis.DataBounds, yAxis.IsInverted);
 
             var gs = geometrySize;
             var hgs = gs / 2f;
             float sw = Stroke?.StrokeThickness ?? 0;
-            float p = yScale.ScaleToUi(pivot);
+            float p = yScale.ToPixels(pivot);
 
             var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
 
-            var points = Fetch(chart);
+            var fetched = Fetch(chart);
+            if (fetched is not ChartPoint[] points) points = fetched.ToArray();
 
             var segments = enableNullSplitting
                 ? SplitEachNull(points, xScale, yScale)
-                : new ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>[][] { points };
+                : new ChartPoint[][] { points };
 
             StackPosition<TDrawingContext>? stacker = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked
                 ? chart.SeriesContext.GetStackPosition(this, GetStackGroup())
@@ -192,12 +197,16 @@ namespace LiveChartsCore
                         s = stacker.GetStack(data.TargetPoint).Start;
                     }
 
-                    var x = xScale.ScaleToUi(data.TargetPoint.SecondaryValue);
-                    var y = yScale.ScaleToUi(data.TargetPoint.PrimaryValue + s);
+                    var x = xScale.ToPixels(data.TargetPoint.SecondaryValue);
+                    var y = yScale.ToPixels(data.TargetPoint.PrimaryValue + s);
 
-                    if (data.TargetPoint.Context.Visual == null)
+                    var visual = data.TargetPoint.Context.Visual as LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>;
+
+                    if (visual == null)
                     {
                         var v = new LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>();
+
+                        visual = v;
 
                         v.Geometry.X = x - hgs;
                         v.Geometry.Y = p - hgs;
@@ -219,8 +228,6 @@ namespace LiveChartsCore
                         if (GeometryFill != null) GeometryFill.AddGeometyToPaintTask(v.Geometry);
                         if (GeometryStroke != null) GeometryStroke.AddGeometyToPaintTask(v.Geometry);
                     }
-
-                    var visual = data.TargetPoint.Context.Visual;
 
                     visual.Bezier.X0 = data.X0;
                     visual.Bezier.Y0 = data.Y0;
@@ -293,7 +300,9 @@ namespace LiveChartsCore
 
                     if (DataLabelsDrawableTask != null)
                     {
-                        if (data.TargetPoint.Context.Label == null)
+                        var label = data.TargetPoint.Context.Label as TLabel;
+
+                        if (label == null)
                         {
                             var l = new TLabel { X = x - hgs, Y = p - hgs };
 
@@ -303,20 +312,21 @@ namespace LiveChartsCore
                                     .WithEasingFunction(chart.EasingFunction));
 
                             l.CompleteAllTransitions();
+                            label = l;
                             data.TargetPoint.Context.Label = l;
                             DataLabelsDrawableTask.AddGeometyToPaintTask(l);
                         }
 
-                        data.TargetPoint.Context.Label.Text = DataLabelFormatter(data.TargetPoint);
-                        data.TargetPoint.Context.Label.TextSize = dls;
-                        data.TargetPoint.Context.Label.Padding = DataLabelsPadding;
+                        label.Text = DataLabelFormatter(data.TargetPoint);
+                        label.TextSize = dls;
+                        label.Padding = DataLabelsPadding;
                         var labelPosition = GetLabelPosition(
-                            x - hgs, y - hgs, gs, gs, data.TargetPoint.Context.Label.Measure(DataLabelsDrawableTask), DataLabelsPosition,
+                            x - hgs, y - hgs, gs, gs, label.Measure(DataLabelsDrawableTask), DataLabelsPosition,
                             SeriesProperties, data.TargetPoint.PrimaryValue > Pivot);
-                        data.TargetPoint.Context.Label.X = labelPosition.X;
-                        data.TargetPoint.Context.Label.Y = labelPosition.Y;
+                        label.X = labelPosition.X;
+                        label.Y = labelPosition.Y;
 
-                        chart.MeasuredDrawables.Add(data.TargetPoint.Context.Label);
+                        chart.MeasuredDrawables.Add(label);
                     }
                 }
 
@@ -454,15 +464,15 @@ namespace LiveChartsCore
             paintContext = context;
         }
 
-        private IEnumerable<BezierData<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>> GetSpline(
-            ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>[] points,
-            ScaleContext xScale,
-            ScaleContext yScale,
+        private IEnumerable<BezierData> GetSpline(
+            ChartPoint[] points,
+            Scaler xScale,
+            Scaler yScale,
             StackPosition<TDrawingContext>? stacker)
         {
             if (points.Length == 0) yield break;
-            IChartPoint<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext> previous, current, next, next2;
 
+            ChartPoint previous, current, next, next2;
 
             for (int i = 0; i < points.Length; i++)
             {
@@ -533,50 +543,50 @@ namespace LiveChartsCore
                     y0 = c1Y;
                 }
 
-                yield return new BezierData<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>(points[i])
+                yield return new BezierData(points[i])
                 {
                     IsFirst = i == 0,
                     IsLast = i == points.Length - 1,
-                    X0 = xScale.ScaleToUi(x0),
-                    Y0 = yScale.ScaleToUi(y0),
-                    X1 = xScale.ScaleToUi(c2X),
-                    Y1 = yScale.ScaleToUi(c2Y),
-                    X2 = xScale.ScaleToUi(next.SecondaryValue),
-                    Y2 = yScale.ScaleToUi(next.PrimaryValue + nys)
+                    X0 = xScale.ToPixels(x0),
+                    Y0 = yScale.ToPixels(y0),
+                    X1 = xScale.ToPixels(c2X),
+                    Y1 = yScale.ToPixels(c2Y),
+                    X2 = xScale.ToPixels(next.SecondaryValue),
+                    Y2 = yScale.ToPixels(next.PrimaryValue + nys)
                 };
             }
         }
 
-        private IEnumerable<ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>[]> SplitEachNull(
-            ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>[] points,
-            ScaleContext xScale,
-            ScaleContext yScale)
+        private IEnumerable<ChartPoint[]> SplitEachNull(
+            ChartPoint[] points,
+            Scaler xScale,
+            Scaler yScale)
         {
-            List<ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>> l =
-                new List<ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>>(points.Length);
+            var l = new List<ChartPoint>(points.Length);
 
             foreach (var point in points)
             {
                 if (point.IsNull)
                 {
-                    if (point.Context.Visual != null)
+                    var visual = point.Context.Visual as LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>;
+                    if (visual != null)
                     {
-                        var x = xScale.ScaleToUi(point.SecondaryValue);
-                        var y = yScale.ScaleToUi(point.PrimaryValue);
+                        var x = xScale.ToPixels(point.SecondaryValue);
+                        var y = yScale.ToPixels(point.PrimaryValue);
                         var gs = geometrySize;
                         var hgs = gs / 2f;
                         float sw = Stroke?.StrokeThickness ?? 0;
-                        float p = yScale.ScaleToUi(pivot);
-                        point.Context.Visual.Geometry.X = x - hgs;
-                        point.Context.Visual.Geometry.Y = p - hgs;
-                        point.Context.Visual.Geometry.Width = gs;
-                        point.Context.Visual.Geometry.Height = gs;
-                        point.Context.Visual.Geometry.RemoveOnCompleted = true;
-                        point.Context.Visual = null;
+                        float p = yScale.ToPixels(pivot);
+                        visual.Geometry.X = x - hgs;
+                        visual.Geometry.Y = p - hgs;
+                        visual.Geometry.Width = gs;
+                        visual.Geometry.Height = gs;
+                        visual.Geometry.RemoveOnCompleted = true;
+                        visual = null;
                     }
 
                     if (l.Count > 0) yield return l.ToArray();
-                    l = new List<ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>>(points.Length);
+                    l = new List<ChartPoint>(points.Length);
                     continue;
                 }
 
@@ -586,9 +596,9 @@ namespace LiveChartsCore
             if (l.Count > 0) yield return l.ToArray();
         }
 
-        protected override void SetDefaultPointTransitions(IChartPoint<LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext> chartPoint)
+        protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
         {
-            var visual = chartPoint.Context.Visual;
+            var visual = chartPoint.Context.Visual as LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>;
             var chart = chartPoint.Context.Chart;
 
             if (visual == null) throw new Exception("Unable to initialize the point instance.");

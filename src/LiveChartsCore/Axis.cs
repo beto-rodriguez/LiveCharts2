@@ -20,13 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Context;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore
 {
@@ -48,6 +49,8 @@ namespace LiveChartsCore
         private AxisPosition position = AxisPosition.LeftOrBottom;
         private Func<double, AxisTick, string>? labeler;
         private Padding padding = new Padding { Left = 8, Top = 8, Bottom = 8, Right = 9 };
+        private double? minValue = null;
+        private double? maxValue = null;
 
         public Bounds DataBounds
         {
@@ -68,6 +71,9 @@ namespace LiveChartsCore
 
         public double Step { get => step; set => step = value; }
 
+        public double? MinValue { get => minValue; set => minValue = value; }
+        public double? MaxValue { get => maxValue; set => maxValue = value; }
+
         public double UnitWith { get; set; } = 1;
 
         public AxisPosition Position { get => position; set => position = value; }
@@ -83,6 +89,8 @@ namespace LiveChartsCore
 
         public IDrawableTask<TDrawingContext>? AlternativeSeparatorForeground { get; set; }
 
+        public bool IsInverted { get; set; }
+
         public void Measure(CartesianChart<TDrawingContext> chart)
         {
             var controlSize = chart.ControlSize;
@@ -90,7 +98,7 @@ namespace LiveChartsCore
             var drawMarginSize = chart.DrawMarginSize;
             var labeler = Labeler;
 
-            var scale = new ScaleContext(drawLocation, drawMarginSize, orientation, dataBounds);
+            var scale = new Scaler(drawLocation, drawMarginSize, orientation, dataBounds, IsInverted);
             var axisTick = this.GetTick(drawMarginSize);
 
             var s = double.IsNaN(step) || step == 0
@@ -134,13 +142,13 @@ namespace LiveChartsCore
                 float x, y;
                 if (orientation == AxisOrientation.X)
                 {
-                    x = scale.ScaleToUi(unchecked((float)i));
+                    x = scale.ToPixels(unchecked((float)i));
                     y = yoo;
                 }
                 else
                 {
                     x = xoo;
-                    y = scale.ScaleToUi(unchecked((float)i));
+                    y = scale.ToPixels(unchecked((float)i));
                 }
 
                 if (!activeSeparators.TryGetValue(label, out var visualSeparator))

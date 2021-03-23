@@ -20,32 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Context;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
+using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.Sketches
+namespace LiveChartsCore
 {
-    public abstract class Series<TModel, TVisual, TLabel, TDrawingContext> : ISeries, IDisposable
+    public abstract class Series<TModel, TVisual, TLabel, TDrawingContext> : ISeries, ISeries<TModel>, IDisposable
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         private readonly CollectionDeepObserver<TModel> observer;
-        private object fetchedFor = new object();
-        private ChartPoint<TModel, TVisual, TLabel, TDrawingContext>[] fetched = new ChartPoint<TModel, TVisual, TLabel, TDrawingContext>[0];
-        protected readonly bool isValueType;
-        protected readonly bool implementsICP;
-        protected readonly Dictionary<int, ChartPoint<TModel, TVisual, TLabel, TDrawingContext>> byValueVisualMap = new Dictionary<int, ChartPoint<TModel, TVisual, TLabel, TDrawingContext>>();
-        protected readonly Dictionary<TModel, ChartPoint<TModel, TVisual, TLabel, TDrawingContext>> byReferenceVisualMap = new Dictionary<TModel, ChartPoint<TModel, TVisual, TLabel, TDrawingContext>>();
-        private readonly HashSet<IChart> subscribedTo = new HashSet<IChart>();
+        private readonly HashSet<IChart> subscribedTo = new();
         private readonly SeriesProperties properties;
-        protected float pivot = 0f;
         private IEnumerable<TModel>? values;
+        protected readonly bool implementsICP;
+        protected float pivot = 0f;
+        protected DataProvider<TModel, TDrawingContext>? dataProvider;
 
         public Series(SeriesProperties properties)
         {
@@ -59,9 +55,6 @@ namespace LiveChartsCore.Sketches
                 {
                     NotifySubscribers();
                 });
-            var t = typeof(TModel);
-            implementsICP = typeof(IChartPoint<TVisual, TLabel, TDrawingContext>).IsAssignableFrom(t);
-            isValueType = t.IsValueType;
         }
 
         /// <inheritdoc />
@@ -90,10 +83,10 @@ namespace LiveChartsCore.Sketches
         public double Pivot { get => pivot; set => pivot = (float)value; }
 
         /// <summary>
-        /// Gets or sets the mapping that defines how a type is mapped to a <see cref="IChartPoint"/> instance, 
-        /// then the <see cref="IChartPoint"/> will be drawn as a point in the chart.
+        /// Gets or sets the mapping that defines how a type is mapped to a <see cref="ChartPoint"/> instance, 
+        /// then the <see cref="ChartPoint"/> will be drawn as a point in the chart.
         /// </summary>
-        public Action<TModel, IChartPoint>? Mapping { get; set; }
+        public Action<TModel, ChartPoint>? Mapping { get; set; }
 
         /// <inheritdoc />
         int ISeries.SeriesId { get; set; } = -1;
@@ -101,25 +94,24 @@ namespace LiveChartsCore.Sketches
         /// <inheritdoc />
         public string HoverState { get; set; } = "Unknown";
 
-
         /// <summary>
-        /// Occurs when an instance of <see cref="ChartPoint{TModel, TVisual, TLabel, TDrawingContext}"/> is measured.
+        /// Occurs when an instance of <see cref="ChartPoint"/> is measured.
         /// </summary>
-        public event Action<IChartPoint<TVisual, TLabel, TDrawingContext>>? PointMeasured;
+        public event Action<TypedChartPoint<TVisual, TLabel, TDrawingContext>>? PointMeasured;
 
         /// <summary>
-        /// Occurs when an instance of <see cref="ChartPoint{TModel, TVisual, TLabel, TDrawingContext}"/> is created.
+        /// Occurs when an instance of <see cref="ChartPoint"/> is created.
         /// </summary>
-        public event Action<IChartPoint<TVisual, TLabel, TDrawingContext>>? PointCreated;
+        public event Action<TypedChartPoint<TVisual, TLabel, TDrawingContext>>? PointCreated;
 
         /// <summary>
-        /// Gets or sets a delegate that will be called everytime a <see cref="ChartPoint{TModel, TVisual, TLabel, TDrawingContext}"/> instance
+        /// Gets or sets a delegate that will be called everytime a <see cref="ChartPoint"/> instance
         /// is added to a state.
         /// </summary>
         public Action<TVisual, IChartView<TDrawingContext>>? OnPointAddedToState { get; set; }
 
         /// <summary>
-        /// Gets or sets a delegate that will be called everytime a <see cref="ChartPoint{TModel, TVisual, TLabel, TDrawingContext}"/> instance
+        /// Gets or sets a delegate that will be called everytime a <see cref="ChartVisualPoint{TModel, TVisual, TLabel, TDrawingContext}"/> instance
         /// is removed from a state.
         /// </summary>
         public Action<TVisual, IChartView<TDrawingContext>>? OnPointRemovedFromState { get; set; }
@@ -128,28 +120,24 @@ namespace LiveChartsCore.Sketches
         public virtual int GetStackGroup() => 0;
 
         /// <inheritdoc cref="ISeries.Fetch(IChart)"/>
-        public virtual ChartPoint<TModel, TVisual, TLabel, TDrawingContext>[] Fetch(IChart chart)
+        protected IEnumerable<ChartPoint> Fetch(IChart chart)
         {
-            if (fetchedFor == chart.MeasureWorker) return fetched;
-
+            if (dataProvider == null) throw new Exception("Data provider not found");
             subscribedTo.Add(chart);
-            fetched = implementsICP
-                ? GetPointsFromICP(chart).ToArray() // this method is experimental, it should improve performance, but how much? that is the question...
-                : GetMappedPoints(chart).ToArray();
-            fetchedFor = chart.MeasureWorker;
-
-            return fetched;
+            return dataProvider.Fetch(this, chart);
         }
 
-        /// <inheritdoc />
-        IChartPoint[] ISeries.Fetch(IChart chart) => Fetch(chart);
+        IEnumerable<ChartPoint> ISeries.Fetch(IChart chart) => Fetch(chart);
+
+        ///// <inheritdoc />
+        //IEnumerable<ChartPoint> ISeries.Fetch(IChart chart) => Fetch(chart);
 
         /// <inheritdoc />
         IEnumerable<TooltipPoint> ISeries.FindPointsNearTo(IChart chart, PointF pointerPosition) =>
             FilterTooltipPoints(Fetch(chart), chart, pointerPosition);
 
         /// <inheritdoc />
-        public void AddPointToState(IChartPoint chartPoint, string state)
+        public void AddPointToState(ChartPoint chartPoint, string state)
         {
             var chart = (IChartView<TDrawingContext>)chartPoint.Context.Chart;
             if (chart.PointStates == null) return;
@@ -160,16 +148,16 @@ namespace LiveChartsCore.Sketches
                 throw new Exception($"The state '{state}' was not found");
 
             if (chartPoint.Context.Visual == null) return;
-                //throw new Exception(
-                //    $"The {nameof(IChartPoint)}.{nameof(IChartPoint.Context)}.{nameof(IChartPoint.Context.Visual)} property is null, " +
-                //    $"this is probably due the point was not measured yet.");
+            //throw new Exception(
+            //    $"The {nameof(IChartPoint)}.{nameof(IChartPoint.Context)}.{nameof(IChartPoint.Context.Visual)} property is null, " +
+            //    $"this is probably due the point was not measured yet.");
 
             var visual = (TVisual)chartPoint.Context.Visual;
             var highlitable = visual.HighlightableGeometry;
 
             if (highlitable == null)
                 throw new Exception(
-                    $"The {nameof(IChartPoint)}.{nameof(IChartPoint.Context)}.{nameof(IChartPoint.Context.Visual)}" +
+                    $"The {nameof(ChartPoint)}.{nameof(ChartPoint.Context)}.{nameof(ChartPoint.Context.Visual)}" +
                     $".{nameof(IVisualChartPoint<TDrawingContext>.HighlightableGeometry)} property is null, " +
                     $"this is probably due the point was not measured yet.");
 
@@ -180,7 +168,7 @@ namespace LiveChartsCore.Sketches
         }
 
         /// <inheritdoc />
-        public virtual void RemovePointFromState(IChartPoint chartPoint, string state)
+        public virtual void RemovePointFromState(ChartPoint chartPoint, string state)
         {
             var chart = (IChartView<TDrawingContext>)chartPoint.Context.Chart;
             var s = chart.PointStates[state];
@@ -189,16 +177,16 @@ namespace LiveChartsCore.Sketches
                 throw new Exception($"The state '{state}' was not found");
 
             if (chartPoint.Context.Visual == null) return;
-                //throw new Exception(
-                //    $"The {nameof(IChartPoint)}.{nameof(IChartPoint.Context)}.{nameof(IChartPoint.Context.Visual)} property is null, " +
-                //    $"this is probably due the point was not measured yet.");
+            //throw new Exception(
+            //    $"The {nameof(IChartPoint)}.{nameof(IChartPoint.Context)}.{nameof(IChartPoint.Context.Visual)} property is null, " +
+            //    $"this is probably due the point was not measured yet.");
 
             var visual = (TVisual)chartPoint.Context.Visual;
             var highlitable = visual.HighlightableGeometry;
 
             if (highlitable == null)
                 throw new Exception(
-                    $"The {nameof(IChartPoint)}.{nameof(IChartPoint.Context)}.{nameof(IChartPoint.Context.Visual)}" +
+                    $"The {nameof(ChartPoint)}.{nameof(ChartPoint.Context)}.{nameof(ChartPoint.Context.Visual)}" +
                     $".{nameof(IVisualChartPoint<TDrawingContext>.HighlightableGeometry)} property is null, " +
                     $"this is probably due the point was not measured yet.");
 
@@ -219,36 +207,38 @@ namespace LiveChartsCore.Sketches
         /// </summary>
         /// <param name="chartPoint">The chart point.</param>
         /// <param name="visual">The visual.</param>
-        protected virtual void OnPointMeasured(IChartPoint<TVisual, TLabel, TDrawingContext> chartPoint)
+        protected virtual void OnPointMeasured(ChartPoint chartPoint)
         {
-            PointMeasured?.Invoke(chartPoint);
+            PointMeasured?.Invoke(new TypedChartPoint<TVisual, TLabel, TDrawingContext>(chartPoint));
         }
 
         /// <summary>
         /// Called when a point is created.
         /// </summary>
         /// <param name="chartPoint">The chart point.</param>
-        protected virtual void OnPointCreated(IChartPoint<TVisual, TLabel, TDrawingContext> chartPoint)
+        protected virtual void OnPointCreated(ChartPoint chartPoint)
         {
             SetDefaultPointTransitions(chartPoint);
-            PointCreated?.Invoke(chartPoint);
+            PointCreated?.Invoke(new TypedChartPoint<TVisual, TLabel, TDrawingContext>(chartPoint));
         }
 
-        protected abstract void SetDefaultPointTransitions(IChartPoint<TVisual, TLabel, TDrawingContext> chartPoint);
+        protected abstract void SetDefaultPointTransitions(ChartPoint chartPoint);
 
         /// <summary>
         /// Called when a point was added to a sate.
         /// </summary>
         /// <param name="visual">The visual.</param>
         /// <param name="chart">The chart.</param>
-        protected void OnAddedToState(TVisual visual, IChartView<TDrawingContext> chart) => (OnPointAddedToState ?? DefaultOnPointAddedToSate)(visual, chart);
+        protected void OnAddedToState(TVisual visual, IChartView<TDrawingContext> chart) 
+            => (OnPointAddedToState ?? DefaultOnPointAddedToSate)(visual, chart);
 
         /// <summary>
         /// Called when a point was removed from a state.
         /// </summary>
         /// <param name="visual">The visual.</param>
         /// <param name="chart">The chart.</param>
-        protected void OnRemovedFromState(TVisual visual, IChartView<TDrawingContext> chart) => (OnPointRemovedFromState ?? DefaultOnRemovedFromState)(visual, chart);
+        protected void OnRemovedFromState(TVisual visual, IChartView<TDrawingContext> chart) 
+            => (OnPointRemovedFromState ?? DefaultOnRemovedFromState)(visual, chart);
 
         /// <summary>
         /// Defines de default behaviour when a point is added to a state.
@@ -256,7 +246,6 @@ namespace LiveChartsCore.Sketches
         /// <param name="visual">The visual.</param>
         /// <param name="chart">The chart.</param>
         protected virtual void DefaultOnPointAddedToSate(TVisual visual, IChartView<TDrawingContext> chart) { }
-
 
         /// <summary>
         /// Defines the default behavious when a point is remvoed from a state.
@@ -321,62 +310,11 @@ namespace LiveChartsCore.Sketches
             };
         }
 
-        private IEnumerable<ChartPoint<TModel, TVisual, TLabel, TDrawingContext>> GetPointsFromICP(IChart chart)
+        private IEnumerable<TooltipPoint> FilterTooltipPoints(
+            IEnumerable<ChartPoint>? points, IChart chart, PointF pointerPosition)
         {
-            throw new NotImplementedException();
+            if (points == null) yield break;
 
-            //if (values == null) yield break;
-
-            //var index = 0;
-
-            //foreach (var item in values)
-            //{
-            //    var cp = (IChartPoint<TVisual, TDrawingContext>)item;
-            //    cp.Context.Index = index++;
-            //    cp.Context.DataSource = item;
-            //    yield return cp;
-            //}
-        }
-
-        private IEnumerable<ChartPoint<TModel, TVisual, TLabel, TDrawingContext>> GetMappedPoints(IChart chart)
-        {
-            if (values == null) yield break;
-
-            var mapper = Mapping ?? LiveCharts.CurrentSettings.GetMap<TModel>();
-            var index = 0;
-
-            if (isValueType)
-            {
-                foreach (var item in values)
-                {
-                    if (!byValueVisualMap.TryGetValue(index, out var cp))
-                        byValueVisualMap[index] = cp = new ChartPoint<TModel, TVisual, TLabel, TDrawingContext>(chart.View, this);
-
-                    cp.Context.Index = index++;
-                    cp.Context.DataSource = item;
-                    mapper(item, cp);
-
-                    yield return cp;
-                }
-            }
-            else
-            {
-                foreach (var item in values)
-                {
-                    if (!byReferenceVisualMap.TryGetValue(item, out var cp))
-                        byReferenceVisualMap[item] = cp = new ChartPoint<TModel, TVisual, TLabel, TDrawingContext>(chart.View, this);
-
-                    cp.Context.Index = index++;
-                    cp.Context.DataSource = item;
-                    mapper(item, cp);
-
-                    yield return cp;
-                }
-            }
-        }
-
-        private IEnumerable<TooltipPoint> FilterTooltipPoints(ChartPoint<TModel, TVisual, TLabel, TDrawingContext>?[] points, IChart chart, PointF pointerPosition)
-        {
             foreach (var point in points)
             {
                 if (point == null || point.Context.HoverArea == null) continue;

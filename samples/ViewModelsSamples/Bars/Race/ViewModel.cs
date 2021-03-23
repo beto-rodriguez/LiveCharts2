@@ -1,5 +1,6 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.Defaults;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -26,7 +27,7 @@ namespace ViewModelsSamples.Bars.Race
                     Stroke  = null,
                     MaxBarWidth = 50,
                     DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
-                    DataLabelsPosition = LiveChartsCore.Context.DataLabelsPosition.End,
+                    DataLabelsPosition = DataLabelsPosition.End,
                     DataLabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
                 new RowSeries<ObservableValue>
@@ -36,7 +37,7 @@ namespace ViewModelsSamples.Bars.Race
                     Stroke  = null,
                     MaxBarWidth = 50,
                     DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
-                    DataLabelsPosition = LiveChartsCore.Context.DataLabelsPosition.End,
+                    DataLabelsPosition = DataLabelsPosition.End,
                     DataLabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
                 new RowSeries<ObservableValue>
@@ -46,7 +47,7 @@ namespace ViewModelsSamples.Bars.Race
                     Stroke  = null,
                     MaxBarWidth = 52,
                     DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
-                    DataLabelsPosition = LiveChartsCore.Context.DataLabelsPosition.End,
+                    DataLabelsPosition = DataLabelsPosition.End,
                     DataLabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
                 new RowSeries<ObservableValue>
@@ -56,7 +57,7 @@ namespace ViewModelsSamples.Bars.Race
                     Stroke  = null,
                     MaxBarWidth = 50,
                     DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
-                    DataLabelsPosition = LiveChartsCore.Context.DataLabelsPosition.End,
+                    DataLabelsPosition = DataLabelsPosition.End,
                     DataLabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
                 new RowSeries<ObservableValue>
@@ -66,7 +67,7 @@ namespace ViewModelsSamples.Bars.Race
                     Stroke  = null,
                     MaxBarWidth = 50,
                     DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
-                    DataLabelsPosition = LiveChartsCore.Context.DataLabelsPosition.End,
+                    DataLabelsPosition = DataLabelsPosition.End,
                     DataLabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
                 new RowSeries<ObservableValue>
@@ -76,7 +77,7 @@ namespace ViewModelsSamples.Bars.Race
                     Stroke  = null,
                     MaxBarWidth = 50,
                     DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
-                    DataLabelsPosition = LiveChartsCore.Context.DataLabelsPosition.End,
+                    DataLabelsPosition = DataLabelsPosition.End,
                     DataLabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
                 new RowSeries<ObservableValue>
@@ -86,7 +87,7 @@ namespace ViewModelsSamples.Bars.Race
                     Stroke  = null,
                     MaxBarWidth = 50,
                     DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
-                    DataLabelsPosition = LiveChartsCore.Context.DataLabelsPosition.End,
+                    DataLabelsPosition = DataLabelsPosition.End,
                     DataLabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
             };

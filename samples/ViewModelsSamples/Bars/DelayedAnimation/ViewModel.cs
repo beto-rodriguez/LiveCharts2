@@ -1,6 +1,6 @@
 ﻿using LiveChartsCore;
-using LiveChartsCore.Context;
 using LiveChartsCore.Easing;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -20,9 +20,8 @@ namespace ViewModelsSamples.Bars.DelayedAnimation
             var x = 0f;
             while(x <= 1)
             {
-                var y = EasingFunctions.BounceInOut(x);
-                values1.Add(y);
-                values2.Add(y);
+                values1.Add(EasingFunctions.BounceInOut(x));
+                values2.Add(EasingFunctions.BounceInOut(x - 0.15f));
                 x += 0.01f;
             }
 
@@ -37,7 +36,7 @@ namespace ViewModelsSamples.Bars.DelayedAnimation
             {
                 Values = values2,
                 Stroke = null,
-                Fill = new SolidColorPaintTask(SKColors.GreenYellow)
+                Fill = new SolidColorPaintTask(SKColors.YellowGreen)
             };
 
             columnSeries1.PointMeasured += OnPointMeasured;
@@ -46,10 +45,10 @@ namespace ViewModelsSamples.Bars.DelayedAnimation
             Series = new List<ISeries> { columnSeries1, columnSeries2 };
         }
 
-        private void OnPointMeasured(IChartPoint<RectangleGeometry, LabelGeometry, SkiaSharpDrawingContext> point)
+        private void OnPointMeasured(TypedChartPoint<RectangleGeometry, LabelGeometry, SkiaSharpDrawingContext> point)
         {
-            var visual = point.Context.Visual;
-            var delayedFunction = new DelayedFunction(EasingFunctions.BuildCustomElasticOut(1.5f, 0.60f), point, 15f);
+            var visual = point.Visual;
+            var delayedFunction = new DelayedFunction(EasingFunctions.BuildCustomElasticOut(1.5f, 0.60f), point.ChartPoint, 15f);
 
             visual
                 .TransitionateProperties(

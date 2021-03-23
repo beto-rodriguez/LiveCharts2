@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Context;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
 using System;
@@ -33,8 +33,9 @@ namespace LiveChartsCore
     /// </summary>
     public class LiveChartsSettings
     {
-        private readonly Dictionary<Type, object> mappers = new Dictionary<Type, object>();
-        private readonly Dictionary<Type, object> seriesStyleBuilder = new Dictionary<Type, object>();
+        private object? currentFactory;
+        private readonly Dictionary<Type, object> mappers = new();
+        private readonly Dictionary<Type, object> seriesStyleBuilder = new();
 
         /// <summary>
         /// Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a <see cref="ChartPoint"/> instance, 
@@ -43,9 +44,10 @@ namespace LiveChartsCore
         /// <typeparam name="T">The type</typeparam>
         /// <param name="predicate">The mapper</param>
         /// <returns></returns>
-        public LiveChartsSettings HasMap<TModel>(Action<TModel, IChartPoint> mapper)
+        public LiveChartsSettings HasMap<TModel>(Action<TModel, ChartPoint> mapper)
         {
-            mappers[typeof(TModel)] = mapper;
+            var t = typeof(TModel);
+            mappers[t] = mapper;
             return this;
         }
 
@@ -54,7 +56,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <typeparam name="T">The type</typeparam>
         /// <returns>The current mapper</returns>
-        internal Action<TModel, IChartPoint> GetMap<TModel>()
+        internal Action<TModel, ChartPoint> GetMap<TModel>()
         {
             if (!mappers.TryGetValue(typeof(TModel), out var mapper))
                 throw new NotImplementedException(
@@ -62,7 +64,23 @@ namespace LiveChartsCore
                     $"{nameof(LiveCharts)}.{nameof(LiveCharts.Configure)}() " +
                     $"method to call {nameof(HasMap)}() with the type you are trying to plot.");
 
-            return (Action<TModel, IChartPoint>)mapper;
+            return (Action<TModel, ChartPoint>)mapper;
+        }
+
+        internal LiveChartsSettings HasDataFactory<TDrawingContext>(IDataFactoryProvider<TDrawingContext> factory)
+            where TDrawingContext: DrawingContext
+        {
+            currentFactory = factory;
+            return this;
+        }
+
+        internal IDataFactoryProvider<TDrawingContext> GetFactory<TDrawingContext>()
+            where TDrawingContext : DrawingContext
+        {
+            if (currentFactory == null) 
+                throw new NotImplementedException($"There is no a {nameof(IDataFactoryProvider<TDrawingContext>)} registered");
+
+            return (IDataFactoryProvider<TDrawingContext>) currentFactory;
         }
 
         public LiveChartsSettings RemoveMap<TModel>()
@@ -96,7 +114,7 @@ namespace LiveChartsCore
         }
 
         /// <summary>
-        /// Enables LiveCharts to be able to plot short, int, long, float, double, decimal and <see cref="ChartPoint"/>.
+        /// Enables LiveCharts to be able to plot short, int, long, float, double, decimal and <see cref="ChartPoint2"/>.
         /// </summary>
         /// <returns></returns>
         public LiveChartsSettings AddDefaultMappers()
@@ -254,6 +272,40 @@ namespace LiveChartsCore
                          point.PrimaryValue = model.Value.Value;
                          point.SecondaryValue = point.Context.Index;
                      }
+                 })
+                 .HasMap<ObservablePoint>((model, point) =>
+                 {
+                     if (model == null)
+                         throw new Exception(
+                             $"A {nameof(ObservablePoint)} can not be null, instead set to null to any of its properties.");
+
+                     if (model.X == null || model.Y == null)
+                     {
+                         point.IsNull = true;
+                         return;
+                     }
+
+                     point.IsNull = false;
+                     unchecked
+                     {
+                         point.PrimaryValue = (float)model.Y.Value;
+                         point.SecondaryValue = (float)model.X.Value;
+                     }
+                 }).HasMap<ObservablePointF>((model, point) =>
+                 {
+                     if (model == null)
+                         throw new Exception(
+                             $"A {nameof(ObservablePointF)} can not be null, instead set to null to any of its properties.");
+
+                     if (model.X == null || model.Y == null)
+                     {
+                         point.IsNull = true;
+                         return;
+                     }
+
+                     point.IsNull = false;
+                     point.PrimaryValue = model.Y.Value;
+                     point.SecondaryValue = model.X.Value;
                  });
         }
     }

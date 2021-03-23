@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Context;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using System;
 
@@ -76,27 +76,29 @@ namespace LiveChartsCore
 
             foreach (var point in Fetch(chart))
             {
+                var visual = point.Context.Visual as TVisual;
+
                 if (point.IsNull)
                 {
-                    if (point.Context.Visual != null)
+                    if (visual != null)
                     {
-                        point.Context.Visual.CenterX = drawLocation.X + drawMarginSize.Width * 0.5f;
-                        point.Context.Visual.CenterY = drawLocation.Y + drawMarginSize.Height * 0.5f;
-                        point.Context.Visual.X = cx;
-                        point.Context.Visual.Y = cy;
-                        point.Context.Visual.Width = 0;
-                        point.Context.Visual.Height = 0;
-                        point.Context.Visual.SweepAngle = 0;
-                        point.Context.Visual.StartAngle = 0;
-                        point.Context.Visual.PushOut = 0;
-                        point.Context.Visual.InnerRadius = 0;
-                        point.Context.Visual.RemoveOnCompleted = true;
+                        visual.CenterX = drawLocation.X + drawMarginSize.Width * 0.5f;
+                        visual.CenterY = drawLocation.Y + drawMarginSize.Height * 0.5f;
+                        visual.X = cx;
+                        visual.Y = cy;
+                        visual.Width = 0;
+                        visual.Height = 0;
+                        visual.SweepAngle = 0;
+                        visual.StartAngle = 0;
+                        visual.PushOut = 0;
+                        visual.InnerRadius = 0;
+                        visual.RemoveOnCompleted = true;
                         point.Context.Visual = null;
                     }
                     continue;
                 }
 
-                if (point.Context.Visual == null)
+                if (visual == null)
                 {
                     var p = new TVisual
                     {
@@ -112,7 +114,8 @@ namespace LiveChartsCore
                         InnerRadius = 0
                     };
 
-                    point.Context.Visual = p;
+                    visual = p;
+                    point.Context.Visual = visual;
                     OnPointCreated(point);
                     p.CompleteAllTransitions();
 
@@ -120,7 +123,7 @@ namespace LiveChartsCore
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(p);
                 }
 
-                var dougnutGeometry = point.Context.Visual;
+                var dougnutGeometry = visual;
 
                 var stack = stacker.GetStack(point);
                 var stackedValue = stack.Start;
@@ -150,22 +153,7 @@ namespace LiveChartsCore
         }
 
         /// <inheritdoc cref="IPieSeries{TDrawingContext}.GetBounds(PieChart{TDrawingContext})"/>
-        public DimensinalBounds GetBounds(PieChart<TDrawingContext> chart)
-        {
-            var stack = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
-            if (stack == null) throw new NullReferenceException("Unexpected null stacker");
-
-            var bounds = new DimensinalBounds();
-            foreach (var point in Fetch(chart))
-            {
-                stack.StackPoint(point);
-                bounds.PrimaryBounds.AppendValue(point.PrimaryValue);
-                bounds.SecondaryBounds.AppendValue(point.SecondaryValue);
-                bounds.TertiaryBounds.AppendValue(Pushout > HoverPushout ? Pushout : HoverPushout);
-            }
-
-            return bounds;
-        }
+        public DimensinalBounds GetBounds(PieChart<TDrawingContext> chart) => dataProvider.GetPieBounds(chart, this);
 
         protected override void DefaultOnPointAddedToSate(TVisual visual, IChartView<TDrawingContext> chart)
         {
@@ -228,9 +216,9 @@ namespace LiveChartsCore
         // for now multiple stack levels at a pie chart is not supported.
         public override int GetStackGroup() => 0;
 
-        protected override void SetDefaultPointTransitions(IChartPoint<TVisual, TLabel, TDrawingContext> chartPoint)
+        protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
         {
-            var visual = chartPoint.Context.Visual;
+            var visual = chartPoint.Context.Visual as TVisual;
             var chart = chartPoint.Context.Chart;
 
             if (visual == null) throw new Exception("Unable to initialize the point instance.");

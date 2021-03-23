@@ -20,12 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Context;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore
 {
@@ -36,6 +37,8 @@ namespace LiveChartsCore
         private int nextSeries = 0;
         private IAxis<TDrawingContext>[] secondaryAxes = new IAxis<TDrawingContext>[0];
         private IAxis<TDrawingContext>[] primaryAxes = new IAxis<TDrawingContext>[0];
+        private double zoomingSpeed = 0;
+        private ZoomMode zoomMode;
         private ICartesianSeries<TDrawingContext>[] series = new ICartesianSeries<TDrawingContext>[0];
 
         public CartesianChart(
@@ -81,6 +84,75 @@ namespace LiveChartsCore
             return chartView.Series.SelectMany(series => series.FindPointsNearTo(this, pointerPosition));
         }
 
+        public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
+        {
+            var xAxis = secondaryAxes[xAxisIndex];
+            var yAxis = primaryAxes[yAxisIndex];
+
+            var xScaler = new Scaler(
+                drawMaringLocation, drawMarginSize, xAxis.Orientation, xAxis.DataBounds, xAxis.IsInverted);
+
+            var yScaler = new Scaler(
+                drawMaringLocation, drawMarginSize, yAxis.Orientation, yAxis.DataBounds, xAxis.IsInverted);
+
+            return new PointF(xScaler.ToChartValues(point.X), yScaler.ToChartValues(point.Y));
+        }
+
+        public void ZoomIn(Point pivot)
+        {
+            if (primaryAxes == null || secondaryAxes == null) return;
+
+            var speed = zoomingSpeed < 0.1 ? 0.1 : (zoomingSpeed > 0.95 ? 0.95 : zoomingSpeed);
+
+            for (var index = 0; index < secondaryAxes.Length; index++)
+            {
+                var xi = secondaryAxes[index];
+
+                var px = new Scaler(
+                    drawMaringLocation, drawMarginSize, xi.Orientation, xi.DataBounds, xi.IsInverted)
+                    .ToChartValues(pivot.X);
+
+                var max = xi.MaxValue == null ? xi.DataBounds.Max : xi.MaxValue;
+                var min = xi.MinValue == null ? xi.DataBounds.Min : xi.MinValue;
+
+                var l = max - min;
+
+                var rMin = (px - min) / l;
+                var rMax = 1 - rMin;
+
+                var target = l * speed;
+                //if (target < xi.View.MinRange) return;
+                var mint = px - target * rMin;
+                var maxt = px + target * rMax;
+                xi.MinValue = mint;
+                xi.MaxValue = maxt;
+            }
+
+            for (var index = 0; index < primaryAxes.Length; index++)
+            {
+                var yi = primaryAxes[index];
+
+                var px = new Scaler(
+                    drawMaringLocation, drawMarginSize, yi.Orientation, yi.DataBounds, yi.IsInverted)
+                    .ToChartValues(pivot.X);
+
+                var max = yi.MaxValue == null ? yi.DataBounds.Max : yi.MaxValue;
+                var min = yi.MinValue == null ? yi.DataBounds.Min : yi.MinValue;
+
+                var l = max - min;
+
+                var rMin = (px - min) / l;
+                var rMax = 1 - rMin;
+
+                var target = l * speed;
+                //if (target < xi.View.MinRange) return;
+                var mint = px - target * rMin;
+                var maxt = px + target * rMax;
+                yi.MinValue = mint;
+                yi.MaxValue = maxt;
+            }
+        }
+
         protected override void Measure()
         {
             measuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
@@ -98,11 +170,15 @@ namespace LiveChartsCore
             { 
                 axis.Initialize(AxisOrientation.X);
                 initializer.ResolveAxisDefaults(axis);
+                if (axis.TextBrush != null) axis.TextBrush.ZIndex = -1;
+                if (axis.SeparatorsBrush != null) axis.SeparatorsBrush.ZIndex = -1;
             }
             foreach (var axis in primaryAxes)
             { 
                 axis.Initialize(AxisOrientation.Y);
                 initializer.ResolveAxisDefaults(axis);
+                if (axis.TextBrush != null) axis.TextBrush.ZIndex = -1;
+                if (axis.SeparatorsBrush != null) axis.SeparatorsBrush.ZIndex = -1;
             }
 
             // get seriesBounds
@@ -219,20 +295,15 @@ namespace LiveChartsCore
             primaryAxes = chartView.YAxes.Cast<IAxis<TDrawingContext>>().Select(x => x.Copy()).ToArray();
             secondaryAxes = chartView.XAxes.Cast<IAxis<TDrawingContext>>().Select(x => x.Copy()).ToArray();
 
+            zoomingSpeed = chartView.ZoomingSpeed;
+            zoomMode = chartView.ZoomMode;
+
             measureWorker = new object();
             series = chartView.Series
                 .Cast<ICartesianSeries<TDrawingContext>>()
                 .Select(series =>
                 {
-                    // a good implementation of ISeries<T>
-                    // must use the measureWorker to identify
-                    // if the points are already fetched.
-
-                    // this way no matter if the Series.Values collection changes
-                    // the fetch method will always return the same collection for the
-                    // current measureWorker instance
-
-                     series.Fetch(this);
+                    series.Fetch(this);
                     return series;
                 }).ToArray();
 

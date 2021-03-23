@@ -20,11 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Context;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
-using LiveChartsCore.Sketches;
 using System;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore
 {
@@ -81,7 +81,7 @@ namespace LiveChartsCore
 
         public Padding DataLabelsPadding { get; set; } = new Padding { Left = 6, Top = 8, Right = 6, Bottom = 8 };
 
-        public Func<IChartPoint, string> DataLabelFormatter { get; set; } = (point) => $"{point.PrimaryValue}";
+        public Func<ChartPoint, string> DataLabelFormatter { get; set; } = (point) => $"{point.PrimaryValue}";
 
         public PaintContext<TDrawingContext> DefaultPaintContext => paintContext;
 
@@ -97,6 +97,9 @@ namespace LiveChartsCore
                 throw new Exception("Default colors are not valid");
 
             initializer.ConstructSeries(this);
+
+            var factory = LiveCharts.CurrentSettings.GetFactory<TDrawingContext>();
+            dataProvider = factory.GetProvider<TModel>();
         }
     }
 }

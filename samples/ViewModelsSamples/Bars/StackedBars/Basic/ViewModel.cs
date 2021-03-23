@@ -1,5 +1,5 @@
 ﻿using LiveChartsCore;
-using LiveChartsCore.Context;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
