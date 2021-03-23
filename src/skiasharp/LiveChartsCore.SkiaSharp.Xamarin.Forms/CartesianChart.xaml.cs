@@ -20,8 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Context;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
@@ -94,6 +95,14 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         public static readonly BindableProperty YAxesProperty =
             BindableProperty.Create(
                 nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis> { new Axis() }, BindingMode.Default, null);
+
+        public static readonly BindableProperty ZoomModeProperty =
+            BindableProperty.Create(
+                nameof(ZoomMode), typeof(ZoomMode), typeof(CartesianChart), ZoomModeProperty.DefaultValue, BindingMode.Default, null);
+
+        public static readonly BindableProperty ZoomingSpeedProperty =
+            BindableProperty.Create(
+                nameof(ZoomingSpeed), typeof(double), typeof(CartesianChart), 0.5d, BindingMode.Default, null);
 
         public static readonly BindableProperty AnimationsSpeedProperty =
            BindableProperty.Create(
@@ -173,6 +182,18 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             set { SetValue(TooltipFindingStrategyProperty, value); }
         }
 
+        public ZoomMode ZoomMode
+        {
+            get { return (ZoomMode)GetValue(ZoomModeProperty); }
+            set { SetValue(ZoomModeProperty, value); }
+        }
+
+        public double ZoomingSpeed
+        {
+            get { return (double)GetValue(ZoomingSpeedProperty); }
+            set { SetValue(ZoomingSpeedProperty, value); }
+        }
+
         SizeF IChartView.ControlSize
         {
             get
@@ -223,6 +244,12 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             if (TooltipPosition == TooltipPosition.Hidden) return;
             tooltip.Show(core.FindPointsNearTo(mousePosition), core);
+        }
+
+        public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
+        {
+            var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
+            return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
         }
     }
 }
