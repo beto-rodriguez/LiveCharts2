@@ -25,6 +25,17 @@ namespace ViewModelsSamples.Scatter.Basic
                     new ObservablePoint(6.1, 4.6),
                     new ObservablePoint(9.4, 7.7),
                     new ObservablePoint(8.4, 8.5),
+                    new ObservablePoint(3.6, 9.6),
+                    new ObservablePoint(4.4, 6.3),
+                    new ObservablePoint(5.8, 4.8),
+                    new ObservablePoint(6.9, 3.4),
+                    new ObservablePoint(7.6, 1.8),
+                    new ObservablePoint(8.3, 8.3),
+                    new ObservablePoint(9.9, 5.2),
+                    new ObservablePoint(8.1, 4.7),
+                    new ObservablePoint(7.4, 3.9),
+                    new ObservablePoint(6.8, 2.3),
+                    new ObservablePoint(5.3, 7.1),
                 }
             }
         };

@@ -79,6 +79,12 @@
     <Compile Update="Pies\Basic\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Scatter\Custom\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Scatter\Basic\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="StackedArea\Basic\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

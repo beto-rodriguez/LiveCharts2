@@ -98,8 +98,8 @@ namespace LiveChartsCore
                 {
                     var r = new TVisual
                     {
-                        X = x - hgs,
-                        Y = y - hgs,
+                        X = x,
+                        Y = y,
                         Width = 0,
                         Height = 0
                     };
@@ -225,6 +225,8 @@ namespace LiveChartsCore
             paintContext = context;
         }
 
+        private Func<float, float> easing = EasingFunctions.BuildCustomElasticOut(1.2f, 0.40f);
+
         protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
         {
             var visual = chartPoint.Context.Visual as TVisual;
@@ -241,7 +243,7 @@ namespace LiveChartsCore
                .WithAnimation(animation =>
                    animation
                        .WithDuration(chart.AnimationsSpeed)
-                       .WithEasingFunction(chart.EasingFunction));
+                       .WithEasingFunction(easing));
         }
     }
 }

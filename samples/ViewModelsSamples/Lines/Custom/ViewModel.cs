@@ -24,12 +24,13 @@ namespace ViewModelsSamples.Lines.Custom
             // you can also define your own SVG geometry
             new LineSeries<double, MyGeomeometry>
             {
-                Values = new List<double> { -2, 2, -2, 2, -2, 2, -2 },
+                Values = new List<double> { -2, 2, 1, 3, -1, 4, 3 },
 
                 Stroke = new SolidColorPaintTask(SKColors.DarkOliveGreen, 3),
                 Fill = null,
-                GeometryStroke = new SolidColorPaintTask(SKColors.DarkOliveGreen, 30),
-                GeometrySize = 50
+                GeometryStroke = null,
+                GeometryFill = new SolidColorPaintTask(SKColors.DarkOliveGreen),
+                GeometrySize = 40
             }
         };
     }

@@ -31,6 +31,7 @@
             "Pies/NightingaleRose",
 
             "Scatter/Basic",
+            "Scatter/Custom",
 
             "General/UserDefinedTypes",
             "General/NullPoints",

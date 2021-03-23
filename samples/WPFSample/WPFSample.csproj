@@ -82,6 +82,9 @@
     <Compile Update="Pies\Basic\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Scatter\Custom\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Scatter\Basic\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -170,6 +173,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Pies\Basic\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Scatter\Custom\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

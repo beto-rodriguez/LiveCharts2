@@ -69,6 +69,12 @@
     <Compile Update="Pies\Basic\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Scatter\Custom\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Scatter\Basic\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="StackedArea\Basic\View.cs">
       <SubType>UserControl</SubType>
     </Compile>

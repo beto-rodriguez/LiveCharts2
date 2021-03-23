@@ -98,7 +98,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public static readonly BindableProperty ZoomModeProperty =
             BindableProperty.Create(
-                nameof(ZoomMode), typeof(ZoomMode), typeof(CartesianChart), ZoomModeProperty.DefaultValue, BindingMode.Default, null);
+                nameof(ZoomMode), typeof(ZoomMode), typeof(CartesianChart), ZoomMode.Both, BindingMode.Default, null);
 
         public static readonly BindableProperty ZoomingSpeedProperty =
             BindableProperty.Create(
