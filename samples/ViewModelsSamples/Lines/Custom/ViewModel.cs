@@ -55,7 +55,6 @@ namespace ViewModelsSamples.Lines.Custom
             {
                 backgroundPaint.Style = SKPaintStyle.Fill;
                 backgroundPaint.Color = SKColors.White;
-                backgroundPaint.IsAntialias = true;
 
                 var r = Width / 2;
                 context.Canvas.DrawCircle(X + r, Y + r, r, backgroundPaint);

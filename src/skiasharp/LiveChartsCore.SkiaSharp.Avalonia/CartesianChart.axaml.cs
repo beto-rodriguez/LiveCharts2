@@ -4,7 +4,6 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -67,6 +66,12 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
         public static readonly AvaloniaProperty<IEnumerable<IAxis>> YAxesProperty =
             AvaloniaProperty.Register<CartesianChart, IEnumerable<IAxis>>(nameof(YAxes), new List<IAxis> { new Axis() }, inherits: true);
 
+        public static readonly AvaloniaProperty<ZoomMode> ZoomModeProperty =
+            AvaloniaProperty.Register<CartesianChart, ZoomMode>(nameof(ZoomMode), ZoomMode.Both, inherits: true);
+
+        public static readonly AvaloniaProperty<double> ZoomingSpeedProperty =
+            AvaloniaProperty.Register<CartesianChart, double>(nameof(ZoomingSpeed), 0.5d, inherits: true);
+
         public static readonly AvaloniaProperty<TimeSpan> AnimationsSpeedProperty =
             AvaloniaProperty.Register<CartesianChart, TimeSpan>(nameof(AnimationsSpeed), TimeSpan.FromMilliseconds(500), inherits: true);
 
@@ -103,6 +108,18 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
         {
             get { return (IEnumerable<IAxis>)GetValue(YAxesProperty); }
             set { SetValue(YAxesProperty, value); }
+        }
+
+        public ZoomMode ZoomMode
+        {
+            get { return (ZoomMode)GetValue(ZoomModeProperty); }
+            set { SetValue(ZoomModeProperty, value); }
+        }
+
+        public double ZoomingSpeed
+        {
+            get { return (double)GetValue(ZoomingSpeedProperty); }
+            set { SetValue(ZoomingSpeedProperty, value); }
         }
 
         public TimeSpan AnimationsSpeed
@@ -163,6 +180,12 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
         public IChartTooltip<SkiaSharpDrawingContext> Tooltip => null;
 
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; }
+
+        public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
+        {
+            var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
+            return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
+        }
 
         protected void InitializeCore()
         {
