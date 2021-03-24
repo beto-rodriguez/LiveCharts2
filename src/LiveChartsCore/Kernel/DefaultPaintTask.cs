@@ -31,7 +31,7 @@ namespace LiveChartsCore.Kernel
     {
         public bool IsStroke { get; set; }
         public bool IsFill { get; set; }
-        public int ZIndex { get; set; }
+        public double ZIndex { get; set; }
         public float StrokeThickness { get; set; }
         public bool IsCompleted { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
         public long CurrentTime { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
@@ -54,7 +54,6 @@ namespace LiveChartsCore.Kernel
 
         public void Dispose()
         {
-            throw new System.NotImplementedException();
         }
 
         public IEnumerable<IDrawable<TDrawingContext>> GetGeometries()

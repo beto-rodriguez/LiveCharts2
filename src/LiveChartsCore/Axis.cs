@@ -51,6 +51,7 @@ namespace LiveChartsCore
         private Padding padding = new Padding { Left = 8, Top = 8, Bottom = 8, Right = 9 };
         private double? minValue = null;
         private double? maxValue = null;
+        private IDrawableTask<TDrawingContext>? textBrush;
 
         public Bounds DataBounds
         {
@@ -79,7 +80,14 @@ namespace LiveChartsCore
         public AxisPosition Position { get => position; set => position = value; }
         public double LabelsRotation { get => labelsRotation; set => labelsRotation = value; }
 
-        public IDrawableTask<TDrawingContext>? TextBrush { get; set; }
+        public IDrawableTask<TDrawingContext>? TextBrush 
+        { 
+            get => textBrush;
+            set 
+            {
+                textBrush = value; 
+            }
+        }
         public double TextSize { get; set; } = 16;
 
         public IDrawableTask<TDrawingContext>? SeparatorsBrush { get; set; }
@@ -105,8 +113,16 @@ namespace LiveChartsCore
                 ? axisTick.Value
                 : step;
 
-            if (TextBrush != null) chart.Canvas.AddDrawableTask(TextBrush);
-            if (SeparatorsBrush != null) chart.Canvas.AddDrawableTask(SeparatorsBrush);
+            if (TextBrush != null)
+            {
+                TextBrush.ZIndex = -1;
+                chart.Canvas.AddDrawableTask(TextBrush);
+            }
+            if (SeparatorsBrush != null)
+            {
+                SeparatorsBrush.ZIndex = -1;
+                chart.Canvas.AddDrawableTask(SeparatorsBrush);
+            }
 
             var lyi = drawLocation.Y;
             var lyj = drawLocation.Y + drawMarginSize.Height;
@@ -154,15 +170,15 @@ namespace LiveChartsCore
                 if (!activeSeparators.TryGetValue(label, out var visualSeparator))
                 {
                     visualSeparator = new AxisVisualSeprator<TDrawingContext>();
+
                     if (TextBrush != null)
                     {
-                        var textGeometry = new TTextGeometry();
-                        textGeometry.TextSize = size;
+                        var textGeometry = new TTextGeometry { TextSize = size };
                         visualSeparator.Text = textGeometry;
                         if (hasRotation) textGeometry.Rotation = r;
-
                         TextBrush.AddGeometyToPaintTask(textGeometry);
                     }
+
                     if (SeparatorsBrush != null)
                     {
                         var lineGeometry = new TLineGeometry();
@@ -185,6 +201,7 @@ namespace LiveChartsCore
                         visualSeparator.Line = lineGeometry;
                         SeparatorsBrush.AddGeometyToPaintTask(lineGeometry);
                     }
+
                     activeSeparators.Add(label, visualSeparator);
                 }
 
@@ -221,8 +238,9 @@ namespace LiveChartsCore
 
             foreach (var separator in activeSeparators.ToArray())
             {
-                if (separator.Value.Line == null || chart.MeasuredDrawables.Contains(separator.Value.Line) ||
-                    separator.Value.Text == null || chart.MeasuredDrawables.Contains(separator.Value.Text))
+                var usedLabel = separator.Value.Text != null && chart.MeasuredDrawables.Contains(separator.Value.Text);
+                var usedLine = separator.Value.Line !=null && chart.MeasuredDrawables.Contains(separator.Value.Line);
+                if (usedLine || usedLabel)
                 {
                     continue;
                 }
@@ -268,23 +286,6 @@ namespace LiveChartsCore
         {
             this.orientation = orientation;
             DataBounds = new Bounds();
-        }
-
-        public IAxis<TDrawingContext> Copy()
-        {
-            return new Axis<TDrawingContext, TTextGeometry, TLineGeometry>
-            {
-                Labeler = labeler ?? Labelers.Default,
-                Step = step,
-                UnitWith = UnitWith,
-                Position = position,
-                LabelsRotation = labelsRotation,
-                TextBrush = TextBrush,
-                SeparatorsBrush = SeparatorsBrush,
-                ShowSeparatorLines = ShowSeparatorLines,
-                ShowSeparatorWedges = ShowSeparatorWedges,
-                AlternativeSeparatorForeground = AlternativeSeparatorForeground
-            };
         }
     }
 }

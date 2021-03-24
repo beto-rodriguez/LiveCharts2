@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
+using System.Collections.ObjectModel;
 
 namespace LiveChartsCore.SkiaSharp.Avalonia
 {
@@ -52,19 +53,24 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
                 {
                     if (core == null) return;
                     Dispatcher.UIThread.InvokeAsync(core.Update, DispatcherPriority.Background);
-                });
+                },
+                true);
+
+            XAxes = new List<IAxis>() { new Axis() };
+            YAxes = new List<IAxis>() { new Axis() };
+            Series = new ObservableCollection<ISeries>();
         }
 
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;
 
         public static readonly AvaloniaProperty<IEnumerable<ISeries>> SeriesProperty =
-            AvaloniaProperty.Register<CartesianChart, IEnumerable<ISeries>>(nameof(Series), new List<ISeries>(), inherits: true);
+            AvaloniaProperty.Register<CartesianChart, IEnumerable<ISeries>>(nameof(Series), null, inherits: true);
 
         public static readonly AvaloniaProperty<IEnumerable<IAxis>> XAxesProperty =
-            AvaloniaProperty.Register<CartesianChart, IEnumerable<IAxis>>(nameof(XAxes), new List<IAxis> { new Axis() }, inherits: true);
+            AvaloniaProperty.Register<CartesianChart, IEnumerable<IAxis>>(nameof(XAxes), null, inherits: true);
 
         public static readonly AvaloniaProperty<IEnumerable<IAxis>> YAxesProperty =
-            AvaloniaProperty.Register<CartesianChart, IEnumerable<IAxis>>(nameof(YAxes), new List<IAxis> { new Axis() }, inherits: true);
+            AvaloniaProperty.Register<CartesianChart, IEnumerable<IAxis>>(nameof(YAxes), null, inherits: true);
 
         public static readonly AvaloniaProperty<ZoomMode> ZoomModeProperty =
             AvaloniaProperty.Register<CartesianChart, ZoomMode>(nameof(ZoomMode), ZoomMode.Both, inherits: true);

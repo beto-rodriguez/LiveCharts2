@@ -170,15 +170,11 @@ namespace LiveChartsCore
             { 
                 axis.Initialize(AxisOrientation.X);
                 initializer.ResolveAxisDefaults(axis);
-                if (axis.TextBrush != null) axis.TextBrush.ZIndex = -1;
-                if (axis.SeparatorsBrush != null) axis.SeparatorsBrush.ZIndex = -1;
             }
             foreach (var axis in primaryAxes)
             { 
                 axis.Initialize(AxisOrientation.Y);
                 initializer.ResolveAxisDefaults(axis);
-                if (axis.TextBrush != null) axis.TextBrush.ZIndex = -1;
-                if (axis.SeparatorsBrush != null) axis.SeparatorsBrush.ZIndex = -1;
             }
 
             // get seriesBounds
@@ -270,6 +266,15 @@ namespace LiveChartsCore
                 var secondaryAxis = secondaryAxes[series.ScalesXAt];
                 var primaryAxis = primaryAxes[series.ScalesYAt];
                 series.Measure(this, secondaryAxis, primaryAxis);
+
+                var deleted = false;
+                foreach (var item in series.DeletingTasks)
+                {
+                    canvas.RemovePaintTask(item);
+                    item.Dispose();
+                    deleted = true;
+                }
+                if (deleted) series.DeletingTasks.Clear();
             }
 
             chartView.CoreCanvas.ForEachGeometry((geometry, drawable) =>
@@ -292,8 +297,8 @@ namespace LiveChartsCore
 
             viewDrawMargin = chartView.DrawMargin;
             controlSize = chartView.ControlSize;
-            primaryAxes = chartView.YAxes.Cast<IAxis<TDrawingContext>>().Select(x => x.Copy()).ToArray();
-            secondaryAxes = chartView.XAxes.Cast<IAxis<TDrawingContext>>().Select(x => x.Copy()).ToArray();
+            primaryAxes = chartView.YAxes.Cast<IAxis<TDrawingContext>>().Select(x => x).ToArray();
+            secondaryAxes = chartView.XAxes.Cast<IAxis<TDrawingContext>>().Select(x => x).ToArray();
 
             zoomingSpeed = chartView.ZoomingSpeed;
             zoomMode = chartView.ZoomMode;

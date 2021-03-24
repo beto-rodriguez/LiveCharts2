@@ -45,7 +45,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                {
                    if (core == null) return;
                    core.Update();
-               });
+               },
+               true);
         }
 
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => (PieChart<SkiaSharpDrawingContext>)core;

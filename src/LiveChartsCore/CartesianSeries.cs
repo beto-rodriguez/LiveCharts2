@@ -33,18 +33,21 @@ namespace LiveChartsCore
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
-        public CartesianSeries(SeriesProperties properties): base(properties) { }
+        private int scalesXAt;
+        private int scalesYAt;
+
+        public CartesianSeries(SeriesProperties properties) : base(properties) { }
 
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.ScalesXAt"/>
-        public int ScalesXAt { get; set; }
+        public int ScalesXAt { get => scalesXAt; set { scalesXAt = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.ScalesYAt"/>
-        public int ScalesYAt { get; set; }
+        public int ScalesYAt { get => scalesYAt; set { scalesYAt = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
         public virtual DimensinalBounds GetBounds(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
-                => dataProvider.GetCartesianBounds(chart, this, x, y); 
+                => dataProvider.GetCartesianBounds(chart, this, x, y);
 
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.Measure(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
         public abstract void Measure(

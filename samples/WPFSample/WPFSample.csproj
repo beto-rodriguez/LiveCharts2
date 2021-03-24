@@ -61,6 +61,9 @@
     <Compile Update="Lines\Area\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Lines\Properties\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Lines\Straight\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -145,6 +148,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Lines\Area\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Lines\Properties\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

@@ -24,6 +24,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
@@ -52,12 +53,17 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 {
                     if (core == null) return;
                     Application.Current.Dispatcher.Invoke(core.Update);
-                });
+                },
+                true);
+
+            XAxes = new List<IAxis>() { new Axis() };
+            YAxes = new List<IAxis>() { new Axis() };
+            Series = new ObservableCollection<ISeries>();
         }
 
         public static readonly DependencyProperty SeriesProperty =
             DependencyProperty.Register(
-                nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new PropertyMetadata(new List<ISeries>(),
+                nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new PropertyMetadata(null,
                     (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                     {
                         var seriesObserver = ((CartesianChart)o).seriesObserver;
@@ -67,11 +73,11 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty XAxesProperty =
             DependencyProperty.Register(
-                nameof(XAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new PropertyMetadata(new List<IAxis> { new Axis() }));
+                nameof(XAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new PropertyMetadata(null));
 
         public static readonly DependencyProperty YAxesProperty =
             DependencyProperty.Register(
-                nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new PropertyMetadata(new List<IAxis> { new Axis() }));
+                nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new PropertyMetadata(null));
 
         public static readonly DependencyProperty ZoomModeProperty =
             DependencyProperty.Register(

@@ -26,6 +26,7 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
@@ -73,14 +74,19 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                {
                    if (core == null) return;
                    MainThread.BeginInvokeOnMainThread(core.Update);
-               });
+               },
+               true);
+
+            XAxes = new List<IAxis>() { new Axis() };
+            YAxes = new List<IAxis>() { new Axis() };
+            Series = new ObservableCollection<ISeries>();
         }
 
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;
 
         public static readonly BindableProperty SeriesProperty =
             BindableProperty.Create(
-                nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new List<ISeries>(), BindingMode.Default, null, 
+                nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new ObservableCollection<ISeries>(), BindingMode.Default, null, 
                 (BindableObject o, object oldValue, object newValue) =>
                 {
                     var seriesObserver = ((CartesianChart)o).seriesObserver;
@@ -90,11 +96,11 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public static readonly BindableProperty XAxesProperty =
             BindableProperty.Create(
-                nameof(XAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis> { new Axis() }, BindingMode.Default, null);
+                nameof(XAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>() { new Axis() }, BindingMode.Default, null);
 
         public static readonly BindableProperty YAxesProperty =
             BindableProperty.Create(
-                nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis> { new Axis() }, BindingMode.Default, null);
+                nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>() { new Axis() }, BindingMode.Default, null);
 
         public static readonly BindableProperty ZoomModeProperty =
             BindableProperty.Create(

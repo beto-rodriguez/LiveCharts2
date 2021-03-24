@@ -56,7 +56,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
                 new ColorMotionProperty(nameof(Color), new SKColor(color.Red, color.Green, color.Blue, color.Alpha)));
         }
 
-        public int ZIndex { get; set; }
+        double IDrawableTask<SkiaSharpDrawingContext>.ZIndex { get; set; }
         public float StrokeThickness { get => strokeWidthTransition.GetMovement(this); set => strokeWidthTransition.SetMovement(value, this); }
         public SKPaintStyle Style { get; set; }
         public bool IsStroke { get; set; }

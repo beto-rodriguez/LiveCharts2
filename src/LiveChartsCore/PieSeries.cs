@@ -65,8 +65,22 @@ namespace LiveChartsCore
             minDimension = minDimension - (Stroke?.StrokeThickness ?? 0) * 2 - maxPushout * 2;
             minDimension *= maxOuterRadius;
 
-            if (Fill != null) chart.Canvas.AddDrawableTask(Fill);
-            if (Stroke != null) chart.Canvas.AddDrawableTask(Stroke);
+            var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
+            if (Fill != null)
+            {
+                Fill.ZIndex = actualZIndex + 0.1;
+                chart.Canvas.AddDrawableTask(Fill);
+            }
+            if (Stroke != null)
+            {
+                Stroke.ZIndex = actualZIndex + 0.2;
+                chart.Canvas.AddDrawableTask(Stroke);
+            }
+            if (DataLabelsDrawableTask != null)
+            {
+                DataLabelsDrawableTask.ZIndex = actualZIndex + 0.3;
+                chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
+            }
 
             var cx = drawLocation.X + drawMarginSize.Width * 0.5f;
             var cy = drawLocation.Y + drawMarginSize.Height * 0.5f;

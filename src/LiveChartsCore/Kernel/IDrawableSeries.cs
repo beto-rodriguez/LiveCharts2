@@ -24,6 +24,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
 using LiveChartsCore.Measure;
 using System;
+using System.Collections.Generic;
 
 namespace LiveChartsCore.Kernel
 {
@@ -101,5 +102,13 @@ namespace LiveChartsCore.Kernel
         /// </summary>
         /// <returns></returns>
         int GetStackGroup();
+
+        /// <summary>
+        /// Gets the deleting tasks.
+        /// </summary>
+        /// <value>
+        /// The deleting tasks.
+        /// </value>
+        List<IDrawableTask<TDrawingContext>> DeletingTasks { get; }
     }
 }

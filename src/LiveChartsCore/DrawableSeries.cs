@@ -25,6 +25,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
 using System;
 using LiveChartsCore.Measure;
+using System.Collections.Generic;
 
 namespace LiveChartsCore
 {
@@ -34,20 +35,29 @@ namespace LiveChartsCore
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
-        protected PaintContext<TDrawingContext> paintContext = new PaintContext<TDrawingContext>();
+        protected PaintContext<TDrawingContext> paintContext = new();
         private IDrawableTask<TDrawingContext>? stroke = null;
         private IDrawableTask<TDrawingContext>? fill = null;
         private double legendShapeSize = 15;
+        private IDrawableTask<TDrawingContext>? dataLabelsDrawableTask;
+        private double dataLabelsSize = 16;
+        private DataLabelsPosition dataLabelsPosition;
+        private Padding dataLabelsPadding = new Padding { Left = 6, Top = 8, Right = 6, Bottom = 8 };
+        private Func<ChartPoint, string> dataLabelFormatter = (point) => $"{point.PrimaryValue}";
+        protected List<IDrawableTask<TDrawingContext>> deletingTasks = new ();
 
         public DrawableSeries(SeriesProperties properties) : base(properties)
         {
         }
+
+        List<IDrawableTask<TDrawingContext>> IDrawableSeries<TDrawingContext>.DeletingTasks => deletingTasks;
 
         public IDrawableTask<TDrawingContext>? Stroke
         {
             get => stroke;
             set
             {
+                if (stroke != null) deletingTasks.Add(stroke);
                 stroke = value;
                 if (stroke != null)
                 {
@@ -55,6 +65,7 @@ namespace LiveChartsCore
                     stroke.IsFill = false;
                 }
                 OnPaintContextChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -63,6 +74,7 @@ namespace LiveChartsCore
             get => fill;
             set
             {
+                if (fill != null) deletingTasks.Add(fill);
                 fill = value;
                 if (fill != null)
                 {
@@ -71,21 +83,31 @@ namespace LiveChartsCore
                     fill.StrokeThickness = 0;
                 }
                 OnPaintContextChanged();
+                OnPropertyChanged();
             }
         }
-        public IDrawableTask<TDrawingContext>? DataLabelsDrawableTask { get; set; }
+        public IDrawableTask<TDrawingContext>? DataLabelsDrawableTask
+        {
+            get => dataLabelsDrawableTask;
+            set
+            {
+                if (dataLabelsDrawableTask != null) deletingTasks.Add(dataLabelsDrawableTask);
+                dataLabelsDrawableTask = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public double DataLabelsSize { get; set; } = 16;
+        public double DataLabelsSize { get => dataLabelsSize; set { dataLabelsSize = value; OnPropertyChanged(); } }
 
-        public DataLabelsPosition DataLabelsPosition { get; set; }
+        public DataLabelsPosition DataLabelsPosition { get => dataLabelsPosition; set { dataLabelsPosition = value; OnPropertyChanged(); } }
 
-        public Padding DataLabelsPadding { get; set; } = new Padding { Left = 6, Top = 8, Right = 6, Bottom = 8 };
+        public Padding DataLabelsPadding { get => dataLabelsPadding; set { dataLabelsPadding = value; OnPropertyChanged(); } }
 
-        public Func<ChartPoint, string> DataLabelFormatter { get; set; } = (point) => $"{point.PrimaryValue}";
+        public Func<ChartPoint, string> DataLabelFormatter { get => dataLabelFormatter; set { dataLabelFormatter = value; OnPropertyChanged(); } }
 
         public PaintContext<TDrawingContext> DefaultPaintContext => paintContext;
 
-        public double LegendShapeSize { get => legendShapeSize; set => legendShapeSize = value; }
+        public double LegendShapeSize { get => legendShapeSize; set { legendShapeSize = value; OnPropertyChanged(); } }
 
         protected abstract void OnPaintContextChanged();
 

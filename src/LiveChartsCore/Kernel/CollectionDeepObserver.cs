@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
 
 namespace LiveChartsCore.Kernel
 {
@@ -32,15 +32,23 @@ namespace LiveChartsCore.Kernel
         private readonly NotifyCollectionChangedEventHandler onCollectionChanged;
         private readonly PropertyChangedEventHandler onItemPropertyChanged;
         private readonly HashSet<INotifyPropertyChanged> itemsListening = new();
-
-        protected bool implementsINPC;
+        protected bool checkINotifyPropertyChanged;
 
         public CollectionDeepObserver(
-            NotifyCollectionChangedEventHandler onCollectionChanged, PropertyChangedEventHandler onItemPropertyChanged)
+            NotifyCollectionChangedEventHandler onCollectionChanged,
+            PropertyChangedEventHandler onItemPropertyChanged,
+            bool? checkINotifyPropertyChanged = null)
         {
             this.onCollectionChanged = onCollectionChanged;
             this.onItemPropertyChanged = onItemPropertyChanged;
-            implementsINPC = typeof(INotifyPropertyChanged).IsAssignableFrom(typeof(T));
+
+            if (checkINotifyPropertyChanged != null)
+            {
+                this.checkINotifyPropertyChanged = checkINotifyPropertyChanged.Value;
+                return;
+            }
+
+            this.checkINotifyPropertyChanged = typeof(INotifyPropertyChanged).IsAssignableFrom(typeof(T));
         }
 
         public void Initialize(IEnumerable<T>? instance)
@@ -52,8 +60,8 @@ namespace LiveChartsCore.Kernel
                 incc.CollectionChanged += OnCollectionChanged;
             }
 
-            if (implementsINPC)
-                foreach (var item in instance.Cast<INotifyPropertyChanged>())
+            if (checkINotifyPropertyChanged)
+                foreach (var item in GetINotifyPropertyChangedItems(instance))
                     item.PropertyChanged += onItemPropertyChanged;
         }
 
@@ -66,37 +74,37 @@ namespace LiveChartsCore.Kernel
                 incc.CollectionChanged -= OnCollectionChanged;
             }
 
-            if (implementsINPC)
-                foreach (var item in instance.Cast<INotifyPropertyChanged>())
+            if (checkINotifyPropertyChanged)
+                foreach (var item in GetINotifyPropertyChangedItems(instance))
                     item.PropertyChanged -= onItemPropertyChanged;
         }
 
         private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (implementsINPC)
+            if (checkINotifyPropertyChanged)
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                        foreach (var item in e.NewItems.Cast<INotifyPropertyChanged>())
+                        foreach (var item in GetINotifyPropertyChangedItems(e.NewItems))
                         {
                             item.PropertyChanged += onItemPropertyChanged;
                             itemsListening.Add(item);
                         }
                         break;
                     case NotifyCollectionChangedAction.Remove:
-                        foreach (var item in e.OldItems.Cast<INotifyPropertyChanged>())
+                        foreach (var item in GetINotifyPropertyChangedItems(e.OldItems))
                         {
                             item.PropertyChanged -= onItemPropertyChanged;
                             itemsListening.Remove(item);
                         }
                         break;
                     case NotifyCollectionChangedAction.Replace:
-                        foreach (var item in e.NewItems.Cast<INotifyPropertyChanged>())
+                        foreach (var item in GetINotifyPropertyChangedItems(e.NewItems))
                         {
                             item.PropertyChanged += onItemPropertyChanged;
                             itemsListening.Add(item);
                         }
-                        foreach (var item in e.OldItems.Cast<INotifyPropertyChanged>())
+                        foreach (var item in GetINotifyPropertyChangedItems(e.OldItems))
                         {
                             item.PropertyChanged -= onItemPropertyChanged;
                             itemsListening.Remove(item);
@@ -108,8 +116,8 @@ namespace LiveChartsCore.Kernel
                             item.PropertyChanged -= onItemPropertyChanged;
                         }
                         itemsListening.Clear();
-                        if (!(sender is IEnumerable<T> s)) break;
-                        foreach (var item in s.Cast<INotifyPropertyChanged>())
+                        if (sender is not IEnumerable<T> s) break;
+                        foreach (var item in GetINotifyPropertyChangedItems(s))
                         {
                             item.PropertyChanged += onItemPropertyChanged;
                             itemsListening.Remove(item);
@@ -121,6 +129,15 @@ namespace LiveChartsCore.Kernel
                 }
 
             onCollectionChanged(sender, e);
+        }
+
+        private IEnumerable<INotifyPropertyChanged> GetINotifyPropertyChangedItems(IEnumerable source)
+        {
+            foreach (var item in source)
+            {
+                if (item is not INotifyPropertyChanged inpc) continue;
+                yield return inpc;
+            }
         }
     }
 }

@@ -83,20 +83,30 @@ namespace LiveChartsCore.Drawing
 
         public void AddDrawableTask(IDrawableTask<TDrawingContext> task)
         {
+            if (paintTasks.Contains(task)) return;
             paintTasks.Add(task);
             Invalidate();
+#if DEBUG
+            Trace.WriteLine("added: " + paintTasks.Count);
+#endif
         }
 
         public void SetPaintTasks(HashSet<IDrawableTask<TDrawingContext>> tasks)
         {
             paintTasks = tasks;
             Invalidate();
+#if DEBUG
+            Trace.WriteLine("set: " + paintTasks.Count);
+#endif
         }
 
         public void RemovePaintTask(IDrawableTask<TDrawingContext> task)
         {
             paintTasks.Remove(task);
             Invalidate();
+#if DEBUG
+            Trace.WriteLine("removed: " + paintTasks.Count);
+#endif
         }
 
         public void ForEachGeometry(Action<IDrawable<TDrawingContext>> predicate) => ForEachGeometry((geometry, paint) => predicate(geometry));

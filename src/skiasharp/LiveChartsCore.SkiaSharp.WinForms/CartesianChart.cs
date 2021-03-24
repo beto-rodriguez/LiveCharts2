@@ -47,7 +47,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                {
                    if (core == null) return;
                    core.Update();
-               });
+               },
+               true);
         }
 
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;

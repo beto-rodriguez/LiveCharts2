@@ -23,6 +23,7 @@
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
@@ -51,13 +52,15 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     if (core == null) return;
                     Application.Current.Dispatcher.Invoke(core.Update);
                 });
+
+            Series = new ObservableCollection<ISeries>();
         }
 
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => (PieChart<SkiaSharpDrawingContext>)core;
 
         public static readonly DependencyProperty SeriesProperty =
             DependencyProperty.Register(
-                nameof(Series), typeof(IEnumerable<ISeries>), typeof(PieChart), new PropertyMetadata(new List<ISeries>(),
+                nameof(Series), typeof(IEnumerable<ISeries>), typeof(PieChart), new PropertyMetadata(null,
                     (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                     {
                         var seriesObserver = ((PieChart)o).seriesObserver;

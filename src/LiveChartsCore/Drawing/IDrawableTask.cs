@@ -25,30 +25,80 @@ using System.Collections.Generic;
 
 namespace LiveChartsCore.Drawing
 {
-    public interface IDrawable: IAnimatable, IDisposable
-    {
-        bool IsStroke { get; set; }
-
-        bool IsFill { get; set; }
-
-        int ZIndex { get; set; }
-
-        float StrokeThickness { get; set; }
-    }
-
-    public interface IDrawableTask<TDrawingContext> : IDrawable
+    /// <summary>
+    /// Defines a set of geometries that will be drawn according to this instance specifications.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="LiveChartsCore.Drawing.IDrawable" />
+    public interface IDrawableTask<TDrawingContext> : IAnimatable, IDisposable
         where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is stroke.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is stroke; otherwise, <c>false</c>.
+        /// </value>
+        bool IsStroke { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is fill.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is fill; otherwise, <c>false</c>.
+        /// </value>
+        bool IsFill { get; set; }
+
+        /// <summary>
+        /// Gets or sets the index of the z.
+        /// </summary>
+        /// <value>
+        /// The index of the z.
+        /// </value>
+        double ZIndex { get; set; }
+
+        /// <summary>
+        /// Gets or sets the stroke thickness.
+        /// </summary>
+        /// <value>
+        /// The stroke thickness.
+        /// </value>
+        float StrokeThickness { get; set; }
+
+        /// <summary>
+        /// Initializes the task.
+        /// </summary>
+        /// <param name="context">The context.</param>
         void InitializeTask(TDrawingContext context);
 
+        /// <summary>
+        /// Gets the geometries.
+        /// </summary>
+        /// <returns></returns>
         IEnumerable<IDrawable<TDrawingContext>> GetGeometries();
 
+        /// <summary>
+        /// Sets the geometries.
+        /// </summary>
+        /// <param name="geometries">The geometries.</param>
         void SetGeometries(HashSet<IDrawable<TDrawingContext>> geometries);
 
+        /// <summary>
+        /// Adds the geomety to paint task.
+        /// </summary>
+        /// <param name="geometry">The geometry.</param>
         void AddGeometyToPaintTask(IDrawable<TDrawingContext> geometry);
 
+        /// <summary>
+        /// Removes the geometry from pain task.
+        /// </summary>
+        /// <param name="geometry">The geometry.</param>
         void RemoveGeometryFromPainTask(IDrawable<TDrawingContext> geometry);
 
+        /// <summary>
+        /// Clones the task.
+        /// </summary>
+        /// <returns></returns>
         IDrawableTask<TDrawingContext> CloneTask();
     }
 }

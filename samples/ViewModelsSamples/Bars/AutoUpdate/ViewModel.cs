@@ -94,8 +94,8 @@ namespace ViewModelsSamples.Bars.AutoUpdate
             Series.RemoveAt(Series.Count - 1);
         }
 
-        // The next commands are only to enable bindings
-        // it is not used in the WinForms sample
+        // The next commands are only to enable XAML bindings
+        // they are not used in the WinForms sample
         public ICommand AddItemCommand => new Command(o => AddRandomItem());
         public ICommand RemoveItemCommand => new Command(o => RemoveFirstItem());
         public ICommand ReplaceItemCommand => new Command(o => ReplaceRandomItem());

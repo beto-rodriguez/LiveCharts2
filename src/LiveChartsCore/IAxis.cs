@@ -61,7 +61,5 @@ namespace LiveChartsCore
 
         void Measure(CartesianChart<TDrawingContext> chart);
         SizeF GetPossibleSize(CartesianChart<TDrawingContext> chart);
-
-        IAxis<TDrawingContext> Copy();
     }
 }

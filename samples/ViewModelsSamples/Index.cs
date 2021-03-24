@@ -6,6 +6,7 @@
         {
             "Lines/Basic",
             "Lines/Straight",
+            "Lines/Properties",
             "Lines/Area",
             "Lines/Custom",
 

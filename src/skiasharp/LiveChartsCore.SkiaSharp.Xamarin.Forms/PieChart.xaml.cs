@@ -4,6 +4,7 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
@@ -53,13 +54,15 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                    if (core == null) return;
                    MainThread.BeginInvokeOnMainThread(core.Update);
                });
+
+            Series = new ObservableCollection<ISeries>();
         }
 
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => (PieChart<SkiaSharpDrawingContext>)core;
 
         public static readonly BindableProperty SeriesProperty =
           BindableProperty.Create(
-              nameof(Series), typeof(IEnumerable<ISeries>), typeof(PieChart), new List<ISeries>(), BindingMode.Default, null,
+              nameof(Series), typeof(IEnumerable<ISeries>), typeof(PieChart), new ObservableCollection<ISeries>(), BindingMode.Default, null,
               (BindableObject o, object oldValue, object newValue) =>
               {
                   var seriesObserver = ((PieChart)o).seriesObserver;

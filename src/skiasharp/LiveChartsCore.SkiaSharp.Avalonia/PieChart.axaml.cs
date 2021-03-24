@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
+using System.Collections.ObjectModel;
 
 namespace LiveChartsCore.SkiaSharp.Avalonia
 {
@@ -54,13 +55,14 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
                    if (core == null) return;
                    Dispatcher.UIThread.InvokeAsync(core.Update, DispatcherPriority.Background);
                });
+
+            Series = new ObservableCollection<ISeries>();
         }
 
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => (PieChart<SkiaSharpDrawingContext>)core;
 
         public static readonly AvaloniaProperty<IEnumerable<ISeries>> SeriesProperty =
-            AvaloniaProperty.Register<PieChart, IEnumerable<ISeries>>(
-                nameof(Series), new List<ISeries>(), inherits: true);
+            AvaloniaProperty.Register<PieChart, IEnumerable<ISeries>>(nameof(Series), new List<ISeries>(), inherits: true);
 
         public static readonly AvaloniaProperty<TimeSpan> AnimationsSpeedProperty =
             AvaloniaProperty.Register<PieChart, TimeSpan>(nameof(AnimationsSpeed), TimeSpan.FromMilliseconds(500), inherits: true);

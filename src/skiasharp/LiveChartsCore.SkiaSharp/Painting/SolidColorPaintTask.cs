@@ -65,8 +65,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting
 
         public float StrokeMiter 
         {
-            get => strokeMiterTransition.GetMovement(this); 
-            set => strokeMiterTransition.SetMovement(value, this); 
+            get => strokeMiterTransition.GetMovement(this);
+            set => strokeMiterTransition.SetMovement(value, this);
         }
         public PathEffect PathEffect
         { 

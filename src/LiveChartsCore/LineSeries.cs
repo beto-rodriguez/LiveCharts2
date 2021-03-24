@@ -59,7 +59,7 @@ namespace LiveChartsCore
         }
 
         /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometrySize"/>
-        public double GeometrySize { get => geometrySize; set => geometrySize = (float)value; }
+        public double GeometrySize { get => geometrySize; set { geometrySize = (float)value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="ILineSeries{TDrawingContext}.LineSmoothness"/>
         public double LineSmoothness 
@@ -70,12 +70,13 @@ namespace LiveChartsCore
                 var v = value;
                 if (value > 1) v = 1;
                 if (value < 0) v = 0;
-                lineSmoothness = (float)v; 
+                lineSmoothness = (float)v;
+                OnPropertyChanged();
             }
         }
 
         /// <inheritdoc cref="ILineSeries{TDrawingContext}.EnableNullSplitting"/>
-        public bool EnableNullSplitting { get => enableNullSplitting; set => enableNullSplitting = value; }
+        public bool EnableNullSplitting { get => enableNullSplitting; set { enableNullSplitting = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometryFill"/>
         public IDrawableTask<TDrawingContext>? GeometryFill
@@ -83,6 +84,7 @@ namespace LiveChartsCore
             get => shapesFill;
             set
             {
+                if (shapesFill != null) deletingTasks.Add(shapesFill);
                 shapesFill = value;
                 if (shapesFill != null)
                 {
@@ -91,6 +93,7 @@ namespace LiveChartsCore
                 }
 
                 OnPaintContextChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -100,12 +103,14 @@ namespace LiveChartsCore
             get => shapesStroke;
             set
             {
+                if (shapesStroke != null) deletingTasks.Add(shapesStroke);
                 shapesStroke = value;
                 if (shapesStroke != null)
                 {
                     shapesStroke.IsStroke = true;
                 }
                 OnPaintContextChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -138,13 +143,16 @@ namespace LiveChartsCore
                 ? chart.SeriesContext.GetStackPosition(this, GetStackGroup())
                 : null;
 
+            var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
+
             if (stacker != null)
             {
                 // easy workaround to set an automatic and valid z-index for stacked area series
                 // the problem of this solution is that the user needs to set z-indexes above 1000
                 // if the user needs to add more series to the chart.
-                if (Fill != null) Fill.ZIndex = 1000 - stacker.Position;
-                if (Stroke != null) Stroke.ZIndex = 1000 - stacker.Position;
+                actualZIndex = 1000 - stacker.Position;
+                if (Fill != null) Fill.ZIndex = actualZIndex;
+                if (Stroke != null) Stroke.ZIndex = actualZIndex;
             }
 
             var dls = unchecked((float)DataLabelsSize);
@@ -178,6 +186,7 @@ namespace LiveChartsCore
                     Fill.AddGeometyToPaintTask(fillPathHelper.Path);
                     chart.MeasuredDrawables.Add(fillPathHelper.Path);
                     chart.Canvas.AddDrawableTask(Fill);
+                    Fill.ZIndex = actualZIndex + 0.1;
                     fillPathHelper.Path.ClearCommands();
                 }
                 if (Stroke != null)
@@ -186,6 +195,7 @@ namespace LiveChartsCore
                     Stroke.AddGeometyToPaintTask(strokePathHelper.Path);
                     chart.MeasuredDrawables.Add(strokePathHelper.Path);
                     chart.Canvas.AddDrawableTask(Stroke);
+                    Stroke.ZIndex = actualZIndex + 0.2;
                     strokePathHelper.Path.ClearCommands();
                 }
 
@@ -224,10 +234,10 @@ namespace LiveChartsCore
                         OnPointCreated(data.TargetPoint);
                         v.Geometry.CompleteAllTransitions();
                         v.Bezier.CompleteAllTransitions();
-
-                        if (GeometryFill != null) GeometryFill.AddGeometyToPaintTask(v.Geometry);
-                        if (GeometryStroke != null) GeometryStroke.AddGeometyToPaintTask(v.Geometry);
                     }
+
+                    if (GeometryFill != null) GeometryFill.AddGeometyToPaintTask(visual.Geometry);
+                    if (GeometryStroke != null) GeometryStroke.AddGeometyToPaintTask(visual.Geometry);
 
                     visual.Bezier.X0 = data.X0;
                     visual.Bezier.Y0 = data.Y0;
@@ -274,15 +284,18 @@ namespace LiveChartsCore
                     {
                         if (data.IsFirst)
                         {
-                            strokePathHelper.StartPoint.X = data.X0;
-                            strokePathHelper.StartPoint.Y = data.Y0;
-                            strokePathHelper.Path.AddCommand(strokePathHelper.StartPoint);
-
                             if (wasStrokeInitialized)
                             {
+                                strokePathHelper.StartPoint.X = data.X0;
+                                strokePathHelper.StartPoint.Y = p;
+
                                 strokePathHelper.StartPoint.CompleteTransitions(
                                    nameof(fillPathHelper.StartPoint.Y), nameof(fillPathHelper.StartPoint.X));
                             }
+
+                            strokePathHelper.StartPoint.X = data.X0;
+                            strokePathHelper.StartPoint.Y = data.Y0;
+                            strokePathHelper.Path.AddCommand(strokePathHelper.StartPoint);
                         }
 
                         strokePathHelper.Path.AddCommand(visual.Bezier);
@@ -330,8 +343,16 @@ namespace LiveChartsCore
                     }
                 }
 
-                if (GeometryFill != null) chart.Canvas.AddDrawableTask(GeometryFill);
-                if (GeometryStroke != null) chart.Canvas.AddDrawableTask(GeometryStroke);
+                if (GeometryFill != null) 
+                { 
+                    chart.Canvas.AddDrawableTask(GeometryFill);
+                    GeometryFill.ZIndex = actualZIndex + 0.3;
+                }
+                if (GeometryStroke != null)
+                {
+                    chart.Canvas.AddDrawableTask(GeometryStroke);
+                    GeometryStroke.ZIndex = actualZIndex + 0.4;
+                }
                 segmentI++;
             }
 
@@ -348,7 +369,11 @@ namespace LiveChartsCore
                 strokePathHelperContainer.RemoveAt(iStroke);
             }
 
-            if (DataLabelsDrawableTask != null) chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
+            if (DataLabelsDrawableTask != null)
+            {
+                chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
+                DataLabelsDrawableTask.ZIndex = actualZIndex + 0.5;
+            }
         }
 
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>

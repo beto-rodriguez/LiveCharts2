@@ -64,6 +64,14 @@ namespace LiveChartsCore
         IEnumerable? Values { get; set; }
 
         /// <summary>
+        /// Gets or sets the index of the z.
+        /// </summary>
+        /// <value>
+        /// The index of the z.
+        /// </value>
+        int ZIndex { get; set; }
+
+        /// <summary>
         /// Gets or sets the value where the direction of the axis changes, by default is 0.
         /// </summary>
         double Pivot { get; set; }

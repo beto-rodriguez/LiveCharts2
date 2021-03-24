@@ -27,10 +27,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using LiveChartsCore.Measure;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace LiveChartsCore
 {
-    public abstract class Series<TModel, TVisual, TLabel, TDrawingContext> : ISeries, ISeries<TModel>, IDisposable
+    public abstract class Series<TModel, TVisual, TLabel, TDrawingContext> : ISeries, ISeries<TModel>, IDisposable, INotifyPropertyChanged
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
@@ -42,6 +44,9 @@ namespace LiveChartsCore
         protected readonly bool implementsICP;
         protected float pivot = 0f;
         protected DataProvider<TModel, TDrawingContext>? dataProvider;
+        private string? name;
+        private Action<TModel, ChartPoint>? mapping;
+        private int zIndex;
 
         public Series(SeriesProperties properties)
         {
@@ -61,7 +66,7 @@ namespace LiveChartsCore
         public SeriesProperties SeriesProperties => properties;
 
         /// <inheritdoc />
-        public string? Name { get; set; }
+        public string? Name { get => name; set { name = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the data set to draw in the chart.
@@ -74,19 +79,20 @@ namespace LiveChartsCore
                 observer.Dispose(values);
                 observer.Initialize(value);
                 values = value;
+                OnPropertyChanged();
             }
         }
 
         IEnumerable? ISeries.Values { get => Values; set => Values = (IEnumerable<TModel>?)value; }
 
         /// <inheritdoc />
-        public double Pivot { get => pivot; set => pivot = (float)value; }
+        public double Pivot { get => pivot; set { pivot = (float)value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the mapping that defines how a type is mapped to a <see cref="ChartPoint"/> instance, 
         /// then the <see cref="ChartPoint"/> will be drawn as a point in the chart.
         /// </summary>
-        public Action<TModel, ChartPoint>? Mapping { get; set; }
+        public Action<TModel, ChartPoint>? Mapping { get => mapping; set { mapping = value; OnPropertyChanged(); } }
 
         /// <inheritdoc />
         int ISeries.SeriesId { get; set; } = -1;
@@ -104,6 +110,8 @@ namespace LiveChartsCore
         /// </summary>
         public event Action<TypedChartPoint<TVisual, TLabel, TDrawingContext>>? PointCreated;
 
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         /// <summary>
         /// Gets or sets a delegate that will be called everytime a <see cref="ChartPoint"/> instance
         /// is added to a state.
@@ -115,6 +123,9 @@ namespace LiveChartsCore
         /// is removed from a state.
         /// </summary>
         public Action<TVisual, IChartView<TDrawingContext>>? OnPointRemovedFromState { get; set; }
+
+        /// <inheritdoc cref="ISeries.ZIndex" />
+        public int ZIndex { get => zIndex; set { zIndex = value; OnPropertyChanged(); } }
 
         /// <inheritdoc />
         public virtual int GetStackGroup() => 0;
@@ -229,7 +240,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="visual">The visual.</param>
         /// <param name="chart">The chart.</param>
-        protected void OnAddedToState(TVisual visual, IChartView<TDrawingContext> chart) 
+        protected void OnAddedToState(TVisual visual, IChartView<TDrawingContext> chart)
             => (OnPointAddedToState ?? DefaultOnPointAddedToSate)(visual, chart);
 
         /// <summary>
@@ -237,7 +248,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="visual">The visual.</param>
         /// <param name="chart">The chart.</param>
-        protected void OnRemovedFromState(TVisual visual, IChartView<TDrawingContext> chart) 
+        protected void OnRemovedFromState(TVisual visual, IChartView<TDrawingContext> chart)
             => (OnPointRemovedFromState ?? DefaultOnRemovedFromState)(visual, chart);
 
         /// <summary>
@@ -308,6 +319,11 @@ namespace LiveChartsCore
                         _ => throw new NotImplementedException(),
                     }
             };
+        }
+
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private IEnumerable<TooltipPoint> FilterTooltipPoints(

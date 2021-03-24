@@ -1,0 +1,27 @@
+<UserControl x:Class="AvaloniaSample.Lines.Properties.View"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharp.Avalonia"
+             xmlns:vms="using:ViewModelsSamples.Lines.Properties">
+  <UserControl.DataContext>
+    <vms:ViewModel/>
+  </UserControl.DataContext>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <WrapPanel Orientation="Horizontal">
+      <Button Command="{Binding ChangeValuesInstanceCommand}">values</Button>
+      <Button Command="{Binding NewFillCommand}">fill</Button>
+      <Button Command="{Binding NewStrokeCommand}">stroke</Button>
+      <Button Command="{Binding NewGeometryFillCommand}">geometry fill</Button>
+      <Button Command="{Binding NewGeometryStrokeCommand}">geom stroke</Button>
+      <Button Command="{Binding IncreaseLineSmoothnessCommand}">+ smoothness</Button>
+      <Button Command="{Binding DecreseLineSmoothnessCommand}">- smoothness</Button>
+      <Button Command="{Binding IncreaseGeometrySizeCommand}">+ geom size</Button>
+      <Button Command="{Binding DecreseGeometrySizeCommand}">- geom size</Button>
+    </WrapPanel>
+    <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}"></lvc:CartesianChart>
+  </Grid>  
+</UserControl>
