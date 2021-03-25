@@ -58,7 +58,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty AnimationsSpeedProperty =
             DependencyProperty.Register(
-                nameof(AnimationsSpeed), typeof(TimeSpan), typeof(Chart), new PropertyMetadata(TimeSpan.FromMilliseconds(100)));
+                nameof(AnimationsSpeed), typeof(TimeSpan), typeof(Chart), new PropertyMetadata(TimeSpan.FromMilliseconds(500)));
 
         public static readonly DependencyProperty EasingFunctionProperty =
             DependencyProperty.Register(

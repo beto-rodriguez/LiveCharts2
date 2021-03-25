@@ -25,10 +25,33 @@ namespace LiveChartsCore.Drawing
     public interface IPathGeometry<TDrawingContext, TPathArgs> : IDrawable<TDrawingContext>
          where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether the path is closed.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is closed; otherwise, <c>false</c>.
+        /// </value>
         bool IsClosed { get; set; }
 
+        /// <summary>
+        /// Adds a path command.
+        /// </summary>
+        /// <param name="command">The command.</param>
         void AddCommand(IPathCommand<TPathArgs> command);
+
+        /// <summary>
+        /// Determines whether the specified command is contained in the current path.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified command contains command; otherwise, <c>false</c>.
+        /// </returns>
         bool ContainsCommand(IPathCommand<TPathArgs> command);
+
+        /// <summary>
+        /// Removes a given command.
+        /// </summary>
+        /// <param name="command">The command.</param>
         void RemoveCommand(IPathCommand<TPathArgs> command);
 
         void ClearCommands();

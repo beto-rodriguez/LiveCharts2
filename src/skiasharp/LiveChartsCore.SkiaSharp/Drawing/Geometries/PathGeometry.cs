@@ -23,12 +23,14 @@
 using LiveChartsCore.Drawing;
 using SkiaSharp;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
     public class PathGeometry : Drawable, IPathGeometry<SkiaSharpDrawingContext, SKPath>
     {
         private readonly HashSet<IPathCommand<SKPath>> commands = new HashSet<IPathCommand<SKPath>>();
+        private IPathCommand<SKPath>[] drawingCommands = null;
 
         public PathGeometry()
         {
@@ -43,7 +45,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             SKPath path = new SKPath();
 
             var isValid = true;
-            foreach (var segment in commands)
+            var toExecuteCommands = drawingCommands ?? (drawingCommands = commands.ToArray());
+            foreach (var segment in toExecuteCommands)
             {
                 segment.IsCompleted = true;
                 segment.Execute(path, GetCurrentTime(), this);
@@ -59,6 +62,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         public void AddCommand(IPathCommand<SKPath> segment)
         {
             commands.Add(segment);
+            drawingCommands = null;
             Invalidate();
         }
 
@@ -70,6 +74,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         public void RemoveCommand(IPathCommand<SKPath> segment)
         {
             commands.Remove(segment);
+            drawingCommands = null;
             Invalidate();
         }
 
