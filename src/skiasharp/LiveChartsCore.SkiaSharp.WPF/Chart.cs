@@ -53,13 +53,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
             SizeChanged += OnSizeChanged;
             MouseMove += OnMouseMove;
-            mouseMoveThrottler = new ActionThrottler(TimeSpan.FromMilliseconds(10));
-            mouseMoveThrottler.Unlocked += MouseMoveThrottlerUnlocked;
+            mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
         }
 
         public static readonly DependencyProperty AnimationsSpeedProperty =
             DependencyProperty.Register(
-                nameof(AnimationsSpeed), typeof(TimeSpan), typeof(Chart), new PropertyMetadata(TimeSpan.FromMilliseconds(500)));
+                nameof(AnimationsSpeed), typeof(TimeSpan), typeof(Chart), new PropertyMetadata(TimeSpan.FromMilliseconds(100)));
 
         public static readonly DependencyProperty EasingFunctionProperty =
             DependencyProperty.Register(
@@ -177,7 +176,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         {
             var p = e.GetPosition(canvas);
             mousePosition = new PointF((float)p.X, (float)p.Y);
-            mouseMoveThrottler.TryRun();
+            mouseMoveThrottler.Call();
         }
 
         private void MouseMoveThrottlerUnlocked()

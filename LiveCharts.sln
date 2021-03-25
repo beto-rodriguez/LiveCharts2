@@ -65,7 +65,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnoSample.Skia.Gtk", "sampl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnoSample.Skia.Tizen", "samples\UnoSample\UnoSample.Skia.Tizen\UnoSample.Skia.Tizen.csproj", "{22A5B01A-D6DF-4794-861F-BBB8050752AF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AvaloniaView", "AvaloniaView", "{F31A39D3-DCA8-401D-B8E3-5CFACCD37016}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ObsoleteAvaloniaView", "ObsoleteAvaloniaView", "{F31A39D3-DCA8-401D-B8E3-5CFACCD37016}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Views", "Views", "{625CAC25-6709-4007-9A2D-836C554F0EEA}"
 EndProject

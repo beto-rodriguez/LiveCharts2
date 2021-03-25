@@ -27,7 +27,7 @@ namespace ViewModelsSamples.General.UserDefinedTypes
             // short, int, long, float, double, decimal, short?, int?, long?, float?, double?, decimal?,
             // WeightedPoint, WeightedPointF, ObservablePoint, ObservablePointF, OversableValue and ObservableValueF
             // for more info see:
-            // https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/LiveChartsCore/LiveChartsSettings.cs#L102
+            // https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/LiveChartsCore/LiveChartsSettings.cs#L122
             LiveCharts.Configure(config =>
 
                 // The HasMap<T>() method helps us to define a map from a type T to a point in our chart

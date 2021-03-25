@@ -22,7 +22,6 @@
 
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using System;
 using System.Collections.Generic;
@@ -41,7 +40,7 @@ namespace LiveChartsCore
         protected readonly ActionThrottler updateThrottler;
 
         // view copied properties
-        protected SizeF controlSize = new SizeF();
+        protected SizeF controlSize = new();
         protected Margin? viewDrawMargin = null;
         protected LegendPosition legendPosition;
         protected LegendOrientation legendOrientation;
@@ -57,10 +56,9 @@ namespace LiveChartsCore
         public Chart(MotionCanvas<TDrawingContext> canvas, Action<LiveChartsSettings> defaultPlatformConfig)
         {
             this.canvas = canvas;
-            updateThrottler = new ActionThrottler(TimeSpan.FromSeconds(300));
-            updateThrottler.Unlocked += UpdateThrottlerUnlocked;
             easingFunction = EasingFunctions.QuadraticOut;
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(defaultPlatformConfig);
+            updateThrottler = new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
         }
 
         public object MeasureWorker => measureWorker;

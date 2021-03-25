@@ -76,8 +76,9 @@ namespace LiveChartsCore
 
         public override void Update()
         {
-            updateThrottler.LockTime = chartView.AnimationsSpeed;
-            updateThrottler.TryRun();
+            updateThrottler.Call();
+            //updateThrottler.LockTime = chartView.AnimationsSpeed;
+            //updateThrottler.TryRun();
         }
 
         protected override void Measure()

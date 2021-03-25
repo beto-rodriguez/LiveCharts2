@@ -56,6 +56,7 @@ namespace LiveChartsCore.Drawing
 
                 foreach (var geometry in paint.GetGeometries())
                 {
+
                     geometry.IsCompleted = true;
                     geometry.CurrentTime = frameTime;
                     geometry.Draw(context);

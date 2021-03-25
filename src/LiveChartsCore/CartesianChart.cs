@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using LiveChartsCore.Measure;
+using System.Diagnostics;
 
 namespace LiveChartsCore
 {
@@ -73,8 +74,9 @@ namespace LiveChartsCore
 
         public override void Update()
         {
-            updateThrottler.LockTime = chartView.AnimationsSpeed;
-            updateThrottler.TryRun();
+            updateThrottler.Call();
+            //updateThrottler.LockTime = TimeSpan.FromMilliseconds(1000);
+            //updateThrottler.TryRun();
         }
 
         public override IEnumerable<TooltipPoint> FindPointsNearTo(PointF pointerPosition)
@@ -286,6 +288,10 @@ namespace LiveChartsCore
             });
 
             Canvas.Invalidate();
+
+#if DEBUG
+            Trace.WriteLine($"measured");
+#endif
         }
 
         protected override void UpdateThrottlerUnlocked()

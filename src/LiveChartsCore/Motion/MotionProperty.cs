@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
+using System.Diagnostics;
 
 namespace LiveChartsCore.Motion
 {
@@ -89,6 +90,7 @@ namespace LiveChartsCore.Motion
                 }
                 animation.animationCompletedCount = 0;
                 isTransitionCompleted = false;
+                requiresToInitialize = true;
             }
             animatable.Invalidate();
         }

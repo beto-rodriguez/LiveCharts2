@@ -19,7 +19,7 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
     {
         private bool isDrawingLoopRunning = false;
         private MotionCanvas<SkiaSharpDrawingContext> canvasCore = new MotionCanvas<SkiaSharpDrawingContext>();
-        private double framesPerSecond = 60;
+        private double framesPerSecond = 90;
 
         public MotionCanvas()
         {

@@ -48,7 +48,11 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             rotation = RegisterMotionProperty(new FloatMotionProperty(nameof(Rotation), 0));
         }
 
-        public float X { get => x.GetMovement(this); set => x.SetMovement(value, this); }
+        public float X
+        {
+            get => x.GetMovement(this); 
+            set => x.SetMovement(value, this);
+        }
 
         public float Y { get => y.GetMovement(this); set => y.SetMovement(value, this); }
 

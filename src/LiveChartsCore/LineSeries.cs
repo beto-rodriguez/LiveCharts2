@@ -62,10 +62,10 @@ namespace LiveChartsCore
         public double GeometrySize { get => geometrySize; set { geometrySize = (float)value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="ILineSeries{TDrawingContext}.LineSmoothness"/>
-        public double LineSmoothness 
-        { 
+        public double LineSmoothness
+        {
             get => lineSmoothness;
-            set 
+            set
             {
                 var v = value;
                 if (value > 1) v = 1;
@@ -250,6 +250,20 @@ namespace LiveChartsCore
                     {
                         if (data.IsFirst)
                         {
+                            if (wasFillInitialized)
+                            {
+                                fillPathHelper.StartPoint.X = data.X0;
+                                fillPathHelper.StartPoint.Y = p;
+
+                                fillPathHelper.StartSegment.X = data.X0;
+                                fillPathHelper.StartSegment.Y = p;
+
+                                fillPathHelper.StartPoint.CompleteTransitions(
+                                    nameof(fillPathHelper.StartPoint.Y), nameof(fillPathHelper.StartPoint.X));
+                                fillPathHelper.StartSegment.CompleteTransitions(
+                                    nameof(fillPathHelper.StartSegment.Y), nameof(fillPathHelper.StartSegment.X));
+                            }
+
                             fillPathHelper.StartPoint.X = data.X0;
                             fillPathHelper.StartPoint.Y = p;
                             fillPathHelper.Path.AddCommand(fillPathHelper.StartPoint);
@@ -257,14 +271,6 @@ namespace LiveChartsCore
                             fillPathHelper.StartSegment.X = data.X0;
                             fillPathHelper.StartSegment.Y = data.Y0;
                             fillPathHelper.Path.AddCommand(fillPathHelper.StartSegment);
-
-                            if (wasFillInitialized)
-                            {
-                                fillPathHelper.StartPoint.CompleteTransitions(
-                                    nameof(fillPathHelper.StartPoint.Y), nameof(fillPathHelper.StartPoint.X));
-                                fillPathHelper.StartSegment.CompleteTransitions(
-                                    nameof(fillPathHelper.StartSegment.Y), nameof(fillPathHelper.StartSegment.X));
-                            }
                         }
 
                         fillPathHelper.Path.AddCommand(visual.Bezier);
@@ -343,8 +349,8 @@ namespace LiveChartsCore
                     }
                 }
 
-                if (GeometryFill != null) 
-                { 
+                if (GeometryFill != null)
+                {
                     chart.Canvas.AddDrawableTask(GeometryFill);
                     GeometryFill.ZIndex = actualZIndex + 0.3;
                 }

@@ -40,8 +40,7 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
 
             InitializeCore();
 
-            mouseMoveThrottler = new ActionThrottler(TimeSpan.FromMilliseconds(10));
-            mouseMoveThrottler.Unlocked += MouseMoveThrottlerUnlocked;
+            mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
 
             seriesObserver = new CollectionDeepObserver<ISeries>(
                 (object? sender, NotifyCollectionChangedEventArgs e) =>
@@ -82,8 +81,7 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             AvaloniaProperty.Register<CartesianChart, TimeSpan>(nameof(AnimationsSpeed), TimeSpan.FromMilliseconds(500), inherits: true);
 
         public static readonly AvaloniaProperty<Func<float, float>> EasingFunctionProperty =
-            AvaloniaProperty.Register<CartesianChart, Func<float, float>>(
-                nameof(AnimationsSpeed), EasingFunctions.SinOut, inherits: true);
+            AvaloniaProperty.Register<CartesianChart, Func<float, float>>(nameof(AnimationsSpeed), EasingFunctions.SinOut, inherits: true);
 
         public static readonly AvaloniaProperty<LegendPosition> LegendPositionProperty =
             AvaloniaProperty.Register<CartesianChart, LegendPosition>(nameof(LegendPosition), LegendPosition.Hidden, inherits: true);
