@@ -40,8 +40,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
             InitializeCore();
             SizeChanged += OnSizeChanged;
-            mouseMoveThrottler = new ActionThrottler(TimeSpan.FromMilliseconds(10));
-            mouseMoveThrottler.Unlocked += MouseMoveThrottlerUnlocked;
+            mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
 
             seriesObserver = new CollectionDeepObserver<ISeries>(
                (object sender, NotifyCollectionChangedEventArgs e) =>
