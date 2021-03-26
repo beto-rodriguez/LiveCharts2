@@ -253,14 +253,14 @@ namespace LiveChartsCore
             // or it is initializing in the UI and has no dimensions yet
             if (drawMarginSize.Width <= 0 || drawMarginSize.Height <= 0) return;
 
-            //foreach (var axis in secondaryAxes)
-            //{
-            //    axis.Measure(this);
-            //}
-            //foreach (var axis in primaryAxes)
-            //{
-            //    axis.Measure(this);
-            //}
+            foreach (var axis in secondaryAxes)
+            {
+                axis.Measure(this);
+            }
+            foreach (var axis in primaryAxes)
+            {
+                axis.Measure(this);
+            }
             foreach (var series in series)
             {
                 var secondaryAxis = secondaryAxes[series.ScalesXAt];

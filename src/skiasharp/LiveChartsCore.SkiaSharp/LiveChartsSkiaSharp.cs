@@ -48,7 +48,7 @@ namespace LiveChartsCore.SkiaSharpView
                     // default settings
                     styleBuilder
                         .UseColors(ColorPacks.MaterialDesign500)
-                        .UseSeriesInitializer(new DefaultSeriesInitializer());
+                        .UseSeriesInitializer(new DefaultInitializer());
 
                     // user defined settings
                     builder?.Invoke(styleBuilder);

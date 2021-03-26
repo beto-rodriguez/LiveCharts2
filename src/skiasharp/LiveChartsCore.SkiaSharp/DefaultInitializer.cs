@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -30,7 +29,7 @@ using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.SkiaSharpView
 {
-    public class DefaultSeriesInitializer : LiveChartsInitializer<SkiaSharpDrawingContext>
+    public class DefaultInitializer : LiveChartsInitializer<SkiaSharpDrawingContext>
     {
         public override void ConstructChart(IChartView<SkiaSharpDrawingContext> chart)
         {
@@ -126,7 +125,7 @@ namespace LiveChartsCore.SkiaSharpView
         {
             if (axis.SeparatorsBrush == LiveChartsSkiaSharp.DefaultPaint)
                 axis.SeparatorsBrush = axis.Orientation == AxisOrientation.X
-                    ? null
+                    ? new SolidColorPaintTask(new SKColor(240, 240, 240))
                     : new SolidColorPaintTask(new SKColor(240, 240, 240));
 
             if (axis.TextBrush == LiveChartsSkiaSharp.DefaultPaint)

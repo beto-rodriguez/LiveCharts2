@@ -13,8 +13,8 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <Button Margin="6" Command="{Binding AddItemCommand}">Add item</Button>
-            <Button Margin="6" Command="{Binding ReplaceItemCommand}">Replace item</Button>
             <Button Margin="6" Command="{Binding RemoveItemCommand}">Remove item</Button>
+            <Button Margin="6" Command="{Binding ReplaceItemCommand}">Replace item</Button>
             <Button Margin="6" Command="{Binding AddSeriesCommand}">Add Series</Button>
             <Button Margin="6" Command="{Binding RemoveSeriesCommand}">Remove Series</Button>
             <Button Margin="6" Click="Button_Click">Constant changes</Button>

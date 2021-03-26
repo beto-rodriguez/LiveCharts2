@@ -25,6 +25,7 @@ namespace LiveChartsCore.Drawing
     public class AxisVisualSeprator<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        public float Value { get; set; }
         public ILabelGeometry<TDrawingContext>? Text { get; set; }
         public ILineGeometry<TDrawingContext>? Line { get; set; }
     }

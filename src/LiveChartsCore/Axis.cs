@@ -82,12 +82,12 @@ namespace LiveChartsCore
         public AxisPosition Position { get => position; set => position = value; }
         public double LabelsRotation { get => labelsRotation; set => labelsRotation = value; }
 
-        public IDrawableTask<TDrawingContext>? TextBrush 
-        { 
+        public IDrawableTask<TDrawingContext>? TextBrush
+        {
             get => textBrush;
-            set 
+            set
             {
-                textBrush = value; 
+                textBrush = value;
             }
         }
         public double TextSize { get; set; } = 16;
@@ -108,7 +108,10 @@ namespace LiveChartsCore
             var drawMarginSize = chart.DrawMarginSize;
             var labeler = Labeler;
 
-            var scale = new Scaler(drawLocation, drawMarginSize, orientation, dataBounds, IsInverted);
+            var scale = new Scaler(drawLocation, drawMarginSize, orientation, DataBounds, IsInverted);
+            var previousSacale = previousDataBounds == null
+                ? null
+                : new Scaler(drawLocation, drawMarginSize, orientation, previousDataBounds, IsInverted);
             var axisTick = this.GetTick(drawMarginSize);
 
             var s = double.IsNaN(step) || step == 0
@@ -146,38 +149,68 @@ namespace LiveChartsCore
                     : controlSize.Width - xo;
             }
 
-            var size = unchecked((float)TextSize);
-            var r = unchecked((float)labelsRotation);
+            var size = (float)TextSize;
+            var r = (float)labelsRotation;
             var hasRotation = Math.Abs(r) > 0.01f;
 
-            var start = Math.Truncate(dataBounds.min / s) * s;
+            var start = Math.Truncate(DataBounds.min / s) * s;
 
-            for (var i = start; i <= dataBounds.max; i += s)
+            for (var i = start; i <= DataBounds.max; i += s)
             {
-                if (i < dataBounds.min) continue;
+                if (i < DataBounds.min) continue;
 
                 var label = labeler(i, axisTick);
                 float x, y;
                 if (orientation == AxisOrientation.X)
                 {
-                    x = scale.ToPixels(unchecked((float)i));
+                    x = scale.ToPixels((float)i);
                     y = yoo;
                 }
                 else
                 {
                     x = xoo;
-                    y = scale.ToPixels(unchecked((float)i));
+                    y = scale.ToPixels((float)i);
                 }
 
                 if (!activeSeparators.TryGetValue(label, out var visualSeparator))
                 {
-                    visualSeparator = new AxisVisualSeprator<TDrawingContext>();
+                    visualSeparator = new AxisVisualSeprator<TDrawingContext>() { Value = (float)i };
 
                     if (TextBrush != null)
                     {
                         var textGeometry = new TTextGeometry { TextSize = size };
                         visualSeparator.Text = textGeometry;
                         if (hasRotation) textGeometry.Rotation = r;
+
+                        textGeometry
+                            .TransitionateProperties(
+                                nameof(textGeometry.X),
+                                nameof(textGeometry.Y))
+                            .WithAnimation(animation =>
+                                animation
+                                    .WithDuration(chart.AnimationsSpeed)
+                                    .WithEasingFunction(chart.EasingFunction));
+
+                        if (previousSacale != null)
+                        {
+                            float xi, yi;
+
+                            if (orientation == AxisOrientation.X)
+                            {
+                                xi = previousSacale.ToPixels((float)i);
+                                yi = yoo;
+                            }
+                            else
+                            {
+                                xi = xoo;
+                                yi = previousSacale.ToPixels((float)i);
+                            }
+
+                            textGeometry.X = xi;
+                            textGeometry.Y = yi;
+                            textGeometry.CompleteAllTransitions();
+                        }
+
                         TextBrush.AddGeometyToPaintTask(textGeometry);
                     }
 
@@ -185,22 +218,50 @@ namespace LiveChartsCore
                     {
                         var lineGeometry = new TLineGeometry();
 
-                        if (orientation == AxisOrientation.X)
+                        visualSeparator.Line = lineGeometry;
+
+                        lineGeometry
+                            .TransitionateProperties(
+                                nameof(lineGeometry.X), nameof(lineGeometry.X1),
+                                nameof(lineGeometry.Y), nameof(lineGeometry.Y1))
+                            .WithAnimation(animation =>
+                                animation
+                                    .WithDuration(chart.AnimationsSpeed)
+                                    .WithEasingFunction(chart.EasingFunction));
+
+                        if (previousSacale != null)
                         {
-                            lineGeometry.X = x;
-                            lineGeometry.X1 = x;
-                            lineGeometry.Y = lyi;
-                            lineGeometry.Y1 = lyj;
-                        }
-                        else
-                        {
-                            lineGeometry.X = lxi;
-                            lineGeometry.X1 = lxj;
-                            lineGeometry.Y = y;
-                            lineGeometry.Y1 = y;
+                            float xi, yi;
+
+                            if (orientation == AxisOrientation.X)
+                            {
+                                xi = previousSacale.ToPixels((float)i);
+                                yi = yoo;
+                            }
+                            else
+                            {
+                                xi = xoo;
+                                yi = previousSacale.ToPixels((float)i);
+                            }
+
+                            if (orientation == AxisOrientation.X)
+                            {
+                                lineGeometry.X = xi;
+                                lineGeometry.X1 = xi;
+                                lineGeometry.Y = lyi;
+                                lineGeometry.Y1 = lyj;
+                            }
+                            else
+                            {
+                                lineGeometry.X = lxi;
+                                lineGeometry.X1 = lxj;
+                                lineGeometry.Y = yi;
+                                lineGeometry.Y1 = yi;
+                            }
+
+                            lineGeometry.CompleteAllTransitions();
                         }
 
-                        visualSeparator.Line = lineGeometry;
                         SeparatorsBrush.AddGeometyToPaintTask(lineGeometry);
                     }
 
@@ -214,6 +275,8 @@ namespace LiveChartsCore
                     visualSeparator.Text.X = x;
                     visualSeparator.Text.Y = y;
                     if (hasRotation) visualSeparator.Text.Rotation = r;
+
+                    if (previousDataBounds == null) visualSeparator.Text.CompleteAllTransitions();
                 }
 
                 if (visualSeparator.Line != null)
@@ -232,6 +295,8 @@ namespace LiveChartsCore
                         visualSeparator.Line.Y = y;
                         visualSeparator.Line.Y1 = y;
                     }
+
+                    if (previousDataBounds == null) visualSeparator.Line.CompleteAllTransitions();
                 }
 
                 if (visualSeparator.Text != null) chart.MeasuredDrawables.Add(visualSeparator.Text);
@@ -241,10 +306,49 @@ namespace LiveChartsCore
             foreach (var separator in activeSeparators.ToArray())
             {
                 var usedLabel = separator.Value.Text != null && chart.MeasuredDrawables.Contains(separator.Value.Text);
-                var usedLine = separator.Value.Line !=null && chart.MeasuredDrawables.Contains(separator.Value.Line);
+                var usedLine = separator.Value.Line != null && chart.MeasuredDrawables.Contains(separator.Value.Line);
                 if (usedLine || usedLabel)
                 {
                     continue;
+                }
+
+                float x, y;
+                if (orientation == AxisOrientation.X)
+                {
+                    x = scale.ToPixels((float)separator.Value.Value);
+                    y = yoo;
+                }
+                else
+                {
+                    x = xoo;
+                    y = scale.ToPixels((float)separator.Value.Value);
+                }
+
+                if (separator.Value.Line != null)
+                {
+                    if (orientation == AxisOrientation.X)
+                    {
+                        separator.Value.Line.X = x;
+                        separator.Value.Line.X1 = x;
+                        separator.Value.Line.Y = lyi;
+                        separator.Value.Line.Y1 = lyj;
+                    }
+                    else
+                    {
+                        separator.Value.Line.X = lxi;
+                        separator.Value.Line.X1 = lxj;
+                        separator.Value.Line.Y = y;
+                        separator.Value.Line.Y1 = y;
+                    }
+
+                    separator.Value.Line.RemoveOnCompleted = true;
+                }
+
+                if (separator.Value.Text != null)
+                {
+                    separator.Value.Text.X = x;
+                    separator.Value.Text.Y = y;
+                    separator.Value.Text.RemoveOnCompleted = true;
                 }
 
                 activeSeparators.Remove(separator.Key);

@@ -28,7 +28,7 @@ namespace WPFSample.Bars.AutoUpdate
 
                 vm.AddRandomItem();
 
-                await Task.Delay(2000);
+                await Task.Delay(1000);
             }
         }
     }

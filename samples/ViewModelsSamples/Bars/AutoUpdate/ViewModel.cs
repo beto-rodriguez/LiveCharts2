@@ -38,7 +38,14 @@ namespace ViewModelsSamples.Bars.AutoUpdate
                 new ObservablePoint(index++, 4),
                 new ObservablePoint(index++, 5),
                 new ObservablePoint(index++, 2),
-                new ObservablePoint(index++, 6)
+                new ObservablePoint(index++, 6),
+                new ObservablePoint(index++, 6),
+                new ObservablePoint(index++, 6),
+                new ObservablePoint(index++, 4),
+                new ObservablePoint(index++, 2),
+                new ObservablePoint(index++, 3),
+                new ObservablePoint(index++, 8),
+                new ObservablePoint(index++, 3)
             };
 
             Series.Add(
