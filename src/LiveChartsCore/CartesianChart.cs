@@ -75,8 +75,6 @@ namespace LiveChartsCore
         public override void Update()
         {
             updateThrottler.Call();
-            //updateThrottler.LockTime = TimeSpan.FromMilliseconds(1000);
-            //updateThrottler.TryRun();
         }
 
         public override IEnumerable<TooltipPoint> FindPointsNearTo(PointF pointerPosition)
@@ -157,11 +155,11 @@ namespace LiveChartsCore
 
         protected override void Measure()
         {
-            measuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
             seriesContext = new SeriesContext<TDrawingContext>(series);
 
             if (legend != null) legend.Draw(this);
 
+            Canvas.MeasuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
             var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<TDrawingContext>();
             var initializer = stylesBuilder.GetInitializer();
             if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
@@ -255,14 +253,14 @@ namespace LiveChartsCore
             // or it is initializing in the UI and has no dimensions yet
             if (drawMarginSize.Width <= 0 || drawMarginSize.Height <= 0) return;
 
-            foreach (var axis in secondaryAxes)
-            {
-                axis.Measure(this);
-            }
-            foreach (var axis in primaryAxes)
-            {
-                axis.Measure(this);
-            }
+            //foreach (var axis in secondaryAxes)
+            //{
+            //    axis.Measure(this);
+            //}
+            //foreach (var axis in primaryAxes)
+            //{
+            //    axis.Measure(this);
+            //}
             foreach (var series in series)
             {
                 var secondaryAxis = secondaryAxes[series.ScalesXAt];
@@ -279,13 +277,23 @@ namespace LiveChartsCore
                 if (deleted) series.DeletingTasks.Clear();
             }
 
-            chartView.CoreCanvas.ForEachGeometry((geometry, drawable) =>
-            {
-                if (measuredDrawables.Contains(geometry)) return; // then the geometry was measured
+            //chartView.CoreCanvas.ForEachGeometry((geometry, drawable) =>
+            //{
+            //    if (measuredDrawables.Contains(geometry)) return; // then the geometry was measured
 
-                // at this point,the geometry is not required in the UI
-                geometry.RemoveOnCompleted = true;
-            });
+            //    // at this point,the geometry is not required in the UI
+            //    if (geometry is ISizedGeometry<TDrawingContext> sizedGeometry)
+            //    {
+            //        var secondaryAxis = secondaryAxes[0];
+            //        var primaryAxis = primaryAxes[0];
+
+            //        var secondaryScale = new Scaler(
+            //            drawMaringLocation, drawMarginSize, secondaryAxis.Orientation, secondaryAxis.DataBounds, secondaryAxis.IsInverted);
+            //        var primaryScale = new Scaler(
+            //            drawMaringLocation, drawMarginSize, primaryAxis.Orientation, primaryAxis.DataBounds, primaryAxis.IsInverted);
+            //    }
+            //    geometry.RemoveOnCompleted = true;
+            //});
 
             Canvas.Invalidate();
 

@@ -85,17 +85,17 @@ namespace LiveChartsCore
         {
             if (series == null)
             {
-                chartView.CoreCanvas.ForEachGeometry((geometry, drawable) =>
-                {
-                    if (measuredDrawables.Contains(geometry)) return; // then the geometry was measured
+                //chartView.CoreCanvas.ForEachGeometry((geometry, drawable) =>
+                //{
+                //    if (MeasuredDrawables.Contains(geometry)) return; // then the geometry was measured
 
-                    // at this point,the geometry is not required in the UI
-                    geometry.RemoveOnCompleted = true;
-                });
+                //    // at this point,the geometry is not required in the UI
+                //    geometry.RemoveOnCompleted = true;
+                //});
                 return;
             }
 
-            measuredDrawables =  new HashSet<IDrawable<TDrawingContext>>();
+            Canvas.MeasuredDrawables =  new HashSet<IDrawable<TDrawingContext>>();
             seriesContext = new SeriesContext<TDrawingContext>(series);
 
             if (legend != null) legend.Draw(this);
@@ -139,13 +139,13 @@ namespace LiveChartsCore
                 series.Measure(this);
             }
 
-            chartView.CoreCanvas.ForEachGeometry((geometry, drawable) =>
-            {
-                if (measuredDrawables.Contains(geometry)) return; // then the geometry was measured
+            //chartView.CoreCanvas.ForEachGeometry((geometry, drawable) =>
+            //{
+            //    if (measuredDrawables.Contains(geometry)) return; // then the geometry was measured
 
-                // at this point,the geometry is not required in the UI
-                geometry.RemoveOnCompleted = true;
-            });
+            //    // at this point,the geometry is not required in the UI
+            //    geometry.RemoveOnCompleted = true;
+            //});
 
             Canvas.Invalidate();
         }

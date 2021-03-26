@@ -34,8 +34,7 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
     {
         protected object measureWorker = new object();
-        protected HashSet<IDrawable<TDrawingContext>> measuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
-        protected SeriesContext<TDrawingContext> seriesContext = new SeriesContext<TDrawingContext>(Enumerable.Empty<IDrawableSeries<TDrawingContext>>());
+        protected SeriesContext<TDrawingContext> seriesContext = new(Enumerable.Empty<IDrawableSeries<TDrawingContext>>());
         protected readonly MotionCanvas<TDrawingContext> canvas;
         protected readonly ActionThrottler updateThrottler;
 
@@ -62,7 +61,7 @@ namespace LiveChartsCore
         }
 
         public object MeasureWorker => measureWorker;
-        public HashSet<IDrawable<TDrawingContext>> MeasuredDrawables => measuredDrawables;
+        public HashSet<IDrawable<TDrawingContext>> MeasuredDrawables => Canvas.MeasuredDrawables;
         public SeriesContext<TDrawingContext> SeriesContext => seriesContext;
         public MotionCanvas<TDrawingContext> Canvas => canvas;
         public abstract IEnumerable<IDrawableSeries<TDrawingContext>> DrawableSeries { get; }

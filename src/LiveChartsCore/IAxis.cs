@@ -29,6 +29,7 @@ namespace LiveChartsCore
 {
     public interface IAxis
     {
+        Bounds? PreviousDataBounds { get; }
         Bounds DataBounds { get; }
         AxisOrientation Orientation { get; }
         float Xo { get; set; }
@@ -37,8 +38,10 @@ namespace LiveChartsCore
         Func<double, AxisTick, string> Labeler { get; set; }
         double Step { get; set; }
         double UnitWith { get; set; }
+
         double? MinValue { get; set; }
         double? MaxValue { get; set; }
+
         bool IsInverted { get; set; }
 
         AxisPosition Position { get; set; }

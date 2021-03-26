@@ -24,6 +24,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using System;
 using LiveChartsCore.Measure;
+using System.Collections.Generic;
 
 namespace LiveChartsCore
 {
@@ -32,6 +33,8 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
+        private HashSet<ChartPoint> everFetched = new();
+
         public ColumnSeries()
             : base(SeriesProperties.Bar | SeriesProperties.VerticalOrientation)
         {
@@ -46,11 +49,15 @@ namespace LiveChartsCore
                 drawLocation, drawMarginSize, secondaryAxis.Orientation, secondaryAxis.DataBounds, secondaryAxis.IsInverted);
             var primaryScale = new Scaler(
                 drawLocation, drawMarginSize, primaryAxis.Orientation, primaryAxis.DataBounds, primaryAxis.IsInverted);
+            var previousSecondaryScale = secondaryAxis.PreviousDataBounds == null ? null : new Scaler(
+                drawLocation, drawMarginSize, secondaryAxis.Orientation, secondaryAxis.PreviousDataBounds, secondaryAxis.IsInverted);
+            var previousPrimaryScale = primaryAxis.PreviousDataBounds == null ? null : new Scaler(
+                drawLocation, drawMarginSize, secondaryAxis.Orientation, primaryAxis.PreviousDataBounds, secondaryAxis.IsInverted);
 
             float uw = secondaryScale.ToPixels(1f) - secondaryScale.ToPixels(0f);
             float uwm = 0.5f * uw;
             float sw = Stroke?.StrokeThickness ?? 0;
-            float p = primaryScale.ToPixels(unchecked((float)Pivot));
+            float p = primaryScale.ToPixels(pivot);
 
             var pos = chart.SeriesContext.GetColumnPostion(this);
             var count = chart.SeriesContext.GetColumnSeriesCount();
@@ -89,13 +96,14 @@ namespace LiveChartsCore
             var dls = unchecked((float)DataLabelsSize);
 
             var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
+            var toDeletePoints = new HashSet<ChartPoint>(everFetched);
 
             foreach (var point in Fetch(chart))
             {
                 var visual = point.Context.Visual as TVisual;
                 var primary = primaryScale.ToPixels(point.PrimaryValue);
                 var secondary = secondaryScale.ToPixels(point.SecondaryValue);
-                float b = Math.Abs(primary - p);
+                var b = Math.Abs(primary - p);
 
                 if (point.IsNull)
                 {
@@ -113,9 +121,13 @@ namespace LiveChartsCore
 
                 if (visual == null)
                 {
+                    var xi = secondary - uwm + cp;
+                    if (previousPrimaryScale != null && previousSecondaryScale != null)
+                        xi = previousSecondaryScale.ToPixels(point.SecondaryValue) - uwm + cp;
+
                     var r = new TVisual
                     {
-                        X = secondary - uwm + cp,
+                        X = xi,
                         Y = p,
                         Width = uw,
                         Height = 0
@@ -128,27 +140,28 @@ namespace LiveChartsCore
 
                     if (Fill != null) Fill.AddGeometyToPaintTask(r);
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(r);
+                    everFetched.Add(point);
                 }
 
-                var sizedGeometry = visual;
-                var cy = point.PrimaryValue > Pivot ? primary : primary - b;
+                var cy = point.PrimaryValue > pivot ? primary : primary - b;
                 var x = secondary - uwm + cp;
 
-                sizedGeometry.X = x;
-                sizedGeometry.Y = cy;
-                sizedGeometry.Width = uw;
-                sizedGeometry.Height = b;
-                sizedGeometry.RemoveOnCompleted = false;
+                visual.X = x;
+                visual.Y = cy;
+                visual.Width = uw;
+                visual.Height = b;
+                visual.RemoveOnCompleted = false;
 
                 var ha = new RectangleHoverArea().SetDimensions(secondary - uwm + cp, cy, uw, b);
                 point.Context.HoverArea = ha;
 
                 OnPointMeasured(point);
-                chart.MeasuredDrawables.Add(sizedGeometry);
+                toDeletePoints.Remove(point);
+                chart.MeasuredDrawables.Add(visual);
 
                 if (DataLabelsDrawableTask != null)
                 {
-                    var label = point.Context.Label as TLabel;
+                    var label = (TLabel?)point.Context.Label;
 
                     if (label == null)
                     {
@@ -175,6 +188,25 @@ namespace LiveChartsCore
 
                     chart.MeasuredDrawables.Add(label);
                 }
+            }
+
+            foreach (var point in toDeletePoints)
+            {
+                var visual = (TVisual?) point.Context.Visual;
+                if (visual == null) continue;
+
+                var primary = primaryScale.ToPixels(point.PrimaryValue);
+                var secondary = secondaryScale.ToPixels(point.SecondaryValue);
+                var b = Math.Abs(primary - p);
+                var cy = point.PrimaryValue > pivot ? primary : primary - b;
+                var x = secondary - uwm + cp;
+
+                visual.X = x;
+                visual.Y = p;
+                visual.Width = uw;
+                visual.Height = 0;
+                visual.RemoveOnCompleted = true;
+                everFetched.Remove(point);
             }
         }
 

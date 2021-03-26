@@ -30,8 +30,8 @@ namespace LiveChartsCore.Drawing
     public class MotionCanvas<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        public readonly Stopwatch stopwatch = new Stopwatch();
-        private HashSet<IDrawableTask<TDrawingContext>> paintTasks = new HashSet<IDrawableTask<TDrawingContext>>();
+        public readonly Stopwatch stopwatch = new();
+        private HashSet<IDrawableTask<TDrawingContext>> paintTasks = new();
         private bool isValid;
 
         public MotionCanvas()
@@ -39,6 +39,7 @@ namespace LiveChartsCore.Drawing
             stopwatch.Start();
         }
 
+        internal HashSet<IDrawable<TDrawingContext>> MeasuredDrawables { get; set; } = new();
         public event Action<MotionCanvas<TDrawingContext>>? Invalidated;
         public bool IsValid { get => isValid; }
 
@@ -48,29 +49,41 @@ namespace LiveChartsCore.Drawing
             var frameTime = stopwatch.ElapsedMilliseconds;
             context.ClearCanvas();
 
-            foreach (var paint in paintTasks.OrderBy(x => x.ZIndex))
+            var toRemoveGeometries = new List<Tuple<IDrawableTask<TDrawingContext>, IDrawable<TDrawingContext>>>();
+
+            foreach (var task in paintTasks.OrderBy(x => x.ZIndex).ToArray())
             {
-                paint.IsCompleted = true;
-                paint.CurrentTime = frameTime;
-                paint.InitializeTask(context);
+                task.IsCompleted = true;
+                task.CurrentTime = frameTime;
+                task.InitializeTask(context);
 
-                foreach (var geometry in paint.GetGeometries())
+                foreach (var geometry in task.GetGeometries())
                 {
-
                     geometry.IsCompleted = true;
                     geometry.CurrentTime = frameTime;
                     geometry.Draw(context);
 
                     isValid = isValid && geometry.IsCompleted;
-                    if (geometry.RemoveOnCompleted && geometry.IsCompleted) paint.RemoveGeometryFromPainTask(geometry);
+
+                    if (geometry.IsCompleted && geometry.RemoveOnCompleted)
+                        toRemoveGeometries.Add(
+                            new Tuple<IDrawableTask<TDrawingContext>, IDrawable<TDrawingContext>>(task, geometry));
+                    //if (!MeasuredDrawables.Contains(geometry))
+                    //    toRemoveGeometries.Add(
+                    //        new Tuple<IDrawableTask<TDrawingContext>, IDrawable<TDrawingContext>>(task, geometry));
                 }
 
-                paint.Dispose();
+                task.Dispose();
 
-                isValid = isValid && paint.IsCompleted;
-                paint.Dispose();
+                isValid = isValid && task.IsCompleted;
+                task.Dispose();
 
-                if (paint.RemoveOnCompleted && paint.IsCompleted) paintTasks.Remove(paint);
+                if (task.RemoveOnCompleted && task.IsCompleted) paintTasks.Remove(task);
+            }
+
+            foreach (var tuple in toRemoveGeometries)
+            {
+                tuple.Item1.RemoveGeometryFromPainTask(tuple.Item2);
             }
 
             this.isValid = isValid;
@@ -84,7 +97,6 @@ namespace LiveChartsCore.Drawing
 
         public void AddDrawableTask(IDrawableTask<TDrawingContext> task)
         {
-            if (paintTasks.Contains(task)) return;
             paintTasks.Add(task);
             Invalidate();
 #if DEBUG

@@ -40,6 +40,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
     {
         protected SKPaint skiaPaint;
         private HashSet<IDrawable<SkiaSharpDrawingContext>> geometries = new HashSet<IDrawable<SkiaSharpDrawingContext>>();
+        private IDrawable<SkiaSharpDrawingContext>[] actualGeometries = null;
         protected FloatMotionProperty strokeWidthTransition;
         private readonly ColorMotionProperty colorTransition;
 
@@ -69,7 +70,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting
 
         public IEnumerable<IDrawable<SkiaSharpDrawingContext>> GetGeometries()
         {
-            foreach (var item in geometries.ToArray())
+            var g = actualGeometries ?? (actualGeometries = geometries.ToArray());
+            foreach (var item in g)
             {
                 yield return item;
             }
@@ -78,18 +80,21 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         public void SetGeometries(HashSet<IDrawable<SkiaSharpDrawingContext>> geometries)
         {
             this.geometries = geometries;
+            actualGeometries = null;
             Invalidate();
         }
 
         public void AddGeometyToPaintTask(IDrawable<SkiaSharpDrawingContext> geometry)
         {
             geometries.Add(geometry);
+            actualGeometries = null;
             Invalidate();
         }
 
         public void RemoveGeometryFromPainTask(IDrawable<SkiaSharpDrawingContext> geometry)
         {
             geometries.Remove(geometry);
+            actualGeometries = null;
             Invalidate();
         }
 

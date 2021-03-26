@@ -39,8 +39,8 @@ namespace LiveChartsCore
         private const float wedgeLength = 8;
         internal AxisOrientation orientation;
         private double step = double.NaN;
-        private Bounds dataBounds = new Bounds();
-        private Bounds previousDataBounds = new Bounds();
+        private Bounds? dataBounds = null;
+        private Bounds? previousDataBounds = null;
         private double labelsRotation;
         private readonly Dictionary<string, AxisVisualSeprator<TDrawingContext>> activeSeparators =
             new Dictionary<string, AxisVisualSeprator<TDrawingContext>>();
@@ -53,9 +53,11 @@ namespace LiveChartsCore
         private double? maxValue = null;
         private IDrawableTask<TDrawingContext>? textBrush;
 
+        public Bounds? PreviousDataBounds => previousDataBounds;
+
         public Bounds DataBounds
         {
-            get => dataBounds;
+            get => dataBounds ??= new Bounds();
             private set
             {
                 previousDataBounds = dataBounds;
