@@ -44,6 +44,7 @@ namespace LiveChartsCore
         protected readonly bool implementsICP;
         protected float pivot = 0f;
         protected DataProvider<TModel, TDrawingContext>? dataProvider;
+        protected readonly HashSet<ChartPoint> everFetched = new();
         private string? name;
         private Action<TModel, ChartPoint>? mapping;
         private int zIndex;
@@ -215,6 +216,8 @@ namespace LiveChartsCore
         {
             observer.Dispose(values);
         }
+
+        protected virtual void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale) { }
 
         /// <summary>
         /// Called when a point was measured.

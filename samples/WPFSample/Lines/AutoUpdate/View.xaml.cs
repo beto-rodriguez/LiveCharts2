@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Controls;
-using ViewModelsSamples.Bars.AutoUpdate;
+using ViewModelsSamples.Lines.AutoUpdate;
 
-namespace WPFSample.Bars.AutoUpdate
+namespace WPFSample.Lines.AutoUpdate
 {
     /// <summary>
     /// Interaction logic for View.xaml

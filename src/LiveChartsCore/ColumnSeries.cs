@@ -33,8 +33,6 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
-        private readonly HashSet<ChartPoint> everFetched = new();
-
         public ColumnSeries()
             : base(SeriesProperties.Bar | SeriesProperties.VerticalOrientation)
         {
@@ -219,25 +217,6 @@ namespace LiveChartsCore
             };
         }
 
-        public override void Delete(IChartView chart)
-        {
-            var core = (CartesianChart<TDrawingContext>)((IChartView<TDrawingContext>)chart).CoreChart;
-
-            var secondaryAxis = core.XAxes[ScalesXAt];
-            var primaryAxis = core.YAxes[ScalesYAt];
-
-            var secondaryScale = new Scaler(
-                core.DrawMaringLocation, core.DrawMarginSize, secondaryAxis.Orientation, secondaryAxis.DataBounds, secondaryAxis.IsInverted);
-            var primaryScale = new Scaler(
-                core.DrawMaringLocation, core.DrawMarginSize, primaryAxis.Orientation, primaryAxis.DataBounds, primaryAxis.IsInverted);
-
-            foreach (var point in everFetched)
-            {
-                if (point.Context.Chart != chart) continue;
-                SoftDeletePoint(point, primaryScale, secondaryScale);
-            }
-        }
-
         protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
         {
             var visual = chartPoint.Context.Visual as TVisual;
@@ -259,7 +238,7 @@ namespace LiveChartsCore
                     .WithEasingFunction(elasticFunction));
         }
 
-        private void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
+        protected override  void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
         {
             var visual = (TVisual?)point.Context.Visual;
             if (visual == null) return;

@@ -23,6 +23,7 @@
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using System;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore
 {
@@ -47,10 +48,34 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
         public virtual DimensinalBounds GetBounds(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
-                => dataProvider.GetCartesianBounds(chart, this, x, y);
+        {
+            if (dataProvider == null) throw new Exception("A data provider is required");
+
+            return dataProvider.GetCartesianBounds(chart, this, x, y);
+        }
 
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.Measure(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
         public abstract void Measure(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
+
+        public override void Delete(IChartView chart)
+        {
+            var core = (CartesianChart<TDrawingContext>)((IChartView<TDrawingContext>)chart).CoreChart;
+
+            var secondaryAxis = core.XAxes[ScalesXAt];
+            var primaryAxis = core.YAxes[ScalesYAt];
+
+            var secondaryScale = new Scaler(
+                core.DrawMaringLocation, core.DrawMarginSize, secondaryAxis.Orientation, secondaryAxis.DataBounds, secondaryAxis.IsInverted);
+            var primaryScale = new Scaler(
+                core.DrawMaringLocation, core.DrawMarginSize, primaryAxis.Orientation, primaryAxis.DataBounds, primaryAxis.IsInverted);
+
+            foreach (var point in everFetched)
+            {
+                if (point.Context.Chart != chart) continue;
+
+                SoftDeletePoint(point, primaryScale, secondaryScale);
+            }
+        }
     }
 }
