@@ -1,9 +1,9 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using System.Threading.Tasks;
-using ViewModelsSamples.Bars.AutoUpdate;
+using ViewModelsSamples.Lines.AutoUpdate;
 
-namespace AvaloniaSample.Bars.AutoUpdate
+namespace AvaloniaSample.Lines.AutoUpdate
 {
     public class View : UserControl
     {

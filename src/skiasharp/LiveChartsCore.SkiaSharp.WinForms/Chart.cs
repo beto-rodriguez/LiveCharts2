@@ -65,8 +65,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             initializer.ConstructChart(this);
 
             InitializeCore();
-            mouseMoveThrottler = new ActionThrottler(TimeSpan.FromMilliseconds(10));
-            mouseMoveThrottler.Unlocked += MouseMoveThrottlerUnlocked;
+            mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
         }
 
         SizeF IChartView.ControlSize => new SizeF { Width = motionCanvas.Width, Height = motionCanvas.Height };
@@ -106,7 +105,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         {
             var p = e.Location;
             mousePosition = new PointF(p.X, p.Y);
-            mouseMoveThrottler.TryRun();
+            mouseMoveThrottler.Call();
         }
 
         private void MouseMoveThrottlerUnlocked()

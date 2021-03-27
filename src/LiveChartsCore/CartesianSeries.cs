@@ -60,7 +60,7 @@ namespace LiveChartsCore
 
         public override void Delete(IChartView chart)
         {
-            var core = (CartesianChart<TDrawingContext>)((IChartView<TDrawingContext>)chart).CoreChart;
+            var core = ((ICartesianChartView<TDrawingContext>)chart).Core;
 
             var secondaryAxis = core.XAxes[ScalesXAt];
             var primaryAxis = core.YAxes[ScalesYAt];

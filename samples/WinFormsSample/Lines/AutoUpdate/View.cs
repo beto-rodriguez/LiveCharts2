@@ -1,9 +1,9 @@
 ﻿using LiveChartsCore.SkiaSharpView.WinForms;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ViewModelsSamples.Bars.AutoUpdate;
+using ViewModelsSamples.Lines.AutoUpdate;
 
-namespace WinFormsSample.Bars.AutoUpdate
+namespace WinFormsSample.Lines.AutoUpdate
 {
     public partial class View : UserControl
     {

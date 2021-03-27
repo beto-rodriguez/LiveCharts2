@@ -58,6 +58,9 @@
     <Compile Update="Lines\Area\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Lines\AutoUpdate\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Lines\Properties\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

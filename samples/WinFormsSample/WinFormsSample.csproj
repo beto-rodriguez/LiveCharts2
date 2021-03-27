@@ -48,6 +48,9 @@
     <Compile Update="Lines\Area\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Lines\AutoUpdate\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Lines\Properties\View.cs">
       <SubType>UserControl</SubType>
     </Compile>

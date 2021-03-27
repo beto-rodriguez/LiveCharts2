@@ -1,10 +1,10 @@
 ﻿
 using System.Threading.Tasks;
-using ViewModelsSamples.Bars.AutoUpdate;
+using ViewModelsSamples.Lines.AutoUpdate;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace XamarinSample.Bars.AutoUpdate
+namespace XamarinSample.Lines.AutoUpdate
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class View : ContentPage
