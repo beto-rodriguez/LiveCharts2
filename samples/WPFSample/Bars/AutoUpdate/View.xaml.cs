@@ -19,7 +19,6 @@ namespace WPFSample.Bars.AutoUpdate
         private async void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             var vm = (ViewModel)DataContext;
-            if (isStreaming.Value) isStreaming = false;
             isStreaming = isStreaming == null ? true : !isStreaming;
 
             while(isStreaming.Value)

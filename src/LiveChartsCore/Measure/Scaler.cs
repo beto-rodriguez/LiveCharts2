@@ -60,6 +60,8 @@ namespace LiveChartsCore.Measure
             mInv = 1 / m;
         }
 
+        public static Scaler GetDefaultScaler(AxisOrientation orientation) => new(new PointF(0, 0), new SizeF(0, 100), orientation, new Bounds(), false);
+
         public float ToPixels(float value) => minPx + (value - minVal) * m;
 
         public float ToChartValues(float value) => minVal + (value - minPx) * mInv;

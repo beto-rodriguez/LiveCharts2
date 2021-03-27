@@ -34,6 +34,8 @@ namespace LiveChartsCore
     public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        private readonly HashSet<ISeries> everMeasuredSeries = new();
+        private readonly HashSet<IAxis<TDrawingContext>> everMeasuredAxes = new();
         private readonly ICartesianChartView<TDrawingContext> chartView;
         private int nextSeries = 0;
         private IAxis<TDrawingContext>[] secondaryAxes = new IAxis<TDrawingContext>[0];
@@ -253,19 +255,28 @@ namespace LiveChartsCore
             // or it is initializing in the UI and has no dimensions yet
             if (drawMarginSize.Width <= 0 || drawMarginSize.Height <= 0) return;
 
+            var toDeleteAxes = new HashSet<IAxis<TDrawingContext>>(primaryAxes.Concat(secondaryAxes));
             foreach (var axis in secondaryAxes)
             {
                 axis.Measure(this);
+                everMeasuredAxes.Add(axis);
+                toDeleteAxes.Remove(axis);
             }
             foreach (var axis in primaryAxes)
             {
                 axis.Measure(this);
+                everMeasuredAxes.Add(axis);
+                toDeleteAxes.Remove(axis);
             }
+
+            var toDeleteSeries = new HashSet<ISeries>(everMeasuredSeries);
             foreach (var series in series)
             {
                 var secondaryAxis = secondaryAxes[series.ScalesXAt];
                 var primaryAxis = primaryAxes[series.ScalesYAt];
                 series.Measure(this, secondaryAxis, primaryAxis);
+                everMeasuredSeries.Add(series);
+                toDeleteSeries.Remove(series);
 
                 var deleted = false;
                 foreach (var item in series.DeletingTasks)
@@ -276,6 +287,9 @@ namespace LiveChartsCore
                 }
                 if (deleted) series.DeletingTasks.Clear();
             }
+
+            foreach (var series in toDeleteSeries) series.Delete(View);
+            foreach (var axis in toDeleteAxes) axis.Dispose();
 
             //chartView.CoreCanvas.ForEachGeometry((geometry, drawable) =>
             //{

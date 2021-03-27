@@ -365,13 +365,13 @@ namespace LiveChartsCore
             var s = double.IsNaN(step) || step == 0
                 ? axisTick.Value
                 : step;
-            var start = Math.Truncate(dataBounds.min / s) * s;
+            var start = Math.Truncate(DataBounds.min / s) * s;
 
             var w = 0f;
             var h = 0f;
             var r = (float)LabelsRotation;
 
-            for (var i = start; i <= dataBounds.max; i += s)
+            for (var i = start; i <= DataBounds.max; i += s)
             {
                 var textGeometry = new TTextGeometry
                 {
@@ -392,6 +392,10 @@ namespace LiveChartsCore
         {
             this.orientation = orientation;
             DataBounds = new Bounds();
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

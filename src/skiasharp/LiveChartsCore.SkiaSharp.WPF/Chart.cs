@@ -118,6 +118,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         SizeF IChartView.ControlSize => new SizeF { Width = (float)canvas.ActualWidth, Height = (float)canvas.ActualHeight };
 
+        public Chart<SkiaSharpDrawingContext> CoreChart => core;
+
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
 
         public FontFamily LegendFontFamily { get; set; }

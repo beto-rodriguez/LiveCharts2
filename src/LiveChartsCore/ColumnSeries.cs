@@ -33,7 +33,7 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
-        private HashSet<ChartPoint> everFetched = new();
+        private readonly HashSet<ChartPoint> everFetched = new();
 
         public ColumnSeries()
             : base(SeriesProperties.Bar | SeriesProperties.VerticalOrientation)
@@ -65,7 +65,7 @@ namespace LiveChartsCore
 
             if (!IgnoresBarPosition && count > 1)
             {
-                uw = uw / count;
+                uw /= count;
                 uwm = 0.5f * uw;
                 cp = (pos - count / 2f) * uw + uwm;
             }
@@ -192,21 +192,8 @@ namespace LiveChartsCore
 
             foreach (var point in toDeletePoints)
             {
-                var visual = (TVisual?) point.Context.Visual;
-                if (visual == null) continue;
-
-                var primary = primaryScale.ToPixels(point.PrimaryValue);
-                var secondary = secondaryScale.ToPixels(point.SecondaryValue);
-                var b = Math.Abs(primary - p);
-                var cy = point.PrimaryValue > pivot ? primary : primary - b;
-                var x = secondary - uwm + cp;
-
-                visual.X = x;
-                visual.Y = p;
-                visual.Width = uw;
-                visual.Height = 0;
-                visual.RemoveOnCompleted = true;
-                everFetched.Remove(point);
+                if (point.Context.Chart != chart.View) continue;
+                SoftDeletePoint(point, primaryScale, secondaryScale);
             }
         }
 
@@ -232,6 +219,25 @@ namespace LiveChartsCore
             };
         }
 
+        public override void Delete(IChartView chart)
+        {
+            var core = (CartesianChart<TDrawingContext>)((IChartView<TDrawingContext>)chart).CoreChart;
+
+            var secondaryAxis = core.XAxes[ScalesXAt];
+            var primaryAxis = core.YAxes[ScalesYAt];
+
+            var secondaryScale = new Scaler(
+                core.DrawMaringLocation, core.DrawMarginSize, secondaryAxis.Orientation, secondaryAxis.DataBounds, secondaryAxis.IsInverted);
+            var primaryScale = new Scaler(
+                core.DrawMaringLocation, core.DrawMarginSize, primaryAxis.Orientation, primaryAxis.DataBounds, primaryAxis.IsInverted);
+
+            foreach (var point in everFetched)
+            {
+                if (point.Context.Chart != chart) continue;
+                SoftDeletePoint(point, primaryScale, secondaryScale);
+            }
+        }
+
         protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
         {
             var visual = chartPoint.Context.Visual as TVisual;
@@ -251,6 +257,24 @@ namespace LiveChartsCore
                 .WithAnimation(animation => animation
                     .WithDuration(chart.AnimationsSpeed)
                     .WithEasingFunction(elasticFunction));
+        }
+
+        private void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
+        {
+            var visual = (TVisual?)point.Context.Visual;
+            if (visual == null) return;
+
+            float p = primaryScale.ToPixels(pivot);
+
+            var secondary = secondaryScale.ToPixels(point.SecondaryValue);
+            var x = secondary;// - uwm + cp; // we cant know those values... the series does not have a position now...
+
+            visual.X = x;
+            visual.Y = p;
+            visual.Height = 0;
+            visual.RemoveOnCompleted = true;
+
+            everFetched.Remove(point);
         }
     }
 }

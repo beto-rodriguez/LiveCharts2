@@ -79,8 +79,9 @@ namespace ViewModelsSamples.Bars.AutoUpdate
 
         public void ReplaceRandomItem()
         {
-            //var randomValue = random.Next(1, 10);
-            //observableValues[random.Next(0, observableValues.Count - 1)] = new ObservablePoint(randomValue);
+            var randomValue = random.Next(1, 10);
+            var randomIndex = random.Next(0, observableValues.Count - 1);
+            observableValues[randomIndex] = new ObservablePoint(observableValues[randomIndex].X, randomValue);
         }
 
         public void AddSeries()

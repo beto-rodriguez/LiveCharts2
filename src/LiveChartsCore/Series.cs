@@ -207,8 +207,11 @@ namespace LiveChartsCore
             if (s.Stroke != null) s.Stroke.RemoveGeometryFromPainTask(highlitable);
         }
 
-        /// <inheritdoc/>
-        public void Dispose()
+        /// <inheritdoc cref="ISeries.Delete"/>
+        public virtual void Delete(IChartView chart) { }
+
+        /// <inheritdoc cref="IDisposable.Dispose"/>
+        public virtual void Dispose()
         {
             observer.Dispose(values);
         }

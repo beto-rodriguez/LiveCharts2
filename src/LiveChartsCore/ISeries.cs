@@ -105,6 +105,11 @@ namespace LiveChartsCore
         /// <param name="chartPoint"></param>
         /// <param name="state"></param>
         void RemovePointFromState(ChartPoint chartPoint, string state);
+
+        /// <summary>
+        /// Deletes the series from the user interface.
+        /// </summary>
+        void Delete(IChartView chart);
     }
 
     public interface ISeries<TModel>: ISeries

@@ -27,7 +27,7 @@ using LiveChartsCore.Measure;
 
 namespace LiveChartsCore
 {
-    public interface IAxis
+    public interface IAxis: IDisposable
     {
         Bounds? PreviousDataBounds { get; }
         Bounds DataBounds { get; }
