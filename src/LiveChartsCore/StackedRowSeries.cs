@@ -24,6 +24,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using System;
 using LiveChartsCore.Measure;
+using System.Collections.Generic;
 
 namespace LiveChartsCore
 {
@@ -45,6 +46,8 @@ namespace LiveChartsCore
             var drawMarginSize = chart.DrawMarginSize;
             var secondaryScale = new Scaler(
                 drawLocation, drawMarginSize, primaryAxis.Orientation, primaryAxis.DataBounds, primaryAxis.IsInverted);
+            var previousSecondaryScale = primaryAxis.PreviousDataBounds == null ? null : new Scaler(
+                drawLocation, drawMarginSize, primaryAxis.Orientation, primaryAxis.PreviousDataBounds, primaryAxis.IsInverted);
             var primaryScale = new Scaler(
                 drawLocation, drawMarginSize, secondaryAxis.Orientation, secondaryAxis.DataBounds, secondaryAxis.IsInverted);
 
@@ -59,14 +62,14 @@ namespace LiveChartsCore
 
             if (count > 1)
             {
-                uw = uw / count;
+                uw /= count;
                 uwm = 0.5f * uw;
                 cp = (pos - count / 2f) * uw + uwm;
             }
 
             if (uw > MaxBarWidth)
             {
-                uw = unchecked((float)MaxBarWidth);
+                uw = (float)MaxBarWidth;
                 uwm = uw / 2f;
             }
 
@@ -86,7 +89,8 @@ namespace LiveChartsCore
                 DataLabelsDrawableTask.ZIndex = actualZIndex + 0.3;
                 chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
             }
-            var dls = unchecked((float)DataLabelsSize);
+            var dls = (float)DataLabelsSize;
+            var toDeletePoints = new HashSet<ChartPoint>(everFetched);
 
             var stacker = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
             if (stacker == null) throw new NullReferenceException("Unexpected null stacker");
@@ -112,10 +116,13 @@ namespace LiveChartsCore
 
                 if (visual == null)
                 {
+                    var yi = secondary - uwm + cp;
+                    if (previousSecondaryScale != null) yi = previousSecondaryScale.ToPixels(point.SecondaryValue) - uwm + cp;
+
                     var r = new TVisual
                     {
                         X = p,
-                        Y = secondary - uwm + cp,
+                        Y = yi,
                         Width = 0,
                         Height = uw
                     };
@@ -127,6 +134,7 @@ namespace LiveChartsCore
 
                     if (Fill != null) Fill.AddGeometyToPaintTask(r);
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(r);
+                    everFetched.Add(point);
                 }
 
                 var sizedGeometry = visual;
@@ -145,11 +153,12 @@ namespace LiveChartsCore
                 point.Context.HoverArea = new RectangleHoverArea().SetDimensions(secondary - uwm + cp, primaryJ, uw, primaryI - primaryJ);
 
                 OnPointMeasured(point);
+                toDeletePoints.Remove(point);
                 chart.MeasuredDrawables.Add(sizedGeometry);
 
                 if (DataLabelsDrawableTask != null)
                 {
-                    var label = point.Context.Label as TLabel;
+                    var label =(TLabel?) point.Context.Label;
 
                     if (label == null)
                     {
@@ -176,6 +185,13 @@ namespace LiveChartsCore
 
                     chart.MeasuredDrawables.Add(label);
                 }
+            }
+
+            foreach (var point in toDeletePoints)
+            {
+                if (point.Context.Chart != chart.View) continue;
+                SoftDeletePoint(point, primaryScale, secondaryScale);
+                everFetched.Remove(point);
             }
         }
 
@@ -221,6 +237,21 @@ namespace LiveChartsCore
                     nameof(visual.Height))
                 .WithAnimation(a =>
                 a.WithDuration(chart.AnimationsSpeed).WithEasingFunction(chart.EasingFunction));
+        }
+
+        protected override void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
+        {
+            var visual = (TVisual?)point.Context.Visual;
+            if (visual == null) return;
+
+            float p = primaryScale.ToPixels(pivot);
+
+            var secondary = secondaryScale.ToPixels(point.SecondaryValue);
+
+            visual.X = p;
+            visual.Y = secondary;
+            visual.Width = 0;
+            visual.RemoveOnCompleted = true;
         }
     }
 }

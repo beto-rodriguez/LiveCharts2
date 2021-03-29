@@ -78,6 +78,9 @@
     <Compile Update="Pies\Basic\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Scatter\AutoUpdate\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Scatter\Custom\View.cs">
       <SubType>UserControl</SubType>
     </Compile>

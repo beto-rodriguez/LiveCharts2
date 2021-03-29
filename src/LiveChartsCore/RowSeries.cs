@@ -138,7 +138,7 @@ namespace LiveChartsCore
 
                 if (DataLabelsDrawableTask != null)
                 {
-                    var label = point.Context.Label as TLabel;
+                    var label =(TLabel?) point.Context.Label;
 
                     if (label == null)
                     {
@@ -195,11 +195,6 @@ namespace LiveChartsCore
                     min = baseBounds.PrimaryBounds.min - tick.Value
                 }
             };
-        }
-
-        protected virtual void DefaultOnPointCreated(TVisual visual, IChartView<TDrawingContext> chart)
-        {
-            
         }
 
         protected override void SetDefaultPointTransitions(ChartPoint chartPoint)

@@ -1,13 +1,13 @@
-﻿using System.Threading.Tasks;
-using System.Windows.Controls;
+﻿
+using System.Threading.Tasks;
 using ViewModelsSamples.Scatter.AutoUpdate;
+using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
-namespace WPFSample.Scatter.AutoUpdate
+namespace XamarinSample.Scatter.AutoUpdate
 {
-    /// <summary>
-    /// Interaction logic for View.xaml
-    /// </summary>
-    public partial class View : UserControl
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class View : ContentPage
     {
         private bool? isStreaming = false;
 
@@ -16,12 +16,13 @@ namespace WPFSample.Scatter.AutoUpdate
             InitializeComponent();
         }
 
-        private async void Button_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void Button_Clicked(object sender, System.EventArgs e)
         {
-            var vm = (ViewModel)DataContext;
+            var vm = (ViewModel)BindingContext;
+
             isStreaming = isStreaming == null ? true : !isStreaming;
 
-            while(isStreaming.Value)
+            while (isStreaming.Value)
             {
                 vm.RemoveFirstItem();
                 vm.AddRandomItem();
