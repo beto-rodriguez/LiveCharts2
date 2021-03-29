@@ -288,8 +288,8 @@ namespace LiveChartsCore
                 if (deleted) series.DeletingTasks.Clear();
             }
 
-            foreach (var series in toDeleteSeries) series.Delete(View);
-            foreach (var axis in toDeleteAxes) axis.Dispose();
+            foreach (var series in toDeleteSeries) { series.Delete(View); everMeasuredSeries.Remove(series); }
+            foreach (var axis in toDeleteAxes) { axis.Dispose(); everMeasuredAxes.Remove(axis); }
 
             //chartView.CoreCanvas.ForEachGeometry((geometry, drawable) =>
             //{

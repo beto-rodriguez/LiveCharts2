@@ -27,7 +27,7 @@ namespace LiveChartsCore.Kernel
     /// <summary>
     /// Defines bounds for both, X and Y axes.
     /// </summary>
-    public class DimensinalBounds
+    public class DimensionalBounds
     {
         private Bounds secondaryBounds;
         private Bounds primaryBounds;
@@ -35,9 +35,9 @@ namespace LiveChartsCore.Kernel
         private Bounds quaternaryBounds;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DimensinalBounds"/> class.
+        /// Initializes a new instance of the <see cref="DimensionalBounds"/> class.
         /// </summary>
-        public DimensinalBounds()
+        public DimensionalBounds()
         {
             secondaryBounds = new Bounds();
             primaryBounds = new Bounds();

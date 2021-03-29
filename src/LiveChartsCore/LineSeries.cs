@@ -386,11 +386,12 @@ namespace LiveChartsCore
             {
                 if (point.Context.Chart != chart.View) continue;
                 SoftDeletePoint(point, primaryScale, secondaryScale);
+                everFetched.Remove(point);
             }
         }
 
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
-        public override DimensinalBounds GetBounds(
+        public override DimensionalBounds GetBounds(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
             var baseBounds = base.GetBounds(chart, x, y);
@@ -398,7 +399,7 @@ namespace LiveChartsCore
             var tick = y.GetTick(chart.ControlSize, baseBounds.PrimaryBounds);
             var xTick = x.GetTick(chart.ControlSize, baseBounds.SecondaryBounds);
 
-            return new DimensinalBounds
+            return new DimensionalBounds
             {
                 SecondaryBounds = new Bounds
                 {
@@ -671,18 +672,16 @@ namespace LiveChartsCore
             var visual = (LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>?)point.Context.Visual;
             if (visual == null) return;
 
-            float p = primaryScale.ToPixels(pivot);
+            //float p = primaryScale.ToPixels(pivot);
 
-            var secondary = secondaryScale.ToPixels(point.SecondaryValue);
-            var x = secondary;// - uwm + cp; // we cant know those values... the series does not have a position now...
+            //var secondary = secondaryScale.ToPixels(point.SecondaryValue);
+            //var x = secondary;// - uwm + cp; // we cant know those values... the series does not have a position now...
 
             //visual.X = 0;
             //visual.Y = 0;
             visual.Geometry.Height = 0;
             visual.Geometry.Width = 0;
             visual.Geometry.RemoveOnCompleted = true;
-
-            everFetched.Remove(point);
         }
 
         public override void Delete(IChartView chart)

@@ -91,9 +91,7 @@ namespace LiveChartsCore
                 chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
             }
 
-            var dls = unchecked((float)DataLabelsSize);
-
-            var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
+            var dls = (float)DataLabelsSize;
             var toDeletePoints = new HashSet<ChartPoint>(everFetched);
 
             foreach (var point in Fetch(chart))
@@ -192,17 +190,18 @@ namespace LiveChartsCore
             {
                 if (point.Context.Chart != chart.View) continue;
                 SoftDeletePoint(point, primaryScale, secondaryScale);
+                everFetched.Remove(point);
             }
         }
 
-        public override DimensinalBounds GetBounds(
+        public override DimensionalBounds GetBounds(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> secondaryAxis, IAxis<TDrawingContext> primaryAxis)
         {
             var baseBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
 
             var tick = secondaryAxis.GetTick(chart.ControlSize, baseBounds.PrimaryBounds);
 
-            return new DimensinalBounds
+            return new DimensionalBounds
             {
                 SecondaryBounds = new Bounds
                 {
@@ -252,8 +251,6 @@ namespace LiveChartsCore
             visual.Y = p;
             visual.Height = 0;
             visual.RemoveOnCompleted = true;
-
-            everFetched.Remove(point);
         }
     }
 }

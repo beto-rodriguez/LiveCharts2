@@ -24,6 +24,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using System;
 using LiveChartsCore.Measure;
+using System.Collections.Generic;
 
 namespace LiveChartsCore
 {
@@ -46,7 +47,7 @@ namespace LiveChartsCore
         public int ScalesYAt { get => scalesYAt; set { scalesYAt = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
-        public virtual DimensinalBounds GetBounds(
+        public virtual DimensionalBounds GetBounds(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
             if (dataProvider == null) throw new Exception("A data provider is required");
@@ -70,12 +71,16 @@ namespace LiveChartsCore
             var primaryScale = new Scaler(
                 core.DrawMaringLocation, core.DrawMarginSize, primaryAxis.Orientation, primaryAxis.DataBounds, primaryAxis.IsInverted);
 
+            var deleted = new List<ChartPoint>();
             foreach (var point in everFetched)
             {
                 if (point.Context.Chart != chart) continue;
 
                 SoftDeletePoint(point, primaryScale, secondaryScale);
+                deleted.Add(point);
             }
+
+            foreach (var item in deleted) everFetched.Remove(item);
         }
     }
 }

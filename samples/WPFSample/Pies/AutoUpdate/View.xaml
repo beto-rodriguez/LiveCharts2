@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="WPFSample.Pies.AutoUpdate.View"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+             xmlns:vms="clr-namespace:ViewModelsSamples.Pies.AutoUpdate;assembly=ViewModelsSamples">
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Margin="6" Command="{Binding AddSeriesCommand}">Add Series</Button>
+            <Button Margin="6" Command="{Binding RemoveSeriesCommand}">Remove Series</Button>
+            <Button Margin="6" Command="{Binding UpdateAllCommand}">Update all</Button>
+            <Button Margin="6" Click="Button_Click">Constant changes</Button>
+        </StackPanel>
+        <lvc:PieChart Grid.Row="1" Series="{Binding Series}"></lvc:PieChart>
+    </Grid>
+</UserControl>

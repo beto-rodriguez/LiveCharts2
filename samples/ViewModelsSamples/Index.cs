@@ -27,6 +27,7 @@
             "StackedBars/Groups",
 
             "Pies/Basic",
+            "Pies/AutoUpdate",
             "Pies/Doughnut",
             "Pies/Pushout",
             "Pies/Custom",

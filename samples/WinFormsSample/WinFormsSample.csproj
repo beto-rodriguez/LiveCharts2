@@ -60,6 +60,9 @@
     <Compile Update="Lines\Custom\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Pies\AutoUpdate\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Pies\Pushout\View.cs">
       <SubType>UserControl</SubType>
     </Compile>

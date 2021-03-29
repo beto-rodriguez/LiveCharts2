@@ -69,7 +69,7 @@ namespace LiveChartsCore.Kernel
         /// </summary>
         /// <param name="chart">The chart.</param>
         /// <returns></returns>
-        DimensinalBounds GetBounds(PieChart<TDrawingContext> chart);
+        DimensionalBounds GetBounds(PieChart<TDrawingContext> chart);
 
         /// <summary>
         /// Measures the series and schedules the draw in specified chart.

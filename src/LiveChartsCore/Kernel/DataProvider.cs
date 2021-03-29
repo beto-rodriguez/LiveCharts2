@@ -73,11 +73,11 @@ namespace LiveChartsCore.Kernel
             }
         }
 
-        public virtual DimensinalBounds GetCartesianBounds(CartesianChart<TDrawingContext> chart, IDrawableSeries<TDrawingContext> series, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
+        public virtual DimensionalBounds GetCartesianBounds(CartesianChart<TDrawingContext> chart, IDrawableSeries<TDrawingContext> series, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
             var stack = chart.SeriesContext.GetStackPosition(series, series.GetStackGroup());
 
-            var bounds = new DimensinalBounds();
+            var bounds = new DimensionalBounds();
             foreach (var point in series.Fetch(chart))
             {
                 var primary = point.PrimaryValue;
@@ -92,12 +92,12 @@ namespace LiveChartsCore.Kernel
             return bounds;
         }
 
-        public virtual DimensinalBounds GetPieBounds(PieChart<TDrawingContext> chart, IPieSeries<TDrawingContext> series)
+        public virtual DimensionalBounds GetPieBounds(PieChart<TDrawingContext> chart, IPieSeries<TDrawingContext> series)
         {
             var stack = chart.SeriesContext.GetStackPosition(series, series.GetStackGroup());
             if (stack == null) throw new NullReferenceException("Unexpected null stacker");
 
-            var bounds = new DimensinalBounds();
+            var bounds = new DimensionalBounds();
             foreach (var point in series.Fetch(chart))
             {
                 stack.StackPoint(point);

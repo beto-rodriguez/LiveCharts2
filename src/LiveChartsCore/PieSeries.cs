@@ -23,6 +23,8 @@
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using System;
+using System.Collections.Generic;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore
 {
@@ -88,6 +90,8 @@ namespace LiveChartsCore
             var stacker = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
             if (stacker == null) throw new NullReferenceException("Unexpected null stacker");
 
+            var toDeletePoints = new HashSet<ChartPoint>(everFetched);
+
             foreach (var point in Fetch(chart))
             {
                 var visual = point.Context.Visual as TVisual;
@@ -112,6 +116,12 @@ namespace LiveChartsCore
                     continue;
                 }
 
+                var stack = stacker.GetStack(point);
+                var stackedValue = stack.Start;
+                var total = stack.Total;
+                var start = stackedValue / total * 360;
+                var end = (stackedValue + point.PrimaryValue) / total * 360 - start;
+
                 if (visual == null)
                 {
                     var p = new TVisual
@@ -122,8 +132,8 @@ namespace LiveChartsCore
                         Y = cy,
                         Width = 0,
                         Height = 0,
-                        SweepAngle = 0,
                         StartAngle = 0,
+                        SweepAngle = 0,
                         PushOut = 0,
                         InnerRadius = 0
                     };
@@ -135,13 +145,10 @@ namespace LiveChartsCore
 
                     if (Fill != null) Fill.AddGeometyToPaintTask(p);
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(p);
+                    everFetched.Add(point);
                 }
 
                 var dougnutGeometry = visual;
-
-                var stack = stacker.GetStack(point);
-                var stackedValue = stack.Start;
-                var total = stack.Total;
 
                 dougnutGeometry.PushOut = pushout;
                 dougnutGeometry.CenterX = drawLocation.X + drawMarginSize.Width * 0.5f;
@@ -153,8 +160,6 @@ namespace LiveChartsCore
                 dougnutGeometry.InnerRadius = innerRadius;
                 dougnutGeometry.PushOut = pushout;
                 dougnutGeometry.RemoveOnCompleted = false;
-                var start = stackedValue / total * 360;
-                var end = (stackedValue + point.PrimaryValue) / total * 360 - start;
                 dougnutGeometry.StartAngle = start;
                 dougnutGeometry.SweepAngle = end;
                 if (start == 0 && end == 360) dougnutGeometry.SweepAngle = 359.9999f;
@@ -162,13 +167,25 @@ namespace LiveChartsCore
                 point.Context.HoverArea = new SemicircleHoverArea().SetDimensions(cx, cy, start, start + end, minDimension * 0.5f);
 
                 OnPointMeasured(point);
+                toDeletePoints.Remove(point);
                 chart.MeasuredDrawables.Add(dougnutGeometry);
+            }
+
+            var u = Scaler.GetDefaultScaler(AxisOrientation.X);
+            foreach (var point in toDeletePoints)
+            {
+                if (point.Context.Chart != chart.View) continue;
+                SoftDeletePoint(point, u, u);
+                everFetched.Remove(point);
             }
         }
 
         /// <inheritdoc cref="IPieSeries{TDrawingContext}.GetBounds(PieChart{TDrawingContext})"/>
-        public DimensinalBounds GetBounds(PieChart<TDrawingContext> chart) => dataProvider.GetPieBounds(chart, this);
-
+        public DimensionalBounds GetBounds(PieChart<TDrawingContext> chart)
+        {
+            if (dataProvider == null) throw new Exception("Data provider not found");
+            return dataProvider.GetPieBounds(chart, this);
+        }
         protected override void DefaultOnPointAddedToSate(TVisual visual, IChartView<TDrawingContext> chart)
         {
             visual.PushOut = (float)HoverPushout;
@@ -253,6 +270,31 @@ namespace LiveChartsCore
                     animation
                         .WithDuration(chart.AnimationsSpeed)
                         .WithEasingFunction(chart.EasingFunction));
+        }
+
+        protected override void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
+        {
+            var visual = (TVisual?)point.Context.Visual;
+            if (visual == null) return;
+
+            visual.StartAngle = visual.StartAngle + visual.SweepAngle;
+            visual.SweepAngle = 0;
+            visual.RemoveOnCompleted = true;
+        }
+
+        public override void Delete(IChartView chart)
+        {
+            var u = Scaler.GetDefaultScaler(AxisOrientation.X);
+
+            var toDelete = new List<ChartPoint>();
+            foreach (var point in everFetched)
+            {
+                if (point.Context.Chart != chart) continue;
+                SoftDeletePoint(point, u, u);
+                toDelete.Add(point);
+            }
+
+            foreach (var item in toDelete) everFetched.Remove(item);
         }
     }
 }

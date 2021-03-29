@@ -33,6 +33,7 @@ namespace LiveChartsCore
     public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        private readonly HashSet<ISeries> everMeasuredSeries = new();
         private readonly IPieChartView<TDrawingContext> chartView;
         private int nextSeries = 0;
         private IPieSeries<TDrawingContext>[] series = new IPieSeries<TDrawingContext>[0];
@@ -134,10 +135,24 @@ namespace LiveChartsCore
             // or it is initializing in the UI and has no dimensions yet
             if (drawMarginSize.Width <= 0 || drawMarginSize.Height <= 0) return;
 
+            var toDeleteSeries = new HashSet<ISeries>(everMeasuredSeries);
             foreach (var series in series)
             {
                 series.Measure(this);
+                everMeasuredSeries.Add(series);
+                toDeleteSeries.Remove(series);
+
+                var deleted = false;
+                foreach (var item in series.DeletingTasks)
+                {
+                    canvas.RemovePaintTask(item);
+                    item.Dispose();
+                    deleted = true;
+                }
+                if (deleted) series.DeletingTasks.Clear();
             }
+
+            foreach (var series in toDeleteSeries) { series.Delete(View); everMeasuredSeries.Remove(series); }
 
             //chartView.CoreCanvas.ForEachGeometry((geometry, drawable) =>
             //{
