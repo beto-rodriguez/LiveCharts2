@@ -34,6 +34,7 @@
             "Pies/NightingaleRose",
 
             "Scatter/Basic",
+            "Scatter/AutoUpdate",
             "Scatter/Custom",
 
             "General/UserDefinedTypes",

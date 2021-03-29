@@ -89,6 +89,9 @@
     <Compile Update="Pies\Basic\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Scatter\AutoUpdate\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Scatter\Custom\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

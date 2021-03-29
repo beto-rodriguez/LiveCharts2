@@ -24,6 +24,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using System;
 using LiveChartsCore.Measure;
+using System.Collections.Generic;
 
 namespace LiveChartsCore
 {
@@ -32,9 +33,10 @@ namespace LiveChartsCore
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
+        private Func<float, float> easing = EasingFunctions.BuildCustomElasticOut(1.2f, 0.40f);
         private double geometrySize = 24d;
         private double minGeometrySize = 6d;
-        private Bounds weightBounds = new Bounds();
+        private Bounds weightBounds = new ();
 
         public ScatterSeries()
             : base(SeriesProperties.Scatter)
@@ -72,9 +74,11 @@ namespace LiveChartsCore
                 DataLabelsDrawableTask.ZIndex = actualZIndex + 0.3;
                 chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
             }
-            var dls = unchecked((float)DataLabelsSize);
 
-            var gs = unchecked((float)geometrySize);
+            var dls = (float)DataLabelsSize;
+            var toDeletePoints = new HashSet<ChartPoint>(everFetched);
+
+            var gs = (float)geometrySize;
             var hgs = gs / 2f;
             float sw = Stroke?.StrokeThickness ?? 0;
             var requiresWScale = weightBounds.max - weightBounds.min > 0;
@@ -82,7 +86,7 @@ namespace LiveChartsCore
 
             foreach (var point in Fetch(chart))
             {
-                var visual = point.Context.Visual as TVisual;
+                var visual = (TVisual?)point.Context.Visual;
 
                 var x = xScale.ToPixels(point.SecondaryValue);
                 var y = yScale.ToPixels(point.PrimaryValue);
@@ -124,6 +128,7 @@ namespace LiveChartsCore
 
                     if (Fill != null) Fill.AddGeometyToPaintTask(r);
                     if (Stroke != null) Stroke.AddGeometyToPaintTask(r);
+                    everFetched.Add(point);
                 }
 
                 var sizedGeometry = visual;
@@ -137,6 +142,7 @@ namespace LiveChartsCore
                 point.Context.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs, y - hgs, gs + 2 * sw, gs + 2 * sw);
 
                 OnPointMeasured(point);
+                toDeletePoints.Remove(point);
                 chart.MeasuredDrawables.Add(sizedGeometry);
 
                 if (DataLabelsDrawableTask != null)
@@ -168,6 +174,13 @@ namespace LiveChartsCore
 
                     chart.MeasuredDrawables.Add(label);
                 }
+            }
+
+            foreach (var point in toDeletePoints)
+            {
+                if (point.Context.Chart != chart.View) continue;
+                SoftDeletePoint(point, yScale, xScale);
+                everFetched.Remove(point);
             }
         }
 
@@ -238,11 +251,9 @@ namespace LiveChartsCore
             paintContext = context;
         }
 
-        private Func<float, float> easing = EasingFunctions.BuildCustomElasticOut(1.2f, 0.40f);
-
         protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
         {
-            var visual = chartPoint.Context.Visual as TVisual;
+            var visual = (TVisual?)chartPoint.Context.Visual;
             var chart = chartPoint.Context.Chart;
 
             if (visual == null) throw new Exception("Unable to initialize the point instance.");
@@ -250,13 +261,30 @@ namespace LiveChartsCore
             visual
                .TransitionateProperties(
                    nameof(visual.X),
-                   nameof(visual.Y),
+                   nameof(visual.Y))
+               .WithAnimation(animation =>
+                   animation
+                       .WithDuration(chart.AnimationsSpeed)
+                       .WithEasingFunction(chart.EasingFunction));
+
+            visual
+               .TransitionateProperties(
                    nameof(visual.Width),
                    nameof(visual.Height))
                .WithAnimation(animation =>
                    animation
                        .WithDuration(chart.AnimationsSpeed)
                        .WithEasingFunction(easing));
+        }
+
+        protected override void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
+        {
+            var visual = (TVisual?)point.Context.Visual;
+            if (visual == null) return;
+
+            visual.Height = 0;
+            visual.Width = 0;
+            visual.RemoveOnCompleted = true;
         }
     }
 }
