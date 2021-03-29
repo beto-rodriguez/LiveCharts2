@@ -49,8 +49,6 @@ namespace LiveChartsCore
                 drawLocation, drawMarginSize, primaryAxis.Orientation, primaryAxis.DataBounds, primaryAxis.IsInverted);
             var previousSecondaryScale = secondaryAxis.PreviousDataBounds == null ? null : new Scaler(
                 drawLocation, drawMarginSize, secondaryAxis.Orientation, secondaryAxis.PreviousDataBounds, secondaryAxis.IsInverted);
-            var previousPrimaryScale = primaryAxis.PreviousDataBounds == null ? null : new Scaler(
-                drawLocation, drawMarginSize, secondaryAxis.Orientation, primaryAxis.PreviousDataBounds, secondaryAxis.IsInverted);
 
             float uw = secondaryScale.ToPixels(1f) - secondaryScale.ToPixels(0f);
             float uwm = 0.5f * uw;
@@ -70,7 +68,7 @@ namespace LiveChartsCore
 
             if (uw > MaxBarWidth)
             {
-                uw = unchecked((float)MaxBarWidth);
+                uw = (float)MaxBarWidth;
                 uwm = uw / 2f;
             }
 
@@ -118,8 +116,7 @@ namespace LiveChartsCore
                 if (visual == null)
                 {
                     var xi = secondary - uwm + cp;
-                    if (previousPrimaryScale != null && previousSecondaryScale != null)
-                        xi = previousSecondaryScale.ToPixels(point.SecondaryValue) - uwm + cp;
+                    if (previousSecondaryScale != null) xi = previousSecondaryScale.ToPixels(point.SecondaryValue) - uwm + cp;
 
                     var r = new TVisual
                     {
@@ -245,9 +242,8 @@ namespace LiveChartsCore
             float p = primaryScale.ToPixels(pivot);
 
             var secondary = secondaryScale.ToPixels(point.SecondaryValue);
-            var x = secondary;// - uwm + cp; // we cant know those values... the series does not have a position now...
 
-            visual.X = x;
+            visual.X = secondary;
             visual.Y = p;
             visual.Height = 0;
             visual.RemoveOnCompleted = true;

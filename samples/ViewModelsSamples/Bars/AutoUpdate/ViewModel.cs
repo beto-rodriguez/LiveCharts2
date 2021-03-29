@@ -49,7 +49,7 @@ namespace ViewModelsSamples.Bars.AutoUpdate
             };
 
             Series.Add(
-                new ColumnSeries<ObservablePoint> { Values = observableValues });
+                new RowSeries<ObservablePoint> { Values = observableValues });
 
             // in the following series notice that the type int does not implement INotifyPropertyChanged
             // and our Series.Values collection is of type List<T>
@@ -90,7 +90,7 @@ namespace ViewModelsSamples.Bars.AutoUpdate
             if (Series.Count == 5) return;
 
             Series.Add(
-                new ColumnSeries<int> 
+                new RowSeries<int> 
                 { 
                     Values = new List<int> { random.Next(0, 10), random.Next(0, 10), random.Next(0, 10) }
                 });
