@@ -38,14 +38,16 @@ namespace LiveChartsCore
         where TTextGeometry : ILabelGeometry<TDrawingContext>, new()
         where TLineGeometry : ILineGeometry<TDrawingContext>, new()
     {
-        private readonly HashSet<IChart> subscribedTo = new();
+        #region fields
+
+        protected readonly HashSet<IChart> subscribedTo = new();
         private const float wedgeLength = 8;
         internal AxisOrientation orientation;
         private double? step = null;
         private Bounds? dataBounds = null;
         private Bounds? previousDataBounds = null;
         private double labelsRotation;
-        private readonly Dictionary<string, AxisVisualSeprator<TDrawingContext>> activeSeparators = new();
+        private readonly Dictionary<CartesianChart<TDrawingContext>, Dictionary<string, AxisVisualSeprator<TDrawingContext>>> activeSeparators = new();
         // xo (x origin) and yo (y origin) are the distance to the center of the axis to the control bounds
         internal float xo = 0f, yo = 0f;
         private AxisPosition position = AxisPosition.Start;
@@ -61,6 +63,10 @@ namespace LiveChartsCore
         private bool showSeparatorLines = true;
         private bool showSeparatorWedges = true;
         private bool isInverted;
+
+        #endregion
+
+        #region properties
 
         float IAxis.Xo { get => xo; set => xo = value; }
         float IAxis.Yo { get => yo; set => yo = value; }
@@ -226,6 +232,8 @@ namespace LiveChartsCore
         /// </value>
         public bool IsInverted { get => isInverted; set { isInverted = value; OnPropertyChanged(); } }
 
+        #endregion
+
         /// <summary>
         /// Measures the axis for the specified chart.
         /// </summary>
@@ -233,6 +241,8 @@ namespace LiveChartsCore
         public void Measure(CartesianChart<TDrawingContext> chart)
         {
             if (dataBounds == null) throw new Exception("DataBounds not found");
+
+            subscribedTo.Add(chart);
 
             var controlSize = chart.ControlSize;
             var drawLocation = chart.DrawMaringLocation;
@@ -285,6 +295,13 @@ namespace LiveChartsCore
             var hasRotation = Math.Abs(r) > 0.01f;
 
             var start = Math.Truncate(dataBounds.min / s) * s;
+            if (!activeSeparators.TryGetValue(chart, out var separators))
+            {
+                separators = new Dictionary<string, AxisVisualSeprator<TDrawingContext>>();
+                activeSeparators[chart] = separators;
+            }
+
+            var measured = new HashSet<AxisVisualSeprator<TDrawingContext>>();
 
             for (var i = start; i <= dataBounds.max; i += s)
             {
@@ -303,7 +320,7 @@ namespace LiveChartsCore
                     y = scale.ToPixels((float)i);
                 }
 
-                if (!activeSeparators.TryGetValue(label, out var visualSeparator))
+                if (!separators.TryGetValue(label, out var visualSeparator))
                 {
                     visualSeparator = new AxisVisualSeprator<TDrawingContext>() { Value = (float)i };
 
@@ -392,7 +409,7 @@ namespace LiveChartsCore
                         }
                     }
 
-                    activeSeparators.Add(label, visualSeparator);
+                    separators.Add(label, visualSeparator);
                 }
 
                 if (TextBrush != null && visualSeparator.Text != null) TextBrush.AddGeometyToPaintTask(visualSeparator.Text);
@@ -430,59 +447,15 @@ namespace LiveChartsCore
                     if (previousDataBounds == null) visualSeparator.Line.CompleteAllTransitions();
                 }
 
-                if (visualSeparator.Text != null) chart.MeasuredDrawables.Add(visualSeparator.Text);
-                if (visualSeparator.Line != null) chart.MeasuredDrawables.Add(visualSeparator.Line);
+                if (visualSeparator.Text != null || visualSeparator.Line != null) measured.Add(visualSeparator);
             }
 
-            foreach (var separator in activeSeparators.ToArray())
+            foreach (var separator in separators.ToArray()) 
             {
-                var usedLabel = separator.Value.Text != null && chart.MeasuredDrawables.Contains(separator.Value.Text);
-                var usedLine = separator.Value.Line != null && chart.MeasuredDrawables.Contains(separator.Value.Line);
-                if (usedLine || usedLabel)
-                {
-                    continue;
-                }
+                if (!measured.Contains(separator.Value)) continue;
 
-                float x, y;
-                if (orientation == AxisOrientation.X)
-                {
-                    x = scale.ToPixels((float)separator.Value.Value);
-                    y = yoo;
-                }
-                else
-                {
-                    x = xoo;
-                    y = scale.ToPixels((float)separator.Value.Value);
-                }
-
-                if (separator.Value.Line != null)
-                {
-                    if (orientation == AxisOrientation.X)
-                    {
-                        separator.Value.Line.X = x;
-                        separator.Value.Line.X1 = x;
-                        separator.Value.Line.Y = lyi;
-                        separator.Value.Line.Y1 = lyj;
-                    }
-                    else
-                    {
-                        separator.Value.Line.X = lxi;
-                        separator.Value.Line.X1 = lxj;
-                        separator.Value.Line.Y = y;
-                        separator.Value.Line.Y1 = y;
-                    }
-
-                    separator.Value.Line.RemoveOnCompleted = true;
-                }
-
-                if (separator.Value.Text != null)
-                {
-                    separator.Value.Text.X = x;
-                    separator.Value.Text.Y = y;
-                    separator.Value.Text.RemoveOnCompleted = true;
-                }
-
-                activeSeparators.Remove(separator.Key);
+                SoftDeleteSeparator(chart, separator.Value, scale);
+                separators.Remove(separator.Key);
             }
         }
 
@@ -539,6 +512,87 @@ namespace LiveChartsCore
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public virtual void Dispose()
+        {
+            foreach (var chart in subscribedTo.ToArray())
+            {
+                var cartesianChart = (CartesianChart<TDrawingContext>)chart;
+                var canvas = cartesianChart.View.CoreCanvas;
+                if (textBrush != null) canvas.RemovePaintTask(textBrush);
+                if (separatorsBrush != null) canvas.RemovePaintTask(separatorsBrush);
+                activeSeparators.Remove(cartesianChart);
+            }
+        }
+
+        private void SoftDeleteSeparator(
+            Chart<TDrawingContext> chart,
+            AxisVisualSeprator<TDrawingContext> separator,
+            Scaler scale)
+        {
+            var controlSize = chart.ControlSize;
+            var drawLocation = chart.DrawMaringLocation;
+            var drawMarginSize = chart.DrawMarginSize;
+
+            var lyi = drawLocation.Y;
+            var lyj = drawLocation.Y + drawMarginSize.Height;
+            var lxi = drawLocation.X;
+            var lxj = drawLocation.X + drawMarginSize.Width;
+
+            float xoo = 0f, yoo = 0f;
+
+            if (orientation == AxisOrientation.X)
+            {
+                yoo = position == AxisPosition.Start
+                     ? controlSize.Height - yo
+                     : yo;
+            }
+            else
+            {
+                xoo = position == AxisPosition.Start
+                    ? xo
+                    : controlSize.Width - xo;
+            }
+
+            float x, y;
+            if (orientation == AxisOrientation.X)
+            {
+                x = scale.ToPixels((float)separator.Value);
+                y = yoo;
+            }
+            else
+            {
+                x = xoo;
+                y = scale.ToPixels((float)separator.Value);
+            }
+
+            if (separator.Line != null)
+            {
+                if (orientation == AxisOrientation.X)
+                {
+                    separator.Line.X = x;
+                    separator.Line.X1 = x;
+                    separator.Line.Y = lyi;
+                    separator.Line.Y1 = lyj;
+                }
+                else
+                {
+                    separator.Line.X = lxi;
+                    separator.Line.X1 = lxj;
+                    separator.Line.Y = y;
+                    separator.Line.Y1 = y;
+                }
+
+                separator.Line.RemoveOnCompleted = true;
+            }
+
+            if (separator.Text != null)
+            {
+                separator.Text.X = x;
+                separator.Text.Y = y;
+                separator.Text.RemoveOnCompleted = true;
+            }
         }
     }
 }

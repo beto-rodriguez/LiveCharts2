@@ -61,7 +61,6 @@ namespace LiveChartsCore
         }
 
         public object MeasureWorker => measureWorker;
-        public HashSet<IDrawable<TDrawingContext>> MeasuredDrawables => Canvas.MeasuredDrawables;
         public SeriesContext<TDrawingContext> SeriesContext => seriesContext;
         public MotionCanvas<TDrawingContext> Canvas => canvas;
         public abstract IEnumerable<IDrawableSeries<TDrawingContext>> DrawableSeries { get; }

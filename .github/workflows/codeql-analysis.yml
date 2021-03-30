@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'csharp' ]
-        targetplatform: [x86, x64]
+        targetplatform: [ x86, x64 ]
 
     steps:
     - name: Checkout repository
@@ -27,8 +27,8 @@ jobs:
       uses: github/codeql-action/init@v1
       with:
         languages: ${{ matrix.language }}
-        
-    - name: Build
+
+    - name: Release build
       run: |
         dotnet build  ./src/LiveChartsCore --configuration Release
         dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp --configuration Release
@@ -41,8 +41,8 @@ jobs:
         dotnet build  ./samples/WPFSample --configuration Release
         dotnet build  ./samples/XamarinSample/XamarinSample/XamarinSample --configuration Release
 
+    - name: Run unit tests
+      run: dotnet test ./tests/LiveChartsCore.UnitTesting
+
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
-
-    - name: Run Unit tests
-      run: dotnet test ./tests/LiveChartsCore.UnitTesting --configuration Release

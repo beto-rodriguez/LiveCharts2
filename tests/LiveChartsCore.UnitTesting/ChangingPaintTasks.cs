@@ -36,8 +36,7 @@ namespace LiveChartsCore.UnitTesting
                         new SkiaSharpDrawingContext(
                             new SKImageInfo(100, 100),
                             SKSurface.CreateNull(100, 100),
-                            new SKCanvas(new SKBitmap()))
-                        { IsTest = true });
+                            new SKCanvas(new SKBitmap())));
                 }
             }
 
@@ -83,8 +82,7 @@ namespace LiveChartsCore.UnitTesting
                         new SkiaSharpDrawingContext(
                             new SKImageInfo(100, 100),
                             SKSurface.CreateNull(100, 100),
-                            new SKCanvas(new SKBitmap()))
-                        { IsTest = true });
+                            new SKCanvas(new SKBitmap())));
                 }
             }
 
@@ -129,8 +127,7 @@ namespace LiveChartsCore.UnitTesting
                         new SkiaSharpDrawingContext(
                             new SKImageInfo(100, 100),
                             SKSurface.CreateNull(100, 100),
-                            new SKCanvas(new SKBitmap()))
-                        { IsTest = true });
+                            new SKCanvas(new SKBitmap())));
                 }
             }
 
@@ -175,8 +172,7 @@ namespace LiveChartsCore.UnitTesting
                         new SkiaSharpDrawingContext(
                             new SKImageInfo(100, 100),
                             SKSurface.CreateNull(100, 100),
-                            new SKCanvas(new SKBitmap()))
-                        { IsTest = true });
+                            new SKCanvas(new SKBitmap())));
                 }
             }
 
@@ -223,8 +219,7 @@ namespace LiveChartsCore.UnitTesting
                         new SkiaSharpDrawingContext(
                             new SKImageInfo(100, 100),
                             SKSurface.CreateNull(100, 100),
-                            new SKCanvas(new SKBitmap()))
-                        { IsTest = true });
+                            new SKCanvas(new SKBitmap())));
                 }
             }
 
@@ -272,8 +267,7 @@ namespace LiveChartsCore.UnitTesting
                         new SkiaSharpDrawingContext(
                             new SKImageInfo(100, 100),
                             SKSurface.CreateNull(100, 100),
-                            new SKCanvas(new SKBitmap()))
-                        { IsTest = true });
+                            new SKCanvas(new SKBitmap())));
                 }
             }
 
@@ -318,8 +312,7 @@ namespace LiveChartsCore.UnitTesting
                         new SkiaSharpDrawingContext(
                             new SKImageInfo(100, 100),
                             SKSurface.CreateNull(100, 100),
-                            new SKCanvas(new SKBitmap()))
-                        { IsTest = true });
+                            new SKCanvas(new SKBitmap())));
                 }
             }
 
@@ -362,8 +355,7 @@ namespace LiveChartsCore.UnitTesting
                         new SkiaSharpDrawingContext(
                             new SKImageInfo(100, 100),
                             SKSurface.CreateNull(100, 100),
-                            new SKCanvas(new SKBitmap()))
-                        { IsTest = true });
+                            new SKCanvas(new SKBitmap())));
                 }
             }
 

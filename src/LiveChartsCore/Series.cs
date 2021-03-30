@@ -208,6 +208,7 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IDisposable.Dispose"/>
         public virtual void Dispose()
         {
+            foreach (var chart in subscribedTo) Delete(chart.View);
             observer.Dispose(values);
         }
 

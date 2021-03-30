@@ -299,8 +299,7 @@ namespace LiveChartsCore
             }
 
             foreach (var series in toDeleteSeries) 
-            { 
-                series.Delete(View);
+            {
                 series.Dispose();
                 everMeasuredSeries.Remove(series);
             }

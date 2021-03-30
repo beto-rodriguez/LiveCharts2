@@ -31,7 +31,7 @@ namespace LiveChartsCore
     /// <summary>
     /// Defines an Axis in a Cartesian chart.
     /// </summary>
-    public interface IAxis
+    public interface IAxis: IDisposable
     {
         /// <summary>
         /// Gets the previous data bounds.

@@ -169,7 +169,6 @@ namespace LiveChartsCore
 
                 OnPointMeasured(point);
                 toDeletePoints.Remove(point);
-                chart.MeasuredDrawables.Add(dougnutGeometry);
             }
 
             var u = Scaler.GetDefaultScaler(AxisOrientation.X);

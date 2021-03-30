@@ -183,7 +183,6 @@ namespace LiveChartsCore
                 {
                     wasFillInitialized = fillPathHelper.Initialize(SetDefaultPathTransitions, chartAnimation);
                     Fill.AddGeometyToPaintTask(fillPathHelper.Path);
-                    chart.MeasuredDrawables.Add(fillPathHelper.Path);
                     chart.Canvas.AddDrawableTask(Fill);
                     Fill.ZIndex = actualZIndex + 0.1;
                     fillPathHelper.Path.ClearCommands();
@@ -192,7 +191,6 @@ namespace LiveChartsCore
                 {
                     wasStrokeInitialized = strokePathHelper.Initialize(SetDefaultPathTransitions, chartAnimation);
                     Stroke.AddGeometyToPaintTask(strokePathHelper.Path);
-                    chart.MeasuredDrawables.Add(strokePathHelper.Path);
                     chart.Canvas.AddDrawableTask(Stroke);
                     Stroke.ZIndex = actualZIndex + 0.2;
                     strokePathHelper.Path.ClearCommands();
@@ -316,7 +314,6 @@ namespace LiveChartsCore
 
                     OnPointMeasured(data.TargetPoint);
                     toDeletePoints.Remove(data.TargetPoint);
-                    chart.MeasuredDrawables.Add(visual.Geometry);
 
                     if (DataLabelsDrawableTask != null)
                     {
@@ -345,8 +342,6 @@ namespace LiveChartsCore
                             SeriesProperties, data.TargetPoint.PrimaryValue > Pivot);
                         label.X = labelPosition.X;
                         label.Y = labelPosition.Y;
-
-                        chart.MeasuredDrawables.Add(label);
                     }
                 }
 

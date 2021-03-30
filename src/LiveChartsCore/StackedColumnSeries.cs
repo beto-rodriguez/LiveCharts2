@@ -155,7 +155,6 @@ namespace LiveChartsCore
 
                 OnPointMeasured(point);
                 toDeletePoints.Remove(point);
-                chart.MeasuredDrawables.Add(sizedGeometry);
 
                 if (DataLabelsDrawableTask != null)
                 {
@@ -184,8 +183,6 @@ namespace LiveChartsCore
                         SeriesProperties, point.PrimaryValue > Pivot);
                     label.X = labelPosition.X;
                     label.Y = labelPosition.Y;
-
-                    chart.MeasuredDrawables.Add(label);
                 }
             }
 
