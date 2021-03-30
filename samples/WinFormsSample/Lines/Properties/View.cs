@@ -57,11 +57,19 @@ namespace WinFormsSample.Lines.Properties
 
             var b8 = new Button { Text = "+ size", Location = new System.Drawing.Point(560, 0) };
             b8.Click += (object sender, System.EventArgs e) => viewModel.IncreaseGeometrySize();
-            Controls.Add(b6);
+            Controls.Add(b8);
 
-            var b9 = new Button { Text = "- size", Location = new System.Drawing.Point(620, 0) };
+            var b9 = new Button { Text = "- size", Location = new System.Drawing.Point(640, 0) };
             b9.Click += (object sender, System.EventArgs e) => viewModel.DecreaseGeometrySize();
-            Controls.Add(b7);
+            Controls.Add(b9);
+
+            var b10 = new Button { Text = "new series", Location = new System.Drawing.Point(720, 0) };
+            b10.Click += (object sender, System.EventArgs e) =>
+            {
+                var newInstance = viewModel.ChangeSeriesInstance();
+                cartesianChart.Series = newInstance;
+            };
+            Controls.Add(b10);
         }
     }
 }

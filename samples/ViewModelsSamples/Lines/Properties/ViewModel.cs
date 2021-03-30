@@ -50,7 +50,7 @@ namespace ViewModelsSamples.Lines.Properties
             lineSeries.Values = values;
         }
 
-        public void ChangeSeriesInstance()
+        public List<ISeries> ChangeSeriesInstance()
         {
             lineSeries = new LineSeries<double>
             {
@@ -62,6 +62,8 @@ namespace ViewModelsSamples.Lines.Properties
             {
                 lineSeries
             };
+
+            return series;
         }
 
         public void NewStroke()

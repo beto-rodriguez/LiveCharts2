@@ -104,7 +104,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     var chart = (CartesianChart)o;
                     if (chart.core == null) return;
                     MainThread.BeginInvokeOnMainThread(chart.core.Update);
-                }));
+                });
 
         public static readonly BindableProperty YAxesProperty =
             BindableProperty.Create(
@@ -114,7 +114,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     var chart = (CartesianChart)o;
                     if (chart.core == null) return;
                     MainThread.BeginInvokeOnMainThread(chart.core.Update);
-                }));
+                });
 
         public static readonly BindableProperty ZoomModeProperty =
             BindableProperty.Create(
