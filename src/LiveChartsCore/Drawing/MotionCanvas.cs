@@ -124,13 +124,19 @@ namespace LiveChartsCore.Drawing
 #endif
         }
 
-        public void ForEachGeometry(Action<IDrawable<TDrawingContext>> predicate) => ForEachGeometry((geometry, paint) => predicate(geometry));
-
-        public void ForEachGeometry(Action<IDrawable<TDrawingContext>, IDrawableTask<TDrawingContext>> predicate)
+        public int CountGeometries()
         {
-            foreach (var paint in paintTasks)
-                foreach (var geometry in paint.GetGeometries())
-                    predicate(geometry, paint);
+            var count = 0;
+
+            foreach (var task in paintTasks)
+            {
+                foreach (var geometry in task.GetGeometries())
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
     }
 }
