@@ -35,6 +35,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext>
     {
         private readonly CollectionDeepObserver<ISeries> seriesObserver;
+        private readonly CollectionDeepObserver<IAxis> xObserver;
+        private readonly CollectionDeepObserver<IAxis> yObserver;
 
         static CartesianChart()
         {
@@ -43,18 +45,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public CartesianChart()
         {
-            seriesObserver = new CollectionDeepObserver<ISeries>(
-                (object sender, NotifyCollectionChangedEventArgs e) =>
-                {
-                    if (core == null) return;
-                    Application.Current.Dispatcher.Invoke(core.Update);
-                },
-                (object sender, PropertyChangedEventArgs e) =>
-                {
-                    if (core == null) return;
-                    Application.Current.Dispatcher.Invoke(core.Update);
-                },
-                true);
+            seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
             XAxes = new List<IAxis>() { new Axis() };
             YAxes = new List<IAxis>() { new Axis() };
@@ -80,6 +73,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                     {
                         var chart = (CartesianChart)o;
+                        var observer = chart.xObserver;
+                        observer.Dispose((IEnumerable<IAxis>)args.OldValue);
+                        observer.Initialize((IEnumerable<IAxis>)args.NewValue);
                         if (chart.core == null) return;
                         Application.Current.Dispatcher.Invoke(chart.core.Update);
                     }));
@@ -90,6 +86,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                     {
                         var chart = (CartesianChart)o;
+                        var observer = chart.yObserver;
+                        observer.Dispose((IEnumerable<IAxis>)args.OldValue);
+                        observer.Initialize((IEnumerable<IAxis>)args.NewValue);
                         if (chart.core == null) return;
                         Application.Current.Dispatcher.Invoke(chart.core.Update);
                     }));
@@ -147,5 +146,18 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
             return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
         }
+
+        private void OnDeepCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (core == null) return;
+            Application.Current.Dispatcher.Invoke(core.Update);
+        }
+
+        private void OnDeepCollectionPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (core == null) return;
+            Application.Current.Dispatcher.Invoke(core.Update);
+        }
     }
 }
+

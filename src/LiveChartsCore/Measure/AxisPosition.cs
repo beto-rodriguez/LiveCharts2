@@ -22,9 +22,19 @@
 
 namespace LiveChartsCore.Measure
 {
+    /// <summary>
+    /// Defines an axis position.
+    /// </summary>
     public enum AxisPosition
     {
-        LeftOrBottom,
-        RightOrTop
+        /// <summary>
+        /// Pleaces the axis at the bottom for X axes and at the left for Y axes
+        /// </summary>
+        Start,
+
+        /// <summary>
+        /// Places the axis at the top for X axes and at the right for Y axes
+        /// </summary>
+        End
     }
 }

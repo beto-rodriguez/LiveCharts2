@@ -143,10 +143,11 @@ namespace LiveChartsCore
                     OnPointCreated(point);
                     p.CompleteAllTransitions();
 
-                    if (Fill != null) Fill.AddGeometyToPaintTask(p);
-                    if (Stroke != null) Stroke.AddGeometyToPaintTask(p);
                     everFetched.Add(point);
                 }
+
+                if (Fill != null) Fill.AddGeometyToPaintTask(visual);
+                if (Stroke != null) Stroke.AddGeometyToPaintTask(visual);
 
                 var dougnutGeometry = visual;
 

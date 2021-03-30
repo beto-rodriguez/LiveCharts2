@@ -48,7 +48,7 @@ namespace LiveChartsCore
         private readonly Dictionary<string, AxisVisualSeprator<TDrawingContext>> activeSeparators = new();
         // xo (x origin) and yo (y origin) are the distance to the center of the axis to the control bounds
         internal float xo = 0f, yo = 0f;
-        private AxisPosition position = AxisPosition.LeftOrBottom;
+        private AxisPosition position = AxisPosition.Start;
         private Func<double, AxisTick, string>? labeler;
         private Padding padding = new() { Left = 8, Top = 8, Bottom = 8, Right = 9 };
         private double? minValue = null;
@@ -60,7 +60,6 @@ namespace LiveChartsCore
         private IDrawableTask<TDrawingContext>? separatorsBrush;
         private bool showSeparatorLines = true;
         private bool showSeparatorWedges = true;
-        private IDrawableTask<TDrawingContext>? alternativeSeparatorForeground;
         private bool isInverted;
 
         float IAxis.Xo { get => xo; set => xo = value; }
@@ -204,22 +203,6 @@ namespace LiveChartsCore
         }
 
         /// <summary>
-        /// Gets or sets the alternative separator foreground.
-        /// </summary>
-        /// <value>
-        /// The alternative separator foreground.
-        /// </value>
-        public IDrawableTask<TDrawingContext>? AlternativeSeparatorForeground
-        {
-            get => alternativeSeparatorForeground;
-            set
-            {
-                if (alternativeSeparatorForeground != null) deletingTasks.Add(alternativeSeparatorForeground);
-                alternativeSeparatorForeground = value;
-            }
-        }
-
-        /// <summary>
         /// Gets or sets a value indicating whether [show separator lines].
         /// </summary>
         /// <value>
@@ -286,13 +269,13 @@ namespace LiveChartsCore
 
             if (orientation == AxisOrientation.X)
             {
-                yoo = position == AxisPosition.LeftOrBottom
+                yoo = position == AxisPosition.Start
                      ? controlSize.Height - yo
                      : yo;
             }
             else
             {
-                xoo = position == AxisPosition.LeftOrBottom
+                xoo = position == AxisPosition.Start
                     ? xo
                     : controlSize.Width - xo;
             }

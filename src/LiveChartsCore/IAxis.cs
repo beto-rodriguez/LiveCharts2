@@ -141,8 +141,6 @@ namespace LiveChartsCore
 
         IDrawableTask<TDrawingContext>? SeparatorsBrush { get; set; }
 
-        IDrawableTask<TDrawingContext>? AlternativeSeparatorForeground { get; set; }
-
         void Measure(CartesianChart<TDrawingContext> chart);
 
         SizeF GetPossibleSize(CartesianChart<TDrawingContext> chart);

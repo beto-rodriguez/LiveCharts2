@@ -205,7 +205,7 @@ namespace LiveChartsCore
                 foreach (var axis in secondaryAxes)
                 {
                     var s = axis.GetPossibleSize(this);
-                    if (axis.Position == AxisPosition.LeftOrBottom)
+                    if (axis.Position == AxisPosition.Start)
                     {
                         // X Bottom
                         axis.Yo = m.Bottom + s.Height * 0.5f;
@@ -228,7 +228,7 @@ namespace LiveChartsCore
                 {
                     var s = axis.GetPossibleSize(this);
                     var w = s.Width > m.Left ? s.Width : m.Left;
-                    if (axis.Position == AxisPosition.LeftOrBottom)
+                    if (axis.Position == AxisPosition.Start)
                     {
                         // Y Left
                         axis.Xo = ls + w * 0.5f;
@@ -255,37 +255,41 @@ namespace LiveChartsCore
             // or it is initializing in the UI and has no dimensions yet
             if (drawMarginSize.Width <= 0 || drawMarginSize.Height <= 0) return;
 
-            var toDeleteAxes = new HashSet<IAxis<TDrawingContext>>(primaryAxes.Concat(secondaryAxes));
-            foreach (var axis in secondaryAxes)
+            var totalAxes = primaryAxes.Concat(secondaryAxes).ToArray();
+            var toDeleteAxes = new HashSet<IAxis<TDrawingContext>>(totalAxes);
+            foreach (var axis in totalAxes)
             {
                 axis.Measure(this);
                 everMeasuredAxes.Add(axis);
                 toDeleteAxes.Remove(axis);
-            }
-            foreach (var axis in primaryAxes)
-            {
-                axis.Measure(this);
-                everMeasuredAxes.Add(axis);
-                toDeleteAxes.Remove(axis);
-            }
-
-            var toDeleteSeries = new HashSet<ISeries>(everMeasuredSeries);
-            foreach (var series in series)
-            {
-                var secondaryAxis = secondaryAxes[series.ScalesXAt];
-                var primaryAxis = primaryAxes[series.ScalesYAt];
-                series.Measure(this, secondaryAxis, primaryAxis);
-                everMeasuredSeries.Add(series);
-                toDeleteSeries.Remove(series);
 
                 var deleted = false;
-                foreach (var item in series.DeletingTasks)
+                foreach (var item in axis.DeletingTasks)
                 {
                     canvas.RemovePaintTask(item);
                     item.Dispose();
                     deleted = true;
                 }
-                if (deleted) series.DeletingTasks.Clear();
+                if (deleted) axis.DeletingTasks.Clear();
+            }
+
+            var toDeleteSeries = new HashSet<ISeries>(everMeasuredSeries);
+            foreach (var series in series)
+            {
+                //var secondaryAxis = secondaryAxes[series.ScalesXAt];
+                //var primaryAxis = primaryAxes[series.ScalesYAt];
+                //series.Measure(this, secondaryAxis, primaryAxis);
+                //everMeasuredSeries.Add(series);
+                //toDeleteSeries.Remove(series);
+
+                //var deleted = false;
+                //foreach (var item in series.DeletingTasks)
+                //{
+                //    canvas.RemovePaintTask(item);
+                //    item.Dispose();
+                //    deleted = true;
+                //}
+                //if (deleted) series.DeletingTasks.Clear();
             }
 
             foreach (var series in toDeleteSeries) { series.Delete(View); everMeasuredSeries.Remove(series); }

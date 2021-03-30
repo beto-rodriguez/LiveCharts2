@@ -126,10 +126,11 @@ namespace LiveChartsCore
                     OnPointCreated(point);
                     r.CompleteAllTransitions();
 
-                    if (Fill != null) Fill.AddGeometyToPaintTask(r);
-                    if (Stroke != null) Stroke.AddGeometyToPaintTask(r);
                     everFetched.Add(point);
                 }
+
+                if (Fill != null) Fill.AddGeometyToPaintTask(visual);
+                if (Stroke != null) Stroke.AddGeometyToPaintTask(visual);
 
                 var sizedGeometry = visual;
 
