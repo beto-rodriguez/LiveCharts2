@@ -169,7 +169,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(core.Update);
+            Application.Current.Dispatcher.Invoke(() => core.Update());
         }
 
         private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)

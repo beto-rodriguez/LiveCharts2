@@ -12,7 +12,7 @@ namespace LiveChartsCore.UnitTesting
     public class ChangingPaintTasks
     {
         [TestMethod]
-        public void SeriesFillChanged()
+        public void DrawableSeriesFillChanged()
         {
             var series = new LineSeries<int>
             {
@@ -59,7 +59,7 @@ namespace LiveChartsCore.UnitTesting
         }
 
         [TestMethod]
-        public void SeriesStrokeChanged()
+        public void DrawableSeriesStrokeChanged()
         {
             var series = new LineSeries<int>
             {
@@ -200,7 +200,7 @@ namespace LiveChartsCore.UnitTesting
         }
 
         [TestMethod]
-        public void SeriesInstanceChanged()
+        public void SeriesCollectionInstanceChanged()
         {
             var series = new LineSeries<int> { Values = new List<int> { 1, 6, 4, 2 } };
 
@@ -330,6 +330,50 @@ namespace LiveChartsCore.UnitTesting
             var geometries = canvas.CountGeometries();
 
             axis.SeparatorsBrush = new SolidColorPaintTask();
+
+            chart.Core.Update(false);
+            DrawChart();
+
+            Assert.IsTrue(
+                drawables == canvas.DrawablesCount &&
+                geometries == canvas.CountGeometries());
+        }
+
+        [TestMethod]
+        public void AxisCollectionInstanceChanged()
+        {
+            var chart = new TestCartesianChartView
+            {
+                Series = new List<ISeries>
+                {
+                    new LineSeries<int> { Values = new List<int> { 1, 6, 4, 2 } },
+                },
+                XAxes = new[] { new Axis() },
+                YAxes = new[] { new Axis() },
+            };
+
+            var canvas = chart.CoreCanvas;
+
+            void DrawChart()
+            {
+                while (!canvas.IsValid)
+                {
+                    canvas.DrawFrame(
+                        new SkiaSharpDrawingContext(
+                            new SKImageInfo(100, 100),
+                            SKSurface.CreateNull(100, 100),
+                            new SKCanvas(new SKBitmap()))
+                        { IsTest = true });
+                }
+            }
+
+            chart.Core.Update(false);
+            DrawChart();
+
+            var drawables = canvas.DrawablesCount;
+            var geometries = canvas.CountGeometries();
+
+            chart.XAxes = new[] { new Axis() };
 
             chart.Core.Update(false);
             DrawChart();

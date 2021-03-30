@@ -46,12 +46,12 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
                 (object? sender, NotifyCollectionChangedEventArgs e) =>
                 {
                     if (core == null) return;
-                    Dispatcher.UIThread.InvokeAsync(core.Update, DispatcherPriority.Background);
+                    Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
                 },
                 (object? sender, PropertyChangedEventArgs e) =>
                 {
                     if (core == null) return;
-                    Dispatcher.UIThread.InvokeAsync(core.Update, DispatcherPriority.Background);
+                    Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
                 },
                 true);
 
@@ -197,7 +197,7 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
             //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
             //tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
-            Dispatcher.UIThread.InvokeAsync(core.Update, DispatcherPriority.Background);
+            Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
         }
 
         private void MouseMoveThrottlerUnlocked()
@@ -219,19 +219,19 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             {
                 seriesObserver.Dispose((IEnumerable<ISeries>)change.OldValue.Value);
                 seriesObserver.Initialize((IEnumerable<ISeries>)change.NewValue.Value);
-                Dispatcher.UIThread.InvokeAsync(core.Update, DispatcherPriority.Background);
+                Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
                 return;
             }
 
             if (change.Property.Name == nameof(XAxes) || change.Property.Name == nameof(YAxes))
             {
-                Dispatcher.UIThread.InvokeAsync(core.Update, DispatcherPriority.Background);
+                Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
             }
 
             // is this how the size event is handled?
             // https://github.com/AvaloniaUI/Avalonia/issues/3237
             if (change.Property.Name != nameof(Bounds)) return;
-            Dispatcher.UIThread.InvokeAsync(core.Update, DispatcherPriority.Background);
+            Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
         }
     }
 }

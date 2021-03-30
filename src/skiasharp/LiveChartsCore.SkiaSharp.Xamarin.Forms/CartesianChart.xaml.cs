@@ -67,12 +67,12 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                (object sender, NotifyCollectionChangedEventArgs e) =>
                {
                    if (core == null) return;
-                   MainThread.BeginInvokeOnMainThread(core.Update);
+                   MainThread.BeginInvokeOnMainThread(() => core.Update());
                },
                (object sender, PropertyChangedEventArgs e) =>
                {
                    if (core == null) return;
-                   MainThread.BeginInvokeOnMainThread(core.Update);
+                   MainThread.BeginInvokeOnMainThread(() => core.Update());
                },
                true);
 
@@ -93,7 +93,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     seriesObserver.Dispose((IEnumerable<ISeries>)oldValue);
                     seriesObserver.Initialize((IEnumerable<ISeries>)newValue);
                     if (chart.core == null) return;
-                    MainThread.BeginInvokeOnMainThread(chart.core.Update);
+                    MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
                 });
 
         public static readonly BindableProperty XAxesProperty =
@@ -103,7 +103,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 {
                     var chart = (CartesianChart)o;
                     if (chart.core == null) return;
-                    MainThread.BeginInvokeOnMainThread(chart.core.Update);
+                    MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
                 });
 
         public static readonly BindableProperty YAxesProperty =
@@ -113,7 +113,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 {
                     var chart = (CartesianChart)o;
                     if (chart.core == null) return;
-                    MainThread.BeginInvokeOnMainThread(chart.core.Update);
+                    MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
                 });
 
         public static readonly BindableProperty ZoomModeProperty =
@@ -246,18 +246,18 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
             //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
             //tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
-            MainThread.BeginInvokeOnMainThread(core.Update);
+            MainThread.BeginInvokeOnMainThread(() => core.Update());
         }
 
         private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
             // show tooltip ??
-            // core.Update();
+            // () => core.Update()();
         }
 
         private void OnSizeChanged(object sender, EventArgs e)
         {
-            MainThread.BeginInvokeOnMainThread(core.Update);
+            MainThread.BeginInvokeOnMainThread(() => core.Update());
         }
 
         private void MouseMoveThrottlerUnlocked()

@@ -304,7 +304,11 @@ namespace LiveChartsCore
                 series.Dispose();
                 everMeasuredSeries.Remove(series);
             }
-            foreach (var axis in toDeleteAxes) { everMeasuredAxes.Remove(axis); }
+            foreach (var axis in toDeleteAxes) 
+            { 
+
+                everMeasuredAxes.Remove(axis);
+            }
 
             Canvas.Invalidate();
 

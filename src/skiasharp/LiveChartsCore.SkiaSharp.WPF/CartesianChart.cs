@@ -64,7 +64,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                         seriesObserver.Dispose((IEnumerable<ISeries>)args.OldValue);
                         seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
                         if (chart.core == null) return;
-                        Application.Current.Dispatcher.Invoke(chart.core.Update);
+                        Application.Current.Dispatcher.Invoke(() => chart.core.Update());
                     }));
 
         public static readonly DependencyProperty XAxesProperty =
@@ -77,7 +77,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                         observer.Dispose((IEnumerable<IAxis>)args.OldValue);
                         observer.Initialize((IEnumerable<IAxis>)args.NewValue);
                         if (chart.core == null) return;
-                        Application.Current.Dispatcher.Invoke(chart.core.Update);
+                        Application.Current.Dispatcher.Invoke(() => chart.core.Update());
                     }));
 
         public static readonly DependencyProperty YAxesProperty =
@@ -90,7 +90,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                         observer.Dispose((IEnumerable<IAxis>)args.OldValue);
                         observer.Initialize((IEnumerable<IAxis>)args.NewValue);
                         if (chart.core == null) return;
-                        Application.Current.Dispatcher.Invoke(chart.core.Update);
+                        Application.Current.Dispatcher.Invoke(() => chart.core.Update());
                     }));
 
         public static readonly DependencyProperty ZoomModeProperty =
@@ -138,7 +138,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
             legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
             tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
-            Application.Current.Dispatcher.Invoke(core.Update);
+            Application.Current.Dispatcher.Invoke(() => core.Update());
         }
 
         public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
@@ -150,13 +150,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         private void OnDeepCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (core == null) return;
-            Application.Current.Dispatcher.Invoke(core.Update);
+            Application.Current.Dispatcher.Invoke(() => core.Update());
         }
 
         private void OnDeepCollectionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (core == null) return;
-            Application.Current.Dispatcher.Invoke(core.Update);
+            Application.Current.Dispatcher.Invoke(() => core.Update());
         }
     }
 }

@@ -45,12 +45,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 (object sender, NotifyCollectionChangedEventArgs e) =>
                 {
                     if (core == null) return;
-                    Application.Current.Dispatcher.Invoke(core.Update);
+                    Application.Current.Dispatcher.Invoke(() => core.Update());
                 },
                 (object sender, PropertyChangedEventArgs e) =>
                 {
                     if (core == null) return;
-                    Application.Current.Dispatcher.Invoke(core.Update);
+                    Application.Current.Dispatcher.Invoke(() => core.Update());
                 });
 
             Series = new ObservableCollection<ISeries>();
@@ -68,7 +68,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                         seriesObserver.Dispose((IEnumerable<ISeries>)args.OldValue);
                         seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
                         if (chart.core == null) return;
-                        Application.Current.Dispatcher.Invoke(chart.core.Update);
+                        Application.Current.Dispatcher.Invoke(() => chart.core.Update());
                     }));
 
         public IEnumerable<ISeries> Series
