@@ -63,20 +63,18 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 nameof(Series), typeof(IEnumerable<ISeries>), typeof(PieChart), new PropertyMetadata(null,
                     (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                     {
-                        var seriesObserver = ((PieChart)o).seriesObserver;
+                        var chart = (PieChart)o;
+                        var seriesObserver = chart.seriesObserver;
                         seriesObserver.Dispose((IEnumerable<ISeries>)args.OldValue);
                         seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
+                        if (chart.core == null) return;
+                        Application.Current.Dispatcher.Invoke(chart.core.Update);
                     }));
 
         public IEnumerable<ISeries> Series
         {
-            get { return (IEnumerable<ISeries>)GetValue(SeriesProperty); }
-            set
-            {
-                seriesObserver.Dispose((IEnumerable<ISeries>)GetValue(SeriesProperty));
-                seriesObserver.Initialize(value);
-                SetValue(SeriesProperty, value);
-            }
+            get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
+            set => SetValue(SeriesProperty, value);
         }
 
         protected override void InitializeCore()

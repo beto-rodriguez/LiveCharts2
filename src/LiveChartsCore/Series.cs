@@ -53,14 +53,8 @@ namespace LiveChartsCore
         {
             this.properties = properties;
             observer = new CollectionDeepObserver<TModel>(
-                (sender, e) =>
-                {
-                    NotifySubscribers();
-                },
-                (sender, e) =>
-                {
-                    NotifySubscribers();
-                });
+                (sender, e) => NotifySubscribers(),
+                (sender, e) => NotifySubscribers());
         }
 
         /// <inheritdoc />

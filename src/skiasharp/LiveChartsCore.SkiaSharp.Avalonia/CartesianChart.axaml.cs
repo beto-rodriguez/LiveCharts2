@@ -219,7 +219,13 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             {
                 seriesObserver.Dispose((IEnumerable<ISeries>)change.OldValue.Value);
                 seriesObserver.Initialize((IEnumerable<ISeries>)change.NewValue.Value);
+                Dispatcher.UIThread.InvokeAsync(core.Update, DispatcherPriority.Background);
                 return;
+            }
+
+            if (change.Property.Name == nameof(XAxes) || change.Property.Name == nameof(YAxes))
+            {
+                Dispatcher.UIThread.InvokeAsync(core.Update, DispatcherPriority.Background);
             }
 
             // is this how the size event is handled?

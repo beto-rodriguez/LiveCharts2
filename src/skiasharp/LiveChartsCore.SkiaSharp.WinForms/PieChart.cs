@@ -60,6 +60,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 seriesObserver.Dispose(series);
                 seriesObserver.Initialize(value);
                 series = value;
+                core?.Update();
             }
         }
 

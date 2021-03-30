@@ -66,18 +66,33 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new PropertyMetadata(null,
                     (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                     {
-                        var seriesObserver = ((CartesianChart)o).seriesObserver;
+                        var chart = (CartesianChart)o;
+                        var seriesObserver = chart.seriesObserver;
                         seriesObserver.Dispose((IEnumerable<ISeries>)args.OldValue);
                         seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
+                        if (chart.core == null) return;
+                        Application.Current.Dispatcher.Invoke(chart.core.Update);
                     }));
 
         public static readonly DependencyProperty XAxesProperty =
             DependencyProperty.Register(
-                nameof(XAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new PropertyMetadata(null));
+                nameof(XAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new PropertyMetadata(null,
+                    (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                    {
+                        var chart = (CartesianChart)o;
+                        if (chart.core == null) return;
+                        Application.Current.Dispatcher.Invoke(chart.core.Update);
+                    }));
 
         public static readonly DependencyProperty YAxesProperty =
             DependencyProperty.Register(
-                nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new PropertyMetadata(null));
+                nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new PropertyMetadata(null,
+                    (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                    {
+                        var chart = (CartesianChart)o;
+                        if (chart.core == null) return;
+                        Application.Current.Dispatcher.Invoke(chart.core.Update);
+                    }));
 
         public static readonly DependencyProperty ZoomModeProperty =
             DependencyProperty.Register(

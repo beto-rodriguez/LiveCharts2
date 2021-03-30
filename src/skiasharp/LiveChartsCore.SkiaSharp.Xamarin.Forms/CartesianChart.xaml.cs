@@ -88,18 +88,33 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new ObservableCollection<ISeries>(), BindingMode.Default, null, 
                 (BindableObject o, object oldValue, object newValue) =>
                 {
-                    var seriesObserver = ((CartesianChart)o).seriesObserver;
+                    var chart = (CartesianChart)o;
+                    var seriesObserver = chart.seriesObserver;
                     seriesObserver.Dispose((IEnumerable<ISeries>)oldValue);
                     seriesObserver.Initialize((IEnumerable<ISeries>)newValue);
+                    if (chart.core == null) return;
+                    MainThread.BeginInvokeOnMainThread(chart.core.Update);
                 });
 
         public static readonly BindableProperty XAxesProperty =
             BindableProperty.Create(
-                nameof(XAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>() { new Axis() }, BindingMode.Default, null);
+                nameof(XAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>() { new Axis() }, BindingMode.Default, null,
+                (BindableObject o, object oldValue, object newValue) =>
+                {
+                    var chart = (CartesianChart)o;
+                    if (chart.core == null) return;
+                    MainThread.BeginInvokeOnMainThread(chart.core.Update);
+                }));
 
         public static readonly BindableProperty YAxesProperty =
             BindableProperty.Create(
-                nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>() { new Axis() }, BindingMode.Default, null);
+                nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>() { new Axis() }, BindingMode.Default, null,
+                (BindableObject o, object oldValue, object newValue) =>
+                {
+                    var chart = (CartesianChart)o;
+                    if (chart.core == null) return;
+                    MainThread.BeginInvokeOnMainThread(chart.core.Update);
+                }));
 
         public static readonly BindableProperty ZoomModeProperty =
             BindableProperty.Create(

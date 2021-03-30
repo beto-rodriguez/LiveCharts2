@@ -4,17 +4,20 @@ using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
 namespace ViewModelsSamples.Lines.Properties
 {
-    public class ViewModel
+    public class ViewModel : INotifyPropertyChanged
     {
-        private readonly LineSeries<double> lineSeries;
         private readonly Color[] colors = ColorPacks.FluentDesign;
         private readonly Random random = new Random();
+        private LineSeries<double> lineSeries;
         private int currentColor = 0;
+        private List<ISeries> series;
 
         public ViewModel()
         {
@@ -24,11 +27,15 @@ namespace ViewModelsSamples.Lines.Properties
                 LineSmoothness = 0.5
             };
 
-            Series = new List<ISeries>();
-            Series.Add(lineSeries);
+            Series = new List<ISeries>
+            {
+                lineSeries
+            };
         }
 
-        public List<ISeries> Series { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public List<ISeries> Series { get => series; set { series = value; OnPropertyChanged(); } }
 
         public void ChangeValuesInstance()
         {
@@ -41,6 +48,20 @@ namespace ViewModelsSamples.Lines.Properties
             }
 
             lineSeries.Values = values;
+        }
+
+        public void ChangeSeriesInstance()
+        {
+            lineSeries = new LineSeries<double>
+            {
+                Values = new List<double> { -2, -1, 3, 5, 3, 4, 6 },
+                LineSmoothness = 0.5
+            };
+
+            Series = new List<ISeries>
+            {
+                lineSeries
+            };
         }
 
         public void NewStroke()
@@ -105,6 +126,7 @@ namespace ViewModelsSamples.Lines.Properties
         // The next commands are only to enable XAML bindings
         // they are not used in the WinForms sample
         public ICommand ChangeValuesInstanceCommand => new Command(o => ChangeValuesInstance());
+        public ICommand ChangeSeriesInstanceCommand => new Command(o => ChangeSeriesInstance());
         public ICommand NewStrokeCommand => new Command(o => NewStroke());
         public ICommand NewFillCommand => new Command(o => NewFill());
         public ICommand NewGeometryFillCommand => new Command(o => NewGeometryFill());
@@ -113,5 +135,10 @@ namespace ViewModelsSamples.Lines.Properties
         public ICommand DecreseLineSmoothnessCommand => new Command(o => DecreaseLineSmoothness());
         public ICommand IncreaseGeometrySizeCommand => new Command(o => IncreaseGeometrySize());
         public ICommand DecreseGeometrySizeCommand => new Command(o => DecreaseGeometrySize());
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

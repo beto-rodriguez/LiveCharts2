@@ -114,8 +114,8 @@ namespace LiveChartsCore
                     drawMaringLocation, drawMarginSize, xi.Orientation, xi.DataBounds, xi.IsInverted)
                     .ToChartValues(pivot.X);
 
-                var max = xi.MaxValue == null ? xi.DataBounds.Max : xi.MaxValue;
-                var min = xi.MinValue == null ? xi.DataBounds.Min : xi.MinValue;
+                var max = xi.MaxLimit == null ? xi.DataBounds.Max : xi.MaxLimit;
+                var min = xi.MinLimit == null ? xi.DataBounds.Min : xi.MinLimit;
 
                 var l = max - min;
 
@@ -126,8 +126,8 @@ namespace LiveChartsCore
                 //if (target < xi.View.MinRange) return;
                 var mint = px - target * rMin;
                 var maxt = px + target * rMax;
-                xi.MinValue = mint;
-                xi.MaxValue = maxt;
+                xi.MinLimit = mint;
+                xi.MaxLimit = maxt;
             }
 
             for (var index = 0; index < primaryAxes.Length; index++)
@@ -138,8 +138,8 @@ namespace LiveChartsCore
                     drawMaringLocation, drawMarginSize, yi.Orientation, yi.DataBounds, yi.IsInverted)
                     .ToChartValues(pivot.X);
 
-                var max = yi.MaxValue == null ? yi.DataBounds.Max : yi.MaxValue;
-                var min = yi.MinValue == null ? yi.DataBounds.Min : yi.MinValue;
+                var max = yi.MaxLimit == null ? yi.DataBounds.Max : yi.MaxLimit;
+                var min = yi.MinLimit == null ? yi.DataBounds.Min : yi.MinLimit;
 
                 var l = max - min;
 
@@ -150,8 +150,8 @@ namespace LiveChartsCore
                 //if (target < xi.View.MinRange) return;
                 var mint = px - target * rMin;
                 var maxt = px + target * rMax;
-                yi.MinValue = mint;
-                yi.MaxValue = maxt;
+                yi.MinLimit = mint;
+                yi.MaxLimit = maxt;
             }
         }
 
@@ -289,7 +289,7 @@ namespace LiveChartsCore
             }
 
             foreach (var series in toDeleteSeries) { series.Delete(View); everMeasuredSeries.Remove(series); }
-            foreach (var axis in toDeleteAxes) { axis.Dispose(); everMeasuredAxes.Remove(axis); }
+            foreach (var axis in toDeleteAxes) { everMeasuredAxes.Remove(axis); }
 
             //chartView.CoreCanvas.ForEachGeometry((geometry, drawable) =>
             //{

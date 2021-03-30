@@ -179,6 +179,11 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
                 return;
             }
 
+            if (change.Property.Name == nameof(XAxes) || change.Property.Name == nameof(YAxes))
+            {
+                Dispatcher.UIThread.InvokeAsync(core.Update, DispatcherPriority.Background);
+            }
+
             // is this how the size event is handled?
             // https://github.com/AvaloniaUI/Avalonia/issues/3237
             if (change.Property.Name != nameof(Bounds)) return;

@@ -29,7 +29,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             InitializeComponent();
 
-
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
             var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<SkiaSharpDrawingContext>();
@@ -64,9 +63,12 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
               nameof(Series), typeof(IEnumerable<ISeries>), typeof(PieChart), new ObservableCollection<ISeries>(), BindingMode.Default, null,
               (BindableObject o, object oldValue, object newValue) =>
               {
-                  var seriesObserver = ((PieChart)o).seriesObserver;
+                  var chart = (PieChart)o;
+                  var seriesObserver = chart.seriesObserver;
                   seriesObserver.Dispose((IEnumerable<ISeries>)oldValue);
                   seriesObserver.Initialize((IEnumerable<ISeries>)newValue);
+                  if (chart.core == null) return;
+                  MainThread.BeginInvokeOnMainThread(chart.core.Update);
               });
 
         public static readonly BindableProperty AnimationsSpeedProperty =

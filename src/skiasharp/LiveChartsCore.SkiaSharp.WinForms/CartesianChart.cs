@@ -34,6 +34,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     {
         private CollectionDeepObserver<ISeries> seriesObserver;
         private IEnumerable<ISeries> series = new List<ISeries>();
+        private IEnumerable<IAxis> xAxes = new List<Axis> { new Axis() };
+        private IEnumerable<IAxis> yAxes = new List<Axis> { new Axis() };
 
         public CartesianChart()
         {
@@ -62,14 +64,16 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 seriesObserver.Dispose(series);
                 seriesObserver.Initialize(value);
                 series = value;
+                core?.Update();
             }
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<IAxis> XAxes { get; set; } = new List<Axis> { new Axis() };
+        public IEnumerable<IAxis> XAxes { get => xAxes; set { xAxes = value; core?.Update(); } }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<IAxis> YAxes { get; set; } = new List<Axis> { new Axis() };
+
+        public IEnumerable<IAxis> YAxes { get => yAxes; set { yAxes = value; core?.Update(); } }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ZoomMode ZoomMode { get; set; }

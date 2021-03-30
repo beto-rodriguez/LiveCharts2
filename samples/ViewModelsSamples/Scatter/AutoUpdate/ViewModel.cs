@@ -16,11 +16,6 @@ namespace ViewModelsSamples.Scatter.AutoUpdate
 
         public ViewModel()
         {
-            // using a collection that implements INotifyCollectionChanged as your series collection
-            // will allow the chart to update every time a series is added, removed, replaced or the whole list was cleared
-            // .Net already provides the System.Collections.ObjectModel.ObservableCollection class
-            Series = new ObservableCollection<ISeries>();
-
             // using an INotifyCollectionChanged as your values collection
             // will let the chart update every time a point is added, removed, replaced or the whole list was cleared
             observableValues = new ObservableCollection<WeightedPoint>
@@ -48,15 +43,19 @@ namespace ViewModelsSamples.Scatter.AutoUpdate
                 new WeightedPoint(index++, 3, 4)
             };
 
-            Series.Add(
-                new ScatterSeries<WeightedPoint> { Values = observableValues, GeometrySize = 50 });
+            // using a collection that implements INotifyCollectionChanged as your series collection
+            // will allow the chart to update every time a series is added, removed, replaced or the whole list was cleared
+            // .Net already provides the System.Collections.ObjectModel.ObservableCollection class
+            Series = new ObservableCollection<ISeries>
+            {
+                new ScatterSeries<WeightedPoint> { Values = observableValues, GeometrySize = 50 }
+            };
 
             // in the following series notice that the type int does not implement INotifyPropertyChanged
             // and our Series.Values collection is of type List<T>
             // List<T> does not implement INotifyCollectionChanged
             // this means the following series is not listening for changes.
-            //Series.Add(
-            //    new LineSeries<int> { Values = new List<int> { 2, 4, 6, 1, 7, -2 } });
+            //Series.Add(new LineSeries<int> { Values = new List<int> { 2, 4, 6, 1, 7, -2 } });
         }
 
         public ObservableCollection<ISeries> Series { get; set; }

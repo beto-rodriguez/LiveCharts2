@@ -13,6 +13,7 @@
     </Grid.RowDefinitions>
     <WrapPanel Orientation="Horizontal">
       <Button Command="{Binding ChangeValuesInstanceCommand}">values</Button>
+      <Button Command="{Binding ChangeSeriesInstanceCommand}">series</Button>
       <Button Command="{Binding NewFillCommand}">fill</Button>
       <Button Command="{Binding NewStrokeCommand}">stroke</Button>
       <Button Command="{Binding NewGeometryFillCommand}">geometry fill</Button>
