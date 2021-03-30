@@ -1,21 +1,9 @@
-# For most projects, this workflow file will not need changing; you simply need
-# to commit it to your repository.
-#
-# You may wish to alter this file to override the set of languages analyzed,
-# or to provide custom queries or build logic.
-#
-# ******** NOTE ********
-# We have attempted to detect the languages in your repository. Please check
-# the `language` matrix defined below to confirm you have the correct set of
-# supported CodeQL languages.
-#
 name: "CodeQL"
 
 on:
   push:
     branches: [ master ]
   pull_request:
-    # The branches below must be a subset of the branches above
     branches: [ master ]
   schedule:
     - cron: '35 19 * * 4'
@@ -30,9 +18,6 @@ jobs:
       matrix:
         language: [ 'csharp' ]
         targetplatform: [x86, x64]
-        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
-        # Learn more:
-        # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
 
     steps:
     - name: Checkout repository
@@ -42,21 +27,22 @@ jobs:
       uses: github/codeql-action/init@v1
       with:
         languages: ${{ matrix.language }}
-
-    - run: |
-        dotnet build  ./src/LiveChartsCore
-        dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp
-        dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia
-        dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.WinForms
-        dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.WPF
-        dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms
-        dotnet build  ./samples/AvaloniaSample
-        dotnet build  ./samples/WinFormsSample
-        dotnet build  ./samples/WPFSample
-        dotnet build  ./samples/XamarinSample/XamarinSample/XamarinSample        
+        
+    - name: Build
+      run: |
+        dotnet build  ./src/LiveChartsCore --configuration Release
+        dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp --configuration Release
+        dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia --configuration Release
+        dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.WinForms --configuration Release
+        dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.WPF --configuration Release
+        dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms --configuration Release
+        dotnet build  ./samples/AvaloniaSample --configuration Release
+        dotnet build  ./samples/WinFormsSample --configuration Release
+        dotnet build  ./samples/WPFSample --configuration Release
+        dotnet build  ./samples/XamarinSample/XamarinSample/XamarinSample --configuration Release
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
 
     - name: Run Unit tests
-      run: dotnet test ./tests/LiveChartsCore.UnitTesting
+      run: dotnet test ./tests/LiveChartsCore.UnitTesting --configuration Release
