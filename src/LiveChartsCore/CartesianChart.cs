@@ -276,42 +276,24 @@ namespace LiveChartsCore
             var toDeleteSeries = new HashSet<ISeries>(everMeasuredSeries);
             foreach (var series in series)
             {
-                //var secondaryAxis = secondaryAxes[series.ScalesXAt];
-                //var primaryAxis = primaryAxes[series.ScalesYAt];
-                //series.Measure(this, secondaryAxis, primaryAxis);
-                //everMeasuredSeries.Add(series);
-                //toDeleteSeries.Remove(series);
+                var secondaryAxis = secondaryAxes[series.ScalesXAt];
+                var primaryAxis = primaryAxes[series.ScalesYAt];
+                series.Measure(this, secondaryAxis, primaryAxis);
+                everMeasuredSeries.Add(series);
+                toDeleteSeries.Remove(series);
 
-                //var deleted = false;
-                //foreach (var item in series.DeletingTasks)
-                //{
-                //    canvas.RemovePaintTask(item);
-                //    item.Dispose();
-                //    deleted = true;
-                //}
-                //if (deleted) series.DeletingTasks.Clear();
+                var deleted = false;
+                foreach (var item in series.DeletingTasks)
+                {
+                    canvas.RemovePaintTask(item);
+                    item.Dispose();
+                    deleted = true;
+                }
+                if (deleted) series.DeletingTasks.Clear();
             }
 
             foreach (var series in toDeleteSeries) { series.Delete(View); everMeasuredSeries.Remove(series); }
             foreach (var axis in toDeleteAxes) { everMeasuredAxes.Remove(axis); }
-
-            //chartView.CoreCanvas.ForEachGeometry((geometry, drawable) =>
-            //{
-            //    if (measuredDrawables.Contains(geometry)) return; // then the geometry was measured
-
-            //    // at this point,the geometry is not required in the UI
-            //    if (geometry is ISizedGeometry<TDrawingContext> sizedGeometry)
-            //    {
-            //        var secondaryAxis = secondaryAxes[0];
-            //        var primaryAxis = primaryAxes[0];
-
-            //        var secondaryScale = new Scaler(
-            //            drawMaringLocation, drawMarginSize, secondaryAxis.Orientation, secondaryAxis.DataBounds, secondaryAxis.IsInverted);
-            //        var primaryScale = new Scaler(
-            //            drawMaringLocation, drawMarginSize, primaryAxis.Orientation, primaryAxis.DataBounds, primaryAxis.IsInverted);
-            //    }
-            //    geometry.RemoveOnCompleted = true;
-            //});
 
             Canvas.Invalidate();
 

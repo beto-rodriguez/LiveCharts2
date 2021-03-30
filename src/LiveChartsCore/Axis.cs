@@ -341,8 +341,6 @@ namespace LiveChartsCore
                             textGeometry.Y = yi;
                             textGeometry.CompleteAllTransitions();
                         }
-
-                        TextBrush.AddGeometyToPaintTask(textGeometry);
                     }
 
                     if (SeparatorsBrush != null)
@@ -392,12 +390,13 @@ namespace LiveChartsCore
 
                             lineGeometry.CompleteAllTransitions();
                         }
-
-                        SeparatorsBrush.AddGeometyToPaintTask(lineGeometry);
                     }
 
                     activeSeparators.Add(label, visualSeparator);
                 }
+
+                if (TextBrush != null && visualSeparator.Text != null) TextBrush.AddGeometyToPaintTask(visualSeparator.Text);
+                if (SeparatorsBrush != null && visualSeparator.Line != null) SeparatorsBrush.AddGeometyToPaintTask(visualSeparator.Line);
 
                 if (visualSeparator.Text != null)
                 {
@@ -408,6 +407,7 @@ namespace LiveChartsCore
                     if (hasRotation) visualSeparator.Text.Rotation = r;
 
                     if (previousDataBounds == null) visualSeparator.Text.CompleteAllTransitions();
+                    
                 }
 
                 if (visualSeparator.Line != null)
