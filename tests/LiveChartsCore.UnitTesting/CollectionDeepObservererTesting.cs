@@ -1,10 +1,7 @@
-﻿using LiveChartsCore.Context;
+﻿using LiveChartsCore.UnitTesting.MockedObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 
 namespace LiveChartsCore.UnitTesting
 {
@@ -145,58 +142,6 @@ namespace LiveChartsCore.UnitTesting
             Assert.IsTrue(
               propertyChangedObserver.CollectionChangedCount == collectionChanges &&
               propertyChangedObserver.PropertyChangedCount == propertyChanges);
-        }
-    }
-
-    public class TestObserver<T>: IDisposable
-    {
-        private readonly CollectionDeepObserver<T> observerer;
-        private IEnumerable<T> observedCollection;
-
-        public TestObserver()
-        {
-            observerer = new CollectionDeepObserver<T>(
-                (object sender, NotifyCollectionChangedEventArgs e) =>
-                {
-                    CollectionChangedCount++;
-                },
-                (object sender, PropertyChangedEventArgs e) =>
-                {
-                    PropertyChangedCount++;
-                });
-        }
-
-        public IEnumerable<T> MyCollection
-        {
-            get => observedCollection;
-            set
-            {
-                observerer.Dispose(observedCollection);
-                observerer.Initialize(value);
-                observedCollection = value;
-            }
-        }
-
-        public int CollectionChangedCount { get; private set; }
-        public int PropertyChangedCount { get; private set; }
-
-        public void Dispose()
-        {
-            observerer.Dispose(observedCollection);
-        }
-    }
-
-    public class PropertyChangedObject : INotifyPropertyChanged
-    {
-        private double value;
-
-        public double Value { get => value; set { this.value = value; OnPropertyChanged(nameof(Value)); } }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

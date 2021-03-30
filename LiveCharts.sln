@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore", "src\LiveC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{2AEE42B2-9D04-4232-BB19-C9465B9CE5D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView.UnitTesting", "tests\LiveChartsCore.UnitTesting\LiveChartsCore.SkiaSharpView.UnitTesting.csproj", "{1016CB13-DC3A-4613-A104-0A8891E1C991}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.UnitTesting", "tests\LiveChartsCore.UnitTesting\LiveChartsCore.UnitTesting.csproj", "{1016CB13-DC3A-4613-A104-0A8891E1C991}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SkiaSharpWiew", "SkiaSharpWiew", "{B88616EB-97AA-41F7-9E51-19AEF1CB33B4}"
 EndProject

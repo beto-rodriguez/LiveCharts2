@@ -81,7 +81,7 @@ namespace LiveChartsCore
         public TimeSpan AnimationsSpeed => animationsSpeed;
         public Func<float, float> EasingFunction => easingFunction;
 
-        public abstract void Update();
+        public abstract void Update(bool throttling = true);
 
         protected abstract void Measure();
 

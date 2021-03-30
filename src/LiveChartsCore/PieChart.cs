@@ -75,7 +75,7 @@ namespace LiveChartsCore
             return chartView.Series.SelectMany(series => series.FindPointsNearTo(this, pointerPosition));
         }
 
-        public override void Update()
+        public override void Update(bool throttling = true)
         {
             updateThrottler.Call();
             //updateThrottler.LockTime = chartView.AnimationsSpeed;

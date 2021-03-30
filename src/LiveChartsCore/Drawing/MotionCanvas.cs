@@ -89,6 +89,8 @@ namespace LiveChartsCore.Drawing
             this.isValid = isValid;
         }
 
+        public int DrawablesCount => paintTasks.Count;
+
         public void Invalidate()
         {
             isValid = false;

@@ -40,6 +40,10 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
         public PaintTask PaintTask { get; set; }
         public SKPaint Paint { get; set; }
 
+#if DEBUG
+        public bool IsTest { get; set; }
+#endif
+
         public override void ClearCanvas()
         {
             Canvas.Clear();

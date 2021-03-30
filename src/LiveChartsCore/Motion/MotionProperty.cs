@@ -37,7 +37,7 @@ namespace LiveChartsCore.Motion
         protected internal T? toValue = default;
         internal long startTime;
         internal long endTime;
-        private bool isTransitionCompleted = false;
+        private bool isCompleted = false;
         private readonly string propertyName;
         private bool requiresToInitialize = true;
 
@@ -66,7 +66,7 @@ namespace LiveChartsCore.Motion
         /// </summary>
         public string PropertyName => propertyName;
 
-        public bool IsCompleted { get => isTransitionCompleted; set => isTransitionCompleted = value; }
+        public bool IsCompleted { get => isCompleted; set => isCompleted = value; }
 
         /// <summary>
         /// Moves to he specified value.
@@ -89,7 +89,7 @@ namespace LiveChartsCore.Motion
                     endTime = animatable.currentTime + animation.duration;
                 }
                 animation.animationCompletedCount = 0;
-                isTransitionCompleted = false;
+                isCompleted = false;
                 requiresToInitialize = true;
             }
             animatable.Invalidate();
@@ -102,7 +102,7 @@ namespace LiveChartsCore.Motion
         /// <returns></returns>
         public T GetMovement(Animatable animatable)
         {
-            if (animation == null || fromValue == null || isTransitionCompleted) return OnGetMovement(1);
+            if (animation == null || fromValue == null || isCompleted) return OnGetMovement(1);
 
             if (requiresToInitialize)
             {
@@ -124,12 +124,12 @@ namespace LiveChartsCore.Motion
                 // at this point the animation is completed
                 p = 1;
                 animation.animationCompletedCount++;
-                isTransitionCompleted = animation.repeatTimes != int.MaxValue && animation.repeatTimes < animation.animationCompletedCount;
-                if (!isTransitionCompleted)
+                isCompleted = animation.repeatTimes != int.MaxValue && animation.repeatTimes < animation.animationCompletedCount;
+                if (!isCompleted)
                 {
                     startTime = animatable.currentTime;
                     endTime = animatable.currentTime + animation.duration;
-                    isTransitionCompleted = false;
+                    isCompleted = false;
                 }
             }
 

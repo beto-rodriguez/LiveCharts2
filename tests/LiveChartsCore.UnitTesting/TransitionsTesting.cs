@@ -1,8 +1,7 @@
 using LiveChartsCore.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Diagnostics;
 
 namespace LiveChartsCore.UnitTesting
 {
@@ -26,6 +25,7 @@ namespace LiveChartsCore.UnitTesting
                 a.CurrentTime = time;
                 a.IsCompleted = true;
             }
+
             float DoTransition(float from, float to, float start, float end, long time, Func<float, float> easing)
             {
                 var p = (time - start) / (end - start);
@@ -49,9 +49,6 @@ namespace LiveChartsCore.UnitTesting
             r.Height = 100;
 
             a.CurrentTime = time;
-
-            float x = 0, y = 0, w = 0, h = 0;
-
             var startTime = 50;
             time = startTime;
 
@@ -59,13 +56,12 @@ namespace LiveChartsCore.UnitTesting
             {
                 DrawFrame(time);
 
-                x = r.X;
-                y = r.Y;
-                w = r.Width;
-                h = r.Height;
-
+                float x = r.X;
+                float y = r.Y;
+                float w = r.Width;
+                float h = r.Height;
                 var l = Math.Truncate((time - startTime) / duration.TotalMilliseconds);
-                if ((time - startTime) % duration.TotalMilliseconds == 0 && time != startTime) l = l - 1;
+                if ((time - startTime) % duration.TotalMilliseconds == 0 && time != startTime) l--;
                 var laps = (long)(l * duration.TotalMilliseconds);
                 Assert.IsTrue(x == DoTransition(50, 100, 50, 1050, time - laps, easing));
                 Assert.IsTrue(y == DoTransition(50, 100, 50, 1050, time - laps, easing));
@@ -76,24 +72,58 @@ namespace LiveChartsCore.UnitTesting
                 time += 500;
             }
 
-            //DrawFrame(1000);
-            //Assert.IsTrue(!a.IsCompleted);
-            //time = 1000;
-            //r.Height = 200;
+            // not completed yet because the duration of the animation in this case is infinite
+            Assert.IsTrue(!a.IsCompleted);
+        }
 
-            //r.SetStoryboard(time, new Animation(EasingFunctions.Lineal, TimeSpan.FromSeconds(1)));
-            ////Assert.IsTrue(!r.IsCompleted);
+        [TestMethod]
+        public void TestMethod2()
+        {
+            var r = new RectangleGeometry();
+            var a = (IAnimatable)r;
+            var duration = TimeSpan.FromSeconds(1);
+            var easing = EasingFunctions.Lineal;
 
-            //while (time <= 2000)
-            //{
-            //    r.SetTime(time);
+            r.SetPropertiesTransitions(
+                new Animation(easing, duration),
+                nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
 
-            //    //Trace.WriteLine(r.IsCompleted);
+            void DrawFrame(long time)
+            {
+                a.CurrentTime = time;
+                a.IsCompleted = true;
 
-            //    time += 50;
-            //}
+                // Calling the property getter moves the transition with the current animatable time
+                float x = r.X;
+                float y = r.Y;
+                float w = r.Width;
+                float h = r.Height;
+            }
 
-            ////Assert.IsTrue(r.IsCompleted);
+            var time = 0;
+            DrawFrame(time);
+
+            // transition from 50 to 100 for each property
+            r.Y = 0;
+            r.X = 0;
+            r.Width = 0;
+            r.Height = 0;
+            r.CompleteTransitions(nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
+            DrawFrame(time);
+
+            Assert.IsTrue(a.IsCompleted);
+
+            r.Y = 100;
+            DrawFrame(time);
+            var p =  r.GetTransitionProperty(nameof(r.Y));
+
+            time += 500;
+            DrawFrame(time);
+            Assert.IsTrue(!p.IsCompleted);
+
+            time += 500;
+            DrawFrame(time);
+            Assert.IsTrue(p.IsCompleted);
         }
     }
 }

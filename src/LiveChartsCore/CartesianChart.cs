@@ -74,8 +74,14 @@ namespace LiveChartsCore
         public override IEnumerable<IDrawableSeries<TDrawingContext>> DrawableSeries => series;
         public override IChartView<TDrawingContext> View => chartView;
 
-        public override void Update()
+        public override void Update(bool throttling = true)
         {
+            if (!throttling)
+            {
+                updateThrottler.ForceCall();
+                return;
+            }
+
             updateThrottler.Call();
         }
 

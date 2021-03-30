@@ -36,6 +36,6 @@ namespace LiveChartsCore.Kernel
         TooltipPosition TooltipPosition { get; }
         TooltipFindingStrategy TooltipFindingStrategy { get; }
 
-        void Update();
+        void Update(bool throttling = true);
     }
 }

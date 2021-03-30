@@ -25,6 +25,9 @@ using System.Threading.Tasks;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// An object that is able to throttle an action.
+    /// </summary>
     public class ActionThrottler
     {
         private readonly object sync = new();
@@ -32,12 +35,21 @@ namespace LiveChartsCore.Kernel
         private readonly TimeSpan time;
         private bool isWaiting = false;
 
-        public ActionThrottler(Action action, TimeSpan time)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ActionThrottler"/> class.
+        /// </summary>
+        /// <param name="targetAction">The target action to throttle.</param>
+        /// <param name="time">The throttling time.</param>
+        public ActionThrottler(Action targetAction, TimeSpan time)
         {
-            this.action = action;
+            action = targetAction;
             this.time = time;
         }
 
+        /// <summary>
+        /// Schedules a call to the target action.
+        /// </summary>
+        /// <returns></returns>
         public async void Call()
         {
             lock (sync)
@@ -53,6 +65,15 @@ namespace LiveChartsCore.Kernel
             {
                 isWaiting = false;
             }
+        }
+
+        /// <summary>
+        /// Forces the call to the target action, this call is not throttled.
+        /// </summary>
+        /// <returns></returns>
+        public void ForceCall()
+        {
+            action.Invoke();
         }
     }
 }
