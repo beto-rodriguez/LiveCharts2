@@ -23,12 +23,13 @@ on:
 jobs:
   analyze:
     name: Analyze
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     strategy:
       fail-fast: false
       matrix:
         language: [ 'csharp' ]
+        targetplatform: [x86, x64]
         # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
         # Learn more:
         # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
@@ -66,6 +67,12 @@ jobs:
         dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.WinForms
         dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.WPF
         dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms
+        dotnet test ./tests/LiveChartsCore.UnitTesting
+        dotnet build  ./samples/AvaloniaSample
+        dotnet build  ./samples/WinFormsSample
+        dotnet build  ./samples/WPFSample
+        dotnet build  ./samples/XamarinSample/XamarinSample/XamarinSample
+        
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
