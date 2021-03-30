@@ -62,6 +62,10 @@ jobs:
     - run: |
         dotnet build  ./src/LiveChartsCore
         dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp
+        dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia
+        dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.WinForms
+        dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.WPF
+        dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
