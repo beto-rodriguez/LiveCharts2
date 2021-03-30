@@ -38,7 +38,7 @@ namespace LiveChartsCore
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         private readonly CollectionDeepObserver<TModel> observer;
-        private readonly HashSet<IChart> subscribedTo = new();
+        protected readonly HashSet<IChart> subscribedTo = new();
         private readonly SeriesProperties properties;
         private IEnumerable<TModel>? values;
         protected readonly bool implementsICP;

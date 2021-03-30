@@ -34,8 +34,8 @@ namespace LiveChartsCore
     public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        private readonly HashSet<ISeries> everMeasuredSeries = new();
-        private readonly HashSet<IAxis<TDrawingContext>> everMeasuredAxes = new();
+        internal readonly HashSet<ISeries> everMeasuredSeries = new();
+        internal readonly HashSet<IAxis<TDrawingContext>> everMeasuredAxes = new();
         private readonly ICartesianChartView<TDrawingContext> chartView;
         private int nextSeries = 0;
         private IAxis<TDrawingContext>[] secondaryAxes = new IAxis<TDrawingContext>[0];
@@ -298,7 +298,12 @@ namespace LiveChartsCore
                 if (deleted) series.DeletingTasks.Clear();
             }
 
-            foreach (var series in toDeleteSeries) { series.Delete(View); everMeasuredSeries.Remove(series); }
+            foreach (var series in toDeleteSeries) 
+            { 
+                series.Delete(View);
+                series.Dispose();
+                everMeasuredSeries.Remove(series);
+            }
             foreach (var axis in toDeleteAxes) { everMeasuredAxes.Remove(axis); }
 
             Canvas.Invalidate();

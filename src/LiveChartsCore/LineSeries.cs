@@ -47,8 +47,8 @@ namespace LiveChartsCore
         private float lineSmoothness = 0.65f;
         private float geometrySize = 14f;
         private bool enableNullSplitting = true;
-        private IDrawableTask<TDrawingContext>? shapesFill;
-        private IDrawableTask<TDrawingContext>? shapesStroke;
+        private IDrawableTask<TDrawingContext>? geometryFill;
+        private IDrawableTask<TDrawingContext>? geometryStroke;
 
         public LineSeries(bool isStacked = false)
             : base(SeriesProperties.Line | SeriesProperties.VerticalOrientation | (isStacked ? SeriesProperties.Stacked : 0))
@@ -79,15 +79,15 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometryFill"/>
         public IDrawableTask<TDrawingContext>? GeometryFill
         {
-            get => shapesFill;
+            get => geometryFill;
             set
             {
-                if (shapesFill != null) deletingTasks.Add(shapesFill);
-                shapesFill = value;
-                if (shapesFill != null)
+                if (geometryFill != null) deletingTasks.Add(geometryFill);
+                geometryFill = value;
+                if (geometryFill != null)
                 {
-                    shapesFill.IsStroke = false;
-                    shapesFill.StrokeThickness = 0;
+                    geometryFill.IsStroke = false;
+                    geometryFill.StrokeThickness = 0;
                 }
 
                 OnPaintContextChanged();
@@ -98,14 +98,14 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometrySize"/>
         public IDrawableTask<TDrawingContext>? GeometryStroke
         {
-            get => shapesStroke;
+            get => geometryStroke;
             set
             {
-                if (shapesStroke != null) deletingTasks.Add(shapesStroke);
-                shapesStroke = value;
-                if (shapesStroke != null)
+                if (geometryStroke != null) deletingTasks.Add(geometryStroke);
+                geometryStroke = value;
+                if (geometryStroke != null)
                 {
-                    shapesStroke.IsStroke = true;
+                    geometryStroke.IsStroke = true;
                 }
                 OnPaintContextChanged();
                 OnPropertyChanged();
@@ -453,9 +453,9 @@ namespace LiveChartsCore
             var lss = unchecked((float)LegendShapeSize);
             var w = LegendShapeSize;
 
-            if (shapesFill != null)
+            if (geometryFill != null)
             {
-                var fillClone = shapesFill.CloneTask();
+                var fillClone = geometryFill.CloneTask();
                 var visual = new TVisual { X = 0, Y = 0, Height = lss, Width = lss };
                 fillClone.AddGeometyToPaintTask(visual);
                 context.PaintTasks.Add(fillClone);
@@ -468,17 +468,17 @@ namespace LiveChartsCore
                 context.PaintTasks.Add(fillClone);
             }
 
-            if (shapesStroke != null)
+            if (geometryStroke != null)
             {
-                var strokeClone = shapesStroke.CloneTask();
+                var strokeClone = geometryStroke.CloneTask();
                 var visual = new TVisual
                 {
-                    X = shapesStroke.StrokeThickness,
-                    Y = shapesStroke.StrokeThickness,
+                    X = geometryStroke.StrokeThickness,
+                    Y = geometryStroke.StrokeThickness,
                     Height = lss,
                     Width = lss
                 };
-                w += 2 * shapesStroke.StrokeThickness;
+                w += 2 * geometryStroke.StrokeThickness;
                 strokeClone.AddGeometyToPaintTask(visual);
                 context.PaintTasks.Add(strokeClone);
             }
@@ -695,6 +695,18 @@ namespace LiveChartsCore
             if (Stroke != null)
                 foreach (var pathHelper in strokePathHelperContainer.ToArray())
                     Stroke.RemoveGeometryFromPainTask(pathHelper.Path);
+        }
+
+        public override void Dispose()
+        {
+            foreach (var chart in subscribedTo)
+            {
+                var c = (Chart<TDrawingContext>)chart;
+                if (geometryFill != null) c.Canvas.RemovePaintTask(geometryFill);
+                if (geometryStroke != null) c.Canvas.RemovePaintTask(geometryStroke);
+            }
+
+            base.Dispose();
         }
     }
 }

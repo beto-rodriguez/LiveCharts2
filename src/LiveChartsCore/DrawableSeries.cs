@@ -177,6 +177,18 @@ namespace LiveChartsCore
         /// </value>
         public double LegendShapeSize { get => legendShapeSize; set { legendShapeSize = value; OnPropertyChanged(); } }
 
+        public override void Dispose()
+        {
+            foreach (var chart in subscribedTo)
+            {
+                var c = (Chart<TDrawingContext>)chart;
+                if (fill != null) c.Canvas.RemovePaintTask(fill);
+                if (stroke != null) c.Canvas.RemovePaintTask(stroke);
+            }
+
+            base.Dispose();
+        }
+
         protected abstract void OnPaintContextChanged();
 
         protected void InitializeSeries()
