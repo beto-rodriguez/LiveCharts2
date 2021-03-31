@@ -25,6 +25,7 @@ using System;
 using System.Drawing;
 using LiveChartsCore.Measure;
 using System.Collections.Generic;
+using LiveChartsCore.Drawing.Common;
 
 namespace LiveChartsCore
 {
@@ -58,6 +59,14 @@ namespace LiveChartsCore
         AxisOrientation Orientation { get; }
 
         /// <summary>
+        /// Gets or sets the padding.
+        /// </summary>
+        /// <value>
+        /// The padding.
+        /// </value>
+        Padding Padding { get; set; }
+
+        /// <summary>
         /// Gets or sets the xo, a refence used internally to calculate the axis position.
         /// </summary>
         /// <value>
@@ -82,13 +91,14 @@ namespace LiveChartsCore
         Func<double, string> Labeler { get; set; }
 
         /// <summary>
-        /// Gets or sets the step, the step defines the interval between every separator in the axis, when the step is null, 
-        /// LiveCharts will calculate it automatically based on the chart data and size, default is null (automatic).
+        /// Gets or sets the minimum step, the step defines the interval between every separator in the axis,
+        /// LiveCharts will calculate it automatically based on the chart data and the chart size size, if the calculated step is less than the <see cref="MinStep"/> 
+        /// then <see cref="MinStep"/> will be used as the axis step, default is 0.
         /// </summary>
         /// <value>
         /// The step.
         /// </value>
-        double? Step { get; set; }
+        double MinStep { get; set; }
 
         /// <summary>
         /// Gets or sets the unit with, it means the width of every point (if the series requires it) in the chart values scale, this value
@@ -125,24 +135,77 @@ namespace LiveChartsCore
         /// </value>
         bool IsInverted { get; set; }
 
+        /// <summary>
+        /// Gets or sets the axis position.
+        /// </summary>
+        /// <value>
+        /// The position.
+        /// </value>
         AxisPosition Position { get; set; }
+
+        /// <summary>
+        /// Gets or sets the labels rotation.
+        /// </summary>
+        /// <value>
+        /// The labels rotation.
+        /// </value>
         double LabelsRotation { get; set; }
 
+        /// <summary>
+        /// Gets or sets the size of the text.
+        /// </summary>
+        /// <value>
+        /// The size of the text.
+        /// </value>
+        double TextSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the separator lines are visible.
+        /// </summary>
         bool ShowSeparatorLines { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the separator weddges are visible.
+        /// </summary>
         bool ShowSeparatorWedges { get; set; }
 
+        /// <summary>
+        /// Initializes the axis for the specified orientation.
+        /// </summary>
+        /// <param name="orientation">The orientation.</param>
         void Initialize(AxisOrientation orientation);
     }
 
     public interface IAxis<TDrawingContext> : IAxis
         where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Gets or sets the text brush.
+        /// </summary>
+        /// <value>
+        /// The text brush.
+        /// </value>
         IDrawableTask<TDrawingContext>? TextBrush { get; set; }
 
+        /// <summary>
+        /// Gets or sets the separators brush.
+        /// </summary>
+        /// <value>
+        /// The separators brush.
+        /// </value>
         IDrawableTask<TDrawingContext>? SeparatorsBrush { get; set; }
 
+        /// <summary>
+        /// Measures the axis.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
         void Measure(CartesianChart<TDrawingContext> chart);
 
+        /// <summary>
+        /// Gets the size of the possible.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
+        /// <returns></returns>
         SizeF GetPossibleSize(CartesianChart<TDrawingContext> chart);
 
         /// <summary>

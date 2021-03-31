@@ -64,6 +64,6 @@ namespace LiveChartsCore.Measure
 
         public float ToPixels(float value) => minPx + (value - minVal) * m;
 
-        public float ToChartValues(float value) => minVal + (value - minPx) * mInv;
+        public float ToChartValues(float pixels) => minVal + (pixels - minPx) * mInv;
     }
 }

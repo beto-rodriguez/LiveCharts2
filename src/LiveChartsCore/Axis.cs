@@ -43,7 +43,7 @@ namespace LiveChartsCore
         protected readonly HashSet<IChart> subscribedTo = new();
         private const float wedgeLength = 8;
         internal AxisOrientation orientation;
-        private double? step = null;
+        private double minStep = 0;
         private Bounds? dataBounds = null;
         private Bounds? previousDataBounds = null;
         private double labelsRotation;
@@ -79,107 +79,52 @@ namespace LiveChartsCore
 
         List<IDrawableTask<TDrawingContext>> IAxis<TDrawingContext>.DeletingTasks => deletingTasks;
 
-        /// <summary>
-        /// Gets the previous data bounds.
-        /// </summary>
-        /// <value>
-        /// The previous data bounds.
-        /// </value>
+        /// <inheritdoc cref="IAxis.PreviousDataBounds"/>
         Bounds? IAxis.PreviousDataBounds => previousDataBounds;
 
-        /// <summary>
-        /// Gets the data bounds.
-        /// </summary>
-        /// <value>
-        /// The data bounds.
-        /// </value>
+        /// <inheritdoc cref="IAxis.DataBounds"/>
         Bounds IAxis.DataBounds => dataBounds ??= new Bounds();
 
-        /// <summary>
-        /// Gets the orientation.
-        /// </summary>
-        /// <value>
-        /// The orientation.
-        /// </value>
+        /// <inheritdoc cref="IAxis.Orientation"/>
         public AxisOrientation Orientation { get => orientation; }
 
-        /// <summary>
-        /// Gets or sets the padding.
-        /// </summary>
-        /// <value>
-        /// The padding.
-        /// </value>
+        /// <inheritdoc cref="IAxis.Padding"/>
         public Padding Padding { get => padding; set { padding = value; OnPropertyChanged(); } }
 
-        /// <summary>
-        /// Gets or sets the labeler.
-        /// </summary>
-        /// <value>
-        /// The labeler.
-        /// </value>
+        /// <inheritdoc cref="IAxis.Labeler"/>
         public Func<double, string> Labeler { get => labeler ?? Labelers.Default; set { labeler = value; OnPropertyChanged(); } }
 
-        /// <summary>
-        /// Gets or sets the step.
-        /// </summary>
-        /// <value>
-        /// The step.
-        /// </value>
-        public double? Step { get => step; set { step = value; OnPropertyChanged(); } }
+        /// <inheritdoc cref="IAxis.MinStep"/>
+        public double MinStep { get => minStep; set { minStep = value; OnPropertyChanged(); } }
 
-        /// <summary>
-        /// Gets or sets the minimum value.
-        /// </summary>
-        /// <value>
-        /// The minimum value.
-        /// </value>
+        /// <inheritdoc cref="IAxis.MinLimit"/>
         public double? MinLimit { get => minValue; set { minValue = value; OnPropertyChanged(); } }
 
-        /// <summary>
-        /// Gets or sets the maximum value.
-        /// </summary>
-        /// <value>
-        /// The maximum value.
-        /// </value>
+        /// <inheritdoc cref="IAxis.MaxLimit"/>
         public double? MaxLimit { get => maxValue; set { maxValue = value; OnPropertyChanged(); } }
 
-        /// <summary>
-        /// Gets or sets the unit with. 
-        /// </summary>
-        /// <value>
-        /// The unit with.
-        /// </value>
+        /// <inheritdoc cref="IAxis.UnitWith"/>
         public double UnitWith { get => unitWith; set { unitWith = value; OnPropertyChanged(); } }
-        /// <summary>
-        /// Gets or sets the position.
-        /// </summary>
-        /// <value>
-        /// The position.
-        /// </value>
+
+        /// <inheritdoc cref="IAxis.Position"/>
         public AxisPosition Position { get => position; set { position = value; OnPropertyChanged(); } }
 
-        /// <summary>
-        /// Gets or sets the labels rotation.
-        /// </summary>
-        /// <value>
-        /// The labels rotation.
-        /// </value>
+        /// <inheritdoc cref="IAxis.LabelsRotation"/>
         public double LabelsRotation { get => labelsRotation; set { labelsRotation = value; OnPropertyChanged(); } }
 
-        /// <summary>
-        /// Gets or sets the size of the text.
-        /// </summary>
-        /// <value>
-        /// The size of the text.
-        /// </value>
+        /// <inheritdoc cref="IAxis.TextSize"/>
         public double TextSize { get => textSize; set { textSize = value; OnPropertyChanged(); } }
 
-        /// <summary>
-        /// Gets or sets the text brush.
-        /// </summary>
-        /// <value>
-        /// The text brush.
-        /// </value>
+        /// <inheritdoc cref="IAxis.ShowSeparatorLines"/>
+        public bool ShowSeparatorLines { get => showSeparatorLines; set { showSeparatorLines = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IAxis.ShowSeparatorWedges"/>
+        public bool ShowSeparatorWedges { get => showSeparatorWedges; set { showSeparatorWedges = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IAxis.IsInverted"/>
+        public bool IsInverted { get => isInverted; set { isInverted = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IAxis{TDrawingContext}.TextBrush"/>
         public IDrawableTask<TDrawingContext>? TextBrush
         {
             get => textBrush;
@@ -191,12 +136,7 @@ namespace LiveChartsCore
             }
         }
 
-        /// <summary>
-        /// Gets or sets the separators brush.
-        /// </summary>
-        /// <value>
-        /// The separators brush.
-        /// </value>
+        /// <inheritdoc cref="IAxis{TDrawingContext}.SeparatorsBrush"/>
         public IDrawableTask<TDrawingContext>? SeparatorsBrush
         {
             get => separatorsBrush;
@@ -208,36 +148,9 @@ namespace LiveChartsCore
             }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether [show separator lines].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [show separator lines]; otherwise, <c>false</c>.
-        /// </value>
-        public bool ShowSeparatorLines { get => showSeparatorLines; set { showSeparatorLines = value; OnPropertyChanged(); } }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [show separator wedges].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [show separator wedges]; otherwise, <c>false</c>.
-        /// </value>
-        public bool ShowSeparatorWedges { get => showSeparatorWedges; set { showSeparatorWedges = value; OnPropertyChanged(); } }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is inverted.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is inverted; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsInverted { get => isInverted; set { isInverted = value; OnPropertyChanged(); } }
-
         #endregion
 
-        /// <summary>
-        /// Measures the axis for the specified chart.
-        /// </summary>
-        /// <param name="chart">The chart.</param>
+        /// <inheritdoc cref="IAxis{TDrawingContext}.Measure(CartesianChart{TDrawingContext})"/>
         public void Measure(CartesianChart<TDrawingContext> chart)
         {
             if (dataBounds == null) throw new Exception("DataBounds not found");
@@ -255,9 +168,8 @@ namespace LiveChartsCore
                 : new Scaler(drawLocation, drawMarginSize, orientation, previousDataBounds, IsInverted);
             var axisTick = this.GetTick(drawMarginSize);
 
-            var s = step == null || step == 0
-                ? axisTick.Value
-                : step.Value;
+            var s = axisTick.Value;
+            if (s < minStep) s = minStep;
 
             if (TextBrush != null)
             {
@@ -454,16 +366,13 @@ namespace LiveChartsCore
             {
                 if (measured.Contains(separator.Value)) continue;
 
+
                 SoftDeleteSeparator(chart, separator.Value, scale);
                 separators.Remove(separator.Key);
             }
         }
 
-        /// <summary>
-        /// Gets the possible size for the given chart.
-        /// </summary>
-        /// <param name="chart">The chart.</param>
-        /// <returns></returns>
+        /// <inheritdoc cref="IAxis{TDrawingContext}.GetPossibleSize(CartesianChart{TDrawingContext})"/>
         public SizeF GetPossibleSize(CartesianChart<TDrawingContext> chart)
         {
             if (dataBounds == null) throw new Exception("DataBounds not found");
@@ -472,9 +381,8 @@ namespace LiveChartsCore
             var ts = (float)TextSize;
             var labeler = Labeler;
             var axisTick = this.GetTick(chart.DrawMarginSize);
-            var s = step == null || step == 0
-                ? axisTick.Value
-                : step.Value;
+            var s = axisTick.Value;
+            if (s < minStep) s = minStep;
             var start = Math.Truncate(dataBounds.min / s) * s;
 
             var w = 0f;
@@ -498,10 +406,7 @@ namespace LiveChartsCore
             return new SizeF(w, h);
         }
 
-        /// <summary>
-        /// Initializes the axis for the specified orientation.
-        /// </summary>
-        /// <param name="orientation">The orientation.</param>
+        /// <inheritdoc cref="IAxis.Initialize(AxisOrientation)"/>
         public void Initialize(AxisOrientation orientation)
         {
             this.orientation = orientation;
@@ -509,11 +414,7 @@ namespace LiveChartsCore
             dataBounds = new Bounds();
         }
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
+        /// <inheritdoc cref="IDisposable.Dispose"/>
         public virtual void Dispose()
         {
             foreach (var chart in subscribedTo.ToArray())
@@ -524,6 +425,11 @@ namespace LiveChartsCore
                 if (separatorsBrush != null) canvas.RemovePaintTask(separatorsBrush);
                 activeSeparators.Remove(cartesianChart);
             }
+        }
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private void SoftDeleteSeparator(

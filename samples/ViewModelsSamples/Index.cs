@@ -38,6 +38,7 @@
             "Scatter/Custom",
 
             "Axes/ColorsAndPosition",
+            "Axes/LabelsFormat",
 
             "General/UserDefinedTypes",
             "General/NullPoints",
