@@ -23,6 +23,7 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace LiveChartsCore.Kernel
 {
@@ -36,6 +37,7 @@ namespace LiveChartsCore.Kernel
         public bool IsCompleted { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
         public long CurrentTime { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
         public bool RemoveOnCompleted { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        public RectangleF ClipRectangle { get; set; }
 
         public void AddGeometyToPaintTask(IDrawable<TDrawingContext> geometry)
         {

@@ -26,6 +26,7 @@ using LiveChartsCore.Measure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Drawing;
 
 namespace LiveChartsCore
 {
@@ -185,6 +186,7 @@ namespace LiveChartsCore
                     Fill.AddGeometyToPaintTask(fillPathHelper.Path);
                     chart.Canvas.AddDrawableTask(Fill);
                     Fill.ZIndex = actualZIndex + 0.1;
+                    Fill.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
                     fillPathHelper.Path.ClearCommands();
                 }
                 if (Stroke != null)
@@ -193,6 +195,7 @@ namespace LiveChartsCore
                     Stroke.AddGeometyToPaintTask(strokePathHelper.Path);
                     chart.Canvas.AddDrawableTask(Stroke);
                     Stroke.ZIndex = actualZIndex + 0.2;
+                    Stroke.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
                     strokePathHelper.Path.ClearCommands();
                 }
 
@@ -348,11 +351,12 @@ namespace LiveChartsCore
                 if (GeometryFill != null)
                 {
                     chart.Canvas.AddDrawableTask(GeometryFill);
+                    GeometryFill.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
                     GeometryFill.ZIndex = actualZIndex + 0.3;
                 }
-                if (GeometryStroke != null)
-                {
+                if (GeometryStroke != null) {
                     chart.Canvas.AddDrawableTask(GeometryStroke);
+                    GeometryStroke.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
                     GeometryStroke.ZIndex = actualZIndex + 0.4;
                 }
                 segmentI++;
@@ -374,6 +378,7 @@ namespace LiveChartsCore
             if (DataLabelsDrawableTask != null)
             {
                 chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
+                DataLabelsDrawableTask.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
                 DataLabelsDrawableTask.ZIndex = actualZIndex + 0.5;
             }
 

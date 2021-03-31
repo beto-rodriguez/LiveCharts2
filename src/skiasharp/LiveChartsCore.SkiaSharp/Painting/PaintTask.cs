@@ -28,6 +28,7 @@ using LiveChartsCore.SkiaSharpView.Motion;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 namespace LiveChartsCore.SkiaSharpView.Painting
@@ -66,6 +67,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting
 
         public SKColor Color { get => colorTransition.GetMovement(this); set => colorTransition.SetMovement(value, this); }
 
+        public RectangleF ClipRectangle { get; set; } = RectangleF.Empty;
+
         public abstract void InitializeTask(SkiaSharpDrawingContext drawingContext);
 
         public IEnumerable<IDrawable<SkiaSharpDrawingContext>> GetGeometries()
@@ -100,7 +103,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
 
         public abstract IDrawableTask<SkiaSharpDrawingContext> CloneTask();
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             skiaPaint?.Dispose();
             skiaPaint = null;

@@ -26,6 +26,7 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Motion;
 using LiveChartsCore.SkiaSharpView.Motion.Composed;
 using SkiaSharp;
+using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Painting
 {
@@ -34,6 +35,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         private readonly FloatMotionProperty strokeMiterTransition;
         private readonly PathEffectMotionProperty pathEffectTransition;
         private readonly ShaderMotionProperty shaderTransition;
+        private SkiaSharpDrawingContext drawingContext;
 
         public SolidColorPaintTask()
         {
@@ -112,9 +114,26 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             skiaPaint.Style = IsStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
             if (PathEffect != null) skiaPaint.PathEffect = PathEffect.GetSKPath();
             if (Shader != null) skiaPaint.Shader = Shader.GetSKShader();
+            if (ClipRectangle != RectangleF.Empty)
+            {
+                drawingContext.Canvas.Save();
+                drawingContext.Canvas.ClipRect(new SKRect(ClipRectangle.X, ClipRectangle.Y, ClipRectangle.Width, ClipRectangle.Height));
+                this.drawingContext = drawingContext;
+            }
 
             drawingContext.Paint = skiaPaint;
             drawingContext.PaintTask = this;
+        }
+
+        public override void Dispose()
+        {
+            if (ClipRectangle != RectangleF.Empty && drawingContext != null)
+            {
+                drawingContext.Canvas.Restore();
+                drawingContext = null;
+            }
+
+            base.Dispose();
         }
     }
 }

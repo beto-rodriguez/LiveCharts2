@@ -25,6 +25,7 @@ using LiveChartsCore.Drawing;
 using System;
 using LiveChartsCore.Measure;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace LiveChartsCore
 {
@@ -62,14 +63,14 @@ namespace LiveChartsCore
 
             if (count > 1)
             {
-                uw = uw / count;
+                uw /= count;
                 uwm = 0.5f * uw;
                 cp = (pos - count / 2f) * uw + uwm;
             }
 
             if (uw > MaxBarWidth)
             {
-                uw = unchecked((float)MaxBarWidth);
+                uw = (float)MaxBarWidth;
                 uwm = uw / 2f;
             }
 
@@ -77,18 +78,22 @@ namespace LiveChartsCore
             if (Fill != null)
             {
                 Fill.ZIndex = actualZIndex + 0.1;
-                chart.Canvas.AddDrawableTask(Fill); 
+                Fill.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
+                chart.Canvas.AddDrawableTask(Fill);
             }
             if (Stroke != null)
             {
                 Stroke.ZIndex = actualZIndex + 0.2;
+                Stroke.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
                 chart.Canvas.AddDrawableTask(Stroke);
             }
             if (DataLabelsDrawableTask != null)
             {
                 DataLabelsDrawableTask.ZIndex = actualZIndex + 0.3;
+                DataLabelsDrawableTask.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
                 chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
             }
+
             var dls = (float)DataLabelsSize;
             var toDeletePoints = new HashSet<ChartPoint>(everFetched);
 

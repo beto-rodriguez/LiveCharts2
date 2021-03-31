@@ -25,6 +25,7 @@ using LiveChartsCore.Drawing;
 using System;
 using LiveChartsCore.Measure;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace LiveChartsCore
 {
@@ -76,16 +77,19 @@ namespace LiveChartsCore
             if (Fill != null)
             {
                 Fill.ZIndex = actualZIndex + 0.1;
+                Fill.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
                 chart.Canvas.AddDrawableTask(Fill);
             }
             if (Stroke != null) 
             {
                 Stroke.ZIndex = actualZIndex + 0.2;
+                Stroke.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
                 chart.Canvas.AddDrawableTask(Stroke);
             }
             if (DataLabelsDrawableTask != null)
             {
                 DataLabelsDrawableTask.ZIndex = actualZIndex + 0.3;
+                DataLabelsDrawableTask.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
                 chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
             }
 

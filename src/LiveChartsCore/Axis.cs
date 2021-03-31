@@ -188,6 +188,7 @@ namespace LiveChartsCore
             if (SeparatorsBrush != null)
             {
                 SeparatorsBrush.ZIndex = -1;
+                SeparatorsBrush.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
                 chart.Canvas.AddDrawableTask(SeparatorsBrush);
             }
 

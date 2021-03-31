@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace LiveChartsCore.Drawing
 {
@@ -64,6 +65,14 @@ namespace LiveChartsCore.Drawing
         /// The stroke thickness.
         /// </value>
         float StrokeThickness { get; set; }
+
+        /// <summary>
+        /// Gets or sets the clip rectangle.
+        /// </summary>
+        /// <value>
+        /// The clip rectangle.
+        /// </value>
+        RectangleF ClipRectangle { get; set; }
 
         /// <summary>
         /// Initializes the task.
