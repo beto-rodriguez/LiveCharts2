@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XamarinSample.Axes.ColorsAndPosition.View"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Xamarin.Forms;assembly=LiveChartsCore.SkiaSharpView.Xamarin.Forms"
+             xmlns:vms="clr-namespace:ViewModelsSamples.Axes.ColorsAndPosition;assembly=ViewModelsSamples">
+    <ContentPage.BindingContext>
+        <vms:ViewModel/>
+    </ContentPage.BindingContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackLayout Grid.Row="0" Orientation="Horizontal">
+            <Button Command="{Binding SetNewColorCommand}" Text="new color"></Button>
+            <Button Command="{Binding TogglePositionCommand}" Text="toogle position"></Button>
+        </StackLayout>
+        <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}"></lvc:CartesianChart>
+    </Grid>
+</ContentPage>

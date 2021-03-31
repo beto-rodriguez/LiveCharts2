@@ -37,7 +37,7 @@
             "Scatter/AutoUpdate",
             "Scatter/Custom",
 
-            "Axes/ColorsAndSeparators",
+            "Axes/ColorsAndPosition",
 
             "General/UserDefinedTypes",
             "General/NullPoints",

@@ -22,6 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Axes\ColorsAndPositions\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Bars\AutoUpdate\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

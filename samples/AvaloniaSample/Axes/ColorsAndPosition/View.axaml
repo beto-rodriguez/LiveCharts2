@@ -1,0 +1,21 @@
+<UserControl x:Class="AvaloniaSample.Axes.ColorsAndPosition.View"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharp.Avalonia"
+             xmlns:vms="using:ViewModelsSamples.Axes.ColorsAndPosition">
+  <UserControl.DataContext>
+    <vms:ViewModel/>
+  </UserControl.DataContext>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="50"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <StackPanel Grid.Row="0" Orientation="Horizontal">
+      <Button Margin="6" Command="{Binding SetNewColorCommand}">Set new color</Button>
+      <Button Margin="6" Command="{Binding TogglePositionCommand}">Toggle Position</Button>
+    </StackPanel>
+    <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}">
+    </lvc:CartesianChart>
+  </Grid> 
+</UserControl>

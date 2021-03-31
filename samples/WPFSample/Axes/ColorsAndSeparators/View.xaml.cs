@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace WPFSample.Axes.ColorsAndSeparators
+namespace WPFSample.Axes.ColorsAndPosition
 {
     /// <summary>
     /// Interaction logic for View.xaml

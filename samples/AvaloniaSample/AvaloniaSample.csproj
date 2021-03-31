@@ -23,6 +23,9 @@
     <Resource Include="Assets\livecharts.png" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Axes\ColorsAndPosition\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Bars\AutoUpdate\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

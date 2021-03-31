@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Windows.Input;
 
-namespace ViewModelsSamples.Axes.ColorsAndSeparators
+namespace ViewModelsSamples.Axes.ColorsAndPosition
 {
     public class ViewModel
     {
