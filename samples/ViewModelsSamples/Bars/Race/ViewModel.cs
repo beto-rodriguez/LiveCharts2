@@ -22,8 +22,8 @@ namespace ViewModelsSamples.Bars.Race
             {
                 new RowSeries<ObservableValue>
                 {
-                    Values = new []{ new ObservableValue(45) },
-                    Name = "Sainz",
+                    Values = new []{ new ObservableValue(50) },
+                    Name = "Tsunoda",
                     Stroke  = null,
                     MaxBarWidth = 50,
                     DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
@@ -32,8 +32,8 @@ namespace ViewModelsSamples.Bars.Race
                 },
                 new RowSeries<ObservableValue>
                 {
-                    Values = new []{ new ObservableValue(50) },
-                    Name = "Vettel",
+                    Values = new []{ new ObservableValue(45) },
+                    Name = "Sainz",
                     Stroke  = null,
                     MaxBarWidth = 50,
                     DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),

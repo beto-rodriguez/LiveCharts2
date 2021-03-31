@@ -89,6 +89,30 @@ namespace LiveChartsCore.Kernel
                 bounds.SecondaryBounds.AppendValue(secondary);
             }
 
+            if (bounds.PrimaryBounds.Max == bounds.PrimaryBounds.Min)
+            {
+                var c = bounds.PrimaryBounds.Min * 0.3;
+                bounds.PrimaryBounds = new Measure.Bounds { Min = bounds.PrimaryBounds.Min - c, Max = bounds.PrimaryBounds.Max + c };
+            }
+
+            if (bounds.SecondaryBounds.Max == bounds.SecondaryBounds.Min)
+            {
+                var c = bounds.SecondaryBounds.Min * 0.3;
+                bounds.SecondaryBounds = new Measure.Bounds { Min = bounds.SecondaryBounds.Min - c, Max = bounds.SecondaryBounds.Max + c };
+            }
+
+            if (bounds.TertiaryBounds.Max == bounds.TertiaryBounds.Min)
+            {
+                var c = bounds.TertiaryBounds.Min * 0.3;
+                bounds.TertiaryBounds = new Measure.Bounds { Min = bounds.TertiaryBounds.Min - c, Max = bounds.TertiaryBounds.Max + c };
+            }
+
+            if (bounds.QuaternaryBounds.Max == bounds.QuaternaryBounds.Min)
+            {
+                var c = bounds.QuaternaryBounds.Min * 0.3;
+                bounds.QuaternaryBounds = new Measure.Bounds { Min = bounds.QuaternaryBounds.Min - c, Max = bounds.QuaternaryBounds.Max + c };
+            }
+
             return bounds;
         }
 
