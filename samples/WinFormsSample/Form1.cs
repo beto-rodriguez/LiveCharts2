@@ -31,10 +31,10 @@ namespace WinFormsSample
             var selected = listBox1.SelectedItem.ToString();
             activeControl = (UserControl) Activator.CreateInstance(null, $"WinFormsSample.{selected.Replace('/', '.')}.View").Unwrap();
 
-            var padding = 8;
+            var padding = 0;
             activeControl.Location = new System.Drawing.Point(listBox1.Width + padding, padding);
             activeControl.Width = Width - listBox1.Width;
-            activeControl.Height = Height;
+            activeControl.Height = Height - 50;
             activeControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             Controls.Add(activeControl);
         }

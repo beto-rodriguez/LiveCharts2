@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="XamarinSample.Axes.LabelsFormat.View"
+             x:Class="XamarinSample.Axes.NamedLabels.View"
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Xamarin.Forms;assembly=LiveChartsCore.SkiaSharpView.Xamarin.Forms"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Axes.LabelsFormat;assembly=ViewModelsSamples">
+             xmlns:vms="clr-namespace:ViewModelsSamples.Axes.NamedLabels;assembly=ViewModelsSamples">
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>

@@ -12,6 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Axes\NamedLabels\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Axes\LabelsFormat\View.cs">
       <SubType>UserControl</SubType>
     </Compile>

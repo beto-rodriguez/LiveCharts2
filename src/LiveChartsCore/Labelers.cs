@@ -20,7 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Kernel;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace LiveChartsCore
@@ -91,5 +93,7 @@ namespace LiveChartsCore
 
             return value.ToString($"{symbol} #{thousands}###{thousands}##0{decimals}## {u}");
         }
+
+        public static NamedLabeler BuildNamedLabeler(IList<string> labels) => new(labels);
     }
 }

@@ -51,7 +51,7 @@ namespace LiveChartsCore
         // xo (x origin) and yo (y origin) are the distance to the center of the axis to the control bounds
         internal float xo = 0f, yo = 0f;
         private AxisPosition position = AxisPosition.Start;
-        private Func<double, string>? labeler;
+        private Func<double, string> labeler = Labelers.Default;
         private Padding padding = new() { Left = 8, Top = 8, Bottom = 8, Right = 9 };
         private double? minValue = null;
         private double? maxValue = null;
@@ -92,7 +92,7 @@ namespace LiveChartsCore
         public Padding Padding { get => padding; set { padding = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IAxis.Labeler"/>
-        public Func<double, string> Labeler { get => labeler ?? Labelers.Default; set { labeler = value; OnPropertyChanged(); } }
+        public Func<double, string> Labeler { get => labeler; set { labeler = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IAxis.MinStep"/>
         public double MinStep { get => minStep; set { minStep = value; OnPropertyChanged(); } }
@@ -114,6 +114,9 @@ namespace LiveChartsCore
 
         /// <inheritdoc cref="IAxis.TextSize"/>
         public double TextSize { get => textSize; set { textSize = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IAxis.Labels"/>
+        public IList<string>? Labels { get; set; }
 
         /// <inheritdoc cref="IAxis.ShowSeparatorLines"/>
         public bool ShowSeparatorLines { get => showSeparatorLines; set { showSeparatorLines = value; OnPropertyChanged(); } }
@@ -160,13 +163,19 @@ namespace LiveChartsCore
             var controlSize = chart.ControlSize;
             var drawLocation = chart.DrawMaringLocation;
             var drawMarginSize = chart.DrawMarginSize;
-            var labeler = Labeler;
 
             var scale = new Scaler(drawLocation, drawMarginSize, orientation, dataBounds, IsInverted);
             var previousSacale = previousDataBounds == null
                 ? null
                 : new Scaler(drawLocation, drawMarginSize, orientation, previousDataBounds, IsInverted);
             var axisTick = this.GetTick(drawMarginSize);
+
+            var labeler = Labeler;
+            if (Labels != null)
+            {
+                labeler = Labelers.BuildNamedLabeler(Labels).Function;
+                minStep = 1;
+            }
 
             var s = axisTick.Value;
             if (s < minStep) s = minStep;
@@ -380,9 +389,17 @@ namespace LiveChartsCore
 
             var ts = (float)TextSize;
             var labeler = Labeler;
+
+            if (Labels != null)
+            {
+                labeler = Labelers.BuildNamedLabeler(Labels).Function;
+                minStep = 1;
+            }
+
             var axisTick = this.GetTick(chart.DrawMarginSize);
             var s = axisTick.Value;
             if (s < minStep) s = minStep;
+
             var start = Math.Truncate(dataBounds.min / s) * s;
 
             var w = 0f;

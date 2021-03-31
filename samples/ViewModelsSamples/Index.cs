@@ -39,6 +39,7 @@
 
             "Axes/ColorsAndPosition",
             "Axes/LabelsFormat",
+            "Axes/NamedLabels",
 
             "General/UserDefinedTypes",
             "General/NullPoints",

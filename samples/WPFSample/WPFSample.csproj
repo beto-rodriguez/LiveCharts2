@@ -24,6 +24,9 @@
     <Compile Update="Axes\ColorsAndSeparators\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Axes\NamedLabels\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Axes\LabelsFormat\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -115,6 +118,10 @@
 
   <ItemGroup>
     <Page Update="Axes\ColorsAndSeparators\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Axes\NamedLabels\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

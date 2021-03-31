@@ -160,6 +160,17 @@ namespace LiveChartsCore
         double TextSize { get; set; }
 
         /// <summary>
+        /// Gets or sets the labels, if labels are not null, then the axis label will be pulled from the labels collection,
+        /// the label is mapped to the chart based on the position of the label and the position of the point, both integers,
+        /// if the axis requires a label outsite the bounds of the labels IList then the index will be returned as the label.
+        /// Default value is null.
+        /// </summary>
+        /// <value>
+        /// The labels.
+        /// </value>
+        IList<string>? Labels { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the separator lines are visible.
         /// </summary>
         bool ShowSeparatorLines { get; set; }
