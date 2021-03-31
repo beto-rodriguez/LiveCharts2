@@ -262,7 +262,7 @@ namespace LiveChartsCore
             if (drawMarginSize.Width <= 0 || drawMarginSize.Height <= 0) return;
 
             var totalAxes = primaryAxes.Concat(secondaryAxes).ToArray();
-            var toDeleteAxes = new HashSet<IAxis<TDrawingContext>>(totalAxes);
+            var toDeleteAxes = new HashSet<IAxis<TDrawingContext>>(everMeasuredAxes);
             foreach (var axis in totalAxes)
             {
                 axis.Measure(this);
@@ -304,8 +304,8 @@ namespace LiveChartsCore
                 everMeasuredSeries.Remove(series);
             }
             foreach (var axis in toDeleteAxes) 
-            { 
-
+            {
+                axis.Dispose();
                 everMeasuredAxes.Remove(axis);
             }
 
