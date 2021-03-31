@@ -25,6 +25,7 @@ using LiveChartsCore.Drawing;
 using System;
 using LiveChartsCore.Measure;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace LiveChartsCore
 {
@@ -70,9 +71,26 @@ namespace LiveChartsCore
                 uwm = uw / 2f;
             }
 
-            if (Fill != null) chart.Canvas.AddDrawableTask(Fill);
-            if (Stroke != null) chart.Canvas.AddDrawableTask(Stroke);
-            if (DataLabelsDrawableTask != null) chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
+            var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
+            if (Fill != null)
+            {
+                Fill.ZIndex = actualZIndex + 0.1;
+                Fill.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
+                chart.Canvas.AddDrawableTask(Fill);
+            }
+            if (Stroke != null)
+            {
+                Stroke.ZIndex = actualZIndex + 0.1;
+                Stroke.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
+                chart.Canvas.AddDrawableTask(Stroke);
+            }
+            if (DataLabelsDrawableTask != null)
+            {
+                DataLabelsDrawableTask.ZIndex = actualZIndex + 0.1;
+                DataLabelsDrawableTask.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
+                chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
+            }
+
             var dls = (float)DataLabelsSize;
             var toDeletePoints = new HashSet<ChartPoint>(everFetched);
 
