@@ -20,28 +20,76 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Measure;
 using System;
+using System.Globalization;
 
 namespace LiveChartsCore
 {
     public static class Labelers
     {
-        private static Func<double, AxisTick, string> defaultLabeler;
+        private static Func<double, string> defaultLabeler;
 
         static Labelers()
         {
-            defaultLabeler = RoundToMagnitude;
+            defaultLabeler = Log10_7;
         }
 
-        public static Func<double, AxisTick, string> Default => defaultLabeler;
+        public static Func<double, string> Default => defaultLabeler;
 
-        public static Func<double, AxisTick, string> RoundToMagnitude
-            => (value, tick) => (Math.Truncate(value / tick.Magnitude) * tick.Magnitude).ToString();
+        public static Func<double, string> SevenRepresentativeDigits => Log10_7;
 
-        public static void SetDefaultLabeler(Func<double, AxisTick, string> labeler)
+        public static Func<double, string> Currency => 
+            value => FormatCurrency(value, ",", ".", NumberFormatInfo.CurrentInfo.CurrencySymbol);
+
+        public static void SetDefaultLabeler(Func<double, string> labeler)
         {
             defaultLabeler = labeler;
+        }
+
+        private static string Log10_7(double value)
+        {
+            var l = value == 0 ? 0 : (int)Math.Log10(Math.Abs(value));
+            var u = "";
+
+            if (l > 7)
+            {
+                if (value > 0)
+                {
+                    value /= Math.Pow(10, 6);
+                    u = "M";
+                }
+                else
+                {
+                    value *= Math.Pow(10, 6);
+                    u = "µ";
+                }
+            }
+
+            return value.ToString($"######0.####### {u}");
+        }
+
+        public static string FormatCurrency(double value, string thousands, string decimals, string symbol)
+        {
+            var l = value == 0 ? 0 : (int)Math.Log10(Math.Abs(value));
+            var u = "";
+
+            if (l > 12)
+            {
+                value /= Math.Pow(10, 12);
+                u = "T";
+            }
+            if (l > 10)
+            {
+                value /= Math.Pow(10, 9);
+                u = "G";
+            }
+            else if (l > 7)
+            {
+                value /= Math.Pow(10, 6);
+                u = "M";
+            }
+
+            return value.ToString($"{symbol} #{thousands}###{thousands}##0{decimals}## {u}");
         }
     }
 }

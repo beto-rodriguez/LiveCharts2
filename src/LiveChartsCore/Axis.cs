@@ -51,7 +51,7 @@ namespace LiveChartsCore
         // xo (x origin) and yo (y origin) are the distance to the center of the axis to the control bounds
         internal float xo = 0f, yo = 0f;
         private AxisPosition position = AxisPosition.Start;
-        private Func<double, AxisTick, string>? labeler;
+        private Func<double, string>? labeler;
         private Padding padding = new() { Left = 8, Top = 8, Bottom = 8, Right = 9 };
         private double? minValue = null;
         private double? maxValue = null;
@@ -117,7 +117,7 @@ namespace LiveChartsCore
         /// <value>
         /// The labeler.
         /// </value>
-        public Func<double, AxisTick, string> Labeler { get => labeler ?? Labelers.Default; set { labeler = value; OnPropertyChanged(); } }
+        public Func<double, string> Labeler { get => labeler ?? Labelers.Default; set { labeler = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the step.
@@ -307,7 +307,7 @@ namespace LiveChartsCore
             {
                 if (i < dataBounds.min) continue;
 
-                var label = labeler(i, axisTick);
+                var label = labeler(i);
                 float x, y;
                 if (orientation == AxisOrientation.X)
                 {
@@ -485,7 +485,7 @@ namespace LiveChartsCore
             {
                 var textGeometry = new TTextGeometry
                 {
-                    Text = labeler(i, axisTick),
+                    Text = labeler(i),
                     TextSize = ts,
                     Rotation = r,
                     Padding = padding

@@ -79,7 +79,7 @@ namespace LiveChartsCore
         /// <value>
         /// The labeler.
         /// </value>
-        Func<double, AxisTick, string> Labeler { get; set; }
+        Func<double, string> Labeler { get; set; }
 
         /// <summary>
         /// Gets or sets the step, the step defines the interval between every separator in the axis, when the step is null, 
