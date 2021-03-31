@@ -310,10 +310,6 @@ namespace LiveChartsCore
             }
 
             Canvas.Invalidate();
-
-#if DEBUG
-            Trace.WriteLine($"measured");
-#endif
         }
 
         protected override void UpdateThrottlerUnlocked()

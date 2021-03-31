@@ -84,6 +84,9 @@ namespace LiveChartsCore.Drawing
             foreach (var tuple in toRemoveGeometries)
             {
                 tuple.Item1.RemoveGeometryFromPainTask(tuple.Item2);
+                // if we removed at least one gemetry, we need to redraw the chart
+                // to ensure it is not present in the next frame
+                isValid = false;
             }
 
             this.isValid = isValid;
@@ -101,27 +104,18 @@ namespace LiveChartsCore.Drawing
         {
             paintTasks.Add(task);
             Invalidate();
-#if DEBUG
-            Trace.WriteLine("added: " + paintTasks.Count);
-#endif
         }
 
         public void SetPaintTasks(HashSet<IDrawableTask<TDrawingContext>> tasks)
         {
             paintTasks = tasks;
             Invalidate();
-#if DEBUG
-            Trace.WriteLine("set: " + paintTasks.Count);
-#endif
         }
 
         public void RemovePaintTask(IDrawableTask<TDrawingContext> task)
         {
             paintTasks.Remove(task);
             Invalidate();
-#if DEBUG
-            Trace.WriteLine("removed: " + paintTasks.Count);
-#endif
         }
 
         public int CountGeometries()

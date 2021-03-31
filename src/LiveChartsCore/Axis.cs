@@ -30,6 +30,7 @@ using System.Linq;
 using LiveChartsCore.Measure;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 namespace LiveChartsCore
 {
@@ -424,7 +425,7 @@ namespace LiveChartsCore
                     if (hasRotation) visualSeparator.Text.Rotation = r;
 
                     if (previousDataBounds == null) visualSeparator.Text.CompleteAllTransitions();
-                    
+
                 }
 
                 if (visualSeparator.Line != null)
@@ -450,12 +451,13 @@ namespace LiveChartsCore
                 if (visualSeparator.Text != null || visualSeparator.Line != null) measured.Add(visualSeparator);
             }
 
-            foreach (var separator in separators.ToArray()) 
+            foreach (var separator in separators.ToArray())
             {
-                if (!measured.Contains(separator.Value)) continue;
+                if (measured.Contains(separator.Value)) continue;
 
                 SoftDeleteSeparator(chart, separator.Value, scale);
                 separators.Remove(separator.Key);
+                Trace.WriteLine("deleted " + separator.Key);
             }
         }
 
