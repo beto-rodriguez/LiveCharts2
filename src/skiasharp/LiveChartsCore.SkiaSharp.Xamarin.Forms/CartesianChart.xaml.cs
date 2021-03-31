@@ -39,7 +39,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharpDrawingContext>
     {
-        private CollectionDeepObserver<ISeries> seriesObserver;
+        private readonly CollectionDeepObserver<ISeries> seriesObserver;
+        private readonly CollectionDeepObserver<IAxis> xObserver;
+        private readonly CollectionDeepObserver<IAxis> yObserver;
         protected Chart<SkiaSharpDrawingContext> core;
         //protected MotionCanvas motionCanvas;
         protected IChartLegend<SkiaSharpDrawingContext> legend;
@@ -63,18 +65,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             SizeChanged += OnSizeChanged;
             mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
 
-            seriesObserver = new CollectionDeepObserver<ISeries>(
-               (object sender, NotifyCollectionChangedEventArgs e) =>
-               {
-                   if (core == null) return;
-                   MainThread.BeginInvokeOnMainThread(() => core.Update());
-               },
-               (object sender, PropertyChangedEventArgs e) =>
-               {
-                   if (core == null) return;
-                   MainThread.BeginInvokeOnMainThread(() => core.Update());
-               },
-               true);
+            seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
             XAxes = new List<IAxis>() { new Axis() };
             YAxes = new List<IAxis>() { new Axis() };
@@ -85,7 +78,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public static readonly BindableProperty SeriesProperty =
             BindableProperty.Create(
-                nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new ObservableCollection<ISeries>(), BindingMode.Default, null, 
+                nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new ObservableCollection<ISeries>(), BindingMode.Default, null,
                 (BindableObject o, object oldValue, object newValue) =>
                 {
                     var chart = (CartesianChart)o;
@@ -102,6 +95,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 (BindableObject o, object oldValue, object newValue) =>
                 {
                     var chart = (CartesianChart)o;
+                    var observer = chart.xObserver;
+                    observer.Dispose((IEnumerable<IAxis>)oldValue);
+                    observer.Initialize((IEnumerable<IAxis>)newValue);
                     if (chart.core == null) return;
                     MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
                 });
@@ -112,6 +108,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 (BindableObject o, object oldValue, object newValue) =>
                 {
                     var chart = (CartesianChart)o;
+                    var observer = chart.yObserver;
+                    observer.Dispose((IEnumerable<IAxis>)oldValue);
+                    observer.Initialize((IEnumerable<IAxis>)newValue);
                     if (chart.core == null) return;
                     MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
                 });
@@ -220,7 +219,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             {
                 return new SizeF
                 {
-                    Width = (float)(Width* DeviceDisplay.MainDisplayInfo.Density),
+                    Width = (float)(Width * DeviceDisplay.MainDisplayInfo.Density),
                     Height = (float)(Height * DeviceDisplay.MainDisplayInfo.Density)
                 };
             }
@@ -270,6 +269,18 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
             return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
+        }
+
+        public void OnDeepCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (core == null) return;
+            MainThread.BeginInvokeOnMainThread(() => core.Update());
+        }
+
+        public void OnDeepCollectionPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (core == null) return;
+            MainThread.BeginInvokeOnMainThread(() => core.Update());
         }
     }
 }

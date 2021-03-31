@@ -24,7 +24,9 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
         protected IChartTooltip<SkiaSharpDrawingContext> tooltip;
         private readonly ActionThrottler mouseMoveThrottler;
         private PointF mousePosition = new PointF();
-        private CollectionDeepObserver<ISeries> seriesObserver;
+        private readonly CollectionDeepObserver<ISeries> seriesObserver;
+        private readonly CollectionDeepObserver<IAxis> xObserver;
+        private readonly CollectionDeepObserver<IAxis> yObserver;
 
         public CartesianChart()
         {
@@ -42,18 +44,9 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
 
             mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
 
-            seriesObserver = new CollectionDeepObserver<ISeries>(
-                (object? sender, NotifyCollectionChangedEventArgs e) =>
-                {
-                    if (core == null) return;
-                    Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
-                },
-                (object? sender, PropertyChangedEventArgs e) =>
-                {
-                    if (core == null) return;
-                    Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
-                },
-                true);
+            seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
             XAxes = new List<IAxis>() { new Axis() };
             YAxes = new List<IAxis>() { new Axis() };
@@ -223,14 +216,37 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
                 return;
             }
 
-            if (change.Property.Name == nameof(XAxes) || change.Property.Name == nameof(YAxes))
+            if (change.Property.Name == nameof(XAxes))
             {
+                xObserver.Dispose((IEnumerable<IAxis>)change.OldValue.Value);
+                xObserver.Initialize((IEnumerable<IAxis>)change.NewValue.Value);
                 Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
+                return;
+            }
+
+            if (change.Property.Name == nameof(YAxes))
+            {
+                yObserver.Dispose((IEnumerable<IAxis>)change.OldValue.Value);
+                yObserver.Initialize((IEnumerable<IAxis>)change.NewValue.Value);
+                Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
+                return;
             }
 
             // is this how the size event is handled?
             // https://github.com/AvaloniaUI/Avalonia/issues/3237
             if (change.Property.Name != nameof(Bounds)) return;
+            Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
+        }
+
+        private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (core == null) return;
+            Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
+        }
+
+        private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (core == null) return;
             Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
         }
     }

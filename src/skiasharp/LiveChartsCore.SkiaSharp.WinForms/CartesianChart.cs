@@ -32,25 +32,18 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 {
     public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext>
     {
-        private CollectionDeepObserver<ISeries> seriesObserver;
+        private readonly CollectionDeepObserver<ISeries> seriesObserver;
+        private readonly CollectionDeepObserver<IAxis> xObserver;
+        private readonly CollectionDeepObserver<IAxis> yObserver;
         private IEnumerable<ISeries> series = new List<ISeries>();
         private IEnumerable<IAxis> xAxes = new List<Axis> { new Axis() };
         private IEnumerable<IAxis> yAxes = new List<Axis> { new Axis() };
 
         public CartesianChart()
         {
-            seriesObserver = new CollectionDeepObserver<ISeries>(
-               (object sender, NotifyCollectionChangedEventArgs e) =>
-               {
-                   if (core == null) return;
-                   core.Update();
-               },
-               (object sender, PropertyChangedEventArgs e) =>
-               {
-                   if (core == null) return;
-                   core.Update();
-               },
-               true);
+            seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         }
 
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;
@@ -69,11 +62,30 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<IAxis> XAxes { get => xAxes; set { xAxes = value; core?.Update(); } }
+        public IEnumerable<IAxis> XAxes 
+        { 
+            get => xAxes;
+            set 
+            {
+                xObserver.Dispose(xAxes);
+                xObserver.Initialize(value);
+                xAxes = value;
+                core?.Update(); 
+            } 
+        }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-
-        public IEnumerable<IAxis> YAxes { get => yAxes; set { yAxes = value; core?.Update(); } }
+        public IEnumerable<IAxis> YAxes 
+        {
+            get => yAxes; 
+            set 
+            {
+                yObserver.Dispose(yAxes);
+                yObserver.Initialize(value);
+                yAxes = value;
+                core?.Update();
+            }
+        }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ZoomMode ZoomMode { get; set; }
@@ -93,6 +105,17 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         {
             throw new System.NotImplementedException();
         }
-    }
 
+        private void OnDeepCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (core == null) return;
+            core.Update();
+        }
+
+        private void OnDeepCollectionPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (core == null) return;
+            core.Update();
+        }
+    }
 }

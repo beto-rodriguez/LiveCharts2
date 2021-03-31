@@ -30,7 +30,6 @@ using System.Linq;
 using LiveChartsCore.Measure;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Diagnostics;
 
 namespace LiveChartsCore
 {
@@ -457,7 +456,6 @@ namespace LiveChartsCore
 
                 SoftDeleteSeparator(chart, separator.Value, scale);
                 separators.Remove(separator.Key);
-                Trace.WriteLine("deleted " + separator.Key);
             }
         }
 
