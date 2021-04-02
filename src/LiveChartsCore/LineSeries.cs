@@ -119,10 +119,8 @@ namespace LiveChartsCore
         {
             var drawLocation = chart.DrawMaringLocation;
             var drawMarginSize = chart.DrawMarginSize;
-            var secondaryScale = new Scaler(
-                drawLocation, drawMarginSize, xAxis.Orientation, xAxis.DataBounds, xAxis.IsInverted);
-            var primaryScale = new Scaler(
-                drawLocation, drawMarginSize, yAxis.Orientation, yAxis.DataBounds, yAxis.IsInverted);
+            var secondaryScale = new Scaler(drawLocation, drawMarginSize, xAxis);
+            var primaryScale = new Scaler(drawLocation, drawMarginSize, yAxis);
 
             var gs = geometrySize;
             var hgs = gs / 2f;

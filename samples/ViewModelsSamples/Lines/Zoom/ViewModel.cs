@@ -1,0 +1,27 @@
+﻿using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
+using System;
+using System.Collections.Generic;
+
+namespace ViewModelsSamples.Lines.Zoom
+{
+    public class ViewModel
+    {
+        public ViewModel()
+        {
+            var values = new int[1000];
+            var r = new Random();
+            var t = 0;
+
+            for (int i = 0; i < 1000; i++)
+            {
+                t += r.Next(-90, 100);
+                values[i] = t;
+            }
+
+            SeriesCollection = new ISeries[] { new LineSeries<int> { Values = values } };
+        }
+
+        public IEnumerable<ISeries> SeriesCollection { get; set; } 
+    }
+}

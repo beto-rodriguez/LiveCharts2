@@ -73,27 +73,29 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public static readonly BindableProperty AnimationsSpeedProperty =
           BindableProperty.Create(
-              nameof(AnimationsSpeed), typeof(TimeSpan), typeof(PieChart), TimeSpan.FromMilliseconds(500));
+              nameof(AnimationsSpeed), typeof(TimeSpan), typeof(PieChart), LiveCharts.CurrentSettings.DefaultAnimationsSpeed);
 
         public static readonly BindableProperty EasingFunctionProperty =
             BindableProperty.Create(
-                nameof(EasingFunction), typeof(Func<float, float>), typeof(PieChart), EasingFunctions.SinOut);
+                nameof(EasingFunction), typeof(Func<float, float>), typeof(PieChart), LiveCharts.CurrentSettings.DefaultEasingFunction);
 
         public static readonly BindableProperty LegendPositionProperty =
             BindableProperty.Create(
-                nameof(LegendPosition), typeof(LegendPosition), typeof(PieChart), LegendPosition.Hidden);
+                nameof(LegendPosition), typeof(LegendPosition), typeof(PieChart), LiveCharts.CurrentSettings.DefaultLegendPosition);
 
         public static readonly BindableProperty LegendOrientationProperty =
             BindableProperty.Create(
-                nameof(LegendOrientation), typeof(LegendOrientation), typeof(PieChart), LegendOrientation.Auto);
+                nameof(LegendOrientation), typeof(LegendOrientation), typeof(PieChart),
+                LiveCharts.CurrentSettings.DefaultLegendOrientation);
 
         public static readonly BindableProperty TooltipPositionProperty =
            BindableProperty.Create(
-               nameof(TooltipPosition), typeof(TooltipPosition), typeof(PieChart), TooltipPosition.Hidden);
+               nameof(TooltipPosition), typeof(TooltipPosition), typeof(PieChart), LiveCharts.CurrentSettings.DefaultTooltipPosition);
 
         public static readonly BindableProperty TooltipFindingStrategyProperty =
             BindableProperty.Create(
-                nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(PieChart), TooltipFindingStrategy.CompareOnlyX);
+                nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(PieChart),
+                LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy);
 
         public IEnumerable<ISeries> Series
         {

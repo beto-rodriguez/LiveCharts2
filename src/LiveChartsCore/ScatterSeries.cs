@@ -54,10 +54,8 @@ namespace LiveChartsCore
         {
             var drawLocation = chart.DrawMaringLocation;
             var drawMarginSize = chart.DrawMarginSize;
-            var xScale = new Scaler(
-                drawLocation, drawMarginSize, xAxis.Orientation, xAxis.DataBounds, xAxis.IsInverted);
-            var yScale = new Scaler(
-                drawLocation, drawMarginSize, yAxis.Orientation, yAxis.DataBounds, yAxis.IsInverted);
+            var xScale = new Scaler(drawLocation, drawMarginSize, xAxis);
+            var yScale = new Scaler(drawLocation, drawMarginSize, yAxis);
 
             var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
             if (Fill != null)

@@ -10,6 +10,7 @@
             "Lines/Properties",
             "Lines/Area",
             "Lines/Custom",
+            "Lines/Zoom",
 
             "StackedArea/Basic",
 

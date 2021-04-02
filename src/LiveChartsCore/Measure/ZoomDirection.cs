@@ -20,27 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Measure;
-using System.Collections.Generic;
-using System.Drawing;
-
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Measure
 {
-    public interface ICartesianChartView<TDrawingContext>: IChartView<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public enum ZoomDirection
     {
-        CartesianChart<TDrawingContext> Core { get; }
-
-        IEnumerable<IAxis> XAxes { get; set; }
-        IEnumerable<IAxis> YAxes { get; set; }
-
-        IEnumerable<ISeries> Series { get; set; }
-
-        ZoomAndPanMode ZoomMode { get; set; }
-
-        double ZoomingSpeed { get; set; }
-
-        PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0);
+        ZoomIn,
+        ZoomOut
     }
 }

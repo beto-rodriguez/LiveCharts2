@@ -42,12 +42,10 @@ namespace LiveChartsCore
         {
             var drawLocation = chart.DrawMaringLocation;
             var drawMarginSize = chart.DrawMarginSize;
-            var secondaryScale = new Scaler(
-                drawLocation, drawMarginSize, primaryAxis.Orientation, primaryAxis.DataBounds, primaryAxis.IsInverted);
-            var previousSecondaryScale = primaryAxis.PreviousDataBounds == null ? null : new Scaler(
-                drawLocation, drawMarginSize, primaryAxis.Orientation, primaryAxis.PreviousDataBounds, primaryAxis.IsInverted);
-            var primaryScale = new Scaler(
-                drawLocation, drawMarginSize, secondaryAxis.Orientation, secondaryAxis.DataBounds, secondaryAxis.IsInverted);
+            var secondaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
+            var previousSecondaryScale = 
+                primaryAxis.PreviousDataBounds == null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis);
+            var primaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
 
             float uw = secondaryScale.ToPixels(1f) - secondaryScale.ToPixels(0f);
             float uwm = 0.5f * uw;

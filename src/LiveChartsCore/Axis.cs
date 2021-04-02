@@ -53,8 +53,8 @@ namespace LiveChartsCore
         private AxisPosition position = AxisPosition.Start;
         private Func<double, string> labeler = Labelers.Default;
         private Padding padding = new() { Left = 8, Top = 8, Bottom = 8, Right = 9 };
-        private double? minValue = null;
-        private double? maxValue = null;
+        private double? minLimit = null;
+        private double? maxLimit = null;
         private IDrawableTask<TDrawingContext>? textBrush;
         private double unitWith = 1;
         protected List<IDrawableTask<TDrawingContext>> deletingTasks = new();
@@ -98,10 +98,10 @@ namespace LiveChartsCore
         public double MinStep { get => minStep; set { minStep = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IAxis.MinLimit"/>
-        public double? MinLimit { get => minValue; set { minValue = value; OnPropertyChanged(); } }
+        public double? MinLimit { get => minLimit; set { minLimit = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IAxis.MaxLimit"/>
-        public double? MaxLimit { get => maxValue; set { maxValue = value; OnPropertyChanged(); } }
+        public double? MaxLimit { get => maxLimit; set { maxLimit = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IAxis.UnitWith"/>
         public double UnitWith { get => unitWith; set { unitWith = value; OnPropertyChanged(); } }
@@ -164,10 +164,10 @@ namespace LiveChartsCore
             var drawLocation = chart.DrawMaringLocation;
             var drawMarginSize = chart.DrawMarginSize;
 
-            var scale = new Scaler(drawLocation, drawMarginSize, orientation, dataBounds, IsInverted);
+            var scale = new Scaler(drawLocation, drawMarginSize, this);
             var previousSacale = previousDataBounds == null
                 ? null
-                : new Scaler(drawLocation, drawMarginSize, orientation, previousDataBounds, IsInverted);
+                : new Scaler(drawLocation, drawMarginSize, this);
             var axisTick = this.GetTick(drawMarginSize);
 
             var labeler = Labeler;

@@ -117,35 +117,40 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public static readonly BindableProperty ZoomModeProperty =
             BindableProperty.Create(
-                nameof(ZoomMode), typeof(ZoomMode), typeof(CartesianChart), ZoomMode.Both, BindingMode.Default, null);
+                nameof(ZoomMode), typeof(ZoomAndPanMode), typeof(CartesianChart),
+                LiveCharts.CurrentSettings.DefaultZoomMode, BindingMode.Default, null);
 
         public static readonly BindableProperty ZoomingSpeedProperty =
             BindableProperty.Create(
-                nameof(ZoomingSpeed), typeof(double), typeof(CartesianChart), 0.5d, BindingMode.Default, null);
+                nameof(ZoomingSpeed), typeof(double), typeof(CartesianChart),
+                LiveCharts.CurrentSettings.DefaultZoomSpeed, BindingMode.Default, null);
 
         public static readonly BindableProperty AnimationsSpeedProperty =
            BindableProperty.Create(
-               nameof(AnimationsSpeed), typeof(TimeSpan), typeof(CartesianChart), TimeSpan.FromMilliseconds(500));
+               nameof(AnimationsSpeed), typeof(TimeSpan), typeof(CartesianChart), LiveCharts.CurrentSettings.DefaultAnimationsSpeed);
 
         public static readonly BindableProperty EasingFunctionProperty =
             BindableProperty.Create(
-                nameof(EasingFunction), typeof(Func<float, float>), typeof(CartesianChart), EasingFunctions.SinOut);
+                nameof(EasingFunction), typeof(Func<float, float>), typeof(CartesianChart),
+                LiveCharts.CurrentSettings.DefaultEasingFunction);
 
         public static readonly BindableProperty LegendPositionProperty =
             BindableProperty.Create(
-                nameof(LegendPosition), typeof(LegendPosition), typeof(CartesianChart), LegendPosition.Hidden);
+                nameof(LegendPosition), typeof(LegendPosition), typeof(CartesianChart), LiveCharts.CurrentSettings.DefaultLegendPosition);
 
         public static readonly BindableProperty LegendOrientationProperty =
             BindableProperty.Create(
-                nameof(LegendOrientation), typeof(LegendOrientation), typeof(CartesianChart), LegendOrientation.Auto);
+                nameof(LegendOrientation), typeof(LegendOrientation), typeof(CartesianChart),
+                LiveCharts.CurrentSettings.DefaultLegendOrientation);
 
         public static readonly BindableProperty TooltipPositionProperty =
            BindableProperty.Create(
-               nameof(TooltipPosition), typeof(TooltipPosition), typeof(CartesianChart), TooltipPosition.Hidden);
+               nameof(TooltipPosition), typeof(TooltipPosition), typeof(CartesianChart), LiveCharts.CurrentSettings.DefaultTooltipPosition);
 
         public static readonly BindableProperty TooltipFindingStrategyProperty =
             BindableProperty.Create(
-                nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(CartesianChart), TooltipFindingStrategy.CompareOnlyX);
+                nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(CartesianChart), 
+                LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy);
 
         public IEnumerable<ISeries> Series
         {
@@ -201,9 +206,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             set { SetValue(TooltipFindingStrategyProperty, value); }
         }
 
-        public ZoomMode ZoomMode
+        public ZoomAndPanMode ZoomMode
         {
-            get { return (ZoomMode)GetValue(ZoomModeProperty); }
+            get { return (ZoomAndPanMode)GetValue(ZoomModeProperty); }
             set { SetValue(ZoomModeProperty, value); }
         }
 

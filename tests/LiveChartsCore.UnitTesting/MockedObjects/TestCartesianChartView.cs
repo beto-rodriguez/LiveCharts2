@@ -35,7 +35,7 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
 
         public IEnumerable<ISeries> Series { get; set; }
 
-        public ZoomMode ZoomMode { get; set; }
+        public ZoomAndPanMode ZoomMode { get; set; }
 
         public double ZoomingSpeed { get; set; }
 

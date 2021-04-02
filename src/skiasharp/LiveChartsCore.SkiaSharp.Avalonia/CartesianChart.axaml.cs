@@ -64,30 +64,37 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
         public static readonly AvaloniaProperty<IEnumerable<IAxis>> YAxesProperty =
             AvaloniaProperty.Register<CartesianChart, IEnumerable<IAxis>>(nameof(YAxes), null, inherits: true);
 
-        public static readonly AvaloniaProperty<ZoomMode> ZoomModeProperty =
-            AvaloniaProperty.Register<CartesianChart, ZoomMode>(nameof(ZoomMode), ZoomMode.Both, inherits: true);
+        public static readonly AvaloniaProperty<ZoomAndPanMode> ZoomModeProperty =
+            AvaloniaProperty.Register<CartesianChart, ZoomAndPanMode>(
+                nameof(ZoomMode), LiveCharts.CurrentSettings.DefaultZoomMode, inherits: true);
 
         public static readonly AvaloniaProperty<double> ZoomingSpeedProperty =
-            AvaloniaProperty.Register<CartesianChart, double>(nameof(ZoomingSpeed), 0.5d, inherits: true);
+            AvaloniaProperty.Register<CartesianChart, double>(
+                nameof(ZoomingSpeed), LiveCharts.CurrentSettings.DefaultZoomSpeed, inherits: true);
 
         public static readonly AvaloniaProperty<TimeSpan> AnimationsSpeedProperty =
-            AvaloniaProperty.Register<CartesianChart, TimeSpan>(nameof(AnimationsSpeed), TimeSpan.FromMilliseconds(500), inherits: true);
+            AvaloniaProperty.Register<CartesianChart, TimeSpan>(
+                nameof(AnimationsSpeed), LiveCharts.CurrentSettings.DefaultAnimationsSpeed, inherits: true);
 
         public static readonly AvaloniaProperty<Func<float, float>> EasingFunctionProperty =
-            AvaloniaProperty.Register<CartesianChart, Func<float, float>>(nameof(AnimationsSpeed), EasingFunctions.SinOut, inherits: true);
+            AvaloniaProperty.Register<CartesianChart, Func<float, float>>(
+                nameof(AnimationsSpeed), LiveCharts.CurrentSettings.DefaultEasingFunction, inherits: true);
 
         public static readonly AvaloniaProperty<LegendPosition> LegendPositionProperty =
-            AvaloniaProperty.Register<CartesianChart, LegendPosition>(nameof(LegendPosition), LegendPosition.Hidden, inherits: true);
+            AvaloniaProperty.Register<CartesianChart, LegendPosition>(
+                nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultLegendPosition, inherits: true);
 
         public static readonly AvaloniaProperty<LegendOrientation> LegendOrientationProperty =
-            AvaloniaProperty.Register<CartesianChart, LegendOrientation>(nameof(LegendOrientation), LegendOrientation.Auto, inherits: true);
+            AvaloniaProperty.Register<CartesianChart, LegendOrientation>(
+                nameof(LegendOrientation), LiveCharts.CurrentSettings.DefaultLegendOrientation, inherits: true);
 
         public static readonly AvaloniaProperty<TooltipPosition> TooltipPositionProperty =
-            AvaloniaProperty.Register<CartesianChart, TooltipPosition>(nameof(TooltipPosition), TooltipPosition.Hidden, inherits: true);
+            AvaloniaProperty.Register<CartesianChart, TooltipPosition>(
+                nameof(TooltipPosition), LiveCharts.CurrentSettings.DefaultTooltipPosition, inherits: true);
 
         public static readonly AvaloniaProperty<TooltipFindingStrategy> TooltipFindingStrategyProperty =
             AvaloniaProperty.Register<CartesianChart, TooltipFindingStrategy>(
-                nameof(LegendPosition), TooltipFindingStrategy.CompareOnlyX, inherits: true);
+                nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, inherits: true);
 
         public IEnumerable<ISeries> Series
         {
@@ -107,9 +114,9 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             set { SetValue(YAxesProperty, value); }
         }
 
-        public ZoomMode ZoomMode
+        public ZoomAndPanMode ZoomMode
         {
-            get { return (ZoomMode)GetValue(ZoomModeProperty); }
+            get { return (ZoomAndPanMode)GetValue(ZoomModeProperty); }
             set { SetValue(ZoomModeProperty, value); }
         }
 

@@ -40,7 +40,7 @@ namespace LiveChartsCore
         private IAxis<TDrawingContext>[] secondaryAxes = new IAxis<TDrawingContext>[0];
         private IAxis<TDrawingContext>[] primaryAxes = new IAxis<TDrawingContext>[0];
         private double zoomingSpeed = 0;
-        private ZoomMode zoomMode;
+        private ZoomAndPanMode zoomMode;
         private ICartesianSeries<TDrawingContext>[] series = new ICartesianSeries<TDrawingContext>[0];
 
         public CartesianChart(
@@ -96,67 +96,102 @@ namespace LiveChartsCore
             var xAxis = secondaryAxes[xAxisIndex];
             var yAxis = primaryAxes[yAxisIndex];
 
-            var xScaler = new Scaler(
-                drawMaringLocation, drawMarginSize, xAxis.Orientation, xAxis.DataBounds, xAxis.IsInverted);
-
-            var yScaler = new Scaler(
-                drawMaringLocation, drawMarginSize, yAxis.Orientation, yAxis.DataBounds, xAxis.IsInverted);
+            var xScaler = new Scaler(drawMaringLocation, drawMarginSize, xAxis);
+            var yScaler = new Scaler(drawMaringLocation, drawMarginSize, yAxis);
 
             return new PointF(xScaler.ToChartValues(point.X), yScaler.ToChartValues(point.Y));
         }
 
-        public void ZoomIn(Point pivot)
+        public void Zoom(PointF pivot, ZoomDirection direction)
         {
             if (primaryAxes == null || secondaryAxes == null) return;
 
             var speed = zoomingSpeed < 0.1 ? 0.1 : (zoomingSpeed > 0.95 ? 0.95 : zoomingSpeed);
+            var m = direction == ZoomDirection.ZoomIn ? speed : 1/speed;
 
-            for (var index = 0; index < secondaryAxes.Length; index++)
+            if ((zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X)
             {
-                var xi = secondaryAxes[index];
+                for (var index = 0; index < secondaryAxes.Length; index++)
+                {
+                    var xi = secondaryAxes[index];
+                    var px = new Scaler(drawMaringLocation, drawMarginSize, xi).ToChartValues(pivot.X);
 
-                var px = new Scaler(
-                    drawMaringLocation, drawMarginSize, xi.Orientation, xi.DataBounds, xi.IsInverted)
-                    .ToChartValues(pivot.X);
+                    var max = xi.MaxLimit == null ? xi.DataBounds.Max : xi.MaxLimit;
+                    var min = xi.MinLimit == null ? xi.DataBounds.Min : xi.MinLimit;
 
-                var max = xi.MaxLimit == null ? xi.DataBounds.Max : xi.MaxLimit;
-                var min = xi.MinLimit == null ? xi.DataBounds.Min : xi.MinLimit;
+                    var l = max - min;
 
-                var l = max - min;
+                    var rMin = (px - min) / l;
+                    var rMax = 1 - rMin;
 
-                var rMin = (px - min) / l;
-                var rMax = 1 - rMin;
+                    var target = l * m;
+                    //if (target < xi.View.MinRange) return;
+                    var mint = px - target * rMin;
+                    var maxt = px + target * rMax;
 
-                var target = l * speed;
-                //if (target < xi.View.MinRange) return;
-                var mint = px - target * rMin;
-                var maxt = px + target * rMax;
-                xi.MinLimit = mint;
-                xi.MaxLimit = maxt;
+                    xi.MaxLimit = maxt;
+                    xi.MinLimit = mint;
+                }
             }
 
-            for (var index = 0; index < primaryAxes.Length; index++)
+            if ((zoomMode & ZoomAndPanMode.Y) == ZoomAndPanMode.Y)
             {
-                var yi = primaryAxes[index];
+                for (var index = 0; index < primaryAxes.Length; index++)
+                {
+                    var yi = primaryAxes[index];
+                    var px = new Scaler(drawMaringLocation, drawMarginSize, yi).ToChartValues(pivot.X);
 
-                var px = new Scaler(
-                    drawMaringLocation, drawMarginSize, yi.Orientation, yi.DataBounds, yi.IsInverted)
-                    .ToChartValues(pivot.X);
+                    var max = yi.MaxLimit == null ? yi.DataBounds.Max : yi.MaxLimit;
+                    var min = yi.MinLimit == null ? yi.DataBounds.Min : yi.MinLimit;
 
-                var max = yi.MaxLimit == null ? yi.DataBounds.Max : yi.MaxLimit;
-                var min = yi.MinLimit == null ? yi.DataBounds.Min : yi.MinLimit;
+                    var l = max - min;
 
-                var l = max - min;
+                    var rMin = (px - min) / l;
+                    var rMax = 1 - rMin;
 
-                var rMin = (px - min) / l;
-                var rMax = 1 - rMin;
+                    var target = l * m;
+                    //if (target < xi.View.MinRange) return;
+                    var mint = px - target * rMin;
+                    var maxt = px + target * rMax;
 
-                var target = l * speed;
-                //if (target < xi.View.MinRange) return;
-                var mint = px - target * rMin;
-                var maxt = px + target * rMax;
-                yi.MinLimit = mint;
-                yi.MaxLimit = maxt;
+                    yi.MaxLimit = maxt;
+                    yi.MinLimit = mint;
+                }
+            }
+        }
+
+        public void Pan(PointF delta)
+        {
+            if ((zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X)
+            {
+                for (var index = 0; index < secondaryAxes.Length; index++)
+                {
+                    var xi = secondaryAxes[index];
+                    var scale = new Scaler(drawMaringLocation, drawMarginSize, xi);
+                    var dx = scale.ToChartValues(-delta.X) - scale.ToChartValues(0);
+
+                    var max = xi.MaxLimit == null ? xi.DataBounds.Max : xi.MaxLimit;
+                    var min = xi.MinLimit == null ? xi.DataBounds.Min : xi.MinLimit;
+
+                    xi.MaxLimit = max + dx;
+                    xi.MinLimit = min + dx;
+                }
+            }
+
+            if ((zoomMode & ZoomAndPanMode.Y) == ZoomAndPanMode.Y)
+            {
+                for (var index = 0; index < primaryAxes.Length; index++)
+                {
+                    var yi = secondaryAxes[index];
+                    var scale = new Scaler(drawMaringLocation, drawMarginSize, yi);
+                    var dy = scale.ToChartValues(delta.Y) - scale.ToChartValues(0);
+
+                    var max = yi.MaxLimit == null ? yi.DataBounds.Max : yi.MaxLimit;
+                    var min = yi.MinLimit == null ? yi.DataBounds.Min : yi.MinLimit;
+
+                    yi.MaxLimit = max + dy;
+                    yi.MinLimit = min + dy;
+                }
             }
         }
 
@@ -264,6 +299,13 @@ namespace LiveChartsCore
             var toDeleteAxes = new HashSet<IAxis<TDrawingContext>>(everMeasuredAxes);
             foreach (var axis in totalAxes)
             {
+                if (axis.DataBounds.Max == axis.DataBounds.Min)
+                {
+                    var c = axis.DataBounds.Min * 0.3;
+                    axis.DataBounds.Min = axis.DataBounds.Min - c;
+                    axis.DataBounds.Max = axis.DataBounds.Max + c;
+                }
+
                 axis.Measure(this);
                 everMeasuredAxes.Add(axis);
                 toDeleteAxes.Remove(axis);

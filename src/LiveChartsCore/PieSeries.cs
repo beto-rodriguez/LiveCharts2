@@ -175,7 +175,7 @@ namespace LiveChartsCore
                 toDeletePoints.Remove(point);
             }
 
-            var u = Scaler.GetDefaultScaler(AxisOrientation.X);
+            var u = new Scaler();
             foreach (var point in toDeletePoints)
             {
                 if (point.Context.Chart != chart.View) continue;
@@ -288,7 +288,7 @@ namespace LiveChartsCore
 
         public override void Delete(IChartView chart)
         {
-            var u = Scaler.GetDefaultScaler(AxisOrientation.X);
+            var u = new Scaler();
 
             var toDelete = new List<ChartPoint>();
             foreach (var point in everFetched)

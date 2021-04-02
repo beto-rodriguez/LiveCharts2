@@ -23,10 +23,12 @@
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows;
 
@@ -37,6 +39,10 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         private readonly CollectionDeepObserver<ISeries> seriesObserver;
         private readonly CollectionDeepObserver<IAxis> xObserver;
         private readonly CollectionDeepObserver<IAxis> yObserver;
+        private readonly ActionThrottler panningThrottler;
+        private System.Windows.Point? previous;
+        private System.Windows.Point? current;
+        private bool isPanning = false;
 
         static CartesianChart()
         {
@@ -52,6 +58,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             XAxes = new List<IAxis>() { new Axis() };
             YAxes = new List<IAxis>() { new Axis() };
             Series = new ObservableCollection<ISeries>();
+
+            MouseWheel += OnMouseWheel;
+            MouseDown += OnMouseDown;
+            MouseMove += OnMouseMove;
+            MouseUp += OnMouseUp;
+
+            panningThrottler = new ActionThrottler(DoPan, TimeSpan.FromMilliseconds(30));
         }
 
         public static readonly DependencyProperty SeriesProperty =
@@ -95,11 +108,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty ZoomModeProperty =
             DependencyProperty.Register(
-                nameof(ZoomMode), typeof(ZoomMode), typeof(CartesianChart), new PropertyMetadata(ZoomMode.Both));
+                nameof(ZoomMode), typeof(ZoomAndPanMode), typeof(CartesianChart),
+                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultZoomMode));
 
         public static readonly DependencyProperty ZoomingSpeedProperty =
             DependencyProperty.Register(
-                nameof(ZoomingSpeed), typeof(double), typeof(CartesianChart), new PropertyMetadata(0.5d));
+                nameof(ZoomingSpeed), typeof(double), typeof(CartesianChart),
+                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultZoomSpeed));
 
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;
 
@@ -121,9 +136,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set { SetValue(YAxesProperty, value); }
         }
 
-        public ZoomMode ZoomMode
+        public ZoomAndPanMode ZoomMode
         {
-            get { return (ZoomMode)GetValue(ZoomModeProperty); }
+            get { return (ZoomAndPanMode)GetValue(ZoomModeProperty); }
             set { SetValue(ZoomModeProperty, value); }
         }
 
@@ -157,6 +172,52 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         {
             if (core == null) return;
             Application.Current.Dispatcher.Invoke(() => core.Update());
+        }
+
+        private void OnMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            var c = (CartesianChart<SkiaSharpDrawingContext>)core;
+            var p = e.GetPosition(this);
+            c.Zoom(new PointF((float)p.X, (float)p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+        }
+
+        private void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            isPanning = true;
+            previous = e.GetPosition(this);
+            CaptureMouse();
+            Trace.WriteLine("down");
+        }
+
+        private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (!isPanning || previous == null) return;
+
+            current = e.GetPosition(this);
+            panningThrottler.Call();
+        }
+
+        private void DoPan()
+        {
+            if (previous == null || current == null) return;
+
+            var c = (CartesianChart<SkiaSharpDrawingContext>)core;
+
+            c.Pan(
+                new PointF(
+                (float)(current.Value.X - previous.Value.X),
+                (float)(current.Value.Y - previous.Value.Y)));
+
+            previous = new System.Windows.Point(current.Value.X, current.Value.Y);
+        }
+
+        private void OnMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Trace.WriteLine("up");
+            if (!isPanning) return;
+            isPanning = false;
+            previous = null;
+            ReleaseMouseCapture();
         }
     }
 }

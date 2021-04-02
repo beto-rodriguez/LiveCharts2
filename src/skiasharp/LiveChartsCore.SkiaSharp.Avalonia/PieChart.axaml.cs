@@ -64,24 +64,28 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             AvaloniaProperty.Register<PieChart, IEnumerable<ISeries>>(nameof(Series), new List<ISeries>(), inherits: true);
 
         public static readonly AvaloniaProperty<TimeSpan> AnimationsSpeedProperty =
-            AvaloniaProperty.Register<PieChart, TimeSpan>(nameof(AnimationsSpeed), TimeSpan.FromMilliseconds(500), inherits: true);
+            AvaloniaProperty.Register<PieChart, TimeSpan>(
+                nameof(AnimationsSpeed), LiveCharts.CurrentSettings.DefaultAnimationsSpeed, inherits: true);
 
         public static readonly AvaloniaProperty<Func<float, float>> EasingFunctionProperty =
             AvaloniaProperty.Register<PieChart, Func<float, float>>(
-                nameof(AnimationsSpeed), EasingFunctions.SinOut, inherits: true);
+                nameof(AnimationsSpeed), LiveCharts.CurrentSettings.DefaultEasingFunction, inherits: true);
 
         public static readonly AvaloniaProperty<LegendPosition> LegendPositionProperty =
-            AvaloniaProperty.Register<PieChart, LegendPosition>(nameof(LegendPosition), LegendPosition.Hidden, inherits: true);
+            AvaloniaProperty.Register<PieChart, LegendPosition>(
+                nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultLegendPosition, inherits: true);
 
         public static readonly AvaloniaProperty<LegendOrientation> LegendOrientationProperty =
-            AvaloniaProperty.Register<PieChart, LegendOrientation>(nameof(LegendOrientation), LegendOrientation.Auto, inherits: true);
+            AvaloniaProperty.Register<PieChart, LegendOrientation>(
+                nameof(LegendOrientation), LiveCharts.CurrentSettings.DefaultLegendOrientation, inherits: true);
 
         public static readonly AvaloniaProperty<TooltipPosition> TooltipPositionProperty =
-            AvaloniaProperty.Register<PieChart, TooltipPosition>(nameof(TooltipPosition), TooltipPosition.Hidden, inherits: true);
+            AvaloniaProperty.Register<PieChart, TooltipPosition>(
+                nameof(TooltipPosition), LiveCharts.CurrentSettings.DefaultTooltipPosition, inherits: true);
 
         public static readonly AvaloniaProperty<TooltipFindingStrategy> TooltipFindingStrategyProperty =
             AvaloniaProperty.Register<PieChart, TooltipFindingStrategy>(
-                nameof(LegendPosition), TooltipFindingStrategy.CompareOnlyX, inherits: true);
+                nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, inherits: true);
 
         public IEnumerable<ISeries> Series
         {

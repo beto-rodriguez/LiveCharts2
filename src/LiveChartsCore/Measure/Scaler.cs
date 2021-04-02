@@ -30,19 +30,26 @@ namespace LiveChartsCore.Measure
         private readonly float m, mInv, minPx, maxPx, deltaPx, minVal, maxVal, deltaVal;
 
         public Scaler(
-            PointF drawMaringLocation, SizeF drawMarginSize, AxisOrientation orientation, Bounds axisBounds, bool isInverted)
+            PointF drawMaringLocation, SizeF drawMarginSize, IAxis axis)
         {
-            if (orientation == AxisOrientation.Unknown)
+            if (axis.Orientation == AxisOrientation.Unknown)
                 throw new Exception("The axis is not ready to be scaled.");
 
-            if (orientation == AxisOrientation.X)
+            if (axis.Orientation == AxisOrientation.X)
             {
                 minPx = drawMaringLocation.X;
                 maxPx = drawMarginSize.Width;
                 deltaPx = maxPx - minPx;
 
-                maxVal = (float)(isInverted ? axisBounds.min : axisBounds.max);
-                minVal = (float)(isInverted ? axisBounds.max : axisBounds.min);
+                maxVal = (float)(axis.IsInverted ? axis.DataBounds.Min : axis.DataBounds.Max);
+                minVal = (float)(axis.IsInverted ? axis.DataBounds.Max : axis.DataBounds.Min);
+
+                if (axis.MaxLimit != null || axis.MinLimit != null)
+                {
+                    maxVal = (float)(axis.IsInverted ? axis.MinLimit ?? minVal : axis.MaxLimit ?? maxVal);
+                    minVal = (float)(axis.IsInverted ? axis.MaxLimit ?? maxVal : axis.MinLimit ?? minVal);
+                }
+
                 deltaVal = maxVal - minVal;
             }
             else
@@ -51,16 +58,39 @@ namespace LiveChartsCore.Measure
                 maxPx = drawMarginSize.Height;
                 deltaPx = maxPx - minPx;
 
-                maxVal = (float)(isInverted ? axisBounds.max : axisBounds.min);
-                minVal = (float)(isInverted ? axisBounds.min : axisBounds.max);
+                maxVal = (float)(axis.IsInverted ? axis.DataBounds.Max : axis.DataBounds.Min);
+                minVal = (float)(axis.IsInverted ? axis.DataBounds.Min : axis.DataBounds.Max);
+
+                if (axis.MaxLimit != null || axis.MinLimit != null)
+                {
+                    maxVal = (float)(axis.IsInverted ? axis.MaxLimit ?? maxVal : axis.MinLimit ?? minVal);
+                    minVal = (float)(axis.IsInverted ? axis.MinLimit ?? minVal : axis.MaxLimit ?? maxVal);
+                }
+
                 deltaVal = maxVal - minVal;
             }
 
             m = deltaPx / deltaVal;
             mInv = 1 / m;
+
+            if (!double.IsNaN(m)) return;
+            m = 0;
+            mInv = 0;
         }
 
-        public static Scaler GetDefaultScaler(AxisOrientation orientation) => new(new PointF(0, 0), new SizeF(0, 100), orientation, new Bounds(), false);
+        public Scaler()
+        {
+            minPx = 0;
+            maxPx = 100;
+            deltaPx = maxPx - minPx;
+
+            maxVal = 0;
+            minVal = 100;
+            deltaVal = maxVal - minVal;
+
+            m = deltaPx / deltaVal;
+            mInv = 1 / m;
+        }
 
         public float ToPixels(float value) => minPx + (value - minVal) * m;
 

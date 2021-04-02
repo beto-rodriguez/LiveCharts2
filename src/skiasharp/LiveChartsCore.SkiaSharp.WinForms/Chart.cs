@@ -72,22 +72,22 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => motionCanvas.CanvasCore;
 
-        public LegendPosition LegendPosition { get; set; }
+        public LegendPosition LegendPosition { get; set; } = LiveCharts.CurrentSettings.DefaultLegendPosition;
 
-        public LegendOrientation LegendOrientation { get; set; }
+        public LegendOrientation LegendOrientation { get; set; } = LiveCharts.CurrentSettings.DefaultLegendOrientation;
 
         public IChartLegend<SkiaSharpDrawingContext> Legend => null;
 
         public Margin DrawMargin { get; set; }
 
-        public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(500);
+        public TimeSpan AnimationsSpeed { get; set; } = LiveCharts.CurrentSettings.DefaultAnimationsSpeed;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Func<float, float> EasingFunction { get; set; } = EasingFunctions.Lineal;
+        public Func<float, float> EasingFunction { get; set; } = LiveCharts.CurrentSettings.DefaultEasingFunction;
 
-        public TooltipPosition TooltipPosition { get; set; }
+        public TooltipPosition TooltipPosition { get; set; } = LiveCharts.CurrentSettings.DefaultTooltipPosition;
 
-        public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
+        public TooltipFindingStrategy TooltipFindingStrategy { get; set; } = LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy;
 
         public IChartTooltip<SkiaSharpDrawingContext> Tooltip => null;
 

@@ -25,6 +25,7 @@ using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
 using System;
 using System.Collections.Generic;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore
 {
@@ -36,6 +37,15 @@ namespace LiveChartsCore
         private object? currentFactory;
         private readonly Dictionary<Type, object> mappers = new();
         private readonly Dictionary<Type, object> seriesStyleBuilder = new();
+
+        public Func<float, float> DefaultEasingFunction { get; set; } = EasingFunctions.QuadraticOut;
+        public TimeSpan DefaultAnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(500);
+        public double DefaultZoomSpeed { get; set; } = 0.8;
+        public ZoomAndPanMode DefaultZoomMode { get; set; } = ZoomAndPanMode.X;
+        public LegendPosition DefaultLegendPosition { get; set; } = LegendPosition.Hidden;
+        public LegendOrientation DefaultLegendOrientation { get; set; } = LegendOrientation.Auto;
+        public TooltipPosition DefaultTooltipPosition { get; set; } = TooltipPosition.Hidden;
+        public TooltipFindingStrategy DefaultTooltipFindingStrategy{ get; set; } = TooltipFindingStrategy.CompareOnlyX;
 
         /// <summary>
         /// Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a <see cref="ChartPoint"/> instance, 
@@ -81,6 +91,30 @@ namespace LiveChartsCore
                 throw new NotImplementedException($"There is no a {nameof(IDataFactoryProvider<TDrawingContext>)} registered");
 
             return (IDataFactoryProvider<TDrawingContext>) currentFactory;
+        }
+
+        public LiveChartsSettings WithDefaultAnimationsSpeed(TimeSpan animationsSpeed)
+        {
+            DefaultAnimationsSpeed = animationsSpeed;
+            return this;
+        }
+
+        public LiveChartsSettings WithDefaultEasingFunction(Func<float, float> easingFunction)
+        {
+            DefaultEasingFunction = easingFunction;
+            return this;
+        }
+
+        public LiveChartsSettings WithDefaultZoomSpeed(double speed)
+        {
+            DefaultZoomSpeed = speed;
+            return this;
+        }
+
+        public LiveChartsSettings WithDefaultZoomMode(ZoomAndPanMode zoomMode)
+        {
+            DefaultZoomMode = zoomMode;
+            return this;
         }
 
         public LiveChartsSettings RemoveMap<TModel>()

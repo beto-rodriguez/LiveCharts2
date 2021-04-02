@@ -58,27 +58,33 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty AnimationsSpeedProperty =
             DependencyProperty.Register(
-                nameof(AnimationsSpeed), typeof(TimeSpan), typeof(Chart), new PropertyMetadata(TimeSpan.FromMilliseconds(500)));
+                nameof(AnimationsSpeed), typeof(TimeSpan), typeof(Chart),
+                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultAnimationsSpeed));
 
         public static readonly DependencyProperty EasingFunctionProperty =
             DependencyProperty.Register(
-                nameof(EasingFunction), typeof(Func<float, float>), typeof(Chart), new PropertyMetadata(EasingFunctions.SinOut));
+                nameof(EasingFunction), typeof(Func<float, float>), typeof(Chart),
+                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultEasingFunction));
 
         public static readonly DependencyProperty LegendPositionProperty =
             DependencyProperty.Register(
-                nameof(LegendPosition), typeof(LegendPosition), typeof(Chart), new PropertyMetadata(LegendPosition.Hidden));
+                nameof(LegendPosition), typeof(LegendPosition), typeof(Chart), 
+                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultLegendPosition));
 
         public static readonly DependencyProperty LegendOrientationProperty =
             DependencyProperty.Register(
-                nameof(LegendOrientation), typeof(LegendOrientation), typeof(Chart), new PropertyMetadata(LegendOrientation.Auto));
+                nameof(LegendOrientation), typeof(LegendOrientation), typeof(Chart), 
+                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultLegendOrientation));
 
         public static readonly DependencyProperty TooltipPositionProperty =
            DependencyProperty.Register(
-               nameof(TooltipPosition), typeof(TooltipPosition), typeof(Chart), new PropertyMetadata(TooltipPosition.Hidden));
+               nameof(TooltipPosition), typeof(TooltipPosition), typeof(Chart), 
+               new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipPosition));
 
         public static readonly DependencyProperty TooltipFindingStrategyProperty =
             DependencyProperty.Register(
-                nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(Chart), new PropertyMetadata(TooltipFindingStrategy.CompareOnlyX));
+                nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(Chart), 
+                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy));
 
         public TimeSpan AnimationsSpeed
         {

@@ -18,12 +18,6 @@ namespace WPFSample
 
         public string[] Samples { get; set; }
 
-        private void AcrylicWindow_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-                DragMove();
-        }
-
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var ctx = (sender as FrameworkElement).DataContext as string;

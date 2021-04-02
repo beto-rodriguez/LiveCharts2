@@ -4,8 +4,7 @@
         Background="#fafafa"
         WindowStartupLocation="CenterScreen"
         BorderThickness="1"
-        BorderBrush="#eeeeee"
-        MouseDown="AcrylicWindow_MouseDown">
+        BorderBrush="#eeeeee">
 
     <Grid Margin="25 0 0 0">
         <Grid.ColumnDefinitions>

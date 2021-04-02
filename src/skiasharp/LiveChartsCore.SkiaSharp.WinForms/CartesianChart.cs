@@ -88,10 +88,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public ZoomMode ZoomMode { get; set; }
+        public ZoomAndPanMode ZoomMode { get; set; } = LiveCharts.CurrentSettings.DefaultZoomMode;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public double ZoomingSpeed { get; set; }
+        public double ZoomingSpeed { get; set; } = LiveCharts.CurrentSettings.DefaultZoomSpeed;
 
         protected override void InitializeCore()
         {
