@@ -44,7 +44,8 @@ namespace LiveChartsCore
         private const float wedgeLength = 8;
         internal AxisOrientation orientation;
         private double minStep = 0;
-        private Bounds? dataBounds = null;
+        private Bounds dataBounds = new();
+        private Bounds visibleDataBounds = new();
         private Bounds? previousDataBounds = null;
         private double labelsRotation;
         private readonly Dictionary<CartesianChart<TDrawingContext>, Dictionary<string, AxisVisualSeprator<TDrawingContext>>> activeSeparators = new();
@@ -68,22 +69,16 @@ namespace LiveChartsCore
 
         #region properties
 
+        List<IDrawableTask<TDrawingContext>> IAxis<TDrawingContext>.DeletingTasks => deletingTasks;
+
         float IAxis.Xo { get => xo; set => xo = value; }
         float IAxis.Yo { get => yo; set => yo = value; }
 
-        /// <summary>
-        /// Occurs when a property value changes.
-        /// </summary>
-        /// <returns></returns>
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        List<IDrawableTask<TDrawingContext>> IAxis<TDrawingContext>.DeletingTasks => deletingTasks;
-
-        /// <inheritdoc cref="IAxis.PreviousDataBounds"/>
         Bounds? IAxis.PreviousDataBounds => previousDataBounds;
 
-        /// <inheritdoc cref="IAxis.DataBounds"/>
-        Bounds IAxis.DataBounds => dataBounds ??= new Bounds();
+        Bounds IAxis.DataBounds => dataBounds;
+
+        Bounds IAxis.VisibleDataBounds => visibleDataBounds;
 
         /// <inheritdoc cref="IAxis.Orientation"/>
         public AxisOrientation Orientation { get => orientation; }
@@ -153,6 +148,12 @@ namespace LiveChartsCore
 
         #endregion
 
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
+        /// <returns></returns>
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         /// <inheritdoc cref="IAxis{TDrawingContext}.Measure(CartesianChart{TDrawingContext})"/>
         public void Measure(CartesianChart<TDrawingContext> chart)
         {
@@ -216,7 +217,10 @@ namespace LiveChartsCore
             var r = (float)labelsRotation;
             var hasRotation = Math.Abs(r) > 0.01f;
 
-            var start = Math.Truncate(dataBounds.min / s) * s;
+            var max = MaxLimit == null ? dataBounds.Max : MaxLimit.Value;
+            var min = MinLimit == null ? dataBounds.Min : MinLimit.Value;
+
+            var start = Math.Truncate(min / s) * s;
             if (!activeSeparators.TryGetValue(chart, out var separators))
             {
                 separators = new Dictionary<string, AxisVisualSeprator<TDrawingContext>>();
@@ -225,9 +229,9 @@ namespace LiveChartsCore
 
             var measured = new HashSet<AxisVisualSeprator<TDrawingContext>>();
 
-            for (var i = start; i <= dataBounds.max; i += s)
+            for (var i = start; i <= max; i += s)
             {
-                if (i < dataBounds.min) continue;
+                if (i < min) continue;
 
                 var label = labeler(i);
                 float x, y;
@@ -430,6 +434,7 @@ namespace LiveChartsCore
             this.orientation = orientation;
             previousDataBounds = dataBounds;
             dataBounds = new Bounds();
+            visibleDataBounds = new Bounds();
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>

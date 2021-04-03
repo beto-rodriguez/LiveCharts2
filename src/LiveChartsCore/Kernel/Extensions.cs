@@ -90,13 +90,16 @@ namespace LiveChartsCore.Kernel
         public static AxisTick GetTick<TDrawingContext>(this IAxis<TDrawingContext> axis, SizeF controlSize)
             where TDrawingContext : DrawingContext
         {
-            return GetTick(axis, controlSize, axis.DataBounds);
+            return GetTick(axis, controlSize, axis.VisibleDataBounds);
         }
 
         public static AxisTick GetTick<TDrawingContext>(this IAxis<TDrawingContext> axis, SizeF controlSize, Bounds bounds)
            where TDrawingContext : DrawingContext
         {
-            var range = bounds.max - bounds.min;
+            var max = axis.MaxLimit == null ? bounds.Max : axis.MaxLimit.Value;
+            var min = axis.MinLimit == null ? bounds.Min : axis.MinLimit.Value;
+
+            var range = max - min;
             var separations = axis.Orientation == AxisOrientation.Y
                 ? Math.Round(controlSize.Height / (12 * cf), 0)
                 : Math.Round(controlSize.Width / (20 * cf), 0);

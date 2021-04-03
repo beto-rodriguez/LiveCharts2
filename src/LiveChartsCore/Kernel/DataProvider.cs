@@ -73,9 +73,18 @@ namespace LiveChartsCore.Kernel
             }
         }
 
-        public virtual DimensionalBounds GetCartesianBounds(CartesianChart<TDrawingContext> chart, IDrawableSeries<TDrawingContext> series, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
+        public virtual DimensionalBounds GetCartesianBounds(
+            CartesianChart<TDrawingContext> chart,
+            IDrawableSeries<TDrawingContext> series,
+            IAxis<TDrawingContext> x,
+            IAxis<TDrawingContext> y)
         {
             var stack = chart.SeriesContext.GetStackPosition(series, series.GetStackGroup());
+
+            var xMin = x.MinLimit ?? float.MinValue;
+            var xMax = x.MaxLimit ?? float.MaxValue;
+            var yMin = y.MinLimit ?? float.MinValue;
+            var yMax = y.MaxLimit ?? float.MaxValue;
 
             var bounds = new DimensionalBounds();
             foreach (var point in series.Fetch(chart))
@@ -87,6 +96,12 @@ namespace LiveChartsCore.Kernel
 
                 bounds.PrimaryBounds.AppendValue(primary);
                 bounds.SecondaryBounds.AppendValue(secondary);
+
+                if (primary >= yMin && primary <= yMax && secondary >= xMin && secondary <= xMax)
+                {
+                    bounds.VisibleSecondaryBounds.AppendValue(secondary);
+                    bounds.VisiblePrimaryBounds.AppendValue(primary);
+                }
             }
 
             return bounds;

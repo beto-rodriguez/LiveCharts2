@@ -61,6 +61,7 @@ namespace LiveChartsCore.Measure
             // the equals comparison is important, we need to register also the coordinates that are equal to the current limit.
             if (max <= value) { max = value; ab |= AffectedBound.Max; }
             if (min >= value) { min = value; ab |= AffectedBound.Min; }
+
             return ab;
         }
     }

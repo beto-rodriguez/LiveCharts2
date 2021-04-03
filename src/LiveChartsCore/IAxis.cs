@@ -51,6 +51,14 @@ namespace LiveChartsCore
         Bounds DataBounds { get; }
 
         /// <summary>
+        /// Gets the data visible bounds, the min and max visible values in the axis.
+        /// </summary>
+        /// <value>
+        /// The data bounds.
+        /// </value>
+        Bounds VisibleDataBounds { get; }
+
+        /// <summary>
         /// Gets the orientation.
         /// </summary>
         /// <value>

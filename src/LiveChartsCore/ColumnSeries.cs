@@ -196,7 +196,7 @@ namespace LiveChartsCore
         {
             var baseBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
 
-            var tick = secondaryAxis.GetTick(chart.ControlSize, baseBounds.PrimaryBounds);
+            var tick = secondaryAxis.GetTick(chart.ControlSize, baseBounds.VisiblePrimaryBounds);
 
             return new DimensionalBounds
             {
@@ -209,7 +209,17 @@ namespace LiveChartsCore
                 {
                     Max = baseBounds.PrimaryBounds.Max + tick.Value,
                     min = baseBounds.PrimaryBounds.min - tick.Value
-                }
+                },
+                VisibleSecondaryBounds = new Bounds
+                {
+                    Max = baseBounds.VisibleSecondaryBounds.Max + 0.5,
+                    Min = baseBounds.VisibleSecondaryBounds.Min - 0.5
+                },
+                VisiblePrimaryBounds = new Bounds
+                {
+                    Max = baseBounds.VisiblePrimaryBounds.Max + tick.Value,
+                    min = baseBounds.VisiblePrimaryBounds.min - tick.Value
+                },
             };
         }
 

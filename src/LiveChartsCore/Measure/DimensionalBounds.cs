@@ -29,40 +29,47 @@ namespace LiveChartsCore.Kernel
     /// </summary>
     public class DimensionalBounds
     {
-        private Bounds secondaryBounds;
-        private Bounds primaryBounds;
-        private Bounds tertiaryBounds;
-        private Bounds quaternaryBounds;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DimensionalBounds"/> class.
         /// </summary>
         public DimensionalBounds()
         {
-            secondaryBounds = new Bounds();
-            primaryBounds = new Bounds();
-            tertiaryBounds = new Bounds();
-            quaternaryBounds = new Bounds();
+            PrimaryBounds = new Bounds();
+            SecondaryBounds = new Bounds();
+            TertiaryBounds = new Bounds();
+            VisiblePrimaryBounds = new Bounds();
+            VisibleSecondaryBounds = new Bounds();
+            VisibleTertiaryBounds = new Bounds();
         }
 
         /// <summary>
         /// Gets or sets the primary bounds.
         /// </summary>
-        public Bounds PrimaryBounds { get => primaryBounds; set => primaryBounds = value; } 
+        public Bounds PrimaryBounds { get; set; }
 
         /// <summary>
         /// Gets or sets the secondary bounds.
         /// </summary>
-        public Bounds SecondaryBounds { get => secondaryBounds; set =>  secondaryBounds = value; } 
+        public Bounds SecondaryBounds { get; set; }
 
         /// <summary>
         /// Gets or sets the tertiary bounds.
         /// </summary>
-        public Bounds TertiaryBounds { get => tertiaryBounds; set => tertiaryBounds = value; }
+        public Bounds TertiaryBounds { get; set; }
 
         /// <summary>
-        /// Gets or sets the quaternary bounds.
+        /// Gets or sets the primary bounds.
         /// </summary>
-        public Bounds QuaternaryBounds { get => quaternaryBounds; set => quaternaryBounds = value; }
+        public Bounds VisiblePrimaryBounds { get; set; }
+
+        /// <summary>
+        /// Gets or sets the secondary bounds.
+        /// </summary>
+        public Bounds VisibleSecondaryBounds { get; set; }
+
+        /// <summary>
+        /// Gets or sets the tertiary bounds.
+        /// </summary>
+        public Bounds VisibleTertiaryBounds { get; set; }
     }
 }

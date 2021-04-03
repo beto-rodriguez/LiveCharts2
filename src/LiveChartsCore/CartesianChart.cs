@@ -107,7 +107,7 @@ namespace LiveChartsCore
             if (primaryAxes == null || secondaryAxes == null) return;
 
             var speed = zoomingSpeed < 0.1 ? 0.1 : (zoomingSpeed > 0.95 ? 0.95 : zoomingSpeed);
-            var m = direction == ZoomDirection.ZoomIn ? speed : 1/speed;
+            var m = direction == ZoomDirection.ZoomIn ? speed : 1 / speed;
 
             if ((zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X)
             {
@@ -116,8 +116,8 @@ namespace LiveChartsCore
                     var xi = secondaryAxes[index];
                     var px = new Scaler(drawMaringLocation, drawMarginSize, xi).ToChartValues(pivot.X);
 
-                    var max = xi.MaxLimit == null ? xi.DataBounds.Max : xi.MaxLimit;
-                    var min = xi.MinLimit == null ? xi.DataBounds.Min : xi.MinLimit;
+                    var max = xi.MaxLimit == null ? xi.DataBounds.Max : xi.MaxLimit.Value;
+                    var min = xi.MinLimit == null ? xi.DataBounds.Min : xi.MinLimit.Value;
 
                     var l = max - min;
 
@@ -128,6 +128,9 @@ namespace LiveChartsCore
                     //if (target < xi.View.MinRange) return;
                     var mint = px - target * rMin;
                     var maxt = px + target * rMax;
+
+                    if (maxt > xi.DataBounds.Max) maxt = xi.DataBounds.Max;
+                    if (mint < xi.DataBounds.Min) mint = xi.DataBounds.Min;
 
                     xi.MaxLimit = maxt;
                     xi.MinLimit = mint;
@@ -141,8 +144,8 @@ namespace LiveChartsCore
                     var yi = primaryAxes[index];
                     var px = new Scaler(drawMaringLocation, drawMarginSize, yi).ToChartValues(pivot.X);
 
-                    var max = yi.MaxLimit == null ? yi.DataBounds.Max : yi.MaxLimit;
-                    var min = yi.MinLimit == null ? yi.DataBounds.Min : yi.MinLimit;
+                    var max = yi.MaxLimit == null ? yi.DataBounds.Max : yi.MaxLimit.Value;
+                    var min = yi.MinLimit == null ? yi.DataBounds.Min : yi.MinLimit.Value;
 
                     var l = max - min;
 
@@ -153,6 +156,9 @@ namespace LiveChartsCore
                     //if (target < xi.View.MinRange) return;
                     var mint = px - target * rMin;
                     var maxt = px + target * rMax;
+
+                    if (maxt > yi.DataBounds.Max) maxt = yi.DataBounds.Max;
+                    if (mint < yi.DataBounds.Min) mint = yi.DataBounds.Min;
 
                     yi.MaxLimit = maxt;
                     yi.MinLimit = mint;
@@ -170,11 +176,11 @@ namespace LiveChartsCore
                     var scale = new Scaler(drawMaringLocation, drawMarginSize, xi);
                     var dx = scale.ToChartValues(-delta.X) - scale.ToChartValues(0);
 
-                    var max = xi.MaxLimit == null ? xi.DataBounds.Max : xi.MaxLimit;
-                    var min = xi.MinLimit == null ? xi.DataBounds.Min : xi.MinLimit;
+                    var max = xi.MaxLimit == null ? xi.DataBounds.Max : xi.MaxLimit.Value;
+                    var min = xi.MinLimit == null ? xi.DataBounds.Min : xi.MinLimit.Value;
 
-                    xi.MaxLimit = max + dx;
-                    xi.MinLimit = min + dx;
+                    xi.MaxLimit = max + dx > xi.DataBounds.Max ? xi.DataBounds.Max : max + dx;
+                    xi.MinLimit = min + dx < xi.DataBounds.Min ? xi.DataBounds.Min : min + dx;
                 }
             }
 
@@ -186,11 +192,11 @@ namespace LiveChartsCore
                     var scale = new Scaler(drawMaringLocation, drawMarginSize, yi);
                     var dy = scale.ToChartValues(delta.Y) - scale.ToChartValues(0);
 
-                    var max = yi.MaxLimit == null ? yi.DataBounds.Max : yi.MaxLimit;
-                    var min = yi.MinLimit == null ? yi.DataBounds.Min : yi.MinLimit;
+                    var max = yi.MaxLimit == null ? yi.DataBounds.Max : yi.MaxLimit.Value;
+                    var min = yi.MinLimit == null ? yi.DataBounds.Min : yi.MinLimit.Value;
 
-                    yi.MaxLimit = max + dy;
-                    yi.MinLimit = min + dy;
+                    yi.MaxLimit = max + dy > yi.DataBounds.Max ? yi.DataBounds.Max : max + dy;
+                    yi.MinLimit = min + dy < yi.DataBounds.Min ? yi.DataBounds.Min : min + dy;
                 }
             }
         }
@@ -209,12 +215,12 @@ namespace LiveChartsCore
 
             // restart axes bounds and meta data
             foreach (var axis in secondaryAxes)
-            { 
+            {
                 axis.Initialize(AxisOrientation.X);
                 initializer.ResolveAxisDefaults(axis);
             }
             foreach (var axis in primaryAxes)
-            { 
+            {
                 axis.Initialize(AxisOrientation.Y);
                 initializer.ResolveAxisDefaults(axis);
             }
@@ -232,8 +238,12 @@ namespace LiveChartsCore
 
                 secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.max);
                 secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.min);
+                secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.max);
+                secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.min);
                 primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.max);
                 primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.min);
+                primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.max);
+                primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.min);
             }
 
             if (viewDrawMargin == null)
@@ -339,12 +349,12 @@ namespace LiveChartsCore
                 if (deleted) series.DeletingTasks.Clear();
             }
 
-            foreach (var series in toDeleteSeries) 
+            foreach (var series in toDeleteSeries)
             {
                 series.Dispose();
                 everMeasuredSeries.Remove(series);
             }
-            foreach (var axis in toDeleteAxes) 
+            foreach (var axis in toDeleteAxes)
             {
                 axis.Dispose();
                 everMeasuredAxes.Remove(axis);

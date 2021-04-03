@@ -29,8 +29,7 @@ namespace LiveChartsCore.Measure
     {
         private readonly float m, mInv, minPx, maxPx, deltaPx, minVal, maxVal, deltaVal;
 
-        public Scaler(
-            PointF drawMaringLocation, SizeF drawMarginSize, IAxis axis)
+        public Scaler(PointF drawMaringLocation, SizeF drawMarginSize, IAxis axis)
         {
             if (axis.Orientation == AxisOrientation.Unknown)
                 throw new Exception("The axis is not ready to be scaled.");
@@ -48,6 +47,16 @@ namespace LiveChartsCore.Measure
                 {
                     maxVal = (float)(axis.IsInverted ? axis.MinLimit ?? minVal : axis.MaxLimit ?? maxVal);
                     minVal = (float)(axis.IsInverted ? axis.MaxLimit ?? maxVal : axis.MinLimit ?? minVal);
+                } else
+                {
+                    var visibleMax = (float)(axis.IsInverted ? axis.VisibleDataBounds.Min : axis.VisibleDataBounds.Max);
+                    var visibleMin = (float)(axis.IsInverted ? axis.VisibleDataBounds.Max : axis.VisibleDataBounds.Min);
+
+                    if (visibleMax != maxVal || visibleMin != minVal)
+                    {
+                        maxVal = visibleMax;
+                        minVal = visibleMin;
+                    }
                 }
 
                 deltaVal = maxVal - minVal;
@@ -65,6 +74,17 @@ namespace LiveChartsCore.Measure
                 {
                     maxVal = (float)(axis.IsInverted ? axis.MaxLimit ?? maxVal : axis.MinLimit ?? minVal);
                     minVal = (float)(axis.IsInverted ? axis.MinLimit ?? minVal : axis.MaxLimit ?? maxVal);
+                }
+                else
+                {
+                    var visibleMax = (float)(axis.IsInverted ? axis.VisibleDataBounds.Max : axis.VisibleDataBounds.Min);
+                    var visibleMin = (float)(axis.IsInverted ? axis.VisibleDataBounds.Min : axis.VisibleDataBounds.Max);
+
+                    if (visibleMax != maxVal || visibleMin != minVal)
+                    {
+                        maxVal = visibleMax;
+                        minVal = visibleMin;
+                    }
                 }
 
                 deltaVal = maxVal - minVal;
