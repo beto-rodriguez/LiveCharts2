@@ -23,10 +23,14 @@
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms
 {
@@ -35,6 +39,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private readonly CollectionDeepObserver<ISeries> seriesObserver;
         private readonly CollectionDeepObserver<IAxis> xObserver;
         private readonly CollectionDeepObserver<IAxis> yObserver;
+        private readonly ActionThrottler panningThrottler;
+        private Point? previous;
+        private Point? current;
+        private bool isPanning = false;
         private IEnumerable<ISeries> series = new List<ISeries>();
         private IEnumerable<IAxis> xAxes = new List<Axis> { new Axis() };
         private IEnumerable<IAxis> yAxes = new List<Axis> { new Axis() };
@@ -44,6 +52,19 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+
+            XAxes = new List<IAxis>() { new Axis() };
+            YAxes = new List<IAxis>() { new Axis() };
+            Series = new ObservableCollection<ISeries>();
+
+            var c = Controls[0].Controls[0];
+
+            c.MouseWheel += OnMouseWheel;
+            c.MouseDown += OnMouseDown;
+            c.MouseMove += OnMoseMove;
+            c.MouseUp += OnMouseUp;
+
+            panningThrottler = new ActionThrottler(DoPan, TimeSpan.FromMilliseconds(30));
         }
 
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;
@@ -116,6 +137,49 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         {
             if (core == null) return;
             core.Update();
+        }
+
+        private void OnMouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            var c = (CartesianChart<SkiaSharpDrawingContext>)core;
+            var p = e.Location;
+            c.Zoom(new PointF(p.X, p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+            Capture = true;
+        }
+
+        private void OnMouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            isPanning = true;
+            previous = e.Location;
+        }
+
+        private void OnMoseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (!isPanning || previous == null) return;
+
+            current = e.Location;
+            panningThrottler.Call();
+        }
+
+        private void DoPan()
+        {
+            if (previous == null || current == null) return;
+
+            var c = (CartesianChart<SkiaSharpDrawingContext>)core;
+
+            c.Pan(
+                new PointF(
+                current.Value.X - previous.Value.X,
+                current.Value.Y - previous.Value.Y));
+
+            previous = new Point(current.Value.X, current.Value.Y);
+        }
+
+        private void OnMouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (!isPanning) return;
+            isPanning = false;
+            previous = null;
         }
     }
 }
