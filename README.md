@@ -92,8 +92,8 @@ The following topics require a solution that will only work for an specific plat
 The following topics will work on any platform.
 
 - [x] ~~Create the Chart class, an object that coordinates every object inside the chart~~
-- [ ] Allow zooming
-- [ ] Allow panning
+- [x] ~~Allow zooming~~
+- [x] ~~Allow panning~~
 - [x] ~~Create the Axis class, an object that defines the data range in a plane (x or y) and scale a chart point to the screen based on the data range in the axis~~
 - [x] ~~Draw Axes in the UI~~
 - [x] ~~Multiple axes in the same chart~~
