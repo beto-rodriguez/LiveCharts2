@@ -42,11 +42,12 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         {
             if (commands.Count == 0) return;
 
-            SKPath path = new SKPath();
+            var toExecute = drawingCommands ?? (drawingCommands = commands.ToArray());
 
+            var path = new SKPath();
             var isValid = true;
-            var toExecuteCommands = drawingCommands ?? (drawingCommands = commands.ToArray());
-            foreach (var segment in toExecuteCommands)
+
+            foreach (var segment in toExecute)
             {
                 segment.IsCompleted = true;
                 segment.Execute(path, GetCurrentTime(), this);
@@ -57,6 +58,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             context.Canvas.DrawPath(path, context.Paint);
 
             if (!isValid) Invalidate();
+
         }
 
         public void AddCommand(IPathCommand<SKPath> segment)

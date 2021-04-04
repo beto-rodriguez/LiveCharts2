@@ -10,7 +10,6 @@
         ExtendClientAreaTitleBarHeightHint="50"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="AvaloniaSample.MainWindow"
-        HasSystemDecorations="False"
         WindowStartupLocation="CenterScreen">
 
   <Border BorderBrush="#eeeeee" BorderThickness="1">
@@ -49,7 +48,7 @@
         </ScrollViewer>
       </Grid>
 
-      <Border Grid.Column="1" >
+      <Border Grid.Column="1">
         <Border Background="White" Margin="20 80 20 20" Padding="20" CornerRadius="8"
                 BoxShadow="0 0 10 0 #05000000, 0 0 10 0 #05000000, 0 0 10 0 #05000000, 0 0 10 0 #05000000"
                 MaxWidth="900" MaxHeight="600">

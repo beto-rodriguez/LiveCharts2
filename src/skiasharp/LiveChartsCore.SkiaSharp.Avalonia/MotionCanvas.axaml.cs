@@ -95,12 +95,12 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
 
             public void Render(IDrawingContextImpl context)
             {
-                var skiaContext = context as ISkiaDrawingContextImpl;
-                if (skiaContext == null) throw new Exception("SkiaSharp is not supported.");
+                if (context is not ISkiaDrawingContextImpl skiaContext)
+                    throw new Exception("SkiaSharp is not supported.");
 
                 motionCanvas.DrawFrame(
-                    new AvaloniaDrawingContext(
-                        new SKImageInfo((int)Bounds.Width, (int)Bounds.Height), skiaContext.SkSurface, skiaContext.SkCanvas));
+                   new AvaloniaDrawingContext(
+                       new SKImageInfo((int)Bounds.Width, (int)Bounds.Height), skiaContext.SkSurface, skiaContext.SkCanvas));
             }
         }
     }

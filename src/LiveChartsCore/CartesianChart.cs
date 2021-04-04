@@ -67,6 +67,7 @@ namespace LiveChartsCore
             }
         }
 
+        public object Sync = new();
         public IAxis<TDrawingContext>[] XAxes => secondaryAxes;
         public IAxis<TDrawingContext>[] YAxes => primaryAxes;
         public ICartesianSeries<TDrawingContext>[] Series => series;
@@ -213,151 +214,155 @@ namespace LiveChartsCore
             if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
                 throw new Exception("Default colors are not valid");
 
-            // restart axes bounds and meta data
-            foreach (var axis in secondaryAxes)
+            lock (canvas.Sync)
             {
-                axis.Initialize(AxisOrientation.X);
-                initializer.ResolveAxisDefaults(axis);
-            }
-            foreach (var axis in primaryAxes)
-            {
-                axis.Initialize(AxisOrientation.Y);
-                initializer.ResolveAxisDefaults(axis);
-            }
-
-            // get seriesBounds
-            foreach (var series in series)
-            {
-                if (series.SeriesId == -1) series.SeriesId = nextSeries++;
-                initializer.ResolveSeriesDefaults(stylesBuilder.CurrentColors, series);
-
-                var secondaryAxis = secondaryAxes[series.ScalesXAt];
-                var primaryAxis = primaryAxes[series.ScalesYAt];
-
-                var seriesBounds = series.GetBounds(this, secondaryAxis, primaryAxis);
-
-                secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.max);
-                secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.min);
-                secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.max);
-                secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.min);
-                primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.max);
-                primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.min);
-                primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.max);
-                primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.min);
-            }
-
-            if (viewDrawMargin == null)
-            {
-                var m = viewDrawMargin ?? new Margin();
-                float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
-                SetDrawMargin(controlSize, m);
-
+                // restart axes bounds and meta data
                 foreach (var axis in secondaryAxes)
                 {
-                    var s = axis.GetPossibleSize(this);
-                    if (axis.Position == AxisPosition.Start)
-                    {
-                        // X Bottom
-                        axis.Yo = m.Bottom + s.Height * 0.5f;
-                        bs = bs + s.Height;
-                        m.Bottom = bs;
-                        //if (s.Width * 0.5f > m.Left) m.Left = s.Width * 0.5f;
-                        //if (s.Width * 0.5f > m.Right) m.Right = s.Width * 0.5f;
-                    }
-                    else
-                    {
-                        // X Top
-                        axis.Yo = ts + s.Height * 0.5f;
-                        ts += s.Height;
-                        m.Top = ts;
-                        //if (ls + s.Width * 0.5f > m.Left) m.Left = ls + s.Width * 0.5f;
-                        //if (rs + s.Width * 0.5f > m.Right) m.Right = rs + s.Width * 0.5f;
-                    }
+                    axis.Initialize(AxisOrientation.X);
+                    initializer.ResolveAxisDefaults(axis);
                 }
                 foreach (var axis in primaryAxes)
                 {
-                    var s = axis.GetPossibleSize(this);
-                    var w = s.Width > m.Left ? s.Width : m.Left;
-                    if (axis.Position == AxisPosition.Start)
+                    axis.Initialize(AxisOrientation.Y);
+                    initializer.ResolveAxisDefaults(axis);
+                }
+
+                // get seriesBounds
+                foreach (var series in series)
+                {
+                    if (series.SeriesId == -1) series.SeriesId = nextSeries++;
+                    initializer.ResolveSeriesDefaults(stylesBuilder.CurrentColors, series);
+
+                    var secondaryAxis = secondaryAxes[series.ScalesXAt];
+                    var primaryAxis = primaryAxes[series.ScalesYAt];
+
+                    var seriesBounds = series.GetBounds(this, secondaryAxis, primaryAxis);
+
+                    secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.max);
+                    secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.min);
+                    secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.max);
+                    secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.min);
+                    primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.max);
+                    primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.min);
+                    primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.max);
+                    primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.min);
+                }
+
+                if (viewDrawMargin == null)
+                {
+                    var m = viewDrawMargin ?? new Margin();
+                    float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
+                    SetDrawMargin(controlSize, m);
+
+                    foreach (var axis in secondaryAxes)
                     {
-                        // Y Left
-                        axis.Xo = ls + w * 0.5f;
-                        ls += w;
-                        m.Left = ls;
-                        //if (s.Height * 0.5f > m.Top) { m.Top = s.Height * 0.5f; }
-                        //if (s.Height * 0.5f > m.Bottom) { m.Bottom = s.Height * 0.5f; }
+                        var s = axis.GetPossibleSize(this);
+                        if (axis.Position == AxisPosition.Start)
+                        {
+                            // X Bottom
+                            axis.Yo = m.Bottom + s.Height * 0.5f;
+                            bs = bs + s.Height;
+                            m.Bottom = bs;
+                            //if (s.Width * 0.5f > m.Left) m.Left = s.Width * 0.5f;
+                            //if (s.Width * 0.5f > m.Right) m.Right = s.Width * 0.5f;
+                        }
+                        else
+                        {
+                            // X Top
+                            axis.Yo = ts + s.Height * 0.5f;
+                            ts += s.Height;
+                            m.Top = ts;
+                            //if (ls + s.Width * 0.5f > m.Left) m.Left = ls + s.Width * 0.5f;
+                            //if (rs + s.Width * 0.5f > m.Right) m.Right = rs + s.Width * 0.5f;
+                        }
                     }
-                    else
+                    foreach (var axis in primaryAxes)
                     {
-                        // Y Right
-                        axis.Xo = rs + w * 0.5f;
-                        rs += w;
-                        m.Right = rs;
-                        //if (ts + s.Height * 0.5f > m.Top) m.Top = ts + s.Height * 0.5f;
-                        //if (bs + s.Height * 0.5f > m.Bottom) m.Bottom = bs + s.Height * 0.5f;
+                        var s = axis.GetPossibleSize(this);
+                        var w = s.Width > m.Left ? s.Width : m.Left;
+                        if (axis.Position == AxisPosition.Start)
+                        {
+                            // Y Left
+                            axis.Xo = ls + w * 0.5f;
+                            ls += w;
+                            m.Left = ls;
+                            //if (s.Height * 0.5f > m.Top) { m.Top = s.Height * 0.5f; }
+                            //if (s.Height * 0.5f > m.Bottom) { m.Bottom = s.Height * 0.5f; }
+                        }
+                        else
+                        {
+                            // Y Right
+                            axis.Xo = rs + w * 0.5f;
+                            rs += w;
+                            m.Right = rs;
+                            //if (ts + s.Height * 0.5f > m.Top) m.Top = ts + s.Height * 0.5f;
+                            //if (bs + s.Height * 0.5f > m.Bottom) m.Bottom = bs + s.Height * 0.5f;
+                        }
                     }
+
+                    SetDrawMargin(controlSize, m);
                 }
 
-                SetDrawMargin(controlSize, m);
-            }
+                // invalid dimensions, probably the chart is too small
+                // or it is initializing in the UI and has no dimensions yet
+                if (drawMarginSize.Width <= 0 || drawMarginSize.Height <= 0) return;
 
-            // invalid dimensions, probably the chart is too small
-            // or it is initializing in the UI and has no dimensions yet
-            if (drawMarginSize.Width <= 0 || drawMarginSize.Height <= 0) return;
-
-            var totalAxes = primaryAxes.Concat(secondaryAxes).ToArray();
-            var toDeleteAxes = new HashSet<IAxis<TDrawingContext>>(everMeasuredAxes);
-            foreach (var axis in totalAxes)
-            {
-                if (axis.DataBounds.Max == axis.DataBounds.Min)
+                var totalAxes = primaryAxes.Concat(secondaryAxes).ToArray();
+                var toDeleteAxes = new HashSet<IAxis<TDrawingContext>>(everMeasuredAxes);
+                foreach (var axis in totalAxes)
                 {
-                    var c = axis.DataBounds.Min * 0.3;
-                    axis.DataBounds.Min = axis.DataBounds.Min - c;
-                    axis.DataBounds.Max = axis.DataBounds.Max + c;
+                    if (axis.DataBounds.Max == axis.DataBounds.Min)
+                    {
+                        var c = axis.DataBounds.Min * 0.3;
+                        axis.DataBounds.Min = axis.DataBounds.Min - c;
+                        axis.DataBounds.Max = axis.DataBounds.Max + c;
+                    }
+
+                    axis.Measure(this);
+                    everMeasuredAxes.Add(axis);
+                    toDeleteAxes.Remove(axis);
+
+                    var deleted = false;
+                    foreach (var item in axis.DeletingTasks)
+                    {
+                        canvas.RemovePaintTask(item);
+                        item.Dispose();
+                        deleted = true;
+                    }
+                    if (deleted) axis.DeletingTasks.Clear();
                 }
 
-                axis.Measure(this);
-                everMeasuredAxes.Add(axis);
-                toDeleteAxes.Remove(axis);
+                var toDeleteSeries = new HashSet<ISeries>(everMeasuredSeries);
 
-                var deleted = false;
-                foreach (var item in axis.DeletingTasks)
+                foreach (var series in series)
                 {
-                    canvas.RemovePaintTask(item);
-                    item.Dispose();
-                    deleted = true;
+                    var secondaryAxis = secondaryAxes[series.ScalesXAt];
+                    var primaryAxis = primaryAxes[series.ScalesYAt];
+                    series.Measure(this, secondaryAxis, primaryAxis);
+                    everMeasuredSeries.Add(series);
+                    toDeleteSeries.Remove(series);
+
+                    var deleted = false;
+                    foreach (var item in series.DeletingTasks)
+                    {
+                        canvas.RemovePaintTask(item);
+                        item.Dispose();
+                        deleted = true;
+                    }
+                    if (deleted) series.DeletingTasks.Clear();
                 }
-                if (deleted) axis.DeletingTasks.Clear();
-            }
 
-            var toDeleteSeries = new HashSet<ISeries>(everMeasuredSeries);
-            foreach (var series in series)
-            {
-                var secondaryAxis = secondaryAxes[series.ScalesXAt];
-                var primaryAxis = primaryAxes[series.ScalesYAt];
-                series.Measure(this, secondaryAxis, primaryAxis);
-                everMeasuredSeries.Add(series);
-                toDeleteSeries.Remove(series);
-
-                var deleted = false;
-                foreach (var item in series.DeletingTasks)
+                foreach (var series in toDeleteSeries)
                 {
-                    canvas.RemovePaintTask(item);
-                    item.Dispose();
-                    deleted = true;
+                    series.Dispose();
+                    everMeasuredSeries.Remove(series);
                 }
-                if (deleted) series.DeletingTasks.Clear();
-            }
-
-            foreach (var series in toDeleteSeries)
-            {
-                series.Dispose();
-                everMeasuredSeries.Remove(series);
-            }
-            foreach (var axis in toDeleteAxes)
-            {
-                axis.Dispose();
-                everMeasuredAxes.Remove(axis);
+                foreach (var axis in toDeleteAxes)
+                {
+                    axis.Dispose();
+                    everMeasuredAxes.Remove(axis);
+                }
             }
 
             Canvas.Invalidate();

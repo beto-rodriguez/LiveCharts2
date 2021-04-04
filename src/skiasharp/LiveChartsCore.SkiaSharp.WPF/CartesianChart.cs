@@ -28,7 +28,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows;
 
@@ -186,7 +185,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             isPanning = true;
             previous = e.GetPosition(this);
             CaptureMouse();
-            Trace.WriteLine("down");
         }
 
         private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
@@ -213,7 +211,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         private void OnMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            Trace.WriteLine("up");
             if (!isPanning) return;
             isPanning = false;
             previous = null;

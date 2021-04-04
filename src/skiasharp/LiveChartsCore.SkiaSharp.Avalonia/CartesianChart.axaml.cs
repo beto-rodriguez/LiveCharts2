@@ -13,6 +13,10 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Collections.ObjectModel;
+using Avalonia.Media;
+using a = Avalonia;
+using Avalonia.Input;
+using Avalonia.Controls.ApplicationLifetimes;
 
 namespace LiveChartsCore.SkiaSharp.Avalonia
 {
@@ -27,6 +31,10 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
         private readonly CollectionDeepObserver<ISeries> seriesObserver;
         private readonly CollectionDeepObserver<IAxis> xObserver;
         private readonly CollectionDeepObserver<IAxis> yObserver;
+        private readonly ActionThrottler panningThrottler;
+        private a.Point? previous;
+        private a.Point? current;
+        private bool isPanning = false;
 
         public CartesianChart()
         {
@@ -51,6 +59,16 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             XAxes = new List<IAxis>() { new Axis() };
             YAxes = new List<IAxis>() { new Axis() };
             Series = new ObservableCollection<ISeries>();
+
+            // workaround to deteck mouse events.
+            // avalonia do not seem to detect events if brackground is not set.
+            Background = new SolidColorBrush(Colors.Transparent);
+
+            PointerWheelChanged += CartesianChart_PointerWheelChanged;
+            PointerPressed += CartesianChart_PointerPressed;
+            PointerMoved += CartesianChart_PointerMoved;
+
+            panningThrottler = new ActionThrottler(DoPan, TimeSpan.FromMilliseconds(30));
         }
 
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;
@@ -219,42 +237,91 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             {
                 seriesObserver.Dispose((IEnumerable<ISeries>)change.OldValue.Value);
                 seriesObserver.Initialize((IEnumerable<ISeries>)change.NewValue.Value);
-                Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
-                return;
             }
 
             if (change.Property.Name == nameof(XAxes))
             {
                 xObserver.Dispose((IEnumerable<IAxis>)change.OldValue.Value);
                 xObserver.Initialize((IEnumerable<IAxis>)change.NewValue.Value);
-                Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
-                return;
             }
 
             if (change.Property.Name == nameof(YAxes))
             {
                 yObserver.Dispose((IEnumerable<IAxis>)change.OldValue.Value);
                 yObserver.Initialize((IEnumerable<IAxis>)change.NewValue.Value);
-                Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
-                return;
             }
 
             // is this how the size event is handled?
             // https://github.com/AvaloniaUI/Avalonia/issues/3237
             if (change.Property.Name != nameof(Bounds)) return;
+
             Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
         }
 
         private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (core == null) return;
+
             Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
         }
 
         private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (core == null) return;
+
             Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
+        }
+
+        private void CartesianChart_PointerWheelChanged(object? sender, global::Avalonia.Input.PointerWheelEventArgs e)
+        {
+            var c = (CartesianChart<SkiaSharpDrawingContext>)core;
+            var p = e.GetPosition(this);
+
+            c.Zoom(new PointF((float)p.X, (float)p.Y), e.Delta.Y > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+        }
+
+        private void CartesianChart_PointerPressed(object? sender, global::Avalonia.Input.PointerPressedEventArgs e)
+        {
+            // only IClassicDesktopStyleApplicationLifetime supported for now.
+            if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+
+            isPanning = true;
+            previous = e.GetPosition(this);
+
+            foreach (var w in desktop.Windows) w.PointerReleased += Window_PointerReleased;
+        }
+
+        private void CartesianChart_PointerMoved(object? sender, global::Avalonia.Input.PointerEventArgs e)
+        {
+            if (!isPanning || previous == null) return;
+
+            current = e.GetPosition(this);
+            panningThrottler.Call();
+        }
+
+        private void Window_PointerReleased(object? sender, PointerReleasedEventArgs e)
+        {
+            if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+
+            if (!isPanning) return;
+            isPanning = false;
+            previous = null;
+
+            foreach (var w in desktop.Windows) w.PointerReleased -= Window_PointerReleased;
+        }
+
+        private void DoPan()
+        {
+            if (previous == null || current == null) return;
+
+            var c = (CartesianChart<SkiaSharpDrawingContext>)core;
+
+            c.Pan(
+                new PointF(
+                (float)(current.Value.X - previous.Value.X),
+                (float)(current.Value.Y - previous.Value.Y)));
+
+            previous = new a.Point(current.Value.X, current.Value.Y);
         }
     }
 }
