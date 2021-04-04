@@ -9,11 +9,11 @@ namespace ViewModelsSamples.Lines.Zoom
     {
         public ViewModel()
         {
-            var values = new int[1000];
+            var values = new int[100];
             var r = new Random();
             var t = 0;
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 100; i++)
             {
                 t += r.Next(-90, 100);
                 values[i] = t;

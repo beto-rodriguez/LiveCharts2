@@ -5,7 +5,8 @@
        x:Class="LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart">
     <lvc:MotionCanvas x:Name="canvas">
         <lvc:MotionCanvas.GestureRecognizers >
-            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+            <PinchGestureRecognizer PinchUpdated="PinchGestureRecognizer_PinchUpdated" />
+            <PanGestureRecognizer PanUpdated="PanGestureRecognizer_PanUpdated"/>
         </lvc:MotionCanvas.GestureRecognizers>
     </lvc:MotionCanvas>
 </ContentView>

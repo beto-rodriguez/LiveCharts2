@@ -31,13 +31,14 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using Xamarin.Essentials;
-using Xamarin.Forms;
+using xf = Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using System.Diagnostics;
 
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharpDrawingContext>
+    public partial class CartesianChart : xf.ContentView, ICartesianChartView<SkiaSharpDrawingContext>
     {
         private readonly CollectionDeepObserver<ISeries> seriesObserver;
         private readonly CollectionDeepObserver<IAxis> xObserver;
@@ -76,10 +77,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;
 
-        public static readonly BindableProperty SeriesProperty =
-            BindableProperty.Create(
-                nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new ObservableCollection<ISeries>(), BindingMode.Default, null,
-                (BindableObject o, object oldValue, object newValue) =>
+        public static readonly xf.BindableProperty SeriesProperty =
+            xf.BindableProperty.Create(
+                nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new ObservableCollection<ISeries>(), xf.BindingMode.Default, null,
+                (xf.BindableObject o, object oldValue, object newValue) =>
                 {
                     var chart = (CartesianChart)o;
                     var seriesObserver = chart.seriesObserver;
@@ -89,10 +90,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
                 });
 
-        public static readonly BindableProperty XAxesProperty =
-            BindableProperty.Create(
-                nameof(XAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>() { new Axis() }, BindingMode.Default, null,
-                (BindableObject o, object oldValue, object newValue) =>
+        public static readonly xf.BindableProperty XAxesProperty =
+            xf.BindableProperty.Create(
+                nameof(XAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>() { new Axis() }, xf.BindingMode.Default, null,
+                (xf.BindableObject o, object oldValue, object newValue) =>
                 {
                     var chart = (CartesianChart)o;
                     var observer = chart.xObserver;
@@ -102,10 +103,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
                 });
 
-        public static readonly BindableProperty YAxesProperty =
-            BindableProperty.Create(
-                nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>() { new Axis() }, BindingMode.Default, null,
-                (BindableObject o, object oldValue, object newValue) =>
+        public static readonly xf.BindableProperty YAxesProperty =
+            xf.BindableProperty.Create(
+                nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>() { new Axis() }, xf.BindingMode.Default, null,
+                (xf.BindableObject o, object oldValue, object newValue) =>
                 {
                     var chart = (CartesianChart)o;
                     var observer = chart.yObserver;
@@ -115,40 +116,40 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
                 });
 
-        public static readonly BindableProperty ZoomModeProperty =
-            BindableProperty.Create(
+        public static readonly xf.BindableProperty ZoomModeProperty =
+            xf.BindableProperty.Create(
                 nameof(ZoomMode), typeof(ZoomAndPanMode), typeof(CartesianChart),
-                LiveCharts.CurrentSettings.DefaultZoomMode, BindingMode.Default, null);
+                LiveCharts.CurrentSettings.DefaultZoomMode, xf.BindingMode.Default, null);
 
-        public static readonly BindableProperty ZoomingSpeedProperty =
-            BindableProperty.Create(
+        public static readonly xf.BindableProperty ZoomingSpeedProperty =
+            xf.BindableProperty.Create(
                 nameof(ZoomingSpeed), typeof(double), typeof(CartesianChart),
-                LiveCharts.CurrentSettings.DefaultZoomSpeed, BindingMode.Default, null);
+                LiveCharts.CurrentSettings.DefaultZoomSpeed, xf.BindingMode.Default, null);
 
-        public static readonly BindableProperty AnimationsSpeedProperty =
-           BindableProperty.Create(
+        public static readonly xf.BindableProperty AnimationsSpeedProperty =
+           xf.BindableProperty.Create(
                nameof(AnimationsSpeed), typeof(TimeSpan), typeof(CartesianChart), LiveCharts.CurrentSettings.DefaultAnimationsSpeed);
 
-        public static readonly BindableProperty EasingFunctionProperty =
-            BindableProperty.Create(
+        public static readonly xf.BindableProperty EasingFunctionProperty =
+            xf.BindableProperty.Create(
                 nameof(EasingFunction), typeof(Func<float, float>), typeof(CartesianChart),
                 LiveCharts.CurrentSettings.DefaultEasingFunction);
 
-        public static readonly BindableProperty LegendPositionProperty =
-            BindableProperty.Create(
+        public static readonly xf.BindableProperty LegendPositionProperty =
+            xf.BindableProperty.Create(
                 nameof(LegendPosition), typeof(LegendPosition), typeof(CartesianChart), LiveCharts.CurrentSettings.DefaultLegendPosition);
 
-        public static readonly BindableProperty LegendOrientationProperty =
-            BindableProperty.Create(
+        public static readonly xf.BindableProperty LegendOrientationProperty =
+            xf.BindableProperty.Create(
                 nameof(LegendOrientation), typeof(LegendOrientation), typeof(CartesianChart),
                 LiveCharts.CurrentSettings.DefaultLegendOrientation);
 
-        public static readonly BindableProperty TooltipPositionProperty =
-           BindableProperty.Create(
+        public static readonly xf.BindableProperty TooltipPositionProperty =
+           xf.BindableProperty.Create(
                nameof(TooltipPosition), typeof(TooltipPosition), typeof(CartesianChart), LiveCharts.CurrentSettings.DefaultTooltipPosition);
 
-        public static readonly BindableProperty TooltipFindingStrategyProperty =
-            BindableProperty.Create(
+        public static readonly xf.BindableProperty TooltipFindingStrategyProperty =
+            xf.BindableProperty.Create(
                 nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(CartesianChart), 
                 LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy);
 
@@ -253,12 +254,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             MainThread.BeginInvokeOnMainThread(() => core.Update());
         }
 
-        private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
-        {
-            // show tooltip ??
-            // () => core.Update()();
-        }
-
         private void OnSizeChanged(object sender, EventArgs e)
         {
             MainThread.BeginInvokeOnMainThread(() => core.Update());
@@ -286,6 +281,28 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             if (core == null) return;
             MainThread.BeginInvokeOnMainThread(() => core.Update());
+        }
+
+        private void PanGestureRecognizer_PanUpdated(object sender, xf.PanUpdatedEventArgs e)
+        {
+            if (e.StatusType != xf.GestureStatus.Running) return;
+
+            var c = (CartesianChart<SkiaSharpDrawingContext>)core;
+            c.Pan(new PointF((float)e.TotalX, (float)e.TotalY));
+        }
+
+        private void PinchGestureRecognizer_PinchUpdated(object sender, xf.PinchGestureUpdatedEventArgs e)
+        {
+            Trace.WriteLine($"{e.ScaleOrigin.X}, {e.ScaleOrigin.Y}");
+            if (e.Status != xf.GestureStatus.Running || Math.Abs(e.Scale - 1) < 0.05) return;
+
+            var c = (CartesianChart<SkiaSharpDrawingContext>)core;
+            var p = e.ScaleOrigin;
+            var s = c.ControlSize;
+
+            c.Zoom(
+                new PointF((float)(p.X * s.Width), (float)(p.Y * s.Height)),
+                e.Scale > 1 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
         }
     }
 }
