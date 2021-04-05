@@ -30,58 +30,49 @@
              xmlns:local="clr-namespace:LiveChartsCore.SkiaSharpView.WPF"
              xmlns:ctx="clr-namespace:LiveChartsCore.Kernel;assembly=LiveChartsCore"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" AllowsTransparency="True">
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             AllowsTransparency="True">
+
+    <Popup.Resources>
+        <DataTemplate x:Key="defaultTemplate">
+            <Border Background="#fafafa" CornerRadius="4">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="3" Direction="0" Color="Black" Opacity="0.20" BlurRadius="6" />
+                </Border.Effect>
+                <ItemsControl ItemsSource="{Binding Points, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type ctx:TooltipPoint}">
+                            <Border Padding="7 5">
+                                <StackPanel Orientation="Horizontal">
+                                    <local:MotionCanvas Margin="0 0 8 0" 
+                                        PaintTasks="{Binding Series.DefaultPaintContext.PaintTasks}"
+                                        Width="{Binding Series.DefaultPaintContext.Width}"
+                                        Height="{Binding Series.DefaultPaintContext.Height}"
+                                        VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Point.AsTooltipString}" Margin="0 0 8 0"
+                                        FontFamily="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}" 
+                                        Foreground="{Binding TextColor, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
+                                        FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}" 
+                                        FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
+                                        FontStyle="{Binding FontStyle, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
+                                        FontStretch="{Binding FontStretch, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
+                                        VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Border>
+        </DataTemplate>
+    </Popup.Resources>
+
     <Border Background="Transparent" Padding="8" Name="border">
-        <Border Background="#fafafa" CornerRadius="4">
-            <Border.Effect>
-                <DropShadowEffect ShadowDepth="3" Direction="0" Color="Black" Opacity="0.20" BlurRadius="6" />
-            </Border.Effect>
-            <ItemsControl ItemsSource="{Binding Points, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type ctx:TooltipPoint}">
-                        <Border Padding="7 5">
-                            <StackPanel Orientation="Horizontal">
-                                <local:MotionCanvas Margin="0 0 8 0" 
-                                                           PaintTasks="{Binding Series.DefaultPaintContext.PaintTasks}"
-                                                           Width="{Binding Series.DefaultPaintContext.Width}"
-                                                           Height="{Binding Series.DefaultPaintContext.Height}"
-                                                           VerticalAlignment="Center"/>
-                                <TextBlock Text="{Binding Series.Name}" Margin="0 0 8 0"
-                                       FontFamily="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}" 
-                                       Foreground="{Binding TextColor, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
-                                       FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}" 
-                                       FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
-                                       FontStyle="{Binding FontStyle, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
-                                       FontStretch="{Binding FontStretch, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
-                                       VerticalAlignment="Center"/>
-
-                                <TextBlock Text="{Binding Coordinate.X}" Margin="0 0 8 0"
-                                       FontFamily="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}" 
-                                       Foreground="{Binding TextColor, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
-                                       FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}" 
-                                       FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
-                                       FontStyle="{Binding FontStyle, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
-                                       FontStretch="{Binding FontStretch, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
-                                       VerticalAlignment="Center"/>
-
-                                <TextBlock Text="{Binding Coordinate.Y}" 
-                                       FontFamily="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}" 
-                                       Foreground="{Binding TextColor, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
-                                       FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}" 
-                                       FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
-                                       FontStyle="{Binding FontStyle, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
-                                       FontStretch="{Binding FontStretch, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
-                                       VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </Border>
+        <ContentControl ContentTemplate="{Binding Path=Template, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}" />
     </Border>
 </Popup>

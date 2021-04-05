@@ -68,23 +68,27 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty LegendPositionProperty =
             DependencyProperty.Register(
-                nameof(LegendPosition), typeof(LegendPosition), typeof(Chart), 
+                nameof(LegendPosition), typeof(LegendPosition), typeof(Chart),
                 new PropertyMetadata(LiveCharts.CurrentSettings.DefaultLegendPosition));
 
         public static readonly DependencyProperty LegendOrientationProperty =
             DependencyProperty.Register(
-                nameof(LegendOrientation), typeof(LegendOrientation), typeof(Chart), 
+                nameof(LegendOrientation), typeof(LegendOrientation), typeof(Chart),
                 new PropertyMetadata(LiveCharts.CurrentSettings.DefaultLegendOrientation));
 
         public static readonly DependencyProperty TooltipPositionProperty =
            DependencyProperty.Register(
-               nameof(TooltipPosition), typeof(TooltipPosition), typeof(Chart), 
+               nameof(TooltipPosition), typeof(TooltipPosition), typeof(Chart),
                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipPosition));
 
         public static readonly DependencyProperty TooltipFindingStrategyProperty =
             DependencyProperty.Register(
                 nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(Chart), 
                 new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy));
+
+        public static readonly DependencyProperty TooltipTemplateProperty =
+            DependencyProperty.Register(
+                nameof(TooltipTemplate), typeof(DataTemplate), typeof(Chart), new PropertyMetadata(null));
 
         public TimeSpan AnimationsSpeed
         {
@@ -120,6 +124,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         {
             get { return (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty); }
             set { SetValue(TooltipFindingStrategyProperty, value); }
+        }
+
+        public DataTemplate TooltipTemplate
+        {
+            get { return (DataTemplate)GetValue(TooltipTemplateProperty); }
+            set { SetValue(TooltipTemplateProperty, value); }
         }
 
         SizeF IChartView.ControlSize => new SizeF { Width = (float)canvas.ActualWidth, Height = (float)canvas.ActualHeight };

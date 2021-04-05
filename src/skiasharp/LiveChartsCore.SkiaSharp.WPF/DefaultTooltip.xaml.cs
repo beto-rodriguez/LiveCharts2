@@ -2,6 +2,7 @@
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -16,25 +17,25 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     /// </summary>
     public partial class DefaultTooltip : Popup, IChartTooltip<SkiaSharpDrawingContext>
     {
+        private readonly DataTemplate defaultTempalte;
         private TimeSpan animationsSpeed = TimeSpan.FromMilliseconds(200);
         private IEasingFunction easingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
         private double hideoutCount = 1500;
-        private System.Drawing.PointF previousLocation = new System.Drawing.PointF();
-        private Dictionary<ChartPoint, object> activePoints = new Dictionary<ChartPoint, object>();
+        private Dictionary<ChartPoint, object> activePoints = new();
 
         public DefaultTooltip()
         {
             InitializeComponent();
             PopupAnimation = PopupAnimation.Fade;
             Placement = PlacementMode.Relative;
-        }
-
-        private void DefaultTooltip_LayoutUpdated(object sender, EventArgs e)
-        {
-            Trace.WriteLine(ActualWidth);
+            defaultTempalte = FindResource("defaultTemplate") as DataTemplate;
         }
 
         #region dependency properties
+
+        public static readonly DependencyProperty TemplateProperty =
+           DependencyProperty.Register(
+               nameof(Template), typeof(DataTemplate), typeof(DefaultTooltip), new PropertyMetadata(null));
 
         public static readonly DependencyProperty PointsProperty =
            DependencyProperty.Register(
@@ -72,6 +73,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         public TimeSpan AnimationsSpeed { get => animationsSpeed; set => animationsSpeed = value; }
         public IEasingFunction EasingFunction { get => easingFunction; set => easingFunction = value; }
         public double HideoutCount { get => hideoutCount; set => hideoutCount = value; }
+
+        public DataTemplate Template
+        {
+            get { return (DataTemplate)GetValue(TemplateProperty); }
+            set { SetValue(TemplateProperty, value); }
+        }
 
         public IEnumerable<TooltipPoint> Points
         {
@@ -119,6 +126,10 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
+            var wpfChart = (Chart)chart.View;
+            var template = wpfChart.TooltipTemplate ?? defaultTempalte;
+            if (Template != template) Template = template;
+
             if (!tooltipPoints.Any())
             {
                 foreach (var key in activePoints.Keys.ToArray())
@@ -142,11 +153,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     chart.TooltipPosition, new System.Drawing.SizeF((float)border.ActualWidth, (float)border.ActualHeight));
             }
 
-            if (location == null || (previousLocation.X == location.Value.X && previousLocation.Y == location.Value.Y))
-                return;
-
-            previousLocation = location.Value;
-
             IsOpen = true;
             Points = tooltipPoints;
 
@@ -158,7 +164,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             var animation = new RectAnimation(from, to, animationsSpeed) { EasingFunction = easingFunction };
             BeginAnimation(PlacementRectangleProperty, animation);
 
-            var wpfChart = (Chart)chart.View;
             FontFamily = wpfChart.TooltipFontFamily ?? new FontFamily("Trebuchet MS");
             TextColor = wpfChart.TooltipTextColor ?? new SolidColorBrush(Color.FromRgb(35, 35, 35));
             FontSize = wpfChart.TooltipFontSize ?? 13;

@@ -335,7 +335,7 @@ namespace LiveChartsCore
                             DataLabelsDrawableTask.AddGeometyToPaintTask(l);
                         }
 
-                        label.Text = DataLabelFormatter(data.TargetPoint);
+                        label.Text = DataLabelsFormatter(data.TargetPoint);
                         label.TextSize = dls;
                         label.Padding = DataLabelsPadding;
                         var labelPosition = GetLabelPosition(

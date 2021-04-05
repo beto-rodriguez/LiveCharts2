@@ -62,12 +62,20 @@ namespace LiveChartsCore.Kernel
         public float TertiaryValue { get; set; }
 
         /// <summary>
-        /// Gets or sets the quaternary value.
+        /// Gets the point as tooltip string.
         /// </summary>
         /// <value>
-        /// The quaternary value.
+        /// As tooltip string.
         /// </value>
-        public float QuaternaryValue { get; set; }
+        public string AsTooltipString => Context.Series.TooltipLabelFormatter(this);
+
+        /// <summary>
+        /// Gets the point as data label.
+        /// </summary>
+        /// <value>
+        /// As tooltip string.
+        /// </value>
+        public string AsDataLabel => Context.Series.DataLabelsFormatter(this);
 
         /// <summary>
         /// Gets the context.

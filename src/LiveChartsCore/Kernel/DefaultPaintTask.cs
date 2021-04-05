@@ -24,6 +24,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace LiveChartsCore.Kernel
 {
@@ -34,9 +35,9 @@ namespace LiveChartsCore.Kernel
         public bool IsFill { get; set; }
         public double ZIndex { get; set; }
         public float StrokeThickness { get; set; }
-        public bool IsCompleted { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-        public long CurrentTime { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-        public bool RemoveOnCompleted { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        public bool IsCompleted { get; set; }
+        public long CurrentTime { get; set; }
+        public bool RemoveOnCompleted { get; set; }
         public RectangleF ClipRectangle { get; set; }
 
         public void AddGeometyToPaintTask(IDrawable<TDrawingContext> geometry)
@@ -51,7 +52,6 @@ namespace LiveChartsCore.Kernel
 
         public void CompleteTransitions(params string[] propertyName)
         {
-            throw new System.NotImplementedException();
         }
 
         public void Dispose()
@@ -60,7 +60,7 @@ namespace LiveChartsCore.Kernel
 
         public IEnumerable<IDrawable<TDrawingContext>> GetGeometries()
         {
-            throw new System.NotImplementedException();
+            return Enumerable.Empty<IDrawable<TDrawingContext>>();
         }
 
         public IMotionProperty GetTransitionProperty(string propertyName)
@@ -70,17 +70,14 @@ namespace LiveChartsCore.Kernel
 
         public void InitializeTask(TDrawingContext context)
         {
-            throw new System.NotImplementedException();
         }
 
         public void RemoveGeometryFromPainTask(IDrawable<TDrawingContext> geometry)
         {
-            throw new System.NotImplementedException();
         }
 
         public void RemovePropertyTransition(string propertyName)
         {
-            throw new System.NotImplementedException();
         }
 
         public void SetGeometries(HashSet<IDrawable<TDrawingContext>> geometries)

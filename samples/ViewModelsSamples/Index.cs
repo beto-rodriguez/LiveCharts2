@@ -42,6 +42,8 @@
             "Axes/LabelsFormat",
             "Axes/NamedLabels",
 
+            "General/Tooltips",
+            "General/TemplatedTooltips",
             "General/UserDefinedTypes",
             "General/NullPoints",
         };

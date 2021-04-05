@@ -91,16 +91,19 @@ namespace LiveChartsCore.Kernel
             {
                 var primary = point.PrimaryValue;
                 var secondary = point.SecondaryValue;
+                var tertiary = point.TertiaryValue;
 
                 if (stack != null) primary = stack.StackPoint(point);
 
                 bounds.PrimaryBounds.AppendValue(primary);
                 bounds.SecondaryBounds.AppendValue(secondary);
+                bounds.TertiaryBounds.AppendValue(tertiary);
 
                 if (primary >= yMin && primary <= yMax && secondary >= xMin && secondary <= xMax)
                 {
-                    bounds.VisibleSecondaryBounds.AppendValue(secondary);
                     bounds.VisiblePrimaryBounds.AppendValue(primary);
+                    bounds.VisibleSecondaryBounds.AppendValue(secondary);
+                    bounds.VisibleTertiaryBounds.AppendValue(tertiary);
                 }
             }
 

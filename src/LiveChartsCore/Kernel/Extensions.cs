@@ -66,7 +66,7 @@ namespace LiveChartsCore.Kernel
                 case TooltipPosition.Left: return new PointF(placementContext.MostLeft - tooltipSize.Width, avrgY);
                 case TooltipPosition.Right: return new PointF(placementContext.MostRight, avrgY);
                 case TooltipPosition.Center: return new PointF(avrgX, avrgY);
-                default: throw new NotImplementedException();
+                default: return new PointF();
             }
         }
 

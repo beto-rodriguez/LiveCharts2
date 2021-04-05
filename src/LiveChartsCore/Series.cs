@@ -48,6 +48,8 @@ namespace LiveChartsCore
         private string? name;
         private Action<TModel, ChartPoint>? mapping;
         private int zIndex;
+        private Func<ChartPoint, string> tooltipLabelFormatter = (point) => $"{point.Context.Series.Name} {point.PrimaryValue}"; 
+        private Func<ChartPoint, string> dataLabelsFormatter = (point) => $"{point.PrimaryValue}";
 
         public Series(SeriesProperties properties)
         {
@@ -121,6 +123,12 @@ namespace LiveChartsCore
 
         /// <inheritdoc cref="ISeries.ZIndex" />
         public int ZIndex { get => zIndex; set { zIndex = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="ISeries.TooltipLabelFormatter" />
+        public Func<ChartPoint, string> TooltipLabelFormatter { get => tooltipLabelFormatter; set { tooltipLabelFormatter = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="ISeries.DataLabelsFormatter" />
+        public Func<ChartPoint, string> DataLabelsFormatter { get => dataLabelsFormatter; set { dataLabelsFormatter = value; OnPropertyChanged(); } }
 
         /// <inheritdoc />
         public virtual int GetStackGroup() => 0;

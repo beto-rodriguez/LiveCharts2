@@ -98,7 +98,7 @@ namespace LiveChartsCore.Measure
             mInv = 0;
         }
 
-        public Scaler()
+        internal Scaler()
         {
             minPx = 0;
             maxPx = 100;

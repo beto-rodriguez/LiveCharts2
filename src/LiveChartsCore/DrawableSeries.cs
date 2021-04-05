@@ -52,7 +52,6 @@ namespace LiveChartsCore
         private double dataLabelsSize = 16;
         private DataLabelsPosition dataLabelsPosition;
         private Padding dataLabelsPadding = new Padding { Left = 6, Top = 8, Right = 6, Bottom = 8 };
-        private Func<ChartPoint, string> dataLabelFormatter = (point) => $"{point.PrimaryValue}";
         protected List<IDrawableTask<TDrawingContext>> deletingTasks = new ();
 
         /// <summary>
@@ -152,14 +151,6 @@ namespace LiveChartsCore
         /// The data labels padding.
         /// </value>
         public Padding DataLabelsPadding { get => dataLabelsPadding; set { dataLabelsPadding = value; OnPropertyChanged(); } }
-
-        /// <summary>
-        /// Gets or sets the data label formatter.
-        /// </summary>
-        /// <value>
-        /// The data label formatter.
-        /// </value>
-        public Func<ChartPoint, string> DataLabelFormatter { get => dataLabelFormatter; set { dataLabelFormatter = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Gets the default paint context.

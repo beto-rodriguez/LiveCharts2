@@ -77,6 +77,24 @@ namespace LiveChartsCore
         double Pivot { get; set; }
 
         /// <summary>
+        /// Gets or sets the tooltip label formatter, this function will build the label when a point in this series 
+        /// is shown inside a tooltip.
+        /// </summary>
+        /// <value>
+        /// The tooltip label formatter.
+        /// </value>
+        Func<ChartPoint, string> TooltipLabelFormatter { get; set; }
+
+        /// <summary>
+        /// Gets or sets the data label formatter, this function will build the label when a point in this series 
+        /// is shown as data label.
+        /// </summary>
+        /// <value>
+        /// The data label formatter.
+        /// </value>
+        Func<ChartPoint, string> DataLabelsFormatter { get; set; }
+
+        /// <summary>
         /// Gets a <see cref="ChartPoint"/> array with the points used to generate the plot.
         /// </summary>
         /// <param name="chart">the chart</param>

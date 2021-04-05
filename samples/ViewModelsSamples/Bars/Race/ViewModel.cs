@@ -28,7 +28,7 @@ namespace ViewModelsSamples.Bars.Race
                     MaxBarWidth = 50,
                     DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
                     DataLabelsPosition = DataLabelsPosition.End,
-                    DataLabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
+                    DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
                 new RowSeries<ObservableValue>
                 {
@@ -38,7 +38,7 @@ namespace ViewModelsSamples.Bars.Race
                     MaxBarWidth = 50,
                     DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
                     DataLabelsPosition = DataLabelsPosition.End,
-                    DataLabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
+                    DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
                 new RowSeries<ObservableValue>
                 {
@@ -48,7 +48,7 @@ namespace ViewModelsSamples.Bars.Race
                     MaxBarWidth = 52,
                     DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
                     DataLabelsPosition = DataLabelsPosition.End,
-                    DataLabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
+                    DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
                 new RowSeries<ObservableValue>
                 {
@@ -58,7 +58,7 @@ namespace ViewModelsSamples.Bars.Race
                     MaxBarWidth = 50,
                     DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
                     DataLabelsPosition = DataLabelsPosition.End,
-                    DataLabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
+                    DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
                 new RowSeries<ObservableValue>
                 {
@@ -68,7 +68,7 @@ namespace ViewModelsSamples.Bars.Race
                     MaxBarWidth = 50,
                     DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
                     DataLabelsPosition = DataLabelsPosition.End,
-                    DataLabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
+                    DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
                 new RowSeries<ObservableValue>
                 {
@@ -78,7 +78,7 @@ namespace ViewModelsSamples.Bars.Race
                     MaxBarWidth = 50,
                     DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
                     DataLabelsPosition = DataLabelsPosition.End,
-                    DataLabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
+                    DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
                 new RowSeries<ObservableValue>
                 {
@@ -88,7 +88,7 @@ namespace ViewModelsSamples.Bars.Race
                     MaxBarWidth = 50,
                     DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
                     DataLabelsPosition = DataLabelsPosition.End,
-                    DataLabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
+                    DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
             };
         }

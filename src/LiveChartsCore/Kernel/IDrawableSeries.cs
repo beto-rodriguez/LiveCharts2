@@ -82,14 +82,6 @@ namespace LiveChartsCore.Kernel
         Padding DataLabelsPadding { get; set; }
 
         /// <summary>
-        /// Gets or sets the data label formatter, it is a delegate that takes the point as parameter, and returns the label as string.
-        /// </summary>
-        /// <value>
-        /// The data label formatter.
-        /// </value>
-        Func<ChartPoint, string> DataLabelFormatter { get; set; }
-
-        /// <summary>
         /// Gets the default paint context, normally handled internally to display tooltips and legends.
         /// </summary>
         /// <value>

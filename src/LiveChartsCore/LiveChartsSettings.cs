@@ -44,7 +44,7 @@ namespace LiveChartsCore
         public ZoomAndPanMode DefaultZoomMode { get; set; } = ZoomAndPanMode.X;
         public LegendPosition DefaultLegendPosition { get; set; } = LegendPosition.Hidden;
         public LegendOrientation DefaultLegendOrientation { get; set; } = LegendOrientation.Auto;
-        public TooltipPosition DefaultTooltipPosition { get; set; } = TooltipPosition.Hidden;
+        public TooltipPosition DefaultTooltipPosition { get; set; } = TooltipPosition.Top;
         public TooltipFindingStrategy DefaultTooltipFindingStrategy{ get; set; } = TooltipFindingStrategy.CompareOnlyX;
 
         /// <summary>

@@ -34,7 +34,7 @@ namespace LiveChartsCore
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
-        private Func<float, float> easing = EasingFunctions.BuildCustomElasticOut(1.2f, 0.40f);
+        private readonly Func<float, float> easing = EasingFunctions.BuildCustomElasticOut(1.2f, 0.40f);
         private double geometrySize = 24d;
         private double minGeometrySize = 6d;
         private Bounds weightBounds = new ();
@@ -43,6 +43,9 @@ namespace LiveChartsCore
             : base(SeriesProperties.Scatter)
         {
             HoverState = LiveCharts.ScatterSeriesHoverKey;
+
+            DataLabelsFormatter = (point) => $"{point.SecondaryValue}, {point.PrimaryValue}";
+            TooltipLabelFormatter = (point) => $"{point.Context.Series.Name} {point.SecondaryValue}, {point.PrimaryValue}";
         }
 
         public double MinGeometrySize { get => minGeometrySize; set => minGeometrySize = value; }
@@ -166,7 +169,7 @@ namespace LiveChartsCore
                         DataLabelsDrawableTask.AddGeometyToPaintTask(l);
                     }
 
-                    label.Text = DataLabelFormatter(point);
+                    label.Text = DataLabelsFormatter(point);
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
                     var labelPosition = GetLabelPosition(
@@ -187,18 +190,8 @@ namespace LiveChartsCore
         public override DimensionalBounds GetBounds(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
-            var baseBounds = new DimensionalBounds();
-            weightBounds = new Bounds();
-            foreach (var point in Fetch(chart))
-            {
-                var primary = point.PrimaryValue;
-                var secondary = point.SecondaryValue;
-                var tertiary = point.TertiaryValue;
-
-                baseBounds.PrimaryBounds.AppendValue(primary);
-                baseBounds.SecondaryBounds.AppendValue(secondary);
-                weightBounds.AppendValue(tertiary);
-            }
+            var baseBounds = base.GetBounds(chart, x, y);
+            weightBounds = baseBounds.TertiaryBounds;
 
             var tick = y.GetTick(chart.ControlSize, baseBounds.VisiblePrimaryBounds);
 

@@ -3,10 +3,16 @@
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Xamarin.Forms"
        x:Class="LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart">
-    <lvc:MotionCanvas x:Name="canvas">
-        <lvc:MotionCanvas.GestureRecognizers >
-            <PinchGestureRecognizer PinchUpdated="PinchGestureRecognizer_PinchUpdated" />
-            <PanGestureRecognizer PanUpdated="PanGestureRecognizer_PanUpdated"/>
-        </lvc:MotionCanvas.GestureRecognizers>
-    </lvc:MotionCanvas>
+    <AbsoluteLayout>
+        <lvc:MotionCanvas x:Name="canvas" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+            <lvc:MotionCanvas.GestureRecognizers >
+                <PinchGestureRecognizer PinchUpdated="PinchGestureRecognizer_PinchUpdated" />
+                <PanGestureRecognizer PanUpdated="PanGestureRecognizer_PanUpdated"/>
+            </lvc:MotionCanvas.GestureRecognizers>
+        </lvc:MotionCanvas>
+        <Button Text="Hola"
+            BackgroundColor="Red"
+            AbsoluteLayout.LayoutFlags="PositionProportional"
+            AbsoluteLayout.LayoutBounds=".95,.95,80,80" />
+    </AbsoluteLayout>
 </ContentView>
