@@ -8,21 +8,37 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Painting
 {
-    public class GradientPaintTask : PaintTask
+    public class LinearGradientPaintTask : PaintTask
     {
-        private SkiaSharpDrawingContext? drawingContext;
-        private readonly SKColor start;
-        private readonly SKColor end;
+        private static readonly SKPoint DefaultStartPoint = new SKPoint(0, 0);
+        private static readonly SKPoint DefaultEndPoint = new SKPoint(1, 1);
 
-        public GradientPaintTask(SKColor start, SKColor end)
+        private readonly SKColor[] gradientStops;
+
+        private readonly SKPoint startPoint;
+        private readonly SKPoint endPoint;
+
+        private SkiaSharpDrawingContext drawingContext;
+
+        public LinearGradientPaintTask(SKColor[] gradientStops, SKPoint startPoint, SKPoint endPoint)
         {
-            this.start = start;
-            this.end = end;
+            this.gradientStops = gradientStops;
+            this.startPoint = startPoint;
+            this.endPoint = endPoint;
         }
+
+        public LinearGradientPaintTask(SKColor[] gradientStops)
+            : this(gradientStops, DefaultStartPoint, DefaultEndPoint) { }
+
+        public LinearGradientPaintTask(SKColor startColor, SKColor endColor, SKPoint startPoint, SKPoint endPoint)
+            : this(new[] { startColor, endColor }, startPoint, endPoint) { }
+
+        public LinearGradientPaintTask(SKColor start, SKColor end)
+            : this(start, end, DefaultStartPoint, DefaultEndPoint) { }
 
         public override IDrawableTask<SkiaSharpDrawingContext> CloneTask()
         {
-            return new GradientPaintTask(start, end)
+            return new LinearGradientPaintTask(gradientStops, startPoint, endPoint)
             {
                 Style = Style,
                 IsStroke = IsStroke,
@@ -40,18 +56,15 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             var info = drawingContext.Info;
 
             skiaPaint.Shader = SKShader.CreateLinearGradient(
-                    new SKPoint(info.Width / 2, 0),
-                    new SKPoint(info.Width / 2, info.Height),
-                    new SKColor[] { start, end },
-                    new float[] { 0, 1 },
+                    startPoint,
+                    endPoint,
+                    gradientStops,
                     SKShaderTileMode.Repeat);
 
 
-            //skiaPaint.Color = Color;
             skiaPaint.IsAntialias = IsAntialias;
             skiaPaint.IsStroke = false;
             skiaPaint.StrokeWidth = 0;
-            //skiaPaint.Style = SKPaintStyle.Fill;
             if (ClipRectangle != RectangleF.Empty)
             {
                 drawingContext.Canvas.Save();
