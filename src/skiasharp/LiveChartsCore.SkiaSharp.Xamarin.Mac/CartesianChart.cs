@@ -15,33 +15,112 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Drawing;
+using CoreGraphics;
 
-namespace StockDesktopWidget.UI.Widgets.AppleMac
+namespace LiveChartsCore.SkiaSharpView.Xamarin.Mac
 {
-    [Register("CartesianChart")]
-    public partial class CartesianChart : NSView, ICartesianChartView<SkiaSharpDrawingContext>
+    [Register(nameof(CartesianChart))]
+    public class CartesianChart : NSView, ICartesianChartView<SkiaSharpDrawingContext>
     {
         private CollectionDeepObserver<ISeries> seriesObserver;
         private CollectionDeepObserver<IAxis> xObserver;
         private CollectionDeepObserver<IAxis> yObserver;
         protected Chart<SkiaSharpDrawingContext> core;
-        //protected MotionCanvas motionCanvas;
         protected IChartLegend<SkiaSharpDrawingContext> legend;
         protected IChartTooltip<SkiaSharpDrawingContext> tooltip;
         private ActionThrottler mouseMoveThrottler;
         private PointF mousePosition = new PointF();
-        private nfloat currentScaleFactor = 1;
-
-        private MotionCanvas canvas;
 
         private IEnumerable<ISeries> _series = new ObservableCollection<ISeries>();
         private IEnumerable<IAxis> _xAxis = new List<IAxis>();
         private IEnumerable<IAxis> _yAxis = new List<IAxis>();
 
-        public CartesianChart(IntPtr handle) : base(handle)
+        private CGRect safeBounds;
+        private nfloat safeScaleFactor = 1;
+
+        // created in code
+        public CartesianChart()
         {
-            currentScaleFactor = NSScreen.MainScreen.BackingScaleFactor;
+            Initialize();
         }
+
+        // created in code
+        public CartesianChart(CGRect frame)
+            : base(frame)
+        {
+            Initialize();
+        }
+
+        // created via designer
+        public CartesianChart(IntPtr p)
+            : base(p)
+        {
+        }
+
+        // created via designer
+        public override void AwakeFromNib()
+        {
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            MotionCanvas = new MotionCanvas();
+            safeScaleFactor = NSScreen.MainScreen.BackingScaleFactor;
+            safeBounds = Bounds;
+
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+
+            var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<SkiaSharpDrawingContext>();
+            var initializer = stylesBuilder.GetInitializer();
+            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
+                throw new Exception("Default colors are not valid");
+            initializer.ConstructChart(this);
+
+            InitializeCore();
+
+            //mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
+
+            seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+
+            XAxes = new List<IAxis>() { new Axis() };
+            YAxes = new List<IAxis>() { new Axis() };
+            Series = new ObservableCollection<ISeries>();
+        }
+
+        private protected MotionCanvas MotionCanvas { get; private set; }
+
+        public override bool MouseDownCanMoveWindow => true;
+
+        public ZoomAndPanMode ZoomMode { get; set; }
+
+        public double ZoomingSpeed { get; set; } = 0.5;
+
+        public CartesianChart<SkiaSharpDrawingContext> Core => (CartesianChart<SkiaSharpDrawingContext>)core;
+
+        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => MotionCanvas.CanvasCore;
+
+        public IChartLegend<SkiaSharpDrawingContext> Legend => legend;
+
+        public IChartTooltip<SkiaSharpDrawingContext> Tooltip => tooltip;
+
+        public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; }
+
+        public Margin DrawMargin { get; set; }
+
+        public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(500);
+
+        public Func<float, float> EasingFunction { get; set; } = EasingFunctions.SinOut;
+
+        public LegendPosition LegendPosition { get; set; } = LegendPosition.Hidden;
+
+        public LegendOrientation LegendOrientation { get; set; } = LegendOrientation.Auto;
+
+        public TooltipPosition TooltipPosition { get; set; } = TooltipPosition.Hidden;
+
+        public TooltipFindingStrategy TooltipFindingStrategy { get; set; } = TooltipFindingStrategy.CompareOnlyX;
 
         public IEnumerable<IAxis> XAxes
         {
@@ -60,8 +139,6 @@ namespace StockDesktopWidget.UI.Widgets.AppleMac
             }
         }
 
-        public override bool MouseDownCanMoveWindow => true;
-
         public IEnumerable<IAxis> YAxes
         {
             get => _yAxis;
@@ -78,6 +155,7 @@ namespace StockDesktopWidget.UI.Widgets.AppleMac
                 BeginInvokeOnMainThread(() => core.Update());
             }
         }
+
         public IEnumerable<ISeries> Series
         {
             get => _series;
@@ -96,86 +174,37 @@ namespace StockDesktopWidget.UI.Widgets.AppleMac
             }
         }
 
-        public ZoomMode ZoomMode { get; set; }
-
-        public double ZoomingSpeed { get; set; } = 0.5;
-
-        public CartesianChart<SkiaSharpDrawingContext> Core => (CartesianChart<SkiaSharpDrawingContext>)core;
-
-
-        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
-
-        public IChartLegend<SkiaSharpDrawingContext> Legend { get; }
-
-        public IChartTooltip<SkiaSharpDrawingContext> Tooltip { get; }
-
-        public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; }
-
         public SizeF ControlSize
         {
             get
             {
                 return new SizeF
                 {
-                    Height = (float)(Bounds.Height * currentScaleFactor),
-                    Width = (float)(Bounds.Width * currentScaleFactor)
+                    Height = (float)(safeBounds.Height * safeScaleFactor),
+                    Width = (float)(safeBounds.Width * safeScaleFactor)
                 };
             }
         }
 
-        public Margin DrawMargin { get; set; }
-        public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(500);
-        public Func<float, float> EasingFunction { get; set; } = EasingFunctions.SinOut;
-        public LegendPosition LegendPosition { get; set; } = LegendPosition.Hidden;
-        public LegendOrientation LegendOrientation { get; set; } = LegendOrientation.Auto;
-        public TooltipPosition TooltipPosition { get; set; } = TooltipPosition.Hidden;
-        public TooltipFindingStrategy TooltipFindingStrategy { get; set; } = TooltipFindingStrategy.CompareOnlyX;
-
-
-        public void Initialize(MotionCanvas canvas)
+        public override void ViewDidMoveToWindow()
         {
-            this.canvas = canvas;
-            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+            base.ViewDidMoveToWindow();
+            Window.DidResize += Window_DidResize;
 
-            var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<SkiaSharpDrawingContext>();
-            var initializer = stylesBuilder.GetInitializer();
-            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
-                throw new Exception("Default colors are not valid");
-            initializer.ConstructChart(this);
-            InitializeCore();
+        }
 
-            var x = new NSNotificationCenter();
-            x.AddObserver(new NSString("NSViewBoundsDidChangeNotification"), OnSizeChanged);
-
-            //mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
-
-            seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-
-            XAxes = new List<IAxis>() { new Axis() };
-            YAxes = new List<IAxis>() { new Axis() };
-            Series = new ObservableCollection<ISeries>();
+        public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
+        {
+            return Core.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
         }
 
         protected void InitializeCore()
         {
-            //if (!(FindByName("canvas") is MotionCanvas canvas))
-            //    throw new Exception(
-            //        $"SkiaElement not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
-            //        $"If you override the template please add an {nameof(MotionCanvas)} to the template and name it 'canvas'");
-
-            core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, MotionCanvas.CanvasCore);
             //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
             //tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
             BeginInvokeOnMainThread(() => core.Update());
         }
-
-        private void OnSizeChanged(NSNotification notification)
-        {
-
-        }
-
 
         private void OnDeepCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -188,9 +217,10 @@ namespace StockDesktopWidget.UI.Widgets.AppleMac
             InvokeOnMainThread(() => core.Update());
         }
 
-        public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
+        private void Window_DidResize(object sender, EventArgs e)
         {
-            return Core.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
+            safeBounds = Bounds;
+            core.Update();
         }
     }
 }
