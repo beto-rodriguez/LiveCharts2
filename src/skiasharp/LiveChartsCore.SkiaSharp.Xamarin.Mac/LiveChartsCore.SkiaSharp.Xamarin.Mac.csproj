@@ -1,0 +1,16 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.23">
+
+  <PropertyGroup>
+    <TargetFramework>xamarinmac2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SkiaSharp.Views" Version="2.80.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\LiveChartsCore\LiveChartsCore.csproj" />
+    <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
+  </ItemGroup>
+
+</Project>
