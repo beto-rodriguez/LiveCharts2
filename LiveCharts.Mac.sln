@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveCharts.Mac", "LiveCharts.Mac.csproj", "{F7155D7B-9F3D-4551-B4BE-DC491650048A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharp.Xamarin.Mac", "src\skiasharp\LiveChartsCore.SkiaSharp.Xamarin.Mac\LiveChartsCore.SkiaSharp.Xamarin.Mac.csproj", "{D2CBE02B-560D-4D55-AFA6-A5BA2DDD625C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView", "src\skiasharp\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj", "{160E0826-A83C-4DA0-BF8A-F0F2DEEAD976}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore", "src\LiveChartsCore\LiveChartsCore.csproj", "{C6092ADF-9EB9-4D75-BED7-16EB6CE7D038}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +15,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F7155D7B-9F3D-4551-B4BE-DC491650048A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F7155D7B-9F3D-4551-B4BE-DC491650048A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F7155D7B-9F3D-4551-B4BE-DC491650048A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F7155D7B-9F3D-4551-B4BE-DC491650048A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2CBE02B-560D-4D55-AFA6-A5BA2DDD625C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2CBE02B-560D-4D55-AFA6-A5BA2DDD625C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2CBE02B-560D-4D55-AFA6-A5BA2DDD625C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2CBE02B-560D-4D55-AFA6-A5BA2DDD625C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{160E0826-A83C-4DA0-BF8A-F0F2DEEAD976}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{160E0826-A83C-4DA0-BF8A-F0F2DEEAD976}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{160E0826-A83C-4DA0-BF8A-F0F2DEEAD976}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{160E0826-A83C-4DA0-BF8A-F0F2DEEAD976}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6092ADF-9EB9-4D75-BED7-16EB6CE7D038}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6092ADF-9EB9-4D75-BED7-16EB6CE7D038}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6092ADF-9EB9-4D75-BED7-16EB6CE7D038}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6092ADF-9EB9-4D75-BED7-16EB6CE7D038}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
