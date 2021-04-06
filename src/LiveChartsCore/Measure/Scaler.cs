@@ -37,7 +37,7 @@ namespace LiveChartsCore.Measure
             if (axis.Orientation == AxisOrientation.X)
             {
                 minPx = drawMaringLocation.X;
-                maxPx = drawMarginSize.Width;
+                maxPx = drawMaringLocation.X + drawMarginSize.Width;
                 deltaPx = maxPx - minPx;
 
                 maxVal = (float)(axis.IsInverted ? axis.DataBounds.Min : axis.DataBounds.Max);
@@ -64,7 +64,7 @@ namespace LiveChartsCore.Measure
             else
             {
                 minPx = drawMaringLocation.Y;
-                maxPx = drawMarginSize.Height;
+                maxPx = drawMaringLocation.Y + drawMarginSize.Height;
                 deltaPx = maxPx - minPx;
 
                 maxVal = (float)(axis.IsInverted ? axis.DataBounds.Max : axis.DataBounds.Min);

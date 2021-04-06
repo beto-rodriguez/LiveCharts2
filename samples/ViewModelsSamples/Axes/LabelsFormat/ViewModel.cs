@@ -1,7 +1,5 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -41,7 +39,7 @@ namespace ViewModelsSamples.Axes.LabelsFormat
                     // Now the Y axis we will display it as currency
                     // LiveCharts provides some common formatters
                     // in this case we are using the currency formatter.
-                    Labeler = Labelers.Currency
+                    Labeler = p => "a long string with many values aaaand " + p.ToString("C2")
 
                     // you could also build your own currency formatter
                     // for example:

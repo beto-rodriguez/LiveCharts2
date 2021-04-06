@@ -117,7 +117,9 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             if (ClipRectangle != RectangleF.Empty)
             {
                 drawingContext.Canvas.Save();
-                drawingContext.Canvas.ClipRect(new SKRect(ClipRectangle.X, ClipRectangle.Y, ClipRectangle.Width, ClipRectangle.Height));
+                drawingContext.Canvas.ClipRect(
+                    new SKRect(
+                        ClipRectangle.X, ClipRectangle.Y, ClipRectangle.X + ClipRectangle.Width, ClipRectangle.Y + ClipRectangle.Height));
                 this.drawingContext = drawingContext;
             }
 

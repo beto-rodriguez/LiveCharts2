@@ -6,7 +6,7 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
+    <Grid Background="AntiqueWhite">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
