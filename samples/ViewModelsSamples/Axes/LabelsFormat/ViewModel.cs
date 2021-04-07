@@ -39,7 +39,7 @@ namespace ViewModelsSamples.Axes.LabelsFormat
                     // Now the Y axis we will display it as currency
                     // LiveCharts provides some common formatters
                     // in this case we are using the currency formatter.
-                    Labeler = p => "a long string with many values aaaand " + p.ToString("C2")
+                    Labeler = Labelers.Currency
 
                     // you could also build your own currency formatter
                     // for example:

@@ -1,3 +1,25 @@
+// The MIT License(MIT)
+
+// Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
@@ -17,10 +39,11 @@ using Avalonia.Media;
 using a = Avalonia;
 using Avalonia.Input;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Markup.Xaml.Templates;
 
 namespace LiveChartsCore.SkiaSharp.Avalonia
 {
-    public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingContext>
+    public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingContext>, IAvaloniaChart
     {
         protected Chart<SkiaSharpDrawingContext> core;
         //protected MotionCanvas motionCanvas;
@@ -114,6 +137,9 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             AvaloniaProperty.Register<CartesianChart, TooltipFindingStrategy>(
                 nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, inherits: true);
 
+        public static readonly AvaloniaProperty<DataTemplate> TooltipTemplateProperty =
+           AvaloniaProperty.Register<CartesianChart, DataTemplate>(nameof(TooltipTemplate), null, inherits: true);
+
         public IEnumerable<ISeries> Series
         {
             get { return (IEnumerable<ISeries>)GetValue(SeriesProperty); }
@@ -180,6 +206,12 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             set { SetValue(TooltipFindingStrategyProperty, value); }
         }
 
+        public DataTemplate TooltipTemplate
+        {
+            get { return (DataTemplate)GetValue(TooltipTemplateProperty); }
+            set { SetValue(TooltipTemplateProperty, value); }
+        }
+
         SizeF IChartView.ControlSize
         {
             get
@@ -202,6 +234,11 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
         public IChartTooltip<SkiaSharpDrawingContext> Tooltip => null;
 
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; }
+        public a.Media.FontFamily TooltipFontFamily { get; set; }
+        public double TooltipFontSize { get; set; } = 14;
+        public FontWeight TooltipFontWeight { get; set; } = FontWeight.Normal;
+        public a.Media.FontStyle TooltipFontStyle { get; set; } = a.Media.FontStyle.Normal;
+        public SolidColorBrush TooltipTextBrush { get; set; } = new SolidColorBrush(new a.Media.Color(255, 30, 30, 30));
 
         public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
@@ -214,7 +251,7 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             var canvas = this.FindControl<MotionCanvas>("canvas");
             core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
             //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
-            //tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
+            tooltip = this.FindControl<DefaultTooltip>("tooltip");
             Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
         }
 
@@ -293,6 +330,10 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
 
         private void CartesianChart_PointerMoved(object? sender, global::Avalonia.Input.PointerEventArgs e)
         {
+            var p = e.GetPosition(this);
+            mousePosition = new PointF((float)p.X, (float)p.Y);
+            mouseMoveThrottler.Call();
+
             if (!isPanning || previous == null) return;
 
             current = e.GetPosition(this);

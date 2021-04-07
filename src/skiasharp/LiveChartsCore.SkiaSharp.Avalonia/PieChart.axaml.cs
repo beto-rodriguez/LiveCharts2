@@ -1,10 +1,32 @@
+// The MIT License(MIT)
+
+// Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 using Avalonia;
+using am = Avalonia.Media;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -14,10 +36,12 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Collections.ObjectModel;
+using Avalonia.Markup.Xaml.Templates;
+using Avalonia.Media;
 
 namespace LiveChartsCore.SkiaSharp.Avalonia
 {
-    public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
+    public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAvaloniaChart
     {
         protected Chart<SkiaSharpDrawingContext> core;
         //protected MotionCanvas motionCanvas;
@@ -87,6 +111,9 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             AvaloniaProperty.Register<PieChart, TooltipFindingStrategy>(
                 nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, inherits: true);
 
+        public static readonly AvaloniaProperty<DataTemplate> TooltipTemplateProperty =
+           AvaloniaProperty.Register<CartesianChart, DataTemplate>(nameof(TooltipTemplate), null, inherits: true);
+
         public IEnumerable<ISeries> Series
         {
             get { return (IEnumerable<ISeries>)GetValue(SeriesProperty); }
@@ -129,6 +156,12 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             set { SetValue(TooltipFindingStrategyProperty, value); }
         }
 
+        public DataTemplate TooltipTemplate
+        {
+            get { return (DataTemplate)GetValue(TooltipTemplateProperty); }
+            set { SetValue(TooltipTemplateProperty, value); }
+        }
+
         SizeF IChartView.ControlSize
         {
             get
@@ -151,6 +184,11 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
         public IChartTooltip<SkiaSharpDrawingContext> Tooltip => null;
 
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; }
+        public am.FontFamily TooltipFontFamily { get; set; }
+        public double TooltipFontSize { get; set; }
+        public FontWeight TooltipFontWeight { get; set; }
+        public am.FontStyle TooltipFontStyle { get; set; }
+        public SolidColorBrush TooltipTextBrush { get; set; }
 
         protected void InitializeCore()
         {

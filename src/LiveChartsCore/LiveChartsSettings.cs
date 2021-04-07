@@ -45,7 +45,7 @@ namespace LiveChartsCore
         public LegendPosition DefaultLegendPosition { get; set; } = LegendPosition.Hidden;
         public LegendOrientation DefaultLegendOrientation { get; set; } = LegendOrientation.Auto;
         public TooltipPosition DefaultTooltipPosition { get; set; } = TooltipPosition.Top;
-        public TooltipFindingStrategy DefaultTooltipFindingStrategy{ get; set; } = TooltipFindingStrategy.CompareOnlyX;
+        public TooltipFindingStrategy DefaultTooltipFindingStrategy { get; set; } = TooltipFindingStrategy.CompareOnlyX;
 
         /// <summary>
         /// Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a <see cref="ChartPoint"/> instance, 
