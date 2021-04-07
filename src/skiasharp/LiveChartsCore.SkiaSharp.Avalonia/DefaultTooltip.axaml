@@ -9,10 +9,8 @@
 
   <UserControl.Resources>
     <DataTemplate x:Key="defaultTemplate">
-      <Border Background="#fafafa" CornerRadius="4">
-        <!--<Border.Effect>
-          <DropShadowEffect ShadowDepth="3" Direction="0" Color="Black" Opacity="0.20" BlurRadius="6" />
-        </Border.Effect>-->
+      <Border Background="#fafafa" CornerRadius="4"
+              BoxShadow="0 0 10 0 #05000000, 0 0 10 0 #05000000, 0 0 10 0 #05000000, 0 0 10 0 #05000000">
         <ItemsControl Items="{Binding Points, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
@@ -44,13 +42,12 @@
     </DataTemplate>
   </UserControl.Resources>
 
-  <Border Background="Transparent" Padding="8" Name="border">
+  <Border Background="Transparent" Padding="8">
     <!--<ContentControl ContentTemplate="{Binding Path=Template, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}" />-->
 
-    <Border Background="#fafafa" CornerRadius="4">
-      <!--<Border.Effect>
-          <DropShadowEffect ShadowDepth="3" Direction="0" Color="Black" Opacity="0.20" BlurRadius="6" />
-        </Border.Effect>-->
+    <Border Background="#fafafa" CornerRadius="4"
+            BoxShadow="0 0 3 0 #20000000, 0 0 3 0 #20000000, 0 0 5 0 #20000000, 0 0 5 0 #20000000">
+
       <ItemsControl Items="{Binding Points, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}">
         <ItemsControl.ItemsPanel>
           <ItemsPanelTemplate>
@@ -78,6 +75,7 @@
           </DataTemplate>
         </ItemsControl.ItemTemplate>
       </ItemsControl>
+
     </Border>
   </Border>
 </UserControl>

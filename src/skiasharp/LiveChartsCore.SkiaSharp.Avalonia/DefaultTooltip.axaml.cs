@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using Avalonia;
+using Avalonia.Animation;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.Templates;
@@ -29,7 +30,6 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace LiveChartsCore.SkiaSharp.Avalonia
@@ -49,6 +49,8 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             if (t == null) throw new Exception("default tempalte not found");
             defaultTemplate = t;
             border = this.FindControl<Border>("border");
+            Canvas.SetTop(this, 0);
+            Canvas.SetLeft(this, 0);
         }
 
         #region dependency properties
@@ -112,27 +114,39 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             if (chart is CartesianChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetCartesianTooltipLocation(
-                    chart.TooltipPosition, new System.Drawing.SizeF((float)border.Bounds.Width, (float)border.Bounds.Height));
+                    chart.TooltipPosition, new System.Drawing.SizeF((float)Bounds.Width, (float)Bounds.Height));
             }
             if (chart is PieChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetPieTooltipLocation(
-                    chart.TooltipPosition, new System.Drawing.SizeF((float)border.Bounds.Width, (float)border.Bounds.Height));
+                    chart.TooltipPosition, new System.Drawing.SizeF((float)Bounds.Width, (float)Bounds.Height));
             }
 
             if (location == null) throw new Exception("location not found");
 
             Points = tooltipPoints;
-            Trace.WriteLine($"{Points.ToList().Count}, {location.Value.X}, {location.Value.Y} => {border.Bounds.Width}, {border.Bounds.Height}");
 
             Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
-            Canvas.SetTop(this, location.Value.Y);
-            Canvas.SetLeft(this, location.Value.X);
+            double x = location.Value.X;
+            double y = location.Value.Y;
+            var s = chart.ControlSize;
+            var w = s.Width;
+            var h = s.Height;
+            if (location.Value.X + Bounds.Width > w) x = w - Bounds.Width;
+            if (location.Value.X < 0) x = 0;
+            if (location.Value.Y < 0) y = 0;
+            if (location.Value.Y + Bounds.Height > h) x = h - Bounds.Height;
 
-            //if (from == Rect.Empty) from = to;
-            //var animation = new RectAnimation(from, to, animationsSpeed) { EasingFunction = easingFunction };
-            //BeginAnimation(PlacementRectangleProperty, animation);
+            if (Transitions == null)
+                Transitions = new Transitions
+                {
+                    new DoubleTransition { Property = Canvas.TopProperty, Duration = TimeSpan.FromMilliseconds(300) },
+                    new DoubleTransition { Property = Canvas.LeftProperty, Duration = TimeSpan.FromMilliseconds(300) },
+                };
+
+            Canvas.SetTop(this, y);
+            Canvas.SetLeft(this, x);
 
             FontFamily = avaloniaChart.TooltipFontFamily ?? new FontFamily("Trebuchet MS");
             TextColor = avaloniaChart.TooltipTextBrush ?? new SolidColorBrush(Color.FromRgb(35, 35, 35));
@@ -153,6 +167,8 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
                 key.RemoveFromHoverState();
                 activePoints.Remove(key);
             }
+
+            chart.Canvas.Invalidate();
         }
 
         private void InitializeComponent()
