@@ -110,8 +110,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         private static void OnPaintTaskChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            var naturalGeometries = (MotionCanvas)sender;
-            naturalGeometries.canvasCore.SetPaintTasks(naturalGeometries.PaintTasks);
+            var motionCanvas = (MotionCanvas)sender;
+            motionCanvas.canvasCore.SetPaintTasks(motionCanvas.PaintTasks);
         }
     }
 }

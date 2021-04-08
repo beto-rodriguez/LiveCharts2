@@ -2,6 +2,7 @@
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp.Views.Desktop;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -12,12 +13,15 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private bool isDrawingLoopRunning = false;
         private MotionCanvas<SkiaSharpDrawingContext> canvasCore = new MotionCanvas<SkiaSharpDrawingContext>();
         private double framesPerSecond = 90;
+        private HashSet<IDrawableTask<SkiaSharpDrawingContext>> paintTasks;
 
         public MotionCanvas()
         {
             InitializeComponent();
             canvasCore.Invalidated += CanvasCore_Invalidated;
         }
+
+        public HashSet<IDrawableTask<SkiaSharpDrawingContext>> PaintTasks { get => paintTasks; set { paintTasks = value; OnPaintTasksChanged(); } }
 
         public double FramesPerSecond { get => framesPerSecond; set => framesPerSecond = value; }
 
@@ -46,6 +50,11 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             }
 
             isDrawingLoopRunning = false;
+        }
+
+        private void OnPaintTasksChanged()
+        {
+            canvasCore.SetPaintTasks(paintTasks);
         }
     }
 }

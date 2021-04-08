@@ -34,8 +34,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     public abstract class Chart: UserControl, IChartView<SkiaSharpDrawingContext>
     {
         protected Chart<SkiaSharpDrawingContext> core;
+        protected IChartLegend<SkiaSharpDrawingContext> legend;
+        protected IChartTooltip<SkiaSharpDrawingContext> tooltip;
         protected MotionCanvas motionCanvas;
-        private PointF mousePosition = new PointF();
+        private PointF mousePosition = new();
         private readonly ActionThrottler mouseMoveThrottler;
 
         public Chart()
@@ -64,6 +66,9 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 throw new Exception("Default colors are not valid");
             initializer.ConstructChart(this);
 
+            var c = Controls[0].Controls[0];
+            c.MouseMove += ChartOnMouseMove;
+
             InitializeCore();
             mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
         }
@@ -91,6 +96,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         public IChartTooltip<SkiaSharpDrawingContext> Tooltip => null;
 
+        public Font TooltipFont { get; set; } = new Font(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
+
+        public Color TooltipBackColor { get; set; } = Color.FromArgb(255, 250, 250, 250);
+
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; }
 
         protected abstract void InitializeCore();
@@ -111,8 +120,20 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private void MouseMoveThrottlerUnlocked()
         {
             if (TooltipPosition == TooltipPosition.Hidden) return;
-            //tooltip.Show(core.FindPointsNearTo(mousePosition), core);
+            tooltip.Show(core.FindPointsNearTo(mousePosition), core);
+        }
+
+        private void ChartOnMouseMove(object sender, MouseEventArgs e)
+        {
+            var p = e.Location;
+            mousePosition = new PointF(p.X, p.Y);
+            mouseMoveThrottler.Call();
+        }
+
+        protected override void OnHandleDestroyed(EventArgs e)
+        {
+            if (tooltip is IDisposable disposableTooltip) disposableTooltip.Dispose();
+            base.OnHandleDestroyed(e);
         }
     }
-
 }

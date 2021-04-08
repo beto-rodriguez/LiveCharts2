@@ -39,7 +39,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         protected IChartLegend<SkiaSharpDrawingContext> legend;
         protected IChartTooltip<SkiaSharpDrawingContext> tooltip;
         private readonly ActionThrottler mouseMoveThrottler;
-        private PointF mousePosition = new PointF();
+        private PointF mousePosition = new();
 
         public Chart()
         {

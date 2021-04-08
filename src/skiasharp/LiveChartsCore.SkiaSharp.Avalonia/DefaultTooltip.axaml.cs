@@ -37,7 +37,6 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
     public class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext>
     {
         private readonly DataTemplate defaultTemplate;
-        private Border border;
         private readonly Dictionary<ChartPoint, object> activePoints = new();
         private TimeSpan animationsSpeed = TimeSpan.FromMilliseconds(200);
         private double hideoutCount = 1500;
@@ -48,7 +47,7 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             var t = (DataTemplate?)Resources["defaultTemplate"];
             if (t == null) throw new Exception("default tempalte not found");
             defaultTemplate = t;
-            border = this.FindControl<Border>("border");
+            TooltipTemplate = t;
             Canvas.SetTop(this, 0);
             Canvas.SetLeft(this, 0);
         }

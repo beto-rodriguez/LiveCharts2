@@ -28,9 +28,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
-using System.Windows.Forms;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms
 {
@@ -83,23 +81,23 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<IAxis> XAxes 
-        { 
+        public IEnumerable<IAxis> XAxes
+        {
             get => xAxes;
-            set 
+            set
             {
                 xObserver.Dispose(xAxes);
                 xObserver.Initialize(value);
                 xAxes = value;
-                core?.Update(); 
-            } 
+                core?.Update();
+            }
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<IAxis> YAxes 
+        public IEnumerable<IAxis> YAxes
         {
-            get => yAxes; 
-            set 
+            get => yAxes;
+            set
             {
                 yObserver.Dispose(yAxes);
                 yObserver.Initialize(value);
@@ -118,13 +116,14 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         {
             core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore);
             //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
-            //tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
+            tooltip = new DefaultTooltip();
             core.Update();
         }
 
         public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
-            throw new System.NotImplementedException();
+            var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
+            return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
         }
 
         private void OnDeepCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

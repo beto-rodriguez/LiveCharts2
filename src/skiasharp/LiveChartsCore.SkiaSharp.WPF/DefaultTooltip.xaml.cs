@@ -41,7 +41,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         private readonly Dictionary<ChartPoint, object> activePoints = new();
         private TimeSpan animationsSpeed = TimeSpan.FromMilliseconds(200);
         private IEasingFunction easingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
-        private double hideoutCount = 1500;
 
         public DefaultTooltip()
         {
@@ -92,7 +91,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public TimeSpan AnimationsSpeed { get => animationsSpeed; set => animationsSpeed = value; }
         public IEasingFunction EasingFunction { get => easingFunction; set => easingFunction = value; }
-        public double HideoutCount { get => hideoutCount; set => hideoutCount = value; }
 
         public DataTemplate Template
         {
