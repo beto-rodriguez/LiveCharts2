@@ -1,18 +1,20 @@
-﻿using LiveChartsCore.Kernel;
+﻿using LiveChartsCore;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.WinForms;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace LiveChartsCore.SkiaSharpView.WinForms
+namespace WinFormsSample.General.TemplatedTooltips
 {
-    public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>, IDisposable
+    public partial class CustomTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>, IDisposable
     {
         private readonly Dictionary<ChartPoint, object> activePoints = new();
 
-        public DefaultTooltip()
+        public CustomTooltip()
         {
             InitializeComponent();
         }
@@ -86,23 +88,14 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 var text = point.Point.AsTooltipString;
                 var size = g.MeasureString(text, chart.TooltipFont);
 
-                var drawableSeries = (IDrawableSeries<SkiaSharpDrawingContext>)point.Series;
-                
-                Controls.Add(new MotionCanvas
+                Controls.Add(new Label
                 {
-                    Location = new Point(6, (int)h + 6),
-                    PaintTasks = drawableSeries.DefaultPaintContext.PaintTasks,
-                    Width = (int)drawableSeries.DefaultPaintContext.Width,
-                    Height = (int)drawableSeries.DefaultPaintContext.Height
-                });
-                Controls.Add(new Label 
-                { 
                     Text = text,
                     Font = chart.TooltipFont,
-                    Location = new Point(6 + (int)drawableSeries.DefaultPaintContext.Width + 6, (int)h + 6)
+                    Location = new Point(6 , (int)h + 6)
                 });
 
-                var thisW = size.Width + 18 + (int)drawableSeries.DefaultPaintContext.Width;
+                var thisW = size.Width + 12;
                 h += size.Height + 6;
                 w = thisW > w ? thisW : w;
             }

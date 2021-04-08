@@ -48,6 +48,15 @@
     <Compile Update="Bars\Custom\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="General\TemplatedTooltips\CustomTooltip.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="General\TemplatedTooltips\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="General\Tooltips\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="General\UserDefinedTypes\View.cs">
       <SubType>UserControl</SubType>
     </Compile>

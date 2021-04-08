@@ -35,7 +35,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     {
         protected Chart<SkiaSharpDrawingContext> core;
         protected IChartLegend<SkiaSharpDrawingContext> legend;
-        protected IChartTooltip<SkiaSharpDrawingContext> tooltip;
+        protected IChartTooltip<SkiaSharpDrawingContext> tooltip = new DefaultTooltip();
         protected MotionCanvas motionCanvas;
         private PointF mousePosition = new();
         private readonly ActionThrottler mouseMoveThrottler;
@@ -71,6 +71,11 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
             InitializeCore();
             mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
+        }
+
+        public Chart(IChartTooltip<SkiaSharpDrawingContext> tooltip) : this()
+        {
+            this.tooltip = tooltip;
         }
 
         SizeF IChartView.ControlSize => new() { Width = motionCanvas.Width, Height = motionCanvas.Height };

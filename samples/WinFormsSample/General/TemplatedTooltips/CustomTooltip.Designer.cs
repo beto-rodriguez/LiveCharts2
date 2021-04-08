@@ -1,7 +1,7 @@
 ﻿
-namespace LiveChartsCore.SkiaSharpView.WinForms
+namespace WinFormsSample.General.TemplatedTooltips
 {
-    partial class DefaultTooltip
+    partial class CustomTooltip
     {
         /// <summary>
         /// Required designer variable.

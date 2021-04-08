@@ -65,6 +65,26 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             panningThrottler = new ActionThrottler(DoPan, TimeSpan.FromMilliseconds(30));
         }
 
+        public CartesianChart(IChartTooltip<SkiaSharpDrawingContext> tooltip): base(tooltip)
+        {
+            seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+
+            XAxes = new List<IAxis>() { new Axis() };
+            YAxes = new List<IAxis>() { new Axis() };
+            Series = new ObservableCollection<ISeries>();
+
+            var c = Controls[0].Controls[0];
+
+            c.MouseWheel += OnMouseWheel;
+            c.MouseDown += OnMouseDown;
+            c.MouseMove += OnMoseMove;
+            c.MouseUp += OnMouseUp;
+
+            panningThrottler = new ActionThrottler(DoPan, TimeSpan.FromMilliseconds(30));
+        }
+
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -116,7 +136,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         {
             core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore);
             //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
-            tooltip = new DefaultTooltip();
             core.Update();
         }
 

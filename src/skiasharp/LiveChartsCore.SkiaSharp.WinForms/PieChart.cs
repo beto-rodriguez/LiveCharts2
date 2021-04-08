@@ -49,6 +49,22 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                true);
         }
 
+        public PieChart(IChartTooltip<SkiaSharpDrawingContext> tooltip): base(tooltip)
+        {
+            seriesObserver = new CollectionDeepObserver<ISeries>(
+               (object sender, NotifyCollectionChangedEventArgs e) =>
+               {
+                   if (core == null) return;
+                   core.Update();
+               },
+               (object sender, PropertyChangedEventArgs e) =>
+               {
+                   if (core == null) return;
+                   core.Update();
+               },
+               true);
+        }
+
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => (PieChart<SkiaSharpDrawingContext>)core;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
