@@ -92,6 +92,13 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             context.Custom(new CustomDrawOp(new Rect(0, 0, Bounds.Width, Bounds.Height), canvasCore));
         }
 
+        protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
+        {
+            if(change.Property.Name == nameof(PaintTasks)) canvasCore.SetPaintTasks(PaintTasks);
+
+            base.OnPropertyChanged(change);
+        }
+
         // based on:
         // https://github.com/AvaloniaUI/Avalonia/blob/554aaec5e5cc96c0b4318b6ed1fbf8159f442889/samples/RenderDemo/Pages/CustomSkiaPage.cs
         class CustomDrawOp : ICustomDrawOperation

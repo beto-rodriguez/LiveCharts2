@@ -44,6 +44,37 @@
 
   <Border Background="Transparent" Padding="8">
     <!--<ContentControl ContentTemplate="{Binding Path=TooltipTemplate, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}" />-->
-    <ContentControl ContentTemplate="{Binding Path=TooltipTemplate, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}" />
+
+    <Border Background="#fafafa" CornerRadius="4"
+              BoxShadow="0 0 10 0 #05000000, 0 0 10 0 #05000000, 0 0 10 0 #05000000, 0 0 10 0 #05000000">
+        <ItemsControl Items="{Binding Points, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="{x:Type ctx:TooltipPoint}">
+              <Border Padding="7 5">
+                <StackPanel Orientation="Horizontal">
+                  <local:MotionCanvas Margin="0 0 8 0"
+                      PaintTasks="{Binding Series.DefaultPaintContext.PaintTasks}"
+                      Width="{Binding Series.DefaultPaintContext.Width}"
+                      Height="{Binding Series.DefaultPaintContext.Height}"
+                      VerticalAlignment="Center"/>
+                  <TextBlock Text="{Binding Point.AsTooltipString}" Margin="0 0 8 0"
+                      FontFamily="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
+                      Foreground="{Binding TextColor, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
+                      FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
+                      FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
+                      FontStyle="{Binding FontStyle, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
+                      VerticalAlignment="Center"/>
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Border>
+    
   </Border>
 </UserControl>
