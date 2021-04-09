@@ -11,11 +11,12 @@ using System.Drawing;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using c = Xamarin.Forms.Color;
 
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingContext>
+    public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingContext>, IMobileChart
     {
         private CollectionDeepObserver<ISeries> seriesObserver;
         protected Chart<SkiaSharpDrawingContext> core;
@@ -156,6 +157,16 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         public IChartLegend<SkiaSharpDrawingContext> Legend => null;
 
         public Margin DrawMargin { get; set; }
+
+        public DataTemplate TooltipTemplate { get; set; }
+
+        public string TooltipFontFamily { get; set; } = null;
+
+        public double TooltipFontSize { get; set; } = 12;
+
+        public c TooltipTextColor { get; set; } = new c(35, 35, 35);
+
+        public FontAttributes TooltipFontAttributes { get; set; }
 
         public IChartTooltip<SkiaSharpDrawingContext> Tooltip => null;
 

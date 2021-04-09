@@ -10,9 +10,9 @@
                 <PanGestureRecognizer PanUpdated="PanGestureRecognizer_PanUpdated"/>
             </lvc:MotionCanvas.GestureRecognizers>
         </lvc:MotionCanvas>
-        <Button Text="Hola"
-            BackgroundColor="Red"
-            AbsoluteLayout.LayoutFlags="PositionProportional"
-            AbsoluteLayout.LayoutBounds=".95,.95,80,80" />
+        <lvc:DefaultTooltip x:Name="tooltip"
+                            AbsoluteLayout.LayoutFlags="PositionProportional"
+                            AbsoluteLayout.LayoutBounds=".05,.05,AutoSize,AutoSize">
+        </lvc:DefaultTooltip>
     </AbsoluteLayout>
 </ContentView>

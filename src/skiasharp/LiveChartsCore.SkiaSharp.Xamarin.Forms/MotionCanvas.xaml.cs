@@ -24,6 +24,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp.Views.Forms;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -50,9 +51,26 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             canvasCore.Invalidated += OnCanvasCoreInvalidated;
         }
 
+        public static readonly BindableProperty PaintTasksProperty = BindableProperty.Create(
+            nameof(PaintTasks), typeof(HashSet<IDrawableTask<SkiaSharpDrawingContext>>),
+            typeof(MotionCanvas), propertyChanged: PaintTasksChanged);
+
+        public SKCanvasView SkCanvasView => skiaElement;
+
         public double FramesPerSecond { get => framesPerSecond; set => framesPerSecond = value; }
 
+        public HashSet<IDrawableTask<SkiaSharpDrawingContext>> PaintTasks
+        {
+            get { return (HashSet<IDrawableTask<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty); }
+            set { SetValue(PaintTasksProperty, value); }
+        }
+
         public MotionCanvas<SkiaSharpDrawingContext> CanvasCore => canvasCore;
+
+        public void Invalidate()
+        {
+            MainThread.BeginInvokeOnMainThread(RunDrawingLoop);
+        }
 
         void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs args)
         {
@@ -79,9 +97,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             isDrawingLoopRunning = false;
         }
 
-        public void Invalidate()
+        private static void PaintTasksChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            MainThread.BeginInvokeOnMainThread(RunDrawingLoop);
+            var control = bindable as MotionCanvas;
+            control.canvasCore.SetPaintTasks(control.PaintTasks);
         }
     }
 }

@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultTooltip"
+             xmlns:local="clr-namespace:LiveChartsCore.SkiaSharpView.Xamarin.Forms"
+             xmlns:ctx="clr-namespace:LiveChartsCore.Kernel;assembly=LiveChartsCore">
+
+    <ContentView.Resources>
+        <DataTemplate x:Key="defaultTemplate">
+            <Frame Background="#fafafa" CornerRadius="4" HasShadow="True" Padding="6">
+                <StackLayout BindableLayout.ItemsSource="{Binding Points}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                                <!--<local:MotionCanvas Margin="0, 0, 8, 0" 
+                                            PaintTasks="{Binding Series, Converter={StaticResource paintTaskConverter}}"
+                                            Width="40"
+                                            Height="40"/>-->
+                                <Label Text="{Binding Point.AsTooltipString}"
+                                           TextColor="{Binding TextColor, Source={RelativeSource AncestorType={x:Type local:TooltipBindingContext}}}"
+                                           FontFamily="{Binding FontFamily, Source={RelativeSource AncestorType={x:Type local:TooltipBindingContext}}}"
+                                           FontSize="{Binding FontSize}"
+                                           FontAttributes="{Binding FontAttributes}" />
+                            </StackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                    </StackLayout>
+            </Frame>
+        </DataTemplate>
+
+        <local:PaintTasksValueConverter x:Key="paintTaskConverter" />
+    </ContentView.Resources>
+
+</ContentView>

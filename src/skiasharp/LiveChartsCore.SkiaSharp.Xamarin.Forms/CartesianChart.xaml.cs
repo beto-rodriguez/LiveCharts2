@@ -34,21 +34,18 @@ using Xamarin.Essentials;
 using Xamarin.Forms.Xaml;
 using System.Diagnostics;
 using Xamarin.Forms;
+using c = Xamarin.Forms.Color;
 
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharpDrawingContext>
+    public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharpDrawingContext>, IMobileChart
     {
         private readonly CollectionDeepObserver<ISeries> seriesObserver;
         private readonly CollectionDeepObserver<IAxis> xObserver;
         private readonly CollectionDeepObserver<IAxis> yObserver;
         protected Chart<SkiaSharpDrawingContext> core;
-        //protected MotionCanvas motionCanvas;
         protected IChartLegend<SkiaSharpDrawingContext> legend;
-        protected IChartTooltip<SkiaSharpDrawingContext> tooltip;
-        private readonly ActionThrottler mouseMoveThrottler;
-        private PointF mousePosition = new PointF();
 
         public CartesianChart()
         {
@@ -64,7 +61,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
             InitializeCore();
             SizeChanged += OnSizeChanged;
-            mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
 
             seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
@@ -73,6 +69,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             XAxes = new List<IAxis>() { new Axis() };
             YAxes = new List<IAxis>() { new Axis() };
             Series = new ObservableCollection<ISeries>();
+
+            canvas.SkCanvasView.EnableTouchEvents = true;
+            canvas.SkCanvasView.Touch += OnSkCanvasTouched;
         }
 
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;
@@ -237,32 +236,30 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public Margin DrawMargin { get; set; }
 
+        public DataTemplate TooltipTemplate { get; set; }
+
+        public string TooltipFontFamily { get; set; } = null;
+
+        public double TooltipFontSize { get; set; } = 12;
+
+        public c TooltipTextColor { get; set; } = new c(35/255, 35/255, 35/255);
+
+        public FontAttributes TooltipFontAttributes { get; set; }
+
         public IChartTooltip<SkiaSharpDrawingContext> Tooltip => null;
 
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; }
 
         protected void InitializeCore()
         {
-            //if (!(FindByName("canvas") is MotionCanvas canvas))
-            //    throw new Exception(
-            //        $"SkiaElement not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
-            //        $"If you override the template please add an {nameof(MotionCanvas)} to the template and name it 'canvas'");
-
             core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
             //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
-            //tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
             MainThread.BeginInvokeOnMainThread(() => core.Update());
         }
 
         private void OnSizeChanged(object sender, EventArgs e)
         {
             MainThread.BeginInvokeOnMainThread(() => core.Update());
-        }
-
-        private void MouseMoveThrottlerUnlocked()
-        {
-            if (TooltipPosition == TooltipPosition.Hidden) return;
-            tooltip.Show(core.FindPointsNearTo(mousePosition), core);
         }
 
         public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
@@ -303,6 +300,13 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             c.Zoom(
                 new PointF((float)(p.X * s.Width), (float)(p.Y * s.Height)),
                 e.Scale > 1 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+        }
+
+        private void OnSkCanvasTouched(object sender, SkiaSharp.Views.Forms.SKTouchEventArgs e)
+        {
+            if (TooltipPosition == TooltipPosition.Hidden) return;
+            var location = new PointF(e.Location.X, e.Location.Y);
+            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindPointsNearTo(location), core);
         }
     }
 }
