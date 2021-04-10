@@ -29,7 +29,7 @@ namespace LiveChartsCore.Kernel
     public interface IChartView
     {
         System.Drawing.SizeF ControlSize { get; }
-        Margin DrawMargin { get; set; }
+        Margin? DrawMargin { get; set; }
 
         TimeSpan AnimationsSpeed { get; set; }
         Func<float, float> EasingFunction { get; set; }

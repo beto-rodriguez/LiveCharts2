@@ -31,13 +31,22 @@ using System.Windows.Forms;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms
 {
-    public abstract class Chart: UserControl, IChartView<SkiaSharpDrawingContext>
+    public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     {
-        protected Chart<SkiaSharpDrawingContext> core;
-        protected IChartLegend<SkiaSharpDrawingContext> legend;
+        protected Chart<SkiaSharpDrawingContext>? core;
+        protected IChartLegend<SkiaSharpDrawingContext>? legend;
         protected IChartTooltip<SkiaSharpDrawingContext> tooltip = new DefaultTooltip();
         protected MotionCanvas motionCanvas;
         private PointF mousePosition = new();
+        private LegendPosition legendPosition = LiveCharts.CurrentSettings.DefaultLegendPosition;
+        private LegendOrientation legendOrientation = LiveCharts.CurrentSettings.DefaultLegendOrientation;
+        private Margin? drawMargin = null;
+        private TooltipPosition tooltipPosition = LiveCharts.CurrentSettings.DefaultTooltipPosition;
+        private TooltipFindingStrategy tooltipFindingStrategy = LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy;
+        private Font tooltipFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
+        private Color tooltipBackColor = Color.FromArgb(255, 250, 250, 250);
+        private Font legendFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
+        private Color legendBackColor = Color.FromArgb(255, 250, 250, 250);
         private readonly ActionThrottler mouseMoveThrottler;
 
         public Chart()
@@ -82,40 +91,43 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => motionCanvas.CanvasCore;
 
-        public LegendPosition LegendPosition { get; set; } = LiveCharts.CurrentSettings.DefaultLegendPosition;
-
-        public LegendOrientation LegendOrientation { get; set; } = LiveCharts.CurrentSettings.DefaultLegendOrientation;
-
-        public IChartLegend<SkiaSharpDrawingContext> Legend => null;
-
-        public Margin DrawMargin { get; set; }
+        public Margin? DrawMargin { get => drawMargin; set { drawMargin = value; OnPropertyChanged(); } }
 
         public TimeSpan AnimationsSpeed { get; set; } = LiveCharts.CurrentSettings.DefaultAnimationsSpeed;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Func<float, float> EasingFunction { get; set; } = LiveCharts.CurrentSettings.DefaultEasingFunction;
 
-        public TooltipPosition TooltipPosition { get; set; } = LiveCharts.CurrentSettings.DefaultTooltipPosition;
+        public LegendPosition LegendPosition { get => legendPosition; set { legendPosition = value; OnPropertyChanged(); } }
 
-        public TooltipFindingStrategy TooltipFindingStrategy { get; set; } = LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy;
+        public LegendOrientation LegendOrientation { get => legendOrientation; set { legendOrientation = value; OnPropertyChanged(); } }
+        public Font LegendFont { get => legendFont; set {legendFont = value; OnPropertyChanged(); } }
+        public Color LegendBackColor { get => legendBackColor; set { legendBackColor = value; OnPropertyChanged(); } }
+        public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
 
-        public IChartTooltip<SkiaSharpDrawingContext> Tooltip => null;
+        public TooltipPosition TooltipPosition { get => tooltipPosition; set { tooltipPosition = value; OnPropertyChanged(); } }
+        public TooltipFindingStrategy TooltipFindingStrategy { get => tooltipFindingStrategy; set { tooltipFindingStrategy = value; OnPropertyChanged(); } }
+        public Font TooltipFont { get => tooltipFont; set { tooltipFont = value; OnPropertyChanged(); } }
+        public Color TooltipBackColor { get => tooltipBackColor; set { tooltipBackColor = value; OnPropertyChanged(); } }
+        public IChartTooltip<SkiaSharpDrawingContext> Tooltip => tooltip;
 
-        public Font TooltipFont { get; set; } = new Font(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
-
-        public Color TooltipBackColor { get; set; } = Color.FromArgb(255, 250, 250, 250);
-
-        public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; }
+        public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
 
         protected abstract void InitializeCore();
 
-        private void OnResized(object sender, EventArgs e)
+        protected void OnPropertyChanged()
         {
             if (core == null) return;
             core.Update();
         }
 
-        private void OnMouseMove(object sender, MouseEventArgs e)
+        private void OnResized(object? sender, EventArgs e)
+        {
+            if (core == null) return;
+            core.Update();
+        }
+
+        private void OnMouseMove(object? sender, MouseEventArgs e)
         {
             var p = e.Location;
             mousePosition = new PointF(p.X, p.Y);
@@ -124,11 +136,11 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         private void MouseMoveThrottlerUnlocked()
         {
-            if (TooltipPosition == TooltipPosition.Hidden) return;
+            if (core == null || TooltipPosition == TooltipPosition.Hidden) return;
             tooltip.Show(core.FindPointsNearTo(mousePosition), core);
         }
 
-        private void ChartOnMouseMove(object sender, MouseEventArgs e)
+        private void ChartOnMouseMove(object? sender, MouseEventArgs e)
         {
             var p = e.Location;
             mousePosition = new PointF(p.X, p.Y);

@@ -11,9 +11,9 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     public partial class MotionCanvas : UserControl
     {
         private bool isDrawingLoopRunning = false;
-        private MotionCanvas<SkiaSharpDrawingContext> canvasCore = new MotionCanvas<SkiaSharpDrawingContext>();
+        private readonly MotionCanvas<SkiaSharpDrawingContext> canvasCore = new();
         private double framesPerSecond = 90;
-        private HashSet<IDrawableTask<SkiaSharpDrawingContext>> paintTasks;
+        private HashSet<IDrawableTask<SkiaSharpDrawingContext>> paintTasks = new();
 
         public MotionCanvas()
         {

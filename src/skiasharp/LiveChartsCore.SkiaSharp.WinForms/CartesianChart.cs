@@ -65,7 +65,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             panningThrottler = new ActionThrottler(DoPan, TimeSpan.FromMilliseconds(30));
         }
 
-        public CartesianChart(IChartTooltip<SkiaSharpDrawingContext> tooltip): base(tooltip)
+        public CartesianChart(IChartTooltip<SkiaSharpDrawingContext> tooltip) : base(tooltip)
         {
             seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
@@ -85,7 +85,14 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             panningThrottler = new ActionThrottler(DoPan, TimeSpan.FromMilliseconds(30));
         }
 
-        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;
+        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core
+        {
+            get
+            {
+                if (core == null) throw new Exception("core not found");
+                return (CartesianChart<SkiaSharpDrawingContext>)core;
+            }
+        }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IEnumerable<ISeries> Series
@@ -141,37 +148,39 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
+            if (core == null) throw new Exception("core not found");
             var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
             return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
         }
 
-        private void OnDeepCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (core == null) return;
             core.Update();
         }
 
-        private void OnDeepCollectionPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (core == null) return;
             core.Update();
         }
 
-        private void OnMouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
+        private void OnMouseWheel(object? sender, System.Windows.Forms.MouseEventArgs e)
         {
+            if (core == null) throw new Exception("core not found");
             var c = (CartesianChart<SkiaSharpDrawingContext>)core;
             var p = e.Location;
             c.Zoom(new PointF(p.X, p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
             Capture = true;
         }
 
-        private void OnMouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        private void OnMouseDown(object? sender, System.Windows.Forms.MouseEventArgs e)
         {
             isPanning = true;
             previous = e.Location;
         }
 
-        private void OnMoseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        private void OnMoseMove(object? sender, System.Windows.Forms.MouseEventArgs e)
         {
             if (!isPanning || previous == null) return;
 
@@ -181,7 +190,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         private void DoPan()
         {
-            if (previous == null || current == null) return;
+            if (previous == null || current == null || core == null) return;
 
             var c = (CartesianChart<SkiaSharpDrawingContext>)core;
 
@@ -193,7 +202,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             previous = new Point(current.Value.X, current.Value.Y);
         }
 
-        private void OnMouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+        private void OnMouseUp(object? sender, System.Windows.Forms.MouseEventArgs e)
         {
             if (!isPanning) return;
             isPanning = false;
