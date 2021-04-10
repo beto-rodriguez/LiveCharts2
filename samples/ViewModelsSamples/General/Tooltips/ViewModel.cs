@@ -11,7 +11,7 @@ namespace ViewModelsSamples.General.Tooltips
     public class ViewModel : INotifyPropertyChanged
     {
         private TooltipPosition position;
-        private TooltipFindingStrategy findingStategy;
+        private AvailablePositions selectedPosition;
 
         public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
         {
@@ -36,9 +36,21 @@ namespace ViewModelsSamples.General.Tooltips
             new AvailablePositions("center", TooltipPosition.Center),
         };
 
-        public TooltipPosition Position { get => position; set { position = value; OnPropertyChanged(); } }
+        public AvailablePositions SelectedPosition
+        {
+            get => selectedPosition;
+            set 
+            { 
+                selectedPosition = value;
+                OnPropertyChanged();
 
-        public TooltipFindingStrategy FindingStategy { get => findingStategy; set { findingStategy = value; OnPropertyChanged(); } }
+                // Workaroud for Avalonia, DisplayMemberPath is not supported
+                // https://github.com/AvaloniaUI/Avalonia/issues/4718
+                Position = selectedPosition.Position;
+            }
+        }
+
+        public TooltipPosition Position { get => position; set { position = value; OnPropertyChanged(); } }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

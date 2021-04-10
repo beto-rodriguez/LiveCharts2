@@ -164,7 +164,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public double TooltipFontSize { get; set; } = 12;
 
-        public c TooltipTextColor { get; set; } = new c(35, 35, 35);
+        public c TooltipTextColor { get; set; } = new c(35/255, 35/255, 35/255);
 
         public FontAttributes TooltipFontAttributes { get; set; }
 

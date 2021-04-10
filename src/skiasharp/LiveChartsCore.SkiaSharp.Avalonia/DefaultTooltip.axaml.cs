@@ -38,8 +38,6 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
     {
         private readonly DataTemplate defaultTemplate;
         private readonly Dictionary<ChartPoint, object> activePoints = new();
-        private TimeSpan animationsSpeed = TimeSpan.FromMilliseconds(200);
-        private double hideoutCount = 1500;
 
         public DefaultTooltip()
         {
@@ -52,42 +50,18 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             Canvas.SetLeft(this, 0);
         }
 
-        #region dependency properties
-
-        public static readonly AvaloniaProperty<DataTemplate> TooltipTemplateProperty =
-            AvaloniaProperty.Register<DefaultTooltip, DataTemplate>(nameof(Template), null, inherits: true);
-
-        public static readonly AvaloniaProperty<IEnumerable<TooltipPoint>> PointsProperty =
-            AvaloniaProperty.Register<DefaultTooltip, IEnumerable<TooltipPoint>>(nameof(Points), null, inherits: true);
-
-        public static readonly AvaloniaProperty<IBrush> TextColorProperty =
-            AvaloniaProperty.Register<DefaultTooltip, IBrush>(nameof(TextColor), new SolidColorBrush(Color.FromRgb(250, 250, 250)), inherits: true);
-
-        #endregion
-
         #region properties
 
-        public TimeSpan AnimationsSpeed { get => animationsSpeed; set => animationsSpeed = value; }
+        public DataTemplate TooltipTemplate { get; set; } = null;
 
-        public double HideoutCount { get => hideoutCount; set => hideoutCount = value; }
+        public IEnumerable<TooltipPoint> Points { get; set; } = Enumerable.Empty<TooltipPoint>();
 
-        public DataTemplate TooltipTemplate
-        {
-            get { return (DataTemplate)GetValue(TooltipTemplateProperty); }
-            set { SetValue(TooltipTemplateProperty, value); }
-        }
-
-        public IEnumerable<TooltipPoint> Points
-        {
-            get { return (IEnumerable<TooltipPoint>)GetValue(PointsProperty); }
-            set { SetValue(PointsProperty, value); }
-        }
-
-        public SolidColorBrush TextColor
-        {
-            get { return (SolidColorBrush)GetValue(TextColorProperty); }
-            set { SetValue(TextColorProperty, value); }
-        }
+        public FontFamily TooltipFontFamily { get; set; } = new FontFamily("Trebuchet MS");
+        public double TooltipFontSize { get; set; }
+        public FontWeight TooltipFontWeight { get; set; }
+        public FontStyle TooltipFontStyle { get; set; }
+        public SolidColorBrush TooltipTextBrush { get; set; } = new SolidColorBrush(Color.FromRgb(35, 35, 35));
+        public IBrush TooltipBackground { get; set; } = new SolidColorBrush(Color.FromRgb(250, 250, 250));
 
         #endregion
 
@@ -124,6 +98,13 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             if (location == null) throw new Exception("location not found");
 
             Points = tooltipPoints;
+            TooltipBackground = avaloniaChart.TooltipBackground;
+            TooltipFontFamily = avaloniaChart.TooltipFontFamily;
+            TooltipFontSize = avaloniaChart.TooltipFontSize;
+            TooltipFontStyle = avaloniaChart.TooltipFontStyle;
+            TooltipFontWeight = avaloniaChart.TooltipFontWeight;
+            TooltipTextBrush = avaloniaChart.TooltipTextBrush;
+            BuildContent();
 
             Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
@@ -147,12 +128,6 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             Canvas.SetTop(this, y);
             Canvas.SetLeft(this, x);
 
-            FontFamily = avaloniaChart.TooltipFontFamily ?? new FontFamily("Trebuchet MS");
-            TextColor = avaloniaChart.TooltipTextBrush ?? new SolidColorBrush(Color.FromRgb(35, 35, 35));
-            FontSize = avaloniaChart.TooltipFontSize;
-            FontWeight = avaloniaChart.TooltipFontWeight;
-            FontStyle = avaloniaChart.TooltipFontStyle;
-
             var o = new object();
             foreach (var tooltipPoint in tooltipPoints)
             {
@@ -170,9 +145,41 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             chart.Canvas.Invalidate();
         }
 
+        protected void BuildContent()
+        {
+            var template = TooltipTemplate ?? defaultTemplate;
+            var model = new TooltipBindingContext
+            {
+                Points = Points,
+                TooltipFontFamily = TooltipFontFamily,
+                TooltipBackground = TooltipBackground,
+                TooltipFontSize = TooltipFontSize,
+                TooltipFontStyle = TooltipFontStyle,
+                TooltipFontWeight = TooltipFontWeight,
+                TooltipTextBrush = TooltipTextBrush
+            };
+
+            var templated = template.Build(model);
+            if (templated == null) return;
+
+            Content = templated;
+        }
+
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
         }
+    }
+
+    public class TooltipBindingContext
+    {
+        public IEnumerable<TooltipPoint> Points { get; set; } = Enumerable.Empty<TooltipPoint>();
+
+        public FontFamily TooltipFontFamily { get; set; } = new FontFamily("Trebuchet MS");
+        public double TooltipFontSize { get; set; }
+        public FontWeight TooltipFontWeight { get; set; }
+        public FontStyle TooltipFontStyle { get; set; }
+        public SolidColorBrush TooltipTextBrush { get; set; } = new SolidColorBrush(Color.FromRgb(35, 35, 35));
+        public IBrush TooltipBackground { get; set; } = new SolidColorBrush(Color.FromRgb(250, 250, 250));
     }
 }

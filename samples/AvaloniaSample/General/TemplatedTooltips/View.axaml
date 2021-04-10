@@ -1,0 +1,56 @@
+<UserControl x:Class="AvaloniaSample.General.TemplatedTooltips.View"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharp.Avalonia"
+             xmlns:vms="using:ViewModelsSamples.General.TemplatedTooltips"
+             xmlns:ctx="using:LiveChartsCore.Kernel">
+  <UserControl.DataContext>
+    <vms:ViewModel/>
+  </UserControl.DataContext>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <lvc:CartesianChart Series="{Binding Series}">
+      <lvc:CartesianChart.TooltipTemplate>
+        <DataTemplate>
+          <Border Background="Transparent" Padding="12">
+            <Border Background="#353535" CornerRadius="4"
+                 BoxShadow="0 0 10 0 #40000000, 0 0 10 0 #40000000, 0 0 10 0 #40000000, 0 0 10 0 #40000000">
+              <ItemsControl Items="{Binding Points, RelativeSource={RelativeSource AncestorType=lvc:DefaultTooltip}}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" />
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate DataType="{x:Type ctx:TooltipPoint}">
+                    <Border Padding="7 5">
+                      <StackPanel Orientation="Horizontal">
+                        <lvc:MotionCanvas
+                            Margin="0 0 8 0"
+                            PaintTasks="{Binding Series.DefaultPaintContext.PaintTasks}"
+                            Width="{Binding Series.DefaultPaintContext.Width}"
+                            Height="{Binding Series.DefaultPaintContext.Height}"
+                            VerticalAlignment="Center"/>
+                        <TextBlock
+                            Foreground="#fafafa"
+                            Text="{Binding Point.AsTooltipString}"
+                            Margin="0 0 8 0"
+                            FontFamily="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=lvc:DefaultTooltip}}"
+                            FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=lvc:DefaultTooltip}}"
+                            FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=lvc:DefaultTooltip}}"
+                            FontStyle="{Binding FontStyle, RelativeSource={RelativeSource AncestorType=lvc:DefaultTooltip}}"
+                            VerticalAlignment="Center"/>
+                      </StackPanel>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </Border>
+          </Border>
+        </DataTemplate>
+      </lvc:CartesianChart.TooltipTemplate>
+    </lvc:CartesianChart>
+  </Grid>  
+</UserControl>

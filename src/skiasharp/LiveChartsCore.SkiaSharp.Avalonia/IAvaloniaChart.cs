@@ -33,5 +33,6 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
         FontWeight TooltipFontWeight { get; set; }
         FontStyle TooltipFontStyle { get; set; }
         SolidColorBrush TooltipTextBrush { get; set; }
+        IBrush TooltipBackground { get; set; }
     }
 }
