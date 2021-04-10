@@ -52,15 +52,20 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
 
         #region properties
 
-        public DataTemplate TooltipTemplate { get; set; } = null;
+        public DataTemplate? TooltipTemplate { get; set; } = null;
 
         public IEnumerable<TooltipPoint> Points { get; set; } = Enumerable.Empty<TooltipPoint>();
 
         public FontFamily TooltipFontFamily { get; set; } = new FontFamily("Trebuchet MS");
+
         public double TooltipFontSize { get; set; }
+
         public FontWeight TooltipFontWeight { get; set; }
+
         public FontStyle TooltipFontStyle { get; set; }
+
         public SolidColorBrush TooltipTextBrush { get; set; } = new SolidColorBrush(Color.FromRgb(35, 35, 35));
+
         public IBrush TooltipBackground { get; set; } = new SolidColorBrush(Color.FromRgb(250, 250, 250));
 
         #endregion
@@ -169,17 +174,5 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
         {
             AvaloniaXamlLoader.Load(this);
         }
-    }
-
-    public class TooltipBindingContext
-    {
-        public IEnumerable<TooltipPoint> Points { get; set; } = Enumerable.Empty<TooltipPoint>();
-
-        public FontFamily TooltipFontFamily { get; set; } = new FontFamily("Trebuchet MS");
-        public double TooltipFontSize { get; set; }
-        public FontWeight TooltipFontWeight { get; set; }
-        public FontStyle TooltipFontStyle { get; set; }
-        public SolidColorBrush TooltipTextBrush { get; set; } = new SolidColorBrush(Color.FromRgb(35, 35, 35));
-        public IBrush TooltipBackground { get; set; } = new SolidColorBrush(Color.FromRgb(250, 250, 250));
     }
 }

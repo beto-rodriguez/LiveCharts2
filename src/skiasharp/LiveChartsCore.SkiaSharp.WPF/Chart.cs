@@ -96,6 +96,40 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(Chart),
                 new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, OnDependencyPropertyChanged));
 
+        public static readonly DependencyProperty TooltipBackgroundProperty =
+           DependencyProperty.Register(
+               nameof(TooltipFontFamily), typeof(FontFamily), typeof(Chart),
+               new PropertyMetadata(new SolidColorBrush(System.Windows.Media.Color.FromRgb(250, 250, 250)), OnDependencyPropertyChanged));
+
+        public static readonly DependencyProperty TooltipFontFamilyProperty =
+           DependencyProperty.Register(
+               nameof(TooltipFontFamily), typeof(FontFamily), typeof(Chart),
+               new PropertyMetadata(new FontFamily("Trebuchet MS"), OnDependencyPropertyChanged));
+
+        public static readonly DependencyProperty TooltipTextColorProperty =
+           DependencyProperty.Register(
+               nameof(TooltipTextColor), typeof(SolidColorBrush), typeof(Chart),
+               new PropertyMetadata(new SolidColorBrush(System.Windows.Media.Color.FromRgb(35, 35, 35)), OnDependencyPropertyChanged));
+
+        public static readonly DependencyProperty TooltipFontSizeProperty =
+           DependencyProperty.Register(
+               nameof(TooltipFontSize), typeof(double), typeof(Chart), new PropertyMetadata(13d, OnDependencyPropertyChanged));
+
+        public static readonly DependencyProperty TooltipFontWeightProperty =
+           DependencyProperty.Register(
+               nameof(TooltipFontWeight), typeof(FontWeight), typeof(Chart),
+               new PropertyMetadata(FontWeights.Normal, OnDependencyPropertyChanged));
+
+        public static readonly DependencyProperty TooltipFontStretchProperty =
+           DependencyProperty.Register(
+               nameof(TooltipFontStretch), typeof(FontStretch), typeof(Chart),
+               new PropertyMetadata(FontStretches.Normal, OnDependencyPropertyChanged));
+
+        public static readonly DependencyProperty TooltipFontStyleProperty =
+           DependencyProperty.Register(
+               nameof(TooltipFontStyle), typeof(FontStyle), typeof(Chart),
+               new PropertyMetadata(FontStyles.Normal, OnDependencyPropertyChanged));
+
         public static readonly DependencyProperty TooltipTemplateProperty =
             DependencyProperty.Register(
                 nameof(TooltipTemplate), typeof(DataTemplate), typeof(Chart), new PropertyMetadata(null, OnDependencyPropertyChanged));
@@ -129,34 +163,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                nameof(LegendFontStyle), typeof(FontStyle), typeof(Chart),
                new PropertyMetadata(FontStyles.Normal, OnDependencyPropertyChanged));
 
-        public static readonly DependencyProperty TooltipFontFamilyProperty =
-           DependencyProperty.Register(
-               nameof(TooltipFontFamily), typeof(FontFamily), typeof(Chart),
-               new PropertyMetadata(new FontFamily("Trebuchet MS"), OnDependencyPropertyChanged));
-
-        public static readonly DependencyProperty TooltipTextColorProperty =
-           DependencyProperty.Register(
-               nameof(TooltipTextColor), typeof(SolidColorBrush), typeof(Chart),
-               new PropertyMetadata(new SolidColorBrush(System.Windows.Media.Color.FromRgb(35, 35, 35)), OnDependencyPropertyChanged));
-
-        public static readonly DependencyProperty TooltipFontSizeProperty =
-           DependencyProperty.Register(
-               nameof(TooltipFontSize), typeof(double), typeof(Chart), new PropertyMetadata(13d, OnDependencyPropertyChanged));
-
-        public static readonly DependencyProperty TooltipFontWeightProperty =
-           DependencyProperty.Register(
-               nameof(TooltipFontWeight), typeof(FontWeight), typeof(Chart),
-               new PropertyMetadata(FontWeights.Normal, OnDependencyPropertyChanged));
-
-        public static readonly DependencyProperty TooltipFontStretchProperty =
-           DependencyProperty.Register(
-               nameof(TooltipFontStretch), typeof(FontStretch), typeof(Chart),
-               new PropertyMetadata(FontStretches.Normal, OnDependencyPropertyChanged));
-
-        public static readonly DependencyProperty TooltipFontStyleProperty =
-           DependencyProperty.Register(
-               nameof(TooltipFontStyle), typeof(FontStyle), typeof(Chart),
-               new PropertyMetadata(FontStyles.Normal, OnDependencyPropertyChanged));
+        public static readonly DependencyProperty LegendTemplateProperty =
+            DependencyProperty.Register(
+                nameof(TooltipTemplate), typeof(DataTemplate), typeof(Chart), new PropertyMetadata(null, OnDependencyPropertyChanged));
 
         #endregion
 
@@ -222,10 +231,60 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set { SetValue(TooltipFindingStrategyProperty, value); }
         }
 
-        public DataTemplate TooltipTemplate
+        public DataTemplate? TooltipTemplate
         {
-            get { return (DataTemplate)GetValue(TooltipTemplateProperty); }
+            get { return (DataTemplate?)GetValue(TooltipTemplateProperty); }
             set { SetValue(TooltipTemplateProperty, value); }
+        }
+
+        public Brush TooltipBackground
+        {
+            get { return (Brush)GetValue(TooltipBackgroundProperty); }
+            set { SetValue(TooltipBackgroundProperty, value); }
+        }
+
+        public FontFamily TooltipFontFamily
+        {
+            get { return (FontFamily)GetValue(TooltipFontFamilyProperty); }
+            set { SetValue(TooltipFontFamilyProperty, value); }
+        }
+
+        public SolidColorBrush TooltipTextColor
+        {
+            get { return (SolidColorBrush)GetValue(TooltipTextColorProperty); }
+            set { SetValue(TooltipTextColorProperty, value); }
+        }
+
+        public double TooltipFontSize
+        {
+            get { return (double)GetValue(TooltipFontSizeProperty); }
+            set { SetValue(TooltipFontSizeProperty, value); }
+        }
+
+        public FontWeight TooltipFontWeight
+        {
+            get { return (FontWeight)GetValue(TooltipFontWeightProperty); }
+            set { SetValue(TooltipFontWeightProperty, value); }
+        }
+
+        public FontStretch TooltipFontStretch
+        {
+            get { return (FontStretch)GetValue(TooltipFontStretchProperty); }
+            set { SetValue(TooltipFontStretchProperty, value); }
+        }
+
+        public FontStyle TooltipFontStyle
+        {
+            get { return (FontStyle)GetValue(TooltipFontStyleProperty); }
+            set { SetValue(TooltipFontStyleProperty, value); }
+        }
+
+        public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
+
+        public DataTemplate? LegendTemplate
+        {
+            get { return (DataTemplate?)GetValue(LegendTemplateProperty); }
+            set { SetValue(LegendTemplateProperty, value); }
         }
 
         public FontFamily LegendFontFamily
@@ -265,44 +324,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         }
 
         public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
-
-        public FontFamily TooltipFontFamily
-        {
-            get { return (FontFamily)GetValue(TooltipFontFamilyProperty); }
-            set { SetValue(TooltipFontFamilyProperty, value); }
-        }
-
-        public SolidColorBrush TooltipTextColor
-        {
-            get { return (SolidColorBrush)GetValue(TooltipTextColorProperty); }
-            set { SetValue(TooltipTextColorProperty, value); }
-        }
-
-        public double TooltipFontSize
-        {
-            get { return (double)GetValue(TooltipFontSizeProperty); }
-            set { SetValue(TooltipFontSizeProperty, value); }
-        }
-
-        public FontWeight TooltipFontWeight
-        {
-            get { return (FontWeight)GetValue(TooltipFontWeightProperty); }
-            set { SetValue(TooltipFontWeightProperty, value); }
-        }
-
-        public FontStretch TooltipFontStretch
-        {
-            get { return (FontStretch)GetValue(TooltipFontStretchProperty); }
-            set { SetValue(TooltipFontStretchProperty, value); }
-        }
-
-        public FontStyle TooltipFontStyle
-        {
-            get { return (FontStyle)GetValue(TooltipFontStyleProperty); }
-            set { SetValue(TooltipFontStyleProperty, value); }
-        }
-
-        public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
 
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
 

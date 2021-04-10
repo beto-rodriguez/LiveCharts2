@@ -40,7 +40,7 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
     public class MotionCanvas : UserControl
     {
         private bool isDrawingLoopRunning = false;
-        private MotionCanvas<SkiaSharpDrawingContext> canvasCore = new MotionCanvas<SkiaSharpDrawingContext>();
+        private readonly MotionCanvas<SkiaSharpDrawingContext> canvasCore = new();
         private double framesPerSecond = 90;
 
         public MotionCanvas()
@@ -94,7 +94,7 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
 
         protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
         {
-            if(change.Property.Name == nameof(PaintTasks)) canvasCore.SetPaintTasks(PaintTasks);
+            if (change.Property.Name == nameof(PaintTasks)) canvasCore.SetPaintTasks(PaintTasks);
 
             base.OnPropertyChanged(change);
         }
@@ -103,7 +103,7 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
         // https://github.com/AvaloniaUI/Avalonia/blob/554aaec5e5cc96c0b4318b6ed1fbf8159f442889/samples/RenderDemo/Pages/CustomSkiaPage.cs
         class CustomDrawOp : ICustomDrawOperation
         {
-            private MotionCanvas<SkiaSharpDrawingContext> motionCanvas;
+            private readonly MotionCanvas<SkiaSharpDrawingContext> motionCanvas;
 
             public CustomDrawOp(Rect bounds, MotionCanvas<SkiaSharpDrawingContext> motionCanvas)
             {
@@ -111,16 +111,13 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
                 Bounds = bounds;
             }
 
-            public void Dispose()
-            {
-                // No-op
-            }
+            public void Dispose() { }
 
             public Rect Bounds { get; }
 
             public bool HitTest(Point p) => false;
 
-            public bool Equals(ICustomDrawOperation other) => false;
+            public bool Equals(ICustomDrawOperation? other) => false;
 
             public void Render(IDrawingContextImpl context)
             {

@@ -61,6 +61,11 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                nameof(Points), typeof(IEnumerable<TooltipPoint>),
                typeof(DefaultTooltip), new PropertyMetadata(new List<TooltipPoint>()));
 
+        public static readonly DependencyProperty BackgroundProperty =
+           DependencyProperty.Register(
+               nameof(FontFamily), typeof(Brush), typeof(DefaultTooltip),
+               new PropertyMetadata(new SolidColorBrush(Color.FromRgb(250, 250, 250))));
+
         public static readonly DependencyProperty FontFamilyProperty =
            DependencyProperty.Register(
                nameof(FontFamily), typeof(FontFamily), typeof(DefaultTooltip), new PropertyMetadata(new FontFamily("Trebuchet MS")));
@@ -96,6 +101,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         {
             get { return (DataTemplate)GetValue(TemplateProperty); }
             set { SetValue(TemplateProperty, value); }
+        }
+
+        public Brush Background
+        {
+            get { return (Brush)GetValue(BackgroundProperty); }
+            set { SetValue(BackgroundProperty, value); }
         }
 
         public IEnumerable<TooltipPoint> Points
@@ -184,6 +195,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             var animation = new RectAnimation(from, to, animationsSpeed) { EasingFunction = easingFunction };
             BeginAnimation(PlacementRectangleProperty, animation);
 
+            Background = wpfChart.TooltipBackground;
             FontFamily = wpfChart.TooltipFontFamily;
             TextColor = wpfChart.TooltipTextColor;
             FontSize = wpfChart.TooltipFontSize;

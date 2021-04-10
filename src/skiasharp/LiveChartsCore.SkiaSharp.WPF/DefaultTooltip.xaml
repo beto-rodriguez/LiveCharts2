@@ -36,7 +36,7 @@
 
     <Popup.Resources>
         <DataTemplate x:Key="defaultTemplate">
-            <Border Background="#fafafa" CornerRadius="4">
+            <Border Background="{Binding Background, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}" CornerRadius="4">
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="3" Direction="0" Color="Black" Opacity="0.20" BlurRadius="6" />
                 </Border.Effect>

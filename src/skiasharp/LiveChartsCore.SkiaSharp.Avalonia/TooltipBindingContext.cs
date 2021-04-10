@@ -20,39 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
+using LiveChartsCore.Kernel;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LiveChartsCore.SkiaSharp.Avalonia
 {
-    public interface IAvaloniaChart
+    public class TooltipBindingContext
     {
-        DataTemplate TooltipTemplate { get; set; }
+        public IEnumerable<TooltipPoint> Points { get; set; } = Enumerable.Empty<TooltipPoint>();
 
-        FontFamily TooltipFontFamily { get; set; }
+        public FontFamily TooltipFontFamily { get; set; } = new FontFamily("Trebuchet MS");
 
-        double TooltipFontSize { get; set; }
+        public double TooltipFontSize { get; set; }
 
-        FontWeight TooltipFontWeight { get; set; }
+        public FontWeight TooltipFontWeight { get; set; }
 
-        FontStyle TooltipFontStyle { get; set; }
+        public FontStyle TooltipFontStyle { get; set; }
 
-        SolidColorBrush TooltipTextBrush { get; set; }
+        public SolidColorBrush TooltipTextBrush { get; set; } = new SolidColorBrush(Color.FromRgb(35, 35, 35));
 
-        IBrush TooltipBackground { get; set; }
-
-        DataTemplate LegendTemplate { get; set; }
-
-        FontFamily LegendFontFamily { get; set; }
-
-        double LegendFontSize { get; set; }
-
-        FontWeight LegendFontWeight { get; set; }
-
-        FontStyle LegendFontStyle { get; set; }
-
-        SolidColorBrush LegendTextBrush { get; set; }
-
-        IBrush LegendBackground { get; set; }
+        public IBrush TooltipBackground { get; set; } = new SolidColorBrush(Color.FromRgb(250, 250, 250));
     }
 }

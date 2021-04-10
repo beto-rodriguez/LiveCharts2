@@ -1,4 +1,4 @@
- // The MIT License(MIT)
+// The MIT License(MIT)
 
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 
@@ -36,28 +36,32 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Collections.ObjectModel;
 using Avalonia.Media;
-using a = Avalonia;
+using A = Avalonia;
 using Avalonia.Input;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml.Templates;
+using System.Linq;
 
 namespace LiveChartsCore.SkiaSharp.Avalonia
 {
     public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingContext>, IAvaloniaChart
     {
-        protected Chart<SkiaSharpDrawingContext> core;
-        //protected MotionCanvas motionCanvas;
-        protected IChartLegend<SkiaSharpDrawingContext> legend;
-        protected IChartTooltip<SkiaSharpDrawingContext> tooltip;
+        #region fields
+
+        protected Chart<SkiaSharpDrawingContext>? core;
+        protected IChartLegend<SkiaSharpDrawingContext>? legend;
+        protected IChartTooltip<SkiaSharpDrawingContext>? tooltip;
         private readonly ActionThrottler mouseMoveThrottler;
-        private PointF mousePosition = new PointF();
+        private PointF mousePosition = new();
         private readonly CollectionDeepObserver<ISeries> seriesObserver;
         private readonly CollectionDeepObserver<IAxis> xObserver;
         private readonly CollectionDeepObserver<IAxis> yObserver;
         private readonly ActionThrottler panningThrottler;
-        private a.Point? previous;
-        private a.Point? current;
+        private A.Point? previous;
+        private A.Point? current;
         private bool isPanning = false;
+
+        #endregion
 
         public CartesianChart()
         {
@@ -94,16 +98,19 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             panningThrottler = new ActionThrottler(DoPan, TimeSpan.FromMilliseconds(30));
         }
 
-        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;
+        #region avalonia/dependency properties
+
+        public static readonly AvaloniaProperty<Margin?> DrawMarginProperty =
+           AvaloniaProperty.Register<CartesianChart, Margin?>(nameof(DrawMargin), null, inherits: true);
 
         public static readonly AvaloniaProperty<IEnumerable<ISeries>> SeriesProperty =
-            AvaloniaProperty.Register<CartesianChart, IEnumerable<ISeries>>(nameof(Series), null, inherits: true);
+           AvaloniaProperty.Register<CartesianChart, IEnumerable<ISeries>>(nameof(Series), Enumerable.Empty<ISeries>(), inherits: true);
 
         public static readonly AvaloniaProperty<IEnumerable<IAxis>> XAxesProperty =
-            AvaloniaProperty.Register<CartesianChart, IEnumerable<IAxis>>(nameof(XAxes), null, inherits: true);
+            AvaloniaProperty.Register<CartesianChart, IEnumerable<IAxis>>(nameof(XAxes), Enumerable.Empty<IAxis>(), inherits: true);
 
         public static readonly AvaloniaProperty<IEnumerable<IAxis>> YAxesProperty =
-            AvaloniaProperty.Register<CartesianChart, IEnumerable<IAxis>>(nameof(YAxes), null, inherits: true);
+            AvaloniaProperty.Register<CartesianChart, IEnumerable<IAxis>>(nameof(YAxes), Enumerable.Empty<IAxis>(), inherits: true);
 
         public static readonly AvaloniaProperty<ZoomAndPanMode> ZoomModeProperty =
             AvaloniaProperty.Register<CartesianChart, ZoomAndPanMode>(
@@ -121,13 +128,8 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             AvaloniaProperty.Register<CartesianChart, Func<float, float>>(
                 nameof(AnimationsSpeed), LiveCharts.CurrentSettings.DefaultEasingFunction, inherits: true);
 
-        public static readonly AvaloniaProperty<LegendPosition> LegendPositionProperty =
-            AvaloniaProperty.Register<CartesianChart, LegendPosition>(
-                nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultLegendPosition, inherits: true);
-
-        public static readonly AvaloniaProperty<LegendOrientation> LegendOrientationProperty =
-            AvaloniaProperty.Register<CartesianChart, LegendOrientation>(
-                nameof(LegendOrientation), LiveCharts.CurrentSettings.DefaultLegendOrientation, inherits: true);
+        public static readonly AvaloniaProperty<DataTemplate?> TooltipTemplateProperty =
+            AvaloniaProperty.Register<CartesianChart, DataTemplate?>(nameof(TooltipTemplate), null, inherits: true);
 
         public static readonly AvaloniaProperty<TooltipPosition> TooltipPositionProperty =
             AvaloniaProperty.Register<CartesianChart, TooltipPosition>(
@@ -137,8 +139,100 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             AvaloniaProperty.Register<CartesianChart, TooltipFindingStrategy>(
                 nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, inherits: true);
 
-        public static readonly AvaloniaProperty<DataTemplate> TooltipTemplateProperty =
-           AvaloniaProperty.Register<CartesianChart, DataTemplate>(nameof(TooltipTemplate), null, inherits: true);
+        public static readonly AvaloniaProperty<A.Media.FontFamily> TooltipFontFamilyProperty =
+            AvaloniaProperty.Register<CartesianChart, A.Media.FontFamily>(
+                nameof(TooltipFontFamily), new A.Media.FontFamily("Arial"), inherits: true);
+
+        public static readonly AvaloniaProperty<double> TooltipFontSizeProperty =
+            AvaloniaProperty.Register<CartesianChart, double>(nameof(TooltipFontSize), 13d, inherits: true);
+
+        public static readonly AvaloniaProperty<FontWeight> TooltipFontWeightProperty =
+            AvaloniaProperty.Register<CartesianChart, FontWeight>(nameof(TooltipFontWeight), FontWeight.Normal, inherits: true);
+
+        public static readonly AvaloniaProperty<A.Media.FontStyle> TooltipFontStyleProperty =
+            AvaloniaProperty.Register<CartesianChart, A.Media.FontStyle>(
+                nameof(TooltipFontStyle), A.Media.FontStyle.Normal, inherits: true);
+
+        public static readonly AvaloniaProperty<SolidColorBrush> TooltipTextBrushProperty =
+            AvaloniaProperty.Register<CartesianChart, SolidColorBrush>(
+                nameof(TooltipTextBrush), new SolidColorBrush(new A.Media.Color(255, 35, 35, 35)), inherits: true);
+
+        public static readonly AvaloniaProperty<IBrush> TooltipBackgroundProperty =
+            AvaloniaProperty.Register<CartesianChart, IBrush>(nameof(TooltipBackground),
+                new SolidColorBrush(new A.Media.Color(255, 250, 250, 250)), inherits: true);
+
+        public static readonly AvaloniaProperty<LegendPosition> LegendPositionProperty =
+            AvaloniaProperty.Register<CartesianChart, LegendPosition>(
+                nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultLegendPosition, inherits: true);
+
+        public static readonly AvaloniaProperty<LegendOrientation> LegendOrientationProperty =
+            AvaloniaProperty.Register<CartesianChart, LegendOrientation>(
+                nameof(LegendOrientation), LiveCharts.CurrentSettings.DefaultLegendOrientation, inherits: true);
+
+        public static readonly AvaloniaProperty<DataTemplate?> LegendTemplateProperty =
+            AvaloniaProperty.Register<CartesianChart, DataTemplate?>(nameof(LegendTemplate), null, inherits: true);
+
+        public static readonly AvaloniaProperty<A.Media.FontFamily> LegendFontFamilyProperty =
+           AvaloniaProperty.Register<CartesianChart, A.Media.FontFamily>(
+               nameof(LegendFontFamily), new A.Media.FontFamily("Arial"), inherits: true);
+
+        public static readonly AvaloniaProperty<double> LegendFontSizeProperty =
+            AvaloniaProperty.Register<CartesianChart, double>(nameof(LegendFontSize), 13d, inherits: true);
+
+        public static readonly AvaloniaProperty<FontWeight> LegendFontWeightProperty =
+            AvaloniaProperty.Register<CartesianChart, FontWeight>(nameof(LegendFontWeight), FontWeight.Normal, inherits: true);
+
+        public static readonly AvaloniaProperty<A.Media.FontStyle> LegendFontStyleProperty =
+            AvaloniaProperty.Register<CartesianChart, A.Media.FontStyle>(
+                nameof(LegendFontStyle), A.Media.FontStyle.Normal, inherits: true);
+
+        public static readonly AvaloniaProperty<SolidColorBrush> LegendTextBrushProperty =
+            AvaloniaProperty.Register<CartesianChart, SolidColorBrush>(
+                nameof(LegendTextBrush), new SolidColorBrush(new A.Media.Color(255, 35, 35, 35)), inherits: true);
+
+        public static readonly AvaloniaProperty<IBrush> LegendBackgroundProperty =
+            AvaloniaProperty.Register<CartesianChart, IBrush>(nameof(LegendBackground),
+                new SolidColorBrush(new A.Media.Color(255, 250, 250, 250)), inherits: true);
+
+        #endregion
+
+        #region properties 
+
+        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas
+        {
+            get
+            {
+                if (core == null) throw new Exception("core not found");
+                return core.Canvas;
+            }
+        }
+
+        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core
+        {
+            get
+            {
+                if (core == null) throw new Exception("core not found");
+                return (CartesianChart<SkiaSharpDrawingContext>)core;
+            }
+        }
+
+        SizeF IChartView.ControlSize
+        {
+            get
+            {
+                return new SizeF
+                {
+                    Width = (float)Bounds.Width,
+                    Height = (float)Bounds.Height
+                };
+            }
+        }
+
+        public Margin DrawMargin
+        {
+            get { return (Margin)GetValue(DrawMarginProperty); }
+            set { SetValue(DrawMarginProperty, value); }
+        }
 
         public IEnumerable<ISeries> Series
         {
@@ -182,18 +276,6 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             set { SetValue(AnimationsSpeedProperty, value); }
         }
 
-        public LegendPosition LegendPosition
-        {
-            get { return (LegendPosition)GetValue(LegendPositionProperty); }
-            set { SetValue(LegendPositionProperty, value); }
-        }
-
-        public LegendOrientation LegendOrientation
-        {
-            get { return (LegendOrientation)GetValue(LegendOrientationProperty); }
-            set { SetValue(LegendOrientationProperty, value); }
-        }
-
         public TooltipPosition TooltipPosition
         {
             get { return (TooltipPosition)GetValue(TooltipPositionProperty); }
@@ -212,40 +294,109 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             set { SetValue(TooltipTemplateProperty, value); }
         }
 
-        SizeF IChartView.ControlSize
+        public A.Media.FontFamily TooltipFontFamily
         {
-            get
-            {
-                //Measure(new Avalonia.Size(double.PositiveInfinity, double.PositiveInfinity));
-                return new SizeF
-                {
-                    Width = (float)Bounds.Width,
-                    Height = (float)Bounds.Height
-                };
-            }
+            get { return (A.Media.FontFamily)GetValue(TooltipFontFamilyProperty); }
+            set { SetValue(TooltipFontFamilyProperty, value); }
         }
 
-        public Margin DrawMargin { get; set; }
+        public double TooltipFontSize
+        {
+            get { return (double)GetValue(TooltipFontSizeProperty); }
+            set { SetValue(TooltipFontSizeProperty, value); }
+        }
 
-        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => core.Canvas;
+        public FontWeight TooltipFontWeight
+        {
+            get { return (FontWeight)GetValue(TooltipFontWeightProperty); }
+            set { SetValue(TooltipFontWeightProperty, value); }
+        }
 
-        public IChartLegend<SkiaSharpDrawingContext> Legend => null; 
+        public A.Media.FontStyle TooltipFontStyle
+        {
+            get { return (A.Media.FontStyle)GetValue(TooltipFontStyleProperty); }
+            set { SetValue(TooltipFontStyleProperty, value); }
+        }
 
-        public IChartTooltip<SkiaSharpDrawingContext> Tooltip => null;
+        public SolidColorBrush TooltipTextBrush
+        {
+            get { return (SolidColorBrush)GetValue(TooltipTextBrushProperty); }
+            set { SetValue(TooltipTextBrushProperty, value); }
+        }
 
-        public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; }
-        public a.Media.FontFamily TooltipFontFamily { get; set; }
-        public double TooltipFontSize { get; set; } = 14;
-        public FontWeight TooltipFontWeight { get; set; } = FontWeight.Normal;
-        public a.Media.FontStyle TooltipFontStyle { get; set; } = a.Media.FontStyle.Normal;
-        public SolidColorBrush TooltipTextBrush { get; set; } = new SolidColorBrush(new a.Media.Color(255, 30, 30, 30));
-        public IBrush TooltipBackground { get; set; } = new SolidColorBrush(new a.Media.Color(255, 250, 250, 250));
+        public IBrush TooltipBackground
+        {
+            get { return (IBrush)GetValue(TooltipBackgroundProperty); }
+            set { SetValue(TooltipBackgroundProperty, value); }
+        }
+
+        public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
+
+        public LegendPosition LegendPosition
+        {
+            get { return (LegendPosition)GetValue(LegendPositionProperty); }
+            set { SetValue(LegendPositionProperty, value); }
+        }
+
+        public LegendOrientation LegendOrientation
+        {
+            get { return (LegendOrientation)GetValue(LegendOrientationProperty); }
+            set { SetValue(LegendOrientationProperty, value); }
+        }
+
+        public DataTemplate LegendTemplate
+        {
+            get { return (DataTemplate)GetValue(LegendTemplateProperty); }
+            set { SetValue(LegendTemplateProperty, value); }
+        }
+
+        public A.Media.FontFamily LegendFontFamily
+        {
+            get { return (A.Media.FontFamily)GetValue(LegendFontFamilyProperty); }
+            set { SetValue(LegendFontFamilyProperty, value); }
+        }
+
+        public double LegendFontSize
+        {
+            get { return (double)GetValue(LegendFontSizeProperty); }
+            set { SetValue(LegendFontSizeProperty, value); }
+        }
+
+        public FontWeight LegendFontWeight
+        {
+            get { return (FontWeight)GetValue(LegendFontWeightProperty); }
+            set { SetValue(LegendFontWeightProperty, value); }
+        }
+
+        public A.Media.FontStyle LegendFontStyle
+        {
+            get { return (A.Media.FontStyle)GetValue(LegendFontStyleProperty); }
+            set { SetValue(LegendFontStyleProperty, value); }
+        }
+        public SolidColorBrush LegendTextBrush
+        {
+            get { return (SolidColorBrush)GetValue(LegendTextBrushProperty); }
+            set { SetValue(LegendTextBrushProperty, value); }
+        }
+
+        public IBrush LegendBackground
+        {
+            get { return (IBrush)GetValue(LegendBackgroundProperty); }
+            set { SetValue(LegendBackgroundProperty, value); }
+        }
+
+        public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
+
+        public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
 
         public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
+            if (core == null) throw new Exception("core not found");
             var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
             return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
         }
+
+        #endregion
 
         protected void InitializeCore()
         {
@@ -258,7 +409,7 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
 
         private void MouseMoveThrottlerUnlocked()
         {
-            if (TooltipPosition == TooltipPosition.Hidden) return;
+            if (core == null || tooltip == null || TooltipPosition == TooltipPosition.Hidden) return;
             tooltip.Show(core.FindPointsNearTo(mousePosition), core);
         }
 
@@ -270,6 +421,8 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
         protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
         {
             base.OnPropertyChanged(change);
+
+            if (core == null) return;
 
             if (change.Property.Name == nameof(Series))
             {
@@ -308,6 +461,8 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
 
         private void CartesianChart_PointerWheelChanged(object? sender, global::Avalonia.Input.PointerWheelEventArgs e)
         {
+            if (core == null) return;
+
             var c = (CartesianChart<SkiaSharpDrawingContext>)core;
             var p = e.GetPosition(this);
 
@@ -350,7 +505,7 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
 
         private void DoPan()
         {
-            if (previous == null || current == null) return;
+            if (previous == null || current == null || core == null) return;
 
             var c = (CartesianChart<SkiaSharpDrawingContext>)core;
 
@@ -359,7 +514,7 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
                 (float)(current.Value.X - previous.Value.X),
                 (float)(current.Value.Y - previous.Value.Y)));
 
-            previous = new a.Point(current.Value.X, current.Value.Y);
+            previous = new A.Point(current.Value.X, current.Value.Y);
         }
     }
 }
