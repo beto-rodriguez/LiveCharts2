@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -42,12 +43,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         public PieChart() 
         {
             seriesObserver = new CollectionDeepObserver<ISeries>(
-                (object sender, NotifyCollectionChangedEventArgs e) =>
+                (object? sender, NotifyCollectionChangedEventArgs e) =>
                 {
                     if (core == null) return;
                     Application.Current.Dispatcher.Invoke(() => core.Update());
                 },
-                (object sender, PropertyChangedEventArgs e) =>
+                (object? sender, PropertyChangedEventArgs e) =>
                 {
                     if (core == null) return;
                     Application.Current.Dispatcher.Invoke(() => core.Update());
@@ -55,8 +56,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
             Series = new ObservableCollection<ISeries>();
         }
-
-        PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => (PieChart<SkiaSharpDrawingContext>)core;
 
         public static readonly DependencyProperty SeriesProperty =
             DependencyProperty.Register(
@@ -71,6 +70,15 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                         Application.Current.Dispatcher.Invoke(() => chart.core.Update());
                     }));
 
+        PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core
+        {
+            get
+            {
+                if (core == null) throw new Exception("core not found");
+                return (PieChart<SkiaSharpDrawingContext>)core;
+            }
+        }
+
         public IEnumerable<ISeries> Series
         {
             get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
@@ -79,6 +87,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         protected override void InitializeCore()
         {
+            if (canvas == null) throw new Exception("canvas not found");
             core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
             legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
             tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;

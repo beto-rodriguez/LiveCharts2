@@ -47,7 +47,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             InitializeComponent();
             PopupAnimation = PopupAnimation.Fade;
             Placement = PlacementMode.Relative;
-            defaultTempalte = FindResource("defaultTemplate") as DataTemplate;
+            defaultTempalte = (DataTemplate)FindResource("defaultTemplate");
         }
 
         #region dependency properties
@@ -171,6 +171,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     chart.TooltipPosition, new System.Drawing.SizeF((float)border.ActualWidth, (float)border.ActualHeight));
             }
 
+            if (location == null) throw new Exception("location not supported");
+
             IsOpen = true;
             Points = tooltipPoints;
 
@@ -182,12 +184,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             var animation = new RectAnimation(from, to, animationsSpeed) { EasingFunction = easingFunction };
             BeginAnimation(PlacementRectangleProperty, animation);
 
-            FontFamily = wpfChart.TooltipFontFamily ?? new FontFamily("Trebuchet MS");
-            TextColor = wpfChart.TooltipTextColor ?? new SolidColorBrush(Color.FromRgb(35, 35, 35));
-            FontSize = wpfChart.TooltipFontSize ?? 13;
-            FontWeight = wpfChart.TooltipFontWeight ?? FontWeights.Normal;
-            FontStyle = wpfChart.TooltipFontStyle ?? FontStyles.Normal;
-            FontStretch = wpfChart.TooltipFontStretch ?? FontStretches.Normal;
+            FontFamily = wpfChart.TooltipFontFamily;
+            TextColor = wpfChart.TooltipTextColor;
+            FontSize = wpfChart.TooltipFontSize;
+            FontWeight = wpfChart.TooltipFontWeight;
+            FontStyle = wpfChart.TooltipFontStyle;
+            FontStretch = wpfChart.TooltipFontStretch;
 
             var o = new object();
             foreach (var tooltipPoint in tooltipPoints)

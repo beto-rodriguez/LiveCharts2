@@ -123,12 +123,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     : Orientation.Vertical;
 
             var wpfChart = (Chart)chart.View;
-            FontFamily = wpfChart.LegendFontFamily ?? new FontFamily("Trebuchet MS");
-            TextColor = wpfChart.LegendTextColor ?? new SolidColorBrush(Color.FromRgb(35, 35, 35));
-            FontSize = wpfChart.LegendFontSize ?? 13;
-            FontWeight = wpfChart.LegendFontWeight ?? FontWeights.Normal;
-            FontStyle = wpfChart.LegendFontStyle ?? FontStyles.Normal;
-            FontStretch = wpfChart.LegendFontStretch ?? FontStretches.Normal;
+
+            FontFamily = wpfChart.LegendFontFamily;
+            TextColor = wpfChart.LegendTextColor;
+            FontSize = wpfChart.LegendFontSize;
+            FontWeight = wpfChart.LegendFontWeight;
+            FontStyle = wpfChart.LegendFontStyle;
+            FontStretch = wpfChart.LegendFontStretch;
 
             UpdateLayout();
         }

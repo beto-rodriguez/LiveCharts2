@@ -34,9 +34,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 {
     public class MotionCanvas : Control
     {
-        protected SKElement skiaElement;
+        private readonly MotionCanvas<SkiaSharpDrawingContext> canvasCore = new();
+        protected SKElement? skiaElement;
         private bool isDrawingLoopRunning = false;
-        private MotionCanvas<SkiaSharpDrawingContext> canvasCore = new MotionCanvas<SkiaSharpDrawingContext>();
         private double framesPerSecond = 90;
 
         static MotionCanvas()
@@ -78,7 +78,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             skiaElement.PaintSurface += OnPaintSurface;
         }
 
-        protected virtual void OnPaintSurface(object sender, SKPaintSurfaceEventArgs args)
+        protected virtual void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
         {
             canvasCore.DrawFrame(new SkiaSharpDrawingContext(args.Info, args.Surface, args.Surface.Canvas));
         }

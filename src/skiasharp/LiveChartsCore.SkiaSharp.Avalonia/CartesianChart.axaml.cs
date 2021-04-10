@@ -225,11 +225,11 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             }
         }
 
+        public Margin DrawMargin { get; set; }
+
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => core.Canvas;
 
-        public IChartLegend<SkiaSharpDrawingContext> Legend => null;
-
-        public Margin DrawMargin { get; set; }
+        public IChartLegend<SkiaSharpDrawingContext> Legend => null; 
 
         public IChartTooltip<SkiaSharpDrawingContext> Tooltip => null;
 
@@ -288,10 +288,6 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
                 yObserver.Dispose((IEnumerable<IAxis>)change.OldValue.Value);
                 yObserver.Initialize((IEnumerable<IAxis>)change.NewValue.Value);
             }
-
-            // is this how the size event is handled?
-            // https://github.com/AvaloniaUI/Avalonia/issues/3237
-            if (change.Property.Name != nameof(Bounds)) return;
 
             Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
         }

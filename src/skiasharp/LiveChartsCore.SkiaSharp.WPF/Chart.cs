@@ -32,14 +32,18 @@ using System.Windows.Media;
 
 namespace LiveChartsCore.SkiaSharpView.WPF
 {
-    public abstract class Chart: Control, IChartView<SkiaSharpDrawingContext>
+    public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     {
-        protected Chart<SkiaSharpDrawingContext> core;
-        protected MotionCanvas canvas;
-        protected IChartLegend<SkiaSharpDrawingContext> legend;
-        protected IChartTooltip<SkiaSharpDrawingContext> tooltip;
+        #region fields
+
+        protected Chart<SkiaSharpDrawingContext>? core;
+        protected MotionCanvas? canvas;
+        protected IChartLegend<SkiaSharpDrawingContext>? legend;
+        protected IChartTooltip<SkiaSharpDrawingContext>? tooltip;
         private readonly ActionThrottler mouseMoveThrottler;
         private PointF mousePosition = new();
+
+        #endregion
 
         public Chart()
         {
@@ -56,39 +60,132 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
         }
 
+        #region dependendency properties
+
+        public static readonly DependencyProperty DrawMarginProperty =
+           DependencyProperty.Register(
+               nameof(DrawMargin), typeof(Margin), typeof(Chart),
+               new PropertyMetadata(LiveCharts.CurrentSettings.DefaultAnimationsSpeed, OnDependencyPropertyChanged));
+
         public static readonly DependencyProperty AnimationsSpeedProperty =
             DependencyProperty.Register(
                 nameof(AnimationsSpeed), typeof(TimeSpan), typeof(Chart),
-                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultAnimationsSpeed));
+                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultAnimationsSpeed, OnDependencyPropertyChanged));
 
         public static readonly DependencyProperty EasingFunctionProperty =
             DependencyProperty.Register(
                 nameof(EasingFunction), typeof(Func<float, float>), typeof(Chart),
-                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultEasingFunction));
+                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultEasingFunction, OnDependencyPropertyChanged));
 
         public static readonly DependencyProperty LegendPositionProperty =
             DependencyProperty.Register(
                 nameof(LegendPosition), typeof(LegendPosition), typeof(Chart),
-                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultLegendPosition));
+                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultLegendPosition, OnDependencyPropertyChanged));
 
         public static readonly DependencyProperty LegendOrientationProperty =
             DependencyProperty.Register(
                 nameof(LegendOrientation), typeof(LegendOrientation), typeof(Chart),
-                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultLegendOrientation));
+                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultLegendOrientation, OnDependencyPropertyChanged));
 
         public static readonly DependencyProperty TooltipPositionProperty =
            DependencyProperty.Register(
                nameof(TooltipPosition), typeof(TooltipPosition), typeof(Chart),
-               new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipPosition));
+               new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipPosition, OnDependencyPropertyChanged));
 
         public static readonly DependencyProperty TooltipFindingStrategyProperty =
             DependencyProperty.Register(
-                nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(Chart), 
-                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy));
+                nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(Chart),
+                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, OnDependencyPropertyChanged));
 
         public static readonly DependencyProperty TooltipTemplateProperty =
             DependencyProperty.Register(
-                nameof(TooltipTemplate), typeof(DataTemplate), typeof(Chart), new PropertyMetadata(null));
+                nameof(TooltipTemplate), typeof(DataTemplate), typeof(Chart), new PropertyMetadata(null, OnDependencyPropertyChanged));
+
+        public static readonly DependencyProperty LegendFontFamilyProperty =
+   DependencyProperty.Register(
+       nameof(LegendFontFamily), typeof(FontFamily), typeof(Chart),
+       new PropertyMetadata(new FontFamily("Trebuchet MS"), OnDependencyPropertyChanged));
+
+        public static readonly DependencyProperty LegendTextColorProperty =
+           DependencyProperty.Register(
+               nameof(LegendTextColor), typeof(SolidColorBrush), typeof(Chart),
+               new PropertyMetadata(new SolidColorBrush(System.Windows.Media.Color.FromRgb(35, 35, 35)), OnDependencyPropertyChanged));
+
+        public static readonly DependencyProperty LegendFontSizeProperty =
+           DependencyProperty.Register(
+               nameof(LegendFontSize), typeof(double), typeof(Chart), new PropertyMetadata(13, OnDependencyPropertyChanged));
+
+        public static readonly DependencyProperty LegendFontWeightProperty =
+           DependencyProperty.Register(
+               nameof(LegendFontWeight), typeof(FontWeight), typeof(Chart),
+               new PropertyMetadata(FontWeights.Normal, OnDependencyPropertyChanged));
+
+        public static readonly DependencyProperty LegendFontStretchProperty =
+           DependencyProperty.Register(
+               nameof(LegendFontStretch), typeof(FontStretch), typeof(Chart),
+               new PropertyMetadata(FontStretches.Normal, OnDependencyPropertyChanged));
+
+        public static readonly DependencyProperty LegendFontStyleProperty =
+           DependencyProperty.Register(
+               nameof(LegendFontStyle), typeof(FontStyle), typeof(Chart),
+               new PropertyMetadata(FontStyles.Normal, OnDependencyPropertyChanged));
+
+        public static readonly DependencyProperty TooltipFontFamilyProperty =
+           DependencyProperty.Register(
+               nameof(TooltipFontFamily), typeof(FontFamily), typeof(Chart),
+               new PropertyMetadata(new FontFamily("Trebuchet MS"), OnDependencyPropertyChanged));
+
+        public static readonly DependencyProperty TooltipTextColorProperty =
+           DependencyProperty.Register(
+               nameof(TooltipTextColor), typeof(SolidColorBrush), typeof(Chart),
+               new PropertyMetadata(new SolidColorBrush(System.Windows.Media.Color.FromRgb(35, 35, 35)), OnDependencyPropertyChanged));
+
+        public static readonly DependencyProperty TooltipFontSizeProperty =
+           DependencyProperty.Register(
+               nameof(TooltipFontSize), typeof(double), typeof(Chart), new PropertyMetadata(13, OnDependencyPropertyChanged));
+
+        public static readonly DependencyProperty TooltipFontWeightProperty =
+           DependencyProperty.Register(
+               nameof(TooltipFontWeight), typeof(FontWeight), typeof(Chart),
+               new PropertyMetadata(FontWeights.Normal, OnDependencyPropertyChanged));
+
+        public static readonly DependencyProperty TooltipFontStretchProperty =
+           DependencyProperty.Register(
+               nameof(TooltipFontStretch), typeof(FontStretch), typeof(Chart),
+               new PropertyMetadata(FontStretches.Normal, OnDependencyPropertyChanged));
+
+        public static readonly DependencyProperty TooltipFontStyleProperty =
+           DependencyProperty.Register(
+               nameof(TooltipFontStyle), typeof(FontStyle), typeof(Chart),
+               new PropertyMetadata(FontStyles.Normal, OnDependencyPropertyChanged));
+
+        #endregion
+
+        #region properties
+
+        public Margin DrawMargin
+        {
+            get { return (Margin)GetValue(DrawMarginProperty); }
+            set { SetValue(DrawMarginProperty, value); }
+        }
+
+        SizeF IChartView.ControlSize
+        {
+            get
+            {
+                if (canvas == null) throw new Exception("Canvas not found");
+                return new() { Width = (float)canvas.ActualWidth, Height = (float)canvas.ActualHeight };
+            }
+        }
+
+        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas
+        {
+            get
+            {
+                if (canvas == null) throw new Exception("Canvas not found");
+                return canvas.CanvasCore;
+            }
+        }
 
         public TimeSpan AnimationsSpeed
         {
@@ -132,49 +229,91 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set { SetValue(TooltipTemplateProperty, value); }
         }
 
-        SizeF IChartView.ControlSize => new SizeF { Width = (float)canvas.ActualWidth, Height = (float)canvas.ActualHeight };
+        public FontFamily LegendFontFamily
+        {
+            get { return (FontFamily)GetValue(LegendFontFamilyProperty); }
+            set { SetValue(LegendFontFamilyProperty, value); }
+        }
 
-        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
+        public SolidColorBrush LegendTextColor
+        {
+            get { return (SolidColorBrush)GetValue(LegendTextColorProperty); }
+            set { SetValue(LegendTextColorProperty, value); }
+        }
 
-        public FontFamily LegendFontFamily { get; set; }
+        public double LegendFontSize
+        {
+            get { return (double)GetValue(LegendFontSizeProperty); }
+            set { SetValue(LegendFontSizeProperty, value); }
+        }
 
-        public SolidColorBrush LegendTextColor { get; set; }
+        public FontWeight LegendFontWeight
+        {
+            get { return (FontWeight)GetValue(LegendFontWeightProperty); }
+            set { SetValue(LegendFontWeightProperty, value); }
+        }
 
-        public double? LegendFontSize { get; set; }
+        public FontStretch LegendFontStretch
+        {
+            get { return (FontStretch)GetValue(LegendFontStretchProperty); }
+            set { SetValue(LegendFontStretchProperty, value); }
+        }
 
-        public FontWeight? LegendFontWeight { get; set; }
+        public FontStyle LegendFontStyle
+        {
+            get { return (FontStyle)GetValue(LegendFontStretchProperty); }
+            set { SetValue(LegendFontStretchProperty, value); }
+        }
 
-        public FontStretch? LegendFontStretch { get; set; }
+        public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
 
-        public FontStyle? LegendFontStyle { get; set; }
+        public FontFamily TooltipFontFamily
+        {
+            get { return (FontFamily)GetValue(TooltipFontFamilyProperty); }
+            set { SetValue(TooltipFontFamilyProperty, value); }
+        }
 
-        public IChartLegend<SkiaSharpDrawingContext> Legend => legend;
+        public SolidColorBrush TooltipTextColor
+        {
+            get { return (SolidColorBrush)GetValue(TooltipTextColorProperty); }
+            set { SetValue(TooltipTextColorProperty, value); }
+        }
 
-        public Margin DrawMargin { get; set; }
+        public double TooltipFontSize
+        {
+            get { return (double)GetValue(TooltipFontStyleProperty); }
+            set { SetValue(TooltipFontStyleProperty, value); }
+        }
 
-        public FontFamily TooltipFontFamily { get; set; }
+        public FontWeight TooltipFontWeight
+        {
+            get { return (FontWeight)GetValue(TooltipFontWeightProperty); }
+            set { SetValue(TooltipFontWeightProperty, value); }
+        }
 
-        public SolidColorBrush TooltipTextColor { get; set; }
+        public FontStretch TooltipFontStretch
+        {
+            get { return (FontStretch)GetValue(TooltipFontStretchProperty); }
+            set { SetValue(TooltipFontStretchProperty, value); }
+        }
 
-        public double? TooltipFontSize { get; set; }
+        public FontStyle TooltipFontStyle
+        {
+            get { return (FontStyle)GetValue(TooltipFontStyleProperty); }
+            set { SetValue(TooltipFontStyleProperty, value); }
+        }
 
-        public FontWeight? TooltipFontWeight { get; set; }
+        public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
 
-        public FontStretch? TooltipFontStretch { get; set; }
+        public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
 
-        public FontStyle? TooltipFontStyle { get; set; }
-
-        public IChartTooltip<SkiaSharpDrawingContext> Tooltip => tooltip;
-
-        public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; }
-
-        protected abstract void InitializeCore();
+        #endregion
 
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
-            if (!(Template.FindName("canvas", this) is MotionCanvas canvas))
+            if (Template.FindName("canvas", this) is not MotionCanvas canvas)
                 throw new Exception(
                     $"{nameof(MotionCanvas)} not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
                     $"If you override the template please add an {nameof(MotionCanvas)} to the template and name it 'canvas'");
@@ -183,8 +322,18 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             InitializeCore();
         }
 
+        protected abstract void InitializeCore();
+
+        protected static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
+        {
+            var chart = (CartesianChart)o;
+            if (chart.core == null) return;
+            Application.Current.Dispatcher.Invoke(() => chart.core.Update());
+        }
+
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
+            if (core == null) return;
             Application.Current.Dispatcher.Invoke(() => core.Update());
         }
 
@@ -197,7 +346,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         private void MouseMoveThrottlerUnlocked()
         {
-            if (TooltipPosition == TooltipPosition.Hidden) return;
+            if (core == null || tooltip == null || TooltipPosition == TooltipPosition.Hidden) return;
             tooltip.Show(core.FindPointsNearTo(mousePosition), core);
         }
     }

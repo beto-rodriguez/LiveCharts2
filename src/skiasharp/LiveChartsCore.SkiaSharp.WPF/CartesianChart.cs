@@ -35,6 +35,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 {
     public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext>
     {
+        #region fields
+
         private readonly CollectionDeepObserver<ISeries> seriesObserver;
         private readonly CollectionDeepObserver<IAxis> xObserver;
         private readonly CollectionDeepObserver<IAxis> yObserver;
@@ -42,6 +44,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         private System.Windows.Point? previous;
         private System.Windows.Point? current;
         private bool isPanning = false;
+
+        #endregion
 
         static CartesianChart()
         {
@@ -65,6 +69,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
             panningThrottler = new ActionThrottler(DoPan, TimeSpan.FromMilliseconds(30));
         }
+
+        #region dependency properties
 
         public static readonly DependencyProperty SeriesProperty =
             DependencyProperty.Register(
@@ -115,7 +121,18 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 nameof(ZoomingSpeed), typeof(double), typeof(CartesianChart),
                 new PropertyMetadata(LiveCharts.CurrentSettings.DefaultZoomSpeed));
 
-        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;
+        #endregion
+
+        #region properties
+
+        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core
+        {
+            get
+            {
+                if (core == null) throw new Exception("core not found");
+                return (CartesianChart<SkiaSharpDrawingContext>)core;
+            }
+        }
 
         public IEnumerable<ISeries> Series
         {
@@ -147,34 +164,40 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set { SetValue(ZoomingSpeedProperty, value); }
         }
 
+        #endregion
+
+        public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
+        {
+            if (core == null) throw new Exception("core not found");
+            var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
+            return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
+        }
+
         protected override void InitializeCore()
         {
+            if (canvas == null) throw new Exception("canvas not found");
+
             core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
             legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
             tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
             Application.Current.Dispatcher.Invoke(() => core.Update());
         }
 
-        public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
-        {
-            var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
-            return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
-        }
-
-        private void OnDeepCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (core == null) return;
             Application.Current.Dispatcher.Invoke(() => core.Update());
         }
 
-        private void OnDeepCollectionPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (core == null) return;
             Application.Current.Dispatcher.Invoke(() => core.Update());
         }
 
-        private void OnMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        private void OnMouseWheel(object? sender, System.Windows.Input.MouseWheelEventArgs e)
         {
+            if (core == null) throw new Exception("core not found");
             var c = (CartesianChart<SkiaSharpDrawingContext>)core;
             var p = e.GetPosition(this);
             c.Zoom(new PointF((float)p.X, (float)p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
@@ -197,6 +220,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         private void DoPan()
         {
+            if (core == null) throw new Exception("core not found");
             if (previous == null || current == null) return;
 
             var c = (CartesianChart<SkiaSharpDrawingContext>)core;

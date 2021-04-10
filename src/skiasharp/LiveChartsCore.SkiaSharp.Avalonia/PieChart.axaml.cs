@@ -222,9 +222,6 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
                 return;
             }
 
-            // is this how the size event is handled?
-            // https://github.com/AvaloniaUI/Avalonia/issues/3237
-            if (change.Property.Name != nameof(Bounds)) return;
             Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
         }
     }

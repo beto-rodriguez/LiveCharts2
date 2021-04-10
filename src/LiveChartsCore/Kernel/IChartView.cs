@@ -45,8 +45,8 @@ namespace LiveChartsCore.Kernel
         where TDrawingContext : DrawingContext
     {
         MotionCanvas<TDrawingContext> CoreCanvas { get; }
-        IChartLegend<TDrawingContext> Legend { get; }
-        IChartTooltip<TDrawingContext> Tooltip { get; }
+        IChartLegend<TDrawingContext>? Legend { get; }
+        IChartTooltip<TDrawingContext>? Tooltip { get; }
         PointStatesDictionary<TDrawingContext> PointStates { get; set; }
     }
 }
