@@ -64,8 +64,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty DrawMarginProperty =
            DependencyProperty.Register(
-               nameof(DrawMargin), typeof(Margin), typeof(Chart),
-               new PropertyMetadata(LiveCharts.CurrentSettings.DefaultAnimationsSpeed, OnDependencyPropertyChanged));
+               nameof(DrawMargin), typeof(Margin), typeof(Chart), new PropertyMetadata(null, OnDependencyPropertyChanged));
 
         public static readonly DependencyProperty AnimationsSpeedProperty =
             DependencyProperty.Register(
@@ -102,9 +101,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 nameof(TooltipTemplate), typeof(DataTemplate), typeof(Chart), new PropertyMetadata(null, OnDependencyPropertyChanged));
 
         public static readonly DependencyProperty LegendFontFamilyProperty =
-   DependencyProperty.Register(
-       nameof(LegendFontFamily), typeof(FontFamily), typeof(Chart),
-       new PropertyMetadata(new FontFamily("Trebuchet MS"), OnDependencyPropertyChanged));
+           DependencyProperty.Register(
+               nameof(LegendFontFamily), typeof(FontFamily), typeof(Chart),
+               new PropertyMetadata(new FontFamily("Trebuchet MS"), OnDependencyPropertyChanged));
 
         public static readonly DependencyProperty LegendTextColorProperty =
            DependencyProperty.Register(
@@ -113,7 +112,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty LegendFontSizeProperty =
            DependencyProperty.Register(
-               nameof(LegendFontSize), typeof(double), typeof(Chart), new PropertyMetadata(13, OnDependencyPropertyChanged));
+               nameof(LegendFontSize), typeof(double), typeof(Chart), new PropertyMetadata(13d, OnDependencyPropertyChanged));
 
         public static readonly DependencyProperty LegendFontWeightProperty =
            DependencyProperty.Register(
@@ -142,7 +141,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty TooltipFontSizeProperty =
            DependencyProperty.Register(
-               nameof(TooltipFontSize), typeof(double), typeof(Chart), new PropertyMetadata(13, OnDependencyPropertyChanged));
+               nameof(TooltipFontSize), typeof(double), typeof(Chart), new PropertyMetadata(13d, OnDependencyPropertyChanged));
 
         public static readonly DependencyProperty TooltipFontWeightProperty =
            DependencyProperty.Register(
@@ -261,8 +260,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public FontStyle LegendFontStyle
         {
-            get { return (FontStyle)GetValue(LegendFontStretchProperty); }
-            set { SetValue(LegendFontStretchProperty, value); }
+            get { return (FontStyle)GetValue(LegendFontStyleProperty); }
+            set { SetValue(LegendFontStyleProperty, value); }
         }
 
         public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
@@ -281,8 +280,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public double TooltipFontSize
         {
-            get { return (double)GetValue(TooltipFontStyleProperty); }
-            set { SetValue(TooltipFontStyleProperty, value); }
+            get { return (double)GetValue(TooltipFontSizeProperty); }
+            set { SetValue(TooltipFontSizeProperty, value); }
         }
 
         public FontWeight TooltipFontWeight
