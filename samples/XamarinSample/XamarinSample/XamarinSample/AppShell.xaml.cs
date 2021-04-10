@@ -24,7 +24,6 @@ namespace XamarinSample
             {
                 var shell_section = new ShellSection { Title = item };
 
-                if (item.ToLower().Contains("tooltip")) continue;
                 var t = Type.GetType($"XamarinSample.{item.Replace('/', '.')}.View");
                 var i = Activator.CreateInstance(t);
 
