@@ -1,0 +1,49 @@
+<UserControl x:Class="AvaloniaSample.General.TemplatedLegends.View"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharp.Avalonia"
+             xmlns:vms="using:ViewModelsSamples.General.TemplatedLegends"
+             xmlns:ctx="using:LiveChartsCore.Kernel">
+  <UserControl.DataContext>
+    <vms:ViewModel/>
+  </UserControl.DataContext>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <lvc:CartesianChart Series="{Binding Series}" LegendPosition="Right">
+      <lvc:CartesianChart.LegendTemplate>
+        <DataTemplate>
+          <ItemsControl Items="{Binding Series, RelativeSource={RelativeSource AncestorType=lvc:DefaultLegend}}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Border Padding="7 5">
+                  <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Name}"
+                        FontFamily="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=lvc:DefaultLegend}}"
+                        Foreground="{Binding TextColor, RelativeSource={RelativeSource AncestorType=lvc:DefaultLegend}}"
+                        FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=lvc:DefaultLegend}}"
+                        FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=lvc:DefaultLegend}}"
+                        FontStyle="{Binding FontStyle, RelativeSource={RelativeSource AncestorType=lvc:DefaultLegend}}"
+                        VerticalAlignment="Center"/>
+                    <lvc:MotionCanvas
+                        Margin="8 0 0 0"
+                        PaintTasks="{Binding DefaultPaintContext.PaintTasks}"
+                        Width="{Binding DefaultPaintContext.Width}"
+                        Height="{Binding DefaultPaintContext.Height}"
+                        VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </DataTemplate>
+      </lvc:CartesianChart.LegendTemplate>
+    </lvc:CartesianChart>
+  </Grid>  
+</UserControl>

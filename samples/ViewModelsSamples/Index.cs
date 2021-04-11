@@ -45,6 +45,7 @@
             "General/Tooltips",
             "General/Legends",
             "General/TemplatedTooltips",
+            "General/TemplatedLegends",
             "General/UserDefinedTypes",
             "General/NullPoints",
         };

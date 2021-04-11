@@ -45,7 +45,6 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             var t = (DataTemplate?)Resources["defaultTemplate"];
             if (t == null) throw new Exception("default tempalte not found");
             defaultTemplate = t;
-            CustomTemplate = t;
         }
 
         public static readonly AvaloniaProperty<Orientation> OrientationProperty =
@@ -115,6 +114,7 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
 
             var avaloniaChart = (IAvaloniaChart)chart.View;
 
+            CustomTemplate = avaloniaChart.LegendTemplate;
             FontFamily = avaloniaChart.LegendFontFamily;
             FontSize = avaloniaChart.LegendFontSize;
             FontWeight = avaloniaChart.LegendFontWeight;

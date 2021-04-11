@@ -31,33 +31,40 @@
              xmlns:local="clr-namespace:LiveChartsCore.SkiaSharpView.WPF"
              mc:Ignorable="d"
              d:DesignHeight="100" d:DesignWidth="200">
-    <ItemsControl ItemsSource="{Binding Series, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}">
-        <ItemsControl.ItemsPanel>
-            <ItemsPanelTemplate>
-                <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center" 
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="defaultTemplate">
+            <ItemsControl ItemsSource="{Binding Series, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center" 
                            Orientation="{Binding Orientation, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}" />
-            </ItemsPanelTemplate>
-        </ItemsControl.ItemsPanel>
-        <ItemsControl.ItemTemplate>
-            <DataTemplate DataType="{x:Type ctx:ISeries}">
-                <Border Padding="15 4">
-                    <StackPanel Orientation="Horizontal">
-                        <local:MotionCanvas Margin="0 0 8 0" 
-                                                       PaintTasks="{Binding DefaultPaintContext.PaintTasks}"
-                                                       Width="{Binding DefaultPaintContext.Width}"
-                                                       Height="{Binding DefaultPaintContext.Height}"
-                                                       VerticalAlignment="Center"/>
-                        <TextBlock Text="{Binding Name}" 
-                                   FontFamily="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}" 
-                                   Foreground="{Binding TextColor, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}"
-                                   FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}" 
-                                   FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}"
-                                   FontStyle="{Binding FontStyle, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}"
-                                   FontStretch="{Binding FontStretch, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}"
-                                   VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Border>
-            </DataTemplate>
-        </ItemsControl.ItemTemplate>
-    </ItemsControl>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type ctx:ISeries}">
+                        <Border Padding="15 4">
+                            <StackPanel Orientation="Horizontal">
+                                <local:MotionCanvas Margin="0 0 8 0" 
+                                    PaintTasks="{Binding DefaultPaintContext.PaintTasks}"
+                                    Width="{Binding DefaultPaintContext.Width}"
+                                    Height="{Binding DefaultPaintContext.Height}"
+                                    VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding Name}" 
+                                    FontFamily="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}" 
+                                    Foreground="{Binding TextColor, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}"
+                                    FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}" 
+                                    FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}"
+                                    FontStyle="{Binding FontStyle, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}"
+                                    FontStretch="{Binding FontStretch, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}"
+                                    VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <ContentControl ContentTemplate="{Binding Path=CustomTemplate, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}" />
 </UserControl>

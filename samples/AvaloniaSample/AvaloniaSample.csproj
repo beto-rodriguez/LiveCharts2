@@ -59,6 +59,9 @@
     <Compile Update="Bars\Custom\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="General\TemplatedLegends\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="General\TemplatedTooltips\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

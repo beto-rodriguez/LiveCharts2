@@ -11,7 +11,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" TooltipPosition="Top" >
+        <lvc:CartesianChart Grid.Row="0" Series="{Binding Series}" TooltipPosition="Top" >
             <lvc:CartesianChart.TooltipTemplate>
                 <DataTemplate>
                     <Border Background="#303030">

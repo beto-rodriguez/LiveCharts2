@@ -35,10 +35,17 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     /// </summary>
     public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
     {
+        private readonly DataTemplate defaultTempalte;
+
         public DefaultLegend()
         {
             InitializeComponent();
+            defaultTempalte = (DataTemplate)FindResource("defaultTemplate");
         }
+
+        public static readonly DependencyProperty CustomTemplateProperty =
+            DependencyProperty.Register(
+                nameof(CustomTemplate), typeof(DataTemplate), typeof(DefaultLegend), new PropertyMetadata(null));
 
         public static readonly DependencyProperty SeriesProperty =
             DependencyProperty.Register(
@@ -63,6 +70,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set { SetValue(SeriesProperty, value); }
         }
 
+        public DataTemplate CustomTemplate
+        {
+            get { return (DataTemplate)GetValue(CustomTemplateProperty); }
+            set { SetValue(CustomTemplateProperty, value); }
+        }
+
         public Orientation Orientation
         {
             get { return (Orientation)GetValue(OrientationProperty); }
@@ -83,9 +96,14 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
         {
+            var wpfChart = (Chart)chart.View;
+
             var series = chart.DrawableSeries;
             var legendOrientation = chart.LegendOrientation;
             var legendPosition = chart.LegendPosition;
+            var template = wpfChart.LegendTemplate ?? defaultTempalte;
+            if (CustomTemplate != template) CustomTemplate = template;
+
             Series = series;
 
             switch (legendPosition)
@@ -121,8 +139,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 Orientation = legendOrientation == LegendOrientation.Horizontal
                     ? Orientation.Horizontal
                     : Orientation.Vertical;
-
-            var wpfChart = (Chart)chart.View;
 
             FontFamily = wpfChart.LegendFontFamily;
             TextColor = wpfChart.LegendTextColor;
