@@ -41,7 +41,7 @@ namespace LiveChartsCore
         public Func<float, float> DefaultEasingFunction { get; set; } = EasingFunctions.QuadraticOut;
         public TimeSpan DefaultAnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(500);
         public double DefaultZoomSpeed { get; set; } = 0.8;
-        public ZoomAndPanMode DefaultZoomMode { get; set; } = ZoomAndPanMode.X;
+        public ZoomAndPanMode DefaultZoomMode { get; set; } = ZoomAndPanMode.None;
         public LegendPosition DefaultLegendPosition { get; set; } = LegendPosition.Hidden;
         public LegendOrientation DefaultLegendOrientation { get; set; } = LegendOrientation.Auto;
         public TooltipPosition DefaultTooltipPosition { get; set; } = TooltipPosition.Top;

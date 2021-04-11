@@ -11,6 +11,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <lvc:CartesianChart Series="{Binding SeriesCollection}"></lvc:CartesianChart>
+        <lvc:CartesianChart Series="{Binding SeriesCollection}" ZoomMode="X"></lvc:CartesianChart>
     </Grid>
 </ContentPage>

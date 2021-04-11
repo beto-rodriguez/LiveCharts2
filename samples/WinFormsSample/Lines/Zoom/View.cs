@@ -18,6 +18,7 @@ namespace WinFormsSample.Lines.Zoom
             cartesianChart = new CartesianChart
             {
                 Series = viewModel.SeriesCollection,
+                ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X,
 
                 // out of livecharts properties...
                 Location = new System.Drawing.Point(0, 0),
