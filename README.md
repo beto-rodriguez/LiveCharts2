@@ -74,18 +74,17 @@ The following topics require a solution that will only work for an specific plat
 - [x] ~~Buid a WPF default tooltip~~
 - [x] ~~Buid a WPF default legend~~
 - [x] ~~Buid a Winforms View~~
-- [ ] Buid a Winforms default tooltip
+- [x] ~~Buid a Winforms default tooltip~~
 - [ ] Buid a Winforms default legend
 - [x] ~~Buid a Xamarin Forms View~~
-- [ ] Buid a Xamarin default tooltip
+- [x] ~~Buid a Xamarin default tooltip~~
 - [ ] Buid a Xamarin default legend
-- [x] ~~Buid an UnoPlatform View~~
+- [x] ~~Buid an UnoPlatform View~~ (Uno platform is paused due multiple uno/skia wasm issues)
 - [ ] Buid an UnoPlatform default tooltip
 - [ ] Buid an UnoPlatform default legend
 - [x] ~~Buid an Avalonia View~~
-- [ ] Buid an Avalonia default tooltip
+- [x] ~~Buid an Avalonia default tooltip~~
 - [ ] Buid an Avalonia default legend
-- [ ] Buid or at least try a view for WASM, Blazor... and the tooltip and legend
 
 ##### Shared tasks
 
