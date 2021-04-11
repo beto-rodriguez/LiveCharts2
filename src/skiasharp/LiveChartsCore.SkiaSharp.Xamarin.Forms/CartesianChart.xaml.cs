@@ -41,11 +41,14 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharpDrawingContext>, IMobileChart
     {
+        #region fields
+
         private readonly CollectionDeepObserver<ISeries> seriesObserver;
         private readonly CollectionDeepObserver<IAxis> xObserver;
         private readonly CollectionDeepObserver<IAxis> yObserver;
-        protected Chart<SkiaSharpDrawingContext> core;
-        protected IChartLegend<SkiaSharpDrawingContext> legend;
+        protected Chart<SkiaSharpDrawingContext>? core;
+
+        #endregion
 
         public CartesianChart()
         {
@@ -74,7 +77,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             canvas.SkCanvasView.Touch += OnSkCanvasTouched;
         }
 
-        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => (CartesianChart<SkiaSharpDrawingContext>)core;
+        #region bindable properties 
 
         public static readonly BindableProperty SeriesProperty =
             BindableProperty.Create(
@@ -115,6 +118,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
                 });
 
+        public static readonly BindableProperty DrawMarginProperty =
+            BindableProperty.Create(
+                nameof(DrawMargin), typeof(Margin), typeof(CartesianChart), null, BindingMode.Default, null, OnBindablePropertyChanged);
+
         public static readonly BindableProperty ZoomModeProperty =
             BindableProperty.Create(
                 nameof(ZoomMode), typeof(ZoomAndPanMode), typeof(CartesianChart),
@@ -136,21 +143,110 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public static readonly BindableProperty LegendPositionProperty =
             BindableProperty.Create(
-                nameof(LegendPosition), typeof(LegendPosition), typeof(CartesianChart), LiveCharts.CurrentSettings.DefaultLegendPosition);
+                nameof(LegendPosition), typeof(LegendPosition), typeof(CartesianChart),
+                LiveCharts.CurrentSettings.DefaultLegendPosition, propertyChanged: OnBindablePropertyChanged);
 
         public static readonly BindableProperty LegendOrientationProperty =
             BindableProperty.Create(
                 nameof(LegendOrientation), typeof(LegendOrientation), typeof(CartesianChart),
-                LiveCharts.CurrentSettings.DefaultLegendOrientation);
+                LiveCharts.CurrentSettings.DefaultLegendOrientation, propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty LegendTemplateProperty =
+            BindableProperty.Create(
+                nameof(LegendTemplate), typeof(DataTemplate), typeof(CartesianChart), null, propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty LegendFontFamilyProperty =
+            BindableProperty.Create(
+                nameof(LegendFontFamily), typeof(string), typeof(CartesianChart), null, propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty LegendFontSizeProperty =
+            BindableProperty.Create(
+                nameof(LegendFontSize), typeof(double), typeof(CartesianChart), 13d, propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty LegendTextColorProperty =
+            BindableProperty.Create(
+                nameof(LegendTextColor), typeof(c), typeof(CartesianChart),
+                new c(35 / 255d, 35 / 255d, 35 / 255d), propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty LegendBackgroundProperty =
+            BindableProperty.Create(
+                nameof(LegendTextColor), typeof(c), typeof(CartesianChart),
+                new c(250 / 255d, 250 / 255d, 250 / 255d), propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty LegendFontAttributesProperty =
+            BindableProperty.Create(
+                nameof(LegendFontAttributes), typeof(FontAttributes), typeof(CartesianChart),
+                FontAttributes.None, propertyChanged: OnBindablePropertyChanged);
 
         public static readonly BindableProperty TooltipPositionProperty =
            BindableProperty.Create(
-               nameof(TooltipPosition), typeof(TooltipPosition), typeof(CartesianChart), LiveCharts.CurrentSettings.DefaultTooltipPosition);
+               nameof(TooltipPosition), typeof(TooltipPosition), typeof(CartesianChart),
+               LiveCharts.CurrentSettings.DefaultTooltipPosition, propertyChanged: OnBindablePropertyChanged);
 
         public static readonly BindableProperty TooltipFindingStrategyProperty =
             BindableProperty.Create(
-                nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(CartesianChart), 
+                nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(CartesianChart),
                 LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy);
+
+        public static readonly BindableProperty TooltipTemplateProperty =
+            BindableProperty.Create(
+                nameof(TooltipTemplate), typeof(DataTemplate), typeof(CartesianChart), null, propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty TooltipFontFamilyProperty =
+            BindableProperty.Create(
+                nameof(TooltipFontFamily), typeof(string), typeof(CartesianChart), null, propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty TooltipFontSizeProperty =
+            BindableProperty.Create(
+                nameof(TooltipFontSize), typeof(double), typeof(CartesianChart), 13d, propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty TooltipTextColorProperty =
+            BindableProperty.Create(
+                nameof(TooltipTextColor), typeof(c), typeof(CartesianChart),
+                new c(35 / 255d, 35 / 255d, 35 / 255d), propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty TooltipBackgroundProperty =
+            BindableProperty.Create(
+                nameof(TooltipTextColor), typeof(c), typeof(CartesianChart),
+                new c(250 / 255d, 250 / 255d, 250 / 255d), propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty TooltipFontAttributesProperty =
+            BindableProperty.Create(
+                nameof(TooltipFontAttributes), typeof(FontAttributes), typeof(CartesianChart),
+                FontAttributes.None, propertyChanged: OnBindablePropertyChanged);
+
+        #endregion
+
+        #region properties
+
+        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core
+        {
+            get
+            {
+                if (core == null || core == null) throw new Exception("core not found");
+                return (CartesianChart<SkiaSharpDrawingContext>)core;
+            }
+        }
+
+        SizeF IChartView.ControlSize
+        {
+            get
+            {
+                return new SizeF
+                {
+                    Width = (float)(Width * DeviceDisplay.MainDisplayInfo.Density),
+                    Height = (float)(Height * DeviceDisplay.MainDisplayInfo.Density)
+                };
+            }
+        }
+
+        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
+
+        public Margin? DrawMargin
+        {
+            get { return (Margin)GetValue(DrawMarginProperty); }
+            set { SetValue(DrawMarginProperty, value); }
+        }
 
         public IEnumerable<ISeries> Series
         {
@@ -182,6 +278,18 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             set { SetValue(AnimationsSpeedProperty, value); }
         }
 
+        public ZoomAndPanMode ZoomMode
+        {
+            get { return (ZoomAndPanMode)GetValue(ZoomModeProperty); }
+            set { SetValue(ZoomModeProperty, value); }
+        }
+
+        public double ZoomingSpeed
+        {
+            get { return (double)GetValue(ZoomingSpeedProperty); }
+            set { SetValue(ZoomingSpeedProperty, value); }
+        }
+
         public LegendPosition LegendPosition
         {
             get { return (LegendPosition)GetValue(LegendPositionProperty); }
@@ -193,6 +301,44 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             get { return (LegendOrientation)GetValue(LegendOrientationProperty); }
             set { SetValue(LegendOrientationProperty, value); }
         }
+
+        public DataTemplate LegendTemplate
+        {
+            get { return (DataTemplate)GetValue(LegendTemplateProperty); }
+            set { SetValue(LegendTemplateProperty, value); }
+        }
+
+        public string LegendFontFamily
+        {
+            get { return (string)GetValue(LegendFontFamilyProperty); }
+            set { SetValue(LegendFontFamilyProperty, value); }
+        }
+
+        public double LegendFontSize
+        {
+            get { return (double)GetValue(LegendFontSizeProperty); }
+            set { SetValue(LegendFontSizeProperty, value); }
+        }
+
+        public c LegendTextColor
+        {
+            get { return (c)GetValue(LegendTextColorProperty); }
+            set { SetValue(LegendTextColorProperty, value); }
+        }
+
+        public c LegendBackgroundColor
+        {
+            get { return (c)GetValue(LegendBackgroundProperty); }
+            set { SetValue(LegendBackgroundProperty, value); }
+        }
+
+        public FontAttributes LegendFontAttributes
+        {
+            get { return (FontAttributes)GetValue(LegendFontAttributesProperty); }
+            set { SetValue(LegendFontAttributesProperty, value); }
+        }
+
+        public IChartLegend<SkiaSharpDrawingContext>? Legend => null;
 
         public TooltipPosition TooltipPosition
         {
@@ -206,92 +352,99 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             set { SetValue(TooltipFindingStrategyProperty, value); }
         }
 
-        public ZoomAndPanMode ZoomMode
+        public DataTemplate TooltipTemplate
         {
-            get { return (ZoomAndPanMode)GetValue(ZoomModeProperty); }
-            set { SetValue(ZoomModeProperty, value); }
+            get { return (DataTemplate)GetValue(TooltipTemplateProperty); }
+            set { SetValue(TooltipTemplateProperty, value); }
         }
 
-        public double ZoomingSpeed
+        public string TooltipFontFamily
         {
-            get { return (double)GetValue(ZoomingSpeedProperty); }
-            set { SetValue(ZoomingSpeedProperty, value); }
+            get { return (string)GetValue(TooltipFontFamilyProperty); }
+            set { SetValue(TooltipFontFamilyProperty, value); }
         }
 
-        SizeF IChartView.ControlSize
+        public double TooltipFontSize
         {
-            get
-            {
-                return new SizeF
-                {
-                    Width = (float)(Width * DeviceDisplay.MainDisplayInfo.Density),
-                    Height = (float)(Height * DeviceDisplay.MainDisplayInfo.Density)
-                };
-            }
+            get { return (double)GetValue(TooltipFontSizeProperty); }
+            set { SetValue(TooltipFontSizeProperty, value); }
         }
 
-        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
-
-        public IChartLegend<SkiaSharpDrawingContext> Legend => null;
-
-        public Margin DrawMargin { get; set; }
-
-        public DataTemplate TooltipTemplate { get; set; }
-
-        public string TooltipFontFamily { get; set; } = null;
-
-        public double TooltipFontSize { get; set; } = 12;
-
-        public c TooltipTextColor { get; set; } = new c(35/255, 35/255, 35/255);
-
-        public FontAttributes TooltipFontAttributes { get; set; }
-
-        public IChartTooltip<SkiaSharpDrawingContext> Tooltip => null;
-
-        public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; }
-
-        protected void InitializeCore()
+        public c TooltipTextColor
         {
-            core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
-            //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
-            MainThread.BeginInvokeOnMainThread(() => core.Update());
+            get { return (c)GetValue(TooltipTextColorProperty); }
+            set { SetValue(TooltipTextColorProperty, value); }
         }
 
-        private void OnSizeChanged(object sender, EventArgs e)
+        public c TooltipBackgroundColor
         {
-            MainThread.BeginInvokeOnMainThread(() => core.Update());
+            get { return (c)GetValue(TooltipBackgroundProperty); }
+            set { SetValue(TooltipBackgroundProperty, value); }
         }
+
+        public FontAttributes TooltipFontAttributes
+        {
+            get { return (FontAttributes)GetValue(TooltipFontAttributesProperty); }
+            set { SetValue(TooltipFontAttributesProperty, value); }
+        }
+
+        public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
+
+        public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
+
+
+        #endregion
 
         public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
+            if (core == null) throw new Exception("core not found");
             var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
             return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
         }
 
-        public void OnDeepCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        protected void InitializeCore()
+        {
+            core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            MainThread.BeginInvokeOnMainThread(() => core.Update());
+        }
+
+        protected void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (core == null) return;
             MainThread.BeginInvokeOnMainThread(() => core.Update());
         }
 
-        public void OnDeepCollectionPropertyChanged(object sender, PropertyChangedEventArgs e)
+        protected void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (core == null) return;
             MainThread.BeginInvokeOnMainThread(() => core.Update());
         }
 
-        private void PanGestureRecognizer_PanUpdated(object sender, PanUpdatedEventArgs e)
+        protected static void OnBindablePropertyChanged(BindableObject o, object oldValue, object newValue)
         {
-            if (e.StatusType != GestureStatus.Running) return;
+            var chart = (CartesianChart)o;
+            if (chart.core == null) return;
+            MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
+        }
+
+        private void OnSizeChanged(object? sender, EventArgs e)
+        {
+            if (core == null) return;
+            MainThread.BeginInvokeOnMainThread(() => core.Update());
+        }
+
+        private void PanGestureRecognizer_PanUpdated(object? sender, PanUpdatedEventArgs e)
+        {
+            if (e.StatusType != GestureStatus.Running || core == null) return;
 
             var c = (CartesianChart<SkiaSharpDrawingContext>)core;
             c.Pan(new PointF((float)e.TotalX, (float)e.TotalY));
         }
 
-        private void PinchGestureRecognizer_PinchUpdated(object sender, PinchGestureUpdatedEventArgs e)
+        private void PinchGestureRecognizer_PinchUpdated(object? sender, PinchGestureUpdatedEventArgs e)
         {
             Trace.WriteLine($"{e.ScaleOrigin.X}, {e.ScaleOrigin.Y}");
-            if (e.Status != GestureStatus.Running || Math.Abs(e.Scale - 1) < 0.05) return;
+            if (e.Status != GestureStatus.Running || Math.Abs(e.Scale - 1) < 0.05 || core == null) return;
 
             var c = (CartesianChart<SkiaSharpDrawingContext>)core;
             var p = e.ScaleOrigin;
@@ -302,9 +455,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 e.Scale > 1 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
         }
 
-        private void OnSkCanvasTouched(object sender, SkiaSharp.Views.Forms.SKTouchEventArgs e)
+        private void OnSkCanvasTouched(object? sender, SkiaSharp.Views.Forms.SKTouchEventArgs e)
         {
-            if (TooltipPosition == TooltipPosition.Hidden) return;
+            if (TooltipPosition == TooltipPosition.Hidden || core == null) return;
             var location = new PointF(e.Location.X, e.Location.Y);
             ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindPointsNearTo(location), core);
         }

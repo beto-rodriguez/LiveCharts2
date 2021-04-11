@@ -36,7 +36,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
     public partial class MotionCanvas : ContentView
     {
         private bool isDrawingLoopRunning = false;
-        private MotionCanvas<SkiaSharpDrawingContext> canvasCore = new MotionCanvas<SkiaSharpDrawingContext>();
+        private MotionCanvas<SkiaSharpDrawingContext> canvasCore = new();
         private double framesPerSecond = 90;
 
         public MotionCanvas()
@@ -99,7 +99,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         private static void PaintTasksChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            var control = bindable as MotionCanvas;
+            var control = (MotionCanvas)bindable;
             control.canvasCore.SetPaintTasks(control.PaintTasks);
         }
     }

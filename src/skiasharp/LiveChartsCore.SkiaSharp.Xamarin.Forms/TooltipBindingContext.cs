@@ -1,14 +1,15 @@
 ﻿using LiveChartsCore.Kernel;
 using System.Collections.Generic;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 {
     public class TooltipBindingContext
     {
-        public IEnumerable<TooltipPoint> Points { get; set; }
+        public IEnumerable<TooltipPoint>? Points { get; set; } = Enumerable.Empty<TooltipPoint>();
 
-        public string FontFamily { get; set; }
+        public string? FontFamily { get; set; }
 
         public double FontSize { get; set; }
 

@@ -3,9 +3,12 @@
               xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart">
-    <lvc:MotionCanvas x:Name="canvas">
-        <lvc:MotionCanvas.GestureRecognizers >
-            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
-        </lvc:MotionCanvas.GestureRecognizers>
-    </lvc:MotionCanvas>
+    <AbsoluteLayout>
+        <lvc:MotionCanvas x:Name="canvas" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+        </lvc:MotionCanvas>
+        <lvc:DefaultTooltip x:Name="tooltip"
+                            AbsoluteLayout.LayoutFlags="PositionProportional"
+                            AbsoluteLayout.LayoutBounds=".05,.05,AutoSize,AutoSize">
+        </lvc:DefaultTooltip>
+    </AbsoluteLayout>
 </ContentView>

@@ -18,13 +18,14 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingContext>, IMobileChart
     {
-        private CollectionDeepObserver<ISeries> seriesObserver;
-        protected Chart<SkiaSharpDrawingContext> core;
-        //protected MotionCanvas motionCanvas;
-        protected IChartLegend<SkiaSharpDrawingContext> legend;
-        protected IChartTooltip<SkiaSharpDrawingContext> tooltip;
+        #region fields
+
+        private readonly CollectionDeepObserver<ISeries> seriesObserver;
+        protected Chart<SkiaSharpDrawingContext>? core;
         private readonly ActionThrottler mouseMoveThrottler;
-        private PointF mousePosition = new PointF();
+        private PointF mousePosition = new();
+
+        #endregion
 
         public PieChart()
         {
@@ -57,20 +58,24 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             Series = new ObservableCollection<ISeries>();
         }
 
-        PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => (PieChart<SkiaSharpDrawingContext>)core;
+        #region bindable properties
 
         public static readonly BindableProperty SeriesProperty =
-          BindableProperty.Create(
-              nameof(Series), typeof(IEnumerable<ISeries>), typeof(PieChart), new ObservableCollection<ISeries>(), BindingMode.Default, null,
-              (BindableObject o, object oldValue, object newValue) =>
-              {
-                  var chart = (PieChart)o;
-                  var seriesObserver = chart.seriesObserver;
-                  seriesObserver.Dispose((IEnumerable<ISeries>)oldValue);
-                  seriesObserver.Initialize((IEnumerable<ISeries>)newValue);
-                  if (chart.core == null) return;
-                  MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
-              });
+              BindableProperty.Create(
+                  nameof(Series), typeof(IEnumerable<ISeries>), typeof(PieChart), new ObservableCollection<ISeries>(), BindingMode.Default, null,
+                  (BindableObject o, object oldValue, object newValue) =>
+                  {
+                      var chart = (PieChart)o;
+                      var seriesObserver = chart.seriesObserver;
+                      seriesObserver.Dispose((IEnumerable<ISeries>)oldValue);
+                      seriesObserver.Initialize((IEnumerable<ISeries>)newValue);
+                      if (chart.core == null) return;
+                      MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
+                  });
+
+        public static readonly BindableProperty DrawMarginProperty =
+            BindableProperty.Create(
+                nameof(DrawMargin), typeof(Margin), typeof(CartesianChart), null, BindingMode.Default, null, OnBindablePropertyChanged);
 
         public static readonly BindableProperty AnimationsSpeedProperty =
           BindableProperty.Create(
@@ -82,21 +87,110 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         public static readonly BindableProperty LegendPositionProperty =
             BindableProperty.Create(
-                nameof(LegendPosition), typeof(LegendPosition), typeof(PieChart), LiveCharts.CurrentSettings.DefaultLegendPosition);
+                nameof(LegendPosition), typeof(LegendPosition), typeof(CartesianChart),
+                LiveCharts.CurrentSettings.DefaultLegendPosition, propertyChanged: OnBindablePropertyChanged);
 
         public static readonly BindableProperty LegendOrientationProperty =
             BindableProperty.Create(
-                nameof(LegendOrientation), typeof(LegendOrientation), typeof(PieChart),
-                LiveCharts.CurrentSettings.DefaultLegendOrientation);
+                nameof(LegendOrientation), typeof(LegendOrientation), typeof(CartesianChart),
+                LiveCharts.CurrentSettings.DefaultLegendOrientation, propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty LegendTemplateProperty =
+            BindableProperty.Create(
+                nameof(LegendTemplate), typeof(DataTemplate), typeof(CartesianChart), null, propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty LegendFontFamilyProperty =
+            BindableProperty.Create(
+                nameof(LegendFontFamily), typeof(string), typeof(CartesianChart), null, propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty LegendFontSizeProperty =
+            BindableProperty.Create(
+                nameof(LegendFontSize), typeof(double), typeof(CartesianChart), 13d, propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty LegendTextColorProperty =
+            BindableProperty.Create(
+                nameof(LegendTextColor), typeof(c), typeof(CartesianChart),
+                new c(35 / 255d, 35 / 255d, 35 / 255d), propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty LegendBackgroundProperty =
+            BindableProperty.Create(
+                nameof(LegendTextColor), typeof(c), typeof(CartesianChart),
+                new c(250 / 255d, 250 / 255d, 250 / 255d), propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty LegendFontAttributesProperty =
+            BindableProperty.Create(
+                nameof(LegendFontAttributes), typeof(FontAttributes), typeof(CartesianChart),
+                FontAttributes.None, propertyChanged: OnBindablePropertyChanged);
 
         public static readonly BindableProperty TooltipPositionProperty =
            BindableProperty.Create(
-               nameof(TooltipPosition), typeof(TooltipPosition), typeof(PieChart), LiveCharts.CurrentSettings.DefaultTooltipPosition);
+               nameof(TooltipPosition), typeof(TooltipPosition), typeof(CartesianChart),
+               LiveCharts.CurrentSettings.DefaultTooltipPosition, propertyChanged: OnBindablePropertyChanged);
 
         public static readonly BindableProperty TooltipFindingStrategyProperty =
             BindableProperty.Create(
-                nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(PieChart),
+                nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(CartesianChart),
                 LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy);
+
+        public static readonly BindableProperty TooltipTemplateProperty =
+            BindableProperty.Create(
+                nameof(TooltipTemplate), typeof(DataTemplate), typeof(CartesianChart), null, propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty TooltipFontFamilyProperty =
+            BindableProperty.Create(
+                nameof(TooltipFontFamily), typeof(string), typeof(CartesianChart), null, propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty TooltipFontSizeProperty =
+            BindableProperty.Create(
+                nameof(TooltipFontSize), typeof(double), typeof(CartesianChart), 13d, propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty TooltipTextColorProperty =
+            BindableProperty.Create(
+                nameof(TooltipTextColor), typeof(c), typeof(CartesianChart),
+                new c(35 / 255d, 35 / 255d, 35 / 255d), propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty TooltipBackgroundProperty =
+            BindableProperty.Create(
+                nameof(TooltipTextColor), typeof(c), typeof(CartesianChart),
+                new c(250 / 255d, 250 / 255d, 250 / 255d), propertyChanged: OnBindablePropertyChanged);
+
+        public static readonly BindableProperty TooltipFontAttributesProperty =
+            BindableProperty.Create(
+                nameof(TooltipFontAttributes), typeof(FontAttributes), typeof(CartesianChart),
+                FontAttributes.None, propertyChanged: OnBindablePropertyChanged);
+
+        #endregion
+
+        #region properties
+
+        PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core
+        {
+            get
+            {
+                if (core == null || core == null) throw new Exception("core not found");
+                return (PieChart<SkiaSharpDrawingContext>)core;
+            }
+        }
+
+        SizeF IChartView.ControlSize
+        {
+            get
+            {
+                return new SizeF
+                {
+                    Width = (float)(Width * DeviceDisplay.MainDisplayInfo.Density),
+                    Height = (float)(Height * DeviceDisplay.MainDisplayInfo.Density)
+                };
+            }
+        }
+
+        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
+
+        public Margin? DrawMargin
+        {
+            get { return (Margin)GetValue(DrawMarginProperty); }
+            set { SetValue(DrawMarginProperty, value); }
+        }
 
         public IEnumerable<ISeries> Series
         {
@@ -128,6 +222,44 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             set { SetValue(LegendOrientationProperty, value); }
         }
 
+        public DataTemplate LegendTemplate
+        {
+            get { return (DataTemplate)GetValue(LegendTemplateProperty); }
+            set { SetValue(LegendTemplateProperty, value); }
+        }
+
+        public string LegendFontFamily
+        {
+            get { return (string)GetValue(LegendFontFamilyProperty); }
+            set { SetValue(LegendFontFamilyProperty, value); }
+        }
+
+        public double LegendFontSize
+        {
+            get { return (double)GetValue(LegendFontSizeProperty); }
+            set { SetValue(LegendFontSizeProperty, value); }
+        }
+
+        public c LegendTextColor
+        {
+            get { return (c)GetValue(LegendTextColorProperty); }
+            set { SetValue(LegendTextColorProperty, value); }
+        }
+
+        public c LegendBackgroundColor
+        {
+            get { return (c)GetValue(LegendBackgroundProperty); }
+            set { SetValue(LegendBackgroundProperty, value); }
+        }
+
+        public FontAttributes LegendFontAttributes
+        {
+            get { return (FontAttributes)GetValue(LegendFontAttributesProperty); }
+            set { SetValue(LegendFontAttributesProperty, value); }
+        }
+
+        public IChartLegend<SkiaSharpDrawingContext>? Legend => null;
+
         public TooltipPosition TooltipPosition
         {
             get { return (TooltipPosition)GetValue(TooltipPositionProperty); }
@@ -140,65 +272,70 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             set { SetValue(TooltipFindingStrategyProperty, value); }
         }
 
-        SizeF IChartView.ControlSize
+        public DataTemplate TooltipTemplate
         {
-            get
-            {
-                return new SizeF
-                {
-                    Width = (float)(Width * DeviceDisplay.MainDisplayInfo.Density),
-                    Height = (float)(Height * DeviceDisplay.MainDisplayInfo.Density)
-                };
-            }
+            get { return (DataTemplate)GetValue(TooltipTemplateProperty); }
+            set { SetValue(TooltipTemplateProperty, value); }
         }
 
-        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
+        public string TooltipFontFamily
+        {
+            get { return (string)GetValue(TooltipFontFamilyProperty); }
+            set { SetValue(TooltipFontFamilyProperty, value); }
+        }
 
-        public IChartLegend<SkiaSharpDrawingContext> Legend => null;
+        public double TooltipFontSize
+        {
+            get { return (double)GetValue(TooltipFontSizeProperty); }
+            set { SetValue(TooltipFontSizeProperty, value); }
+        }
 
-        public Margin DrawMargin { get; set; }
+        public c TooltipTextColor
+        {
+            get { return (c)GetValue(TooltipTextColorProperty); }
+            set { SetValue(TooltipTextColorProperty, value); }
+        }
 
-        public DataTemplate TooltipTemplate { get; set; }
+        public c TooltipBackgroundColor
+        {
+            get { return (c)GetValue(TooltipBackgroundProperty); }
+            set { SetValue(TooltipBackgroundProperty, value); }
+        }
 
-        public string TooltipFontFamily { get; set; } = null;
+        public FontAttributes TooltipFontAttributes
+        {
+            get { return (FontAttributes)GetValue(TooltipFontAttributesProperty); }
+            set { SetValue(TooltipFontAttributesProperty, value); }
+        }
 
-        public double TooltipFontSize { get; set; } = 12;
+        public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
 
-        public c TooltipTextColor { get; set; } = new c(35/255, 35/255, 35/255);
+        public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
 
-        public FontAttributes TooltipFontAttributes { get; set; }
-
-        public IChartTooltip<SkiaSharpDrawingContext> Tooltip => null;
-
-        public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; }
+        #endregion
 
         protected void InitializeCore()
         {
-            //if (!(FindByName("canvas") is MotionCanvas canvas))
-            //    throw new Exception(
-            //        $"SkiaElement not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
-            //        $"If you override the template please add an {nameof(MotionCanvas)} to the template and name it 'canvas'");
-
             core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
-            //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
-            //tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
             MainThread.BeginInvokeOnMainThread(() => core.Update());
         }
 
-        private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
+        protected static void OnBindablePropertyChanged(BindableObject o, object oldValue, object newValue)
         {
-            // show tooltip ??
-            // () => core.Update()();
+            var chart = (PieChart)o;
+            if (chart.core == null) return;
+            MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
         }
 
         private void OnSizeChanged(object sender, EventArgs e)
         {
+            if (core == null) return;
             MainThread.BeginInvokeOnMainThread(() => core.Update());
         }
 
         private void MouseMoveThrottlerUnlocked()
         {
-            if (TooltipPosition == TooltipPosition.Hidden) return;
+            if (TooltipPosition == TooltipPosition.Hidden || core == null) return;
             tooltip.Show(core.FindPointsNearTo(mousePosition), core);
         }
     }

@@ -1,5 +1,6 @@
 ﻿using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xamarin.Essentials;
@@ -12,20 +13,20 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
     public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawingContext>
     {
         private readonly DataTemplate defaultTemplate;
-        private readonly Dictionary<ChartPoint, object> activePoints = new Dictionary<ChartPoint, object>();
+        private readonly Dictionary<ChartPoint, object> activePoints = new();
 
         public DefaultTooltip()
         {
             InitializeComponent();
             BindingContext = this;
-            defaultTemplate = Resources["defaultTemplate"] as DataTemplate;
+            defaultTemplate = (DataTemplate) Resources["defaultTemplate"];
         }
 
-        public DataTemplate TooltipTemplate { get; set; }
+        public DataTemplate? TooltipTemplate { get; set; }
 
-        public IEnumerable<TooltipPoint> Points { get; set; }
+        public IEnumerable<TooltipPoint> Points { get; set; } = Enumerable.Empty<TooltipPoint>();
 
-        public string FontFamily { get; set; }
+        public string? FontFamily { get; set; }
 
         public double FontSize { get; set; }
 
@@ -66,6 +67,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 location = tooltipPoints.GetPieTooltipLocation(
                     chart.TooltipPosition, new System.Drawing.SizeF((float)size.Width, (float)size.Height));
             }
+            if (location == null) throw new Exception("location not supported");
 
             var template = mobileChart.TooltipTemplate ?? defaultTemplate;
             if (TooltipTemplate != template) TooltipTemplate = template;
@@ -104,7 +106,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         protected void BuildContent()
         {
             var template = TooltipTemplate ?? defaultTemplate;
-            if (!(template.CreateContent() is View view)) return;
+            if (template.CreateContent() is not View view) return;
 
             view.BindingContext = new TooltipBindingContext
             {

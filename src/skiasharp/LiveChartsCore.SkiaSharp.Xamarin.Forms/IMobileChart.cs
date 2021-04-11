@@ -12,6 +12,20 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         Color TooltipTextColor { get; set; }
 
+        Color TooltipBackgroundColor { get; set; }
+
         FontAttributes TooltipFontAttributes { get; set; }
+
+        DataTemplate LegendTemplate { get; set; }
+
+        string LegendFontFamily { get; set; }
+
+        double LegendFontSize { get; set; }
+
+        Color LegendTextColor { get; set; }
+
+        Color LegendBackgroundColor { get; set; }
+
+        FontAttributes LegendFontAttributes { get; set; }
     }
 }
