@@ -205,9 +205,9 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             }
         }
 
-        public Margin DrawMargin
+        public Margin? DrawMargin
         {
-            get { return (Margin)GetValue(DrawMarginProperty); }
+            get { return (Margin?)GetValue(DrawMarginProperty); }
             set { SetValue(DrawMarginProperty, value); }
         }
 

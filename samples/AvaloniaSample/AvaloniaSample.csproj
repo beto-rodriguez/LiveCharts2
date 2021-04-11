@@ -62,6 +62,9 @@
     <Compile Update="General\TemplatedTooltips\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="General\Legends\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="General\Tooltips\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

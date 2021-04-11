@@ -21,12 +21,15 @@
               <DataTemplate DataType="{x:Type ctx:TooltipPoint}">
                 <Border Padding="7 5">
                   <StackPanel Orientation="Horizontal">
-                    <local:MotionCanvas Margin="0 0 8 0"
+                    <local:MotionCanvas 
+                        Margin="0 0 8 0"
                         PaintTasks="{Binding Series.DefaultPaintContext.PaintTasks}"
                         Width="{Binding Series.DefaultPaintContext.Width}"
                         Height="{Binding Series.DefaultPaintContext.Height}"
                         VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding Point.AsTooltipString}" Margin="0 0 8 0"
+                    <TextBlock 
+                        Margin="0 0 8 0"
+                        Text="{Binding Point.AsTooltipString}"
                         FontFamily="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
                         Foreground="{Binding TextColor, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
                         FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"

@@ -228,9 +228,9 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             }
         }
 
-        public Margin DrawMargin
+        public Margin? DrawMargin
         {
-            get { return (Margin)GetValue(DrawMarginProperty); }
+            get { return (Margin?)GetValue(DrawMarginProperty); }
             set { SetValue(DrawMarginProperty, value); }
         }
 
@@ -402,7 +402,7 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
         {
             var canvas = this.FindControl<MotionCanvas>("canvas");
             core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
-            //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
+            legend = this.FindControl<DefaultLegend>("legend");
             tooltip = this.FindControl<DefaultTooltip>("tooltip");
             Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
         }
