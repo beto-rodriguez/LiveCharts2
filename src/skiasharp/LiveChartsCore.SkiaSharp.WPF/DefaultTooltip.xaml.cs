@@ -63,7 +63,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty BackgroundProperty =
            DependencyProperty.Register(
-               nameof(FontFamily), typeof(Brush), typeof(DefaultTooltip),
+               nameof(Background), typeof(Brush), typeof(DefaultTooltip),
                new PropertyMetadata(new SolidColorBrush(Color.FromRgb(250, 250, 250))));
 
         public static readonly DependencyProperty FontFamilyProperty =

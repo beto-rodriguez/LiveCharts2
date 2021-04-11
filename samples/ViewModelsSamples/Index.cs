@@ -43,6 +43,7 @@
             "Axes/NamedLabels",
 
             "General/Tooltips",
+            "General/Legends",
             "General/TemplatedTooltips",
             "General/UserDefinedTypes",
             "General/NullPoints",

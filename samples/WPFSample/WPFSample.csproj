@@ -60,6 +60,9 @@
     <Compile Update="General\TemplatedTooltips\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="General\Legends\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="General\Tooltips\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -175,6 +178,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="General\TemplatedTooltips\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="General\Legends\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

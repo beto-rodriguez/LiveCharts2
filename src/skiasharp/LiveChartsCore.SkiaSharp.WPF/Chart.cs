@@ -98,7 +98,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty TooltipBackgroundProperty =
            DependencyProperty.Register(
-               nameof(TooltipFontFamily), typeof(FontFamily), typeof(Chart),
+               nameof(TooltipBackground), typeof(SolidColorBrush), typeof(Chart),
                new PropertyMetadata(new SolidColorBrush(System.Windows.Media.Color.FromRgb(250, 250, 250)), OnDependencyPropertyChanged));
 
         public static readonly DependencyProperty TooltipFontFamilyProperty =
@@ -165,7 +165,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         public static readonly DependencyProperty LegendTemplateProperty =
             DependencyProperty.Register(
-                nameof(TooltipTemplate), typeof(DataTemplate), typeof(Chart), new PropertyMetadata(null, OnDependencyPropertyChanged));
+                nameof(LegendTemplate), typeof(DataTemplate), typeof(Chart), new PropertyMetadata(null, OnDependencyPropertyChanged));
 
         #endregion
 
