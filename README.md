@@ -75,16 +75,16 @@ The following topics require a solution that will only work for an specific plat
 - [x] ~~Buid a WPF default legend~~
 - [x] ~~Buid a Winforms View~~
 - [x] ~~Buid a Winforms default tooltip~~
-- [ ] Buid a Winforms default legend
+- [x] ~~Buid a Winforms default legend~~
 - [x] ~~Buid a Xamarin Forms View~~
 - [x] ~~Buid a Xamarin default tooltip~~
-- [ ] Buid a Xamarin default legend
+- [x] ~~Buid a Xamarin default legend~~
 - [x] ~~Buid an UnoPlatform View~~ (Uno platform is paused due multiple uno/skia wasm issues)
 - [ ] Buid an UnoPlatform default tooltip
 - [ ] Buid an UnoPlatform default legend
 - [x] ~~Buid an Avalonia View~~
 - [x] ~~Buid an Avalonia default tooltip~~
-- [ ] Buid an Avalonia default legend
+- [x] ~~Buid an Avalonia default legend~~
 
 ##### Shared tasks
 
