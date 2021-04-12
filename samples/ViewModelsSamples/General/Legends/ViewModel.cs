@@ -17,7 +17,15 @@ namespace ViewModelsSamples.General.Legends
         {
             new ColumnSeries<double>
             {
-                Values = new ObservableCollection<double> { 3, 7, 3, 1, 4, 5, 6 },
+                Values = new ObservableCollection<double> { 3, 7, 3,},
+            },
+            new ColumnSeries<double>
+            {
+                Values = new ObservableCollection<double> { 5, 3, 2 },
+            },
+            new ColumnSeries<double>
+            {
+                Values = new ObservableCollection<double> { 8, 2, 4 },
             }
         };
 

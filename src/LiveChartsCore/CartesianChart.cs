@@ -206,8 +206,6 @@ namespace LiveChartsCore
         {
             seriesContext = new SeriesContext<TDrawingContext>(series);
 
-            if (legend != null) legend.Draw(this);
-
             Canvas.MeasuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
             var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<TDrawingContext>();
             var initializer = stylesBuilder.GetInitializer();
@@ -248,6 +246,8 @@ namespace LiveChartsCore
                     primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.max);
                     primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.min);
                 }
+
+                if (legend != null) legend.Draw(this);
 
                 if (viewDrawMargin == null)
                 {

@@ -11,6 +11,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>, IDisposable
     {
         private readonly Dictionary<ChartPoint, object> activePoints = new();
+        private const int CS_DROPSHADOW = 0x00020000;
 
         public DefaultTooltip()
         {
@@ -81,9 +82,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
             var h = 0f;
             var w = 0f;
+
+            using Graphics g = CreateGraphics();
             foreach (var point in tooltipPoints)
             {
-                using Graphics g = CreateGraphics();
                 var text = point.Point.AsTooltipString;
                 var size = g.MeasureString(text, chart.TooltipFont);
 
@@ -122,6 +124,16 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             }
 
             base.Dispose(disposing);
+        }
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ClassStyle |= CS_DROPSHADOW;
+                return cp;
+            }
         }
     }
 }

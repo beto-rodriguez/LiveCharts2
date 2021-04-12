@@ -34,7 +34,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     {
         protected Chart<SkiaSharpDrawingContext>? core;
-        protected IChartLegend<SkiaSharpDrawingContext>? legend;
+        protected IChartLegend<SkiaSharpDrawingContext> legend = new DefaultLegend();
         protected IChartTooltip<SkiaSharpDrawingContext> tooltip = new DefaultTooltip();
         protected MotionCanvas motionCanvas;
         private PointF mousePosition = new();
@@ -53,7 +53,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         {
             motionCanvas = new MotionCanvas();
             SuspendLayout();
-            motionCanvas.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            motionCanvas.Dock = DockStyle.Fill;
             motionCanvas.FramesPerSecond = 90D;
             motionCanvas.Location = new Point(0, 0);
             motionCanvas.Name = "motionCanvas";
@@ -64,6 +64,9 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(motionCanvas);
+            var l = (Control)legend;
+            l.Dock = DockStyle.Right;
+            Controls.Add(l);
             Name = "CartesianChart";
             ResumeLayout(false);
 
@@ -109,7 +112,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         public TooltipFindingStrategy TooltipFindingStrategy { get => tooltipFindingStrategy; set { tooltipFindingStrategy = value; OnPropertyChanged(); } }
         public Font TooltipFont { get => tooltipFont; set { tooltipFont = value; OnPropertyChanged(); } }
         public Color TooltipBackColor { get => tooltipBackColor; set { tooltipBackColor = value; OnPropertyChanged(); } }
-        public IChartTooltip<SkiaSharpDrawingContext> Tooltip => tooltip;
+        public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
 
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
 
@@ -151,6 +154,18 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         {
             if (tooltip is IDisposable disposableTooltip) disposableTooltip.Dispose();
             base.OnHandleDestroyed(e);
+        }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // Chart
+            // 
+            this.Name = "Chart";
+            this.Size = new System.Drawing.Size(643, 418);
+            this.ResumeLayout(false);
+
         }
     }
 }
