@@ -57,6 +57,9 @@
     <Compile Update="General\TemplatedTooltips\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="General\TemplatedLegends\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="General\Tooltips\View.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -49,8 +49,11 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private Color legendBackColor = Color.FromArgb(255, 250, 250, 250);
         private readonly ActionThrottler mouseMoveThrottler;
 
-        public Chart()
+        public Chart(IChartTooltip<SkiaSharpDrawingContext>? tooltip, IChartLegend<SkiaSharpDrawingContext>? legend)
         {
+            if (tooltip != null) this.tooltip = tooltip;
+            if (legend != null) this.legend = legend;
+
             motionCanvas = new MotionCanvas();
             SuspendLayout();
             motionCanvas.Dock = DockStyle.Fill;
@@ -64,7 +67,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(motionCanvas);
-            var l = (Control)legend;
+            var l = (Control)this.legend;
             l.Dock = DockStyle.Right;
             Controls.Add(l);
             Name = "CartesianChart";
@@ -83,11 +86,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
             InitializeCore();
             mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
-        }
-
-        public Chart(IChartTooltip<SkiaSharpDrawingContext> tooltip) : this()
-        {
-            this.tooltip = tooltip;
         }
 
         SizeF IChartView.ControlSize => new() { Width = motionCanvas.Width, Height = motionCanvas.Height };

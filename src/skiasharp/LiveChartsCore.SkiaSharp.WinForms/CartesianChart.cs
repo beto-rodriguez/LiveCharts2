@@ -45,27 +45,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private IEnumerable<IAxis> xAxes = new List<Axis> { new Axis() };
         private IEnumerable<IAxis> yAxes = new List<Axis> { new Axis() };
 
-        public CartesianChart()
-        {
-            seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-
-            XAxes = new List<IAxis>() { new Axis() };
-            YAxes = new List<IAxis>() { new Axis() };
-            Series = new ObservableCollection<ISeries>();
-
-            var c = Controls[0].Controls[0];
-
-            c.MouseWheel += OnMouseWheel;
-            c.MouseDown += OnMouseDown;
-            c.MouseMove += OnMoseMove;
-            c.MouseUp += OnMouseUp;
-
-            panningThrottler = new ActionThrottler(DoPan, TimeSpan.FromMilliseconds(30));
-        }
-
-        public CartesianChart(IChartTooltip<SkiaSharpDrawingContext> tooltip) : base(tooltip)
+        public CartesianChart(IChartTooltip<SkiaSharpDrawingContext>? tooltip = null, IChartLegend<SkiaSharpDrawingContext>? legend = null)
+            :base(tooltip, legend)
         {
             seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);

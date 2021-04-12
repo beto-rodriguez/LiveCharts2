@@ -34,23 +34,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private CollectionDeepObserver<ISeries> seriesObserver;
         private IEnumerable<ISeries> series = new List<ISeries>();
 
-        public PieChart()
-        {
-            seriesObserver = new CollectionDeepObserver<ISeries>(
-               (object? sender, NotifyCollectionChangedEventArgs e) =>
-               {
-                   if (core == null) return;
-                   core.Update();
-               },
-               (object? sender, PropertyChangedEventArgs e) =>
-               {
-                   if (core == null) return;
-                   core.Update();
-               },
-               true);
-        }
-
-        public PieChart(IChartTooltip<SkiaSharpDrawingContext> tooltip) : base(tooltip)
+        public PieChart(IChartTooltip<SkiaSharpDrawingContext>? tooltip = null, IChartLegend<SkiaSharpDrawingContext>? legend = null)
+            : base(tooltip, legend)
         {
             seriesObserver = new CollectionDeepObserver<ISeries>(
                (object? sender, NotifyCollectionChangedEventArgs e) =>

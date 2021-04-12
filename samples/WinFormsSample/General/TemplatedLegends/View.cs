@@ -1,8 +1,8 @@
 ﻿using LiveChartsCore.SkiaSharpView.WinForms;
 using System.Windows.Forms;
-using ViewModelsSamples.General.TemplatedTooltips;
+using ViewModelsSamples.General.TemplatedLegends;
 
-namespace WinFormsSample.General.TemplatedTooltips
+namespace WinFormsSample.General.TemplatedLegends
 {
     public partial class View : UserControl
     {
@@ -15,7 +15,7 @@ namespace WinFormsSample.General.TemplatedTooltips
 
             var viewModel = new ViewModel();
 
-            cartesianChart = new CartesianChart(tooltip: new CustomTooltip())
+            cartesianChart = new CartesianChart(legend: new CustomLegend())
             {
                 Series = viewModel.Series,
 
