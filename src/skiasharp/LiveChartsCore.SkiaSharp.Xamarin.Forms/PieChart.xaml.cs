@@ -1,4 +1,26 @@
-﻿using LiveChartsCore.Drawing;
+﻿// The MIT License(MIT)
+
+// Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -22,8 +44,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         private readonly CollectionDeepObserver<ISeries> seriesObserver;
         protected Chart<SkiaSharpDrawingContext>? core;
-        private readonly ActionThrottler mouseMoveThrottler;
-        private PointF mousePosition = new();
+        private Grid? grid;
 
         #endregion
 
@@ -41,7 +62,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
             InitializeCore();
             SizeChanged += OnSizeChanged;
-            mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
 
             seriesObserver = new CollectionDeepObserver<ISeries>(
                (object sender, NotifyCollectionChangedEventArgs e) =>
@@ -56,6 +76,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                });
 
             Series = new ObservableCollection<ISeries>();
+
+            canvas.SkCanvasView.EnableTouchEvents = true;
+            canvas.SkCanvasView.Touch += OnSkCanvasTouched;
         }
 
         #region bindable properties
@@ -185,6 +208,12 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         }
 
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
+
+        BindableObject IMobileChart.Canvas => canvas;
+
+        BindableObject IMobileChart.Legend => legend;
+
+        Grid IMobileChart.LayoutGrid => grid ??= this.FindByName<Grid>("gridLayout");
 
         public Margin? DrawMargin
         {
@@ -333,10 +362,11 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             MainThread.BeginInvokeOnMainThread(() => core.Update());
         }
 
-        private void MouseMoveThrottlerUnlocked()
+        private void OnSkCanvasTouched(object? sender, SkiaSharp.Views.Forms.SKTouchEventArgs e)
         {
             if (TooltipPosition == TooltipPosition.Hidden || core == null) return;
-            tooltip.Show(core.FindPointsNearTo(mousePosition), core);
+            var location = new PointF(e.Location.X, e.Location.Y);
+            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindPointsNearTo(location), core);
         }
     }
 }

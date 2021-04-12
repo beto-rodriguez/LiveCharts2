@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultLegend"
+             xmlns:core="clr-namespace:LiveChartsCore;assembly=LiveChartsCore"
+             xmlns:local="clr-namespace:LiveChartsCore.SkiaSharpView.Xamarin.Forms">
+
+    <ContentView.Resources>
+        <DataTemplate x:Key="defaultTemplate">
+            <Frame>
+                <StackLayout 
+                    BindableLayout.ItemsSource="{Binding Series, Source={RelativeSource AncestorType={x:Type local:LegendBindingContext}}}"
+                    Orientation="{Binding Orientation, Source={RelativeSource AncestorType={x:Type local:LegendBindingContext}}}"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                                <local:MotionCanvas 
+                                    VerticalOptions="Center"
+                                    Margin="0, 0, 5, 0"
+                                    WidthRequest="{Binding Source={RelativeSource AncestorType={x:Type core:ISeries}}, Converter={StaticResource wConverter}}"
+                                    HeightRequest="{Binding Source={RelativeSource AncestorType={x:Type core:ISeries}}, Converter={StaticResource hConverter}}"
+                                    PaintTasks="{Binding Source={RelativeSource AncestorType={x:Type core:ISeries}}, Converter={StaticResource paintTaskConverter}}"/>
+                                <Label Text="{Binding Name}"
+                                    TextColor="{Binding TextColor, Source={RelativeSource AncestorType={x:Type local:LegendBindingContext}}}"
+                                    FontFamily="{Binding FontFamily, Source={RelativeSource AncestorType={x:Type local:LegendBindingContext}}}"
+                                    FontSize="{Binding FontSize}"
+                                    FontAttributes="{Binding FontAttributes}" />
+                            </StackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
+            </Frame>
+        </DataTemplate>
+
+        <local:PaintTasksValueConverter x:Key="paintTaskConverter" />
+        <local:WidthConverter x:Key="wConverter" />
+        <local:HeightConverter x:Key="hConverter" />
+    </ContentView.Resources>
+
+</ContentView>

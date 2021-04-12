@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XamarinSample.General.TemplatedLegends.View"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Xamarin.Forms;assembly=LiveChartsCore.SkiaSharpView.Xamarin.Forms"
+             xmlns:vms="clr-namespace:ViewModelsSamples.General.TemplatedLegends;assembly=ViewModelsSamples"
+             xmlns:core="clr-namespace:LiveChartsCore;assembly=LiveChartsCore">
+    
+    <ContentPage.BindingContext>
+        <vms:ViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <lvc:PaintTasksValueConverter x:Key="paintTaskConverter" />
+        <lvc:WidthConverter x:Key="wConverter" />
+        <lvc:HeightConverter x:Key="hConverter" />
+    </ContentPage.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <lvc:CartesianChart Grid.Row="0" Series="{Binding Series}" LegendPosition="Bottom">
+            <lvc:CartesianChart.LegendTemplate>
+                <DataTemplate>
+                    <Frame Background="#fafafa" CornerRadius="4" Padding="6">
+                        <StackLayout 
+                                BindableLayout.ItemsSource="{Binding Series, Source={RelativeSource AncestorType={x:Type lvc:LegendBindingContext}}}"
+                                Orientation="{Binding Orientation, Source={RelativeSource AncestorType={x:Type lvc:LegendBindingContext}}}"
+                                VerticalOptions="Center">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                                        <Label Text="{Binding Name}"
+                                            TextColor="{Binding TextColor, Source={RelativeSource AncestorType={x:Type lvc:LegendBindingContext}}}"
+                                            FontFamily="{Binding FontFamily, Source={RelativeSource AncestorType={x:Type lvc:LegendBindingContext}}}"
+                                            FontSize="{Binding FontSize}"
+                                            FontAttributes="{Binding FontAttributes}" />
+                                        <lvc:MotionCanvas 
+                                            VerticalOptions="Center"
+                                            Margin="5, 0, 0, 0"
+                                            WidthRequest="{Binding Source={RelativeSource AncestorType={x:Type core:ISeries}}, Converter={StaticResource wConverter}}"
+                                            HeightRequest="{Binding Source={RelativeSource AncestorType={x:Type core:ISeries}}, Converter={StaticResource hConverter}}"
+                                            PaintTasks="{Binding Source={RelativeSource AncestorType={x:Type core:ISeries}}, Converter={StaticResource paintTaskConverter}}"/>
+                                    </StackLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </StackLayout>
+                    </Frame>
+                </DataTemplate>
+            </lvc:CartesianChart.LegendTemplate>
+        </lvc:CartesianChart>
+    </Grid>
+</ContentPage>

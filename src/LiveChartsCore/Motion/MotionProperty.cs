@@ -22,7 +22,6 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
-using System.Diagnostics;
 
 namespace LiveChartsCore.Motion
 {

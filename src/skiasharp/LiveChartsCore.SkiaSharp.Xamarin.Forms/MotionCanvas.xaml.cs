@@ -36,7 +36,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
     public partial class MotionCanvas : ContentView
     {
         private bool isDrawingLoopRunning = false;
-        private MotionCanvas<SkiaSharpDrawingContext> canvasCore = new();
+        private readonly MotionCanvas<SkiaSharpDrawingContext> canvasCore = new();
         private double framesPerSecond = 90;
 
         public MotionCanvas()

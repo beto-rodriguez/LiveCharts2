@@ -24,17 +24,18 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Globalization;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 {
-    public class PaintTasksValueConverter : IValueConverter
+    public class HeightConverter : IValueConverter
     {
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var v = (IDrawableSeries<SkiaSharpDrawingContext>)value;
             if (v == null) return null;
-            return v.DefaultPaintContext.PaintTasks;
+            return v.DefaultPaintContext.Height / DeviceDisplay.MainDisplayInfo.Density;
         }
 
         public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

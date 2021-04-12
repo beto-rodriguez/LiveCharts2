@@ -46,6 +46,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         private readonly CollectionDeepObserver<ISeries> seriesObserver;
         private readonly CollectionDeepObserver<IAxis> xObserver;
         private readonly CollectionDeepObserver<IAxis> yObserver;
+        private Grid? grid;
         protected Chart<SkiaSharpDrawingContext>? core;
 
         #endregion
@@ -223,7 +224,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             get
             {
-                if (core == null || core == null) throw new Exception("core not found");
+                if (core == null) throw new Exception("core not found");
                 return (CartesianChart<SkiaSharpDrawingContext>)core;
             }
         }
@@ -241,6 +242,12 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         }
 
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
+
+        Grid IMobileChart.LayoutGrid => grid ??= this.FindByName<Grid>("gridLayout");
+
+        BindableObject IMobileChart.Canvas => canvas;
+
+        BindableObject IMobileChart.Legend => legend;
 
         public Margin? DrawMargin
         {
@@ -338,7 +345,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             set { SetValue(LegendFontAttributesProperty, value); }
         }
 
-        public IChartLegend<SkiaSharpDrawingContext>? Legend => null;
+        public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
 
         public TooltipPosition TooltipPosition
         {
@@ -391,7 +398,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
 
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
-
 
         #endregion
 

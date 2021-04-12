@@ -58,7 +58,13 @@
     <Compile Update="Bars\WithBackground\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="General\TemplatedLegends\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="General\TemplatedTooltips\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="General\Legends\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="General\Tooltips\View.xaml.cs">

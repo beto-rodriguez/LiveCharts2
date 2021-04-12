@@ -3,27 +3,41 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="XamarinSample.General.TemplatedTooltips.View"
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Xamarin.Forms;assembly=LiveChartsCore.SkiaSharpView.Xamarin.Forms"
-             xmlns:vms="clr-namespace:ViewModelsSamples.General.Tooltips;assembly=ViewModelsSamples">
+             xmlns:vms="clr-namespace:ViewModelsSamples.General.TemplatedTooltips;assembly=ViewModelsSamples">
+    
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <lvc:PaintTasksValueConverter x:Key="paintTaskConverter" />
+        <lvc:WidthConverter x:Key="wConverter" />
+        <lvc:HeightConverter x:Key="hConverter" />
+    </ContentPage.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}">
+        <lvc:CartesianChart Grid.Row="0" Series="{Binding Series}">
             <lvc:CartesianChart.TooltipTemplate>
                 <DataTemplate>
-                    <Frame Background="#353535" CornerRadius="4" HasShadow="True" Padding="6">
-                        <StackLayout BindableLayout.ItemsSource="{Binding Points}">
+                    <Frame Background="#fafafa" CornerRadius="4" HasShadow="True" Padding="6">
+                        <StackLayout BindableLayout.ItemsSource="{Binding Points, Source={RelativeSource AncestorType={x:Type lvc:TooltipBindingContext}}}">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
                                     <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                                         <Label Text="{Binding Point.AsTooltipString}"
-                                           TextColor="#fafafa"
-                                           FontFamily="{Binding FontFamily, Source={RelativeSource AncestorType={x:Type lvc:TooltipBindingContext}}}"
-                                           FontSize="{Binding FontSize}"
-                                           FontAttributes="{Binding FontAttributes}" />
+                                            TextColor="{Binding TextColor, Source={RelativeSource AncestorType={x:Type lvc:TooltipBindingContext}}}"
+                                            FontFamily="{Binding FontFamily, Source={RelativeSource AncestorType={x:Type lvc:TooltipBindingContext}}}"
+                                            FontSize="{Binding FontSize}"
+                                            FontAttributes="{Binding FontAttributes}" />
+                                        <lvc:MotionCanvas 
+                                            VerticalOptions="Center"
+                                            Margin="5, 0, 0, 0"
+                                            WidthRequest="{Binding Series, Converter={StaticResource wConverter}}"
+                                            HeightRequest="{Binding Series, Converter={StaticResource hConverter}}"
+                                            PaintTasks="{Binding Series, Converter={StaticResource paintTaskConverter}}"/>
                                     </StackLayout>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>

@@ -20,26 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Kernel;
-using LiveChartsCore.SkiaSharpView.Drawing;
-using System;
-using System.Globalization;
+using System.Collections.Generic;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 {
-    public class PaintTasksValueConverter : IValueConverter
+    public class LegendBindingContext
     {
-        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var v = (IDrawableSeries<SkiaSharpDrawingContext>)value;
-            if (v == null) return null;
-            return v.DefaultPaintContext.PaintTasks;
-        }
+        public IEnumerable<ISeries>? Series { get; set; } = Enumerable.Empty<ISeries>();
 
-        public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        public string? FontFamily { get; set; }
+
+        public double FontSize { get; set; }
+
+        public Color TextColor { get; set; }
+
+        public FontAttributes FontAttributes { get; set; }
+
+        public StackOrientation Orientation { get; set; }
     }
 }
