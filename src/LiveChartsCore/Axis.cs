@@ -33,6 +33,14 @@ using System.Runtime.CompilerServices;
 
 namespace LiveChartsCore
 {
+    /// <summary>
+    /// Defines an Axis in a Cartesian chart.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <typeparam name="TTextGeometry">The type of the text geometry.</typeparam>
+    /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
+    /// <seealso cref="LiveChartsCore.IAxis{TDrawingContext}" />
+    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
     public class Axis<TDrawingContext, TTextGeometry, TLineGeometry> : IAxis<TDrawingContext>, INotifyPropertyChanged
         where TDrawingContext : DrawingContext
         where TTextGeometry : ILabelGeometry<TDrawingContext>, new()
@@ -40,8 +48,14 @@ namespace LiveChartsCore
     {
         #region fields
 
+        /// <summary>
+        /// Get a <see cref="HashSet{T}"/> reference to the charts that are subscribed to this axis.
+        /// </summary>
         protected readonly HashSet<IChart> subscribedTo = new();
-        private const float wedgeLength = 8;
+        /// <summary>
+        /// Gets a <see cref="HashSet{T}"/> reference to the pending to delete paint tasks.
+        /// </summary>
+        protected List<IDrawableTask<TDrawingContext>> deletingTasks = new();
         internal AxisOrientation orientation;
         private double minStep = 0;
         private Bounds dataBounds = new();
@@ -57,8 +71,7 @@ namespace LiveChartsCore
         private double? minLimit = null;
         private double? maxLimit = null;
         private IDrawableTask<TDrawingContext>? textBrush;
-        private double unitWith = 1;
-        protected List<IDrawableTask<TDrawingContext>> deletingTasks = new();
+        private double unitWith = 1;       
         private double textSize = 16;
         private IDrawableTask<TDrawingContext>? separatorsBrush;
         private bool showSeparatorLines = true;
@@ -450,6 +463,11 @@ namespace LiveChartsCore
             }
         }
 
+        /// <summary>
+        /// Called when a property changes.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <returns></returns>
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

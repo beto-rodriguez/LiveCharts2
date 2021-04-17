@@ -24,23 +24,41 @@ using System;
 
 namespace LiveChartsCore.Drawing.Common
 {
+    /// <summary>
+    /// The Transition builder class helps to build transitions using fluent synstax.
+    /// </summary>
     public class TransitionBuilder
     {
         private readonly string[] properties;
         private readonly IAnimatable target;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TransitionBuilder"/> class.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="properties">The properties.</param>
         public TransitionBuilder(IAnimatable target, string[] properties)
         {
             this.target = target;
             this.properties = properties;
         }
 
+        /// <summary>
+        /// Sets the animation.
+        /// </summary>
+        /// <param name="animation">The animation.</param>
+        /// <returns>The transition</returns>
         public TransitionBuilder WithAnimation(Animation animation)
         {
             target.SetPropertiesTransitions(animation, properties);
             return this;
         }
 
+        /// <summary>
+        /// Sets the animation.
+        /// </summary>
+        /// <param name="animationBuilder">The animation builder.</param>
+        /// <returns>The transition</returns>
         public TransitionBuilder WithAnimation(Action<Animation> animationBuilder)
         {
             var animation = new Animation();
@@ -48,6 +66,10 @@ namespace LiveChartsCore.Drawing.Common
             return WithAnimation(animation);
         }
 
+        /// <summary>
+        /// Sets the current transitions.
+        /// </summary>
+        /// <returns>The transition</returns>
         public TransitionBuilder CompleteCurrentTransitions()
         {
             target.CompleteTransitions(properties);

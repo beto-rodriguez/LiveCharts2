@@ -22,9 +22,27 @@
 
 namespace LiveChartsCore.Drawing
 {
+    /// <summary>
+    /// Defines a line path segment.
+    /// </summary>
+    /// <typeparam name="TPath">The type of the path.</typeparam>
+    /// <seealso cref="LiveChartsCore.Drawing.IPathCommand{TPath}" />
     public interface ILinePathSegment<TPath> : IPathCommand<TPath>
     {
+        /// <summary>
+        /// Gets or sets the x.
+        /// </summary>
+        /// <value>
+        /// The x.
+        /// </value>
         float X { get; set; }
+
+        /// <summary>
+        /// Gets or sets the y.
+        /// </summary>
+        /// <value>
+        /// The y.
+        /// </value>
         float Y { get; set; }
     }
 }

@@ -25,10 +25,25 @@ using System.Drawing;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defines a hover area.
+    /// </summary>
     public abstract class HoverArea
     {
+        /// <summary>
+        /// Determines whether the area is trigger by the specified point in the user interface.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <param name="strategy">The strategy.</param>
+        /// <returns>
+        ///   <c>true</c> if [is trigger by] [the specified point]; otherwise, <c>false</c>.
+        /// </returns>
         public abstract bool IsTriggerBy(PointF point, TooltipFindingStrategy strategy);
 
+        /// <summary>
+        /// Suggests the tooltip placement.
+        /// </summary>
+        /// <param name="context">The context.</param>
         public abstract void SuggestTooltipPlacement(TooltipPlacementContext context);
     }
 }

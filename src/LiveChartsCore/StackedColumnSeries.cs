@@ -29,17 +29,35 @@ using System.Drawing;
 
 namespace LiveChartsCore
 {
+    /// <summary>
+    /// Defines the stacked column series class.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <typeparam name="TVisual">The type of the visual.</typeparam>
+    /// <typeparam name="TLabel">The type of the label.</typeparam>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="LiveChartsCore.StackedBarSeries{TModel, TVisual, TLabel, TDrawingContext}" />
     public class StackedColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : StackedBarSeries<TModel, TVisual, TLabel, TDrawingContext>
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StackedColumnSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+        /// </summary>
         public StackedColumnSeries()
             : base(SeriesProperties.Bar | SeriesProperties.VerticalOrientation | SeriesProperties.Stacked)
         {
 
         }
 
+        /// <summary>
+        /// Measures this series.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
+        /// <param name="secondaryAxis">The secondary axis.</param>
+        /// <param name="primaryAxis">The primary axis.</param>
+        /// <exception cref="NullReferenceException">Unexpected null stacker</exception>
         public override void Measure(
            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> secondaryAxis, IAxis<TDrawingContext> primaryAxis)
         {
@@ -197,6 +215,13 @@ namespace LiveChartsCore
             }
         }
 
+        /// <summary>
+        /// Gets the bounds.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
+        /// <param name="secondaryAxis">The secondary axis.</param>
+        /// <param name="primaryAxis">The primary axis.</param>
+        /// <returns></returns>
         public override DimensionalBounds GetBounds(
          CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> secondaryAxis, IAxis<TDrawingContext> primaryAxis)
         {
@@ -229,6 +254,11 @@ namespace LiveChartsCore
             };
         }
 
+        /// <summary>
+        /// Sets the default point transitions.
+        /// </summary>
+        /// <param name="chartPoint">The chart point.</param>
+        /// <exception cref="Exception">Unable to initialize the point instance.</exception>
         protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
         {
             var visual = chartPoint.Context.Visual as TVisual;
@@ -248,6 +278,12 @@ namespace LiveChartsCore
                     a.WithDuration((long)(chart.AnimationsSpeed.TotalMilliseconds * 1.5)).WithEasingFunction(elasticFunction));
         }
 
+        /// <summary>
+        /// Softs the delete point.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <param name="primaryScale">The primary scale.</param>
+        /// <param name="secondaryScale">The secondary scale.</param>
         protected override void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
         {
             var visual = (TVisual?)point.Context.Visual;

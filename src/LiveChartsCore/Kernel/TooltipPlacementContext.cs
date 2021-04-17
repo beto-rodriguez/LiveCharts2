@@ -22,13 +22,57 @@
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defines the tooltopl placement constext class.
+    /// </summary>
     public class TooltipPlacementContext
     {
+        /// <summary>
+        /// Gets or sets the most top.
+        /// </summary>
+        /// <value>
+        /// The most top.
+        /// </value>
         public float MostTop { get; set; } = float.MaxValue;
+
+        /// <summary>
+        /// Gets or sets the most bottom.
+        /// </summary>
+        /// <value>
+        /// The most bottom.
+        /// </value>
         public float MostBottom { get; set; } = float.MinValue;
+
+        /// <summary>
+        /// Gets or sets the most right.
+        /// </summary>
+        /// <value>
+        /// The most right.
+        /// </value>
         public float MostRight { get; set; } = float.MinValue;
+
+        /// <summary>
+        /// Gets or sets the most left.
+        /// </summary>
+        /// <value>
+        /// The most left.
+        /// </value>
         public float MostLeft { get; set; } = float.MaxValue;
+
+        /// <summary>
+        /// Gets or sets the pie x.
+        /// </summary>
+        /// <value>
+        /// The pie x.
+        /// </value>
         public float PieX { get; set; } = 0;
+
+        /// <summary>
+        /// Gets or sets the pie y.
+        /// </summary>
+        /// <value>
+        /// The pie y.
+        /// </value>
         public float PieY { get; set; } = 0;
     }
 }

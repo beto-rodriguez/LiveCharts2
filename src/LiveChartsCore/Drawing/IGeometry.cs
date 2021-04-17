@@ -22,13 +22,43 @@
 
 namespace LiveChartsCore.Drawing
 {
+    /// <summary>
+    /// Defines a geometry in the user interface.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="LiveChartsCore.Drawing.IDrawable{TDrawingContext}" />
     public interface IGeometry<TDrawingContext>: IDrawable<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Gets or sets the rotation.
+        /// </summary>
+        /// <value>
+        /// The rotation.
+        /// </value>
         float Rotation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the x.
+        /// </summary>
+        /// <value>
+        /// The x.
+        /// </value>
         float X { get; set; }
+
+        /// <summary>
+        /// Gets or sets the y.
+        /// </summary>
+        /// <value>
+        /// The y.
+        /// </value>
         float Y { get; set; }
 
+        /// <summary>
+        /// Measures the specified drawable task.
+        /// </summary>
+        /// <param name="drawableTask">The drawable task.</param>
+        /// <returns></returns>
         System.Drawing.SizeF Measure(IDrawableTask<TDrawingContext> drawableTask);
     }
 }

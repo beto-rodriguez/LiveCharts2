@@ -21,14 +21,31 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using System;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defiens a scatter series.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="LiveChartsCore.Kernel.IDrawableSeries{TDrawingContext}" />
     public interface IScatterSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Gets or sets the size of the geometry.
+        /// </summary>
+        /// <value>
+        /// The size of the geometry.
+        /// </value>
         double GeometrySize { get; set; }
+
+        /// <summary>
+        /// Gets or sets the minimum size of the geometry.
+        /// </summary>
+        /// <value>
+        /// The minimum size of the geometry.
+        /// </value>
         double MinGeometrySize { get; set; }
     }
 }

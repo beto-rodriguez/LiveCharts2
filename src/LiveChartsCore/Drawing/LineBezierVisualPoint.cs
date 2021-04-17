@@ -22,15 +22,38 @@
 
 namespace LiveChartsCore.Drawing
 {
+    /// <summary>
+    /// Defines a line bezier visual point.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <typeparam name="TVisual">The type of the visual.</typeparam>
+    /// <typeparam name="TBezierSegment">The type of the bezier segment.</typeparam>
+    /// <typeparam name="TPathArgs">The type of the path arguments.</typeparam>
+    /// <seealso cref="LiveChartsCore.Drawing.ILineBezierVisualChartPoint{TDrawingContext}" />
     public class LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs> : ILineBezierVisualChartPoint<TDrawingContext>
         where TVisual : ISizedVisualChartPoint<TDrawingContext>, new()
         where TBezierSegment : IBezierSegment<TPathArgs>, new()
         where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Gets the geometry.
+        /// </summary>
+        /// <value>
+        /// The geometry.
+        /// </value>
         public TVisual Geometry { get; set; } = new TVisual();
 
+        /// <summary>
+        /// Gets the bezier.
+        /// </summary>
+        /// <value>
+        /// The bezier.
+        /// </value>
         public TBezierSegment Bezier { get; set; } = new TBezierSegment();
 
+        /// <summary>
+        /// Gets the main <see cref="T:LiveChartsCore.Drawing.IDrawable`1" />.
+        /// </summary>
         public IDrawable<TDrawingContext>? HighlightableGeometry => Geometry?.HighlightableGeometry;
 
         ISizedGeometry<TDrawingContext> ILineBezierVisualChartPoint<TDrawingContext>.Geometry => Geometry;

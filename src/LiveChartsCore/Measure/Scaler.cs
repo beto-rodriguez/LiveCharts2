@@ -25,10 +25,20 @@ using System.Drawing;
 
 namespace LiveChartsCore.Measure
 {
+    /// <summary>
+    /// Defines the scaler class, this class helps to scale from the data scale to the user interface scale and vise versa.
+    /// </summary>
     public class Scaler
     {
         private readonly float m, mInv, minPx, maxPx, deltaPx, minVal, maxVal, deltaVal;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Scaler"/> class.
+        /// </summary>
+        /// <param name="drawMaringLocation">The draw maring location.</param>
+        /// <param name="drawMarginSize">Size of the draw margin.</param>
+        /// <param name="axis">The axis.</param>
+        /// <exception cref="Exception">The axis is not ready to be scaled.</exception>
         public Scaler(PointF drawMaringLocation, SizeF drawMarginSize, IAxis axis)
         {
             if (axis.Orientation == AxisOrientation.Unknown)
@@ -112,8 +122,18 @@ namespace LiveChartsCore.Measure
             mInv = 1 / m;
         }
 
+        /// <summary>
+        /// Converts to pixels.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
         public float ToPixels(float value) => minPx + (value - minVal) * m;
 
+        /// <summary>
+        /// Converts to chartvalues.
+        /// </summary>
+        /// <param name="pixels">The pixels.</param>
+        /// <returns></returns>
         public float ToChartValues(float pixels) => minVal + (pixels - minPx) * mInv;
     }
 }

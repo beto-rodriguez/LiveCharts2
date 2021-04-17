@@ -25,12 +25,29 @@ using System;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defiens a series style rule.
+    /// </summary>
+    /// <typeparam name="TVisual">The type of the visual.</typeparam>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     public class SeriesStyleRule<TVisual, TDrawingContext>
         where TDrawingContext : DrawingContext
         where TVisual : IVisualChartPoint<TDrawingContext>
     {
+        /// <summary>
+        /// Gets or sets the series properties.
+        /// </summary>
+        /// <value>
+        /// The series properties.
+        /// </value>
         public SeriesProperties SeriesProperties { get; set; }
 
+        /// <summary>
+        /// Gets or sets the rule.
+        /// </summary>
+        /// <value>
+        /// The rule.
+        /// </value>
         public Action<IDrawableSeries<TDrawingContext>>? Rule { get; set; }
     }
 }

@@ -22,10 +22,22 @@
 
 namespace LiveChartsCore.Drawing
 {
+    /// <summary>
+    /// Defines the drawing alignment.
+    /// </summary>
     public enum Align
     {
+        /// <summary>
+        /// Aligns to the start
+        /// </summary>
         Start,
+        /// <summary>
+        /// Aligns to the end
+        /// </summary>
         End,
+        /// <summary>
+        /// Aligns to the middle
+        /// </summary>
         Middle
     }
 }

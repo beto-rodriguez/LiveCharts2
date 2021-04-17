@@ -25,20 +25,47 @@ using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Measure
 {
+    /// <summary>
+    /// Defines the stack position.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     public class StackPosition<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         private int position;
         private Stacker<TDrawingContext> stacker = new Stacker<TDrawingContext>();
 
+        /// <summary>
+        /// Gets or sets the stacker.
+        /// </summary>
+        /// <value>
+        /// The stacker.
+        /// </value>
         public Stacker<TDrawingContext> Stacker { get => stacker; set => stacker = value; }
+
+        /// <summary>
+        /// Gets or sets the position.
+        /// </summary>
+        /// <value>
+        /// The position.
+        /// </value>
         public int Position { get => position; set => position = value; }
 
+        /// <summary>
+        /// Stacks the point.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <returns></returns>
         public float StackPoint(ChartPoint point)
         {
             return stacker.StackPoint(point, position);
         }
 
+        /// <summary>
+        /// Gets the stack.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <returns></returns>
         public StackedValue GetStack(ChartPoint point)
         {
             return stacker.GetStack(point, position);

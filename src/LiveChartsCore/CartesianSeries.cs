@@ -28,7 +28,16 @@ using System.Collections.Generic;
 
 namespace LiveChartsCore
 {
-    /// <inheritdoc cref="ICartesianSeries{TDrawingContext}"/>
+    /// <summary>
+    /// Defines a Cartesian series.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <typeparam name="TVisual">The type of the visual.</typeparam>
+    /// <typeparam name="TLabel">The type of the label.</typeparam>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="LiveChartsCore.DrawableSeries{TModel, TVisual, TLabel, TDrawingContext}" />
+    /// <seealso cref="System.IDisposable" />
+    /// <seealso cref="LiveChartsCore.Kernel.ICartesianSeries{TDrawingContext}" />
     public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
         : DrawableSeries<TModel, TVisual, TLabel, TDrawingContext>, IDisposable, ICartesianSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
@@ -38,6 +47,10 @@ namespace LiveChartsCore
         private int scalesXAt;
         private int scalesYAt;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+        /// </summary>
+        /// <param name="properties">The series properties.</param>
         public CartesianSeries(SeriesProperties properties) : base(properties) { }
 
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.ScalesXAt"/>
@@ -59,6 +72,11 @@ namespace LiveChartsCore
         public abstract void Measure(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
 
+        /// <summary>
+        /// Deletes the series from the user interface.
+        /// </summary>
+        /// <param name="chart"></param>
+        /// <inheritdoc cref="M:LiveChartsCore.ISeries.Delete(LiveChartsCore.Kernel.IChartView)" />
         public override void Delete(IChartView chart)
         {
             var core = ((ICartesianChartView<TDrawingContext>)chart).Core;

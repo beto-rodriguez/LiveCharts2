@@ -355,7 +355,7 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
         {
             base.OnPropertyChanged(change);
 
-            if (core == null) throw new Exception("core not found");
+            if (core == null) return;
 
             if (change.Property.Name == nameof(Series))
             {

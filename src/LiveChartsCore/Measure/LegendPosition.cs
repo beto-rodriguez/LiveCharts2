@@ -22,12 +22,34 @@
 
 namespace LiveChartsCore.Measure
 {
+    /// <summary>
+    /// Defines the legend position enumeration.
+    /// </summary>
     public enum LegendPosition
     {
+        /// <summary>
+        /// The hidden position.
+        /// </summary>
         Hidden,
+
+        /// <summary>
+        /// The top position.
+        /// </summary>
         Top,
+
+        /// <summary>
+        /// The left position.
+        /// </summary>
         Left,
+
+        /// <summary>
+        /// The right position.
+        /// </summary>
         Right,
+
+        /// <summary>
+        /// The bottom position.
+        /// </summary>
         Bottom
     }
 }

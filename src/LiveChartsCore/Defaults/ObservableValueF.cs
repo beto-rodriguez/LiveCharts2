@@ -26,24 +26,49 @@ using System.Runtime.CompilerServices;
 
 namespace LiveChartsCore.Defaults
 {
+    /// <summary>
+    /// Defines an object that notifies when the value property changes.
+    /// </summary>
+    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
     public class ObservableValueF : INotifyPropertyChanged
     {
         private float? value;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableValueF"/> class.
+        /// </summary>
         public ObservableValueF()
         {
 
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableValueF"/> class.
+        /// </summary>
+        /// <param name="value">The value.</param>
         public ObservableValueF(float? value)
         {
             this.value = value;
         }
 
+        /// <summary>
+        /// Gets or sets the value.
+        /// </summary>
+        /// <value>
+        /// The value.
+        /// </value>
         public float? Value { get => value; set { this.value = value; OnPropertyChanged(); } }
 
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
+        /// <returns></returns>
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        /// <summary>
+        /// Called when a property changes.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));

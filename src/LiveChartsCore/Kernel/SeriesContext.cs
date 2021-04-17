@@ -26,6 +26,10 @@ using System.Collections.Generic;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defines a series context.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     public class SeriesContext<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
@@ -44,6 +48,10 @@ namespace LiveChartsCore.Kernel
 
         private Dictionary<string, Stacker<TDrawingContext>> stackers = new Dictionary<string, Stacker<TDrawingContext>>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SeriesContext{TDrawingContext}"/> class.
+        /// </summary>
+        /// <param name="series">The series.</param>
         public SeriesContext(IEnumerable<IDrawableSeries<TDrawingContext>> series)
         {
             this.series = series;
@@ -51,6 +59,11 @@ namespace LiveChartsCore.Kernel
 
         #region columns and rows
 
+        /// <summary>
+        /// Gets the column postion.
+        /// </summary>
+        /// <param name="series">The series.</param>
+        /// <returns></returns>
         public int GetColumnPostion(IDrawableSeries<TDrawingContext> series)
         {
             if (areBarsIndexed) return columnPositions[series];
@@ -58,6 +71,10 @@ namespace LiveChartsCore.Kernel
             return columnPositions[series];
         }
 
+        /// <summary>
+        /// Gets the column series count.
+        /// </summary>
+        /// <returns></returns>
         public int GetColumnSeriesCount()
         {
             if (areBarsIndexed) return columnsCount;
@@ -65,6 +82,11 @@ namespace LiveChartsCore.Kernel
             return columnsCount;
         }
 
+        /// <summary>
+        /// Gets the row postion.
+        /// </summary>
+        /// <param name="series">The series.</param>
+        /// <returns></returns>
         public int GetRowPostion(IDrawableSeries<TDrawingContext> series)
         {
             if (areBarsIndexed) return rowPositions[series];
@@ -72,6 +94,10 @@ namespace LiveChartsCore.Kernel
             return rowPositions[series];
         }
 
+        /// <summary>
+        /// Gets the row series count.
+        /// </summary>
+        /// <returns></returns>
         public int GetRowSeriesCount()
         {
             if (areBarsIndexed) return rowsCount;
@@ -79,6 +105,11 @@ namespace LiveChartsCore.Kernel
             return rowsCount;
         }
 
+        /// <summary>
+        /// Gets the stacked column postion.
+        /// </summary>
+        /// <param name="series">The series.</param>
+        /// <returns></returns>
         public int GetStackedColumnPostion(IDrawableSeries<TDrawingContext> series)
         {
             if (areBarsIndexed) return stackColumnPositions[series.GetStackGroup()];
@@ -86,6 +117,10 @@ namespace LiveChartsCore.Kernel
             return stackColumnPositions[series.GetStackGroup()];
         }
 
+        /// <summary>
+        /// Gets the stacked column series count.
+        /// </summary>
+        /// <returns></returns>
         public int GetStackedColumnSeriesCount()
         {
             if (areBarsIndexed) return stackedColumnsCount;
@@ -93,6 +128,11 @@ namespace LiveChartsCore.Kernel
             return stackedColumnsCount;
         }
 
+        /// <summary>
+        /// Gets the stacked row postion.
+        /// </summary>
+        /// <param name="series">The series.</param>
+        /// <returns></returns>
         public int GetStackedRowPostion(IDrawableSeries<TDrawingContext> series)
         {
             if (areBarsIndexed) return stackRowsPositions[series.GetStackGroup()];
@@ -100,6 +140,10 @@ namespace LiveChartsCore.Kernel
             return stackRowsPositions[series.GetStackGroup()];
         }
 
+        /// <summary>
+        /// Gets the stacked row series count.
+        /// </summary>
+        /// <returns></returns>
         public int GetStackedRowSeriesCount()
         {
             if (areBarsIndexed) return stackedRowsCount;
@@ -154,6 +198,12 @@ namespace LiveChartsCore.Kernel
 
         #region stacked
 
+        /// <summary>
+        /// Gets the stack position.
+        /// </summary>
+        /// <param name="series">The series.</param>
+        /// <param name="stackGroup">The stack group.</param>
+        /// <returns></returns>
         public StackPosition<TDrawingContext>? GetStackPosition(IDrawableSeries<TDrawingContext> series, int stackGroup)
         {
             if (!series.IsStackedSeries()) return null;

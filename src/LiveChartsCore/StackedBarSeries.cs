@@ -26,25 +26,60 @@ using System;
 
 namespace LiveChartsCore
 {
+    /// <summary>
+    /// Defiens the stacked bar series class/
+    /// </summary>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <typeparam name="TVisual">The type of the visual.</typeparam>
+    /// <typeparam name="TLabel">The type of the label.</typeparam>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="LiveChartsCore.CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
+    /// <seealso cref="LiveChartsCore.Kernel.IStackedBarSeries{TDrawingContext}" />
     public abstract class StackedBarSeries<TModel, TVisual, TLabel, TDrawingContext>
         : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IStackedBarSeries<TDrawingContext>
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
+        /// <summary>
+        /// The elastic function
+        /// </summary>
         protected static Func<float, float> elasticFunction = EasingFunctions.BuildCustomElasticOut(1.5f, 0.60f);
+
+        /// <summary>
+        /// The stack group
+        /// </summary>
         protected int stackGroup;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StackedBarSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+        /// </summary>
+        /// <param name="properties">The series properties.</param>
         public StackedBarSeries(SeriesProperties properties)
             : base(properties)
         {
             HoverState = LiveCharts.StackedBarSeriesHoverKey;
         }
 
+        /// <summary>
+        /// Gets or sets the stack group.
+        /// </summary>
+        /// <value>
+        /// The stack group.
+        /// </value>
         public int StackGroup { get => stackGroup; set => stackGroup = value; }
 
+        /// <summary>
+        /// Gets or sets the maximum width of the bar.
+        /// </summary>
+        /// <value>
+        /// The maximum width of the bar.
+        /// </value>
         public double MaxBarWidth { get; set; } = 50;
 
+        /// <summary>
+        /// Called when the paint context changed.
+        /// </summary>
         protected override void OnPaintContextChanged()
         {
             var context = new PaintContext<TDrawingContext>();
@@ -79,6 +114,11 @@ namespace LiveChartsCore
             paintContext = context;
         }
 
+        /// <summary>
+        /// Gets the stack group.
+        /// </summary>
+        /// <returns></returns>
+        /// <inheritdoc />
         public override int GetStackGroup() => stackGroup;
     }
 }

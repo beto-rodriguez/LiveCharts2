@@ -22,6 +22,12 @@
 
 namespace LiveChartsCore.Drawing
 {
+    /// <summary>
+    /// Defines a douggnut visual chart point.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="LiveChartsCore.Drawing.IDoughnutGeometry{TDrawingContext}" />
+    /// <seealso cref="LiveChartsCore.Drawing.IVisualChartPoint{TDrawingContext}" />
     public interface IDoughnutVisualChartPoint<TDrawingContext> : IDoughnutGeometry<TDrawingContext>, IVisualChartPoint<TDrawingContext>
         where TDrawingContext : DrawingContext
     {

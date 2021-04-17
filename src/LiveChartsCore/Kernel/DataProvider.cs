@@ -26,12 +26,30 @@ using System.Collections.Generic;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defines a data provider.
+    /// </summary>
+    /// <typeparam name="TModel"></typeparam>
+    /// <typeparam name="TDrawingContext"></typeparam>
     public class DataProvider<TModel, TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// The by value visual map.
+        /// </summary>
         protected readonly Dictionary<int, ChartPoint> byValueVisualMap = new();
+
+        /// <summary>
+        /// The by reference visual map.
+        /// </summary>
         protected readonly Dictionary<TModel, ChartPoint> byReferenceVisualMap = new();
 
+        /// <summary>
+        /// Fetches the the points for the specified series.
+        /// </summary>
+        /// <param name="series">The series.</param>
+        /// <param name="chart">The chart.</param>
+        /// <returns></returns>
         public virtual IEnumerable<ChartPoint> Fetch(ISeries<TModel> series, IChart chart)
         {
             if (series.Values == null) yield break;
@@ -73,6 +91,14 @@ namespace LiveChartsCore.Kernel
             }
         }
 
+        /// <summary>
+        /// Gets the cartesian bounds.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
+        /// <param name="series">The series.</param>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
         public virtual DimensionalBounds GetCartesianBounds(
             CartesianChart<TDrawingContext> chart,
             IDrawableSeries<TDrawingContext> series,
@@ -110,6 +136,13 @@ namespace LiveChartsCore.Kernel
             return bounds;
         }
 
+        /// <summary>
+        /// Gets the pie bounds.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
+        /// <param name="series">The series.</param>
+        /// <returns></returns>
+        /// <exception cref="NullReferenceException">Unexpected null stacker</exception>
         public virtual DimensionalBounds GetPieBounds(PieChart<TDrawingContext> chart, IPieSeries<TDrawingContext> series)
         {
             var stack = chart.SeriesContext.GetStackPosition(series, series.GetStackGroup());

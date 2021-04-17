@@ -3,6 +3,9 @@
 
 namespace LiveChartsCore.Easing
 {
+    /// <summary>
+    /// Defines the BounceEasingFunction
+    /// </summary>
     public static class BounceEasingFunction
     {
         private static float
@@ -17,16 +20,31 @@ namespace LiveChartsCore.Easing
              b9 = 63f / 64f,
              b0 = 1f / b1 / b1;
 
+        /// <summary>
+        /// the in easing.
+        /// </summary>
+        /// <param name="t">The t.</param>
+        /// <returns></returns>
         public static float In(float t)
         {
             return 1 - Out(1 - t);
         }
 
+        /// <summary>
+        /// the out easing.
+        /// </summary>
+        /// <param name="t">The t.</param>
+        /// <returns></returns>
         public static float Out(float t)
         {
             return (t = +t) < b1 ? b0 * t * t : t < b3 ? b0 * (t -= b2) * t + b4 : t < b6 ? b0 * (t -= b5) * t + b7 : b0 * (t -= b8) * t + b9;
         }
 
+        /// <summary>
+        /// the in out easing.
+        /// </summary>
+        /// <param name="t">The t.</param>
+        /// <returns></returns>
         public static float InOut(float t)
         {
             return ((t *= 2) <= 1 ? 1 - Out(1 - t) : Out(t - 1) + 1) / 2f;

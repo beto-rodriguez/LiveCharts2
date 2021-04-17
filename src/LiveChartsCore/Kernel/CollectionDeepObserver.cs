@@ -27,13 +27,28 @@ using System.ComponentModel;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// A helper class that tracks both, <see cref="INotifyCollectionChanged.CollectionChanged"/> and 
+    /// <see cref="INotifyPropertyChanged.PropertyChanged"/> events.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class CollectionDeepObserver<T>
     {
         private readonly NotifyCollectionChangedEventHandler onCollectionChanged;
         private readonly PropertyChangedEventHandler onItemPropertyChanged;
         private readonly HashSet<INotifyPropertyChanged> itemsListening = new();
+
+        /// <summary>
+        /// The check i notify property changed
+        /// </summary>
         protected bool checkINotifyPropertyChanged;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CollectionDeepObserver{T}"/> class.
+        /// </summary>
+        /// <param name="onCollectionChanged">The on collection changed handler.</param>
+        /// <param name="onItemPropertyChanged">The on item property changed handler.</param>
+        /// <param name="checkINotifyPropertyChanged">if true, it will force the check to verify if the type {T} implements INotifyPropertyChanged.</param>
         public CollectionDeepObserver(
             NotifyCollectionChangedEventHandler onCollectionChanged,
             PropertyChangedEventHandler onItemPropertyChanged,
@@ -51,6 +66,11 @@ namespace LiveChartsCore.Kernel
             this.checkINotifyPropertyChanged = typeof(INotifyPropertyChanged).IsAssignableFrom(typeof(T));
         }
 
+        /// <summary>
+        /// Initializes the listeners.
+        /// </summary>
+        /// <param name="instance">The instance.</param>
+        /// <returns></returns>
         public void Initialize(IEnumerable<T>? instance)
         {
             if (instance == null) return;
@@ -65,6 +85,11 @@ namespace LiveChartsCore.Kernel
                     item.PropertyChanged += onItemPropertyChanged;
         }
 
+        /// <summary>
+        /// Disposes the listeners.
+        /// </summary>
+        /// <param name="instance">The instance.</param>
+        /// <returns></returns>
         public void Dispose(IEnumerable<T>? instance)
         {
             if (instance == null) return;

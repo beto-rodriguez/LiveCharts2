@@ -29,6 +29,9 @@ using System.Drawing;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// LiveCharts kerner extensions.
+    /// </summary>
     public static class Extensions
     {
         private const double cf = 3d;
@@ -70,6 +73,13 @@ namespace LiveChartsCore.Kernel
             }
         }
 
+        /// <summary>
+        ///  Returns the left, top coordinate of the tooltip based on the found points, the position and the tooltip size.
+        /// </summary>
+        /// <param name="foundPoints">The found points.</param>
+        /// <param name="position">The position.</param>
+        /// <param name="tooltipSize">Size of the tooltip.</param>
+        /// <returns></returns>
         public static PointF? GetPieTooltipLocation(
             this IEnumerable<TooltipPoint> foundPoints, TooltipPosition position, SizeF tooltipSize) 
         {
@@ -87,12 +97,27 @@ namespace LiveChartsCore.Kernel
             return found ? new PointF(placementContext.PieX, placementContext.PieY) : null;
         }
 
+        /// <summary>
+        /// Gets the tick.
+        /// </summary>
+        /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+        /// <param name="axis">The axis.</param>
+        /// <param name="controlSize">Size of the control.</param>
+        /// <returns></returns>
         public static AxisTick GetTick<TDrawingContext>(this IAxis<TDrawingContext> axis, SizeF controlSize)
             where TDrawingContext : DrawingContext
         {
             return GetTick(axis, controlSize, axis.VisibleDataBounds);
         }
 
+        /// <summary>
+        /// Gets the tick.
+        /// </summary>
+        /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+        /// <param name="axis">The axis.</param>
+        /// <param name="controlSize">Size of the control.</param>
+        /// <param name="bounds">The bounds.</param>
+        /// <returns></returns>
         public static AxisTick GetTick<TDrawingContext>(this IAxis<TDrawingContext> axis, SizeF controlSize, Bounds bounds)
            where TDrawingContext : DrawingContext
         {
@@ -118,6 +143,13 @@ namespace LiveChartsCore.Kernel
             return new AxisTick { Value = tick, Magnitude = magnitude };
         }
 
+        /// <summary>
+        /// Creates a transition builder for the specified properties.
+        /// </summary>
+        /// <param name="animatable">The animatable.</param>
+        /// <param name="properties">The properties.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception">At least one property is required when calling {nameof(TransitionateProperties)}</exception>
         public static TransitionBuilder TransitionateProperties(this IAnimatable animatable, params string[] properties)
         {
             if (properties == null || properties.Length == 0)
@@ -126,39 +158,99 @@ namespace LiveChartsCore.Kernel
             return new TransitionBuilder(animatable, properties);
         }
 
+        /// <summary>
+        /// Determines whether is bar series.
+        /// </summary>
+        /// <param name="series">The series.</param>
+        /// <returns>
+        ///   <c>true</c> if [is bar series] [the specified series]; otherwise, <c>false</c>.
+        /// </returns>
         public static bool IsBarSeries(this ISeries series)
             => (series.SeriesProperties & SeriesProperties.Bar) != 0;
 
+        /// <summary>
+        /// Determines whether is column series.
+        /// </summary>
+        /// <param name="series">The series.</param>
+        /// <returns>
+        ///   <c>true</c> if [is column series] [the specified series]; otherwise, <c>false</c>.
+        /// </returns>
         public static bool IsColumnSeries(this ISeries series)
             => (series.SeriesProperties & (SeriesProperties.Bar | SeriesProperties.VerticalOrientation)) != 0;
 
+        /// <summary>
+        /// Determines whether is row series.
+        /// </summary>
+        /// <param name="series">The series.</param>
+        /// <returns>
+        ///   <c>true</c> if [is row series] [the specified series]; otherwise, <c>false</c>.
+        /// </returns>
         public static bool IsRowSeries(this ISeries series)
             => (series.SeriesProperties & (SeriesProperties.Bar | SeriesProperties.HorizontalOrientation)) != 0;
 
+        /// <summary>
+        /// Determines whether is stacked series.
+        /// </summary>
+        /// <param name="series">The series.</param>
+        /// <returns>
+        ///   <c>true</c> if [is stacked series] [the specified series]; otherwise, <c>false</c>.
+        /// </returns>
         public static bool IsStackedSeries(this ISeries series)
             => (series.SeriesProperties & (SeriesProperties.Stacked)) != 0;
 
+        /// <summary>
+        /// Determines whether is vertical series.
+        /// </summary>
+        /// <param name="series">The series.</param>
+        /// <returns>
+        ///   <c>true</c> if [is vertical series] [the specified series]; otherwise, <c>false</c>.
+        /// </returns>
         public static bool IsVerticalSeries(this ISeries series)
             => (series.SeriesProperties & (SeriesProperties.VerticalOrientation)) != 0;
 
+        /// <summary>
+        /// Determines whether is horizontal series.
+        /// </summary>
+        /// <param name="series">The series.</param>
+        /// <returns>
+        ///   <c>true</c> if [is horizontal series] [the specified series]; otherwise, <c>false</c>.
+        /// </returns>
         public static bool IsHorizontalSeries(this ISeries series)
             => (series.SeriesProperties & (SeriesProperties.HorizontalOrientation)) != 0;
 
+        /// <summary>
+        /// Adds a point to the specified state.
+        /// </summary>
+        /// <param name="chartPoint">The chart point.</param>
+        /// <param name="state">The state.</param>
         public static void AddToState(this ChartPoint chartPoint, string state) 
         {
             chartPoint.Context.Series.AddPointToState(chartPoint, state);
         }
 
+        /// <summary>
+        /// Removes a point from the specified state.
+        /// </summary>
+        /// <param name="chartPoint">The chart point.</param>
+        /// <param name="state">The state.</param>
         public static void RemoveFromState(this ChartPoint chartPoint, string state) 
         {
             chartPoint.Context.Series.RemovePointFromState(chartPoint, state);
         }
 
+        /// <summary>
+        /// Adds a point to the hover state.
+        /// </summary>
+        /// <param name="chartPoint">The chart point.</param>
         public static void AddToHoverState(this ChartPoint chartPoint)
         {
             chartPoint.Context.Series.AddPointToState(chartPoint, chartPoint.Context.Series.HoverState);
         }
 
+        /// <summary>
+        /// Removes a point from the hover state.
+        /// </summary>
+        /// <param name="chartPoint">The chart point.</param>
         public static void RemoveFromHoverState(this ChartPoint chartPoint)
         {
             chartPoint.Context.Series.RemovePointFromState(chartPoint, chartPoint.Context.Series.HoverState);

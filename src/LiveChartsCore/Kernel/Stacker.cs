@@ -25,6 +25,10 @@ using System.Collections.Generic;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defiens the stacker helper class.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     public class Stacker<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
@@ -35,12 +39,26 @@ namespace LiveChartsCore.Kernel
         private List<List<StackedValue>> stack = new List<List<StackedValue>>();
         private List<float> totals = new List<float>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Stacker{TDrawingContext}"/> class.
+        /// </summary>
         public Stacker()
         {
         }
 
+        /// <summary>
+        /// Gets the maximum lenght.
+        /// </summary>
+        /// <value>
+        /// The maximum lenght.
+        /// </value>
         public int MaxLenght => stackMaxLength;
 
+        /// <summary>
+        /// Gets the series stack position.
+        /// </summary>
+        /// <param name="series">The series.</param>
+        /// <returns></returns>
         public int GetSeriesStackPosition(IDrawableSeries<TDrawingContext> series)
         {
             if (!stackPositions.TryGetValue(series, out var i))
@@ -54,6 +72,12 @@ namespace LiveChartsCore.Kernel
             return i;
         }
 
+        /// <summary>
+        /// Stacks the point.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <param name="seriesStackPosition">The series stack position.</param>
+        /// <returns></returns>
         public float StackPoint(ChartPoint point, int seriesStackPosition)
         {
             var index = unchecked((int)point.SecondaryValue);
@@ -78,6 +102,12 @@ namespace LiveChartsCore.Kernel
             return total;
         }
 
+        /// <summary>
+        /// Gets the stack.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <param name="seriesStackPosition">The series stack position.</param>
+        /// <returns></returns>
         public StackedValue GetStack(ChartPoint point, int seriesStackPosition)
         {
             var index = unchecked((int)point.SecondaryValue);

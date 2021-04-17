@@ -22,9 +22,25 @@
 
 namespace LiveChartsCore.Measure
 {
+    /// <summary>
+    /// Defines an axis tick, the distance between every separator.
+    /// </summary>
     public struct AxisTick
     {
+        /// <summary>
+        /// Gets or sets the value.
+        /// </summary>
+        /// <value>
+        /// The value.
+        /// </value>
         public double Value { get; set; }
+
+        /// <summary>
+        /// Gets or sets the magnitude.
+        /// </summary>
+        /// <value>
+        /// The magnitude.
+        /// </value>
         public double Magnitude { get; set; }
     }
 }

@@ -24,12 +24,21 @@ using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defines the stroke and ill drawable class.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     public class StrokeAndFillDrawable<TDrawingContext>
         where TDrawingContext: DrawingContext
     {
         private IDrawableTask<TDrawingContext>? stroke = null;
         private IDrawableTask<TDrawingContext>? fill = null;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StrokeAndFillDrawable{TDrawingContext}"/> class.
+        /// </summary>
+        /// <param name="stroke">The stroke.</param>
+        /// <param name="fill">The fill.</param>
         public StrokeAndFillDrawable(IDrawableTask<TDrawingContext>? stroke, IDrawableTask<TDrawingContext>? fill)
         {
             this.stroke = stroke;
@@ -48,8 +57,20 @@ namespace LiveChartsCore.Kernel
             }
         }
 
+        /// <summary>
+        /// Gets the stroke.
+        /// </summary>
+        /// <value>
+        /// The stroke.
+        /// </value>
         public IDrawableTask<TDrawingContext>? Stroke => stroke;
 
+        /// <summary>
+        /// Gets the fill.
+        /// </summary>
+        /// <value>
+        /// The fill.
+        /// </value>
         public IDrawableTask<TDrawingContext>? Fill => fill;
     }
 }

@@ -24,8 +24,19 @@ using LiveChartsCore.Drawing.Common;
 
 namespace LiveChartsCore.Drawing
 {
+    /// <summary>
+    /// Defines a path command.
+    /// </summary>
+    /// <typeparam name="TPathContext">The type of the path context.</typeparam>
+    /// <seealso cref="LiveChartsCore.Drawing.IAnimatable" />
     public interface IPathCommand<TPathContext>: IAnimatable
     {
+        /// <summary>
+        /// Executes the command in the path.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="currentTime">The current time.</param>
+        /// <param name="pathGeometry">The path geometry.</param>
         void Execute(TPathContext path, long currentTime, Animatable pathGeometry);
     }
 }

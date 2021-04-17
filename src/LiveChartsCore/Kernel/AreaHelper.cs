@@ -25,22 +25,66 @@ using System;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defines the area helper classs.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <typeparam name="TGeometryPath">The type of the geometry path.</typeparam>
+    /// <typeparam name="TLineSegment">The type of the line segment.</typeparam>
+    /// <typeparam name="TMoveTo">The type of the move to.</typeparam>
+    /// <typeparam name="TPathContext">The type of the path context.</typeparam>
     public class AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveTo, TPathContext>
         where TGeometryPath : IPathGeometry<TDrawingContext, TPathContext>, new()
         where TLineSegment : ILinePathSegment<TPathContext>, new()
         where TMoveTo : IMoveToPathCommand<TPathContext>, new()
         where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Gets or sets the path.
+        /// </summary>
+        /// <value>
+        /// The path.
+        /// </value>
         public IPathGeometry<TDrawingContext, TPathContext> Path { get; set; } = new TGeometryPath();
 
+        /// <summary>
+        /// Gets or sets the start point.
+        /// </summary>
+        /// <value>
+        /// The start point.
+        /// </value>
         public IMoveToPathCommand<TPathContext> StartPoint { get; set; } = new TMoveTo();
 
+        /// <summary>
+        /// Gets or sets the start segment.
+        /// </summary>
+        /// <value>
+        /// The start segment.
+        /// </value>
         public ILinePathSegment<TPathContext> StartSegment { get; set; } = new TLineSegment();
 
+        /// <summary>
+        /// Gets or sets the end segment.
+        /// </summary>
+        /// <value>
+        /// The end segment.
+        /// </value>
         public ILinePathSegment<TPathContext> EndSegment { get; set; } = new TLineSegment();
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is initialized.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is initialized; otherwise, <c>false</c>.
+        /// </value>
         public bool IsInitialized { get; set; }
 
+        /// <summary>
+        /// Initializes the helper with the specified transition setter.
+        /// </summary>
+        /// <param name="transitionSetter">The transition setter.</param>
+        /// <param name="defaultAnimation">The default animation.</param>
+        /// <returns></returns>
         public bool Initialize(
             Action<AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveTo, TPathContext>, Animation> transitionSetter,
             Animation defaultAnimation)

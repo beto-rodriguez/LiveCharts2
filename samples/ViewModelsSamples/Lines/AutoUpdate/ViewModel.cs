@@ -40,7 +40,7 @@ namespace ViewModelsSamples.Lines.AutoUpdate
                 new ObservablePoint(index++, 4),
                 new ObservablePoint(index++, 2),
                 new ObservablePoint(index++, 3),
-                new ObservablePoint(index++, 8),
+                new ObservablePoint(index++, 4),
                 new ObservablePoint(index++, 3)
             };
 
@@ -61,27 +61,30 @@ namespace ViewModelsSamples.Lines.AutoUpdate
 
         public ObservableCollection<ISeries> Series { get; set; }
 
-        public void AddRandomItem()
+        public void AddItem()
         {
-            // for this sample only 50 items are suported.
-            if (observableValues.Count > 50) return;
-
             var randomValue = random.Next(1, 10);
-            observableValues.Add(new ObservablePoint(index++, randomValue));
+            observableValues.Add(
+                new ObservablePoint { X = index++, Y = randomValue });
         }
 
         public void RemoveFirstItem()
         {
-            if (observableValues.Count < 2) return;
-
             observableValues.RemoveAt(0);
+        }
+
+        public void UpdateLastItem()
+        {
+            var randomValue = random.Next(1, 10);
+            observableValues[observableValues.Count - 1].Y = randomValue;
         }
 
         public void ReplaceRandomItem()
         {
             var randomValue = random.Next(1, 10);
             var randomIndex = random.Next(0, observableValues.Count - 1);
-            observableValues[randomIndex] = new ObservablePoint(observableValues[randomIndex].X, randomValue);
+            observableValues[randomIndex] = 
+                new ObservablePoint { X = observableValues[randomIndex].X, Y = randomValue };
         }
 
         public void AddSeries()
@@ -105,8 +108,9 @@ namespace ViewModelsSamples.Lines.AutoUpdate
 
         // The next commands are only to enable XAML bindings
         // they are not used in the WinForms sample
-        public ICommand AddItemCommand => new Command(o => AddRandomItem());
+        public ICommand AddItemCommand => new Command(o => AddItem());
         public ICommand RemoveItemCommand => new Command(o => RemoveFirstItem());
+        public ICommand UpdateItemCommand => new Command(o => UpdateLastItem());
         public ICommand ReplaceItemCommand => new Command(o => ReplaceRandomItem());
         public ICommand AddSeriesCommand => new Command(o => AddSeries());
         public ICommand RemoveSeriesCommand => new Command(o => RemoveLastSeries());

@@ -22,13 +22,39 @@
 
 namespace LiveChartsCore.Measure
 {
+    /// <summary>
+    /// Defines the tool tip position.
+    /// </summary>
     public enum TooltipPosition
     {
+        /// <summary>
+        /// The hidden position.
+        /// </summary>
         Hidden,
+
+        /// <summary>
+        /// The top position.
+        /// </summary>
         Top,
+
+        /// <summary>
+        /// The bottom position.
+        /// </summary>
         Bottom,
+
+        /// <summary>
+        /// The left position.
+        /// </summary>
         Left,
+
+        /// <summary>
+        /// The right position.
+        /// </summary>
         Right,
+
+        /// <summary>
+        /// The center position.
+        /// </summary>
         Center
     }
 }

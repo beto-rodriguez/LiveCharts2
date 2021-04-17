@@ -25,9 +25,18 @@ using System.Collections.Generic;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defines a tool tip.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     public interface IChartTooltip<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Shows the tool tip in the specified chart.
+        /// </summary>
+        /// <param name="foundPoints">The found points.</param>
+        /// <param name="chart">The chart.</param>
         void Show(IEnumerable<TooltipPoint> foundPoints, Chart<TDrawingContext> chart);
     }
 }

@@ -24,7 +24,7 @@ namespace AvaloniaSample.Lines.AutoUpdate
             while (isStreaming.Value)
             {
                 vm.RemoveFirstItem();
-                vm.AddRandomItem();
+                vm.AddItem();
                 await Task.Delay(1000);
             }
         }

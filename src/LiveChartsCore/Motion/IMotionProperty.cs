@@ -24,10 +24,33 @@ using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Motion
 {
+    /// <summary>
+    /// Defines a motions property.
+    /// </summary>
     public interface IMotionProperty
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is completed.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is completed; otherwise, <c>false</c>.
+        /// </value>
         bool IsCompleted { get; set; }
+
+        /// <summary>
+        /// Gets the name of the property.
+        /// </summary>
+        /// <value>
+        /// The name of the property.
+        /// </value>
         string PropertyName { get; }
+
+        /// <summary>
+        /// Gets or sets the animation.
+        /// </summary>
+        /// <value>
+        /// The animation.
+        /// </value>
         Animation? Animation { get; set; }
     }
 }

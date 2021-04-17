@@ -21,14 +21,31 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using System;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defiens a stacked bar series.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="LiveChartsCore.Kernel.IDrawableSeries{TDrawingContext}" />
     public interface IStackedBarSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Gets or sets the maximum width of the bar.
+        /// </summary>
+        /// <value>
+        /// The maximum width of the bar.
+        /// </value>
         double MaxBarWidth { get; set; }
+
+        /// <summary>
+        /// Gets or sets the stack group.
+        /// </summary>
+        /// <value>
+        /// The stack group.
+        /// </value>
         int StackGroup { get; set; }
     }
 }

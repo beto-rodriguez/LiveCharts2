@@ -22,6 +22,9 @@
 
 namespace LiveChartsCore.Measure
 {
+    /// <summary>
+    /// Defines the tooltip finding strategy.
+    /// </summary>
     public enum TooltipFindingStrategy
     {
         /// <summary>

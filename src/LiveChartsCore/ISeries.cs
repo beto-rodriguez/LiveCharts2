@@ -40,7 +40,7 @@ namespace LiveChartsCore
         int SeriesId { get; set; }
 
         /// <summary>
-        /// Gets or sets the state where the visual is moved to when the mouse moves over a <see cref="ChartVisualPoint{TModel, TVisual, TLabel, TDrawingContext}"/>.
+        /// Gets or sets the state where the visual is moved to when the mouse moves over a <see cref="ChartPoint"/>.
         /// </summary>
         string HoverState { get; set; }
 
@@ -64,7 +64,7 @@ namespace LiveChartsCore
         IEnumerable? Values { get; set; }
 
         /// <summary>
-        /// Gets or sets the index of the z.
+        /// Gets or sets the z index position.
         /// </summary>
         /// <value>
         /// The index of the z.
@@ -130,6 +130,11 @@ namespace LiveChartsCore
         void Delete(IChartView chart);
     }
 
+    /// <summary>
+    /// Defines a series.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <seealso cref="System.IDisposable" />
     public interface ISeries<TModel>: ISeries
     {
         /// <summary>

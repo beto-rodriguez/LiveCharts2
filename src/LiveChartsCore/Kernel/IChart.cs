@@ -24,18 +24,56 @@ using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defines a chart.
+    /// </summary>
     public interface IChart
     {
-        object MeasureWorker { get; }
-
+        /// <summary>
+        /// Gets the chart view.
+        /// </summary>
+        /// <value>
+        /// The view.
+        /// </value>
         IChartView View { get; }
 
+        /// <summary>
+        /// Gets the legend position.
+        /// </summary>
+        /// <value>
+        /// The legend position.
+        /// </value>
         LegendPosition LegendPosition { get; }
+
+        /// <summary>
+        /// Gets the legend orientation.
+        /// </summary>
+        /// <value>
+        /// The legend orientation.
+        /// </value>
         LegendOrientation LegendOrientation { get; }
 
+
+        /// <summary>
+        /// Gets the toolTip position.
+        /// </summary>
+        /// <value>
+        /// The toolTip position.
+        /// </value>
         TooltipPosition TooltipPosition { get; }
+
+        /// <summary>
+        /// Gets the toolTip finding strategy.
+        /// </summary>
+        /// <value>
+        /// The toolTip finding strategy.
+        /// </value>
         TooltipFindingStrategy TooltipFindingStrategy { get; }
 
+        /// <summary>
+        /// Updates the chart in the user interface.
+        /// </summary>
+        /// <param name="throttling">if set to <c>true</c> the update will be throttled, otherwise it will run immediately.</param>
         void Update(bool throttling = true);
     }
 }

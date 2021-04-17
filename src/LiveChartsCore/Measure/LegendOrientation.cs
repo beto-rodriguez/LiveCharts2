@@ -22,10 +22,24 @@
 
 namespace LiveChartsCore.Measure
 {
+    /// <summary>
+    /// Defines the legend orientation.
+    /// </summary>
     public enum LegendOrientation
     {
+        /// <summary>
+        /// The automatic orientation.
+        /// </summary>
         Auto,
+
+        /// <summary>
+        /// The horizontal orientation.
+        /// </summary>
         Horizontal,
+
+        /// <summary>
+        /// The vertical orientation.
+        /// </summary>
         Vertical
     }
 }

@@ -25,11 +25,28 @@ using System.Collections.Generic;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defines a pie chart.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="LiveChartsCore.Kernel.IChartView{TDrawingContext}" />
     public interface IPieChartView<TDrawingContext>: IChartView<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Gets the core.
+        /// </summary>
+        /// <value>
+        /// The core.
+        /// </value>
         PieChart<TDrawingContext> Core { get; }
 
+        /// <summary>
+        /// Gets or sets the series.
+        /// </summary>
+        /// <value>
+        /// The series.
+        /// </value>
         IEnumerable<ISeries> Series { get; set; }
     }
 }

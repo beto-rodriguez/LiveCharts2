@@ -22,10 +22,33 @@
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defines the a stacked value.
+    /// </summary>
     public struct StackedValue
     {
+        /// <summary>
+        /// Gets or sets the start.
+        /// </summary>
+        /// <value>
+        /// The start.
+        /// </value>
         public float Start { get; set; }
+
+        /// <summary>
+        /// Gets or sets the end.
+        /// </summary>
+        /// <value>
+        /// The end.
+        /// </value>
         public float End { get; set; }
+
+        /// <summary>
+        /// Gets or sets the total stacked.
+        /// </summary>
+        /// <value>
+        /// The total.
+        /// </value>
         public float Total { get; set; }
     }
 }

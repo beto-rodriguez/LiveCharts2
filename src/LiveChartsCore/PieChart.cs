@@ -30,6 +30,11 @@ using LiveChartsCore.Measure;
 
 namespace LiveChartsCore
 {
+    /// <summary>
+    /// Defines a pie chart.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="LiveChartsCore.Chart{TDrawingContext}" />
     public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
@@ -38,6 +43,12 @@ namespace LiveChartsCore
         private int nextSeries = 0;
         private IPieSeries<TDrawingContext>[] series = new IPieSeries<TDrawingContext>[0];
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PieChart{TDrawingContext}"/> class.
+        /// </summary>
+        /// <param name="view">The view.</param>
+        /// <param name="defaultPlatformConfig">The default platform configuration.</param>
+        /// <param name="canvas">The canvas.</param>
         public PieChart(
             IPieChartView<TDrawingContext> view,
             Action<LiveChartsSettings> defaultPlatformConfig,
@@ -61,20 +72,65 @@ namespace LiveChartsCore
             }
         }
 
+        /// <summary>
+        /// Gets the series.
+        /// </summary>
+        /// <value>
+        /// The series.
+        /// </value>
         public IPieSeries<TDrawingContext>[] Series => series;
+
+        /// <summary>
+        /// Gets the drawable series.
+        /// </summary>
+        /// <value>
+        /// The drawable series.
+        /// </value>
         public override IEnumerable<IDrawableSeries<TDrawingContext>> DrawableSeries => series;
+
+        /// <summary>
+        /// Gets the view.
+        /// </summary>
+        /// <value>
+        /// The view.
+        /// </value>
         public override IChartView<TDrawingContext> View => chartView;
+
+        /// <summary>
+        /// Gets the value bounds.
+        /// </summary>
+        /// <value>
+        /// The value bounds.
+        /// </value>
         public Bounds ValueBounds { get; private set; } = new Bounds();
+
+        /// <summary>
+        /// Gets the index bounds.
+        /// </summary>
+        /// <value>
+        /// The index bounds.
+        /// </value>
         public Bounds IndexBounds { get; private set; } = new Bounds();
+
+        /// <summary>
+        /// Gets the pushout bounds.
+        /// </summary>
+        /// <value>
+        /// The pushout bounds.
+        /// </value>
         public Bounds PushoutBounds { get; private set; } = new Bounds();
 
+        /// <summary>
+        /// Finds the points near to the specified point.
+        /// </summary>
+        /// <param name="pointerPosition">The pointer position.</param>
+        /// <returns></returns>
         public override IEnumerable<TooltipPoint> FindPointsNearTo(PointF pointerPosition)
         {
-            if (measureWorker == null) return Enumerable.Empty<TooltipPoint>();
-
             return chartView.Series.SelectMany(series => series.FindPointsNearTo(this, pointerPosition));
         }
 
+        /// <inheritdoc cref="IChart.Update(bool)" />
         public override void Update(bool throttling = true)
         {
             updateThrottler.Call();
@@ -82,6 +138,11 @@ namespace LiveChartsCore
             //updateThrottler.TryRun();
         }
 
+
+        /// <summary>
+        /// Measures this chart.
+        /// </summary>
+        /// <returns></returns>
         protected override void Measure()
         {
             if (series == null)
@@ -165,6 +226,10 @@ namespace LiveChartsCore
             Canvas.Invalidate();
         }
 
+        /// <summary>
+        /// Called when the updated the throttler is unlocked.
+        /// </summary>
+        /// <returns></returns>
         protected override void UpdateThrottlerUnlocked()
         {
             // before measure every element in the chart
@@ -175,7 +240,6 @@ namespace LiveChartsCore
             viewDrawMargin = chartView.DrawMargin;
             controlSize = chartView.ControlSize;
 
-            measureWorker = new object();
             series = chartView.Series
                 .Cast<IPieSeries<TDrawingContext>>()
                 .Select(series =>

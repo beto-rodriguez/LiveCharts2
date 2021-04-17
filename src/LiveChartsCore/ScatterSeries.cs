@@ -29,6 +29,15 @@ using System.Drawing;
 
 namespace LiveChartsCore
 {
+    /// <summary>
+    /// Defines a scatter series.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <typeparam name="TVisual">The type of the visual.</typeparam>
+    /// <typeparam name="TLabel">The type of the label.</typeparam>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="LiveChartsCore.CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
+    /// <seealso cref="LiveChartsCore.Kernel.IScatterSeries{TDrawingContext}" />
     public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext> : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IScatterSeries<TDrawingContext>
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
@@ -39,6 +48,9 @@ namespace LiveChartsCore
         private double minGeometrySize = 6d;
         private Bounds weightBounds = new ();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ScatterSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+        /// </summary>
         public ScatterSeries()
             : base(SeriesProperties.Scatter)
         {
@@ -48,10 +60,23 @@ namespace LiveChartsCore
             TooltipLabelFormatter = (point) => $"{point.Context.Series.Name} {point.SecondaryValue}, {point.PrimaryValue}";
         }
 
+        /// <summary>
+        /// Gets or sets the minimum size of the geometry.
+        /// </summary>
+        /// <value>
+        /// The minimum size of the geometry.
+        /// </value>
         public double MinGeometrySize { get => minGeometrySize; set => minGeometrySize = value; }
 
+        /// <summary>
+        /// Gets or sets the size of the geometry.
+        /// </summary>
+        /// <value>
+        /// The size of the geometry.
+        /// </value>
         public double GeometrySize { get => geometrySize; set => geometrySize = value; }
 
+        /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.Measure(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
         public override void Measure(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
         {
@@ -187,6 +212,7 @@ namespace LiveChartsCore
             }
         }
 
+        /// <inheritdoc cref="GetBounds(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
         public override DimensionalBounds GetBounds(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
@@ -220,6 +246,7 @@ namespace LiveChartsCore
             };
         }
 
+        /// <inheritdoc cref="OnPaintContextChanged"/>
         protected override void OnPaintContextChanged()
         {
             var context = new PaintContext<TDrawingContext>();
@@ -254,6 +281,7 @@ namespace LiveChartsCore
             paintContext = context;
         }
 
+        /// <inheritdoc cref="SetDefaultPointTransitions(ChartPoint)"/>
         protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
         {
             var visual = (TVisual?)chartPoint.Context.Visual;
@@ -280,6 +308,7 @@ namespace LiveChartsCore
                        .WithEasingFunction(easing));
         }
 
+        /// <inheritdoc cref="SoftDeletePoint(ChartPoint, Scaler, Scaler)"/>
         protected override void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
         {
             var visual = (TVisual?)point.Context.Visual;

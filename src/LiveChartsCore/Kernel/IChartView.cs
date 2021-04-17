@@ -26,27 +26,113 @@ using System;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defines a chart view
+    /// </summary>
     public interface IChartView
     {
+        /// <summary>
+        /// Gets the size of the control.
+        /// </summary>
+        /// <value>
+        /// The size of the control.
+        /// </value>
         System.Drawing.SizeF ControlSize { get; }
+
+        /// <summary>
+        /// Gets or sets the draw margin.
+        /// </summary>
+        /// <value>
+        /// The draw margin.
+        /// </value>
         Margin? DrawMargin { get; set; }
 
+        /// <summary>
+        /// Gets or sets the animations speed.
+        /// </summary>
+        /// <value>
+        /// The animations speed.
+        /// </value>
         TimeSpan AnimationsSpeed { get; set; }
+
+        /// <summary>
+        /// Gets or sets the easing function.
+        /// </summary>
+        /// <value>
+        /// The easing function.
+        /// </value>
         Func<float, float> EasingFunction { get; set; }
 
+        /// <summary>
+        /// Gets or sets the legend position.
+        /// </summary>
+        /// <value>
+        /// The legend position.
+        /// </value>
         LegendPosition LegendPosition { get; set; }
+
+        /// <summary>
+        /// Gets or sets the legend orientation.
+        /// </summary>
+        /// <value>
+        /// The legend orientation.
+        /// </value>
         LegendOrientation LegendOrientation { get; set; }
 
+        /// <summary>
+        /// Gets or sets the tooltip position.
+        /// </summary>
+        /// <value>
+        /// The tooltip position.
+        /// </value>
         TooltipPosition TooltipPosition { get; set; }
+
+        /// <summary>
+        /// Gets or sets the tooltip finding strategy.
+        /// </summary>
+        /// <value>
+        /// The tooltip finding strategy.
+        /// </value>
         TooltipFindingStrategy TooltipFindingStrategy { get; set; }
     }
 
+    /// <summary>
+    /// Defines a chart view.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     public interface IChartView<TDrawingContext>: IChartView
         where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Gets the core canvas.
+        /// </summary>
+        /// <value>
+        /// The core canvas.
+        /// </value>
         MotionCanvas<TDrawingContext> CoreCanvas { get; }
+
+        /// <summary>
+        /// Gets the legend.
+        /// </summary>
+        /// <value>
+        /// The legend.
+        /// </value>
         IChartLegend<TDrawingContext>? Legend { get; }
+
+        /// <summary>
+        /// Gets the tooltip.
+        /// </summary>
+        /// <value>
+        /// The tooltip.
+        /// </value>
         IChartTooltip<TDrawingContext>? Tooltip { get; }
+
+        /// <summary>
+        /// Gets or sets the point states.
+        /// </summary>
+        /// <value>
+        /// The point states.
+        /// </value>
         PointStatesDictionary<TDrawingContext> PointStates { get; set; }
     }
 }

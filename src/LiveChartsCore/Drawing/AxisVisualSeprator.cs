@@ -22,11 +22,35 @@
 
 namespace LiveChartsCore.Drawing
 {
+    /// <summary>
+    /// Defines an axis visual separator.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     public class AxisVisualSeprator<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Gets or sets the value.
+        /// </summary>
+        /// <value>
+        /// The value.
+        /// </value>
         public float Value { get; set; }
+
+        /// <summary>
+        /// Gets or sets the text.
+        /// </summary>
+        /// <value>
+        /// The text.
+        /// </value>
         public ILabelGeometry<TDrawingContext>? Text { get; set; }
+
+        /// <summary>
+        /// Gets or sets the line.
+        /// </summary>
+        /// <value>
+        /// The line.
+        /// </value>
         public ILineGeometry<TDrawingContext>? Line { get; set; }
     }
 }

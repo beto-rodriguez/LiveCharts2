@@ -22,9 +22,19 @@
 
 namespace LiveChartsCore.Measure
 {
+    /// <summary>
+    /// Defines the zooming direction.
+    /// </summary>
     public enum ZoomDirection
     {
+        /// <summary>
+        /// The zoom in
+        /// </summary>
         ZoomIn,
+
+        /// <summary>
+        /// The zoom out
+        /// </summary>
         ZoomOut
     }
 }

@@ -22,23 +22,92 @@
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defines the bezier data class.
+    /// </summary>
     public class BezierData
     {
         private ChartPoint targetPoint;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BezierData"/> class.
+        /// </summary>
+        /// <param name="chartPoint">The chart point.</param>
         public BezierData(ChartPoint chartPoint)
         {
             targetPoint = chartPoint;
         }
 
+        /// <summary>
+        /// Gets or sets the target point.
+        /// </summary>
+        /// <value>
+        /// The target point.
+        /// </value>
         public ChartPoint TargetPoint { get => targetPoint; set => targetPoint = value; }
+
+        /// <summary>
+        /// Gets or sets the x0.
+        /// </summary>
+        /// <value>
+        /// The x0.
+        /// </value>
         public float X0 { get; set; }
+
+        /// <summary>
+        /// Gets or sets the y0.
+        /// </summary>
+        /// <value>
+        /// The y0.
+        /// </value>
         public float Y0 { get; set; }
+
+        /// <summary>
+        /// Gets or sets the x1.
+        /// </summary>
+        /// <value>
+        /// The x1.
+        /// </value>
         public float X1 { get; set; }
+
+        /// <summary>
+        /// Gets or sets the y1.
+        /// </summary>
+        /// <value>
+        /// The y1.
+        /// </value>
         public float Y1 { get; set; }
+
+        /// <summary>
+        /// Gets or sets the x2.
+        /// </summary>
+        /// <value>
+        /// The x2.
+        /// </value>
         public float X2 { get; set; }
+
+        /// <summary>
+        /// Gets or sets the y2.
+        /// </summary>
+        /// <value>
+        /// The y2.
+        /// </value>
         public float Y2 { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is first.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is first; otherwise, <c>false</c>.
+        /// </value>
         public bool IsFirst { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is last.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is last; otherwise, <c>false</c>.
+        /// </value>
         public bool IsLast { get; set; }
     }
 }

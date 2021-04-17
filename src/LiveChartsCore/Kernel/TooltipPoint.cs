@@ -22,19 +22,39 @@
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defines the tooltip piont class.
+    /// </summary>
     public class TooltipPoint
     {
         private ISeries series;
         private ChartPoint point;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TooltipPoint"/> class.
+        /// </summary>
+        /// <param name="series">The series.</param>
+        /// <param name="point">The point.</param>
         public TooltipPoint(ISeries series, ChartPoint point)
         {
             this.series = series;
             this.point = point;
         }
 
+        /// <summary>
+        /// Gets or sets the series.
+        /// </summary>
+        /// <value>
+        /// The series.
+        /// </value>
         public ISeries Series { get => series; set => series = value; }
 
+        /// <summary>
+        /// Gets or sets the point.
+        /// </summary>
+        /// <value>
+        /// The point.
+        /// </value>
         public ChartPoint Point { get => point; set => point = value; }
     }
 }

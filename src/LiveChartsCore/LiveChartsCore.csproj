@@ -9,4 +9,8 @@
     <RootNamespace>LiveChartsCore</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Users\Beto\source\repos\LiveCharts\src\LiveChartsCore\LiveChartsCore.xml</DocumentationFile>
+  </PropertyGroup>
+
 </Project>

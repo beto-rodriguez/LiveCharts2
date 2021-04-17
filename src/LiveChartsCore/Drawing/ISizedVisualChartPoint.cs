@@ -22,6 +22,12 @@
 
 namespace LiveChartsCore.Drawing
 {
+    /// <summary>
+    /// Defines a sized visual chart point.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="LiveChartsCore.Drawing.ISizedGeometry{TDrawingContext}" />
+    /// <seealso cref="LiveChartsCore.Drawing.IVisualChartPoint{TDrawingContext}" />
     public interface ISizedVisualChartPoint<TDrawingContext>: ISizedGeometry<TDrawingContext>, IVisualChartPoint<TDrawingContext>
         where TDrawingContext : DrawingContext
     {

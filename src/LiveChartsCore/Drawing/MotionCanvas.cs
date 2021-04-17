@@ -27,14 +27,21 @@ using System.Linq;
 
 namespace LiveChartsCore.Drawing
 {
+    /// <summary>
+    /// Defines a canvas that is able to animate the shapes inside it.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     public class MotionCanvas<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        public readonly Stopwatch stopwatch = new();
+        private readonly Stopwatch stopwatch = new();
         private readonly object sync = new();
         private HashSet<IDrawableTask<TDrawingContext>> paintTasks = new();
         private bool isValid;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MotionCanvas{TDrawingContext}"/> class.
+        /// </summary>
         public MotionCanvas()
         {
             stopwatch.Start();
@@ -42,12 +49,32 @@ namespace LiveChartsCore.Drawing
 
         internal HashSet<IDrawable<TDrawingContext>> MeasuredDrawables { get; set; } = new();
 
+        /// <summary>
+        /// Occurs then the visual is invalidated.
+        /// </summary>
         public event Action<MotionCanvas<TDrawingContext>>? Invalidated;
 
+        /// <summary>
+        /// Returns true if the visual is valid.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.
+        /// </value>
         public bool IsValid { get => isValid; }
 
+        /// <summary>
+        /// Gets the synchronize object.
+        /// </summary>
+        /// <value>
+        /// The synchronize.
+        /// </value>
         public object Sync => sync;
 
+        /// <summary>
+        /// Draws the frame.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns></returns>
         public void DrawFrame(TDrawingContext context)
         {
             lock (sync)
@@ -100,32 +127,61 @@ namespace LiveChartsCore.Drawing
             }
         }
 
+        /// <summary>
+        /// Gets the drawables count.
+        /// </summary>
+        /// <value>
+        /// The drawables count.
+        /// </value>
         public int DrawablesCount => paintTasks.Count;
 
+        /// <summary>
+        /// Invalidates this instance.
+        /// </summary>
+        /// <returns></returns>
         public void Invalidate()
         {
             isValid = false;
             Invalidated?.Invoke(this);
         }
 
+        /// <summary>
+        /// Adds a drawable task.
+        /// </summary>
+        /// <param name="task">The task.</param>
+        /// <returns></returns>
         public void AddDrawableTask(IDrawableTask<TDrawingContext> task)
         {
             paintTasks.Add(task);
             Invalidate();
         }
 
+        /// <summary>
+        /// Sets the paint tasks.
+        /// </summary>
+        /// <param name="tasks">The tasks.</param>
+        /// <returns></returns>
         public void SetPaintTasks(HashSet<IDrawableTask<TDrawingContext>> tasks)
         {
             paintTasks = tasks;
             Invalidate();
         }
 
+        /// <summary>
+        /// Removes the paint task.
+        /// </summary>
+        /// <param name="task">The task.</param>
+        /// <returns></returns>
         public void RemovePaintTask(IDrawableTask<TDrawingContext> task)
         {
             paintTasks.Remove(task);
             Invalidate();
         }
 
+        /// <summary>
+        /// Counts the geometries.
+        /// </summary>
+        /// <returns></returns>
         public int CountGeometries()
         {
             var count = 0;

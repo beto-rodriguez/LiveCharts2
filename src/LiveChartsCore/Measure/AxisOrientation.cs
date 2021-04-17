@@ -22,12 +22,24 @@
 
 namespace LiveChartsCore.Measure
 {
+    /// <summary>
+    /// Defines the axis orientation.
+    /// </summary>
     public enum AxisOrientation
     {
+        /// <summary>
+        /// The unknown orientation.
+        /// </summary>
         Unknown,
+
+        /// <summary>
+        /// The x orientation.
+        /// </summary>
         X,
+
+        /// <summary>
+        /// The y orientation.
+        /// </summary>
         Y
     }
 }
-
-

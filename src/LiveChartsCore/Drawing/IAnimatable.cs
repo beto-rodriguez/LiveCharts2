@@ -24,18 +24,64 @@ using LiveChartsCore.Motion;
 
 namespace LiveChartsCore.Drawing
 {
+    /// <summary>
+    /// Defines an object that can is able to animate its properties.
+    /// </summary>
     public interface IAnimatable
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is completed.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is completed; otherwise, <c>false</c>.
+        /// </value>
         bool IsCompleted { get; set; }
+
+        /// <summary>
+        /// Gets or sets the current time.
+        /// </summary>
+        /// <value>
+        /// The current time.
+        /// </value>
         long CurrentTime { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the element is removed when all the transitions complete.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if remove on completed; otherwise, <c>false</c>.
+        /// </value>
         bool RemoveOnCompleted { get; set; }
 
+        /// <summary>
+        /// Sets the properties transitions.
+        /// </summary>
+        /// <param name="animation">The animation.</param>
+        /// <param name="propertyName">Name of the property.</param>
         void SetPropertiesTransitions(Animation animation, params string[] propertyName);
+
+        /// <summary>
+        /// Removes a property transition.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
         void RemovePropertyTransition(string propertyName);
 
+        /// <summary>
+        /// Completes all transitions.
+        /// </summary>
         void CompleteAllTransitions();
+
+        /// <summary>
+        /// Completes the transitions.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
         void CompleteTransitions(params string[] propertyName);
+
+        /// <summary>
+        /// Gets the transition property.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <returns></returns>
         IMotionProperty GetTransitionProperty(string propertyName);
     }
 }

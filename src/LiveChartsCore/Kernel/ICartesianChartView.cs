@@ -27,20 +27,69 @@ using System.Drawing;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defines a cartesina chart view.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="LiveChartsCore.Kernel.IChartView{TDrawingContext}" />
     public interface ICartesianChartView<TDrawingContext>: IChartView<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Gets the core.
+        /// </summary>
+        /// <value>
+        /// The core.
+        /// </value>
         CartesianChart<TDrawingContext> Core { get; }
 
+        /// <summary>
+        /// Gets or sets the x axes.
+        /// </summary>
+        /// <value>
+        /// The x axes.
+        /// </value>
         IEnumerable<IAxis> XAxes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the y axes.
+        /// </summary>
+        /// <value>
+        /// The y axes.
+        /// </value>
         IEnumerable<IAxis> YAxes { get; set; }
 
+        /// <summary>
+        /// Gets or sets the series.
+        /// </summary>
+        /// <value>
+        /// The series.
+        /// </value>
         IEnumerable<ISeries> Series { get; set; }
 
+        /// <summary>
+        /// Gets or sets the zoom mode.
+        /// </summary>
+        /// <value>
+        /// The zoom mode.
+        /// </value>
         ZoomAndPanMode ZoomMode { get; set; }
 
+        /// <summary>
+        /// Gets or sets the zooming speed from 0 to 1, where 0 is the fastest.
+        /// </summary>
+        /// <value>
+        /// The zooming speed.
+        /// </value>
         double ZoomingSpeed { get; set; }
 
+        /// <summary>
+        /// Scales the UI point.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <param name="xAxisIndex">Index of the x axis.</param>
+        /// <param name="yAxisIndex">Index of the y axis.</param>
+        /// <returns></returns>
         PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0);
     }
 }

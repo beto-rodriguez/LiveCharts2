@@ -195,6 +195,11 @@ namespace LiveChartsCore
         void Initialize(AxisOrientation orientation);
     }
 
+    /// <summary>
+    /// Defines an Axis in a Cartesian chart.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="System.IDisposable" />
     public interface IAxis<TDrawingContext> : IAxis
         where TDrawingContext : DrawingContext
     {

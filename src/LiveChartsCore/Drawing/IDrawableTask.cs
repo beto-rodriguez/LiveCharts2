@@ -30,7 +30,6 @@ namespace LiveChartsCore.Drawing
     /// Defines a set of geometries that will be drawn according to this instance specifications.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="LiveChartsCore.Drawing.IDrawable" />
     public interface IDrawableTask<TDrawingContext> : IAnimatable, IDisposable
         where TDrawingContext : DrawingContext
     {

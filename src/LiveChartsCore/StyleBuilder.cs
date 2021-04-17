@@ -26,26 +26,50 @@ using System.Drawing;
 
 namespace LiveChartsCore
 {
+    /// <summary>
+    /// Defiens a style builder.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     public class StyleBuilder<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         private Color[]? colors;
         private LiveChartsInitializer<TDrawingContext>? seriesInitializer;
 
+        /// <summary>
+        /// Gets the current colors.
+        /// </summary>
+        /// <value>
+        /// The current colors.
+        /// </value>
         public Color[]? CurrentColors => colors;
 
+        /// <summary>
+        /// Uses the colors.
+        /// </summary>
+        /// <param name="colors">The colors.</param>
+        /// <returns></returns>
         public StyleBuilder<TDrawingContext> UseColors(params Color[] colors)
         {
             this.colors = colors;
             return this;
         }
 
+        /// <summary>
+        /// Uses the series initializer.
+        /// </summary>
+        /// <param name="seriesInitializer">The series initializer.</param>
+        /// <returns></returns>
         public StyleBuilder<TDrawingContext> UseSeriesInitializer(LiveChartsInitializer<TDrawingContext> seriesInitializer)
         {
             this.seriesInitializer = seriesInitializer;
             return this;
         }
 
+        /// <summary>
+        /// Gets the initializer.
+        /// </summary>
+        /// <returns></returns>
         public LiveChartsInitializer<TDrawingContext> GetInitializer()
         {
             if (seriesInitializer == null)

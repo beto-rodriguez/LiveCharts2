@@ -27,25 +27,32 @@ using System.Linq;
 
 namespace LiveChartsCore.Drawing.Common
 {
+    /// <inheritdoc cref="IAnimatable" />
     public abstract class Animatable : IAnimatable
     {
-        protected Dictionary<string, IMotionProperty> transitionProperties = new Dictionary<string, IMotionProperty>();
+        /// <summary>
+        /// The transition properties
+        /// </summary>
+        protected Dictionary<string, IMotionProperty> transitionProperties = new();
         internal long currentTime = long.MinValue;
         internal bool isCompleted = true;
         internal bool removeOnCompleted;
 
-        public Animatable()
-        {
-        }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Animatable"/> class.
+        /// </summary>
+        public Animatable() { }
 
+        /// <inheritdoc cref="IAnimatable.IsCompleted" />
         bool IAnimatable.IsCompleted { get => isCompleted; set => isCompleted = value; }
+
+        /// <inheritdoc cref="IAnimatable.CurrentTime" />
         long IAnimatable.CurrentTime { get => currentTime; set => currentTime = value; }
 
-        /// <summary>
-        /// if true, the element will be removed from the UI the next time <see cref="TransitionCompleted"/> event occurs.
-        /// </summary>
+        /// <inheritdoc cref="IAnimatable.RemoveOnCompleted" />
         public bool RemoveOnCompleted { get => removeOnCompleted; set => removeOnCompleted = value; }
 
+        /// <inheritdoc cref="SetPropertiesTransitions(Animation, string[])" />
         public void SetPropertiesTransitions(Animation animation, params string[] properties)
         {
             foreach (var name in properties)
@@ -54,16 +61,22 @@ namespace LiveChartsCore.Drawing.Common
             }
         }
 
+        /// <inheritdoc cref="IAnimatable.RemovePropertyTransition(string)" />
         public void RemovePropertyTransition(string propertyName)
         {
             transitionProperties[propertyName].Animation = null;
         }
 
+        /// <summary>
+        /// Invalidates this animatable.
+        /// </summary>
+        /// <returns></returns>
         public void Invalidate()
         {
             isCompleted = false;
         }
 
+        /// <inheritdoc cref="IAnimatable.CompleteTransitions(string[])" />
         public void CompleteTransitions(params string[] propertyNames)
         {
             if (propertyNames == null || propertyNames.Length == 0)
@@ -81,11 +94,13 @@ namespace LiveChartsCore.Drawing.Common
             }
         }
 
+        /// <inheritdoc cref="IAnimatable.CompleteAllTransitions" />
         public void CompleteAllTransitions()
         {
             CompleteTransitions(transitionProperties.Keys.ToArray());
         }
 
+        /// <inheritdoc cref="IAnimatable.GetTransitionProperty(string)" />
         public IMotionProperty GetTransitionProperty(string propertyName)
         {
             if (!transitionProperties.TryGetValue(propertyName, out var transitionProperty))
@@ -95,6 +110,12 @@ namespace LiveChartsCore.Drawing.Common
             return transitionProperty;
         }
 
+        /// <summary>
+        /// Registers a motion property.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="transition">The transition.</param>
+        /// <returns></returns>
         protected T RegisterMotionProperty<T>(T transition)
             where T : IMotionProperty
         {
@@ -102,11 +123,20 @@ namespace LiveChartsCore.Drawing.Common
             return transition;
         }
 
+        /// <summary>
+        /// Sets the current time.
+        /// </summary>
+        /// <param name="time">The time.</param>
+        /// <returns></returns>
         protected void SetCurrentTime(long time)
         {
             currentTime = time;
         }
 
+        /// <summary>
+        /// Gets the current time.
+        /// </summary>
+        /// <returns></returns>
         protected long GetCurrentTime()
         {
             return currentTime;

@@ -24,21 +24,52 @@ using System;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defines the series properties enumeration.
+    /// </summary>
     [Flags]
     public enum SeriesProperties
     {
+        /// <summary>
+        /// includes all series
+        /// </summary>
         AllSeries = 0,
 
+        /// <summary>
+        /// The Cartesian series
+        /// </summary>
         CartesianSeries = 1 << 1,
+        /// <summary>
+        /// The bar series
+        /// </summary>
         Bar = 1 << 2,
+        /// <summary>
+        /// The line series
+        /// </summary>
         Line = 1 << 3,
+        /// <summary>
+        /// The scatter series
+        /// </summary>
         Scatter = 1 << 4,
 
+        /// <summary>
+        /// The pie series
+        /// </summary>
         PieSeries = 1 << 5,
 
+        /// <summary>
+        /// The stacked series
+        /// </summary>
         Stacked = 1 << 6,
 
+        /// <summary>
+        /// The vertical orientation
+        /// </summary>
         VerticalOrientation = 1 << 7,
+
+        /// <summary>
+        /// The horizontal orientation
+        /// </summary>
         HorizontalOrientation = 1 << 8
     }
 }

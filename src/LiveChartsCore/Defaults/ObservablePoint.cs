@@ -26,28 +26,60 @@ using System.Runtime.CompilerServices;
 
 namespace LiveChartsCore.Defaults
 {
+    /// <summary>
+    /// Defines a point for he Cartesian coordinate system that implements <see cref="INotifyPropertyChanged"/>.
+    /// </summary>
+    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
     public class ObservablePoint : INotifyPropertyChanged
     {
         private double? x;
         private double? y;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservablePoint"/> class.
+        /// </summary>
         public ObservablePoint()
         {
 
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservablePoint"/> class.
+        /// </summary>
+        /// <param name="x">The x coordinate.</param>
+        /// <param name="y">The y coordinate.</param>
         public ObservablePoint(double? x, double? y)
         {
             this.x = x;
             this.y = y;
         }
 
+        /// <summary>
+        /// Gets or sets the x coordinate.
+        /// </summary>
+        /// <value>
+        /// The x.
+        /// </value>
         public double? X { get => x; set { x = value; OnPropertyChanged(); } }
 
+        /// <summary>
+        /// Gets or sets the y coordinate.
+        /// </summary>
+        /// <value>
+        /// The y.
+        /// </value>
         public double? Y { get => y; set { y = value; OnPropertyChanged(); } }
 
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
+        /// <returns></returns>
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        /// <summary>
+        /// Called when a property changed.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));

@@ -22,8 +22,14 @@
 
 namespace LiveChartsCore.Drawing
 {
+    /// <summary>
+    /// Defines a context that is able to draw 2D shapes in the user intrerface.
+    /// </summary>
     public abstract class DrawingContext
     {
+        /// <summary>
+        /// Clears the canvas.
+        /// </summary>
         public abstract void ClearCanvas();
     }
 }

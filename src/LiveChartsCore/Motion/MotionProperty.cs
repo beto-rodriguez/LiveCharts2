@@ -31,15 +31,27 @@ namespace LiveChartsCore.Motion
     /// <typeparam name="T"></typeparam>
     public abstract class MotionProperty<T> : IMotionProperty
     {
-        private Animation? animation;
+        /// <summary>
+        /// From value
+        /// </summary>
         protected internal T? fromValue = default;
+
+        /// <summary>
+        /// To value
+        /// </summary>
         protected internal T? toValue = default;
+
+        private Animation? animation;
         internal long startTime;
         internal long endTime;
         private bool isCompleted = false;
         private readonly string propertyName;
         private bool requiresToInitialize = true;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MotionProperty{T}"/> class.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
         public MotionProperty(string propertyName)
         {
             this.propertyName = propertyName;
@@ -65,13 +77,19 @@ namespace LiveChartsCore.Motion
         /// </summary>
         public string PropertyName => propertyName;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is completed.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is completed; otherwise, <c>false</c>.
+        /// </value>
         public bool IsCompleted { get => isCompleted; set => isCompleted = value; }
 
         /// <summary>
         /// Moves to he specified value.
         /// </summary>
         /// <param name="value">The value to move to.</param>
-        /// <param name="animatable">The <see cref="Visual"/> instance that is moving.</param>
+        /// <param name="animatable">The <see cref="IAnimatable"/> instance that is moving.</param>
         public void SetMovement(T value, Animatable animatable)
         {
             fromValue = GetMovement(animatable);
@@ -136,6 +154,11 @@ namespace LiveChartsCore.Motion
             return OnGetMovement(fp);
         }
 
+        /// <summary>
+        /// Called to get the movement at a specific progress.
+        /// </summary>
+        /// <param name="progress">The progress.</param>
+        /// <returns></returns>
         protected abstract T OnGetMovement(float progress);
     }
 }

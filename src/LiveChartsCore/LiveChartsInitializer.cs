@@ -27,19 +27,42 @@ using System.Drawing;
 namespace LiveChartsCore
 {
     /// <summary>
-    /// Defines an object that must set the default Fil, Stroke and series name.
+    /// Defines an object that must set the default Fill, Stroke and series name.
     /// </summary>
     public abstract class LiveChartsInitializer<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Constructs a chart.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
         public abstract void ConstructChart(IChartView<TDrawingContext> chart);
 
+
+        /// <summary>
+        /// Constructs a series.
+        /// </summary>
+        /// <param name="series">The series.</param>
         public abstract void ConstructSeries(IDrawableSeries<TDrawingContext> series);
 
+
+        /// <summary>
+        /// Constructs an axis.
+        /// </summary>
+        /// <param name="axis">The axis.</param>
         public abstract void ConstructAxis(IAxis<TDrawingContext> axis);
 
+        /// <summary>
+        /// Resolves the series defaults.
+        /// </summary>
+        /// <param name="colors">The colors.</param>
+        /// <param name="series">The series.</param>
         public abstract void ResolveSeriesDefaults(Color[] colors, IDrawableSeries<TDrawingContext> series);
 
+        /// <summary>
+        /// Resolves the axis defaults.
+        /// </summary>
+        /// <param name="axis">The axis.</param>
         public abstract void ResolveAxisDefaults(IAxis<TDrawingContext> axis);
     }
 }

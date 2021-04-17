@@ -51,6 +51,10 @@ namespace LiveChartsCore
         private IDrawableTask<TDrawingContext>? geometryFill;
         private IDrawableTask<TDrawingContext>? geometryStroke;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs}"/> class.
+        /// </summary>
+        /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
         public LineSeries(bool isStacked = false)
             : base(SeriesProperties.Line | SeriesProperties.VerticalOrientation | (isStacked ? SeriesProperties.Stacked : 0))
         {
@@ -422,20 +426,12 @@ namespace LiveChartsCore
             };
         }
 
-        protected virtual void SetDefaultPathTransitions(
-            ISizedGeometry<TDrawingContext> geometry, Animation defaultAnimation)
-        {
-            var defaultProperties = new string[]
-            {
-                nameof(geometry.X),
-                nameof(geometry.Y),
-                nameof(geometry.Width),
-                nameof(geometry.Height)
-            };
-            geometry.SetPropertiesTransitions(defaultAnimation, defaultProperties);
-            geometry.CompleteTransitions(defaultProperties);
-        }
-
+        /// <summary>
+        /// Sets the default path transitions.
+        /// </summary>
+        /// <param name="areaHelper">The area helper.</param>
+        /// <param name="defaultAnimation">The default animation.</param>
+        /// <returns></returns>
         protected virtual void SetDefaultPathTransitions(
             AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs> areaHelper, Animation defaultAnimation)
         {
@@ -455,6 +451,7 @@ namespace LiveChartsCore
                 .CompleteCurrentTransitions();
         }
 
+        /// <inheritdoc cref="DrawableSeries{TModel, TVisual, TLabel, TDrawingContext}.OnPaintContextChanged"/>
         protected override void OnPaintContextChanged()
         {
             var context = new PaintContext<TDrawingContext>();
@@ -643,6 +640,7 @@ namespace LiveChartsCore
             if (l.Count > 0) yield return l.ToArray();
         }
 
+        /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SetDefaultPointTransitions(ChartPoint)"/>
         protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
         {
             var visual = chartPoint.Context.Visual as LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>;
@@ -673,8 +671,9 @@ namespace LiveChartsCore
                     animation
                          .WithDuration(chart.AnimationsSpeed)
                         .WithEasingFunction(chart.EasingFunction));
-        } 
+        }
 
+        /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SoftDeletePoint(ChartPoint, Scaler, Scaler)"/>
         protected override void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
         {
             var visual = (LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>?)point.Context.Visual;
@@ -692,6 +691,7 @@ namespace LiveChartsCore
             visual.Geometry.RemoveOnCompleted = true;
         }
 
+        /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Delete(IChartView)"/>
         public override void Delete(IChartView chart)
         {
             base.Delete(chart);
@@ -705,6 +705,10 @@ namespace LiveChartsCore
                     Stroke.RemoveGeometryFromPainTask(pathHelper.Path);
         }
 
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <returns></returns>
         public override void Dispose()
         {
             foreach (var chart in subscribedTo)

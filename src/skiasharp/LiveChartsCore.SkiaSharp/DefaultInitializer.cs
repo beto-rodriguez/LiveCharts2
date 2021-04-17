@@ -125,7 +125,7 @@ namespace LiveChartsCore.SkiaSharpView
         {
             if (axis.SeparatorsBrush == LiveChartsSkiaSharp.DefaultPaint)
                 axis.SeparatorsBrush = axis.Orientation == AxisOrientation.X
-                    ? new SolidColorPaintTask(new SKColor(225, 225, 225))
+                    ? null
                     : new SolidColorPaintTask(new SKColor(225, 225, 225));
 
             if (axis.TextBrush == LiveChartsSkiaSharp.DefaultPaint)

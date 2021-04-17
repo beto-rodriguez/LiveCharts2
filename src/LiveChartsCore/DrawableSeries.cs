@@ -44,7 +44,15 @@ namespace LiveChartsCore
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
+        /// <summary>
+        /// The paint context.
+        /// </summary>
         protected PaintContext<TDrawingContext> paintContext = new();
+
+        /// <summary>
+        /// The pending to delete tasks.
+        /// </summary>
+        protected List<IDrawableTask<TDrawingContext>> deletingTasks = new();
         private IDrawableTask<TDrawingContext>? stroke = null;
         private IDrawableTask<TDrawingContext>? fill = null;
         private double legendShapeSize = 15;
@@ -52,7 +60,6 @@ namespace LiveChartsCore
         private double dataLabelsSize = 16;
         private DataLabelsPosition dataLabelsPosition;
         private Padding dataLabelsPadding = new Padding { Left = 6, Top = 8, Right = 6, Bottom = 8 };
-        protected List<IDrawableTask<TDrawingContext>> deletingTasks = new ();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DrawableSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -168,6 +175,10 @@ namespace LiveChartsCore
         /// </value>
         public double LegendShapeSize { get => legendShapeSize; set { legendShapeSize = value; OnPropertyChanged(); } }
 
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <returns></returns>
         public override void Dispose()
         {
             foreach (var chart in subscribedTo)
@@ -180,8 +191,17 @@ namespace LiveChartsCore
             base.Dispose();
         }
 
+        /// <summary>
+        /// Called when the paint context changed.
+        /// </summary>
+        /// <returns></returns>
         protected abstract void OnPaintContextChanged();
 
+        /// <summary>
+        /// Initializes the series.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception">Default colors are not valid</exception>
         protected void InitializeSeries()
         {
             var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<TDrawingContext>();

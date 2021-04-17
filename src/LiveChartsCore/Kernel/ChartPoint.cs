@@ -22,8 +22,16 @@
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defiens a point in a chart.
+    /// </summary>
     public class ChartPoint
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ChartPoint"/> class.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
+        /// <param name="series">The series.</param>
         public ChartPoint(IChartView chart, ISeries series)
         {
             Context = new ChartPointContext(chart, series);

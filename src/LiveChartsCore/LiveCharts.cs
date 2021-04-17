@@ -25,23 +25,82 @@ using System;
 
 namespace LiveChartsCore
 {
+    /// <summary>
+    /// LiveCharts global settings.
+    /// </summary>
     public static class LiveCharts
     {
         private static bool isConfigured = false;
         private static object defaultPaintTask = new();
         private static readonly LiveChartsSettings settings = new();
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is configured.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is configured; otherwise, <c>false</c>.
+        /// </value>
         public static bool IsConfigured => isConfigured;
+
+        /// <summary>
+        /// Gets the current settings.
+        /// </summary>
+        /// <value>
+        /// The current settings.
+        /// </value>
         public static LiveChartsSettings CurrentSettings => settings;
 
+        /// <summary>
+        /// Gets the bar series hover key.
+        /// </summary>
+        /// <value>
+        /// The bar series hover key.
+        /// </value>
         public static string BarSeriesHoverKey => nameof(BarSeriesHoverKey);
+
+        /// <summary>
+        /// Gets the line series hover key.
+        /// </summary>
+        /// <value>
+        /// The line series hover key.
+        /// </value>
         public static string LineSeriesHoverKey => nameof(LineSeriesHoverKey);
+
+        /// <summary>
+        /// Gets the pie series hover key.
+        /// </summary>
+        /// <value>
+        /// The pie series hover key.
+        /// </value>
         public static string PieSeriesHoverKey => nameof(PieSeriesHoverKey);
+
+        /// <summary>
+        /// Gets the scatter series hover key.
+        /// </summary>
+        /// <value>
+        /// The scatter series hover key.
+        /// </value>
         public static string ScatterSeriesHoverKey => nameof(ScatterSeriesHoverKey);
+
+        /// <summary>
+        /// Gets the stacked bar series hover key.
+        /// </summary>
+        /// <value>
+        /// The stacked bar series hover key.
+        /// </value>
         public static string StackedBarSeriesHoverKey => nameof(StackedBarSeriesHoverKey);
 
+        /// <summary>
+        /// The disable animations
+        /// </summary>
         public static TimeSpan DisableAnimations = TimeSpan.FromMilliseconds(1);
 
+        /// <summary>
+        /// Configures LiveCharts.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
+        /// <returns></returns>
+        /// <exception cref="NullReferenceException">$"{nameof(LiveChartsSettings)} must not be null.</exception>
         public static void Configure(Action<LiveChartsSettings> configuration)
         {
             if (configuration == null) throw new NullReferenceException($"{nameof(LiveChartsSettings)} must not be null.");
@@ -50,6 +109,12 @@ namespace LiveChartsCore
             configuration(settings);
         }
 
+        /// <summary>
+        /// Defines a mapper for the given type.
+        /// </summary>
+        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <param name="mapper">The mapper.</param>
+        /// <returns></returns>
         public static LiveChartsSettings HasMapFor<TModel>(Action<TModel, ChartPoint> mapper)
         {
             return settings.HasMap(mapper);

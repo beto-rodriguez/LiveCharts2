@@ -22,14 +22,44 @@
 
 namespace LiveChartsCore.Measure
 {
+    /// <summary>
+    /// Defines the data labales position.
+    /// </summary>
     public enum DataLabelsPosition
     {
+        /// <summary>
+        /// The end
+        /// </summary>
         End,
+
+        /// <summary>
+        /// The start
+        /// </summary>
         Start,
+
+        /// <summary>
+        /// The middle
+        /// </summary>
         Middle,
+
+        /// <summary>
+        /// The top
+        /// </summary>
         Top,
+
+        /// <summary>
+        /// The bottom
+        /// </summary>
         Bottom,
+
+        /// <summary>
+        /// The left
+        /// </summary>
         Left,
+
+        /// <summary>
+        /// The right
+        /// </summary>
         Right
     }
 }

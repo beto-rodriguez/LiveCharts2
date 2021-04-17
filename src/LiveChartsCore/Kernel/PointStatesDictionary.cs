@@ -27,11 +27,24 @@ using System.Linq;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defiens the points states dictionary class.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     public class PointStatesDictionary<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        private Dictionary<string, StrokeAndFillDrawable<TDrawingContext>> states = new Dictionary<string, StrokeAndFillDrawable<TDrawingContext>>();
+        private Dictionary<string, StrokeAndFillDrawable<TDrawingContext>> states = new();
 
+        /// <summary>
+        /// Gets or sets the stroke and fill for the specified state name.
+        /// </summary>
+        /// <value>
+        /// The stroke and fill.
+        /// </value>
+        /// <param name="stateName">Name of the state.</param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException">$"A null instance is not valid at this point, to delete a key please use the {nameof(DeleteState)}() method.</exception>
         public StrokeAndFillDrawable<TDrawingContext>? this[string stateName]
         {
             get
@@ -56,16 +69,36 @@ namespace LiveChartsCore.Kernel
             }
         }
 
+        /// <summary>
+        /// Gets the chart.
+        /// </summary>
+        /// <value>
+        /// The chart.
+        /// </value>
         public Chart<TDrawingContext>? Chart { get; internal set; }
 
+        /// <summary>
+        /// Gets the states.
+        /// </summary>
+        /// <returns></returns>
         public StrokeAndFillDrawable<TDrawingContext>[] GetStates() => states.Values.ToArray();
 
+        /// <summary>
+        /// Deletes the state.
+        /// </summary>
+        /// <param name="stateName">Name of the state.</param>
+        /// <returns></returns>
         public void DeleteState(string stateName)
         {
             RemoveState(states[stateName]);
             states.Remove(stateName);
         }
 
+        /// <summary>
+        /// Removes the state.
+        /// </summary>
+        /// <param name="state">The state.</param>
+        /// <returns></returns>
         private void RemoveState(StrokeAndFillDrawable<TDrawingContext> state)
         {
             if (Chart == null) return;

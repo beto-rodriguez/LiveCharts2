@@ -24,6 +24,9 @@ using System;
 
 namespace LiveChartsCore.Drawing
 {
+    /// <summary>
+    /// Defines an animation.
+    /// </summary>
     public class Animation
     {
         private Func<float, float> easingFunction;
@@ -31,17 +34,31 @@ namespace LiveChartsCore.Drawing
         internal int animationCompletedCount = 0;
         internal int repeatTimes;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Animation"/> class.
+        /// </summary>
         public Animation()
         {
             easingFunction = t => t;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Animation"/> class.
+        /// </summary>
+        /// <param name="easingFunction">The easing function.</param>
+        /// <param name="duration">The duration.</param>
         public Animation(Func<float, float> easingFunction, TimeSpan duration)
         {
             this.easingFunction = easingFunction;
             this.duration = (long)duration.TotalMilliseconds;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Animation"/> class.
+        /// </summary>
+        /// <param name="easingFunction">The easing function.</param>
+        /// <param name="duration">The duration.</param>
+        /// <param name="repeatTimes">The repeat times.</param>
         public Animation(Func<float, float> easingFunction, TimeSpan duration, int repeatTimes)
         {
             this.easingFunction = easingFunction;
@@ -49,6 +66,12 @@ namespace LiveChartsCore.Drawing
             this.repeatTimes = repeatTimes;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Animation"/> class.
+        /// </summary>
+        /// <param name="easingFunction">The easing function.</param>
+        /// <param name="duration">The duration.</param>
+        /// <param name="repeatTimes">The repeat times.</param>
         public Animation(Func<float, float> easingFunction, long duration, int repeatTimes)
         {
             this.easingFunction = easingFunction;
@@ -56,6 +79,10 @@ namespace LiveChartsCore.Drawing
             this.repeatTimes = repeatTimes;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Animation"/> class.
+        /// </summary>
+        /// <param name="animation">The animation.</param>
         public Animation(Animation animation)
         {
             easingFunction = animation.easingFunction;
@@ -79,30 +106,54 @@ namespace LiveChartsCore.Drawing
         /// </summary>
         public int Repeat { get => repeatTimes; set => repeatTimes = value; }
 
+        /// <summary>
+        /// Sets the easing function.
+        /// </summary>
+        /// <param name="easing">The easing.</param>
+        /// <returns>The animation instance</returns>
         public Animation WithEasingFunction(Func<float, float> easing)
         {
             easingFunction = easing;
             return this;
         }
 
+        /// <summary>
+        /// Sets the duration.
+        /// </summary>
+        /// <param name="duration">The duration.</param>
+        /// <returns>The animation instance</returns>
         public Animation WithDuration(TimeSpan duration)
         {
             this.duration = (long)duration.TotalMilliseconds;
             return this;
         }
 
+        /// <summary>
+        /// Sets the duration.
+        /// </summary>
+        /// <param name="duration">The duration.</param>
+        /// <returns>The animation instance</returns>
         public Animation WithDuration(long duration)
         {
             this.duration = duration;
             return this;
         }
 
+        /// <summary>
+        /// Sets the repeats times.
+        /// </summary>
+        /// <param name="times">The times.</param>
+        /// <returns>The animation instance</returns>
         public Animation RepeatTimes(int times)
         {
             repeatTimes = times;
             return this;
         }
 
+        /// <summary>
+        /// Sets he repeats times indefinitely number of times.
+        /// </summary>
+        /// <returns>The animation instance</returns>
         public Animation RepeatIndefinitely()
         {
             repeatTimes = int.MaxValue;

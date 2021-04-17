@@ -5,6 +5,9 @@ using System;
 
 namespace LiveChartsCore.Easing
 {
+    /// <summary>
+    /// Defienes the CubicBezierEasingFunction.
+    /// </summary>
     public static class CubicBezierEasingFunction
     {
         private static readonly float NEWTON_ITERATIONS = 4f;
@@ -15,6 +18,15 @@ namespace LiveChartsCore.Easing
         private static readonly int kSplineTableSize = 11;
         private static readonly float kSampleStepSize = 1.0f / (kSplineTableSize - 1.0f);
 
+        /// <summary>
+        /// Builds a bezier easing function.
+        /// </summary>
+        /// <param name="mX1">The m x1.</param>
+        /// <param name="mY1">The m y1.</param>
+        /// <param name="mX2">The m x2.</param>
+        /// <param name="mY2">The m y2.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception">Bezier x values must be in [0, 1] range</exception>
         public static Func<float, float> BuildBezierEasingFunction(float mX1, float mY1, float mX2, float mY2)
         {
             if (!(0 <= mX1 && mX1 <= 1 && 0 <= mX2 && mX2 <= 1))

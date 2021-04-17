@@ -26,6 +26,10 @@ using System.Drawing;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defines a semicircle hover area.
+    /// </summary>
+    /// <seealso cref="LiveChartsCore.Kernel.HoverArea" />
     public class SemicircleHoverArea : HoverArea
     {
         private float startAngle;
@@ -34,18 +38,49 @@ namespace LiveChartsCore.Kernel
         private float centerX;
         private float centerY;
 
+        /// <summary>
+        /// Gets or sets the center x.
+        /// </summary>
+        /// <value>
+        /// The center x coordinate.
+        /// </value>
         public float CenterX { get => centerX; set => centerX = value; }
+
+        /// <summary>
+        /// Gets or sets the center y.
+        /// </summary>
+        /// <value>
+        /// The center y coordinate.
+        /// </value>
         public float CenterY { get => centerY; set => centerY = value; }
+
         /// <summary>
         /// Gets or sets the start angle in degrees.
         /// </summary>
         public float StartAngle { get => startAngle; set => startAngle = value; }
+
         /// <summary>
         /// Gets or sets the and angle in degrees.
         /// </summary>
         public float EndAngle { get => endAngle; set => endAngle = value; }
+
+        /// <summary>
+        /// Gets or sets the radius.
+        /// </summary>
+        /// <value>
+        /// The radius.
+        /// </value>
         public float Radius { get => radius; set => radius = value; }
 
+        /// <summary>
+        /// Sets the area dimensions.
+        /// </summary>
+        /// <param name="centerX">The center x.</param>
+        /// <param name="centerY">The center y.</param>
+        /// <param name="startAngle">The start angle.</param>
+        /// <param name="endAngle">The end angle.</param>
+        /// <param name="radius">The radius.</param>
+        /// <returns></returns>
         public SemicircleHoverArea SetDimensions(float centerX, float centerY, float startAngle, float endAngle, float radius)
         {
             this.centerX = centerX;
@@ -56,6 +91,7 @@ namespace LiveChartsCore.Kernel
             return this;
         }
 
+        /// <inheritdoc cref="IsTriggerBy(PointF, TooltipFindingStrategy)"/>
         public override bool IsTriggerBy(PointF point, TooltipFindingStrategy strategy)
         {
             var dx = centerX - point.X;
@@ -69,6 +105,7 @@ namespace LiveChartsCore.Kernel
             return startAngle <= beta && endAngle >= beta && r < radius;
         }
 
+        /// <inheritdoc cref="SuggestTooltipPlacement(TooltipPlacementContext)"/>
         public override void SuggestTooltipPlacement(TooltipPlacementContext context)
         {
             var angle = (startAngle + endAngle) / 2;

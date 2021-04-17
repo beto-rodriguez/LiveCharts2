@@ -56,7 +56,7 @@ namespace LiveChartsCore.Kernel
         /// <param name="chart">The chart.</param>
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
-        /// <returns></returns>
+        /// <returns>the series bounds</returns>
         DimensionalBounds GetBounds(CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
 
         /// <summary>

@@ -38,21 +38,76 @@ namespace LiveChartsCore
         private readonly Dictionary<Type, object> mappers = new();
         private readonly Dictionary<Type, object> seriesStyleBuilder = new();
 
+        /// <summary>
+        /// Gets or sets the default easing function.
+        /// </summary>
+        /// <value>
+        /// The default easing function.
+        /// </value>
         public Func<float, float> DefaultEasingFunction { get; set; } = EasingFunctions.QuadraticOut;
+
+        /// <summary>
+        /// Gets or sets the default animations speed.
+        /// </summary>
+        /// <value>
+        /// The default animations speed.
+        /// </value>
         public TimeSpan DefaultAnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(500);
+
+        /// <summary>
+        /// Gets or sets the default zoom speed.
+        /// </summary>
+        /// <value>
+        /// The default zoom speed.
+        /// </value>
         public double DefaultZoomSpeed { get; set; } = 0.8;
+
+        /// <summary>
+        /// Gets or sets the default zoom mode.
+        /// </summary>
+        /// <value>
+        /// The default zoom mode.
+        /// </value>
         public ZoomAndPanMode DefaultZoomMode { get; set; } = ZoomAndPanMode.None;
+
+        /// <summary>
+        /// Gets or sets the default legend position.
+        /// </summary>
+        /// <value>
+        /// The default legend position.
+        /// </value>
         public LegendPosition DefaultLegendPosition { get; set; } = LegendPosition.Hidden;
+
+        /// <summary>
+        /// Gets or sets the default legend orientation.
+        /// </summary>
+        /// <value>
+        /// The default legend orientation.
+        /// </value>
         public LegendOrientation DefaultLegendOrientation { get; set; } = LegendOrientation.Auto;
+
+        /// <summary>
+        /// Gets or sets the default tooltip position.
+        /// </summary>
+        /// <value>
+        /// The default tooltip position.
+        /// </value>
         public TooltipPosition DefaultTooltipPosition { get; set; } = TooltipPosition.Top;
+
+        /// <summary>
+        /// Gets or sets the default tooltip finding strategy.
+        /// </summary>
+        /// <value>
+        /// The default tooltip finding strategy.
+        /// </value>
         public TooltipFindingStrategy DefaultTooltipFindingStrategy { get; set; } = TooltipFindingStrategy.CompareOnlyX;
 
         /// <summary>
-        /// Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a <see cref="ChartPoint"/> instance, 
+        /// Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a<see cref="ChartPoint"/> instance,
         /// then the <see cref="ChartPoint"/> will be drawn as a point in our chart.
         /// </summary>
-        /// <typeparam name="T">The type</typeparam>
-        /// <param name="predicate">The mapper</param>
+        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <param name="mapper">The mapper.</param>
         /// <returns></returns>
         public LiveChartsSettings HasMap<TModel>(Action<TModel, ChartPoint> mapper)
         {
@@ -61,11 +116,6 @@ namespace LiveChartsCore
             return this;
         }
 
-        /// <summary>
-        /// Gets the current mapping for a given type.
-        /// </summary>
-        /// <typeparam name="T">The type</typeparam>
-        /// <returns>The current mapper</returns>
         internal Action<TModel, ChartPoint> GetMap<TModel>()
         {
             if (!mappers.TryGetValue(typeof(TModel), out var mapper))
@@ -93,36 +143,68 @@ namespace LiveChartsCore
             return (IDataFactoryProvider<TDrawingContext>) currentFactory;
         }
 
+        /// <summary>
+        /// Sets the default animations speed.
+        /// </summary>
+        /// <param name="animationsSpeed">The animations speed.</param>
+        /// <returns>the current settings</returns>
         public LiveChartsSettings WithDefaultAnimationsSpeed(TimeSpan animationsSpeed)
         {
             DefaultAnimationsSpeed = animationsSpeed;
             return this;
         }
 
+        /// <summary>
+        /// Withes the default easing function.
+        /// </summary>
+        /// <param name="easingFunction">The easing function.</param>
+        /// <returns>the current settings</returns>
         public LiveChartsSettings WithDefaultEasingFunction(Func<float, float> easingFunction)
         {
             DefaultEasingFunction = easingFunction;
             return this;
         }
 
+        /// <summary>
+        /// Withes the default zoom speed.
+        /// </summary>
+        /// <param name="speed">The speed.</param>
+        /// <returns>the current settings</returns>
         public LiveChartsSettings WithDefaultZoomSpeed(double speed)
         {
             DefaultZoomSpeed = speed;
             return this;
         }
 
+
+        /// <summary>
+        /// Withes the default zoom mode.
+        /// </summary>
+        /// <param name="zoomMode">The zoom mode.</param>
+        /// <returns>the current settings</returns>
         public LiveChartsSettings WithDefaultZoomMode(ZoomAndPanMode zoomMode)
         {
             DefaultZoomMode = zoomMode;
             return this;
         }
 
+        /// <summary>
+        /// Removes a map from the settings.
+        /// </summary>
+        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <returns></returns>
         public LiveChartsSettings RemoveMap<TModel>()
         {
             mappers.Remove(typeof(TModel));
             return this;
         }
 
+        /// <summary>
+        /// Adds the default styles.
+        /// </summary>
+        /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+        /// <param name="builder">The builder.</param>
+        /// <returns></returns>
         public LiveChartsSettings AddDefaultStyles<TDrawingContext>(Action<StyleBuilder<TDrawingContext>> builder)
             where TDrawingContext : DrawingContext
         {
@@ -138,6 +220,12 @@ namespace LiveChartsCore
             return this;
         }
 
+        /// <summary>
+        /// Gets the styles builder.
+        /// </summary>
+        /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+        /// <returns></returns>
+        /// <exception cref="Exception">$"The type {nameof(TDrawingContext)} is not registered.</exception>
         public StyleBuilder<TDrawingContext> GetStylesBuilder<TDrawingContext>()
             where TDrawingContext : DrawingContext
         {
@@ -148,7 +236,7 @@ namespace LiveChartsCore
         }
 
         /// <summary>
-        /// Enables LiveCharts to be able to plot short, int, long, float, double, decimal and <see cref="ChartPoint2"/>.
+        /// Enables LiveCharts to be able to plot short, int, long, float, double, decimal and <see cref="ChartPoint"/>.
         /// </summary>
         /// <returns></returns>
         public LiveChartsSettings AddDefaultMappers()

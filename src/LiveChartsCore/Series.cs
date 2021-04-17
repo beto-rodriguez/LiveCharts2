@@ -32,25 +32,59 @@ using System.Runtime.CompilerServices;
 
 namespace LiveChartsCore
 {
+    /// <summary>
+    /// Defines a series in a Cartesian chart.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <typeparam name="TVisual">The type of the visual.</typeparam>
+    /// <typeparam name="TLabel">The type of the label.</typeparam>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="LiveChartsCore.ISeries" />
+    /// <seealso cref="LiveChartsCore.ISeries{TModel}" />
+    /// <seealso cref="System.IDisposable" />
+    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
     public abstract class Series<TModel, TVisual, TLabel, TDrawingContext> : ISeries, ISeries<TModel>, IDisposable, INotifyPropertyChanged
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
-        private readonly CollectionDeepObserver<TModel> observer;
+        /// <summary>
+        /// The subscribed to
+        /// </summary>
         protected readonly HashSet<IChart> subscribedTo = new();
+
+        /// <summary>
+        /// The implements icp
+        /// </summary>
+        protected readonly bool implementsICP;
+
+        /// <summary>
+        /// The pivot
+        /// </summary>
+        protected float pivot = 0f;
+
+        /// <summary>
+        /// The data provider
+        /// </summary>
+        protected DataProvider<TModel, TDrawingContext>? dataProvider;
+
+        /// <summary>
+        /// The ever fetched
+        /// </summary>
+        protected readonly HashSet<ChartPoint> everFetched = new();
+        private readonly CollectionDeepObserver<TModel> observer;
         private readonly SeriesProperties properties;
         private IEnumerable<TModel>? values;
-        protected readonly bool implementsICP;
-        protected float pivot = 0f;
-        protected DataProvider<TModel, TDrawingContext>? dataProvider;
-        protected readonly HashSet<ChartPoint> everFetched = new();
         private string? name;
         private Action<TModel, ChartPoint>? mapping;
         private int zIndex;
         private Func<ChartPoint, string> tooltipLabelFormatter = (point) => $"{point.Context.Series.Name} {point.PrimaryValue}"; 
         private Func<ChartPoint, string> dataLabelsFormatter = (point) => $"{point.PrimaryValue}";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+        /// </summary>
+        /// <param name="properties">The properties.</param>
         public Series(SeriesProperties properties)
         {
             this.properties = properties;
@@ -107,6 +141,9 @@ namespace LiveChartsCore
         /// </summary>
         public event Action<TypedChartPoint<TVisual, TLabel, TDrawingContext>>? PointCreated;
 
+        /// <summary>
+        /// Occurs when aa property changes.
+        /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
@@ -116,7 +153,7 @@ namespace LiveChartsCore
         public Action<TVisual, IChartView<TDrawingContext>>? OnPointAddedToState { get; set; }
 
         /// <summary>
-        /// Gets or sets a delegate that will be called everytime a <see cref="ChartVisualPoint{TModel, TVisual, TLabel, TDrawingContext}"/> instance
+        /// Gets or sets a delegate that will be called everytime a <see cref="ChartPoint"/> instance
         /// is removed from a state.
         /// </summary>
         public Action<TVisual, IChartView<TDrawingContext>>? OnPointRemovedFromState { get; set; }
@@ -220,13 +257,19 @@ namespace LiveChartsCore
             observer.Dispose(values);
         }
 
+        /// <summary>
+        /// Softs the delete point.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <param name="primaryScale">The primary scale.</param>
+        /// <param name="secondaryScale">The secondary scale.</param>
+        /// <returns></returns>
         protected virtual void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale) { }
 
         /// <summary>
         /// Called when a point was measured.
         /// </summary>
         /// <param name="chartPoint">The chart point.</param>
-        /// <param name="visual">The visual.</param>
         protected virtual void OnPointMeasured(ChartPoint chartPoint)
         {
             PointMeasured?.Invoke(new TypedChartPoint<TVisual, TLabel, TDrawingContext>(chartPoint));
@@ -242,6 +285,11 @@ namespace LiveChartsCore
             PointCreated?.Invoke(new TypedChartPoint<TVisual, TLabel, TDrawingContext>(chartPoint));
         }
 
+        /// <summary>
+        /// Sets the default point transitions.
+        /// </summary>
+        /// <param name="chartPoint">The chart point.</param>
+        /// <returns></returns>
         protected abstract void SetDefaultPointTransitions(ChartPoint chartPoint);
 
         /// <summary>
@@ -330,6 +378,11 @@ namespace LiveChartsCore
             };
         }
 
+        /// <summary>
+        /// Called when a property changed.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <returns></returns>
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

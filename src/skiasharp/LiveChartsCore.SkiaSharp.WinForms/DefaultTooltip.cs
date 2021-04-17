@@ -16,6 +16,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         public DefaultTooltip()
         {
             InitializeComponent();
+            ShowInTaskbar = false;
         }
 
         public void Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)

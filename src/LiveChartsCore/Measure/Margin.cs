@@ -22,12 +22,25 @@
 
 namespace LiveChartsCore.Measure
 {
+    /// <summary>
+    ///Defines the margin class.
+    /// </summary>
     public class Margin
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Margin"/> class.
+        /// </summary>
         public Margin()
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Margin"/> class.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="top">The top.</param>
+        /// <param name="right">The right.</param>
+        /// <param name="bottom">The bottom.</param>
         public Margin(float left, float top, float right, float bottom)
         {
             Left = left;
@@ -36,9 +49,36 @@ namespace LiveChartsCore.Measure
             Bottom = bottom;
         }
 
+        /// <summary>
+        /// Gets or sets the left.
+        /// </summary>
+        /// <value>
+        /// The left.
+        /// </value>
         public float Left { get; set; }
+
+        /// <summary>
+        /// Gets or sets the top.
+        /// </summary>
+        /// <value>
+        /// The top.
+        /// </value>
         public float Top { get; set; }
+
+        /// <summary>
+        /// Gets or sets the right.
+        /// </summary>
+        /// <value>
+        /// The right.
+        /// </value>
         public float Right { get; set; }
+
+        /// <summary>
+        /// Gets or sets the bottom.
+        /// </summary>
+        /// <value>
+        /// The bottom.
+        /// </value>
         public float Bottom { get; set; }
     }
 }

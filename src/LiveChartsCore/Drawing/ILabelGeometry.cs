@@ -24,11 +24,36 @@ using LiveChartsCore.Drawing.Common;
 
 namespace LiveChartsCore.Drawing
 {
+    /// <summary>
+    /// Defines a label geometry in the user interface.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="LiveChartsCore.Drawing.IGeometry{TDrawingContext}" />
     public interface ILabelGeometry<TDrawingContext> : IGeometry<TDrawingContext>
          where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Gets or sets the padding.
+        /// </summary>
+        /// <value>
+        /// The padding.
+        /// </value>
         Padding Padding { get; set; }
+
+        /// <summary>
+        /// Gets or sets the text.
+        /// </summary>
+        /// <value>
+        /// The text.
+        /// </value>
         string Text { get; set; }
+
+        /// <summary>
+        /// Gets or sets the size of the text.
+        /// </summary>
+        /// <value>
+        /// The size of the text.
+        /// </value>
         float TextSize { get; set; }
     }
 }

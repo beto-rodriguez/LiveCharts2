@@ -30,6 +30,11 @@ using LiveChartsCore.Measure;
 
 namespace LiveChartsCore
 {
+    /// <summary>
+    /// Defines a cartesina chart.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="LiveChartsCore.Chart{TDrawingContext}" />
     public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
@@ -43,6 +48,12 @@ namespace LiveChartsCore
         private ZoomAndPanMode zoomMode;
         private ICartesianSeries<TDrawingContext>[] series = new ICartesianSeries<TDrawingContext>[0];
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CartesianChart{TDrawingContext}"/> class.
+        /// </summary>
+        /// <param name="view">The view.</param>
+        /// <param name="defaultPlatformConfig">The default platform configuration.</param>
+        /// <param name="canvas">The canvas.</param>
         public CartesianChart(
             ICartesianChartView<TDrawingContext> view,
             Action<LiveChartsSettings> defaultPlatformConfig,
@@ -67,13 +78,47 @@ namespace LiveChartsCore
             }
         }
 
-        public object Sync = new();
+        /// <summary>
+        /// Gets the x axes.
+        /// </summary>
+        /// <value>
+        /// The x axes.
+        /// </value>
         public IAxis<TDrawingContext>[] XAxes => secondaryAxes;
+
+        /// <summary>
+        /// Gets the y axes.
+        /// </summary>
+        /// <value>
+        /// The y axes.
+        /// </value>
         public IAxis<TDrawingContext>[] YAxes => primaryAxes;
+
+        /// <summary>
+        /// Gets the series.
+        /// </summary>
+        /// <value>
+        /// The series.
+        /// </value>
         public ICartesianSeries<TDrawingContext>[] Series => series;
+
+        /// <summary>
+        /// Gets the drawable series.
+        /// </summary>
+        /// <value>
+        /// The drawable series.
+        /// </value>
         public override IEnumerable<IDrawableSeries<TDrawingContext>> DrawableSeries => series;
+
+        /// <summary>
+        /// Gets the view.
+        /// </summary>
+        /// <value>
+        /// The view.
+        /// </value>
         public override IChartView<TDrawingContext> View => chartView;
 
+        /// <inheritdoc cref="IChart.Update(bool)" />
         public override void Update(bool throttling = true)
         {
             if (!throttling)
@@ -85,13 +130,23 @@ namespace LiveChartsCore
             updateThrottler.Call();
         }
 
+        /// <summary>
+        /// Finds the points near to the speficied location.
+        /// </summary>
+        /// <param name="pointerPosition">The pointer position.</param>
+        /// <returns></returns>
         public override IEnumerable<TooltipPoint> FindPointsNearTo(PointF pointerPosition)
         {
-            if (measureWorker == null) return Enumerable.Empty<TooltipPoint>();
-
             return chartView.Series.SelectMany(series => series.FindPointsNearTo(this, pointerPosition));
         }
 
+        /// <summary>
+        /// Scales the speficied point to the UI.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <param name="xAxisIndex">Index of the x axis.</param>
+        /// <param name="yAxisIndex">Index of the y axis.</param>
+        /// <returns></returns>
         public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
             var xAxis = secondaryAxes[xAxisIndex];
@@ -103,6 +158,12 @@ namespace LiveChartsCore
             return new PointF(xScaler.ToChartValues(point.X), yScaler.ToChartValues(point.Y));
         }
 
+        /// <summary>
+        /// Zooms to the specified pivot.
+        /// </summary>
+        /// <param name="pivot">The pivot.</param>
+        /// <param name="direction">The direction.</param>
+        /// <returns></returns>
         public void Zoom(PointF pivot, ZoomDirection direction)
         {
             if (primaryAxes == null || secondaryAxes == null) return;
@@ -167,6 +228,11 @@ namespace LiveChartsCore
             }
         }
 
+        /// <summary>
+        /// Pans with the specified delta.
+        /// </summary>
+        /// <param name="delta">The delta.</param>
+        /// <returns></returns>
         public void Pan(PointF delta)
         {
             if ((zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X)
@@ -202,6 +268,10 @@ namespace LiveChartsCore
             }
         }
 
+        /// <summary>
+        /// Measures this chart.
+        /// </summary>
+        /// <returns></returns>
         protected override void Measure()
         {
             seriesContext = new SeriesContext<TDrawingContext>(series);
@@ -368,6 +438,10 @@ namespace LiveChartsCore
             Canvas.Invalidate();
         }
 
+        /// <summary>
+        /// Called when the updated the throttler is unlocked.
+        /// </summary>
+        /// <returns></returns>
         protected override void UpdateThrottlerUnlocked()
         {
             // before measure every element in the chart
@@ -383,7 +457,6 @@ namespace LiveChartsCore
             zoomingSpeed = chartView.ZoomingSpeed;
             zoomMode = chartView.ZoomMode;
 
-            measureWorker = new object();
             series = chartView.Series
                 .Cast<ICartesianSeries<TDrawingContext>>()
                 .Select(series =>

@@ -23,13 +23,13 @@
 namespace LiveChartsCore.Drawing
 {
     /// <summary>
-    /// Defines an object that contains a <see cref="Geometry"/> to highlight when the point requires so.
+    /// Defines an object that contains a <see cref="IDrawable{TDrawingContext}"/> to highlight when the point requires so.
     /// </summary>
     public interface IVisualChartPoint<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Gets the main <see cref="Geometry"/>.
+        /// Gets the main <see cref="IDrawable{TDrawingContext}"/>.
         /// </summary>
         IDrawable<TDrawingContext>? HighlightableGeometry { get; }
     }

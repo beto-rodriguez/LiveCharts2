@@ -22,6 +22,12 @@
 
 namespace LiveChartsCore.Drawing
 {
+    /// <summary>
+    /// Defiens a bezier segment.
+    /// </summary>
+    /// <typeparam name="TPathContext">The type of the path context.</typeparam>
+    /// <seealso cref="LiveChartsCore.Drawing.IAnimatableBezierSegment" />
+    /// <seealso cref="LiveChartsCore.Drawing.IPathCommand{TPathContext}" />
     public interface IBezierSegment<TPathContext> : IAnimatableBezierSegment, IPathCommand<TPathContext>
     {
     }

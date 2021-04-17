@@ -21,11 +21,14 @@
 // SOFTWARE.
 
 using LiveChartsCore.Measure;
-using System;
 using System.Drawing;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defines a rectangle hover area.
+    /// </summary>
+    /// <seealso cref="LiveChartsCore.Kernel.HoverArea" />
     public class RectangleHoverArea : HoverArea
     {
         private float x;
@@ -33,11 +36,46 @@ namespace LiveChartsCore.Kernel
         private float width;
         private float height;
 
+        /// <summary>
+        /// Gets or sets the x location.
+        /// </summary>
+        /// <value>
+        /// The x.
+        /// </value>
         public float X { get => x; set => x = value; }
+
+        /// <summary>
+        /// Gets or sets the y location.
+        /// </summary>
+        /// <value>
+        /// The y.
+        /// </value>
         public float Y { get => y; set => y = value; }
+
+        /// <summary>
+        /// Gets or sets the width.
+        /// </summary>
+        /// <value>
+        /// The width.
+        /// </value>
         public float Width { get => width; set => width = value; }
+
+        /// <summary>
+        /// Gets or sets the height.
+        /// </summary>
+        /// <value>
+        /// The height.
+        /// </value>
         public float Height { get => height; set => height = value; }
 
+        /// <summary>
+        /// Sets the area dimensions.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <returns></returns>
         public RectangleHoverArea SetDimensions(float x, float y, float width, float height)
         {
             this.x = x;
@@ -47,6 +85,7 @@ namespace LiveChartsCore.Kernel
             return this;
         }
 
+        /// <inheritdoc cref="IsTriggerBy(PointF, TooltipFindingStrategy)"/>
         public override bool IsTriggerBy(PointF point, TooltipFindingStrategy strategy)
         {
             return strategy == TooltipFindingStrategy.CompareAll
@@ -55,6 +94,7 @@ namespace LiveChartsCore.Kernel
                   (strategy == TooltipFindingStrategy.CompareOnlyX || (point.Y >= y && point.Y <= y + height));
         }
 
+        /// <inheritdoc cref="SuggestTooltipPlacement(TooltipPlacementContext)"/>
         public override void SuggestTooltipPlacement(TooltipPlacementContext cartesianContext)
         {
             if (y < cartesianContext.MostTop) cartesianContext.MostTop = y;

@@ -24,9 +24,18 @@ using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Kernel
 {
+    /// <summary>
+    /// Defines adata factory provider.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     public interface IDataFactoryProvider<TDrawingContext>
          where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Gets the provider.
+        /// </summary>
+        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <returns></returns>
         public DataProvider<TModel, TDrawingContext> GetProvider<TModel>();
     }
 }

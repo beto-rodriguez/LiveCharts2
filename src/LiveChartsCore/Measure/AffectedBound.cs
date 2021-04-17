@@ -24,11 +24,23 @@ using System;
 
 namespace LiveChartsCore.Measure
 {
+    /// <summary>
+    /// Defines a the measured affected bounds.
+    /// </summary>
     [Flags]
     public enum AffectedBound
     {
+        /// <summary>
+        /// The none option.
+        /// </summary>
         None = 0,
+        /// <summary>
+        /// The max limit.
+        /// </summary>
         Max = 1 << 0,
+        /// <summary>
+        ///  The min limit.
+        /// </summary>
         Min = 1 << 1
     }
 }

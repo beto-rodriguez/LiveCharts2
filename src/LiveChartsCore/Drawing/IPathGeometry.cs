@@ -22,6 +22,12 @@
 
 namespace LiveChartsCore.Drawing
 {
+    /// <summary>
+    /// Defines a path geometyr in the user interface.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <typeparam name="TPathArgs">The type of the path arguments.</typeparam>
+    /// <seealso cref="LiveChartsCore.Drawing.IDrawable{TDrawingContext}" />
     public interface IPathGeometry<TDrawingContext, TPathArgs> : IDrawable<TDrawingContext>
          where TDrawingContext : DrawingContext
     {
@@ -54,6 +60,9 @@ namespace LiveChartsCore.Drawing
         /// <param name="command">The command.</param>
         void RemoveCommand(IPathCommand<TPathArgs> command);
 
+        /// <summary>
+        /// Clears the commands.
+        /// </summary>
         void ClearCommands();
     }
 }

@@ -36,6 +36,9 @@ namespace LiveChartsCore
         where TVisual : class, IDoughnutVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+        /// </summary>
         public PieSeries() : base(SeriesProperties.PieSeries | SeriesProperties.Stacked)
         {
             HoverState = LiveCharts.PieSeriesHoverKey;
@@ -190,16 +193,30 @@ namespace LiveChartsCore
             if (dataProvider == null) throw new Exception("Data provider not found");
             return dataProvider.GetPieBounds(chart, this);
         }
+
+        /// <summary>
+        /// Defines de default behaviour when a point is added to a state.
+        /// </summary>
+        /// <param name="visual">The visual.</param>
+        /// <param name="chart">The chart.</param>
         protected override void DefaultOnPointAddedToSate(TVisual visual, IChartView<TDrawingContext> chart)
         {
             visual.PushOut = (float)HoverPushout;
         }
 
+        /// <summary>
+        /// Defines the default behavior when a point is removed from a state.
+        /// </summary>
+        /// <param name="visual">The visual.</param>
+        /// <param name="chart">The chart.</param>
         protected override void DefaultOnRemovedFromState(TVisual visual, IChartView<TDrawingContext> chart)
         {
             visual.PushOut = (float)Pushout;
         }
 
+        /// <summary>
+        /// Called when the paint context changed.
+        /// </summary>
         protected override void OnPaintContextChanged()
         {
             var context = new PaintContext<TDrawingContext>();
@@ -248,9 +265,18 @@ namespace LiveChartsCore
             paintContext = context;
         }
 
-        // for now multiple stack levels at a pie chart is not supported.
+        /// <summary>
+        /// GEts the stack group
+        /// </summary>
+        /// <returns></returns>
+        /// <inheritdoc />
         public override int GetStackGroup() => 0;
 
+        /// <summary>
+        /// Sets the default point transitions.
+        /// </summary>
+        /// <param name="chartPoint">The chart point.</param>
+        /// <exception cref="Exception">Unable to initialize the point instance.</exception>
         protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
         {
             var visual = chartPoint.Context.Visual as TVisual;
@@ -276,6 +302,12 @@ namespace LiveChartsCore
                         .WithEasingFunction(chart.EasingFunction));
         }
 
+        /// <summary>
+        /// Softs the delete point.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <param name="primaryScale">The primary scale.</param>
+        /// <param name="secondaryScale">The secondary scale.</param>
         protected override void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
         {
             var visual = (TVisual?)point.Context.Visual;
@@ -286,6 +318,11 @@ namespace LiveChartsCore
             visual.RemoveOnCompleted = true;
         }
 
+        /// <summary>
+        /// Deletes the point from the chart.
+        /// </summary>
+        /// <param name="chart"></param>
+        /// <inheritdoc cref="M:LiveChartsCore.ISeries.Delete(LiveChartsCore.Kernel.IChartView)" />
         public override void Delete(IChartView chart)
         {
             var u = new Scaler();
