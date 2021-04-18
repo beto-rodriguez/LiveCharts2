@@ -26,20 +26,68 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing
 {
+    /// <summary>
+    /// Defines a skia sharp drawing context.
+    /// </summary>
+    /// <seealso cref="LiveChartsCore.Drawing.DrawingContext" />
     public class SkiaSharpDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SkiaSharpDrawingContext"/> class.
+        /// </summary>
+        /// <param name="info">The information.</param>
+        /// <param name="surface">The surface.</param>
+        /// <param name="canvas">The canvas.</param>
         public SkiaSharpDrawingContext(SKImageInfo info, SKSurface surface, SKCanvas canvas)
         {
             Info = info;
             Surface = surface;
             Canvas = canvas;
         }
+
+        /// <summary>
+        /// Gets or sets the information.
+        /// </summary>
+        /// <value>
+        /// The information.
+        /// </value>
         public SKImageInfo Info { get; set; }
+
+        /// <summary>
+        /// Gets or sets the surface.
+        /// </summary>
+        /// <value>
+        /// The surface.
+        /// </value>
         public SKSurface Surface { get; set; }
+
+        /// <summary>
+        /// Gets or sets the canvas.
+        /// </summary>
+        /// <value>
+        /// The canvas.
+        /// </value>
         public SKCanvas Canvas { get; set; }
+
+        /// <summary>
+        /// Gets or sets the paint task.
+        /// </summary>
+        /// <value>
+        /// The paint task.
+        /// </value>
         public PaintTask PaintTask { get; set; }
+
+        /// <summary>
+        /// Gets or sets the paint.
+        /// </summary>
+        /// <value>
+        /// The paint.
+        /// </value>
         public SKPaint Paint { get; set; }
 
+        /// <summary>
+        /// Clears the canvas.
+        /// </summary>
         public override void ClearCanvas()
         {
             Canvas.Clear();

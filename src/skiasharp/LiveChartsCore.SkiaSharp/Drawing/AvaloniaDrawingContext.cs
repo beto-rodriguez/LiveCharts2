@@ -24,13 +24,27 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing
 {
+    /// <summary>
+    /// Defines an avalonia-skiasharp drawing context.
+    /// </summary>
+    /// <seealso cref="LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext" />
     public class AvaloniaDrawingContext: SkiaSharpDrawingContext
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AvaloniaDrawingContext"/> class.
+        /// </summary>
+        /// <param name="info">The information.</param>
+        /// <param name="surface">The surface.</param>
+        /// <param name="canvas">The canvas.</param>
         public AvaloniaDrawingContext(SKImageInfo info, SKSurface surface, SKCanvas canvas) 
             :base(info, surface, canvas) 
         {
 
         }
+
+        /// <summary>
+        /// Clears the canvas.
+        /// </summary>
         public override void ClearCanvas()
         {
             // work arround becauase avalonia clears the canvas to black

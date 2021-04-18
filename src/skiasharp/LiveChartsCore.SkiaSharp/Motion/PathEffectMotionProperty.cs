@@ -25,14 +25,22 @@ using LiveChartsCore.SkiaSharpView.Motion.Composed;
 
 namespace LiveChartsCore.SkiaSharpView.Motion
 {
+    /// <summary>
+    /// A property that defines path effects transitions to enable animations.
+    /// </summary>
     public class PathEffectMotionProperty : MotionProperty<PathEffect>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PathEffectMotionProperty"/> class.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
         public PathEffectMotionProperty(string propertyName)
             : base(propertyName)
         {
 
         }
 
+        /// <inheritdoc cref="OnGetMovement(float)" />
         protected override PathEffect OnGetMovement(float progress)
         {
             if (fromValue == null && toValue == null) return null;

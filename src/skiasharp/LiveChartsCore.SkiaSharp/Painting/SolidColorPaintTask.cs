@@ -30,6 +30,10 @@ using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Painting
 {
+    /// <summary>
+    /// Defines a set of geometries that will be painted using a solid color.,
+    /// </summary>
+    /// <seealso cref="LiveChartsCore.SkiaSharpView.Painting.PaintTask" />
     public class SolidColorPaintTask : PaintTask
     {
         private readonly FloatMotionProperty strokeMiterTransition;
@@ -37,6 +41,9 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         private readonly ShaderMotionProperty shaderTransition;
         private SkiaSharpDrawingContext drawingContext;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SolidColorPaintTask"/> class.
+        /// </summary>
         public SolidColorPaintTask()
         {
             strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
@@ -44,6 +51,10 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             shaderTransition = RegisterMotionProperty(new ShaderMotionProperty(nameof(Shader)));
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SolidColorPaintTask"/> class.
+        /// </summary>
+        /// <param name="color">The color.</param>
         public SolidColorPaintTask(SKColor color)
             : base(color)
         {
@@ -52,6 +63,11 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             shaderTransition = RegisterMotionProperty(new ShaderMotionProperty(nameof(Shader)));
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SolidColorPaintTask"/> class.
+        /// </summary>
+        /// <param name="color">The color.</param>
+        /// <param name="strokeWidth">Width of the stroke.</param>
         public SolidColorPaintTask(SKColor color, float strokeWidth)
             : base(color)
         {
@@ -61,26 +77,60 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             shaderTransition = RegisterMotionProperty(new ShaderMotionProperty(nameof(Shader)));
         }
 
+        /// <summary>
+        /// Gets or sets the stroke cap.
+        /// </summary>
+        /// <value>
+        /// The stroke cap.
+        /// </value>
         public SKStrokeCap StrokeCap { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets the stroke join.
+        /// </summary>
+        /// <value>
+        /// The stroke join.
+        /// </value>
         public SKStrokeJoin StrokeJoin { get; set; }
 
+        /// <summary>
+        /// Gets or sets the stroke miter.
+        /// </summary>
+        /// <value>
+        /// The stroke miter.
+        /// </value>
         public float StrokeMiter 
         {
             get => strokeMiterTransition.GetMovement(this);
             set => strokeMiterTransition.SetMovement(value, this);
         }
+
+        /// <summary>
+        /// Gets or sets the path effect.
+        /// </summary>
+        /// <value>
+        /// The path effect.
+        /// </value>
         public PathEffect PathEffect
         { 
             get => pathEffectTransition.GetMovement(this); 
             set => pathEffectTransition.SetMovement(value, this); 
         }
+
+        /// <summary>
+        /// Gets or sets the shader.
+        /// </summary>
+        /// <value>
+        /// The shader.
+        /// </value>
         public Shader Shader
         {
             get => shaderTransition.GetMovement(this);
             set => shaderTransition.SetMovement(value, this);
         }
 
+        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.CloneTask" />
         public override IDrawableTask<SkiaSharpDrawingContext> CloneTask()
         {
             var clone = new SolidColorPaintTask
@@ -100,6 +150,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             return clone;
         }
 
+        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.InitializeTask(TDrawingContext)" />
         public override void InitializeTask(SkiaSharpDrawingContext drawingContext)
         {
             if (skiaPaint == null) skiaPaint = new SKPaint();
@@ -127,6 +178,9 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             drawingContext.PaintTask = this;
         }
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
         public override void Dispose()
         {
             if (ClipRectangle != RectangleF.Empty && drawingContext != null)

@@ -29,26 +29,34 @@ using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
+    /// <inheritdoc cref="ILineGeometry{TDrawingContext}" />
     public class LineGeometry : Geometry, ILineGeometry<SkiaSharpDrawingContext>
     {
         private readonly FloatMotionProperty x1;
         private readonly FloatMotionProperty y1;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LineGeometry"/> class.
+        /// </summary>
         public LineGeometry()
         {
             x1 = RegisterMotionProperty(new FloatMotionProperty(nameof(X1), 0f));
             y1 = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
         }
 
+        /// <inheritdoc cref="ILineGeometry{TDrawingContext}.X1" />
         public float X1 { get => x1.GetMovement(this); set => x1.SetMovement(value, this); }
 
+        /// <inheritdoc cref="ILineGeometry{TDrawingContext}.Y1" />
         public float Y1 { get => y1.GetMovement(this); set => y1.SetMovement(value, this); }
 
+        /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
             context.Canvas.DrawLine(X, Y, X1, Y1, paint);
         }
 
+        /// <inheritdoc cref="Geometry.OnMeasure(PaintTask)" />
         protected override SizeF OnMeasure(PaintTask drawable)
         {
             return new SizeF(Math.Abs(X1 - X), Math.Abs(Y1 - Y));

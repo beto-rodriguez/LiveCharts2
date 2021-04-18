@@ -26,17 +26,38 @@ using System;
 
 namespace LiveChartsCore.SkiaSharpView
 {
+    /// <summary>
+    /// Defines the default LiveCharts-SkiaSharp settings
+    /// </summary>
     public static class LiveChartsSkiaSharp
     {
         private static readonly DefaultPaintTask<SkiaSharpDrawingContext> defaultPaintTask = new DefaultPaintTask<SkiaSharpDrawingContext>();
 
+        /// <summary>
+        /// Gets the default paint task.
+        /// </summary>
+        /// <value>
+        /// The default paint.
+        /// </value>
         public static DefaultPaintTask<SkiaSharpDrawingContext> DefaultPaint => defaultPaintTask;
 
+        /// <summary>
+        /// Gets the default platform builder.
+        /// </summary>
+        /// <value>
+        /// The default platform builder.
+        /// </value>
         public static Action<LiveChartsSettings> DefaultPlatformBuilder =>
             (LiveChartsSettings settings) => settings
                 .AddDefaultMappers()
                 .AddSkiaSharp();
 
+        /// <summary>
+        /// Adds SkiaSharp as the UI provider for LiveCharts.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <param name="builder">The builder.</param>
+        /// <returns></returns>
         public static LiveChartsSettings AddSkiaSharp(
             this LiveChartsSettings settings, Action<StyleBuilder<SkiaSharpDrawingContext>> builder = null)
         {

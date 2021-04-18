@@ -24,23 +24,41 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
+    /// <summary>
+    /// Defines a geometry that is built using from a svg path.
+    /// </summary>
+    /// <seealso cref="LiveChartsCore.SkiaSharpView.Drawing.Geometries.SizedGeometry" />
     public class SVGPathGeometry : SizedGeometry
     {
         private string svg;
         private SKPath svgPath;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SVGPathGeometry"/> class.
+        /// </summary>
         public SVGPathGeometry() : base()
         {
 
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SVGPathGeometry"/> class.
+        /// </summary>
+        /// <param name="svgPath">The SVG path.</param>
         public SVGPathGeometry(SKPath svgPath)
         {
             this.svgPath = svgPath;
         }
 
+        /// <summary>
+        /// Gets or sets the SVG path.
+        /// </summary>
+        /// <value>
+        /// The SVG.
+        /// </value>
         public string SVG { get => svg; set { svg = value; OnSVGPropertyChanged(); } }
 
+        /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
             if (svgPath == null && svg == null)

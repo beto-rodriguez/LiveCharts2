@@ -24,9 +24,23 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Motion.Composed
 {
+    /// <summary>
+    /// A wrapper for skia sharp shaders to enable animations on them.
+    /// </summary>
     public abstract class Shader
     {
+        /// <summary>
+        /// Interpolates a shader.
+        /// </summary>
+        /// <param name="from">From.</param>
+        /// <param name="progress">The progress.</param>
+        /// <returns></returns>
         public abstract Shader InterpolateFrom(Shader from, float progress);
+
+        /// <summary>
+        /// Gets the skia sharp shader.
+        /// </summary>
+        /// <returns></returns>
         public abstract SKShader GetSKShader();
     }
 }

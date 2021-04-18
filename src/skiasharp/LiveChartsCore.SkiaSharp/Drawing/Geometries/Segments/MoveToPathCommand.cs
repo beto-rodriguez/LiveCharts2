@@ -27,20 +27,28 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments
 {
+    /// <inheritdoc cref="IMoveToPathCommand{TPath}" />
     public class MoveToPathCommand : PathCommand, IMoveToPathCommand<SKPath>
     {
         private readonly FloatMotionProperty xTransition;
         private readonly FloatMotionProperty yTransition;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MoveToPathCommand"/> class.
+        /// </summary>
         public MoveToPathCommand()
         {
             xTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0f));
             yTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0f));
         }
 
+        /// <inheritdoc cref="IMoveToPathCommand{TPath}.X" />
         public float X { get => xTransition.GetMovement(this); set => xTransition.SetMovement(value, this); }
+
+        /// <inheritdoc cref="IMoveToPathCommand{TPath}.Y" />
         public float Y { get => yTransition.GetMovement(this); set => yTransition.SetMovement(value, this); }
 
+        /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
         public override void Execute(SKPath path, long currentTime, Animatable pathGeometry)
         {
             SetCurrentTime(currentTime);

@@ -24,9 +24,23 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Motion.Composed
 {
+    /// <summary>
+    /// A wrapper for skia sharp path effects, to rnable animations on them.
+    /// </summary>
     public abstract class PathEffect
     {
+        /// <summary>
+        /// Interpolates a path effect.
+        /// </summary>
+        /// <param name="from">From.</param>
+        /// <param name="progress">The progress.</param>
+        /// <returns></returns>
         public abstract PathEffect InterpolateFrom(PathEffect from, float progress);
+
+        /// <summary>
+        /// Gets the skia sharp path effect.
+        /// </summary>
+        /// <returns></returns>
         public abstract SKPathEffect GetSKPath();
     }
 }

@@ -25,7 +25,7 @@ namespace LiveChartsCore.Drawing.Common
     /// <summary>
     /// Defines the padding measure helped class,.
     /// </summary>
-    public struct Padding
+    public class Padding
     {
         /// <summary>
         /// Gets or sets the left.

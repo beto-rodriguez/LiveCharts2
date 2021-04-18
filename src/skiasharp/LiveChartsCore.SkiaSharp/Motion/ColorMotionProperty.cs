@@ -25,8 +25,15 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Motion
 {
+    /// <summary>
+    /// A property that defines color transitions to enable animations.
+    /// </summary>
     public class ColorMotionProperty : MotionProperty<SKColor>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ColorMotionProperty"/> class.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
         public ColorMotionProperty(string propertyName)
             : base(propertyName)
         {
@@ -34,6 +41,11 @@ namespace LiveChartsCore.SkiaSharpView.Motion
             toValue = new SKColor();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ColorMotionProperty"/> class.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="color">The color.</param>
         public ColorMotionProperty(string propertyName, SKColor color)
             : base(propertyName)
         {
@@ -41,6 +53,7 @@ namespace LiveChartsCore.SkiaSharpView.Motion
             toValue = new SKColor(color.Red, color.Green, color.Blue, color.Alpha);
         }
 
+        /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
         protected override SKColor OnGetMovement(float progress)
         {
             unchecked

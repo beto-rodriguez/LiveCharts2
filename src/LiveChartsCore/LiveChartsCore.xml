@@ -5031,7 +5031,8 @@
         </member>
         <member name="T:LiveChartsCore.LiveChartsInitializer`1">
             <summary>
-            Defines an object that must set the default Fill, Stroke and series name.
+            Defines an object that must initialize live charts visual objects, this object defines how things will 
+            be drawn by default, it is highly related to themes.
             </summary>
         </member>
         <member name="M:LiveChartsCore.LiveChartsInitializer`1.ConstructChart(LiveChartsCore.Kernel.IChartView{`0})">

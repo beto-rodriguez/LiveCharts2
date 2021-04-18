@@ -25,14 +25,22 @@ using LiveChartsCore.SkiaSharpView.Motion.Composed;
 
 namespace LiveChartsCore.SkiaSharpView.Motion
 {
+    /// <summary>
+    /// A property that defines shaders transitions to enable animations.
+    /// </summary>
     public class ShaderMotionProperty : MotionProperty<Shader>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ShaderMotionProperty"/> class.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
         public ShaderMotionProperty(string propertyName)
             : base(propertyName)
         {
 
         }
 
+        /// <inheritdoc cref="OnGetMovement(float)" />
         protected override Shader OnGetMovement(float progress)
         {
             if (fromValue == null && toValue == null) return null;

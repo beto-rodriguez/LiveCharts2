@@ -1,25 +1,29 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Motion;
-using LiveChartsCore.SkiaSharpView.Motion.Composed;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Painting
 {
+    /// <summary>
+    /// Defines a set of geometries that will be painted using a linear gradient shader.,
+    /// </summary>
+    /// <seealso cref="LiveChartsCore.SkiaSharpView.Painting.PaintTask" />
     public class LinearGradientPaintTask : PaintTask
     {
         private static readonly SKPoint DefaultStartPoint = new SKPoint(0, 0);
         private static readonly SKPoint DefaultEndPoint = new SKPoint(1, 1);
-
         private readonly SKColor[] gradientStops;
-
         private readonly SKPoint startPoint;
         private readonly SKPoint endPoint;
-
         private SkiaSharpDrawingContext drawingContext;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LinearGradientPaintTask"/> class.
+        /// </summary>
+        /// <param name="gradientStops">The gradient stops.</param>
+        /// <param name="startPoint">The start point.</param>
+        /// <param name="endPoint">The end point.</param>
         public LinearGradientPaintTask(SKColor[] gradientStops, SKPoint startPoint, SKPoint endPoint)
         {
             this.gradientStops = gradientStops;
@@ -27,15 +31,32 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             this.endPoint = endPoint;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LinearGradientPaintTask"/> class.
+        /// </summary>
+        /// <param name="gradientStops">The gradient stops.</param>
         public LinearGradientPaintTask(SKColor[] gradientStops)
             : this(gradientStops, DefaultStartPoint, DefaultEndPoint) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LinearGradientPaintTask"/> class.
+        /// </summary>
+        /// <param name="startColor">The start color.</param>
+        /// <param name="endColor">The end color.</param>
+        /// <param name="startPoint">The start point.</param>
+        /// <param name="endPoint">The end point.</param>
         public LinearGradientPaintTask(SKColor startColor, SKColor endColor, SKPoint startPoint, SKPoint endPoint)
             : this(new[] { startColor, endColor }, startPoint, endPoint) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LinearGradientPaintTask"/> class.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
         public LinearGradientPaintTask(SKColor start, SKColor end)
             : this(start, end, DefaultStartPoint, DefaultEndPoint) { }
 
+        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.CloneTask" />
         public override IDrawableTask<SkiaSharpDrawingContext> CloneTask()
         {
             return new LinearGradientPaintTask(gradientStops, startPoint, endPoint)
@@ -49,6 +70,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             };
         }
 
+        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.InitializeTask(TDrawingContext)" />
         public override void InitializeTask(SkiaSharpDrawingContext drawingContext)
         {
             if (skiaPaint == null) skiaPaint = new SKPaint();
@@ -76,6 +98,9 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             drawingContext.PaintTask = this;
         }
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
         public override void Dispose()
         {
             if (ClipRectangle != RectangleF.Empty && drawingContext != null)

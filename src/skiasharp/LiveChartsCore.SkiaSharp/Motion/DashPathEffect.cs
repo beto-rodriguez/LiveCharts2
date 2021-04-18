@@ -25,22 +25,33 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Motion
 {
+    /// <summary>
+    /// An wapper to enable dash path effects animations for skia sharp path effects.
+    /// </summary>
+    /// <seealso cref="LiveChartsCore.SkiaSharpView.Motion.Composed.PathEffect" />
     public class DashPathEffect : PathEffect
     {
         private readonly float[] dashArray;
         private readonly float phase;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DashPathEffect"/> class.
+        /// </summary>
+        /// <param name="dashArray">The dash array.</param>
+        /// <param name="phase">The phase.</param>
         public DashPathEffect(float[] dashArray, float phase)
         {
             this.dashArray = dashArray;
             this.phase = phase;
         }
 
+        /// <inheritdoc cref="PathEffect" />
         public override SKPathEffect GetSKPath()
         {
             return SKPathEffect.CreateDash(dashArray, phase);
         }
 
+        /// <inheritdoc cref="PathEffect" />
         public override PathEffect InterpolateFrom(PathEffect from, float progress)
         {
             var fromDashEffect = (DashPathEffect)from;

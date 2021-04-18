@@ -25,8 +25,12 @@ using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace LiveChartsCore.SkiaSharpView
 {
+    /// <inheritdoc cref="IAxis" />
     public class Axis: Axis<SkiaSharpDrawingContext, LabelGeometry, LineGeometry>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Axis"/> class.
+        /// </summary>
         public Axis()
         {
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);

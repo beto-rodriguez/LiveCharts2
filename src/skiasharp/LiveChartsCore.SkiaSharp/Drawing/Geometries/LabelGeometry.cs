@@ -29,32 +29,53 @@ using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
+    /// <inheritdoc cref="ILabelGeometry{TDrawingContext}" />
     public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     {
         private string text;
-        private FloatMotionProperty textSizeProperty;
+        private readonly FloatMotionProperty textSizeProperty;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LabelGeometry"/> class.
+        /// </summary>
         public LabelGeometry()
         {
             textSizeProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize)));
         }
 
+        /// <summary>
+        /// Gets or sets the vertical align.
+        /// </summary>
+        /// <value>
+        /// The vertical align.
+        /// </value>
         public Align VerticalAlign { get; set; } = Align.Middle;
 
+        /// <summary>
+        /// Gets or sets the horizontal align.
+        /// </summary>
+        /// <value>
+        /// The horizontal align.
+        /// </value>
         public Align HorizontalAlign { get; set; } = Align.Middle;
 
+        /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.Text" />
         public string Text { get => text; set => text = value; }
 
+        /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.TextSize" />
         public float TextSize { get => textSizeProperty.GetMovement(this); set => textSizeProperty.SetMovement(value, this); }
 
+        /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.Padding" />
         public Padding Padding { get; set; }
 
+        /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
             paint.TextSize = TextSize;
             context.Canvas.DrawText(text ?? "", GetPosition(context, paint), paint);
         }
 
+        /// <inheritdoc cref="Geometry.OnMeasure(PaintTask)" />
         protected override SizeF OnMeasure(PaintTask drawable)
         {
             var p = new SKPaint
@@ -72,6 +93,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             return new SizeF(bounds.Size.Width + Padding.Left + Padding.Right, bounds.Size.Height + Padding.Top + Padding.Bottom);
         }
 
+        /// <inheritdoc cref="Geometry.GetPosition(SkiaSharpDrawingContext, SKPaint)" />
         protected override SKPoint GetPosition(SkiaSharpDrawingContext context, SKPaint paint)
         {
             var size = Measure(context.PaintTask);

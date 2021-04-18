@@ -29,8 +29,16 @@ using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.SkiaSharpView
 {
+    /// <summary>
+    /// Defines an object that must initialize live charts visual objects, this object defines how things will 
+    /// be drawn by default, it is highly related to themes.
+    /// </summary>
     public class DefaultInitializer : LiveChartsInitializer<SkiaSharpDrawingContext>
     {
+        /// <summary>
+        /// Constructs a chart.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
         public override void ConstructChart(IChartView<SkiaSharpDrawingContext> chart)
         {
             var defaultHoverColor = new SKColor(255, 255, 255, 180);
@@ -44,6 +52,10 @@ namespace LiveChartsCore.SkiaSharpView
             };
         }
 
+        /// <summary>
+        /// Constructs an axis.
+        /// </summary>
+        /// <param name="axis">The axis.</param>
         public override void ConstructAxis(IAxis<SkiaSharpDrawingContext> axis)
         {
             axis.ShowSeparatorLines = true;
@@ -51,6 +63,10 @@ namespace LiveChartsCore.SkiaSharpView
             axis.SeparatorsBrush = LiveChartsSkiaSharp.DefaultPaint;
         }
 
+        /// <summary>
+        /// Constructs a series.
+        /// </summary>
+        /// <param name="series">The series.</param>
         public override void ConstructSeries(IDrawableSeries<SkiaSharpDrawingContext> series)
         {
             if ((series.SeriesProperties & SeriesProperties.PieSeries) == SeriesProperties.PieSeries)
@@ -88,6 +104,11 @@ namespace LiveChartsCore.SkiaSharpView
             series.Stroke = LiveChartsSkiaSharp.DefaultPaint;
         }
 
+        /// <summary>
+        /// Resolves the series defaults.
+        /// </summary>
+        /// <param name="colors">The colors.</param>
+        /// <param name="series">The series.</param>
         public override void ResolveSeriesDefaults(Color[] colors, IDrawableSeries<SkiaSharpDrawingContext> series)
         {
             var color = colors[series.SeriesId % colors.Length];
@@ -121,6 +142,10 @@ namespace LiveChartsCore.SkiaSharpView
             }
         }
 
+        /// <summary>
+        /// Resolves the axis defaults.
+        /// </summary>
+        /// <param name="axis">The axis.</param>
         public override void ResolveAxisDefaults(IAxis<SkiaSharpDrawingContext> axis)
         {
             if (axis.SeparatorsBrush == LiveChartsSkiaSharp.DefaultPaint)

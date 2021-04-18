@@ -26,8 +26,10 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments
 {
+    /// <inheritdoc cref="IPathCommand{TPathContext}" />
     public abstract class PathCommand : Animatable, IPathCommand<SKPath>
     {
+        /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
         public abstract void Execute(SKPath path, long currentTime, Animatable pathGeometry);
     }
 }

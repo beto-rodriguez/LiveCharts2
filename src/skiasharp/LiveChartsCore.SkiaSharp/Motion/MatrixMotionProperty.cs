@@ -25,14 +25,22 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Motion
 {
+    /// <summary>
+    /// A wrapper to enable matrix/transform transitions for skia sharp.
+    /// </summary>
     public class MatrixMotionProperty : MotionProperty<SKMatrix>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MatrixMotionProperty"/> class.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
         public MatrixMotionProperty(string propertyName)
             : base(propertyName)
         {
 
         }
 
+        /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
         protected override SKMatrix OnGetMovement(float progress)
         {
             return new SKMatrix

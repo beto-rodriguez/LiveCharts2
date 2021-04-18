@@ -30,16 +30,35 @@ using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
+    /// <inheritdoc cref="IGeometry{TDrawingContext}" />
     public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>, IVisualChartPoint<SkiaSharpDrawingContext>
     {
         private bool hasTransform = false;
         private bool hasRotation = false;
 
+        /// <summary>
+        /// The transform
+        /// </summary>
         protected readonly MatrixMotionProperty transform;
+
+        /// <summary>
+        /// The x
+        /// </summary>
         protected readonly FloatMotionProperty x;
+
+        /// <summary>
+        /// The y
+        /// </summary>
         protected readonly FloatMotionProperty y;
+
+        /// <summary>
+        /// The rotation
+        /// </summary>
         protected readonly FloatMotionProperty rotation;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Geometry"/> class.
+        /// </summary>
         public Geometry()
         {
             x = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0));
@@ -48,14 +67,22 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             rotation = RegisterMotionProperty(new FloatMotionProperty(nameof(Rotation), 0));
         }
 
+        /// <inheritdoc cref="IGeometry{TDrawingContext}.X" />
         public float X
         {
             get => x.GetMovement(this); 
             set => x.SetMovement(value, this);
         }
 
+        /// <inheritdoc cref="IGeometry{TDrawingContext}.Y" />
         public float Y { get => y.GetMovement(this); set => y.SetMovement(value, this); }
 
+        /// <summary>
+        /// Gets or sets the matrix transform.
+        /// </summary>
+        /// <value>
+        /// The transform.
+        /// </value>
         public SKMatrix Transform
         {
             get => transform.GetMovement(this);
@@ -66,6 +93,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             }
         }
 
+        /// <inheritdoc cref="IGeometry{TDrawingContext}.Rotation" />
         public float Rotation
         {
             get => rotation.GetMovement(this);
@@ -76,8 +104,13 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             }
         }
 
+        /// <inheritdoc cref="IVisualChartPoint{TDrawingContext}.HighlightableGeometry" />
         public IDrawable<SkiaSharpDrawingContext> HighlightableGeometry => GetHighlitableGeometry();
 
+        /// <summary>
+        /// Draws the geometry in the user interface.
+        /// </summary>
+        /// <param name="context">The context.</param>
         public override void Draw(SkiaSharpDrawingContext context)
         {
             var hasRotation = Rotation != 0;
@@ -118,8 +151,18 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             if (hasTransform || hasRotation) context.Canvas.Restore();
         }
 
+        /// <summary>
+        /// Called when the geometry is drawn.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="paint">The paint.</param>
         public abstract void OnDraw(SkiaSharpDrawingContext context, SKPaint paint);
 
+        /// <summary>
+        /// Measures the geometry.
+        /// </summary>
+        /// <param name="drawableTask">The drawable task.</param>
+        /// <returns>the size of the geometry.</returns>
         public SizeF Measure(IDrawableTask<SkiaSharpDrawingContext> drawableTask)
         {
             var measure = OnMeasure((PaintTask)drawableTask);
@@ -141,10 +184,25 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             return measure;
         }
 
+        /// <summary>
+        /// Called when the geometry is measured.
+        /// </summary>
+        /// <param name="paintTaks">The paint task.</param>
+        /// <returns>the size of the geometry</returns>
         protected abstract SizeF OnMeasure(PaintTask paintTaks);
 
+        /// <summary>
+        /// Gets the position of the geometry from the top left corner of the view.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="paint">The paint.</param>
+        /// <returns>the position.</returns>
         protected virtual SKPoint GetPosition(SkiaSharpDrawingContext context, SKPaint paint) => new SKPoint(X, Y);
 
+        /// <summary>
+        /// Gets the highlitable geometry.
+        /// </summary>
+        /// <returns></returns>
         protected virtual IGeometry<SkiaSharpDrawingContext> GetHighlitableGeometry() => this;
     }
 }

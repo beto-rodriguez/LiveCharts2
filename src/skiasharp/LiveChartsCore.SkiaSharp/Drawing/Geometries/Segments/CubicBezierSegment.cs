@@ -27,6 +27,7 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments
 {
+    /// <inheritdoc cref="IBezierSegment{TPathContext}" />
     public class CubicBezierSegment : PathCommand, IBezierSegment<SKPath>
     {
         private readonly FloatMotionProperty x0Transition;
@@ -36,6 +37,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments
         private readonly FloatMotionProperty x2Transition;
         private readonly FloatMotionProperty y2Transition;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CubicBezierSegment"/> class.
+        /// </summary>
         public CubicBezierSegment()
         {
             x0Transition = RegisterMotionProperty(new FloatMotionProperty(nameof(X0), 0f));
@@ -46,18 +50,25 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments
             y2Transition = RegisterMotionProperty(new FloatMotionProperty(nameof(Y2), 0f));
         }
 
+        /// <inheritdoc cref="IAnimatableBezierSegment.X0" />
         public float X0 { get => x0Transition.GetMovement(this); set => x0Transition.SetMovement(value, this); }
 
+        /// <inheritdoc cref="IAnimatableBezierSegment.Y0" />
         public float Y0 { get => y0Transition.GetMovement(this); set => y0Transition.SetMovement(value, this); }
 
+        /// <inheritdoc cref="IAnimatableBezierSegment.X1" />
         public float X1 { get => x1Transition.GetMovement(this); set => x1Transition.SetMovement(value, this); }
 
+        /// <inheritdoc cref="IAnimatableBezierSegment.Y1" />
         public float Y1 { get => y1Transition.GetMovement(this); set => y1Transition.SetMovement(value, this); }
 
+        /// <inheritdoc cref="IAnimatableBezierSegment.X2" />
         public float X2 { get => x2Transition.GetMovement(this); set => x2Transition.SetMovement(value, this); }
 
+        /// <inheritdoc cref="IAnimatableBezierSegment.Y2" />
         public float Y2 { get => y2Transition.GetMovement(this); set => y2Transition.SetMovement(value, this); }
 
+        /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
         public override void Execute(SKPath path, long currentTime, Animatable pathGeometry)
         {
             SetCurrentTime(currentTime);

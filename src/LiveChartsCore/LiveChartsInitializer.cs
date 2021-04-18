@@ -27,7 +27,8 @@ using System.Drawing;
 namespace LiveChartsCore
 {
     /// <summary>
-    /// Defines an object that must set the default Fill, Stroke and series name.
+    /// Defines an object that must initialize live charts visual objects, this object defines how things will 
+    /// be drawn by default, it is highly related to themes.
     /// </summary>
     public abstract class LiveChartsInitializer<TDrawingContext>
         where TDrawingContext : DrawingContext

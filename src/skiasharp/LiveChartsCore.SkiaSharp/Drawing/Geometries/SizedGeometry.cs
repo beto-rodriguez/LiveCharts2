@@ -27,20 +27,37 @@ using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
+    /// <inheritdoc cref="ISizedGeometry{TDrawingContext}" />
     public abstract class SizedGeometry : Geometry, ISizedVisualChartPoint<SkiaSharpDrawingContext>
     {
+        /// <summary>
+        /// The width
+        /// </summary>
         protected readonly FloatMotionProperty width;
+
+        /// <summary>
+        /// The height
+        /// </summary>
         protected readonly FloatMotionProperty height;
+
+        /// <summary>
+        /// The match dimensions
+        /// </summary>
         protected bool matchDimensions = false;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SizedGeometry"/> class.
+        /// </summary>
         public SizedGeometry() : base()
         {
             width = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 0));
             height = RegisterMotionProperty(new FloatMotionProperty(nameof(Height), 0));
         }
 
+        /// <inheritdoc cref="ISizedGeometry{TDrawingContext}.Width" />
         public float Width { get => width.GetMovement(this); set => width.SetMovement(value, this); }
 
+        /// <inheritdoc cref="ISizedGeometry{TDrawingContext}.Height" />
         public float Height
         {
             get
@@ -59,6 +76,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             }
         }
 
+        /// <inheritdoc cref="Geometry.OnMeasure(PaintTask)" />
         protected override SizeF OnMeasure(PaintTask paint)
         {
             return new SizeF(Width, Height);

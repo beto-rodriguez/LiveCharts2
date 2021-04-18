@@ -25,8 +25,15 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Motion
 {
+    /// <summary>
+    /// A property that defines points transitions to enable animations.
+    /// </summary>
     public class PointMotionProperty : MotionProperty<SKPoint>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PointMotionProperty"/> class.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
         public PointMotionProperty(string propertyName)
             : base(propertyName)
         {
@@ -34,6 +41,11 @@ namespace LiveChartsCore.SkiaSharpView.Motion
             toValue = new SKPoint();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PointMotionProperty"/> class.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="point">The point.</param>
         public PointMotionProperty(string propertyName, SKPoint point)
             : base(propertyName)
         {
@@ -41,6 +53,7 @@ namespace LiveChartsCore.SkiaSharpView.Motion
             toValue = new SKPoint(point.X, point.Y);
         }
 
+        /// <inheritdoc cref="OnGetMovement(float)" />
         protected override SKPoint OnGetMovement(float progress)
         {
             return new SKPoint(

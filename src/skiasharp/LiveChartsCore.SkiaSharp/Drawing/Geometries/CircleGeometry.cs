@@ -24,13 +24,21 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
+    /// <summary>
+    /// Defines a circle geometry.
+    /// </summary>
+    /// <seealso cref="LiveChartsCore.SkiaSharpView.Drawing.Geometries.SizedGeometry" />
     public class CircleGeometry : SizedGeometry
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CircleGeometry"/> class.
+        /// </summary>
         public CircleGeometry() : base()
         {
             matchDimensions = true;
         }
 
+        /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
             var rx = Width / 2f;

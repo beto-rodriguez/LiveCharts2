@@ -27,17 +27,23 @@ using System.Linq;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
+    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}" />
     public class PathGeometry : Drawable, IPathGeometry<SkiaSharpDrawingContext, SKPath>
     {
         private readonly HashSet<IPathCommand<SKPath>> commands = new HashSet<IPathCommand<SKPath>>();
         private IPathCommand<SKPath>[] drawingCommands = null;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PathGeometry"/> class.
+        /// </summary>
         public PathGeometry()
         {
         }
 
+        /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.IsClosed" />
         public bool IsClosed { get; set; }
 
+        /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void Draw(SkiaSharpDrawingContext context)
         {
             if (commands.Count == 0) return;
@@ -61,6 +67,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 
         }
 
+        /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.AddCommand(IPathCommand{TPathArgs})" />
         public void AddCommand(IPathCommand<SKPath> segment)
         {
             commands.Add(segment);
@@ -68,11 +75,13 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             Invalidate();
         }
 
+        /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.ContainsCommand(IPathCommand{TPathArgs})" />
         public bool ContainsCommand(IPathCommand<SKPath> segment)
         {
             return commands.Contains(segment);
         }
 
+        /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.RemoveCommand(IPathCommand{TPathArgs})" />
         public void RemoveCommand(IPathCommand<SKPath> segment)
         {
             commands.Remove(segment);
@@ -80,6 +89,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             Invalidate();
         }
 
+        /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.ClearCommands" />
         public void ClearCommands()
         {
             commands.Clear();

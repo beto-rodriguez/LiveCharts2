@@ -25,20 +25,41 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
+    /// <summary>
+    /// Defines a ropunded rectangle geometry.
+    /// </summary>
+    /// <seealso cref="LiveChartsCore.SkiaSharpView.Drawing.Geometries.SizedGeometry" />
     public class RoundedRectangleGeometry : SizedGeometry
     {
         private readonly FloatMotionProperty rx;
         private readonly FloatMotionProperty ry;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RoundedRectangleGeometry"/> class.
+        /// </summary>
         public RoundedRectangleGeometry()
         {
             rx = RegisterMotionProperty(new FloatMotionProperty(nameof(Rx), 8f));
             ry = RegisterMotionProperty(new FloatMotionProperty(nameof(Ry), 8f));
         }
 
+        /// <summary>
+        /// Gets or sets the rx, the rounding in the x axis.
+        /// </summary>
+        /// <value>
+        /// The rx.
+        /// </value>
         public float Rx { get => rx.GetMovement(this); set => rx.SetMovement(value, this); }
+
+        /// <summary>
+        /// Gets or sets the ry, the rounding in the axis.
+        /// </summary>
+        /// <value>
+        /// The ry.
+        /// </value>
         public float Ry { get => ry.GetMovement(this); set => ry.SetMovement(value, this); }
 
+        /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
             context.Canvas.DrawRoundRect(

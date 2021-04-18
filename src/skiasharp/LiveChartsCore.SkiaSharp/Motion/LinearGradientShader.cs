@@ -25,6 +25,10 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Motion
 {
+    /// <summary>
+    /// A wrapper to enable linear gradient animations using skia sharp shaders.
+    /// </summary>
+    /// <seealso cref="LiveChartsCore.SkiaSharpView.Motion.Composed.Shader" />
     public class LinearGradientShader : Shader
     {
         private readonly SKPoint start;
@@ -33,6 +37,14 @@ namespace LiveChartsCore.SkiaSharpView.Motion
         private readonly float[] colorPos;
         private readonly SKShaderTileMode mode;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LinearGradientShader"/> class.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="colors">The colors.</param>
+        /// <param name="colorPos">The color position.</param>
+        /// <param name="mode">The mode.</param>
         public LinearGradientShader(SKPoint start, SKPoint end, SKColor[] colors, float[] colorPos, SKShaderTileMode mode)
         {
             this.start = start;
@@ -42,11 +54,13 @@ namespace LiveChartsCore.SkiaSharpView.Motion
             this.colorPos = colorPos;
         }
 
+        /// <inheritdoc cref="Shader.GetSKShader" />
         public override SKShader GetSKShader()
         {
             return SKShader.CreateLinearGradient(start, end, colors, mode);
         }
 
+        /// <inheritdoc cref="Shader.InterpolateFrom(Shader, float)" />
         public override Shader InterpolateFrom(Shader from, float progress)
         {
             var f = (LinearGradientShader)from;
