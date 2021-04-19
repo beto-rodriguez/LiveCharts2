@@ -32,9 +32,7 @@ using System.Windows.Media.Animation;
 
 namespace LiveChartsCore.SkiaSharpView.WPF
 {
-    /// <summary>
-    /// Interaction logic for DefaultTooltip.xaml
-    /// </summary>
+    /// <inheritdoc cref="IChartTooltip{TDrawingContext}" />
     public partial class DefaultTooltip : Popup, IChartTooltip<SkiaSharpDrawingContext>
     {
         private readonly DataTemplate defaultTempalte;
@@ -42,6 +40,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         private TimeSpan animationsSpeed = TimeSpan.FromMilliseconds(200);
         private IEasingFunction easingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
+        /// </summary>
         public DefaultTooltip()
         {
             InitializeComponent();
@@ -52,40 +53,67 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         #region dependency properties
 
+        /// <summary>
+        /// The template property
+        /// </summary>
         public static readonly DependencyProperty TemplateProperty =
            DependencyProperty.Register(
                nameof(Template), typeof(DataTemplate), typeof(DefaultTooltip), new PropertyMetadata(null));
 
+        /// <summary>
+        /// The points property
+        /// </summary>
         public static readonly DependencyProperty PointsProperty =
            DependencyProperty.Register(
                nameof(Points), typeof(IEnumerable<TooltipPoint>),
                typeof(DefaultTooltip), new PropertyMetadata(new List<TooltipPoint>()));
 
+        /// <summary>
+        /// The background property
+        /// </summary>
         public static readonly DependencyProperty BackgroundProperty =
            DependencyProperty.Register(
                nameof(Background), typeof(Brush), typeof(DefaultTooltip),
                new PropertyMetadata(new SolidColorBrush(Color.FromRgb(250, 250, 250))));
 
+        /// <summary>
+        /// The font family property
+        /// </summary>
         public static readonly DependencyProperty FontFamilyProperty =
            DependencyProperty.Register(
                nameof(FontFamily), typeof(FontFamily), typeof(DefaultTooltip), new PropertyMetadata(new FontFamily("Trebuchet MS")));
 
+        /// <summary>
+        /// The font size property
+        /// </summary>
         public static readonly DependencyProperty FontSizeProperty =
            DependencyProperty.Register(
                nameof(FontSize), typeof(double), typeof(DefaultTooltip), new PropertyMetadata(13d));
 
+        /// <summary>
+        /// The font weight property
+        /// </summary>
         public static readonly DependencyProperty FontWeightProperty =
            DependencyProperty.Register(
                nameof(FontWeightProperty), typeof(FontWeight), typeof(DefaultTooltip), new PropertyMetadata(FontWeights.Normal));
 
+        /// <summary>
+        /// The font style property
+        /// </summary>
         public static readonly DependencyProperty FontStyleProperty =
            DependencyProperty.Register(
                nameof(FontStyle), typeof(FontStyle), typeof(DefaultTooltip), new PropertyMetadata(FontStyles.Normal));
 
+        /// <summary>
+        /// The font stretch property
+        /// </summary>
         public static readonly DependencyProperty FontStretchProperty =
            DependencyProperty.Register(
                nameof(FontStretch), typeof(FontStretch), typeof(DefaultTooltip), new PropertyMetadata(FontStretches.Normal));
 
+        /// <summary>
+        /// The text color property
+        /// </summary>
         public static readonly DependencyProperty TextColorProperty =
           DependencyProperty.Register(
               nameof(TextColor), typeof(SolidColorBrush), typeof(DefaultTooltip), new PropertyMetadata(new SolidColorBrush(Color.FromRgb(250, 250, 250))));
@@ -94,57 +122,124 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         #region properties
 
+        /// <summary>
+        /// Gets or sets the animations speed.
+        /// </summary>
+        /// <value>
+        /// The animations speed.
+        /// </value>
         public TimeSpan AnimationsSpeed { get => animationsSpeed; set => animationsSpeed = value; }
+
+        /// <summary>
+        /// Gets or sets the easing function.
+        /// </summary>
+        /// <value>
+        /// The easing function.
+        /// </value>
         public IEasingFunction EasingFunction { get => easingFunction; set => easingFunction = value; }
 
+        /// <summary>
+        /// Gets or sets the template.
+        /// </summary>
+        /// <value>
+        /// The template.
+        /// </value>
         public DataTemplate Template
         {
             get { return (DataTemplate)GetValue(TemplateProperty); }
             set { SetValue(TemplateProperty, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the background.
+        /// </summary>
+        /// <value>
+        /// The background.
+        /// </value>
         public Brush Background
         {
             get { return (Brush)GetValue(BackgroundProperty); }
             set { SetValue(BackgroundProperty, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the points.
+        /// </summary>
+        /// <value>
+        /// The points.
+        /// </value>
         public IEnumerable<TooltipPoint> Points
         {
             get { return (IEnumerable<TooltipPoint>)GetValue(PointsProperty); }
             set { SetValue(PointsProperty, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the font family.
+        /// </summary>
+        /// <value>
+        /// The font family.
+        /// </value>
         public FontFamily FontFamily
         {
             get { return (FontFamily)GetValue(FontFamilyProperty); }
             set { SetValue(FontFamilyProperty, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the size of the font.
+        /// </summary>
+        /// <value>
+        /// The size of the font.
+        /// </value>
         public double FontSize
         {
             get { return (double)GetValue(FontSizeProperty); }
             set { SetValue(FontSizeProperty, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the font weight.
+        /// </summary>
+        /// <value>
+        /// The font weight.
+        /// </value>
         public FontWeight FontWeight
         {
             get { return (FontWeight)GetValue(FontWeightProperty); }
             set { SetValue(FontWeightProperty, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the font style.
+        /// </summary>
+        /// <value>
+        /// The font style.
+        /// </value>
         public FontStyle FontStyle
         {
             get { return (FontStyle)GetValue(FontStyleProperty); }
             set { SetValue(FontStyleProperty, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the font stretch.
+        /// </summary>
+        /// <value>
+        /// The font stretch.
+        /// </value>
         public FontStretch FontStretch
         {
             get { return (FontStretch)GetValue(FontStretchProperty); }
             set { SetValue(FontStretchProperty, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the color of the text.
+        /// </summary>
+        /// <value>
+        /// The color of the text.
+        /// </value>
         public SolidColorBrush TextColor
         {
             get { return (SolidColorBrush)GetValue(TextColorProperty); }

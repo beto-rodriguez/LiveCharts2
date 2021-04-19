@@ -31,6 +31,7 @@ using System.Windows;
 
 namespace LiveChartsCore.SkiaSharpView.WPF
 {
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}" />
     public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     {
         private readonly CollectionDeepObserver<ISeries> seriesObserver;
@@ -40,6 +41,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             DefaultStyleKeyProperty.OverrideMetadata(typeof(PieChart), new FrameworkPropertyMetadata(typeof(PieChart)));
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PieChart"/> class.
+        /// </summary>
         public PieChart() 
         {
             seriesObserver = new CollectionDeepObserver<ISeries>(
@@ -57,6 +61,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             Series = new ObservableCollection<ISeries>();
         }
 
+        /// <summary>
+        /// The series property
+        /// </summary>
         public static readonly DependencyProperty SeriesProperty =
             DependencyProperty.Register(
                 nameof(Series), typeof(IEnumerable<ISeries>), typeof(PieChart), new PropertyMetadata(null,
@@ -79,12 +86,17 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             }
         }
 
+        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
         public IEnumerable<ISeries> Series
         {
             get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
             set => SetValue(SeriesProperty, value);
         }
 
+        /// <summary>
+        /// Initializes the core.
+        /// </summary>
+        /// <exception cref="Exception">canvas not found</exception>
         protected override void InitializeCore()
         {
             if (canvas == null) throw new Exception("canvas not found");

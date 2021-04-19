@@ -7,6 +7,10 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Users\Beto\source\repos\LiveCharts\src\skiasharp\LiveChartsCore.SkiaSharp.WPF\LiveChartsCore.SkiaSharpView.WPF.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="SkiaSharp.Views.WPF" Version="2.80.2" />
   </ItemGroup>

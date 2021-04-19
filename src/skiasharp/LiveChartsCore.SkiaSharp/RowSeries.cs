@@ -36,7 +36,6 @@ namespace LiveChartsCore.SkiaSharpView
     /// or at the series level 
     /// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
     /// </typeparam> data label of every point.
-    /// </typeparam>
     public class RowSeries<TModel>: RowSeries<TModel, RectangleGeometry, LabelGeometry>
     {
 

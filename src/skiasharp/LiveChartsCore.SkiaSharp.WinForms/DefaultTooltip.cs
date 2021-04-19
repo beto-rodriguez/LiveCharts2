@@ -136,6 +136,12 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             base.Dispose(disposing);
         }
 
+        /// <summary>
+        /// Gets the create parameters.
+        /// </summary>
+        /// <value>
+        /// The create parameters.
+        /// </value>
         protected override CreateParams CreateParams
         {
             get

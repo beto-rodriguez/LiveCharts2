@@ -32,10 +32,17 @@ using System.Windows.Controls;
 
 namespace LiveChartsCore.SkiaSharpView.WPF
 {
+    /// <summary>
+    /// Defines the motion canvas control for WPF, <see cref="MotionCanvas{TDrawingContext}"/>.
+    /// </summary>
+    /// <seealso cref="System.Windows.Controls.Control" />
     public class MotionCanvas : Control
     {
-        private readonly MotionCanvas<SkiaSharpDrawingContext> canvasCore = new();
+        /// <summary>
+        /// The skia element
+        /// </summary>
         protected SKElement? skiaElement;
+        private readonly MotionCanvas<SkiaSharpDrawingContext> canvasCore = new();
         private bool isDrawingLoopRunning = false;
         private double framesPerSecond = 90;
 
@@ -44,27 +51,52 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             DefaultStyleKeyProperty.OverrideMetadata(typeof(MotionCanvas), new FrameworkPropertyMetadata(typeof(MotionCanvas)));
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
+        /// </summary>
         public MotionCanvas()
         {
             canvasCore.Invalidated += OnCanvasCoreInvalidated;
             Unloaded += OnUnloaded;
         }
 
+        /// <summary>
+        /// The paint tasks property
+        /// </summary>
         public static readonly DependencyProperty PaintTasksProperty =
             DependencyProperty.Register(
                 nameof(PaintTasks), typeof(HashSet<IDrawableTask<SkiaSharpDrawingContext>>), typeof(MotionCanvas),
                 new PropertyMetadata(new HashSet<IDrawableTask<SkiaSharpDrawingContext>>(), new PropertyChangedCallback(OnPaintTaskChanged)));
 
+        /// <summary>
+        /// Gets or sets the paint tasks.
+        /// </summary>
+        /// <value>
+        /// The paint tasks.
+        /// </value>
         public HashSet<IDrawableTask<SkiaSharpDrawingContext>> PaintTasks
         {
             get { return (HashSet<IDrawableTask<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty); }
             set { SetValue(PaintTasksProperty, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the frames per second.
+        /// </summary>
+        /// <value>
+        /// The frames per second.
+        /// </value>
         public double FramesPerSecond { get => framesPerSecond; set => framesPerSecond = value; }
 
+        /// <summary>
+        /// Gets the canvas core.
+        /// </summary>
+        /// <value>
+        /// The canvas core.
+        /// </value>
         public MotionCanvas<SkiaSharpDrawingContext> CanvasCore => canvasCore;
 
+        /// <inheritdoc cref="OnApplyTemplate" />
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -78,6 +110,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             skiaElement.PaintSurface += OnPaintSurface;
         }
 
+        /// <inheritdoc cref="OnPaintSurface(object?, SKPaintSurfaceEventArgs)" />
         protected virtual void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
         {
             canvasCore.DrawFrame(new SkiaSharpDrawingContext(args.Info, args.Surface, args.Surface.Canvas));

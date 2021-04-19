@@ -33,6 +33,7 @@ using System.Windows;
 
 namespace LiveChartsCore.SkiaSharpView.WPF
 {
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}" />
     public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext>
     {
         #region fields
@@ -52,6 +53,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             DefaultStyleKeyProperty.OverrideMetadata(typeof(CartesianChart), new FrameworkPropertyMetadata(typeof(CartesianChart)));
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CartesianChart"/> class.
+        /// </summary>
         public CartesianChart()
         {
             seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
@@ -72,6 +76,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         #region dependency properties
 
+        /// <summary>
+        /// The series property
+        /// </summary>
         public static readonly DependencyProperty SeriesProperty =
             DependencyProperty.Register(
                 nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new PropertyMetadata(null,
@@ -85,6 +92,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                         Application.Current.Dispatcher.Invoke(() => chart.core.Update());
                     }));
 
+        /// <summary>
+        /// The x axes property
+        /// </summary>
         public static readonly DependencyProperty XAxesProperty =
             DependencyProperty.Register(
                 nameof(XAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new PropertyMetadata(null,
@@ -98,6 +108,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                         Application.Current.Dispatcher.Invoke(() => chart.core.Update());
                     }));
 
+        /// <summary>
+        /// The y axes property
+        /// </summary>
         public static readonly DependencyProperty YAxesProperty =
             DependencyProperty.Register(
                 nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new PropertyMetadata(null,
@@ -111,11 +124,17 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                         Application.Current.Dispatcher.Invoke(() => chart.core.Update());
                     }));
 
+        /// <summary>
+        /// The zoom mode property
+        /// </summary>
         public static readonly DependencyProperty ZoomModeProperty =
             DependencyProperty.Register(
                 nameof(ZoomMode), typeof(ZoomAndPanMode), typeof(CartesianChart),
                 new PropertyMetadata(LiveCharts.CurrentSettings.DefaultZoomMode));
 
+        /// <summary>
+        /// The zooming speed property
+        /// </summary>
         public static readonly DependencyProperty ZoomingSpeedProperty =
             DependencyProperty.Register(
                 nameof(ZoomingSpeed), typeof(double), typeof(CartesianChart),
@@ -134,30 +153,35 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             }
         }
 
+        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
         public IEnumerable<ISeries> Series
         {
             get { return (IEnumerable<ISeries>)GetValue(SeriesProperty); }
             set { SetValue(SeriesProperty, value); }
         }
 
+        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.XAxes" />
         public IEnumerable<IAxis> XAxes
         {
             get { return (IEnumerable<IAxis>)GetValue(XAxesProperty); }
             set { SetValue(XAxesProperty, value); }
         }
 
+        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.YAxes" />
         public IEnumerable<IAxis> YAxes
         {
             get { return (IEnumerable<IAxis>)GetValue(YAxesProperty); }
             set { SetValue(YAxesProperty, value); }
         }
 
+        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomMode" />
         public ZoomAndPanMode ZoomMode
         {
             get { return (ZoomAndPanMode)GetValue(ZoomModeProperty); }
             set { SetValue(ZoomModeProperty, value); }
         }
 
+        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomingSpeed" />
         public double ZoomingSpeed
         {
             get { return (double)GetValue(ZoomingSpeedProperty); }
@@ -166,6 +190,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         #endregion
 
+        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(PointF, int, int)" />
         public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
             if (core == null) throw new Exception("core not found");
@@ -173,6 +198,10 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
         }
 
+        /// <summary>
+        /// Initializes the core.
+        /// </summary>
+        /// <exception cref="Exception">canvas not found</exception>
         protected override void InitializeCore()
         {
             if (canvas == null) throw new Exception("canvas not found");
