@@ -200,6 +200,14 @@
             <param name="disposing">if set to <c>true</c> [disposing].</param>
             <returns></returns>
         </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.DefaultTooltip.CreateParams">
+            <summary>
+            Gets the create parameters.
+            </summary>
+            <value>
+            The create parameters.
+            </value>
+        </member>
         <member name="F:LiveChartsCore.SkiaSharpView.WinForms.DefaultTooltip.components">
             <summary>
             Required designer variable.
