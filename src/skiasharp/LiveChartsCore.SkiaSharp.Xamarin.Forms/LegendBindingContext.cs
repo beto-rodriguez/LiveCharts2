@@ -26,18 +26,57 @@ using Xamarin.Forms;
 
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 {
+    /// <summary>
+    /// Defines the legend binding context.
+    /// </summary>
     public class LegendBindingContext
     {
+        /// <summary>
+        /// Gets or sets the series.
+        /// </summary>
+        /// <value>
+        /// The series.
+        /// </value>
         public IEnumerable<ISeries>? Series { get; set; } = Enumerable.Empty<ISeries>();
 
+        /// <summary>
+        /// Gets or sets the font family.
+        /// </summary>
+        /// <value>
+        /// The font family.
+        /// </value>
         public string? FontFamily { get; set; }
 
+        /// <summary>
+        /// Gets or sets the size of the font.
+        /// </summary>
+        /// <value>
+        /// The size of the font.
+        /// </value>
         public double FontSize { get; set; }
 
+        /// <summary>
+        /// Gets or sets the color of the text.
+        /// </summary>
+        /// <value>
+        /// The color of the text.
+        /// </value>
         public Color TextColor { get; set; }
 
+        /// <summary>
+        /// Gets or sets the font attributes.
+        /// </summary>
+        /// <value>
+        /// The font attributes.
+        /// </value>
         public FontAttributes FontAttributes { get; set; }
 
+        /// <summary>
+        /// Gets or sets the orientation.
+        /// </summary>
+        /// <value>
+        /// The orientation.
+        /// </value>
         public StackOrientation Orientation { get; set; }
     }
 }

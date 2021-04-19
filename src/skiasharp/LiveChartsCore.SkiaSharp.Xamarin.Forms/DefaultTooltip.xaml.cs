@@ -31,31 +31,71 @@ using Xamarin.Forms.Xaml;
 
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 {
+    /// <inheritdoc cref="IChartTooltip{TDrawingContext}" />
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawingContext>
     {
         private readonly DataTemplate defaultTemplate;
         private readonly Dictionary<ChartPoint, object> activePoints = new();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
+        /// </summary>
         public DefaultTooltip()
         {
             InitializeComponent();
             defaultTemplate = (DataTemplate) Resources["defaultTemplate"];
         }
 
+        /// <summary>
+        /// Gets or sets the tooltip template.
+        /// </summary>
+        /// <value>
+        /// The tooltip template.
+        /// </value>
         public DataTemplate? TooltipTemplate { get; set; }
 
+        /// <summary>
+        /// Gets or sets the points.
+        /// </summary>
+        /// <value>
+        /// The points.
+        /// </value>
         public IEnumerable<TooltipPoint> Points { get; set; } = Enumerable.Empty<TooltipPoint>();
 
+        /// <summary>
+        /// Gets or sets the font family.
+        /// </summary>
+        /// <value>
+        /// The font family.
+        /// </value>
         public string? FontFamily { get; set; }
 
+        /// <summary>
+        /// Gets or sets the size of the font.
+        /// </summary>
+        /// <value>
+        /// The size of the font.
+        /// </value>
         public double FontSize { get; set; }
 
+        /// <summary>
+        /// Gets or sets the color of the text.
+        /// </summary>
+        /// <value>
+        /// The color of the text.
+        /// </value>
         public Color TextColor { get; set; }
 
+        /// <summary>
+        /// Gets or sets the font attributes.
+        /// </summary>
+        /// <value>
+        /// The font attributes.
+        /// </value>
         public FontAttributes FontAttributes { get; set; }
 
-        public void Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var mobileChart = (IMobileChart)chart.View;
 
@@ -124,6 +164,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             chart.Canvas.Invalidate();
         }
 
+        /// <summary>
+        /// Builds the content.
+        /// </summary>
+        /// <returns></returns>
         protected void BuildContent()
         {
             var template = TooltipTemplate ?? defaultTemplate;

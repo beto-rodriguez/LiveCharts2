@@ -6,6 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Users\Beto\source\repos\LiveCharts\src\skiasharp\LiveChartsCore.SkiaSharp.Xamarin.Forms\LiveChartsCore.SkiaSharpView.Xamarin.Forms.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="SkiaSharp.Views.Forms" Version="2.80.2" />
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />

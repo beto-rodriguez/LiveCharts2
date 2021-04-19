@@ -32,6 +32,9 @@ using Xamarin.Forms.Xaml;
 
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 {
+    /// <summary>
+    /// The motion canvas control fro Xamarin, <see cref="MotionCanvas{TDrawingContext}"/>.
+    /// </summary>
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MotionCanvas : ContentView
     {
@@ -39,6 +42,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         private readonly MotionCanvas<SkiaSharpDrawingContext> canvasCore = new();
         private double framesPerSecond = 90;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
+        /// </summary>
         public MotionCanvas()
         {
             InitializeComponent();
@@ -51,22 +57,53 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             canvasCore.Invalidated += OnCanvasCoreInvalidated;
         }
 
+        /// <summary>
+        /// The paint tasks property
+        /// </summary>
         public static readonly BindableProperty PaintTasksProperty = BindableProperty.Create(
             nameof(PaintTasks), typeof(HashSet<IDrawableTask<SkiaSharpDrawingContext>>),
             typeof(MotionCanvas), propertyChanged: PaintTasksChanged);
 
+        /// <summary>
+        /// Gets the sk canvas view.
+        /// </summary>
+        /// <value>
+        /// The sk canvas view.
+        /// </value>
         public SKCanvasView SkCanvasView => skiaElement;
 
+        /// <summary>
+        /// Gets or sets the frames per second.
+        /// </summary>
+        /// <value>
+        /// The frames per second.
+        /// </value>
         public double FramesPerSecond { get => framesPerSecond; set => framesPerSecond = value; }
 
+        /// <summary>
+        /// Gets or sets the paint tasks.
+        /// </summary>
+        /// <value>
+        /// The paint tasks.
+        /// </value>
         public HashSet<IDrawableTask<SkiaSharpDrawingContext>> PaintTasks
         {
             get { return (HashSet<IDrawableTask<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty); }
             set { SetValue(PaintTasksProperty, value); }
         }
 
+        /// <summary>
+        /// Gets the canvas core.
+        /// </summary>
+        /// <value>
+        /// The canvas core.
+        /// </value>
         public MotionCanvas<SkiaSharpDrawingContext> CanvasCore => canvasCore;
 
+        /// <summary>
+        /// Invalidates this instance.
+        /// </summary>
+        /// <returns></returns>
         public void Invalidate()
         {
             MainThread.BeginInvokeOnMainThread(RunDrawingLoop);

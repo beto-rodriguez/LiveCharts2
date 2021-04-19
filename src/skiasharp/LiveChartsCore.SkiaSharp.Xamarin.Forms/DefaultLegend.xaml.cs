@@ -30,32 +30,78 @@ using Xamarin.Forms.Xaml;
 
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 {
+    /// <inheritdoc cref="IChartLegend{TDrawingContext}" />
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DefaultLegend : ContentView, IChartLegend<SkiaSharpDrawingContext>
     {
         private readonly DataTemplate defaultTemplate;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultLegend"/> class.
+        /// </summary>
         public DefaultLegend()
         {
             InitializeComponent();
             defaultTemplate = (DataTemplate)Resources["defaultTemplate"];
         }
 
+        /// <summary>
+        /// Gets or sets the legend template.
+        /// </summary>
+        /// <value>
+        /// The legend template.
+        /// </value>
         public DataTemplate? LegendTemplate { get; set; }
 
+        /// <summary>
+        /// Gets or sets the series.
+        /// </summary>
+        /// <value>
+        /// The series.
+        /// </value>
         public IEnumerable<ISeries> Series { get; set; } = Enumerable.Empty<ISeries>();
 
+        /// <summary>
+        /// Gets or sets the font family.
+        /// </summary>
+        /// <value>
+        /// The font family.
+        /// </value>
         public string? FontFamily { get; set; }
 
+        /// <summary>
+        /// Gets or sets the size of the font.
+        /// </summary>
+        /// <value>
+        /// The size of the font.
+        /// </value>
         public double FontSize { get; set; }
 
+        /// <summary>
+        /// Gets or sets the color of the text.
+        /// </summary>
+        /// <value>
+        /// The color of the text.
+        /// </value>
         public Color TextColor { get; set; }
 
+        /// <summary>
+        /// Gets or sets the font attributes.
+        /// </summary>
+        /// <value>
+        /// The font attributes.
+        /// </value>
         public FontAttributes FontAttributes { get; set; }
 
+        /// <summary>
+        /// Gets or sets the orientation.
+        /// </summary>
+        /// <value>
+        /// The orientation.
+        /// </value>
         public StackOrientation Orientation { get; set; }
 
-        public void Draw(Chart<SkiaSharpDrawingContext> chart)
+        void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
         {
             var mobileChart = (IMobileChart)chart.View;
             var series = chart.DrawableSeries;
@@ -154,6 +200,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             BuildContent();
         }
 
+        /// <summary>
+        /// Builds the content.
+        /// </summary>
         protected void BuildContent()
         {
             var template = LegendTemplate ?? defaultTemplate;
