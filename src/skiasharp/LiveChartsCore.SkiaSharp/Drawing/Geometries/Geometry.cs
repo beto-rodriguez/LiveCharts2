@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -70,7 +70,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="IGeometry{TDrawingContext}.X" />
         public float X
         {
-            get => x.GetMovement(this); 
+            get => x.GetMovement(this);
             set => x.SetMovement(value, this);
         }
 
@@ -117,7 +117,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 
             if (hasTransform || hasRotation)
             {
-                context.Canvas.Save();
+                _ = context.Canvas.Save();
 
                 if (hasRotation)
                 {
@@ -197,12 +197,18 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <param name="context">The context.</param>
         /// <param name="paint">The paint.</param>
         /// <returns>the position.</returns>
-        protected virtual SKPoint GetPosition(SkiaSharpDrawingContext context, SKPaint paint) => new SKPoint(X, Y);
+        protected virtual SKPoint GetPosition(SkiaSharpDrawingContext context, SKPaint paint)
+        {
+            return new SKPoint(X, Y);
+        }
 
         /// <summary>
         /// Gets the highlitable geometry.
         /// </summary>
         /// <returns></returns>
-        protected virtual IGeometry<SkiaSharpDrawingContext> GetHighlitableGeometry() => this;
+        protected virtual IGeometry<SkiaSharpDrawingContext> GetHighlitableGeometry()
+        {
+            return this;
+        }
     }
 }

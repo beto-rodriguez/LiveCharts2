@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -60,14 +60,14 @@ namespace LiveChartsCore
             var previousSecondaryScale =
                 secondaryAxis.PreviousDataBounds == null ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis);
 
-            float uw = secondaryScale.ToPixels(1f) - secondaryScale.ToPixels(0f);
-            float uwm = 0.5f * uw;
-            float sw = Stroke?.StrokeThickness ?? 0;
-            float p = primaryScale.ToPixels(pivot);
+            var uw = secondaryScale.ToPixels(1f) - secondaryScale.ToPixels(0f);
+            var uwm = 0.5f * uw;
+            var sw = Stroke?.StrokeThickness ?? 0;
+            var p = primaryScale.ToPixels(pivot);
 
             var pos = chart.SeriesContext.GetColumnPostion(this);
             var count = chart.SeriesContext.GetColumnSeriesCount();
-            float cp = 0f;
+            var cp = 0f;
 
             if (!IgnoresBarPosition && count > 1)
             {
@@ -89,7 +89,7 @@ namespace LiveChartsCore
                 Fill.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
                 chart.Canvas.AddDrawableTask(Fill);
             }
-            if (Stroke != null) 
+            if (Stroke != null)
             {
                 Stroke.ZIndex = actualZIndex + 0.2;
                 Stroke.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
@@ -144,7 +144,7 @@ namespace LiveChartsCore
                     OnPointCreated(point);
                     r.CompleteAllTransitions();
 
-                    everFetched.Add(point);
+                    _ = everFetched.Add(point);
                 }
 
                 if (Fill != null) Fill.AddGeometyToPaintTask(visual);
@@ -163,7 +163,7 @@ namespace LiveChartsCore
                 point.Context.HoverArea = ha;
 
                 OnPointMeasured(point);
-                toDeletePoints.Remove(point);
+                _ = toDeletePoints.Remove(point);
 
                 if (DataLabelsDrawableTask != null)
                 {
@@ -173,7 +173,7 @@ namespace LiveChartsCore
                     {
                         var l = new TLabel { X = secondary - uwm + cp, Y = p };
 
-                        l.TransitionateProperties(nameof(l.X), nameof(l.Y))
+                        _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
                             .WithAnimation(a =>
                                 a.WithDuration(chart.AnimationsSpeed)
                                 .WithEasingFunction(chart.EasingFunction));
@@ -198,7 +198,7 @@ namespace LiveChartsCore
             {
                 if (point.Context.Chart != chart.View) continue;
                 SoftDeletePoint(point, primaryScale, secondaryScale);
-                everFetched.Remove(point);
+                _ = everFetched.Remove(point);
             }
         }
 
@@ -238,19 +238,18 @@ namespace LiveChartsCore
         /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SetDefaultPointTransitions(ChartPoint)"/>
         protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
         {
-            var visual = chartPoint.Context.Visual as TVisual;
             var chart = chartPoint.Context.Chart;
 
-            if (visual == null) throw new Exception("Unable to initialize the point instance.");
+            if (chartPoint.Context.Visual is not TVisual visual) throw new Exception("Unable to initialize the point instance.");
 
-            visual
+            _ = visual
                 .TransitionateProperties(nameof(visual.X), nameof(visual.Width))
                 .WithAnimation(animation =>
                     animation
                         .WithDuration(chart.AnimationsSpeed)
                         .WithEasingFunction(chart.EasingFunction));
 
-            visual
+            _ = visual
                 .TransitionateProperties(nameof(visual.Y), nameof(visual.Height))
                 .WithAnimation(animation => animation
                     .WithDuration(chart.AnimationsSpeed)
@@ -258,12 +257,12 @@ namespace LiveChartsCore
         }
 
         /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SoftDeletePoint(ChartPoint, Scaler, Scaler)"/>
-        protected override  void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
+        protected override void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
         {
             var visual = (TVisual?)point.Context.Visual;
             if (visual == null) return;
 
-            float p = primaryScale.ToPixels(pivot);
+            var p = primaryScale.ToPixels(pivot);
 
             var secondary = secondaryScale.ToPixels(point.SecondaryValue);
 

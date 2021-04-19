@@ -191,10 +191,10 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
                 if (countable.Count == 0)
                     return;
                 else if (countable.Count == 1)
-                    using (IEnumerator<T> enumerator = countable.GetEnumerator())
+                    using (var enumerator = countable.GetEnumerator())
                     {
-                        enumerator.MoveNext();
-                        Remove(enumerator.Current);
+                        _ = enumerator.MoveNext();
+                        _ = Remove(enumerator.Current);
                         return;
                     }
             }
@@ -206,7 +206,7 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
             var clusters = new Dictionary<int, List<T>>();
             var lastIndex = -1;
             List<T>? lastCluster = null;
-            foreach (T item in collection)
+            foreach (var item in collection)
             {
                 var index = IndexOf(item);
                 if (index < 0)
@@ -225,7 +225,7 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
             if (Count == 0)
                 OnCollectionReset();
             else
-                foreach (KeyValuePair<int, List<T>> cluster in clusters)
+                foreach (var cluster in clusters)
                     OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, cluster.Value, cluster.Key));
 
         }
@@ -276,7 +276,7 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
             {
                 for (var i = 0; i < count; i++, index++)
                 {
-                    T item = Items[index];
+                    var item = Items[index];
                     if (match(item))
                     {
                         Items.RemoveAt(index);
@@ -339,7 +339,7 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
 
             //Items will always be List<T>, see constructors
             var items = (List<T>)Items;
-            List<T> removedItems = items.GetRange(index, count);
+            var removedItems = items.GetRange(index, count);
 
             CheckReentrancy();
 
@@ -426,7 +426,7 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
                   oldCluster = null;
 
 
-                int i = index;
+                var i = index;
                 for (; i < rangeCount && i - index < addedCount; i++)
                 {
                     //parallel position
@@ -465,7 +465,7 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
                     if (count > addedCount)
                     {
                         var removedCount = rangeCount - addedCount;
-                        T[] removed = new T[removedCount];
+                        var removed = new T[removedCount];
                         items.CopyTo(i, removed, 0, removed.Length);
                         items.RemoveRange(i, removedCount);
                         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed, i));
@@ -473,10 +473,10 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
                     else
                     {
                         var k = i - index;
-                        T[] added = new T[addedCount - k];
-                        for (int j = k; j < addedCount; j++)
+                        var added = new T[addedCount - k];
+                        for (var j = k; j < addedCount; j++)
                         {
-                            T @new = list[j];
+                            var @new = list[j];
                             added[j - k] = @new;
                         }
                         items.InsertRange(i, added);
@@ -540,7 +540,7 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
                 return;
 
             CheckReentrancy();
-            T oldItem = this[index];
+            var oldItem = this[index];
             base.SetItem(index, item);
 
             OnIndexerPropertyChanged();
@@ -569,7 +569,10 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
         /// 
         /// </summary>
         /// <returns></returns>
-        protected virtual IDisposable DeferEvents() => new DeferredEventsCollection(this);
+        protected virtual IDisposable DeferEvents()
+        {
+            return new DeferredEventsCollection(this);
+        }
 
         #endregion Protected Methods
 
@@ -594,20 +597,26 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
         /// <summary>
         /// /// Helper to raise a PropertyChanged event for the Indexer property
         /// /// </summary>
-        void OnIndexerPropertyChanged() =>
-         OnPropertyChanged(EventArgsCache.IndexerPropertyChanged);
+        void OnIndexerPropertyChanged()
+        {
+            OnPropertyChanged(EventArgsCache.IndexerPropertyChanged);
+        }
 
         /// <summary>
         /// Helper to raise CollectionChanged event to any listeners
         /// </summary>
-        void OnCollectionChanged(NotifyCollectionChangedAction action, object oldItem, object newItem, int index) =>
-         OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, newItem, oldItem, index));
+        void OnCollectionChanged(NotifyCollectionChangedAction action, object oldItem, object newItem, int index)
+        {
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, newItem, oldItem, index));
+        }
 
         /// <summary>
         /// Helper to raise CollectionChanged event with action == Reset to any listeners
         /// </summary>
-        void OnCollectionReset() =>
-         OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
+        void OnCollectionReset()
+        {
+            OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
+        }
 
         /// <summary>
         /// Helper to raise event for clustered action and clear cluster.

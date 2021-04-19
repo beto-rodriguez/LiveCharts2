@@ -28,7 +28,7 @@ namespace WinFormsSample.General.TemplatedTooltips
                 foreach (var key in activePoints.Keys.ToArray())
                 {
                     key.RemoveFromHoverState();
-                    activePoints.Remove(key);
+                    _ = activePoints.Remove(key);
                 }
 
                 return;
@@ -69,7 +69,7 @@ namespace WinFormsSample.General.TemplatedTooltips
             {
                 if (activePoints[key] == o) continue;
                 key.RemoveFromHoverState();
-                activePoints.Remove(key);
+                _ = activePoints.Remove(key);
             }
 
             wfChart.CoreCanvas.Invalidate();
@@ -84,7 +84,7 @@ namespace WinFormsSample.General.TemplatedTooltips
             var w = 0f;
             foreach (var point in tooltipPoints)
             {
-                using Graphics g = CreateGraphics();
+                using var g = CreateGraphics();
                 var text = point.Point.AsTooltipString;
                 var size = g.MeasureString(text, chart.TooltipFont);
 
@@ -92,7 +92,7 @@ namespace WinFormsSample.General.TemplatedTooltips
                 {
                     Text = text,
                     Font = chart.TooltipFont,
-                    Location = new Point(6 , (int)h + 6)
+                    Location = new Point(6, (int)h + 6)
                 });
 
                 var thisW = size.Width + 12;

@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -53,7 +53,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <param name="tooltip">The default tool tip control.</param>
         /// <param name="legend">The default legend control.</param>
         public CartesianChart(IChartTooltip<SkiaSharpDrawingContext>? tooltip = null, IChartLegend<SkiaSharpDrawingContext>? legend = null)
-            :base(tooltip, legend)
+            : base(tooltip, legend)
         {
             seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
@@ -77,8 +77,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         {
             get
             {
-                if (core == null) throw new Exception("core not found");
-                return (CartesianChart<SkiaSharpDrawingContext>)core;
+                return core == null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
             }
         }
 

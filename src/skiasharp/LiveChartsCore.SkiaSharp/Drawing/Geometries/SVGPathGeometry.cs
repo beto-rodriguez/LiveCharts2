@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,7 +27,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     /// <summary>
     /// Defines a geometry that is built using from a svg path.
     /// </summary>
-    /// <seealso cref="LiveChartsCore.SkiaSharpView.Drawing.Geometries.SizedGeometry" />
+    /// <seealso cref="SizedGeometry" />
     public class SVGPathGeometry : SizedGeometry
     {
         private string svg;
@@ -65,10 +65,10 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
                 throw new System.NullReferenceException(
                     $"{nameof(SVG)} property is null and there is not a defined path to draw.");
 
-            context.Canvas.Save();
+            _ = context.Canvas.Save();
 
             var canvas = context.Canvas;
-            svgPath.GetTightBounds(out SKRect bounds);
+            _ = svgPath.GetTightBounds(out var bounds);
 
             canvas.Translate(X + Width / 2, Y + Height / 2);
             canvas.Scale(Width / (bounds.Width + paint.StrokeWidth),

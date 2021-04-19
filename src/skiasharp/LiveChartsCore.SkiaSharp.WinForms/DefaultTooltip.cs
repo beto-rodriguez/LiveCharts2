@@ -32,7 +32,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 foreach (var key in activePoints.Keys.ToArray())
                 {
                     key.RemoveFromHoverState();
-                    activePoints.Remove(key);
+                    _ = activePoints.Remove(key);
                 }
 
                 return;
@@ -74,7 +74,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             {
                 if (activePoints[key] == o) continue;
                 key.RemoveFromHoverState();
-                activePoints.Remove(key);
+                _ = activePoints.Remove(key);
             }
 
             wfChart.CoreCanvas.Invalidate();
@@ -88,14 +88,14 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             var h = 0f;
             var w = 0f;
 
-            using Graphics g = CreateGraphics();
+            using var g = CreateGraphics();
             foreach (var point in tooltipPoints)
             {
                 var text = point.Point.AsTooltipString;
                 var size = g.MeasureString(text, chart.TooltipFont);
 
                 var drawableSeries = (IDrawableSeries<SkiaSharpDrawingContext>)point.Series;
-                
+
                 Controls.Add(new MotionCanvas
                 {
                     Location = new Point(6, (int)h + 6),
@@ -103,8 +103,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                     Width = (int)drawableSeries.DefaultPaintContext.Width,
                     Height = (int)drawableSeries.DefaultPaintContext.Height
                 });
-                Controls.Add(new Label 
-                { 
+                Controls.Add(new Label
+                {
                     Text = text,
                     Font = chart.TooltipFont,
                     Location = new Point(6 + (int)drawableSeries.DefaultPaintContext.Width + 6, (int)h + 6)
@@ -146,7 +146,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         {
             get
             {
-                CreateParams cp = base.CreateParams;
+                var cp = base.CreateParams;
                 cp.ClassStyle |= CS_DROPSHADOW;
                 return cp;
             }

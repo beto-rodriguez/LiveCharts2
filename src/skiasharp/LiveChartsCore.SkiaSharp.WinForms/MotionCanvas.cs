@@ -11,7 +11,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     /// <summary>
     /// The motion canvas control for windows forms, <see cref="MotionCanvas{TDrawingContext}"/>.
     /// </summary>
-    /// <seealso cref="System.Windows.Forms.UserControl" />
+    /// <seealso cref="UserControl" />
     public partial class MotionCanvas : UserControl
     {
         private bool isDrawingLoopRunning = false;

@@ -2495,7 +2495,7 @@
         </member>
         <member name="T:LiveChartsCore.Easing.CubicBezierEasingFunction">
             <summary>
-            Defienes the CubicBezierEasingFunction.
+            Defines the CubicBezierEasingFunction.
             </summary>
         </member>
         <member name="M:LiveChartsCore.Easing.CubicBezierEasingFunction.BuildBezierEasingFunction(System.Single,System.Single,System.Single,System.Single)">

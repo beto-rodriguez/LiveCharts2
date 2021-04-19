@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -35,17 +35,17 @@ namespace LiveChartsCore
     /// <typeparam name="TVisual">The type of the visual.</typeparam>
     /// <typeparam name="TLabel">The type of the label.</typeparam>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="LiveChartsCore.DrawableSeries{TModel, TVisual, TLabel, TDrawingContext}" />
-    /// <seealso cref="System.IDisposable" />
-    /// <seealso cref="LiveChartsCore.Kernel.ICartesianSeries{TDrawingContext}" />
+    /// <seealso cref="DrawableSeries{TModel, TVisual, TLabel, TDrawingContext}" />
+    /// <seealso cref="IDisposable" />
+    /// <seealso cref="ICartesianSeries{TDrawingContext}" />
     public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
         : DrawableSeries<TModel, TVisual, TLabel, TDrawingContext>, IDisposable, ICartesianSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
-        private int scalesXAt;
-        private int scalesYAt;
+        private int _scalesXAt;
+        private int _scalesYAt;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -54,18 +54,18 @@ namespace LiveChartsCore
         public CartesianSeries(SeriesProperties properties) : base(properties) { }
 
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.ScalesXAt"/>
-        public int ScalesXAt { get => scalesXAt; set { scalesXAt = value; OnPropertyChanged(); } }
+        public int ScalesXAt { get => _scalesXAt; set { _scalesXAt = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.ScalesYAt"/>
-        public int ScalesYAt { get => scalesYAt; set { scalesYAt = value; OnPropertyChanged(); } }
+        public int ScalesYAt { get => _scalesYAt; set { _scalesYAt = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
         public virtual DimensionalBounds GetBounds(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
-            if (dataProvider == null) throw new Exception("A data provider is required");
-
-            return dataProvider.GetCartesianBounds(chart, this, x, y);
+            return dataProvider == null
+                ? throw new Exception("A data provider is required")
+                : dataProvider.GetCartesianBounds(chart, this, x, y);
         }
 
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.Measure(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
@@ -96,7 +96,7 @@ namespace LiveChartsCore
                 deleted.Add(point);
             }
 
-            foreach (var item in deleted) everFetched.Remove(item);
+            foreach (var item in deleted) _ = everFetched.Remove(item);
         }
     }
 }

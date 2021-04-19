@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace ViewModelsSamples.Bars.Race
 {
-    public class ViewModel: INotifyPropertyChanged
+    public class ViewModel : INotifyPropertyChanged
     {
         private Random r = new Random();
         private List<ISeries> series;

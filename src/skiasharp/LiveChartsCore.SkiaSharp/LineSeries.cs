@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -38,7 +38,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// or at the series level 
     /// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
     /// </typeparam>
-    public class LineSeries<TModel>: LineSeries<TModel, CircleGeometry, LabelGeometry>
+    public class LineSeries<TModel> : LineSeries<TModel, CircleGeometry, LabelGeometry>
     {
 
     }
@@ -78,10 +78,10 @@ namespace LiveChartsCore.SkiaSharpView
     /// <typeparam name="TLabel">
     /// The type of the data label of every point.
     /// </typeparam>
-    public class LineSeries<TModel, TVisual, TLabel> 
+    public class LineSeries<TModel, TVisual, TLabel>
         : LineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, PathGeometry, LineSegment, CubicBezierSegment, MoveToPathCommand, SKPath>
         where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
-        where TLabel: class, ILabelGeometry<SkiaSharpDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LineSeries{TModel, TVisual, TLabel}"/> class.

@@ -1,8 +1,6 @@
 ﻿using LiveChartsCore.Kernel;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
 
 namespace LiveChartsCore.UnitTesting.MockedObjects
 {

@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -138,7 +138,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <value>
         /// The legend font.
         /// </value>
-        public Font LegendFont { get => legendFont; set {legendFont = value; OnPropertyChanged(); } }
+        public Font LegendFont { get => legendFont; set { legendFont = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the default color of the legend back.
@@ -198,7 +198,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <summary>
         /// Raises the <see cref="E:HandleDestroyed" /> event.
         /// </summary>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         /// <returns></returns>
         protected override void OnHandleDestroyed(EventArgs e)
         {
@@ -234,13 +234,13 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         private void InitializeComponent()
         {
-            this.SuspendLayout();
+            SuspendLayout();
             // 
             // Chart
             // 
-            this.Name = "Chart";
-            this.Size = new System.Drawing.Size(643, 418);
-            this.ResumeLayout(false);
+            Name = "Chart";
+            Size = new Size(643, 418);
+            ResumeLayout(false);
 
         }
     }

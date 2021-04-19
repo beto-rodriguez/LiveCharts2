@@ -83,7 +83,7 @@ namespace ViewModelsSamples.Lines.AutoUpdate
         {
             var randomValue = random.Next(1, 10);
             var randomIndex = random.Next(0, observableValues.Count - 1);
-            observableValues[randomIndex] = 
+            observableValues[randomIndex] =
                 new ObservablePoint { X = observableValues[randomIndex].X, Y = randomValue };
         }
 
@@ -93,8 +93,8 @@ namespace ViewModelsSamples.Lines.AutoUpdate
             if (Series.Count == 5) return;
 
             Series.Add(
-                new LineSeries<int> 
-                { 
+                new LineSeries<int>
+                {
                     Values = new List<int> { random.Next(0, 10), random.Next(0, 10), random.Next(0, 10) }
                 });
         }

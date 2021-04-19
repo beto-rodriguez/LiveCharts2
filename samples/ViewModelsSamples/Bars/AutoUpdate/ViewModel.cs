@@ -89,8 +89,8 @@ namespace ViewModelsSamples.Bars.AutoUpdate
             if (Series.Count == 5) return;
 
             Series.Add(
-                new ColumnSeries<int> 
-                { 
+                new ColumnSeries<int>
+                {
                     Values = new List<int> { random.Next(0, 10), random.Next(0, 10), random.Next(0, 10) }
                 });
         }

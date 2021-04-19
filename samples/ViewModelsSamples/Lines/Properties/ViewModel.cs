@@ -41,7 +41,7 @@ namespace ViewModelsSamples.Lines.Properties
         {
             var t = 0;
             var values = new List<double>();
-            for (int i = 0; i < 10; i++)
+            for (var i = 0; i < 10; i++)
             {
                 t += random.Next(-5, 10);
                 values.Add(t);

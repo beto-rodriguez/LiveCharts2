@@ -18,8 +18,8 @@ namespace ViewModelsSamples.Bars.Layered
                 MaxBarWidth = double.MaxValue,
                 IgnoresBarPosition = true
             },
-            new ColumnSeries<int> 
-            { 
+            new ColumnSeries<int>
+            {
                 Values = new [] { 2, 4, 8, 9, 5, 2, 4, 7 },
                 Stroke = null,
                 Fill = new SolidColorPaintTask(SKColors.CornflowerBlue),

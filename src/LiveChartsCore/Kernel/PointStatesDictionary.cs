@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -49,8 +49,7 @@ namespace LiveChartsCore.Kernel
         {
             get
             {
-                if (!states.TryGetValue(stateName, out var state)) return null;
-                return state;
+                return !states.TryGetValue(stateName, out var state) ? null : state;
             }
             set
             {
@@ -81,7 +80,10 @@ namespace LiveChartsCore.Kernel
         /// Gets the states.
         /// </summary>
         /// <returns></returns>
-        public StrokeAndFillDrawable<TDrawingContext>[] GetStates() => states.Values.ToArray();
+        public StrokeAndFillDrawable<TDrawingContext>[] GetStates()
+        {
+            return states.Values.ToArray();
+        }
 
         /// <summary>
         /// Deletes the state.
@@ -91,7 +93,7 @@ namespace LiveChartsCore.Kernel
         public void DeleteState(string stateName)
         {
             RemoveState(states[stateName]);
-            states.Remove(stateName);
+            _ = states.Remove(stateName);
         }
 
         /// <summary>

@@ -30,7 +30,7 @@ namespace WinFormsSample.General.Legends
             Controls.Add(cartesianChart);
 
             var b1 = new ComboBox { Text = "hidden", Location = new System.Drawing.Point(0, 0) };
-            b1.Items.AddRange(new[] { "hidden", "top", "left", "right", "bottom"});
+            b1.Items.AddRange(new[] { "hidden", "top", "left", "right", "bottom" });
             b1.SelectedValueChanged += (object sender, System.EventArgs e) =>
             {
                 if (b1.SelectedItem.ToString() == "hidden") cartesianChart.LegendPosition = LegendPosition.Hidden;

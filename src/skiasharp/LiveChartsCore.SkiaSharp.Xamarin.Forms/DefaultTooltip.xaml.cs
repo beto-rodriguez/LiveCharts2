@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -44,7 +44,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         public DefaultTooltip()
         {
             InitializeComponent();
-            defaultTemplate = (DataTemplate) Resources["defaultTemplate"];
+            defaultTemplate = (DataTemplate)Resources["defaultTemplate"];
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 foreach (var key in activePoints.Keys.ToArray())
                 {
                     key.RemoveFromHoverState();
-                    activePoints.Remove(key);
+                    _ = activePoints.Remove(key);
                 }
                 return;
             }
@@ -138,7 +138,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             FontAttributes = mobileChart.TooltipFontAttributes;
             BuildContent();
 
-            Measure(double.PositiveInfinity, double.PositiveInfinity);
+            _ = Measure(double.PositiveInfinity, double.PositiveInfinity);
             var chartSize = chart.ControlSize;
 
             AbsoluteLayout.SetLayoutBounds(
@@ -158,7 +158,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             {
                 if (activePoints[key] == o) continue;
                 key.RemoveFromHoverState();
-                activePoints.Remove(key);
+                _ = activePoints.Remove(key);
             }
 
             chart.Canvas.Invalidate();

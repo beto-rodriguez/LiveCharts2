@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -34,9 +34,9 @@ namespace LiveChartsCore.Kernel
     /// <typeparam name="T"></typeparam>
     public class CollectionDeepObserver<T>
     {
-        private readonly NotifyCollectionChangedEventHandler onCollectionChanged;
-        private readonly PropertyChangedEventHandler onItemPropertyChanged;
-        private readonly HashSet<INotifyPropertyChanged> itemsListening = new();
+        private readonly NotifyCollectionChangedEventHandler _onCollectionChanged;
+        private readonly PropertyChangedEventHandler _onItemPropertyChanged;
+        private readonly HashSet<INotifyPropertyChanged> _itemsListening = new();
 
         /// <summary>
         /// The check i notify property changed
@@ -54,8 +54,8 @@ namespace LiveChartsCore.Kernel
             PropertyChangedEventHandler onItemPropertyChanged,
             bool? checkINotifyPropertyChanged = null)
         {
-            this.onCollectionChanged = onCollectionChanged;
-            this.onItemPropertyChanged = onItemPropertyChanged;
+            _onCollectionChanged = onCollectionChanged;
+            _onItemPropertyChanged = onItemPropertyChanged;
 
             if (checkINotifyPropertyChanged != null)
             {
@@ -82,7 +82,7 @@ namespace LiveChartsCore.Kernel
 
             if (checkINotifyPropertyChanged)
                 foreach (var item in GetINotifyPropertyChangedItems(instance))
-                    item.PropertyChanged += onItemPropertyChanged;
+                    item.PropertyChanged += _onItemPropertyChanged;
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace LiveChartsCore.Kernel
 
             if (checkINotifyPropertyChanged)
                 foreach (var item in GetINotifyPropertyChangedItems(instance))
-                    item.PropertyChanged -= onItemPropertyChanged;
+                    item.PropertyChanged -= _onItemPropertyChanged;
         }
 
         private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -112,48 +112,50 @@ namespace LiveChartsCore.Kernel
                     case NotifyCollectionChangedAction.Add:
                         foreach (var item in GetINotifyPropertyChangedItems(e.NewItems))
                         {
-                            item.PropertyChanged += onItemPropertyChanged;
-                            itemsListening.Add(item);
+                            item.PropertyChanged += _onItemPropertyChanged;
+                            _ = _itemsListening.Add(item);
                         }
                         break;
                     case NotifyCollectionChangedAction.Remove:
                         foreach (var item in GetINotifyPropertyChangedItems(e.OldItems))
                         {
-                            item.PropertyChanged -= onItemPropertyChanged;
-                            itemsListening.Remove(item);
+                            item.PropertyChanged -= _onItemPropertyChanged;
+                            _ = _itemsListening.Remove(item);
                         }
                         break;
                     case NotifyCollectionChangedAction.Replace:
                         foreach (var item in GetINotifyPropertyChangedItems(e.NewItems))
                         {
-                            item.PropertyChanged += onItemPropertyChanged;
-                            itemsListening.Add(item);
+                            item.PropertyChanged += _onItemPropertyChanged;
+                            _ = _itemsListening.Add(item);
                         }
                         foreach (var item in GetINotifyPropertyChangedItems(e.OldItems))
                         {
-                            item.PropertyChanged -= onItemPropertyChanged;
-                            itemsListening.Remove(item);
+                            item.PropertyChanged -= _onItemPropertyChanged;
+                            _ = _itemsListening.Remove(item);
                         }
                         break;
                     case NotifyCollectionChangedAction.Reset:
-                        foreach (var item in itemsListening)
+                        foreach (var item in _itemsListening)
                         {
-                            item.PropertyChanged -= onItemPropertyChanged;
+                            item.PropertyChanged -= _onItemPropertyChanged;
                         }
-                        itemsListening.Clear();
+                        _itemsListening.Clear();
                         if (sender is not IEnumerable<T> s) break;
                         foreach (var item in GetINotifyPropertyChangedItems(s))
                         {
-                            item.PropertyChanged += onItemPropertyChanged;
-                            itemsListening.Remove(item);
+                            item.PropertyChanged += _onItemPropertyChanged;
+                            _ = _itemsListening.Remove(item);
                         }
                         break;
                     case NotifyCollectionChangedAction.Move:
                         // ignored.
                         break;
+                    default:
+                        break;
                 }
 
-            onCollectionChanged(sender, e);
+            _onCollectionChanged(sender, e);
         }
 
         private IEnumerable<INotifyPropertyChanged> GetINotifyPropertyChangedItems(IEnumerable source)

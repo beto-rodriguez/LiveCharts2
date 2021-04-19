@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -29,12 +29,12 @@ namespace LiveChartsCore.Defaults
     /// <summary>
     /// Defines a point with a weighted coordinate.
     /// </summary>
-    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
+    /// <seealso cref="INotifyPropertyChanged" />
     public class WeightedPoint : INotifyPropertyChanged
     {
-        private double? x;
-        private double? y;
-        private double? weight;
+        private double? _x;
+        private double? _y;
+        private double? _weight;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WeightedPoint"/> class.
@@ -52,9 +52,9 @@ namespace LiveChartsCore.Defaults
         /// <param name="weight">The weight.</param>
         public WeightedPoint(double? x, double? y, double? weight)
         {
-            this.x = x;
-            this.y = y;
-            this.weight = weight;
+            _x = x;
+            _y = y;
+            _weight = weight;
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace LiveChartsCore.Defaults
         /// <value>
         /// The x.
         /// </value>
-        public double? X { get => x; set { x = value; OnPropertyChanged(); } }
+        public double? X { get => _x; set { _x = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the y.
@@ -71,7 +71,7 @@ namespace LiveChartsCore.Defaults
         /// <value>
         /// The y.
         /// </value>
-        public double? Y { get => y; set { y = value; OnPropertyChanged(); } }
+        public double? Y { get => _y; set { _y = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the weight.
@@ -79,7 +79,7 @@ namespace LiveChartsCore.Defaults
         /// <value>
         /// The weight.
         /// </value>
-        public double? Weight { get => weight; set { weight = value; OnPropertyChanged(); } }
+        public double? Weight { get => _weight; set { _weight = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Occurs when a property value changes.

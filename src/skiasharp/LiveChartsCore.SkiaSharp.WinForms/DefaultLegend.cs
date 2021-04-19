@@ -82,7 +82,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 {
                     var parent = new Panel();
                     Controls.Add(parent);
-                    using Graphics g = CreateGraphics();
+                    using var g = CreateGraphics();
                     foreach (var s in series)
                     {
                         var size = g.MeasureString(s.Name, chart.LegendFont);
@@ -121,7 +121,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 {
                     var parent = new Panel();
                     Controls.Add(parent);
-                    using Graphics g = CreateGraphics();
+                    using var g = CreateGraphics();
                     foreach (var s in series)
                     {
                         var size = g.MeasureString(s.Name, chart.LegendFont);

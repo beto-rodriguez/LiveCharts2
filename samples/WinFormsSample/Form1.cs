@@ -16,7 +16,7 @@ namespace WinFormsSample
         {
             foreach (var item in ViewModelsSamples.Index.Samples)
             {
-                listBox1.Items.Add(item);
+                _ = listBox1.Items.Add(item);
             }
         }
 
@@ -29,7 +29,7 @@ namespace WinFormsSample
             }
 
             var selected = listBox1.SelectedItem.ToString();
-            activeControl = (UserControl) Activator.CreateInstance(null, $"WinFormsSample.{selected.Replace('/', '.')}.View").Unwrap();
+            activeControl = (UserControl)Activator.CreateInstance(null, $"WinFormsSample.{selected.Replace('/', '.')}.View").Unwrap();
 
             var padding = 0;
             activeControl.Location = new System.Drawing.Point(listBox1.Width + padding, padding);

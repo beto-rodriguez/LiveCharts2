@@ -18,7 +18,7 @@ namespace ViewModelsSamples.Bars.DelayedAnimation
             var values2 = new List<float>();
 
             var x = 0f;
-            while(x <= 1)
+            while (x <= 1)
             {
                 values1.Add(EasingFunctions.BounceInOut(x));
                 values2.Add(EasingFunctions.BounceInOut(x - 0.15f));
@@ -26,7 +26,7 @@ namespace ViewModelsSamples.Bars.DelayedAnimation
             }
 
             var columnSeries1 = new ColumnSeries<float>
-            { 
+            {
                 Values = values1,
                 Stroke = null,
                 Fill = new SolidColorPaintTask(SKColors.CornflowerBlue),
@@ -50,7 +50,7 @@ namespace ViewModelsSamples.Bars.DelayedAnimation
             var visual = point.Visual;
             var delayedFunction = new DelayedFunction(EasingFunctions.BuildCustomElasticOut(1.5f, 0.60f), point.ChartPoint, 15f);
 
-            visual
+            _ = visual
                 .TransitionateProperties(
                     nameof(visual.Y),
                     nameof(visual.Height))

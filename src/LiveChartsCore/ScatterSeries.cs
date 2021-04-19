@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -36,17 +36,15 @@ namespace LiveChartsCore
     /// <typeparam name="TVisual">The type of the visual.</typeparam>
     /// <typeparam name="TLabel">The type of the label.</typeparam>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="LiveChartsCore.CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
-    /// <seealso cref="LiveChartsCore.Kernel.IScatterSeries{TDrawingContext}" />
+    /// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
+    /// <seealso cref="IScatterSeries{TDrawingContext}" />
     public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext> : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IScatterSeries<TDrawingContext>
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
-        private readonly Func<float, float> easing = EasingFunctions.BuildCustomElasticOut(1.2f, 0.40f);
-        private double geometrySize = 24d;
-        private double minGeometrySize = 6d;
-        private Bounds weightBounds = new ();
+        private readonly Func<float, float> _easing = EasingFunctions.BuildCustomElasticOut(1.2f, 0.40f);
+        private Bounds _weightBounds = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScatterSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -66,7 +64,7 @@ namespace LiveChartsCore
         /// <value>
         /// The minimum size of the geometry.
         /// </value>
-        public double MinGeometrySize { get => minGeometrySize; set => minGeometrySize = value; }
+        public double MinGeometrySize { get; set; } = 6d;
 
         /// <summary>
         /// Gets or sets the size of the geometry.
@@ -74,7 +72,7 @@ namespace LiveChartsCore
         /// <value>
         /// The size of the geometry.
         /// </value>
-        public double GeometrySize { get => geometrySize; set => geometrySize = value; }
+        public double GeometrySize { get; set; } = 24d;
 
         /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.Measure(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
         public override void Measure(
@@ -108,11 +106,11 @@ namespace LiveChartsCore
             var dls = (float)DataLabelsSize;
             var toDeletePoints = new HashSet<ChartPoint>(everFetched);
 
-            var gs = (float)geometrySize;
+            var gs = (float)GeometrySize;
             var hgs = gs / 2f;
-            float sw = Stroke?.StrokeThickness ?? 0;
-            var requiresWScale = weightBounds.max - weightBounds.min > 0;
-            var wm = -(geometrySize - minGeometrySize) / (weightBounds.max - weightBounds.min);
+            var sw = Stroke?.StrokeThickness ?? 0;
+            var requiresWScale = _weightBounds.max - _weightBounds.min > 0;
+            var wm = -(GeometrySize - MinGeometrySize) / (_weightBounds.max - _weightBounds.min);
 
             foreach (var point in Fetch(chart))
             {
@@ -137,7 +135,7 @@ namespace LiveChartsCore
 
                 if (requiresWScale)
                 {
-                    gs = (float)(wm * (weightBounds.max - point.TertiaryValue) + geometrySize);
+                    gs = (float)(wm * (_weightBounds.max - point.TertiaryValue) + GeometrySize);
                     hgs = gs / 2f;
                 }
 
@@ -156,7 +154,7 @@ namespace LiveChartsCore
                     OnPointCreated(point);
                     r.CompleteAllTransitions();
 
-                    everFetched.Add(point);
+                    _ = everFetched.Add(point);
                 }
 
                 if (Fill != null) Fill.AddGeometyToPaintTask(visual);
@@ -173,17 +171,15 @@ namespace LiveChartsCore
                 point.Context.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs, y - hgs, gs + 2 * sw, gs + 2 * sw);
 
                 OnPointMeasured(point);
-                toDeletePoints.Remove(point);
+                _ = toDeletePoints.Remove(point);
 
                 if (DataLabelsDrawableTask != null)
                 {
-                    var label = point.Context.Label as TLabel;
-
-                    if (label == null)
+                    if (point.Context.Label is not TLabel label)
                     {
                         var l = new TLabel { X = x - hgs, Y = y - hgs };
 
-                        l.TransitionateProperties(nameof(l.X), nameof(l.Y))
+                        _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
                             .WithAnimation(a =>
                                 a.WithDuration(chart.AnimationsSpeed)
                                 .WithEasingFunction(chart.EasingFunction));
@@ -208,7 +204,7 @@ namespace LiveChartsCore
             {
                 if (point.Context.Chart != chart.View) continue;
                 SoftDeletePoint(point, yScale, xScale);
-                everFetched.Remove(point);
+                _ = everFetched.Remove(point);
             }
         }
 
@@ -217,7 +213,7 @@ namespace LiveChartsCore
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
             var baseBounds = base.GetBounds(chart, x, y);
-            weightBounds = baseBounds.TertiaryBounds;
+            _weightBounds = baseBounds.TertiaryBounds;
 
             var tick = y.GetTick(chart.ControlSize, baseBounds.VisiblePrimaryBounds);
 
@@ -256,7 +252,7 @@ namespace LiveChartsCore
                 var fillClone = Fill.CloneTask();
                 var visual = new TVisual { X = 0, Y = 0, Height = (float)LegendShapeSize, Width = (float)LegendShapeSize };
                 fillClone.AddGeometyToPaintTask(visual);
-                context.PaintTasks.Add(fillClone);
+                _ = context.PaintTasks.Add(fillClone);
             }
 
             var w = LegendShapeSize;
@@ -272,7 +268,7 @@ namespace LiveChartsCore
                 };
                 w += 2 * strokeClone.StrokeThickness;
                 strokeClone.AddGeometyToPaintTask(visual);
-                context.PaintTasks.Add(strokeClone);
+                _ = context.PaintTasks.Add(strokeClone);
             }
 
             context.Width = w;
@@ -289,7 +285,7 @@ namespace LiveChartsCore
 
             if (visual == null) throw new Exception("Unable to initialize the point instance.");
 
-            visual
+            _ = visual
                .TransitionateProperties(
                    nameof(visual.X),
                    nameof(visual.Y))
@@ -298,14 +294,14 @@ namespace LiveChartsCore
                        .WithDuration(chart.AnimationsSpeed)
                        .WithEasingFunction(chart.EasingFunction));
 
-            visual
+            _ = visual
                .TransitionateProperties(
                    nameof(visual.Width),
                    nameof(visual.Height))
                .WithAnimation(animation =>
                    animation
                        .WithDuration(chart.AnimationsSpeed)
-                       .WithEasingFunction(easing));
+                       .WithEasingFunction(_easing));
         }
 
         /// <inheritdoc cref="SoftDeletePoint(ChartPoint, Scaler, Scaler)"/>

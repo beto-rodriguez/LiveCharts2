@@ -1,17 +1,17 @@
 // The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,7 +27,6 @@ using Avalonia.Threading;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
@@ -298,8 +297,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             get
             {
-                if (core == null) throw new Exception("core not found");
-                return core.Canvas;
+                return core == null ? throw new Exception("core not found") : core.Canvas;
             }
         }
 
@@ -307,8 +305,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             get
             {
-                if (core == null) throw new Exception("core not found");
-                return (CartesianChart<SkiaSharpDrawingContext>)core;
+                return core == null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
             }
         }
 
@@ -605,7 +602,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
             legend = this.FindControl<DefaultLegend>("legend");
             tooltip = this.FindControl<DefaultTooltip>("tooltip");
-            Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
+            _ = Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
         }
 
         /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})" />
@@ -633,7 +630,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 yObserver.Initialize((IEnumerable<IAxis>)change.NewValue.Value);
             }
 
-            Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
+            _ = Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
         }
 
         private void MouseMoveThrottlerUnlocked()
@@ -651,17 +648,17 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             if (core == null) return;
 
-            Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
+            _ = Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
         }
 
         private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (core == null) return;
 
-            Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
+            _ = Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
         }
 
-        private void CartesianChart_PointerWheelChanged(object? sender, global::Avalonia.Input.PointerWheelEventArgs e)
+        private void CartesianChart_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
         {
             if (core == null) return;
 
@@ -671,7 +668,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             c.Zoom(new PointF((float)p.X, (float)p.Y), e.Delta.Y > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
         }
 
-        private void CartesianChart_PointerPressed(object? sender, global::Avalonia.Input.PointerPressedEventArgs e)
+        private void CartesianChart_PointerPressed(object? sender, PointerPressedEventArgs e)
         {
             // only IClassicDesktopStyleApplicationLifetime supported for now.
             if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
@@ -682,7 +679,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             foreach (var w in desktop.Windows) w.PointerReleased += Window_PointerReleased;
         }
 
-        private void CartesianChart_PointerMoved(object? sender, global::Avalonia.Input.PointerEventArgs e)
+        private void CartesianChart_PointerMoved(object? sender, PointerEventArgs e)
         {
             var p = e.GetPosition(this);
             mousePosition = new PointF((float)p.X, (float)p.Y);

@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -96,16 +96,16 @@ namespace LiveChartsCore.Motion
             toValue = value;
             if (animation != null)
             {
-                if (animatable.currentTime == long.MinValue) // the animatable is not in the canvas yet.
+                if (animatable._currentTime == long.MinValue) // the animatable is not in the canvas yet.
                 {
                     requiresToInitialize = true;
                 }
                 else
                 {
-                    startTime = animatable.currentTime;
-                    endTime = animatable.currentTime + animation.duration;
+                    startTime = animatable._currentTime;
+                    endTime = animatable._currentTime + animation._duration;
                 }
-                animation.animationCompletedCount = 0;
+                animation._animationCompletedCount = 0;
                 isCompleted = false;
                 requiresToInitialize = true;
             }
@@ -123,29 +123,29 @@ namespace LiveChartsCore.Motion
 
             if (requiresToInitialize)
             {
-                startTime = animatable.currentTime;
-                endTime = animatable.currentTime + animation.duration;
+                startTime = animatable._currentTime;
+                endTime = animatable._currentTime + animation._duration;
                 requiresToInitialize = false;
             }
 
             // at this points we are sure that the animatable has not finished at least with this property.
-            animatable.isCompleted = false;
+            animatable._isCompleted = false;
 
             // is this line necessary? ...
             //if (animatable.currentTime - startTime <= 0) return OnGetMovement(0);
 
-            var p = (animatable.currentTime - startTime) / unchecked((float)(endTime - startTime));
+            var p = (animatable._currentTime - startTime) / unchecked((float)(endTime - startTime));
 
             if (p >= 1)
             {
                 // at this point the animation is completed
                 p = 1;
-                animation.animationCompletedCount++;
-                isCompleted = animation.repeatTimes != int.MaxValue && animation.repeatTimes < animation.animationCompletedCount;
+                animation._animationCompletedCount++;
+                isCompleted = animation._repeatTimes != int.MaxValue && animation._repeatTimes < animation._animationCompletedCount;
                 if (!isCompleted)
                 {
-                    startTime = animatable.currentTime;
-                    endTime = animatable.currentTime + animation.duration;
+                    startTime = animatable._currentTime;
+                    endTime = animatable._currentTime + animation._duration;
                     isCompleted = false;
                 }
             }

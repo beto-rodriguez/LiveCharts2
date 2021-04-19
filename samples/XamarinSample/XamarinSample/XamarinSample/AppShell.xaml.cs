@@ -5,7 +5,7 @@ using Xamarin.Forms;
 
 namespace XamarinSample
 {
-    public partial class AppShell : Xamarin.Forms.Shell
+    public partial class AppShell : Shell
     {
         private bool isLoaded = false;
         private Dictionary<string, string> routesSamples = new Dictionary<string, string>();
@@ -32,8 +32,8 @@ namespace XamarinSample
 
                 var shell_section = new ShellSection { Title = item };
 
-                var content = new ShellContent() 
-                { 
+                var content = new ShellContent()
+                {
                     Content = i == 0 ? Activator.CreateInstance(t) : null
                 };
                 shell_section.Items.Add(content);

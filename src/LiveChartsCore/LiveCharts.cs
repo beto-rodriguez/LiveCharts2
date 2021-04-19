@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -30,9 +30,7 @@ namespace LiveChartsCore
     /// </summary>
     public static class LiveCharts
     {
-        private static bool isConfigured = false;
-        private static object defaultPaintTask = new();
-        private static readonly LiveChartsSettings settings = new();
+        private static readonly object s_defaultPaintTask = new();
 
         /// <summary>
         /// Gets a value indicating whether this instance is configured.
@@ -40,7 +38,7 @@ namespace LiveChartsCore
         /// <value>
         ///   <c>true</c> if this instance is configured; otherwise, <c>false</c>.
         /// </value>
-        public static bool IsConfigured => isConfigured;
+        public static bool IsConfigured { get; private set; } = false;
 
         /// <summary>
         /// Gets the current settings.
@@ -48,7 +46,7 @@ namespace LiveChartsCore
         /// <value>
         /// The current settings.
         /// </value>
-        public static LiveChartsSettings CurrentSettings => settings;
+        public static LiveChartsSettings CurrentSettings { get; } = new();
 
         /// <summary>
         /// Gets the bar series hover key.
@@ -105,8 +103,8 @@ namespace LiveChartsCore
         {
             if (configuration == null) throw new NullReferenceException($"{nameof(LiveChartsSettings)} must not be null.");
 
-            isConfigured = true;
-            configuration(settings);
+            IsConfigured = true;
+            configuration(CurrentSettings);
         }
 
         /// <summary>
@@ -117,7 +115,7 @@ namespace LiveChartsCore
         /// <returns></returns>
         public static LiveChartsSettings HasMapFor<TModel>(Action<TModel, ChartPoint> mapper)
         {
-            return settings.HasMap(mapper);
+            return CurrentSettings.HasMap(mapper);
         }
     }
 }

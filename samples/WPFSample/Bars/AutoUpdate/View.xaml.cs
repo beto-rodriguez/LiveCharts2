@@ -21,7 +21,7 @@ namespace WPFSample.Bars.AutoUpdate
             var vm = (ViewModel)DataContext;
             isStreaming = isStreaming == null ? true : !isStreaming;
 
-            while(isStreaming.Value)
+            while (isStreaming.Value)
             {
                 vm.RemoveFirstItem();
                 vm.AddRandomItem();

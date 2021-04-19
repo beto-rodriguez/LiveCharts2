@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -34,7 +34,7 @@ namespace LiveChartsCore.Kernel
     /// </summary>
     public static class Extensions
     {
-        private const double cf = 3d;
+        private const double Cf = 3d;
 
         /// <summary>
         /// Returns the left, top coordinate of the tooltip based on the found points, the position and the tooltip size.
@@ -46,7 +46,7 @@ namespace LiveChartsCore.Kernel
         public static PointF? GetCartesianTooltipLocation(
             this IEnumerable<TooltipPoint> foundPoints, TooltipPosition position, SizeF tooltipSize)
         {
-            float count = 0f;
+            var count = 0f;
 
             var placementContext = new TooltipPlacementContext();
 
@@ -59,18 +59,19 @@ namespace LiveChartsCore.Kernel
 
             if (count == 0) return null;
 
-            var avrgX = ((placementContext.MostRight + placementContext.MostLeft) / 2f) - tooltipSize.Width * 0.5f;
-            var avrgY = ((placementContext.MostTop + placementContext.MostBottom) / 2f) - tooltipSize.Height * 0.5f;
+            var avrgX = (placementContext.MostRight + placementContext.MostLeft) / 2f - tooltipSize.Width * 0.5f;
+            var avrgY = (placementContext.MostTop + placementContext.MostBottom) / 2f - tooltipSize.Height * 0.5f;
 
-            switch (position)
+            return position switch
             {
-                case TooltipPosition.Top: return new PointF(avrgX, placementContext.MostTop - tooltipSize.Height);
-                case TooltipPosition.Bottom: return new PointF(avrgX, placementContext.MostBottom);
-                case TooltipPosition.Left: return new PointF(placementContext.MostLeft - tooltipSize.Width, avrgY);
-                case TooltipPosition.Right: return new PointF(placementContext.MostRight, avrgY);
-                case TooltipPosition.Center: return new PointF(avrgX, avrgY);
-                default: return new PointF();
-            }
+                TooltipPosition.Top => new PointF(avrgX, placementContext.MostTop - tooltipSize.Height),
+                TooltipPosition.Bottom => new PointF(avrgX, placementContext.MostBottom),
+                TooltipPosition.Left => new PointF(placementContext.MostLeft - tooltipSize.Width, avrgY),
+                TooltipPosition.Right => new PointF(placementContext.MostRight, avrgY),
+                TooltipPosition.Center => new PointF(avrgX, avrgY),
+                TooltipPosition.Hidden => new PointF(),
+                _ => new PointF(),
+            };
         }
 
         /// <summary>
@@ -81,7 +82,7 @@ namespace LiveChartsCore.Kernel
         /// <param name="tooltipSize">Size of the tooltip.</param>
         /// <returns></returns>
         public static PointF? GetPieTooltipLocation(
-            this IEnumerable<TooltipPoint> foundPoints, TooltipPosition position, SizeF tooltipSize) 
+            this IEnumerable<TooltipPoint> foundPoints, TooltipPosition position, SizeF tooltipSize)
         {
             var placementContext = new TooltipPlacementContext();
             var found = false;
@@ -126,8 +127,8 @@ namespace LiveChartsCore.Kernel
 
             var range = max - min;
             var separations = axis.Orientation == AxisOrientation.Y
-                ? Math.Round(controlSize.Height / (12 * cf), 0)
-                : Math.Round(controlSize.Width / (20 * cf), 0);
+                ? Math.Round(controlSize.Height / (12 * Cf), 0)
+                : Math.Round(controlSize.Width / (20 * Cf), 0);
             var minimum = range / separations;
 
             var magnitude = Math.Pow(10, Math.Floor(Math.Log(minimum) / Math.Log(10)));
@@ -137,8 +138,7 @@ namespace LiveChartsCore.Kernel
 
             if (residual > 5) tick = 10 * magnitude;
             else if (residual > 2) tick = 5 * magnitude;
-            else if (residual > 1) tick = 2 * magnitude;
-            else tick = magnitude;
+            else tick = residual > 1 ? 2 * magnitude : magnitude;
 
             return new AxisTick { Value = tick, Magnitude = magnitude };
         }
@@ -152,10 +152,9 @@ namespace LiveChartsCore.Kernel
         /// <exception cref="Exception">At least one property is required when calling {nameof(TransitionateProperties)}</exception>
         public static TransitionBuilder TransitionateProperties(this IAnimatable animatable, params string[] properties)
         {
-            if (properties == null || properties.Length == 0)
-                throw new Exception($"At least one property is required when calling {nameof(TransitionateProperties)}"); 
-
-            return new TransitionBuilder(animatable, properties);
+            return properties == null || properties.Length == 0
+                ? throw new Exception($"At least one property is required when calling {nameof(TransitionateProperties)}")
+                : new TransitionBuilder(animatable, properties);
         }
 
         /// <summary>
@@ -166,7 +165,9 @@ namespace LiveChartsCore.Kernel
         ///   <c>true</c> if [is bar series] [the specified series]; otherwise, <c>false</c>.
         /// </returns>
         public static bool IsBarSeries(this ISeries series)
-            => (series.SeriesProperties & SeriesProperties.Bar) != 0;
+        {
+            return (series.SeriesProperties & SeriesProperties.Bar) != 0;
+        }
 
         /// <summary>
         /// Determines whether is column series.
@@ -176,7 +177,9 @@ namespace LiveChartsCore.Kernel
         ///   <c>true</c> if [is column series] [the specified series]; otherwise, <c>false</c>.
         /// </returns>
         public static bool IsColumnSeries(this ISeries series)
-            => (series.SeriesProperties & (SeriesProperties.Bar | SeriesProperties.VerticalOrientation)) != 0;
+        {
+            return (series.SeriesProperties & (SeriesProperties.Bar | SeriesProperties.VerticalOrientation)) != 0;
+        }
 
         /// <summary>
         /// Determines whether is row series.
@@ -186,7 +189,9 @@ namespace LiveChartsCore.Kernel
         ///   <c>true</c> if [is row series] [the specified series]; otherwise, <c>false</c>.
         /// </returns>
         public static bool IsRowSeries(this ISeries series)
-            => (series.SeriesProperties & (SeriesProperties.Bar | SeriesProperties.HorizontalOrientation)) != 0;
+        {
+            return (series.SeriesProperties & (SeriesProperties.Bar | SeriesProperties.HorizontalOrientation)) != 0;
+        }
 
         /// <summary>
         /// Determines whether is stacked series.
@@ -196,7 +201,9 @@ namespace LiveChartsCore.Kernel
         ///   <c>true</c> if [is stacked series] [the specified series]; otherwise, <c>false</c>.
         /// </returns>
         public static bool IsStackedSeries(this ISeries series)
-            => (series.SeriesProperties & (SeriesProperties.Stacked)) != 0;
+        {
+            return (series.SeriesProperties & (SeriesProperties.Stacked)) != 0;
+        }
 
         /// <summary>
         /// Determines whether is vertical series.
@@ -206,7 +213,9 @@ namespace LiveChartsCore.Kernel
         ///   <c>true</c> if [is vertical series] [the specified series]; otherwise, <c>false</c>.
         /// </returns>
         public static bool IsVerticalSeries(this ISeries series)
-            => (series.SeriesProperties & (SeriesProperties.VerticalOrientation)) != 0;
+        {
+            return (series.SeriesProperties & (SeriesProperties.VerticalOrientation)) != 0;
+        }
 
         /// <summary>
         /// Determines whether is horizontal series.
@@ -216,14 +225,16 @@ namespace LiveChartsCore.Kernel
         ///   <c>true</c> if [is horizontal series] [the specified series]; otherwise, <c>false</c>.
         /// </returns>
         public static bool IsHorizontalSeries(this ISeries series)
-            => (series.SeriesProperties & (SeriesProperties.HorizontalOrientation)) != 0;
+        {
+            return (series.SeriesProperties & (SeriesProperties.HorizontalOrientation)) != 0;
+        }
 
         /// <summary>
         /// Adds a point to the specified state.
         /// </summary>
         /// <param name="chartPoint">The chart point.</param>
         /// <param name="state">The state.</param>
-        public static void AddToState(this ChartPoint chartPoint, string state) 
+        public static void AddToState(this ChartPoint chartPoint, string state)
         {
             chartPoint.Context.Series.AddPointToState(chartPoint, state);
         }
@@ -233,7 +244,7 @@ namespace LiveChartsCore.Kernel
         /// </summary>
         /// <param name="chartPoint">The chart point.</param>
         /// <param name="state">The state.</param>
-        public static void RemoveFromState(this ChartPoint chartPoint, string state) 
+        public static void RemoveFromState(this ChartPoint chartPoint, string state)
         {
             chartPoint.Context.Series.RemovePointFromState(chartPoint, state);
         }

@@ -91,8 +91,8 @@ namespace ViewModelsSamples.Scatter.AutoUpdate
             if (Series.Count == 5) return;
 
             Series.Add(
-                new ScatterSeries<int> 
-                { 
+                new ScatterSeries<int>
+                {
                     Values = new List<int> { random.Next(0, 10), random.Next(0, 10), random.Next(0, 10) }
                 });
         }
@@ -102,7 +102,7 @@ namespace ViewModelsSamples.Scatter.AutoUpdate
             if (Series.Count == 1) return;
 
             Series.RemoveAt(Series.Count - 1);
-        } 
+        }
 
         // The next commands are only to enable XAML bindings
         // they are not used in the WinForms sample

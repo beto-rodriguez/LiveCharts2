@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -34,9 +34,9 @@ namespace LiveChartsCore
     /// </summary>
     public class LiveChartsSettings
     {
-        private object? currentFactory;
-        private readonly Dictionary<Type, object> mappers = new();
-        private readonly Dictionary<Type, object> seriesStyleBuilder = new();
+        private object? _currentFactory;
+        private readonly Dictionary<Type, object> _mappers = new();
+        private readonly Dictionary<Type, object> _seriesStyleBuilder = new();
 
         /// <summary>
         /// Gets or sets the default easing function.
@@ -112,35 +112,33 @@ namespace LiveChartsCore
         public LiveChartsSettings HasMap<TModel>(Action<TModel, ChartPoint> mapper)
         {
             var t = typeof(TModel);
-            mappers[t] = mapper;
+            _mappers[t] = mapper;
             return this;
         }
 
         internal Action<TModel, ChartPoint> GetMap<TModel>()
         {
-            if (!mappers.TryGetValue(typeof(TModel), out var mapper))
-                throw new NotImplementedException(
+            return !_mappers.TryGetValue(typeof(TModel), out var mapper)
+                ? throw new NotImplementedException(
                     $"A mapper for type {typeof(TModel)} is not implemented yet, consider using " +
                     $"{nameof(LiveCharts)}.{nameof(LiveCharts.Configure)}() " +
-                    $"method to call {nameof(HasMap)}() with the type you are trying to plot.");
-
-            return (Action<TModel, ChartPoint>)mapper;
+                    $"method to call {nameof(HasMap)}() with the type you are trying to plot.")
+                : (Action<TModel, ChartPoint>)mapper;
         }
 
         internal LiveChartsSettings HasDataFactory<TDrawingContext>(IDataFactoryProvider<TDrawingContext> factory)
-            where TDrawingContext: DrawingContext
+            where TDrawingContext : DrawingContext
         {
-            currentFactory = factory;
+            _currentFactory = factory;
             return this;
         }
 
         internal IDataFactoryProvider<TDrawingContext> GetFactory<TDrawingContext>()
             where TDrawingContext : DrawingContext
         {
-            if (currentFactory == null) 
-                throw new NotImplementedException($"There is no a {nameof(IDataFactoryProvider<TDrawingContext>)} registered");
-
-            return (IDataFactoryProvider<TDrawingContext>) currentFactory;
+            return _currentFactory == null
+                ? throw new NotImplementedException($"There is no a {nameof(IDataFactoryProvider<TDrawingContext>)} registered")
+                : (IDataFactoryProvider<TDrawingContext>)_currentFactory;
         }
 
         /// <summary>
@@ -195,7 +193,7 @@ namespace LiveChartsCore
         /// <returns></returns>
         public LiveChartsSettings RemoveMap<TModel>()
         {
-            mappers.Remove(typeof(TModel));
+            _ = _mappers.Remove(typeof(TModel));
             return this;
         }
 
@@ -208,10 +206,10 @@ namespace LiveChartsCore
         public LiveChartsSettings AddDefaultStyles<TDrawingContext>(Action<StyleBuilder<TDrawingContext>> builder)
             where TDrawingContext : DrawingContext
         {
-            if (!seriesStyleBuilder.TryGetValue(typeof(TDrawingContext), out var stylesBuilder))
+            if (!_seriesStyleBuilder.TryGetValue(typeof(TDrawingContext), out var stylesBuilder))
             {
                 stylesBuilder = new StyleBuilder<TDrawingContext>();
-                seriesStyleBuilder[typeof(TDrawingContext)] = stylesBuilder;
+                _seriesStyleBuilder[typeof(TDrawingContext)] = stylesBuilder;
             }
 
             var sb = (StyleBuilder<TDrawingContext>)stylesBuilder;
@@ -229,10 +227,9 @@ namespace LiveChartsCore
         public StyleBuilder<TDrawingContext> GetStylesBuilder<TDrawingContext>()
             where TDrawingContext : DrawingContext
         {
-            if (!seriesStyleBuilder.TryGetValue(typeof(TDrawingContext), out var stylesBuilder))
-                throw new Exception($"The type {nameof(TDrawingContext)} is not registered.");
-
-            return (StyleBuilder<TDrawingContext>)stylesBuilder;
+            return !_seriesStyleBuilder.TryGetValue(typeof(TDrawingContext), out var stylesBuilder)
+                ? throw new Exception($"The type {nameof(TDrawingContext)} is not registered.")
+                : (StyleBuilder<TDrawingContext>)stylesBuilder;
         }
 
         /// <summary>

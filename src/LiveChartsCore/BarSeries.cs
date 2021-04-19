@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -33,8 +33,8 @@ namespace LiveChartsCore
     /// <typeparam name="TVisual">The type of the visual.</typeparam>
     /// <typeparam name="TLabel">The type of the label.</typeparam>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="LiveChartsCore.CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
-    /// <seealso cref="LiveChartsCore.Kernel.IBarSeries{TDrawingContext}" />
+    /// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
+    /// <seealso cref="IBarSeries{TDrawingContext}" />
     public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext> : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IBarSeries<TDrawingContext>
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
@@ -73,7 +73,7 @@ namespace LiveChartsCore
                 var fillClone = Fill.CloneTask();
                 var visual = new TVisual { X = 0, Y = 0, Height = (float)LegendShapeSize, Width = (float)LegendShapeSize };
                 fillClone.AddGeometyToPaintTask(visual);
-                context.PaintTasks.Add(fillClone);
+                _ = context.PaintTasks.Add(fillClone);
             }
 
             var w = LegendShapeSize;
@@ -89,7 +89,7 @@ namespace LiveChartsCore
                 };
                 w += 2 * strokeClone.StrokeThickness;
                 strokeClone.AddGeometyToPaintTask(visual);
-                context.PaintTasks.Add(strokeClone);
+                _ = context.PaintTasks.Add(strokeClone);
             }
 
             context.Width = w;

@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -33,7 +33,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
     /// <summary>
     /// Defines a set of geometries that will be painted using a solid color.,
     /// </summary>
-    /// <seealso cref="LiveChartsCore.SkiaSharpView.Painting.PaintTask" />
+    /// <seealso cref="PaintTask" />
     public class SolidColorPaintTask : PaintTask
     {
         private readonly FloatMotionProperty strokeMiterTransition;
@@ -100,7 +100,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <value>
         /// The stroke miter.
         /// </value>
-        public float StrokeMiter 
+        public float StrokeMiter
         {
             get => strokeMiterTransition.GetMovement(this);
             set => strokeMiterTransition.SetMovement(value, this);
@@ -113,9 +113,9 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// The path effect.
         /// </value>
         public PathEffect PathEffect
-        { 
-            get => pathEffectTransition.GetMovement(this); 
-            set => pathEffectTransition.SetMovement(value, this); 
+        {
+            get => pathEffectTransition.GetMovement(this);
+            set => pathEffectTransition.SetMovement(value, this);
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             if (Shader != null) skiaPaint.Shader = Shader.GetSKShader();
             if (ClipRectangle != RectangleF.Empty)
             {
-                drawingContext.Canvas.Save();
+                _ = drawingContext.Canvas.Save();
                 drawingContext.Canvas.ClipRect(
                     new SKRect(
                         ClipRectangle.X, ClipRectangle.Y, ClipRectangle.X + ClipRectangle.Width, ClipRectangle.Y + ClipRectangle.Height));

@@ -8,7 +8,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
     /// <summary>
     /// Defines a set of geometries that will be painted using a linear gradient shader.,
     /// </summary>
-    /// <seealso cref="LiveChartsCore.SkiaSharpView.Painting.PaintTask" />
+    /// <seealso cref="PaintTask" />
     public class LinearGradientPaintTask : PaintTask
     {
         private static readonly SKPoint DefaultStartPoint = new SKPoint(0, 0);
@@ -89,7 +89,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             skiaPaint.StrokeWidth = 0;
             if (ClipRectangle != RectangleF.Empty)
             {
-                drawingContext.Canvas.Save();
+                _ = drawingContext.Canvas.Save();
                 drawingContext.Canvas.ClipRect(new SKRect(ClipRectangle.X, ClipRectangle.Y, ClipRectangle.Width, ClipRectangle.Height));
                 this.drawingContext = drawingContext;
             }

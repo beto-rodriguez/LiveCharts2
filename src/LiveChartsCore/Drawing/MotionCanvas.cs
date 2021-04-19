@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -34,17 +34,15 @@ namespace LiveChartsCore.Drawing
     public class MotionCanvas<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        private readonly Stopwatch stopwatch = new();
-        private readonly object sync = new();
-        private HashSet<IDrawableTask<TDrawingContext>> paintTasks = new();
-        private bool isValid;
+        private readonly Stopwatch _stopwatch = new();
+        private HashSet<IDrawableTask<TDrawingContext>> _paintTasks = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MotionCanvas{TDrawingContext}"/> class.
         /// </summary>
         public MotionCanvas()
         {
-            stopwatch.Start();
+            _stopwatch.Start();
         }
 
         internal HashSet<IDrawable<TDrawingContext>> MeasuredDrawables { get; set; } = new();
@@ -60,7 +58,7 @@ namespace LiveChartsCore.Drawing
         /// <value>
         ///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.
         /// </value>
-        public bool IsValid { get => isValid; }
+        public bool IsValid { get; private set; }
 
         /// <summary>
         /// Gets the synchronize object.
@@ -68,7 +66,7 @@ namespace LiveChartsCore.Drawing
         /// <value>
         /// The synchronize.
         /// </value>
-        public object Sync => sync;
+        public object Sync { get; } = new();
 
         /// <summary>
         /// Draws the frame.
@@ -77,15 +75,15 @@ namespace LiveChartsCore.Drawing
         /// <returns></returns>
         public void DrawFrame(TDrawingContext context)
         {
-            lock (sync)
+            lock (Sync)
             {
                 var isValid = true;
-                var frameTime = stopwatch.ElapsedMilliseconds;
+                var frameTime = _stopwatch.ElapsedMilliseconds;
                 context.ClearCanvas();
 
                 var toRemoveGeometries = new List<Tuple<IDrawableTask<TDrawingContext>, IDrawable<TDrawingContext>>>();
 
-                foreach (var task in paintTasks.OrderBy(x => x.ZIndex).ToArray())
+                foreach (var task in _paintTasks.OrderBy(x => x.ZIndex).ToArray())
                 {
                     task.IsCompleted = true;
                     task.CurrentTime = frameTime;
@@ -112,7 +110,7 @@ namespace LiveChartsCore.Drawing
                     isValid = isValid && task.IsCompleted;
                     task.Dispose();
 
-                    if (task.RemoveOnCompleted && task.IsCompleted) paintTasks.Remove(task);
+                    if (task.RemoveOnCompleted && task.IsCompleted) _ = _paintTasks.Remove(task);
                 }
 
                 foreach (var tuple in toRemoveGeometries)
@@ -123,7 +121,7 @@ namespace LiveChartsCore.Drawing
                     isValid = false;
                 }
 
-                this.isValid = isValid;
+                IsValid = isValid;
             }
         }
 
@@ -133,7 +131,7 @@ namespace LiveChartsCore.Drawing
         /// <value>
         /// The drawables count.
         /// </value>
-        public int DrawablesCount => paintTasks.Count;
+        public int DrawablesCount => _paintTasks.Count;
 
         /// <summary>
         /// Invalidates this instance.
@@ -141,7 +139,7 @@ namespace LiveChartsCore.Drawing
         /// <returns></returns>
         public void Invalidate()
         {
-            isValid = false;
+            IsValid = false;
             Invalidated?.Invoke(this);
         }
 
@@ -152,7 +150,7 @@ namespace LiveChartsCore.Drawing
         /// <returns></returns>
         public void AddDrawableTask(IDrawableTask<TDrawingContext> task)
         {
-            paintTasks.Add(task);
+            _ = _paintTasks.Add(task);
             Invalidate();
         }
 
@@ -163,7 +161,7 @@ namespace LiveChartsCore.Drawing
         /// <returns></returns>
         public void SetPaintTasks(HashSet<IDrawableTask<TDrawingContext>> tasks)
         {
-            paintTasks = tasks;
+            _paintTasks = tasks;
             Invalidate();
         }
 
@@ -174,7 +172,7 @@ namespace LiveChartsCore.Drawing
         /// <returns></returns>
         public void RemovePaintTask(IDrawableTask<TDrawingContext> task)
         {
-            paintTasks.Remove(task);
+            _ = _paintTasks.Remove(task);
             Invalidate();
         }
 
@@ -186,7 +184,7 @@ namespace LiveChartsCore.Drawing
         {
             var count = 0;
 
-            foreach (var task in paintTasks)
+            foreach (var task in _paintTasks)
             {
                 foreach (var geometry in task.GetGeometries())
                 {

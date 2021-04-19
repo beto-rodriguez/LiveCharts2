@@ -12,7 +12,7 @@ namespace ViewModelsSamples.Scatter.Basic
         {
             new ScatterSeries<ObservablePoint>
             {
-                Values = new ObservableCollection<ObservablePoint> 
+                Values = new ObservableCollection<ObservablePoint>
                 {
                     new ObservablePoint(2.2, 5.4),
                     new ObservablePoint(4.5, 2.5),

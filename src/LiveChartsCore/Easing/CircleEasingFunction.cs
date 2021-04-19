@@ -19,7 +19,7 @@ namespace LiveChartsCore.Easing
         {
             unchecked
             {
-                return (float)(1 - Math.Sqrt(1 - t * t));
+                return (float)(1 - Math.Sqrt(1 - (t * t)));
             }
         }
 
@@ -32,7 +32,7 @@ namespace LiveChartsCore.Easing
         {
             unchecked
             {
-                return (float)Math.Sqrt(1 - --t * t);
+                return (float)Math.Sqrt(1 - (--t * t));
             }
         }
 
@@ -43,7 +43,7 @@ namespace LiveChartsCore.Easing
         /// <returns></returns>
         public static float InOut(float t)
         {
-            return (float)((t *= 2) <= 1 ? 1 - Math.Sqrt(1 - t * t) : Math.Sqrt(1 - (t -= 2) * t) + 1) / 2f;
+            return (float)((t *= 2) <= 1 ? 1 - Math.Sqrt(1 - (t * t)) : Math.Sqrt(1 - ((t -= 2) * t)) + 1) / 2f;
         }
     }
 }

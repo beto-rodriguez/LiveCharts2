@@ -48,6 +48,6 @@ namespace ViewModelsSamples.Bars.States
             Series = new List<ISeries> { columnSeries };
         }
 
-        public List<ISeries> Series { get; set; } 
+        public List<ISeries> Series { get; set; }
     }
 }

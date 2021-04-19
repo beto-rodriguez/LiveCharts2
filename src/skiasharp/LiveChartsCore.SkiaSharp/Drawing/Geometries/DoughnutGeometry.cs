@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -89,7 +89,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
-            SKPath path = new SKPath();
+            var path = new SKPath();
 
             var cx = CenterX;
             var cy = CenterY;
@@ -98,7 +98,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             var startAngle = StartAngle;
             var sweepAngle = SweepAngle;
             var toRadians = (float)(Math.PI / 180);
-            float pushout = PushOut;
+            var pushout = PushOut;
 
             path.MoveTo(
                 (float)(cx + Math.Cos(startAngle * toRadians) * wedge),
@@ -129,11 +129,11 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 
             if (pushout > 0)
             {
-                float pushoutAngle = startAngle + 0.5f * sweepAngle;
-                float x = pushout * (float)Math.Cos(pushoutAngle * toRadians);
-                float y = pushout * (float)Math.Sin(pushoutAngle * toRadians);
+                var pushoutAngle = startAngle + 0.5f * sweepAngle;
+                var x = pushout * (float)Math.Cos(pushoutAngle * toRadians);
+                var y = pushout * (float)Math.Sin(pushoutAngle * toRadians);
 
-                context.Canvas.Save();
+                _ = context.Canvas.Save();
                 context.Canvas.Translate(x, y);
             }
 

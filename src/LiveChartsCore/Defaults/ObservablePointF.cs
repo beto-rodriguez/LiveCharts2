@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,7 +19,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-
 
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -29,11 +28,11 @@ namespace LiveChartsCore.Defaults
     /// <summary>
     /// Defines a point for he Cartesian coordinate system that implements <see cref="INotifyPropertyChanged"/>.
     /// </summary>
-    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
+    /// <seealso cref="INotifyPropertyChanged" />
     public class ObservablePointF : INotifyPropertyChanged
     {
-        private float? x;
-        private float? y;
+        private float? _x;
+        private float? _y;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservablePointF"/> class.
@@ -50,8 +49,8 @@ namespace LiveChartsCore.Defaults
         /// <param name="y">The y coordinate.</param>
         public ObservablePointF(float? x, float? y)
         {
-            this.x = x;
-            this.y = y;
+            _x = x;
+            _y = y;
         }
 
         /// <summary>
@@ -60,7 +59,7 @@ namespace LiveChartsCore.Defaults
         /// <value>
         /// The x.
         /// </value>
-        public float? X { get => x; set { x = value; OnPropertyChanged(); } }
+        public float? X { get => _x; set { _x = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the y coordinate.
@@ -68,7 +67,7 @@ namespace LiveChartsCore.Defaults
         /// <value>
         /// The y.
         /// </value>
-        public float? Y { get => y; set { y = value; OnPropertyChanged(); } }
+        public float? Y { get => _y; set { _y = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Occurs when a property value changes.

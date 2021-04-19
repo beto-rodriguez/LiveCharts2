@@ -30,7 +30,7 @@ namespace WinFormsSample.Pies.AutoUpdate
 
             Controls.Add(piechart);
 
-            var b1 = new Button { Text = "Add series", Location = new System.Drawing.Point(0,0) };
+            var b1 = new Button { Text = "Add series", Location = new System.Drawing.Point(0, 0) };
             b1.Click += (object sender, System.EventArgs e) => viewModel.AddSeries();
             Controls.Add(b1);
 

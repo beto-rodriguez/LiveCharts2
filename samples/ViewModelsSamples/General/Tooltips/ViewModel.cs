@@ -39,8 +39,8 @@ namespace ViewModelsSamples.General.Tooltips
         public AvailablePositions SelectedPosition
         {
             get => selectedPosition;
-            set 
-            { 
+            set
+            {
                 selectedPosition = value;
                 OnPropertyChanged();
 
@@ -55,7 +55,9 @@ namespace ViewModelsSamples.General.Tooltips
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 
     public class AvailablePositions

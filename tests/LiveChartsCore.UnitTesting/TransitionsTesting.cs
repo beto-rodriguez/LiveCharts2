@@ -56,10 +56,10 @@ namespace LiveChartsCore.UnitTesting
             {
                 DrawFrame(time);
 
-                float x = r.X;
-                float y = r.Y;
-                float w = r.Width;
-                float h = r.Height;
+                var x = r.X;
+                var y = r.Y;
+                var w = r.Width;
+                var h = r.Height;
                 var l = Math.Truncate((time - startTime) / duration.TotalMilliseconds);
                 if ((time - startTime) % duration.TotalMilliseconds == 0 && time != startTime) l--;
                 var laps = (long)(l * duration.TotalMilliseconds);
@@ -94,10 +94,10 @@ namespace LiveChartsCore.UnitTesting
                 a.IsCompleted = true;
 
                 // Calling the property getter moves the transition with the current animatable time
-                float x = r.X;
-                float y = r.Y;
-                float w = r.Width;
-                float h = r.Height;
+                var x = r.X;
+                var y = r.Y;
+                var w = r.Width;
+                var h = r.Height;
             }
 
             var time = 0;
@@ -115,7 +115,7 @@ namespace LiveChartsCore.UnitTesting
 
             r.Y = 100;
             DrawFrame(time);
-            var p =  r.GetTransitionProperty(nameof(r.Y));
+            var p = r.GetTransitionProperty(nameof(r.Y));
 
             time += 500;
             DrawFrame(time);

@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -34,14 +34,13 @@ namespace LiveChartsCore
     /// Defines a pie chart.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="LiveChartsCore.Chart{TDrawingContext}" />
+    /// <seealso cref="Chart{TDrawingContext}" />
     public class PieChart<TDrawingContext> : Chart<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        private readonly HashSet<ISeries> everMeasuredSeries = new();
-        private readonly IPieChartView<TDrawingContext> chartView;
-        private int nextSeries = 0;
-        private IPieSeries<TDrawingContext>[] series = new IPieSeries<TDrawingContext>[0];
+        private readonly HashSet<ISeries> _everMeasuredSeries = new();
+        private readonly IPieChartView<TDrawingContext> _chartView;
+        private int _nextSeries = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PieChart{TDrawingContext}"/> class.
@@ -55,7 +54,7 @@ namespace LiveChartsCore
             MotionCanvas<TDrawingContext> canvas)
             : base(canvas, defaultPlatformConfig)
         {
-            chartView = view;
+            _chartView = view;
 
             view.PointStates.Chart = this;
             foreach (var item in view.PointStates.GetStates())
@@ -65,9 +64,10 @@ namespace LiveChartsCore
                     item.Fill.ZIndex += 1000000;
                     canvas.AddDrawableTask(item.Fill);
                 }
-                if (item.Stroke != null) {
+                if (item.Stroke != null)
+                {
                     item.Stroke.ZIndex += 1000000;
-                    canvas.AddDrawableTask(item.Stroke); 
+                    canvas.AddDrawableTask(item.Stroke);
                 }
             }
         }
@@ -78,7 +78,7 @@ namespace LiveChartsCore
         /// <value>
         /// The series.
         /// </value>
-        public IPieSeries<TDrawingContext>[] Series => series;
+        public IPieSeries<TDrawingContext>[] Series { get; private set; } = new IPieSeries<TDrawingContext>[0];
 
         /// <summary>
         /// Gets the drawable series.
@@ -86,7 +86,7 @@ namespace LiveChartsCore
         /// <value>
         /// The drawable series.
         /// </value>
-        public override IEnumerable<IDrawableSeries<TDrawingContext>> DrawableSeries => series;
+        public override IEnumerable<IDrawableSeries<TDrawingContext>> DrawableSeries => Series;
 
         /// <summary>
         /// Gets the view.
@@ -94,7 +94,7 @@ namespace LiveChartsCore
         /// <value>
         /// The view.
         /// </value>
-        public override IChartView<TDrawingContext> View => chartView;
+        public override IChartView<TDrawingContext> View => _chartView;
 
         /// <summary>
         /// Gets the value bounds.
@@ -127,7 +127,7 @@ namespace LiveChartsCore
         /// <returns></returns>
         public override IEnumerable<TooltipPoint> FindPointsNearTo(PointF pointerPosition)
         {
-            return chartView.Series.SelectMany(series => series.FindPointsNearTo(this, pointerPosition));
+            return _chartView.Series.SelectMany(series => series.FindPointsNearTo(this, pointerPosition));
         }
 
         /// <inheritdoc cref="IChart.Update(bool)" />
@@ -145,7 +145,7 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected override void Measure()
         {
-            if (series == null)
+            if (Series == null)
             {
                 //chartView.CoreCanvas.ForEachGeometry((geometry, drawable) =>
                 //{
@@ -157,8 +157,8 @@ namespace LiveChartsCore
                 return;
             }
 
-            Canvas.MeasuredDrawables =  new HashSet<IDrawable<TDrawingContext>>();
-            seriesContext = new SeriesContext<TDrawingContext>(series);
+            Canvas.MeasuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
+            seriesContext = new SeriesContext<TDrawingContext>(Series);
 
             if (legend != null) legend.Draw(this);
 
@@ -170,19 +170,19 @@ namespace LiveChartsCore
             ValueBounds = new Bounds();
             IndexBounds = new Bounds();
             PushoutBounds = new Bounds();
-            foreach (var series in series)
+            foreach (var series in Series)
             {
-                if (series.SeriesId == -1) series.SeriesId = nextSeries++;
+                if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
                 initializer.ResolveSeriesDefaults(stylesBuilder.CurrentColors, series);
 
                 var seriesBounds = series.GetBounds(this);
 
-                ValueBounds.AppendValue(seriesBounds.PrimaryBounds.max);
-                ValueBounds.AppendValue(seriesBounds.PrimaryBounds.min);
-                IndexBounds.AppendValue(seriesBounds.SecondaryBounds.max);
-                IndexBounds.AppendValue(seriesBounds.SecondaryBounds.min);
-                PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.max);
-                PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.min);
+                _ = ValueBounds.AppendValue(seriesBounds.PrimaryBounds.max);
+                _ = ValueBounds.AppendValue(seriesBounds.PrimaryBounds.min);
+                _ = IndexBounds.AppendValue(seriesBounds.SecondaryBounds.max);
+                _ = IndexBounds.AppendValue(seriesBounds.SecondaryBounds.min);
+                _ = PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.max);
+                _ = PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.min);
             }
 
             if (viewDrawMargin == null)
@@ -196,12 +196,12 @@ namespace LiveChartsCore
             // or it is initializing in the UI and has no dimensions yet
             if (drawMarginSize.Width <= 0 || drawMarginSize.Height <= 0) return;
 
-            var toDeleteSeries = new HashSet<ISeries>(everMeasuredSeries);
-            foreach (var series in series)
+            var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
+            foreach (var series in Series)
             {
                 series.Measure(this);
-                everMeasuredSeries.Add(series);
-                toDeleteSeries.Remove(series);
+                _ = _everMeasuredSeries.Add(series);
+                _ = toDeleteSeries.Remove(series);
 
                 var deleted = false;
                 foreach (var item in series.DeletingTasks)
@@ -213,7 +213,7 @@ namespace LiveChartsCore
                 if (deleted) series.DeletingTasks.Clear();
             }
 
-            foreach (var series in toDeleteSeries) { series.Delete(View); everMeasuredSeries.Remove(series); }
+            foreach (var series in toDeleteSeries) { series.Delete(View); _ = _everMeasuredSeries.Remove(series); }
 
             //chartView.CoreCanvas.ForEachGeometry((geometry, drawable) =>
             //{
@@ -237,10 +237,10 @@ namespace LiveChartsCore
             // this call should be thread safe
             // ToDo: ensure it is thread safe...
 
-            viewDrawMargin = chartView.DrawMargin;
-            controlSize = chartView.ControlSize;
+            viewDrawMargin = _chartView.DrawMargin;
+            controlSize = _chartView.ControlSize;
 
-            series = chartView.Series
+            Series = _chartView.Series
                 .Cast<IPieSeries<TDrawingContext>>()
                 .Select(series =>
                 {
@@ -252,20 +252,20 @@ namespace LiveChartsCore
                     // the fetch method will always return the same collection for the
                     // current measureWorker instance
 
-                    series.Fetch(this);
+                    _ = series.Fetch(this);
                     return series;
                 }).ToArray();
 
-            legendPosition = chartView.LegendPosition;
-            legendOrientation = chartView.LegendOrientation;
-            legend = chartView.Legend; // ... this is a reference type.. this has no sense
+            legendPosition = _chartView.LegendPosition;
+            legendOrientation = _chartView.LegendOrientation;
+            legend = _chartView.Legend; // ... this is a reference type.. this has no sense
 
-            tooltipPosition = chartView.TooltipPosition;
-            tooltipFindingStrategy = chartView.TooltipFindingStrategy;
-            tooltip = chartView.Tooltip; //... no sense again...
+            tooltipPosition = _chartView.TooltipPosition;
+            tooltipFindingStrategy = _chartView.TooltipFindingStrategy;
+            tooltip = _chartView.Tooltip; //... no sense again...
 
-            animationsSpeed = chartView.AnimationsSpeed;
-            easingFunction = chartView.EasingFunction;
+            animationsSpeed = _chartView.AnimationsSpeed;
+            easingFunction = _chartView.EasingFunction;
 
             Measure();
         }

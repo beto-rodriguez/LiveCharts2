@@ -17,7 +17,7 @@ namespace ViewModelsSamples.Scatter.Custom
             var values1 = new ObservableCollection<ObservablePoint>();
             var values2 = new ObservableCollection<ObservablePoint>();
 
-            for (int i = 0; i < 20; i++)
+            for (var i = 0; i < 20; i++)
             {
                 values1.Add(new ObservablePoint(r.Next(0, 20), r.Next(0, 20)));
                 values2.Add(new ObservablePoint(r.Next(0, 20), r.Next(0, 20)));

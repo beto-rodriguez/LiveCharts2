@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -36,8 +36,8 @@ namespace LiveChartsCore
     /// <typeparam name="TVisual">The type of the visual.</typeparam>
     /// <typeparam name="TLabel">The type of the label.</typeparam>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="LiveChartsCore.Series{TModel, TVisual, TLabel, TDrawingContext}" />
-    /// <seealso cref="LiveChartsCore.Kernel.IDrawableSeries{TDrawingContext}" />
+    /// <seealso cref="Series{TModel, TVisual, TLabel, TDrawingContext}" />
+    /// <seealso cref="IDrawableSeries{TDrawingContext}" />
     public abstract class DrawableSeries<TModel, TVisual, TLabel, TDrawingContext>
         : Series<TModel, TVisual, TLabel, TDrawingContext>, IDrawableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
@@ -53,13 +53,13 @@ namespace LiveChartsCore
         /// The pending to delete tasks.
         /// </summary>
         protected List<IDrawableTask<TDrawingContext>> deletingTasks = new();
-        private IDrawableTask<TDrawingContext>? stroke = null;
-        private IDrawableTask<TDrawingContext>? fill = null;
-        private double legendShapeSize = 15;
-        private IDrawableTask<TDrawingContext>? dataLabelsDrawableTask;
-        private double dataLabelsSize = 16;
-        private DataLabelsPosition dataLabelsPosition;
-        private Padding dataLabelsPadding = new Padding { Left = 6, Top = 8, Right = 6, Bottom = 8 };
+        private IDrawableTask<TDrawingContext>? _stroke = null;
+        private IDrawableTask<TDrawingContext>? _fill = null;
+        private double _legendShapeSize = 15;
+        private IDrawableTask<TDrawingContext>? _dataLabelsDrawableTask;
+        private double _dataLabelsSize = 16;
+        private DataLabelsPosition _dataLabelsPosition;
+        private Padding _dataLabelsPadding = new() { Left = 6, Top = 8, Right = 6, Bottom = 8 };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DrawableSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -79,15 +79,15 @@ namespace LiveChartsCore
         /// </value>
         public IDrawableTask<TDrawingContext>? Stroke
         {
-            get => stroke;
+            get => _stroke;
             set
             {
-                if (stroke != null) deletingTasks.Add(stroke);
-                stroke = value;
-                if (stroke != null)
+                if (_stroke != null) deletingTasks.Add(_stroke);
+                _stroke = value;
+                if (_stroke != null)
                 {
-                    stroke.IsStroke = true;
-                    stroke.IsFill = false;
+                    _stroke.IsStroke = true;
+                    _stroke.IsFill = false;
                 }
                 OnPaintContextChanged();
                 OnPropertyChanged();
@@ -102,16 +102,16 @@ namespace LiveChartsCore
         /// </value>
         public IDrawableTask<TDrawingContext>? Fill
         {
-            get => fill;
+            get => _fill;
             set
             {
-                if (fill != null) deletingTasks.Add(fill);
-                fill = value;
-                if (fill != null)
+                if (_fill != null) deletingTasks.Add(_fill);
+                _fill = value;
+                if (_fill != null)
                 {
-                    fill.IsStroke = false;
-                    fill.IsFill = true;
-                    fill.StrokeThickness = 0;
+                    _fill.IsStroke = false;
+                    _fill.IsFill = true;
+                    _fill.StrokeThickness = 0;
                 }
                 OnPaintContextChanged();
                 OnPropertyChanged();
@@ -126,11 +126,11 @@ namespace LiveChartsCore
         /// </value>
         public IDrawableTask<TDrawingContext>? DataLabelsDrawableTask
         {
-            get => dataLabelsDrawableTask;
+            get => _dataLabelsDrawableTask;
             set
             {
-                if (dataLabelsDrawableTask != null) deletingTasks.Add(dataLabelsDrawableTask);
-                dataLabelsDrawableTask = value;
+                if (_dataLabelsDrawableTask != null) deletingTasks.Add(_dataLabelsDrawableTask);
+                _dataLabelsDrawableTask = value;
                 OnPropertyChanged();
             }
         }
@@ -141,7 +141,7 @@ namespace LiveChartsCore
         /// <value>
         /// The size of the data labels.
         /// </value>
-        public double DataLabelsSize { get => dataLabelsSize; set { dataLabelsSize = value; OnPropertyChanged(); } }
+        public double DataLabelsSize { get => _dataLabelsSize; set { _dataLabelsSize = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the data labels position.
@@ -149,7 +149,7 @@ namespace LiveChartsCore
         /// <value>
         /// The data labels position.
         /// </value>
-        public DataLabelsPosition DataLabelsPosition { get => dataLabelsPosition; set { dataLabelsPosition = value; OnPropertyChanged(); } }
+        public DataLabelsPosition DataLabelsPosition { get => _dataLabelsPosition; set { _dataLabelsPosition = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the data labels padding.
@@ -157,7 +157,7 @@ namespace LiveChartsCore
         /// <value>
         /// The data labels padding.
         /// </value>
-        public Padding DataLabelsPadding { get => dataLabelsPadding; set { dataLabelsPadding = value; OnPropertyChanged(); } }
+        public Padding DataLabelsPadding { get => _dataLabelsPadding; set { _dataLabelsPadding = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Gets the default paint context.
@@ -173,7 +173,7 @@ namespace LiveChartsCore
         /// <value>
         /// The size of the legend shape.
         /// </value>
-        public double LegendShapeSize { get => legendShapeSize; set { legendShapeSize = value; OnPropertyChanged(); } }
+        public double LegendShapeSize { get => _legendShapeSize; set { _legendShapeSize = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources.
@@ -184,8 +184,8 @@ namespace LiveChartsCore
             foreach (var chart in subscribedTo)
             {
                 var c = (Chart<TDrawingContext>)chart;
-                if (fill != null) c.Canvas.RemovePaintTask(fill);
-                if (stroke != null) c.Canvas.RemovePaintTask(stroke);
+                if (_fill != null) c.Canvas.RemovePaintTask(_fill);
+                if (_stroke != null) c.Canvas.RemovePaintTask(_stroke);
             }
 
             base.Dispose();
