@@ -16,8 +16,7 @@ but there are a few exceptions:
 
 * ~~Never use single-line form (for example: if (source == null) throw new ArgumentNullException("source");)~~
 
-* Please use single line `if` expressions, if the line is too long please create a new line everytime the with of the line could exceed the editor window size, for example, the
-following line is valid: 
+* Please use single line `if` expressions, if the line is too long please create a new line everytime the width of the line could exceeds the editor window size, for example, the following line is valid: 
 ```
 if (model == null)
     throw new Exception(
