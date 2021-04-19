@@ -626,7 +626,7 @@ namespace LiveChartsCore
                         visual.Geometry.Width = gs;
                         visual.Geometry.Height = gs;
                         visual.Geometry.RemoveOnCompleted = true;
-                        visual = null;
+                        point.Context.Visual = null;
                     }
 
                     if (l.Count > 0) yield return l.ToArray();

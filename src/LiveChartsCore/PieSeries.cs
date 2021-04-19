@@ -314,7 +314,7 @@ namespace LiveChartsCore
             var visual = (TVisual?)point.Context.Visual;
             if (visual == null) return;
 
-            visual.StartAngle = visual.StartAngle + visual.SweepAngle;
+            visual.StartAngle += visual.SweepAngle;
             visual.SweepAngle = 0;
             visual.RemoveOnCompleted = true;
         }

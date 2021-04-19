@@ -179,9 +179,7 @@ namespace LiveChartsCore
 
                 if (DataLabelsDrawableTask != null)
                 {
-                    var label = (TLabel)point.Context.Label;
-
-                    if (label == null)
+                    if (point.Context.Label is not TLabel label)
                     {
                         var l = new TLabel { X = secondary - uwm + cp, Y = p };
 
@@ -261,10 +259,9 @@ namespace LiveChartsCore
         /// <exception cref="Exception">Unable to initialize the point instance.</exception>
         protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
         {
-            var visual = chartPoint.Context.Visual as TVisual;
             var chart = chartPoint.Context.Chart;
 
-            if (visual == null) throw new Exception("Unable to initialize the point instance.");
+            if (chartPoint.Context.Visual is not TVisual visual) throw new Exception("Unable to initialize the point instance.");
 
             _ = visual
                 .TransitionateProperties(
