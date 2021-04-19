@@ -35,10 +35,17 @@ using System.Linq;
 
 namespace LiveChartsCore.SkiaSharp.Avalonia
 {
+    /// <summary>
+    /// Defines a default legend for a chart.
+    /// </summary>
     public class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
     {
         private readonly DataTemplate defaultTemplate;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultLegend"/> class.
+        /// </summary>
+        /// <exception cref="Exception">default tempalte not found</exception>
         public DefaultLegend()
         {
             InitializeComponent();
@@ -47,24 +54,60 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             defaultTemplate = t;
         }
 
+        /// <summary>
+        /// The orientation property
+        /// </summary>
         public static readonly AvaloniaProperty<Orientation> OrientationProperty =
            AvaloniaProperty.Register<CartesianChart, Orientation>(nameof(Orientation), Orientation.Horizontal, inherits: true);
 
+        /// <summary>
+        /// The dock property
+        /// </summary>
         public static readonly AvaloniaProperty<Dock> DockProperty =
            AvaloniaProperty.Register<CartesianChart, Dock>(nameof(Dock), Dock.Left, inherits: true);
 
+        /// <summary>
+        /// Gets or sets the custom template.
+        /// </summary>
+        /// <value>
+        /// The custom template.
+        /// </value>
         public DataTemplate? CustomTemplate { get; set; } = null;
 
+        /// <summary>
+        /// Gets or sets the series.
+        /// </summary>
+        /// <value>
+        /// The series.
+        /// </value>
         public IEnumerable<ISeries> Series { get; set; } = Enumerable.Empty<ISeries>();
 
+        /// <summary>
+        /// Gets or sets the text brush.
+        /// </summary>
+        /// <value>
+        /// The text brush.
+        /// </value>
         public SolidColorBrush TextBrush { get; set; } = new SolidColorBrush(Color.FromRgb(35, 35, 35));
 
+        /// <summary>
+        /// Gets or sets the orientation.
+        /// </summary>
+        /// <value>
+        /// The orientation.
+        /// </value>
         public Orientation Orientation
         {
             get { return (Orientation)GetValue(OrientationProperty); }
             set { SetValue(OrientationProperty, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the dock.
+        /// </summary>
+        /// <value>
+        /// The dock.
+        /// </value>
         public Dock Dock
         {
             get { return (Dock)GetValue(DockProperty); }
@@ -125,6 +168,9 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
         }
 
+        /// <summary>
+        /// Builds the content.
+        /// </summary>
         protected void BuildContent()
         {
             var template = CustomTemplate ?? defaultTemplate;

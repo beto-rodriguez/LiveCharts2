@@ -28,32 +28,32 @@ namespace LiveChartsCore.Measure
     public enum TooltipPosition
     {
         /// <summary>
-        /// The hidden position.
+        /// The hidden position, tool tips will be hidden.
         /// </summary>
         Hidden,
 
         /// <summary>
-        /// The top position.
+        /// The top position, places the tool tip at the top of the hovered point.
         /// </summary>
         Top,
 
         /// <summary>
-        /// The bottom position.
+        /// The bottom position, places the tool tip at the bottom of the hovered point.
         /// </summary>
         Bottom,
 
         /// <summary>
-        /// The left position.
+        /// The left position, places the tool tip at the left of the hovered point.
         /// </summary>
         Left,
 
         /// <summary>
-        /// The right position.
+        /// The right position, places the tool tip at the right of the hovered point.
         /// </summary>
         Right,
 
         /// <summary>
-        /// The center position.
+        /// The center position, places the tool tip at the center of the hovered point.
         /// </summary>
         Center
     }

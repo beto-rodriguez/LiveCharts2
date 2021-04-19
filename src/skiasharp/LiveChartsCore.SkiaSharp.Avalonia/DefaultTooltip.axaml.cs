@@ -34,11 +34,18 @@ using System.Linq;
 
 namespace LiveChartsCore.SkiaSharp.Avalonia
 {
+    /// <summary>
+    /// Defines a default tool tip for a chart control.
+    /// </summary>
     public class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext>
     {
         private readonly DataTemplate defaultTemplate;
         private readonly Dictionary<ChartPoint, object> activePoints = new();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
+        /// </summary>
+        /// <exception cref="Exception">default tempalte not found</exception>
         public DefaultTooltip()
         {
             InitializeComponent();
@@ -52,20 +59,68 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
 
         #region properties
 
+        /// <summary>
+        /// Gets or sets the tool tip template.
+        /// </summary>
+        /// <value>
+        /// The tool tip template.
+        /// </value>
         public DataTemplate? TooltipTemplate { get; set; } = null;
 
+        /// <summary>
+        /// Gets or sets the points.
+        /// </summary>
+        /// <value>
+        /// The points.
+        /// </value>
         public IEnumerable<TooltipPoint> Points { get; set; } = Enumerable.Empty<TooltipPoint>();
 
+        /// <summary>
+        /// Gets or sets the tool tip font family.
+        /// </summary>
+        /// <value>
+        /// The tool tip font family.
+        /// </value>
         public FontFamily TooltipFontFamily { get; set; } = new FontFamily("Trebuchet MS");
 
+        /// <summary>
+        /// Gets or sets the size of the tool tip font.
+        /// </summary>
+        /// <value>
+        /// The size of the tool tip font.
+        /// </value>
         public double TooltipFontSize { get; set; }
 
+        /// <summary>
+        /// Gets or sets the tool tip font weight.
+        /// </summary>
+        /// <value>
+        /// The tool tip font weight.
+        /// </value>
         public FontWeight TooltipFontWeight { get; set; }
 
+        /// <summary>
+        /// Gets or sets the tool tip font style.
+        /// </summary>
+        /// <value>
+        /// The tool tip font style.
+        /// </value>
         public FontStyle TooltipFontStyle { get; set; }
 
+        /// <summary>
+        /// Gets or sets the tool tip text brush.
+        /// </summary>
+        /// <value>
+        /// The tool tip text brush.
+        /// </value>
         public SolidColorBrush TooltipTextBrush { get; set; } = new SolidColorBrush(Color.FromRgb(35, 35, 35));
 
+        /// <summary>
+        /// Gets or sets the tooltip background.
+        /// </summary>
+        /// <value>
+        /// The tooltip background.
+        /// </value>
         public IBrush TooltipBackground { get; set; } = new SolidColorBrush(Color.FromRgb(250, 250, 250));
 
         #endregion
@@ -150,6 +205,10 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             chart.Canvas.Invalidate();
         }
 
+        /// <summary>
+        /// Builds the content.
+        /// </summary>
+        /// <returns></returns>
         protected void BuildContent()
         {
             var template = TooltipTemplate ?? defaultTemplate;

@@ -28,27 +28,27 @@ namespace LiveChartsCore.Measure
     public enum LegendPosition
     {
         /// <summary>
-        /// The hidden position.
+        /// The hidden position, hides the legend form the user interface.
         /// </summary>
         Hidden,
 
         /// <summary>
-        /// The top position.
+        /// The top position, places the legend at the top of the chart.
         /// </summary>
         Top,
 
         /// <summary>
-        /// The left position.
+        /// The left position, places the legend at the left of the chart.
         /// </summary>
         Left,
 
         /// <summary>
-        /// The right position.
+        /// The right position, places the legend at the right of the chart.
         /// </summary>
         Right,
 
         /// <summary>
-        /// The bottom position.
+        /// The bottom position, places the legend at the bottom of the chart.
         /// </summary>
         Bottom
     }

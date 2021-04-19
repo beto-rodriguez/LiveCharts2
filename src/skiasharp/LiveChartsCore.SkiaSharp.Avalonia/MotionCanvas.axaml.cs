@@ -37,12 +37,18 @@ using System.Threading.Tasks;
 
 namespace LiveChartsCore.SkiaSharp.Avalonia
 {
+    /// <summary>
+    /// Thje motion canvas control fro avalonia, <see cref="MotionCanvas{TDrawingContext}"/>.
+    /// </summary>
     public class MotionCanvas : UserControl
     {
         private bool isDrawingLoopRunning = false;
         private readonly MotionCanvas<SkiaSharpDrawingContext> canvasCore = new();
         private double framesPerSecond = 90;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
+        /// </summary>
         public MotionCanvas()
         {
             InitializeComponent();
@@ -54,18 +60,53 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
             AvaloniaXamlLoader.Load(this);
         }
 
+        /// <summary>
+        /// The paint tasks property
+        /// </summary>
         public static readonly AvaloniaProperty<HashSet<IDrawableTask<SkiaSharpDrawingContext>>> PaintTasksProperty =
             AvaloniaProperty.Register<MotionCanvas, HashSet<IDrawableTask<SkiaSharpDrawingContext>>>(nameof(PaintTasks), inherits: true);
 
+        /// <summary>
+        /// Gets or sets the paint tasks.
+        /// </summary>
+        /// <value>
+        /// The paint tasks.
+        /// </value>
         public HashSet<IDrawableTask<SkiaSharpDrawingContext>> PaintTasks
         {
             get { return (HashSet<IDrawableTask<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty); }
             set { SetValue(PaintTasksProperty, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the frames per second.
+        /// </summary>
+        /// <value>
+        /// The frames per second.
+        /// </value>
         public double FramesPerSecond { get => framesPerSecond; set => framesPerSecond = value; }
 
+        /// <summary>
+        /// Gets the canvas core.
+        /// </summary>
+        /// <value>
+        /// The canvas core.
+        /// </value>
         public MotionCanvas<SkiaSharpDrawingContext> CanvasCore => canvasCore;
+
+        /// <inheritdoc cref="Render(a.DrawingContext)" />
+        public override void Render(a.DrawingContext context)
+        {
+            context.Custom(new CustomDrawOp(new Rect(0, 0, Bounds.Width, Bounds.Height), canvasCore));
+        }
+
+        /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})" />
+        protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
+        {
+            if (change.Property.Name == nameof(PaintTasks)) canvasCore.SetPaintTasks(PaintTasks);
+
+            base.OnPropertyChanged(change);
+        }
 
         private async void RunDrawingLoop()
         {
@@ -85,18 +126,6 @@ namespace LiveChartsCore.SkiaSharp.Avalonia
         private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
         {
             Dispatcher.UIThread.InvokeAsync(RunDrawingLoop, DispatcherPriority.Background);
-        }
-
-        public override void Render(a.DrawingContext context)
-        {
-            context.Custom(new CustomDrawOp(new Rect(0, 0, Bounds.Width, Bounds.Height), canvasCore));
-        }
-
-        protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
-        {
-            if (change.Property.Name == nameof(PaintTasks)) canvasCore.SetPaintTasks(PaintTasks);
-
-            base.OnPropertyChanged(change);
         }
 
         // based on:

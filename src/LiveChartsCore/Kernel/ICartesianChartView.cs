@@ -28,7 +28,7 @@ using System.Drawing;
 namespace LiveChartsCore.Kernel
 {
     /// <summary>
-    /// Defines a cartesina chart view.
+    /// Defines a Cartesian chart view, this view is able to host one or many series in a Cartesian coordinate system.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="LiveChartsCore.Kernel.IChartView{TDrawingContext}" />
@@ -60,7 +60,7 @@ namespace LiveChartsCore.Kernel
         IEnumerable<IAxis> YAxes { get; set; }
 
         /// <summary>
-        /// Gets or sets the series.
+        /// Gets or sets the series to plot in the user interface.
         /// </summary>
         /// <value>
         /// The series.
@@ -76,7 +76,7 @@ namespace LiveChartsCore.Kernel
         ZoomAndPanMode ZoomMode { get; set; }
 
         /// <summary>
-        /// Gets or sets the zooming speed from 0 to 1, where 0 is the fastest.
+        /// Gets or sets the zooming speed from 0 to 1, where 0 is the fastest and 1 the slowest.
         /// </summary>
         /// <value>
         /// The zooming speed.

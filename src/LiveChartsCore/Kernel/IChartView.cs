@@ -40,7 +40,8 @@ namespace LiveChartsCore.Kernel
         System.Drawing.SizeF ControlSize { get; }
 
         /// <summary>
-        /// Gets or sets the draw margin.
+        /// Gets or sets the draw margin, if this property is null, the library will calculate a margin, this margin is the distance 
+        /// between the view bounds and the drawable area.
         /// </summary>
         /// <value>
         /// The draw margin.
@@ -56,7 +57,8 @@ namespace LiveChartsCore.Kernel
         TimeSpan AnimationsSpeed { get; set; }
 
         /// <summary>
-        /// Gets or sets the easing function.
+        /// Gets or sets the easing function, the library already provides many easing functions in the 
+        /// LiveCharts.EasingFunction static class.
         /// </summary>
         /// <value>
         /// The easing function.
