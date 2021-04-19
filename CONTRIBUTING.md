@@ -25,7 +25,7 @@ if (model == null)
 ```
 
 
-* Using braces is always accepted, and required if any block of an if/else if/.../else compound statement uses braces or if a single statement body spans multiple lines.
+* Using braces is always accepted, and required if any block of an if/else if/.../else compound statement uses braces ~~or if a single statement body spans multiple lines.~~ (just brake the lines as in the previous sample)
 
 * Braces may be omitted only if the body of every block associated with an if/else if/.../else compound statement is placed on a single line.
 
