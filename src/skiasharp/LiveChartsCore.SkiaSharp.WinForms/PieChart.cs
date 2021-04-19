@@ -29,11 +29,17 @@ using System.ComponentModel;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms
 {
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}" />
     public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     {
         private CollectionDeepObserver<ISeries> seriesObserver;
         private IEnumerable<ISeries> series = new List<ISeries>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PieChart"/> class.
+        /// </summary>
+        /// <param name="tooltip">The default tool tip control.</param>
+        /// <param name="legend">The default legend.</param>
         public PieChart(IChartTooltip<SkiaSharpDrawingContext>? tooltip = null, IChartLegend<SkiaSharpDrawingContext>? legend = null)
             : base(tooltip, legend)
         {
@@ -60,6 +66,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             }
         }
 
+        /// <inheritdoc cref="IPieChartView{TDrawingContext}.Series" />
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IEnumerable<ISeries> Series
         {
@@ -73,6 +80,9 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             }
         }
 
+        /// <summary>
+        /// Initializes the core.
+        /// </summary>
         protected override void InitializeCore()
         {
             core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore);

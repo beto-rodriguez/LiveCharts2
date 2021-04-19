@@ -7,16 +7,26 @@ using System.Windows.Forms;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms
 {
+    /// <inheritdoc cref="IChartLegend{TDrawingContext}" />
     public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultLegend"/> class.
+        /// </summary>
         public DefaultLegend()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Gets or sets the orientation.
+        /// </summary>
+        /// <value>
+        /// The orientation.
+        /// </value>
         public LegendOrientation Orientation { get; set; }
 
-        public void Draw(Chart<SkiaSharpDrawingContext> chart)
+        void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
         {
             var wfChart = (Chart)chart.View;
 

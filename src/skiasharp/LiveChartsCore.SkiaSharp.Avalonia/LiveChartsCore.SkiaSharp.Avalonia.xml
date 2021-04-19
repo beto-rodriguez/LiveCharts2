@@ -4,5 +4,1053 @@
         <name>LiveChartsCore.SkiaSharp.Avalonia</name>
     </assembly>
     <members>
+        <member name="T:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.ICartesianChartView`1" />
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.core">
+            <summary>
+            The core
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.legend">
+            <summary>
+            The legend
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.tooltip">
+            <summary>
+            The tooltip
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart"/> class.
+            </summary>
+            <exception cref="T:System.Exception">Default colors are not valid</exception>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.DrawMarginProperty">
+            <summary>
+            The draw margin property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.SeriesProperty">
+            <summary>
+            The series property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.XAxesProperty">
+            <summary>
+            The x axes property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.YAxesProperty">
+            <summary>
+            The y axes property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.ZoomModeProperty">
+            <summary>
+            The zoom mode property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.ZoomingSpeedProperty">
+            <summary>
+            The zooming speed property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.AnimationsSpeedProperty">
+            <summary>
+            The animations speed property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.EasingFunctionProperty">
+            <summary>
+            The easing function property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.TooltipTemplateProperty">
+            <summary>
+            The tool tip template property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.TooltipPositionProperty">
+            <summary>
+            The tool tip position property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.TooltipFindingStrategyProperty">
+            <summary>
+            The tool tip finding strategy property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.TooltipFontFamilyProperty">
+            <summary>
+            The tool tip font family property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.TooltipFontSizeProperty">
+            <summary>
+            The tool tip font size property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.TooltipFontWeightProperty">
+            <summary>
+            The tool tip font weight property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.TooltipFontStyleProperty">
+            <summary>
+            The tool tip font style property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.TooltipTextBrushProperty">
+            <summary>
+            The tool tip text brush property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.TooltipBackgroundProperty">
+            <summary>
+            The tool tip background property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.LegendPositionProperty">
+            <summary>
+            The legend position property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.LegendOrientationProperty">
+            <summary>
+            The legend orientation property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.LegendTemplateProperty">
+            <summary>
+            The legend template property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.LegendFontFamilyProperty">
+            <summary>
+            The legend font family property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.LegendFontSizeProperty">
+            <summary>
+            The legend font size property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.LegendFontWeightProperty">
+            <summary>
+            The legend font weight property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.LegendFontStyleProperty">
+            <summary>
+            The legend font style property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.LegendTextBrushProperty">
+            <summary>
+            The legend text brush property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.LegendBackgroundProperty">
+            <summary>
+            The legend background property
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.CoreCanvas">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.CoreCanvas" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.DrawMargin">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.DrawMargin" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.Series">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.Series" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.XAxes">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.XAxes" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.YAxes">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.YAxes" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.ZoomMode">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.ZoomMode" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.ZoomingSpeed">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.ZoomingSpeed" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.AnimationsSpeed">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.AnimationsSpeed" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.EasingFunction">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.EasingFunction" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.TooltipPosition">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.TooltipPosition" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.TooltipFindingStrategy">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.TooltipFindingStrategy" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.TooltipTemplate">
+            <summary>
+            Gets or sets the tool tip data template.
+            </summary>
+            <value>
+            The tool tip template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.TooltipFontFamily">
+            <summary>
+            Gets or sets the tool tip default font family.
+            </summary>
+            <value>
+            The tool tip font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.TooltipFontSize">
+            <summary>
+            Gets or sets the default size of the tool tip font.
+            </summary>
+            <value>
+            The size of the tool tip font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.TooltipFontWeight">
+            <summary>
+            Gets or sets the tool tip default font weight.
+            </summary>
+            <value>
+            The tool tip font weight.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.TooltipFontStyle">
+            <summary>
+            Gets or sets the tool tip default font style.
+            </summary>
+            <value>
+            The tool tip font style.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.TooltipTextBrush">
+            <summary>
+            Gets or sets the tool tip default text brush.
+            </summary>
+            <value>
+            The tool tip text brush.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.TooltipBackground">
+            <summary>
+            Gets or sets the tool tip default background.
+            </summary>
+            <value>
+            The tool tip background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.Tooltip">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.Tooltip" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.LegendPosition">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.LegendPosition" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.LegendOrientation">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.LegendOrientation" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.LegendTemplate">
+            <summary>
+            Gets or sets the legend template.
+            </summary>
+            <value>
+            The legend template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.LegendFontFamily">
+            <summary>
+            Gets or sets the legend default font family.
+            </summary>
+            <value>
+            The legend font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.LegendFontSize">
+            <summary>
+            Gets or sets the size of the legend default font.
+            </summary>
+            <value>
+            The size of the legend font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.LegendFontWeight">
+            <summary>
+            Gets or sets the legend defailt font weight.
+            </summary>
+            <value>
+            The legend font weight.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.LegendFontStyle">
+            <summary>
+            Gets or sets the legend default font style.
+            </summary>
+            <value>
+            The legend font style.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.LegendTextBrush">
+            <summary>
+            Gets or sets the legend default text brush.
+            </summary>
+            <value>
+            The legend text brush.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.LegendBackground">
+            <summary>
+            Gets or sets the legend default background.
+            </summary>
+            <value>
+            The legend background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.Legend">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.Legend" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.PointStates">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.PointStates" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.ScaleUIPoint(System.Drawing.PointF,System.Int32,System.Int32)">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.ICartesianChartView`1.ScaleUIPoint(System.Drawing.PointF,System.Int32,System.Int32)" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.InitializeCore">
+            <summary>
+            Initializes the core.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.OnPropertyChanged``1(Avalonia.AvaloniaPropertyChangedEventArgs{``0})">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharp.Avalonia.CartesianChart.OnPropertyChanged``1(Avalonia.AvaloniaPropertyChangedEventArgs{``0})" />
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharp.Avalonia.DefaultLegend">
+            <summary>
+            Defines a default legend for a chart.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharp.Avalonia.DefaultLegend.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharp.Avalonia.DefaultLegend"/> class.
+            </summary>
+            <exception cref="T:System.Exception">default tempalte not found</exception>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.DefaultLegend.OrientationProperty">
+            <summary>
+            The orientation property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.DefaultLegend.DockProperty">
+            <summary>
+            The dock property
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.DefaultLegend.CustomTemplate">
+            <summary>
+            Gets or sets the custom template.
+            </summary>
+            <value>
+            The custom template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.DefaultLegend.Series">
+            <summary>
+            Gets or sets the series.
+            </summary>
+            <value>
+            The series.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.DefaultLegend.TextBrush">
+            <summary>
+            Gets or sets the text brush.
+            </summary>
+            <value>
+            The text brush.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.DefaultLegend.Orientation">
+            <summary>
+            Gets or sets the orientation.
+            </summary>
+            <value>
+            The orientation.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.DefaultLegend.Dock">
+            <summary>
+            Gets or sets the dock.
+            </summary>
+            <value>
+            The dock.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharp.Avalonia.DefaultLegend.BuildContent">
+            <summary>
+            Builds the content.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharp.Avalonia.DefaultTooltip">
+            <summary>
+            Defines a default tool tip for a chart control.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharp.Avalonia.DefaultTooltip.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharp.Avalonia.DefaultTooltip"/> class.
+            </summary>
+            <exception cref="T:System.Exception">default tempalte not found</exception>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.DefaultTooltip.TooltipTemplate">
+            <summary>
+            Gets or sets the tool tip template.
+            </summary>
+            <value>
+            The tool tip template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.DefaultTooltip.Points">
+            <summary>
+            Gets or sets the points.
+            </summary>
+            <value>
+            The points.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.DefaultTooltip.TooltipFontFamily">
+            <summary>
+            Gets or sets the tool tip font family.
+            </summary>
+            <value>
+            The tool tip font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.DefaultTooltip.TooltipFontSize">
+            <summary>
+            Gets or sets the size of the tool tip font.
+            </summary>
+            <value>
+            The size of the tool tip font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.DefaultTooltip.TooltipFontWeight">
+            <summary>
+            Gets or sets the tool tip font weight.
+            </summary>
+            <value>
+            The tool tip font weight.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.DefaultTooltip.TooltipFontStyle">
+            <summary>
+            Gets or sets the tool tip font style.
+            </summary>
+            <value>
+            The tool tip font style.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.DefaultTooltip.TooltipTextBrush">
+            <summary>
+            Gets or sets the tool tip text brush.
+            </summary>
+            <value>
+            The tool tip text brush.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.DefaultTooltip.TooltipBackground">
+            <summary>
+            Gets or sets the tooltip background.
+            </summary>
+            <value>
+            The tooltip background.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharp.Avalonia.DefaultTooltip.BuildContent">
+            <summary>
+            Builds the content.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharp.Avalonia.IAvaloniaChart">
+            <summary>
+            Defines a chart only for the the avalonia ui framework
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.IAvaloniaChart.TooltipTemplate">
+            <summary>
+            Gets or sets the tool tip template.
+            </summary>
+            <value>
+            The tool tip template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.IAvaloniaChart.TooltipFontFamily">
+            <summary>
+            Gets or sets the tool tip font family.
+            </summary>
+            <value>
+            The tool tip font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.IAvaloniaChart.TooltipFontSize">
+            <summary>
+            Gets or sets the size of the tool tip font.
+            </summary>
+            <value>
+            The size of the tool tip font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.IAvaloniaChart.TooltipFontWeight">
+            <summary>
+            Gets or sets the tool tip font weight.
+            </summary>
+            <value>
+            The tool tip font weight.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.IAvaloniaChart.TooltipFontStyle">
+            <summary>
+            Gets or sets the tool tip font style.
+            </summary>
+            <value>
+            The tool tip font style.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.IAvaloniaChart.TooltipTextBrush">
+            <summary>
+            Gets or sets the tool tip text brush.
+            </summary>
+            <value>
+            The tool tip text brush.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.IAvaloniaChart.TooltipBackground">
+            <summary>
+            Gets or sets the tool tip background.
+            </summary>
+            <value>
+            The tool tip background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.IAvaloniaChart.LegendTemplate">
+            <summary>
+            Gets or sets the legend template.
+            </summary>
+            <value>
+            The legend template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.IAvaloniaChart.LegendFontFamily">
+            <summary>
+            Gets or sets the legend font family.
+            </summary>
+            <value>
+            The legend font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.IAvaloniaChart.LegendFontSize">
+            <summary>
+            Gets or sets the size of the legend font.
+            </summary>
+            <value>
+            The size of the legend font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.IAvaloniaChart.LegendFontWeight">
+            <summary>
+            Gets or sets the legend font weight.
+            </summary>
+            <value>
+            The legend font weight.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.IAvaloniaChart.LegendFontStyle">
+            <summary>
+            Gets or sets the legend font style.
+            </summary>
+            <value>
+            The legend font style.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.IAvaloniaChart.LegendTextBrush">
+            <summary>
+            Gets or sets the legend text brush.
+            </summary>
+            <value>
+            The legend text brush.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.IAvaloniaChart.LegendBackground">
+            <summary>
+            Gets or sets the legend background.
+            </summary>
+            <value>
+            The legend background.
+            </value>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharp.Avalonia.LegendBindingContext">
+            <summary>
+            The legend binding context.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.LegendBindingContext.Series">
+            <summary>
+            Gets or sets the series.
+            </summary>
+            <value>
+            The series.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.LegendBindingContext.FontFamily">
+            <summary>
+            Gets or sets the font family.
+            </summary>
+            <value>
+            The font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.LegendBindingContext.FontSize">
+            <summary>
+            Gets or sets the size of the font.
+            </summary>
+            <value>
+            The size of the font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.LegendBindingContext.FontWeight">
+            <summary>
+            Gets or sets the font weight.
+            </summary>
+            <value>
+            The font weight.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.LegendBindingContext.FontStyle">
+            <summary>
+            Gets or sets the font style.
+            </summary>
+            <value>
+            The font style.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.LegendBindingContext.TextBrush">
+            <summary>
+            Gets or sets the text brush.
+            </summary>
+            <value>
+            The text brush.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.LegendBindingContext.Background">
+            <summary>
+            Gets or sets the background.
+            </summary>
+            <value>
+            The background.
+            </value>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharp.Avalonia.MotionCanvas">
+            <summary>
+            Thje motion canvas control fro avalonia, <see cref="T:LiveChartsCore.Drawing.MotionCanvas`1"/>.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharp.Avalonia.MotionCanvas.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharp.Avalonia.MotionCanvas"/> class.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.MotionCanvas.PaintTasksProperty">
+            <summary>
+            The paint tasks property
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.MotionCanvas.PaintTasks">
+            <summary>
+            Gets or sets the paint tasks.
+            </summary>
+            <value>
+            The paint tasks.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.MotionCanvas.FramesPerSecond">
+            <summary>
+            Gets or sets the frames per second.
+            </summary>
+            <value>
+            The frames per second.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.MotionCanvas.CanvasCore">
+            <summary>
+            Gets the canvas core.
+            </summary>
+            <value>
+            The canvas core.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharp.Avalonia.MotionCanvas.Render(Avalonia.Media.DrawingContext)">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharp.Avalonia.MotionCanvas.Render(Avalonia.Media.DrawingContext)" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharp.Avalonia.MotionCanvas.OnPropertyChanged``1(Avalonia.AvaloniaPropertyChangedEventArgs{``0})">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharp.Avalonia.MotionCanvas.OnPropertyChanged``1(Avalonia.AvaloniaPropertyChangedEventArgs{``0})" />
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharp.Avalonia.PieChart">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.IPieChartView`1" />
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.core">
+            <summary>
+            The core
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.legend">
+            <summary>
+            The legend
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.tooltip">
+            <summary>
+            The tooltip
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharp.Avalonia.PieChart.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharp.Avalonia.PieChart"/> class.
+            </summary>
+            <exception cref="T:System.Exception">Default colors are not valid</exception>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.DrawMarginProperty">
+            <summary>
+            The draw margin property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.SeriesProperty">
+            <summary>
+            The series property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.AnimationsSpeedProperty">
+            <summary>
+            The animations speed property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.EasingFunctionProperty">
+            <summary>
+            The easing function property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.TooltipTemplateProperty">
+            <summary>
+            The tool tip template property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.TooltipPositionProperty">
+            <summary>
+            The tool tip position property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.TooltipFindingStrategyProperty">
+            <summary>
+            The tool tip finding strategy property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.TooltipFontFamilyProperty">
+            <summary>
+            The tool tip font family property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.TooltipFontSizeProperty">
+            <summary>
+            The tool tip font size property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.TooltipFontWeightProperty">
+            <summary>
+            The tool tip font weight property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.TooltipFontStyleProperty">
+            <summary>
+            The tool tip font style property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.TooltipTextBrushProperty">
+            <summary>
+            The tool tip text brush property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.TooltipBackgroundProperty">
+            <summary>
+            The tool tip background property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.LegendPositionProperty">
+            <summary>
+            The legend position property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.LegendOrientationProperty">
+            <summary>
+            The legend orientation property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.LegendTemplateProperty">
+            <summary>
+            The legend template property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.LegendFontFamilyProperty">
+            <summary>
+            The legend font family property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.LegendFontSizeProperty">
+            <summary>
+            The legend font size property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.LegendFontWeightProperty">
+            <summary>
+            The legend font weight property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.LegendFontStyleProperty">
+            <summary>
+            The legend font style property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.LegendTextBrushProperty">
+            <summary>
+            The legend text brush property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharp.Avalonia.PieChart.LegendBackgroundProperty">
+            <summary>
+            The legend background property
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.CoreCanvas">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.CoreCanvas" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.DrawMargin">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.DrawMargin" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.Series">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.Series" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.AnimationsSpeed">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.AnimationsSpeed" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.EasingFunction">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.EasingFunction" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.TooltipPosition">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.TooltipPosition" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.TooltipFindingStrategy">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.TooltipFindingStrategy" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.TooltipTemplate">
+            <summary>
+            Gets or sets the tool data tip template.
+            </summary>
+            <value>
+            The tool tip template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.TooltipFontFamily">
+            <summary>
+            Gets or sets the tool tip default font family.
+            </summary>
+            <value>
+            The tool tip font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.TooltipFontSize">
+            <summary>
+            Gets or sets the default size of the tool tip font.
+            </summary>
+            <value>
+            The size of the tool tip font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.TooltipFontWeight">
+            <summary>
+            Gets or sets the default tool tip font weight.
+            </summary>
+            <value>
+            The tool tip font weight.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.TooltipFontStyle">
+            <summary>
+            Gets or sets the default tool tip font style.
+            </summary>
+            <value>
+            The tool tip font style.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.TooltipTextBrush">
+            <summary>
+            Gets or sets the default tool tip text brush.
+            </summary>
+            <value>
+            The tool tip text brush.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.TooltipBackground">
+            <summary>
+            Gets or sets the default tool tip background.
+            </summary>
+            <value>
+            The too ltip background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.Tooltip">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.Tooltip" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.LegendPosition">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.LegendPosition" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.LegendOrientation">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.LegendOrientation" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.LegendTemplate">
+            <summary>
+            Gets or sets the legend template.
+            </summary>
+            <value>
+            The legend template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.LegendFontFamily">
+            <summary>
+            Gets or sets the default legend font family.
+            </summary>
+            <value>
+            The legend font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.LegendFontSize">
+            <summary>
+            Gets or sets the default size of the legend font.
+            </summary>
+            <value>
+            The size of the legend font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.LegendFontWeight">
+            <summary>
+            Gets or sets the default legend font weight.
+            </summary>
+            <value>
+            The legend font weight.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.LegendFontStyle">
+            <summary>
+            Gets or sets the default legend font style.
+            </summary>
+            <value>
+            The legend font style.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.LegendTextBrush">
+            <summary>
+            Gets or sets the default legend text brush.
+            </summary>
+            <value>
+            The legend text brush.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.LegendBackground">
+            <summary>
+            Gets or sets the default legend background.
+            </summary>
+            <value>
+            The legend background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.Legend">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.Legend" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.PieChart.PointStates">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.PointStates" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharp.Avalonia.PieChart.InitializeCore">
+            <summary>
+            Initializes the core.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharp.Avalonia.PieChart.OnPropertyChanged``1(Avalonia.AvaloniaPropertyChangedEventArgs{``0})">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharp.Avalonia.PieChart.OnPropertyChanged``1(Avalonia.AvaloniaPropertyChangedEventArgs{``0})" />
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharp.Avalonia.TooltipBindingContext">
+            <summary>
+            Defines the tool tip binding context.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.TooltipBindingContext.Points">
+            <summary>
+            Gets or sets the points.
+            </summary>
+            <value>
+            The points.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.TooltipBindingContext.TooltipFontFamily">
+            <summary>
+            Gets or sets the tool tip font family.
+            </summary>
+            <value>
+            The tool tip font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.TooltipBindingContext.TooltipFontSize">
+            <summary>
+            Gets or sets the size of the tool tip font.
+            </summary>
+            <value>
+            The size of the tool tip font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.TooltipBindingContext.TooltipFontWeight">
+            <summary>
+            Gets or sets the tool tip font weight.
+            </summary>
+            <value>
+            The tool tip font weight.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.TooltipBindingContext.TooltipFontStyle">
+            <summary>
+            Gets or sets the tool tip font style.
+            </summary>
+            <value>
+            The tool tip font style.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.TooltipBindingContext.TooltipTextBrush">
+            <summary>
+            Gets or sets the tool tip text brush.
+            </summary>
+            <value>
+            The tool tip text brush.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharp.Avalonia.TooltipBindingContext.TooltipBackground">
+            <summary>
+            Gets or sets the tool tip background.
+            </summary>
+            <value>
+            The tool tip background.
+            </value>
+        </member>
     </members>
 </doc>

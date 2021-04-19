@@ -8,18 +8,22 @@ using System.Windows.Forms;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms
 {
+    /// <inheritdoc cref="IChartTooltip{TDrawingContext}" />
     public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>, IDisposable
     {
         private readonly Dictionary<ChartPoint, object> activePoints = new();
         private const int CS_DROPSHADOW = 0x00020000;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
+        /// </summary>
         public DefaultTooltip()
         {
             InitializeComponent();
             ShowInTaskbar = false;
         }
 
-        public void Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var wfChart = (Chart)chart.View;
 
@@ -117,6 +121,11 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             return new SizeF(w, h);
         }
 
+        /// <summary>
+        /// Disposes the specified disposing.
+        /// </summary>
+        /// <param name="disposing">if set to <c>true</c> [disposing].</param>
+        /// <returns></returns>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))

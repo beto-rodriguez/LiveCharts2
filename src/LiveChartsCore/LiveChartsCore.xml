@@ -3689,7 +3689,7 @@
         </member>
         <member name="T:LiveChartsCore.Kernel.ICartesianChartView`1">
             <summary>
-            Defines a cartesina chart view.
+            Defines a Cartesian chart view, this view is able to host one or many series in a Cartesian coordinate system.
             </summary>
             <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
             <seealso cref="T:LiveChartsCore.Kernel.IChartView`1" />
@@ -3720,7 +3720,7 @@
         </member>
         <member name="P:LiveChartsCore.Kernel.ICartesianChartView`1.Series">
             <summary>
-            Gets or sets the series.
+            Gets or sets the series to plot in the user interface.
             </summary>
             <value>
             The series.
@@ -3736,7 +3736,7 @@
         </member>
         <member name="P:LiveChartsCore.Kernel.ICartesianChartView`1.ZoomingSpeed">
             <summary>
-            Gets or sets the zooming speed from 0 to 1, where 0 is the fastest.
+            Gets or sets the zooming speed from 0 to 1, where 0 is the fastest and 1 the slowest.
             </summary>
             <value>
             The zooming speed.
@@ -3884,7 +3884,8 @@
         </member>
         <member name="P:LiveChartsCore.Kernel.IChartView.DrawMargin">
             <summary>
-            Gets or sets the draw margin.
+            Gets or sets the draw margin, if this property is null, the library will calculate a margin, this margin is the distance 
+            between the view bounds and the drawable area.
             </summary>
             <value>
             The draw margin.
@@ -3900,7 +3901,8 @@
         </member>
         <member name="P:LiveChartsCore.Kernel.IChartView.EasingFunction">
             <summary>
-            Gets or sets the easing function.
+            Gets or sets the easing function, the library already provides many easing functions in the 
+            LiveCharts.EasingFunction static class.
             </summary>
             <value>
             The easing function.
@@ -5373,27 +5375,27 @@
         </member>
         <member name="F:LiveChartsCore.Measure.LegendPosition.Hidden">
             <summary>
-            The hidden position.
+            The hidden position, hides the legend form the user interface.
             </summary>
         </member>
         <member name="F:LiveChartsCore.Measure.LegendPosition.Top">
             <summary>
-            The top position.
+            The top position, places the legend at the top of the chart.
             </summary>
         </member>
         <member name="F:LiveChartsCore.Measure.LegendPosition.Left">
             <summary>
-            The left position.
+            The left position, places the legend at the left of the chart.
             </summary>
         </member>
         <member name="F:LiveChartsCore.Measure.LegendPosition.Right">
             <summary>
-            The right position.
+            The right position, places the legend at the right of the chart.
             </summary>
         </member>
         <member name="F:LiveChartsCore.Measure.LegendPosition.Bottom">
             <summary>
-            The bottom position.
+            The bottom position, places the legend at the bottom of the chart.
             </summary>
         </member>
         <member name="T:LiveChartsCore.Measure.Margin">
@@ -5538,32 +5540,32 @@
         </member>
         <member name="F:LiveChartsCore.Measure.TooltipPosition.Hidden">
             <summary>
-            The hidden position.
+            The hidden position, tool tips will be hidden.
             </summary>
         </member>
         <member name="F:LiveChartsCore.Measure.TooltipPosition.Top">
             <summary>
-            The top position.
+            The top position, places the tool tip at the top of the hovered point.
             </summary>
         </member>
         <member name="F:LiveChartsCore.Measure.TooltipPosition.Bottom">
             <summary>
-            The bottom position.
+            The bottom position, places the tool tip at the bottom of the hovered point.
             </summary>
         </member>
         <member name="F:LiveChartsCore.Measure.TooltipPosition.Left">
             <summary>
-            The left position.
+            The left position, places the tool tip at the left of the hovered point.
             </summary>
         </member>
         <member name="F:LiveChartsCore.Measure.TooltipPosition.Right">
             <summary>
-            The right position.
+            The right position, places the tool tip at the right of the hovered point.
             </summary>
         </member>
         <member name="F:LiveChartsCore.Measure.TooltipPosition.Center">
             <summary>
-            The center position.
+            The center position, places the tool tip at the center of the hovered point.
             </summary>
         </member>
         <member name="T:LiveChartsCore.Measure.ZoomAndPanMode">
