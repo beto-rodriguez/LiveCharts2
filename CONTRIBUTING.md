@@ -34,7 +34,7 @@ Early `return`, `continue` and `break` should be used when possible.
 
 # Naming files
 
-The documentation is generated autmatically so it is important that all the files are named the same as the object name.
+The documentation is generated autmatically, it is important that all the files are named the same as the object name.
 
 for the following class, the file must be named `Hello.cs`
 
