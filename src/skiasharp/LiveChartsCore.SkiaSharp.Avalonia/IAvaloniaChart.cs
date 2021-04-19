@@ -23,7 +23,7 @@
 using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
 
-namespace LiveChartsCore.SkiaSharp.Avalonia
+namespace LiveChartsCore.SkiaSharpView.Avalonia
 {
     /// <summary>
     /// Defines a chart only for the the avalonia ui framework

@@ -2,10 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:local="using:LiveChartsCore.SkiaSharp.Avalonia"
+             xmlns:local="using:LiveChartsCore.SkiaSharpView.Avalonia"
              xmlns:core="using:LiveChartsCore"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="LiveChartsCore.SkiaSharp.Avalonia.DefaultLegend">
+             x:Class="LiveChartsCore.SkiaSharpView.Avalonia.DefaultLegend">
   <UserControl.Resources>
     <DataTemplate x:Key="defaultTemplate">
       <ItemsControl Items="{Binding Series, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}">

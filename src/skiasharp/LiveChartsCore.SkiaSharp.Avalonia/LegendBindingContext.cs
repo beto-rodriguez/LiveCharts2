@@ -24,7 +24,7 @@ using Avalonia.Media;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LiveChartsCore.SkiaSharp.Avalonia
+namespace LiveChartsCore.SkiaSharpView.Avalonia
 {
     /// <summary>
     /// The legend binding context.

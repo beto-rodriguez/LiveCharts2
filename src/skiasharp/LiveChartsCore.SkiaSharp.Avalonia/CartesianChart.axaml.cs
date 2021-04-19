@@ -42,7 +42,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml.Templates;
 using System.Linq;
 
-namespace LiveChartsCore.SkiaSharp.Avalonia
+namespace LiveChartsCore.SkiaSharpView.Avalonia
 {
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}" />
     public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingContext>, IAvaloniaChart

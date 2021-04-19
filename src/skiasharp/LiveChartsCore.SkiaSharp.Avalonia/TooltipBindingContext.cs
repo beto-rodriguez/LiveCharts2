@@ -25,7 +25,7 @@ using LiveChartsCore.Kernel;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LiveChartsCore.SkiaSharp.Avalonia
+namespace LiveChartsCore.SkiaSharpView.Avalonia
 {
     /// <summary>
     /// Defines the tool tip binding context.

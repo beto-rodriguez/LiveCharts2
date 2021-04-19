@@ -35,7 +35,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace LiveChartsCore.SkiaSharp.Avalonia
+namespace LiveChartsCore.SkiaSharpView.Avalonia
 {
     /// <summary>
     /// Thje motion canvas control fro avalonia, <see cref="MotionCanvas{TDrawingContext}"/>.

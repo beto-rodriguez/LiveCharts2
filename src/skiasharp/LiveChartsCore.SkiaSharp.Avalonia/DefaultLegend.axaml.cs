@@ -33,7 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LiveChartsCore.SkiaSharp.Avalonia
+namespace LiveChartsCore.SkiaSharpView.Avalonia
 {
     /// <summary>
     /// Defines a default legend for a chart.

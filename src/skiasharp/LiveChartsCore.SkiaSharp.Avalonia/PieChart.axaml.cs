@@ -39,7 +39,7 @@ using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
 using A = Avalonia;
 
-namespace LiveChartsCore.SkiaSharp.Avalonia
+namespace LiveChartsCore.SkiaSharpView.Avalonia
 {
     /// <inheritdoc cref="IPieChartView{TDrawingContext}" />
     public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAvaloniaChart

@@ -3,8 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             xmlns:local="using:LiveChartsCore.SkiaSharp.Avalonia"
-             x:Class="LiveChartsCore.SkiaSharp.Avalonia.CartesianChart"
+             xmlns:local="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             x:Class="LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart"
              Name="chart"
              ClipToBounds="False">
 
