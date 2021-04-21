@@ -38,7 +38,7 @@ namespace LiveChartsCore
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="BarSeries{TModel, TVisual, TLabel, TDrawingContext}" />
     public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
-        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+        where TVisual : class, IRoundedRectangleChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
@@ -104,6 +104,9 @@ namespace LiveChartsCore
             var dls = (float)DataLabelsSize;
             var toDeletePoints = new HashSet<ChartPoint>(everFetched);
 
+            var rx = (float)Rx;
+            var ry = (float)Ry;
+
             foreach (var point in Fetch(chart))
             {
                 var visual = point.Context.Visual as TVisual;
@@ -135,7 +138,9 @@ namespace LiveChartsCore
                         X = p,
                         Y = yi,
                         Width = 0,
-                        Height = uw
+                        Height = uw,
+                        Rx = rx,
+                        Ry = ry
                     };
 
                     visual = r;
@@ -158,6 +163,8 @@ namespace LiveChartsCore
                 sizedGeometry.Y = y;
                 sizedGeometry.Width = b;
                 sizedGeometry.Height = uw;
+                sizedGeometry.Rx = rx;
+                sizedGeometry.Ry = ry;
 
                 point.Context.HoverArea = new RectangleHoverArea().SetDimensions(primary, secondary - uwm + cp, b, uw);
 

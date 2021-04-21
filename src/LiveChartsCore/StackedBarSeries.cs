@@ -37,7 +37,7 @@ namespace LiveChartsCore
     /// <seealso cref="IStackedBarSeries{TDrawingContext}" />
     public abstract class StackedBarSeries<TModel, TVisual, TLabel, TDrawingContext>
         : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IStackedBarSeries<TDrawingContext>
-        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+        where TVisual : class, IRoundedRectangleChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {

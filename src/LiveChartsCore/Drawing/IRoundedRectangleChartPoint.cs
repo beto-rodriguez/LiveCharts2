@@ -20,16 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Drawing
 {
     /// <summary>
-    /// Defines a bar series point.
+    /// Defines a rounded rectangle visual chart point.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IDrawableSeries{TDrawingContext}" />
-    public interface IBarSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
+    /// <seealso cref="ISizedVisualChartPoint{TDrawingContext}" />
+    public interface IRoundedRectangleChartPoint<TDrawingContext> : ISizedVisualChartPoint<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
@@ -38,7 +36,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The rx.
         /// </value>
-        double Rx { get; set; }
+        float Rx { get; set; }
 
         /// <summary>
         /// Gets or sets the ry, the radius used in the y axis to round the corners of each column in pixels.
@@ -46,20 +44,6 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The ry.
         /// </value>
-        double Ry { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maximum width of the bar.
-        /// </summary>
-        /// <value>
-        /// The maximum width of the bar.
-        /// </value>
-        double MaxBarWidth { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the bar position respects the other bars that share 
-        /// the same <see cref="ChartPoint.SecondaryValue"/>.
-        /// </summary>
-        bool IgnoresBarPosition { get; set; }
+        float Ry { get; set; }
     }
 }

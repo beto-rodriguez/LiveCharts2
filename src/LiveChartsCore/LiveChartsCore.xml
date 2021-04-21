@@ -120,6 +120,12 @@
         <member name="P:LiveChartsCore.BarSeries`4.IgnoresBarPosition">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IBarSeries`1.IgnoresBarPosition"/>
         </member>
+        <member name="P:LiveChartsCore.BarSeries`4.Rx">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IBarSeries`1.Rx"/>
+        </member>
+        <member name="P:LiveChartsCore.BarSeries`4.Ry">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IBarSeries`1.Ry"/>
+        </member>
         <member name="M:LiveChartsCore.BarSeries`4.OnPaintContextChanged">
             <summary>
             Called when the paint context changes.
@@ -1922,6 +1928,29 @@
             Clears the commands.
             </summary>
         </member>
+        <member name="T:LiveChartsCore.Drawing.IRoundedRectangleChartPoint`1">
+            <summary>
+            Defines a rounded rectangle visual chart point.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+            <seealso cref="T:LiveChartsCore.Drawing.ISizedVisualChartPoint`1" />
+        </member>
+        <member name="P:LiveChartsCore.Drawing.IRoundedRectangleChartPoint`1.Rx">
+            <summary>
+            Gets or sets the rx, the radius used in the x axis to round the corners of each column in pixels.
+            </summary>
+            <value>
+            The rx.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Drawing.IRoundedRectangleChartPoint`1.Ry">
+            <summary>
+            Gets or sets the ry, the radius used in the y axis to round the corners of each column in pixels.
+            </summary>
+            <value>
+            The ry.
+            </value>
+        </member>
         <member name="T:LiveChartsCore.Drawing.ISizedGeometry`1">
             <summary>
             Defines a sized geometry in the user interface.
@@ -3698,6 +3727,22 @@
             <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
             <seealso cref="T:LiveChartsCore.Kernel.IDrawableSeries`1" />
         </member>
+        <member name="P:LiveChartsCore.Kernel.IBarSeries`1.Rx">
+            <summary>
+            Gets or sets the rx, the radius used in the x axis to round the corners of each column in pixels.
+            </summary>
+            <value>
+            The rx.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IBarSeries`1.Ry">
+            <summary>
+            Gets or sets the ry, the radius used in the y axis to round the corners of each column in pixels.
+            </summary>
+            <value>
+            The ry.
+            </value>
+        </member>
         <member name="P:LiveChartsCore.Kernel.IBarSeries`1.MaxBarWidth">
             <summary>
             Gets or sets the maximum width of the bar.
@@ -4239,6 +4284,22 @@
             </summary>
             <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
             <seealso cref="T:LiveChartsCore.Kernel.IDrawableSeries`1" />
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IStackedBarSeries`1.Rx">
+            <summary>
+            Gets or sets the rx, the radius used in the x axis to round the corners of each column, it goes from 0 to 1.
+            </summary>
+            <value>
+            The rx.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IStackedBarSeries`1.Ry">
+            <summary>
+            Gets or sets the ry, the radius used in the y axis to round the corners of each column, it goes from 0 to 1.
+            </summary>
+            <value>
+            The ry.
+            </value>
         </member>
         <member name="P:LiveChartsCore.Kernel.IStackedBarSeries`1.MaxBarWidth">
             <summary>
@@ -6191,7 +6252,7 @@
         </member>
         <member name="T:LiveChartsCore.StackedBarSeries`4">
             <summary>
-            Defiens the stacked bar series class/
+            Defines the stacked bar series class.
             </summary>
             <typeparam name="TModel">The type of the model.</typeparam>
             <typeparam name="TVisual">The type of the visual.</typeparam>
@@ -6231,6 +6292,12 @@
             <value>
             The maximum width of the bar.
             </value>
+        </member>
+        <member name="P:LiveChartsCore.StackedBarSeries`4.Rx">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IStackedBarSeries`1.Rx"/>
+        </member>
+        <member name="P:LiveChartsCore.StackedBarSeries`4.Ry">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IStackedBarSeries`1.Ry"/>
         </member>
         <member name="M:LiveChartsCore.StackedBarSeries`4.OnPaintContextChanged">
             <summary>

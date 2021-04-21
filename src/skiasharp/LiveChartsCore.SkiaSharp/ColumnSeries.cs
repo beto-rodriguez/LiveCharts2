@@ -56,7 +56,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// The type of the geometry of every point of the series.
     /// </typeparam>
     public class ColumnSeries<TModel, TVisual> : ColumnSeries<TModel, TVisual, LabelGeometry>
-        where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+        where TVisual : class, IRoundedRectangleChartPoint<SkiaSharpDrawingContext>, new()
     {
 
     }
@@ -78,7 +78,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// The type of the data label of every point.
     /// </typeparam>
     public class ColumnSeries<TModel, TVisual, TLabel> : ColumnSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext>
-        where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+        where TVisual : class, IRoundedRectangleChartPoint<SkiaSharpDrawingContext>, new()
         where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
     {
         /// <summary>

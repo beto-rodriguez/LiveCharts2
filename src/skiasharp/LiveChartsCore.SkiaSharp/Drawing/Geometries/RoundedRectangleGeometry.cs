@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using SkiaSharp;
 
@@ -29,7 +30,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     /// Defines a ropunded rectangle geometry.
     /// </summary>
     /// <seealso cref="SizedGeometry" />
-    public class RoundedRectangleGeometry : SizedGeometry
+    public class RoundedRectangleGeometry : SizedGeometry, IRoundedRectangleChartPoint<SkiaSharpDrawingContext>
     {
         private readonly FloatMotionProperty _rx;
         private readonly FloatMotionProperty _ry;

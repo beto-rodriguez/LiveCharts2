@@ -38,7 +38,7 @@ namespace LiveChartsCore
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="StackedBarSeries{TModel, TVisual, TLabel, TDrawingContext}" />
     public class StackedRowSeries<TModel, TVisual, TLabel, TDrawingContext> : StackedBarSeries<TModel, TVisual, TLabel, TDrawingContext>
-        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+        where TVisual : class, IRoundedRectangleChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
@@ -115,6 +115,9 @@ namespace LiveChartsCore
             var stacker = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
             if (stacker == null) throw new NullReferenceException("Unexpected null stacker");
 
+            var rx = (float)Rx;
+            var ry = (float)Ry;
+
             foreach (var point in Fetch(chart))
             {
                 var visual = point.Context.Visual as TVisual;
@@ -144,7 +147,9 @@ namespace LiveChartsCore
                         X = p,
                         Y = yi,
                         Width = 0,
-                        Height = uw
+                        Height = uw,
+                        Rx = rx,
+                        Ry = ry
                     };
 
                     visual = r;
@@ -169,6 +174,8 @@ namespace LiveChartsCore
                 sizedGeometry.Y = y;
                 sizedGeometry.Width = primaryI - primaryJ;
                 sizedGeometry.Height = uw;
+                sizedGeometry.Rx = rx;
+                sizedGeometry.Ry = ry;
                 sizedGeometry.RemoveOnCompleted = false;
 
                 point.Context.HoverArea = new RectangleHoverArea().SetDimensions(secondary - uwm + cp, primaryJ, uw, primaryI - primaryJ);

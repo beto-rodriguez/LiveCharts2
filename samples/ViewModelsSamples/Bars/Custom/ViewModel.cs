@@ -1,5 +1,7 @@
 ﻿using LiveChartsCore;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System.Collections.Generic;
@@ -29,7 +31,8 @@ namespace ViewModelsSamples.Bars.Custom
         };
     }
 
-    public class MyGeomeometry : LiveChartsCore.SkiaSharpView.Drawing.Geometries.SVGPathGeometry
+    // Just for the case of a column series, the geometry must implement
+    public class MyGeomeometry : LiveChartsCore.SkiaSharpView.Drawing.Geometries.SVGPathGeometry, IRoundedRectangleChartPoint<SkiaSharpDrawingContext>
     {
         // Icon made by srip from www.flaticon.com
         // https://www.flaticon.com/free-icon/ruler_973004?term=ruler&related_id=973004
@@ -38,11 +41,15 @@ namespace ViewModelsSamples.Bars.Custom
             //+ "M240,72c13.255,0,24-10.745,24-24s-10.745-24-24-24s-24,10.745-24,24S226.745,72,240,72z M240,40c4.418,0,8,3.582,8,8     s-3.582,8-8,8s-8-3.582-8-8S235.582,40,240,40z"
             );
 
-
         public MyGeomeometry()
             : base(svgPath)
         {
 
         }
+
+        // the following properties were added to implement IRoundedRectangleChartPoint<T>
+        //in this case we will just ignore these properties.
+        public float Rx { get; set; }
+        public float Ry { get; set; }
     }
 }

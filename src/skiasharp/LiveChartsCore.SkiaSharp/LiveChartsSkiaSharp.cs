@@ -126,6 +126,16 @@ namespace LiveChartsCore.SkiaSharpView
                                     stackedLine.Stroke = null;
                                     stackedLine.Fill = DefaultPaintTask;
                                 })
+                                .ForBarSeries(barSeries =>
+                                {
+                                    barSeries.Rx = 6;
+                                    barSeries.Ry = 6;
+                                })
+                                .ForStackedBarSeries(stackedBarSeries =>
+                                {
+                                    stackedBarSeries.Rx = 0;
+                                    stackedBarSeries.Ry = 0;
+                                })
                                 .ForPieSeries(pieSeries =>
                                 {
                                     pieSeries.Fill = DefaultPaintTask;
@@ -134,6 +144,8 @@ namespace LiveChartsCore.SkiaSharpView
                                 }))
                         // finally add a resolver for the DefaultPaintTask
                         // the library already provides the AddDefaultResolvers() method
+                        // this method only translates 'DefaultPaintTask' to a valid stroke/fill based on
+                        // the series context
                         .AddDefaultResolvers();
 
                     // user defined settings
