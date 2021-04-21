@@ -33,7 +33,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     /// <inheritdoc cref="IChartLegend{TDrawingContext}" />
     public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
     {
-        private readonly DataTemplate defaultTempalte;
+        private readonly DataTemplate _defaultTempalte;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultLegend"/> class.
@@ -41,7 +41,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         public DefaultLegend()
         {
             InitializeComponent();
-            defaultTempalte = (DataTemplate)FindResource("defaultTemplate");
+            _defaultTempalte = (DataTemplate)FindResource("defaultTemplate");
         }
 
         /// <summary>
@@ -88,8 +88,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </value>
         public IEnumerable<IDrawableSeries<SkiaSharpDrawingContext>> Series
         {
-            get { return (IEnumerable<IDrawableSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty); }
-            set { SetValue(SeriesProperty, value); }
+            get => (IEnumerable<IDrawableSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty);
+            set => SetValue(SeriesProperty, value);
         }
 
         /// <summary>
@@ -100,8 +100,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </value>
         public DataTemplate CustomTemplate
         {
-            get { return (DataTemplate)GetValue(CustomTemplateProperty); }
-            set { SetValue(CustomTemplateProperty, value); }
+            get => (DataTemplate)GetValue(CustomTemplateProperty);
+            set => SetValue(CustomTemplateProperty, value);
         }
 
         /// <summary>
@@ -112,8 +112,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </value>
         public Orientation Orientation
         {
-            get { return (Orientation)GetValue(OrientationProperty); }
-            set { SetValue(OrientationProperty, value); }
+            get => (Orientation)GetValue(OrientationProperty);
+            set => SetValue(OrientationProperty, value);
         }
 
         /// <summary>
@@ -124,8 +124,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </value>
         public Dock Dock
         {
-            get { return (Dock)GetValue(DockProperty); }
-            set { SetValue(DockProperty, value); }
+            get => (Dock)GetValue(DockProperty);
+            set => SetValue(DockProperty, value);
         }
 
         /// <summary>
@@ -136,8 +136,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </value>
         public SolidColorBrush TextColor
         {
-            get { return (SolidColorBrush)GetValue(TextColorProperty); }
-            set { SetValue(TextColorProperty, value); }
+            get => (SolidColorBrush)GetValue(TextColorProperty);
+            set => SetValue(TextColorProperty, value);
         }
 
         void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
@@ -147,7 +147,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             var series = chart.DrawableSeries;
             var legendOrientation = chart.LegendOrientation;
             var legendPosition = chart.LegendPosition;
-            var template = wpfChart.LegendTemplate ?? defaultTempalte;
+            var template = wpfChart.LegendTemplate ?? _defaultTempalte;
             if (CustomTemplate != template) CustomTemplate = template;
 
             Series = series;

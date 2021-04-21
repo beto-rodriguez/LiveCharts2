@@ -35,10 +35,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     /// <inheritdoc cref="IChartTooltip{TDrawingContext}" />
     public partial class DefaultTooltip : Popup, IChartTooltip<SkiaSharpDrawingContext>
     {
-        private readonly DataTemplate defaultTempalte;
-        private readonly Dictionary<ChartPoint, object> activePoints = new();
-        private TimeSpan animationsSpeed = TimeSpan.FromMilliseconds(200);
-        private IEasingFunction easingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
+        private readonly DataTemplate _defaultTempalte;
+        private readonly Dictionary<ChartPoint, object> _activePoints = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
@@ -48,7 +46,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             InitializeComponent();
             PopupAnimation = PopupAnimation.Fade;
             Placement = PlacementMode.Relative;
-            defaultTempalte = (DataTemplate)FindResource("defaultTemplate");
+            _defaultTempalte = (DataTemplate)FindResource("defaultTemplate");
         }
 
         #region dependency properties
@@ -128,7 +126,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <value>
         /// The animations speed.
         /// </value>
-        public TimeSpan AnimationsSpeed { get => animationsSpeed; set => animationsSpeed = value; }
+        public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(200);
 
         /// <summary>
         /// Gets or sets the easing function.
@@ -136,7 +134,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <value>
         /// The easing function.
         /// </value>
-        public IEasingFunction EasingFunction { get => easingFunction; set => easingFunction = value; }
+        public IEasingFunction EasingFunction { get; set; } = new CubicEase() { EasingMode = EasingMode.EaseOut };
 
         /// <summary>
         /// Gets or sets the template.
@@ -146,8 +144,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </value>
         public DataTemplate Template
         {
-            get { return (DataTemplate)GetValue(TemplateProperty); }
-            set { SetValue(TemplateProperty, value); }
+            get => (DataTemplate)GetValue(TemplateProperty);
+            set => SetValue(TemplateProperty, value);
         }
 
         /// <summary>
@@ -158,8 +156,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </value>
         public Brush Background
         {
-            get { return (Brush)GetValue(BackgroundProperty); }
-            set { SetValue(BackgroundProperty, value); }
+            get => (Brush)GetValue(BackgroundProperty);
+            set => SetValue(BackgroundProperty, value);
         }
 
         /// <summary>
@@ -170,8 +168,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </value>
         public IEnumerable<TooltipPoint> Points
         {
-            get { return (IEnumerable<TooltipPoint>)GetValue(PointsProperty); }
-            set { SetValue(PointsProperty, value); }
+            get => (IEnumerable<TooltipPoint>)GetValue(PointsProperty);
+            set => SetValue(PointsProperty, value);
         }
 
         /// <summary>
@@ -182,8 +180,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </value>
         public FontFamily FontFamily
         {
-            get { return (FontFamily)GetValue(FontFamilyProperty); }
-            set { SetValue(FontFamilyProperty, value); }
+            get => (FontFamily)GetValue(FontFamilyProperty);
+            set => SetValue(FontFamilyProperty, value);
         }
 
         /// <summary>
@@ -194,8 +192,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </value>
         public double FontSize
         {
-            get { return (double)GetValue(FontSizeProperty); }
-            set { SetValue(FontSizeProperty, value); }
+            get => (double)GetValue(FontSizeProperty);
+            set => SetValue(FontSizeProperty, value);
         }
 
         /// <summary>
@@ -206,8 +204,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </value>
         public FontWeight FontWeight
         {
-            get { return (FontWeight)GetValue(FontWeightProperty); }
-            set { SetValue(FontWeightProperty, value); }
+            get => (FontWeight)GetValue(FontWeightProperty);
+            set => SetValue(FontWeightProperty, value);
         }
 
         /// <summary>
@@ -218,8 +216,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </value>
         public FontStyle FontStyle
         {
-            get { return (FontStyle)GetValue(FontStyleProperty); }
-            set { SetValue(FontStyleProperty, value); }
+            get => (FontStyle)GetValue(FontStyleProperty);
+            set => SetValue(FontStyleProperty, value);
         }
 
         /// <summary>
@@ -230,8 +228,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </value>
         public FontStretch FontStretch
         {
-            get { return (FontStretch)GetValue(FontStretchProperty); }
-            set { SetValue(FontStretchProperty, value); }
+            get => (FontStretch)GetValue(FontStretchProperty);
+            set => SetValue(FontStretchProperty, value);
         }
 
         /// <summary>
@@ -242,8 +240,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </value>
         public SolidColorBrush TextColor
         {
-            get { return (SolidColorBrush)GetValue(TextColorProperty); }
-            set { SetValue(TextColorProperty, value); }
+            get => (SolidColorBrush)GetValue(TextColorProperty);
+            set => SetValue(TextColorProperty, value);
         }
 
         #endregion
@@ -251,15 +249,15 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var wpfChart = (Chart)chart.View;
-            var template = wpfChart.TooltipTemplate ?? defaultTempalte;
+            var template = wpfChart.TooltipTemplate ?? _defaultTempalte;
             if (Template != template) Template = template;
 
             if (!tooltipPoints.Any())
             {
-                foreach (var key in activePoints.Keys.ToArray())
+                foreach (var key in _activePoints.Keys.ToArray())
                 {
                     key.RemoveFromHoverState();
-                    _ = activePoints.Remove(key);
+                    _ = _activePoints.Remove(key);
                 }
                 return;
             }
@@ -287,7 +285,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             var from = PlacementRectangle;
             var to = new Rect(location.Value.X, location.Value.Y, 0, 0);
             if (from == Rect.Empty) from = to;
-            var animation = new RectAnimation(from, to, animationsSpeed) { EasingFunction = easingFunction };
+            var animation = new RectAnimation(from, to, AnimationsSpeed) { EasingFunction = EasingFunction };
             BeginAnimation(PlacementRectangleProperty, animation);
 
             Background = wpfChart.TooltipBackground;
@@ -302,14 +300,14 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             foreach (var tooltipPoint in tooltipPoints)
             {
                 tooltipPoint.Point.AddToHoverState();
-                activePoints[tooltipPoint.Point] = o;
+                _activePoints[tooltipPoint.Point] = o;
             }
 
-            foreach (var key in activePoints.Keys.ToArray())
+            foreach (var key in _activePoints.Keys.ToArray())
             {
-                if (activePoints[key] == o) continue;
+                if (_activePoints[key] == o) continue;
                 key.RemoveFromHoverState();
-                _ = activePoints.Remove(key);
+                _ = _activePoints.Remove(key);
             }
 
             wpfChart.CoreCanvas.Invalidate();

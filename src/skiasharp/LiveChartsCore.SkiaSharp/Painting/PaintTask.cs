@@ -45,9 +45,9 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// The stroke width transition
         /// </summary>
         protected FloatMotionProperty strokeWidthTransition;
-        private HashSet<IDrawable<SkiaSharpDrawingContext>> geometries = new HashSet<IDrawable<SkiaSharpDrawingContext>>();
-        private IDrawable<SkiaSharpDrawingContext>[] actualGeometries = null;
-        private readonly ColorMotionProperty colorTransition;
+        private HashSet<IDrawable<SkiaSharpDrawingContext>> _geometries = new HashSet<IDrawable<SkiaSharpDrawingContext>>();
+        private IDrawable<SkiaSharpDrawingContext>[] _actualGeometries = null;
+        private readonly ColorMotionProperty _colorTransition;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PaintTask"/> class.
@@ -55,7 +55,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         public PaintTask()
         {
             strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness), 0f));
-            colorTransition = RegisterMotionProperty(new ColorMotionProperty(nameof(Color), new SKColor()));
+            _colorTransition = RegisterMotionProperty(new ColorMotionProperty(nameof(Color), new SKColor()));
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         public PaintTask(SKColor color)
         {
             strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness), 0f));
-            colorTransition = RegisterMotionProperty(
+            _colorTransition = RegisterMotionProperty(
                 new ColorMotionProperty(nameof(Color), new SKColor(color.Red, color.Green, color.Blue, color.Alpha)));
         }
 
@@ -102,7 +102,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <value>
         /// The color.
         /// </value>
-        public SKColor Color { get => colorTransition.GetMovement(this); set => colorTransition.SetMovement(value, this); }
+        public SKColor Color { get => _colorTransition.GetMovement(this); set => _colorTransition.SetMovement(value, this); }
 
         /// <summary>
         /// Gets or sets the clip rectangle.
@@ -118,7 +118,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.GetGeometries" />
         public IEnumerable<IDrawable<SkiaSharpDrawingContext>> GetGeometries()
         {
-            var g = actualGeometries ?? (actualGeometries = geometries.ToArray());
+            var g = _actualGeometries ?? (_actualGeometries = _geometries.ToArray());
             foreach (var item in g)
             {
                 yield return item;
@@ -128,24 +128,24 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.SetGeometries(HashSet{IDrawable{TDrawingContext}})" />
         public void SetGeometries(HashSet<IDrawable<SkiaSharpDrawingContext>> geometries)
         {
-            this.geometries = geometries;
-            actualGeometries = null;
+            this._geometries = geometries;
+            _actualGeometries = null;
             Invalidate();
         }
 
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.AddGeometyToPaintTask(IDrawable{TDrawingContext})" />
         public void AddGeometyToPaintTask(IDrawable<SkiaSharpDrawingContext> geometry)
         {
-            _ = geometries.Add(geometry);
-            actualGeometries = null;
+            _ = _geometries.Add(geometry);
+            _actualGeometries = null;
             Invalidate();
         }
 
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.RemoveGeometryFromPainTask(IDrawable{TDrawingContext})" />
         public void RemoveGeometryFromPainTask(IDrawable<SkiaSharpDrawingContext> geometry)
         {
-            _ = geometries.Remove(geometry);
-            actualGeometries = null;
+            _ = _geometries.Remove(geometry);
+            _actualGeometries = null;
             Invalidate();
         }
 

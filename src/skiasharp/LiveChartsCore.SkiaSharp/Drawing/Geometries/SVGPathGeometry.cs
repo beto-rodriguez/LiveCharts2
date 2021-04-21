@@ -30,8 +30,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     /// <seealso cref="SizedGeometry" />
     public class SVGPathGeometry : SizedGeometry
     {
-        private string svg;
-        private SKPath svgPath;
+        private string _svg;
+        private SKPath _svgPath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SVGPathGeometry"/> class.
@@ -47,7 +47,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <param name="svgPath">The SVG path.</param>
         public SVGPathGeometry(SKPath svgPath)
         {
-            this.svgPath = svgPath;
+            _svgPath = svgPath;
         }
 
         /// <summary>
@@ -56,33 +56,33 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <value>
         /// The SVG.
         /// </value>
-        public string SVG { get => svg; set { svg = value; OnSVGPropertyChanged(); } }
+        public string SVG { get => _svg; set { _svg = value; OnSVGPropertyChanged(); } }
 
         /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
-            if (svgPath == null && svg == null)
+            if (_svgPath == null && _svg == null)
                 throw new System.NullReferenceException(
                     $"{nameof(SVG)} property is null and there is not a defined path to draw.");
 
             _ = context.Canvas.Save();
 
             var canvas = context.Canvas;
-            _ = svgPath.GetTightBounds(out var bounds);
+            _ = _svgPath.GetTightBounds(out var bounds);
 
             canvas.Translate(X + Width / 2, Y + Height / 2);
             canvas.Scale(Width / (bounds.Width + paint.StrokeWidth),
                          Height / (bounds.Height + paint.StrokeWidth));
             canvas.Translate(-bounds.MidX, -bounds.MidY);
 
-            canvas.DrawPath(svgPath, paint);
+            canvas.DrawPath(_svgPath, paint);
 
             context.Canvas.Restore();
         }
 
         private void OnSVGPropertyChanged()
         {
-            svgPath = SKPath.ParseSvgPathData(svg);
+            _svgPath = SKPath.ParseSvgPathData(_svg);
         }
     }
 }

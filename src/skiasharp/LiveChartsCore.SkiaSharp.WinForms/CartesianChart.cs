@@ -73,13 +73,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             panningThrottler = new ActionThrottler(DoPan, TimeSpan.FromMilliseconds(30));
         }
 
-        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core
-        {
-            get
-            {
-                return core == null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
-            }
-        }
+        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => core == null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
 

@@ -55,6 +55,12 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IBarSeries{TDrawingContext}.IgnoresBarPosition"/>
         public bool IgnoresBarPosition { get; set; } = false;
 
+        /// <inheritdoc cref="IBarSeries{TDrawingContext}.Rx"/>
+        public double Rx { get; set; }
+
+        /// <inheritdoc cref="IBarSeries{TDrawingContext}.Ry"/>
+        public double Ry { get; set; }
+
         /// <summary>
         /// Called when the paint context changes.
         /// </summary>

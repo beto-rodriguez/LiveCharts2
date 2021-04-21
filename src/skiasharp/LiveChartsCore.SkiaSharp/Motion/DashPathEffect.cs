@@ -31,8 +31,8 @@ namespace LiveChartsCore.SkiaSharpView.Motion
     /// <seealso cref="PathEffect" />
     public class DashPathEffect : PathEffect
     {
-        private readonly float[] dashArray;
-        private readonly float phase;
+        private readonly float[] _dashArray;
+        private readonly float _phase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DashPathEffect"/> class.
@@ -41,21 +41,21 @@ namespace LiveChartsCore.SkiaSharpView.Motion
         /// <param name="phase">The phase.</param>
         public DashPathEffect(float[] dashArray, float phase)
         {
-            this.dashArray = dashArray;
-            this.phase = phase;
+            _dashArray = dashArray;
+            _phase = phase;
         }
 
         /// <inheritdoc cref="PathEffect" />
         public override SKPathEffect GetSKPath()
         {
-            return SKPathEffect.CreateDash(dashArray, phase);
+            return SKPathEffect.CreateDash(_dashArray, _phase);
         }
 
         /// <inheritdoc cref="PathEffect" />
         public override PathEffect InterpolateFrom(PathEffect from, float progress)
         {
             var fromDashEffect = (DashPathEffect)from;
-            return new DashPathEffect(dashArray, fromDashEffect.phase + progress * (phase - 0));
+            return new DashPathEffect(_dashArray, fromDashEffect._phase + progress * (_phase - 0));
         }
     }
 }

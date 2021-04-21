@@ -42,9 +42,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// The skia element
         /// </summary>
         protected SKElement? skiaElement;
-        private readonly MotionCanvas<SkiaSharpDrawingContext> canvasCore = new();
-        private bool isDrawingLoopRunning = false;
-        private double framesPerSecond = 90;
+        private bool _isDrawingLoopRunning = false;
 
         static MotionCanvas()
         {
@@ -56,7 +54,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </summary>
         public MotionCanvas()
         {
-            canvasCore.Invalidated += OnCanvasCoreInvalidated;
+            CanvasCore.Invalidated += OnCanvasCoreInvalidated;
             Unloaded += OnUnloaded;
         }
 
@@ -76,8 +74,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </value>
         public HashSet<IDrawableTask<SkiaSharpDrawingContext>> PaintTasks
         {
-            get { return (HashSet<IDrawableTask<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty); }
-            set { SetValue(PaintTasksProperty, value); }
+            get => (HashSet<IDrawableTask<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty);
+            set => SetValue(PaintTasksProperty, value);
         }
 
         /// <summary>
@@ -86,7 +84,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <value>
         /// The frames per second.
         /// </value>
-        public double FramesPerSecond { get => framesPerSecond; set => framesPerSecond = value; }
+        public double FramesPerSecond { get; set; } = 90;
 
         /// <summary>
         /// Gets the canvas core.
@@ -94,7 +92,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <value>
         /// The canvas core.
         /// </value>
-        public MotionCanvas<SkiaSharpDrawingContext> CanvasCore => canvasCore;
+        public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
 
         /// <inheritdoc cref="OnApplyTemplate" />
         public override void OnApplyTemplate()
@@ -113,7 +111,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <inheritdoc cref="OnPaintSurface(object?, SKPaintSurfaceEventArgs)" />
         protected virtual void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
         {
-            canvasCore.DrawFrame(new SkiaSharpDrawingContext(args.Info, args.Surface, args.Surface.Canvas));
+            CanvasCore.DrawFrame(new SkiaSharpDrawingContext(args.Info, args.Surface, args.Surface.Canvas));
         }
 
         private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
@@ -123,28 +121,28 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
-            canvasCore.Invalidated -= OnCanvasCoreInvalidated;
+            CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
         }
 
         private async void RunDrawingLoop()
         {
-            if (isDrawingLoopRunning || skiaElement == null) return;
-            isDrawingLoopRunning = true;
+            if (_isDrawingLoopRunning || skiaElement == null) return;
+            _isDrawingLoopRunning = true;
 
-            var ts = TimeSpan.FromSeconds(1 / framesPerSecond);
-            while (!canvasCore.IsValid)
+            var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
+            while (!CanvasCore.IsValid)
             {
                 skiaElement.InvalidateVisual();
                 await Task.Delay(ts);
             }
 
-            isDrawingLoopRunning = false;
+            _isDrawingLoopRunning = false;
         }
 
         private static void OnPaintTaskChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             var motionCanvas = (MotionCanvas)sender;
-            motionCanvas.canvasCore.SetPaintTasks(motionCanvas.PaintTasks);
+            motionCanvas.CanvasCore.SetPaintTasks(motionCanvas.PaintTasks);
         }
     }
 }

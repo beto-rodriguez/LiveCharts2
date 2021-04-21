@@ -22,7 +22,6 @@
 
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
-using System.Drawing;
 using System;
 
 namespace LiveChartsCore.Themes
@@ -120,7 +119,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The pie series builder.
         /// </value>
-        public Action<IBarSeries<TDrawingContext>>? StackedBarSeriesBuilder { get; set; }
+        public Action<IStackedBarSeries<TDrawingContext>>? StackedBarSeriesBuilder { get; set; }
 
         /// <summary>
         /// Gets or sets the stacked column series builder.
@@ -128,7 +127,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The pie series builder.
         /// </value>
-        public Action<IBarSeries<TDrawingContext>>? StackedColumnSeriesBuilder { get; set; }
+        public Action<IStackedBarSeries<TDrawingContext>>? StackedColumnSeriesBuilder { get; set; }
 
         /// <summary>
         /// Gets or sets the stacked row series builder.
@@ -136,7 +135,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The pie series builder.
         /// </value>
-        public Action<IBarSeries<TDrawingContext>>? StackedRowSeriesBuilder { get; set; }
+        public Action<IStackedBarSeries<TDrawingContext>>? StackedRowSeriesBuilder { get; set; }
 
         /// <summary>
         /// Gets or sets the scatter series builder.
@@ -184,7 +183,8 @@ namespace LiveChartsCore.Themes
                 CartesianSeriesBuilder?.Invoke((ICartesianSeries<TDrawingContext>)series);
             }
 
-            if ((series.SeriesProperties & SeriesProperties.Bar) == SeriesProperties.Bar)
+            if ((series.SeriesProperties & SeriesProperties.Bar) == SeriesProperties.Bar &&
+                (series.SeriesProperties & SeriesProperties.Stacked) != SeriesProperties.Stacked)
             {
                 var barSeries = (IBarSeries<TDrawingContext>)series;
                 BarSeriesBuilder?.Invoke(barSeries);
@@ -192,21 +192,28 @@ namespace LiveChartsCore.Themes
                 if ((series.SeriesProperties & SeriesProperties.VerticalOrientation) == SeriesProperties.VerticalOrientation)
                 {
                     ColumnSeriesBuilder?.Invoke(barSeries);
-
-                    if ((series.SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked)
-                    {
-                        StackedColumnSeriesBuilder?.Invoke(barSeries);
-                    }
                 }
 
                 if ((series.SeriesProperties & SeriesProperties.HorizontalOrientation) == SeriesProperties.HorizontalOrientation)
                 {
                     RowSeriesBuilder?.Invoke(barSeries);
+                }
+            }
 
-                    if ((series.SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked)
-                    {
-                        StackedColumnSeriesBuilder?.Invoke(barSeries);
-                    }
+            var stackedBarMask = SeriesProperties.Bar | SeriesProperties.Stacked;
+            if ((series.SeriesProperties & stackedBarMask) == stackedBarMask)
+            {
+                var stackedBarSeries = (IStackedBarSeries<TDrawingContext>)series;
+                StackedBarSeriesBuilder?.Invoke(stackedBarSeries);
+
+                if ((series.SeriesProperties & SeriesProperties.VerticalOrientation) == SeriesProperties.VerticalOrientation)
+                {
+                    StackedColumnSeriesBuilder?.Invoke(stackedBarSeries);
+                }
+
+                if ((series.SeriesProperties & SeriesProperties.HorizontalOrientation) == SeriesProperties.HorizontalOrientation)
+                {
+                    StackedRowSeriesBuilder?.Invoke(stackedBarSeries);
                 }
             }
 

@@ -33,8 +33,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     /// <inheritdoc cref="IGeometry{TDrawingContext}" />
     public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>, IVisualChartPoint<SkiaSharpDrawingContext>
     {
-        private bool hasTransform = false;
-        private bool hasRotation = false;
+        private bool _hasTransform = false;
+        private bool _hasRotation = false;
 
         /// <summary>
         /// The transform
@@ -89,7 +89,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             set
             {
                 transform.SetMovement(value, this);
-                hasTransform = !value.IsIdentity;
+                _hasTransform = !value.IsIdentity;
             }
         }
 
@@ -100,7 +100,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             set
             {
                 rotation.SetMovement(value, this);
-                hasRotation = Math.Abs(value) > 0.01;
+                _hasRotation = Math.Abs(value) > 0.01;
             }
         }
 
@@ -115,7 +115,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         {
             var hasRotation = Rotation != 0;
 
-            if (hasTransform || hasRotation)
+            if (_hasTransform || hasRotation)
             {
                 _ = context.Canvas.Save();
 
@@ -132,7 +132,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
                     context.Canvas.Translate(-tx, -ty);
                 }
 
-                if (hasTransform)
+                if (_hasTransform)
                 {
                     var p = GetPosition(context, context.Paint);
                     var tx = p.X;
@@ -148,7 +148,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 
             OnDraw(context, context.Paint);
 
-            if (hasTransform || hasRotation) context.Canvas.Restore();
+            if (_hasTransform || hasRotation) context.Canvas.Restore();
         }
 
         /// <summary>

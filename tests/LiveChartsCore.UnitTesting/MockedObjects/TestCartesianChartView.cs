@@ -11,8 +11,6 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
 {
     public class TestCartesianChartView : ICartesianChartView<SkiaSharpDrawingContext>
     {
-        private readonly MotionCanvas<SkiaSharpDrawingContext> canvas = new();
-
         public TestCartesianChartView()
         {
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
@@ -24,7 +22,7 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
             initializer.ApplyStyleToChart(this);
 
             Core = new CartesianChart<SkiaSharpDrawingContext>(
-                this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas);
+                this, LiveChartsSkiaSharp.DefaultPlatformBuilder, CoreCanvas);
         }
 
         public CartesianChart<SkiaSharpDrawingContext> Core { get; }
@@ -39,7 +37,7 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
 
         public double ZoomingSpeed { get; set; }
 
-        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas;
+        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas { get; } = new();
 
         public IChartLegend<SkiaSharpDrawingContext> Legend => null;
 

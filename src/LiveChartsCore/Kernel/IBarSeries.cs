@@ -33,6 +33,22 @@ namespace LiveChartsCore.Kernel
         where TDrawingContext : DrawingContext
     {
         /// <summary>
+        /// Gets or sets the rx, the radius used in the x axis to round the corners of each column, it goes from 0 to 1.
+        /// </summary>
+        /// <value>
+        /// The rx.
+        /// </value>
+        double Rx { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ry, the radius used in the y axis to round the corners of each column, it goes from 0 to 1.
+        /// </summary>
+        /// <value>
+        /// The ry.
+        /// </value>
+        double Ry { get; set; }
+
+        /// <summary>
         /// Gets or sets the maximum width of the bar.
         /// </summary>
         /// <value>
@@ -45,7 +61,5 @@ namespace LiveChartsCore.Kernel
         /// the same <see cref="ChartPoint.SecondaryValue"/>.
         /// </summary>
         bool IgnoresBarPosition { get; set; }
-
-
     }
 }

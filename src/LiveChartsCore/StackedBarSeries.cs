@@ -27,7 +27,7 @@ using System;
 namespace LiveChartsCore
 {
     /// <summary>
-    /// Defiens the stacked bar series class/
+    /// Defines the stacked bar series class.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     /// <typeparam name="TVisual">The type of the visual.</typeparam>
@@ -76,6 +76,12 @@ namespace LiveChartsCore
         /// The maximum width of the bar.
         /// </value>
         public double MaxBarWidth { get; set; } = 50;
+
+        /// <inheritdoc cref="IStackedBarSeries{TDrawingContext}.Rx"/>
+        public double Rx { get; set; }
+
+        /// <inheritdoc cref="IStackedBarSeries{TDrawingContext}.Ry"/>
+        public double Ry { get; set; }
 
         /// <summary>
         /// Called when the paint context changed.

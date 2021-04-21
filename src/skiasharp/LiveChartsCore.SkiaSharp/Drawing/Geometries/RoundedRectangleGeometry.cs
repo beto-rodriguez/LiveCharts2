@@ -31,16 +31,16 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     /// <seealso cref="SizedGeometry" />
     public class RoundedRectangleGeometry : SizedGeometry
     {
-        private readonly FloatMotionProperty rx;
-        private readonly FloatMotionProperty ry;
+        private readonly FloatMotionProperty _rx;
+        private readonly FloatMotionProperty _ry;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RoundedRectangleGeometry"/> class.
         /// </summary>
         public RoundedRectangleGeometry()
         {
-            rx = RegisterMotionProperty(new FloatMotionProperty(nameof(Rx), 8f));
-            ry = RegisterMotionProperty(new FloatMotionProperty(nameof(Ry), 8f));
+            _rx = RegisterMotionProperty(new FloatMotionProperty(nameof(Rx), 8f));
+            _ry = RegisterMotionProperty(new FloatMotionProperty(nameof(Ry), 8f));
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <value>
         /// The rx.
         /// </value>
-        public float Rx { get => rx.GetMovement(this); set => rx.SetMovement(value, this); }
+        public float Rx { get => _rx.GetMovement(this); set => _rx.SetMovement(value, this); }
 
         /// <summary>
         /// Gets or sets the ry, the rounding in the axis.
@@ -57,7 +57,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <value>
         /// The ry.
         /// </value>
-        public float Ry { get => ry.GetMovement(this); set => ry.SetMovement(value, this); }
+        public float Ry { get => _ry.GetMovement(this); set => _ry.SetMovement(value, this); }
 
         /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)

@@ -33,7 +33,6 @@ namespace LiveChartsCore.Kernel
         where TDrawingContext : DrawingContext
     {
         private int stackCount = 0;
-        private int stackMaxLength = 0;
         private Dictionary<IDrawableSeries<TDrawingContext>, int> stackPositions = new Dictionary<IDrawableSeries<TDrawingContext>, int>();
         private int knownMaxLenght = 0;
         private List<List<StackedValue>> stack = new List<List<StackedValue>>();
@@ -52,7 +51,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The maximum lenght.
         /// </value>
-        public int MaxLenght => stackMaxLength;
+        public int MaxLenght { get; } = 0;
 
         /// <summary>
         /// Gets the series stack position.

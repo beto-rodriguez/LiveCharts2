@@ -60,10 +60,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="ISizedGeometry{TDrawingContext}.Height" />
         public float Height
         {
-            get
-            {
-                return matchDimensions ? width.GetMovement(this) : height.GetMovement(this);
-            }
+            get => matchDimensions ? width.GetMovement(this) : height.GetMovement(this);
             set
             {
                 if (matchDimensions)

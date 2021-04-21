@@ -1,4 +1,26 @@
-﻿using System.Drawing;
+﻿// The MIT License(MIT)
+//
+// Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+using System.Drawing;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
@@ -11,12 +33,12 @@ namespace LiveChartsCore.SkiaSharpView.Painting
     /// <seealso cref="PaintTask" />
     public class LinearGradientPaintTask : PaintTask
     {
-        private static readonly SKPoint DefaultStartPoint = new SKPoint(0, 0);
-        private static readonly SKPoint DefaultEndPoint = new SKPoint(1, 1);
-        private readonly SKColor[] gradientStops;
-        private readonly SKPoint startPoint;
-        private readonly SKPoint endPoint;
-        private SkiaSharpDrawingContext drawingContext;
+        private static readonly SKPoint s_defaultStartPoint = new SKPoint(0, 0);
+        private static readonly SKPoint s_defaultEndPoint = new SKPoint(1, 1);
+        private readonly SKColor[] _gradientStops;
+        private readonly SKPoint _startPoint;
+        private readonly SKPoint _endPoint;
+        private SkiaSharpDrawingContext _drawingContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LinearGradientPaintTask"/> class.
@@ -26,9 +48,9 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <param name="endPoint">The end point.</param>
         public LinearGradientPaintTask(SKColor[] gradientStops, SKPoint startPoint, SKPoint endPoint)
         {
-            this.gradientStops = gradientStops;
-            this.startPoint = startPoint;
-            this.endPoint = endPoint;
+            _gradientStops = gradientStops;
+            _startPoint = startPoint;
+            _endPoint = endPoint;
         }
 
         /// <summary>
@@ -36,7 +58,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// </summary>
         /// <param name="gradientStops">The gradient stops.</param>
         public LinearGradientPaintTask(SKColor[] gradientStops)
-            : this(gradientStops, DefaultStartPoint, DefaultEndPoint) { }
+            : this(gradientStops, s_defaultStartPoint, s_defaultEndPoint) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LinearGradientPaintTask"/> class.
@@ -54,12 +76,12 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
         public LinearGradientPaintTask(SKColor start, SKColor end)
-            : this(start, end, DefaultStartPoint, DefaultEndPoint) { }
+            : this(start, end, s_defaultStartPoint, s_defaultEndPoint) { }
 
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.CloneTask" />
         public override IDrawableTask<SkiaSharpDrawingContext> CloneTask()
         {
-            return new LinearGradientPaintTask(gradientStops, startPoint, endPoint)
+            return new LinearGradientPaintTask(_gradientStops, _startPoint, _endPoint)
             {
                 Style = Style,
                 IsStroke = IsStroke,
@@ -75,12 +97,10 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         {
             if (skiaPaint == null) skiaPaint = new SKPaint();
 
-            var info = drawingContext.Info;
-
             skiaPaint.Shader = SKShader.CreateLinearGradient(
-                    startPoint,
-                    endPoint,
-                    gradientStops,
+                    _startPoint,
+                    _endPoint,
+                    _gradientStops,
                     SKShaderTileMode.Repeat);
 
 
@@ -91,7 +111,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             {
                 _ = drawingContext.Canvas.Save();
                 drawingContext.Canvas.ClipRect(new SKRect(ClipRectangle.X, ClipRectangle.Y, ClipRectangle.Width, ClipRectangle.Height));
-                this.drawingContext = drawingContext;
+                _drawingContext = drawingContext;
             }
 
             drawingContext.Paint = skiaPaint;
@@ -103,10 +123,10 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// </summary>
         public override void Dispose()
         {
-            if (ClipRectangle != RectangleF.Empty && drawingContext != null)
+            if (ClipRectangle != RectangleF.Empty && _drawingContext != null)
             {
-                drawingContext.Canvas.Restore();
-                drawingContext = null;
+                _drawingContext.Canvas.Restore();
+                _drawingContext = null;
             }
 
             base.Dispose();

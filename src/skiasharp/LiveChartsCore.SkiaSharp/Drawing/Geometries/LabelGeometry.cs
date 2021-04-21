@@ -32,15 +32,14 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     /// <inheritdoc cref="ILabelGeometry{TDrawingContext}" />
     public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     {
-        private string text;
-        private readonly FloatMotionProperty textSizeProperty;
+        private readonly FloatMotionProperty _textSizeProperty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LabelGeometry"/> class.
         /// </summary>
         public LabelGeometry()
         {
-            textSizeProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize)));
+            _textSizeProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize)));
         }
 
         /// <summary>
@@ -60,10 +59,10 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         public Align HorizontalAlign { get; set; } = Align.Middle;
 
         /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.Text" />
-        public string Text { get => text; set => text = value; }
+        public string Text { get; set; }
 
         /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.TextSize" />
-        public float TextSize { get => textSizeProperty.GetMovement(this); set => textSizeProperty.SetMovement(value, this); }
+        public float TextSize { get => _textSizeProperty.GetMovement(this); set => _textSizeProperty.SetMovement(value, this); }
 
         /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.Padding" />
         public Padding Padding { get; set; }
@@ -72,7 +71,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
             paint.TextSize = TextSize;
-            context.Canvas.DrawText(text ?? "", GetPosition(context, paint), paint);
+            context.Canvas.DrawText(Text ?? "", GetPosition(context, paint), paint);
         }
 
         /// <inheritdoc cref="Geometry.OnMeasure(PaintTask)" />
@@ -89,7 +88,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 
             var bounds = new SKRect();
 
-            _ = p.MeasureText(text, ref bounds);
+            _ = p.MeasureText(Text, ref bounds);
             return new SizeF(bounds.Size.Width + Padding.Left + Padding.Right, bounds.Size.Height + Padding.Top + Padding.Bottom);
         }
 
@@ -103,12 +102,16 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
                 case Align.Start: dy = size.Height; break;
                 case Align.Middle: dy = size.Height * 0.5f; break;
                 case Align.End: dy = 0f; break;
+                default:
+                    break;
             }
             switch (HorizontalAlign)
             {
                 case Align.Start: dx = 0; break;
                 case Align.Middle: dx = size.Width * 0.5f; break;
                 case Align.End: dx = size.Width; break;
+                default:
+                    break;
             }
             return new SKPoint(X - dx + Padding.Left, Y + dy - Padding.Top);
         }

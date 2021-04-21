@@ -34,7 +34,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     /// <inheritdoc cref="IPieChartView{TDrawingContext}" />
     public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     {
-        private readonly CollectionDeepObserver<ISeries> seriesObserver;
+        private readonly CollectionDeepObserver<ISeries> _seriesObserver;
 
         static PieChart()
         {
@@ -46,7 +46,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </summary>
         public PieChart()
         {
-            seriesObserver = new CollectionDeepObserver<ISeries>(
+            _seriesObserver = new CollectionDeepObserver<ISeries>(
                 (object? sender, NotifyCollectionChangedEventArgs e) =>
                 {
                     if (core == null) return;
@@ -70,20 +70,14 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                     {
                         var chart = (PieChart)o;
-                        var seriesObserver = chart.seriesObserver;
+                        var seriesObserver = chart._seriesObserver;
                         seriesObserver.Dispose((IEnumerable<ISeries>)args.OldValue);
                         seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
                         if (chart.core == null) return;
                         Application.Current.Dispatcher.Invoke(() => chart.core.Update());
                     }));
 
-        PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core
-        {
-            get
-            {
-                return core == null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
-            }
-        }
+        PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => core == null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
         public IEnumerable<ISeries> Series

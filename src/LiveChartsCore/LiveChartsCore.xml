@@ -6543,7 +6543,7 @@
             <param name="predicate">The predicate.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForStackedBarSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IBarSeries{``0}})">
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForStackedBarSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IStackedBarSeries{``0}})">
             <summary>
              Defines a style builder for stacked <see cref="T:LiveChartsCore.Kernel.IBarSeries`1"/> objects.
             </summary>
@@ -6552,7 +6552,7 @@
             <param name="predicate">The predicate.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForStackedColumnSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IBarSeries{``0}})">
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForStackedColumnSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IStackedBarSeries{``0}})">
             <summary>
              Defines a style builder for stacked vertical <see cref="T:LiveChartsCore.Kernel.IBarSeries`1"/> objects.
             </summary>
@@ -6561,7 +6561,7 @@
             <param name="predicate">The predicate.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForStackedRowSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IBarSeries{``0}})">
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForStackedRowSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IStackedBarSeries{``0}})">
             <summary>
              Defines a style builder for stacked horizontal <see cref="T:LiveChartsCore.Kernel.IBarSeries`1"/> objects.
             </summary>

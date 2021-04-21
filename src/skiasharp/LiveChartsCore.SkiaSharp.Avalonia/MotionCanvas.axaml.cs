@@ -43,7 +43,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
     public class MotionCanvas : UserControl
     {
         private bool isDrawingLoopRunning = false;
-        private readonly MotionCanvas<SkiaSharpDrawingContext> canvasCore = new();
         private double framesPerSecond = 90;
 
         /// <summary>
@@ -52,7 +51,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         public MotionCanvas()
         {
             InitializeComponent();
-            canvasCore.Invalidated += OnCanvasCoreInvalidated;
+            CanvasCore.Invalidated += OnCanvasCoreInvalidated;
         }
 
         private void InitializeComponent()
@@ -74,8 +73,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </value>
         public HashSet<IDrawableTask<SkiaSharpDrawingContext>> PaintTasks
         {
-            get { return (HashSet<IDrawableTask<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty); }
-            set { SetValue(PaintTasksProperty, value); }
+            get => (HashSet<IDrawableTask<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty);
+            set => SetValue(PaintTasksProperty, value);
         }
 
         /// <summary>
@@ -92,18 +91,18 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <value>
         /// The canvas core.
         /// </value>
-        public MotionCanvas<SkiaSharpDrawingContext> CanvasCore => canvasCore;
+        public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
 
         /// <inheritdoc cref="Render(a.DrawingContext)" />
         public override void Render(a.DrawingContext context)
         {
-            context.Custom(new CustomDrawOp(new Rect(0, 0, Bounds.Width, Bounds.Height), canvasCore));
+            context.Custom(new CustomDrawOp(new Rect(0, 0, Bounds.Width, Bounds.Height), CanvasCore));
         }
 
         /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})" />
         protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
         {
-            if (change.Property.Name == nameof(PaintTasks)) canvasCore.SetPaintTasks(PaintTasks);
+            if (change.Property.Name == nameof(PaintTasks)) CanvasCore.SetPaintTasks(PaintTasks);
 
             base.OnPropertyChanged(change);
         }
@@ -114,7 +113,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             isDrawingLoopRunning = true;
 
             var ts = TimeSpan.FromSeconds(1 / framesPerSecond);
-            while (!canvasCore.IsValid)
+            while (!CanvasCore.IsValid)
             {
                 InvalidateVisual();
                 await Task.Delay(ts);

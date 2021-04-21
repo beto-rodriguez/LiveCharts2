@@ -31,9 +31,6 @@ namespace LiveChartsCore.Kernel
     /// <seealso cref="HoverArea" />
     public class RectangleHoverArea : HoverArea
     {
-        private float x;
-        private float y;
-        private float width;
         private float height;
 
         /// <summary>
@@ -42,7 +39,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The x.
         /// </value>
-        public float X { get => x; set => x = value; }
+        public float X { get; set; }
 
         /// <summary>
         /// Gets or sets the y location.
@@ -50,7 +47,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The y.
         /// </value>
-        public float Y { get => y; set => y = value; }
+        public float Y { get; set; }
 
         /// <summary>
         /// Gets or sets the width.
@@ -58,7 +55,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The width.
         /// </value>
-        public float Width { get => width; set => width = value; }
+        public float Width { get; set; }
 
         /// <summary>
         /// Gets or sets the height.
@@ -78,9 +75,9 @@ namespace LiveChartsCore.Kernel
         /// <returns></returns>
         public RectangleHoverArea SetDimensions(float x, float y, float width, float height)
         {
-            this.x = x;
-            this.y = y;
-            this.width = width;
+            this.X = x;
+            this.Y = y;
+            this.Width = width;
             this.height = height;
             return this;
         }
@@ -89,18 +86,18 @@ namespace LiveChartsCore.Kernel
         public override bool IsTriggerBy(PointF point, TooltipFindingStrategy strategy)
         {
             return strategy == TooltipFindingStrategy.CompareAll
-                ? point.X >= x && point.X <= x + width && point.Y >= y && point.Y <= y + height
-                : (strategy == TooltipFindingStrategy.CompareOnlyY || (point.X >= x && point.X <= x + width)) &&
-                  (strategy == TooltipFindingStrategy.CompareOnlyX || (point.Y >= y && point.Y <= y + height));
+                ? point.X >= X && point.X <= X + Width && point.Y >= Y && point.Y <= Y + height
+                : (strategy == TooltipFindingStrategy.CompareOnlyY || (point.X >= X && point.X <= X + Width)) &&
+                  (strategy == TooltipFindingStrategy.CompareOnlyX || (point.Y >= Y && point.Y <= Y + height));
         }
 
         /// <inheritdoc cref="SuggestTooltipPlacement(TooltipPlacementContext)"/>
         public override void SuggestTooltipPlacement(TooltipPlacementContext cartesianContext)
         {
-            if (y < cartesianContext.MostTop) cartesianContext.MostTop = y;
-            if (y + height > cartesianContext.MostBottom) cartesianContext.MostBottom = y + height;
-            if (x + width > cartesianContext.MostRight) cartesianContext.MostRight = x + width;
-            if (x < cartesianContext.MostLeft) cartesianContext.MostLeft = x;
+            if (Y < cartesianContext.MostTop) cartesianContext.MostTop = Y;
+            if (Y + height > cartesianContext.MostBottom) cartesianContext.MostBottom = Y + height;
+            if (X + Width > cartesianContext.MostRight) cartesianContext.MostRight = X + Width;
+            if (X < cartesianContext.MostLeft) cartesianContext.MostLeft = X;
         }
     }
 }

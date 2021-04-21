@@ -74,14 +74,15 @@ namespace LiveChartsCore.SkiaSharpView
                             initializer
                                 .ForCharts(chart =>
                                 {
-                                    var defaultHoverColor = new SKColor(255, 255, 255, 180);
+                                    chart.AnimationsSpeed = TimeSpan.FromMilliseconds(700);
+                                    chart.EasingFunction = EasingFunctions.ExponentialOut;
 
                                     // The point states dictionary defines the fill and stroke to use for a point marked with the
                                     // state key, LiveCharts uses this dictionary to highlight a chart point when the mouse is
                                     // over a point, for example, the first .WithState() defines that every time a point is marked
                                     // with the LiveCharts.BarSeriesHoverKey key, the library will draw a null stroke and
                                     // new SKColor(255, 255, 255, 180) as the fill (defaultHoverColor).
-
+                                    var defaultHoverColor = new SKColor(255, 255, 255, 180);
                                     chart.PointStates =
                                         new PointStatesDictionary<SkiaSharpDrawingContext>()
                                             .WithState(
@@ -155,7 +156,9 @@ namespace LiveChartsCore.SkiaSharpView
                         var color = colors[series.SeriesId % colors.Length];
                         if (series.Name == null) series.Name = $"Series {series.SeriesId + 1}";
 
-                        if ((series.SeriesProperties & SeriesProperties.PieSeries) == SeriesProperties.PieSeries)
+
+                        if ((series.SeriesProperties & SeriesProperties.PieSeries) == SeriesProperties.PieSeries ||
+                            (series.SeriesProperties & SeriesProperties.Bar) == SeriesProperties.Bar)
                         {
                             if (series.Fill == DefaultPaintTask) series.Fill = new SolidColorPaintTask(ColorAsSKColor(color));
                             if (series.Stroke == DefaultPaintTask) series.Stroke = new SolidColorPaintTask(ColorAsSKColor(color), 3);
@@ -170,15 +173,17 @@ namespace LiveChartsCore.SkiaSharpView
 
                             series.Fill = new SolidColorPaintTask(ColorAsSKColor(color, (byte)(opacity * 255)));
                         }
-                        if (series.Stroke == DefaultPaintTask) series.Stroke = new SolidColorPaintTask(ColorAsSKColor(color), 3.5f);
+                        if (series.Stroke == DefaultPaintTask) series.Stroke = new SolidColorPaintTask(ColorAsSKColor(color), 5);
 
                         if ((series.SeriesProperties & SeriesProperties.Line) == SeriesProperties.Line)
                         {
                             var lineSeries = (ILineSeries<SkiaSharpDrawingContext>)series;
+
                             if (lineSeries.GeometryFill == DefaultPaintTask)
                                 lineSeries.GeometryFill = new SolidColorPaintTask(ColorAsSKColor(color));
                             if (lineSeries.GeometryStroke == DefaultPaintTask)
-                                lineSeries.GeometryStroke = new SolidColorPaintTask(ColorAsSKColor(color), lineSeries.Stroke?.StrokeThickness ?? 3.5f);
+                                lineSeries.GeometryStroke = new SolidColorPaintTask(
+                                    ColorAsSKColor(color), lineSeries.Stroke?.StrokeThickness ?? 5);
                         }
                     })
                 .WithAxisDefaultsResolver(
@@ -187,10 +192,10 @@ namespace LiveChartsCore.SkiaSharpView
                         if (axis.SeparatorsBrush == DefaultPaintTask)
                             axis.SeparatorsBrush = axis.Orientation == AxisOrientation.X
                                 ? null
-                                : new SolidColorPaintTask(new SKColor(225, 225, 225));
+                                : new SolidColorPaintTask(new SKColor(235, 235, 235));
 
                         if (axis.TextBrush == DefaultPaintTask)
-                            axis.TextBrush = new SolidColorPaintTask(new SKColor(180, 180, 180));
+                            axis.TextBrush = new SolidColorPaintTask(new SKColor(90, 90, 90));
                     });
         }
 
@@ -200,4 +205,3 @@ namespace LiveChartsCore.SkiaSharpView
         }
     }
 }
-

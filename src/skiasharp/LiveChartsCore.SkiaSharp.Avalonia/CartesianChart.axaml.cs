@@ -293,102 +293,84 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         #region properties 
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
-        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas
-        {
-            get
-            {
-                return core == null ? throw new Exception("core not found") : core.Canvas;
-            }
-        }
+        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => core == null ? throw new Exception("core not found") : core.Canvas;
 
-        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core
-        {
-            get
-            {
-                return core == null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
-            }
-        }
+        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => core == null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
 
-        SizeF IChartView.ControlSize
+        SizeF IChartView.ControlSize => new SizeF
         {
-            get
-            {
-                return new SizeF
-                {
-                    Width = (float)Bounds.Width,
-                    Height = (float)Bounds.Height
-                };
-            }
-        }
+            Width = (float)Bounds.Width,
+            Height = (float)Bounds.Height
+        };
 
         /// <inheritdoc cref="IChartView.DrawMargin" />
         public Margin? DrawMargin
         {
-            get { return (Margin?)GetValue(DrawMarginProperty); }
-            set { SetValue(DrawMarginProperty, value); }
+            get => (Margin?)GetValue(DrawMarginProperty);
+            set => SetValue(DrawMarginProperty, value);
         }
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
         public IEnumerable<ISeries> Series
         {
-            get { return (IEnumerable<ISeries>)GetValue(SeriesProperty); }
-            set { SetValue(SeriesProperty, value); }
+            get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
+            set => SetValue(SeriesProperty, value);
         }
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.XAxes" />
         public IEnumerable<IAxis> XAxes
         {
-            get { return (IEnumerable<IAxis>)GetValue(XAxesProperty); }
-            set { SetValue(XAxesProperty, value); }
+            get => (IEnumerable<IAxis>)GetValue(XAxesProperty);
+            set => SetValue(XAxesProperty, value);
         }
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.YAxes" />
         public IEnumerable<IAxis> YAxes
         {
-            get { return (IEnumerable<IAxis>)GetValue(YAxesProperty); }
-            set { SetValue(YAxesProperty, value); }
+            get => (IEnumerable<IAxis>)GetValue(YAxesProperty);
+            set => SetValue(YAxesProperty, value);
         }
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomMode" />
         public ZoomAndPanMode ZoomMode
         {
-            get { return (ZoomAndPanMode)GetValue(ZoomModeProperty); }
-            set { SetValue(ZoomModeProperty, value); }
+            get => (ZoomAndPanMode)GetValue(ZoomModeProperty);
+            set => SetValue(ZoomModeProperty, value);
         }
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomingSpeed" />
         public double ZoomingSpeed
         {
-            get { return (double)GetValue(ZoomingSpeedProperty); }
-            set { SetValue(ZoomingSpeedProperty, value); }
+            get => (double)GetValue(ZoomingSpeedProperty);
+            set => SetValue(ZoomingSpeedProperty, value);
         }
 
         /// <inheritdoc cref="IChartView.AnimationsSpeed" />
         public TimeSpan AnimationsSpeed
         {
-            get { return (TimeSpan)GetValue(AnimationsSpeedProperty); }
-            set { SetValue(AnimationsSpeedProperty, value); }
+            get => (TimeSpan)GetValue(AnimationsSpeedProperty);
+            set => SetValue(AnimationsSpeedProperty, value);
         }
 
         /// <inheritdoc cref="IChartView.EasingFunction" />
         public Func<float, float> EasingFunction
         {
-            get { return (Func<float, float>)GetValue(EasingFunctionProperty); }
-            set { SetValue(AnimationsSpeedProperty, value); }
+            get => (Func<float, float>)GetValue(EasingFunctionProperty);
+            set => SetValue(EasingFunctionProperty, value);
         }
 
         /// <inheritdoc cref="IChartView.TooltipPosition" />
         public TooltipPosition TooltipPosition
         {
-            get { return (TooltipPosition)GetValue(TooltipPositionProperty); }
-            set { SetValue(TooltipPositionProperty, value); }
+            get => (TooltipPosition)GetValue(TooltipPositionProperty);
+            set => SetValue(TooltipPositionProperty, value);
         }
 
         /// <inheritdoc cref="IChartView.TooltipFindingStrategy" />
         public TooltipFindingStrategy TooltipFindingStrategy
         {
-            get { return (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty); }
-            set { SetValue(TooltipFindingStrategyProperty, value); }
+            get => (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty);
+            set => SetValue(TooltipFindingStrategyProperty, value);
         }
 
         /// <summary>
@@ -399,8 +381,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </value>
         public DataTemplate TooltipTemplate
         {
-            get { return (DataTemplate)GetValue(TooltipTemplateProperty); }
-            set { SetValue(TooltipTemplateProperty, value); }
+            get => (DataTemplate)GetValue(TooltipTemplateProperty);
+            set => SetValue(TooltipTemplateProperty, value);
         }
 
         /// <summary>
@@ -411,8 +393,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </value>
         public A.Media.FontFamily TooltipFontFamily
         {
-            get { return (A.Media.FontFamily)GetValue(TooltipFontFamilyProperty); }
-            set { SetValue(TooltipFontFamilyProperty, value); }
+            get => (A.Media.FontFamily)GetValue(TooltipFontFamilyProperty);
+            set => SetValue(TooltipFontFamilyProperty, value);
         }
 
         /// <summary>
@@ -423,8 +405,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </value>
         public double TooltipFontSize
         {
-            get { return (double)GetValue(TooltipFontSizeProperty); }
-            set { SetValue(TooltipFontSizeProperty, value); }
+            get => (double)GetValue(TooltipFontSizeProperty);
+            set => SetValue(TooltipFontSizeProperty, value);
         }
 
         /// <summary>
@@ -435,8 +417,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </value>
         public FontWeight TooltipFontWeight
         {
-            get { return (FontWeight)GetValue(TooltipFontWeightProperty); }
-            set { SetValue(TooltipFontWeightProperty, value); }
+            get => (FontWeight)GetValue(TooltipFontWeightProperty);
+            set => SetValue(TooltipFontWeightProperty, value);
         }
 
         /// <summary>
@@ -447,8 +429,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </value>
         public A.Media.FontStyle TooltipFontStyle
         {
-            get { return (A.Media.FontStyle)GetValue(TooltipFontStyleProperty); }
-            set { SetValue(TooltipFontStyleProperty, value); }
+            get => (A.Media.FontStyle)GetValue(TooltipFontStyleProperty);
+            set => SetValue(TooltipFontStyleProperty, value);
         }
 
         /// <summary>
@@ -459,8 +441,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </value>
         public SolidColorBrush TooltipTextBrush
         {
-            get { return (SolidColorBrush)GetValue(TooltipTextBrushProperty); }
-            set { SetValue(TooltipTextBrushProperty, value); }
+            get => (SolidColorBrush)GetValue(TooltipTextBrushProperty);
+            set => SetValue(TooltipTextBrushProperty, value);
         }
 
         /// <summary>
@@ -471,8 +453,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </value>
         public IBrush TooltipBackground
         {
-            get { return (IBrush)GetValue(TooltipBackgroundProperty); }
-            set { SetValue(TooltipBackgroundProperty, value); }
+            get => (IBrush)GetValue(TooltipBackgroundProperty);
+            set => SetValue(TooltipBackgroundProperty, value);
         }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
@@ -481,15 +463,15 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <inheritdoc cref="IChartView.LegendPosition" />
         public LegendPosition LegendPosition
         {
-            get { return (LegendPosition)GetValue(LegendPositionProperty); }
-            set { SetValue(LegendPositionProperty, value); }
+            get => (LegendPosition)GetValue(LegendPositionProperty);
+            set => SetValue(LegendPositionProperty, value);
         }
 
         /// <inheritdoc cref="IChartView.LegendOrientation" />
         public LegendOrientation LegendOrientation
         {
-            get { return (LegendOrientation)GetValue(LegendOrientationProperty); }
-            set { SetValue(LegendOrientationProperty, value); }
+            get => (LegendOrientation)GetValue(LegendOrientationProperty);
+            set => SetValue(LegendOrientationProperty, value);
         }
 
         /// <summary>
@@ -500,8 +482,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </value>
         public DataTemplate LegendTemplate
         {
-            get { return (DataTemplate)GetValue(LegendTemplateProperty); }
-            set { SetValue(LegendTemplateProperty, value); }
+            get => (DataTemplate)GetValue(LegendTemplateProperty);
+            set => SetValue(LegendTemplateProperty, value);
         }
 
         /// <summary>
@@ -512,8 +494,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </value>
         public A.Media.FontFamily LegendFontFamily
         {
-            get { return (A.Media.FontFamily)GetValue(LegendFontFamilyProperty); }
-            set { SetValue(LegendFontFamilyProperty, value); }
+            get => (A.Media.FontFamily)GetValue(LegendFontFamilyProperty);
+            set => SetValue(LegendFontFamilyProperty, value);
         }
 
         /// <summary>
@@ -524,8 +506,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </value>
         public double LegendFontSize
         {
-            get { return (double)GetValue(LegendFontSizeProperty); }
-            set { SetValue(LegendFontSizeProperty, value); }
+            get => (double)GetValue(LegendFontSizeProperty);
+            set => SetValue(LegendFontSizeProperty, value);
         }
 
         /// <summary>
@@ -536,8 +518,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </value>
         public FontWeight LegendFontWeight
         {
-            get { return (FontWeight)GetValue(LegendFontWeightProperty); }
-            set { SetValue(LegendFontWeightProperty, value); }
+            get => (FontWeight)GetValue(LegendFontWeightProperty);
+            set => SetValue(LegendFontWeightProperty, value);
         }
 
         /// <summary>
@@ -548,8 +530,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </value>
         public A.Media.FontStyle LegendFontStyle
         {
-            get { return (A.Media.FontStyle)GetValue(LegendFontStyleProperty); }
-            set { SetValue(LegendFontStyleProperty, value); }
+            get => (A.Media.FontStyle)GetValue(LegendFontStyleProperty);
+            set => SetValue(LegendFontStyleProperty, value);
         }
 
         /// <summary>
@@ -560,8 +542,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </value>
         public SolidColorBrush LegendTextBrush
         {
-            get { return (SolidColorBrush)GetValue(LegendTextBrushProperty); }
-            set { SetValue(LegendTextBrushProperty, value); }
+            get => (SolidColorBrush)GetValue(LegendTextBrushProperty);
+            set => SetValue(LegendTextBrushProperty, value);
         }
 
         /// <summary>
@@ -572,8 +554,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </value>
         public IBrush LegendBackground
         {
-            get { return (IBrush)GetValue(LegendBackgroundProperty); }
-            set { SetValue(LegendBackgroundProperty, value); }
+            get => (IBrush)GetValue(LegendBackgroundProperty);
+            set => SetValue(LegendBackgroundProperty, value);
         }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />

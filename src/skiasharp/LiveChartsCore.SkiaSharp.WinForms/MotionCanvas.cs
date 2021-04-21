@@ -15,8 +15,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     public partial class MotionCanvas : UserControl
     {
         private bool isDrawingLoopRunning = false;
-        private readonly MotionCanvas<SkiaSharpDrawingContext> canvasCore = new();
-        private double framesPerSecond = 90;
         private HashSet<IDrawableTask<SkiaSharpDrawingContext>> paintTasks = new();
 
         /// <summary>
@@ -25,7 +23,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         public MotionCanvas()
         {
             InitializeComponent();
-            canvasCore.Invalidated += CanvasCore_Invalidated;
+            CanvasCore.Invalidated += CanvasCore_Invalidated;
         }
 
         /// <summary>
@@ -42,7 +40,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <value>
         /// The frames per second.
         /// </value>
-        public double FramesPerSecond { get => framesPerSecond; set => framesPerSecond = value; }
+        public double FramesPerSecond { get; set; } = 90;
 
         /// <summary>
         /// Gets the canvas core.
@@ -50,11 +48,11 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <value>
         /// The canvas core.
         /// </value>
-        public MotionCanvas<SkiaSharpDrawingContext> CanvasCore => canvasCore;
+        public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
 
         private void SkControl_PaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
-            canvasCore.DrawFrame(new SkiaSharpDrawingContext(e.Info, e.Surface, e.Surface.Canvas));
+            CanvasCore.DrawFrame(new SkiaSharpDrawingContext(e.Info, e.Surface, e.Surface.Canvas));
         }
 
         private void CanvasCore_Invalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
@@ -67,8 +65,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             if (isDrawingLoopRunning) return;
             isDrawingLoopRunning = true;
 
-            var ts = TimeSpan.FromSeconds(1 / framesPerSecond);
-            while (!canvasCore.IsValid)
+            var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
+            while (!CanvasCore.IsValid)
             {
                 skControl2.Invalidate();
                 await Task.Delay(ts);
@@ -79,7 +77,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         private void OnPaintTasksChanged()
         {
-            canvasCore.SetPaintTasks(paintTasks);
+            CanvasCore.SetPaintTasks(paintTasks);
         }
     }
 }

@@ -32,53 +32,53 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}" />
     public class DoughnutGeometry : Geometry, IDoughnutGeometry<SkiaSharpDrawingContext>, IDoughnutVisualChartPoint<SkiaSharpDrawingContext>
     {
-        private readonly FloatMotionProperty cxProperty;
-        private readonly FloatMotionProperty cyProperty;
-        private readonly FloatMotionProperty wProperty;
-        private readonly FloatMotionProperty hProperty;
-        private readonly FloatMotionProperty startProperty;
-        private readonly FloatMotionProperty sweepProperty;
-        private readonly FloatMotionProperty pushoutProperty;
-        private readonly FloatMotionProperty innerRadiusProperty;
+        private readonly FloatMotionProperty _cxProperty;
+        private readonly FloatMotionProperty _cyProperty;
+        private readonly FloatMotionProperty _wProperty;
+        private readonly FloatMotionProperty _hProperty;
+        private readonly FloatMotionProperty _startProperty;
+        private readonly FloatMotionProperty _sweepProperty;
+        private readonly FloatMotionProperty _pushoutProperty;
+        private readonly FloatMotionProperty _innerRadiusProperty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DoughnutGeometry"/> class.
         /// </summary>
         public DoughnutGeometry()
         {
-            cxProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(CenterX)));
-            cyProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(CenterY)));
-            wProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width)));
-            hProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Height)));
-            startProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(StartAngle)));
-            sweepProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(SweepAngle)));
-            pushoutProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(PushOut)));
-            innerRadiusProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(InnerRadius)));
+            _cxProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(CenterX)));
+            _cyProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(CenterY)));
+            _wProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width)));
+            _hProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Height)));
+            _startProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(StartAngle)));
+            _sweepProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(SweepAngle)));
+            _pushoutProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(PushOut)));
+            _innerRadiusProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(InnerRadius)));
         }
 
         /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.CenterX" />
-        public float CenterX { get => cxProperty.GetMovement(this); set => cxProperty.SetMovement(value, this); }
+        public float CenterX { get => _cxProperty.GetMovement(this); set => _cxProperty.SetMovement(value, this); }
 
         /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.CenterY" />
-        public float CenterY { get => cyProperty.GetMovement(this); set => cyProperty.SetMovement(value, this); }
+        public float CenterY { get => _cyProperty.GetMovement(this); set => _cyProperty.SetMovement(value, this); }
 
         /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.Width" />
-        public float Width { get => wProperty.GetMovement(this); set => wProperty.SetMovement(value, this); }
+        public float Width { get => _wProperty.GetMovement(this); set => _wProperty.SetMovement(value, this); }
 
         /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.Height" />
-        public float Height { get => hProperty.GetMovement(this); set => hProperty.SetMovement(value, this); }
+        public float Height { get => _hProperty.GetMovement(this); set => _hProperty.SetMovement(value, this); }
 
         /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.StartAngle" />
-        public float StartAngle { get => startProperty.GetMovement(this); set => startProperty.SetMovement(value, this); }
+        public float StartAngle { get => _startProperty.GetMovement(this); set => _startProperty.SetMovement(value, this); }
 
         /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.SweepAngle" />
-        public float SweepAngle { get => sweepProperty.GetMovement(this); set => sweepProperty.SetMovement(value, this); }
+        public float SweepAngle { get => _sweepProperty.GetMovement(this); set => _sweepProperty.SetMovement(value, this); }
 
         /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.PushOut" />
-        public float PushOut { get => pushoutProperty.GetMovement(this); set => pushoutProperty.SetMovement(value, this); }
+        public float PushOut { get => _pushoutProperty.GetMovement(this); set => _pushoutProperty.SetMovement(value, this); }
 
         /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.InnerRadius" />
-        public float InnerRadius { get => innerRadiusProperty.GetMovement(this); set => innerRadiusProperty.SetMovement(value, this); }
+        public float InnerRadius { get => _innerRadiusProperty.GetMovement(this); set => _innerRadiusProperty.SetMovement(value, this); }
 
         /// <inheritdoc cref="Geometry.OnMeasure(PaintTask)" />
         protected override SizeF OnMeasure(PaintTask paint)

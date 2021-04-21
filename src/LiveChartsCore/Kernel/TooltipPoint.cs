@@ -27,7 +27,6 @@ namespace LiveChartsCore.Kernel
     /// </summary>
     public class TooltipPoint
     {
-        private ISeries series;
         private ChartPoint point;
 
         /// <summary>
@@ -37,7 +36,7 @@ namespace LiveChartsCore.Kernel
         /// <param name="point">The point.</param>
         public TooltipPoint(ISeries series, ChartPoint point)
         {
-            this.series = series;
+            this.Series = series;
             this.point = point;
         }
 
@@ -47,7 +46,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The series.
         /// </value>
-        public ISeries Series { get => series; set => series = value; }
+        public ISeries Series { get; set; }
 
         /// <summary>
         /// Gets or sets the point.

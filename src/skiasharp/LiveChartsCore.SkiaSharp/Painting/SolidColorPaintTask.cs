@@ -36,19 +36,19 @@ namespace LiveChartsCore.SkiaSharpView.Painting
     /// <seealso cref="PaintTask" />
     public class SolidColorPaintTask : PaintTask
     {
-        private readonly FloatMotionProperty strokeMiterTransition;
-        private readonly PathEffectMotionProperty pathEffectTransition;
-        private readonly ShaderMotionProperty shaderTransition;
-        private SkiaSharpDrawingContext drawingContext;
+        private readonly FloatMotionProperty _strokeMiterTransition;
+        private readonly PathEffectMotionProperty _pathEffectTransition;
+        private readonly ShaderMotionProperty _shaderTransition;
+        private SkiaSharpDrawingContext _drawingContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SolidColorPaintTask"/> class.
         /// </summary>
         public SolidColorPaintTask()
         {
-            strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
-            pathEffectTransition = RegisterMotionProperty(new PathEffectMotionProperty(nameof(PathEffect)));
-            shaderTransition = RegisterMotionProperty(new ShaderMotionProperty(nameof(Shader)));
+            _strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
+            _pathEffectTransition = RegisterMotionProperty(new PathEffectMotionProperty(nameof(PathEffect)));
+            _shaderTransition = RegisterMotionProperty(new ShaderMotionProperty(nameof(Shader)));
         }
 
         /// <summary>
@@ -58,9 +58,9 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         public SolidColorPaintTask(SKColor color)
             : base(color)
         {
-            strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
-            pathEffectTransition = RegisterMotionProperty(new PathEffectMotionProperty(nameof(PathEffect)));
-            shaderTransition = RegisterMotionProperty(new ShaderMotionProperty(nameof(Shader)));
+            _strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
+            _pathEffectTransition = RegisterMotionProperty(new PathEffectMotionProperty(nameof(PathEffect)));
+            _shaderTransition = RegisterMotionProperty(new ShaderMotionProperty(nameof(Shader)));
         }
 
         /// <summary>
@@ -72,9 +72,9 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             : base(color)
         {
             strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness), strokeWidth));
-            strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
-            pathEffectTransition = RegisterMotionProperty(new PathEffectMotionProperty(nameof(PathEffect)));
-            shaderTransition = RegisterMotionProperty(new ShaderMotionProperty(nameof(Shader)));
+            _strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
+            _pathEffectTransition = RegisterMotionProperty(new PathEffectMotionProperty(nameof(PathEffect)));
+            _shaderTransition = RegisterMotionProperty(new ShaderMotionProperty(nameof(Shader)));
         }
 
         /// <summary>
@@ -102,8 +102,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// </value>
         public float StrokeMiter
         {
-            get => strokeMiterTransition.GetMovement(this);
-            set => strokeMiterTransition.SetMovement(value, this);
+            get => _strokeMiterTransition.GetMovement(this);
+            set => _strokeMiterTransition.SetMovement(value, this);
         }
 
         /// <summary>
@@ -114,8 +114,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// </value>
         public PathEffect PathEffect
         {
-            get => pathEffectTransition.GetMovement(this);
-            set => pathEffectTransition.SetMovement(value, this);
+            get => _pathEffectTransition.GetMovement(this);
+            set => _pathEffectTransition.SetMovement(value, this);
         }
 
         /// <summary>
@@ -126,8 +126,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// </value>
         public Shader Shader
         {
-            get => shaderTransition.GetMovement(this);
-            set => shaderTransition.SetMovement(value, this);
+            get => _shaderTransition.GetMovement(this);
+            set => _shaderTransition.SetMovement(value, this);
         }
 
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.CloneTask" />
@@ -171,7 +171,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
                 drawingContext.Canvas.ClipRect(
                     new SKRect(
                         ClipRectangle.X, ClipRectangle.Y, ClipRectangle.X + ClipRectangle.Width, ClipRectangle.Y + ClipRectangle.Height));
-                this.drawingContext = drawingContext;
+                _drawingContext = drawingContext;
             }
 
             drawingContext.Paint = skiaPaint;
@@ -183,10 +183,10 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// </summary>
         public override void Dispose()
         {
-            if (ClipRectangle != RectangleF.Empty && drawingContext != null)
+            if (ClipRectangle != RectangleF.Empty && _drawingContext != null)
             {
-                drawingContext.Canvas.Restore();
-                drawingContext = null;
+                _drawingContext.Canvas.Restore();
+                _drawingContext = null;
             }
 
             base.Dispose();

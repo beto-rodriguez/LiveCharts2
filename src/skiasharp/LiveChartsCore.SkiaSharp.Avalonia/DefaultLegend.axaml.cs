@@ -98,8 +98,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </value>
         public Orientation Orientation
         {
-            get { return (Orientation)GetValue(OrientationProperty); }
-            set { SetValue(OrientationProperty, value); }
+            get => (Orientation)GetValue(OrientationProperty);
+            set => SetValue(OrientationProperty, value);
         }
 
         /// <summary>
@@ -110,8 +110,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </value>
         public Dock Dock
         {
-            get { return (Dock)GetValue(DockProperty); }
-            set { SetValue(DockProperty, value); }
+            get => (Dock)GetValue(DockProperty);
+            set => SetValue(DockProperty, value);
         }
 
         void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)

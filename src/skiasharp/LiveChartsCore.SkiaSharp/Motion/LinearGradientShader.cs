@@ -31,11 +31,11 @@ namespace LiveChartsCore.SkiaSharpView.Motion
     /// <seealso cref="Shader" />
     public class LinearGradientShader : Shader
     {
-        private readonly SKPoint start;
-        private readonly SKPoint end;
-        private readonly SKColor[] colors;
-        private readonly float[] colorPos;
-        private readonly SKShaderTileMode mode;
+        private readonly SKPoint _start;
+        private readonly SKPoint _end;
+        private readonly SKColor[] _colors;
+        private readonly float[] _colorPos;
+        private readonly SKShaderTileMode _mode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LinearGradientShader"/> class.
@@ -47,17 +47,17 @@ namespace LiveChartsCore.SkiaSharpView.Motion
         /// <param name="mode">The mode.</param>
         public LinearGradientShader(SKPoint start, SKPoint end, SKColor[] colors, float[] colorPos, SKShaderTileMode mode)
         {
-            this.start = start;
-            this.end = end;
-            this.colors = colors;
-            this.mode = mode;
-            this.colorPos = colorPos;
+            _start = start;
+            _end = end;
+            _colors = colors;
+            _mode = mode;
+            _colorPos = colorPos;
         }
 
         /// <inheritdoc cref="Shader.GetSKShader" />
         public override SKShader GetSKShader()
         {
-            return SKShader.CreateLinearGradient(start, end, colors, mode);
+            return SKShader.CreateLinearGradient(_start, _end, _colors, _mode);
         }
 
         /// <inheritdoc cref="Shader.InterpolateFrom(Shader, float)" />
@@ -65,13 +65,13 @@ namespace LiveChartsCore.SkiaSharpView.Motion
         {
             var f = (LinearGradientShader)from;
 
-            if (colors.Length != f.colors.Length) throw new System.Exception("Different colors length is not supported");
+            if (_colors.Length != f._colors.Length) throw new System.Exception("Different colors length is not supported");
 
-            var interpolatedColors = new SKColor[colors.Length];
-            for (var i = 0; i < colors.Length; i++)
+            var interpolatedColors = new SKColor[_colors.Length];
+            for (var i = 0; i < _colors.Length; i++)
             {
-                var fi = f.colors[i];
-                var j = colors[i];
+                var fi = f._colors[i];
+                var j = _colors[i];
                 interpolatedColors[i] = new SKColor(
                     (byte)(fi.Red + progress * (j.Red - fi.Red)),
                     (byte)(fi.Green + progress * (j.Green - fi.Green)),
@@ -81,14 +81,14 @@ namespace LiveChartsCore.SkiaSharpView.Motion
 
             return new LinearGradientShader(
                  new SKPoint(
-                     f.start.X + progress * (start.X - f.start.X),
-                     f.start.Y + progress * (start.Y - f.start.Y)),
+                     f._start.X + progress * (_start.X - f._start.X),
+                     f._start.Y + progress * (_start.Y - f._start.Y)),
                  new SKPoint(
-                     f.end.X + progress * (end.X - f.end.X),
-                     f.end.Y + progress * (end.Y - f.end.Y)),
+                     f._end.X + progress * (_end.X - f._end.X),
+                     f._end.Y + progress * (_end.Y - f._end.Y)),
                  interpolatedColors,
-                 colorPos,
-                 mode);
+                 _colorPos,
+                 _mode);
         }
     }
 }

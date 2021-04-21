@@ -184,7 +184,7 @@ namespace LiveChartsCore.Themes
         /// <returns></returns>
         public static VisualsInitializer<TDrawingContext> ForStackedBarSeries<TDrawingContext>(
             this VisualsInitializer<TDrawingContext> styler,
-            Action<IBarSeries<TDrawingContext>> predicate)
+            Action<IStackedBarSeries<TDrawingContext>> predicate)
             where TDrawingContext : DrawingContext
         {
             styler.StackedBarSeriesBuilder = predicate;
@@ -200,7 +200,7 @@ namespace LiveChartsCore.Themes
         /// <returns></returns>
         public static VisualsInitializer<TDrawingContext> ForStackedColumnSeries<TDrawingContext>(
             this VisualsInitializer<TDrawingContext> styler,
-            Action<IBarSeries<TDrawingContext>> predicate)
+            Action<IStackedBarSeries<TDrawingContext>> predicate)
             where TDrawingContext : DrawingContext
         {
             styler.StackedColumnSeriesBuilder = predicate;
@@ -216,7 +216,7 @@ namespace LiveChartsCore.Themes
         /// <returns></returns>
         public static VisualsInitializer<TDrawingContext> ForStackedRowSeries<TDrawingContext>(
             this VisualsInitializer<TDrawingContext> styler,
-            Action<IBarSeries<TDrawingContext>> predicate)
+            Action<IStackedBarSeries<TDrawingContext>> predicate)
             where TDrawingContext : DrawingContext
         {
             styler.StackedRowSeriesBuilder = predicate;
