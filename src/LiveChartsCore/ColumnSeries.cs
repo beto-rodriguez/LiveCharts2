@@ -243,17 +243,15 @@ namespace LiveChartsCore
             if (chartPoint.Context.Visual is not TVisual visual) throw new Exception("Unable to initialize the point instance.");
 
             _ = visual
-                .TransitionateProperties(nameof(visual.X), nameof(visual.Width))
+                .TransitionateProperties(
+                    nameof(visual.X),
+                    nameof(visual.Width),
+                    nameof(visual.Y),
+                    nameof(visual.Height))
                 .WithAnimation(animation =>
                     animation
                         .WithDuration(chart.AnimationsSpeed)
                         .WithEasingFunction(chart.EasingFunction));
-
-            _ = visual
-                .TransitionateProperties(nameof(visual.Y), nameof(visual.Height))
-                .WithAnimation(animation => animation
-                    .WithDuration(chart.AnimationsSpeed)
-                    .WithEasingFunction(elasticFunction));
         }
 
         /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SoftDeletePoint(ChartPoint, Scaler, Scaler)"/>

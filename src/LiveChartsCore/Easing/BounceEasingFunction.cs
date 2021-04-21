@@ -37,8 +37,8 @@ namespace LiveChartsCore.Easing
         public static float Out(float t)
         {
             return (t = +t) < s_b1
-                ? s_b0 * t * t : t < s_b3 ? (s_b0 * (t -= s_b2) * t) + s_b4 : t < s_b6 ? (s_b0 * (t -= s_b5) * t) + s_b7
-                : (s_b0 * (t -= s_b8) * t) + s_b9;
+                ? s_b0 * t * t : t < s_b3 ? s_b0 * (t -= s_b2) * t + s_b4 : t < s_b6 ? s_b0 * (t -= s_b5) * t + s_b7
+                : s_b0 * (t -= s_b8) * t + s_b9;
         }
 
         /// <summary>

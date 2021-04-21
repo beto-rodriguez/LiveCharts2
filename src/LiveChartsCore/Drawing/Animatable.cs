@@ -67,6 +67,15 @@ namespace LiveChartsCore.Drawing.Common
             transitionProperties[propertyName].Animation = null;
         }
 
+        /// <inheritdoc cref="IAnimatable.RemoveTransitions" />
+        public void RemoveTransitions()
+        {
+            foreach (var property in transitionProperties)
+            {
+                property.Value.Animation = null;
+            }
+        }
+
         /// <summary>
         /// Invalidates this animatable.
         /// </summary>

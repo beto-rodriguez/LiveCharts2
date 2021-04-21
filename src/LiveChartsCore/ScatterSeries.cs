@@ -43,7 +43,6 @@ namespace LiveChartsCore
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
-        private readonly Func<float, float> _easing = EasingFunctions.BuildCustomElasticOut(1.2f, 0.40f);
         private Bounds _weightBounds = new();
 
         /// <summary>
@@ -288,20 +287,13 @@ namespace LiveChartsCore
             _ = visual
                .TransitionateProperties(
                    nameof(visual.X),
-                   nameof(visual.Y))
-               .WithAnimation(animation =>
-                   animation
-                       .WithDuration(chart.AnimationsSpeed)
-                       .WithEasingFunction(chart.EasingFunction));
-
-            _ = visual
-               .TransitionateProperties(
+                   nameof(visual.Y),
                    nameof(visual.Width),
                    nameof(visual.Height))
                .WithAnimation(animation =>
                    animation
                        .WithDuration(chart.AnimationsSpeed)
-                       .WithEasingFunction(_easing));
+                       .WithEasingFunction(chart.EasingFunction));
         }
 
         /// <inheritdoc cref="SoftDeletePoint(ChartPoint, Scaler, Scaler)"/>

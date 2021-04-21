@@ -434,7 +434,8 @@ namespace LiveChartsCore
         /// <param name="defaultAnimation">The default animation.</param>
         /// <returns></returns>
         protected virtual void SetDefaultPathTransitions(
-            AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs> areaHelper, Animation defaultAnimation)
+            AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs> areaHelper,
+            Animation defaultAnimation)
         {
             _ = areaHelper.StartPoint
                 .TransitionateProperties(nameof(areaHelper.StartPoint.X), nameof(areaHelper.StartPoint.Y))

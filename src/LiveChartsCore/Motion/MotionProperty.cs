@@ -40,13 +40,9 @@ namespace LiveChartsCore.Motion
         /// To value
         /// </summary>
         protected internal T? toValue = default;
-
-        private Animation? animation;
-        internal long startTime;
-        internal long endTime;
-        private bool isCompleted = false;
-        private readonly string propertyName;
-        private bool requiresToInitialize = true;
+        internal long _startTime;
+        internal long _endTime;
+        private bool _requiresToInitialize = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MotionProperty{T}"/> class.
@@ -54,28 +50,28 @@ namespace LiveChartsCore.Motion
         /// <param name="propertyName">Name of the property.</param>
         public MotionProperty(string propertyName)
         {
-            this.propertyName = propertyName;
+            PropertyName = propertyName;
         }
 
         /// <summary>
         /// Gets the value where the transition began.
         /// </summary>
-        public T? FromValue { get => fromValue; }
+        public T? FromValue => fromValue;
 
         /// <summary>
         /// Gets the value where the transition finished or will finish.
         /// </summary>
-        public T? ToValue { get => toValue; }
+        public T? ToValue => toValue;
 
         /// <summary>
         /// Gets or sets the animation to define the transition.
         /// </summary>
-        public Animation? Animation { get => animation; set => animation = value; }
+        public Animation? Animation { get; set; }
 
         /// <summary>
         /// Gets the property name.
         /// </summary>
-        public string PropertyName => propertyName;
+        public string PropertyName { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is completed.
@@ -83,7 +79,7 @@ namespace LiveChartsCore.Motion
         /// <value>
         ///   <c>true</c> if this instance is completed; otherwise, <c>false</c>.
         /// </value>
-        public bool IsCompleted { get => isCompleted; set => isCompleted = value; }
+        public bool IsCompleted { get; set; } = false;
 
         /// <summary>
         /// Moves to he specified value.
@@ -94,20 +90,20 @@ namespace LiveChartsCore.Motion
         {
             fromValue = GetMovement(animatable);
             toValue = value;
-            if (animation != null)
+            if (Animation != null)
             {
                 if (animatable._currentTime == long.MinValue) // the animatable is not in the canvas yet.
                 {
-                    requiresToInitialize = true;
+                    _requiresToInitialize = true;
                 }
                 else
                 {
-                    startTime = animatable._currentTime;
-                    endTime = animatable._currentTime + animation._duration;
+                    _startTime = animatable._currentTime;
+                    _endTime = animatable._currentTime + Animation._duration;
                 }
-                animation._animationCompletedCount = 0;
-                isCompleted = false;
-                requiresToInitialize = true;
+                Animation._animationCompletedCount = 0;
+                IsCompleted = false;
+                _requiresToInitialize = true;
             }
             animatable.Invalidate();
         }
@@ -119,13 +115,13 @@ namespace LiveChartsCore.Motion
         /// <returns></returns>
         public T GetMovement(Animatable animatable)
         {
-            if (animation == null || fromValue == null || isCompleted) return OnGetMovement(1);
+            if (Animation == null || Animation.EasingFunction == null || fromValue == null || IsCompleted) return OnGetMovement(1);
 
-            if (requiresToInitialize)
+            if (_requiresToInitialize)
             {
-                startTime = animatable._currentTime;
-                endTime = animatable._currentTime + animation._duration;
-                requiresToInitialize = false;
+                _startTime = animatable._currentTime;
+                _endTime = animatable._currentTime + Animation._duration;
+                _requiresToInitialize = false;
             }
 
             // at this points we are sure that the animatable has not finished at least with this property.
@@ -134,23 +130,23 @@ namespace LiveChartsCore.Motion
             // is this line necessary? ...
             //if (animatable.currentTime - startTime <= 0) return OnGetMovement(0);
 
-            var p = (animatable._currentTime - startTime) / unchecked((float)(endTime - startTime));
+            var p = (animatable._currentTime - _startTime) / unchecked((float)(_endTime - _startTime));
 
             if (p >= 1)
             {
                 // at this point the animation is completed
                 p = 1;
-                animation._animationCompletedCount++;
-                isCompleted = animation._repeatTimes != int.MaxValue && animation._repeatTimes < animation._animationCompletedCount;
-                if (!isCompleted)
+                Animation._animationCompletedCount++;
+                IsCompleted = Animation._repeatTimes != int.MaxValue && Animation._repeatTimes < Animation._animationCompletedCount;
+                if (!IsCompleted)
                 {
-                    startTime = animatable._currentTime;
-                    endTime = animatable._currentTime + animation._duration;
-                    isCompleted = false;
+                    _startTime = animatable._currentTime;
+                    _endTime = animatable._currentTime + Animation._duration;
+                    IsCompleted = false;
                 }
             }
 
-            var fp = animation.EasingFunction(p);
+            var fp = Animation.EasingFunction(p);
             return OnGetMovement(fp);
         }
 

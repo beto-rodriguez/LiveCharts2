@@ -108,11 +108,6 @@
             <seealso cref="T:LiveChartsCore.CartesianSeries`4" />
             <seealso cref="T:LiveChartsCore.Kernel.IBarSeries`1" />
         </member>
-        <member name="F:LiveChartsCore.BarSeries`4.elasticFunction">
-            <summary>
-            Gets the default elastic easing function.
-            </summary>
-        </member>
         <member name="M:LiveChartsCore.BarSeries`4.#ctor(LiveChartsCore.Kernel.SeriesProperties)">
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.BarSeries`4"/> class.
@@ -137,7 +132,7 @@
             <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
             <seealso cref="T:LiveChartsCore.Chart`1" />
         </member>
-        <member name="M:LiveChartsCore.CartesianChart`1.#ctor(LiveChartsCore.Kernel.ICartesianChartView{`0},System.Action{LiveChartsCore.LiveChartsSettings},LiveChartsCore.Drawing.MotionCanvas{`0})">
+        <member name="M:LiveChartsCore.CartesianChart`1.#ctor(LiveChartsCore.Kernel.ICartesianChartView{`0},System.Action{LiveChartsCore.Kernel.LiveChartsSettings},LiveChartsCore.Drawing.MotionCanvas{`0})">
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.CartesianChart`1"/> class.
             </summary>
@@ -350,7 +345,7 @@
             The draw maring location
             </summary>
         </member>
-        <member name="M:LiveChartsCore.Chart`1.#ctor(LiveChartsCore.Drawing.MotionCanvas{`0},System.Action{LiveChartsCore.LiveChartsSettings})">
+        <member name="M:LiveChartsCore.Chart`1.#ctor(LiveChartsCore.Drawing.MotionCanvas{`0},System.Action{LiveChartsCore.Kernel.LiveChartsSettings})">
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.Chart`1"/> class.
             </summary>
@@ -1155,6 +1150,9 @@
         <member name="M:LiveChartsCore.Drawing.Common.Animatable.RemovePropertyTransition(System.String)">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IAnimatable.RemovePropertyTransition(System.String)" />
         </member>
+        <member name="M:LiveChartsCore.Drawing.Common.Animatable.RemoveTransitions">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IAnimatable.RemoveTransitions" />
+        </member>
         <member name="M:LiveChartsCore.Drawing.Common.Animatable.Invalidate">
             <summary>
             Invalidates this animatable.
@@ -1430,6 +1428,11 @@
             Removes a property transition.
             </summary>
             <param name="propertyName">Name of the property.</param>
+        </member>
+        <member name="M:LiveChartsCore.Drawing.IAnimatable.RemoveTransitions">
+            <summary>
+            Removes all the current transitions.
+            </summary>
         </member>
         <member name="M:LiveChartsCore.Drawing.IAnimatable.CompleteAllTransitions">
             <summary>
@@ -2925,6 +2928,11 @@
             The data label formatter.
             </value>
         </member>
+        <member name="E:LiveChartsCore.ISeries.Disposing">
+            <summary>
+            Occurs before the series is disposed.
+            </summary>
+        </member>
         <member name="M:LiveChartsCore.ISeries.Fetch(LiveChartsCore.Kernel.IChart)">
             <summary>
             Gets a <see cref="T:LiveChartsCore.Kernel.ChartPoint"/> array with the points used to generate the plot.
@@ -2954,6 +2962,11 @@
             </summary>
             <param name="chartPoint"></param>
             <param name="state"></param>
+        </member>
+        <member name="M:LiveChartsCore.ISeries.RestartAnimations">
+            <summary>
+            Clears the visuals in the cache and re-starts animations.
+            </summary>
         </member>
         <member name="M:LiveChartsCore.ISeries.Delete(LiveChartsCore.Kernel.IChartView)">
             <summary>
@@ -3367,6 +3380,12 @@
             <returns></returns>
             <exception cref="T:System.NullReferenceException">Unexpected null stacker</exception>
         </member>
+        <member name="M:LiveChartsCore.Kernel.DataProvider`2.RestartVisuals">
+            <summary>
+            Clears the visuals in the cache.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:LiveChartsCore.Kernel.DefaultPaintTask`1">
             <summary>
             Defines a default paint task.
@@ -3511,6 +3530,12 @@
         <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.CompleteAllTransitions">
             <summary>
             Completes all transitions.
+            </summary>
+            <exception cref="T:System.NotImplementedException"></exception>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.RemoveTransitions">
+            <summary>
+            Removes all the current transitions.
             </summary>
             <exception cref="T:System.NotImplementedException"></exception>
         </member>
@@ -4231,6 +4256,141 @@
             The stack group.
             </value>
         </member>
+        <member name="T:LiveChartsCore.Kernel.LiveChartsSettings">
+            <summary>
+            LiveCharts global settings
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.LiveChartsSettings.DefaultEasingFunction">
+            <summary>
+            Gets or sets the default easing function.
+            </summary>
+            <value>
+            The default easing function.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.LiveChartsSettings.DefaultAnimationsSpeed">
+            <summary>
+            Gets or sets the default animations speed.
+            </summary>
+            <value>
+            The default animations speed.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.LiveChartsSettings.DefaultZoomSpeed">
+            <summary>
+            Gets or sets the default zoom speed.
+            </summary>
+            <value>
+            The default zoom speed.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.LiveChartsSettings.DefaultZoomMode">
+            <summary>
+            Gets or sets the default zoom mode.
+            </summary>
+            <value>
+            The default zoom mode.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.LiveChartsSettings.DefaultLegendPosition">
+            <summary>
+            Gets or sets the default legend position.
+            </summary>
+            <value>
+            The default legend position.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.LiveChartsSettings.DefaultLegendOrientation">
+            <summary>
+            Gets or sets the default legend orientation.
+            </summary>
+            <value>
+            The default legend orientation.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.LiveChartsSettings.DefaultTooltipPosition">
+            <summary>
+            Gets or sets the default tooltip position.
+            </summary>
+            <value>
+            The default tooltip position.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.LiveChartsSettings.DefaultTooltipFindingStrategy">
+            <summary>
+            Gets or sets the default tooltip finding strategy.
+            </summary>
+            <value>
+            The default tooltip finding strategy.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})">
+            <summary>
+            Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a<see cref="T:LiveChartsCore.Kernel.ChartPoint"/> instance,
+            then the <see cref="T:LiveChartsCore.Kernel.ChartPoint"/> will be drawn as a point in our chart.
+            </summary>
+            <typeparam name="TModel">The type of the model.</typeparam>
+            <param name="mapper">The mapper.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.LiveChartsSettings.WithDefaultAnimationsSpeed(System.TimeSpan)">
+            <summary>
+            Sets the default animations speed.
+            </summary>
+            <param name="animationsSpeed">The animations speed.</param>
+            <returns>the current settings</returns>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.LiveChartsSettings.WithDefaultEasingFunction(System.Func{System.Single,System.Single})">
+            <summary>
+            Withes the default easing function.
+            </summary>
+            <param name="easingFunction">The easing function.</param>
+            <returns>the current settings</returns>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.LiveChartsSettings.WithDefaultZoomSpeed(System.Double)">
+            <summary>
+            Withes the default zoom speed.
+            </summary>
+            <param name="speed">The speed.</param>
+            <returns>the current settings</returns>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.LiveChartsSettings.WithDefaultZoomMode(LiveChartsCore.Measure.ZoomAndPanMode)">
+            <summary>
+            Withes the default zoom mode.
+            </summary>
+            <param name="zoomMode">The zoom mode.</param>
+            <returns>the current settings</returns>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.LiveChartsSettings.RemoveMap``1">
+            <summary>
+            Removes a map from the settings.
+            </summary>
+            <typeparam name="TModel">The type of the model.</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.LiveChartsSettings.HasTheme``1(System.Action{LiveChartsCore.Themes.Theme{``0}})">
+            <summary>
+            Adds the default styles.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+            <param name="builder">The builder.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.LiveChartsSettings.GetTheme``1">
+            <summary>
+            Gets the styles builder.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+            <returns></returns>
+            <exception cref="T:System.Exception">$"The type {nameof(TDrawingContext)} is not registered.</exception>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.LiveChartsSettings.AddDefaultMappers">
+            <summary>
+            Enables LiveCharts to be able to plot short, int, long, float, double, decimal and <see cref="T:LiveChartsCore.Kernel.ChartPoint"/>.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:LiveChartsCore.Kernel.NamedLabeler">
             <summary>
             The named labeler helper class.
@@ -4281,7 +4441,7 @@
         </member>
         <member name="T:LiveChartsCore.Kernel.PointStatesDictionary`1">
             <summary>
-            Defiens the points states dictionary class.
+            Defines the points states dictionary class.
             </summary>
             <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
         </member>
@@ -4308,6 +4468,15 @@
             <summary>
             Gets the states.
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.PointStatesDictionary`1.WithState(System.String,LiveChartsCore.Drawing.IDrawableTask{`0},LiveChartsCore.Drawing.IDrawableTask{`0})">
+            <summary>
+            Add the visual state for the given key.
+            </summary>
+            <param name="key">The key.</param>
+            <param name="fill">The fill.</param>
+            <param name="stroke">The stroke.</param>
             <returns></returns>
         </member>
         <member name="M:LiveChartsCore.Kernel.PointStatesDictionary`1.DeleteState(System.String)">
@@ -5015,7 +5184,7 @@
             The disable animations
             </summary>
         </member>
-        <member name="M:LiveChartsCore.LiveCharts.Configure(System.Action{LiveChartsCore.LiveChartsSettings})">
+        <member name="M:LiveChartsCore.LiveCharts.Configure(System.Action{LiveChartsCore.Kernel.LiveChartsSettings})">
             <summary>
             Configures LiveCharts.
             </summary>
@@ -5029,178 +5198,6 @@
             </summary>
             <typeparam name="TModel">The type of the model.</typeparam>
             <param name="mapper">The mapper.</param>
-            <returns></returns>
-        </member>
-        <member name="T:LiveChartsCore.LiveChartsInitializer`1">
-            <summary>
-            Defines an object that must initialize live charts visual objects, this object defines how things will 
-            be drawn by default, it is highly related to themes.
-            </summary>
-        </member>
-        <member name="M:LiveChartsCore.LiveChartsInitializer`1.ConstructChart(LiveChartsCore.Kernel.IChartView{`0})">
-            <summary>
-            Constructs a chart.
-            </summary>
-            <param name="chart">The chart.</param>
-        </member>
-        <member name="M:LiveChartsCore.LiveChartsInitializer`1.ConstructSeries(LiveChartsCore.Kernel.IDrawableSeries{`0})">
-            <summary>
-            Constructs a series.
-            </summary>
-            <param name="series">The series.</param>
-        </member>
-        <member name="M:LiveChartsCore.LiveChartsInitializer`1.ConstructAxis(LiveChartsCore.IAxis{`0})">
-            <summary>
-            Constructs an axis.
-            </summary>
-            <param name="axis">The axis.</param>
-        </member>
-        <member name="M:LiveChartsCore.LiveChartsInitializer`1.ResolveSeriesDefaults(System.Drawing.Color[],LiveChartsCore.Kernel.IDrawableSeries{`0})">
-            <summary>
-            Resolves the series defaults.
-            </summary>
-            <param name="colors">The colors.</param>
-            <param name="series">The series.</param>
-        </member>
-        <member name="M:LiveChartsCore.LiveChartsInitializer`1.ResolveAxisDefaults(LiveChartsCore.IAxis{`0})">
-            <summary>
-            Resolves the axis defaults.
-            </summary>
-            <param name="axis">The axis.</param>
-        </member>
-        <member name="T:LiveChartsCore.LiveChartsSettings">
-            <summary>
-            LiveCharts global settings
-            </summary>
-        </member>
-        <member name="P:LiveChartsCore.LiveChartsSettings.DefaultEasingFunction">
-            <summary>
-            Gets or sets the default easing function.
-            </summary>
-            <value>
-            The default easing function.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.LiveChartsSettings.DefaultAnimationsSpeed">
-            <summary>
-            Gets or sets the default animations speed.
-            </summary>
-            <value>
-            The default animations speed.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.LiveChartsSettings.DefaultZoomSpeed">
-            <summary>
-            Gets or sets the default zoom speed.
-            </summary>
-            <value>
-            The default zoom speed.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.LiveChartsSettings.DefaultZoomMode">
-            <summary>
-            Gets or sets the default zoom mode.
-            </summary>
-            <value>
-            The default zoom mode.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.LiveChartsSettings.DefaultLegendPosition">
-            <summary>
-            Gets or sets the default legend position.
-            </summary>
-            <value>
-            The default legend position.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.LiveChartsSettings.DefaultLegendOrientation">
-            <summary>
-            Gets or sets the default legend orientation.
-            </summary>
-            <value>
-            The default legend orientation.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.LiveChartsSettings.DefaultTooltipPosition">
-            <summary>
-            Gets or sets the default tooltip position.
-            </summary>
-            <value>
-            The default tooltip position.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.LiveChartsSettings.DefaultTooltipFindingStrategy">
-            <summary>
-            Gets or sets the default tooltip finding strategy.
-            </summary>
-            <value>
-            The default tooltip finding strategy.
-            </value>
-        </member>
-        <member name="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})">
-            <summary>
-            Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a<see cref="T:LiveChartsCore.Kernel.ChartPoint"/> instance,
-            then the <see cref="T:LiveChartsCore.Kernel.ChartPoint"/> will be drawn as a point in our chart.
-            </summary>
-            <typeparam name="TModel">The type of the model.</typeparam>
-            <param name="mapper">The mapper.</param>
-            <returns></returns>
-        </member>
-        <member name="M:LiveChartsCore.LiveChartsSettings.WithDefaultAnimationsSpeed(System.TimeSpan)">
-            <summary>
-            Sets the default animations speed.
-            </summary>
-            <param name="animationsSpeed">The animations speed.</param>
-            <returns>the current settings</returns>
-        </member>
-        <member name="M:LiveChartsCore.LiveChartsSettings.WithDefaultEasingFunction(System.Func{System.Single,System.Single})">
-            <summary>
-            Withes the default easing function.
-            </summary>
-            <param name="easingFunction">The easing function.</param>
-            <returns>the current settings</returns>
-        </member>
-        <member name="M:LiveChartsCore.LiveChartsSettings.WithDefaultZoomSpeed(System.Double)">
-            <summary>
-            Withes the default zoom speed.
-            </summary>
-            <param name="speed">The speed.</param>
-            <returns>the current settings</returns>
-        </member>
-        <member name="M:LiveChartsCore.LiveChartsSettings.WithDefaultZoomMode(LiveChartsCore.Measure.ZoomAndPanMode)">
-            <summary>
-            Withes the default zoom mode.
-            </summary>
-            <param name="zoomMode">The zoom mode.</param>
-            <returns>the current settings</returns>
-        </member>
-        <member name="M:LiveChartsCore.LiveChartsSettings.RemoveMap``1">
-            <summary>
-            Removes a map from the settings.
-            </summary>
-            <typeparam name="TModel">The type of the model.</typeparam>
-            <returns></returns>
-        </member>
-        <member name="M:LiveChartsCore.LiveChartsSettings.AddDefaultStyles``1(System.Action{LiveChartsCore.StyleBuilder{``0}})">
-            <summary>
-            Adds the default styles.
-            </summary>
-            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-            <param name="builder">The builder.</param>
-            <returns></returns>
-        </member>
-        <member name="M:LiveChartsCore.LiveChartsSettings.GetStylesBuilder``1">
-            <summary>
-            Gets the styles builder.
-            </summary>
-            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-            <returns></returns>
-            <exception cref="T:System.Exception">$"The type {nameof(TDrawingContext)} is not registered.</exception>
-        </member>
-        <member name="M:LiveChartsCore.LiveChartsSettings.AddDefaultMappers">
-            <summary>
-            Enables LiveCharts to be able to plot short, int, long, float, double, decimal and <see cref="T:LiveChartsCore.Kernel.ChartPoint"/>.
-            </summary>
             <returns></returns>
         </member>
         <member name="T:LiveChartsCore.Measure.AffectedBound">
@@ -5736,7 +5733,7 @@
             <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
             <seealso cref="T:LiveChartsCore.Chart`1" />
         </member>
-        <member name="M:LiveChartsCore.PieChart`1.#ctor(LiveChartsCore.Kernel.IPieChartView{`0},System.Action{LiveChartsCore.LiveChartsSettings},LiveChartsCore.Drawing.MotionCanvas{`0})">
+        <member name="M:LiveChartsCore.PieChart`1.#ctor(LiveChartsCore.Kernel.IPieChartView{`0},System.Action{LiveChartsCore.Kernel.LiveChartsSettings},LiveChartsCore.Drawing.MotionCanvas{`0})">
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.PieChart`1"/> class.
             </summary>
@@ -6047,6 +6044,9 @@
             Occurs when aa property changes.
             </summary>
         </member>
+        <member name="E:LiveChartsCore.Series`4.Disposing">
+            <inheritdoc cref="E:LiveChartsCore.ISeries.Disposing" />
+        </member>
         <member name="P:LiveChartsCore.Series`4.OnPointAddedToState">
             <summary>
             Gets or sets a delegate that will be called everytime a <see cref="T:LiveChartsCore.Kernel.ChartPoint"/> instance
@@ -6082,6 +6082,9 @@
         </member>
         <member name="M:LiveChartsCore.Series`4.RemovePointFromState(LiveChartsCore.Kernel.ChartPoint,System.String)">
             <inheritdoc />
+        </member>
+        <member name="M:LiveChartsCore.Series`4.RestartAnimations">
+            <inheritdoc cref="M:LiveChartsCore.ISeries.RestartAnimations"/>
         </member>
         <member name="M:LiveChartsCore.Series`4.Delete(LiveChartsCore.Kernel.IChartView)">
             <inheritdoc cref="M:LiveChartsCore.ISeries.Delete(LiveChartsCore.Kernel.IChartView)"/>
@@ -6337,40 +6340,6 @@
             <param name="primaryScale">The primary scale.</param>
             <param name="secondaryScale">The secondary scale.</param>
         </member>
-        <member name="T:LiveChartsCore.StyleBuilder`1">
-            <summary>
-            Defiens a style builder.
-            </summary>
-            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-        </member>
-        <member name="P:LiveChartsCore.StyleBuilder`1.CurrentColors">
-            <summary>
-            Gets the current colors.
-            </summary>
-            <value>
-            The current colors.
-            </value>
-        </member>
-        <member name="M:LiveChartsCore.StyleBuilder`1.UseColors(System.Drawing.Color[])">
-            <summary>
-            Uses the colors.
-            </summary>
-            <param name="colors">The colors.</param>
-            <returns></returns>
-        </member>
-        <member name="M:LiveChartsCore.StyleBuilder`1.UseSeriesInitializer(LiveChartsCore.LiveChartsInitializer{`0})">
-            <summary>
-            Uses the series initializer.
-            </summary>
-            <param name="seriesInitializer">The series initializer.</param>
-            <returns></returns>
-        </member>
-        <member name="M:LiveChartsCore.StyleBuilder`1.GetInitializer">
-            <summary>
-            Gets the initializer.
-            </summary>
-            <returns></returns>
-        </member>
         <member name="T:LiveChartsCore.ColorPacks">
             <summary>
             Defines a set of predefined colors to use.
@@ -6487,6 +6456,332 @@
             <value>
             The late summer.
             </value>
+        </member>
+        <member name="T:LiveChartsCore.Themes.LiveChartsStylerExtensions">
+            <summary>
+            Defines the LiveCharts styler extensions.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForCharts``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IChartView{``0}})">
+            <summary>
+             Defines a style builder for <see cref="T:LiveChartsCore.Kernel.IChartView`1"/> objects.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+            <param name="styler">The styler.</param>
+            <param name="predicate">The predicate.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForAxes``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.IAxis{``0}})">
+            <summary>
+             Defines a style builder for <see cref="T:LiveChartsCore.Kernel.IChartView`1"/> objects.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+            <param name="styler">The styler.</param>
+            <param name="predicate">The predicate.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForAnySeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IDrawableSeries{``0}})">
+            <summary>
+             Defines a style builder for <see cref="T:LiveChartsCore.Kernel.IDrawableSeries`1"/> objects.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+            <param name="styler">The styler.</param>
+            <param name="predicate">The predicate.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForPieSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IPieSeries{``0}})">
+            <summary>
+             Defines a style builder for <see cref="T:LiveChartsCore.Kernel.IPieSeries`1"/> objects.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+            <param name="styler">The styler.</param>
+            <param name="predicate">The predicate.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForLineSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.ILineSeries{``0}})">
+            <summary>
+             Defines a style builder for <see cref="T:LiveChartsCore.Kernel.ILineSeries`1"/> objects.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+            <param name="styler">The styler.</param>
+            <param name="predicate">The predicate.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForStackedLineSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.ILineSeries{``0}})">
+            <summary>
+             Defines a style builder for tacked <see cref="T:LiveChartsCore.Kernel.ILineSeries`1"/> objects.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+            <param name="styler">The styler.</param>
+            <param name="predicate">The predicate.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForBarSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IBarSeries{``0}})">
+            <summary>
+             Defines a style builder for <see cref="T:LiveChartsCore.Kernel.IBarSeries`1"/> objects.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+            <param name="styler">The styler.</param>
+            <param name="predicate">The predicate.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForColumnSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IBarSeries{``0}})">
+            <summary>
+             Defines a style builder for vertical <see cref="T:LiveChartsCore.Kernel.IBarSeries`1"/> objects.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+            <param name="styler">The styler.</param>
+            <param name="predicate">The predicate.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForRowSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IBarSeries{``0}})">
+            <summary>
+             Defines a style builder for horizontal <see cref="T:LiveChartsCore.Kernel.IBarSeries`1"/> objects.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+            <param name="styler">The styler.</param>
+            <param name="predicate">The predicate.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForStackedBarSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IBarSeries{``0}})">
+            <summary>
+             Defines a style builder for stacked <see cref="T:LiveChartsCore.Kernel.IBarSeries`1"/> objects.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+            <param name="styler">The styler.</param>
+            <param name="predicate">The predicate.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForStackedColumnSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IBarSeries{``0}})">
+            <summary>
+             Defines a style builder for stacked vertical <see cref="T:LiveChartsCore.Kernel.IBarSeries`1"/> objects.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+            <param name="styler">The styler.</param>
+            <param name="predicate">The predicate.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForStackedRowSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IBarSeries{``0}})">
+            <summary>
+             Defines a style builder for stacked horizontal <see cref="T:LiveChartsCore.Kernel.IBarSeries`1"/> objects.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+            <param name="styler">The styler.</param>
+            <param name="predicate">The predicate.</param>
+            <returns></returns>
+        </member>
+        <member name="T:LiveChartsCore.Themes.Theme`1">
+            <summary>
+            Defines a style builder.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+        </member>
+        <member name="P:LiveChartsCore.Themes.Theme`1.CurrentColors">
+            <summary>
+            Gets the current colors.
+            </summary>
+            <value>
+            The current colors.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Themes.Theme`1.SeriesDefaultsResolver">
+            <summary>
+            Gets or sets the series default resolver.
+            </summary>
+            <value>
+            The series default resolver.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Themes.Theme`1.AxisDefaultResolver">
+            <summary>
+            Gets or sets the axis default resolver.
+            </summary>
+            <value>
+            The axis default resolver.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.Themes.Theme`1.WithColors(System.Drawing.Color[])">
+            <summary>
+            Uses the colors.
+            </summary>
+            <param name="colors">The colors.</param>
+            <returns>The current theme instance</returns>
+        </member>
+        <member name="M:LiveChartsCore.Themes.Theme`1.WithVisualsInitializer(System.Action{LiveChartsCore.Themes.VisualsInitializer{`0}})">
+            <summary>
+            Creates a new styles builder and configures it using the given predicate.
+            </summary>
+            <param name="predicate">The predicate.</param>
+            <returns>The current theme instance</returns>
+        </member>
+        <member name="M:LiveChartsCore.Themes.Theme`1.WithSeriesDefaultsResolver(System.Action{System.Drawing.Color[],LiveChartsCore.Kernel.IDrawableSeries{`0}})">
+            <summary>
+            Sets the series defaults resolver.
+            </summary>
+            <param name="resolver">The resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Themes.Theme`1.WithAxisDefaultsResolver(System.Action{LiveChartsCore.IAxis{`0}})">
+            <summary>
+            Sets the axis defaults resolver.
+            </summary>
+            <param name="resolver">The resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Themes.Theme`1.GetVisualsInitializer">
+            <summary>
+            Gets the objects builder.
+            </summary>
+            <returns>The current theme instance</returns>
+        </member>
+        <member name="M:LiveChartsCore.Themes.Theme`1.ResolveSeriesDefaults(System.Drawing.Color[],LiveChartsCore.Kernel.IDrawableSeries{`0})">
+            <summary>
+            Resolves the series defaults.
+            </summary>
+            <param name="colors">The colors.</param>
+            <param name="series">The series.</param>
+        </member>
+        <member name="M:LiveChartsCore.Themes.Theme`1.ResolveAxisDefaults(LiveChartsCore.IAxis{`0})">
+            <summary>
+            Resolves the axis defaults.
+            </summary>
+            <param name="axis">The axis.</param>
+        </member>
+        <member name="T:LiveChartsCore.Themes.VisualsInitializer`1">
+            <summary>
+            Defines an object that must initialize live charts visual objects, this object defines how things will 
+            be drawn by default, it is highly related to themes.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.ChartBuilder">
+            <summary>
+            Gets or sets the chart builder.
+            </summary>
+            <value>
+            The chart builder.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.AxisBuilder">
+            <summary>
+            Gets or sets the axis builder.
+            </summary>
+            <value>
+            The axis builder.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.SeriesBuilder">
+            <summary>
+            Gets or sets the series builder.
+            </summary>
+            <value>
+            The pie series builder.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.PieSeriesBuilder">
+            <summary>
+            Gets or sets the pie series builder.
+            </summary>
+            <value>
+            The pie series builder.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.CartesianSeriesBuilder">
+            <summary>
+            Gets or sets the Cartesian series builder.
+            </summary>
+            <value>
+            The pie series builder.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.LineSeriesBuilder">
+            <summary>
+            Gets or sets the line series builder.
+            </summary>
+            <value>
+            The pie series builder.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.StackedLineSeriesBuilder">
+            <summary>
+            Gets or sets the stacked line series builder.
+            </summary>
+            <value>
+            The pie series builder.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.BarSeriesBuilder">
+            <summary>
+            Gets or sets the bar series builder.
+            </summary>
+            <value>
+            The pie series builder.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.ColumnSeriesBuilder">
+            <summary>
+            Gets or sets the column series builder.
+            </summary>
+            <value>
+            The pie series builder.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.RowSeriesBuilder">
+            <summary>
+            Gets or sets the row series builder.
+            </summary>
+            <value>
+            The pie series builder.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.StackedBarSeriesBuilder">
+            <summary>
+            Gets or sets the stacked bar series builder.
+            </summary>
+            <value>
+            The pie series builder.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.StackedColumnSeriesBuilder">
+            <summary>
+            Gets or sets the stacked column series builder.
+            </summary>
+            <value>
+            The pie series builder.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.StackedRowSeriesBuilder">
+            <summary>
+            Gets or sets the stacked row series builder.
+            </summary>
+            <value>
+            The pie series builder.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.ScatterSeriesBuilder">
+            <summary>
+            Gets or sets the scatter series builder.
+            </summary>
+            <value>
+            The pie series builder.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.Themes.VisualsInitializer`1.ApplyStyleToChart(LiveChartsCore.Kernel.IChartView{`0})">
+            <summary>
+            Constructs a chart.
+            </summary>
+            <param name="chart">The chart.</param>
+        </member>
+        <member name="M:LiveChartsCore.Themes.VisualsInitializer`1.ApplyStyleToAxis(LiveChartsCore.IAxis{`0})">
+            <summary>
+            Constructs an axis.
+            </summary>
+            <param name="axis">The axis.</param>
+        </member>
+        <member name="M:LiveChartsCore.Themes.VisualsInitializer`1.ApplyStyleToSeries(LiveChartsCore.Kernel.IDrawableSeries{`0})">
+            <summary>
+            Constructs a series.
+            </summary>
+            <param name="series">The series.</param>
         </member>
     </members>
 </doc>

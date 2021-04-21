@@ -204,12 +204,12 @@ namespace LiveChartsCore
         /// <exception cref="Exception">Default colors are not valid</exception>
         protected void InitializeSeries()
         {
-            var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<TDrawingContext>();
-            var initializer = stylesBuilder.GetInitializer();
+            var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
+            var initializer = stylesBuilder.GetVisualsInitializer();
             if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
                 throw new Exception("Default colors are not valid");
 
-            initializer.ConstructSeries(this);
+            initializer.ApplyStyleToSeries(this);
 
             var factory = LiveCharts.CurrentSettings.GetFactory<TDrawingContext>();
             dataProvider = factory.GetProvider<TModel>();

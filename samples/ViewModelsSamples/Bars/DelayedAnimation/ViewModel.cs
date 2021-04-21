@@ -17,11 +17,13 @@ namespace ViewModelsSamples.Bars.DelayedAnimation
             var values1 = new List<float>();
             var values2 = new List<float>();
 
+            var fx = EasingFunctions.BounceInOut; // this is the function we are going to plot
             var x = 0f;
+
             while (x <= 1)
             {
-                values1.Add(EasingFunctions.BounceInOut(x));
-                values2.Add(EasingFunctions.BounceInOut(x - 0.15f));
+                values1.Add(fx(x));
+                values2.Add(fx(x - 0.15f));
                 x += 0.01f;
             }
 

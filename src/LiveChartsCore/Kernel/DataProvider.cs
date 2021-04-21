@@ -159,5 +159,26 @@ namespace LiveChartsCore.Kernel
 
             return bounds;
         }
+
+        /// <summary>
+        /// Clears the visuals in the cache.
+        /// </summary>
+        /// <returns></returns>
+        public virtual void RestartVisuals()
+        {
+            foreach (var item in byReferenceVisualMap)
+            {
+                if (item.Value.Context.Visual is not IAnimatable visual) continue;
+                visual.RemoveTransitions();
+            }
+            byReferenceVisualMap.Clear();
+
+            foreach (var item in byValueVisualMap)
+            {
+                if (item.Value.Context.Visual is not IAnimatable visual) continue;
+                visual.RemoveTransitions();
+            }
+            byValueVisualMap.Clear();
+        }
     }
 }

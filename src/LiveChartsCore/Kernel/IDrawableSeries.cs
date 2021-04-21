@@ -88,6 +88,8 @@ namespace LiveChartsCore.Kernel
         /// </value>
         PaintContext<TDrawingContext> DefaultPaintContext { get; }
 
+
+
         /// <summary>
         /// Gets the stack group, normally used internally to handled the stacked series.
         /// </summary>

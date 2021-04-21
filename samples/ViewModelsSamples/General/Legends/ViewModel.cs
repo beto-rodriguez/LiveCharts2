@@ -10,8 +10,8 @@ namespace ViewModelsSamples.General.Legends
 {
     public class ViewModel : INotifyPropertyChanged
     {
-        private LegendPosition position;
-        private AvailablePositions selectedPosition;
+        private LegendPosition _position;
+        private AvailablePosition _selectedPosition;
 
         public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
         {
@@ -29,30 +29,27 @@ namespace ViewModelsSamples.General.Legends
             }
         };
 
-        public List<AvailablePositions> Positions => new List<AvailablePositions>
+        public List<AvailablePosition> Positions => new List<AvailablePosition>
         {
-            new AvailablePositions("hidden", LegendPosition.Hidden),
-            new AvailablePositions("top", LegendPosition.Top),
-            new AvailablePositions("bottom", LegendPosition.Bottom),
-            new AvailablePositions("right", LegendPosition.Right),
-            new AvailablePositions("left", LegendPosition.Left)
+            new AvailablePosition("hidden", LegendPosition.Hidden),
+            new AvailablePosition("top", LegendPosition.Top),
+            new AvailablePosition("bottom", LegendPosition.Bottom),
+            new AvailablePosition("right", LegendPosition.Right),
+            new AvailablePosition("left", LegendPosition.Left)
         };
 
-        public AvailablePositions SelectedPosition
+        public AvailablePosition SelectedPosition
         {
-            get => selectedPosition;
+            get => _selectedPosition;
             set
             {
-                selectedPosition = value;
+                _selectedPosition = value;
                 OnPropertyChanged();
-
-                // Workaroud for Avalonia, DisplayMemberPath is not supported
-                // https://github.com/AvaloniaUI/Avalonia/issues/4718
-                Position = selectedPosition.Position;
+                Position = _selectedPosition.Position;
             }
         }
 
-        public LegendPosition Position { get => position; set { position = value; OnPropertyChanged(); } }
+        public LegendPosition Position { get => _position; set { _position = value; OnPropertyChanged(); } }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -62,9 +59,9 @@ namespace ViewModelsSamples.General.Legends
         }
     }
 
-    public class AvailablePositions
+    public class AvailablePosition
     {
-        public AvailablePositions(string name, LegendPosition position)
+        public AvailablePosition(string name, LegendPosition position)
         {
             Name = name;
             Position = position;

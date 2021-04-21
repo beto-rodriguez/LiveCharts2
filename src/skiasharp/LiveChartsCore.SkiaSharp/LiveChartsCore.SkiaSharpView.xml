@@ -19,7 +19,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -31,7 +31,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -46,7 +46,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -61,43 +61,6 @@
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.ColumnSeries`3"/> class.
             </summary>
-        </member>
-        <member name="T:LiveChartsCore.SkiaSharpView.DefaultInitializer">
-            <summary>
-            Defines an object that must initialize live charts visual objects, this object defines how things will 
-            be drawn by default, it is highly related to themes.
-            </summary>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.DefaultInitializer.ConstructChart(LiveChartsCore.Kernel.IChartView{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
-            <summary>
-            Constructs a chart.
-            </summary>
-            <param name="chart">The chart.</param>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.DefaultInitializer.ConstructAxis(LiveChartsCore.IAxis{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
-            <summary>
-            Constructs an axis.
-            </summary>
-            <param name="axis">The axis.</param>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.DefaultInitializer.ConstructSeries(LiveChartsCore.Kernel.IDrawableSeries{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
-            <summary>
-            Constructs a series.
-            </summary>
-            <param name="series">The series.</param>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.DefaultInitializer.ResolveSeriesDefaults(System.Drawing.Color[],LiveChartsCore.Kernel.IDrawableSeries{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
-            <summary>
-            Resolves the series defaults.
-            </summary>
-            <param name="colors">The colors.</param>
-            <param name="series">The series.</param>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.DefaultInitializer.ResolveAxisDefaults(LiveChartsCore.IAxis{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
-            <summary>
-            Resolves the axis defaults.
-            </summary>
-            <param name="axis">The axis.</param>
         </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Drawing.AvaloniaDrawingContext">
             <summary>
@@ -620,7 +583,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -632,7 +595,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -647,7 +610,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -668,7 +631,7 @@
             Defines the default LiveCharts-SkiaSharp settings
             </summary>
         </member>
-        <member name="P:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.DefaultPaint">
+        <member name="P:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.DefaultPaintTask">
             <summary>
             Gets the default paint task.
             </summary>
@@ -684,12 +647,19 @@
             The default platform builder.
             </value>
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AddSkiaSharp(LiveChartsCore.LiveChartsSettings,System.Action{LiveChartsCore.StyleBuilder{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext}})">
+        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AddSkiaSharp(LiveChartsCore.Kernel.LiveChartsSettings,System.Action{LiveChartsCore.Themes.Theme{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext}})">
             <summary>
             Adds SkiaSharp as the UI provider for LiveCharts.
             </summary>
             <param name="settings">The settings.</param>
             <param name="builder">The builder.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AddDefaultResolvers(LiveChartsCore.Themes.Theme{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <summary>
+            Adds the default resolvers.
+            </summary>
+            <param name="theme">The theme.</param>
             <returns></returns>
         </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Motion.ColorMotionProperty">
@@ -1072,7 +1042,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -1084,7 +1054,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -1099,7 +1069,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -1122,7 +1092,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam> data label of every point.
@@ -1134,7 +1104,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -1149,7 +1119,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -1172,7 +1142,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -1184,7 +1154,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -1199,7 +1169,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -1222,7 +1192,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -1234,7 +1204,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -1249,7 +1219,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -1272,7 +1242,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -1284,7 +1254,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -1299,7 +1269,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -1322,7 +1292,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -1334,7 +1304,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
@@ -1349,7 +1319,7 @@
             <typeparam name="TModel">
             The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
             to use a custom type, you must register the type globally 
-            (<see cref="M:LiveChartsCore.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
             or at the series level 
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>

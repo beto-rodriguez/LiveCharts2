@@ -67,6 +67,11 @@ namespace LiveChartsCore.Drawing
         void RemovePropertyTransition(string propertyName);
 
         /// <summary>
+        /// Removes all the current transitions.
+        /// </summary>
+        void RemoveTransitions();
+
+        /// <summary>
         /// Completes all transitions.
         /// </summary>
         void CompleteAllTransitions();

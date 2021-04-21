@@ -274,9 +274,8 @@ namespace LiveChartsCore
             seriesContext = new SeriesContext<TDrawingContext>(Series);
 
             Canvas.MeasuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
-            var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<TDrawingContext>();
-            var initializer = stylesBuilder.GetInitializer();
-            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
+            var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
+            if (theme.CurrentColors == null || theme.CurrentColors.Length == 0)
                 throw new Exception("Default colors are not valid");
 
             lock (canvas.Sync)
@@ -285,19 +284,19 @@ namespace LiveChartsCore
                 foreach (var axis in XAxes)
                 {
                     axis.Initialize(AxisOrientation.X);
-                    initializer.ResolveAxisDefaults(axis);
+                    theme.ResolveAxisDefaults(axis);
                 }
                 foreach (var axis in YAxes)
                 {
                     axis.Initialize(AxisOrientation.Y);
-                    initializer.ResolveAxisDefaults(axis);
+                    theme.ResolveAxisDefaults(axis);
                 }
 
                 // get seriesBounds
                 foreach (var series in Series)
                 {
                     if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
-                    initializer.ResolveSeriesDefaults(stylesBuilder.CurrentColors, series);
+                    theme.ResolveSeriesDefaults(theme.CurrentColors, series);
 
                     var secondaryAxis = XAxes[series.ScalesXAt];
                     var primaryAxis = YAxes[series.ScalesYAt];

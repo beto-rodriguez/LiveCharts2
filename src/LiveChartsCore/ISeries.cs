@@ -95,6 +95,11 @@ namespace LiveChartsCore
         Func<ChartPoint, string> DataLabelsFormatter { get; set; }
 
         /// <summary>
+        /// Occurs before the series is disposed.
+        /// </summary>
+        event Action<ISeries>? Disposing;
+
+        /// <summary>
         /// Gets a <see cref="ChartPoint"/> array with the points used to generate the plot.
         /// </summary>
         /// <param name="chart">the chart</param>
@@ -123,6 +128,11 @@ namespace LiveChartsCore
         /// <param name="chartPoint"></param>
         /// <param name="state"></param>
         void RemovePointFromState(ChartPoint chartPoint, string state);
+
+        /// <summary>
+        /// Clears the visuals in the cache and re-starts animations.
+        /// </summary>
+        void RestartAnimations();
 
         /// <summary>
         /// Deletes the series from the user interface.

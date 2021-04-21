@@ -145,6 +145,9 @@ namespace LiveChartsCore
         /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        /// <inheritdoc cref="ISeries.Disposing" />
+        public event Action<ISeries>? Disposing;
+
         /// <summary>
         /// Gets or sets a delegate that will be called everytime a <see cref="ChartPoint"/> instance
         /// is added to a state.
@@ -254,12 +257,20 @@ namespace LiveChartsCore
             if (s.Stroke != null) s.Stroke.RemoveGeometryFromPainTask(highlitable);
         }
 
+        /// <inheritdoc cref="ISeries.RestartAnimations"/>
+        public void RestartAnimations()
+        {
+            if (dataProvider == null) throw new Exception("Data provider not found");
+            dataProvider.RestartVisuals();
+        }
+
         /// <inheritdoc cref="ISeries.Delete"/>
         public virtual void Delete(IChartView chart) { }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
         public virtual void Dispose()
         {
+            Disposing?.Invoke(this);
             foreach (var chart in subscribedTo) Delete(chart.View);
             _observer.Dispose(_values);
         }

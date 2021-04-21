@@ -206,5 +206,14 @@ namespace LiveChartsCore.Kernel
         {
             throw new System.NotImplementedException();
         }
+
+        /// <summary>
+        /// Removes all the current transitions.
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public void RemoveTransitions()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

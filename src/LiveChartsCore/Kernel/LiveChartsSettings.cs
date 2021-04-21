@@ -20,14 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
 using System;
 using System.Collections.Generic;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Themes;
 
-namespace LiveChartsCore
+namespace LiveChartsCore.Kernel
 {
     /// <summary>
     /// LiveCharts global settings
@@ -203,16 +203,16 @@ namespace LiveChartsCore
         /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
         /// <param name="builder">The builder.</param>
         /// <returns></returns>
-        public LiveChartsSettings AddDefaultStyles<TDrawingContext>(Action<StyleBuilder<TDrawingContext>> builder)
+        public LiveChartsSettings HasTheme<TDrawingContext>(Action<Theme<TDrawingContext>> builder)
             where TDrawingContext : DrawingContext
         {
             if (!_seriesStyleBuilder.TryGetValue(typeof(TDrawingContext), out var stylesBuilder))
             {
-                stylesBuilder = new StyleBuilder<TDrawingContext>();
+                stylesBuilder = new Theme<TDrawingContext>();
                 _seriesStyleBuilder[typeof(TDrawingContext)] = stylesBuilder;
             }
 
-            var sb = (StyleBuilder<TDrawingContext>)stylesBuilder;
+            var sb = (Theme<TDrawingContext>)stylesBuilder;
             builder(sb);
 
             return this;
@@ -224,12 +224,12 @@ namespace LiveChartsCore
         /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
         /// <returns></returns>
         /// <exception cref="Exception">$"The type {nameof(TDrawingContext)} is not registered.</exception>
-        public StyleBuilder<TDrawingContext> GetStylesBuilder<TDrawingContext>()
+        public Theme<TDrawingContext> GetTheme<TDrawingContext>()
             where TDrawingContext : DrawingContext
         {
             return !_seriesStyleBuilder.TryGetValue(typeof(TDrawingContext), out var stylesBuilder)
                 ? throw new Exception($"The type {nameof(TDrawingContext)} is not registered.")
-                : (StyleBuilder<TDrawingContext>)stylesBuilder;
+                : (Theme<TDrawingContext>)stylesBuilder;
         }
 
         /// <summary>

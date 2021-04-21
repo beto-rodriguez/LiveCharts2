@@ -162,9 +162,8 @@ namespace LiveChartsCore
 
             if (legend != null) legend.Draw(this);
 
-            var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<TDrawingContext>();
-            var initializer = stylesBuilder.GetInitializer();
-            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
+            var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
+            if (theme.CurrentColors == null || theme.CurrentColors.Length == 0)
                 throw new Exception("Default colors are not valid");
 
             ValueBounds = new Bounds();
@@ -173,7 +172,7 @@ namespace LiveChartsCore
             foreach (var series in Series)
             {
                 if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
-                initializer.ResolveSeriesDefaults(stylesBuilder.CurrentColors, series);
+                theme.ResolveSeriesDefaults(theme.CurrentColors, series);
 
                 var seriesBounds = series.GetBounds(this);
 

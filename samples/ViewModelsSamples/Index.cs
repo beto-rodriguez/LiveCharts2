@@ -44,6 +44,7 @@
 
             "General/Tooltips",
             "General/Legends",
+            "General/Animations",
             "General/TemplatedTooltips",
             "General/TemplatedLegends",
             "General/UserDefinedTypes",

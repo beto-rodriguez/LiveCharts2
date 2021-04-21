@@ -21,13 +21,13 @@ namespace ViewModelsSamples.General.UserDefinedTypes
         {
             // in this case we have an array of the Dog class
             // we need to compare the Age property of every dog in our array
-            // you normally should configure every intance you require to use only when your application starts.
+            // you normally should configure every instance you require to use only when your application starts.
 
             // by default LiveCharts already knows how to map the types:
             // short, int, long, float, double, decimal, short?, int?, long?, float?, double?, decimal?,
             // WeightedPoint, WeightedPointF, ObservablePoint, ObservablePointF, OversableValue and ObservableValueF
             // for more info see:
-            // https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/LiveChartsCore/LiveChartsSettings.cs#L122
+            // https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/LiveChartsCore/LiveChartsSettings.cs#L239
             LiveCharts.Configure(config =>
 
                 // The HasMap<T>() method helps us to define a map from a type T to a point in our chart
@@ -50,7 +50,7 @@ namespace ViewModelsSamples.General.UserDefinedTypes
                     // lets also set a mapper for the DogAverageAge class
                     .HasMap<DogAverageAge>((dogAverageAge, point) =>
                     {
-                        // in this case we are ignoring the point paramenter
+                        // in this case we are ignoring the point.Context.Index
                         // every coordinate will be provided by our dogAverageAge instance
                         point.PrimaryValue = (float)dogAverageAge.Y;
                         point.SecondaryValue = (float)dogAverageAge.X;

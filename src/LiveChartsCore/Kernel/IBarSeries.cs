@@ -45,5 +45,7 @@ namespace LiveChartsCore.Kernel
         /// the same <see cref="ChartPoint.SecondaryValue"/>.
         /// </summary>
         bool IgnoresBarPosition { get; set; }
+
+
     }
 }

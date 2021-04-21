@@ -244,14 +244,7 @@ namespace LiveChartsCore
             _ = visual
                 .TransitionateProperties(
                     nameof(visual.X),
-                    nameof(visual.Width))
-                .WithAnimation(animation =>
-                    animation
-                        .WithDuration((long)(chart.AnimationsSpeed.TotalMilliseconds * 1.5))
-                        .WithEasingFunction(elasticFunction));
-
-            _ = visual
-                .TransitionateProperties(
+                    nameof(visual.Width),
                     nameof(visual.Y),
                     nameof(visual.Height))
                 .WithAnimation(animation =>

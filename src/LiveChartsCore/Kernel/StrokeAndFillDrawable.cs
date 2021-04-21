@@ -31,9 +31,6 @@ namespace LiveChartsCore.Kernel
     public class StrokeAndFillDrawable<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        private IDrawableTask<TDrawingContext>? stroke = null;
-        private IDrawableTask<TDrawingContext>? fill = null;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="StrokeAndFillDrawable{TDrawingContext}"/> class.
         /// </summary>
@@ -41,14 +38,14 @@ namespace LiveChartsCore.Kernel
         /// <param name="fill">The fill.</param>
         public StrokeAndFillDrawable(IDrawableTask<TDrawingContext>? stroke, IDrawableTask<TDrawingContext>? fill)
         {
-            this.stroke = stroke;
+            Stroke = stroke;
             if (stroke != null)
             {
                 stroke.IsStroke = true;
                 stroke.IsFill = false;
             }
 
-            this.fill = fill;
+            Fill = fill;
             if (fill != null)
             {
                 fill.IsStroke = false;
@@ -63,7 +60,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The stroke.
         /// </value>
-        public IDrawableTask<TDrawingContext>? Stroke => stroke;
+        public IDrawableTask<TDrawingContext>? Stroke { get; } = null;
 
         /// <summary>
         /// Gets the fill.
@@ -71,6 +68,6 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The fill.
         /// </value>
-        public IDrawableTask<TDrawingContext>? Fill => fill;
+        public IDrawableTask<TDrawingContext>? Fill { get; } = null;
     }
 }

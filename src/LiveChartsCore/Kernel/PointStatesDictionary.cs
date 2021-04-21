@@ -28,13 +28,13 @@ using System.Linq;
 namespace LiveChartsCore.Kernel
 {
     /// <summary>
-    /// Defiens the points states dictionary class.
+    /// Defines the points states dictionary class.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     public class PointStatesDictionary<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        private Dictionary<string, StrokeAndFillDrawable<TDrawingContext>> states = new();
+        private readonly Dictionary<string, StrokeAndFillDrawable<TDrawingContext>> _states = new();
 
         /// <summary>
         /// Gets or sets the stroke and fill for the specified state name.
@@ -47,19 +47,16 @@ namespace LiveChartsCore.Kernel
         /// <exception cref="InvalidOperationException">$"A null instance is not valid at this point, to delete a key please use the {nameof(DeleteState)}() method.</exception>
         public StrokeAndFillDrawable<TDrawingContext>? this[string stateName]
         {
-            get
-            {
-                return !states.TryGetValue(stateName, out var state) ? null : state;
-            }
+            get => !_states.TryGetValue(stateName, out var state) ? null : state;
             set
             {
                 if (value == null)
                     throw new InvalidOperationException(
                         $"A null instance is not valid at this point, to delete a key please use the {nameof(DeleteState)}() method.");
 
-                if (states.ContainsKey(stateName)) RemoveState(states[stateName]);
+                if (_states.ContainsKey(stateName)) RemoveState(_states[stateName]);
 
-                states[stateName] = value;
+                _states[stateName] = value;
 
                 if (Chart == null) return;
 
@@ -82,7 +79,23 @@ namespace LiveChartsCore.Kernel
         /// <returns></returns>
         public StrokeAndFillDrawable<TDrawingContext>[] GetStates()
         {
-            return states.Values.ToArray();
+            return _states.Values.ToArray();
+        }
+
+        /// <summary>
+        /// Add the visual state for the given key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="fill">The fill.</param>
+        /// <param name="stroke">The stroke.</param>
+        /// <returns></returns>
+        public PointStatesDictionary<TDrawingContext> WithState(
+            string key,
+            IDrawableTask<TDrawingContext>? fill,
+            IDrawableTask<TDrawingContext>? stroke)
+        {
+            _states.Add(key, new StrokeAndFillDrawable<TDrawingContext>(fill, stroke));
+            return this;
         }
 
         /// <summary>
@@ -92,8 +105,8 @@ namespace LiveChartsCore.Kernel
         /// <returns></returns>
         public void DeleteState(string stateName)
         {
-            RemoveState(states[stateName]);
-            _ = states.Remove(stateName);
+            RemoveState(_states[stateName]);
+            _ = _states.Remove(stateName);
         }
 
         /// <summary>
