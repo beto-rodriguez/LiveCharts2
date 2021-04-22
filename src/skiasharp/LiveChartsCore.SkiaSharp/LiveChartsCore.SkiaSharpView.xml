@@ -5,7 +5,7 @@
     </assembly>
     <members>
         <member name="T:LiveChartsCore.SkiaSharpView.Axis">
-            <inheritdoc cref="T:LiveChartsCore.IAxis" />
+            <inheritdoc cref="T:LiveChartsCore.Kernel.IAxis" />
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Axis.#ctor">
             <summary>
@@ -75,6 +75,14 @@
             <param name="info">The information.</param>
             <param name="surface">The surface.</param>
             <param name="canvas">The canvas.</param>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.AvaloniaDrawingContext.BackColor">
+            <summary>
+            Gets or sets the color of the back.
+            </summary>
+            <value>
+            The color of the back.
+            </value>
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Drawing.AvaloniaDrawingContext.ClearCanvas">
             <summary>

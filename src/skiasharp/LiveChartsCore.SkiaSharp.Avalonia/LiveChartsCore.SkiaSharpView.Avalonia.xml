@@ -686,6 +686,14 @@
             The frames per second.
             </value>
         </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.MotionCanvas.BackColor">
+            <summary>
+            Gets or sets the color of the back.
+            </summary>
+            <value>
+            The color of the back.
+            </value>
+        </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.MotionCanvas.CanvasCore">
             <summary>
             Gets the canvas core.

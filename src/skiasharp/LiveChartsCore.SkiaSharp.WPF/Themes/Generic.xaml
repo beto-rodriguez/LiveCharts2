@@ -5,7 +5,7 @@
     xmlns:skia="clr-namespace:SkiaSharp.Views.WPF;assembly=SkiaSharp.Views.WPF">
 
     <ControlTemplate x:Key="DefaultChartTempalte" TargetType="{x:Type local:Chart}">
-        <DockPanel LastChildFill="true">
+        <DockPanel LastChildFill="true" Background="{Binding Background, RelativeSource={RelativeSource AncestorType=local:Chart}}">
             <local:DefaultTooltip x:Name="tooltip" />
             <local:DefaultLegend x:Name="legend"
                 DockPanel.Dock="{Binding ElementName=legend, Path=Dock}"

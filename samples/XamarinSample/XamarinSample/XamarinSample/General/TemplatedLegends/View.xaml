@@ -4,7 +4,7 @@
              x:Class="XamarinSample.General.TemplatedLegends.View"
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Xamarin.Forms;assembly=LiveChartsCore.SkiaSharpView.Xamarin.Forms"
              xmlns:vms="clr-namespace:ViewModelsSamples.General.TemplatedLegends;assembly=ViewModelsSamples"
-             xmlns:core="clr-namespace:LiveChartsCore;assembly=LiveChartsCore">
+             xmlns:core="clr-namespace:LiveChartsCore.Kernel;assembly=LiveChartsCore">
     
     <ContentPage.BindingContext>
         <vms:ViewModel/>

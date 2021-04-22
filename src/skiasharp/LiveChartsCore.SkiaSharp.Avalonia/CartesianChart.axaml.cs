@@ -83,6 +83,10 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             InitializeComponent();
 
+            // workaround to deteck mouse events.
+            // avalonia do not seem to detect events if brackground is not set.
+            Background = new SolidColorBrush(Colors.Transparent);
+
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
             var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
@@ -102,10 +106,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             XAxes = new List<IAxis>() { new Axis() };
             YAxes = new List<IAxis>() { new Axis() };
             Series = new ObservableCollection<ISeries>();
-
-            // workaround to deteck mouse events.
-            // avalonia do not seem to detect events if brackground is not set.
-            Background = new SolidColorBrush(Colors.Transparent);
 
             PointerWheelChanged += CartesianChart_PointerWheelChanged;
             PointerPressed += CartesianChart_PointerPressed;
@@ -295,7 +295,21 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => core == null ? throw new Exception("core not found") : core.Canvas;
 
-        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => core == null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
+        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core =>
+            core == null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
+
+        System.Drawing.Color IChartView.BackColor
+        {
+            get => Background is not SolidColorBrush b
+                    ? new System.Drawing.Color()
+                    : System.Drawing.Color.FromArgb(b.Color.R, b.Color.G, b.Color.B, b.Color.A);
+            set
+            {
+                Background = new SolidColorBrush(new A.Media.Color(value.R, value.G, value.B, value.A));
+                var canvas = this.FindControl<MotionCanvas>("canvas");
+                canvas.BackColor = new SkiaSharp.SKColor(value.R, value.G, value.B, value.A);
+            }
+        }
 
         SizeF IChartView.ControlSize => new()
         {

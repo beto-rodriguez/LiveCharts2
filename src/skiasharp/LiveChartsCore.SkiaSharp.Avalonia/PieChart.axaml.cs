@@ -74,6 +74,10 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             InitializeComponent();
 
+            // workaround to detect mouse events.
+            // avalonia do not seem to detect events if brackground is not set.
+            Background = new SolidColorBrush(Colors.Transparent);
+
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
             var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
@@ -99,10 +103,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                });
 
             Series = new ObservableCollection<ISeries>();
-
-            // workaround to deteck mouse events.
-            // avalonia do not seem to detect events if brackground is not set.
-            Background = new SolidColorBrush(Colors.Transparent);
 
             PointerMoved += CartesianChart_PointerMoved;
         }
@@ -256,6 +256,19 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 new SolidColorBrush(new A.Media.Color(255, 250, 250, 250)), inherits: true);
 
         #endregion
+
+        System.Drawing.Color IChartView.BackColor
+        {
+            get => Background is not SolidColorBrush b
+                    ? new System.Drawing.Color()
+                    : System.Drawing.Color.FromArgb(b.Color.R, b.Color.G, b.Color.B, b.Color.A);
+            set
+            {
+                Background = new SolidColorBrush(new A.Media.Color(value.R, value.G, value.B, value.A));
+                var canvas = this.FindControl<MotionCanvas>("canvas");
+                canvas.BackColor = new SkiaSharp.SKColor(value.R, value.G, value.B, value.A);
+            }
+        }
 
         SizeF IChartView.ControlSize => new()
         {

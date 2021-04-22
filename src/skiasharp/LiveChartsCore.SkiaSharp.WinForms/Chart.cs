@@ -54,17 +54,17 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// </summary>
         protected MotionCanvas motionCanvas;
 
-        private PointF mousePosition = new();
-        private LegendPosition legendPosition = LiveCharts.CurrentSettings.DefaultLegendPosition;
-        private LegendOrientation legendOrientation = LiveCharts.CurrentSettings.DefaultLegendOrientation;
-        private Margin? drawMargin = null;
-        private TooltipPosition tooltipPosition = LiveCharts.CurrentSettings.DefaultTooltipPosition;
-        private TooltipFindingStrategy tooltipFindingStrategy = LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy;
-        private Font tooltipFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
-        private Color tooltipBackColor = Color.FromArgb(255, 250, 250, 250);
-        private Font legendFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
-        private Color legendBackColor = Color.FromArgb(255, 250, 250, 250);
-        private readonly ActionThrottler mouseMoveThrottler;
+        private PointF _mousePosition = new();
+        private LegendPosition _legendPosition = LiveCharts.CurrentSettings.DefaultLegendPosition;
+        private LegendOrientation _legendOrientation = LiveCharts.CurrentSettings.DefaultLegendOrientation;
+        private Margin? _drawMargin = null;
+        private TooltipPosition _tooltipPosition = LiveCharts.CurrentSettings.DefaultTooltipPosition;
+        private TooltipFindingStrategy _tooltipFindingStrategy = LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy;
+        private Font _tooltipFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
+        private Color _tooltipBackColor = Color.FromArgb(255, 250, 250, 250);
+        private Font _legendFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
+        private Color _legendBackColor = Color.FromArgb(255, 250, 250, 250);
+        private readonly ActionThrottler _mouseMoveThrottler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Chart"/> class.
@@ -108,7 +108,12 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             c.MouseMove += ChartOnMouseMove;
 
             InitializeCore();
-            mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
+            _mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
+        }
+
+        Color IChartView.BackColor
+        {
+            set => BackColor = value;
         }
 
         SizeF IChartView.ControlSize => new() { Width = motionCanvas.Width, Height = motionCanvas.Height };
@@ -117,7 +122,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => motionCanvas.CanvasCore;
 
         /// <inheritdoc cref="IChartView.DrawMargin" />
-        public Margin? DrawMargin { get => drawMargin; set { drawMargin = value; OnPropertyChanged(); } }
+        public Margin? DrawMargin { get => _drawMargin; set { _drawMargin = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IChartView.AnimationsSpeed" />
         public TimeSpan AnimationsSpeed { get; set; } = LiveCharts.CurrentSettings.DefaultAnimationsSpeed;
@@ -127,10 +132,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         public Func<float, float> EasingFunction { get; set; } = LiveCharts.CurrentSettings.DefaultEasingFunction;
 
         /// <inheritdoc cref="IChartView.LegendPosition" />
-        public LegendPosition LegendPosition { get => legendPosition; set { legendPosition = value; OnPropertyChanged(); } }
+        public LegendPosition LegendPosition { get => _legendPosition; set { _legendPosition = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IChartView.LegendOrientation" />
-        public LegendOrientation LegendOrientation { get => legendOrientation; set { legendOrientation = value; OnPropertyChanged(); } }
+        public LegendOrientation LegendOrientation { get => _legendOrientation; set { _legendOrientation = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the default legend font.
@@ -138,7 +143,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <value>
         /// The legend font.
         /// </value>
-        public Font LegendFont { get => legendFont; set { legendFont = value; OnPropertyChanged(); } }
+        public Font LegendFont { get => _legendFont; set { _legendFont = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the default color of the legend back.
@@ -146,16 +151,16 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <value>
         /// The color of the legend back.
         /// </value>
-        public Color LegendBackColor { get => legendBackColor; set { legendBackColor = value; OnPropertyChanged(); } }
+        public Color LegendBackColor { get => _legendBackColor; set { _legendBackColor = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
         public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
 
         /// <inheritdoc cref="IChartView.LegendPosition" />
-        public TooltipPosition TooltipPosition { get => tooltipPosition; set { tooltipPosition = value; OnPropertyChanged(); } }
+        public TooltipPosition TooltipPosition { get => _tooltipPosition; set { _tooltipPosition = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IChartView.TooltipFindingStrategy" />
-        public TooltipFindingStrategy TooltipFindingStrategy { get => tooltipFindingStrategy; set { tooltipFindingStrategy = value; OnPropertyChanged(); } }
+        public TooltipFindingStrategy TooltipFindingStrategy { get => _tooltipFindingStrategy; set { _tooltipFindingStrategy = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the default tool tip font.
@@ -163,7 +168,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <value>
         /// The tool tip font.
         /// </value>
-        public Font TooltipFont { get => tooltipFont; set { tooltipFont = value; OnPropertyChanged(); } }
+        public Font TooltipFont { get => _tooltipFont; set { _tooltipFont = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the color of the default tool tip back.
@@ -171,7 +176,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <value>
         /// The color of the tool tip back.
         /// </value>
-        public Color TooltipBackColor { get => tooltipBackColor; set { tooltipBackColor = value; OnPropertyChanged(); } }
+        public Color TooltipBackColor { get => _tooltipBackColor; set { _tooltipBackColor = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
         public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
@@ -215,21 +220,21 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private void OnMouseMove(object? sender, MouseEventArgs e)
         {
             var p = e.Location;
-            mousePosition = new PointF(p.X, p.Y);
-            mouseMoveThrottler.Call();
+            _mousePosition = new PointF(p.X, p.Y);
+            _mouseMoveThrottler.Call();
         }
 
         private void MouseMoveThrottlerUnlocked()
         {
             if (core == null || TooltipPosition == TooltipPosition.Hidden) return;
-            tooltip.Show(core.FindPointsNearTo(mousePosition), core);
+            tooltip.Show(core.FindPointsNearTo(_mousePosition), core);
         }
 
         private void ChartOnMouseMove(object? sender, MouseEventArgs e)
         {
             var p = e.Location;
-            mousePosition = new PointF(p.X, p.Y);
-            mouseMoveThrottler.Call();
+            _mousePosition = new PointF(p.X, p.Y);
+            _mouseMoveThrottler.Call();
         }
 
         private void InitializeComponent()

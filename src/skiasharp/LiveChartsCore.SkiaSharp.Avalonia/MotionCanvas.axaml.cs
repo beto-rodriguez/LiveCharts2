@@ -42,8 +42,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
     /// </summary>
     public class MotionCanvas : UserControl
     {
-        private bool isDrawingLoopRunning = false;
-        private double framesPerSecond = 90;
+        private bool _isDrawingLoopRunning = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
@@ -83,7 +82,15 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <value>
         /// The frames per second.
         /// </value>
-        public double FramesPerSecond { get => framesPerSecond; set => framesPerSecond = value; }
+        public double FramesPerSecond { get; set; } = 90;
+
+        /// <summary>
+        /// Gets or sets the color of the back.
+        /// </summary>
+        /// <value>
+        /// The color of the back.
+        /// </value>
+        public SKColor BackColor { get; set; } = new SKColor(255, 255, 255, 255);
 
         /// <summary>
         /// Gets the canvas core.
@@ -96,7 +103,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <inheritdoc cref="Render(a.DrawingContext)" />
         public override void Render(a.DrawingContext context)
         {
-            context.Custom(new CustomDrawOp(new Rect(0, 0, Bounds.Width, Bounds.Height), CanvasCore));
+            context.Custom(new CustomDrawOp(new Rect(0, 0, Bounds.Width, Bounds.Height), CanvasCore, BackColor));
         }
 
         /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})" />
@@ -109,17 +116,17 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         private async void RunDrawingLoop()
         {
-            if (isDrawingLoopRunning) return;
-            isDrawingLoopRunning = true;
+            if (_isDrawingLoopRunning) return;
+            _isDrawingLoopRunning = true;
 
-            var ts = TimeSpan.FromSeconds(1 / framesPerSecond);
+            var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
             while (!CanvasCore.IsValid)
             {
                 InvalidateVisual();
                 await Task.Delay(ts);
             }
 
-            isDrawingLoopRunning = false;
+            _isDrawingLoopRunning = false;
         }
 
         private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
@@ -129,13 +136,15 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         // based on:
         // https://github.com/AvaloniaUI/Avalonia/blob/554aaec5e5cc96c0b4318b6ed1fbf8159f442889/samples/RenderDemo/Pages/CustomSkiaPage.cs
-        class CustomDrawOp : ICustomDrawOperation
+        private class CustomDrawOp : ICustomDrawOperation
         {
-            private readonly MotionCanvas<SkiaSharpDrawingContext> motionCanvas;
+            private readonly MotionCanvas<SkiaSharpDrawingContext> _motionCanvas;
+            private readonly SKColor _backColor;
 
-            public CustomDrawOp(Rect bounds, MotionCanvas<SkiaSharpDrawingContext> motionCanvas)
+            public CustomDrawOp(Rect bounds, MotionCanvas<SkiaSharpDrawingContext> motionCanvas, SKColor backColor)
             {
-                this.motionCanvas = motionCanvas;
+                _motionCanvas = motionCanvas;
+                _backColor = backColor;
                 Bounds = bounds;
             }
 
@@ -158,9 +167,12 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 if (context is not ISkiaDrawingContextImpl skiaContext)
                     throw new Exception("SkiaSharp is not supported.");
 
-                motionCanvas.DrawFrame(
+                _motionCanvas.DrawFrame(
                    new AvaloniaDrawingContext(
-                       new SKImageInfo((int)Bounds.Width, (int)Bounds.Height), skiaContext.SkSurface, skiaContext.SkCanvas));
+                       new SKImageInfo((int)Bounds.Width, (int)Bounds.Height), skiaContext.SkSurface, skiaContext.SkCanvas)
+                   {
+                       BackColor = _backColor
+                   });
             }
         }
     }

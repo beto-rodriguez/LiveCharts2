@@ -74,6 +74,7 @@ namespace LiveChartsCore.SkiaSharpView
                             initializer
                                 .ForCharts(chart =>
                                 {
+                                    chart.BackColor = Color.FromArgb(255, 50, 50, 50);
                                     chart.AnimationsSpeed = TimeSpan.FromMilliseconds(700);
                                     chart.EasingFunction = EasingFunctions.ExponentialOut;
 

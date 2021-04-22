@@ -11,7 +11,7 @@
             <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
             <typeparam name="TTextGeometry">The type of the text geometry.</typeparam>
             <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
-            <seealso cref="T:LiveChartsCore.IAxis`1" />
+            <seealso cref="T:LiveChartsCore.Kernel.IAxis`1" />
             <seealso cref="T:System.ComponentModel.INotifyPropertyChanged" />
         </member>
         <member name="F:LiveChartsCore.Axis`3.subscribedTo">
@@ -25,52 +25,52 @@
             </summary>
         </member>
         <member name="P:LiveChartsCore.Axis`3.Orientation">
-            <inheritdoc cref="P:LiveChartsCore.IAxis.Orientation"/>
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.Orientation"/>
         </member>
         <member name="P:LiveChartsCore.Axis`3.Padding">
-            <inheritdoc cref="P:LiveChartsCore.IAxis.Padding"/>
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.Padding"/>
         </member>
         <member name="P:LiveChartsCore.Axis`3.Labeler">
-            <inheritdoc cref="P:LiveChartsCore.IAxis.Labeler"/>
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.Labeler"/>
         </member>
         <member name="P:LiveChartsCore.Axis`3.MinStep">
-            <inheritdoc cref="P:LiveChartsCore.IAxis.MinStep"/>
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.MinStep"/>
         </member>
         <member name="P:LiveChartsCore.Axis`3.MinLimit">
-            <inheritdoc cref="P:LiveChartsCore.IAxis.MinLimit"/>
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.MinLimit"/>
         </member>
         <member name="P:LiveChartsCore.Axis`3.MaxLimit">
-            <inheritdoc cref="P:LiveChartsCore.IAxis.MaxLimit"/>
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.MaxLimit"/>
         </member>
         <member name="P:LiveChartsCore.Axis`3.UnitWith">
-            <inheritdoc cref="P:LiveChartsCore.IAxis.UnitWith"/>
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.UnitWith"/>
         </member>
         <member name="P:LiveChartsCore.Axis`3.Position">
-            <inheritdoc cref="P:LiveChartsCore.IAxis.Position"/>
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.Position"/>
         </member>
         <member name="P:LiveChartsCore.Axis`3.LabelsRotation">
-            <inheritdoc cref="P:LiveChartsCore.IAxis.LabelsRotation"/>
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.LabelsRotation"/>
         </member>
         <member name="P:LiveChartsCore.Axis`3.TextSize">
-            <inheritdoc cref="P:LiveChartsCore.IAxis.TextSize"/>
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.TextSize"/>
         </member>
         <member name="P:LiveChartsCore.Axis`3.Labels">
-            <inheritdoc cref="P:LiveChartsCore.IAxis.Labels"/>
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.Labels"/>
         </member>
         <member name="P:LiveChartsCore.Axis`3.ShowSeparatorLines">
-            <inheritdoc cref="P:LiveChartsCore.IAxis.ShowSeparatorLines"/>
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.ShowSeparatorLines"/>
         </member>
         <member name="P:LiveChartsCore.Axis`3.ShowSeparatorWedges">
-            <inheritdoc cref="P:LiveChartsCore.IAxis.ShowSeparatorWedges"/>
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.ShowSeparatorWedges"/>
         </member>
         <member name="P:LiveChartsCore.Axis`3.IsInverted">
-            <inheritdoc cref="P:LiveChartsCore.IAxis.IsInverted"/>
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.IsInverted"/>
         </member>
         <member name="P:LiveChartsCore.Axis`3.TextBrush">
-            <inheritdoc cref="P:LiveChartsCore.IAxis`1.TextBrush"/>
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis`1.TextBrush"/>
         </member>
         <member name="P:LiveChartsCore.Axis`3.SeparatorsBrush">
-            <inheritdoc cref="P:LiveChartsCore.IAxis`1.SeparatorsBrush"/>
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis`1.SeparatorsBrush"/>
         </member>
         <member name="E:LiveChartsCore.Axis`3.PropertyChanged">
             <summary>
@@ -79,13 +79,13 @@
             <returns></returns>
         </member>
         <member name="M:LiveChartsCore.Axis`3.Measure(LiveChartsCore.CartesianChart{`0})">
-            <inheritdoc cref="M:LiveChartsCore.IAxis`1.Measure(LiveChartsCore.CartesianChart{`0})"/>
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IAxis`1.Measure(LiveChartsCore.CartesianChart{`0})"/>
         </member>
         <member name="M:LiveChartsCore.Axis`3.GetPossibleSize(LiveChartsCore.CartesianChart{`0})">
-            <inheritdoc cref="M:LiveChartsCore.IAxis`1.GetPossibleSize(LiveChartsCore.CartesianChart{`0})"/>
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IAxis`1.GetPossibleSize(LiveChartsCore.CartesianChart{`0})"/>
         </member>
         <member name="M:LiveChartsCore.Axis`3.Initialize(LiveChartsCore.Measure.AxisOrientation)">
-            <inheritdoc cref="M:LiveChartsCore.IAxis.Initialize(LiveChartsCore.Measure.AxisOrientation)"/>
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IAxis.Initialize(LiveChartsCore.Measure.AxisOrientation)"/>
         </member>
         <member name="M:LiveChartsCore.Axis`3.Dispose">
             <inheritdoc cref="M:System.IDisposable.Dispose"/>
@@ -256,11 +256,11 @@
         <member name="P:LiveChartsCore.CartesianSeries`4.ScalesYAt">
             <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianSeries`1.ScalesYAt"/>
         </member>
-        <member name="M:LiveChartsCore.CartesianSeries`4.GetBounds(LiveChartsCore.CartesianChart{`3},LiveChartsCore.IAxis{`3},LiveChartsCore.IAxis{`3})">
-            <inheritdoc cref="M:LiveChartsCore.Kernel.ICartesianSeries`1.GetBounds(LiveChartsCore.CartesianChart{`0},LiveChartsCore.IAxis{`0},LiveChartsCore.IAxis{`0})"/>
+        <member name="M:LiveChartsCore.CartesianSeries`4.GetBounds(LiveChartsCore.CartesianChart{`3},LiveChartsCore.Kernel.IAxis{`3},LiveChartsCore.Kernel.IAxis{`3})">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.ICartesianSeries`1.GetBounds(LiveChartsCore.CartesianChart{`0},LiveChartsCore.Kernel.IAxis{`0},LiveChartsCore.Kernel.IAxis{`0})"/>
         </member>
-        <member name="M:LiveChartsCore.CartesianSeries`4.Measure(LiveChartsCore.CartesianChart{`3},LiveChartsCore.IAxis{`3},LiveChartsCore.IAxis{`3})">
-            <inheritdoc cref="M:LiveChartsCore.Kernel.ICartesianSeries`1.Measure(LiveChartsCore.CartesianChart{`0},LiveChartsCore.IAxis{`0},LiveChartsCore.IAxis{`0})"/>
+        <member name="M:LiveChartsCore.CartesianSeries`4.Measure(LiveChartsCore.CartesianChart{`3},LiveChartsCore.Kernel.IAxis{`3},LiveChartsCore.Kernel.IAxis{`3})">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.ICartesianSeries`1.Measure(LiveChartsCore.CartesianChart{`0},LiveChartsCore.Kernel.IAxis{`0},LiveChartsCore.Kernel.IAxis{`0})"/>
         </member>
         <member name="M:LiveChartsCore.CartesianSeries`4.Delete(LiveChartsCore.Kernel.IChartView)">
             <summary>
@@ -710,11 +710,11 @@
             Initializes a new instance of the <see cref="T:LiveChartsCore.ColumnSeries`4"/> class.
             </summary>
         </member>
-        <member name="M:LiveChartsCore.ColumnSeries`4.Measure(LiveChartsCore.CartesianChart{`3},LiveChartsCore.IAxis{`3},LiveChartsCore.IAxis{`3})">
-            <inheritdoc cref="M:LiveChartsCore.Kernel.ICartesianSeries`1.Measure(LiveChartsCore.CartesianChart{`0},LiveChartsCore.IAxis{`0},LiveChartsCore.IAxis{`0})"/>
+        <member name="M:LiveChartsCore.ColumnSeries`4.Measure(LiveChartsCore.CartesianChart{`3},LiveChartsCore.Kernel.IAxis{`3},LiveChartsCore.Kernel.IAxis{`3})">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.ICartesianSeries`1.Measure(LiveChartsCore.CartesianChart{`0},LiveChartsCore.Kernel.IAxis{`0},LiveChartsCore.Kernel.IAxis{`0})"/>
         </member>
-        <member name="M:LiveChartsCore.ColumnSeries`4.GetBounds(LiveChartsCore.CartesianChart{`3},LiveChartsCore.IAxis{`3},LiveChartsCore.IAxis{`3})">
-            <inheritdoc cref="M:LiveChartsCore.Kernel.ICartesianSeries`1.GetBounds(LiveChartsCore.CartesianChart{`0},LiveChartsCore.IAxis{`0},LiveChartsCore.IAxis{`0})"/>
+        <member name="M:LiveChartsCore.ColumnSeries`4.GetBounds(LiveChartsCore.CartesianChart{`3},LiveChartsCore.Kernel.IAxis{`3},LiveChartsCore.Kernel.IAxis{`3})">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.ICartesianSeries`1.GetBounds(LiveChartsCore.CartesianChart{`0},LiveChartsCore.Kernel.IAxis{`0},LiveChartsCore.Kernel.IAxis{`0})"/>
         </member>
         <member name="M:LiveChartsCore.ColumnSeries`4.SetDefaultPointTransitions(LiveChartsCore.Kernel.ChartPoint)">
             <inheritdoc cref="M:LiveChartsCore.Series`4.SetDefaultPointTransitions(LiveChartsCore.Kernel.ChartPoint)"/>
@@ -2683,348 +2683,6 @@
             <param name="e">The e.</param>
             <returns></returns>
         </member>
-        <member name="T:LiveChartsCore.IAxis">
-            <summary>
-            Defines an Axis in a Cartesian chart.
-            </summary>
-        </member>
-        <member name="P:LiveChartsCore.IAxis.PreviousDataBounds">
-            <summary>
-            Gets the previous data bounds.
-            </summary>
-            <value>
-            The previous data bounds.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.IAxis.DataBounds">
-            <summary>
-            Gets the data bounds, the min and max values in the axis.
-            </summary>
-            <value>
-            The data bounds.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.IAxis.VisibleDataBounds">
-            <summary>
-            Gets the data visible bounds, the min and max visible values in the axis.
-            </summary>
-            <value>
-            The data bounds.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.IAxis.Orientation">
-            <summary>
-            Gets the orientation.
-            </summary>
-            <value>
-            The orientation.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.IAxis.Padding">
-            <summary>
-            Gets or sets the padding.
-            </summary>
-            <value>
-            The padding.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.IAxis.Xo">
-            <summary>
-            Gets or sets the xo, a refence used internally to calculate the axis position.
-            </summary>
-            <value>
-            The xo.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.IAxis.Yo">
-            <summary>
-            Gets or sets the yo, a refence used internally to calculate the axis position..
-            </summary>
-            <value>
-            The yo.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.IAxis.Labeler">
-            <summary>
-            Gets or sets the labeler, a function that receives a number and return the label content as string.
-            </summary>
-            <value>
-            The labeler.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.IAxis.MinStep">
-            <summary>
-            Gets or sets the minimum step, the step defines the interval between every separator in the axis,
-            LiveCharts will calculate it automatically based on the chart data and the chart size size, if the calculated step is less than the <see cref="P:LiveChartsCore.IAxis.MinStep"/> 
-            then <see cref="P:LiveChartsCore.IAxis.MinStep"/> will be used as the axis step, default is 0.
-            </summary>
-            <value>
-            The step.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.IAxis.UnitWith">
-            <summary>
-            Gets or sets the unit with, it means the width of every point (if the series requires it) in the chart values scale, this value
-            should normally be 1, unless you are plotting in a custom scale, default is 1.
-            </summary>
-            <value>
-            The unit with.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.IAxis.MinLimit">
-            <summary>
-            Gets or sets the minimum value visible in the axis, any point less than this value will be hidden, 
-            set it to null to use a value based on the smaller value in the chart.
-            </summary>
-            <value>
-            The minimum value.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.IAxis.MaxLimit">
-            <summary>
-            Gets or sets the maximum value visible in the axis, any point greater than this value will be hidden, 
-            set it null to use a value based on the greather value in the chart.
-            </summary>
-            <value>
-            The maximum value.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.IAxis.IsInverted">
-            <summary>
-            Gets or sets a value indicating whether the axis is inverted based on the Cartesian coordinate system.
-            </summary>
-            <value>
-              <c>true</c> if this instance is inverted; otherwise, <c>false</c>.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.IAxis.Position">
-            <summary>
-            Gets or sets the axis position.
-            </summary>
-            <value>
-            The position.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.IAxis.LabelsRotation">
-            <summary>
-            Gets or sets the labels rotation.
-            </summary>
-            <value>
-            The labels rotation.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.IAxis.TextSize">
-            <summary>
-            Gets or sets the size of the text.
-            </summary>
-            <value>
-            The size of the text.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.IAxis.Labels">
-            <summary>
-            Gets or sets the labels, if labels are not null, then the axis label will be pulled from the labels collection,
-            the label is mapped to the chart based on the position of the label and the position of the point, both integers,
-            if the axis requires a label outsite the bounds of the labels IList then the index will be returned as the label.
-            Default value is null.
-            </summary>
-            <value>
-            The labels.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.IAxis.ShowSeparatorLines">
-            <summary>
-            Gets or sets a value indicating whether the separator lines are visible.
-            </summary>
-        </member>
-        <member name="P:LiveChartsCore.IAxis.ShowSeparatorWedges">
-            <summary>
-            Gets or sets a value indicating whether the separator weddges are visible.
-            </summary>
-        </member>
-        <member name="M:LiveChartsCore.IAxis.Initialize(LiveChartsCore.Measure.AxisOrientation)">
-            <summary>
-            Initializes the axis for the specified orientation.
-            </summary>
-            <param name="orientation">The orientation.</param>
-        </member>
-        <member name="T:LiveChartsCore.IAxis`1">
-            <summary>
-            Defines an Axis in a Cartesian chart.
-            </summary>
-            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-            <seealso cref="T:System.IDisposable" />
-        </member>
-        <member name="P:LiveChartsCore.IAxis`1.TextBrush">
-            <summary>
-            Gets or sets the text brush.
-            </summary>
-            <value>
-            The text brush.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.IAxis`1.SeparatorsBrush">
-            <summary>
-            Gets or sets the separators brush.
-            </summary>
-            <value>
-            The separators brush.
-            </value>
-        </member>
-        <member name="M:LiveChartsCore.IAxis`1.Measure(LiveChartsCore.CartesianChart{`0})">
-            <summary>
-            Measures the axis.
-            </summary>
-            <param name="chart">The chart.</param>
-        </member>
-        <member name="M:LiveChartsCore.IAxis`1.GetPossibleSize(LiveChartsCore.CartesianChart{`0})">
-            <summary>
-            Gets the size of the possible.
-            </summary>
-            <param name="chart">The chart.</param>
-            <returns></returns>
-        </member>
-        <member name="P:LiveChartsCore.IAxis`1.DeletingTasks">
-            <summary>
-            Gets the deleting tasks.
-            </summary>
-            <value>
-            The deleting tasks.
-            </value>
-        </member>
-        <member name="T:LiveChartsCore.ISeries">
-            <summary>
-            Defines a chart series.
-            </summary>
-        </member>
-        <member name="P:LiveChartsCore.ISeries.SeriesId">
-            <summary>
-            Gets or sets a series unique identifier, the library handles this id automatically.
-            </summary>
-        </member>
-        <member name="P:LiveChartsCore.ISeries.HoverState">
-            <summary>
-            Gets or sets the state where the visual is moved to when the mouse moves over a <see cref="T:LiveChartsCore.Kernel.ChartPoint"/>.
-            </summary>
-        </member>
-        <member name="P:LiveChartsCore.ISeries.SeriesProperties">
-            <summary>
-            Gets the properties of the series.
-            </summary>
-        </member>
-        <member name="P:LiveChartsCore.ISeries.Name">
-            <summary>
-            Gets or sets the name of the series, the name is normally used by <see cref="T:LiveChartsCore.Kernel.IChartTooltip`1"/> or 
-            <see cref="T:LiveChartsCore.Kernel.IChartLegend`1"/>, the default value is set automatically by the library.
-            </summary>
-        </member>
-        <member name="P:LiveChartsCore.ISeries.Values">
-            <summary>
-            Gets or sets the values.
-            </summary>
-            <value>
-            The values.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.ISeries.ZIndex">
-            <summary>
-            Gets or sets the z index position.
-            </summary>
-            <value>
-            The index of the z.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.ISeries.Pivot">
-            <summary>
-            Gets or sets the value where the direction of the axis changes, by default is 0.
-            </summary>
-        </member>
-        <member name="P:LiveChartsCore.ISeries.TooltipLabelFormatter">
-            <summary>
-            Gets or sets the tooltip label formatter, this function will build the label when a point in this series 
-            is shown inside a tooltip.
-            </summary>
-            <value>
-            The tooltip label formatter.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.ISeries.DataLabelsFormatter">
-            <summary>
-            Gets or sets the data label formatter, this function will build the label when a point in this series 
-            is shown as data label.
-            </summary>
-            <value>
-            The data label formatter.
-            </value>
-        </member>
-        <member name="E:LiveChartsCore.ISeries.Disposing">
-            <summary>
-            Occurs before the series is disposed.
-            </summary>
-        </member>
-        <member name="M:LiveChartsCore.ISeries.Fetch(LiveChartsCore.Kernel.IChart)">
-            <summary>
-            Gets a <see cref="T:LiveChartsCore.Kernel.ChartPoint"/> array with the points used to generate the plot.
-            </summary>
-            <param name="chart">the chart</param>
-            <returns></returns>
-        </member>
-        <member name="M:LiveChartsCore.ISeries.FindPointsNearTo(LiveChartsCore.Kernel.IChart,System.Drawing.PointF)">
-            <summary>
-            Gets the <see cref="T:LiveChartsCore.Kernel.ChartPoint"/> instances which contain the <paramref name="pointerPosition"/>, according 
-            to the chart's <see cref="T:LiveChartsCore.Measure.TooltipFindingStrategy"/> property.
-            </summary>
-            <param name="chart">the chart</param>
-            <param name="pointerPosition">the poiinter position</param>
-            <returns></returns>
-        </member>
-        <member name="M:LiveChartsCore.ISeries.AddPointToState(LiveChartsCore.Kernel.ChartPoint,System.String)">
-            <summary>
-            Marks a given point as a given state.
-            </summary>
-            <param name="chartPoint"></param>
-            <param name="state"></param>
-        </member>
-        <member name="M:LiveChartsCore.ISeries.RemovePointFromState(LiveChartsCore.Kernel.ChartPoint,System.String)">
-            <summary>
-            Removes a given point from the given state.
-            </summary>
-            <param name="chartPoint"></param>
-            <param name="state"></param>
-        </member>
-        <member name="M:LiveChartsCore.ISeries.RestartAnimations">
-            <summary>
-            Clears the visuals in the cache and re-starts animations.
-            </summary>
-        </member>
-        <member name="M:LiveChartsCore.ISeries.Delete(LiveChartsCore.Kernel.IChartView)">
-            <summary>
-            Deletes the series from the user interface.
-            </summary>
-        </member>
-        <member name="T:LiveChartsCore.ISeries`1">
-            <summary>
-            Defines a series.
-            </summary>
-            <typeparam name="TModel">The type of the model.</typeparam>
-            <seealso cref="T:System.IDisposable" />
-        </member>
-        <member name="P:LiveChartsCore.ISeries`1.Mapping">
-            <summary>
-            Gets or sets the mapping.
-            </summary>
-            <value>
-            The mapping.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.ISeries`1.Values">
-            <summary>
-            Gets or sets the values.
-            </summary>
-            <value>
-            The values.
-            </value>
-        </member>
         <member name="T:LiveChartsCore.Kernel.ActionThrottler">
             <summary>
             An object that is able to throttle an action.
@@ -3195,7 +2853,7 @@
             Defiens a point in a chart.
             </summary>
         </member>
-        <member name="M:LiveChartsCore.Kernel.ChartPoint.#ctor(LiveChartsCore.Kernel.IChartView,LiveChartsCore.ISeries)">
+        <member name="M:LiveChartsCore.Kernel.ChartPoint.#ctor(LiveChartsCore.Kernel.IChartView,LiveChartsCore.Kernel.ISeries)">
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.Kernel.ChartPoint"/> class.
             </summary>
@@ -3263,7 +2921,7 @@
             Defines the environment of a point in a chart.
             </summary>
         </member>
-        <member name="M:LiveChartsCore.Kernel.ChartPointContext.#ctor(LiveChartsCore.Kernel.IChartView,LiveChartsCore.ISeries)">
+        <member name="M:LiveChartsCore.Kernel.ChartPointContext.#ctor(LiveChartsCore.Kernel.IChartView,LiveChartsCore.Kernel.ISeries)">
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.Kernel.ChartPointContext"/> class.
             </summary>
@@ -3382,7 +3040,7 @@
             The by reference visual map.
             </summary>
         </member>
-        <member name="M:LiveChartsCore.Kernel.DataProvider`2.Fetch(LiveChartsCore.ISeries{`0},LiveChartsCore.Kernel.IChart)">
+        <member name="M:LiveChartsCore.Kernel.DataProvider`2.Fetch(LiveChartsCore.Kernel.ISeries{`0},LiveChartsCore.Kernel.IChart)">
             <summary>
             Fetches the the points for the specified series.
             </summary>
@@ -3390,7 +3048,7 @@
             <param name="chart">The chart.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.Kernel.DataProvider`2.GetCartesianBounds(LiveChartsCore.CartesianChart{`1},LiveChartsCore.Kernel.IDrawableSeries{`1},LiveChartsCore.IAxis{`1},LiveChartsCore.IAxis{`1})">
+        <member name="M:LiveChartsCore.Kernel.DataProvider`2.GetCartesianBounds(LiveChartsCore.CartesianChart{`1},LiveChartsCore.Kernel.IDrawableSeries{`1},LiveChartsCore.Kernel.IAxis{`1},LiveChartsCore.Kernel.IAxis{`1})">
             <summary>
             Gets the cartesian bounds.
             </summary>
@@ -3591,7 +3249,7 @@
             <param name="tooltipSize">Size of the tooltip.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.Kernel.Extensions.GetTick``1(LiveChartsCore.IAxis{``0},System.Drawing.SizeF)">
+        <member name="M:LiveChartsCore.Kernel.Extensions.GetTick``1(LiveChartsCore.Kernel.IAxis{``0},System.Drawing.SizeF)">
             <summary>
             Gets the tick.
             </summary>
@@ -3600,7 +3258,7 @@
             <param name="controlSize">Size of the control.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.Kernel.Extensions.GetTick``1(LiveChartsCore.IAxis{``0},System.Drawing.SizeF,LiveChartsCore.Measure.Bounds)">
+        <member name="M:LiveChartsCore.Kernel.Extensions.GetTick``1(LiveChartsCore.Kernel.IAxis{``0},System.Drawing.SizeF,LiveChartsCore.Measure.Bounds)">
             <summary>
             Gets the tick.
             </summary>
@@ -3619,7 +3277,7 @@
             <returns></returns>
             <exception cref="T:System.Exception">At least one property is required when calling {nameof(TransitionateProperties)}</exception>
         </member>
-        <member name="M:LiveChartsCore.Kernel.Extensions.IsBarSeries(LiveChartsCore.ISeries)">
+        <member name="M:LiveChartsCore.Kernel.Extensions.IsBarSeries(LiveChartsCore.Kernel.ISeries)">
             <summary>
             Determines whether is bar series.
             </summary>
@@ -3628,7 +3286,7 @@
               <c>true</c> if [is bar series] [the specified series]; otherwise, <c>false</c>.
             </returns>
         </member>
-        <member name="M:LiveChartsCore.Kernel.Extensions.IsColumnSeries(LiveChartsCore.ISeries)">
+        <member name="M:LiveChartsCore.Kernel.Extensions.IsColumnSeries(LiveChartsCore.Kernel.ISeries)">
             <summary>
             Determines whether is column series.
             </summary>
@@ -3637,7 +3295,7 @@
               <c>true</c> if [is column series] [the specified series]; otherwise, <c>false</c>.
             </returns>
         </member>
-        <member name="M:LiveChartsCore.Kernel.Extensions.IsRowSeries(LiveChartsCore.ISeries)">
+        <member name="M:LiveChartsCore.Kernel.Extensions.IsRowSeries(LiveChartsCore.Kernel.ISeries)">
             <summary>
             Determines whether is row series.
             </summary>
@@ -3646,7 +3304,7 @@
               <c>true</c> if [is row series] [the specified series]; otherwise, <c>false</c>.
             </returns>
         </member>
-        <member name="M:LiveChartsCore.Kernel.Extensions.IsStackedSeries(LiveChartsCore.ISeries)">
+        <member name="M:LiveChartsCore.Kernel.Extensions.IsStackedSeries(LiveChartsCore.Kernel.ISeries)">
             <summary>
             Determines whether is stacked series.
             </summary>
@@ -3655,7 +3313,7 @@
               <c>true</c> if [is stacked series] [the specified series]; otherwise, <c>false</c>.
             </returns>
         </member>
-        <member name="M:LiveChartsCore.Kernel.Extensions.IsVerticalSeries(LiveChartsCore.ISeries)">
+        <member name="M:LiveChartsCore.Kernel.Extensions.IsVerticalSeries(LiveChartsCore.Kernel.ISeries)">
             <summary>
             Determines whether is vertical series.
             </summary>
@@ -3664,7 +3322,7 @@
               <c>true</c> if [is vertical series] [the specified series]; otherwise, <c>false</c>.
             </returns>
         </member>
-        <member name="M:LiveChartsCore.Kernel.Extensions.IsHorizontalSeries(LiveChartsCore.ISeries)">
+        <member name="M:LiveChartsCore.Kernel.Extensions.IsHorizontalSeries(LiveChartsCore.Kernel.ISeries)">
             <summary>
             Determines whether is horizontal series.
             </summary>
@@ -3719,6 +3377,215 @@
             Suggests the tooltip placement.
             </summary>
             <param name="context">The context.</param>
+        </member>
+        <member name="T:LiveChartsCore.Kernel.IAxis">
+            <summary>
+            Defines an Axis in a Cartesian chart.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.PreviousDataBounds">
+            <summary>
+            Gets the previous data bounds.
+            </summary>
+            <value>
+            The previous data bounds.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.DataBounds">
+            <summary>
+            Gets the data bounds, the min and max values in the axis.
+            </summary>
+            <value>
+            The data bounds.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.VisibleDataBounds">
+            <summary>
+            Gets the data visible bounds, the min and max visible values in the axis.
+            </summary>
+            <value>
+            The data bounds.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.Orientation">
+            <summary>
+            Gets the orientation.
+            </summary>
+            <value>
+            The orientation.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.Padding">
+            <summary>
+            Gets or sets the padding.
+            </summary>
+            <value>
+            The padding.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.Xo">
+            <summary>
+            Gets or sets the xo, a refence used internally to calculate the axis position.
+            </summary>
+            <value>
+            The xo.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.Yo">
+            <summary>
+            Gets or sets the yo, a refence used internally to calculate the axis position..
+            </summary>
+            <value>
+            The yo.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.Labeler">
+            <summary>
+            Gets or sets the labeler, a function that receives a number and return the label content as string.
+            </summary>
+            <value>
+            The labeler.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.MinStep">
+            <summary>
+            Gets or sets the minimum step, the step defines the interval between every separator in the axis,
+            LiveCharts will calculate it automatically based on the chart data and the chart size size, if the calculated step is less than the <see cref="P:LiveChartsCore.Kernel.IAxis.MinStep"/> 
+            then <see cref="P:LiveChartsCore.Kernel.IAxis.MinStep"/> will be used as the axis step, default is 0.
+            </summary>
+            <value>
+            The step.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.UnitWith">
+            <summary>
+            Gets or sets the unit with, it means the width of every point (if the series requires it) in the chart values scale, this value
+            should normally be 1, unless you are plotting in a custom scale, default is 1.
+            </summary>
+            <value>
+            The unit with.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.MinLimit">
+            <summary>
+            Gets or sets the minimum value visible in the axis, any point less than this value will be hidden, 
+            set it to null to use a value based on the smaller value in the chart.
+            </summary>
+            <value>
+            The minimum value.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.MaxLimit">
+            <summary>
+            Gets or sets the maximum value visible in the axis, any point greater than this value will be hidden, 
+            set it null to use a value based on the greather value in the chart.
+            </summary>
+            <value>
+            The maximum value.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.IsInverted">
+            <summary>
+            Gets or sets a value indicating whether the axis is inverted based on the Cartesian coordinate system.
+            </summary>
+            <value>
+              <c>true</c> if this instance is inverted; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.Position">
+            <summary>
+            Gets or sets the axis position.
+            </summary>
+            <value>
+            The position.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.LabelsRotation">
+            <summary>
+            Gets or sets the labels rotation.
+            </summary>
+            <value>
+            The labels rotation.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.TextSize">
+            <summary>
+            Gets or sets the size of the text.
+            </summary>
+            <value>
+            The size of the text.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.Labels">
+            <summary>
+            Gets or sets the labels, if labels are not null, then the axis label will be pulled from the labels collection,
+            the label is mapped to the chart based on the position of the label and the position of the point, both integers,
+            if the axis requires a label outsite the bounds of the labels IList then the index will be returned as the label.
+            Default value is null.
+            </summary>
+            <value>
+            The labels.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.ShowSeparatorLines">
+            <summary>
+            Gets or sets a value indicating whether the separator lines are visible.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.ShowSeparatorWedges">
+            <summary>
+            Gets or sets a value indicating whether the separator weddges are visible.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.IAxis.Initialize(LiveChartsCore.Measure.AxisOrientation)">
+            <summary>
+            Initializes the axis for the specified orientation.
+            </summary>
+            <param name="orientation">The orientation.</param>
+        </member>
+        <member name="T:LiveChartsCore.Kernel.IAxis`1">
+            <summary>
+            Defines an Axis in a Cartesian chart.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+            <seealso cref="T:System.IDisposable" />
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis`1.TextBrush">
+            <summary>
+            Gets or sets the text brush.
+            </summary>
+            <value>
+            The text brush.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis`1.SeparatorsBrush">
+            <summary>
+            Gets or sets the separators brush.
+            </summary>
+            <value>
+            The separators brush.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.IAxis`1.Measure(LiveChartsCore.CartesianChart{`0})">
+            <summary>
+            Measures the axis.
+            </summary>
+            <param name="chart">The chart.</param>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.IAxis`1.GetPossibleSize(LiveChartsCore.CartesianChart{`0})">
+            <summary>
+            Gets the size of the possible.
+            </summary>
+            <param name="chart">The chart.</param>
+            <returns></returns>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis`1.DeletingTasks">
+            <summary>
+            Gets the deleting tasks.
+            </summary>
+            <value>
+            The deleting tasks.
+            </value>
         </member>
         <member name="T:LiveChartsCore.Kernel.IBarSeries`1">
             <summary>
@@ -3846,7 +3713,7 @@
             The index of the axis.
             </value>
         </member>
-        <member name="M:LiveChartsCore.Kernel.ICartesianSeries`1.GetBounds(LiveChartsCore.CartesianChart{`0},LiveChartsCore.IAxis{`0},LiveChartsCore.IAxis{`0})">
+        <member name="M:LiveChartsCore.Kernel.ICartesianSeries`1.GetBounds(LiveChartsCore.CartesianChart{`0},LiveChartsCore.Kernel.IAxis{`0},LiveChartsCore.Kernel.IAxis{`0})">
             <summary>
             Gets the series bounds bounds.
             </summary>
@@ -3855,7 +3722,7 @@
             <param name="y">The y.</param>
             <returns>the series bounds</returns>
         </member>
-        <member name="M:LiveChartsCore.Kernel.ICartesianSeries`1.Measure(LiveChartsCore.CartesianChart{`0},LiveChartsCore.IAxis{`0},LiveChartsCore.IAxis{`0})">
+        <member name="M:LiveChartsCore.Kernel.ICartesianSeries`1.Measure(LiveChartsCore.CartesianChart{`0},LiveChartsCore.Kernel.IAxis{`0},LiveChartsCore.Kernel.IAxis{`0})">
             <summary>
             Measures the series and schedules the draw in specified chart.
             </summary>
@@ -3943,6 +3810,14 @@
             <summary>
             Defines a chart view
             </summary>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IChartView.BackColor">
+            <summary>
+            Sets the back color of the control.
+            </summary>
+            <value>
+            The color of the back.
+            </value>
         </member>
         <member name="P:LiveChartsCore.Kernel.IChartView.ControlSize">
             <summary>
@@ -4066,7 +3941,7 @@
             Defines a series a chart series that has a visual representation in the user interface.
             </summary>
             <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-            <seealso cref="T:LiveChartsCore.ISeries" />
+            <seealso cref="T:LiveChartsCore.Kernel.ISeries" />
         </member>
         <member name="P:LiveChartsCore.Kernel.IDrawableSeries`1.Stroke">
             <summary>
@@ -4276,6 +4151,139 @@
             </summary>
             <value>
             The minimum size of the geometry.
+            </value>
+        </member>
+        <member name="T:LiveChartsCore.Kernel.ISeries">
+            <summary>
+            Defines a chart series.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.ISeries.SeriesId">
+            <summary>
+            Gets or sets a series unique identifier, the library handles this id automatically.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.ISeries.HoverState">
+            <summary>
+            Gets or sets the state where the visual is moved to when the mouse moves over a <see cref="T:LiveChartsCore.Kernel.ChartPoint"/>.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.ISeries.SeriesProperties">
+            <summary>
+            Gets the properties of the series.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.ISeries.Name">
+            <summary>
+            Gets or sets the name of the series, the name is normally used by <see cref="T:LiveChartsCore.Kernel.IChartTooltip`1"/> or 
+            <see cref="T:LiveChartsCore.Kernel.IChartLegend`1"/>, the default value is set automatically by the library.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.ISeries.Values">
+            <summary>
+            Gets or sets the values.
+            </summary>
+            <value>
+            The values.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.ISeries.ZIndex">
+            <summary>
+            Gets or sets the z index position.
+            </summary>
+            <value>
+            The index of the z.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.ISeries.Pivot">
+            <summary>
+            Gets or sets the value where the direction of the axis changes, by default is 0.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.ISeries.TooltipLabelFormatter">
+            <summary>
+            Gets or sets the tooltip label formatter, this function will build the label when a point in this series 
+            is shown inside a tooltip.
+            </summary>
+            <value>
+            The tooltip label formatter.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.ISeries.DataLabelsFormatter">
+            <summary>
+            Gets or sets the data label formatter, this function will build the label when a point in this series 
+            is shown as data label.
+            </summary>
+            <value>
+            The data label formatter.
+            </value>
+        </member>
+        <member name="E:LiveChartsCore.Kernel.ISeries.Disposing">
+            <summary>
+            Occurs before the series is disposed.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.ISeries.Fetch(LiveChartsCore.Kernel.IChart)">
+            <summary>
+            Gets a <see cref="T:LiveChartsCore.Kernel.ChartPoint"/> array with the points used to generate the plot.
+            </summary>
+            <param name="chart">the chart</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.ISeries.FindPointsNearTo(LiveChartsCore.Kernel.IChart,System.Drawing.PointF)">
+            <summary>
+            Gets the <see cref="T:LiveChartsCore.Kernel.ChartPoint"/> instances which contain the <paramref name="pointerPosition"/>, according 
+            to the chart's <see cref="T:LiveChartsCore.Measure.TooltipFindingStrategy"/> property.
+            </summary>
+            <param name="chart">the chart</param>
+            <param name="pointerPosition">the poiinter position</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.ISeries.AddPointToState(LiveChartsCore.Kernel.ChartPoint,System.String)">
+            <summary>
+            Marks a given point as a given state.
+            </summary>
+            <param name="chartPoint"></param>
+            <param name="state"></param>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.ISeries.RemovePointFromState(LiveChartsCore.Kernel.ChartPoint,System.String)">
+            <summary>
+            Removes a given point from the given state.
+            </summary>
+            <param name="chartPoint"></param>
+            <param name="state"></param>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.ISeries.RestartAnimations">
+            <summary>
+            Clears the visuals in the cache and re-starts animations.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.ISeries.Delete(LiveChartsCore.Kernel.IChartView)">
+            <summary>
+            Deletes the series from the user interface.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.Kernel.ISeries`1">
+            <summary>
+            Defines a series.
+            </summary>
+            <typeparam name="TModel">The type of the model.</typeparam>
+            <seealso cref="T:System.IDisposable" />
+        </member>
+        <member name="P:LiveChartsCore.Kernel.ISeries`1.Mapping">
+            <summary>
+            Gets or sets the mapping.
+            </summary>
+            <value>
+            The mapping.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.ISeries`1.Values">
+            <summary>
+            Gets or sets the values.
+            </summary>
+            <value>
+            The values.
             </value>
         </member>
         <member name="T:LiveChartsCore.Kernel.IStackedBarSeries`1">
@@ -4968,7 +4976,7 @@
             Defines the tooltip piont class.
             </summary>
         </member>
-        <member name="M:LiveChartsCore.Kernel.TooltipPoint.#ctor(LiveChartsCore.ISeries,LiveChartsCore.Kernel.ChartPoint)">
+        <member name="M:LiveChartsCore.Kernel.TooltipPoint.#ctor(LiveChartsCore.Kernel.ISeries,LiveChartsCore.Kernel.ChartPoint)">
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.Kernel.TooltipPoint"/> class.
             </summary>
@@ -5147,11 +5155,11 @@
         <member name="P:LiveChartsCore.LineSeries`9.GeometryStroke">
             <inheritdoc cref="P:LiveChartsCore.Kernel.ILineSeries`1.GeometrySize"/>
         </member>
-        <member name="M:LiveChartsCore.LineSeries`9.Measure(LiveChartsCore.CartesianChart{`3},LiveChartsCore.IAxis{`3},LiveChartsCore.IAxis{`3})">
-            <inheritdoc cref="M:LiveChartsCore.Kernel.ICartesianSeries`1.Measure(LiveChartsCore.CartesianChart{`0},LiveChartsCore.IAxis{`0},LiveChartsCore.IAxis{`0})" />
+        <member name="M:LiveChartsCore.LineSeries`9.Measure(LiveChartsCore.CartesianChart{`3},LiveChartsCore.Kernel.IAxis{`3},LiveChartsCore.Kernel.IAxis{`3})">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.ICartesianSeries`1.Measure(LiveChartsCore.CartesianChart{`0},LiveChartsCore.Kernel.IAxis{`0},LiveChartsCore.Kernel.IAxis{`0})" />
         </member>
-        <member name="M:LiveChartsCore.LineSeries`9.GetBounds(LiveChartsCore.CartesianChart{`3},LiveChartsCore.IAxis{`3},LiveChartsCore.IAxis{`3})">
-            <inheritdoc cref="M:LiveChartsCore.Kernel.ICartesianSeries`1.GetBounds(LiveChartsCore.CartesianChart{`0},LiveChartsCore.IAxis{`0},LiveChartsCore.IAxis{`0})"/>
+        <member name="M:LiveChartsCore.LineSeries`9.GetBounds(LiveChartsCore.CartesianChart{`3},LiveChartsCore.Kernel.IAxis{`3},LiveChartsCore.Kernel.IAxis{`3})">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.ICartesianSeries`1.GetBounds(LiveChartsCore.CartesianChart{`0},LiveChartsCore.Kernel.IAxis{`0},LiveChartsCore.Kernel.IAxis{`0})"/>
         </member>
         <member name="M:LiveChartsCore.LineSeries`9.SetDefaultPathTransitions(LiveChartsCore.Kernel.AreaHelper{`3,`4,`5,`7,`8},LiveChartsCore.Drawing.Animation)">
             <summary>
@@ -5512,7 +5520,7 @@
             Defines the scaler class, this class helps to scale from the data scale to the user interface scale and vise versa.
             </summary>
         </member>
-        <member name="M:LiveChartsCore.Measure.Scaler.#ctor(System.Drawing.PointF,System.Drawing.SizeF,LiveChartsCore.IAxis)">
+        <member name="M:LiveChartsCore.Measure.Scaler.#ctor(System.Drawing.PointF,System.Drawing.SizeF,LiveChartsCore.Kernel.IAxis)">
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.Measure.Scaler"/> class.
             </summary>
@@ -5961,11 +5969,11 @@
             Initializes a new instance of the <see cref="T:LiveChartsCore.RowSeries`4"/> class.
             </summary>
         </member>
-        <member name="M:LiveChartsCore.RowSeries`4.Measure(LiveChartsCore.CartesianChart{`3},LiveChartsCore.IAxis{`3},LiveChartsCore.IAxis{`3})">
-            <inheritdoc cref="M:LiveChartsCore.CartesianSeries`4.Measure(LiveChartsCore.CartesianChart{`3},LiveChartsCore.IAxis{`3},LiveChartsCore.IAxis{`3})"/>
+        <member name="M:LiveChartsCore.RowSeries`4.Measure(LiveChartsCore.CartesianChart{`3},LiveChartsCore.Kernel.IAxis{`3},LiveChartsCore.Kernel.IAxis{`3})">
+            <inheritdoc cref="M:LiveChartsCore.CartesianSeries`4.Measure(LiveChartsCore.CartesianChart{`3},LiveChartsCore.Kernel.IAxis{`3},LiveChartsCore.Kernel.IAxis{`3})"/>
         </member>
-        <member name="M:LiveChartsCore.RowSeries`4.GetBounds(LiveChartsCore.CartesianChart{`3},LiveChartsCore.IAxis{`3},LiveChartsCore.IAxis{`3})">
-            <inheritdoc cref="M:LiveChartsCore.CartesianSeries`4.GetBounds(LiveChartsCore.CartesianChart{`3},LiveChartsCore.IAxis{`3},LiveChartsCore.IAxis{`3})"/>
+        <member name="M:LiveChartsCore.RowSeries`4.GetBounds(LiveChartsCore.CartesianChart{`3},LiveChartsCore.Kernel.IAxis{`3},LiveChartsCore.Kernel.IAxis{`3})">
+            <inheritdoc cref="M:LiveChartsCore.CartesianSeries`4.GetBounds(LiveChartsCore.CartesianChart{`3},LiveChartsCore.Kernel.IAxis{`3},LiveChartsCore.Kernel.IAxis{`3})"/>
         </member>
         <member name="M:LiveChartsCore.RowSeries`4.SetDefaultPointTransitions(LiveChartsCore.Kernel.ChartPoint)">
             <inheritdoc cref="M:LiveChartsCore.Series`4.SetDefaultPointTransitions(LiveChartsCore.Kernel.ChartPoint)"/>
@@ -6005,11 +6013,11 @@
             The size of the geometry.
             </value>
         </member>
-        <member name="M:LiveChartsCore.ScatterSeries`4.Measure(LiveChartsCore.CartesianChart{`3},LiveChartsCore.IAxis{`3},LiveChartsCore.IAxis{`3})">
-            <inheritdoc cref="M:LiveChartsCore.CartesianSeries`4.Measure(LiveChartsCore.CartesianChart{`3},LiveChartsCore.IAxis{`3},LiveChartsCore.IAxis{`3})"/>
+        <member name="M:LiveChartsCore.ScatterSeries`4.Measure(LiveChartsCore.CartesianChart{`3},LiveChartsCore.Kernel.IAxis{`3},LiveChartsCore.Kernel.IAxis{`3})">
+            <inheritdoc cref="M:LiveChartsCore.CartesianSeries`4.Measure(LiveChartsCore.CartesianChart{`3},LiveChartsCore.Kernel.IAxis{`3},LiveChartsCore.Kernel.IAxis{`3})"/>
         </member>
-        <member name="M:LiveChartsCore.ScatterSeries`4.GetBounds(LiveChartsCore.CartesianChart{`3},LiveChartsCore.IAxis{`3},LiveChartsCore.IAxis{`3})">
-            <inheritdoc cref="M:LiveChartsCore.ScatterSeries`4.GetBounds(LiveChartsCore.CartesianChart{`3},LiveChartsCore.IAxis{`3},LiveChartsCore.IAxis{`3})"/>
+        <member name="M:LiveChartsCore.ScatterSeries`4.GetBounds(LiveChartsCore.CartesianChart{`3},LiveChartsCore.Kernel.IAxis{`3},LiveChartsCore.Kernel.IAxis{`3})">
+            <inheritdoc cref="M:LiveChartsCore.ScatterSeries`4.GetBounds(LiveChartsCore.CartesianChart{`3},LiveChartsCore.Kernel.IAxis{`3},LiveChartsCore.Kernel.IAxis{`3})"/>
         </member>
         <member name="M:LiveChartsCore.ScatterSeries`4.OnPaintContextChanged">
             <inheritdoc cref="M:LiveChartsCore.ScatterSeries`4.OnPaintContextChanged"/>
@@ -6028,8 +6036,8 @@
             <typeparam name="TVisual">The type of the visual.</typeparam>
             <typeparam name="TLabel">The type of the label.</typeparam>
             <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-            <seealso cref="T:LiveChartsCore.ISeries" />
-            <seealso cref="T:LiveChartsCore.ISeries`1" />
+            <seealso cref="T:LiveChartsCore.Kernel.ISeries" />
+            <seealso cref="T:LiveChartsCore.Kernel.ISeries`1" />
             <seealso cref="T:System.IDisposable" />
             <seealso cref="T:System.ComponentModel.INotifyPropertyChanged" />
         </member>
@@ -6084,7 +6092,7 @@
             then the <see cref="T:LiveChartsCore.Kernel.ChartPoint"/> will be drawn as a point in the chart.
             </summary>
         </member>
-        <member name="P:LiveChartsCore.Series`4.LiveChartsCore#ISeries#SeriesId">
+        <member name="P:LiveChartsCore.Series`4.LiveChartsCore#Kernel#ISeries#SeriesId">
             <inheritdoc />
         </member>
         <member name="P:LiveChartsCore.Series`4.HoverState">
@@ -6106,7 +6114,7 @@
             </summary>
         </member>
         <member name="E:LiveChartsCore.Series`4.Disposing">
-            <inheritdoc cref="E:LiveChartsCore.ISeries.Disposing" />
+            <inheritdoc cref="E:LiveChartsCore.Kernel.ISeries.Disposing" />
         </member>
         <member name="P:LiveChartsCore.Series`4.OnPointAddedToState">
             <summary>
@@ -6121,21 +6129,21 @@
             </summary>
         </member>
         <member name="P:LiveChartsCore.Series`4.ZIndex">
-            <inheritdoc cref="P:LiveChartsCore.ISeries.ZIndex" />
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ISeries.ZIndex" />
         </member>
         <member name="P:LiveChartsCore.Series`4.TooltipLabelFormatter">
-            <inheritdoc cref="P:LiveChartsCore.ISeries.TooltipLabelFormatter" />
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ISeries.TooltipLabelFormatter" />
         </member>
         <member name="P:LiveChartsCore.Series`4.DataLabelsFormatter">
-            <inheritdoc cref="P:LiveChartsCore.ISeries.DataLabelsFormatter" />
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ISeries.DataLabelsFormatter" />
         </member>
         <member name="M:LiveChartsCore.Series`4.GetStackGroup">
             <inheritdoc />
         </member>
         <member name="M:LiveChartsCore.Series`4.Fetch(LiveChartsCore.Kernel.IChart)">
-            <inheritdoc cref="M:LiveChartsCore.ISeries.Fetch(LiveChartsCore.Kernel.IChart)"/>
+            <inheritdoc cref="M:LiveChartsCore.Kernel.ISeries.Fetch(LiveChartsCore.Kernel.IChart)"/>
         </member>
-        <member name="M:LiveChartsCore.Series`4.LiveChartsCore#ISeries#FindPointsNearTo(LiveChartsCore.Kernel.IChart,System.Drawing.PointF)">
+        <member name="M:LiveChartsCore.Series`4.LiveChartsCore#Kernel#ISeries#FindPointsNearTo(LiveChartsCore.Kernel.IChart,System.Drawing.PointF)">
             <inheritdoc />
         </member>
         <member name="M:LiveChartsCore.Series`4.AddPointToState(LiveChartsCore.Kernel.ChartPoint,System.String)">
@@ -6145,10 +6153,10 @@
             <inheritdoc />
         </member>
         <member name="M:LiveChartsCore.Series`4.RestartAnimations">
-            <inheritdoc cref="M:LiveChartsCore.ISeries.RestartAnimations"/>
+            <inheritdoc cref="M:LiveChartsCore.Kernel.ISeries.RestartAnimations"/>
         </member>
         <member name="M:LiveChartsCore.Series`4.Delete(LiveChartsCore.Kernel.IChartView)">
-            <inheritdoc cref="M:LiveChartsCore.ISeries.Delete(LiveChartsCore.Kernel.IChartView)"/>
+            <inheritdoc cref="M:LiveChartsCore.Kernel.ISeries.Delete(LiveChartsCore.Kernel.IChartView)"/>
         </member>
         <member name="M:LiveChartsCore.Series`4.Dispose">
             <inheritdoc cref="M:System.IDisposable.Dispose"/>
@@ -6326,7 +6334,7 @@
             Initializes a new instance of the <see cref="T:LiveChartsCore.StackedColumnSeries`4"/> class.
             </summary>
         </member>
-        <member name="M:LiveChartsCore.StackedColumnSeries`4.Measure(LiveChartsCore.CartesianChart{`3},LiveChartsCore.IAxis{`3},LiveChartsCore.IAxis{`3})">
+        <member name="M:LiveChartsCore.StackedColumnSeries`4.Measure(LiveChartsCore.CartesianChart{`3},LiveChartsCore.Kernel.IAxis{`3},LiveChartsCore.Kernel.IAxis{`3})">
             <summary>
             Measures this series.
             </summary>
@@ -6335,7 +6343,7 @@
             <param name="primaryAxis">The primary axis.</param>
             <exception cref="T:System.NullReferenceException">Unexpected null stacker</exception>
         </member>
-        <member name="M:LiveChartsCore.StackedColumnSeries`4.GetBounds(LiveChartsCore.CartesianChart{`3},LiveChartsCore.IAxis{`3},LiveChartsCore.IAxis{`3})">
+        <member name="M:LiveChartsCore.StackedColumnSeries`4.GetBounds(LiveChartsCore.CartesianChart{`3},LiveChartsCore.Kernel.IAxis{`3},LiveChartsCore.Kernel.IAxis{`3})">
             <summary>
             Gets the bounds.
             </summary>
@@ -6374,7 +6382,7 @@
             Initializes a new instance of the <see cref="T:LiveChartsCore.StackedRowSeries`4"/> class.
             </summary>
         </member>
-        <member name="M:LiveChartsCore.StackedRowSeries`4.Measure(LiveChartsCore.CartesianChart{`3},LiveChartsCore.IAxis{`3},LiveChartsCore.IAxis{`3})">
+        <member name="M:LiveChartsCore.StackedRowSeries`4.Measure(LiveChartsCore.CartesianChart{`3},LiveChartsCore.Kernel.IAxis{`3},LiveChartsCore.Kernel.IAxis{`3})">
             <summary>
             Measures this series.
             </summary>
@@ -6383,7 +6391,7 @@
             <param name="primaryAxis">The primary axis.</param>
             <exception cref="T:System.NullReferenceException">Unexpected null stacker</exception>
         </member>
-        <member name="M:LiveChartsCore.StackedRowSeries`4.GetBounds(LiveChartsCore.CartesianChart{`3},LiveChartsCore.IAxis{`3},LiveChartsCore.IAxis{`3})">
+        <member name="M:LiveChartsCore.StackedRowSeries`4.GetBounds(LiveChartsCore.CartesianChart{`3},LiveChartsCore.Kernel.IAxis{`3},LiveChartsCore.Kernel.IAxis{`3})">
             <summary>
             Gets the bounds.
             </summary>
@@ -6538,7 +6546,7 @@
             <param name="predicate">The predicate.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForAxes``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.IAxis{``0}})">
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForAxes``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IAxis{``0}})">
             <summary>
              Defines a style builder for <see cref="T:LiveChartsCore.Kernel.IChartView`1"/> objects.
             </summary>
@@ -6688,7 +6696,7 @@
             <param name="resolver">The resolver.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.Themes.Theme`1.WithAxisDefaultsResolver(System.Action{LiveChartsCore.IAxis{`0}})">
+        <member name="M:LiveChartsCore.Themes.Theme`1.WithAxisDefaultsResolver(System.Action{LiveChartsCore.Kernel.IAxis{`0}})">
             <summary>
             Sets the axis defaults resolver.
             </summary>
@@ -6708,7 +6716,7 @@
             <param name="colors">The colors.</param>
             <param name="series">The series.</param>
         </member>
-        <member name="M:LiveChartsCore.Themes.Theme`1.ResolveAxisDefaults(LiveChartsCore.IAxis{`0})">
+        <member name="M:LiveChartsCore.Themes.Theme`1.ResolveAxisDefaults(LiveChartsCore.Kernel.IAxis{`0})">
             <summary>
             Resolves the axis defaults.
             </summary>
@@ -6838,7 +6846,7 @@
             </summary>
             <param name="chart">The chart.</param>
         </member>
-        <member name="M:LiveChartsCore.Themes.VisualsInitializer`1.ApplyStyleToAxis(LiveChartsCore.IAxis{`0})">
+        <member name="M:LiveChartsCore.Themes.VisualsInitializer`1.ApplyStyleToAxis(LiveChartsCore.Kernel.IAxis{`0})">
             <summary>
             Constructs an axis.
             </summary>

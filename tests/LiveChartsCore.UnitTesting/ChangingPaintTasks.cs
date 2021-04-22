@@ -1,4 +1,5 @@
-﻿using LiveChartsCore.SkiaSharpView;
+﻿using LiveChartsCore.Kernel;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.UnitTesting.MockedObjects;

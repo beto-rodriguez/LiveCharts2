@@ -32,6 +32,14 @@ namespace LiveChartsCore.Kernel
     public interface IChartView
     {
         /// <summary>
+        /// Sets the back color of the control.
+        /// </summary>
+        /// <value>
+        /// The color of the back.
+        /// </value>
+        System.Drawing.Color BackColor { get; set; }
+
+        /// <summary>
         /// Gets the size of the control.
         /// </summary>
         /// <value>

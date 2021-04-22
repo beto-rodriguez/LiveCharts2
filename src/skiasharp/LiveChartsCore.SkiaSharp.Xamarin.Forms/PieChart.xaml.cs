@@ -254,6 +254,15 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         #region properties
 
+        System.Drawing.Color IChartView.BackColor
+        {
+            get => Background is not SolidColorBrush b
+                    ? new System.Drawing.Color()
+                    : System.Drawing.Color.FromArgb(
+                        (int)(b.Color.A * 255), (int)(b.Color.R * 255), (int)(b.Color.G * 255), (int)(b.Color.B * 255));
+            set => Background = new SolidColorBrush(new c(value.R / 255, value.G / 255, value.B / 255, value.A / 255));
+        }
+
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core =>
             core == null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
 

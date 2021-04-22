@@ -43,12 +43,20 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
         }
 
         /// <summary>
+        /// Gets or sets the color of the back.
+        /// </summary>
+        /// <value>
+        /// The color of the back.
+        /// </value>
+        public SKColor BackColor { get; set; } = new SKColor(255, 255, 255, 255);
+
+        /// <summary>
         /// Clears the canvas.
         /// </summary>
         public override void ClearCanvas()
         {
-            // work arround becauase avalonia clears the canvas to black
-            Canvas.Clear(new SKColor(255, 255, 255));
+            Canvas.Clear(SKColors.Red);
+            Canvas.Clear(BackColor);
         }
     }
 }

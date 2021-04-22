@@ -258,6 +258,14 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         #region properties
 
+        System.Drawing.Color IChartView.BackColor
+        {
+            get => Background is not SolidColorBrush b
+                    ? new System.Drawing.Color()
+                    : System.Drawing.Color.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
+            set => Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(value.A, value.R, value.G, value.B));
+        }
+
         /// <inheritdoc cref="IChartView.DrawMargin" />
         public Margin? DrawMargin
         {
