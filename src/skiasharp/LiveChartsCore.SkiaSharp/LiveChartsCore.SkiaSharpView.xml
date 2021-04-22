@@ -655,19 +655,47 @@
             The default platform builder.
             </value>
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AddSkiaSharp(LiveChartsCore.Kernel.LiveChartsSettings,System.Action{LiveChartsCore.Themes.Theme{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext}})">
+        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AddSkiaSharp(LiveChartsCore.Kernel.LiveChartsSettings)">
             <summary>
             Adds SkiaSharp as the UI provider for LiveCharts.
             </summary>
             <param name="settings">The settings.</param>
-            <param name="builder">The builder.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AddDefaultResolvers(LiveChartsCore.Themes.Theme{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AddLightTheme(LiveChartsCore.Kernel.LiveChartsSettings)">
+            <summary>
+            Adds the light theme.
+            </summary>
+            <param name="settings">The settings.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AddDarkTheme(LiveChartsCore.Kernel.LiveChartsSettings)">
+            <summary>
+            Adds the light theme.
+            </summary>
+            <param name="settings">The settings.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AddDefaultLightResolvers(LiveChartsCore.Themes.Theme{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
             <summary>
             Adds the default resolvers.
             </summary>
             <param name="theme">The theme.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AddDefaultDarkResolvers(LiveChartsCore.Themes.Theme{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <summary>
+            Adds the default resolvers.
+            </summary>
+            <param name="theme">The theme.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AsSKColor(System.Drawing.Color,System.Nullable{System.Byte})">
+            <summary>
+            Converts a <see cref="T:System.Drawing.Color"/> to an <see cref="T:SkiaSharp.SKColor"/> instance.
+            </summary>
+            <param name="color">The color.</param>
+            <param name="alphaOverrides">The alpha overrides.</param>
             <returns></returns>
         </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Motion.ColorMotionProperty">
