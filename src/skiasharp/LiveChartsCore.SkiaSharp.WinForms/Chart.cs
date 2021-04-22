@@ -113,6 +113,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         Color IChartView.BackColor
         {
+            get => BackColor;
             set => BackColor = value;
         }
 

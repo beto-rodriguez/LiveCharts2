@@ -61,6 +61,8 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
 
         public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
+        public Color BackColor { get; set; }
+
         public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
             return new PointF();
