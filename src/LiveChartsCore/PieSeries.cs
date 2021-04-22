@@ -220,25 +220,8 @@ namespace LiveChartsCore
         {
             var context = new PaintContext<TDrawingContext>();
 
-            if (Fill != null)
-            {
-                var fillClone = Fill.CloneTask();
-                var visual = new TVisual
-                {
-                    X = 0,
-                    Y = 0,
-                    Height = (float)LegendShapeSize,
-                    Width = (float)LegendShapeSize,
-                    CenterX = (float)LegendShapeSize * 0.5f,
-                    CenterY = (float)LegendShapeSize * 0.5f,
-                    StartAngle = 0,
-                    SweepAngle = 359.9999f
-                };
-                fillClone.AddGeometyToPaintTask(visual);
-                _ = context.PaintTasks.Add(fillClone);
-            }
-
             var w = LegendShapeSize;
+            var sh = 0f;
             if (Stroke != null)
             {
                 var strokeClone = Stroke.CloneTask();
@@ -253,9 +236,29 @@ namespace LiveChartsCore
                     StartAngle = 0,
                     SweepAngle = 359.9999f
                 };
+                sh = strokeClone.StrokeThickness;
+                strokeClone.ZIndex = 1;
                 w += 2 * strokeClone.StrokeThickness;
                 strokeClone.AddGeometyToPaintTask(visual);
                 _ = context.PaintTasks.Add(strokeClone);
+            }
+
+            if (Fill != null)
+            {
+                var fillClone = Fill.CloneTask();
+                var visual = new TVisual
+                {
+                    X = sh,
+                    Y = sh,
+                    Height = (float)LegendShapeSize,
+                    Width = (float)LegendShapeSize,
+                    CenterX = (float)LegendShapeSize * 0.5f,
+                    CenterY = (float)LegendShapeSize * 0.5f,
+                    StartAngle = 0,
+                    SweepAngle = 359.9999f
+                };
+                fillClone.AddGeometyToPaintTask(visual);
+                _ = context.PaintTasks.Add(fillClone);
             }
 
             context.Width = w;

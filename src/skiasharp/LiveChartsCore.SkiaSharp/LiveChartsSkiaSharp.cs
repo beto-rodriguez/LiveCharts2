@@ -279,7 +279,7 @@ namespace LiveChartsCore.SkiaSharpView
                         if (series.Fill == DefaultPaintTask)
                         {
                             var mask = SeriesProperties.Line | SeriesProperties.Stacked;
-                            var opacity = (series.SeriesProperties & mask) == mask ? 1 : 0.5;
+                            var opacity = (series.SeriesProperties & mask) == mask ? 1 : 0.2;
 
                             series.Fill = new SolidColorPaintTask(color.AsSKColor((byte)(opacity * 255)));
                         }
@@ -336,7 +336,7 @@ namespace LiveChartsCore.SkiaSharpView
                         if (series.Fill == DefaultPaintTask)
                         {
                             var mask = SeriesProperties.Line | SeriesProperties.Stacked;
-                            var opacity = (series.SeriesProperties & mask) == mask ? 1 : 0.5;
+                            var opacity = (series.SeriesProperties & mask) == mask ? 1 : 0.2;
 
                             series.Fill = new SolidColorPaintTask(color.AsSKColor((byte)(opacity * 255)));
                         }

@@ -457,23 +457,9 @@ namespace LiveChartsCore
         protected override void OnPaintContextChanged()
         {
             var context = new PaintContext<TDrawingContext>();
-            var lss = unchecked((float)LegendShapeSize);
+            var lss = (float)LegendShapeSize;
             var w = LegendShapeSize;
-
-            if (_geometryFill != null)
-            {
-                var fillClone = _geometryFill.CloneTask();
-                var visual = new TVisual { X = 0, Y = 0, Height = lss, Width = lss };
-                fillClone.AddGeometyToPaintTask(visual);
-                _ = context.PaintTasks.Add(fillClone);
-            }
-            else if (Fill != null)
-            {
-                var fillClone = Fill.CloneTask();
-                var visual = new TVisual { X = 0, Y = 0, Height = lss, Width = lss };
-                fillClone.AddGeometyToPaintTask(visual);
-                _ = context.PaintTasks.Add(fillClone);
-            }
+            var sh = 0f;
 
             if (_geometryStroke != null)
             {
@@ -485,6 +471,8 @@ namespace LiveChartsCore
                     Height = lss,
                     Width = lss
                 };
+                sh = _geometryStroke.StrokeThickness;
+                strokeClone.ZIndex = 1;
                 w += 2 * _geometryStroke.StrokeThickness;
                 strokeClone.AddGeometyToPaintTask(visual);
                 _ = context.PaintTasks.Add(strokeClone);
@@ -499,9 +487,26 @@ namespace LiveChartsCore
                     Height = lss,
                     Width = lss
                 };
+                sh = strokeClone.StrokeThickness;
+                strokeClone.ZIndex = 1;
                 w += 2 * strokeClone.StrokeThickness;
                 strokeClone.AddGeometyToPaintTask(visual);
                 _ = context.PaintTasks.Add(strokeClone);
+            }
+
+            if (_geometryFill != null)
+            {
+                var fillClone = _geometryFill.CloneTask();
+                var visual = new TVisual { X = sh, Y = sh, Height = lss, Width = lss };
+                fillClone.AddGeometyToPaintTask(visual);
+                _ = context.PaintTasks.Add(fillClone);
+            }
+            else if (Fill != null)
+            {
+                var fillClone = Fill.CloneTask();
+                var visual = new TVisual { X = sh, Y = sh, Height = lss, Width = lss };
+                fillClone.AddGeometyToPaintTask(visual);
+                _ = context.PaintTasks.Add(fillClone);
             }
 
             context.Width = w;
