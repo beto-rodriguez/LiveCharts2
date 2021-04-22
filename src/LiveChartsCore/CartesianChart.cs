@@ -138,7 +138,7 @@ namespace LiveChartsCore
         }
 
         /// <summary>
-        /// Scales the speficied point to the UI.
+        /// Scales the specified point to the UI.
         /// </summary>
         /// <param name="point">The point.</param>
         /// <param name="xAxisIndex">Index of the x axis.</param>
@@ -330,8 +330,8 @@ namespace LiveChartsCore
                             axis.Yo = m.Bottom + s.Height * 0.5f;
                             bs += s.Height;
                             m.Bottom = bs;
-                            //if (s.Width * 0.5f > m.Left) m.Left = s.Width * 0.5f;
-                            //if (s.Width * 0.5f > m.Right) m.Right = s.Width * 0.5f;
+                            if (s.Width * 0.5f > m.Left) m.Left = s.Width * 0.5f;
+                            if (s.Width * 0.5f > m.Right) m.Right = s.Width * 0.5f;
                         }
                         else
                         {
@@ -339,8 +339,8 @@ namespace LiveChartsCore
                             axis.Yo = ts + s.Height * 0.5f;
                             ts += s.Height;
                             m.Top = ts;
-                            //if (ls + s.Width * 0.5f > m.Left) m.Left = ls + s.Width * 0.5f;
-                            //if (rs + s.Width * 0.5f > m.Right) m.Right = rs + s.Width * 0.5f;
+                            if (ls + s.Width * 0.5f > m.Left) m.Left = ls + s.Width * 0.5f;
+                            if (rs + s.Width * 0.5f > m.Right) m.Right = rs + s.Width * 0.5f;
                         }
                     }
                     foreach (var axis in YAxes)
@@ -353,8 +353,8 @@ namespace LiveChartsCore
                             axis.Xo = ls + w * 0.5f;
                             ls += w;
                             m.Left = ls;
-                            //if (s.Height * 0.5f > m.Top) { m.Top = s.Height * 0.5f; }
-                            //if (s.Height * 0.5f > m.Bottom) { m.Bottom = s.Height * 0.5f; }
+                            if (s.Height * 0.5f > m.Top) { m.Top = s.Height * 0.5f; }
+                            if (s.Height * 0.5f > m.Bottom) { m.Bottom = s.Height * 0.5f; }
                         }
                         else
                         {
@@ -362,8 +362,8 @@ namespace LiveChartsCore
                             axis.Xo = rs + w * 0.5f;
                             rs += w;
                             m.Right = rs;
-                            //if (ts + s.Height * 0.5f > m.Top) m.Top = ts + s.Height * 0.5f;
-                            //if (bs + s.Height * 0.5f > m.Bottom) m.Bottom = bs + s.Height * 0.5f;
+                            if (ts + s.Height * 0.5f > m.Top) m.Top = ts + s.Height * 0.5f;
+                            if (bs + s.Height * 0.5f > m.Bottom) m.Bottom = bs + s.Height * 0.5f;
                         }
                     }
 

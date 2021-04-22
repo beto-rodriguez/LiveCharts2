@@ -198,7 +198,7 @@
         </member>
         <member name="M:LiveChartsCore.CartesianChart`1.ScaleUIPoint(System.Drawing.PointF,System.Int32,System.Int32)">
             <summary>
-            Scales the speficied point to the UI.
+            Scales the specified point to the UI.
             </summary>
             <param name="point">The point.</param>
             <param name="xAxisIndex">Index of the x axis.</param>

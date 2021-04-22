@@ -41,6 +41,7 @@
             "Axes/ColorsAndPosition",
             "Axes/LabelsFormat",
             "Axes/NamedLabels",
+            "Axes/Multiple",
 
             "General/Tooltips",
             "General/Legends",

@@ -299,7 +299,7 @@ namespace LiveChartsCore
                         }
                     }
 
-                    if (SeparatorsBrush != null)
+                    if (SeparatorsBrush != null && ShowSeparatorLines)
                     {
                         var lineGeometry = new TLineGeometry();
 
@@ -352,7 +352,7 @@ namespace LiveChartsCore
                 }
 
                 if (TextBrush != null && visualSeparator.Text != null) TextBrush.AddGeometyToPaintTask(visualSeparator.Text);
-                if (SeparatorsBrush != null && visualSeparator.Line != null) SeparatorsBrush.AddGeometyToPaintTask(visualSeparator.Line);
+                if (SeparatorsBrush != null && ShowSeparatorLines && visualSeparator.Line != null) SeparatorsBrush.AddGeometyToPaintTask(visualSeparator.Line);
 
                 if (visualSeparator.Text != null)
                 {
