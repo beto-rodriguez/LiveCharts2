@@ -17,6 +17,7 @@ namespace AvaloniaSample.Bars.Race
         public async void Update()
         {
             var vm = (ViewModel?)DataContext;
+            if (vm == null) return;
             while (true)
             {
                 await Dispatcher.UIThread.InvokeAsync(vm.RandomIncrement, DispatcherPriority.Background);

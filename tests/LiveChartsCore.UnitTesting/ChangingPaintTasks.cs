@@ -298,8 +298,8 @@ namespace LiveChartsCore.UnitTesting
                 {
                     new LineSeries<int> { Values = new List<int> { 1, 6, 4, 2 } },
                 },
-                XAxes = new[] { axis },
-                YAxes = new[] { new Axis() },
+                XAxes = new[] { new Axis() },
+                YAxes = new[] { axis },
             };
 
             var canvas = chart.CoreCanvas;

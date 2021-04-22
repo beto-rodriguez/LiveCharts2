@@ -20,8 +20,7 @@ namespace AvaloniaSample
         private void OnPointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
         {
             var content = this.FindControl<ContentControl>("content");
-            var ctx = (sender as Border)?.DataContext as string;
-            if (ctx == null) throw new Exception("Sample not found");
+            if ((sender as Border)?.DataContext is not string ctx) throw new Exception("Sample not found");
             content.Content = Activator.CreateInstance(null, $"AvaloniaSample.{ctx.Replace('/', '.')}.View")?.Unwrap();
         }
 

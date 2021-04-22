@@ -60,9 +60,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </summary>
         protected IChartTooltip<SkiaSharpDrawingContext>? tooltip;
 
-        private readonly ActionThrottler mouseMoveThrottler;
-        private PointF mousePosition = new();
-        private readonly CollectionDeepObserver<ISeries> seriesObserver;
+        private readonly ActionThrottler _mouseMoveThrottler;
+        private PointF _mousePosition = new();
+        private readonly CollectionDeepObserver<ISeries> _seriesObserver;
 
         #endregion
 
@@ -84,9 +84,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
             InitializeCore();
 
-            mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
+            _mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
 
-            seriesObserver = new CollectionDeepObserver<ISeries>(
+            _seriesObserver = new CollectionDeepObserver<ISeries>(
                (object? sender, NotifyCollectionChangedEventArgs e) =>
                {
                    if (core == null) return;
@@ -257,7 +257,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         #endregion
 
-        SizeF IChartView.ControlSize => new SizeF
+        SizeF IChartView.ControlSize => new()
         {
             Width = (float)Bounds.Width,
             Height = (float)Bounds.Height
@@ -523,8 +523,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
             if (change.Property.Name == nameof(Series))
             {
-                seriesObserver.Dispose((IEnumerable<ISeries>)change.OldValue.Value);
-                seriesObserver.Initialize((IEnumerable<ISeries>)change.NewValue.Value);
+                _seriesObserver.Dispose((IEnumerable<ISeries>)change.OldValue.Value);
+                _seriesObserver.Initialize((IEnumerable<ISeries>)change.NewValue.Value);
                 return;
             }
 
@@ -534,7 +534,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         private void MouseMoveThrottlerUnlocked()
         {
             if (core == null || tooltip == null || TooltipPosition == TooltipPosition.Hidden) return;
-            tooltip.Show(core.FindPointsNearTo(mousePosition), core);
+            tooltip.Show(core.FindPointsNearTo(_mousePosition), core);
         }
 
         private void InitializeComponent()
@@ -545,8 +545,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         private void CartesianChart_PointerMoved(object? sender, A.Input.PointerEventArgs e)
         {
             var p = e.GetPosition(this);
-            mousePosition = new PointF((float)p.X, (float)p.Y);
-            mouseMoveThrottler.Call();
+            _mousePosition = new PointF((float)p.X, (float)p.Y);
+            _mouseMoveThrottler.Call();
         }
     }
 }

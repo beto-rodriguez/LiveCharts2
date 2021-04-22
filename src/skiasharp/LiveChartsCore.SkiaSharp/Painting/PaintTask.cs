@@ -128,7 +128,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.SetGeometries(HashSet{IDrawable{TDrawingContext}})" />
         public void SetGeometries(HashSet<IDrawable<SkiaSharpDrawingContext>> geometries)
         {
-            this._geometries = geometries;
+            _geometries = geometries;
             _actualGeometries = null;
             Invalidate();
         }

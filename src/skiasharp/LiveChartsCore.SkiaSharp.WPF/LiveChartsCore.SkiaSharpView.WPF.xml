@@ -81,7 +81,7 @@
         </member>
         <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.tooltip">
             <summary>
-            The tooltip
+            The tool tip
             </summary>
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.WPF.Chart.#ctor">

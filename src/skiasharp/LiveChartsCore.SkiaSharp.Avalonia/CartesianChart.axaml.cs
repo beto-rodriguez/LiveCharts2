@@ -63,15 +63,15 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </summary>
         protected IChartTooltip<SkiaSharpDrawingContext>? tooltip;
 
-        private readonly ActionThrottler mouseMoveThrottler;
-        private PointF mousePosition = new();
-        private readonly CollectionDeepObserver<ISeries> seriesObserver;
-        private readonly CollectionDeepObserver<IAxis> xObserver;
-        private readonly CollectionDeepObserver<IAxis> yObserver;
-        private readonly ActionThrottler panningThrottler;
-        private A.Point? previous;
-        private A.Point? current;
-        private bool isPanning = false;
+        private readonly ActionThrottler _mouseMoveThrottler;
+        private PointF _mousePosition = new();
+        private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+        private readonly CollectionDeepObserver<IAxis> _xObserver;
+        private readonly CollectionDeepObserver<IAxis> _yObserver;
+        private readonly ActionThrottler _panningThrottler;
+        private A.Point? _previous;
+        private A.Point? _current;
+        private bool _isPanning = false;
 
         #endregion
 
@@ -93,11 +93,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
             InitializeCore();
 
-            mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
+            _mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
 
-            seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
             XAxes = new List<IAxis>() { new Axis() };
             YAxes = new List<IAxis>() { new Axis() };
@@ -111,7 +111,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             PointerPressed += CartesianChart_PointerPressed;
             PointerMoved += CartesianChart_PointerMoved;
 
-            panningThrottler = new ActionThrottler(DoPan, TimeSpan.FromMilliseconds(30));
+            _panningThrottler = new ActionThrottler(DoPan, TimeSpan.FromMilliseconds(30));
         }
 
         #region avalonia/dependency properties
@@ -297,7 +297,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => core == null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
 
-        SizeF IChartView.ControlSize => new SizeF
+        SizeF IChartView.ControlSize => new()
         {
             Width = (float)Bounds.Width,
             Height = (float)Bounds.Height
@@ -596,20 +596,20 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
             if (change.Property.Name == nameof(Series))
             {
-                seriesObserver.Dispose((IEnumerable<ISeries>)change.OldValue.Value);
-                seriesObserver.Initialize((IEnumerable<ISeries>)change.NewValue.Value);
+                _seriesObserver.Dispose((IEnumerable<ISeries>)change.OldValue.Value);
+                _seriesObserver.Initialize((IEnumerable<ISeries>)change.NewValue.Value);
             }
 
             if (change.Property.Name == nameof(XAxes))
             {
-                xObserver.Dispose((IEnumerable<IAxis>)change.OldValue.Value);
-                xObserver.Initialize((IEnumerable<IAxis>)change.NewValue.Value);
+                _xObserver.Dispose((IEnumerable<IAxis>)change.OldValue.Value);
+                _xObserver.Initialize((IEnumerable<IAxis>)change.NewValue.Value);
             }
 
             if (change.Property.Name == nameof(YAxes))
             {
-                yObserver.Dispose((IEnumerable<IAxis>)change.OldValue.Value);
-                yObserver.Initialize((IEnumerable<IAxis>)change.NewValue.Value);
+                _yObserver.Dispose((IEnumerable<IAxis>)change.OldValue.Value);
+                _yObserver.Initialize((IEnumerable<IAxis>)change.NewValue.Value);
             }
 
             _ = Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
@@ -618,7 +618,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         private void MouseMoveThrottlerUnlocked()
         {
             if (core == null || tooltip == null || TooltipPosition == TooltipPosition.Hidden) return;
-            tooltip.Show(core.FindPointsNearTo(mousePosition), core);
+            tooltip.Show(core.FindPointsNearTo(_mousePosition), core);
         }
 
         private void InitializeComponent()
@@ -655,8 +655,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             // only IClassicDesktopStyleApplicationLifetime supported for now.
             if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
 
-            isPanning = true;
-            previous = e.GetPosition(this);
+            _isPanning = true;
+            _previous = e.GetPosition(this);
 
             foreach (var w in desktop.Windows) w.PointerReleased += Window_PointerReleased;
         }
@@ -664,38 +664,38 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         private void CartesianChart_PointerMoved(object? sender, PointerEventArgs e)
         {
             var p = e.GetPosition(this);
-            mousePosition = new PointF((float)p.X, (float)p.Y);
-            mouseMoveThrottler.Call();
+            _mousePosition = new PointF((float)p.X, (float)p.Y);
+            _mouseMoveThrottler.Call();
 
-            if (!isPanning || previous == null) return;
+            if (!_isPanning || _previous == null) return;
 
-            current = e.GetPosition(this);
-            panningThrottler.Call();
+            _current = e.GetPosition(this);
+            _panningThrottler.Call();
         }
 
         private void Window_PointerReleased(object? sender, PointerReleasedEventArgs e)
         {
             if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
 
-            if (!isPanning) return;
-            isPanning = false;
-            previous = null;
+            if (!_isPanning) return;
+            _isPanning = false;
+            _previous = null;
 
             foreach (var w in desktop.Windows) w.PointerReleased -= Window_PointerReleased;
         }
 
         private void DoPan()
         {
-            if (previous == null || current == null || core == null) return;
+            if (_previous == null || _current == null || core == null) return;
 
             var c = (CartesianChart<SkiaSharpDrawingContext>)core;
 
             c.Pan(
                 new PointF(
-                (float)(current.Value.X - previous.Value.X),
-                (float)(current.Value.Y - previous.Value.Y)));
+                (float)(_current.Value.X - _previous.Value.X),
+                (float)(_current.Value.Y - _previous.Value.Y)));
 
-            previous = new A.Point(current.Value.X, current.Value.Y);
+            _previous = new A.Point(_current.Value.X, _current.Value.Y);
         }
     }
 }

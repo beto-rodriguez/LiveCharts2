@@ -5,12 +5,12 @@ namespace ViewModelsSamples
 {
     public class Command : ICommand
     {
-        private Action<object> command;
+        private readonly Action<object> _command;
         public event EventHandler CanExecuteChanged;
 
         public Command(Action<object> command)
         {
-            this.command = command;
+            _command = command;
         }
 
         public bool CanExecute(object parameter)
@@ -20,7 +20,7 @@ namespace ViewModelsSamples
 
         public void Execute(object parameter)
         {
-            command(parameter);
+            _command(parameter);
         }
     }
 }

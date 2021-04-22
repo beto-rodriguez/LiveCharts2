@@ -47,8 +47,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// The core
         /// </summary>
         protected Chart<SkiaSharpDrawingContext>? core;
-        private readonly CollectionDeepObserver<ISeries> seriesObserver;
-        private Grid? grid;
+        private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+        private Grid? _grid;
 
         #endregion
 
@@ -71,7 +71,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             InitializeCore();
             SizeChanged += OnSizeChanged;
 
-            seriesObserver = new CollectionDeepObserver<ISeries>(
+            _seriesObserver = new CollectionDeepObserver<ISeries>(
                (object sender, NotifyCollectionChangedEventArgs e) =>
                {
                    if (core == null) return;
@@ -100,7 +100,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                   (BindableObject o, object oldValue, object newValue) =>
                   {
                       var chart = (PieChart)o;
-                      var seriesObserver = chart.seriesObserver;
+                      var seriesObserver = chart._seriesObserver;
                       seriesObserver.Dispose((IEnumerable<ISeries>)oldValue);
                       seriesObserver.Initialize((IEnumerable<ISeries>)newValue);
                       if (chart.core == null) return;
@@ -254,9 +254,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         #region properties
 
-        PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => core == null || core == null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
+        PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core =>
+            core == null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
 
-        SizeF IChartView.ControlSize => new SizeF
+        SizeF IChartView.ControlSize => new()
         {
             Width = (float)(Width * DeviceDisplay.MainDisplayInfo.Density),
             Height = (float)(Height * DeviceDisplay.MainDisplayInfo.Density)
@@ -269,7 +270,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         BindableObject IMobileChart.Legend => legend;
 
-        Grid IMobileChart.LayoutGrid => grid ??= this.FindByName<Grid>("gridLayout");
+        Grid IMobileChart.LayoutGrid => _grid ??= this.FindByName<Grid>("gridLayout");
 
         /// <inheritdoc cref="IChartView.DrawMargin" />
         public Margin? DrawMargin
@@ -514,7 +515,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         private void OnSkCanvasTouched(object? sender, SkiaSharp.Views.Forms.SKTouchEventArgs e)
         {
-            if (TooltipPosition == TooltipPosition.Hidden || core == null) return;
+            if (core == null) return;
+            if (TooltipPosition == TooltipPosition.Hidden) return;
             var location = new PointF(e.Location.X, e.Location.Y);
             ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindPointsNearTo(location), core);
         }
