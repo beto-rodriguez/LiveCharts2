@@ -23,6 +23,12 @@
     <Resource Include="Assets\livecharts.png" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Axes\Multiple\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Axes\LabelsRotation\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Axes\NamedLabels\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
@@ -66,6 +72,12 @@
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="General\Legends\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="General\Animations\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="General\Visibility\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="General\Tooltips\View.axaml.cs">

@@ -142,7 +142,7 @@ namespace LiveChartsCore
         public event Action<TypedChartPoint<TVisual, TLabel, TDrawingContext>>? PointCreated;
 
         /// <summary>
-        /// Occurs when aa property changes.
+        /// Occurs when a property changes.
         /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
 

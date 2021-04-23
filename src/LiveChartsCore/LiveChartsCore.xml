@@ -6146,7 +6146,7 @@
         </member>
         <member name="E:LiveChartsCore.Series`4.PropertyChanged">
             <summary>
-            Occurs when aa property changes.
+            Occurs when a property changes.
             </summary>
         </member>
         <member name="E:LiveChartsCore.Series`4.Disposing">
