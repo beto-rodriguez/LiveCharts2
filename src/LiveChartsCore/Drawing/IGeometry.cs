@@ -31,6 +31,14 @@ namespace LiveChartsCore.Drawing
         where TDrawingContext : DrawingContext
     {
         /// <summary>
+        /// Gets or sets the opacity.
+        /// </summary>
+        /// <value>
+        /// The opacity.
+        /// </value>
+        float Opacity { get; set; }
+
+        /// <summary>
         /// Gets or sets the rotation.
         /// </summary>
         /// <value>

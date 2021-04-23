@@ -160,6 +160,11 @@
             The local transform
             </summary>
         </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.opacityProperty">
+            <summary>
+            The opacity property
+            </summary>
+        </member>
         <member name="F:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.x">
             <summary>
             The x
@@ -199,6 +204,9 @@
             The transform.
             </value>
         </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.Opacity">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IGeometry`1.Opacity" />
+        </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.Rotation">
             <inheritdoc cref="P:LiveChartsCore.Drawing.IGeometry`1.Rotation" />
         </member>
@@ -224,6 +232,16 @@
             </summary>
             <param name="drawableTask">The drawable task.</param>
             <returns>the size of the geometry.</returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.BeforeDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
+            <summary>
+            Called before the draw.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.AfterDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
+            <summary>
+            Called after the draw.
+            </summary>
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnMeasure(LiveChartsCore.SkiaSharpView.Painting.PaintTask)">
             <summary>
@@ -924,6 +942,12 @@
         <member name="M:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask.CloneTask">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.CloneTask" />
         </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask.SetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.SetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask.ResetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.ResetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})" />
+        </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask.InitializeTask(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.InitializeTask(`0)" />
         </member>
@@ -1015,6 +1039,12 @@
         <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.CloneTask">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.CloneTask" />
         </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.SetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.SetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.ResetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.SetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})" />
+        </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.Dispose">
             <summary>
             Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -1089,6 +1119,12 @@
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.InitializeTask(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.InitializeTask(`0)" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.SetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.SetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.ResetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.ResetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})" />
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.Dispose">
             <summary>

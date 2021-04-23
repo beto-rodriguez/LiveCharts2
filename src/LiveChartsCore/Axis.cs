@@ -272,7 +272,8 @@ namespace LiveChartsCore
                         _ = textGeometry
                             .TransitionateProperties(
                                 nameof(textGeometry.X),
-                                nameof(textGeometry.Y))
+                                nameof(textGeometry.Y),
+                                nameof(textGeometry.Opacity))
                             .WithAnimation(animation =>
                                 animation
                                     .WithDuration(chart.AnimationsSpeed)
@@ -308,7 +309,8 @@ namespace LiveChartsCore
                         _ = lineGeometry
                             .TransitionateProperties(
                                 nameof(lineGeometry.X), nameof(lineGeometry.X1),
-                                nameof(lineGeometry.Y), nameof(lineGeometry.Y1))
+                                nameof(lineGeometry.Y), nameof(lineGeometry.Y1),
+                                nameof(lineGeometry.Opacity))
                             .WithAnimation(animation =>
                                 animation
                                     .WithDuration(chart.AnimationsSpeed)
@@ -363,7 +365,6 @@ namespace LiveChartsCore
                     if (hasRotation) visualSeparator.Text.Rotation = r;
 
                     if (_previousDataBounds == null) visualSeparator.Text.CompleteAllTransitions();
-
                 }
 
                 if (visualSeparator.Line != null)
@@ -531,6 +532,7 @@ namespace LiveChartsCore
                     separator.Line.Y1 = y;
                 }
 
+                separator.Line.Opacity = 0;
                 separator.Line.RemoveOnCompleted = true;
             }
 
@@ -538,6 +540,7 @@ namespace LiveChartsCore
             {
                 separator.Text.X = x;
                 separator.Text.Y = y;
+                separator.Text.Opacity = 0;
                 separator.Text.RemoveOnCompleted = true;
             }
         }

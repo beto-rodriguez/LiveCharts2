@@ -29,7 +29,7 @@ namespace LiveChartsCore.Kernel
     /// </summary>
     public class NamedLabeler
     {
-        private readonly IList<string> labels;
+        private readonly IList<string> _labels;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NamedLabeler"/> class.
@@ -37,7 +37,7 @@ namespace LiveChartsCore.Kernel
         /// <param name="labels">The labels.</param>
         public NamedLabeler(IList<string> labels)
         {
-            this.labels = labels;
+            _labels = labels;
         }
 
         /// <summary>
@@ -49,9 +49,9 @@ namespace LiveChartsCore.Kernel
         {
             var index = (int)value;
 
-            return index < 0 || index > labels.Count - 1
+            return index < 0 || index > _labels.Count - 1
                 ? index.ToString()
-                : labels[index];
+                : _labels[index];
         }
     }
 }

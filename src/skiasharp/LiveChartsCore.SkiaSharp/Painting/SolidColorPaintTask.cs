@@ -178,6 +178,21 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             drawingContext.PaintTask = this;
         }
 
+        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.SetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
+        public override void SetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
+        {
+            var baseColor = context.PaintTask.Color;
+            context.Paint.Color =
+                new SKColor(baseColor.Red, baseColor.Green, baseColor.Blue, unchecked((byte)(255 * geometry.Opacity)));
+        }
+
+        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.ResetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
+        public override void ResetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
+        {
+            var baseColor = context.PaintTask.Color;
+            context.Paint.Color = baseColor;
+        }
+
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>

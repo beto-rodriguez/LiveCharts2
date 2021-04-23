@@ -104,6 +104,20 @@ namespace LiveChartsCore.Drawing
         void RemoveGeometryFromPainTask(IDrawable<TDrawingContext> geometry);
 
         /// <summary>
+        /// Sets the opacity according to the given geometry.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="geometry">The geometry.</param>
+        void SetOpacity(TDrawingContext context, IGeometry<TDrawingContext> geometry);
+
+        /// <summary>
+        /// Resets the opacity.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="geometry">The geometry.</param>
+        void ResetOpacity(TDrawingContext context, IGeometry<TDrawingContext> geometry);
+
+        /// <summary>
         /// Clones the task.
         /// </summary>
         /// <returns></returns>

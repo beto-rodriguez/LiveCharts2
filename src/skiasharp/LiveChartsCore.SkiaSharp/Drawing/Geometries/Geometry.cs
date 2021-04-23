@@ -46,6 +46,11 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         protected readonly MatrixMotionProperty localTransform;
 
         /// <summary>
+        /// The opacity property
+        /// </summary>
+        protected readonly FloatMotionProperty opacityProperty;
+
+        /// <summary>
         /// The x
         /// </summary>
         protected readonly FloatMotionProperty x;
@@ -74,6 +79,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             y = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0));
             transform = RegisterMotionProperty(new MatrixMotionProperty(nameof(Transform), SKMatrix.Identity));
             rotation = RegisterMotionProperty(new FloatMotionProperty(nameof(Rotation), 0));
+            opacityProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Opacity), 1));
             this.hasCustomTransform = hasCustomTransform;
         }
 
@@ -94,6 +100,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             get => transform.GetMovement(this);
             set { transform.SetMovement(value, this); _hasTransform = !value.IsIdentity; }
         }
+
+        /// <inheritdoc cref="IGeometry{TDrawingContext}.Opacity" />
+        public float Opacity { get => opacityProperty.GetMovement(this); set => opacityProperty.SetMovement(value, this); }
 
         /// <inheritdoc cref="IGeometry{TDrawingContext}.Rotation" />
         public float Rotation { get => rotation.GetMovement(this); set => rotation.SetMovement(value, this); }
@@ -128,7 +137,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
                 }
             }
 
+            BeforeDraw(context);
             OnDraw(context, context.Paint);
+            AfterDraw(context);
 
             if (_hasTransform || hasRotation | hasCustomTransform) context.Canvas.Restore();
         }
@@ -167,6 +178,27 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             }
 
             return measure;
+        }
+
+        /// <summary>
+        /// Called before the draw.
+        /// </summary>
+        protected virtual void BeforeDraw(SkiaSharpDrawingContext context)
+        {
+            if (Opacity == 1) return;
+
+            context.PaintTask.SetOpacity(context, this);
+        }
+
+
+        /// <summary>
+        /// Called after the draw.
+        /// </summary>
+        protected virtual void AfterDraw(SkiaSharpDrawingContext context)
+        {
+            if (Opacity == 1) return;
+
+            context.PaintTask.ResetOpacity(context, this);
         }
 
         /// <summary>

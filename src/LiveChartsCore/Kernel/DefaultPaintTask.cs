@@ -215,5 +215,17 @@ namespace LiveChartsCore.Kernel
         {
             throw new System.NotImplementedException();
         }
+
+        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.SetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
+        public void SetOpacity(TDrawingContext context, IGeometry<TDrawingContext> geometry)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.ResetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
+        public void ResetOpacity(TDrawingContext context, IGeometry<TDrawingContext> geometry)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
