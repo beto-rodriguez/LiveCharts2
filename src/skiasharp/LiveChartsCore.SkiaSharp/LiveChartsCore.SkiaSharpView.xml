@@ -155,6 +155,11 @@
             The transform
             </summary>
         </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.localTransform">
+            <summary>
+            The local transform
+            </summary>
+        </member>
         <member name="F:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.x">
             <summary>
             The x
@@ -170,7 +175,12 @@
             The rotation
             </summary>
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.#ctor">
+        <member name="F:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.hasCustomTransform">
+            <summary>
+            The has custom transform
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.#ctor(System.Boolean)">
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry"/> class.
             </summary>
@@ -221,6 +231,12 @@
             </summary>
             <param name="paintTaks">The paint task.</param>
             <returns>the size of the geometry</returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.GetTransform(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
+            <summary>
+            Gets the actual transform.
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.GetPosition(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)">
             <summary>
@@ -277,6 +293,9 @@
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LabelGeometry.GetPosition(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)">
             <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.GetPosition(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LabelGeometry.GetTransform(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.GetTransform(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)" />
         </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LineGeometry">
             <inheritdoc cref="T:LiveChartsCore.Drawing.ILineGeometry`1" />
@@ -808,6 +827,11 @@
             Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Motion.MatrixMotionProperty"/> class.
             </summary>
             <param name="propertyName">Name of the property.</param>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Motion.MatrixMotionProperty.#ctor(System.String,SkiaSharp.SKMatrix)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Motion.MatrixMotionProperty"/> class.
+            </summary>
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Motion.MatrixMotionProperty.OnGetMovement(System.Single)">
             <inheritdoc cref="M:LiveChartsCore.Motion.MotionProperty`1.OnGetMovement(System.Single)" />

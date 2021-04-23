@@ -21,6 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Axes\LabelsRotation\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Axes\Multiple\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -138,6 +141,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Axes\LabelsRotation\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Axes\Multiple\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>

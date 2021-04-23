@@ -107,6 +107,7 @@ namespace LiveChartsCore.SkiaSharpView
                                })
                                .ForAxes(axis =>
                                {
+                                   axis.TextSize = 16;
                                    axis.ShowSeparatorLines = true;
                                    axis.TextBrush = DefaultPaintTask;
                                    axis.SeparatorsBrush = DefaultPaintTask;
@@ -137,6 +138,8 @@ namespace LiveChartsCore.SkiaSharpView
                                })
                                .ForBarSeries(barSeries =>
                                {
+                                   // only ForAnySeries() has run, a bar series is not
+                                   // any of the previous types.
                                    barSeries.Rx = 6;
                                    barSeries.Ry = 6;
                                })
@@ -200,6 +203,7 @@ namespace LiveChartsCore.SkiaSharpView
                                })
                                .ForAxes(axis =>
                                {
+                                   axis.TextSize = 18;
                                    axis.ShowSeparatorLines = true;
                                    axis.TextBrush = DefaultPaintTask;
                                    axis.SeparatorsBrush = DefaultPaintTask;

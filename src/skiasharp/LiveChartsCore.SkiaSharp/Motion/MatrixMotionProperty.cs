@@ -37,7 +37,18 @@ namespace LiveChartsCore.SkiaSharpView.Motion
         public MatrixMotionProperty(string propertyName)
             : base(propertyName)
         {
+            fromValue = SKMatrix.Identity;
+            toValue = SKMatrix.Identity;
+        }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MatrixMotionProperty"/> class.
+        /// </summary>
+        public MatrixMotionProperty(string propertyName, SKMatrix value)
+            : base(propertyName)
+        {
+            fromValue = value;
+            toValue = value;
         }
 
         /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />

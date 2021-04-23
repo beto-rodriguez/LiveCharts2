@@ -4,6 +4,8 @@
     {
         public static string[] Samples = new[]
         {
+            "Axes/LabelsRotation",
+
             "Lines/Basic",
             "Lines/AutoUpdate",
             "Lines/Straight",
@@ -41,6 +43,7 @@
             "Axes/ColorsAndPosition",
             "Axes/LabelsFormat",
             "Axes/NamedLabels",
+
             "Axes/Multiple",
 
             "General/Tooltips",

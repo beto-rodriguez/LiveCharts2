@@ -38,6 +38,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// Initializes a new instance of the <see cref="LabelGeometry"/> class.
         /// </summary>
         public LabelGeometry()
+            : base(true)
         {
             _textSizeProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize)));
         }
@@ -95,8 +96,15 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="Geometry.GetPosition(SkiaSharpDrawingContext, SKPaint)" />
         protected override SKPoint GetPosition(SkiaSharpDrawingContext context, SKPaint paint)
         {
-            var size = Measure(context.PaintTask);
+            return new SKPoint(X, Y);
+        }
+
+        /// <inheritdoc cref="Geometry.GetTransform(SkiaSharpDrawingContext)" />
+        protected override SKMatrix GetTransform(SkiaSharpDrawingContext context)
+        {
+            var size = OnMeasure(context.PaintTask);
             float dx = 0f, dy = 0f;
+
             switch (VerticalAlign)
             {
                 case Align.Start: dy = size.Height; break;
@@ -108,12 +116,20 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             switch (HorizontalAlign)
             {
                 case Align.Start: dx = 0; break;
-                case Align.Middle: dx = size.Width * 0.5f; break;
+                case Align.Middle: dx = -size.Width * 0.5f; break;
                 case Align.End: dx = size.Width; break;
                 default:
                     break;
             }
-            return new SKPoint(X - dx + Padding.Left, Y + dy - Padding.Top);
+
+            var result = new SKMatrix();
+
+            var locationTransform = SKMatrix.CreateTranslation(dx + Padding.Left, dy - Padding.Top);
+            var geometryTransform = Transform;
+
+            SKMatrix.Concat(ref result, ref locationTransform, ref geometryTransform);
+
+            return result;
         }
     }
 }

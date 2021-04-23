@@ -34,12 +34,16 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>, IVisualChartPoint<SkiaSharpDrawingContext>
     {
         private bool _hasTransform = false;
-        private bool _hasRotation = false;
 
         /// <summary>
         /// The transform
         /// </summary>
         protected readonly MatrixMotionProperty transform;
+
+        /// <summary>
+        /// The local transform
+        /// </summary>
+        protected readonly MatrixMotionProperty localTransform;
 
         /// <summary>
         /// The x
@@ -57,22 +61,24 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         protected readonly FloatMotionProperty rotation;
 
         /// <summary>
+        /// The has custom transform
+        /// </summary>
+        protected bool hasCustomTransform = false;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Geometry"/> class.
         /// </summary>
-        public Geometry()
+        public Geometry(bool hasCustomTransform = false)
         {
             x = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0));
             y = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0));
-            transform = RegisterMotionProperty(new MatrixMotionProperty(nameof(Transform)));
+            transform = RegisterMotionProperty(new MatrixMotionProperty(nameof(Transform), SKMatrix.Identity));
             rotation = RegisterMotionProperty(new FloatMotionProperty(nameof(Rotation), 0));
+            this.hasCustomTransform = hasCustomTransform;
         }
 
         /// <inheritdoc cref="IGeometry{TDrawingContext}.X" />
-        public float X
-        {
-            get => x.GetMovement(this);
-            set => x.SetMovement(value, this);
-        }
+        public float X { get => x.GetMovement(this); set => x.SetMovement(value, this); }
 
         /// <inheritdoc cref="IGeometry{TDrawingContext}.Y" />
         public float Y { get => y.GetMovement(this); set => y.SetMovement(value, this); }
@@ -86,23 +92,11 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         public SKMatrix Transform
         {
             get => transform.GetMovement(this);
-            set
-            {
-                transform.SetMovement(value, this);
-                _hasTransform = !value.IsIdentity;
-            }
+            set { transform.SetMovement(value, this); _hasTransform = !value.IsIdentity; }
         }
 
         /// <inheritdoc cref="IGeometry{TDrawingContext}.Rotation" />
-        public float Rotation
-        {
-            get => rotation.GetMovement(this);
-            set
-            {
-                rotation.SetMovement(value, this);
-                _hasRotation = Math.Abs(value) > 0.01;
-            }
-        }
+        public float Rotation { get => rotation.GetMovement(this); set => rotation.SetMovement(value, this); }
 
         /// <inheritdoc cref="IVisualChartPoint{TDrawingContext}.HighlightableGeometry" />
         public IDrawable<SkiaSharpDrawingContext> HighlightableGeometry => GetHighlitableGeometry();
@@ -115,40 +109,28 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         {
             var hasRotation = Rotation != 0;
 
-            if (_hasTransform || hasRotation)
+            if (_hasTransform || hasRotation || hasCustomTransform)
             {
                 _ = context.Canvas.Save();
 
                 if (hasRotation)
                 {
                     var p = GetPosition(context, context.Paint);
-                    var tx = p.X;
-                    var ty = p.Y;
-                    context.Canvas.Translate(tx, ty);
-
-                    var t = SKMatrix.CreateRotationDegrees(Rotation);
-                    context.Canvas.Concat(ref t);
-
-                    context.Canvas.Translate(-tx, -ty);
+                    context.Canvas.Translate(p.X, p.Y);
+                    context.Canvas.RotateDegrees(Rotation);
+                    context.Canvas.Translate(-p.X, -p.Y);
                 }
 
-                if (_hasTransform)
+                if (_hasTransform || hasCustomTransform)
                 {
-                    var p = GetPosition(context, context.Paint);
-                    var tx = p.X;
-                    var ty = p.Y;
-                    context.Canvas.Translate(tx, ty);
-
-                    var t = Transform;
-                    context.Canvas.Concat(ref t);
-
-                    context.Canvas.Translate(-tx, -ty);
+                    var transform = GetTransform(context);
+                    context.Canvas.Concat(ref transform);
                 }
             }
 
             OnDraw(context, context.Paint);
 
-            if (_hasTransform || hasRotation) context.Canvas.Restore();
+            if (_hasTransform || hasRotation | hasCustomTransform) context.Canvas.Restore();
         }
 
         /// <summary>
@@ -173,7 +155,10 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
                 const double toRadias = Math.PI / 180;
 
                 if (r < 0) r += 360;
-                r %= 90;
+                r %= 360;
+
+                if (r > 180) r = 360 - r;
+                if (r > 90 && r <= 180) r = 180 - r;
 
                 var w = (float)(Math.Cos(r * toRadias) * measure.Width + Math.Sin(r * toRadias) * measure.Height);
                 var h = (float)(Math.Sin(r * toRadias) * measure.Width + Math.Cos(r * toRadias) * measure.Height);
@@ -190,6 +175,15 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <param name="paintTaks">The paint task.</param>
         /// <returns>the size of the geometry</returns>
         protected abstract SizeF OnMeasure(PaintTask paintTaks);
+
+        /// <summary>
+        /// Gets the actual transform.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual SKMatrix GetTransform(SkiaSharpDrawingContext context)
+        {
+            return Transform;
+        }
 
         /// <summary>
         /// Gets the position of the geometry from the top left corner of the view.
