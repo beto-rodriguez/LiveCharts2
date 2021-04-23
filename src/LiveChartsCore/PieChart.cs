@@ -134,10 +134,7 @@ namespace LiveChartsCore
         public override void Update(bool throttling = true)
         {
             updateThrottler.Call();
-            //updateThrottler.LockTime = chartView.AnimationsSpeed;
-            //updateThrottler.TryRun();
         }
-
 
         /// <summary>
         /// Measures this chart.
@@ -240,6 +237,7 @@ namespace LiveChartsCore
             controlSize = _chartView.ControlSize;
 
             Series = _chartView.Series
+                .Where(x => x.IsVisible)
                 .Cast<IPieSeries<TDrawingContext>>()
                 .Select(series =>
                 {
