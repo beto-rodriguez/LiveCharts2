@@ -47,6 +47,7 @@
             "General/Tooltips",
             "General/Legends",
             "General/Animations",
+            "General/Visibility",
             "General/TemplatedTooltips",
             "General/TemplatedLegends",
             "General/UserDefinedTypes",

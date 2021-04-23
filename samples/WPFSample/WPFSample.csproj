@@ -84,6 +84,9 @@
     <Compile Update="General\NullPoints\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="General\Visibility\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Lines\Area\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -222,6 +225,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="General\NullPoints\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="General\Visibility\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

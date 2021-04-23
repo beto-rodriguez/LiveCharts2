@@ -191,7 +191,7 @@
         </member>
         <member name="M:LiveChartsCore.CartesianChart`1.FindPointsNearTo(System.Drawing.PointF)">
             <summary>
-            Finds the points near to the speficied location.
+            Finds the points near to the specified location.
             </summary>
             <param name="pointerPosition">The pointer position.</param>
             <returns></returns>
@@ -4215,6 +4215,14 @@
             The values.
             </value>
         </member>
+        <member name="P:LiveChartsCore.Kernel.ISeries.IsVisible">
+            <summary>
+            Gets or sets a value indicating whether this instance is visible.
+            </summary>
+            <value>
+              <c>true</c> if this instance is visible; otherwise, <c>false</c>.
+            </value>
+        </member>
         <member name="P:LiveChartsCore.Kernel.ISeries.ZIndex">
             <summary>
             Gets or sets the z index position.
@@ -6146,13 +6154,13 @@
         </member>
         <member name="P:LiveChartsCore.Series`4.OnPointAddedToState">
             <summary>
-            Gets or sets a delegate that will be called everytime a <see cref="T:LiveChartsCore.Kernel.ChartPoint"/> instance
+            Gets or sets a delegate that will be called every time a <see cref="T:LiveChartsCore.Kernel.ChartPoint"/> instance
             is added to a state.
             </summary>
         </member>
         <member name="P:LiveChartsCore.Series`4.OnPointRemovedFromState">
             <summary>
-            Gets or sets a delegate that will be called everytime a <see cref="T:LiveChartsCore.Kernel.ChartPoint"/> instance
+            Gets or sets a delegate that will be called every time a <see cref="T:LiveChartsCore.Kernel.ChartPoint"/> instance
             is removed from a state.
             </summary>
         </member>
@@ -6165,14 +6173,14 @@
         <member name="P:LiveChartsCore.Series`4.DataLabelsFormatter">
             <inheritdoc cref="P:LiveChartsCore.Kernel.ISeries.DataLabelsFormatter" />
         </member>
+        <member name="P:LiveChartsCore.Series`4.IsVisible">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ISeries.IsVisible" />
+        </member>
         <member name="M:LiveChartsCore.Series`4.GetStackGroup">
             <inheritdoc />
         </member>
         <member name="M:LiveChartsCore.Series`4.Fetch(LiveChartsCore.Kernel.IChart)">
             <inheritdoc cref="M:LiveChartsCore.Kernel.ISeries.Fetch(LiveChartsCore.Kernel.IChart)"/>
-        </member>
-        <member name="M:LiveChartsCore.Series`4.LiveChartsCore#Kernel#ISeries#FindPointsNearTo(LiveChartsCore.Kernel.IChart,System.Drawing.PointF)">
-            <inheritdoc />
         </member>
         <member name="M:LiveChartsCore.Series`4.AddPointToState(LiveChartsCore.Kernel.ChartPoint,System.String)">
             <inheritdoc />

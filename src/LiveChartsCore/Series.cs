@@ -79,6 +79,7 @@ namespace LiveChartsCore
         private int _zIndex;
         private Func<ChartPoint, string> _tooltipLabelFormatter = (point) => $"{point.Context.Series.Name} {point.PrimaryValue}";
         private Func<ChartPoint, string> _dataLabelsFormatter = (point) => $"{point.PrimaryValue}";
+        private bool _isVisible = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -149,13 +150,13 @@ namespace LiveChartsCore
         public event Action<ISeries>? Disposing;
 
         /// <summary>
-        /// Gets or sets a delegate that will be called everytime a <see cref="ChartPoint"/> instance
+        /// Gets or sets a delegate that will be called every time a <see cref="ChartPoint"/> instance
         /// is added to a state.
         /// </summary>
         public Action<TVisual, IChartView<TDrawingContext>>? OnPointAddedToState { get; set; }
 
         /// <summary>
-        /// Gets or sets a delegate that will be called everytime a <see cref="ChartPoint"/> instance
+        /// Gets or sets a delegate that will be called every time a <see cref="ChartPoint"/> instance
         /// is removed from a state.
         /// </summary>
         public Action<TVisual, IChartView<TDrawingContext>>? OnPointRemovedFromState { get; set; }
@@ -164,10 +165,30 @@ namespace LiveChartsCore
         public int ZIndex { get => _zIndex; set { _zIndex = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="ISeries.TooltipLabelFormatter" />
-        public Func<ChartPoint, string> TooltipLabelFormatter { get => _tooltipLabelFormatter; set { _tooltipLabelFormatter = value; OnPropertyChanged(); } }
+        public Func<ChartPoint, string> TooltipLabelFormatter
+        {
+            get => _tooltipLabelFormatter;
+            set { _tooltipLabelFormatter = value; OnPropertyChanged(); }
+        }
 
         /// <inheritdoc cref="ISeries.DataLabelsFormatter" />
-        public Func<ChartPoint, string> DataLabelsFormatter { get => _dataLabelsFormatter; set { _dataLabelsFormatter = value; OnPropertyChanged(); } }
+        public Func<ChartPoint, string> DataLabelsFormatter
+        {
+            get => _dataLabelsFormatter;
+            set { _dataLabelsFormatter = value; OnPropertyChanged(); }
+        }
+
+        /// <inheritdoc cref="ISeries.IsVisible" />
+        public bool IsVisible
+        {
+            get => _isVisible;
+            set
+            {
+                _isVisible = value;
+                if (!_isVisible) RestartAnimations();
+                OnPropertyChanged();
+            }
+        }
 
         /// <inheritdoc />
         public virtual int GetStackGroup()
@@ -188,10 +209,6 @@ namespace LiveChartsCore
             return Fetch(chart);
         }
 
-        ///// <inheritdoc />
-        //IEnumerable<ChartPoint> ISeries.Fetch(IChart chart) => Fetch(chart);
-
-        /// <inheritdoc />
         IEnumerable<TooltipPoint> ISeries.FindPointsNearTo(IChart chart, PointF pointerPosition)
         {
             return FilterTooltipPoints(Fetch(chart), chart, pointerPosition);

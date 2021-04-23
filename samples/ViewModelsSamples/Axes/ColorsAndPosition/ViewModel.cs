@@ -79,6 +79,8 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
             XAxes[0].Position = selectedPosition;
         }
 
+        // The next commands are only to enable XAML bindings
+        // they are not used in the WinForms sample
         public ICommand SetNewColorCommand => new Command(o => SetNewColor());
         public ICommand TogglePositionCommand => new Command(o => TogglePosition());
     }

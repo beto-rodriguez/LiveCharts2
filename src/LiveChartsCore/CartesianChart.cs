@@ -128,7 +128,7 @@ namespace LiveChartsCore
         }
 
         /// <summary>
-        /// Finds the points near to the speficied location.
+        /// Finds the points near to the specified location.
         /// </summary>
         /// <param name="pointerPosition">The pointer position.</param>
         /// <returns></returns>
@@ -454,6 +454,7 @@ namespace LiveChartsCore
             _zoomMode = _chartView.ZoomMode;
 
             Series = _chartView.Series
+                .Where(x => x.IsVisible)
                 .Cast<ICartesianSeries<TDrawingContext>>()
                 .Select(series =>
                 {
