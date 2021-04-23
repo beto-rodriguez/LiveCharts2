@@ -96,7 +96,7 @@ The following topics will work on any platform.
 - [x] ~~Create the Axis class, an object that defines the data range in a plane (x or y) and scale a chart point to the screen based on the data range in the axis~~
 - [x] ~~Draw Axes in the UI~~
 - [x] ~~Multiple axes in the same chart~~
-- [ ] Axis labels rotation
+- [x] ~~Axis labels rotation~~
 - [ ] Date scaled Axes
 - [ ] Logaritmic scaled Axes
 - [ ] Allow the chart to have external elements in the UI ([visual elements](https://lvcharts.net/App/examples/v1/wpf/Visual%20Elements))
