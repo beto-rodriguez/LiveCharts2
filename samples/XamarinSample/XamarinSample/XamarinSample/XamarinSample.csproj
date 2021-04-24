@@ -22,7 +22,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Axes\LabelsRotation\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Axes\ColorsAndPositions\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Axes\Multiple\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Axes\NamedLabels\View.xaml.cs">
@@ -56,6 +62,12 @@
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Bars\WithBackground\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="General\Animations\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="General\Visibility\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="General\TemplatedLegends\View.xaml.cs">
