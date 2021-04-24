@@ -13,20 +13,19 @@ namespace AvaloniaSample
 #if DEBUG
             this.AttachDevTools();
 #endif
-            Samples = ViewModelsSamples.Index.Samples;
-            DataContext = this;
+
+            DataContext = new MainWindowViewModel();
         }
 
         private void OnPointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
         {
             var content = this.FindControl<ContentControl>("content");
             if ((sender as Border)?.DataContext is not string ctx) throw new Exception("Sample not found");
-            Active = ctx.Replace('/', '.');
-            content.Content = Activator.CreateInstance(null, $"AvaloniaSample.{Active}.View")?.Unwrap();
+            content.Content = Activator.CreateInstance(null, $"AvaloniaSample.{ctx.Replace('/', '.')}.View")?.Unwrap();
+            if (content.Content is not Home.View homeView) return;
+            if (DataContext is not MainWindowViewModel dc) throw new Exception();
+            homeView.MainWindowVM = dc;
         }
-
-        public string Active { get; set; }
-        public string[] Samples { get; set; }
 
         private void InitializeComponent()
         {

@@ -4,7 +4,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
         xmlns:vms="using:ViewModelsSamples"
-        Background="#b9eeeeee"
+        xmlns:local="using:AvaloniaSample"
+        Background="{Binding Background}"
         TransparencyLevelHint="Blur"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaTitleBarHeightHint="50"
@@ -39,7 +40,10 @@
             <ItemsControl.ItemTemplate>
               <DataTemplate>
                 <Border Padding="0 6" Cursor="Hand"  PointerPressed="OnPointerPressed">
-                  <TextBlock Text="{Binding}" Foreground="#707070" FontSize="16" FontFamily="Open Sans"></TextBlock>
+                  <TextBlock Text="{Binding}"
+                             Foreground="{Binding DataContext.Foreground, RelativeSource={RelativeSource AncestorType=Window}}"
+                             FontSize="16"
+                             FontFamily="Open Sans"></TextBlock>
                 </Border>
               </DataTemplate>
             </ItemsControl.ItemTemplate>
@@ -49,7 +53,7 @@
       </Grid>
 
       <Border Grid.Column="1"
-              Background="White"
+              Background="{Binding DataContext.HighlightedBackgound, RelativeSource={RelativeSource AncestorType=Window}}"
               Margin="20 35 0 0"
               Padding="25"
               BoxShadow="0 0 10 0 #15000000, 0 0 10 0 #15000000, 0 0 10 0 #15000000, 0 0 10 0 #15000000">

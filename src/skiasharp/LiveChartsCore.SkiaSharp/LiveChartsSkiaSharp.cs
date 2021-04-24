@@ -54,12 +54,7 @@ namespace LiveChartsCore.SkiaSharpView
             (LiveChartsSettings settings) => settings
                 .AddDefaultMappers()
                 .AddSkiaSharp()
-                .AddLightTheme(theme =>
-                    theme.Style
-                        .HasRuleForLineSeries(lineSeries =>
-                        {
-                            lineSeries.LineSmoothness = 0;
-                        }));
+                .AddLightTheme();
 
         /// <summary>
         /// Adds SkiaSharp as the UI provider for LiveCharts.

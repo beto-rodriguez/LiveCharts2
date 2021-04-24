@@ -89,6 +89,9 @@
     <Compile Update="General\NullPoints\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Home\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Lines\Area\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

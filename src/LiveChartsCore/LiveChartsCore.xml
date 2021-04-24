@@ -4492,7 +4492,9 @@
         </member>
         <member name="M:LiveChartsCore.Kernel.LiveChartsSettings.AddDefaultMappers">
             <summary>
-            Enables LiveCharts to be able to plot short, int, long, float, double, decimal and <see cref="T:LiveChartsCore.Kernel.ChartPoint"/>.
+            Enables LiveCharts to be able to plot short, int, long, float, double, decimal, short?, int?, long?, float?, double?, decimal?,
+            <see cref="T:LiveChartsCore.Defaults.WeightedPoint"/>, <see cref="T:LiveChartsCore.Defaults.ObservableValue"/>, <see cref="T:LiveChartsCore.Defaults.ObservablePoint"/>, <see cref="T:LiveChartsCore.Defaults.WeightedPointF"/>,
+            <see cref="T:LiveChartsCore.Defaults.ObservableValueF"/> and <see cref="T:LiveChartsCore.Defaults.ObservablePointF"/>.
             </summary>
             <returns></returns>
         </member>

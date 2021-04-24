@@ -34,6 +34,8 @@ namespace LiveChartsCore.Themes
     public class Theme<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        private VisualsStyle<TDrawingContext> _style;
+
         /// <summary>
         /// Gets the current colors.
         /// </summary>
@@ -48,7 +50,11 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The style.
         /// </value>
-        public VisualsStyle<TDrawingContext>? Style { get; private set; }
+        public VisualsStyle<TDrawingContext> Style
+        {
+            get => _style ?? throw new Exception("There is no style defined yet.");
+            private set => _style = value;
+        }
 
         /// <summary>
         /// Gets or sets the series default resolver.
