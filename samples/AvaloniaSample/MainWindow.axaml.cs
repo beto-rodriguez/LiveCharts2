@@ -21,9 +21,11 @@ namespace AvaloniaSample
         {
             var content = this.FindControl<ContentControl>("content");
             if ((sender as Border)?.DataContext is not string ctx) throw new Exception("Sample not found");
-            content.Content = Activator.CreateInstance(null, $"AvaloniaSample.{ctx.Replace('/', '.')}.View")?.Unwrap();
+            Active = ctx.Replace('/', '.');
+            content.Content = Activator.CreateInstance(null, $"AvaloniaSample.{Active}.View")?.Unwrap();
         }
 
+        public string Active { get; set; }
         public string[] Samples { get; set; }
 
         private void InitializeComponent()

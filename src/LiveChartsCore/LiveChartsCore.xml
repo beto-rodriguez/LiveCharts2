@@ -6488,92 +6488,12 @@
             The material design800.
             </value>
         </member>
-        <member name="P:LiveChartsCore.ColorPacks.Blues">
-            <summary>
-            Gets the blues colors.
-            </summary>
-            <value>
-            The blues.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.ColorPacks.Reds">
-            <summary>
-            Gets the reds.
-            </summary>
-            <value>
-            The reds.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.ColorPacks.Greens">
-            <summary>
-            Gets the greens.
-            </summary>
-            <value>
-            The greens.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.ColorPacks.Grays">
-            <summary>
-            Gets the grays.
-            </summary>
-            <value>
-            The grays.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.ColorPacks.Energy">
-            <summary>
-            Gets the energy.
-            </summary>
-            <value>
-            The energy.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.ColorPacks.Nature">
-            <summary>
-            Gets the nature.
-            </summary>
-            <value>
-            The nature.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.ColorPacks.Cloudy">
-            <summary>
-            Gets the cloudy.
-            </summary>
-            <value>
-            The cloudy.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.ColorPacks.Candy">
-            <summary>
-            Gets the candy.
-            </summary>
-            <value>
-            The candy.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.ColorPacks.Fishy">
-            <summary>
-            Gets the fishy.
-            </summary>
-            <value>
-            The fishy.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.ColorPacks.LateSummer">
-            <summary>
-            Gets the late summer.
-            </summary>
-            <value>
-            The late summer.
-            </value>
-        </member>
         <member name="T:LiveChartsCore.Themes.LiveChartsStylerExtensions">
             <summary>
             Defines the LiveCharts styler extensions.
             </summary>
         </member>
-        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForCharts``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IChartView{``0}})">
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.HasRuleForCharts``1(LiveChartsCore.Themes.VisualsStyle{``0},System.Action{LiveChartsCore.Kernel.IChartView{``0}})">
             <summary>
              Defines a style builder for <see cref="T:LiveChartsCore.Kernel.IChartView`1"/> objects.
             </summary>
@@ -6582,7 +6502,7 @@
             <param name="predicate">The predicate.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForAxes``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IAxis{``0}})">
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.HasRuleForAxes``1(LiveChartsCore.Themes.VisualsStyle{``0},System.Action{LiveChartsCore.Kernel.IAxis{``0}})">
             <summary>
              Defines a style builder for <see cref="T:LiveChartsCore.Kernel.IChartView`1"/> objects.
             </summary>
@@ -6591,7 +6511,7 @@
             <param name="predicate">The predicate.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForAnySeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IDrawableSeries{``0}})">
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.HasRuleForAnySeries``1(LiveChartsCore.Themes.VisualsStyle{``0},System.Action{LiveChartsCore.Kernel.IDrawableSeries{``0}})">
             <summary>
              Defines a style builder for <see cref="T:LiveChartsCore.Kernel.IDrawableSeries`1"/> objects.
             </summary>
@@ -6600,7 +6520,7 @@
             <param name="predicate">The predicate.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForPieSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IPieSeries{``0}})">
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.HasRuleForPieSeries``1(LiveChartsCore.Themes.VisualsStyle{``0},System.Action{LiveChartsCore.Kernel.IPieSeries{``0}})">
             <summary>
              Defines a style builder for <see cref="T:LiveChartsCore.Kernel.IPieSeries`1"/> objects.
             </summary>
@@ -6609,7 +6529,7 @@
             <param name="predicate">The predicate.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForLineSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.ILineSeries{``0}})">
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.HasRuleForLineSeries``1(LiveChartsCore.Themes.VisualsStyle{``0},System.Action{LiveChartsCore.Kernel.ILineSeries{``0}})">
             <summary>
              Defines a style builder for <see cref="T:LiveChartsCore.Kernel.ILineSeries`1"/> objects.
             </summary>
@@ -6618,7 +6538,7 @@
             <param name="predicate">The predicate.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForStackedLineSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.ILineSeries{``0}})">
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.HasRuleForStackedLineSeries``1(LiveChartsCore.Themes.VisualsStyle{``0},System.Action{LiveChartsCore.Kernel.ILineSeries{``0}})">
             <summary>
              Defines a style builder for tacked <see cref="T:LiveChartsCore.Kernel.ILineSeries`1"/> objects.
             </summary>
@@ -6627,7 +6547,7 @@
             <param name="predicate">The predicate.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForBarSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IBarSeries{``0}})">
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.HasRuleForBarSeries``1(LiveChartsCore.Themes.VisualsStyle{``0},System.Action{LiveChartsCore.Kernel.IBarSeries{``0}})">
             <summary>
              Defines a style builder for <see cref="T:LiveChartsCore.Kernel.IBarSeries`1"/> objects.
             </summary>
@@ -6636,7 +6556,7 @@
             <param name="predicate">The predicate.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForColumnSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IBarSeries{``0}})">
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.HasRuleForColumnSeries``1(LiveChartsCore.Themes.VisualsStyle{``0},System.Action{LiveChartsCore.Kernel.IBarSeries{``0}})">
             <summary>
              Defines a style builder for vertical <see cref="T:LiveChartsCore.Kernel.IBarSeries`1"/> objects.
             </summary>
@@ -6645,7 +6565,7 @@
             <param name="predicate">The predicate.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForRowSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IBarSeries{``0}})">
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.HasRuleForRowSeries``1(LiveChartsCore.Themes.VisualsStyle{``0},System.Action{LiveChartsCore.Kernel.IBarSeries{``0}})">
             <summary>
              Defines a style builder for horizontal <see cref="T:LiveChartsCore.Kernel.IBarSeries`1"/> objects.
             </summary>
@@ -6654,7 +6574,7 @@
             <param name="predicate">The predicate.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForStackedBarSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IStackedBarSeries{``0}})">
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.HasRuleForStackedBarSeries``1(LiveChartsCore.Themes.VisualsStyle{``0},System.Action{LiveChartsCore.Kernel.IStackedBarSeries{``0}})">
             <summary>
              Defines a style builder for stacked <see cref="T:LiveChartsCore.Kernel.IBarSeries`1"/> objects.
             </summary>
@@ -6663,7 +6583,7 @@
             <param name="predicate">The predicate.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForStackedColumnSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IStackedBarSeries{``0}})">
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.HasRuleForStackedColumnSeries``1(LiveChartsCore.Themes.VisualsStyle{``0},System.Action{LiveChartsCore.Kernel.IStackedBarSeries{``0}})">
             <summary>
              Defines a style builder for stacked vertical <see cref="T:LiveChartsCore.Kernel.IBarSeries`1"/> objects.
             </summary>
@@ -6672,7 +6592,7 @@
             <param name="predicate">The predicate.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.ForStackedRowSeries``1(LiveChartsCore.Themes.VisualsInitializer{``0},System.Action{LiveChartsCore.Kernel.IStackedBarSeries{``0}})">
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.HasRuleForStackedRowSeries``1(LiveChartsCore.Themes.VisualsStyle{``0},System.Action{LiveChartsCore.Kernel.IStackedBarSeries{``0}})">
             <summary>
              Defines a style builder for stacked horizontal <see cref="T:LiveChartsCore.Kernel.IBarSeries`1"/> objects.
             </summary>
@@ -6693,6 +6613,14 @@
             </summary>
             <value>
             The current colors.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Themes.Theme`1.Style">
+            <summary>
+            Gets the style.
+            </summary>
+            <value>
+            The style.
             </value>
         </member>
         <member name="P:LiveChartsCore.Themes.Theme`1.SeriesDefaultsResolver">
@@ -6718,7 +6646,7 @@
             <param name="colors">The colors.</param>
             <returns>The current theme instance</returns>
         </member>
-        <member name="M:LiveChartsCore.Themes.Theme`1.WithVisualsInitializer(System.Action{LiveChartsCore.Themes.VisualsInitializer{`0}})">
+        <member name="M:LiveChartsCore.Themes.Theme`1.WithStyle(System.Action{LiveChartsCore.Themes.VisualsStyle{`0}})">
             <summary>
             Creates a new styles builder and configures it using the given predicate.
             </summary>
@@ -6758,13 +6686,13 @@
             </summary>
             <param name="axis">The axis.</param>
         </member>
-        <member name="T:LiveChartsCore.Themes.VisualsInitializer`1">
+        <member name="T:LiveChartsCore.Themes.VisualsStyle`1">
             <summary>
             Defines an object that must initialize live charts visual objects, this object defines how things will 
             be drawn by default, it is highly related to themes.
             </summary>
         </member>
-        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.ChartBuilder">
+        <member name="P:LiveChartsCore.Themes.VisualsStyle`1.ChartBuilder">
             <summary>
             Gets or sets the chart builder.
             </summary>
@@ -6772,7 +6700,7 @@
             The chart builder.
             </value>
         </member>
-        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.AxisBuilder">
+        <member name="P:LiveChartsCore.Themes.VisualsStyle`1.AxisBuilder">
             <summary>
             Gets or sets the axis builder.
             </summary>
@@ -6780,7 +6708,7 @@
             The axis builder.
             </value>
         </member>
-        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.SeriesBuilder">
+        <member name="P:LiveChartsCore.Themes.VisualsStyle`1.SeriesBuilder">
             <summary>
             Gets or sets the series builder.
             </summary>
@@ -6788,7 +6716,7 @@
             The pie series builder.
             </value>
         </member>
-        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.PieSeriesBuilder">
+        <member name="P:LiveChartsCore.Themes.VisualsStyle`1.PieSeriesBuilder">
             <summary>
             Gets or sets the pie series builder.
             </summary>
@@ -6796,7 +6724,7 @@
             The pie series builder.
             </value>
         </member>
-        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.CartesianSeriesBuilder">
+        <member name="P:LiveChartsCore.Themes.VisualsStyle`1.CartesianSeriesBuilder">
             <summary>
             Gets or sets the Cartesian series builder.
             </summary>
@@ -6804,7 +6732,7 @@
             The pie series builder.
             </value>
         </member>
-        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.LineSeriesBuilder">
+        <member name="P:LiveChartsCore.Themes.VisualsStyle`1.LineSeriesBuilder">
             <summary>
             Gets or sets the line series builder.
             </summary>
@@ -6812,7 +6740,7 @@
             The pie series builder.
             </value>
         </member>
-        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.StackedLineSeriesBuilder">
+        <member name="P:LiveChartsCore.Themes.VisualsStyle`1.StackedLineSeriesBuilder">
             <summary>
             Gets or sets the stacked line series builder.
             </summary>
@@ -6820,7 +6748,7 @@
             The pie series builder.
             </value>
         </member>
-        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.BarSeriesBuilder">
+        <member name="P:LiveChartsCore.Themes.VisualsStyle`1.BarSeriesBuilder">
             <summary>
             Gets or sets the bar series builder.
             </summary>
@@ -6828,7 +6756,7 @@
             The pie series builder.
             </value>
         </member>
-        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.ColumnSeriesBuilder">
+        <member name="P:LiveChartsCore.Themes.VisualsStyle`1.ColumnSeriesBuilder">
             <summary>
             Gets or sets the column series builder.
             </summary>
@@ -6836,7 +6764,7 @@
             The pie series builder.
             </value>
         </member>
-        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.RowSeriesBuilder">
+        <member name="P:LiveChartsCore.Themes.VisualsStyle`1.RowSeriesBuilder">
             <summary>
             Gets or sets the row series builder.
             </summary>
@@ -6844,7 +6772,7 @@
             The pie series builder.
             </value>
         </member>
-        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.StackedBarSeriesBuilder">
+        <member name="P:LiveChartsCore.Themes.VisualsStyle`1.StackedBarSeriesBuilder">
             <summary>
             Gets or sets the stacked bar series builder.
             </summary>
@@ -6852,7 +6780,7 @@
             The pie series builder.
             </value>
         </member>
-        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.StackedColumnSeriesBuilder">
+        <member name="P:LiveChartsCore.Themes.VisualsStyle`1.StackedColumnSeriesBuilder">
             <summary>
             Gets or sets the stacked column series builder.
             </summary>
@@ -6860,7 +6788,7 @@
             The pie series builder.
             </value>
         </member>
-        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.StackedRowSeriesBuilder">
+        <member name="P:LiveChartsCore.Themes.VisualsStyle`1.StackedRowSeriesBuilder">
             <summary>
             Gets or sets the stacked row series builder.
             </summary>
@@ -6868,7 +6796,7 @@
             The pie series builder.
             </value>
         </member>
-        <member name="P:LiveChartsCore.Themes.VisualsInitializer`1.ScatterSeriesBuilder">
+        <member name="P:LiveChartsCore.Themes.VisualsStyle`1.ScatterSeriesBuilder">
             <summary>
             Gets or sets the scatter series builder.
             </summary>
@@ -6876,19 +6804,19 @@
             The pie series builder.
             </value>
         </member>
-        <member name="M:LiveChartsCore.Themes.VisualsInitializer`1.ApplyStyleToChart(LiveChartsCore.Kernel.IChartView{`0})">
+        <member name="M:LiveChartsCore.Themes.VisualsStyle`1.ApplyStyleToChart(LiveChartsCore.Kernel.IChartView{`0})">
             <summary>
             Constructs a chart.
             </summary>
             <param name="chart">The chart.</param>
         </member>
-        <member name="M:LiveChartsCore.Themes.VisualsInitializer`1.ApplyStyleToAxis(LiveChartsCore.Kernel.IAxis{`0})">
+        <member name="M:LiveChartsCore.Themes.VisualsStyle`1.ApplyStyleToAxis(LiveChartsCore.Kernel.IAxis{`0})">
             <summary>
             Constructs an axis.
             </summary>
             <param name="axis">The axis.</param>
         </member>
-        <member name="M:LiveChartsCore.Themes.VisualsInitializer`1.ApplyStyleToSeries(LiveChartsCore.Kernel.IDrawableSeries{`0})">
+        <member name="M:LiveChartsCore.Themes.VisualsStyle`1.ApplyStyleToSeries(LiveChartsCore.Kernel.IDrawableSeries{`0})">
             <summary>
             Constructs a series.
             </summary>

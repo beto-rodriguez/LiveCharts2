@@ -85,7 +85,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
             // workaround to deteck mouse events.
             // avalonia do not seem to detect events if brackground is not set.
-            Background = new SolidColorBrush(Colors.Transparent);
+            ((IChartView)this).BackColor = System.Drawing.Color.FromArgb(0, 0, 0, 0);
 
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
@@ -300,9 +300,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         System.Drawing.Color IChartView.BackColor
         {
-            get => Background is not SolidColorBrush b
+            get => Background is not ISolidColorBrush b
                     ? new System.Drawing.Color()
-                    : System.Drawing.Color.FromArgb(b.Color.R, b.Color.G, b.Color.B, b.Color.A);
+                    : System.Drawing.Color.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
             set
             {
                 Background = new SolidColorBrush(new A.Media.Color(value.R, value.G, value.B, value.A));
@@ -624,6 +624,15 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             {
                 _yObserver.Dispose((IEnumerable<IAxis>)change.OldValue.Value);
                 _yObserver.Initialize((IEnumerable<IAxis>)change.NewValue.Value);
+            }
+
+            if (change.Property.Name == nameof(Background))
+            {
+                var canvas = this.FindControl<MotionCanvas>("canvas");
+                var color = Background is not ISolidColorBrush b
+                    ? new System.Drawing.Color()
+                    : System.Drawing.Color.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
+                canvas.BackColor = new SkiaSharp.SKColor(color.R, color.G, color.B, color.A);
             }
 
             _ = Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);

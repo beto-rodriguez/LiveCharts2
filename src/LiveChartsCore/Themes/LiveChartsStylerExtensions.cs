@@ -38,12 +38,12 @@ namespace LiveChartsCore.Themes
         /// <param name="styler">The styler.</param>
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
-        public static VisualsInitializer<TDrawingContext> ForCharts<TDrawingContext>(
-            this VisualsInitializer<TDrawingContext> styler,
+        public static VisualsStyle<TDrawingContext> HasRuleForCharts<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
             Action<IChartView<TDrawingContext>> predicate)
             where TDrawingContext : DrawingContext
         {
-            styler.ChartBuilder = predicate;
+            styler.ChartBuilder.Add(predicate);
             return styler;
         }
 
@@ -54,12 +54,12 @@ namespace LiveChartsCore.Themes
         /// <param name="styler">The styler.</param>
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
-        public static VisualsInitializer<TDrawingContext> ForAxes<TDrawingContext>(
-            this VisualsInitializer<TDrawingContext> styler,
+        public static VisualsStyle<TDrawingContext> HasRuleForAxes<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
             Action<IAxis<TDrawingContext>> predicate)
             where TDrawingContext : DrawingContext
         {
-            styler.AxisBuilder = predicate;
+            styler.AxisBuilder.Add(predicate);
             return styler;
         }
 
@@ -70,12 +70,12 @@ namespace LiveChartsCore.Themes
         /// <param name="styler">The styler.</param>
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
-        public static VisualsInitializer<TDrawingContext> ForAnySeries<TDrawingContext>(
-            this VisualsInitializer<TDrawingContext> styler,
+        public static VisualsStyle<TDrawingContext> HasRuleForAnySeries<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
             Action<IDrawableSeries<TDrawingContext>> predicate)
             where TDrawingContext : DrawingContext
         {
-            styler.SeriesBuilder = predicate;
+            styler.SeriesBuilder.Add(predicate);
             return styler;
         }
 
@@ -86,12 +86,12 @@ namespace LiveChartsCore.Themes
         /// <param name="styler">The styler.</param>
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
-        public static VisualsInitializer<TDrawingContext> ForPieSeries<TDrawingContext>(
-            this VisualsInitializer<TDrawingContext> styler,
+        public static VisualsStyle<TDrawingContext> HasRuleForPieSeries<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
             Action<IPieSeries<TDrawingContext>> predicate)
             where TDrawingContext : DrawingContext
         {
-            styler.PieSeriesBuilder = predicate;
+            styler.PieSeriesBuilder.Add(predicate);
             return styler;
         }
 
@@ -102,12 +102,12 @@ namespace LiveChartsCore.Themes
         /// <param name="styler">The styler.</param>
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
-        public static VisualsInitializer<TDrawingContext> ForLineSeries<TDrawingContext>(
-            this VisualsInitializer<TDrawingContext> styler,
+        public static VisualsStyle<TDrawingContext> HasRuleForLineSeries<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
             Action<ILineSeries<TDrawingContext>> predicate)
             where TDrawingContext : DrawingContext
         {
-            styler.LineSeriesBuilder = predicate;
+            styler.LineSeriesBuilder.Add(predicate);
             return styler;
         }
 
@@ -118,12 +118,12 @@ namespace LiveChartsCore.Themes
         /// <param name="styler">The styler.</param>
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
-        public static VisualsInitializer<TDrawingContext> ForStackedLineSeries<TDrawingContext>(
-            this VisualsInitializer<TDrawingContext> styler,
+        public static VisualsStyle<TDrawingContext> HasRuleForStackedLineSeries<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
             Action<ILineSeries<TDrawingContext>> predicate)
             where TDrawingContext : DrawingContext
         {
-            styler.StackedLineSeriesBuilder = predicate;
+            styler.StackedLineSeriesBuilder.Add(predicate);
             return styler;
         }
 
@@ -134,12 +134,12 @@ namespace LiveChartsCore.Themes
         /// <param name="styler">The styler.</param>
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
-        public static VisualsInitializer<TDrawingContext> ForBarSeries<TDrawingContext>(
-            this VisualsInitializer<TDrawingContext> styler,
+        public static VisualsStyle<TDrawingContext> HasRuleForBarSeries<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
             Action<IBarSeries<TDrawingContext>> predicate)
             where TDrawingContext : DrawingContext
         {
-            styler.BarSeriesBuilder = predicate;
+            styler.BarSeriesBuilder.Add(predicate);
             return styler;
         }
 
@@ -150,12 +150,12 @@ namespace LiveChartsCore.Themes
         /// <param name="styler">The styler.</param>
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
-        public static VisualsInitializer<TDrawingContext> ForColumnSeries<TDrawingContext>(
-            this VisualsInitializer<TDrawingContext> styler,
+        public static VisualsStyle<TDrawingContext> HasRuleForColumnSeries<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
             Action<IBarSeries<TDrawingContext>> predicate)
             where TDrawingContext : DrawingContext
         {
-            styler.ColumnSeriesBuilder = predicate;
+            styler.ColumnSeriesBuilder.Add(predicate);
             return styler;
         }
 
@@ -166,12 +166,12 @@ namespace LiveChartsCore.Themes
         /// <param name="styler">The styler.</param>
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
-        public static VisualsInitializer<TDrawingContext> ForRowSeries<TDrawingContext>(
-            this VisualsInitializer<TDrawingContext> styler,
+        public static VisualsStyle<TDrawingContext> HasRuleForRowSeries<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
             Action<IBarSeries<TDrawingContext>> predicate)
             where TDrawingContext : DrawingContext
         {
-            styler.ColumnSeriesBuilder = predicate;
+            styler.ColumnSeriesBuilder.Add(predicate);
             return styler;
         }
 
@@ -182,12 +182,12 @@ namespace LiveChartsCore.Themes
         /// <param name="styler">The styler.</param>
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
-        public static VisualsInitializer<TDrawingContext> ForStackedBarSeries<TDrawingContext>(
-            this VisualsInitializer<TDrawingContext> styler,
+        public static VisualsStyle<TDrawingContext> HasRuleForStackedBarSeries<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
             Action<IStackedBarSeries<TDrawingContext>> predicate)
             where TDrawingContext : DrawingContext
         {
-            styler.StackedBarSeriesBuilder = predicate;
+            styler.StackedBarSeriesBuilder.Add(predicate);
             return styler;
         }
 
@@ -198,12 +198,12 @@ namespace LiveChartsCore.Themes
         /// <param name="styler">The styler.</param>
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
-        public static VisualsInitializer<TDrawingContext> ForStackedColumnSeries<TDrawingContext>(
-            this VisualsInitializer<TDrawingContext> styler,
+        public static VisualsStyle<TDrawingContext> HasRuleForStackedColumnSeries<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
             Action<IStackedBarSeries<TDrawingContext>> predicate)
             where TDrawingContext : DrawingContext
         {
-            styler.StackedColumnSeriesBuilder = predicate;
+            styler.StackedColumnSeriesBuilder.Add(predicate);
             return styler;
         }
 
@@ -214,12 +214,12 @@ namespace LiveChartsCore.Themes
         /// <param name="styler">The styler.</param>
         /// <param name="predicate">The predicate.</param>
         /// <returns></returns>
-        public static VisualsInitializer<TDrawingContext> ForStackedRowSeries<TDrawingContext>(
-            this VisualsInitializer<TDrawingContext> styler,
+        public static VisualsStyle<TDrawingContext> HasRuleForStackedRowSeries<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
             Action<IStackedBarSeries<TDrawingContext>> predicate)
             where TDrawingContext : DrawingContext
         {
-            styler.StackedRowSeriesBuilder = predicate;
+            styler.StackedRowSeriesBuilder.Add(predicate);
             return styler;
         }
     }

@@ -54,7 +54,12 @@ namespace LiveChartsCore.SkiaSharpView
             (LiveChartsSettings settings) => settings
                 .AddDefaultMappers()
                 .AddSkiaSharp()
-                .AddLightTheme();
+                .AddLightTheme(theme =>
+                    theme.Style
+                        .HasRuleForLineSeries(lineSeries =>
+                        {
+                            lineSeries.LineSmoothness = 0;
+                        }));
 
         /// <summary>
         /// Adds SkiaSharp as the UI provider for LiveCharts.
@@ -70,17 +75,19 @@ namespace LiveChartsCore.SkiaSharpView
         /// Adds the light theme.
         /// </summary>
         /// <param name="settings">The settings.</param>
+        /// <param name="additionalStyles">the additional styles.</param>
         /// <returns></returns>
-        public static LiveChartsSettings AddLightTheme(this LiveChartsSettings settings)
+        public static LiveChartsSettings AddLightTheme(
+            this LiveChartsSettings settings, Action<Theme<SkiaSharpDrawingContext>> additionalStyles = null)
         {
             return settings
                 .HasTheme((Theme<SkiaSharpDrawingContext> theme) =>
                 {
                     _ = theme
                        .WithColors(ColorPacks.MaterialDesign500)
-                       .WithVisualsInitializer(initializer =>
-                           initializer
-                               .ForCharts(chart =>
+                       .WithStyle(style =>
+                           style
+                               .HasRuleForCharts(chart =>
                                {
                                    chart.BackColor = Color.FromArgb(255, 255, 255, 255);
                                    chart.AnimationsSpeed = TimeSpan.FromMilliseconds(700);
@@ -92,20 +99,14 @@ namespace LiveChartsCore.SkiaSharpView
                                    // with the LiveCharts.BarSeriesHoverKey key, the library will draw a null stroke and
                                    // new SKColor(255, 255, 255, 180) as the fill (defaultHoverColor).
                                    var defaultHoverColor = Color.FromArgb(180, 255, 255, 255).AsSKColor();
-                                   chart.PointStates =
-                                       new PointStatesDictionary<SkiaSharpDrawingContext>()
-                                           .WithState(
-                                               LiveCharts.BarSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor))
-                                           .WithState(
-                                               LiveCharts.LineSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor))
-                                           .WithState(
-                                               LiveCharts.PieSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor))
-                                           .WithState(
-                                               LiveCharts.ScatterSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor))
-                                           .WithState(
-                                               LiveCharts.StackedBarSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor));
+                                   chart.PointStates = new PointStatesDictionary<SkiaSharpDrawingContext>()
+                                        .WithState(LiveCharts.BarSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor))
+                                        .WithState(LiveCharts.LineSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor))
+                                        .WithState(LiveCharts.PieSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor))
+                                        .WithState(LiveCharts.ScatterSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor))
+                                        .WithState(LiveCharts.StackedBarSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor));
                                })
-                               .ForAxes(axis =>
+                               .HasRuleForAxes(axis =>
                                {
                                    axis.TextSize = 16;
                                    axis.ShowSeparatorLines = true;
@@ -113,12 +114,12 @@ namespace LiveChartsCore.SkiaSharpView
                                    axis.SeparatorsBrush = DefaultPaintTask;
                                })
                                // ForAnySeries() will be called for all the series
-                               .ForAnySeries(series =>
+                               .HasRuleForAnySeries(series =>
                                {
                                    series.Fill = DefaultPaintTask;
                                    series.Stroke = DefaultPaintTask;
                                })
-                               .ForLineSeries(lineSeries =>
+                               .HasRuleForLineSeries(lineSeries =>
                                {
                                    // at this point ForAnySeries() was already called
                                    // we are configuring the missing properties
@@ -126,7 +127,7 @@ namespace LiveChartsCore.SkiaSharpView
                                    lineSeries.GeometryFill = new SolidColorPaintTask(Color.FromArgb(255, 250, 250, 250).AsSKColor());
                                    lineSeries.GeometryStroke = DefaultPaintTask;
                                })
-                               .ForStackedLineSeries(stackedLine =>
+                               .HasRuleForStackedLineSeries(stackedLine =>
                                {
                                    // at this point both ForAnySeries() and ForLineSeries() were already called
                                    // again we are correcting the previous settings
@@ -136,19 +137,19 @@ namespace LiveChartsCore.SkiaSharpView
                                    stackedLine.Stroke = null;
                                    stackedLine.Fill = DefaultPaintTask;
                                })
-                               .ForBarSeries(barSeries =>
+                               .HasRuleForBarSeries(barSeries =>
                                {
                                    // only ForAnySeries() has run, a bar series is not
                                    // any of the previous types.
                                    barSeries.Rx = 6;
                                    barSeries.Ry = 6;
                                })
-                               .ForStackedBarSeries(stackedBarSeries =>
+                               .HasRuleForStackedBarSeries(stackedBarSeries =>
                                {
                                    stackedBarSeries.Rx = 0;
                                    stackedBarSeries.Ry = 0;
                                })
-                               .ForPieSeries(pieSeries =>
+                               .HasRuleForPieSeries(pieSeries =>
                                {
                                    pieSeries.Fill = DefaultPaintTask;
                                    pieSeries.Stroke = null;
@@ -159,6 +160,8 @@ namespace LiveChartsCore.SkiaSharpView
                        // these method only translates 'DefaultPaintTask' to a valid stroke/fill based on
                        // the series context
                        .AddDefaultLightResolvers();
+
+                    additionalStyles?.Invoke(theme);
                 });
         }
 
@@ -166,17 +169,19 @@ namespace LiveChartsCore.SkiaSharpView
         /// Adds the light theme.
         /// </summary>
         /// <param name="settings">The settings.</param>
+        /// <param name="additionalStyles">The additional styles.</param>
         /// <returns></returns>
-        public static LiveChartsSettings AddDarkTheme(this LiveChartsSettings settings)
+        public static LiveChartsSettings AddDarkTheme(
+            this LiveChartsSettings settings, Action<Theme<SkiaSharpDrawingContext>> additionalStyles = null)
         {
             return settings
                 .HasTheme((Theme<SkiaSharpDrawingContext> theme) =>
                 {
                     _ = theme
                        .WithColors(ColorPacks.MaterialDesign200)
-                       .WithVisualsInitializer(initializer =>
-                           initializer
-                               .ForCharts(chart =>
+                       .WithStyle(style =>
+                           style
+                               .HasRuleForCharts(chart =>
                                {
                                    chart.BackColor = Color.FromArgb(255, 40, 40, 40);
                                    chart.AnimationsSpeed = TimeSpan.FromMilliseconds(700);
@@ -201,7 +206,7 @@ namespace LiveChartsCore.SkiaSharpView
                                            .WithState(
                                                LiveCharts.StackedBarSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor));
                                })
-                               .ForAxes(axis =>
+                               .HasRuleForAxes(axis =>
                                {
                                    axis.TextSize = 18;
                                    axis.ShowSeparatorLines = true;
@@ -209,12 +214,12 @@ namespace LiveChartsCore.SkiaSharpView
                                    axis.SeparatorsBrush = DefaultPaintTask;
                                })
                                // ForAnySeries() will be called for all the series
-                               .ForAnySeries(series =>
+                               .HasRuleForAnySeries(series =>
                                {
                                    series.Fill = DefaultPaintTask;
                                    series.Stroke = DefaultPaintTask;
                                })
-                               .ForLineSeries(lineSeries =>
+                               .HasRuleForLineSeries(lineSeries =>
                                {
                                    // at this point ForAnySeries() was already called
                                    // we are configuring the missing properties
@@ -222,7 +227,7 @@ namespace LiveChartsCore.SkiaSharpView
                                    lineSeries.GeometryFill = new SolidColorPaintTask(Color.FromArgb(255, 40, 40, 40).AsSKColor());
                                    lineSeries.GeometryStroke = DefaultPaintTask;
                                })
-                               .ForStackedLineSeries(stackedLine =>
+                               .HasRuleForStackedLineSeries(stackedLine =>
                                {
                                    // at this point both ForAnySeries() and ForLineSeries() were already called
                                    // again we are correcting the previous settings
@@ -232,17 +237,17 @@ namespace LiveChartsCore.SkiaSharpView
                                    stackedLine.Stroke = null;
                                    stackedLine.Fill = DefaultPaintTask;
                                })
-                               .ForBarSeries(barSeries =>
+                               .HasRuleForBarSeries(barSeries =>
                                {
                                    barSeries.Rx = 6;
                                    barSeries.Ry = 6;
                                })
-                               .ForStackedBarSeries(stackedBarSeries =>
+                               .HasRuleForStackedBarSeries(stackedBarSeries =>
                                {
                                    stackedBarSeries.Rx = 0;
                                    stackedBarSeries.Ry = 0;
                                })
-                               .ForPieSeries(pieSeries =>
+                               .HasRuleForPieSeries(pieSeries =>
                                {
                                    pieSeries.Fill = DefaultPaintTask;
                                    pieSeries.Stroke = null;
@@ -253,6 +258,8 @@ namespace LiveChartsCore.SkiaSharpView
                        // this method only translates 'DefaultPaintTask' to a valid stroke/fill based on
                        // the series context
                        .AddDefaultDarkResolvers();
+
+                    additionalStyles?.Invoke(theme);
                 });
         }
 

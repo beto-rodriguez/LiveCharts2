@@ -34,8 +34,6 @@ namespace LiveChartsCore.Themes
     public class Theme<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        private VisualsInitializer<TDrawingContext>? _theme;
-
         /// <summary>
         /// Gets the current colors.
         /// </summary>
@@ -43,6 +41,14 @@ namespace LiveChartsCore.Themes
         /// The current colors.
         /// </value>
         public Color[]? CurrentColors { get; private set; }
+
+        /// <summary>
+        /// Gets the style.
+        /// </summary>
+        /// <value>
+        /// The style.
+        /// </value>
+        public VisualsStyle<TDrawingContext>? Style { get; private set; }
 
         /// <summary>
         /// Gets or sets the series default resolver.
@@ -76,9 +82,9 @@ namespace LiveChartsCore.Themes
         /// </summary>
         /// <param name="predicate">The predicate.</param>
         /// <returns>The current theme instance</returns>
-        public Theme<TDrawingContext> WithVisualsInitializer(Action<VisualsInitializer<TDrawingContext>> predicate)
+        public Theme<TDrawingContext> WithStyle(Action<VisualsStyle<TDrawingContext>> predicate)
         {
-            predicate(_theme = new VisualsInitializer<TDrawingContext>());
+            predicate(Style = new VisualsStyle<TDrawingContext>());
             return this;
         }
 
@@ -108,11 +114,11 @@ namespace LiveChartsCore.Themes
         /// Gets the objects builder.
         /// </summary>
         /// <returns>The current theme instance</returns>
-        public VisualsInitializer<TDrawingContext> GetVisualsInitializer()
+        public VisualsStyle<TDrawingContext> GetVisualsInitializer()
         {
-            return _theme ?? throw new NullReferenceException(
-                    $"An instance of {nameof(VisualsInitializer<TDrawingContext>)} is no configured yet, " +
-                    $"please register an instance using {nameof(WithVisualsInitializer)}() method.");
+            return Style ?? throw new NullReferenceException(
+                    $"An instance of {nameof(VisualsStyle<TDrawingContext>)} is no configured yet, " +
+                    $"please register an instance using {nameof(WithStyle)}() method.");
         }
 
         /// <summary>

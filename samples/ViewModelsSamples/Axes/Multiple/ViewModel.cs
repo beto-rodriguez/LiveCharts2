@@ -19,6 +19,7 @@ namespace ViewModelsSamples.Axes.Multiple
             {
                 new LineSeries<double>
                 {
+                    LineSmoothness = 1,
                     Name = "tens",
                     Values = new ObservableCollection<double> { 14, 13, 14, 15, 17 },
                     Stroke = new SolidColorPaintTask(blue, 2),

@@ -23,6 +23,7 @@
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using System;
+using System.Collections.Generic;
 
 namespace LiveChartsCore.Themes
 {
@@ -30,7 +31,7 @@ namespace LiveChartsCore.Themes
     /// Defines an object that must initialize live charts visual objects, this object defines how things will 
     /// be drawn by default, it is highly related to themes.
     /// </summary>
-    public class VisualsInitializer<TDrawingContext>
+    public class VisualsStyle<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
@@ -39,7 +40,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The chart builder.
         /// </value>
-        public Action<IChartView<TDrawingContext>>? ChartBuilder { get; set; }
+        public List<Action<IChartView<TDrawingContext>>> ChartBuilder { get; set; } = new List<Action<IChartView<TDrawingContext>>>();
 
         /// <summary>
         /// Gets or sets the axis builder.
@@ -47,7 +48,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The axis builder.
         /// </value>
-        public Action<IAxis<TDrawingContext>>? AxisBuilder { get; set; }
+        public List<Action<IAxis<TDrawingContext>>> AxisBuilder { get; set; } = new List<Action<IAxis<TDrawingContext>>>();
 
         /// <summary>
         /// Gets or sets the series builder.
@@ -55,7 +56,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The pie series builder.
         /// </value>
-        public Action<IDrawableSeries<TDrawingContext>>? SeriesBuilder { get; set; }
+        public List<Action<IDrawableSeries<TDrawingContext>>> SeriesBuilder { get; set; } = new List<Action<IDrawableSeries<TDrawingContext>>>();
 
         /// <summary>
         /// Gets or sets the pie series builder.
@@ -63,7 +64,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The pie series builder.
         /// </value>
-        public Action<IPieSeries<TDrawingContext>>? PieSeriesBuilder { get; set; }
+        public List<Action<IPieSeries<TDrawingContext>>> PieSeriesBuilder { get; set; } = new List<Action<IPieSeries<TDrawingContext>>>();
 
         /// <summary>
         /// Gets or sets the Cartesian series builder.
@@ -71,7 +72,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The pie series builder.
         /// </value>
-        public Action<ICartesianSeries<TDrawingContext>>? CartesianSeriesBuilder { get; set; }
+        public List<Action<ICartesianSeries<TDrawingContext>>> CartesianSeriesBuilder { get; set; } = new List<Action<ICartesianSeries<TDrawingContext>>>();
 
         /// <summary>
         /// Gets or sets the line series builder.
@@ -79,7 +80,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The pie series builder.
         /// </value>
-        public Action<ILineSeries<TDrawingContext>>? LineSeriesBuilder { get; set; }
+        public List<Action<ILineSeries<TDrawingContext>>> LineSeriesBuilder { get; set; } = new List<Action<ILineSeries<TDrawingContext>>>();
 
         /// <summary>
         /// Gets or sets the stacked line series builder.
@@ -87,7 +88,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The pie series builder.
         /// </value>
-        public Action<ILineSeries<TDrawingContext>>? StackedLineSeriesBuilder { get; set; }
+        public List<Action<ILineSeries<TDrawingContext>>> StackedLineSeriesBuilder { get; set; } = new List<Action<ILineSeries<TDrawingContext>>>();
 
         /// <summary>
         /// Gets or sets the bar series builder.
@@ -95,7 +96,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The pie series builder.
         /// </value>
-        public Action<IBarSeries<TDrawingContext>>? BarSeriesBuilder { get; set; }
+        public List<Action<IBarSeries<TDrawingContext>>> BarSeriesBuilder { get; set; } = new List<Action<IBarSeries<TDrawingContext>>>();
 
         /// <summary>
         /// Gets or sets the column series builder.
@@ -103,7 +104,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The pie series builder.
         /// </value>
-        public Action<IBarSeries<TDrawingContext>>? ColumnSeriesBuilder { get; set; }
+        public List<Action<IBarSeries<TDrawingContext>>> ColumnSeriesBuilder { get; set; } = new List<Action<IBarSeries<TDrawingContext>>>();
 
         /// <summary>
         /// Gets or sets the row series builder.
@@ -111,7 +112,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The pie series builder.
         /// </value>
-        public Action<IBarSeries<TDrawingContext>>? RowSeriesBuilder { get; set; }
+        public List<Action<IBarSeries<TDrawingContext>>> RowSeriesBuilder { get; set; } = new List<Action<IBarSeries<TDrawingContext>>>();
 
         /// <summary>
         /// Gets or sets the stacked bar series builder.
@@ -119,7 +120,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The pie series builder.
         /// </value>
-        public Action<IStackedBarSeries<TDrawingContext>>? StackedBarSeriesBuilder { get; set; }
+        public List<Action<IStackedBarSeries<TDrawingContext>>> StackedBarSeriesBuilder { get; set; } = new List<Action<IStackedBarSeries<TDrawingContext>>>();
 
         /// <summary>
         /// Gets or sets the stacked column series builder.
@@ -127,7 +128,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The pie series builder.
         /// </value>
-        public Action<IStackedBarSeries<TDrawingContext>>? StackedColumnSeriesBuilder { get; set; }
+        public List<Action<IStackedBarSeries<TDrawingContext>>> StackedColumnSeriesBuilder { get; set; } = new List<Action<IStackedBarSeries<TDrawingContext>>>();
 
         /// <summary>
         /// Gets or sets the stacked row series builder.
@@ -135,7 +136,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The pie series builder.
         /// </value>
-        public Action<IStackedBarSeries<TDrawingContext>>? StackedRowSeriesBuilder { get; set; }
+        public List<Action<IStackedBarSeries<TDrawingContext>>> StackedRowSeriesBuilder { get; set; } = new List<Action<IStackedBarSeries<TDrawingContext>>>();
 
         /// <summary>
         /// Gets or sets the scatter series builder.
@@ -143,7 +144,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The pie series builder.
         /// </value>
-        public Action<IScatterSeries<TDrawingContext>>? ScatterSeriesBuilder { get; set; }
+        public List<Action<IScatterSeries<TDrawingContext>>> ScatterSeriesBuilder { get; set; } = new List<Action<IScatterSeries<TDrawingContext>>>();
 
         /// <summary>
         /// Constructs a chart.
@@ -151,8 +152,7 @@ namespace LiveChartsCore.Themes
         /// <param name="chart">The chart.</param>
         public void ApplyStyleToChart(IChartView<TDrawingContext> chart)
         {
-            if (ChartBuilder == null) return;
-            ChartBuilder(chart);
+            foreach (var rule in ChartBuilder) rule(chart);
         }
 
         /// <summary>
@@ -161,8 +161,7 @@ namespace LiveChartsCore.Themes
         /// <param name="axis">The axis.</param>
         public void ApplyStyleToAxis(IAxis<TDrawingContext> axis)
         {
-            if (AxisBuilder == null) return;
-            AxisBuilder(axis);
+            foreach (var rule in AxisBuilder) rule(axis);
         }
 
         /// <summary>
@@ -171,32 +170,32 @@ namespace LiveChartsCore.Themes
         /// <param name="series">The series.</param>
         public virtual void ApplyStyleToSeries(IDrawableSeries<TDrawingContext> series)
         {
-            SeriesBuilder?.Invoke(series);
+            foreach (var rule in SeriesBuilder) rule(series);
 
             if ((series.SeriesProperties & SeriesProperties.PieSeries) == SeriesProperties.PieSeries)
             {
-                PieSeriesBuilder?.Invoke((IPieSeries<TDrawingContext>)series);
+                foreach (var rule in PieSeriesBuilder) rule((IPieSeries<TDrawingContext>)series);
             }
 
             if ((series.SeriesProperties & SeriesProperties.CartesianSeries) == SeriesProperties.CartesianSeries)
             {
-                CartesianSeriesBuilder?.Invoke((ICartesianSeries<TDrawingContext>)series);
+                foreach (var rule in CartesianSeriesBuilder) rule((ICartesianSeries<TDrawingContext>)series);
             }
 
             if ((series.SeriesProperties & SeriesProperties.Bar) == SeriesProperties.Bar &&
                 (series.SeriesProperties & SeriesProperties.Stacked) != SeriesProperties.Stacked)
             {
                 var barSeries = (IBarSeries<TDrawingContext>)series;
-                BarSeriesBuilder?.Invoke(barSeries);
+                foreach (var rule in BarSeriesBuilder) rule(barSeries);
 
                 if ((series.SeriesProperties & SeriesProperties.VerticalOrientation) == SeriesProperties.VerticalOrientation)
                 {
-                    ColumnSeriesBuilder?.Invoke(barSeries);
+                    foreach (var rule in ColumnSeriesBuilder) rule(barSeries);
                 }
 
                 if ((series.SeriesProperties & SeriesProperties.HorizontalOrientation) == SeriesProperties.HorizontalOrientation)
                 {
-                    RowSeriesBuilder?.Invoke(barSeries);
+                    foreach (var rule in RowSeriesBuilder) rule(barSeries);
                 }
             }
 
@@ -204,32 +203,32 @@ namespace LiveChartsCore.Themes
             if ((series.SeriesProperties & stackedBarMask) == stackedBarMask)
             {
                 var stackedBarSeries = (IStackedBarSeries<TDrawingContext>)series;
-                StackedBarSeriesBuilder?.Invoke(stackedBarSeries);
+                foreach (var rule in StackedBarSeriesBuilder) rule(stackedBarSeries);
 
                 if ((series.SeriesProperties & SeriesProperties.VerticalOrientation) == SeriesProperties.VerticalOrientation)
                 {
-                    StackedColumnSeriesBuilder?.Invoke(stackedBarSeries);
+                    foreach (var rule in StackedColumnSeriesBuilder) rule(stackedBarSeries);
                 }
 
                 if ((series.SeriesProperties & SeriesProperties.HorizontalOrientation) == SeriesProperties.HorizontalOrientation)
                 {
-                    StackedRowSeriesBuilder?.Invoke(stackedBarSeries);
+                    foreach (var rule in StackedRowSeriesBuilder) rule(stackedBarSeries);
                 }
             }
 
             if ((series.SeriesProperties & SeriesProperties.Scatter) == SeriesProperties.Scatter)
             {
-                ScatterSeriesBuilder?.Invoke((IScatterSeries<TDrawingContext>)series);
+                foreach (var rule in ScatterSeriesBuilder) rule((IScatterSeries<TDrawingContext>)series);
             }
 
             if ((series.SeriesProperties & SeriesProperties.Line) == SeriesProperties.Line)
             {
                 var lineSeries = (ILineSeries<TDrawingContext>)series;
-                LineSeriesBuilder?.Invoke(lineSeries);
+                foreach (var rule in LineSeriesBuilder) rule(lineSeries);
 
                 if ((series.SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked)
                 {
-                    StackedLineSeriesBuilder?.Invoke(lineSeries);
+                    foreach (var rule in StackedLineSeriesBuilder) rule(lineSeries);
                 }
             }
         }

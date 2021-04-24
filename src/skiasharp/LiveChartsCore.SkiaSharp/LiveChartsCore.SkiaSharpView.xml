@@ -699,18 +699,20 @@
             <param name="settings">The settings.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AddLightTheme(LiveChartsCore.Kernel.LiveChartsSettings)">
+        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AddLightTheme(LiveChartsCore.Kernel.LiveChartsSettings,System.Action{LiveChartsCore.Themes.Theme{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext}})">
             <summary>
             Adds the light theme.
             </summary>
             <param name="settings">The settings.</param>
+            <param name="additionalStyles">the additional styles.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AddDarkTheme(LiveChartsCore.Kernel.LiveChartsSettings)">
+        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AddDarkTheme(LiveChartsCore.Kernel.LiveChartsSettings,System.Action{LiveChartsCore.Themes.Theme{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext}})">
             <summary>
             Adds the light theme.
             </summary>
             <param name="settings">The settings.</param>
+            <param name="additionalStyles">The additional styles.</param>
             <returns></returns>
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AddDefaultLightResolvers(LiveChartsCore.Themes.Theme{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">

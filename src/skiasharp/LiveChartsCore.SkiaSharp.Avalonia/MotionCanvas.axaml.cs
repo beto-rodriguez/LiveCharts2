@@ -38,7 +38,7 @@ using System.Threading.Tasks;
 namespace LiveChartsCore.SkiaSharpView.Avalonia
 {
     /// <summary>
-    /// Thje motion canvas control fro avalonia, <see cref="MotionCanvas{TDrawingContext}"/>.
+    /// The motion canvas control fro avalonia, <see cref="MotionCanvas{TDrawingContext}"/>.
     /// </summary>
     public class MotionCanvas : UserControl
     {
@@ -90,7 +90,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <value>
         /// The color of the back.
         /// </value>
-        public SKColor BackColor { get; set; } = new SKColor(255, 255, 255, 255);
+        public SKColor BackColor { get; set; } = new SKColor(255, 255, 255, 0);
 
         /// <summary>
         /// Gets the canvas core.
