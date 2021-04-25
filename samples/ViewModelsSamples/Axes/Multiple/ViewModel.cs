@@ -22,8 +22,8 @@ namespace ViewModelsSamples.Axes.Multiple
                     LineSmoothness = 1,
                     Name = "tens",
                     Values = new ObservableCollection<double> { 14, 13, 14, 15, 17 },
-                    Stroke = new SkiaSharpPaintTask(blue, 2),
-                    GeometryStroke = new SkiaSharpPaintTask(blue, 2),
+                    Stroke = new SolidColorPaintTask(blue, 2),
+                    GeometryStroke = new SolidColorPaintTask(blue, 2),
                     Fill = null,
                     ScalesYAt = 0 // it will be scaled at the Axis[0] instance
                 },
@@ -31,8 +31,8 @@ namespace ViewModelsSamples.Axes.Multiple
                 {
                     Name = "tens 2",
                     Values = new ObservableCollection<double> { 11, 12, 13, 10, 13 },
-                    Stroke = new SkiaSharpPaintTask(blue, 2),
-                    GeometryStroke = new SkiaSharpPaintTask(blue, 2),
+                    Stroke = new SolidColorPaintTask(blue, 2),
+                    GeometryStroke = new SolidColorPaintTask(blue, 2),
                     Fill = null,
                     ScalesYAt = 0 // it will be scaled at the Axis[0] instance
                 },
@@ -40,8 +40,8 @@ namespace ViewModelsSamples.Axes.Multiple
                 {
                     Name = "hundreds",
                     Values = new ObservableCollection<double> { 533, 586, 425, 579, 518 },
-                    Stroke = new SkiaSharpPaintTask(red, 2),
-                    GeometryStroke = new SkiaSharpPaintTask(red, 2),
+                    Stroke = new SolidColorPaintTask(red, 2),
+                    GeometryStroke = new SolidColorPaintTask(red, 2),
                     Fill = null,
                     ScalesYAt = 1 // it will be scaled at the YAxes[1] instance
                 },
@@ -49,8 +49,8 @@ namespace ViewModelsSamples.Axes.Multiple
                 {
                     Name = "thousands",
                     Values = new ObservableCollection<double> { 5493, 7843, 4368, 9018, 3902 },
-                    Stroke = new SkiaSharpPaintTask(yellow, 2),
-                    GeometryStroke = new SkiaSharpPaintTask(yellow, 2),
+                    Stroke = new SolidColorPaintTask(yellow, 2),
+                    GeometryStroke = new SolidColorPaintTask(yellow, 2),
                     Fill = null,
                     ScalesYAt = 2  // it will be scaled at the YAxes[2] instance
                 }
@@ -60,17 +60,17 @@ namespace ViewModelsSamples.Axes.Multiple
             {
                 new Axis // the "units" and "tens" series will be scaled on this axis
                 {
-                    TextBrush = new SkiaSharpPaintTask(blue)
+                    TextBrush = new SolidColorPaintTask(blue)
                 },
                 new Axis // the "hundreds" series will be scaled on this axis
                 {
-                    TextBrush = new SkiaSharpPaintTask(red),
+                    TextBrush = new SolidColorPaintTask(red),
                     ShowSeparatorLines = false,
                     Position = LiveChartsCore.Measure.AxisPosition.End
                 },
                 new Axis() // the "thousands" series will be scaled on this axis
                 {
-                    TextBrush = new SkiaSharpPaintTask(yellow),
+                    TextBrush = new SolidColorPaintTask(yellow),
                     ShowSeparatorLines = false,
                     Position = LiveChartsCore.Measure.AxisPosition.End
                 }

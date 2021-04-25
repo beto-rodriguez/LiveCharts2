@@ -54,6 +54,9 @@
     <Compile Update="Bars\Custom\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Design\RadialGradients\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Design\LinearGradients\View.cs">
       <SubType>UserControl</SubType>
     </Compile>

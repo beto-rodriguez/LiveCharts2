@@ -18,14 +18,14 @@ namespace ViewModelsSamples.Bars.Custom
             new ColumnSeries<double, LiveChartsCore.SkiaSharpView.Drawing.Geometries.RoundedRectangleGeometry>
             {
                 Values = new List<double> { 4, 2, 0, 5, 2, 6 },
-                Fill = new SkiaSharpPaintTask(SKColors.CornflowerBlue)
+                Fill = new SolidColorPaintTask(SKColors.CornflowerBlue)
             },
 
             // you can also define your own geometry using SVG
             new ColumnSeries<double, MyGeomeometry>
             {
                 Values = new List<double> { 3, 2, 3, 4, 5, 3 },
-                Stroke = new SkiaSharpPaintTask(SKColors.Coral, 5),
+                Stroke = new SolidColorPaintTask(SKColors.Coral, 5),
                 Fill = null
             }
         };

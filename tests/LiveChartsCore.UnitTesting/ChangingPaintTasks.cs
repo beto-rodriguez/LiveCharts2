@@ -48,7 +48,7 @@ namespace LiveChartsCore.UnitTesting
             var geometries = canvas.CountGeometries();
 
             // on changing the fill task, the previouns instance should be removed.
-            series.Fill = new SkiaSharpPaintTask();
+            series.Fill = new SolidColorPaintTask();
 
             chart.Core.Update(false);
             DrawChart();
@@ -93,7 +93,7 @@ namespace LiveChartsCore.UnitTesting
             var drawables = canvas.DrawablesCount;
             var geometries = canvas.CountGeometries();
 
-            series.Stroke = new SkiaSharpPaintTask();
+            series.Stroke = new SolidColorPaintTask();
 
             chart.Core.Update(false);
             DrawChart();
@@ -138,8 +138,8 @@ namespace LiveChartsCore.UnitTesting
             var drawables = canvas.DrawablesCount;
             var geometries = canvas.CountGeometries();
 
-            series.GeometryFill = new SkiaSharpPaintTask();
-            series.GeometryStroke = new SkiaSharpPaintTask();
+            series.GeometryFill = new SolidColorPaintTask();
+            series.GeometryStroke = new SolidColorPaintTask();
 
             chart.Core.Update(false);
             DrawChart();
@@ -278,7 +278,7 @@ namespace LiveChartsCore.UnitTesting
             var drawables = canvas.DrawablesCount;
             var geometries = canvas.CountGeometries();
 
-            axis.TextBrush = new SkiaSharpPaintTask();
+            axis.TextBrush = new SolidColorPaintTask();
 
             chart.Core.Update(false);
             DrawChart();
@@ -323,7 +323,7 @@ namespace LiveChartsCore.UnitTesting
             var drawables = canvas.DrawablesCount;
             var geometries = canvas.CountGeometries();
 
-            axis.SeparatorsBrush = new SkiaSharpPaintTask();
+            axis.SeparatorsBrush = new SolidColorPaintTask();
 
             chart.Core.Update(false);
             DrawChart();

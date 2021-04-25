@@ -63,6 +63,9 @@
     <Compile Update="Bars\Custom\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Design\RadialGradients\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Design\LinearGradients\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -200,6 +203,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Bars\Custom\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Design\RadialGradients\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

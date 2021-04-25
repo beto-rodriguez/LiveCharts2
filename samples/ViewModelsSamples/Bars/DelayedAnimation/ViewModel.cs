@@ -31,14 +31,14 @@ namespace ViewModelsSamples.Bars.DelayedAnimation
             {
                 Values = values1,
                 Stroke = null,
-                Fill = new SkiaSharpPaintTask(SKColors.CornflowerBlue),
+                Fill = new SolidColorPaintTask(SKColors.CornflowerBlue),
             };
 
             var columnSeries2 = new ColumnSeries<float>
             {
                 Values = values2,
                 Stroke = null,
-                Fill = new SkiaSharpPaintTask(SKColors.YellowGreen)
+                Fill = new SolidColorPaintTask(SKColors.YellowGreen)
             };
 
             columnSeries1.PointMeasured += OnPointMeasured;

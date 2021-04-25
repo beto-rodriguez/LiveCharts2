@@ -29,29 +29,28 @@ using SkiaSharp;
 namespace LiveChartsCore.SkiaSharpView.Painting
 {
     /// <summary>
-    /// Defines a set of geometries that will be painted using a linear gradient shader.
+    /// Defines a set of geometries that will be painted using a radial gradient shader.
     /// </summary>
     /// <seealso cref="PaintTask" />
-    public class LinearGradientPaintTask : PaintTask
+    public class RadialGradientPaintTask : PaintTask
     {
-        private static readonly SKPoint s_defaultStartPoint = new SKPoint(0, 0.5f);
-        private static readonly SKPoint s_defaultEndPoint = new SKPoint(1, 0.5f);
-        private readonly SKColor[] _gradientStops;
-        private readonly SKPoint _startPoint;
-        private readonly SKPoint _endPoint;
-        private readonly float[] _colorPos = null;
-        private readonly SKShaderTileMode _tileMode = SKShaderTileMode.Repeat;
         private SkiaSharpDrawingContext _drawingContext;
+        private readonly SKColor[] _gradientStops;
+        private readonly SKPoint _center;
+        private readonly float _radius;
+        private readonly float[] _colorPos;
+        private readonly SKShaderTileMode _tileMode;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LinearGradientPaintTask"/> class.
+        /// Initializes a new instance of the <see cref="RadialGradientPaintTask"/> class.
         /// </summary>
         /// <param name="gradientStops">The gradient stops.</param>
-        /// <param name="startPoint">
-        /// The start point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
+        /// <param name="center">
+        /// The center point of the gradient, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end,
+        /// default is (0.5, 0.5).
         /// </param>
-        /// <param name="endPoint">
-        /// The end point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
+        /// <param name="radius">
+        /// The radius, in the range of 0 to 1, where 1 is the maximum of both Width and Height of the chart, default is 0.5.
         /// </param>
         /// <param name="colorPos">
         /// An array of integers in the range of 0 to 1.
@@ -61,48 +60,27 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <param name="tileMode">
         /// The shader tile mode, default is <see cref="SKShaderTileMode.Repeat"/>.
         /// </param>
-        public LinearGradientPaintTask(
+        public RadialGradientPaintTask(
             SKColor[] gradientStops,
-            SKPoint startPoint,
-            SKPoint endPoint,
+            SKPoint? center = null,
+            float radius = 0.5f,
             float[] colorPos = null,
             SKShaderTileMode tileMode = SKShaderTileMode.Repeat)
         {
             _gradientStops = gradientStops;
-            _startPoint = startPoint;
-            _endPoint = endPoint;
+            if (center == null) _center = new SKPoint(0.5f, 0.5f);
+            _radius = radius;
             _colorPos = colorPos;
             _tileMode = tileMode;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LinearGradientPaintTask"/> class.
+        /// Initializes a new instance of the <see cref="RadialGradientPaintTask"/> class.
         /// </summary>
-        /// <param name="gradientStops">The gradient stops.</param>
-        public LinearGradientPaintTask(SKColor[] gradientStops)
-            : this(gradientStops, s_defaultStartPoint, s_defaultEndPoint) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LinearGradientPaintTask"/> class.
-        /// </summary>
-        /// <param name="startColor">The start color.</param>
-        /// <param name="endColor">The end color.</param>
-        /// <param name="startPoint">
-        /// The start point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
-        /// </param>
-        /// <param name="endPoint">
-        /// The end point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
-        /// </param>
-        public LinearGradientPaintTask(SKColor startColor, SKColor endColor, SKPoint startPoint, SKPoint endPoint)
-            : this(new[] { startColor, endColor }, startPoint, endPoint) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LinearGradientPaintTask"/> class.
-        /// </summary>
-        /// <param name="start">The start.</param>
-        /// <param name="end">The end.</param>
-        public LinearGradientPaintTask(SKColor start, SKColor end)
-            : this(start, end, s_defaultStartPoint, s_defaultEndPoint) { }
+        /// <param name="centerColor">Color of the center.</param>
+        /// <param name="outerColor">Color of the outer.</param>
+        public RadialGradientPaintTask(SKColor centerColor, SKColor outerColor)
+            : this(new[] { centerColor, outerColor }) { }
 
         /// <summary>
         /// Gets or sets the path effect.
@@ -115,7 +93,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.CloneTask" />
         public override IDrawableTask<SkiaSharpDrawingContext> CloneTask()
         {
-            return new LinearGradientPaintTask(_gradientStops, _startPoint, _endPoint, _colorPos, _tileMode)
+            return new RadialGradientPaintTask(_gradientStops, _center, _radius, _colorPos, _tileMode)
             {
                 Style = Style,
                 IsStroke = IsStroke,
@@ -126,30 +104,21 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             };
         }
 
-        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.SetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
-        public override void SetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.ResetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
-        public override void ResetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
-        {
-            throw new System.NotImplementedException();
-        }
-
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.InitializeTask(TDrawingContext)" />
         public override void InitializeTask(SkiaSharpDrawingContext drawingContext)
         {
             if (skiaPaint == null) skiaPaint = new SKPaint();
 
             var size = GetDrawRectangleSize(drawingContext);
-            var start = new SKPoint(size.Location.X + _startPoint.X * size.Width, size.Location.Y + _startPoint.Y * size.Height);
-            var end = new SKPoint(size.Location.X + _endPoint.X * size.Width, size.Location.Y + _endPoint.Y * size.Height);
+            var center = new SKPoint(size.Location.X + _center.X * size.Width, size.Location.Y + _center.Y * size.Height);
+            var r = size.Location.X + size.Width > size.Location.Y + size.Height
+                ? size.Location.X + size.Width
+                : size.Location.Y + size.Height;
+            r *= _radius;
 
-            skiaPaint.Shader = SKShader.CreateLinearGradient(
-                    start,
-                    end,
+            skiaPaint.Shader = SKShader.CreateRadialGradient(
+                    center,
+                    r,
                     _gradientStops,
                     _colorPos,
                     _tileMode);
@@ -174,6 +143,18 @@ namespace LiveChartsCore.SkiaSharpView.Painting
 
             drawingContext.Paint = skiaPaint;
             drawingContext.PaintTask = this;
+        }
+
+        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.ResetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
+        public override void ResetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.SetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
+        public override void SetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
+        {
+            throw new System.NotImplementedException();
         }
 
         /// <summary>

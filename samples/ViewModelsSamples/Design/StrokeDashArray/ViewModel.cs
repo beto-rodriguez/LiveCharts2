@@ -1,10 +1,9 @@
 ﻿using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using SkiaSharp;
 
-namespace ViewModelsSamples.Design.LinearGradients
+namespace ViewModelsSamples.Design.StrokeDashArray
 {
     public class ViewModel
     {
@@ -20,20 +19,16 @@ namespace ViewModelsSamples.Design.LinearGradients
 
             Series = new ISeries[]
             {
-                new ColumnSeries<int>
-                {
-                    Values = new []{ 3, 7, 2, 9, 4 },
-                    Stroke = null,
-                    Fill = new LinearGradientPaintTask(
-                        new [] {new SKColor(255, 140, 148), new SKColor(220, 237, 194) },
-                        new SKPoint(0.5f, 0),
-                        new SKPoint(0.5f, 1))
-                },
                 new LineSeries<int>
                 {
-                    Values = new []{ 4, 2, 8, 5, 3 },
+                    Values = new [] { 4, 2, 8, 5, 3 },
+                    LineSmoothness = 1,
                     GeometrySize = 22,
-                    Stroke = new LinearGradientPaintTask(colors) { StrokeThickness = 10 },
+                    Stroke = new SolidColorPaintTask() {
+                        StrokeCap = SKStrokeCap.Round,
+                        StrokeThickness = 10,
+
+                    },
                     GeometryStroke = new LinearGradientPaintTask(colors) { StrokeThickness = 10 },
                     Fill = null
                 }

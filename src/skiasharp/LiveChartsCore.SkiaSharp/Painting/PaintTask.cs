@@ -35,6 +35,9 @@ namespace LiveChartsCore.SkiaSharpView.Painting
     /// <inheritdoc cref="IDrawableTask{TDrawingContext}" />
     public abstract class PaintTask : Animatable, IDisposable, IDrawableTask<SkiaSharpDrawingContext>
     {
+        private HashSet<IDrawable<SkiaSharpDrawingContext>> _geometries = new HashSet<IDrawable<SkiaSharpDrawingContext>>();
+        private IDrawable<SkiaSharpDrawingContext>[] _actualGeometries = null;
+
         /// <summary>
         /// The skia paint
         /// </summary>
@@ -44,8 +47,6 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// The stroke width transition
         /// </summary>
         protected FloatMotionProperty strokeWidthTransition;
-        private HashSet<IDrawable<SkiaSharpDrawingContext>> _geometries = new HashSet<IDrawable<SkiaSharpDrawingContext>>();
-        private IDrawable<SkiaSharpDrawingContext>[] _actualGeometries = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PaintTask"/> class.
