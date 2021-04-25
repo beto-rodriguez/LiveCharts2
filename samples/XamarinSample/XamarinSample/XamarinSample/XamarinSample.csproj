@@ -64,6 +64,9 @@
     <Compile Update="Bars\WithBackground\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Design\LinearGradients\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="General\Animations\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

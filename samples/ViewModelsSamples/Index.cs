@@ -4,6 +4,8 @@
     {
         public static string[] Samples = new[]
         {
+            "Design/LinearGradients",
+
             "Lines/Basic",
             "Lines/AutoUpdate",
             "Lines/Straight",

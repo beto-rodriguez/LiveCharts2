@@ -33,8 +33,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting
     /// <seealso cref="PaintTask" />
     public class LinearGradientPaintTask : PaintTask
     {
-        private static readonly SKPoint s_defaultStartPoint = new SKPoint(0, 0);
-        private static readonly SKPoint s_defaultEndPoint = new SKPoint(1, 1);
+        private static readonly SKPoint s_defaultStartPoint = new SKPoint(0, 0.5f);
+        private static readonly SKPoint s_defaultEndPoint = new SKPoint(1, 0.5f);
         private readonly SKColor[] _gradientStops;
         private readonly SKPoint _startPoint;
         private readonly SKPoint _endPoint;
@@ -109,16 +109,21 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         {
             if (skiaPaint == null) skiaPaint = new SKPaint();
 
+            var size = GetDrawRectangleSize(drawingContext);
+            var start = new SKPoint(size.Location.X + _startPoint.X * size.Width, size.Location.Y + _startPoint.Y * size.Height);
+            var end = new SKPoint(size.Location.X + _endPoint.X * size.Width, size.Location.Y + _endPoint.Y * size.Height);
+
             skiaPaint.Shader = SKShader.CreateLinearGradient(
-                    _startPoint,
-                    _endPoint,
+                    start,
+                    end,
                     _gradientStops,
                     SKShaderTileMode.Repeat);
 
-
             skiaPaint.IsAntialias = IsAntialias;
-            skiaPaint.IsStroke = false;
-            skiaPaint.StrokeWidth = 0;
+            skiaPaint.IsStroke = true;
+            skiaPaint.StrokeWidth = StrokeThickness;
+            skiaPaint.Style = IsStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
+
             if (ClipRectangle != RectangleF.Empty)
             {
                 _ = drawingContext.Canvas.Save();
@@ -142,6 +147,13 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             }
 
             base.Dispose();
+        }
+
+        private SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext)
+        {
+            return ClipRectangle == null
+                ? new SKRect(0, 0, drawingContext.Info.Width, drawingContext.Info.Width)
+                : new SKRect(ClipRectangle.X, ClipRectangle.Y, ClipRectangle.Width, ClipRectangle.Height);
         }
     }
 }

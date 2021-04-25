@@ -65,6 +65,9 @@
     <Compile Update="Bars\Custom\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Design\LinearGradients\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="General\TemplatedLegends\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
