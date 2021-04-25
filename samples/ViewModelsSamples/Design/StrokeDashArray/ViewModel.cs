@@ -1,6 +1,7 @@
 ﻿using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using SkiaSharp;
 
 namespace ViewModelsSamples.Design.StrokeDashArray
@@ -9,13 +10,17 @@ namespace ViewModelsSamples.Design.StrokeDashArray
     {
         public ViewModel()
         {
-            var colors = new[]
-            {
-                new SKColor(45, 64, 89),
-                new SKColor(234, 84, 85),
-                new SKColor(240, 123, 63),
-                new SKColor(255, 212, 96)
-            };
+            // The LiveChartsCore.SkiaSharpView.Painting.EffectsPathEffect abstract class is a wrapper for
+            // the SkiaSharp.SKPathEffect object, in this case we will use the DashEffect class
+            // to create a dash line as the stroke of our line series
+
+            // notice the stroke thickness affects the stroke dash array
+            // if you want to learn more about stroke dash arrays please see:
+            // https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/curves/effects#dots-and-dashes
+
+            var strokeThickness = 10;
+            var strokeDashArray = new float[] { 3 * strokeThickness, 2 * strokeThickness };
+            var effect = new DashEffect(strokeDashArray);
 
             Series = new ISeries[]
             {
@@ -24,12 +29,13 @@ namespace ViewModelsSamples.Design.StrokeDashArray
                     Values = new [] { 4, 2, 8, 5, 3 },
                     LineSmoothness = 1,
                     GeometrySize = 22,
-                    Stroke = new SolidColorPaintTask() {
+                    Stroke = new SolidColorPaintTask
+                    {
+                        Color = SKColors.CornflowerBlue,
                         StrokeCap = SKStrokeCap.Round,
-                        StrokeThickness = 10,
-
+                        StrokeThickness = strokeThickness,
+                        PathEffect = effect
                     },
-                    GeometryStroke = new LinearGradientPaintTask(colors) { StrokeThickness = 10 },
                     Fill = null
                 }
             };

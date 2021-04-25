@@ -6,6 +6,7 @@
         {
             "Design/LinearGradients",
             "Design/RadialGradients",
+            "Design/StrokeDashArray",
 
             "Lines/Basic",
             "Lines/AutoUpdate",

@@ -1,7 +1,6 @@
 ﻿using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using SkiaSharp;
 
 namespace ViewModelsSamples.Design.LinearGradients
@@ -10,12 +9,20 @@ namespace ViewModelsSamples.Design.LinearGradients
     {
         public ViewModel()
         {
+            // linear gradients are based on SkiaSharp linear gradients
+            // for more info please see:
+            // https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/effects/shaders/linear-gradient
+
             var colors = new[]
             {
                 new SKColor(45, 64, 89),
-                new SKColor(234, 84, 85),
-                new SKColor(240, 123, 63),
                 new SKColor(255, 212, 96)
+                // ...
+
+                // you can add as many colors as you require to build the gradient
+                // by default all the distance between each colors is equal
+                // use the colorPos parameter in the constructor of the LinearGradientPaintTask class
+                // to specify the distance between each color
             };
 
             Series = new ISeries[]
@@ -25,7 +32,7 @@ namespace ViewModelsSamples.Design.LinearGradients
                     Values = new []{ 3, 7, 2, 9, 4 },
                     Stroke = null,
                     Fill = new LinearGradientPaintTask(
-                        new [] {new SKColor(255, 140, 148), new SKColor(220, 237, 194) },
+                        new [] { new SKColor(255, 140, 148), new SKColor(220, 237, 194) },
                         new SKPoint(0.5f, 0),
                         new SKPoint(0.5f, 1))
                 },

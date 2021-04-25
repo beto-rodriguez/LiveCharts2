@@ -32,12 +32,12 @@ namespace LiveChartsCore.SkiaSharpView.Painting.Effects
     public class DashEffect : PathEffect
     {
         private readonly float[] _dashArray;
-        private readonly float _phase;
+        private readonly float _phase = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DashEffect"/> class.
         /// </summary>
-        public DashEffect(float[] dashArray, float phase)
+        public DashEffect(float[] dashArray, float phase = 0)
         {
             _dashArray = dashArray;
             _phase = phase;
