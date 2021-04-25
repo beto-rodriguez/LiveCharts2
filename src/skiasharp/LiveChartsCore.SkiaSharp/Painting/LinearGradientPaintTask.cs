@@ -38,19 +38,29 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         private readonly SKColor[] _gradientStops;
         private readonly SKPoint _startPoint;
         private readonly SKPoint _endPoint;
+        private readonly float[] _colorPos = null;
         private SkiaSharpDrawingContext _drawingContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LinearGradientPaintTask"/> class.
         /// </summary>
         /// <param name="gradientStops">The gradient stops.</param>
-        /// <param name="startPoint">The start point.</param>
-        /// <param name="endPoint">The end point.</param>
-        public LinearGradientPaintTask(SKColor[] gradientStops, SKPoint startPoint, SKPoint endPoint)
+        /// <param name="startPoint">
+        /// The start point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
+        /// </param>
+        /// <param name="endPoint">
+        /// The end point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
+        /// </param>
+        /// <param name="colorPos">An array of integers in the range of 0 to 1.
+        /// These integers indicate the relative positions of the colors, You can set that argument to null to equally
+        /// space the colors, default is null.
+        /// </param>
+        public LinearGradientPaintTask(SKColor[] gradientStops, SKPoint startPoint, SKPoint endPoint, float[] colorPos = null)
         {
             _gradientStops = gradientStops;
             _startPoint = startPoint;
             _endPoint = endPoint;
+            _colorPos = colorPos;
         }
 
         /// <summary>
@@ -65,8 +75,12 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// </summary>
         /// <param name="startColor">The start color.</param>
         /// <param name="endColor">The end color.</param>
-        /// <param name="startPoint">The start point.</param>
-        /// <param name="endPoint">The end point.</param>
+        /// <param name="startPoint">
+        /// The start point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
+        /// </param>
+        /// <param name="endPoint">
+        /// The end point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
+        /// </param>
         public LinearGradientPaintTask(SKColor startColor, SKColor endColor, SKPoint startPoint, SKPoint endPoint)
             : this(new[] { startColor, endColor }, startPoint, endPoint) { }
 
@@ -117,6 +131,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
                     start,
                     end,
                     _gradientStops,
+                    _colorPos,
                     SKShaderTileMode.Repeat);
 
             skiaPaint.IsAntialias = IsAntialias;
