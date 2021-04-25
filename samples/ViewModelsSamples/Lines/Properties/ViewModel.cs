@@ -71,7 +71,7 @@ namespace ViewModelsSamples.Lines.Properties
         {
             var nextColorIndex = currentColor++ % colors.Length;
             var color = colors[nextColorIndex];
-            lineSeries.Stroke = new SolidColorPaintTask(new SKColor(color.R, color.G, color.B)) { StrokeThickness = 3 };
+            lineSeries.Stroke = new SkiaSharpPaintTask(new SKColor(color.R, color.G, color.B)) { StrokeThickness = 3 };
         }
 
         public void NewFill()
@@ -79,7 +79,7 @@ namespace ViewModelsSamples.Lines.Properties
             var nextColorIndex = currentColor++ % colors.Length;
             var color = colors[nextColorIndex];
 
-            lineSeries.Fill = new SolidColorPaintTask(new SKColor(color.R, color.G, color.B, 90));
+            lineSeries.Fill = new SkiaSharpPaintTask(new SKColor(color.R, color.G, color.B, 90));
         }
 
         public void NewGeometryFill()
@@ -87,7 +87,7 @@ namespace ViewModelsSamples.Lines.Properties
             var nextColorIndex = currentColor++ % colors.Length;
             var color = colors[nextColorIndex];
 
-            lineSeries.GeometryFill = new SolidColorPaintTask(new SKColor(color.R, color.G, color.B));
+            lineSeries.GeometryFill = new SkiaSharpPaintTask(new SKColor(color.R, color.G, color.B));
         }
 
         public void NewGeometryStroke()
@@ -95,7 +95,7 @@ namespace ViewModelsSamples.Lines.Properties
             var nextColorIndex = currentColor++ % colors.Length;
             var color = colors[nextColorIndex];
 
-            lineSeries.GeometryStroke = new SolidColorPaintTask(new SKColor(color.R, color.G, color.B)) { StrokeThickness = 3 };
+            lineSeries.GeometryStroke = new SkiaSharpPaintTask(new SKColor(color.R, color.G, color.B)) { StrokeThickness = 3 };
         }
 
         public void IncreaseLineSmoothness()

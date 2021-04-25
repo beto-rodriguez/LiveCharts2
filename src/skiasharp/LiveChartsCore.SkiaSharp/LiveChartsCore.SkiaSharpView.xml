@@ -150,16 +150,6 @@
         <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry">
             <inheritdoc cref="T:LiveChartsCore.Drawing.IGeometry`1" />
         </member>
-        <member name="F:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.transform">
-            <summary>
-            The transform
-            </summary>
-        </member>
-        <member name="F:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.localTransform">
-            <summary>
-            The local transform
-            </summary>
-        </member>
         <member name="F:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.opacityProperty">
             <summary>
             The opacity property
@@ -737,174 +727,6 @@
             <param name="alphaOverrides">The alpha overrides.</param>
             <returns></returns>
         </member>
-        <member name="T:LiveChartsCore.SkiaSharpView.Motion.ColorMotionProperty">
-            <summary>
-            A property that defines color transitions to enable animations.
-            </summary>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.ColorMotionProperty.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Motion.ColorMotionProperty"/> class.
-            </summary>
-            <param name="propertyName">Name of the property.</param>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.ColorMotionProperty.#ctor(System.String,SkiaSharp.SKColor)">
-            <summary>
-            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Motion.ColorMotionProperty"/> class.
-            </summary>
-            <param name="propertyName">Name of the property.</param>
-            <param name="color">The color.</param>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.ColorMotionProperty.OnGetMovement(System.Single)">
-            <inheritdoc cref="M:LiveChartsCore.Motion.MotionProperty`1.OnGetMovement(System.Single)" />
-        </member>
-        <member name="T:LiveChartsCore.SkiaSharpView.Motion.Composed.PathEffect">
-            <summary>
-            A wrapper for skia sharp path effects, to rnable animations on them.
-            </summary>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.Composed.PathEffect.InterpolateFrom(LiveChartsCore.SkiaSharpView.Motion.Composed.PathEffect,System.Single)">
-            <summary>
-            Interpolates a path effect.
-            </summary>
-            <param name="from">From.</param>
-            <param name="progress">The progress.</param>
-            <returns></returns>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.Composed.PathEffect.GetSKPath">
-            <summary>
-            Gets the skia sharp path effect.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="T:LiveChartsCore.SkiaSharpView.Motion.Composed.Shader">
-            <summary>
-            A wrapper for skia sharp shaders to enable animations on them.
-            </summary>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.Composed.Shader.InterpolateFrom(LiveChartsCore.SkiaSharpView.Motion.Composed.Shader,System.Single)">
-            <summary>
-            Interpolates a shader.
-            </summary>
-            <param name="from">From.</param>
-            <param name="progress">The progress.</param>
-            <returns></returns>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.Composed.Shader.GetSKShader">
-            <summary>
-            Gets the skia sharp shader.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="T:LiveChartsCore.SkiaSharpView.Motion.DashPathEffect">
-            <summary>
-            An wapper to enable dash path effects animations for skia sharp path effects.
-            </summary>
-            <seealso cref="T:LiveChartsCore.SkiaSharpView.Motion.Composed.PathEffect" />
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.DashPathEffect.#ctor(System.Single[],System.Single)">
-            <summary>
-            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Motion.DashPathEffect"/> class.
-            </summary>
-            <param name="dashArray">The dash array.</param>
-            <param name="phase">The phase.</param>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.DashPathEffect.GetSKPath">
-            <inheritdoc cref="T:LiveChartsCore.SkiaSharpView.Motion.Composed.PathEffect" />
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.DashPathEffect.InterpolateFrom(LiveChartsCore.SkiaSharpView.Motion.Composed.PathEffect,System.Single)">
-            <inheritdoc cref="T:LiveChartsCore.SkiaSharpView.Motion.Composed.PathEffect" />
-        </member>
-        <member name="T:LiveChartsCore.SkiaSharpView.Motion.LinearGradientShader">
-            <summary>
-            A wrapper to enable linear gradient animations using skia sharp shaders.
-            </summary>
-            <seealso cref="T:LiveChartsCore.SkiaSharpView.Motion.Composed.Shader" />
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.LinearGradientShader.#ctor(SkiaSharp.SKPoint,SkiaSharp.SKPoint,SkiaSharp.SKColor[],System.Single[],SkiaSharp.SKShaderTileMode)">
-            <summary>
-            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Motion.LinearGradientShader"/> class.
-            </summary>
-            <param name="start">The start.</param>
-            <param name="end">The end.</param>
-            <param name="colors">The colors.</param>
-            <param name="colorPos">The color position.</param>
-            <param name="mode">The mode.</param>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.LinearGradientShader.GetSKShader">
-            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Motion.Composed.Shader.GetSKShader" />
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.LinearGradientShader.InterpolateFrom(LiveChartsCore.SkiaSharpView.Motion.Composed.Shader,System.Single)">
-            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Motion.Composed.Shader.InterpolateFrom(LiveChartsCore.SkiaSharpView.Motion.Composed.Shader,System.Single)" />
-        </member>
-        <member name="T:LiveChartsCore.SkiaSharpView.Motion.MatrixMotionProperty">
-            <summary>
-            A wrapper to enable matrix/transform transitions for skia sharp.
-            </summary>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.MatrixMotionProperty.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Motion.MatrixMotionProperty"/> class.
-            </summary>
-            <param name="propertyName">Name of the property.</param>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.MatrixMotionProperty.#ctor(System.String,SkiaSharp.SKMatrix)">
-            <summary>
-            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Motion.MatrixMotionProperty"/> class.
-            </summary>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.MatrixMotionProperty.OnGetMovement(System.Single)">
-            <inheritdoc cref="M:LiveChartsCore.Motion.MotionProperty`1.OnGetMovement(System.Single)" />
-        </member>
-        <member name="T:LiveChartsCore.SkiaSharpView.Motion.PathEffectMotionProperty">
-            <summary>
-            A property that defines path effects transitions to enable animations.
-            </summary>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.PathEffectMotionProperty.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Motion.PathEffectMotionProperty"/> class.
-            </summary>
-            <param name="propertyName">Name of the property.</param>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.PathEffectMotionProperty.OnGetMovement(System.Single)">
-            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Motion.PathEffectMotionProperty.OnGetMovement(System.Single)" />
-        </member>
-        <member name="T:LiveChartsCore.SkiaSharpView.Motion.PointMotionProperty">
-            <summary>
-            A property that defines points transitions to enable animations.
-            </summary>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.PointMotionProperty.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Motion.PointMotionProperty"/> class.
-            </summary>
-            <param name="propertyName">Name of the property.</param>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.PointMotionProperty.#ctor(System.String,SkiaSharp.SKPoint)">
-            <summary>
-            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Motion.PointMotionProperty"/> class.
-            </summary>
-            <param name="propertyName">Name of the property.</param>
-            <param name="point">The point.</param>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.PointMotionProperty.OnGetMovement(System.Single)">
-            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Motion.PointMotionProperty.OnGetMovement(System.Single)" />
-        </member>
-        <member name="T:LiveChartsCore.SkiaSharpView.Motion.ShaderMotionProperty">
-            <summary>
-            A property that defines shaders transitions to enable animations.
-            </summary>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.ShaderMotionProperty.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Motion.ShaderMotionProperty"/> class.
-            </summary>
-            <param name="propertyName">Name of the property.</param>
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Motion.ShaderMotionProperty.OnGetMovement(System.Single)">
-            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Motion.ShaderMotionProperty.OnGetMovement(System.Single)" />
-        </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask">
             <summary>
             Defines a set of geometries that will be painted using a linear gradient shader.,
@@ -1052,31 +874,31 @@
             Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
             </summary>
         </member>
-        <member name="T:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask">
+        <member name="T:LiveChartsCore.SkiaSharpView.Painting.SkiaSharpPaintTask">
             <summary>
             Defines a set of geometries that will be painted using a solid color.,
             </summary>
             <seealso cref="T:LiveChartsCore.SkiaSharpView.Painting.PaintTask" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.#ctor">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SkiaSharpPaintTask.#ctor">
             <summary>
-            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask"/> class.
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.SkiaSharpPaintTask"/> class.
             </summary>
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.#ctor(SkiaSharp.SKColor)">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SkiaSharpPaintTask.#ctor(SkiaSharp.SKColor)">
             <summary>
-            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask"/> class.
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.SkiaSharpPaintTask"/> class.
             </summary>
             <param name="color">The color.</param>
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.#ctor(SkiaSharp.SKColor,System.Single)">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SkiaSharpPaintTask.#ctor(SkiaSharp.SKColor,System.Single)">
             <summary>
-            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask"/> class.
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.SkiaSharpPaintTask"/> class.
             </summary>
             <param name="color">The color.</param>
             <param name="strokeWidth">Width of the stroke.</param>
         </member>
-        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.StrokeCap">
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SkiaSharpPaintTask.StrokeCap">
             <summary>
             Gets or sets the stroke cap.
             </summary>
@@ -1084,7 +906,7 @@
             The stroke cap.
             </value>
         </member>
-        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.StrokeJoin">
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SkiaSharpPaintTask.StrokeJoin">
             <summary>
             Gets or sets the stroke join.
             </summary>
@@ -1092,7 +914,7 @@
             The stroke join.
             </value>
         </member>
-        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.StrokeMiter">
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SkiaSharpPaintTask.StrokeMiter">
             <summary>
             Gets or sets the stroke miter.
             </summary>
@@ -1100,35 +922,35 @@
             The stroke miter.
             </value>
         </member>
-        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.PathEffect">
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SkiaSharpPaintTask.PathEffect">
             <summary>
-            Gets or sets the path effect.
+            Gets or sets the skia sharp path effect.
             </summary>
             <value>
             The path effect.
             </value>
         </member>
-        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.Shader">
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SkiaSharpPaintTask.Shader">
             <summary>
-            Gets or sets the shader.
+            Gets or sets the skia sharp shader.
             </summary>
             <value>
             The shader.
             </value>
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.CloneTask">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SkiaSharpPaintTask.CloneTask">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.CloneTask" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.InitializeTask(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SkiaSharpPaintTask.InitializeTask(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.InitializeTask(`0)" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.SetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SkiaSharpPaintTask.SetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.SetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.ResetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SkiaSharpPaintTask.ResetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.ResetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.Dispose">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SkiaSharpPaintTask.Dispose">
             <summary>
             Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
             </summary>

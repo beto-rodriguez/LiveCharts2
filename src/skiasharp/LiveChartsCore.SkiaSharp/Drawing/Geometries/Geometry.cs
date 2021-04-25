@@ -22,7 +22,6 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
-using LiveChartsCore.SkiaSharpView.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System;
@@ -34,16 +33,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>, IVisualChartPoint<SkiaSharpDrawingContext>
     {
         private bool _hasTransform = false;
-
-        /// <summary>
-        /// The transform
-        /// </summary>
-        protected readonly MatrixMotionProperty transform;
-
-        /// <summary>
-        /// The local transform
-        /// </summary>
-        protected readonly MatrixMotionProperty localTransform;
+        private SKMatrix _transform = SKMatrix.Identity;
 
         /// <summary>
         /// The opacity property
@@ -77,7 +67,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         {
             x = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0));
             y = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0));
-            transform = RegisterMotionProperty(new MatrixMotionProperty(nameof(Transform), SKMatrix.Identity));
             rotation = RegisterMotionProperty(new FloatMotionProperty(nameof(Rotation), 0));
             opacityProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Opacity), 1));
             this.hasCustomTransform = hasCustomTransform;
@@ -95,11 +84,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <value>
         /// The transform.
         /// </value>
-        public SKMatrix Transform
-        {
-            get => transform.GetMovement(this);
-            set { transform.SetMovement(value, this); _hasTransform = !value.IsIdentity; }
-        }
+        public SKMatrix Transform { get => _transform; set { _transform = value; _hasTransform = !value.IsIdentity; } }
 
         /// <inheritdoc cref="IGeometry{TDrawingContext}.Opacity" />
         public float Opacity { get => opacityProperty.GetMovement(this); set => opacityProperty.SetMovement(value, this); }

@@ -24,7 +24,6 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Motion;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -47,7 +46,6 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         protected FloatMotionProperty strokeWidthTransition;
         private HashSet<IDrawable<SkiaSharpDrawingContext>> _geometries = new HashSet<IDrawable<SkiaSharpDrawingContext>>();
         private IDrawable<SkiaSharpDrawingContext>[] _actualGeometries = null;
-        private readonly ColorMotionProperty _colorTransition;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PaintTask"/> class.
@@ -55,18 +53,15 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         public PaintTask()
         {
             strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness), 0f));
-            _colorTransition = RegisterMotionProperty(new ColorMotionProperty(nameof(Color), new SKColor()));
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PaintTask"/> class.
         /// </summary>
         /// <param name="color">The color.</param>
-        public PaintTask(SKColor color)
+        public PaintTask(SKColor color) : this()
         {
-            strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness), 0f));
-            _colorTransition = RegisterMotionProperty(
-                new ColorMotionProperty(nameof(Color), new SKColor(color.Red, color.Green, color.Blue, color.Alpha)));
+            Color = color;
         }
 
         double IDrawableTask<SkiaSharpDrawingContext>.ZIndex { get; set; }
@@ -102,7 +97,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <value>
         /// The color.
         /// </value>
-        public SKColor Color { get => _colorTransition.GetMovement(this); set => _colorTransition.SetMovement(value, this); }
+        public SKColor Color { get; set; }
 
         /// <summary>
         /// Gets or sets the clip rectangle.

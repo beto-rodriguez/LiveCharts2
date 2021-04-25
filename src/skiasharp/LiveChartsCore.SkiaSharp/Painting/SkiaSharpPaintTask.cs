@@ -23,8 +23,6 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Motion;
-using LiveChartsCore.SkiaSharpView.Motion.Composed;
 using SkiaSharp;
 using System.Drawing;
 
@@ -34,47 +32,41 @@ namespace LiveChartsCore.SkiaSharpView.Painting
     /// Defines a set of geometries that will be painted using a solid color.,
     /// </summary>
     /// <seealso cref="PaintTask" />
-    public class SolidColorPaintTask : PaintTask
+    public class SkiaSharpPaintTask : PaintTask
     {
         private readonly FloatMotionProperty _strokeMiterTransition;
-        private readonly PathEffectMotionProperty _pathEffectTransition;
-        private readonly ShaderMotionProperty _shaderTransition;
         private SkiaSharpDrawingContext _drawingContext;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SolidColorPaintTask"/> class.
+        /// Initializes a new instance of the <see cref="SkiaSharpPaintTask"/> class.
         /// </summary>
-        public SolidColorPaintTask()
+        public SkiaSharpPaintTask()
         {
             _strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
-            _pathEffectTransition = RegisterMotionProperty(new PathEffectMotionProperty(nameof(PathEffect)));
-            _shaderTransition = RegisterMotionProperty(new ShaderMotionProperty(nameof(Shader)));
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SolidColorPaintTask"/> class.
+        /// Initializes a new instance of the <see cref="SkiaSharpPaintTask"/> class.
         /// </summary>
         /// <param name="color">The color.</param>
-        public SolidColorPaintTask(SKColor color)
+        public SkiaSharpPaintTask(SKColor color)
             : base(color)
         {
             _strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
-            _pathEffectTransition = RegisterMotionProperty(new PathEffectMotionProperty(nameof(PathEffect)));
-            _shaderTransition = RegisterMotionProperty(new ShaderMotionProperty(nameof(Shader)));
+            Color = color;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SolidColorPaintTask"/> class.
+        /// Initializes a new instance of the <see cref="SkiaSharpPaintTask"/> class.
         /// </summary>
         /// <param name="color">The color.</param>
         /// <param name="strokeWidth">Width of the stroke.</param>
-        public SolidColorPaintTask(SKColor color, float strokeWidth)
+        public SkiaSharpPaintTask(SKColor color, float strokeWidth)
             : base(color)
         {
             strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness), strokeWidth));
             _strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
-            _pathEffectTransition = RegisterMotionProperty(new PathEffectMotionProperty(nameof(PathEffect)));
-            _shaderTransition = RegisterMotionProperty(new ShaderMotionProperty(nameof(Shader)));
+            Color = color;
         }
 
         /// <summary>
@@ -84,7 +76,6 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// The stroke cap.
         /// </value>
         public SKStrokeCap StrokeCap { get; set; }
-
 
         /// <summary>
         /// Gets or sets the stroke join.
@@ -107,33 +98,25 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         }
 
         /// <summary>
-        /// Gets or sets the path effect.
+        /// Gets or sets the skia sharp path effect.
         /// </summary>
         /// <value>
         /// The path effect.
         /// </value>
-        public PathEffect PathEffect
-        {
-            get => _pathEffectTransition.GetMovement(this);
-            set => _pathEffectTransition.SetMovement(value, this);
-        }
+        public SKPathEffect PathEffect { get; set; }
 
         /// <summary>
-        /// Gets or sets the shader.
+        /// Gets or sets the skia sharp shader.
         /// </summary>
         /// <value>
         /// The shader.
         /// </value>
-        public Shader Shader
-        {
-            get => _shaderTransition.GetMovement(this);
-            set => _shaderTransition.SetMovement(value, this);
-        }
+        public SKShader Shader { get; set; }
 
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.CloneTask" />
         public override IDrawableTask<SkiaSharpDrawingContext> CloneTask()
         {
-            var clone = new SolidColorPaintTask
+            var clone = new SkiaSharpPaintTask
             {
                 Style = Style,
                 IsStroke = IsStroke,
@@ -163,8 +146,10 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             skiaPaint.StrokeMiter = StrokeMiter;
             skiaPaint.StrokeWidth = StrokeThickness;
             skiaPaint.Style = IsStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
-            if (PathEffect != null) skiaPaint.PathEffect = PathEffect.GetSKPath();
-            if (Shader != null) skiaPaint.Shader = Shader.GetSKShader();
+
+            if (PathEffect != null) skiaPaint.PathEffect = PathEffect;
+            if (Shader != null) skiaPaint.Shader = Shader;
+
             if (ClipRectangle != RectangleF.Empty)
             {
                 _ = drawingContext.Canvas.Save();

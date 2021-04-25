@@ -25,7 +25,7 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
                 {
                     Values = new ObservableCollection<double> { 2, 5, 4, -2, 4, -3, 5 },
                     Stroke = null,
-                    Fill = new SolidColorPaintTask { Color = SKColors.DarkOliveGreen }
+                    Fill = new SkiaSharpPaintTask { Color = SKColors.DarkOliveGreen }
                 }
             };
 
@@ -39,10 +39,10 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
                     TextSize = 20,
 
                     // TextBrush = null will not draw the axis labels.
-                    TextBrush = new SolidColorPaintTask{ Color = SKColors.CornflowerBlue },
+                    TextBrush = new SkiaSharpPaintTask{ Color = SKColors.CornflowerBlue },
 
                     // SeparatorsBrush = null will not draw the separator lines
-                    SeparatorsBrush = new SolidColorPaintTask { Color = SKColors.LightBlue, StrokeThickness = 3 },
+                    SeparatorsBrush = new SkiaSharpPaintTask { Color = SKColors.LightBlue, StrokeThickness = 3 },
 
                     Position = selectedPosition
                 }
@@ -53,8 +53,8 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
                 new Axis
                 {
                     TextSize = 20,
-                    TextBrush = new SolidColorPaintTask { Color = SKColors.Red },
-                    SeparatorsBrush = new SolidColorPaintTask { Color = SKColors.LightPink, StrokeThickness = 3 },
+                    TextBrush = new SkiaSharpPaintTask { Color = SKColors.Red },
+                    SeparatorsBrush = new SkiaSharpPaintTask { Color = SKColors.LightPink, StrokeThickness = 3 },
                     Position = selectedPosition
                 }
             };
@@ -69,8 +69,8 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
         public void SetNewColor()
         {
             var nextColor = colors[selectedColor++ % colors.Length];
-            XAxes[0].TextBrush = new SolidColorPaintTask(new SKColor(nextColor.R, nextColor.G, nextColor.B));
-            XAxes[0].SeparatorsBrush = new SolidColorPaintTask(new SKColor(nextColor.R, nextColor.G, nextColor.B), 3);
+            XAxes[0].TextBrush = new SkiaSharpPaintTask(new SKColor(nextColor.R, nextColor.G, nextColor.B));
+            XAxes[0].SeparatorsBrush = new SkiaSharpPaintTask(new SKColor(nextColor.R, nextColor.G, nextColor.B), 3);
         }
 
         public void TogglePosition()
