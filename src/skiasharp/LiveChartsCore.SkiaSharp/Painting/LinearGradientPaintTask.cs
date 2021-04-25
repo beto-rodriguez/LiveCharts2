@@ -28,7 +28,7 @@ using SkiaSharp;
 namespace LiveChartsCore.SkiaSharpView.Painting
 {
     /// <summary>
-    /// Defines a set of geometries that will be painted using a linear gradient shader.,
+    /// Defines a set of geometries that will be painted using a linear gradient shader.
     /// </summary>
     /// <seealso cref="PaintTask" />
     public class LinearGradientPaintTask : PaintTask
@@ -169,6 +169,37 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             return ClipRectangle == null
                 ? new SKRect(0, 0, drawingContext.Info.Width, drawingContext.Info.Width)
                 : new SKRect(ClipRectangle.X, ClipRectangle.Y, ClipRectangle.Width, ClipRectangle.Height);
+        }
+    }
+
+    /// <summary>
+    /// Defines a set of geometries that will be painted using a radial gradient shader.
+    /// </summary>
+    /// <seealso cref="PaintTask" />
+    public class RadilGradientPaintTask : PaintTask
+    {
+        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.CloneTask" />
+        public override IDrawableTask<SkiaSharpDrawingContext> CloneTask()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.InitializeTask(TDrawingContext)" />
+        public override void InitializeTask(SkiaSharpDrawingContext drawingContext)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.ResetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
+        public override void ResetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.SetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
+        public override void SetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

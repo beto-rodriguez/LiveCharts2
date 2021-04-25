@@ -733,13 +733,21 @@
             </summary>
             <seealso cref="T:LiveChartsCore.SkiaSharpView.Painting.PaintTask" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask.#ctor(SkiaSharp.SKColor[],SkiaSharp.SKPoint,SkiaSharp.SKPoint)">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask.#ctor(SkiaSharp.SKColor[],SkiaSharp.SKPoint,SkiaSharp.SKPoint,System.Single[])">
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask"/> class.
             </summary>
             <param name="gradientStops">The gradient stops.</param>
-            <param name="startPoint">The start point.</param>
-            <param name="endPoint">The end point.</param>
+            <param name="startPoint">
+            The start point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
+            </param>
+            <param name="endPoint">
+            The end point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
+            </param>
+            <param name="colorPos">An array of integers in the range of 0 to 1.
+            These integers indicate the relative positions of the colors, You can set that argument to null to equally
+            space the colors, default is null.
+            </param>
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask.#ctor(SkiaSharp.SKColor[])">
             <summary>
@@ -753,8 +761,12 @@
             </summary>
             <param name="startColor">The start color.</param>
             <param name="endColor">The end color.</param>
-            <param name="startPoint">The start point.</param>
-            <param name="endPoint">The end point.</param>
+            <param name="startPoint">
+            The start point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
+            </param>
+            <param name="endPoint">
+            The end point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
+            </param>
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask.#ctor(SkiaSharp.SKColor,SkiaSharp.SKColor)">
             <summary>
