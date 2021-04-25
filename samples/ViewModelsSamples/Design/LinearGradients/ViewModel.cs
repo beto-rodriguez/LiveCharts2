@@ -20,7 +20,7 @@ namespace ViewModelsSamples.Design.LinearGradients
                 // ...
 
                 // you can add as many colors as you require to build the gradient
-                // by default all the distance between each colors is equal
+                // by default all the distance between each color is equal
                 // use the colorPos parameter in the constructor of the LinearGradientPaintTask class
                 // to specify the distance between each color
             };

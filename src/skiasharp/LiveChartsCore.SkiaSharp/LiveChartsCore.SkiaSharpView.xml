@@ -954,7 +954,7 @@
             default is (0.5, 0.5).
             </param>
             <param name="radius">
-            The radius, in the range of 0 to 1, where 1 is the maximum of both Width and Height of the chart, default is 0.5.
+            The radius, in the range of 0 to 1, where 1 is the minimum of both Width and Height of the chart, default is 0.5.
             </param>
             <param name="colorPos">
             An array of integers in the range of 0 to 1.

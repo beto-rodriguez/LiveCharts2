@@ -20,7 +20,7 @@ namespace ViewModelsSamples.Design.RadialGradients
                 // ...
 
                 // you can add as many colors as you require to build the gradient
-                // by default all the distance between each colors is equal
+                // by default all the distance between each color is equal
                 // use the colorPos parameter in the constructor of the RadialGradientPaintTask class
                 // to specify the distance between each color
             };
@@ -32,7 +32,8 @@ namespace ViewModelsSamples.Design.RadialGradients
                     Values = new []{ 7 },
                     Stroke = null,
                     Fill = new RadialGradientPaintTask(colors),
-                    MaxOuterRadius = 0.8
+                    Pushout = 10,
+                    MaxOuterRadius = 0.9
                 },
                 new PieSeries<int>
                 {

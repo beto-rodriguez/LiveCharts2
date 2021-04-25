@@ -50,7 +50,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// default is (0.5, 0.5).
         /// </param>
         /// <param name="radius">
-        /// The radius, in the range of 0 to 1, where 1 is the maximum of both Width and Height of the chart, default is 0.5.
+        /// The radius, in the range of 0 to 1, where 1 is the minimum of both Width and Height of the chart, default is 0.5.
         /// </param>
         /// <param name="colorPos">
         /// An array of integers in the range of 0 to 1.
@@ -112,8 +112,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             var size = GetDrawRectangleSize(drawingContext);
             var center = new SKPoint(size.Location.X + _center.X * size.Width, size.Location.Y + _center.Y * size.Height);
             var r = size.Location.X + size.Width > size.Location.Y + size.Height
-                ? size.Location.X + size.Width
-                : size.Location.Y + size.Height;
+                ? size.Location.Y + size.Height
+                : size.Location.X + size.Width;
             r *= _radius;
 
             skiaPaint.Shader = SKShader.CreateRadialGradient(
