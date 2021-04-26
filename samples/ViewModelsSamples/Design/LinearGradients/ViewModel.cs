@@ -33,7 +33,22 @@ namespace ViewModelsSamples.Design.LinearGradients
                     Stroke = null,
                     Fill = new LinearGradientPaintTask(
                         new [] { new SKColor(255, 140, 148), new SKColor(220, 237, 194) },
+                        // with the following points we are specifying the orientation of the gradient
+                        // by default the gradient is orientated horizontally
+                        // defined by the points: (0, 0.5) and (1, 0.5)
+                        // but for this sample we will use a vertical gradient:
+
+                        // to build a vertical gradient we must specify 2 points that will draw a imaginary line
+                        // the gradient will change colors as it moves following this imaginary line
+                        // the coordinates of these points (X, Y) go from 0 to 1
+                        //  where 0 is the start of the axis and 1 the end. Then to build our vertical gradient
+
+                        // we must go from the point:
+                        // (x0, y0) where x0 could be read as "the middle of the x axis" and y0 as "the start of the y axis"
                         new SKPoint(0.5f, 0),
+
+                        // to the point:
+                        // (x1, y1) where x1 could be read as "the middle of the x axis" and y0 as "the start of the y axis"
                         new SKPoint(0.5f, 1))
                 },
                 new LineSeries<int>
