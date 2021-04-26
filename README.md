@@ -97,8 +97,8 @@ The following topics will work on any platform.
 - [x] ~~Draw Axes in the UI~~
 - [x] ~~Multiple axes in the same chart~~
 - [x] ~~Axis labels rotation~~
-- [ ] Date scaled Axes
-- [ ] Logaritmic scaled Axes
+- [x] ~~Date scaled Axes~~
+- [x] ~~Logaritmic scaled Axes~~
 - [ ] Allow the chart to have external elements in the UI ([visual elements](https://lvcharts.net/App/examples/v1/wpf/Visual%20Elements))
 - [x] ~~Create the Series class, an object that is able to draw a data set in the screen in diferent ways (defined by the class that inherits from this) a series must be flexible, practically anything was plotted, could be changed by the user, it must also animate when the data changes~~
 
