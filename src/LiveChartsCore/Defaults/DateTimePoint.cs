@@ -21,54 +21,51 @@
 // SOFTWARE.
 
 
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace LiveChartsCore.Defaults
 {
     /// <summary>
-    /// Defines a point for the Cartesian coordinate system that implements <see cref="INotifyPropertyChanged"/>.
+    /// Defines a date time point for the Cartesian coordinate system that implements <see cref="INotifyPropertyChanged"/>.
     /// </summary>
-    /// <seealso cref="INotifyPropertyChanged" />
-    public class ObservablePoint : INotifyPropertyChanged
+    public class DateTimePoint : INotifyPropertyChanged
     {
-        private double? _x;
-        private double? _y;
+        private DateTime _dateTime;
+        private double? _value;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObservablePoint"/> class.
+        /// Initializes a new instance of the <see cref="DateTimePoint"/> class.
         /// </summary>
-        public ObservablePoint()
-        {
+        public DateTimePoint() { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DateTimePoint"/> class.
+        /// </summary>
+        /// <param name="dateTime">The date time.</param>
+        /// <param name="value">The value.</param>
+        public DateTimePoint(DateTime dateTime, double value)
+        {
+            _dateTime = dateTime;
+            _value = value;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObservablePoint"/> class.
-        /// </summary>
-        /// <param name="x">The x coordinate.</param>
-        /// <param name="y">The y coordinate.</param>
-        public ObservablePoint(double? x, double? y)
-        {
-            _x = x;
-            _y = y;
-        }
-
-        /// <summary>
-        /// Gets or sets the x coordinate.
+        /// Gets or sets the date time.
         /// </summary>
         /// <value>
-        /// The x.
+        /// The date time.
         /// </value>
-        public double? X { get => _x; set { _x = value; OnPropertyChanged(); } }
+        public DateTime DateTime { get => _dateTime; set { _dateTime = value; OnPropertyChanged(); } }
 
         /// <summary>
-        /// Gets or sets the y coordinate.
+        /// Gets or sets the value.
         /// </summary>
         /// <value>
-        /// The y.
+        /// The value.
         /// </value>
-        public double? Y { get => _y; set { _y = value; OnPropertyChanged(); } }
+        public double? Value { get => _value; set { _value = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Occurs when a property value changes.

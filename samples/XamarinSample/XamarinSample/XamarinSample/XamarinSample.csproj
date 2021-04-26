@@ -22,10 +22,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Axes\Logaritmic\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Axes\LabelsRotation\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Axes\ColorsAndPositions\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Axes\DateTimeScaled\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Axes\Multiple\View.xaml.cs">

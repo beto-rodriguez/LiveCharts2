@@ -47,6 +47,8 @@
             "Axes/NamedLabels",
             "Axes/LabelsRotation",
             "Axes/Multiple",
+            "Axes/DateTimeScaled",
+            "Axes/Logaritmic",
 
             "General/Tooltips",
             "General/Legends",

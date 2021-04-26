@@ -26,17 +26,17 @@ using System.Collections.Generic;
 namespace LiveChartsCore.Kernel
 {
     /// <summary>
-    /// Defiens the stacker helper class.
+    /// Defines the stacker helper class.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     public class Stacker<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        private int stackCount = 0;
-        private Dictionary<IDrawableSeries<TDrawingContext>, int> stackPositions = new Dictionary<IDrawableSeries<TDrawingContext>, int>();
-        private int knownMaxLenght = 0;
-        private List<List<StackedValue>> stack = new List<List<StackedValue>>();
-        private List<float> totals = new List<float>();
+        private readonly Dictionary<IDrawableSeries<TDrawingContext>, int> _stackPositions = new();
+        private readonly List<List<StackedValue>> _stack = new();
+        private readonly List<float> _totals = new();
+        private int _stackCount = 0;
+        private int _knownMaxLenght = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Stacker{TDrawingContext}"/> class.
@@ -46,12 +46,12 @@ namespace LiveChartsCore.Kernel
         }
 
         /// <summary>
-        /// Gets the maximum lenght.
+        /// Gets the maximum length.
         /// </summary>
         /// <value>
-        /// The maximum lenght.
+        /// The maximum length.
         /// </value>
-        public int MaxLenght { get; } = 0;
+        public int MaxLength { get; } = 0;
 
         /// <summary>
         /// Gets the series stack position.
@@ -60,12 +60,12 @@ namespace LiveChartsCore.Kernel
         /// <returns></returns>
         public int GetSeriesStackPosition(IDrawableSeries<TDrawingContext> series)
         {
-            if (!stackPositions.TryGetValue(series, out var i))
+            if (!_stackPositions.TryGetValue(series, out var i))
             {
-                var n = new List<StackedValue>(knownMaxLenght);
-                stack.Add(n);
-                i = stackCount++;
-                stackPositions[series] = i;
+                var n = new List<StackedValue>(_knownMaxLenght);
+                _stack.Add(n);
+                i = _stackCount++;
+                _stackPositions[series] = i;
             }
 
             return i;
@@ -80,23 +80,23 @@ namespace LiveChartsCore.Kernel
         public float StackPoint(ChartPoint point, int seriesStackPosition)
         {
             var index = unchecked((int)point.SecondaryValue);
-            var start = seriesStackPosition == 0 ? 0 : stack[seriesStackPosition - 1][index].End;
+            var start = seriesStackPosition == 0 ? 0 : _stack[seriesStackPosition - 1][index].End;
             var value = point.PrimaryValue;
 
-            var si = stack[seriesStackPosition];
+            var si = _stack[seriesStackPosition];
             if (si.Count < point.SecondaryValue + 1)
             {
                 si.Add(new StackedValue { Start = start, End = start + value });
-                totals.Add(0);
-                knownMaxLenght++;
+                _totals.Add(0);
+                _knownMaxLenght++;
             }
             else
             {
                 si[index] = new StackedValue { Start = start, End = start + value };
             }
 
-            var total = totals[index] + value;
-            totals[index] = total;
+            var total = _totals[index] + value;
+            _totals[index] = total;
 
             return total;
         }
@@ -110,13 +110,13 @@ namespace LiveChartsCore.Kernel
         public StackedValue GetStack(ChartPoint point, int seriesStackPosition)
         {
             var index = unchecked((int)point.SecondaryValue);
-            var p = stack[seriesStackPosition][index];
+            var p = _stack[seriesStackPosition][index];
 
             return new StackedValue
             {
                 Start = p.Start,
                 End = p.End,
-                Total = totals[index]
+                Total = _totals[index]
             };
         }
     }

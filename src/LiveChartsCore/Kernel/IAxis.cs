@@ -115,7 +115,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The unit with.
         /// </value>
-        double UnitWith { get; set; }
+        double UnitWidth { get; set; }
 
         /// <summary>
         /// Gets or sets the minimum value visible in the axis, any point less than this value will be hidden, 

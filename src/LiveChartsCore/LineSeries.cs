@@ -112,6 +112,7 @@ namespace LiveChartsCore
                 {
                     _geometryStroke.IsStroke = true;
                 }
+
                 OnPaintContextChanged();
                 OnPropertyChanged();
             }

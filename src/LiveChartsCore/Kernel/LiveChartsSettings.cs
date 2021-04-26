@@ -412,7 +412,8 @@ namespace LiveChartsCore.Kernel
                          point.PrimaryValue = (float)model.Y.Value;
                          point.SecondaryValue = (float)model.X.Value;
                      }
-                 }).HasMap<ObservablePointF>((model, point) =>
+                 })
+                 .HasMap<ObservablePointF>((model, point) =>
                  {
                      if (model == null)
                          throw new Exception(
@@ -427,6 +428,40 @@ namespace LiveChartsCore.Kernel
                      point.IsNull = false;
                      point.PrimaryValue = model.Y.Value;
                      point.SecondaryValue = model.X.Value;
+                 })
+                 .HasMap<DateTimePoint>((model, point) =>
+                 {
+                     if (model == null)
+                         throw new Exception(
+                             $"A {nameof(DateTimePoint)} can not be null, instead set to null the " +
+                             $"{nameof(DateTimePoint.Value)} property.");
+
+                     if (model.Value == null)
+                     {
+                         point.IsNull = true;
+                         return;
+                     }
+
+                     point.IsNull = false;
+                     point.PrimaryValue = (float)model.Value.Value;
+                     point.SecondaryValue = model.DateTime.Ticks;
+                 })
+                 .HasMap<DateTimePointF>((model, point) =>
+                 {
+                     if (model == null)
+                         throw new Exception(
+                             $"A {nameof(DateTimePointF)} can not be null, instead set to null the " +
+                             $"{nameof(DateTimePointF.Value)} property.");
+
+                     if (model.Value == null)
+                     {
+                         point.IsNull = true;
+                         return;
+                     }
+
+                     point.IsNull = false;
+                     point.PrimaryValue = model.Value.Value;
+                     point.SecondaryValue = model.DateTime.Ticks;
                  });
         }
     }

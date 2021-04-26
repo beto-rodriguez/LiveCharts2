@@ -59,7 +59,7 @@ namespace LiveChartsCore
                 primaryAxis.PreviousDataBounds == null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis);
             var primaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
 
-            var uw = secondaryScale.ToPixels(1f) - secondaryScale.ToPixels(0f);
+            var uw = secondaryScale.ToPixels((float) primaryAxis.UnitWidth) - secondaryScale.ToPixels(0f);
             var uwm = 0.5f * uw;
             var sw = Stroke?.StrokeThickness ?? 0;
             var p = primaryScale.ToPixels((float)Pivot);
@@ -220,23 +220,23 @@ namespace LiveChartsCore
             {
                 PrimaryBounds = new Bounds
                 {
-                    Max = baseBounds.SecondaryBounds.Max + 0.5,
-                    Min = baseBounds.SecondaryBounds.Min - 0.5
+                    Max = baseBounds.SecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth,
+                    Min = baseBounds.SecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth
                 },
                 SecondaryBounds = new Bounds
                 {
-                    Max = baseBounds.PrimaryBounds.Max + tick.Value,
-                    min = baseBounds.PrimaryBounds.Min - tick.Value
+                    Max = baseBounds.PrimaryBounds.Max + tick.Value * primaryAxis.UnitWidth,
+                    min = baseBounds.PrimaryBounds.Min - tick.Value * primaryAxis.UnitWidth
                 },
                 VisiblePrimaryBounds = new Bounds
                 {
-                    Max = baseBounds.VisibleSecondaryBounds.Max + 0.5,
-                    Min = baseBounds.VisibleSecondaryBounds.Min - 0.5
+                    Max = baseBounds.VisibleSecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth,
+                    Min = baseBounds.VisibleSecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth
                 },
                 VisibleSecondaryBounds = new Bounds
                 {
-                    Max = baseBounds.VisiblePrimaryBounds.Max + tick.Value,
-                    min = baseBounds.VisiblePrimaryBounds.Min - tick.Value
+                    Max = baseBounds.VisiblePrimaryBounds.Max + tick.Value * primaryAxis.UnitWidth,
+                    min = baseBounds.VisiblePrimaryBounds.Min - tick.Value * primaryAxis.UnitWidth
                 },
             };
         }

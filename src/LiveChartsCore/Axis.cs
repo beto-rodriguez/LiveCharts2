@@ -71,7 +71,7 @@ namespace LiveChartsCore
         private double? _minLimit = null;
         private double? _maxLimit = null;
         private IDrawableTask<TDrawingContext>? _textBrush;
-        private double _unitWith = 1;
+        private double _unitWidth = 1;
         private double _textSize = 16;
         private IDrawableTask<TDrawingContext>? _separatorsBrush;
         private bool _showSeparatorLines = true;
@@ -111,8 +111,8 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IAxis.MaxLimit"/>
         public double? MaxLimit { get => _maxLimit; set { _maxLimit = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis.UnitWith"/>
-        public double UnitWith { get => _unitWith; set { _unitWith = value; OnPropertyChanged(); } }
+        /// <inheritdoc cref="IAxis.UnitWidth"/>
+        public double UnitWidth { get => _unitWidth; set { _unitWidth = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IAxis.Position"/>
         public AxisPosition Position { get => _position; set { _position = value; OnPropertyChanged(); } }

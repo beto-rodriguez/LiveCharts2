@@ -21,7 +21,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Axes\Logaritmic\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Axes\LabelsRotation\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Axes\DateTimeScaled\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Axes\Multiple\View.xaml.cs">
@@ -153,7 +159,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Axes\Logaritmic\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Axes\LabelsRotation\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Axes\DateTimeScaled\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

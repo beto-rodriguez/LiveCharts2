@@ -42,8 +42,8 @@
         <member name="P:LiveChartsCore.Axis`3.MaxLimit">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.MaxLimit"/>
         </member>
-        <member name="P:LiveChartsCore.Axis`3.UnitWith">
-            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.UnitWith"/>
+        <member name="P:LiveChartsCore.Axis`3.UnitWidth">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.UnitWidth"/>
         </member>
         <member name="P:LiveChartsCore.Axis`3.Position">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.Position"/>
@@ -722,9 +722,99 @@
         <member name="M:LiveChartsCore.ColumnSeries`4.SoftDeletePoint(LiveChartsCore.Kernel.ChartPoint,LiveChartsCore.Measure.Scaler,LiveChartsCore.Measure.Scaler)">
             <inheritdoc cref="M:LiveChartsCore.Series`4.SoftDeletePoint(LiveChartsCore.Kernel.ChartPoint,LiveChartsCore.Measure.Scaler,LiveChartsCore.Measure.Scaler)"/>
         </member>
+        <member name="T:LiveChartsCore.Defaults.DateTimePoint">
+            <summary>
+            Defines a date time point for the Cartesian coordinate system that implements <see cref="T:System.ComponentModel.INotifyPropertyChanged"/>.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.Defaults.DateTimePoint.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.Defaults.DateTimePoint"/> class.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.Defaults.DateTimePoint.#ctor(System.DateTime,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.Defaults.DateTimePoint"/> class.
+            </summary>
+            <param name="dateTime">The date time.</param>
+            <param name="value">The value.</param>
+        </member>
+        <member name="P:LiveChartsCore.Defaults.DateTimePoint.DateTime">
+            <summary>
+            Gets or sets the date time.
+            </summary>
+            <value>
+            The date time.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Defaults.DateTimePoint.Value">
+            <summary>
+            Gets or sets the value.
+            </summary>
+            <value>
+            The value.
+            </value>
+        </member>
+        <member name="E:LiveChartsCore.Defaults.DateTimePoint.PropertyChanged">
+            <summary>
+            Occurs when a property value changes.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Defaults.DateTimePoint.OnPropertyChanged(System.String)">
+            <summary>
+            Called when a property changed.
+            </summary>
+            <param name="propertyName">Name of the property.</param>
+        </member>
+        <member name="T:LiveChartsCore.Defaults.DateTimePointF">
+            <summary>
+            Defines a date time point for the Cartesian coordinate system that implements <see cref="T:System.ComponentModel.INotifyPropertyChanged"/>.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.Defaults.DateTimePointF.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.Defaults.DateTimePoint"/> class.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.Defaults.DateTimePointF.#ctor(System.DateTime,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.Defaults.DateTimePoint"/> class.
+            </summary>
+            <param name="dateTime">The date time.</param>
+            <param name="value">The value.</param>
+        </member>
+        <member name="P:LiveChartsCore.Defaults.DateTimePointF.DateTime">
+            <summary>
+            Gets or sets the date time.
+            </summary>
+            <value>
+            The date time.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Defaults.DateTimePointF.Value">
+            <summary>
+            Gets or sets the value.
+            </summary>
+            <value>
+            The value.
+            </value>
+        </member>
+        <member name="E:LiveChartsCore.Defaults.DateTimePointF.PropertyChanged">
+            <summary>
+            Occurs when a property value changes.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Defaults.DateTimePointF.OnPropertyChanged(System.String)">
+            <summary>
+            Called when a property changed.
+            </summary>
+            <param name="propertyName">Name of the property.</param>
+        </member>
         <member name="T:LiveChartsCore.Defaults.ObservablePoint">
             <summary>
-            Defines a point for he Cartesian coordinate system that implements <see cref="T:System.ComponentModel.INotifyPropertyChanged"/>.
+            Defines a point for the Cartesian coordinate system that implements <see cref="T:System.ComponentModel.INotifyPropertyChanged"/>.
             </summary>
             <seealso cref="T:System.ComponentModel.INotifyPropertyChanged" />
         </member>
@@ -3485,7 +3575,7 @@
             The step.
             </value>
         </member>
-        <member name="P:LiveChartsCore.Kernel.IAxis.UnitWith">
+        <member name="P:LiveChartsCore.Kernel.IAxis.UnitWidth">
             <summary>
             Gets or sets the unit with, it means the width of every point (if the series requires it) in the chart values scale, this value
             should normally be 1, unless you are plotting in a custom scale, default is 1.
@@ -4887,7 +4977,7 @@
         </member>
         <member name="T:LiveChartsCore.Kernel.Stacker`1">
             <summary>
-            Defiens the stacker helper class.
+            Defines the stacker helper class.
             </summary>
             <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
         </member>
@@ -4896,12 +4986,12 @@
             Initializes a new instance of the <see cref="T:LiveChartsCore.Kernel.Stacker`1"/> class.
             </summary>
         </member>
-        <member name="P:LiveChartsCore.Kernel.Stacker`1.MaxLenght">
+        <member name="P:LiveChartsCore.Kernel.Stacker`1.MaxLength">
             <summary>
-            Gets the maximum lenght.
+            Gets the maximum length.
             </summary>
             <value>
-            The maximum lenght.
+            The maximum length.
             </value>
         </member>
         <member name="M:LiveChartsCore.Kernel.Stacker`1.GetSeriesStackPosition(LiveChartsCore.Kernel.IDrawableSeries{`0})">
@@ -5562,7 +5652,7 @@
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.Measure.Scaler"/> class.
             </summary>
-            <param name="drawMaringLocation">The draw maring location.</param>
+            <param name="drawMaringLocation">The draw margin location.</param>
             <param name="drawMarginSize">Size of the draw margin.</param>
             <param name="axis">The axis.</param>
             <exception cref="T:System.Exception">The axis is not ready to be scaled.</exception>
@@ -5576,7 +5666,7 @@
         </member>
         <member name="M:LiveChartsCore.Measure.Scaler.ToChartValues(System.Single)">
             <summary>
-            Converts to chartvalues.
+            Converts to chart values.
             </summary>
             <param name="pixels">The pixels.</param>
             <returns></returns>
