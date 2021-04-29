@@ -90,6 +90,10 @@ namespace LiveChartsCore
 
         Bounds? IAxis.PreviousVisibleDataBounds { get; set; }
 
+        double? IAxis.PreviousMaxLimit { get; set; }
+
+        double? IAxis.PreviousMinLimit { get; set; }
+
         Bounds IAxis.DataBounds => _dataBounds ?? throw new Exception("bounds not found");
 
         Bounds IAxis.VisibleDataBounds => _visibleDataBounds ?? throw new Exception("bounds not found");
@@ -447,8 +451,6 @@ namespace LiveChartsCore
         public void Initialize(AxisOrientation orientation)
         {
             _orientation = orientation;
-            //_previousDataBounds = _dataBounds;
-            //_previousVisibleDataBounds = _visibleDataBounds;
             _dataBounds = new Bounds();
             _visibleDataBounds = new Bounds();
         }

@@ -58,15 +58,9 @@ namespace LiveChartsCore
             var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
             var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
             var previousPrimaryScale =
-                primaryAxis.PreviousDataBounds == null
-                ? null
-                : new Scaler(
-                    drawLocation, drawMarginSize, primaryAxis, primaryAxis.PreviousDataBounds, primaryAxis.PreviousVisibleDataBounds);
+                primaryAxis.PreviousDataBounds == null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis, true);
             var previousSecondaryScale =
-                secondaryAxis.PreviousDataBounds == null
-                ? null
-                : new Scaler(
-                    drawLocation, drawMarginSize, secondaryAxis, secondaryAxis.PreviousDataBounds, secondaryAxis.PreviousVisibleDataBounds);
+                secondaryAxis.PreviousDataBounds == null ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
 
             var uw = secondaryScale.ToPixels((float)secondaryAxis.UnitWidth) - secondaryScale.ToPixels(0f);
             var puw = previousSecondaryScale == null ? 0 : previousSecondaryScale.ToPixels((float)secondaryAxis.UnitWidth) - previousSecondaryScale.ToPixels(0f);
@@ -149,8 +143,13 @@ namespace LiveChartsCore
 
                     if (previousSecondaryScale != null && previousPrimaryScale != null)
                     {
+                        var previousP = previousPrimaryScale.ToPixels(pivot);
+                        var previousPrimary = previousPrimaryScale.ToPixels(point.PrimaryValue);
+                        var bp = Math.Abs(previousPrimary - previousP);
+                        var cyp = point.PrimaryValue > pivot ? previousPrimary : previousPrimary - bp;
+
                         xi = previousSecondaryScale.ToPixels(point.SecondaryValue) - uwm + cp;
-                        pi = previousPrimaryScale.ToPixels(pivot);
+                        pi = chart.IsZoomingOrPanning ? cyp : previousP;
                         uwi = puw;
                     }
 

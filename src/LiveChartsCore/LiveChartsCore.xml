@@ -3640,6 +3640,22 @@
             The maximum value.
             </value>
         </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.PreviousMaxLimit">
+            <summary>
+            Gets or sets the previous maximum limit.
+            </summary>
+            <value>
+            The previous maximum limit.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.PreviousMinLimit">
+            <summary>
+            Gets or sets the previous minimum limit.
+            </summary>
+            <value>
+            The previous minimum limit.
+            </value>
+        </member>
         <member name="P:LiveChartsCore.Kernel.IAxis.IsInverted">
             <summary>
             Gets or sets a value indicating whether the axis is inverted based on the Cartesian coordinate system.
@@ -5539,6 +5555,14 @@
             Gets or sets the minimum value in the set.
             </summary>
         </member>
+        <member name="P:LiveChartsCore.Measure.Bounds.Delta">
+            <summary>
+            Gets the delta, the absolute range in the axis.
+            </summary>
+            <value>
+            The delta.
+            </value>
+        </member>
         <member name="M:LiveChartsCore.Measure.Bounds.AppendValue(System.Double)">
             <summary>
             Compares the current bounds with a given value,
@@ -5694,15 +5718,14 @@
             Defines the scaler class, this class helps to scale from the data scale to the user interface scale and vise versa.
             </summary>
         </member>
-        <member name="M:LiveChartsCore.Measure.Scaler.#ctor(System.Drawing.PointF,System.Drawing.SizeF,LiveChartsCore.Kernel.IAxis,LiveChartsCore.Measure.Bounds,LiveChartsCore.Measure.Bounds)">
+        <member name="M:LiveChartsCore.Measure.Scaler.#ctor(System.Drawing.PointF,System.Drawing.SizeF,LiveChartsCore.Kernel.IAxis,System.Boolean)">
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.Measure.Scaler"/> class.
             </summary>
             <param name="drawMaringLocation">The draw margin location.</param>
             <param name="drawMarginSize">Size of the draw margin.</param>
             <param name="axis">The axis.</param>
-            <param name="actualBounds">The bounds to use, if null then use the axis bounds.</param>
-            <param name="actualVisibleBounds">The previous visible bounds to use, if null then use the axis bounds.</param>
+            <param name="usePreviousScale">Indicates if the scaler should be built based on the previous known data.</param>
             <exception cref="T:System.Exception">The axis is not ready to be scaled.</exception>
         </member>
         <member name="M:LiveChartsCore.Measure.Scaler.ToPixels(System.Single)">

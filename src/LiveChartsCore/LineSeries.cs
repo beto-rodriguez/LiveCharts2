@@ -130,15 +130,9 @@ namespace LiveChartsCore
             var secondaryScale = new Scaler(drawLocation, drawMarginSize, xAxis);
             var primaryScale = new Scaler(drawLocation, drawMarginSize, yAxis);
             var previousPrimaryScale =
-                yAxis.PreviousDataBounds == null
-                ? null
-                : new Scaler(
-                    drawLocation, drawMarginSize, yAxis, yAxis.PreviousDataBounds, yAxis.PreviousVisibleDataBounds);
+                yAxis.PreviousDataBounds == null ? null : new Scaler(drawLocation, drawMarginSize, yAxis, true);
             var previousSecondaryScale =
-                xAxis.PreviousDataBounds == null
-                ? null
-                : new Scaler(
-                    drawLocation, drawMarginSize, xAxis, xAxis.PreviousDataBounds, xAxis.PreviousVisibleDataBounds);
+                xAxis.PreviousDataBounds == null ? null : new Scaler(drawLocation, drawMarginSize, xAxis, true);
 
             var gs = _geometrySize;
             var hgs = gs / 2f;
@@ -335,10 +329,18 @@ namespace LiveChartsCore
                     {
                         if (data.IsFirst)
                         {
-                            if (wasStrokeInitialized)
+                            if (wasStrokeInitialized || chart.IsZoomingOrPanning)
                             {
-                                strokePathHelper.StartPoint.X = data.X0;
-                                strokePathHelper.StartPoint.Y = p;
+                                if (chart.IsZoomingOrPanning && previousPrimaryScale != null && previousSecondaryScale != null)
+                                {
+                                    strokePathHelper.StartPoint.X = previousSecondaryScale.ToPixels(data.OriginalData.X0);
+                                    strokePathHelper.StartPoint.Y = previousPrimaryScale.ToPixels(data.OriginalData.Y0);
+                                }
+                                else
+                                {
+                                    strokePathHelper.StartPoint.X = data.X0;
+                                    strokePathHelper.StartPoint.Y = p;
+                                }
 
                                 strokePathHelper.StartPoint.CompleteTransitions(
                                    nameof(fillPathHelper.StartPoint.Y), nameof(fillPathHelper.StartPoint.X));

@@ -144,6 +144,22 @@ namespace LiveChartsCore.Kernel
         double? MaxLimit { get; set; }
 
         /// <summary>
+        /// Gets or sets the previous maximum limit.
+        /// </summary>
+        /// <value>
+        /// The previous maximum limit.
+        /// </value>
+        double? PreviousMaxLimit { get; set; }
+
+        /// <summary>
+        /// Gets or sets the previous minimum limit.
+        /// </summary>
+        /// <value>
+        /// The previous minimum limit.
+        /// </value>
+        double? PreviousMinLimit { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the axis is inverted based on the Cartesian coordinate system.
         /// </summary>
         /// <value>

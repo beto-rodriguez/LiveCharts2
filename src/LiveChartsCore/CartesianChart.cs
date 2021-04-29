@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using LiveChartsCore.Measure;
+using System.Diagnostics;
 
 namespace LiveChartsCore
 {
@@ -315,8 +316,8 @@ namespace LiveChartsCore
                 animationsSpeed = _chartView.AnimationsSpeed;
                 easingFunction = _chartView.EasingFunction;
 
-
                 seriesContext = new SeriesContext<TDrawingContext>(Series);
+                var totalAxes = XAxes.Concat(YAxes).ToArray();
 
                 Canvas.MeasuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
                 var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
@@ -417,7 +418,6 @@ namespace LiveChartsCore
                 // or it is initializing in the UI and has no dimensions yet
                 if (drawMarginSize.Width <= 0 || drawMarginSize.Height <= 0) return;
 
-                var totalAxes = YAxes.Concat(XAxes).ToArray();
                 var toDeleteAxes = new HashSet<IAxis<TDrawingContext>>(_everMeasuredAxes);
                 foreach (var axis in totalAxes)
                 {
@@ -440,8 +440,6 @@ namespace LiveChartsCore
                         deleted = true;
                     }
                     if (deleted) axis.DeletingTasks.Clear();
-                    axis.PreviousDataBounds = axis.DataBounds;
-                    axis.PreviousVisibleDataBounds = axis.VisibleDataBounds;
                 }
 
                 var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
@@ -473,6 +471,14 @@ namespace LiveChartsCore
                 {
                     axis.Dispose();
                     _ = _everMeasuredAxes.Remove(axis);
+                }
+
+                foreach (var axis in totalAxes)
+                {
+                    axis.PreviousDataBounds = axis.DataBounds;
+                    axis.PreviousVisibleDataBounds = axis.VisibleDataBounds;
+                    axis.PreviousMaxLimit = axis.MaxLimit;
+                    axis.PreviousMinLimit = axis.MinLimit;
                 }
 
                 IsZoomingOrPanning = false;

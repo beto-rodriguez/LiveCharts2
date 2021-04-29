@@ -85,8 +85,6 @@ namespace LiveChartsCore.Drawing
 
                 foreach (var task in _paintTasks.OrderBy(x => x.ZIndex).ToArray())
                 {
-                    if (task.IsPaused) continue;
-
                     task.IsCompleted = true;
                     task.CurrentTime = frameTime;
                     task.InitializeTask(context);
@@ -95,7 +93,7 @@ namespace LiveChartsCore.Drawing
                     {
                         geometry.IsCompleted = true;
                         geometry.CurrentTime = frameTime;
-                        geometry.Draw(context);
+                        if (!task.IsPaused) geometry.Draw(context);
 
                         isValid = isValid && geometry.IsCompleted;
 

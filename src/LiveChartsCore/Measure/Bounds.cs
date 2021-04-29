@@ -46,6 +46,14 @@ namespace LiveChartsCore.Measure
         public double Min { get; set; } = double.MaxValue;
 
         /// <summary>
+        /// Gets the delta, the absolute range in the axis.
+        /// </summary>
+        /// <value>
+        /// The delta.
+        /// </value>
+        public double Delta => Max - Min;
+
+        /// <summary>
         /// Compares the current bounds with a given value,
         /// if the given value is greater than the current instance <see cref="Max"/> property then the given value is set at <see cref="Max"/> property,
         /// if the given value is less than the current instance <see cref="Min"/> property then the given value is set at <see cref="Min"/> property.
