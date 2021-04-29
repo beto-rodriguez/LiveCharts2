@@ -30,8 +30,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments
     /// <inheritdoc cref="ILinePathSegment{TPath}" />
     public class LineSegment : PathCommand, ILinePathSegment<SKPath>
     {
-        private FloatMotionProperty _xProperty;
-        private FloatMotionProperty _yProperty;
+        private readonly FloatMotionProperty _xProperty;
+        private readonly FloatMotionProperty _yProperty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LineSegment"/> class.
@@ -53,20 +53,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments
         {
             SetCurrentTime(currentTime);
             path.LineTo(X, Y);
-        }
-
-        /// <inheritdoc cref="PathCommand.Clone" />
-        public override object Clone()
-        {
-            var clone = new LineSegment
-            {
-                X = X,
-                Y = Y
-            };
-            //clone._xProperty = _xProperty;
-            //clone._yProperty = _yProperty;
-            //clone.CompleteAllTransitions();
-            return clone;
         }
     }
 }

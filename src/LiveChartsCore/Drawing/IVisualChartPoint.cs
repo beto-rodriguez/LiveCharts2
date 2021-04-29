@@ -27,7 +27,7 @@ namespace LiveChartsCore.Drawing
     /// <summary>
     /// Defines an object that contains a <see cref="IDrawable{TDrawingContext}"/> to highlight when the point requires so.
     /// </summary>
-    public interface IVisualChartPoint<TDrawingContext> : ICloneable
+    public interface IVisualChartPoint<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>

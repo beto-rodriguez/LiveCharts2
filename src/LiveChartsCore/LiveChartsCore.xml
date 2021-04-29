@@ -2159,15 +2159,6 @@
             Gets the main <see cref="T:LiveChartsCore.Drawing.IDrawable`1" />.
             </summary>
         </member>
-        <member name="M:LiveChartsCore.Drawing.LineBezierVisualPoint`4.Clone">
-            <summary>
-            Creates a new object that is a copy of the current instance.
-            </summary>
-            <returns>
-            A new object that is a copy of this instance.
-            </returns>
-            <exception cref="T:System.NotImplementedException"></exception>
-        </member>
         <member name="T:LiveChartsCore.Drawing.MotionCanvas`1">
             <summary>
             Defines a canvas that is able to animate the shapes inside it.

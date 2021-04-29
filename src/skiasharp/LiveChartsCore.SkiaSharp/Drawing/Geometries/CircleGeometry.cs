@@ -44,28 +44,5 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             var rx = Width / 2f;
             context.Canvas.DrawCircle(X + rx, Y + rx, rx, paint);
         }
-
-        /// <inheritdoc cref="Geometry.Clone" />
-        public override object Clone()
-        {
-            var clone = new CircleGeometry
-            {
-                X = X,
-                Y = Y,
-                Transform = Transform,
-                Opacity = Opacity,
-                Rotation = Rotation,
-                Width = Width,
-                Height = Height
-            };
-            clone.xProperty = xProperty;
-            clone.yProperty = yProperty;
-            clone.opacityProperty = opacityProperty;
-            clone.rotationProperty = rotationProperty;
-            clone.widthProperty = widthProperty;
-            clone.heightProperty = heightProperty;
-            clone.CompleteAllTransitions();
-            return clone;
-        }
     }
 }

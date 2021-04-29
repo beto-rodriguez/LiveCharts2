@@ -29,15 +29,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments
     /// <inheritdoc cref="IPathCommand{TPathContext}" />
     public abstract class PathCommand : Animatable, IPathCommand<SKPath>
     {
-        /// <summary>
-        /// Creates a new object that is a copy of the current instance.
-        /// </summary>
-        /// <returns>
-        /// A new object that is a copy of this instance.
-        /// </returns>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public abstract object Clone();
-
         /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
         public abstract void Execute(SKPath path, long currentTime, Animatable pathGeometry);
     }

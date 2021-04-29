@@ -85,10 +85,7 @@ namespace LiveChartsCore.Drawing
 
                 foreach (var task in _paintTasks.OrderBy(x => x.ZIndex).ToArray())
                 {
-                    if (task.IsPaused)
-                    {
-                        continue;
-                    }
+                    if (task.IsPaused) continue;
 
                     task.IsCompleted = true;
                     task.CurrentTime = frameTime;
@@ -105,9 +102,6 @@ namespace LiveChartsCore.Drawing
                         if (geometry.IsCompleted && geometry.RemoveOnCompleted)
                             toRemoveGeometries.Add(
                                 new Tuple<IDrawableTask<TDrawingContext>, IDrawable<TDrawingContext>>(task, geometry));
-                        //if (!MeasuredDrawables.Contains(geometry))
-                        //    toRemoveGeometries.Add(
-                        //        new Tuple<IDrawableTask<TDrawingContext>, IDrawable<TDrawingContext>>(task, geometry));
                     }
 
                     task.Dispose();
@@ -121,7 +115,8 @@ namespace LiveChartsCore.Drawing
                 foreach (var tuple in toRemoveGeometries)
                 {
                     tuple.Item1.RemoveGeometryFromPainTask(tuple.Item2);
-                    // if we removed at least one gemetry, we need to redraw the chart
+
+                    // if we removed at least one geometry, we need to redraw the chart
                     // to ensure it is not present in the next frame
                     isValid = false;
                 }

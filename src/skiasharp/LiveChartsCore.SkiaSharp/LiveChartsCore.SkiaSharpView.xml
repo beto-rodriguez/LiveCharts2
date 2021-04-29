@@ -109,9 +109,6 @@
         <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.CircleGeometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)">
             <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.CircleGeometry.Clone">
-            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.Clone" />
-        </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry">
             <inheritdoc cref="T:LiveChartsCore.Drawing.IDoughnutGeometry`1" />
         </member>
@@ -149,9 +146,6 @@
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)">
             <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)" />
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry.Clone">
-            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.Clone" />
         </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry">
             <inheritdoc cref="T:LiveChartsCore.Drawing.IGeometry`1" />
@@ -266,14 +260,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.Clone">
-            <summary>
-            Creates a new object that is a copy of the current instance.
-            </summary>
-            <returns>
-            A new object that is a copy of this instance.
-            </returns>
-        </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LabelGeometry">
             <inheritdoc cref="T:LiveChartsCore.Drawing.ILabelGeometry`1" />
         </member>
@@ -319,9 +305,6 @@
         <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LabelGeometry.GetTransform(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
             <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.GetTransform(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LabelGeometry.Clone">
-            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.Clone" />
-        </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LineGeometry">
             <inheritdoc cref="T:LiveChartsCore.Drawing.ILineGeometry`1" />
         </member>
@@ -342,9 +325,6 @@
         <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LineGeometry.OnMeasure(LiveChartsCore.SkiaSharpView.Painting.PaintTask)">
             <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnMeasure(LiveChartsCore.SkiaSharpView.Painting.PaintTask)" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LineGeometry.Clone">
-            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.Clone" />
-        </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.OvalGeometry">
             <summary>
             Defines an oval geometry.
@@ -358,9 +338,6 @@
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.OvalGeometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)">
             <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)" />
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.OvalGeometry.Clone">
-            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.Clone" />
         </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.PathGeometry">
             <inheritdoc cref="T:LiveChartsCore.Drawing.IPathGeometry`2" />
@@ -402,9 +379,6 @@
         <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.RectangleGeometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)">
             <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.RectangleGeometry.Clone">
-            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.Clone" />
-        </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.RoundedRectangleGeometry">
             <summary>
             Defines a rounded rectangle geometry.
@@ -435,9 +409,6 @@
         <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.RoundedRectangleGeometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)">
             <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.RoundedRectangleGeometry.Clone">
-            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.Clone" />
-        </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.CubicBezierSegment">
             <inheritdoc cref="T:LiveChartsCore.Drawing.IBezierSegment`1" />
         </member>
@@ -467,9 +438,6 @@
         <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.CubicBezierSegment.Execute(SkiaSharp.SKPath,System.Int64,LiveChartsCore.Drawing.Common.Animatable)">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IPathCommand`1.Execute(`0,System.Int64,LiveChartsCore.Drawing.Common.Animatable)" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.CubicBezierSegment.Clone">
-            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.PathCommand.Clone" />
-        </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.LineSegment">
             <inheritdoc cref="T:LiveChartsCore.Drawing.ILinePathSegment`1" />
         </member>
@@ -486,9 +454,6 @@
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.LineSegment.Execute(SkiaSharp.SKPath,System.Int64,LiveChartsCore.Drawing.Common.Animatable)">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IPathCommand`1.Execute(`0,System.Int64,LiveChartsCore.Drawing.Common.Animatable)" />
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.LineSegment.Clone">
-            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.PathCommand.Clone" />
         </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.MoveToPathCommand">
             <inheritdoc cref="T:LiveChartsCore.Drawing.IMoveToPathCommand`1" />
@@ -507,20 +472,8 @@
         <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.MoveToPathCommand.Execute(SkiaSharp.SKPath,System.Int64,LiveChartsCore.Drawing.Common.Animatable)">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IPathCommand`1.Execute(`0,System.Int64,LiveChartsCore.Drawing.Common.Animatable)" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.MoveToPathCommand.Clone">
-            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.PathCommand.Clone" />
-        </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.PathCommand">
             <inheritdoc cref="T:LiveChartsCore.Drawing.IPathCommand`1" />
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.PathCommand.Clone">
-            <summary>
-            Creates a new object that is a copy of the current instance.
-            </summary>
-            <returns>
-            A new object that is a copy of this instance.
-            </returns>
-            <exception cref="T:System.NotImplementedException"></exception>
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.PathCommand.Execute(SkiaSharp.SKPath,System.Int64,LiveChartsCore.Drawing.Common.Animatable)">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IPathCommand`1.Execute(`0,System.Int64,LiveChartsCore.Drawing.Common.Animatable)" />
@@ -571,9 +524,6 @@
         <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SquareGeometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)">
             <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SquareGeometry.Clone">
-            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.Clone" />
-        </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SVGPathGeometry">
             <summary>
             Defines a geometry that is built using from a svg path.
@@ -601,9 +551,6 @@
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SVGPathGeometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)">
             <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)" />
-        </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SVGPathGeometry.Clone">
-            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.Clone" />
         </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext">
             <summary>

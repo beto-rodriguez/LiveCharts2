@@ -58,21 +58,5 @@ namespace LiveChartsCore.Drawing
 
         ISizedGeometry<TDrawingContext> ILineBezierVisualChartPoint<TDrawingContext>.Geometry => Geometry;
         IAnimatableBezierSegment ILineBezierVisualChartPoint<TDrawingContext>.Bezier => Bezier;
-
-        /// <summary>
-        /// Creates a new object that is a copy of the current instance.
-        /// </summary>
-        /// <returns>
-        /// A new object that is a copy of this instance.
-        /// </returns>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public object Clone()
-        {
-            return new LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>
-            {
-                Geometry = (TVisual)Geometry.Clone(),
-                Bezier = (TBezierSegment)Bezier.Clone()
-            };
-        }
     }
 }

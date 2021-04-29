@@ -30,8 +30,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments
     /// <inheritdoc cref="IMoveToPathCommand{TPath}" />
     public class MoveToPathCommand : PathCommand, IMoveToPathCommand<SKPath>
     {
-        private FloatMotionProperty _xProperty;
-        private FloatMotionProperty _yProperty;
+        private readonly FloatMotionProperty _xProperty;
+        private readonly FloatMotionProperty _yProperty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MoveToPathCommand"/> class.
@@ -53,20 +53,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments
         {
             SetCurrentTime(currentTime);
             path.MoveTo(X, Y);
-        }
-
-        /// <inheritdoc cref="PathCommand.Clone" />
-        public override object Clone()
-        {
-            var clone = new MoveToPathCommand
-            {
-                X = X,
-                Y = Y
-            };
-            //clone._xProperty = _xProperty;
-            //clone._yProperty = _yProperty;
-            //clone.CompleteAllTransitions();
-            return clone;
         }
     }
 }

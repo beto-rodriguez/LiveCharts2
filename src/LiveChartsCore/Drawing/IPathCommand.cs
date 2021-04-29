@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.Drawing.Common;
 
 namespace LiveChartsCore.Drawing
@@ -30,7 +29,7 @@ namespace LiveChartsCore.Drawing
     /// </summary>
     /// <typeparam name="TPathContext">The type of the path context.</typeparam>
     /// <seealso cref="IAnimatable" />
-    public interface IPathCommand<TPathContext> : IAnimatable, ICloneable
+    public interface IPathCommand<TPathContext> : IAnimatable
     {
         /// <summary>
         /// Executes the command in the path.

@@ -30,12 +30,12 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments
     /// <inheritdoc cref="IBezierSegment{TPathContext}" />
     public class CubicBezierSegment : PathCommand, IBezierSegment<SKPath>
     {
-        private FloatMotionProperty _x0Property;
-        private FloatMotionProperty _y0Property;
-        private FloatMotionProperty _x1Property;
-        private FloatMotionProperty _y1Property;
-        private FloatMotionProperty _x2Property;
-        private FloatMotionProperty _y2Property;
+        private readonly FloatMotionProperty _x0Property;
+        private readonly FloatMotionProperty _y0Property;
+        private readonly FloatMotionProperty _x1Property;
+        private readonly FloatMotionProperty _y1Property;
+        private readonly FloatMotionProperty _x2Property;
+        private readonly FloatMotionProperty _y2Property;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CubicBezierSegment"/> class.
@@ -73,28 +73,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments
         {
             SetCurrentTime(currentTime);
             path.CubicTo(X0, Y0, X1, Y1, X2, Y2);
-        }
-
-        /// <inheritdoc cref="PathCommand.Clone" />
-        public override object Clone()
-        {
-            var clone = new CubicBezierSegment
-            {
-                X0 = X0,
-                Y0 = Y0,
-                X1 = X1,
-                Y1 = Y1,
-                X2 = X2,
-                Y2 = Y2
-            };
-            clone._x0Property = _x0Property;
-            clone._y0Property = _y0Property;
-            clone._x1Property = _x1Property;
-            clone._y1Property = _y1Property;
-            clone._x2Property = _x2Property;
-            clone._y2Property = _y2Property;
-            clone.CompleteAllTransitions();
-            return clone;
         }
     }
 }

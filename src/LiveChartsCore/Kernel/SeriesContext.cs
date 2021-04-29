@@ -41,12 +41,12 @@ namespace LiveChartsCore.Kernel
         private int stackedRowsCount = 0;
         private bool areBarsIndexed = false;
 
-        private Dictionary<IDrawableSeries<TDrawingContext>, int> columnPositions = new Dictionary<IDrawableSeries<TDrawingContext>, int>();
-        private Dictionary<IDrawableSeries<TDrawingContext>, int> rowPositions = new Dictionary<IDrawableSeries<TDrawingContext>, int>();
-        private Dictionary<int, int> stackColumnPositions = new Dictionary<int, int>();
-        private Dictionary<int, int> stackRowsPositions = new Dictionary<int, int>();
+        private readonly Dictionary<IDrawableSeries<TDrawingContext>, int> columnPositions = new Dictionary<IDrawableSeries<TDrawingContext>, int>();
+        private readonly Dictionary<IDrawableSeries<TDrawingContext>, int> rowPositions = new Dictionary<IDrawableSeries<TDrawingContext>, int>();
+        private readonly Dictionary<int, int> stackColumnPositions = new Dictionary<int, int>();
+        private readonly Dictionary<int, int> stackRowsPositions = new Dictionary<int, int>();
 
-        private Dictionary<string, Stacker<TDrawingContext>> stackers = new Dictionary<string, Stacker<TDrawingContext>>();
+        private readonly Dictionary<string, Stacker<TDrawingContext>> stackers = new Dictionary<string, Stacker<TDrawingContext>>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SeriesContext{TDrawingContext}"/> class.
