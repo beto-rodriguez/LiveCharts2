@@ -38,22 +38,22 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <summary>
         /// The opacity property
         /// </summary>
-        protected readonly FloatMotionProperty opacityProperty;
+        protected FloatMotionProperty opacityProperty;
 
         /// <summary>
         /// The x
         /// </summary>
-        protected readonly FloatMotionProperty x;
+        protected FloatMotionProperty xProperty;
 
         /// <summary>
         /// The y
         /// </summary>
-        protected readonly FloatMotionProperty y;
+        protected FloatMotionProperty yProperty;
 
         /// <summary>
         /// The rotation
         /// </summary>
-        protected readonly FloatMotionProperty rotation;
+        protected FloatMotionProperty rotationProperty;
 
         /// <summary>
         /// The has custom transform
@@ -65,18 +65,18 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// </summary>
         public Geometry(bool hasCustomTransform = false)
         {
-            x = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0));
-            y = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0));
-            rotation = RegisterMotionProperty(new FloatMotionProperty(nameof(Rotation), 0));
+            xProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0));
+            yProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0));
+            rotationProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Rotation), 0));
             opacityProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Opacity), 1));
             this.hasCustomTransform = hasCustomTransform;
         }
 
         /// <inheritdoc cref="IGeometry{TDrawingContext}.X" />
-        public float X { get => x.GetMovement(this); set => x.SetMovement(value, this); }
+        public float X { get => xProperty.GetMovement(this); set => xProperty.SetMovement(value, this); }
 
         /// <inheritdoc cref="IGeometry{TDrawingContext}.Y" />
-        public float Y { get => y.GetMovement(this); set => y.SetMovement(value, this); }
+        public float Y { get => yProperty.GetMovement(this); set => yProperty.SetMovement(value, this); }
 
         /// <summary>
         /// Gets or sets the matrix transform.
@@ -90,7 +90,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         public float Opacity { get => opacityProperty.GetMovement(this); set => opacityProperty.SetMovement(value, this); }
 
         /// <inheritdoc cref="IGeometry{TDrawingContext}.Rotation" />
-        public float Rotation { get => rotation.GetMovement(this); set => rotation.SetMovement(value, this); }
+        public float Rotation { get => rotationProperty.GetMovement(this); set => rotationProperty.SetMovement(value, this); }
 
         /// <inheritdoc cref="IVisualChartPoint{TDrawingContext}.HighlightableGeometry" />
         public IDrawable<SkiaSharpDrawingContext> HighlightableGeometry => GetHighlitableGeometry();
@@ -221,5 +221,13 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         {
             return this;
         }
+
+        /// <summary>
+        /// Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns>
+        /// A new object that is a copy of this instance.
+        /// </returns>
+        public abstract object Clone();
     }
 }

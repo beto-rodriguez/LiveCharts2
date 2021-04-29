@@ -57,13 +57,20 @@ namespace LiveChartsCore
             var drawMarginSize = chart.DrawMarginSize;
             var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
             var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
+            var previousPrimaryScale =
+                primaryAxis.PreviousDataBounds == null
+                ? null
+                : new Scaler(
+                    drawLocation, drawMarginSize, primaryAxis, primaryAxis.PreviousDataBounds, primaryAxis.PreviousVisibleDataBounds);
             var previousSecondaryScale =
-                secondaryAxis.PreviousDataBounds == null ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis);
+                secondaryAxis.PreviousDataBounds == null
+                ? null
+                : new Scaler(
+                    drawLocation, drawMarginSize, secondaryAxis, secondaryAxis.PreviousDataBounds, secondaryAxis.PreviousVisibleDataBounds);
 
             var uw = secondaryScale.ToPixels((float)secondaryAxis.UnitWidth) - secondaryScale.ToPixels(0f);
+            var puw = previousSecondaryScale == null ? 0 : previousSecondaryScale.ToPixels((float)secondaryAxis.UnitWidth) - previousSecondaryScale.ToPixels(0f);
             var uwm = 0.5f * uw;
-            var sw = Stroke?.StrokeThickness ?? 0;
-            var p = primaryScale.ToPixels(pivot);
 
             var pos = chart.SeriesContext.GetColumnPostion(this);
             var count = chart.SeriesContext.GetColumnSeriesCount();
@@ -72,6 +79,7 @@ namespace LiveChartsCore
             if (!IgnoresBarPosition && count > 1)
             {
                 uw /= count;
+                puw /= count;
                 uwm = 0.5f * uw;
                 cp = (pos - count / 2f) * uw + uwm;
             }
@@ -79,8 +87,12 @@ namespace LiveChartsCore
             if (uw > MaxBarWidth)
             {
                 uw = (float)MaxBarWidth;
-                uwm = uw / 2f;
+                uwm = uw * 0.5f;
+                puw = uw;
             }
+
+            var sw = Stroke?.StrokeThickness ?? 0;
+            var p = primaryScale.ToPixels(pivot);
 
             var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
             if (Fill != null)
@@ -132,13 +144,21 @@ namespace LiveChartsCore
                 if (visual == null)
                 {
                     var xi = secondary - uwm + cp;
-                    if (previousSecondaryScale != null) xi = previousSecondaryScale.ToPixels(point.SecondaryValue) - uwm + cp;
+                    var pi = p;
+                    var uwi = uw;
+
+                    if (previousSecondaryScale != null && previousPrimaryScale != null)
+                    {
+                        xi = previousSecondaryScale.ToPixels(point.SecondaryValue) - uwm + cp;
+                        pi = previousPrimaryScale.ToPixels(pivot);
+                        uwi = puw;
+                    }
 
                     var r = new TVisual
                     {
                         X = xi,
-                        Y = p,
-                        Width = uw,
+                        Y = pi,
+                        Width = uwi,
                         Height = 0,
                         Rx = rx,
                         Ry = ry
@@ -227,7 +247,7 @@ namespace LiveChartsCore
                 PrimaryBounds = new Bounds
                 {
                     Max = baseBounds.PrimaryBounds.Max + tick.Value * primaryAxis.UnitWidth,
-                    min = baseBounds.PrimaryBounds.min - tick.Value * primaryAxis.UnitWidth
+                    Min = baseBounds.PrimaryBounds.Min - tick.Value * primaryAxis.UnitWidth
                 },
                 VisibleSecondaryBounds = new Bounds
                 {
@@ -237,7 +257,7 @@ namespace LiveChartsCore
                 VisiblePrimaryBounds = new Bounds
                 {
                     Max = baseBounds.VisiblePrimaryBounds.Max + tick.Value * primaryAxis.UnitWidth,
-                    min = baseBounds.VisiblePrimaryBounds.min - tick.Value * primaryAxis.UnitWidth
+                    Min = baseBounds.VisiblePrimaryBounds.Min - tick.Value * primaryAxis.UnitWidth
                 },
             };
         }
@@ -268,7 +288,6 @@ namespace LiveChartsCore
             if (visual == null) return;
 
             var p = primaryScale.ToPixels(pivot);
-
             var secondary = secondaryScale.ToPixels(point.SecondaryValue);
 
             visual.X = secondary;

@@ -31,6 +31,11 @@ namespace ViewModelsSamples.Design.LinearGradients
                 {
                     Values = new []{ 3, 7, 2, 9, 4 },
                     Stroke = null,
+
+                    // this is an easy way to set a linear gradient:
+                    // Fill = new LinearGradientPaintTask(new SKColor(255, 140, 148), new SKColor(220, 237, 194))
+
+                    // but you can customize the gradient
                     Fill = new LinearGradientPaintTask(
                         // the gradient will use the following colors array
                         new [] { new SKColor(255, 140, 148), new SKColor(220, 237, 194) },
@@ -50,7 +55,7 @@ namespace ViewModelsSamples.Design.LinearGradients
                         new SKPoint(0.5f, 0),
 
                         // to the point:
-                        // (x1, y1) where x1 could be read as "the middle of the x axis" and y0 as "the start of the y axis"
+                        // (x1, y1) where x1 could be read as "the middle of the x axis" and y0 as "the end of the y axis"
                         new SKPoint(0.5f, 1))
                 },
                 new LineSeries<int>

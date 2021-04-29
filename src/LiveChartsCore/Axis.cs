@@ -58,9 +58,8 @@ namespace LiveChartsCore
         protected List<IDrawableTask<TDrawingContext>> deletingTasks = new();
         internal AxisOrientation _orientation;
         private double _minStep = 0;
-        private Bounds _dataBounds = new();
-        private Bounds _visibleDataBounds = new();
-        private Bounds? _previousDataBounds = null;
+        private Bounds? _dataBounds = null;
+        private Bounds? _visibleDataBounds = null;
         private double _labelsRotation;
         private readonly Dictionary<CartesianChart<TDrawingContext>, Dictionary<string, AxisVisualSeprator<TDrawingContext>>> _activeSeparators = new();
         // xo (x origin) and yo (y origin) are the distance to the center of the axis to the control bounds
@@ -87,11 +86,13 @@ namespace LiveChartsCore
         float IAxis.Xo { get => _xo; set => _xo = value; }
         float IAxis.Yo { get => _yo; set => _yo = value; }
 
-        Bounds? IAxis.PreviousDataBounds => _previousDataBounds;
+        Bounds? IAxis.PreviousDataBounds { get; set; }
 
-        Bounds IAxis.DataBounds => _dataBounds;
+        Bounds? IAxis.PreviousVisibleDataBounds { get; set; }
 
-        Bounds IAxis.VisibleDataBounds => _visibleDataBounds;
+        Bounds IAxis.DataBounds => _dataBounds ?? throw new Exception("bounds not found");
+
+        Bounds IAxis.VisibleDataBounds => _visibleDataBounds ?? throw new Exception("bounds not found");
 
         /// <inheritdoc cref="IAxis.Orientation"/>
         public AxisOrientation Orientation => _orientation;
@@ -179,7 +180,7 @@ namespace LiveChartsCore
             var drawMarginSize = chart.DrawMarginSize;
 
             var scale = new Scaler(drawLocation, drawMarginSize, this);
-            var previousSacale = _previousDataBounds == null
+            var previousSacale = ((IAxis)this).PreviousDataBounds == null
                 ? null
                 : new Scaler(drawLocation, drawMarginSize, this);
             var axisTick = this.GetTick(drawMarginSize);
@@ -364,7 +365,7 @@ namespace LiveChartsCore
                     visualSeparator.Text.Y = y;
                     if (hasRotation) visualSeparator.Text.Rotation = r;
 
-                    if (_previousDataBounds == null) visualSeparator.Text.CompleteAllTransitions();
+                    if (((IAxis)this).PreviousDataBounds == null) visualSeparator.Text.CompleteAllTransitions();
                 }
 
                 if (visualSeparator.Line != null)
@@ -384,7 +385,7 @@ namespace LiveChartsCore
                         visualSeparator.Line.Y1 = y;
                     }
 
-                    if (_previousDataBounds == null) visualSeparator.Line.CompleteAllTransitions();
+                    if (((IAxis)this).PreviousDataBounds == null) visualSeparator.Line.CompleteAllTransitions();
                 }
 
                 if (visualSeparator.Text != null || visualSeparator.Line != null) _ = measured.Add(visualSeparator);
@@ -419,13 +420,13 @@ namespace LiveChartsCore
             var s = axisTick.Value;
             if (s < _minStep) s = _minStep;
 
-            var start = Math.Truncate(_dataBounds.min / s) * s;
+            var start = Math.Truncate(_dataBounds.Min / s) * s;
 
             var w = 0f;
             var h = 0f;
             var r = (float)LabelsRotation;
 
-            for (var i = start; i <= _dataBounds.max; i += s)
+            for (var i = start; i <= _dataBounds.Max; i += s)
             {
                 var textGeometry = new TTextGeometry
                 {
@@ -446,7 +447,8 @@ namespace LiveChartsCore
         public void Initialize(AxisOrientation orientation)
         {
             _orientation = orientation;
-            _previousDataBounds = _dataBounds;
+            //_previousDataBounds = _dataBounds;
+            //_previousVisibleDataBounds = _visibleDataBounds;
             _dataBounds = new Bounds();
             _visibleDataBounds = new Bounds();
         }

@@ -51,6 +51,7 @@ namespace LiveChartsCore.Drawing.Common
         public TransitionBuilder WithAnimation(Animation animation)
         {
             _target.SetPropertiesTransitions(animation, _properties);
+
             return this;
         }
 

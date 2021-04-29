@@ -53,11 +53,13 @@ namespace LiveChartsCore.Drawing.Common
         public bool RemoveOnCompleted { get => _removeOnCompleted; set => _removeOnCompleted = value; }
 
         /// <inheritdoc cref="SetPropertiesTransitions(Animation, string[])" />
-        public void SetPropertiesTransitions(Animation animation, params string[] properties)
+        public void SetPropertiesTransitions(Animation? animation, params string[] properties)
         {
+            var a = animation?.Duration == 0 ? null : animation;
+
             foreach (var name in properties)
             {
-                transitionProperties[name].Animation = animation;
+                transitionProperties[name].Animation = a;
             }
         }
 

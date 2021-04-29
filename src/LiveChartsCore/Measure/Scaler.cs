@@ -39,11 +39,18 @@ namespace LiveChartsCore.Measure
         /// <param name="drawMaringLocation">The draw margin location.</param>
         /// <param name="drawMarginSize">Size of the draw margin.</param>
         /// <param name="axis">The axis.</param>
+        /// <param name="actualBounds">The bounds to use, if null then use the axis bounds.</param>
+        /// <param name="actualVisibleBounds">The previous visible bounds to use, if null then use the axis bounds.</param>
         /// <exception cref="Exception">The axis is not ready to be scaled.</exception>
-        public Scaler(PointF drawMaringLocation, SizeF drawMarginSize, IAxis axis)
+        public Scaler(
+            PointF drawMaringLocation, SizeF drawMarginSize, IAxis axis,
+            Bounds? actualBounds = null, Bounds? actualVisibleBounds = null)
         {
             if (axis.Orientation == AxisOrientation.Unknown)
                 throw new Exception("The axis is not ready to be scaled.");
+
+            actualBounds ??= axis.DataBounds;
+            actualVisibleBounds ??= axis.VisibleDataBounds;
 
             if (axis.Orientation == AxisOrientation.X)
             {
@@ -51,8 +58,8 @@ namespace LiveChartsCore.Measure
                 _maxPx = drawMaringLocation.X + drawMarginSize.Width;
                 _deltaPx = _maxPx - _minPx;
 
-                _maxVal = (float)(axis.IsInverted ? axis.DataBounds.Min : axis.DataBounds.Max);
-                _minVal = (float)(axis.IsInverted ? axis.DataBounds.Max : axis.DataBounds.Min);
+                _maxVal = (float)(axis.IsInverted ? actualBounds.Min : actualBounds.Max);
+                _minVal = (float)(axis.IsInverted ? actualBounds.Max : actualBounds.Min);
 
                 if (axis.MaxLimit != null || axis.MinLimit != null)
                 {
@@ -61,8 +68,8 @@ namespace LiveChartsCore.Measure
                 }
                 else
                 {
-                    var visibleMax = (float)(axis.IsInverted ? axis.VisibleDataBounds.Min : axis.VisibleDataBounds.Max);
-                    var visibleMin = (float)(axis.IsInverted ? axis.VisibleDataBounds.Max : axis.VisibleDataBounds.Min);
+                    var visibleMax = (float)(axis.IsInverted ? actualVisibleBounds.Min : actualVisibleBounds.Max);
+                    var visibleMin = (float)(axis.IsInverted ? actualVisibleBounds.Max : actualVisibleBounds.Min);
 
                     if (visibleMax != _maxVal || visibleMin != _minVal)
                     {
@@ -79,8 +86,8 @@ namespace LiveChartsCore.Measure
                 _maxPx = drawMaringLocation.Y + drawMarginSize.Height;
                 _deltaPx = _maxPx - _minPx;
 
-                _maxVal = (float)(axis.IsInverted ? axis.DataBounds.Max : axis.DataBounds.Min);
-                _minVal = (float)(axis.IsInverted ? axis.DataBounds.Min : axis.DataBounds.Max);
+                _maxVal = (float)(axis.IsInverted ? actualBounds.Max : actualBounds.Min);
+                _minVal = (float)(axis.IsInverted ? actualBounds.Min : actualBounds.Max);
 
                 if (axis.MaxLimit != null || axis.MinLimit != null)
                 {
@@ -89,8 +96,8 @@ namespace LiveChartsCore.Measure
                 }
                 else
                 {
-                    var visibleMax = (float)(axis.IsInverted ? axis.VisibleDataBounds.Max : axis.VisibleDataBounds.Min);
-                    var visibleMin = (float)(axis.IsInverted ? axis.VisibleDataBounds.Min : axis.VisibleDataBounds.Max);
+                    var visibleMax = (float)(axis.IsInverted ? actualVisibleBounds.Max : actualVisibleBounds.Min);
+                    var visibleMin = (float)(axis.IsInverted ? actualVisibleBounds.Min : actualVisibleBounds.Max);
 
                     if (visibleMax != _maxVal || visibleMin != _minVal)
                     {

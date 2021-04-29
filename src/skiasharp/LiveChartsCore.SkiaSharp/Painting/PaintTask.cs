@@ -108,6 +108,14 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// </value>
         public RectangleF ClipRectangle { get; set; } = RectangleF.Empty;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is paused.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is paused; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsPaused { get; set; }
+
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.InitializeTask(TDrawingContext)" />
         public abstract void InitializeTask(SkiaSharpDrawingContext drawingContext);
 

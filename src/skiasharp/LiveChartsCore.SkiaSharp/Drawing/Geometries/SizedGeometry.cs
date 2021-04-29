@@ -33,12 +33,12 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <summary>
         /// The width
         /// </summary>
-        protected readonly FloatMotionProperty width;
+        protected FloatMotionProperty widthProperty;
 
         /// <summary>
         /// The height
         /// </summary>
-        protected readonly FloatMotionProperty height;
+        protected FloatMotionProperty heightProperty;
 
         /// <summary>
         /// The match dimensions
@@ -50,25 +50,25 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// </summary>
         public SizedGeometry() : base()
         {
-            width = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 0));
-            height = RegisterMotionProperty(new FloatMotionProperty(nameof(Height), 0));
+            widthProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 0));
+            heightProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Height), 0));
         }
 
         /// <inheritdoc cref="ISizedGeometry{TDrawingContext}.Width" />
-        public float Width { get => width.GetMovement(this); set => width.SetMovement(value, this); }
+        public float Width { get => widthProperty.GetMovement(this); set => widthProperty.SetMovement(value, this); }
 
         /// <inheritdoc cref="ISizedGeometry{TDrawingContext}.Height" />
         public float Height
         {
-            get => matchDimensions ? width.GetMovement(this) : height.GetMovement(this);
+            get => matchDimensions ? widthProperty.GetMovement(this) : heightProperty.GetMovement(this);
             set
             {
                 if (matchDimensions)
                 {
-                    width.SetMovement(value, this);
+                    widthProperty.SetMovement(value, this);
                     return;
                 }
-                height.SetMovement(value, this);
+                heightProperty.SetMovement(value, this);
             }
         }
 

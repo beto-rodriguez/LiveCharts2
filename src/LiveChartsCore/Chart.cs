@@ -133,6 +133,14 @@ namespace LiveChartsCore
         #region properties
 
         /// <summary>
+        /// Gets or sets the measure work.
+        /// </summary>
+        /// <value>
+        /// The measure work.
+        /// </value>
+        public object MeasureWork { get; set; } = new object();
+
+        /// <summary>
         /// Gets the series context.
         /// </summary>
         /// <value>

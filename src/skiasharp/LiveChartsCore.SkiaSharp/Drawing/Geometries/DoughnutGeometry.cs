@@ -32,14 +32,14 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}" />
     public class DoughnutGeometry : Geometry, IDoughnutGeometry<SkiaSharpDrawingContext>, IDoughnutVisualChartPoint<SkiaSharpDrawingContext>
     {
-        private readonly FloatMotionProperty _cxProperty;
-        private readonly FloatMotionProperty _cyProperty;
-        private readonly FloatMotionProperty _wProperty;
-        private readonly FloatMotionProperty _hProperty;
-        private readonly FloatMotionProperty _startProperty;
-        private readonly FloatMotionProperty _sweepProperty;
-        private readonly FloatMotionProperty _pushoutProperty;
-        private readonly FloatMotionProperty _innerRadiusProperty;
+        private FloatMotionProperty _cxProperty;
+        private FloatMotionProperty _cyProperty;
+        private FloatMotionProperty _wProperty;
+        private FloatMotionProperty _hProperty;
+        private FloatMotionProperty _startProperty;
+        private FloatMotionProperty _sweepProperty;
+        private FloatMotionProperty _pushoutProperty;
+        private FloatMotionProperty _innerRadiusProperty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DoughnutGeometry"/> class.
@@ -140,6 +140,41 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             context.Canvas.DrawPath(path, context.Paint);
 
             if (pushout > 0) context.Canvas.Restore();
+        }
+
+        /// <inheritdoc cref="Geometry.Clone" />
+        public override object Clone()
+        {
+            var clone = new DoughnutGeometry
+            {
+                X = X,
+                Y = Y,
+                Transform = Transform,
+                Opacity = Opacity,
+                Rotation = Rotation,
+                Width = Width,
+                Height = Height,
+                CenterX = CenterX,
+                CenterY = CenterY,
+                StartAngle = StartAngle,
+                SweepAngle = SweepAngle,
+                PushOut = PushOut,
+                InnerRadius = InnerRadius
+            };
+            clone.xProperty = xProperty;
+            clone.yProperty = yProperty;
+            clone.opacityProperty = opacityProperty;
+            clone.rotationProperty = rotationProperty;
+            clone._wProperty = _wProperty;
+            clone._hProperty = _hProperty;
+            clone._cxProperty = _cxProperty;
+            clone._cyProperty = _cyProperty;
+            clone._startProperty = _startProperty;
+            clone._sweepProperty = _sweepProperty;
+            clone._pushoutProperty = _pushoutProperty;
+            clone._innerRadiusProperty = _innerRadiusProperty;
+            clone.CompleteAllTransitions();
+            return clone;
         }
     }
 }

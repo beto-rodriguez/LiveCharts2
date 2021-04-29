@@ -101,6 +101,14 @@ namespace LiveChartsCore.Kernel
         public RectangleF ClipRectangle { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this instance is paused.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is paused; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsPaused { get; set; }
+
+        /// <summary>
         /// Adds the geomety to paint task.
         /// </summary>
         /// <param name="geometry">The geometry.</param>
@@ -193,7 +201,7 @@ namespace LiveChartsCore.Kernel
         /// <param name="animation">The animation.</param>
         /// <param name="propertyName">Name of the property.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        public void SetPropertiesTransitions(Animation animation, params string[] propertyName)
+        public void SetPropertiesTransitions(Animation? animation, params string[] propertyName)
         {
             throw new System.NotImplementedException();
         }

@@ -44,5 +44,28 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             context.Canvas.DrawRect(
                 new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } }, paint);
         }
+
+        /// <inheritdoc cref="Geometry.Clone" />
+        public override object Clone()
+        {
+            var clone = new RectangleGeometry
+            {
+                X = X,
+                Y = Y,
+                Transform = Transform,
+                Opacity = Opacity,
+                Rotation = Rotation,
+                Width = Width,
+                Height = Height
+            };
+            clone.xProperty = xProperty;
+            clone.yProperty = yProperty;
+            clone.opacityProperty = opacityProperty;
+            clone.rotationProperty = rotationProperty;
+            clone.widthProperty = widthProperty;
+            clone.heightProperty = heightProperty;
+            clone.CompleteAllTransitions();
+            return clone;
+        }
     }
 }

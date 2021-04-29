@@ -108,8 +108,8 @@ namespace LiveChartsCore
             var gs = (float)GeometrySize;
             var hgs = gs / 2f;
             var sw = Stroke?.StrokeThickness ?? 0;
-            var requiresWScale = _weightBounds.max - _weightBounds.min > 0;
-            var wm = -(GeometrySize - MinGeometrySize) / (_weightBounds.max - _weightBounds.min);
+            var requiresWScale = _weightBounds.Max - _weightBounds.Min > 0;
+            var wm = -(GeometrySize - MinGeometrySize) / (_weightBounds.Max - _weightBounds.Min);
 
             foreach (var point in Fetch(chart))
             {
@@ -134,7 +134,7 @@ namespace LiveChartsCore
 
                 if (requiresWScale)
                 {
-                    gs = (float)(wm * (_weightBounds.max - point.TertiaryValue) + GeometrySize);
+                    gs = (float)(wm * (_weightBounds.Max - point.TertiaryValue) + GeometrySize);
                     hgs = gs / 2f;
                 }
 
@@ -226,7 +226,7 @@ namespace LiveChartsCore
                 PrimaryBounds = new Bounds
                 {
                     Max = baseBounds.PrimaryBounds.Max + tick.Value,
-                    min = baseBounds.PrimaryBounds.min - tick.Value
+                    Min = baseBounds.PrimaryBounds.Min - tick.Value
                 },
                 VisibleSecondaryBounds = new Bounds
                 {
@@ -236,7 +236,7 @@ namespace LiveChartsCore
                 VisiblePrimaryBounds = new Bounds
                 {
                     Max = baseBounds.VisiblePrimaryBounds.Max + tick.Value,
-                    min = baseBounds.VisiblePrimaryBounds.min - tick.Value
+                    Min = baseBounds.VisiblePrimaryBounds.Min - tick.Value
                 },
             };
         }

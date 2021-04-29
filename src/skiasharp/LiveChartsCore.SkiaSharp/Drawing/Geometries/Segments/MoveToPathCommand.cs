@@ -30,29 +30,43 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments
     /// <inheritdoc cref="IMoveToPathCommand{TPath}" />
     public class MoveToPathCommand : PathCommand, IMoveToPathCommand<SKPath>
     {
-        private readonly FloatMotionProperty _xTransition;
-        private readonly FloatMotionProperty _yTransition;
+        private FloatMotionProperty _xProperty;
+        private FloatMotionProperty _yProperty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MoveToPathCommand"/> class.
         /// </summary>
         public MoveToPathCommand()
         {
-            _xTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0f));
-            _yTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0f));
+            _xProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0f));
+            _yProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0f));
         }
 
         /// <inheritdoc cref="IMoveToPathCommand{TPath}.X" />
-        public float X { get => _xTransition.GetMovement(this); set => _xTransition.SetMovement(value, this); }
+        public float X { get => _xProperty.GetMovement(this); set => _xProperty.SetMovement(value, this); }
 
         /// <inheritdoc cref="IMoveToPathCommand{TPath}.Y" />
-        public float Y { get => _yTransition.GetMovement(this); set => _yTransition.SetMovement(value, this); }
+        public float Y { get => _yProperty.GetMovement(this); set => _yProperty.SetMovement(value, this); }
 
         /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
         public override void Execute(SKPath path, long currentTime, Animatable pathGeometry)
         {
             SetCurrentTime(currentTime);
             path.MoveTo(X, Y);
+        }
+
+        /// <inheritdoc cref="PathCommand.Clone" />
+        public override object Clone()
+        {
+            var clone = new MoveToPathCommand
+            {
+                X = X,
+                Y = Y
+            };
+            //clone._xProperty = _xProperty;
+            //clone._yProperty = _yProperty;
+            //clone.CompleteAllTransitions();
+            return clone;
         }
     }
 }

@@ -66,6 +66,14 @@ namespace LiveChartsCore.Drawing
         float StrokeThickness { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this instance is paused.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is paused; otherwise, <c>false</c>.
+        /// </value>
+        bool IsPaused { get; set; }
+
+        /// <summary>
         /// Gets or sets the clip rectangle.
         /// </summary>
         /// <value>

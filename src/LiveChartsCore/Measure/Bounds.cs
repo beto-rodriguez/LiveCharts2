@@ -27,9 +27,6 @@ namespace LiveChartsCore.Measure
     /// </summary>
     public class Bounds
     {
-        internal double max = double.MinValue;
-        internal double min = double.MaxValue;
-
         /// <summary>
         /// Creates a new instance of the <see cref="Bounds"/> class.
         /// </summary>
@@ -41,12 +38,12 @@ namespace LiveChartsCore.Measure
         /// <summary>
         /// Gets or sets the maximum value in the set.
         /// </summary>
-        public double Max { get => max; set => max = value; }
+        public double Max { get; set; } = double.MinValue;
 
         /// <summary>
         /// Gets or sets the minimum value in the set.
         /// </summary>
-        public double Min { get => min; set => min = value; }
+        public double Min { get; set; } = double.MaxValue;
 
         /// <summary>
         /// Compares the current bounds with a given value,
@@ -59,8 +56,8 @@ namespace LiveChartsCore.Measure
         {
             var ab = AffectedBound.None;
             // the equals comparison is important, we need to register also the coordinates that are equal to the current limit.
-            if (max <= value) { max = value; ab |= AffectedBound.Max; }
-            if (min >= value) { min = value; ab |= AffectedBound.Min; }
+            if (Max <= value) { Max = value; ab |= AffectedBound.Max; }
+            if (Min >= value) { Min = value; ab |= AffectedBound.Min; }
 
             return ab;
         }

@@ -40,7 +40,15 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The previous data bounds.
         /// </value>
-        Bounds? PreviousDataBounds { get; }
+        Bounds? PreviousDataBounds { get; set; }
+
+        /// <summary>
+        /// Gets the previous data bounds.
+        /// </summary>
+        /// <value>
+        /// The previous data bounds.
+        /// </value>
+        Bounds? PreviousVisibleDataBounds { get; set; }
 
         /// <summary>
         /// Gets the data bounds, the min and max values in the axis.

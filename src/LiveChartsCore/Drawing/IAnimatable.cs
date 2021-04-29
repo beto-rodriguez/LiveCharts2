@@ -58,7 +58,7 @@ namespace LiveChartsCore.Drawing
         /// </summary>
         /// <param name="animation">The animation.</param>
         /// <param name="propertyName">Name of the property.</param>
-        void SetPropertiesTransitions(Animation animation, params string[] propertyName);
+        void SetPropertiesTransitions(Animation? animation, params string[] propertyName);
 
         /// <summary>
         /// Removes a property transition.

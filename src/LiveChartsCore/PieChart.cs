@@ -173,12 +173,12 @@ namespace LiveChartsCore
 
                 var seriesBounds = series.GetBounds(this);
 
-                _ = ValueBounds.AppendValue(seriesBounds.PrimaryBounds.max);
-                _ = ValueBounds.AppendValue(seriesBounds.PrimaryBounds.min);
-                _ = IndexBounds.AppendValue(seriesBounds.SecondaryBounds.max);
-                _ = IndexBounds.AppendValue(seriesBounds.SecondaryBounds.min);
-                _ = PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.max);
-                _ = PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.min);
+                _ = ValueBounds.AppendValue(seriesBounds.PrimaryBounds.Max);
+                _ = ValueBounds.AppendValue(seriesBounds.PrimaryBounds.Min);
+                _ = IndexBounds.AppendValue(seriesBounds.SecondaryBounds.Max);
+                _ = IndexBounds.AppendValue(seriesBounds.SecondaryBounds.Min);
+                _ = PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Max);
+                _ = PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Min);
             }
 
             if (viewDrawMargin == null)
@@ -228,10 +228,7 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected override void UpdateThrottlerUnlocked()
         {
-            // before measure every element in the chart
-            // we copy the properties that might change while we are updating the chart
-            // this call should be thread safe
-            // ToDo: ensure it is thread safe...
+            MeasureWork = new object();
 
             viewDrawMargin = _chartView.DrawMargin;
             controlSize = _chartView.ControlSize;

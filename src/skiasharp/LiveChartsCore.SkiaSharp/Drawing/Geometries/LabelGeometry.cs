@@ -32,7 +32,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     /// <inheritdoc cref="ILabelGeometry{TDrawingContext}" />
     public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     {
-        private readonly FloatMotionProperty _textSizeProperty;
+        private FloatMotionProperty _textSizeProperty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LabelGeometry"/> class.
@@ -130,6 +130,36 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             SKMatrix.Concat(ref result, ref locationTransform, ref geometryTransform);
 
             return result;
+        }
+
+        /// <inheritdoc cref="Geometry.Clone" />
+        public override object Clone()
+        {
+            var clone = new LabelGeometry
+            {
+                X = X,
+                Y = Y,
+                Transform = Transform,
+                Opacity = Opacity,
+                Rotation = Rotation,
+                VerticalAlign = VerticalAlign,
+                HorizontalAlign = HorizontalAlign,
+                TextSize = TextSize,
+                Padding = new Padding
+                {
+                    Top = Padding.Top,
+                    Left = Padding.Left,
+                    Right = Padding.Right,
+                    Bottom = Padding.Bottom,
+                }
+            };
+            clone.xProperty = xProperty;
+            clone.yProperty = yProperty;
+            clone.opacityProperty = opacityProperty;
+            clone.rotationProperty = rotationProperty;
+            clone._textSizeProperty = _textSizeProperty;
+            clone.CompleteAllTransitions();
+            return clone;
         }
     }
 }

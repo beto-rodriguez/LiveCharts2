@@ -31,7 +31,7 @@ using LiveChartsCore.Measure;
 namespace LiveChartsCore
 {
     /// <summary>
-    /// Defines a cartesina chart.
+    /// Defines a Cartesian chart.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="Chart{TDrawingContext}" />
@@ -106,6 +106,14 @@ namespace LiveChartsCore
         /// The drawable series.
         /// </value>
         public override IEnumerable<IDrawableSeries<TDrawingContext>> DrawableSeries => Series;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is zooming or panning.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is zooming or panning; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsZoomingOrPanning { get; private set; }
 
         /// <summary>
         /// Gets the view.
@@ -223,6 +231,8 @@ namespace LiveChartsCore
                     yi.MinLimit = mint;
                 }
             }
+
+            IsZoomingOrPanning = true;
         }
 
         /// <summary>
@@ -263,6 +273,8 @@ namespace LiveChartsCore
                     yi.MinLimit = min + dy < yi.DataBounds.Min ? yi.DataBounds.Min : min + dy;
                 }
             }
+
+            IsZoomingOrPanning = true;
         }
 
         /// <summary>
@@ -271,15 +283,46 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected override void Measure()
         {
-            seriesContext = new SeriesContext<TDrawingContext>(Series);
-
-            Canvas.MeasuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
-            var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-            if (theme.CurrentColors == null || theme.CurrentColors.Length == 0)
-                throw new Exception("Default colors are not valid");
-
             lock (canvas.Sync)
             {
+                MeasureWork = new object();
+
+                viewDrawMargin = _chartView.DrawMargin;
+                controlSize = _chartView.ControlSize;
+                YAxes = _chartView.YAxes.Cast<IAxis<TDrawingContext>>().Select(x => x).ToArray();
+                XAxes = _chartView.XAxes.Cast<IAxis<TDrawingContext>>().Select(x => x).ToArray();
+
+                _zoomingSpeed = _chartView.ZoomingSpeed;
+                _zoomMode = _chartView.ZoomMode;
+
+                Series = _chartView.Series
+                    .Where(x => x.IsVisible)
+                    .Cast<ICartesianSeries<TDrawingContext>>()
+                    .Select(series =>
+                    {
+                        _ = series.Fetch(this);
+                        return series;
+                    }).ToArray();
+
+                legendPosition = _chartView.LegendPosition;
+                legendOrientation = _chartView.LegendOrientation;
+                legend = _chartView.Legend;
+
+                tooltipPosition = _chartView.TooltipPosition;
+                tooltipFindingStrategy = _chartView.TooltipFindingStrategy;
+                tooltip = _chartView.Tooltip;
+
+                animationsSpeed = _chartView.AnimationsSpeed;
+                easingFunction = _chartView.EasingFunction;
+
+
+                seriesContext = new SeriesContext<TDrawingContext>(Series);
+
+                Canvas.MeasuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
+                var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
+                if (theme.CurrentColors == null || theme.CurrentColors.Length == 0)
+                    throw new Exception("Default colors are not valid");
+
                 // restart axes bounds and meta data
                 foreach (var axis in XAxes)
                 {
@@ -303,14 +346,14 @@ namespace LiveChartsCore
 
                     var seriesBounds = series.GetBounds(this, secondaryAxis, primaryAxis);
 
-                    _ = secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.max);
-                    _ = secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.min);
-                    _ = secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.max);
-                    _ = secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.min);
-                    _ = primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.max);
-                    _ = primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.min);
-                    _ = primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.max);
-                    _ = primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.min);
+                    _ = secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.Max);
+                    _ = secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.Min);
+                    _ = secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.Max);
+                    _ = secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.Min);
+                    _ = primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.Max);
+                    _ = primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.Min);
+                    _ = primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.Max);
+                    _ = primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.Min);
                 }
 
                 if (legend != null) legend.Draw(this);
@@ -397,6 +440,8 @@ namespace LiveChartsCore
                         deleted = true;
                     }
                     if (deleted) axis.DeletingTasks.Clear();
+                    axis.PreviousDataBounds = axis.DataBounds;
+                    axis.PreviousVisibleDataBounds = axis.VisibleDataBounds;
                 }
 
                 var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
@@ -429,6 +474,8 @@ namespace LiveChartsCore
                     axis.Dispose();
                     _ = _everMeasuredAxes.Remove(axis);
                 }
+
+                IsZoomingOrPanning = false;
             }
 
             Canvas.Invalidate();
@@ -440,39 +487,6 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected override void UpdateThrottlerUnlocked()
         {
-            // before measure every element in the chart
-            // we copy the properties that might change while we are updating the chart
-            // this call should be thread safe
-            // ToDo: ensure it is thread safe...
-
-            viewDrawMargin = _chartView.DrawMargin;
-            controlSize = _chartView.ControlSize;
-            YAxes = _chartView.YAxes.Cast<IAxis<TDrawingContext>>().Select(x => x).ToArray();
-            XAxes = _chartView.XAxes.Cast<IAxis<TDrawingContext>>().Select(x => x).ToArray();
-
-            _zoomingSpeed = _chartView.ZoomingSpeed;
-            _zoomMode = _chartView.ZoomMode;
-
-            Series = _chartView.Series
-                .Where(x => x.IsVisible)
-                .Cast<ICartesianSeries<TDrawingContext>>()
-                .Select(series =>
-                {
-                    _ = series.Fetch(this);
-                    return series;
-                }).ToArray();
-
-            legendPosition = _chartView.LegendPosition;
-            legendOrientation = _chartView.LegendOrientation;
-            legend = _chartView.Legend; // ... this is a reference type.. this has no sense
-
-            tooltipPosition = _chartView.TooltipPosition;
-            tooltipFindingStrategy = _chartView.TooltipFindingStrategy;
-            tooltip = _chartView.Tooltip; //... no sense again...
-
-            animationsSpeed = _chartView.AnimationsSpeed;
-            easingFunction = _chartView.EasingFunction;
-
             Measure();
         }
     }

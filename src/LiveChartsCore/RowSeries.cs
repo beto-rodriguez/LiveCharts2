@@ -226,7 +226,7 @@ namespace LiveChartsCore
                 SecondaryBounds = new Bounds
                 {
                     Max = baseBounds.PrimaryBounds.Max + tick.Value * primaryAxis.UnitWidth,
-                    min = baseBounds.PrimaryBounds.Min - tick.Value * primaryAxis.UnitWidth
+                    Min = baseBounds.PrimaryBounds.Min - tick.Value * primaryAxis.UnitWidth
                 },
                 VisiblePrimaryBounds = new Bounds
                 {
@@ -236,7 +236,7 @@ namespace LiveChartsCore
                 VisibleSecondaryBounds = new Bounds
                 {
                     Max = baseBounds.VisiblePrimaryBounds.Max + tick.Value * primaryAxis.UnitWidth,
-                    min = baseBounds.VisiblePrimaryBounds.Min - tick.Value * primaryAxis.UnitWidth
+                    Min = baseBounds.VisiblePrimaryBounds.Min - tick.Value * primaryAxis.UnitWidth
                 },
             };
         }

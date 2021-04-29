@@ -30,6 +30,14 @@ namespace LiveChartsCore.Kernel
     public interface IChart
     {
         /// <summary>
+        /// Gets or sets the measure work.
+        /// </summary>
+        /// <value>
+        /// The measure work.
+        /// </value>
+        object MeasureWork { get; set; }
+
+        /// <summary>
         /// Gets the chart view.
         /// </summary>
         /// <value>

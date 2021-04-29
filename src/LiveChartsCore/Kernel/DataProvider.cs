@@ -34,15 +34,8 @@ namespace LiveChartsCore.Kernel
     public class DataProvider<TModel, TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        /// <summary>
-        /// The by value visual map.
-        /// </summary>
-        protected readonly Dictionary<int, ChartPoint> byValueVisualMap = new();
-
-        /// <summary>
-        /// The by reference visual map.
-        /// </summary>
-        protected readonly Dictionary<TModel, ChartPoint> byReferenceVisualMap = new();
+        private readonly Dictionary<int, ChartPoint> _byValueVisualMap = new();
+        private readonly Dictionary<TModel, ChartPoint> _byReferenceVisualMap = new();
 
         /// <summary>
         /// Fetches the the points for the specified series.
@@ -64,8 +57,8 @@ namespace LiveChartsCore.Kernel
             {
                 foreach (var item in series.Values)
                 {
-                    if (!byValueVisualMap.TryGetValue(index, out var cp))
-                        byValueVisualMap[index] = cp = new ChartPoint(chart.View, series);
+                    if (!_byValueVisualMap.TryGetValue(index, out var cp))
+                        _byValueVisualMap[index] = cp = new ChartPoint(chart.View, series);
 
                     cp.Context.Index = index++;
                     cp.Context.DataSource = item;
@@ -79,8 +72,8 @@ namespace LiveChartsCore.Kernel
             {
                 foreach (var item in series.Values)
                 {
-                    if (!byReferenceVisualMap.TryGetValue(item, out var cp))
-                        byReferenceVisualMap[item] = cp = new ChartPoint(chart.View, series);
+                    if (!_byReferenceVisualMap.TryGetValue(item, out var cp))
+                        _byReferenceVisualMap[item] = cp = new ChartPoint(chart.View, series);
 
                     cp.Context.Index = index++;
                     cp.Context.DataSource = item;
@@ -166,19 +159,19 @@ namespace LiveChartsCore.Kernel
         /// <returns></returns>
         public virtual void RestartVisuals()
         {
-            foreach (var item in byReferenceVisualMap)
+            foreach (var item in _byReferenceVisualMap)
             {
                 if (item.Value.Context.Visual is not IAnimatable visual) continue;
                 visual.RemoveTransitions();
             }
-            byReferenceVisualMap.Clear();
+            _byReferenceVisualMap.Clear();
 
-            foreach (var item in byValueVisualMap)
+            foreach (var item in _byValueVisualMap)
             {
                 if (item.Value.Context.Visual is not IAnimatable visual) continue;
                 visual.RemoveTransitions();
             }
-            byValueVisualMap.Clear();
+            _byValueVisualMap.Clear();
         }
     }
 }

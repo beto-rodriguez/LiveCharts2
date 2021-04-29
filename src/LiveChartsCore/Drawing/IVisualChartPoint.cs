@@ -20,12 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+
 namespace LiveChartsCore.Drawing
 {
     /// <summary>
     /// Defines an object that contains a <see cref="IDrawable{TDrawingContext}"/> to highlight when the point requires so.
     /// </summary>
-    public interface IVisualChartPoint<TDrawingContext>
+    public interface IVisualChartPoint<TDrawingContext> : ICloneable
         where TDrawingContext : DrawingContext
     {
         /// <summary>

@@ -81,7 +81,7 @@ namespace ViewModelsSamples.Axes.DateTimeScaled
 
                     // since all the months and years have a different number of days
                     // we can use the average, it would not cause any visible error in the user interface
-                    // Months: TimeSpan.FromDays(30.4).Ticks
+                    // Months: TimeSpan.FromDays(30.4375).Ticks
                     // Years: TimeSpan.FromDays(365.25).Ticks
                 }
             };

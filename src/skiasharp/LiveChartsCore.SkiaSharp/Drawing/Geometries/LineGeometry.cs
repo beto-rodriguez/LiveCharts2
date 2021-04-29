@@ -32,8 +32,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     /// <inheritdoc cref="ILineGeometry{TDrawingContext}" />
     public class LineGeometry : Geometry, ILineGeometry<SkiaSharpDrawingContext>
     {
-        private readonly FloatMotionProperty _x1;
-        private readonly FloatMotionProperty _y1;
+        private FloatMotionProperty _x1;
+        private FloatMotionProperty _y1;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LineGeometry"/> class.
@@ -60,6 +60,29 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         protected override SizeF OnMeasure(PaintTask drawable)
         {
             return new SizeF(Math.Abs(X1 - X), Math.Abs(Y1 - Y));
+        }
+
+        /// <inheritdoc cref="Geometry.Clone" />
+        public override object Clone()
+        {
+            var clone = new LineGeometry
+            {
+                X = X,
+                Y = Y,
+                Transform = Transform,
+                Opacity = Opacity,
+                Rotation = Rotation,
+                X1 = X1,
+                Y1 = Y1
+            };
+            clone.xProperty = xProperty;
+            clone.yProperty = yProperty;
+            clone.opacityProperty = opacityProperty;
+            clone.rotationProperty = rotationProperty;
+            clone._x1 = _x1;
+            clone._y1 = _y1;
+            clone.CompleteAllTransitions();
+            return clone;
         }
     }
 }
