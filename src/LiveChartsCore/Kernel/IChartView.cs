@@ -114,6 +114,29 @@ namespace LiveChartsCore.Kernel
         where TDrawingContext : DrawingContext
     {
         /// <summary>
+        /// Occurs before the chart is measured, this is the first step before the chart updates.
+        /// </summary>
+        event ChartEventHandler<TDrawingContext>? Measuring;
+
+        /// <summary>
+        /// Occurs when the chart started an update, just when the drawing loop started.
+        /// </summary>
+        event ChartEventHandler<TDrawingContext>? UpdateStarted;
+
+        /// <summary>
+        /// Occurs when a chart update finished, just when the drawing loop finished.
+        /// </summary>
+        event ChartEventHandler<TDrawingContext>? UpdateFinished;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the automatic updates are enabled.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if automatic update are enabled; otherwise, <c>false</c>.
+        /// </value>
+        bool AutoUpdateEnaled { get; set; }
+
+        /// <summary>
         /// Gets the core canvas.
         /// </summary>
         /// <value>

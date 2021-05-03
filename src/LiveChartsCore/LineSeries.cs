@@ -557,6 +557,7 @@ namespace LiveChartsCore
             context.Height = w;
 
             paintContext = context;
+            OnPropertyChanged(nameof(DefaultPaintContext));
         }
 
         private IEnumerable<BezierData> GetSpline(
@@ -738,7 +739,6 @@ namespace LiveChartsCore
             if (visual == null) return;
 
             var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
-
             if (chartView.Core.IsZoomingOrPanning)
             {
                 visual.Geometry.CompleteAllTransitions();

@@ -158,6 +158,15 @@
             The legend background property
             </summary>
         </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart.Measuring">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.Measuring" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart.UpdateStarted">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateStarted" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart.UpdateFinished">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateFinished" />
+        </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart.CoreCanvas">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.CoreCanvas" />
         </member>
@@ -318,6 +327,9 @@
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart.PointStates">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.PointStates" />
         </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart.AutoUpdateEnaled">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.AutoUpdateEnaled" />
+        </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart.ScaleUIPoint(System.Drawing.PointF,System.Int32,System.Int32)">
             <inheritdoc cref="M:LiveChartsCore.Kernel.ICartesianChartView`1.ScaleUIPoint(System.Drawing.PointF,System.Int32,System.Int32)" />
         </member>
@@ -339,7 +351,7 @@
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Avalonia.DefaultLegend"/> class.
             </summary>
-            <exception cref="T:System.Exception">default tempalte not found</exception>
+            <exception cref="T:System.Exception">default template not found</exception>
         </member>
         <member name="F:LiveChartsCore.SkiaSharpView.Avalonia.DefaultLegend.OrientationProperty">
             <summary>
@@ -842,6 +854,15 @@
             The legend background property
             </summary>
         </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.Measuring">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.Measuring" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.UpdateStarted">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateStarted" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.UpdateFinished">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateFinished" />
+        </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.CoreCanvas">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.CoreCanvas" />
         </member>
@@ -916,7 +937,7 @@
             Gets or sets the default tool tip background.
             </summary>
             <value>
-            The too ltip background.
+            The tool tip background.
             </value>
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.Tooltip">
@@ -989,6 +1010,9 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.PointStates">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.PointStates" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.AutoUpdateEnaled">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.AutoUpdateEnaled" />
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.InitializeCore">
             <summary>

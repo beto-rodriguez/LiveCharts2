@@ -21,7 +21,8 @@
               <DataTemplate DataType="{x:Type ctx:TooltipPoint}">
                 <Border Padding="7 5">
                   <StackPanel Orientation="Horizontal">
-                    <local:MotionCanvas 
+                    <local:MotionCanvas
+                        BackColor="#fafafa"
                         Margin="0 0 8 0"
                         PaintTasks="{Binding Series.DefaultPaintContext.PaintTasks}"
                         Width="{Binding Series.DefaultPaintContext.Width}"

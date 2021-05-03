@@ -83,8 +83,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             InitializeComponent();
 
-            // workaround to deteck mouse events.
-            // avalonia do not seem to detect events if brackground is not set.
+            // workaround to detect mouse events.
+            // Avalonia do not seem to detect events if background is not set.
             ((IChartView)this).BackColor = System.Drawing.Color.FromArgb(0, 0, 0, 0);
 
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
@@ -287,6 +287,19 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         public static readonly AvaloniaProperty<IBrush> LegendBackgroundProperty =
             AvaloniaProperty.Register<CartesianChart, IBrush>(nameof(LegendBackground),
                 new SolidColorBrush(new A.Media.Color(255, 250, 250, 250)), inherits: true);
+
+        #endregion
+
+        #region properties
+
+        /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
+        public event ChartEventHandler<SkiaSharpDrawingContext>? Measuring;
+
+        /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateStarted" />
+        public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateStarted;
+
+        /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
+        public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateFinished;
 
         #endregion
 
@@ -578,6 +591,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <inheritdoc cref="IChartView{TDrawingContext}.PointStates" />
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
 
+        /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnaled" />
+        public bool AutoUpdateEnaled { get; set; } = true;
+
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(PointF, int, int)" />
         public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
@@ -596,6 +612,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             var canvas = this.FindControl<MotionCanvas>("canvas");
             core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+
+            core.Measuring += OnCoreMeasuring;
+            core.UpdateStarted += OnCoreUpdateStarted;
+            core.UpdateFinished += OnCoreUpdateFinished;
+
             legend = this.FindControl<DefaultLegend>("legend");
             tooltip = this.FindControl<DefaultTooltip>("tooltip");
             _ = Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
@@ -719,6 +740,21 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 (float)(_current.Value.Y - _previous.Value.Y)));
 
             _previous = new A.Point(_current.Value.X, _current.Value.Y);
+        }
+
+        private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
+        {
+            UpdateFinished?.Invoke(this);
+        }
+
+        private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart)
+        {
+            UpdateStarted?.Invoke(this);
+        }
+
+        private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
+        {
+            Measuring?.Invoke(this);
         }
     }
 }

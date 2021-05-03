@@ -200,6 +200,15 @@
             The legend template property
             </summary>
         </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WPF.Chart.Measuring">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.Measuring" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WPF.Chart.UpdateStarted">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateStarted" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WPF.Chart.UpdateFinished">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateFinished" />
+        </member>
         <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.DrawMargin">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.DrawMargin" />
         </member>
@@ -352,6 +361,9 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.PointStates">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.PointStates" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.AutoUpdateEnaled">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.AutoUpdateEnaled" />
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.WPF.Chart.OnApplyTemplate">
             <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.WPF.Chart.OnApplyTemplate" />

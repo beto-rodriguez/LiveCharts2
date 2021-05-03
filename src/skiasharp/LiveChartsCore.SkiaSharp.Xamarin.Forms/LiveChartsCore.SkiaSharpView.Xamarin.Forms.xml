@@ -138,6 +138,15 @@
             The tool tip font attributes property
             </summary>
         </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.Measuring">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.Measuring" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.UpdateStarted">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateStarted" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.UpdateFinished">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateFinished" />
+        </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.CoreCanvas">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.CoreCanvas" />
         </member>
@@ -281,6 +290,9 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.PointStates">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.PointStates" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.AutoUpdateEnaled">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.AutoUpdateEnaled" />
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.ScaleUIPoint(System.Drawing.PointF,System.Int32,System.Int32)">
             <inheritdoc cref="M:LiveChartsCore.Kernel.ICartesianChartView`1.ScaleUIPoint(System.Drawing.PointF,System.Int32,System.Int32)" />
@@ -848,6 +860,15 @@
             The tool tip font attributes property
             </summary>
         </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.Measuring">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.Measuring" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.UpdateStarted">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateStarted" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.UpdateFinished">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateFinished" />
+        </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.CoreCanvas">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.CoreCanvas" />
         </member>
@@ -979,6 +1000,9 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.PointStates">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.PointStates" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.AutoUpdateEnaled">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.AutoUpdateEnaled" />
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.InitializeCore">
             <summary>

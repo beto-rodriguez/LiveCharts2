@@ -1,5 +1,4 @@
 ﻿using LiveChartsCore;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -48,7 +47,7 @@ namespace ViewModelsSamples.Axes.LabelsRotation
                     // Now the Y axis we will display it as currency
                     // LiveCharts provides some common formatters
                     // in this case we are using the currency formatter.
-                    Labeler = d => Labelers.Currency(d)
+                    Labeler = Labelers.Currency,
 
                     // you could also build your own currency formatter
                     // for example:

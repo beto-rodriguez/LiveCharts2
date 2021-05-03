@@ -44,6 +44,7 @@
                              Foreground="{Binding DataContext.Foreground, RelativeSource={RelativeSource AncestorType=Window}}"
                              FontSize="16"
                              FontFamily="Open Sans"></TextBlock>
+                    
                 </Border>
               </DataTemplate>
             </ItemsControl.ItemTemplate>

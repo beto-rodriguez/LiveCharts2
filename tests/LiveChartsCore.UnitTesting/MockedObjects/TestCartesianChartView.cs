@@ -62,6 +62,11 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
         public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
         public Color BackColor { get; set; }
+        public bool AutoUpdateEnaled { get; set; } = true;
+
+        public event ChartEventHandler<SkiaSharpDrawingContext> Measuring;
+        public event ChartEventHandler<SkiaSharpDrawingContext> UpdateStarted;
+        public event ChartEventHandler<SkiaSharpDrawingContext> UpdateFinished;
 
         public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
         {

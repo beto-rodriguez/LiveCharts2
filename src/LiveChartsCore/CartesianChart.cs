@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using LiveChartsCore.Measure;
-using System.Diagnostics;
 
 namespace LiveChartsCore
 {
@@ -124,10 +123,14 @@ namespace LiveChartsCore
         /// </value>
         public override IChartView<TDrawingContext> View => _chartView;
 
-        /// <inheritdoc cref="IChart.Update(bool)" />
-        public override void Update(bool throttling = true)
+        /// <inheritdoc cref="IChart.Update(ChartUpdateParams?)" />
+        public override void Update(ChartUpdateParams? chartUpdateParams = null)
         {
-            if (!throttling)
+            if (chartUpdateParams == null) chartUpdateParams = new ChartUpdateParams();
+
+            if (chartUpdateParams.IsAutomaticUpdate && !View.AutoUpdateEnaled) return;
+
+            if (!chartUpdateParams.Throttling)
             {
                 updateThrottler.ForceCall();
                 return;
@@ -286,6 +289,8 @@ namespace LiveChartsCore
         {
             lock (canvas.Sync)
             {
+                InvokeOnMeasuring();
+
                 MeasureWork = new object();
 
                 viewDrawMargin = _chartView.DrawMargin;
@@ -319,7 +324,6 @@ namespace LiveChartsCore
                 seriesContext = new SeriesContext<TDrawingContext>(Series);
                 var totalAxes = XAxes.Concat(YAxes).ToArray();
 
-                Canvas.MeasuredDrawables = new HashSet<IDrawable<TDrawingContext>>();
                 var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
                 if (theme.CurrentColors == null || theme.CurrentColors.Length == 0)
                     throw new Exception("Default colors are not valid");
@@ -482,6 +486,7 @@ namespace LiveChartsCore
                 }
 
                 IsZoomingOrPanning = false;
+                InvokeOnUpdateStarted();
             }
 
             Canvas.Invalidate();

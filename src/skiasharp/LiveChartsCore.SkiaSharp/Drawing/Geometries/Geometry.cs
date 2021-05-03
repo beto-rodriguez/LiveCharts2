@@ -156,8 +156,10 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
                 if (r > 180) r = 360 - r;
                 if (r > 90 && r <= 180) r = 180 - r;
 
-                var w = (float)(Math.Cos(r * toRadias) * measure.Width + Math.Sin(r * toRadias) * measure.Height);
-                var h = (float)(Math.Sin(r * toRadias) * measure.Width + Math.Cos(r * toRadias) * measure.Height);
+                var rRadians = r * toRadias;
+
+                var w = (float)(Math.Cos(rRadians) * measure.Width + Math.Sin(rRadians) * measure.Height);
+                var h = (float)(Math.Sin(rRadians) * measure.Width + Math.Cos(rRadians) * measure.Height);
 
                 measure = new SizeF(w, h);
             }
@@ -174,7 +176,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 
             context.PaintTask.SetOpacity(context, this);
         }
-
 
         /// <summary>
         /// Called after the draw.

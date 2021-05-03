@@ -117,7 +117,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             path.ArcTo(
                 new SKPoint { X = wedge + pushout, Y = wedge + pushout },
                 0,
-                SKPathArcSize.Small,
+                sweepAngle > 180 ? SKPathArcSize.Large : SKPathArcSize.Small,
                 SKPathDirection.CounterClockwise,
                 new SKPoint
                 {

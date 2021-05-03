@@ -45,12 +45,15 @@ namespace LiveChartsCore.Drawing
             _stopwatch.Start();
         }
 
-        internal HashSet<IDrawable<TDrawingContext>> MeasuredDrawables { get; set; } = new();
-
         /// <summary>
-        /// Occurs then the visual is invalidated.
+        /// Occurs when the visual is invalidated.
         /// </summary>
         public event Action<MotionCanvas<TDrawingContext>>? Invalidated;
+
+        /// <summary>
+        /// Occurs when all the visuals in the canvas are valid.
+        /// </summary>
+        public event Action<MotionCanvas<TDrawingContext>>? Validated;
 
         /// <summary>
         /// Returns true if the visual is valid.
@@ -121,6 +124,8 @@ namespace LiveChartsCore.Drawing
 
                 IsValid = isValid;
             }
+
+            if (IsValid) Validated?.Invoke(this);
         }
 
         /// <summary>

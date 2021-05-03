@@ -257,11 +257,26 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         #endregion
 
+        #region events
+
+        /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
+        public event ChartEventHandler<SkiaSharpDrawingContext>? Measuring;
+
+        /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateStarted" />
+        public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateStarted;
+
+        /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
+        public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateFinished;
+
+        #endregion
+
+        #region properties
+
         System.Drawing.Color IChartView.BackColor
         {
-            get => Background is not SolidColorBrush b
+            get => Background is not ISolidColorBrush b
                     ? new System.Drawing.Color()
-                    : System.Drawing.Color.FromArgb(b.Color.R, b.Color.G, b.Color.B, b.Color.A);
+                    : System.Drawing.Color.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
             set
             {
                 Background = new SolidColorBrush(new A.Media.Color(value.R, value.G, value.B, value.A));
@@ -399,7 +414,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// Gets or sets the default tool tip background.
         /// </summary>
         /// <value>
-        /// The too ltip background.
+        /// The tool tip background.
         /// </value>
         public IBrush TooltipBackground
         {
@@ -514,6 +529,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <inheritdoc cref="IChartView{TDrawingContext}.PointStates" />
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
 
+        /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnaled" />
+        public bool AutoUpdateEnaled { get; set; } = true;
+
+        #endregion
+
         /// <summary>
         /// Initializes the core.
         /// </summary>
@@ -522,8 +542,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             var canvas = this.FindControl<MotionCanvas>("canvas");
             core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
-            //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
-            //tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
+
+            core.Measuring += OnCoreMeasuring;
+            core.UpdateStarted += OnCoreUpdateStarted;
+            core.UpdateFinished += OnCoreUpdateFinished;
+
+            legend = this.FindControl<DefaultLegend>("legend");
+            tooltip = this.FindControl<DefaultTooltip>("tooltip");
             _ = Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
         }
 
@@ -539,6 +564,15 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 _seriesObserver.Dispose((IEnumerable<ISeries>)change.OldValue.Value);
                 _seriesObserver.Initialize((IEnumerable<ISeries>)change.NewValue.Value);
                 return;
+            }
+
+            if (change.Property.Name == nameof(Background))
+            {
+                var canvas = this.FindControl<MotionCanvas>("canvas");
+                var color = Background is not ISolidColorBrush b
+                    ? new System.Drawing.Color()
+                    : System.Drawing.Color.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
+                canvas.BackColor = new SkiaSharp.SKColor(color.R, color.G, color.B, color.A);
             }
 
             _ = Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
@@ -560,6 +594,21 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             var p = e.GetPosition(this);
             _mousePosition = new PointF((float)p.X, (float)p.Y);
             _mouseMoveThrottler.Call();
+        }
+
+        private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
+        {
+            UpdateFinished?.Invoke(this);
+        }
+
+        private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart)
+        {
+            UpdateStarted?.Invoke(this);
+        }
+
+        private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
+        {
+            Measuring?.Invoke(this);
         }
     }
 }

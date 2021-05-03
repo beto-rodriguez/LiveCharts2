@@ -87,6 +87,11 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
             canvas.SkCanvasView.EnableTouchEvents = true;
             canvas.SkCanvasView.Touch += OnSkCanvasTouched;
+
+            if (core == null) throw new Exception("Core not found!");
+            core.Measuring += OnCoreMeasuring;
+            core.UpdateStarted += OnCoreUpdateStarted;
+            core.UpdateFinished += OnCoreUpdateFinished;
         }
 
         #region bindable properties
@@ -249,6 +254,19 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             BindableProperty.Create(
                 nameof(TooltipFontAttributes), typeof(FontAttributes), typeof(CartesianChart),
                 FontAttributes.None, propertyChanged: OnBindablePropertyChanged);
+
+        #endregion
+
+        #region events
+
+        /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
+        public event ChartEventHandler<SkiaSharpDrawingContext>? Measuring;
+
+        /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateStarted" />
+        public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateStarted;
+
+        /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
+        public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateFinished;
 
         #endregion
 
@@ -490,6 +508,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <inheritdoc cref="IChartView{TDrawingContext}.PointStates" />
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
 
+        /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnaled" />
+        public bool AutoUpdateEnaled { get; set; } = true;
+
         #endregion
 
         /// <summary>
@@ -528,6 +549,21 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             if (TooltipPosition == TooltipPosition.Hidden) return;
             var location = new PointF(e.Location.X, e.Location.Y);
             ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindPointsNearTo(location), core);
+        }
+
+        private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
+        {
+            UpdateFinished?.Invoke(this);
+        }
+
+        private void OnCoreUpdateStarted(IChartView<SkiaSharpDrawingContext> chart)
+        {
+            UpdateStarted?.Invoke(this);
+        }
+
+        private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
+        {
+            Measuring?.Invoke(this);
         }
     }
 }

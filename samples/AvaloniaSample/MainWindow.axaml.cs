@@ -1,6 +1,8 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using System;
 
 namespace AvaloniaSample
@@ -16,6 +18,17 @@ namespace AvaloniaSample
 
             DataContext = new MainWindowViewModel();
             LoadContent("Home");
+
+            LiveCharts.Configure(settings =>
+                settings.
+                    AddDefaultMappers()
+                    .AddSkiaSharp()
+                    .AddLightTheme()
+
+                    // .., your custom settings here
+                    // .HasMap<Foo>( ... )
+
+                    );
         }
 
         private void OnPointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)

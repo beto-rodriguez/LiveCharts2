@@ -123,6 +123,9 @@
     <Compile Update="Pies\AutoUpdate\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Pies\Processing\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Pies\Pushout\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -292,6 +295,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Pies\AutoUpdate\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pies\Processing\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

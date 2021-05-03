@@ -22,7 +22,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using LiveChartsCore.Kernel;
 using Xamarin.Forms;
 
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms

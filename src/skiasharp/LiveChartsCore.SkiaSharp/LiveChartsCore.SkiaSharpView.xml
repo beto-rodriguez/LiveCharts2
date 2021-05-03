@@ -721,7 +721,7 @@
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AsSKColor(System.Drawing.Color,System.Nullable{System.Byte})">
             <summary>
-            Converts a <see cref="T:System.Drawing.Color"/> to an <see cref="T:SkiaSharp.SKColor"/> instance.
+            Converts a <see cref="T:System.Drawing.Color"/> to a <see cref="T:SkiaSharp.SKColor"/> instance.
             </summary>
             <param name="color">The color.</param>
             <param name="alphaOverrides">The alpha overrides.</param>

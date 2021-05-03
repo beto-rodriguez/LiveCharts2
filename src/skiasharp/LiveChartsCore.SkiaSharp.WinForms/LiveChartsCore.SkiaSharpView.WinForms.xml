@@ -68,6 +68,15 @@
             <param name="legend">The default legend.</param>
             <exception cref="T:LiveChartsCore.SkiaSharpView.WinForms.MotionCanvas"></exception>
         </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WinForms.Chart.Measuring">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.Measuring" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WinForms.Chart.UpdateStarted">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateStarted" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WinForms.Chart.UpdateFinished">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateFinished" />
+        </member>
         <member name="P:LiveChartsCore.SkiaSharpView.WinForms.Chart.CoreCanvas">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.CoreCanvas" />
         </member>
@@ -132,6 +141,9 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.WinForms.Chart.PointStates">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.PointStates" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.Chart.AutoUpdateEnaled">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.AutoUpdateEnaled" />
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.WinForms.Chart.InitializeCore">
             <summary>

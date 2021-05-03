@@ -128,7 +128,7 @@ namespace LiveChartsCore
                         visual.X = secondary - uwm + cp;
                         visual.Y = p;
                         visual.Width = uw;
-                        visual.Height = 0;
+                        visual.Height =  0;
                         visual.RemoveOnCompleted = true;
                         point.Context.Visual = null;
                     }
@@ -140,6 +140,7 @@ namespace LiveChartsCore
                     var xi = secondary - uwm + cp;
                     var pi = p;
                     var uwi = uw;
+                    var hi = 0f;
 
                     if (previousSecondaryScale != null && previousPrimaryScale != null)
                     {
@@ -151,6 +152,7 @@ namespace LiveChartsCore
                         xi = previousSecondaryScale.ToPixels(point.SecondaryValue) - uwm + cp;
                         pi = chart.IsZoomingOrPanning ? cyp : previousP;
                         uwi = puw;
+                        hi = chart.IsZoomingOrPanning ? bp : 0;
                     }
 
                     var r = new TVisual
@@ -285,6 +287,14 @@ namespace LiveChartsCore
         {
             var visual = (TVisual?)point.Context.Visual;
             if (visual == null) return;
+
+            var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
+            if (chartView.Core.IsZoomingOrPanning)
+            {
+                visual.CompleteAllTransitions();
+                visual.RemoveOnCompleted = true;
+                return;
+            }
 
             var p = primaryScale.ToPixels(pivot);
             var secondary = secondaryScale.ToPixels(point.SecondaryValue);

@@ -20,13 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore
 {
     /// <summary>
     /// Defines a chart series.

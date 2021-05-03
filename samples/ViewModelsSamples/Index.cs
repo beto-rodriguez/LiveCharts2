@@ -33,6 +33,7 @@
 
             "Pies/Basic",
             "Pies/AutoUpdate",
+            "Pies/Processing",
             "Pies/Doughnut",
             "Pies/Pushout",
             "Pies/Custom",

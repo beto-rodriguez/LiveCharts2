@@ -194,8 +194,8 @@
             The view.
             </value>
         </member>
-        <member name="M:LiveChartsCore.CartesianChart`1.Update(System.Boolean)">
-            <inheritdoc cref="M:LiveChartsCore.Kernel.IChart.Update(System.Boolean)" />
+        <member name="M:LiveChartsCore.CartesianChart`1.Update(LiveChartsCore.Kernel.ChartUpdateParams)">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IChart.Update(LiveChartsCore.Kernel.ChartUpdateParams)" />
         </member>
         <member name="M:LiveChartsCore.CartesianChart`1.FindPointsNearTo(System.Drawing.PointF)">
             <summary>
@@ -326,17 +326,17 @@
         </member>
         <member name="F:LiveChartsCore.Chart`1.tooltipPosition">
             <summary>
-            The tooltip position
+            The tool tip position
             </summary>
         </member>
         <member name="F:LiveChartsCore.Chart`1.tooltipFindingStrategy">
             <summary>
-            The tooltip finding strategy
+            The tool tip finding strategy
             </summary>
         </member>
         <member name="F:LiveChartsCore.Chart`1.tooltip">
             <summary>
-            The tooltip
+            The tool tip
             </summary>
         </member>
         <member name="F:LiveChartsCore.Chart`1.animationsSpeed">
@@ -356,7 +356,7 @@
         </member>
         <member name="F:LiveChartsCore.Chart`1.drawMaringLocation">
             <summary>
-            The draw maring location
+            The draw margin location
             </summary>
         </member>
         <member name="M:LiveChartsCore.Chart`1.#ctor(LiveChartsCore.Drawing.MotionCanvas{`0},System.Action{LiveChartsCore.Kernel.LiveChartsSettings})">
@@ -365,6 +365,15 @@
             </summary>
             <param name="canvas">The canvas.</param>
             <param name="defaultPlatformConfig">The default platform configuration.</param>
+        </member>
+        <member name="E:LiveChartsCore.Chart`1.Measuring">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.Measuring" />
+        </member>
+        <member name="E:LiveChartsCore.Chart`1.UpdateStarted">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateStarted" />
+        </member>
+        <member name="E:LiveChartsCore.Chart`1.UpdateFinished">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateFinished" />
         </member>
         <member name="P:LiveChartsCore.Chart`1.MeasureWork">
             <summary>
@@ -494,8 +503,8 @@
             The easing function.
             </value>
         </member>
-        <member name="M:LiveChartsCore.Chart`1.Update(System.Boolean)">
-            <inheritdoc cref="M:LiveChartsCore.Kernel.IChart.Update(System.Boolean)" />
+        <member name="M:LiveChartsCore.Chart`1.Update(LiveChartsCore.Kernel.ChartUpdateParams)">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IChart.Update(LiveChartsCore.Kernel.ChartUpdateParams)" />
         </member>
         <member name="M:LiveChartsCore.Chart`1.Measure">
             <summary>
@@ -522,6 +531,24 @@
             </summary>
             <param name="controlSize">Size of the control.</param>
             <param name="margin">The margin.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Chart`1.InvokeOnMeasuring">
+            <summary>
+            Invokes the <see cref="E:LiveChartsCore.Chart`1.Measuring"/> event.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Chart`1.InvokeOnUpdateStarted">
+            <summary>
+            Invokes the on update started.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Chart`1.InvokeOnUpdateFinished">
+            <summary>
+            Invokes the on update finished.
+            </summary>
             <returns></returns>
         </member>
         <member name="T:LiveChartsCore.Collections.RangeObservableCollection`1">
@@ -2172,7 +2199,12 @@
         </member>
         <member name="E:LiveChartsCore.Drawing.MotionCanvas`1.Invalidated">
             <summary>
-            Occurs then the visual is invalidated.
+            Occurs when the visual is invalidated.
+            </summary>
+        </member>
+        <member name="E:LiveChartsCore.Drawing.MotionCanvas`1.Validated">
+            <summary>
+            Occurs when all the visuals in the canvas are valid.
             </summary>
         </member>
         <member name="P:LiveChartsCore.Drawing.MotionCanvas`1.IsValid">
@@ -2819,6 +2851,147 @@
             <param name="e">The e.</param>
             <returns></returns>
         </member>
+        <member name="T:LiveChartsCore.ISeries">
+            <summary>
+            Defines a chart series.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.ISeries.SeriesId">
+            <summary>
+            Gets or sets a series unique identifier, the library handles this id automatically.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.ISeries.HoverState">
+            <summary>
+            Gets or sets the state where the visual is moved to when the mouse moves over a <see cref="T:LiveChartsCore.Kernel.ChartPoint"/>.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.ISeries.SeriesProperties">
+            <summary>
+            Gets the properties of the series.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.ISeries.Name">
+            <summary>
+            Gets or sets the name of the series, the name is normally used by <see cref="T:LiveChartsCore.Kernel.IChartTooltip`1"/> or 
+            <see cref="T:LiveChartsCore.Kernel.IChartLegend`1"/>, the default value is set automatically by the library.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.ISeries.Values">
+            <summary>
+            Gets or sets the values.
+            </summary>
+            <value>
+            The values.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.ISeries.IsVisible">
+            <summary>
+            Gets or sets a value indicating whether this instance is visible.
+            </summary>
+            <value>
+              <c>true</c> if this instance is visible; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.ISeries.ZIndex">
+            <summary>
+            Gets or sets the z index position.
+            </summary>
+            <value>
+            The index of the z.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.ISeries.Pivot">
+            <summary>
+            Gets or sets the value where the direction of the axis changes, by default is 0.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.ISeries.TooltipLabelFormatter">
+            <summary>
+            Gets or sets the tooltip label formatter, this function will build the label when a point in this series 
+            is shown inside a tooltip.
+            </summary>
+            <value>
+            The tooltip label formatter.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.ISeries.DataLabelsFormatter">
+            <summary>
+            Gets or sets the data label formatter, this function will build the label when a point in this series 
+            is shown as data label.
+            </summary>
+            <value>
+            The data label formatter.
+            </value>
+        </member>
+        <member name="E:LiveChartsCore.ISeries.Disposing">
+            <summary>
+            Occurs before the series is disposed.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.ISeries.Fetch(LiveChartsCore.Kernel.IChart)">
+            <summary>
+            Gets a <see cref="T:LiveChartsCore.Kernel.ChartPoint"/> array with the points used to generate the plot.
+            </summary>
+            <param name="chart">the chart</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.ISeries.FindPointsNearTo(LiveChartsCore.Kernel.IChart,System.Drawing.PointF)">
+            <summary>
+            Gets the <see cref="T:LiveChartsCore.Kernel.ChartPoint"/> instances which contain the <paramref name="pointerPosition"/>, according 
+            to the chart's <see cref="T:LiveChartsCore.Measure.TooltipFindingStrategy"/> property.
+            </summary>
+            <param name="chart">the chart</param>
+            <param name="pointerPosition">the poiinter position</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.ISeries.AddPointToState(LiveChartsCore.Kernel.ChartPoint,System.String)">
+            <summary>
+            Marks a given point as a given state.
+            </summary>
+            <param name="chartPoint"></param>
+            <param name="state"></param>
+        </member>
+        <member name="M:LiveChartsCore.ISeries.RemovePointFromState(LiveChartsCore.Kernel.ChartPoint,System.String)">
+            <summary>
+            Removes a given point from the given state.
+            </summary>
+            <param name="chartPoint"></param>
+            <param name="state"></param>
+        </member>
+        <member name="M:LiveChartsCore.ISeries.RestartAnimations">
+            <summary>
+            Clears the visuals in the cache and re-starts animations.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.ISeries.Delete(LiveChartsCore.Kernel.IChartView)">
+            <summary>
+            Deletes the series from the user interface.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.ISeries`1">
+            <summary>
+            Defines a series.
+            </summary>
+            <typeparam name="TModel">The type of the model.</typeparam>
+            <seealso cref="T:System.IDisposable" />
+        </member>
+        <member name="P:LiveChartsCore.ISeries`1.Mapping">
+            <summary>
+            Gets or sets the mapping.
+            </summary>
+            <value>
+            The mapping.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.ISeries`1.Values">
+            <summary>
+            Gets or sets the values.
+            </summary>
+            <value>
+            The values.
+            </value>
+        </member>
         <member name="T:LiveChartsCore.Kernel.ActionThrottler">
             <summary>
             An object that is able to throttle an action.
@@ -2992,12 +3165,19 @@
               <c>true</c> if this instance is last; otherwise, <c>false</c>.
             </value>
         </member>
+        <member name="T:LiveChartsCore.Kernel.ChartEventHandler`1">
+            <summary>
+            Defines a method that will handle an event in a chart.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+            <param name="chart">The chart.</param>
+        </member>
         <member name="T:LiveChartsCore.Kernel.ChartPoint">
             <summary>
             Defiens a point in a chart.
             </summary>
         </member>
-        <member name="M:LiveChartsCore.Kernel.ChartPoint.#ctor(LiveChartsCore.Kernel.IChartView,LiveChartsCore.Kernel.ISeries)">
+        <member name="M:LiveChartsCore.Kernel.ChartPoint.#ctor(LiveChartsCore.Kernel.IChartView,LiveChartsCore.ISeries)">
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.Kernel.ChartPoint"/> class.
             </summary>
@@ -3065,7 +3245,7 @@
             Defines the environment of a point in a chart.
             </summary>
         </member>
-        <member name="M:LiveChartsCore.Kernel.ChartPointContext.#ctor(LiveChartsCore.Kernel.IChartView,LiveChartsCore.Kernel.ISeries)">
+        <member name="M:LiveChartsCore.Kernel.ChartPointContext.#ctor(LiveChartsCore.Kernel.IChartView,LiveChartsCore.ISeries)">
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.Kernel.ChartPointContext"/> class.
             </summary>
@@ -3118,6 +3298,27 @@
             <summary>
             Gets or sets the area that triggers the ToolTip.
             </summary>
+        </member>
+        <member name="T:LiveChartsCore.Kernel.ChartUpdateParams">
+            <summary>
+            Defines the chart update parameter.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.ChartUpdateParams.IsAutomaticUpdate">
+            <summary>
+            Gets or sets a value indicating whether this instance is automatic update.
+            </summary>
+            <value>
+              <c>true</c> if this instance is automatic update; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.ChartUpdateParams.Throttling">
+            <summary>
+            Gets or sets a value indicating whether this <see cref="T:LiveChartsCore.Kernel.ChartUpdateParams"/> is throttling.
+            </summary>
+            <value>
+              <c>true</c> if throttling; otherwise, <c>false</c>.
+            </value>
         </member>
         <member name="T:LiveChartsCore.Kernel.CollectionDeepObserver`1">
             <summary>
@@ -3174,7 +3375,7 @@
             <typeparam name="TModel"></typeparam>
             <typeparam name="TDrawingContext"></typeparam>
         </member>
-        <member name="M:LiveChartsCore.Kernel.DataProvider`2.Fetch(LiveChartsCore.Kernel.ISeries{`0},LiveChartsCore.Kernel.IChart)">
+        <member name="M:LiveChartsCore.Kernel.DataProvider`2.Fetch(LiveChartsCore.ISeries{`0},LiveChartsCore.Kernel.IChart)">
             <summary>
             Fetches the the points for the specified series.
             </summary>
@@ -3425,7 +3626,7 @@
             <returns></returns>
             <exception cref="T:System.Exception">At least one property is required when calling {nameof(TransitionateProperties)}</exception>
         </member>
-        <member name="M:LiveChartsCore.Kernel.Extensions.IsBarSeries(LiveChartsCore.Kernel.ISeries)">
+        <member name="M:LiveChartsCore.Kernel.Extensions.IsBarSeries(LiveChartsCore.ISeries)">
             <summary>
             Determines whether is bar series.
             </summary>
@@ -3434,7 +3635,7 @@
               <c>true</c> if [is bar series] [the specified series]; otherwise, <c>false</c>.
             </returns>
         </member>
-        <member name="M:LiveChartsCore.Kernel.Extensions.IsColumnSeries(LiveChartsCore.Kernel.ISeries)">
+        <member name="M:LiveChartsCore.Kernel.Extensions.IsColumnSeries(LiveChartsCore.ISeries)">
             <summary>
             Determines whether is column series.
             </summary>
@@ -3443,7 +3644,7 @@
               <c>true</c> if [is column series] [the specified series]; otherwise, <c>false</c>.
             </returns>
         </member>
-        <member name="M:LiveChartsCore.Kernel.Extensions.IsRowSeries(LiveChartsCore.Kernel.ISeries)">
+        <member name="M:LiveChartsCore.Kernel.Extensions.IsRowSeries(LiveChartsCore.ISeries)">
             <summary>
             Determines whether is row series.
             </summary>
@@ -3452,7 +3653,7 @@
               <c>true</c> if [is row series] [the specified series]; otherwise, <c>false</c>.
             </returns>
         </member>
-        <member name="M:LiveChartsCore.Kernel.Extensions.IsStackedSeries(LiveChartsCore.Kernel.ISeries)">
+        <member name="M:LiveChartsCore.Kernel.Extensions.IsStackedSeries(LiveChartsCore.ISeries)">
             <summary>
             Determines whether is stacked series.
             </summary>
@@ -3461,7 +3662,7 @@
               <c>true</c> if [is stacked series] [the specified series]; otherwise, <c>false</c>.
             </returns>
         </member>
-        <member name="M:LiveChartsCore.Kernel.Extensions.IsVerticalSeries(LiveChartsCore.Kernel.ISeries)">
+        <member name="M:LiveChartsCore.Kernel.Extensions.IsVerticalSeries(LiveChartsCore.ISeries)">
             <summary>
             Determines whether is vertical series.
             </summary>
@@ -3470,7 +3671,7 @@
               <c>true</c> if [is vertical series] [the specified series]; otherwise, <c>false</c>.
             </returns>
         </member>
-        <member name="M:LiveChartsCore.Kernel.Extensions.IsHorizontalSeries(LiveChartsCore.Kernel.ISeries)">
+        <member name="M:LiveChartsCore.Kernel.Extensions.IsHorizontalSeries(LiveChartsCore.ISeries)">
             <summary>
             Determines whether is horizontal series.
             </summary>
@@ -3955,11 +4156,10 @@
             The toolTip finding strategy.
             </value>
         </member>
-        <member name="M:LiveChartsCore.Kernel.IChart.Update(System.Boolean)">
+        <member name="M:LiveChartsCore.Kernel.IChart.Update(LiveChartsCore.Kernel.ChartUpdateParams)">
             <summary>
             Updates the chart in the user interface.
             </summary>
-            <param name="throttling">if set to <c>true</c> the update will be throttled, otherwise it will run immediately.</param>
         </member>
         <member name="T:LiveChartsCore.Kernel.IChartLegend`1">
             <summary>
@@ -4071,6 +4271,29 @@
             </summary>
             <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
         </member>
+        <member name="E:LiveChartsCore.Kernel.IChartView`1.Measuring">
+            <summary>
+            Occurs before the chart is measured, this is the first step before the chart updates.
+            </summary>
+        </member>
+        <member name="E:LiveChartsCore.Kernel.IChartView`1.UpdateStarted">
+            <summary>
+            Occurs when the chart started an update, just when the drawing loop started.
+            </summary>
+        </member>
+        <member name="E:LiveChartsCore.Kernel.IChartView`1.UpdateFinished">
+            <summary>
+            Occurs when a chart update finished, just when the drawing loop finished.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IChartView`1.AutoUpdateEnaled">
+            <summary>
+            Gets or sets a value indicating whether the automatic updates are enabled.
+            </summary>
+            <value>
+              <c>true</c> if automatic update are enabled; otherwise, <c>false</c>.
+            </value>
+        </member>
         <member name="P:LiveChartsCore.Kernel.IChartView`1.CoreCanvas">
             <summary>
             Gets the core canvas.
@@ -4121,7 +4344,7 @@
             Defines a series a chart series that has a visual representation in the user interface.
             </summary>
             <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-            <seealso cref="T:LiveChartsCore.Kernel.ISeries" />
+            <seealso cref="T:LiveChartsCore.ISeries" />
         </member>
         <member name="P:LiveChartsCore.Kernel.IDrawableSeries`1.Stroke">
             <summary>
@@ -4331,147 +4554,6 @@
             </summary>
             <value>
             The minimum size of the geometry.
-            </value>
-        </member>
-        <member name="T:LiveChartsCore.Kernel.ISeries">
-            <summary>
-            Defines a chart series.
-            </summary>
-        </member>
-        <member name="P:LiveChartsCore.Kernel.ISeries.SeriesId">
-            <summary>
-            Gets or sets a series unique identifier, the library handles this id automatically.
-            </summary>
-        </member>
-        <member name="P:LiveChartsCore.Kernel.ISeries.HoverState">
-            <summary>
-            Gets or sets the state where the visual is moved to when the mouse moves over a <see cref="T:LiveChartsCore.Kernel.ChartPoint"/>.
-            </summary>
-        </member>
-        <member name="P:LiveChartsCore.Kernel.ISeries.SeriesProperties">
-            <summary>
-            Gets the properties of the series.
-            </summary>
-        </member>
-        <member name="P:LiveChartsCore.Kernel.ISeries.Name">
-            <summary>
-            Gets or sets the name of the series, the name is normally used by <see cref="T:LiveChartsCore.Kernel.IChartTooltip`1"/> or 
-            <see cref="T:LiveChartsCore.Kernel.IChartLegend`1"/>, the default value is set automatically by the library.
-            </summary>
-        </member>
-        <member name="P:LiveChartsCore.Kernel.ISeries.Values">
-            <summary>
-            Gets or sets the values.
-            </summary>
-            <value>
-            The values.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.Kernel.ISeries.IsVisible">
-            <summary>
-            Gets or sets a value indicating whether this instance is visible.
-            </summary>
-            <value>
-              <c>true</c> if this instance is visible; otherwise, <c>false</c>.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.Kernel.ISeries.ZIndex">
-            <summary>
-            Gets or sets the z index position.
-            </summary>
-            <value>
-            The index of the z.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.Kernel.ISeries.Pivot">
-            <summary>
-            Gets or sets the value where the direction of the axis changes, by default is 0.
-            </summary>
-        </member>
-        <member name="P:LiveChartsCore.Kernel.ISeries.TooltipLabelFormatter">
-            <summary>
-            Gets or sets the tooltip label formatter, this function will build the label when a point in this series 
-            is shown inside a tooltip.
-            </summary>
-            <value>
-            The tooltip label formatter.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.Kernel.ISeries.DataLabelsFormatter">
-            <summary>
-            Gets or sets the data label formatter, this function will build the label when a point in this series 
-            is shown as data label.
-            </summary>
-            <value>
-            The data label formatter.
-            </value>
-        </member>
-        <member name="E:LiveChartsCore.Kernel.ISeries.Disposing">
-            <summary>
-            Occurs before the series is disposed.
-            </summary>
-        </member>
-        <member name="M:LiveChartsCore.Kernel.ISeries.Fetch(LiveChartsCore.Kernel.IChart)">
-            <summary>
-            Gets a <see cref="T:LiveChartsCore.Kernel.ChartPoint"/> array with the points used to generate the plot.
-            </summary>
-            <param name="chart">the chart</param>
-            <returns></returns>
-        </member>
-        <member name="M:LiveChartsCore.Kernel.ISeries.FindPointsNearTo(LiveChartsCore.Kernel.IChart,System.Drawing.PointF)">
-            <summary>
-            Gets the <see cref="T:LiveChartsCore.Kernel.ChartPoint"/> instances which contain the <paramref name="pointerPosition"/>, according 
-            to the chart's <see cref="T:LiveChartsCore.Measure.TooltipFindingStrategy"/> property.
-            </summary>
-            <param name="chart">the chart</param>
-            <param name="pointerPosition">the poiinter position</param>
-            <returns></returns>
-        </member>
-        <member name="M:LiveChartsCore.Kernel.ISeries.AddPointToState(LiveChartsCore.Kernel.ChartPoint,System.String)">
-            <summary>
-            Marks a given point as a given state.
-            </summary>
-            <param name="chartPoint"></param>
-            <param name="state"></param>
-        </member>
-        <member name="M:LiveChartsCore.Kernel.ISeries.RemovePointFromState(LiveChartsCore.Kernel.ChartPoint,System.String)">
-            <summary>
-            Removes a given point from the given state.
-            </summary>
-            <param name="chartPoint"></param>
-            <param name="state"></param>
-        </member>
-        <member name="M:LiveChartsCore.Kernel.ISeries.RestartAnimations">
-            <summary>
-            Clears the visuals in the cache and re-starts animations.
-            </summary>
-        </member>
-        <member name="M:LiveChartsCore.Kernel.ISeries.Delete(LiveChartsCore.Kernel.IChartView)">
-            <summary>
-            Deletes the series from the user interface.
-            </summary>
-        </member>
-        <member name="T:LiveChartsCore.Kernel.ISeries`1">
-            <summary>
-            Defines a series.
-            </summary>
-            <typeparam name="TModel">The type of the model.</typeparam>
-            <seealso cref="T:System.IDisposable" />
-        </member>
-        <member name="P:LiveChartsCore.Kernel.ISeries`1.Mapping">
-            <summary>
-            Gets or sets the mapping.
-            </summary>
-            <value>
-            The mapping.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.Kernel.ISeries`1.Values">
-            <summary>
-            Gets or sets the values.
-            </summary>
-            <value>
-            The values.
             </value>
         </member>
         <member name="T:LiveChartsCore.Kernel.IStackedBarSeries`1">
@@ -5166,7 +5248,7 @@
             Defines the tooltip piont class.
             </summary>
         </member>
-        <member name="M:LiveChartsCore.Kernel.TooltipPoint.#ctor(LiveChartsCore.Kernel.ISeries,LiveChartsCore.Kernel.ChartPoint)">
+        <member name="M:LiveChartsCore.Kernel.TooltipPoint.#ctor(LiveChartsCore.ISeries,LiveChartsCore.Kernel.ChartPoint)">
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.Kernel.TooltipPoint"/> class.
             </summary>
@@ -5269,7 +5351,7 @@
         </member>
         <member name="T:LiveChartsCore.Labelers">
             <summary>
-            Defines common functiuons to build labels in a chart.
+            Defines common functions to build labels in a chart.
             </summary>
         </member>
         <member name="P:LiveChartsCore.Labelers.Default">
@@ -6064,8 +6146,8 @@
             <param name="pointerPosition">The pointer position.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.PieChart`1.Update(System.Boolean)">
-            <inheritdoc cref="M:LiveChartsCore.Kernel.IChart.Update(System.Boolean)" />
+        <member name="M:LiveChartsCore.PieChart`1.Update(LiveChartsCore.Kernel.ChartUpdateParams)">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IChart.Update(LiveChartsCore.Kernel.ChartUpdateParams)" />
         </member>
         <member name="M:LiveChartsCore.PieChart`1.Measure">
             <summary>
@@ -6235,8 +6317,8 @@
             <typeparam name="TVisual">The type of the visual.</typeparam>
             <typeparam name="TLabel">The type of the label.</typeparam>
             <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-            <seealso cref="T:LiveChartsCore.Kernel.ISeries" />
-            <seealso cref="T:LiveChartsCore.Kernel.ISeries`1" />
+            <seealso cref="T:LiveChartsCore.ISeries" />
+            <seealso cref="T:LiveChartsCore.ISeries`1" />
             <seealso cref="T:System.IDisposable" />
             <seealso cref="T:System.ComponentModel.INotifyPropertyChanged" />
         </member>
@@ -6291,7 +6373,7 @@
             then the <see cref="T:LiveChartsCore.Kernel.ChartPoint"/> will be drawn as a point in the chart.
             </summary>
         </member>
-        <member name="P:LiveChartsCore.Series`4.LiveChartsCore#Kernel#ISeries#SeriesId">
+        <member name="P:LiveChartsCore.Series`4.LiveChartsCore#ISeries#SeriesId">
             <inheritdoc />
         </member>
         <member name="P:LiveChartsCore.Series`4.HoverState">
@@ -6313,7 +6395,7 @@
             </summary>
         </member>
         <member name="E:LiveChartsCore.Series`4.Disposing">
-            <inheritdoc cref="E:LiveChartsCore.Kernel.ISeries.Disposing" />
+            <inheritdoc cref="E:LiveChartsCore.ISeries.Disposing" />
         </member>
         <member name="P:LiveChartsCore.Series`4.OnPointAddedToState">
             <summary>
@@ -6328,22 +6410,22 @@
             </summary>
         </member>
         <member name="P:LiveChartsCore.Series`4.ZIndex">
-            <inheritdoc cref="P:LiveChartsCore.Kernel.ISeries.ZIndex" />
+            <inheritdoc cref="P:LiveChartsCore.ISeries.ZIndex" />
         </member>
         <member name="P:LiveChartsCore.Series`4.TooltipLabelFormatter">
-            <inheritdoc cref="P:LiveChartsCore.Kernel.ISeries.TooltipLabelFormatter" />
+            <inheritdoc cref="P:LiveChartsCore.ISeries.TooltipLabelFormatter" />
         </member>
         <member name="P:LiveChartsCore.Series`4.DataLabelsFormatter">
-            <inheritdoc cref="P:LiveChartsCore.Kernel.ISeries.DataLabelsFormatter" />
+            <inheritdoc cref="P:LiveChartsCore.ISeries.DataLabelsFormatter" />
         </member>
         <member name="P:LiveChartsCore.Series`4.IsVisible">
-            <inheritdoc cref="P:LiveChartsCore.Kernel.ISeries.IsVisible" />
+            <inheritdoc cref="P:LiveChartsCore.ISeries.IsVisible" />
         </member>
         <member name="M:LiveChartsCore.Series`4.GetStackGroup">
             <inheritdoc />
         </member>
         <member name="M:LiveChartsCore.Series`4.Fetch(LiveChartsCore.Kernel.IChart)">
-            <inheritdoc cref="M:LiveChartsCore.Kernel.ISeries.Fetch(LiveChartsCore.Kernel.IChart)"/>
+            <inheritdoc cref="M:LiveChartsCore.ISeries.Fetch(LiveChartsCore.Kernel.IChart)"/>
         </member>
         <member name="M:LiveChartsCore.Series`4.AddPointToState(LiveChartsCore.Kernel.ChartPoint,System.String)">
             <inheritdoc />
@@ -6352,10 +6434,10 @@
             <inheritdoc />
         </member>
         <member name="M:LiveChartsCore.Series`4.RestartAnimations">
-            <inheritdoc cref="M:LiveChartsCore.Kernel.ISeries.RestartAnimations"/>
+            <inheritdoc cref="M:LiveChartsCore.ISeries.RestartAnimations"/>
         </member>
         <member name="M:LiveChartsCore.Series`4.Delete(LiveChartsCore.Kernel.IChartView)">
-            <inheritdoc cref="M:LiveChartsCore.Kernel.ISeries.Delete(LiveChartsCore.Kernel.IChartView)"/>
+            <inheritdoc cref="M:LiveChartsCore.ISeries.Delete(LiveChartsCore.Kernel.IChartView)"/>
         </member>
         <member name="M:LiveChartsCore.Series`4.Dispose">
             <inheritdoc cref="M:System.IDisposable.Dispose"/>

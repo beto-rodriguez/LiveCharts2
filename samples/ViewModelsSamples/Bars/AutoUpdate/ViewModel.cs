@@ -1,5 +1,5 @@
-﻿using LiveChartsCore.Defaults;
-using LiveChartsCore.Kernel;
+﻿using LiveChartsCore;
+using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using System;
 using System.Collections.Generic;
@@ -62,7 +62,7 @@ namespace ViewModelsSamples.Bars.AutoUpdate
 
         public void AddRandomItem()
         {
-            // for this sample only 50 items are suported.
+            // for this sample only 50 items are supported.
             if (observableValues.Count > 50) return;
 
             var randomValue = random.Next(1, 10);

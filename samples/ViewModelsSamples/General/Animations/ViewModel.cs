@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using LiveChartsCore;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.General.Animations

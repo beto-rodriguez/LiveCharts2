@@ -28,7 +28,7 @@ using System.Globalization;
 namespace LiveChartsCore
 {
     /// <summary>
-    /// Defines common functiuons to build labels in a chart.
+    /// Defines common functions to build labels in a chart.
     /// </summary>
     public static class Labelers
     {

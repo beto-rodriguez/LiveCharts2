@@ -40,18 +40,18 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
     /// </summary>
     public class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
     {
-        private readonly DataTemplate defaultTemplate;
+        private readonly DataTemplate _defaultTemplate;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultLegend"/> class.
         /// </summary>
-        /// <exception cref="Exception">default tempalte not found</exception>
+        /// <exception cref="Exception">default template not found</exception>
         public DefaultLegend()
         {
             InitializeComponent();
             var t = (DataTemplate?)Resources["defaultTemplate"];
-            if (t == null) throw new Exception("default tempalte not found");
-            defaultTemplate = t;
+            if (t == null) throw new Exception("default template not found");
+            _defaultTemplate = t;
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </summary>
         protected void BuildContent()
         {
-            var template = CustomTemplate ?? defaultTemplate;
+            var template = CustomTemplate ?? _defaultTemplate;
             var model = new LegendBindingContext
             {
                 Series = Series,

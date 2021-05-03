@@ -1,4 +1,5 @@
-﻿using LiveChartsCore.Defaults;
+﻿using LiveChartsCore;
+using LiveChartsCore.Defaults;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
 using System;

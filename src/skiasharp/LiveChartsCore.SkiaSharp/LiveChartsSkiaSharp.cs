@@ -373,7 +373,7 @@ namespace LiveChartsCore.SkiaSharpView
         }
 
         /// <summary>
-        /// Converts a <see cref="Color"/> to an <see cref="SKColor"/> instance.
+        /// Converts a <see cref="Color"/> to a <see cref="SKColor"/> instance.
         /// </summary>
         /// <param name="color">The color.</param>
         /// <param name="alphaOverrides">The alpha overrides.</param>

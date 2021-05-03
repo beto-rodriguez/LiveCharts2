@@ -277,6 +277,7 @@ namespace LiveChartsCore
             context.Height = w;
 
             paintContext = context;
+            OnPropertyChanged(nameof(DefaultPaintContext));
         }
 
         /// <inheritdoc cref="SetDefaultPointTransitions(ChartPoint)"/>

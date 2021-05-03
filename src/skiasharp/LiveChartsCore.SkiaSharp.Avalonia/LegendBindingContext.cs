@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using Avalonia.Media;
-using LiveChartsCore.Kernel;
 using System.Collections.Generic;
 using System.Linq;
 
