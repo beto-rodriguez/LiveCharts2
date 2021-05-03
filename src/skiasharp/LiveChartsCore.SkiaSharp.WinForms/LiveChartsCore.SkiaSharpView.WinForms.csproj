@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile></DocumentationFile>
+    <DocumentationFile>../../../docs/LiveChartsCore.SkiaSharpView.WinForms.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

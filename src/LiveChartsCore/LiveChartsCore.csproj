@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>LiveChartsCore.xml</DocumentationFile>
+    <DocumentationFile>../../docs/LiveChartsCore.xml</DocumentationFile>
   </PropertyGroup>
 
 </Project>

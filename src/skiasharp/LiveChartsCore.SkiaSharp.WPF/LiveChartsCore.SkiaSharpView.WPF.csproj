@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile></DocumentationFile>
+    <DocumentationFile>../../../docs/LiveChartsCore.SkiaSharpView.WPF.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

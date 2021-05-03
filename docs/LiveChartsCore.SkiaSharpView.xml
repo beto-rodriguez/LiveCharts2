@@ -1,0 +1,1382 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LiveChartsCore.SkiaSharpView</name>
+    </assembly>
+    <members>
+        <member name="T:LiveChartsCore.SkiaSharpView.Axis">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.IAxis" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Axis.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Axis"/> class.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.ColumnSeries`1">
+            <summary>
+            Defines a column series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.ColumnSeries`2">
+            <summary>
+            Defines a column series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+            <typeparam name="TVisual">
+            The type of the geometry of every point of the series.
+            </typeparam>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.ColumnSeries`3">
+            <summary>
+            Defines a column series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+            <typeparam name="TVisual">
+            The type of the geometry of every point of the series.
+            </typeparam>
+            <typeparam name="TLabel">
+            The type of the data label of every point.
+            </typeparam>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.ColumnSeries`3.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.ColumnSeries`3"/> class.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Drawing.AvaloniaDrawingContext">
+            <summary>
+            Defines an avalonia-skiasharp drawing context.
+            </summary>
+            <seealso cref="T:LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.AvaloniaDrawingContext.#ctor(SkiaSharp.SKImageInfo,SkiaSharp.SKSurface,SkiaSharp.SKCanvas)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Drawing.AvaloniaDrawingContext"/> class.
+            </summary>
+            <param name="info">The information.</param>
+            <param name="surface">The surface.</param>
+            <param name="canvas">The canvas.</param>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.AvaloniaDrawingContext.BackColor">
+            <summary>
+            Gets or sets the color of the back.
+            </summary>
+            <value>
+            The color of the back.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.AvaloniaDrawingContext.ClearCanvas">
+            <summary>
+            Clears the canvas.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Drawable">
+            <inheritdoc cref="T:LiveChartsCore.Drawing.IDrawable`1" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Drawable.Draw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawable`1.Draw(`0)" />
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.CircleGeometry">
+            <summary>
+            Defines a circle geometry.
+            </summary>
+            <seealso cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SizedGeometry" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.CircleGeometry.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.CircleGeometry"/> class.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.CircleGeometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)" />
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry">
+            <inheritdoc cref="T:LiveChartsCore.Drawing.IDoughnutGeometry`1" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry"/> class.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry.CenterX">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IDoughnutGeometry`1.CenterX" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry.CenterY">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IDoughnutGeometry`1.CenterY" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry.Width">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IDoughnutGeometry`1.Width" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry.Height">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IDoughnutGeometry`1.Height" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry.StartAngle">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IDoughnutGeometry`1.StartAngle" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry.SweepAngle">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IDoughnutGeometry`1.SweepAngle" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry.PushOut">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IDoughnutGeometry`1.PushOut" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry.InnerRadius">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IDoughnutGeometry`1.InnerRadius" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry.OnMeasure(LiveChartsCore.SkiaSharpView.Painting.PaintTask)">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnMeasure(LiveChartsCore.SkiaSharpView.Painting.PaintTask)" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)" />
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry">
+            <inheritdoc cref="T:LiveChartsCore.Drawing.IGeometry`1" />
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.opacityProperty">
+            <summary>
+            The opacity property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.xProperty">
+            <summary>
+            The x
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.yProperty">
+            <summary>
+            The y
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.rotationProperty">
+            <summary>
+            The rotation
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.hasCustomTransform">
+            <summary>
+            The has custom transform
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.#ctor(System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry"/> class.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.X">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IGeometry`1.X" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.Y">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IGeometry`1.Y" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.Transform">
+            <summary>
+            Gets or sets the matrix transform.
+            </summary>
+            <value>
+            The transform.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.Opacity">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IGeometry`1.Opacity" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.Rotation">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IGeometry`1.Rotation" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.HighlightableGeometry">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IVisualChartPoint`1.HighlightableGeometry" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.Draw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
+            <summary>
+            Draws the geometry in the user interface.
+            </summary>
+            <param name="context">The context.</param>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)">
+            <summary>
+            Called when the geometry is drawn.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="paint">The paint.</param>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.Measure(LiveChartsCore.Drawing.IDrawableTask{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <summary>
+            Measures the geometry.
+            </summary>
+            <param name="drawableTask">The drawable task.</param>
+            <returns>the size of the geometry.</returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.BeforeDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
+            <summary>
+            Called before the draw.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.AfterDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
+            <summary>
+            Called after the draw.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnMeasure(LiveChartsCore.SkiaSharpView.Painting.PaintTask)">
+            <summary>
+            Called when the geometry is measured.
+            </summary>
+            <param name="paintTaks">The paint task.</param>
+            <returns>the size of the geometry</returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.GetTransform(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
+            <summary>
+            Gets the actual transform.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.GetPosition(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)">
+            <summary>
+            Gets the position of the geometry from the top left corner of the view.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="paint">The paint.</param>
+            <returns>the position.</returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.GetHighlitableGeometry">
+            <summary>
+            Gets the highlitable geometry.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LabelGeometry">
+            <inheritdoc cref="T:LiveChartsCore.Drawing.ILabelGeometry`1" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LabelGeometry.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LabelGeometry"/> class.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LabelGeometry.VerticalAlign">
+            <summary>
+            Gets or sets the vertical align.
+            </summary>
+            <value>
+            The vertical align.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LabelGeometry.HorizontalAlign">
+            <summary>
+            Gets or sets the horizontal align.
+            </summary>
+            <value>
+            The horizontal align.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LabelGeometry.Text">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.ILabelGeometry`1.Text" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LabelGeometry.TextSize">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.ILabelGeometry`1.TextSize" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LabelGeometry.Padding">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.ILabelGeometry`1.Padding" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LabelGeometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LabelGeometry.OnMeasure(LiveChartsCore.SkiaSharpView.Painting.PaintTask)">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnMeasure(LiveChartsCore.SkiaSharpView.Painting.PaintTask)" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LabelGeometry.GetPosition(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.GetPosition(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LabelGeometry.GetTransform(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.GetTransform(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)" />
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LineGeometry">
+            <inheritdoc cref="T:LiveChartsCore.Drawing.ILineGeometry`1" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LineGeometry.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LineGeometry"/> class.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LineGeometry.X1">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.ILineGeometry`1.X1" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LineGeometry.Y1">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.ILineGeometry`1.Y1" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LineGeometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.LineGeometry.OnMeasure(LiveChartsCore.SkiaSharpView.Painting.PaintTask)">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnMeasure(LiveChartsCore.SkiaSharpView.Painting.PaintTask)" />
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.OvalGeometry">
+            <summary>
+            Defines an oval geometry.
+            </summary>
+            <seealso cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SizedGeometry" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.OvalGeometry.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.OvalGeometry"/> class.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.OvalGeometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)" />
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.PathGeometry">
+            <inheritdoc cref="T:LiveChartsCore.Drawing.IPathGeometry`2" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.PathGeometry.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.PathGeometry"/> class.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.PathGeometry.IsClosed">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IPathGeometry`2.IsClosed" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.PathGeometry.Draw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.PathGeometry.AddCommand(LiveChartsCore.Drawing.IPathCommand{SkiaSharp.SKPath})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IPathGeometry`2.AddCommand(LiveChartsCore.Drawing.IPathCommand{`1})" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.PathGeometry.ContainsCommand(LiveChartsCore.Drawing.IPathCommand{SkiaSharp.SKPath})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IPathGeometry`2.ContainsCommand(LiveChartsCore.Drawing.IPathCommand{`1})" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.PathGeometry.RemoveCommand(LiveChartsCore.Drawing.IPathCommand{SkiaSharp.SKPath})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IPathGeometry`2.RemoveCommand(LiveChartsCore.Drawing.IPathCommand{`1})" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.PathGeometry.ClearCommands">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IPathGeometry`2.ClearCommands" />
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.RectangleGeometry">
+            <summary>
+            Defines a rectangle geometry.
+            </summary>
+            <seealso cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SizedGeometry" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.RectangleGeometry.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.RectangleGeometry"/> class.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.RectangleGeometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)" />
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.RoundedRectangleGeometry">
+            <summary>
+            Defines a rounded rectangle geometry.
+            </summary>
+            <seealso cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SizedGeometry" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.RoundedRectangleGeometry.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.RoundedRectangleGeometry"/> class.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.RoundedRectangleGeometry.Rx">
+            <summary>
+            Gets or sets the rx, the rounding in the x axis.
+            </summary>
+            <value>
+            The rx.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.RoundedRectangleGeometry.Ry">
+            <summary>
+            Gets or sets the ry, the rounding in the axis.
+            </summary>
+            <value>
+            The ry.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.RoundedRectangleGeometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)" />
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.CubicBezierSegment">
+            <inheritdoc cref="T:LiveChartsCore.Drawing.IBezierSegment`1" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.CubicBezierSegment.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.CubicBezierSegment"/> class.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.CubicBezierSegment.X0">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IAnimatableBezierSegment.X0" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.CubicBezierSegment.Y0">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IAnimatableBezierSegment.Y0" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.CubicBezierSegment.X1">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IAnimatableBezierSegment.X1" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.CubicBezierSegment.Y1">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IAnimatableBezierSegment.Y1" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.CubicBezierSegment.X2">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IAnimatableBezierSegment.X2" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.CubicBezierSegment.Y2">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IAnimatableBezierSegment.Y2" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.CubicBezierSegment.Execute(SkiaSharp.SKPath,System.Int64,LiveChartsCore.Drawing.Common.Animatable)">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IPathCommand`1.Execute(`0,System.Int64,LiveChartsCore.Drawing.Common.Animatable)" />
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.LineSegment">
+            <inheritdoc cref="T:LiveChartsCore.Drawing.ILinePathSegment`1" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.LineSegment.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.LineSegment"/> class.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.LineSegment.X">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.ILinePathSegment`1.X" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.LineSegment.Y">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.ILinePathSegment`1.Y" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.LineSegment.Execute(SkiaSharp.SKPath,System.Int64,LiveChartsCore.Drawing.Common.Animatable)">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IPathCommand`1.Execute(`0,System.Int64,LiveChartsCore.Drawing.Common.Animatable)" />
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.MoveToPathCommand">
+            <inheritdoc cref="T:LiveChartsCore.Drawing.IMoveToPathCommand`1" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.MoveToPathCommand.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.MoveToPathCommand"/> class.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.MoveToPathCommand.X">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IMoveToPathCommand`1.X" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.MoveToPathCommand.Y">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IMoveToPathCommand`1.Y" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.MoveToPathCommand.Execute(SkiaSharp.SKPath,System.Int64,LiveChartsCore.Drawing.Common.Animatable)">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IPathCommand`1.Execute(`0,System.Int64,LiveChartsCore.Drawing.Common.Animatable)" />
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.PathCommand">
+            <inheritdoc cref="T:LiveChartsCore.Drawing.IPathCommand`1" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.PathCommand.Execute(SkiaSharp.SKPath,System.Int64,LiveChartsCore.Drawing.Common.Animatable)">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IPathCommand`1.Execute(`0,System.Int64,LiveChartsCore.Drawing.Common.Animatable)" />
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SizedGeometry">
+            <inheritdoc cref="T:LiveChartsCore.Drawing.ISizedGeometry`1" />
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SizedGeometry.widthProperty">
+            <summary>
+            The width
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SizedGeometry.heightProperty">
+            <summary>
+            The height
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SizedGeometry.matchDimensions">
+            <summary>
+            The match dimensions
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SizedGeometry.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SizedGeometry"/> class.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SizedGeometry.Width">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.ISizedGeometry`1.Width" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SizedGeometry.Height">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.ISizedGeometry`1.Height" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SizedGeometry.OnMeasure(LiveChartsCore.SkiaSharpView.Painting.PaintTask)">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnMeasure(LiveChartsCore.SkiaSharpView.Painting.PaintTask)" />
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SquareGeometry">
+            <summary>
+            Defines a square geometry.
+            </summary>
+            <seealso cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SizedGeometry" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SquareGeometry.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SquareGeometry"/> class.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SquareGeometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)" />
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SVGPathGeometry">
+            <summary>
+            Defines a geometry that is built using from a svg path.
+            </summary>
+            <seealso cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SizedGeometry" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SVGPathGeometry.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SVGPathGeometry"/> class.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SVGPathGeometry.#ctor(SkiaSharp.SKPath)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SVGPathGeometry"/> class.
+            </summary>
+            <param name="svgPath">The SVG path.</param>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SVGPathGeometry.SVG">
+            <summary>
+            Gets or sets the SVG path.
+            </summary>
+            <value>
+            The SVG.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.SVGPathGeometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnDraw(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,SkiaSharp.SKPaint)" />
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext">
+            <summary>
+            Defines a skia sharp drawing context.
+            </summary>
+            <seealso cref="T:LiveChartsCore.Drawing.DrawingContext" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext.#ctor(SkiaSharp.SKImageInfo,SkiaSharp.SKSurface,SkiaSharp.SKCanvas)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext"/> class.
+            </summary>
+            <param name="info">The information.</param>
+            <param name="surface">The surface.</param>
+            <param name="canvas">The canvas.</param>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext.Info">
+            <summary>
+            Gets or sets the information.
+            </summary>
+            <value>
+            The information.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext.Surface">
+            <summary>
+            Gets or sets the surface.
+            </summary>
+            <value>
+            The surface.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext.Canvas">
+            <summary>
+            Gets or sets the canvas.
+            </summary>
+            <value>
+            The canvas.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext.PaintTask">
+            <summary>
+            Gets or sets the paint task.
+            </summary>
+            <value>
+            The paint task.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext.Paint">
+            <summary>
+            Gets or sets the paint.
+            </summary>
+            <value>
+            The paint.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext.ClearCanvas">
+            <summary>
+            Clears the canvas.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.LineSeries`1">
+            <summary>
+            Defines a line series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.LineSeries`2">
+            <summary>
+            Defines a line series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+            <typeparam name="TVisual">
+            The type of the geometry of every point of the series.
+            </typeparam>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.LineSeries`3">
+            <summary>
+            Defines a line series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+            <typeparam name="TVisual">
+            The type of the geometry of every point of the series.
+            </typeparam>
+            <typeparam name="TLabel">
+            The type of the data label of every point.
+            </typeparam>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.LineSeries`3.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.LineSeries`3"/> class.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp">
+            <summary>
+            Defines the default LiveCharts-SkiaSharp settings
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.DefaultPaintTask">
+            <summary>
+            Gets the default paint task.
+            </summary>
+            <value>
+            The default paint.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.DefaultPlatformBuilder">
+            <summary>
+            Gets the default platform builder.
+            </summary>
+            <value>
+            The default platform builder.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AddSkiaSharp(LiveChartsCore.Kernel.LiveChartsSettings)">
+            <summary>
+            Adds SkiaSharp as the UI provider for LiveCharts.
+            </summary>
+            <param name="settings">The settings.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AddLightTheme(LiveChartsCore.Kernel.LiveChartsSettings,System.Action{LiveChartsCore.Themes.Theme{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext}})">
+            <summary>
+            Adds the light theme.
+            </summary>
+            <param name="settings">The settings.</param>
+            <param name="additionalStyles">the additional styles.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AddDarkTheme(LiveChartsCore.Kernel.LiveChartsSettings,System.Action{LiveChartsCore.Themes.Theme{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext}})">
+            <summary>
+            Adds the light theme.
+            </summary>
+            <param name="settings">The settings.</param>
+            <param name="additionalStyles">The additional styles.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AddDefaultLightResolvers(LiveChartsCore.Themes.Theme{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <summary>
+            Adds the default resolvers.
+            </summary>
+            <param name="theme">The theme.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AddDefaultDarkResolvers(LiveChartsCore.Themes.Theme{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <summary>
+            Adds the default resolvers.
+            </summary>
+            <param name="theme">The theme.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.AsSKColor(System.Drawing.Color,System.Nullable{System.Byte})">
+            <summary>
+            Converts a <see cref="T:System.Drawing.Color"/> to a <see cref="T:SkiaSharp.SKColor"/> instance.
+            </summary>
+            <param name="color">The color.</param>
+            <param name="alphaOverrides">The alpha overrides.</param>
+            <returns></returns>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Painting.Effects.DashEffect">
+            <summary>
+            Creates a stroke dash effect.
+            </summary>
+            <seealso cref="T:LiveChartsCore.SkiaSharpView.Painting.Effects.PathEffect" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.Effects.DashEffect.#ctor(System.Single[],System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.Effects.DashEffect"/> class.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.Effects.DashEffect.CreateEffect(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Painting.Effects.DashEffect.CreateEffect(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)"/>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Painting.Effects.PathEffect">
+            <summary>
+            A wrapper object for skia sharp path effects.
+            </summary>
+            <seealso cref="T:System.IDisposable" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.Effects.PathEffect.SKPathEffect">
+            <summary>
+            Gets or sets the sk path effect.
+            </summary>
+            <value>
+            The sk path effect.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.Effects.PathEffect.CreateEffect(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
+            <summary>
+            Creates the path effect.
+            </summary>
+            <param name="drawingContext">The drawing context.</param>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.Effects.PathEffect.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+            <exception cref="T:System.NotImplementedException"></exception>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask">
+            <summary>
+            Defines a set of geometries that will be painted using a linear gradient shader.
+            </summary>
+            <seealso cref="T:LiveChartsCore.SkiaSharpView.Painting.PaintTask" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask.#ctor(SkiaSharp.SKColor[],SkiaSharp.SKPoint,SkiaSharp.SKPoint,System.Single[],SkiaSharp.SKShaderTileMode)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask"/> class.
+            </summary>
+            <param name="gradientStops">The gradient stops.</param>
+            <param name="startPoint">
+            The start point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
+            </param>
+            <param name="endPoint">
+            The end point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
+            </param>
+            <param name="colorPos">
+            An array of integers in the range of 0 to 1.
+            These integers indicate the relative positions of the colors, You can set that argument to null to equally
+            space the colors, default is null.
+            </param>
+            <param name="tileMode">
+            The shader tile mode, default is <see cref="F:SkiaSharp.SKShaderTileMode.Repeat"/>.
+            </param>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask.#ctor(SkiaSharp.SKColor[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask"/> class.
+            </summary>
+            <param name="gradientStops">The gradient stops.</param>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask.#ctor(SkiaSharp.SKColor,SkiaSharp.SKColor,SkiaSharp.SKPoint,SkiaSharp.SKPoint)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask"/> class.
+            </summary>
+            <param name="startColor">The start color.</param>
+            <param name="endColor">The end color.</param>
+            <param name="startPoint">
+            The start point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
+            </param>
+            <param name="endPoint">
+            The end point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
+            </param>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask.#ctor(SkiaSharp.SKColor,SkiaSharp.SKColor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask"/> class.
+            </summary>
+            <param name="start">The start.</param>
+            <param name="end">The end.</param>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask.PathEffect">
+            <summary>
+            Gets or sets the path effect.
+            </summary>
+            <value>
+            The path effect.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask.CloneTask">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.CloneTask" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask.SetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.SetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask.ResetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.ResetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask.InitializeTask(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.InitializeTask(`0)" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.LinearGradientPaintTask.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Painting.PaintTask">
+            <inheritdoc cref="T:LiveChartsCore.Drawing.IDrawableTask`1" />
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Painting.PaintTask.skiaPaint">
+            <summary>
+            The skia paint
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Painting.PaintTask.strokeWidthTransition">
+            <summary>
+            The stroke width transition
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.PaintTask"/> class.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.#ctor(SkiaSharp.SKColor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.PaintTask"/> class.
+            </summary>
+            <param name="color">The color.</param>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.PaintTask.StrokeThickness">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IDrawableTask`1.StrokeThickness" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.PaintTask.Style">
+            <summary>
+            Gets or sets the style.
+            </summary>
+            <value>
+            The style.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.PaintTask.IsStroke">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IDrawableTask`1.IsStroke" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.PaintTask.IsFill">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IDrawableTask`1.IsFill" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.PaintTask.IsAntialias">
+            <summary>
+            Gets or sets a value indicating whether this instance is antialias.
+            </summary>
+            <value>
+              <c>true</c> if this instance is antialias; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.PaintTask.Color">
+            <summary>
+            Gets or sets the color.
+            </summary>
+            <value>
+            The color.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.PaintTask.ClipRectangle">
+            <summary>
+            Gets or sets the clip rectangle.
+            </summary>
+            <value>
+            The clip rectangle.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.PaintTask.IsPaused">
+            <summary>
+            Gets or sets a value indicating whether this instance is paused.
+            </summary>
+            <value>
+            <c>true</c> if this instance is paused; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.InitializeTask(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.InitializeTask(`0)" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.GetGeometries">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.GetGeometries" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.SetGeometries(System.Collections.Generic.HashSet{LiveChartsCore.Drawing.IDrawable{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext}})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.SetGeometries(System.Collections.Generic.HashSet{LiveChartsCore.Drawing.IDrawable{`0}})" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.AddGeometyToPaintTask(LiveChartsCore.Drawing.IDrawable{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.AddGeometyToPaintTask(LiveChartsCore.Drawing.IDrawable{`0})" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.RemoveGeometryFromPainTask(LiveChartsCore.Drawing.IDrawable{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.RemoveGeometryFromPainTask(LiveChartsCore.Drawing.IDrawable{`0})" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.CloneTask">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.CloneTask" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.SetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.SetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.ResetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.SetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask">
+            <summary>
+            Defines a set of geometries that will be painted using a radial gradient shader.
+            </summary>
+            <seealso cref="T:LiveChartsCore.SkiaSharpView.Painting.PaintTask" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask.#ctor(SkiaSharp.SKColor[],System.Nullable{SkiaSharp.SKPoint},System.Single,System.Single[],SkiaSharp.SKShaderTileMode)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask"/> class.
+            </summary>
+            <param name="gradientStops">The gradient stops.</param>
+            <param name="center">
+            The center point of the gradient, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end,
+            default is (0.5, 0.5).
+            </param>
+            <param name="radius">
+            The radius, in the range of 0 to 1, where 1 is the minimum of both Width and Height of the chart, default is 0.5.
+            </param>
+            <param name="colorPos">
+            An array of integers in the range of 0 to 1.
+            These integers indicate the relative positions of the colors, You can set that argument to null to equally
+            space the colors, default is null.
+            </param>
+            <param name="tileMode">
+            The shader tile mode, default is <see cref="F:SkiaSharp.SKShaderTileMode.Repeat"/>.
+            </param>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask.#ctor(SkiaSharp.SKColor,SkiaSharp.SKColor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask"/> class.
+            </summary>
+            <param name="centerColor">Color of the center.</param>
+            <param name="outerColor">Color of the outer.</param>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask.PathEffect">
+            <summary>
+            Gets or sets the path effect.
+            </summary>
+            <value>
+            The path effect.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask.CloneTask">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.CloneTask" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask.InitializeTask(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.InitializeTask(`0)" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask.ResetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.ResetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask.SetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.SetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask">
+            <summary>
+            Defines a set of geometries that will be painted using a solid color.,
+            </summary>
+            <seealso cref="T:LiveChartsCore.SkiaSharpView.Painting.PaintTask" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask"/> class.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.#ctor(SkiaSharp.SKColor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask"/> class.
+            </summary>
+            <param name="color">The color.</param>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.#ctor(SkiaSharp.SKColor,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask"/> class.
+            </summary>
+            <param name="color">The color.</param>
+            <param name="strokeWidth">Width of the stroke.</param>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.StrokeCap">
+            <summary>
+            Gets or sets the stroke cap.
+            </summary>
+            <value>
+            The stroke cap.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.StrokeJoin">
+            <summary>
+            Gets or sets the stroke join.
+            </summary>
+            <value>
+            The stroke join.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.StrokeMiter">
+            <summary>
+            Gets or sets the stroke miter.
+            </summary>
+            <value>
+            The stroke miter.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.PathEffect">
+            <summary>
+            Gets or sets the path effect.
+            </summary>
+            <value>
+            The path effect.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.CloneTask">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.CloneTask" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.InitializeTask(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.InitializeTask(`0)" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.SetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.SetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.ResetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.ResetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.PieSeries`1">
+            <summary>
+            Defines a pie series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.PieSeries`2">
+            <summary>
+            Defines a pie series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+            <typeparam name="TVisual">
+            The type of the geometry of every point of the series.
+            </typeparam>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.PieSeries`3">
+            <summary>
+            Defines a pie series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+            <typeparam name="TVisual">
+            The type of the geometry of every point of the series.
+            </typeparam>
+            <typeparam name="TLabel">
+            The type of the data label of every point.
+            </typeparam>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.PieSeries`3.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.PieSeries`3"/> class.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.RowSeries`1">
+            <summary>
+            Defines a row series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam> data label of every point.
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.RowSeries`2">
+            <summary>
+            Defines a row series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+            <typeparam name="TVisual">
+            The type of the geometry of every point of the series.
+            </typeparam>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.RowSeries`3">
+            <summary>
+            Defines a row series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+            <typeparam name="TVisual">
+            The type of the geometry of every point of the series.
+            </typeparam>
+            <typeparam name="TLabel">
+            The type of the data label of every point.
+            </typeparam>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.RowSeries`3.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.RowSeries`3"/> class.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.ScatterSeries`1">
+            <summary>
+            Defines a scatter series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.ScatterSeries`2">
+            <summary>
+            Defines a scatter series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+            <typeparam name="TVisual">
+            The type of the geometry of every point of the series.
+            </typeparam>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.ScatterSeries`3">
+            <summary>
+            Defines a scatter series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+            <typeparam name="TVisual">
+            The type of the geometry of every point of the series.
+            </typeparam>
+            <typeparam name="TLabel">
+            The type of the data label of every point.
+            </typeparam>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.ScatterSeries`3.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.ScatterSeries`3"/> class.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.StackedAreaSeries`1">
+            <summary>
+            Defines a stacked area series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.StackedAreaSeries`2">
+            <summary>
+            Defines a stacked area series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+            <typeparam name="TVisual">
+            The type of the geometry of every point of the series.
+            </typeparam>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.StackedAreaSeries`3">
+            <summary>
+            Defines a stacked area series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+            <typeparam name="TVisual">
+            The type of the geometry of every point of the series.
+            </typeparam>
+            <typeparam name="TLabel">
+            The type of the data label of every point.
+            </typeparam>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.StackedAreaSeries`3.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.StackedAreaSeries`3"/> class.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.StackedColumnSeries`1">
+            <summary>
+            Defines a stacked column series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.StackedColumnSeries`2">
+            <summary>
+            Defines a stacked column series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+            <typeparam name="TVisual">
+            The type of the geometry of every point of the series.
+            </typeparam>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.StackedColumnSeries`3">
+            <summary>
+            Defines a stacked column series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+            <typeparam name="TVisual">
+            The type of the geometry of every point of the series.
+            </typeparam>
+            <typeparam name="TLabel">
+            The type of the data label of every point.
+            </typeparam>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.StackedColumnSeries`3.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.StackedColumnSeries`3"/> class.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.StackedRowSeries`1">
+            <summary>
+            Defines a stacked row series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.StackedRowSeries`2">
+            <summary>
+            Defines a stacked row series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+            <typeparam name="TVisual">
+            The type of the geometry of every point of the series.
+            </typeparam>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.StackedRowSeries`3">
+            <summary>
+            Defines a stacked row series in the user interface.
+            </summary>
+            <typeparam name="TModel">
+            The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
+            to use a custom type, you must register the type globally 
+            (<see cref="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})"/>)
+            or at the series level 
+            (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
+            </typeparam>
+            <typeparam name="TVisual">
+            The type of the geometry of every point of the series.
+            </typeparam>
+            <typeparam name="TLabel">
+            The type of the data label of every point.
+            </typeparam>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.StackedRowSeries`3.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.StackedRowSeries`3"/> class.
+            </summary>
+        </member>
+    </members>
+</doc>
