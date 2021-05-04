@@ -62,9 +62,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             _xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-            XAxes = new List<IAxis>() { new Axis() };
-            YAxes = new List<IAxis>() { new Axis() };
-            Series = new ObservableCollection<ISeries>();
+            SetCurrentValue(XAxesProperty, new List<IAxis>() { new Axis() });
+            SetCurrentValue(YAxesProperty, new List<IAxis>() { new Axis() });
+            SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
 
             MouseWheel += OnMouseWheel;
             MouseDown += OnMouseDown;
@@ -90,6 +90,10 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                         seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
                         if (chart.core == null) return;
                         Application.Current.Dispatcher.Invoke(() => chart.core.Update());
+                    },
+                    (DependencyObject o, object value) =>
+                    {
+                        return value is IEnumerable<ISeries> ? value : new ObservableCollection<ISeries>();
                     }));
 
         /// <summary>
@@ -106,6 +110,10 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                         observer.Initialize((IEnumerable<IAxis>)args.NewValue);
                         if (chart.core == null) return;
                         Application.Current.Dispatcher.Invoke(() => chart.core.Update());
+                    },
+                    (DependencyObject o, object value) =>
+                    {
+                        return value is IEnumerable<IAxis> ? value : new List<IAxis>() { new Axis() };
                     }));
 
         /// <summary>
@@ -122,6 +130,10 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                         observer.Initialize((IEnumerable<IAxis>)args.NewValue);
                         if (chart.core == null) return;
                         Application.Current.Dispatcher.Invoke(() => chart.core.Update());
+                    },
+                    (DependencyObject o, object value) =>
+                    {
+                        return value is IEnumerable<IAxis> ? value : new List<IAxis>() { new Axis() };
                     }));
 
         /// <summary>
