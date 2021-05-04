@@ -187,11 +187,23 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set => SetValue(ZoomModeProperty, value);
         }
 
+        ZoomAndPanMode ICartesianChartView<SkiaSharpDrawingContext>.ZoomMode
+        {
+            get => ZoomMode;
+            set => SetValueOrCurrentValue(ZoomModeProperty, value);
+        }
+
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomingSpeed" />
         public double ZoomingSpeed
         {
             get => (double)GetValue(ZoomingSpeedProperty);
             set => SetValue(ZoomingSpeedProperty, value);
+        }
+
+        double ICartesianChartView<SkiaSharpDrawingContext>.ZoomingSpeed
+        {
+            get => ZoomingSpeed;
+            set => SetValueOrCurrentValue(ZoomingSpeedProperty, value);
         }
 
         #endregion
