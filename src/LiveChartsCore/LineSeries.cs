@@ -358,6 +358,7 @@ namespace LiveChartsCore
                     visual.Geometry.Y = y - hgs;
                     visual.Geometry.Width = gs;
                     visual.Geometry.Height = gs;
+                    visual.Geometry.RemoveOnCompleted = false;
 
                     data.TargetPoint.Context.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs, y - hgs + 2 * sw, gs, gs + 2 * sw);
 

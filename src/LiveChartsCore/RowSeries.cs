@@ -165,6 +165,7 @@ namespace LiveChartsCore
                 sizedGeometry.Height = uw;
                 sizedGeometry.Rx = rx;
                 sizedGeometry.Ry = ry;
+                sizedGeometry.RemoveOnCompleted = true;
 
                 point.Context.HoverArea = new RectangleHoverArea().SetDimensions(primary, secondary - uwm + cp, b, uw);
 
