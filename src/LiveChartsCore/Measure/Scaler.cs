@@ -54,6 +54,32 @@ namespace LiveChartsCore.Measure
 
             if (actualBounds == null || actualVisibleBounds == null) throw new Exception("bounds not found");
 
+            if (double.IsInfinity(actualBounds.Delta) || double.IsInfinity(actualVisibleBounds.Delta))
+            {
+                _maxVal = 0;
+                _minVal = 0;
+                _deltaVal = 0;
+
+
+                if (axis.Orientation == AxisOrientation.X)
+                {
+                    _minPx = drawMaringLocation.X;
+                    _maxPx = drawMaringLocation.X + drawMarginSize.Width;
+                    _deltaPx = _maxPx - _minPx;
+                }
+                else
+                {
+                    _minPx = drawMaringLocation.Y;
+                    _maxPx = drawMaringLocation.Y + drawMarginSize.Height;
+                    _deltaPx = _maxPx - _minPx;
+                }
+
+                _m = 0;
+                _mInv = 0;
+
+                return;
+            }
+
             if (axis.Orientation == AxisOrientation.X)
             {
                 _minPx = drawMaringLocation.X;
@@ -114,7 +140,7 @@ namespace LiveChartsCore.Measure
             _m = _deltaPx / _deltaVal;
             _mInv = 1 / _m;
 
-            if (!double.IsNaN(_m)) return;
+            if (!double.IsNaN(_m) && !double.IsInfinity(_m)) return;
             _m = 0;
             _mInv = 0;
         }

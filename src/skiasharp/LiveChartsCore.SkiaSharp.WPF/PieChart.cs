@@ -58,7 +58,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     Application.Current.Dispatcher.Invoke(() => core.Update());
                 });
 
-            Series = new ObservableCollection<ISeries>();
+            SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
         }
 
         /// <summary>
@@ -75,6 +75,10 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                         seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
                         if (chart.core == null) return;
                         Application.Current.Dispatcher.Invoke(() => chart.core.Update());
+                    },
+                    (DependencyObject o, object value) =>
+                    {
+                        return value is IEnumerable<ISeries> ? value : new ObservableCollection<ISeries>();
                     }));
 
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => core == null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;

@@ -276,7 +276,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             get => Background is not SolidColorBrush b
                     ? new System.Drawing.Color()
                     : System.Drawing.Color.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
-            set => Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(value.A, value.R, value.G, value.B));
+            set => SetValueOrCurrentValue(BackgroundProperty, new SolidColorBrush(System.Windows.Media.Color.FromArgb(value.A, value.R, value.G, value.B)));
         }
 
         /// <inheritdoc cref="IChartView.DrawMargin" />
@@ -285,6 +285,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             get => (Margin)GetValue(DrawMarginProperty);
             set => SetValue(DrawMarginProperty, value);
         }
+
+        Margin? IChartView.DrawMargin
+        {
+            get => DrawMargin;
+            set => SetValueOrCurrentValue(DrawMarginProperty, value);
+        }
+
         SizeF IChartView.ControlSize => canvas == null
                     ? throw new Exception("Canvas not found")
                     : (new() { Width = (float)canvas.ActualWidth, Height = (float)canvas.ActualHeight });
@@ -299,11 +306,23 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set => SetValue(AnimationsSpeedProperty, value);
         }
 
+        TimeSpan IChartView.AnimationsSpeed
+        {
+            get => AnimationsSpeed;
+            set => SetValueOrCurrentValue(AnimationsSpeedProperty, value);
+        }
+
         /// <inheritdoc cref="IChartView.EasingFunction" />
         public Func<float, float> EasingFunction
         {
             get => (Func<float, float>)GetValue(EasingFunctionProperty);
             set => SetValue(EasingFunctionProperty, value);
+        }
+
+        Func<float, float> IChartView.EasingFunction
+        {
+            get => EasingFunction;
+            set => SetValueOrCurrentValue(EasingFunctionProperty, value);
         }
 
         /// <inheritdoc cref="IChartView.LegendPosition" />
@@ -313,11 +332,23 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set => SetValue(LegendPositionProperty, value);
         }
 
+        LegendPosition IChartView.LegendPosition
+        {
+            get => LegendPosition;
+            set => SetValueOrCurrentValue(LegendPositionProperty, value);
+        }
+
         /// <inheritdoc cref="IChartView.LegendOrientation" />
         public LegendOrientation LegendOrientation
         {
             get => (LegendOrientation)GetValue(LegendOrientationProperty);
             set => SetValue(LegendOrientationProperty, value);
+        }
+
+        LegendOrientation IChartView.LegendOrientation
+        {
+            get => LegendOrientation;
+            set => SetValueOrCurrentValue(LegendOrientationProperty, value);
         }
 
         /// <inheritdoc cref="IChartView.TooltipPosition" />
@@ -327,11 +358,23 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set => SetValue(TooltipPositionProperty, value);
         }
 
+        TooltipPosition IChartView.TooltipPosition
+        {
+            get => TooltipPosition;
+            set => SetValueOrCurrentValue(TooltipPositionProperty, value);
+        }
+
         /// <inheritdoc cref="IChartView.TooltipFindingStrategy" />
         public TooltipFindingStrategy TooltipFindingStrategy
         {
             get => (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty);
             set => SetValue(TooltipFindingStrategyProperty, value);
+        }
+
+        TooltipFindingStrategy IChartView.TooltipFindingStrategy
+        {
+            get => TooltipFindingStrategy;
+            set => SetValueOrCurrentValue(TooltipFindingStrategyProperty, value);
         }
 
         /// <summary>
@@ -598,6 +641,20 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
         {
             Measuring?.Invoke(this);
+        }
+
+        /// <summary>
+        /// Sets the local value of a dependency property, specified by its dependency property identifier.
+        /// If the object has not yet finished initializing, does so without changing its value source.
+        /// </summary>
+        /// <param name="dp">The identifier of the dependency property to set.</param>
+        /// <param name="value">The new local value.</param>
+        protected void SetValueOrCurrentValue(DependencyProperty dp, object value)
+        {
+            if (IsInitialized)
+                SetValue(dp, value);
+            else
+                SetCurrentValue(dp, value);
         }
     }
 }

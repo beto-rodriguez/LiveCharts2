@@ -44,8 +44,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         public DefaultTooltip()
         {
             InitializeComponent();
-            PopupAnimation = PopupAnimation.Fade;
-            Placement = PlacementMode.Relative;
+            SetCurrentValue(PopupAnimationProperty, PopupAnimation.Fade);
+            SetCurrentValue(PlacementProperty, PlacementMode.Relative);
             _defaultTempalte = (DataTemplate)FindResource("defaultTemplate");
         }
 
