@@ -64,6 +64,10 @@ namespace LiveChartsCore
 
             var uw = secondaryScale.ToPixels((float)secondaryAxis.UnitWidth) - secondaryScale.ToPixels(0f);
             var puw = previousSecondaryScale == null ? 0 : previousSecondaryScale.ToPixels((float)secondaryAxis.UnitWidth) - previousSecondaryScale.ToPixels(0f);
+
+            uw -= (float)GroupPadding;
+            puw -= (float)GroupPadding;
+
             var uwm = 0.5f * uw;
 
             var pos = chart.SeriesContext.GetColumnPostion(this);
@@ -128,7 +132,7 @@ namespace LiveChartsCore
                         visual.X = secondary - uwm + cp;
                         visual.Y = p;
                         visual.Width = uw;
-                        visual.Height =  0;
+                        visual.Height = 0;
                         visual.RemoveOnCompleted = true;
                         point.Context.Visual = null;
                     }

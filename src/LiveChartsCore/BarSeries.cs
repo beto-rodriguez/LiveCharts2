@@ -49,6 +49,9 @@ namespace LiveChartsCore
             HoverState = LiveCharts.BarSeriesHoverKey;
         }
 
+        /// <inheritdoc cref="IBarSeries{TDrawingContext}.GroupPadding"/>
+        public double GroupPadding { get; set; } = 10;
+
         /// <inheritdoc cref="IBarSeries{TDrawingContext}.MaxBarWidth"/>
         public double MaxBarWidth { get; set; } = 50;
 

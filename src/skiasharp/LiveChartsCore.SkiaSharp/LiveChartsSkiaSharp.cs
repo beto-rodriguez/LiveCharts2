@@ -136,8 +136,9 @@ namespace LiveChartsCore.SkiaSharpView
                                {
                                    // only ForAnySeries() has run, a bar series is not
                                    // any of the previous types.
-                                   barSeries.Rx = 6;
-                                   barSeries.Ry = 6;
+                                   barSeries.Stroke = null;
+                                   barSeries.Rx = 4;
+                                   barSeries.Ry = 4;
                                })
                                .HasRuleForStackedBarSeries(stackedBarSeries =>
                                {
@@ -234,8 +235,11 @@ namespace LiveChartsCore.SkiaSharpView
                                })
                                .HasRuleForBarSeries(barSeries =>
                                {
-                                   barSeries.Rx = 6;
-                                   barSeries.Ry = 6;
+                                   // only ForAnySeries() has run, a bar series is not
+                                   // any of the previous types.
+                                   barSeries.Stroke = null;
+                                   barSeries.Rx = 4;
+                                   barSeries.Ry = 4;
                                })
                                .HasRuleForStackedBarSeries(stackedBarSeries =>
                                {

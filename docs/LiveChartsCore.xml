@@ -63,6 +63,9 @@
         <member name="P:LiveChartsCore.Axis`3.ShowSeparatorWedges">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.ShowSeparatorWedges"/>
         </member>
+        <member name="P:LiveChartsCore.Axis`3.IsVisible">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.IsVisible"/>
+        </member>
         <member name="P:LiveChartsCore.Axis`3.IsInverted">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.IsInverted"/>
         </member>
@@ -113,6 +116,9 @@
             Initializes a new instance of the <see cref="T:LiveChartsCore.BarSeries`4"/> class.
             </summary>
             <param name="properties">The properties.</param>
+        </member>
+        <member name="P:LiveChartsCore.BarSeries`4.GroupPadding">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IBarSeries`1.GroupPadding"/>
         </member>
         <member name="P:LiveChartsCore.BarSeries`4.MaxBarWidth">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IBarSeries`1.MaxBarWidth"/>
@@ -3857,6 +3863,14 @@
             The previous minimum limit.
             </value>
         </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.IsVisible">
+            <summary>
+            Gets or sets a value indicating whether this instance is visible.
+            </summary>
+            <value>
+              <c>true</c> if this instance is visible; otherwise, <c>false</c>.
+            </value>
+        </member>
         <member name="P:LiveChartsCore.Kernel.IAxis.IsInverted">
             <summary>
             Gets or sets a value indicating whether the axis is inverted based on the Cartesian coordinate system.
@@ -3981,6 +3995,14 @@
             </summary>
             <value>
             The ry.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IBarSeries`1.GroupPadding">
+            <summary>
+            Gets or sets the padding for each group of bars that share the same secondary coordinate.
+            </summary>
+            <value>
+            The bar group padding.
             </value>
         </member>
         <member name="P:LiveChartsCore.Kernel.IBarSeries`1.MaxBarWidth">

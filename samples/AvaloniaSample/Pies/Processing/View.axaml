@@ -12,7 +12,7 @@
     <UserControl.Resources>
         <local:PaintTaskToBrushConverter x:Key="toBrush"></local:PaintTaskToBrushConverter>
     </UserControl.Resources>
-    <Grid ColumnDefinitions="*, 300">
+    <Grid ColumnDefinitions="*, 150" Height="200">
 
         <lvc:PieChart Background="#f5f5f5"
                       Series="{Binding Series}"/>
@@ -25,15 +25,15 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Margin="0 8">
+                    <StackPanel Orientation="Horizontal" Margin="0 3">
                         <TextBlock Text="{Binding Values[0].Value}"
-                                   FontSize="35"
+                                   FontSize="25"
                                    VerticalAlignment="Center"
                                    Foreground="{Binding DefaultPaintContext.PaintTasks, Converter={StaticResource toBrush}}"
                                    FontWeight="SemiBold" />
-                        <TextBlock Margin="8 0"
+                        <TextBlock Margin="3 0"
                                    Text="{Binding Name}"
-                                   FontSize="18"
+                                   FontSize="14"
                                    VerticalAlignment="Center"
                                    Foreground="{Binding DefaultPaintContext.PaintTasks, Converter={StaticResource toBrush}}"/>
                     </StackPanel>

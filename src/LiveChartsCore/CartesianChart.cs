@@ -371,6 +371,8 @@ namespace LiveChartsCore
 
                     foreach (var axis in XAxes)
                     {
+                        if (!axis.IsVisible) continue;
+
                         var s = axis.GetPossibleSize(this);
                         if (axis.Position == AxisPosition.Start)
                         {
@@ -393,6 +395,8 @@ namespace LiveChartsCore
                     }
                     foreach (var axis in YAxes)
                     {
+                        if (!axis.IsVisible) continue;
+
                         var s = axis.GetPossibleSize(this);
                         var w = s.Width > m.Left ? s.Width : m.Left;
                         if (axis.Position == AxisPosition.Start)
@@ -432,9 +436,12 @@ namespace LiveChartsCore
                         axis.DataBounds.Max = axis.DataBounds.Max + c;
                     }
 
-                    axis.Measure(this);
                     _ = _everMeasuredAxes.Add(axis);
-                    _ = toDeleteAxes.Remove(axis);
+                    if (axis.IsVisible)
+                    {
+                        axis.Measure(this);
+                        _ = toDeleteAxes.Remove(axis);
+                    }
 
                     var deleted = false;
                     foreach (var item in axis.DeletingTasks)
@@ -452,6 +459,7 @@ namespace LiveChartsCore
                 {
                     var secondaryAxis = XAxes[series.ScalesXAt];
                     var primaryAxis = YAxes[series.ScalesYAt];
+
                     series.Measure(this, secondaryAxis, primaryAxis);
                     _ = _everMeasuredSeries.Add(series);
                     _ = toDeleteSeries.Remove(series);

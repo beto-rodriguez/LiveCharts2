@@ -160,6 +160,14 @@ namespace LiveChartsCore.Kernel
         double? PreviousMinLimit { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this instance is visible.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is visible; otherwise, <c>false</c>.
+        /// </value>
+        bool IsVisible { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the axis is inverted based on the Cartesian coordinate system.
         /// </summary>
         /// <value>

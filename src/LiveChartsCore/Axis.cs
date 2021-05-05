@@ -75,6 +75,7 @@ namespace LiveChartsCore
         private IDrawableTask<TDrawingContext>? _separatorsBrush;
         private bool _showSeparatorLines = true;
         private bool _showSeparatorWedges = true;
+        private bool _isVisible = true;
         private bool _isInverted;
 
         #endregion
@@ -136,6 +137,9 @@ namespace LiveChartsCore
 
         /// <inheritdoc cref="IAxis.ShowSeparatorWedges"/>
         public bool ShowSeparatorWedges { get => _showSeparatorWedges; set { _showSeparatorWedges = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IAxis.IsVisible"/>
+        public bool IsVisible { get => _isVisible; set { _isVisible = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IAxis.IsInverted"/>
         public bool IsInverted { get => _isInverted; set { _isInverted = value; OnPropertyChanged(); } }

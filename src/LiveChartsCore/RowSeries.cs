@@ -61,6 +61,10 @@ namespace LiveChartsCore
 
             var uw = secondaryScale.ToPixels((float) primaryAxis.UnitWidth) - secondaryScale.ToPixels(0f);
             var uwm = 0.5f * uw;
+
+            uw -= (float)GroupPadding;
+            //puw -= (float)GroupPadding;
+
             var sw = Stroke?.StrokeThickness ?? 0;
             var p = primaryScale.ToPixels((float)Pivot);
 
