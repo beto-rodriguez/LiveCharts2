@@ -382,6 +382,20 @@
             <param name="args">The <see cref="T:System.Windows.DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
             <returns></returns>
         </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WPF.Chart.SetValueOrCurrentValue(System.Windows.DependencyProperty,System.Object)">
+            <summary>
+            Sets the local value of a dependency property, specified by its dependency property identifier.
+            If the object has not yet finished initializing, does so without changing its value source.
+            </summary>
+            <param name="dp">The identifier of the dependency property to set.</param>
+            <param name="value">The new local value.</param>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WPF.Chart.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.TooltipPoint})">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IChartView`1.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.TooltipPoint})"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WPF.Chart.HideTooltip">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IChartView`1.HideTooltip"/>
+        </member>
         <member name="T:LiveChartsCore.SkiaSharpView.WPF.DefaultLegend">
             <inheritdoc cref="T:LiveChartsCore.Kernel.IChartLegend`1" />
             <summary>
@@ -684,6 +698,36 @@
             Initializes the core.
             </summary>
             <exception cref="T:System.Exception">canvas not found</exception>
+        </member>
+        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+            <summary>
+            GeneratedInternalTypeHelper
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            CreateInstance
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            GetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            SetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+            <summary>
+            CreateDelegate
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+            <summary>
+            AddEventHandler
+            </summary>
         </member>
     </members>
 </doc>

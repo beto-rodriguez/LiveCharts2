@@ -25,6 +25,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -113,6 +114,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             core.Measuring += OnCoreMeasuring;
             core.UpdateStarted += OnCoreUpdateStarted;
             core.UpdateFinished += OnCoreUpdateFinished;
+
+            c.MouseLeave += Chart_MouseLeave;
 
             _mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
         }
@@ -211,6 +214,22 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         #endregion
 
+        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
+        public void ShowTooltip(IEnumerable<TooltipPoint> points)
+        {
+            if (tooltip == null || core == null) return;
+
+            tooltip.Show(points, core);
+        }
+
+        /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
+        public void HideTooltip()
+        {
+            if (tooltip == null || core == null) return;
+
+            tooltip.Hide();
+        }
+
         /// <summary>
         /// Initializes the core.
         /// </summary>
@@ -264,18 +283,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             _mouseMoveThrottler.Call();
         }
 
-        private void InitializeComponent()
-        {
-            SuspendLayout();
-            // 
-            // Chart
-            // 
-            Name = "Chart";
-            Size = new Size(643, 418);
-            ResumeLayout(false);
-
-        }
-
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
         {
             UpdateFinished?.Invoke(this);
@@ -289,6 +296,11 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
         {
             Measuring?.Invoke(this);
+        }
+
+        private void Chart_MouseLeave(object? sender, EventArgs e)
+        {
+            tooltip?.Hide();
         }
     }
 }

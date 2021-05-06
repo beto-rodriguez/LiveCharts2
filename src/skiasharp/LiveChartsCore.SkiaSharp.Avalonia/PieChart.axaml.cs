@@ -37,6 +37,7 @@ using System.Collections.ObjectModel;
 using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
 using A = Avalonia;
+using Avalonia.Input;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia
 {
@@ -75,7 +76,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             InitializeComponent();
 
             // workaround to detect mouse events.
-            // avalonia do not seem to detect events if brackground is not set.
+            // Avalonia do not seem to detect events if background is not set.
             Background = new SolidColorBrush(Colors.Transparent);
 
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
@@ -103,6 +104,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                });
 
             Series = new ObservableCollection<ISeries>();
+            PointerLeave += CartesianChart_PointerLeave;
 
             PointerMoved += CartesianChart_PointerMoved;
         }
@@ -534,6 +536,22 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         #endregion
 
+        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
+        public void ShowTooltip(IEnumerable<TooltipPoint> points)
+        {
+            if (tooltip == null || core == null) return;
+
+            tooltip.Show(points, core);
+        }
+
+        /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
+        public void HideTooltip()
+        {
+            if (tooltip == null || core == null) return;
+
+            tooltip.Hide();
+        }
+
         /// <summary>
         /// Initializes the core.
         /// </summary>
@@ -589,7 +607,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             AvaloniaXamlLoader.Load(this);
         }
 
-        private void CartesianChart_PointerMoved(object? sender, A.Input.PointerEventArgs e)
+        private void CartesianChart_PointerMoved(object? sender, PointerEventArgs e)
         {
             var p = e.GetPosition(this);
             _mousePosition = new PointF((float)p.X, (float)p.Y);
@@ -609,6 +627,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
         {
             Measuring?.Invoke(this);
+        }
+
+        private void CartesianChart_PointerLeave(object? sender, PointerEventArgs e)
+        {
+            tooltip?.Hide();
         }
     }
 }

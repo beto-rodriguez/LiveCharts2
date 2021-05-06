@@ -25,6 +25,7 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Timers;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -35,8 +36,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawingContext>
     {
-        private readonly DataTemplate defaultTemplate;
-        private readonly Dictionary<ChartPoint, object> activePoints = new();
+        private readonly DataTemplate _defaultTemplate;
+        private readonly Dictionary<ChartPoint, object> _activePoints = new();
+        private readonly Timer _closeTimer = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
@@ -44,14 +46,16 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         public DefaultTooltip()
         {
             InitializeComponent();
-            defaultTemplate = (DataTemplate)Resources["defaultTemplate"];
+            _defaultTemplate = (DataTemplate)Resources["defaultTemplate"];
+            _closeTimer.Interval = 3000;
+            _closeTimer.Elapsed += _closeTimer_Elapsed;
         }
 
         /// <summary>
-        /// Gets or sets the tooltip template.
+        /// Gets or sets the tool tip template.
         /// </summary>
         /// <value>
-        /// The tooltip template.
+        /// The tool tip template.
         /// </value>
         public DataTemplate? TooltipTemplate { get; set; }
 
@@ -101,10 +105,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
             if (!tooltipPoints.Any())
             {
-                foreach (var key in activePoints.Keys.ToArray())
+                foreach (var key in _activePoints.Keys.ToArray())
                 {
                     key.RemoveFromHoverState();
-                    _ = activePoints.Remove(key);
+                    _ = _activePoints.Remove(key);
                 }
                 return;
             }
@@ -130,7 +134,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             }
             if (location == null) throw new Exception("location not supported");
 
-            var template = mobileChart.TooltipTemplate ?? defaultTemplate;
+            var template = mobileChart.TooltipTemplate ?? _defaultTemplate;
             if (TooltipTemplate != template) TooltipTemplate = template;
             FontFamily = mobileChart.TooltipFontFamily;
             TextColor = mobileChart.TooltipTextColor;
@@ -151,15 +155,18 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             foreach (var tooltipPoint in tooltipPoints)
             {
                 tooltipPoint.Point.AddToHoverState();
-                activePoints[tooltipPoint.Point] = o;
+                _activePoints[tooltipPoint.Point] = o;
             }
 
-            foreach (var key in activePoints.Keys.ToArray())
+            foreach (var key in _activePoints.Keys.ToArray())
             {
-                if (activePoints[key] == o) continue;
+                if (_activePoints[key] == o) continue;
                 key.RemoveFromHoverState();
-                _ = activePoints.Remove(key);
+                _ = _activePoints.Remove(key);
             }
+
+            _closeTimer.Stop();
+            _closeTimer.Start();
 
             chart.Canvas.Invalidate();
         }
@@ -170,7 +177,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <returns></returns>
         protected void BuildContent()
         {
-            var template = TooltipTemplate ?? defaultTemplate;
+            var template = TooltipTemplate ?? _defaultTemplate;
             if (template.CreateContent() is not View view) return;
 
             view.BindingContext = new TooltipBindingContext
@@ -183,6 +190,16 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             };
 
             Content = view;
+        }
+
+        void IChartTooltip<SkiaSharpDrawingContext>.Hide()
+        {
+            Content = null;
+        }
+
+        private void _closeTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            ((IChartTooltip<SkiaSharpDrawingContext>)this).Hide();
         }
     }
 }

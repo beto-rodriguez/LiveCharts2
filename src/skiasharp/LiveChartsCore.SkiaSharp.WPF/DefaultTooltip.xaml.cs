@@ -312,5 +312,10 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
             wpfChart.CoreCanvas.Invalidate();
         }
+
+        void IChartTooltip<SkiaSharpDrawingContext>.Hide()
+        {
+            IsOpen = false;
+        }
     }
 }

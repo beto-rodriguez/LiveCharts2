@@ -90,6 +90,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             core.Measuring += OnCoreMeasuring;
             core.UpdateStarted += OnCoreUpdateStarted;
             core.UpdateFinished += OnCoreUpdateFinished;
+
+            
         }
 
         #region bindable properties 
@@ -593,6 +595,22 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             if (core == null) throw new Exception("core not found");
             var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
             return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
+        }
+
+        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
+        public void ShowTooltip(IEnumerable<TooltipPoint> points)
+        {
+            if (tooltip == null || core == null) return;
+
+            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(points, core);
+        }
+
+        /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
+        public void HideTooltip()
+        {
+            if (tooltip == null || core == null) return;
+
+            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
         }
 
         /// <summary>

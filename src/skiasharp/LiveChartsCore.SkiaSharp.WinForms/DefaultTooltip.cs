@@ -11,7 +11,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     /// <inheritdoc cref="IChartTooltip{TDrawingContext}" />
     public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>, IDisposable
     {
-        private readonly Dictionary<ChartPoint, object> activePoints = new();
+        private readonly Dictionary<ChartPoint, object> _activePoints = new();
         private const int CS_DROPSHADOW = 0x00020000;
 
         /// <summary>
@@ -29,10 +29,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
             if (!tooltipPoints.Any())
             {
-                foreach (var key in activePoints.Keys.ToArray())
+                foreach (var key in _activePoints.Keys.ToArray())
                 {
                     key.RemoveFromHoverState();
-                    _ = activePoints.Remove(key);
+                    _ = _activePoints.Remove(key);
                 }
 
                 return;
@@ -67,14 +67,14 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             foreach (var tooltipPoint in tooltipPoints)
             {
                 tooltipPoint.Point.AddToHoverState();
-                activePoints[tooltipPoint.Point] = o;
+                _activePoints[tooltipPoint.Point] = o;
             }
 
-            foreach (var key in activePoints.Keys.ToArray())
+            foreach (var key in _activePoints.Keys.ToArray())
             {
-                if (activePoints[key] == o) continue;
+                if (_activePoints[key] == o) continue;
                 key.RemoveFromHoverState();
-                _ = activePoints.Remove(key);
+                _ = _activePoints.Remove(key);
             }
 
             wfChart.CoreCanvas.Invalidate();
@@ -119,6 +119,11 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
             ResumeLayout();
             return new SizeF(w, h);
+        }
+
+        void IChartTooltip<SkiaSharpDrawingContext>.Hide()
+        {
+            Location = new Point(10000, 10000);
         }
 
         /// <summary>

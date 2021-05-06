@@ -291,7 +291,7 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart.LegendFontWeight">
             <summary>
-            Gets or sets the legend defailt font weight.
+            Gets or sets the legend default font weight.
             </summary>
             <value>
             The legend font weight.
@@ -332,6 +332,12 @@
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart.ScaleUIPoint(System.Drawing.PointF,System.Int32,System.Int32)">
             <inheritdoc cref="M:LiveChartsCore.Kernel.ICartesianChartView`1.ScaleUIPoint(System.Drawing.PointF,System.Int32,System.Int32)" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.TooltipPoint})">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IChartView`1.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.TooltipPoint})"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart.HideTooltip">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IChartView`1.HideTooltip"/>
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart.InitializeCore">
             <summary>
@@ -417,7 +423,7 @@
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Avalonia.DefaultTooltip"/> class.
             </summary>
-            <exception cref="T:System.Exception">default tempalte not found</exception>
+            <exception cref="T:System.Exception">default template not found</exception>
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.DefaultTooltip.TooltipTemplate">
             <summary>
@@ -1013,6 +1019,12 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.AutoUpdateEnaled">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.AutoUpdateEnaled" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.TooltipPoint})">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IChartView`1.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.TooltipPoint})"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.HideTooltip">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IChartView`1.HideTooltip"/>
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.InitializeCore">
             <summary>

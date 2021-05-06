@@ -4208,6 +4208,11 @@
             <param name="foundPoints">The found points.</param>
             <param name="chart">The chart.</param>
         </member>
+        <member name="M:LiveChartsCore.Kernel.IChartTooltip`1.Hide">
+            <summary>
+            Hides this tool tip instance.
+            </summary>
+        </member>
         <member name="T:LiveChartsCore.Kernel.IChartView">
             <summary>
             Defines a chart view
@@ -4347,6 +4352,17 @@
             <value>
             The point states.
             </value>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.IChartView`1.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.TooltipPoint})">
+            <summary>
+            Shows the tool tip based on the given points.
+            </summary>
+            <param name="points">The points.</param>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.IChartView`1.HideTooltip">
+            <summary>
+            Hides the tool tip.
+            </summary>
         </member>
         <member name="T:LiveChartsCore.Kernel.IDataFactoryProvider`1">
             <summary>

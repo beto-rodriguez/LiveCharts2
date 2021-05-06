@@ -297,6 +297,12 @@
         <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.ScaleUIPoint(System.Drawing.PointF,System.Int32,System.Int32)">
             <inheritdoc cref="M:LiveChartsCore.Kernel.ICartesianChartView`1.ScaleUIPoint(System.Drawing.PointF,System.Int32,System.Int32)" />
         </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.TooltipPoint})">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IChartView`1.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.TooltipPoint})"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.HideTooltip">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IChartView`1.HideTooltip"/>
+        </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.InitializeCore">
             <summary>
             Initializes the core.
@@ -391,10 +397,10 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultTooltip.TooltipTemplate">
             <summary>
-            Gets or sets the tooltip template.
+            Gets or sets the tool tip template.
             </summary>
             <value>
-            The tooltip template.
+            The tool tip template.
             </value>
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultTooltip.Points">
@@ -1003,6 +1009,12 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.AutoUpdateEnaled">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.AutoUpdateEnaled" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.TooltipPoint})">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IChartView`1.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.TooltipPoint})"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.HideTooltip">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IChartView`1.HideTooltip"/>
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.InitializeCore">
             <summary>

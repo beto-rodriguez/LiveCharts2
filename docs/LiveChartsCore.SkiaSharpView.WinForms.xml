@@ -145,6 +145,12 @@
         <member name="P:LiveChartsCore.SkiaSharpView.WinForms.Chart.AutoUpdateEnaled">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.AutoUpdateEnaled" />
         </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.Chart.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.TooltipPoint})">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IChartView`1.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.TooltipPoint})"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.Chart.HideTooltip">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IChartView`1.HideTooltip"/>
+        </member>
         <member name="M:LiveChartsCore.SkiaSharpView.WinForms.Chart.InitializeCore">
             <summary>
             Initializes the core.

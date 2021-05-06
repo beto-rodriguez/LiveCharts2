@@ -23,6 +23,7 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 using System;
+using System.Collections.Generic;
 
 namespace LiveChartsCore.Kernel
 {
@@ -167,5 +168,16 @@ namespace LiveChartsCore.Kernel
         /// The point states.
         /// </value>
         PointStatesDictionary<TDrawingContext> PointStates { get; set; }
+
+        /// <summary>
+        /// Shows the tool tip based on the given points.
+        /// </summary>
+        /// <param name="points">The points.</param>
+        void ShowTooltip(IEnumerable<TooltipPoint> points);
+
+        /// <summary>
+        /// Hides the tool tip.
+        /// </summary>
+        void HideTooltip();
     }
 }

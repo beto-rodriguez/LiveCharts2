@@ -38,5 +38,10 @@ namespace LiveChartsCore.Kernel
         /// <param name="foundPoints">The found points.</param>
         /// <param name="chart">The chart.</param>
         void Show(IEnumerable<TooltipPoint> foundPoints, Chart<TDrawingContext> chart);
+
+        /// <summary>
+        /// Hides this tool tip instance.
+        /// </summary>
+        void Hide();
     }
 }

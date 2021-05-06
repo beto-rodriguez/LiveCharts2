@@ -513,6 +513,22 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         #endregion
 
+        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
+        public void ShowTooltip(IEnumerable<TooltipPoint> points)
+        {
+            if (tooltip == null || core == null) return;
+
+            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(points, core);
+        }
+
+        /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
+        public void HideTooltip()
+        {
+            if (tooltip == null || core == null) return;
+
+            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
+        }
+
         /// <summary>
         /// Initializes the core.
         /// </summary>

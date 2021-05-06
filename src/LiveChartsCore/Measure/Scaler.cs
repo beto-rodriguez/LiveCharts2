@@ -44,8 +44,7 @@ namespace LiveChartsCore.Measure
         public Scaler(
             PointF drawMaringLocation, SizeF drawMarginSize, IAxis axis, bool usePreviousScale = false)
         {
-            if (axis.Orientation == AxisOrientation.Unknown)
-                throw new Exception("The axis is not ready to be scaled.");
+            if (axis.Orientation == AxisOrientation.Unknown) throw new Exception("The axis is not ready to be scaled.");
 
             var actualBounds = usePreviousScale ? axis.PreviousDataBounds : axis.DataBounds;
             var actualVisibleBounds = usePreviousScale ? axis.PreviousVisibleDataBounds : axis.VisibleDataBounds;
@@ -59,7 +58,6 @@ namespace LiveChartsCore.Measure
                 _maxVal = 0;
                 _minVal = 0;
                 _deltaVal = 0;
-
 
                 if (axis.Orientation == AxisOrientation.X)
                 {

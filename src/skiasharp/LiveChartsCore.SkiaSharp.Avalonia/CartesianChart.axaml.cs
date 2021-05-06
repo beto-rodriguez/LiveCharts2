@@ -111,6 +111,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             PointerPressed += CartesianChart_PointerPressed;
             PointerMoved += CartesianChart_PointerMoved;
 
+            PointerLeave += CartesianChart_PointerLeave;
+
             _panningThrottler = new ActionThrottler(DoPan, TimeSpan.FromMilliseconds(30));
         }
 
@@ -538,7 +540,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         }
 
         /// <summary>
-        /// Gets or sets the legend defailt font weight.
+        /// Gets or sets the legend default font weight.
         /// </summary>
         /// <value>
         /// The legend font weight.
@@ -594,6 +596,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnaled" />
         public bool AutoUpdateEnaled { get; set; } = true;
 
+        #endregion
+
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(PointF, int, int)" />
         public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
@@ -602,7 +606,21 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
         }
 
-        #endregion
+        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
+        public void ShowTooltip(IEnumerable<TooltipPoint> points)
+        {
+            if (tooltip == null || core == null) return;
+
+            tooltip.Show(points, core);
+        }
+
+        /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
+        public void HideTooltip()
+        {
+            if (tooltip == null || core == null) return;
+
+            tooltip.Hide();
+        }
 
         /// <summary>
         /// Initializes the core.
@@ -755,6 +773,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
         {
             Measuring?.Invoke(this);
+        }
+
+        private void CartesianChart_PointerLeave(object? sender, PointerEventArgs e)
+        {
+            tooltip?.Hide();
         }
     }
 }

@@ -29,6 +29,7 @@ using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Collections.Generic;
 
 namespace LiveChartsCore.SkiaSharpView.WPF
 {
@@ -78,6 +79,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
             SizeChanged += OnSizeChanged;
             MouseMove += OnMouseMove;
+            MouseLeave += OnMouseLeave;
+
             _mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
         }
 
@@ -590,6 +593,22 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             core.UpdateFinished += OnCoreUpdateFinished;
         }
 
+        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
+        public void ShowTooltip(IEnumerable<TooltipPoint> points)
+        {
+            if (tooltip == null || core == null) return;
+
+            tooltip.Show(points, core);
+        }
+
+        /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
+        public void HideTooltip()
+        {
+            if (tooltip == null || core == null) return;
+
+            tooltip.Hide();
+        }
+
         /// <summary>
         /// Initializes the core.
         /// </summary>
@@ -655,6 +674,11 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 SetValue(dp, value);
             else
                 SetCurrentValue(dp, value);
+        }
+
+        private void OnMouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            tooltip?.Hide();
         }
     }
 }
