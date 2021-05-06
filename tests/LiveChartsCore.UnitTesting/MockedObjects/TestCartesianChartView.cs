@@ -68,9 +68,19 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
         public event ChartEventHandler<SkiaSharpDrawingContext> UpdateStarted;
         public event ChartEventHandler<SkiaSharpDrawingContext> UpdateFinished;
 
+        public void HideTooltip()
+        {
+            throw new NotImplementedException();
+        }
+
         public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
             return new PointF();
+        }
+
+        public void ShowTooltip(IEnumerable<TooltipPoint> points)
+        {
+            throw new NotImplementedException();
         }
     }
 }
