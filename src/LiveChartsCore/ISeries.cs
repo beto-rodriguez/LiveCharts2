@@ -72,6 +72,15 @@ namespace LiveChartsCore
         bool IsVisible { get; set; }
 
         /// <summary>
+        /// Gets or sets the data padding, both coordinates (X and Y) from 0 to 1, where 0 is nothing and 1 is the axis tick
+        /// (the separation between every label).
+        /// </summary>
+        /// <value>
+        /// The data padding.
+        /// </value>
+        PointF DataPadding { get; set; }
+
+        /// <summary>
         /// Gets or sets the z index position.
         /// </summary>
         /// <value>
@@ -85,11 +94,11 @@ namespace LiveChartsCore
         double Pivot { get; set; }
 
         /// <summary>
-        /// Gets or sets the tooltip label formatter, this function will build the label when a point in this series 
-        /// is shown inside a tooltip.
+        /// Gets or sets the tool tip label formatter, this function will build the label when a point in this series 
+        /// is shown inside a tool tip.
         /// </summary>
         /// <value>
-        /// The tooltip label formatter.
+        /// The tool tip label formatter.
         /// </value>
         Func<ChartPoint, string> TooltipLabelFormatter { get; set; }
 
@@ -119,7 +128,7 @@ namespace LiveChartsCore
         /// to the chart's <see cref="TooltipFindingStrategy"/> property.
         /// </summary>
         /// <param name="chart">the chart</param>
-        /// <param name="pointerPosition">the poiinter position</param>
+        /// <param name="pointerPosition">the pointer position</param>
         /// <returns></returns>
         IEnumerable<TooltipPoint> FindPointsNearTo(IChart chart, PointF pointerPosition);
 

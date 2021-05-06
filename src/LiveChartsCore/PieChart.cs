@@ -199,12 +199,12 @@ namespace LiveChartsCore
 
                     var seriesBounds = series.GetBounds(this);
 
-                    _ = ValueBounds.AppendValue(seriesBounds.PrimaryBounds.Max);
-                    _ = ValueBounds.AppendValue(seriesBounds.PrimaryBounds.Min);
-                    _ = IndexBounds.AppendValue(seriesBounds.SecondaryBounds.Max);
-                    _ = IndexBounds.AppendValue(seriesBounds.SecondaryBounds.Min);
-                    _ = PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Max);
-                    _ = PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Min);
+                    ValueBounds.AppendValue(seriesBounds.PrimaryBounds.Max);
+                    ValueBounds.AppendValue(seriesBounds.PrimaryBounds.Min);
+                    IndexBounds.AppendValue(seriesBounds.SecondaryBounds.Max);
+                    IndexBounds.AppendValue(seriesBounds.SecondaryBounds.Min);
+                    PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Max);
+                    PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Min);
                 }
 
                 if (viewDrawMargin == null)

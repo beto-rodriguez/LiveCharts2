@@ -2899,6 +2899,15 @@
               <c>true</c> if this instance is visible; otherwise, <c>false</c>.
             </value>
         </member>
+        <member name="P:LiveChartsCore.ISeries.DataPadding">
+            <summary>
+            Gets or sets the data padding, both coordinates (X and Y) from 0 to 1, where 0 is nothing and 1 is the axis tick
+            (the separation between every label).
+            </summary>
+            <value>
+            The data padding.
+            </value>
+        </member>
         <member name="P:LiveChartsCore.ISeries.ZIndex">
             <summary>
             Gets or sets the z index position.
@@ -2914,11 +2923,11 @@
         </member>
         <member name="P:LiveChartsCore.ISeries.TooltipLabelFormatter">
             <summary>
-            Gets or sets the tooltip label formatter, this function will build the label when a point in this series 
-            is shown inside a tooltip.
+            Gets or sets the tool tip label formatter, this function will build the label when a point in this series 
+            is shown inside a tool tip.
             </summary>
             <value>
-            The tooltip label formatter.
+            The tool tip label formatter.
             </value>
         </member>
         <member name="P:LiveChartsCore.ISeries.DataLabelsFormatter">
@@ -2948,7 +2957,7 @@
             to the chart's <see cref="T:LiveChartsCore.Measure.TooltipFindingStrategy"/> property.
             </summary>
             <param name="chart">the chart</param>
-            <param name="pointerPosition">the poiinter position</param>
+            <param name="pointerPosition">the pointer position</param>
             <returns></returns>
         </member>
         <member name="M:LiveChartsCore.ISeries.AddPointToState(LiveChartsCore.Kernel.ChartPoint,System.String)">
@@ -3391,7 +3400,7 @@
         </member>
         <member name="M:LiveChartsCore.Kernel.DataProvider`2.GetCartesianBounds(LiveChartsCore.CartesianChart{`1},LiveChartsCore.Kernel.IDrawableSeries{`1},LiveChartsCore.Kernel.IAxis{`1},LiveChartsCore.Kernel.IAxis{`1})">
             <summary>
-            Gets the cartesian bounds.
+            Gets the Cartesian bounds.
             </summary>
             <param name="chart">The chart.</param>
             <param name="series">The series.</param>
@@ -5387,6 +5396,22 @@
             Gets or sets the tertiary bounds.
             </summary>
         </member>
+        <member name="P:LiveChartsCore.Kernel.DimensionalBounds.MinDeltaPrimary">
+            <summary>
+            Gets or sets the minimum delta primary.
+            </summary>
+            <value>
+            The minimum delta primary.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.DimensionalBounds.MinDeltaSecondary">
+            <summary>
+            Gets or sets the minimum delta secondary.
+            </summary>
+            <value>
+            The minimum delta secondary.
+            </value>
+        </member>
         <member name="T:LiveChartsCore.Labelers">
             <summary>
             Defines common functions to build labels in a chart.
@@ -5579,26 +5604,6 @@
             <param name="mapper">The mapper.</param>
             <returns></returns>
         </member>
-        <member name="T:LiveChartsCore.Measure.AffectedBound">
-            <summary>
-            Defines a the measured affected bounds.
-            </summary>
-        </member>
-        <member name="F:LiveChartsCore.Measure.AffectedBound.None">
-            <summary>
-            The none option.
-            </summary>
-        </member>
-        <member name="F:LiveChartsCore.Measure.AffectedBound.Max">
-            <summary>
-            The max limit.
-            </summary>
-        </member>
-        <member name="F:LiveChartsCore.Measure.AffectedBound.Min">
-            <summary>
-             The min limit.
-            </summary>
-        </member>
         <member name="T:LiveChartsCore.Measure.AxisOrientation">
             <summary>
             Defines the axis orientation.
@@ -5667,12 +5672,12 @@
         </member>
         <member name="P:LiveChartsCore.Measure.Bounds.Max">
             <summary>
-            Gets or sets the maximum value in the set.
+            Gets or sets the maximum value in the data set.
             </summary>
         </member>
         <member name="P:LiveChartsCore.Measure.Bounds.Min">
             <summary>
-            Gets or sets the minimum value in the set.
+            Gets or sets the minimum value in the data set.
             </summary>
         </member>
         <member name="P:LiveChartsCore.Measure.Bounds.Delta">
@@ -5681,6 +5686,14 @@
             </summary>
             <value>
             The delta.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Measure.Bounds.MinDelta">
+            <summary>
+            Gets or sets the minimum delta.
+            </summary>
+            <value>
+            The minimum delta.
             </value>
         </member>
         <member name="M:LiveChartsCore.Measure.Bounds.AppendValue(System.Double)">
@@ -6458,6 +6471,9 @@
         </member>
         <member name="P:LiveChartsCore.Series`4.IsVisible">
             <inheritdoc cref="P:LiveChartsCore.ISeries.IsVisible" />
+        </member>
+        <member name="P:LiveChartsCore.Series`4.DataPadding">
+            <inheritdoc cref="P:LiveChartsCore.ISeries.DataPadding" />
         </member>
         <member name="M:LiveChartsCore.Series`4.GetStackGroup">
             <inheritdoc />

@@ -36,14 +36,14 @@ namespace LiveChartsCore.Measure
         }
 
         /// <summary>
-        /// Gets or sets the maximum value in the set.
+        /// Gets or sets the maximum value in the data set.
         /// </summary>
-        public double Max { get; set; } = double.MinValue;
+        public double Max { get; set; } = float.MinValue;
 
         /// <summary>
-        /// Gets or sets the minimum value in the set.
+        /// Gets or sets the minimum value in the data set.
         /// </summary>
-        public double Min { get; set; } = double.MaxValue;
+        public double Min { get; set; } = float.MaxValue;
 
         /// <summary>
         /// Gets the delta, the absolute range in the axis.
@@ -54,20 +54,24 @@ namespace LiveChartsCore.Measure
         public double Delta => Max - Min;
 
         /// <summary>
+        /// Gets or sets the minimum delta.
+        /// </summary>
+        /// <value>
+        /// The minimum delta.
+        /// </value>
+        public double MinDelta { get; set; }
+
+        /// <summary>
         /// Compares the current bounds with a given value,
         /// if the given value is greater than the current instance <see cref="Max"/> property then the given value is set at <see cref="Max"/> property,
         /// if the given value is less than the current instance <see cref="Min"/> property then the given value is set at <see cref="Min"/> property.
         /// </summary>
         /// <param name="value">the value to append</param>
         /// <returns>Whether the value affected the current bounds, true if it affected, false if did not.</returns>
-        public AffectedBound AppendValue(double value)
+        public void AppendValue(double value)
         {
-            var ab = AffectedBound.None;
-            // the equals comparison is important, we need to register also the coordinates that are equal to the current limit.
-            if (Max <= value) { Max = value; ab |= AffectedBound.Max; }
-            if (Min >= value) { Min = value; ab |= AffectedBound.Min; }
-
-            return ab;
+            if (Max <= value) Max = value;
+            if (Min >= value) Min = value;
         }
     }
 }

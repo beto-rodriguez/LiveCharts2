@@ -80,6 +80,7 @@ namespace LiveChartsCore
         private Func<ChartPoint, string> _tooltipLabelFormatter = (point) => $"{point.Context.Series.Name} {point.PrimaryValue}";
         private Func<ChartPoint, string> _dataLabelsFormatter = (point) => $"{point.PrimaryValue}";
         private bool _isVisible = true;
+        private PointF _dataPadding = new(0.5f, 0.5f);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -189,6 +190,9 @@ namespace LiveChartsCore
                 OnPropertyChanged();
             }
         }
+
+        /// <inheritdoc cref="ISeries.DataPadding" />
+        public PointF DataPadding { get => _dataPadding; set { _dataPadding = value; OnPropertyChanged(); } }
 
         /// <inheritdoc />
         public virtual int GetStackGroup()

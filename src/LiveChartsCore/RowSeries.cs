@@ -219,30 +219,48 @@ namespace LiveChartsCore
         {
             var baseBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
 
-            var tick = secondaryAxis.GetTick(chart.ControlSize, baseBounds.VisiblePrimaryBounds);
+            var tickPrimary = primaryAxis.GetTick(chart.ControlSize, baseBounds.VisiblePrimaryBounds);
+            var tickSecondary = secondaryAxis.GetTick(chart.ControlSize, baseBounds.VisibleSecondaryBounds);
+
+            var ts = tickSecondary.Value * DataPadding.X;
+            var tp = tickPrimary.Value * DataPadding.Y;
+
+            if (baseBounds.VisibleSecondaryBounds.Delta == 0)
+            {
+                var ms = baseBounds.VisibleSecondaryBounds.Min == 0 ? 1 : baseBounds.VisibleSecondaryBounds.Min;
+                ts = 0.1 * ms * DataPadding.X;
+            }
+
+            if (baseBounds.VisiblePrimaryBounds.Delta == 0)
+            {
+                var mp = baseBounds.VisiblePrimaryBounds.Min == 0 ? 1 : baseBounds.VisiblePrimaryBounds.Min;
+                tp = 0.1 * mp * DataPadding.Y;
+            }
 
             return new DimensionalBounds
             {
                 PrimaryBounds = new Bounds
                 {
-                    Max = baseBounds.SecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth,
-                    Min = baseBounds.SecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth
+                    Max = baseBounds.SecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth + ts,
+                    Min = baseBounds.SecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth - ts
                 },
                 SecondaryBounds = new Bounds
                 {
-                    Max = baseBounds.PrimaryBounds.Max + tick.Value * primaryAxis.UnitWidth,
-                    Min = baseBounds.PrimaryBounds.Min - tick.Value * primaryAxis.UnitWidth
+                    Max = baseBounds.PrimaryBounds.Max + tp,
+                    Min = baseBounds.PrimaryBounds.Min - tp
                 },
                 VisiblePrimaryBounds = new Bounds
                 {
-                    Max = baseBounds.VisibleSecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth,
-                    Min = baseBounds.VisibleSecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth
+                    Max = baseBounds.VisibleSecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth + ts,
+                    Min = baseBounds.VisibleSecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth - ts
                 },
                 VisibleSecondaryBounds = new Bounds
                 {
-                    Max = baseBounds.VisiblePrimaryBounds.Max + tick.Value * primaryAxis.UnitWidth,
-                    Min = baseBounds.VisiblePrimaryBounds.Min - tick.Value * primaryAxis.UnitWidth
+                    Max = baseBounds.VisiblePrimaryBounds.Max + tp,
+                    Min = baseBounds.VisiblePrimaryBounds.Min - tp
                 },
+                MinDeltaPrimary = baseBounds.MinDeltaPrimary,
+                MinDeltaSecondary = baseBounds.MinDeltaSecondary
             };
         }
 

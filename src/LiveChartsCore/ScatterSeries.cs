@@ -51,6 +51,8 @@ namespace LiveChartsCore
         public ScatterSeries()
             : base(SeriesProperties.Scatter)
         {
+            DataPadding = new PointF(1, 1);
+
             HoverState = LiveCharts.ScatterSeriesHoverKey;
 
             DataLabelsFormatter = (point) => $"{point.SecondaryValue}, {point.PrimaryValue}";
@@ -209,35 +211,41 @@ namespace LiveChartsCore
 
         /// <inheritdoc cref="GetBounds(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
         public override DimensionalBounds GetBounds(
-            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
+            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> secondaryAxis, IAxis<TDrawingContext> primaryAxis)
         {
-            var baseBounds = base.GetBounds(chart, x, y);
+            var baseBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
             _weightBounds = baseBounds.TertiaryBounds;
 
-            var tick = y.GetTick(chart.ControlSize, baseBounds.VisiblePrimaryBounds);
+            var tickPrimary = primaryAxis.GetTick(chart.ControlSize, baseBounds.VisiblePrimaryBounds);
+            var tickSecondary = secondaryAxis.GetTick(chart.ControlSize, baseBounds.VisibleSecondaryBounds);
+
+            var ts = tickSecondary.Value * DataPadding.X;
+            var tp = tickPrimary.Value * DataPadding.Y;
 
             return new DimensionalBounds
             {
                 SecondaryBounds = new Bounds
                 {
-                    Max = baseBounds.SecondaryBounds.Max + tick.Value,
-                    Min = baseBounds.SecondaryBounds.Min - tick.Value
+                    Max = baseBounds.SecondaryBounds.Max + ts,
+                    Min = baseBounds.SecondaryBounds.Min - ts
                 },
                 PrimaryBounds = new Bounds
                 {
-                    Max = baseBounds.PrimaryBounds.Max + tick.Value,
-                    Min = baseBounds.PrimaryBounds.Min - tick.Value
+                    Max = baseBounds.PrimaryBounds.Max + tp,
+                    Min = baseBounds.PrimaryBounds.Min - tp
                 },
                 VisibleSecondaryBounds = new Bounds
                 {
-                    Max = baseBounds.VisibleSecondaryBounds.Max + tick.Value,
-                    Min = baseBounds.VisibleSecondaryBounds.Min - tick.Value
+                    Max = baseBounds.VisibleSecondaryBounds.Max + ts,
+                    Min = baseBounds.VisibleSecondaryBounds.Min - ts
                 },
                 VisiblePrimaryBounds = new Bounds
                 {
-                    Max = baseBounds.VisiblePrimaryBounds.Max + tick.Value,
-                    Min = baseBounds.VisiblePrimaryBounds.Min - tick.Value
+                    Max = baseBounds.VisiblePrimaryBounds.Max + tp,
+                    Min = baseBounds.VisiblePrimaryBounds.Min - tp
                 },
+                MinDeltaPrimary = baseBounds.MinDeltaPrimary,
+                MinDeltaSecondary = baseBounds.MinDeltaSecondary
             };
         }
 

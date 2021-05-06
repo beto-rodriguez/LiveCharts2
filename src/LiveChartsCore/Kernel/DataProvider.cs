@@ -85,7 +85,7 @@ namespace LiveChartsCore.Kernel
         }
 
         /// <summary>
-        /// Gets the cartesian bounds.
+        /// Gets the Cartesian bounds.
         /// </summary>
         /// <param name="chart">The chart.</param>
         /// <param name="series">The series.</param>
@@ -106,6 +106,7 @@ namespace LiveChartsCore.Kernel
             var yMax = y.MaxLimit ?? float.MaxValue;
 
             var bounds = new DimensionalBounds();
+            ChartPoint? previous = null;
             foreach (var point in series.Fetch(chart))
             {
                 var primary = point.PrimaryValue;
@@ -114,16 +115,26 @@ namespace LiveChartsCore.Kernel
 
                 if (stack != null) primary = stack.StackPoint(point);
 
-                _ = bounds.PrimaryBounds.AppendValue(primary);
-                _ = bounds.SecondaryBounds.AppendValue(secondary);
-                _ = bounds.TertiaryBounds.AppendValue(tertiary);
+                bounds.PrimaryBounds.AppendValue(primary);
+                bounds.SecondaryBounds.AppendValue(secondary);
+                bounds.TertiaryBounds.AppendValue(tertiary);
 
                 if (primary >= yMin && primary <= yMax && secondary >= xMin && secondary <= xMax)
                 {
-                    _ = bounds.VisiblePrimaryBounds.AppendValue(primary);
-                    _ = bounds.VisibleSecondaryBounds.AppendValue(secondary);
-                    _ = bounds.VisibleTertiaryBounds.AppendValue(tertiary);
+                    bounds.VisiblePrimaryBounds.AppendValue(primary);
+                    bounds.VisibleSecondaryBounds.AppendValue(secondary);
+                    bounds.VisibleTertiaryBounds.AppendValue(tertiary);
                 }
+
+                if (previous != null)
+                {
+                    var dx = Math.Abs(previous.SecondaryValue - point.SecondaryValue);
+                    var dy = Math.Abs(previous.PrimaryValue - point.PrimaryValue);
+                    if (dx < bounds.MinDeltaSecondary) bounds.MinDeltaSecondary = dx;
+                    if (dy < bounds.MinDeltaPrimary) bounds.MinDeltaPrimary = dy;
+                }
+
+                previous = point;
             }
 
             return bounds;
@@ -145,9 +156,9 @@ namespace LiveChartsCore.Kernel
             foreach (var point in series.Fetch(chart))
             {
                 _ = stack.StackPoint(point);
-                _ = bounds.PrimaryBounds.AppendValue(point.PrimaryValue);
-                _ = bounds.SecondaryBounds.AppendValue(point.SecondaryValue);
-                _ = bounds.TertiaryBounds.AppendValue(series.Pushout > series.HoverPushout ? series.Pushout : series.HoverPushout);
+                bounds.PrimaryBounds.AppendValue(point.PrimaryValue);
+                bounds.SecondaryBounds.AppendValue(point.SecondaryValue);
+                bounds.TertiaryBounds.AppendValue(series.Pushout > series.HoverPushout ? series.Pushout : series.HoverPushout);
             }
 
             return bounds;

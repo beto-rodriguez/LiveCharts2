@@ -196,9 +196,10 @@ namespace LiveChartsCore
                     var rMax = 1 - rMin;
 
                     var target = l * m;
-                    //if (target < xi.View.MinRange) return;
                     var mint = px - target * rMin;
                     var maxt = px + target * rMax;
+
+                    if (maxt - mint < xi.DataBounds.MinDelta * 5) return;
 
                     if (maxt > xi.DataBounds.Max) maxt = xi.DataBounds.Max;
                     if (mint < xi.DataBounds.Min) mint = xi.DataBounds.Min;
@@ -213,7 +214,7 @@ namespace LiveChartsCore
                 for (var index = 0; index < YAxes.Length; index++)
                 {
                     var yi = YAxes[index];
-                    var px = new Scaler(drawMaringLocation, drawMarginSize, yi).ToChartValues(pivot.X);
+                    var px = new Scaler(drawMaringLocation, drawMarginSize, yi).ToChartValues(pivot.Y);
 
                     var max = yi.MaxLimit == null ? yi.DataBounds.Max : yi.MaxLimit.Value;
                     var min = yi.MinLimit == null ? yi.DataBounds.Min : yi.MinLimit.Value;
@@ -224,9 +225,10 @@ namespace LiveChartsCore
                     var rMax = 1 - rMin;
 
                     var target = l * m;
-                    //if (target < xi.View.MinRange) return;
                     var mint = px - target * rMin;
                     var maxt = px + target * rMax;
+
+                    if (maxt - mint < yi.DataBounds.MinDelta * 5) return;
 
                     if (maxt > yi.DataBounds.Max) maxt = yi.DataBounds.Max;
                     if (mint < yi.DataBounds.Min) mint = yi.DataBounds.Min;
@@ -257,8 +259,22 @@ namespace LiveChartsCore
                     var max = xi.MaxLimit == null ? xi.DataBounds.Max : xi.MaxLimit.Value;
                     var min = xi.MinLimit == null ? xi.DataBounds.Min : xi.MinLimit.Value;
 
-                    xi.MaxLimit = max + dx > xi.DataBounds.Max ? xi.DataBounds.Max : max + dx;
-                    xi.MinLimit = min + dx < xi.DataBounds.Min ? xi.DataBounds.Min : min + dx;
+                    if (max + dx > xi.DataBounds.Max)
+                    {
+                        xi.MaxLimit = xi.DataBounds.Max;
+                        xi.MinLimit = xi.DataBounds.Max - (max - min);
+                        continue;
+                    }
+
+                    if (min + dx < xi.DataBounds.Min)
+                    {
+                        xi.MinLimit = xi.DataBounds.Min;
+                        xi.MaxLimit = xi.DataBounds.Min + max - min;
+                        continue;
+                    }
+
+                    xi.MaxLimit = max + dx;
+                    xi.MinLimit = min + dx;
                 }
             }
 
@@ -266,15 +282,29 @@ namespace LiveChartsCore
             {
                 for (var index = 0; index < YAxes.Length; index++)
                 {
-                    var yi = XAxes[index];
+                    var yi = YAxes[index];
                     var scale = new Scaler(drawMaringLocation, drawMarginSize, yi);
-                    var dy = scale.ToChartValues(delta.Y) - scale.ToChartValues(0);
+                    var dy = -(scale.ToChartValues(delta.Y) - scale.ToChartValues(0));
 
                     var max = yi.MaxLimit == null ? yi.DataBounds.Max : yi.MaxLimit.Value;
                     var min = yi.MinLimit == null ? yi.DataBounds.Min : yi.MinLimit.Value;
 
-                    yi.MaxLimit = max + dy > yi.DataBounds.Max ? yi.DataBounds.Max : max + dy;
-                    yi.MinLimit = min + dy < yi.DataBounds.Min ? yi.DataBounds.Min : min + dy;
+                    if (max + dy > yi.DataBounds.Max)
+                    {
+                        yi.MaxLimit = yi.DataBounds.Max;
+                        yi.MinLimit = yi.DataBounds.Max - (max - min);
+                        continue;
+                    }
+
+                    if (min + dy < yi.DataBounds.Min)
+                    {
+                        yi.MinLimit = yi.DataBounds.Min;
+                        yi.MaxLimit = yi.DataBounds.Min + max - min;
+                        continue;
+                    }
+
+                    yi.MaxLimit = max + dy;
+                    yi.MinLimit = min + dy;
                 }
             }
 
@@ -351,14 +381,19 @@ namespace LiveChartsCore
 
                     var seriesBounds = series.GetBounds(this, secondaryAxis, primaryAxis);
 
-                    _ = secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.Max);
-                    _ = secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.Min);
-                    _ = secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.Max);
-                    _ = secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.Min);
-                    _ = primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.Max);
-                    _ = primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.Min);
-                    _ = primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.Max);
-                    _ = primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.Min);
+                    secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.Max);
+                    secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.Min);
+                    secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.Max);
+                    secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.Min);
+                    primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.Max);
+                    primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.Min);
+                    primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.Max);
+                    primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.Min);
+
+                    if (primaryAxis.DataBounds.MinDelta < seriesBounds.MinDeltaPrimary)
+                        primaryAxis.DataBounds.MinDelta = seriesBounds.MinDeltaPrimary;
+                    if (secondaryAxis.DataBounds.MinDelta < seriesBounds.MinDeltaSecondary)
+                        secondaryAxis.DataBounds.MinDelta = seriesBounds.MinDeltaSecondary;
                 }
 
                 if (legend != null) legend.Draw(this);
