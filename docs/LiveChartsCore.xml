@@ -75,6 +75,12 @@
         <member name="P:LiveChartsCore.Axis`3.SeparatorsBrush">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis`1.SeparatorsBrush"/>
         </member>
+        <member name="P:LiveChartsCore.Axis`3.AnimationsSpeed">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.AnimationsSpeed"/>
+        </member>
+        <member name="P:LiveChartsCore.Axis`3.EasingFunction">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.EasingFunction"/>
+        </member>
         <member name="E:LiveChartsCore.Axis`3.PropertyChanged">
             <summary>
             Occurs when a property value changes.
@@ -2921,6 +2927,24 @@
             Gets or sets the value where the direction of the axis changes, by default is 0.
             </summary>
         </member>
+        <member name="P:LiveChartsCore.ISeries.AnimationsSpeed">
+            <summary>
+            Gets or sets the animations speed, if this property is null, the
+            <see cref="P:LiveChartsCore.Chart`1.AnimationsSpeed"/> property will be used.
+            </summary>
+            <value>
+            The animations speed.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.ISeries.EasingFunction">
+            <summary>
+            Gets or sets the easing function to animate the series, if this property is null, the
+            <see cref="P:LiveChartsCore.Chart`1.EasingFunction"/> property will be used.
+            </summary>
+            <value>
+            The easing function.
+            </value>
+        </member>
         <member name="P:LiveChartsCore.ISeries.TooltipLabelFormatter">
             <summary>
             Gets or sets the tool tip label formatter, this function will build the label when a point in this series 
@@ -3921,6 +3945,24 @@
             </summary>
             <value>
             The labels.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.AnimationsSpeed">
+            <summary>
+            Gets or sets the animations speed, if this property is null, the
+            <see cref="P:LiveChartsCore.Chart`1.AnimationsSpeed"/> property will be used.
+            </summary>
+            <value>
+            The animations speed.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IAxis.EasingFunction">
+            <summary>
+            Gets or sets the easing function to animate the series, if this property is null, the
+            <see cref="P:LiveChartsCore.Chart`1.EasingFunction"/> property will be used.
+            </summary>
+            <value>
+            The easing function.
             </value>
         </member>
         <member name="P:LiveChartsCore.Kernel.IAxis.ShowSeparatorLines">
@@ -6475,6 +6517,12 @@
         <member name="P:LiveChartsCore.Series`4.DataPadding">
             <inheritdoc cref="P:LiveChartsCore.ISeries.DataPadding" />
         </member>
+        <member name="P:LiveChartsCore.Series`4.AnimationsSpeed">
+            <inheritdoc cref="P:LiveChartsCore.ISeries.AnimationsSpeed" />
+        </member>
+        <member name="P:LiveChartsCore.Series`4.EasingFunction">
+            <inheritdoc cref="P:LiveChartsCore.ISeries.EasingFunction" />
+        </member>
         <member name="M:LiveChartsCore.Series`4.GetStackGroup">
             <inheritdoc />
         </member>
@@ -6603,11 +6651,6 @@
             <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
             <seealso cref="T:LiveChartsCore.CartesianSeries`4" />
             <seealso cref="T:LiveChartsCore.Kernel.IStackedBarSeries`1" />
-        </member>
-        <member name="F:LiveChartsCore.StackedBarSeries`4.elasticFunction">
-            <summary>
-            The elastic function
-            </summary>
         </member>
         <member name="F:LiveChartsCore.StackedBarSeries`4.stackGroup">
             <summary>

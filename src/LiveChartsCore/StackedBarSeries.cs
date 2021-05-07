@@ -42,11 +42,6 @@ namespace LiveChartsCore
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         /// <summary>
-        /// The elastic function
-        /// </summary>
-        protected static Func<float, float> elasticFunction = EasingFunctions.BuildCustomElasticOut(1.5f, 0.60f);
-
-        /// <summary>
         /// The stack group
         /// </summary>
         protected int stackGroup;

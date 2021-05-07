@@ -168,6 +168,12 @@ namespace LiveChartsCore
             }
         }
 
+        /// <inheritdoc cref="IAxis.AnimationsSpeed"/>
+        public TimeSpan? AnimationsSpeed { get; set; }
+
+        /// <inheritdoc cref="IAxis.EasingFunction"/>
+        public Func<float, float>? EasingFunction { get; set; }
+
         #endregion
 
         /// <summary>
@@ -285,8 +291,8 @@ namespace LiveChartsCore
                                 nameof(textGeometry.Opacity))
                             .WithAnimation(animation =>
                                 animation
-                                    .WithDuration(chart.AnimationsSpeed)
-                                    .WithEasingFunction(chart.EasingFunction));
+                                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
+                                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
 
                         if (previousSacale != null)
                         {
@@ -322,8 +328,8 @@ namespace LiveChartsCore
                                 nameof(lineGeometry.Opacity))
                             .WithAnimation(animation =>
                                 animation
-                                    .WithDuration(chart.AnimationsSpeed)
-                                    .WithEasingFunction(chart.EasingFunction));
+                                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
+                                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
 
                         if (previousSacale != null)
                         {

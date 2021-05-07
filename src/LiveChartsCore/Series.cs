@@ -194,6 +194,12 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ISeries.DataPadding" />
         public PointF DataPadding { get => _dataPadding; set { _dataPadding = value; OnPropertyChanged(); } }
 
+        /// <inheritdoc cref="ISeries.AnimationsSpeed" />
+        public TimeSpan? AnimationsSpeed { get; set; }
+
+        /// <inheritdoc cref="ISeries.EasingFunction" />
+        public Func<float, float>? EasingFunction { get; set; }
+
         /// <inheritdoc />
         public virtual int GetStackGroup()
         {

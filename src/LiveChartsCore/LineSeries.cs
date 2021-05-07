@@ -140,7 +140,7 @@ namespace LiveChartsCore
             var sw = Stroke?.StrokeThickness ?? 0;
             var p = primaryScale.ToPixels(pivot);
 
-            var chartAnimation = new Animation(chart.EasingFunction, chart.AnimationsSpeed);
+            var chartAnimation = new Animation(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
 
             var fetched = Fetch(chart);
             if (fetched is not ChartPoint[] points) points = fetched.ToArray();
@@ -361,7 +361,10 @@ namespace LiveChartsCore
                     visual.Geometry.Height = gs;
                     visual.Geometry.RemoveOnCompleted = false;
 
-                    data.TargetPoint.Context.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs, y - hgs + 2 * sw, gs, gs + 2 * sw);
+                    var hags = gs < 8 ? 8 : gs;
+
+                    data.TargetPoint.Context.HoverArea = new RectangleHoverArea()
+                        .SetDimensions(x - hgs, y - hgs + 2 * sw, hags, hags + 2 * sw);
 
                     OnPointMeasured(data.TargetPoint);
                     _ = toDeletePoints.Remove(data.TargetPoint);
@@ -375,9 +378,10 @@ namespace LiveChartsCore
                             var l = new TLabel { X = x - hgs, Y = p - hgs };
 
                             _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
-                                .WithAnimation(a =>
-                                    a.WithDuration(chart.AnimationsSpeed)
-                                    .WithEasingFunction(chart.EasingFunction));
+                                .WithAnimation(animation =>
+                                    animation
+                                        .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
+                                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
 
                             l.CompleteAllTransitions();
                             label = l;
@@ -734,8 +738,8 @@ namespace LiveChartsCore
                     nameof(visual.Geometry.Height))
                 .WithAnimation(animation =>
                     animation
-                        .WithDuration(chart.AnimationsSpeed)
-                        .WithEasingFunction(chart.EasingFunction));
+                        .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
+                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
 
             _ = visual.Bezier
                 .TransitionateProperties(
@@ -747,8 +751,8 @@ namespace LiveChartsCore
                     nameof(visual.Bezier.Y2))
                 .WithAnimation(animation =>
                     animation
-                         .WithDuration(chart.AnimationsSpeed)
-                        .WithEasingFunction(chart.EasingFunction));
+                        .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
+                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
         }
 
         /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SoftDeletePoint(ChartPoint, Scaler, Scaler)"/>

@@ -181,9 +181,10 @@ namespace LiveChartsCore
                         var l = new TLabel { X = x - hgs, Y = y - hgs };
 
                         _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
-                            .WithAnimation(a =>
-                                a.WithDuration(chart.AnimationsSpeed)
-                                .WithEasingFunction(chart.EasingFunction));
+                            .WithAnimation(animation =>
+                                animation
+                                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
+                                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
 
                         l.CompleteAllTransitions();
                         label = l;
@@ -304,8 +305,8 @@ namespace LiveChartsCore
                    nameof(visual.Height))
                .WithAnimation(animation =>
                    animation
-                       .WithDuration(chart.AnimationsSpeed)
-                       .WithEasingFunction(chart.EasingFunction));
+                       .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
+                       .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
         }
 
         /// <inheritdoc cref="SoftDeletePoint(ChartPoint, Scaler, Scaler)"/>

@@ -211,6 +211,24 @@ namespace LiveChartsCore.Kernel
         IList<string>? Labels { get; set; }
 
         /// <summary>
+        /// Gets or sets the animations speed, if this property is null, the
+        /// <see cref="Chart{TDrawingContext}.AnimationsSpeed"/> property will be used.
+        /// </summary>
+        /// <value>
+        /// The animations speed.
+        /// </value>
+        TimeSpan? AnimationsSpeed { get; set; }
+
+        /// <summary>
+        /// Gets or sets the easing function to animate the series, if this property is null, the
+        /// <see cref="Chart{TDrawingContext}.EasingFunction"/> property will be used.
+        /// </summary>
+        /// <value>
+        /// The easing function.
+        /// </value>
+        Func<float, float>? EasingFunction { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the separator lines are visible.
         /// </summary>
         bool ShowSeparatorLines { get; set; }
