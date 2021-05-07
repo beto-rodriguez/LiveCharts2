@@ -27,7 +27,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:MotionCanvas}">
-                    <skia:SKElement x:Name="skiaElement" />
+                    <skia:SKElement x:Name="skiaElement"
+                                    IgnorePixelScaling="True"/>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
