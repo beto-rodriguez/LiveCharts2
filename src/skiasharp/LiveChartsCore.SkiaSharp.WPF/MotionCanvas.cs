@@ -111,7 +111,22 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <inheritdoc cref="OnPaintSurface(object?, SKPaintSurfaceEventArgs)" />
         protected virtual void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
         {
+            (var dpiX, var dpiY) = GetPixelDensity();
+
+            args.Surface.Canvas.Scale(dpiX, dpiY);
+
             CanvasCore.DrawFrame(new SkiaSharpDrawingContext(args.Info, args.Surface, args.Surface.Canvas));
+        }
+
+        private (float dpiX, float dpiY) GetPixelDensity()
+        {
+            var presentationSource = PresentationSource.FromVisual(this);
+            if (presentationSource == null) return (1f, 1f);
+            var compositionTarget = presentationSource.CompositionTarget;
+            if (compositionTarget == null) return (1f, 1f);
+
+            var matrix = compositionTarget.TransformToDevice;
+            return ((float)matrix.M11, (float)matrix.M22);
         }
 
         private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)

@@ -178,6 +178,13 @@ namespace LiveChartsCore.Kernel
         }
 
         /// <summary>
+        /// Removes all geometry from paint task.
+        /// </summary>
+        public void ClearGeometriesFromPaintTask()
+        {
+        }
+
+        /// <summary>
         /// Removes a property transition.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>

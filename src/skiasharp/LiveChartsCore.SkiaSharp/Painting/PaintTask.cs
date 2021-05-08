@@ -153,6 +153,14 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             Invalidate();
         }
 
+        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.ClearGeometriesFromPaintTask"/>
+        public void ClearGeometriesFromPaintTask()
+        {
+            _geometries.Clear();
+            _actualGeometries = null;
+            Invalidate();
+        }
+
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.CloneTask" />
         public abstract IDrawableTask<SkiaSharpDrawingContext> CloneTask();
 

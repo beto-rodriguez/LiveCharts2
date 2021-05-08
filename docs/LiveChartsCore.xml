@@ -1857,6 +1857,11 @@
             </summary>
             <param name="geometry">The geometry.</param>
         </member>
+        <member name="M:LiveChartsCore.Drawing.IDrawableTask`1.ClearGeometriesFromPaintTask">
+            <summary>
+            Removes all geometry from paint task.
+            </summary>
+        </member>
         <member name="M:LiveChartsCore.Drawing.IDrawableTask`1.SetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})">
             <summary>
             Sets the opacity according to the given geometry.
@@ -3574,6 +3579,11 @@
             Removes the geometry from pain task.
             </summary>
             <param name="geometry">The geometry.</param>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.ClearGeometriesFromPaintTask">
+            <summary>
+            Removes all geometry from paint task.
+            </summary>
         </member>
         <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.RemovePropertyTransition(System.String)">
             <summary>

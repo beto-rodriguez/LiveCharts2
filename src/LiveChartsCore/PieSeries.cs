@@ -126,8 +126,18 @@ namespace LiveChartsCore
                 var stack = stacker.GetStack(point);
                 var stackedValue = stack.Start;
                 var total = stack.Total;
-                var start = stackedValue / total * 360;
-                var end = (stackedValue + point.PrimaryValue) / total * 360 - start;
+
+                float start, end;
+                if (total == 0)
+                {
+                    start = 0;
+                    end = 0;
+                }
+                else
+                {
+                    start = stackedValue / total * 360;
+                    end = (stackedValue + point.PrimaryValue) / total * 360 - start;
+                }
 
                 if (visual == null)
                 {
