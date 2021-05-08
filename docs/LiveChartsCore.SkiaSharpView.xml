@@ -932,6 +932,9 @@
         <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.RemoveGeometryFromPainTask(LiveChartsCore.Drawing.IDrawable{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.RemoveGeometryFromPainTask(LiveChartsCore.Drawing.IDrawable{`0})" />
         </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.ClearGeometriesFromPaintTask">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.ClearGeometriesFromPaintTask"/>
+        </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.CloneTask">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.CloneTask" />
         </member>
