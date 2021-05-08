@@ -466,10 +466,20 @@ namespace LiveChartsCore
             {
                 var cartesianChart = (CartesianChart<TDrawingContext>)chart;
                 var canvas = cartesianChart.View.CoreCanvas;
-                if (_textBrush != null) canvas.RemovePaintTask(_textBrush);
-                if (_separatorsBrush != null) canvas.RemovePaintTask(_separatorsBrush);
+                if (_textBrush != null)
+                {
+                    canvas.RemovePaintTask(_textBrush);
+                    _textBrush.ClearGeometriesFromPaintTask();
+                }
+                if (_separatorsBrush != null)
+                {
+                    canvas.RemovePaintTask(_separatorsBrush);
+                    _separatorsBrush.ClearGeometriesFromPaintTask();
+                }
+
                 _ = _activeSeparators.Remove(cartesianChart);
             }
+            subscribedTo.Clear();
         }
 
         /// <summary>
