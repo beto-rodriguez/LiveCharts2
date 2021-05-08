@@ -50,21 +50,22 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 
             var toExecute = _drawingCommands ?? (_drawingCommands = _commands.ToArray());
 
-            var path = new SKPath();
-            var isValid = true;
-
-            foreach (var segment in toExecute)
+            using(var path = new SKPath())
             {
-                segment.IsCompleted = true;
-                segment.Execute(path, GetCurrentTime(), this);
-                isValid = isValid && segment.IsCompleted;
+                var isValid = true;
+
+                foreach (var segment in toExecute)
+                {
+                    segment.IsCompleted = true;
+                    segment.Execute(path, GetCurrentTime(), this);
+                    isValid = isValid && segment.IsCompleted;
+                }
+
+                if (IsClosed) path.Close();
+                context.Canvas.DrawPath(path, context.Paint);
+
+                if (!isValid) Invalidate();
             }
-
-            if (IsClosed) path.Close();
-            context.Canvas.DrawPath(path, context.Paint);
-
-            if (!isValid) Invalidate();
-
         }
 
         /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.AddCommand(IPathCommand{TPathArgs})" />
