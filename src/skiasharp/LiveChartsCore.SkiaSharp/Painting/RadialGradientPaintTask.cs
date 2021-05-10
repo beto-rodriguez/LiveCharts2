@@ -34,11 +34,11 @@ namespace LiveChartsCore.SkiaSharpView.Painting
     /// <seealso cref="PaintTask" />
     public class RadialGradientPaintTask : PaintTask
     {
-        private SkiaSharpDrawingContext _drawingContext;
+        private SkiaSharpDrawingContext? _drawingContext;
         private readonly SKColor[] _gradientStops;
         private readonly SKPoint _center;
         private readonly float _radius;
-        private readonly float[] _colorPos;
+        private readonly float[]? _colorPos;
         private readonly SKShaderTileMode _tileMode;
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             SKColor[] gradientStops,
             SKPoint? center = null,
             float radius = 0.5f,
-            float[] colorPos = null,
+            float[]? colorPos = null,
             SKShaderTileMode tileMode = SKShaderTileMode.Repeat)
         {
             _gradientStops = gradientStops;
@@ -88,7 +88,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <value>
         /// The path effect.
         /// </value>
-        public PathEffect PathEffect { get; set; }
+        public PathEffect? PathEffect { get; set; }
 
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.CloneTask" />
         public override IDrawableTask<SkiaSharpDrawingContext> CloneTask()

@@ -73,7 +73,7 @@ namespace LiveChartsCore.SkiaSharpView
         /// <param name="additionalStyles">the additional styles.</param>
         /// <returns></returns>
         public static LiveChartsSettings AddLightTheme(
-            this LiveChartsSettings settings, Action<Theme<SkiaSharpDrawingContext>> additionalStyles = null)
+            this LiveChartsSettings settings, Action<Theme<SkiaSharpDrawingContext>>? additionalStyles = null)
         {
             return settings
                 .HasTheme((Theme<SkiaSharpDrawingContext> theme) =>
@@ -168,7 +168,7 @@ namespace LiveChartsCore.SkiaSharpView
         /// <param name="additionalStyles">The additional styles.</param>
         /// <returns></returns>
         public static LiveChartsSettings AddDarkTheme(
-            this LiveChartsSettings settings, Action<Theme<SkiaSharpDrawingContext>> additionalStyles = null)
+            this LiveChartsSettings settings, Action<Theme<SkiaSharpDrawingContext>>? additionalStyles = null)
         {
             return settings
                 .HasTheme((Theme<SkiaSharpDrawingContext> theme) =>

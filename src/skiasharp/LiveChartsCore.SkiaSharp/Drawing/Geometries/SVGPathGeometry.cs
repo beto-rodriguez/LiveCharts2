@@ -30,8 +30,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     /// <seealso cref="SizedGeometry" />
     public class SVGPathGeometry : SizedGeometry
     {
-        private string _svg;
-        private SKPath _svgPath;
+        private string _svg = string.Empty;
+        private SKPath? _svgPath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SVGPathGeometry"/> class.
@@ -61,7 +61,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
-            if (_svgPath == null && _svg == null)
+            if (_svgPath == null)
                 throw new System.NullReferenceException(
                     $"{nameof(SVG)} property is null and there is not a defined path to draw.");
 

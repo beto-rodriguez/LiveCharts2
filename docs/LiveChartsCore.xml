@@ -1696,22 +1696,6 @@
             The center y.
             </value>
         </member>
-        <member name="P:LiveChartsCore.Drawing.IDoughnutGeometry`1.X">
-            <summary>
-            Gets or sets the x.
-            </summary>
-            <value>
-            The x.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.Drawing.IDoughnutGeometry`1.Y">
-            <summary>
-            Gets or sets the y.
-            </summary>
-            <value>
-            The y.
-            </value>
-        </member>
         <member name="P:LiveChartsCore.Drawing.IDoughnutGeometry`1.Width">
             <summary>
             Gets or sets the width.

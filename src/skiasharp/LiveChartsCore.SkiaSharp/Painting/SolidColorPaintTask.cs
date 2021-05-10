@@ -36,7 +36,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
     public class SolidColorPaintTask : PaintTask
     {
         private readonly FloatMotionProperty _strokeMiterTransition;
-        private SkiaSharpDrawingContext _drawingContext;
+        private SkiaSharpDrawingContext? _drawingContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SolidColorPaintTask"/> class.
@@ -104,7 +104,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <value>
         /// The path effect.
         /// </value>
-        public PathEffect PathEffect { get; set; }
+        public PathEffect? PathEffect { get; set; }
 
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.CloneTask" />
         public override IDrawableTask<SkiaSharpDrawingContext> CloneTask()
@@ -161,6 +161,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.SetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
         public override void SetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
         {
+            if (context.PaintTask == null || context.Paint == null) return;
+
             var baseColor = context.PaintTask.Color;
             context.Paint.Color =
                 new SKColor(baseColor.Red, baseColor.Green, baseColor.Blue, unchecked((byte)(255 * geometry.Opacity)));
@@ -169,6 +171,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.ResetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
         public override void ResetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
         {
+            if (context.PaintTask == null || context.Paint == null) return;
+
             var baseColor = context.PaintTask.Color;
             context.Paint.Color = baseColor;
         }

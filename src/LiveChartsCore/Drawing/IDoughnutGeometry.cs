@@ -47,22 +47,6 @@ namespace LiveChartsCore.Drawing
         float CenterY { get; set; }
 
         /// <summary>
-        /// Gets or sets the x.
-        /// </summary>
-        /// <value>
-        /// The x.
-        /// </value>
-        float X { get; set; }
-
-        /// <summary>
-        /// Gets or sets the y.
-        /// </summary>
-        /// <value>
-        /// The y.
-        /// </value>
-        float Y { get; set; }
-
-        /// <summary>
         /// Gets or sets the width.
         /// </summary>
         /// <value>

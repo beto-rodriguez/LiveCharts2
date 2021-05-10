@@ -30,8 +30,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}" />
     public class PathGeometry : Drawable, IPathGeometry<SkiaSharpDrawingContext, SKPath>
     {
-        private readonly HashSet<IPathCommand<SKPath>> _commands = new HashSet<IPathCommand<SKPath>>();
-        private IPathCommand<SKPath>[] _drawingCommands = null;
+        private readonly HashSet<IPathCommand<SKPath>> _commands = new();
+        private IPathCommand<SKPath>[]? _drawingCommands = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PathGeometry"/> class.
@@ -48,9 +48,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         {
             if (_commands.Count == 0) return;
 
-            var toExecute = _drawingCommands ?? (_drawingCommands = _commands.ToArray());
+            var toExecute = _drawingCommands ??= _commands.ToArray();
 
-            using(var path = new SKPath())
+            using (var path = new SKPath())
             {
                 var isValid = true;
 

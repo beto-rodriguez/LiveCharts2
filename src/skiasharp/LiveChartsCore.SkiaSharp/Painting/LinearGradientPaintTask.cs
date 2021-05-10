@@ -34,14 +34,14 @@ namespace LiveChartsCore.SkiaSharpView.Painting
     /// <seealso cref="PaintTask" />
     public class LinearGradientPaintTask : PaintTask
     {
-        private static readonly SKPoint s_defaultStartPoint = new SKPoint(0, 0.5f);
-        private static readonly SKPoint s_defaultEndPoint = new SKPoint(1, 0.5f);
+        private static readonly SKPoint s_defaultStartPoint = new(0, 0.5f);
+        private static readonly SKPoint s_defaultEndPoint = new(1, 0.5f);
         private readonly SKColor[] _gradientStops;
         private readonly SKPoint _startPoint;
         private readonly SKPoint _endPoint;
-        private readonly float[] _colorPos = null;
+        private readonly float[]? _colorPos = null;
         private readonly SKShaderTileMode _tileMode = SKShaderTileMode.Repeat;
-        private SkiaSharpDrawingContext _drawingContext;
+        private SkiaSharpDrawingContext? _drawingContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LinearGradientPaintTask"/> class.
@@ -65,7 +65,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             SKColor[] gradientStops,
             SKPoint startPoint,
             SKPoint endPoint,
-            float[] colorPos = null,
+            float[]? colorPos = null,
             SKShaderTileMode tileMode = SKShaderTileMode.Repeat)
         {
             _gradientStops = gradientStops;
@@ -110,7 +110,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <value>
         /// The path effect.
         /// </value>
-        public PathEffect PathEffect { get; set; }
+        public PathEffect? PathEffect { get; set; }
 
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.CloneTask" />
         public override IDrawableTask<SkiaSharpDrawingContext> CloneTask()

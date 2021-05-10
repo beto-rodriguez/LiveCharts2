@@ -35,13 +35,13 @@ namespace LiveChartsCore.SkiaSharpView.Painting
     /// <inheritdoc cref="IDrawableTask{TDrawingContext}" />
     public abstract class PaintTask : Animatable, IDisposable, IDrawableTask<SkiaSharpDrawingContext>
     {
-        private HashSet<IDrawable<SkiaSharpDrawingContext>> _geometries = new HashSet<IDrawable<SkiaSharpDrawingContext>>();
-        private IDrawable<SkiaSharpDrawingContext>[] _actualGeometries = null;
+        private HashSet<IDrawable<SkiaSharpDrawingContext>> _geometries = new();
+        private IDrawable<SkiaSharpDrawingContext>[]? _actualGeometries = null;
 
         /// <summary>
         /// The skia paint
         /// </summary>
-        protected SKPaint skiaPaint;
+        protected SKPaint? skiaPaint;
 
         /// <summary>
         /// The stroke width transition
@@ -122,7 +122,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.GetGeometries" />
         public IEnumerable<IDrawable<SkiaSharpDrawingContext>> GetGeometries()
         {
-            var g = _actualGeometries ?? (_actualGeometries = _geometries.ToArray());
+            var g = _actualGeometries ??= _geometries.ToArray();
             foreach (var item in g)
             {
                 yield return item;

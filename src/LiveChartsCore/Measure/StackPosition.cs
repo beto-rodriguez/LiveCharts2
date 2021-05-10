@@ -32,15 +32,13 @@ namespace LiveChartsCore.Measure
     public class StackPosition<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        private Stacker<TDrawingContext> stacker = new Stacker<TDrawingContext>();
-
         /// <summary>
         /// Gets or sets the stacker.
         /// </summary>
         /// <value>
         /// The stacker.
         /// </value>
-        public Stacker<TDrawingContext> Stacker { get => stacker; set => stacker = value; }
+        public Stacker<TDrawingContext> Stacker { get; set; } = new Stacker<TDrawingContext>();
 
         /// <summary>
         /// Gets or sets the position.
@@ -57,7 +55,7 @@ namespace LiveChartsCore.Measure
         /// <returns></returns>
         public float StackPoint(ChartPoint point)
         {
-            return stacker.StackPoint(point, Position);
+            return Stacker.StackPoint(point, Position);
         }
 
         /// <summary>
@@ -67,7 +65,7 @@ namespace LiveChartsCore.Measure
         /// <returns></returns>
         public StackedValue GetStack(ChartPoint point)
         {
-            return stacker.GetStack(point, Position);
+            return Stacker.GetStack(point, Position);
         }
     }
 }

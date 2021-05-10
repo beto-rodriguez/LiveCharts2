@@ -55,6 +55,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             _sweepProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(SweepAngle)));
             _pushoutProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(PushOut)));
             _innerRadiusProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(InnerRadius)));
+            _cornerRadiusProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(CornerRadius)));
         }
 
         /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.CenterX" />

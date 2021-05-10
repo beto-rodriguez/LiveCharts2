@@ -38,7 +38,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting.Effects
         /// <value>
         /// The sk path effect.
         /// </value>
-        public SKPathEffect SKPathEffect { get; set; }
+        public SKPathEffect? SKPathEffect { get; set; }
 
         /// <summary>
         /// Creates the path effect.
@@ -52,7 +52,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting.Effects
         /// <exception cref="NotImplementedException"></exception>
         public virtual void Dispose()
         {
-            SKPathEffect.Dispose();
+            SKPathEffect?.Dispose();
         }
     }
 }
