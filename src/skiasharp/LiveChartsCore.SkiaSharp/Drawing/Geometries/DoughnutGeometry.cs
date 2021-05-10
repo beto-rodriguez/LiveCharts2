@@ -110,7 +110,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
                 var r = Width * 0.5f;
                 var startAngle = StartAngle;
                 var sweepAngle = SweepAngle;
-                var toRadians = (float)(Math.PI / 180);
+                const float toRadians = (float)(Math.PI / 180);
                 var pushout = PushOut;
 
                 path.MoveTo(

@@ -43,6 +43,11 @@ namespace LiveChartsCore.Measure
         Middle,
 
         /// <summary>
+        /// The chart center
+        /// </summary>
+        ChartCenter,
+
+        /// <summary>
         /// The top
         /// </summary>
         Top,

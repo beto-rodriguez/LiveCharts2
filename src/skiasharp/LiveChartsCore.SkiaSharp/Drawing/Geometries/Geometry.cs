@@ -126,7 +126,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             OnDraw(context, context.Paint);
             AfterDraw(context);
 
-            if (_hasTransform || hasRotation | hasCustomTransform) context.Canvas.Restore();
+            if (_hasTransform || hasRotation || hasCustomTransform) context.Canvas.Restore();
         }
 
         /// <summary>
@@ -150,11 +150,11 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             {
                 const double toRadias = Math.PI / 180;
 
-                if (r < 0) r += 360;
                 r %= 360;
+                if (r < 0) r += 360;
 
                 if (r > 180) r = 360 - r;
-                if (r > 90 && r <= 180) r = 180 - r;
+                if (r is > 90 and <= 180) r = 180 - r;
 
                 var rRadians = r * toRadias;
 

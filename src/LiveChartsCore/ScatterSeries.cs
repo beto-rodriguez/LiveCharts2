@@ -318,6 +318,9 @@ namespace LiveChartsCore
             visual.Height = 0;
             visual.Width = 0;
             visual.RemoveOnCompleted = true;
+
+            if (dataProvider == null) throw new Exception("Data provider not found");
+            dataProvider.DisposePoint(point);
         }
     }
 }

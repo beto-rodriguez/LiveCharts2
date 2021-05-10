@@ -112,9 +112,12 @@ namespace LiveChartsCore
                 chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
             }
 
+            var completeAngle = 270f;
+
             var cx = drawLocation.X + drawMarginSize.Width * 0.5f;
             var cy = drawLocation.Y + drawMarginSize.Height * 0.5f;
 
+            var dls = (float)DataLabelsSize;
             var stacker = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
             if (stacker == null) throw new NullReferenceException("Unexpected null stacker");
 
@@ -163,14 +166,14 @@ namespace LiveChartsCore
                 }
                 else
                 {
-                    start = stackedValue / total * 360;
-                    end = (stackedValue + point.PrimaryValue) / total * 360 - start;
+                    start = stackedValue / total * completeAngle;
+                    end = (stackedValue + point.PrimaryValue) / total * completeAngle - start;
                 }
 
                 if (IsFillSeries)
                 {
                     start = 0;
-                    end = 360;
+                    end = completeAngle;
                 }
 
                 if (visual == null)
@@ -208,8 +211,8 @@ namespace LiveChartsCore
                 var md = minDimension;
                 var w = md - (md - 2 * innerRadius) * (fetched.Length - i) / fetched.Length - relativeOuterRadius * 2;
 
-                dougnutGeometry.CenterX = drawLocation.X + drawMarginSize.Width * 0.5f;
-                dougnutGeometry.CenterY = drawLocation.Y + drawMarginSize.Height * 0.5f;
+                dougnutGeometry.CenterX = cx;
+                dougnutGeometry.CenterY = cy;
                 dougnutGeometry.X = (drawMarginSize.Width - w) * 0.5f;
                 dougnutGeometry.Y = (drawMarginSize.Height - w) * 0.5f;
                 dougnutGeometry.Width = w;
@@ -219,15 +222,46 @@ namespace LiveChartsCore
                 dougnutGeometry.RemoveOnCompleted = false;
                 dougnutGeometry.StartAngle = start + initialRotation;
                 dougnutGeometry.SweepAngle = end;
-                if (start == 0 && end == 360) dougnutGeometry.SweepAngle = 359.9999f;
-
-                stackedInnerRadius = (w + relativeOuterRadius * 2) * 0.5f;
+                if (start == 0 && end == completeAngle) dougnutGeometry.SweepAngle = completeAngle - 0.0001f;
 
                 point.Context.HoverArea = new SemicircleHoverArea()
                     .SetDimensions(cx, cy, start + initialRotation, start + initialRotation + end, md * 0.5f);
 
                 OnPointMeasured(point);
                 _ = toDeletePoints.Remove(point);
+
+                if (DataLabelsDrawableTask != null && point.PrimaryValue > 0)
+                {
+                    var label = (TLabel?)point.Context.Label;
+
+                    if (label == null)
+                    {
+                        var l = new TLabel { X = cx, Y = cy };
+
+                        _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
+                            .WithAnimation(animation =>
+                                animation
+                                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
+                                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
+
+                        l.CompleteAllTransitions();
+                        label = l;
+                        point.Context.Label = l;
+                        DataLabelsDrawableTask.AddGeometyToPaintTask(l);
+                    }
+
+                    label.Text = DataLabelsFormatter(point);
+                    label.TextSize = dls;
+                    label.Padding = DataLabelsPadding;
+                    var labelPosition = GetLabelPolarPosition(
+                        cx, cy, ((w + relativeOuterRadius * 2) * 0.5f + stackedInnerRadius) * 0.5f, start + initialRotation, end,
+                        label.Measure(DataLabelsDrawableTask), DataLabelsPosition);
+                    label.X = labelPosition.X;
+                    label.Y = labelPosition.Y;
+                }
+
+                stackedInnerRadius = (w + relativeOuterRadius * 2) * 0.5f;
+
                 i++;
             }
 
@@ -374,6 +408,9 @@ namespace LiveChartsCore
             visual.StartAngle += visual.SweepAngle;
             visual.SweepAngle = 0;
             visual.RemoveOnCompleted = true;
+
+            if (dataProvider == null) throw new Exception("Data provider not found");
+            dataProvider.DisposePoint(point);
         }
 
         /// <summary>

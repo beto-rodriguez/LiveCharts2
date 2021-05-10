@@ -36,6 +36,16 @@ namespace LiveChartsCore.Kernel
     {
         private readonly Dictionary<int, ChartPoint> _byValueVisualMap = new();
         private readonly Dictionary<TModel, ChartPoint> _byReferenceVisualMap = new();
+        private readonly bool _isValueType = false;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataProvider{TModel, TDrawingContext}"/> class.
+        /// </summary>
+        public DataProvider()
+        {
+            var t = typeof(TModel);
+            _isValueType = t.IsValueType;
+        }
 
         /// <summary>
         /// Fetches the the points for the specified series.
@@ -47,13 +57,10 @@ namespace LiveChartsCore.Kernel
         {
             if (series.Values == null) yield break;
 
-            var t = typeof(TModel);
-            var isValueType = t.IsValueType;
-
             var mapper = series.Mapping ?? LiveCharts.CurrentSettings.GetMap<TModel>();
             var index = 0;
 
-            if (isValueType)
+            if (_isValueType)
             {
                 foreach (var item in series.Values)
                 {
@@ -81,6 +88,24 @@ namespace LiveChartsCore.Kernel
 
                     yield return cp;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Disposes a given point.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <returns></returns>
+        public void DisposePoint(ChartPoint point)
+        {
+            if (_isValueType)
+            {
+                _ = _byValueVisualMap.Remove(point.Context.Index);
+            }
+            else
+            {
+                if (point.Context.DataSource == null) return;
+                _ = _byReferenceVisualMap.Remove((TModel)point.Context.DataSource);
             }
         }
 

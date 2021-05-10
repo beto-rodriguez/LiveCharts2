@@ -400,6 +400,8 @@ namespace LiveChartsCore
             return position switch
 #pragma warning restore IDE0072 // Add missing cases
             {
+                DataLabelsPosition.ChartCenter =>
+                    throw new Exception($"The position {DataLabelsPosition.ChartCenter}, is only supported in polar charts."),
                 DataLabelsPosition.Top => new PointF(middleX, y - labelSize.Height * 0.5f),
                 DataLabelsPosition.Bottom => new PointF(middleX, y + height + labelSize.Height * 0.5f),
                 DataLabelsPosition.Left => new PointF(x - labelSize.Width * 0.5f, middleY),
@@ -431,6 +433,58 @@ namespace LiveChartsCore
                         _ => throw new NotImplementedException(),
                     }
             };
+        }
+
+        protected virtual PointF GetLabelPolarPosition(
+            float centerX,
+            float centerY,
+            float radius,
+            float startAngle,
+            float sweepAngle,
+            SizeF labelSize,
+            DataLabelsPosition position)
+        {
+            const float toRadians = (float)(Math.PI / 180);
+            float angle = 0;
+            float d = 0;
+
+            switch (position)
+            {
+                case DataLabelsPosition.End:
+                    angle = (startAngle + sweepAngle);
+                    d = 1;
+                    break;
+                case DataLabelsPosition.Start:
+                    angle = startAngle;
+                    d = -1;
+                    break;
+                case DataLabelsPosition.Middle:
+                    angle = (startAngle + sweepAngle) * 0.5f;
+                    d = 0;
+                    break;
+                case DataLabelsPosition.ChartCenter:
+
+                    break;
+                case DataLabelsPosition.Top:
+                case DataLabelsPosition.Bottom:
+                case DataLabelsPosition.Left:
+                case DataLabelsPosition.Right:
+                default:
+                    throw new Exception(
+                        $"Only {DataLabelsPosition.Start}, {DataLabelsPosition.End}, {DataLabelsPosition.Middle} " +
+                        $"positions are supported in polar charts.");
+            }
+
+            angle %= 360;
+            if (angle < 0) angle += 360;
+
+            var da = (float)Math.Atan(labelSize.Width * 0.5 / radius) / toRadians;
+            angle += d * da;
+            angle *= toRadians;
+
+            return new PointF(
+                 (float)(centerX + Math.Cos(angle) * radius),
+                 (float)(centerY + Math.Sin(angle) * radius));
         }
 
         /// <summary>

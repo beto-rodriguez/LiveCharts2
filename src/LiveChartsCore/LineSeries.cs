@@ -777,6 +777,9 @@ namespace LiveChartsCore
             visual.Geometry.Height = 0;
             visual.Geometry.Width = 0;
             visual.Geometry.RemoveOnCompleted = true;
+
+            if (dataProvider == null) throw new Exception("Data provider not found");
+            dataProvider.DisposePoint(point);
         }
 
         /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Delete(IChartView)"/>

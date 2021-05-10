@@ -3419,12 +3419,24 @@
             <typeparam name="TModel"></typeparam>
             <typeparam name="TDrawingContext"></typeparam>
         </member>
+        <member name="M:LiveChartsCore.Kernel.DataProvider`2.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.Kernel.DataProvider`2"/> class.
+            </summary>
+        </member>
         <member name="M:LiveChartsCore.Kernel.DataProvider`2.Fetch(LiveChartsCore.ISeries{`0},LiveChartsCore.Kernel.IChart)">
             <summary>
             Fetches the the points for the specified series.
             </summary>
             <param name="series">The series.</param>
             <param name="chart">The chart.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.DataProvider`2.DisposePoint(LiveChartsCore.Kernel.ChartPoint)">
+            <summary>
+            Disposes a given point.
+            </summary>
+            <param name="point">The point.</param>
             <returns></returns>
         </member>
         <member name="M:LiveChartsCore.Kernel.DataProvider`2.GetCartesianBounds(LiveChartsCore.CartesianChart{`1},LiveChartsCore.Kernel.IDrawableSeries{`1},LiveChartsCore.Kernel.IAxis{`1},LiveChartsCore.Kernel.IAxis{`1})">
@@ -5818,6 +5830,11 @@
         <member name="F:LiveChartsCore.Measure.DataLabelsPosition.Middle">
             <summary>
             The middle
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.Measure.DataLabelsPosition.ChartCenter">
+            <summary>
+            The chart center
             </summary>
         </member>
         <member name="F:LiveChartsCore.Measure.DataLabelsPosition.Top">

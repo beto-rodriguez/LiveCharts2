@@ -690,8 +690,24 @@
             The series property
             </summary>
         </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.PieChart.InitialRotationProperty">
+            <summary>
+            The initial rotation property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.PieChart.TotalProperty">
+            <summary>
+            The total property
+            </summary>
+        </member>
         <member name="P:LiveChartsCore.SkiaSharpView.WPF.PieChart.Series">
             <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.Series" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.PieChart.InitialRotation">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.InitialRotation" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.PieChart.Total">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.Total" />
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.WPF.PieChart.InitializeCore">
             <summary>
