@@ -81,6 +81,20 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                         return value is IEnumerable<ISeries> ? value : new ObservableCollection<ISeries>();
                     }));
 
+        /// <summary>
+        /// The initial rotation property
+        /// </summary>
+        public static readonly DependencyProperty InitialRotationProperty =
+            DependencyProperty.Register(
+                nameof(InitialRotation), typeof(double), typeof(Chart), new PropertyMetadata(0d, OnDependencyPropertyChanged));
+
+        /// <summary>
+        /// The total property
+        /// </summary>
+        public static readonly DependencyProperty TotalProperty =
+            DependencyProperty.Register(
+                nameof(Total), typeof(double?), typeof(Chart), new PropertyMetadata(null, OnDependencyPropertyChanged));
+
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => core == null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
@@ -88,6 +102,20 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         {
             get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
             set => SetValue(SeriesProperty, value);
+        }
+
+        /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />
+        public double InitialRotation
+        {
+            get => (double)GetValue(InitialRotationProperty);
+            set => SetValue(InitialRotationProperty, value);
+        }
+
+        /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total" />
+        public double? Total
+        {
+            get => (double?)GetValue(TotalProperty);
+            set => SetValue(TotalProperty, value);
         }
 
         /// <summary>

@@ -48,5 +48,23 @@ namespace LiveChartsCore.Kernel
         /// The series.
         /// </value>
         IEnumerable<ISeries> Series { get; set; }
+
+        /// <summary>
+        /// Gets or sets the initial rotation in degrees, this angle specifies where the first pie slice will be drawn, then the remaining
+        /// slices will stack according to its corresponding position.
+        /// </summary>
+        /// <value>
+        /// The initial rotation.
+        /// </value>
+        public double InitialRotation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the total, it is the maximum value a pie slice can represent, when this property is null, the <see cref="Total"/> property
+        /// will be calculated automatically based on the series data. Default value is null.
+        /// </summary>
+        /// <value>
+        /// The total stacked.
+        /// </value>
+        public double? Total { get; set; }
     }
 }

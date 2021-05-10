@@ -128,6 +128,9 @@
     <Compile Update="Pies\AutoUpdate\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Pies\Gauge\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Pies\Processing\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

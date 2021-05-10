@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using LiveChartsCore.Measure;
 using System.Drawing;
+using System.Linq;
 
 namespace LiveChartsCore
 {
@@ -36,6 +37,14 @@ namespace LiveChartsCore
         where TVisual : class, IDoughnutVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
+        private double _pushout = 5;
+        private double _innerRadius = 0;
+        private double _maxOuterRadius = 1;
+        private double _hoverPushout = 20;
+        private double _innerPadding = 0;
+        private double _outerPadding = 0;
+        private bool _isFillSeries;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
@@ -45,16 +54,24 @@ namespace LiveChartsCore
         }
 
         /// <inheritdoc cref="IPieSeries{TDrawingContext}.Pushout"/>
-        public double Pushout { get; set; } = 5;
-
+        public double Pushout { get => _pushout; set { _pushout = value; OnPropertyChanged(); } }
         /// <inheritdoc cref="IPieSeries{TDrawingContext}.InnerRadius"/>
-        public double InnerRadius { get; set; } = 0;
+        public double InnerRadius { get => _innerRadius; set { _innerRadius = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IPieSeries{TDrawingContext}.MaxOuterRadius"/>
-        public double MaxOuterRadius { get; set; } = 1;
+        public double MaxOuterRadius { get => _maxOuterRadius; set { _maxOuterRadius = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IPieSeries{TDrawingContext}.HoverPushout"/>
-        public double HoverPushout { get; set; } = 20;
+        public double HoverPushout { get => _hoverPushout; set { _hoverPushout = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IPieSeries{TDrawingContext}.RelativeInnerRadius"/>
+        public double RelativeInnerRadius { get => _innerPadding; set { _innerPadding = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IPieSeries{TDrawingContext}.RelativeOuterRadius"/>
+        public double RelativeOuterRadius { get => _outerPadding; set { _outerPadding = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IPieSeries{TDrawingContext}.IsFillSeries"/>
+        public bool IsFillSeries { get => _isFillSeries; set { _isFillSeries = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IPieSeries{TDrawingContext}.Measure(PieChart{TDrawingContext})"/>
         public void Measure(PieChart<TDrawingContext> chart)
@@ -70,6 +87,10 @@ namespace LiveChartsCore
 
             minDimension = minDimension - (Stroke?.StrokeThickness ?? 0) * 2 - maxPushout * 2;
             minDimension *= maxOuterRadius;
+
+            var view = (IPieChartView<TDrawingContext>)chart.View;
+            var initialRotation = (float)view.InitialRotation;
+            var chartTotal = (float?)view.Total;
 
             var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
             if (Fill != null)
@@ -99,7 +120,14 @@ namespace LiveChartsCore
 
             var toDeletePoints = new HashSet<ChartPoint>(everFetched);
 
-            foreach (var point in Fetch(chart))
+            var fetched = Fetch(chart).ToArray();
+
+            var stackedInnerRadius = innerRadius;
+            var relativeInnerRadius = (float)RelativeInnerRadius;
+            var relativeOuterRadius = (float)RelativeOuterRadius;
+            var i = 1f;
+
+            foreach (var point in fetched)
             {
                 var visual = point.Context.Visual as TVisual;
 
@@ -107,14 +135,14 @@ namespace LiveChartsCore
                 {
                     if (visual != null)
                     {
-                        visual.CenterX = drawLocation.X + drawMarginSize.Width * 0.5f;
-                        visual.CenterY = drawLocation.Y + drawMarginSize.Height * 0.5f;
+                        visual.CenterX = cx;
+                        visual.CenterY = cy;
                         visual.X = cx;
                         visual.Y = cy;
                         visual.Width = 0;
                         visual.Height = 0;
                         visual.SweepAngle = 0;
-                        visual.StartAngle = 0;
+                        visual.StartAngle = initialRotation;
                         visual.PushOut = 0;
                         visual.InnerRadius = 0;
                         visual.RemoveOnCompleted = true;
@@ -125,7 +153,7 @@ namespace LiveChartsCore
 
                 var stack = stacker.GetStack(point);
                 var stackedValue = stack.Start;
-                var total = stack.Total;
+                var total = chartTotal ?? stack.Total;
 
                 float start, end;
                 if (total == 0)
@@ -139,17 +167,23 @@ namespace LiveChartsCore
                     end = (stackedValue + point.PrimaryValue) / total * 360 - start;
                 }
 
+                if (IsFillSeries)
+                {
+                    start = 0;
+                    end = 360;
+                }
+
                 if (visual == null)
                 {
                     var p = new TVisual
                     {
-                        CenterX = drawLocation.X + drawMarginSize.Width * 0.5f,
-                        CenterY = drawLocation.Y + drawMarginSize.Height * 0.5f,
+                        CenterX = cx,
+                        CenterY = cy,
                         X = cx,
                         Y = cy,
                         Width = 0,
                         Height = 0,
-                        StartAngle = 0,
+                        StartAngle = chart.IsFirstDraw ? initialRotation : start + initialRotation,
                         SweepAngle = 0,
                         PushOut = 0,
                         InnerRadius = 0
@@ -167,25 +201,34 @@ namespace LiveChartsCore
                 if (Stroke != null) Stroke.AddGeometyToPaintTask(visual);
 
                 var dougnutGeometry = visual;
+                //visual.Opacity = 0.2f;
 
-                dougnutGeometry.PushOut = pushout;
+                stackedInnerRadius += relativeInnerRadius;
+
+                var md = minDimension;
+                var w = md - (md - 2 * innerRadius) * (fetched.Length - i) / fetched.Length - relativeOuterRadius * 2;
+
                 dougnutGeometry.CenterX = drawLocation.X + drawMarginSize.Width * 0.5f;
                 dougnutGeometry.CenterY = drawLocation.Y + drawMarginSize.Height * 0.5f;
-                dougnutGeometry.X = (drawMarginSize.Width - minDimension) * 0.5f;
-                dougnutGeometry.Y = (drawMarginSize.Height - minDimension) * 0.5f;
-                dougnutGeometry.Width = minDimension;
-                dougnutGeometry.Height = minDimension;
-                dougnutGeometry.InnerRadius = innerRadius;
+                dougnutGeometry.X = (drawMarginSize.Width - w) * 0.5f;
+                dougnutGeometry.Y = (drawMarginSize.Height - w) * 0.5f;
+                dougnutGeometry.Width = w;
+                dougnutGeometry.Height = w;
+                dougnutGeometry.InnerRadius = stackedInnerRadius;
                 dougnutGeometry.PushOut = pushout;
                 dougnutGeometry.RemoveOnCompleted = false;
-                dougnutGeometry.StartAngle = start;
+                dougnutGeometry.StartAngle = start + initialRotation;
                 dougnutGeometry.SweepAngle = end;
                 if (start == 0 && end == 360) dougnutGeometry.SweepAngle = 359.9999f;
 
-                point.Context.HoverArea = new SemicircleHoverArea().SetDimensions(cx, cy, start, start + end, minDimension * 0.5f);
+                stackedInnerRadius = (w + relativeOuterRadius * 2) * 0.5f;
+
+                point.Context.HoverArea = new SemicircleHoverArea()
+                    .SetDimensions(cx, cy, start + initialRotation, start + initialRotation + end, md * 0.5f);
 
                 OnPointMeasured(point);
                 _ = toDeletePoints.Remove(point);
+                i++;
             }
 
             var u = new Scaler();
@@ -204,7 +247,7 @@ namespace LiveChartsCore
         }
 
         /// <summary>
-        /// Defines de default behaviour when a point is added to a state.
+        /// Defines the default behavior when a point is added to a state.
         /// </summary>
         /// <param name="visual">The visual.</param>
         /// <param name="chart">The chart.</param>

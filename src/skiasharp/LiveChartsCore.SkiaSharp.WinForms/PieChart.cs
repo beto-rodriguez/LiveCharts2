@@ -32,8 +32,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     /// <inheritdoc cref="IPieChartView{TDrawingContext}" />
     public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     {
-        private CollectionDeepObserver<ISeries> seriesObserver;
-        private IEnumerable<ISeries> series = new List<ISeries>();
+        private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+        private IEnumerable<ISeries> _series = new List<ISeries>();
+        private double _initialRotation;
+        private double? _total;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PieChart"/> class.
@@ -43,7 +45,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         public PieChart(IChartTooltip<SkiaSharpDrawingContext>? tooltip = null, IChartLegend<SkiaSharpDrawingContext>? legend = null)
             : base(tooltip, legend)
         {
-            seriesObserver = new CollectionDeepObserver<ISeries>(
+            _seriesObserver = new CollectionDeepObserver<ISeries>(
                (object? sender, NotifyCollectionChangedEventArgs e) =>
                {
                    if (core == null) return;
@@ -57,28 +59,28 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                true);
         }
 
-        PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core
-        {
-            get
-            {
-                return core == null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
-                ;
-            }
-        }
+        PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core =>
+            core == null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
 
         /// <inheritdoc cref="IPieChartView{TDrawingContext}.Series" />
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IEnumerable<ISeries> Series
         {
-            get => series;
+            get => _series;
             set
             {
-                seriesObserver.Dispose(series);
-                seriesObserver.Initialize(value);
-                series = value;
+                _seriesObserver.Dispose(_series);
+                _seriesObserver.Initialize(value);
+                _series = value;
                 core?.Update();
             }
         }
+
+        /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />
+        public double InitialRotation { get => _initialRotation; set { _initialRotation = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total" />
+        public double? Total { get => _total; set { _total = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Initializes the core.

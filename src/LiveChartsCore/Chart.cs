@@ -151,6 +151,14 @@ namespace LiveChartsCore
         public object MeasureWork { get; set; } = new object();
 
         /// <summary>
+        /// Gets or sets a value indicating whether this it is the first draw of this instance.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this it is the first draw; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsFirstDraw { get; set; } = true;
+
+        /// <summary>
         /// Gets the series context.
         /// </summary>
         /// <value>

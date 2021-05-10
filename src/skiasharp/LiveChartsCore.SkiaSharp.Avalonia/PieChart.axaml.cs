@@ -124,6 +124,18 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             AvaloniaProperty.Register<PieChart, IEnumerable<ISeries>>(nameof(Series), new List<ISeries>(), inherits: true);
 
         /// <summary>
+        /// The initial rotation property
+        /// </summary>
+        public static readonly AvaloniaProperty<double> InitialRotationProperty =
+            AvaloniaProperty.Register<PieChart, double>(nameof(InitialRotation), 0d, inherits: true);
+
+        /// <summary>
+        /// The total property
+        /// </summary>
+        public static readonly AvaloniaProperty<double?> TotalProperty =
+            AvaloniaProperty.Register<PieChart, double?>(nameof(Total), null, inherits: true);
+
+        /// <summary>
         /// The animations speed property
         /// </summary>
         public static readonly AvaloniaProperty<TimeSpan> AnimationsSpeedProperty =
@@ -310,6 +322,20 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
             set => SetValue(SeriesProperty, value);
+        }
+
+        /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />
+        public double InitialRotation
+        {
+            get => (double)GetValue(InitialRotationProperty);
+            set => SetValue(InitialRotationProperty, value);
+        }
+
+        /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total" />
+        public double? Total
+        {
+            get => (double?)GetValue(TotalProperty);
+            set => SetValue(TotalProperty, value);
         }
 
         /// <inheritdoc cref="IChartView.AnimationsSpeed" />

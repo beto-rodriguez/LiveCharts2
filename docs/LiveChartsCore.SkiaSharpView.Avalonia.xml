@@ -760,6 +760,16 @@
             The series property
             </summary>
         </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.InitialRotationProperty">
+            <summary>
+            The initial rotation property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.TotalProperty">
+            <summary>
+            The total property
+            </summary>
+        </member>
         <member name="F:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.AnimationsSpeedProperty">
             <summary>
             The animations speed property
@@ -877,6 +887,12 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.Series">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.Series" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.InitialRotation">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.InitialRotation" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.Total">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.Total" />
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.AnimationsSpeed">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.AnimationsSpeed" />

@@ -40,6 +40,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         private readonly FloatMotionProperty _sweepProperty;
         private readonly FloatMotionProperty _pushoutProperty;
         private readonly FloatMotionProperty _innerRadiusProperty;
+        private readonly FloatMotionProperty _cornerRadiusProperty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DoughnutGeometry"/> class.
@@ -80,6 +81,11 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.InnerRadius" />
         public float InnerRadius { get => _innerRadiusProperty.GetMovement(this); set => _innerRadiusProperty.SetMovement(value, this); }
 
+        /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.CornerRadius" />
+        public float CornerRadius { get => _cornerRadiusProperty.GetMovement(this); set => _cornerRadiusProperty.SetMovement(value, this); }
+
+        internal static Action<SkiaSharpDrawingContext, SKPaint>? AlternativeDraw { get; set; }
+
         /// <inheritdoc cref="Geometry.OnMeasure(PaintTask)" />
         protected override SizeF OnMeasure(PaintTask paint)
         {
@@ -89,6 +95,12 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
+            if (AlternativeDraw != null)
+            {
+                AlternativeDraw(context, paint);
+                return;
+            }
+
             using (var path = new SKPath())
             {
                 var cx = CenterX;

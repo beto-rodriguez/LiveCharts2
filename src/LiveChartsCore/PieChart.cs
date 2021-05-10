@@ -242,6 +242,7 @@ namespace LiveChartsCore
                 }
 
                 InvokeOnUpdateStarted();
+                IsFirstDraw = false;
             }
 
             Canvas.Invalidate();

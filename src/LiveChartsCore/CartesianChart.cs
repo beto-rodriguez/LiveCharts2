@@ -530,6 +530,8 @@ namespace LiveChartsCore
 
                 IsZoomingOrPanning = false;
                 InvokeOnUpdateStarted();
+
+                IsFirstDraw = false;
             }
 
             Canvas.Invalidate();

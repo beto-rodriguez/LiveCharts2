@@ -141,6 +141,9 @@
         <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry.InnerRadius">
             <inheritdoc cref="P:LiveChartsCore.Drawing.IDoughnutGeometry`1.InnerRadius" />
         </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry.CornerRadius">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IDoughnutGeometry`1.CornerRadius" />
+        </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry.OnMeasure(LiveChartsCore.SkiaSharpView.Painting.PaintTask)">
             <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnMeasure(LiveChartsCore.SkiaSharpView.Painting.PaintTask)" />
         </member>

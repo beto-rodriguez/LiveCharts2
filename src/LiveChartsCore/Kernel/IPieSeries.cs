@@ -33,10 +33,10 @@ namespace LiveChartsCore.Kernel
         where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Gets or sets the pushout, it is the distance in pixels between the center of the control and the pie slice.
+        /// Gets or sets the push out, it is the distance in pixels between the center of the control and the pie slice.
         /// </summary>
         /// <value>
-        /// The pushout.
+        /// The push out.
         /// </value>
         double Pushout { get; set; }
 
@@ -57,12 +57,37 @@ namespace LiveChartsCore.Kernel
         double MaxOuterRadius { get; set; }
 
         /// <summary>
-        /// Gets or sets the hover pushout in pixes, it defines the <see cref="Pushout"/> where the pointer is over the slice.
+        /// Gets or sets the hover push out in pixes, it defines the <see cref="Pushout"/> where the pointer is over the slice.
         /// </summary>
         /// <value>
-        /// The hover pushout.
+        /// The hover pus hout.
         /// </value>
         double HoverPushout { get; set; }
+
+        /// <summary>
+        /// Gets or sets the relative inner radius, it is the extra inner radius for every stacked slice.
+        /// </summary>
+        /// <value>
+        /// The inner padding.
+        /// </value>
+        double RelativeInnerRadius { get; set; }
+
+        /// <summary>
+        /// Gets or sets the relative outer radius, it is the decrement in the outer radius for every stacked slice.
+        /// </summary>
+        /// <value>
+        /// The inner padding.
+        /// </value>
+        double RelativeOuterRadius { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is a fill series, a fill series is a dummy series that will create a 360 degrees
+        /// pie slice, this series is normally used to set a background for pie charts, specially useful o create gauges.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is fill series; otherwise, <c>false</c>.
+        /// </value>
+        bool IsFillSeries { get; set; }
 
         /// <summary>
         /// Gets the series bounds.

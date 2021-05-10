@@ -113,6 +113,20 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                   });
 
         /// <summary>
+        /// The initial rotation property
+        /// </summary>
+        public static readonly BindableProperty InitialRotationProperty =
+            BindableProperty.Create(
+                nameof(InitialRotation), typeof(double), typeof(CartesianChart), 0d, BindingMode.Default, null, OnBindablePropertyChanged);
+
+        /// <summary>
+        /// The total property
+        /// </summary>
+        public static readonly BindableProperty TotalProperty =
+            BindableProperty.Create(
+                nameof(TotalProperty), typeof(double), typeof(CartesianChart), null, BindingMode.Default, null, OnBindablePropertyChanged);
+
+        /// <summary>
         /// The draw margin property
         /// </summary>
         public static readonly BindableProperty DrawMarginProperty =
@@ -311,6 +325,20 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
             set => SetValue(SeriesProperty, value);
+        }
+
+        /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />
+        public double InitialRotation
+        {
+            get => (double)GetValue(InitialRotationProperty);
+            set => SetValue(InitialRotationProperty, value);
+        }
+
+        /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total" />
+        public double? Total
+        {
+            get => (double?)GetValue(TotalProperty);
+            set => SetValue(TotalProperty, value);
         }
 
         /// <inheritdoc cref="IChartView.AnimationsSpeed" />

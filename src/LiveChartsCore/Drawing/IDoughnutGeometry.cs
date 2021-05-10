@@ -27,7 +27,7 @@ namespace LiveChartsCore.Drawing
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="IDrawable{TDrawingContext}" />
-    public interface IDoughnutGeometry<TDrawingContext> : IDrawable<TDrawingContext>
+    public interface IDoughnutGeometry<TDrawingContext> : IGeometry<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
@@ -109,5 +109,13 @@ namespace LiveChartsCore.Drawing
         /// The inner radius.
         /// </value>
         float InnerRadius { get; set; }
+
+        /// <summary>
+        /// Gets or sets the corner radius.
+        /// </summary>
+        /// <value>
+        /// The corner radius.
+        /// </value>
+        float CornerRadius { get; set; }
     }
 }
