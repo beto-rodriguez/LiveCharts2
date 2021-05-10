@@ -675,7 +675,7 @@
         </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Avalonia.MotionCanvas">
             <summary>
-            The motion canvas control fro avalonia, <see cref="T:LiveChartsCore.Drawing.MotionCanvas`1"/>.
+            The motion canvas control for avalonia, <see cref="T:LiveChartsCore.Drawing.MotionCanvas`1"/>.
             </summary>
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Avalonia.MotionCanvas.#ctor">

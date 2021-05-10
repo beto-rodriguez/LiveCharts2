@@ -112,7 +112,7 @@ namespace LiveChartsCore
                 chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
             }
 
-            var completeAngle = 270f;
+            var completeAngle = 360f;
 
             var cx = drawLocation.X + drawMarginSize.Width * 0.5f;
             var cy = drawLocation.Y + drawMarginSize.Height * 0.5f;
