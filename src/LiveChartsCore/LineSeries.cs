@@ -126,7 +126,7 @@ namespace LiveChartsCore
         {
             Trace.WriteLine(chart.View.CoreCanvas.CountGeometries());
 
-            var drawLocation = chart.DrawMaringLocation;
+            var drawLocation = chart.DrawMarginLocation;
             var drawMarginSize = chart.DrawMarginSize;
             var secondaryScale = new Scaler(drawLocation, drawMarginSize, xAxis);
             var primaryScale = new Scaler(drawLocation, drawMarginSize, yAxis);
@@ -194,7 +194,7 @@ namespace LiveChartsCore
                 if (Fill != null)
                 {
                     wasFillInitialized = fillPathHelper.Initialize(SetDefaultPathTransitions, chartAnimation);
-                    Fill.AddGeometyToPaintTask(fillPathHelper.Path);
+                    Fill.AddGeometryToPaintTask(fillPathHelper.Path);
                     chart.Canvas.AddDrawableTask(Fill);
                     Fill.ZIndex = actualZIndex + 0.1;
                     Fill.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
@@ -203,7 +203,7 @@ namespace LiveChartsCore
                 if (Stroke != null)
                 {
                     wasStrokeInitialized = strokePathHelper.Initialize(SetDefaultPathTransitions, chartAnimation);
-                    Stroke.AddGeometyToPaintTask(strokePathHelper.Path);
+                    Stroke.AddGeometryToPaintTask(strokePathHelper.Path);
                     chart.Canvas.AddDrawableTask(Stroke);
                     Stroke.ZIndex = actualZIndex + 0.2;
                     Stroke.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
@@ -276,8 +276,8 @@ namespace LiveChartsCore
 
                     _ = everFetched.Add(data.TargetPoint);
 
-                    if (GeometryFill != null) GeometryFill.AddGeometyToPaintTask(visual.Geometry);
-                    if (GeometryStroke != null) GeometryStroke.AddGeometyToPaintTask(visual.Geometry);
+                    if (GeometryFill != null) GeometryFill.AddGeometryToPaintTask(visual.Geometry);
+                    if (GeometryStroke != null) GeometryStroke.AddGeometryToPaintTask(visual.Geometry);
 
                     visual.Bezier.X0 = data.X0;
                     visual.Bezier.Y0 = data.Y0;
@@ -386,7 +386,7 @@ namespace LiveChartsCore
                             l.CompleteAllTransitions();
                             label = l;
                             data.TargetPoint.Context.Label = l;
-                            DataLabelsDrawableTask.AddGeometyToPaintTask(l);
+                            DataLabelsDrawableTask.AddGeometryToPaintTask(l);
                         }
 
                         label.Text = DataLabelsFormatter(data.TargetPoint);
@@ -541,7 +541,7 @@ namespace LiveChartsCore
                 sh = _geometryStroke.StrokeThickness;
                 strokeClone.ZIndex = 1;
                 w += 2 * _geometryStroke.StrokeThickness;
-                strokeClone.AddGeometyToPaintTask(visual);
+                strokeClone.AddGeometryToPaintTask(visual);
                 _ = context.PaintTasks.Add(strokeClone);
             }
             else if (Stroke != null)
@@ -557,7 +557,7 @@ namespace LiveChartsCore
                 sh = strokeClone.StrokeThickness;
                 strokeClone.ZIndex = 1;
                 w += 2 * strokeClone.StrokeThickness;
-                strokeClone.AddGeometyToPaintTask(visual);
+                strokeClone.AddGeometryToPaintTask(visual);
                 _ = context.PaintTasks.Add(strokeClone);
             }
 
@@ -565,14 +565,14 @@ namespace LiveChartsCore
             {
                 var fillClone = _geometryFill.CloneTask();
                 var visual = new TVisual { X = sh, Y = sh, Height = lss, Width = lss };
-                fillClone.AddGeometyToPaintTask(visual);
+                fillClone.AddGeometryToPaintTask(visual);
                 _ = context.PaintTasks.Add(fillClone);
             }
             else if (Fill != null)
             {
                 var fillClone = Fill.CloneTask();
                 var visual = new TVisual { X = sh, Y = sh, Height = lss, Width = lss };
-                fillClone.AddGeometyToPaintTask(visual);
+                fillClone.AddGeometryToPaintTask(visual);
                 _ = context.PaintTasks.Add(fillClone);
             }
 

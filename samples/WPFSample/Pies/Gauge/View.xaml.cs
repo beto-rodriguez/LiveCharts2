@@ -20,40 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Kernel
+using System.Windows.Controls;
+
+namespace WPFSample.Pies.Gauge
 {
     /// <summary>
-    /// Defines the tooltip point class.
+    /// Interaction logic for View.xaml
     /// </summary>
-    public class TooltipPoint
+    public partial class View : UserControl
     {
-        private ChartPoint point;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TooltipPoint"/> class.
-        /// </summary>
-        /// <param name="series">The series.</param>
-        /// <param name="point">The point.</param>
-        public TooltipPoint(ISeries series, ChartPoint point)
+        public View()
         {
-            this.Series = series;
-            this.point = point;
+            InitializeComponent();
         }
-
-        /// <summary>
-        /// Gets or sets the series.
-        /// </summary>
-        /// <value>
-        /// The series.
-        /// </value>
-        public ISeries Series { get; set; }
-
-        /// <summary>
-        /// Gets or sets the point.
-        /// </summary>
-        /// <value>
-        /// The point.
-        /// </value>
-        public ChartPoint Point { get => point; set => point = value; }
     }
 }

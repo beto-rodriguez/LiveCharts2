@@ -291,7 +291,7 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart.LegendFontWeight">
             <summary>
-            Gets or sets the legend defailt font weight.
+            Gets or sets the legend default font weight.
             </summary>
             <value>
             The legend font weight.

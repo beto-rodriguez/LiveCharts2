@@ -62,7 +62,7 @@ namespace ViewModelsSamples.Scatter.AutoUpdate
 
         public void AddRandomItem()
         {
-            // for this sample only 50 items are suported.
+            // for this sample only 50 items are supported.
             if (observableValues.Count > 50) return;
 
             var randomValue = random.Next(1, 10);

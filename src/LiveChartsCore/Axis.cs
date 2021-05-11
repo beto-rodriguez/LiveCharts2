@@ -190,7 +190,7 @@ namespace LiveChartsCore
             _ = subscribedTo.Add(chart);
 
             var controlSize = chart.ControlSize;
-            var drawLocation = chart.DrawMaringLocation;
+            var drawLocation = chart.DrawMarginLocation;
             var drawMarginSize = chart.DrawMarginSize;
 
             var scale = new Scaler(drawLocation, drawMarginSize, this);
@@ -368,8 +368,8 @@ namespace LiveChartsCore
                     separators.Add(label, visualSeparator);
                 }
 
-                if (TextBrush != null && visualSeparator.Text != null) TextBrush.AddGeometyToPaintTask(visualSeparator.Text);
-                if (SeparatorsBrush != null && ShowSeparatorLines && visualSeparator.Line != null) SeparatorsBrush.AddGeometyToPaintTask(visualSeparator.Line);
+                if (TextBrush != null && visualSeparator.Text != null) TextBrush.AddGeometryToPaintTask(visualSeparator.Text);
+                if (SeparatorsBrush != null && ShowSeparatorLines && visualSeparator.Line != null) SeparatorsBrush.AddGeometryToPaintTask(visualSeparator.Line);
 
                 if (visualSeparator.Text != null)
                 {
@@ -504,7 +504,7 @@ namespace LiveChartsCore
             Scaler scale)
         {
             var controlSize = chart.ControlSize;
-            var drawLocation = chart.DrawMaringLocation;
+            var drawLocation = chart.DrawMarginLocation;
             var drawMarginSize = chart.DrawMarginSize;
 
             var lyi = drawLocation.Y;

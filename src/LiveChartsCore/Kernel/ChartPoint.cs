@@ -23,7 +23,7 @@
 namespace LiveChartsCore.Kernel
 {
     /// <summary>
-    /// Defiens a point in a chart.
+    /// Defines a point in a chart.
     /// </summary>
     public class ChartPoint
     {

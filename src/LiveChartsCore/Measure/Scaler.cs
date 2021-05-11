@@ -36,13 +36,13 @@ namespace LiveChartsCore.Measure
         /// <summary>
         /// Initializes a new instance of the <see cref="Scaler"/> class.
         /// </summary>
-        /// <param name="drawMaringLocation">The draw margin location.</param>
+        /// <param name="drawMarginLocation">The draw margin location.</param>
         /// <param name="drawMarginSize">Size of the draw margin.</param>
         /// <param name="axis">The axis.</param>
         /// <param name="usePreviousScale">Indicates if the scaler should be built based on the previous known data.</param>
         /// <exception cref="Exception">The axis is not ready to be scaled.</exception>
         public Scaler(
-            PointF drawMaringLocation, SizeF drawMarginSize, IAxis axis, bool usePreviousScale = false)
+            PointF drawMagrinLocation, SizeF drawMarginSize, IAxis axis, bool usePreviousScale = false)
         {
             if (axis.Orientation == AxisOrientation.Unknown) throw new Exception("The axis is not ready to be scaled.");
 
@@ -61,14 +61,14 @@ namespace LiveChartsCore.Measure
 
                 if (axis.Orientation == AxisOrientation.X)
                 {
-                    _minPx = drawMaringLocation.X;
-                    _maxPx = drawMaringLocation.X + drawMarginSize.Width;
+                    _minPx = drawMagrinLocation.X;
+                    _maxPx = drawMagrinLocation.X + drawMarginSize.Width;
                     _deltaPx = _maxPx - _minPx;
                 }
                 else
                 {
-                    _minPx = drawMaringLocation.Y;
-                    _maxPx = drawMaringLocation.Y + drawMarginSize.Height;
+                    _minPx = drawMagrinLocation.Y;
+                    _maxPx = drawMagrinLocation.Y + drawMarginSize.Height;
                     _deltaPx = _maxPx - _minPx;
                 }
 
@@ -80,8 +80,8 @@ namespace LiveChartsCore.Measure
 
             if (axis.Orientation == AxisOrientation.X)
             {
-                _minPx = drawMaringLocation.X;
-                _maxPx = drawMaringLocation.X + drawMarginSize.Width;
+                _minPx = drawMagrinLocation.X;
+                _maxPx = drawMagrinLocation.X + drawMarginSize.Width;
                 _deltaPx = _maxPx - _minPx;
 
                 _maxVal = (float)(axis.IsInverted ? actualBounds.Min : actualBounds.Max);
@@ -108,8 +108,8 @@ namespace LiveChartsCore.Measure
             }
             else
             {
-                _minPx = drawMaringLocation.Y;
-                _maxPx = drawMaringLocation.Y + drawMarginSize.Height;
+                _minPx = drawMagrinLocation.Y;
+                _maxPx = drawMagrinLocation.Y + drawMarginSize.Height;
                 _deltaPx = _maxPx - _minPx;
 
                 _maxVal = (float)(axis.IsInverted ? actualBounds.Max : actualBounds.Min);

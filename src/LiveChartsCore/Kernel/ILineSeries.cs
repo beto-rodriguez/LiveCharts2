@@ -41,7 +41,7 @@ namespace LiveChartsCore.Kernel
         double GeometrySize { get; set; }
 
         /// <summary>
-        /// Gets or sets the line smoothness, where 0 is a staright line, and 1 the most curved line, default is 0.65
+        /// Gets or sets the line smoothness, where 0 is a straight line, and 1 the most curved line, default is 0.65
         /// </summary>
         /// <value>
         /// The line smoothness.
@@ -50,7 +50,7 @@ namespace LiveChartsCore.Kernel
 
         /// <summary>
         /// Gets or sets a value indicating whether the line should split every null point, 
-        /// enabling it has a performance impact, defaulty is true.
+        /// enabling it has a performance impact, default is true.
         /// </summary>
         bool EnableNullSplitting { get; set; }
 

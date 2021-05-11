@@ -60,7 +60,7 @@ namespace LiveChartsCore.Kernel
         #region columns and rows
 
         /// <summary>
-        /// Gets the column postion.
+        /// Gets the column position.
         /// </summary>
         /// <param name="series">The series.</param>
         /// <returns></returns>
@@ -83,7 +83,7 @@ namespace LiveChartsCore.Kernel
         }
 
         /// <summary>
-        /// Gets the row postion.
+        /// Gets the row position.
         /// </summary>
         /// <param name="series">The series.</param>
         /// <returns></returns>
@@ -106,7 +106,7 @@ namespace LiveChartsCore.Kernel
         }
 
         /// <summary>
-        /// Gets the stacked column postion.
+        /// Gets the stacked column position.
         /// </summary>
         /// <param name="series">The series.</param>
         /// <returns></returns>
@@ -129,7 +129,7 @@ namespace LiveChartsCore.Kernel
         }
 
         /// <summary>
-        /// Gets the stacked row postion.
+        /// Gets the stacked row position.
         /// </summary>
         /// <param name="series">The series.</param>
         /// <returns></returns>

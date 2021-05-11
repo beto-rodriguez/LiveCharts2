@@ -47,7 +47,7 @@ namespace LiveChartsCore.UnitTesting
             var drawables = canvas.DrawablesCount;
             var geometries = canvas.CountGeometries();
 
-            // on changing the fill task, the previouns instance should be removed.
+            // on changing the fill task, the previous instance should be removed.
             series.Fill = new SolidColorPaintTask();
 
             chart.Core.Update(new ChartUpdateParams { Throttling = false });

@@ -497,7 +497,7 @@
         </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Avalonia.IAvaloniaChart">
             <summary>
-            Defines a chart only for the the avalonia ui framework
+            Defines a chart only for the avalonia ui framework
             </summary>
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.IAvaloniaChart.TooltipTemplate">

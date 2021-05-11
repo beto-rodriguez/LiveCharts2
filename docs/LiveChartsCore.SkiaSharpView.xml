@@ -929,8 +929,8 @@
         <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.SetGeometries(System.Collections.Generic.HashSet{LiveChartsCore.Drawing.IDrawable{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext}})">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.SetGeometries(System.Collections.Generic.HashSet{LiveChartsCore.Drawing.IDrawable{`0}})" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.AddGeometyToPaintTask(LiveChartsCore.Drawing.IDrawable{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
-            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.AddGeometyToPaintTask(LiveChartsCore.Drawing.IDrawable{`0})" />
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.AddGeometryToPaintTask(LiveChartsCore.Drawing.IDrawable{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.AddGeometryToPaintTask(LiveChartsCore.Drawing.IDrawable{`0})" />
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.RemoveGeometryFromPainTask(LiveChartsCore.Drawing.IDrawable{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.RemoveGeometryFromPainTask(LiveChartsCore.Drawing.IDrawable{`0})" />

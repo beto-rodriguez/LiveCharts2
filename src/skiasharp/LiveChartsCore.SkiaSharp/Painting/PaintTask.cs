@@ -137,8 +137,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             Invalidate();
         }
 
-        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.AddGeometyToPaintTask(IDrawable{TDrawingContext})" />
-        public void AddGeometyToPaintTask(IDrawable<SkiaSharpDrawingContext> geometry)
+        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.AddGeometryToPaintTask(IDrawable{TDrawingContext})" />
+        public void AddGeometryToPaintTask(IDrawable<SkiaSharpDrawingContext> geometry)
         {
             _ = _geometries.Add(geometry);
             _actualGeometries = null;
