@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using LiveChartsCore.Measure;
+using System.Diagnostics;
 
 namespace LiveChartsCore
 {
@@ -221,6 +222,7 @@ namespace LiveChartsCore
                 var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
                 foreach (var series in Series)
                 {
+                    Trace.WriteLine(series.Name);
                     series.Measure(this);
                     _ = _everMeasuredSeries.Add(series);
                     _ = toDeleteSeries.Remove(series);

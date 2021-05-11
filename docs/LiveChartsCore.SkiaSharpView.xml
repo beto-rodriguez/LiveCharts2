@@ -614,6 +614,104 @@
             Clears the canvas.
             </summary>
         </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.GaugeBuilder">
+            <summary>
+            Defines a helper class to build gauges.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.InnerRadius">
+            <summary>
+            Gets or sets the inner radius.
+            </summary>
+            <value>
+            The inner radius.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.OffsetRadius">
+            <summary>
+            Gets or sets the offset radius, the separation between each gauge if multiple gauges are nested.
+            </summary>
+            <value>
+            The relative inner radius.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.BackgroundInnerRadius">
+            <summary>
+            Gets or sets the background inner radius.
+            </summary>
+            <value>
+            The background inner radius.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.BackgroundOffsetRadius">
+            <summary>
+            Gets or sets the background offset radius, the separation between each gauge if multiple gauges are nested.
+            </summary>
+            <value>
+            The background relative inner radius.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.Background">
+            <summary>
+            Gets or sets the background.
+            </summary>
+            <value>
+            The background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.LabelsSize">
+            <summary>
+            Gets or sets the size of the labels.
+            </summary>
+            <value>
+            The size of the labels.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.LabelsPosition">
+            <summary>
+            Gets or sets the labels position.
+            </summary>
+            <value>
+            The labels position.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.LabelFormatter">
+            <summary>
+            Gets or sets the label formatter.
+            </summary>
+            <value>
+            The label formatter.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.GaugeBuilder.AddValue(LiveChartsCore.Defaults.ObservableValue,LiveChartsCore.Drawing.IDrawableTask{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <summary>
+            Adds the value.
+            </summary>
+            <param name="value">The value.</param>
+            <param name="labelsDrawableTask">The labels drawable task.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.GaugeBuilder.AddValue(LiveChartsCore.Defaults.ObservableValue,SkiaSharp.SKColor)">
+            <summary>
+            Adds the value.
+            </summary>
+            <param name="value">The value.</param>
+            <param name="labelsColor">Color of the labels.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.GaugeBuilder.AddValue(LiveChartsCore.Defaults.ObservableValue)">
+            <summary>
+            Adds the value.
+            </summary>
+            <param name="value">The value.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.GaugeBuilder.BuildSeries">
+            <summary>
+            Builds the series.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:LiveChartsCore.SkiaSharpView.LineSeries`1">
             <summary>
             Defines a line series in the user interface.
@@ -1013,7 +1111,7 @@
         </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask">
             <summary>
-            Defines a set of geometries that will be painted using a solid color.,
+            Defines a set of geometries that will be painted using a solid color.
             </summary>
             <seealso cref="T:LiveChartsCore.SkiaSharpView.Painting.PaintTask" />
         </member>

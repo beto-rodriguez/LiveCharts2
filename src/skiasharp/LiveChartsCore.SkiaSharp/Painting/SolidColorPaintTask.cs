@@ -30,7 +30,7 @@ using System.Drawing;
 namespace LiveChartsCore.SkiaSharpView.Painting
 {
     /// <summary>
-    /// Defines a set of geometries that will be painted using a solid color.,
+    /// Defines a set of geometries that will be painted using a solid color.
     /// </summary>
     /// <seealso cref="PaintTask" />
     public class SolidColorPaintTask : PaintTask
