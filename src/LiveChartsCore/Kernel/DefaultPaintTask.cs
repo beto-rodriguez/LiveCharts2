@@ -109,10 +109,10 @@ namespace LiveChartsCore.Kernel
         public bool IsPaused { get; set; }
 
         /// <summary>
-        /// Adds the geomety to paint task.
+        /// Adds the geometry to paint task.
         /// </summary>
         /// <param name="geometry">The geometry.</param>
-        public void AddGeometyToPaintTask(IDrawable<TDrawingContext> geometry)
+        public void AddGeometryToPaintTask(IDrawable<TDrawingContext> geometry)
         {
 
         }

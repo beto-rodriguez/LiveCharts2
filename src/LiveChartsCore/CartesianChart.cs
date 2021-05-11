@@ -161,8 +161,8 @@ namespace LiveChartsCore
             var xAxis = XAxes[xAxisIndex];
             var yAxis = YAxes[yAxisIndex];
 
-            var xScaler = new Scaler(drawMaringLocation, drawMarginSize, xAxis);
-            var yScaler = new Scaler(drawMaringLocation, drawMarginSize, yAxis);
+            var xScaler = new Scaler(DrawMarginLocation, drawMarginSize, xAxis);
+            var yScaler = new Scaler(DrawMarginLocation, drawMarginSize, yAxis);
 
             return new PointF(xScaler.ToChartValues(point.X), yScaler.ToChartValues(point.Y));
         }
@@ -185,7 +185,7 @@ namespace LiveChartsCore
                 for (var index = 0; index < XAxes.Length; index++)
                 {
                     var xi = XAxes[index];
-                    var px = new Scaler(drawMaringLocation, drawMarginSize, xi).ToChartValues(pivot.X);
+                    var px = new Scaler(DrawMarginLocation, drawMarginSize, xi).ToChartValues(pivot.X);
 
                     var max = xi.MaxLimit == null ? xi.DataBounds.Max : xi.MaxLimit.Value;
                     var min = xi.MinLimit == null ? xi.DataBounds.Min : xi.MinLimit.Value;
@@ -214,7 +214,7 @@ namespace LiveChartsCore
                 for (var index = 0; index < YAxes.Length; index++)
                 {
                     var yi = YAxes[index];
-                    var px = new Scaler(drawMaringLocation, drawMarginSize, yi).ToChartValues(pivot.Y);
+                    var px = new Scaler(DrawMarginLocation, drawMarginSize, yi).ToChartValues(pivot.Y);
 
                     var max = yi.MaxLimit == null ? yi.DataBounds.Max : yi.MaxLimit.Value;
                     var min = yi.MinLimit == null ? yi.DataBounds.Min : yi.MinLimit.Value;
@@ -253,7 +253,7 @@ namespace LiveChartsCore
                 for (var index = 0; index < XAxes.Length; index++)
                 {
                     var xi = XAxes[index];
-                    var scale = new Scaler(drawMaringLocation, drawMarginSize, xi);
+                    var scale = new Scaler(DrawMarginLocation, drawMarginSize, xi);
                     var dx = scale.ToChartValues(-delta.X) - scale.ToChartValues(0);
 
                     var max = xi.MaxLimit == null ? xi.DataBounds.Max : xi.MaxLimit.Value;
@@ -283,7 +283,7 @@ namespace LiveChartsCore
                 for (var index = 0; index < YAxes.Length; index++)
                 {
                     var yi = YAxes[index];
-                    var scale = new Scaler(drawMaringLocation, drawMarginSize, yi);
+                    var scale = new Scaler(DrawMarginLocation, drawMarginSize, yi);
                     var dy = -(scale.ToChartValues(delta.Y) - scale.ToChartValues(0));
 
                     var max = yi.MaxLimit == null ? yi.DataBounds.Max : yi.MaxLimit.Value;
