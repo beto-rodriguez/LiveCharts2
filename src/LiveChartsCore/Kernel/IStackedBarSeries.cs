@@ -25,7 +25,7 @@ using LiveChartsCore.Drawing;
 namespace LiveChartsCore.Kernel
 {
     /// <summary>
-    /// Defiens a stacked bar series.
+    /// Defines a stacked bar series.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="IDrawableSeries{TDrawingContext}" />

@@ -26,7 +26,7 @@ using System;
 namespace LiveChartsCore.Kernel
 {
     /// <summary>
-    /// Defines the area helper classs.
+    /// Defines the area helper class.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <typeparam name="TGeometryPath">The type of the geometry path.</typeparam>

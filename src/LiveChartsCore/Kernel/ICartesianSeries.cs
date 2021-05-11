@@ -51,7 +51,7 @@ namespace LiveChartsCore.Kernel
         int ScalesYAt { get; set; }
 
         /// <summary>
-        /// Gets the series bounds bounds.
+        /// Gets the series bounds.
         /// </summary>
         /// <param name="chart">The chart.</param>
         /// <param name="x">The x.</param>

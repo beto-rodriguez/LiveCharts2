@@ -282,7 +282,7 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart.LegendFontWeight">
             <summary>
-            Gets or sets the legend defailt font weight.
+            Gets or sets the legend default font weight.
             </summary>
             <value>
             The legend font weight.
@@ -339,7 +339,7 @@
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Avalonia.DefaultLegend"/> class.
             </summary>
-            <exception cref="T:System.Exception">default tempalte not found</exception>
+            <exception cref="T:System.Exception">default template not found</exception>
         </member>
         <member name="F:LiveChartsCore.SkiaSharpView.Avalonia.DefaultLegend.OrientationProperty">
             <summary>
@@ -405,7 +405,7 @@
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Avalonia.DefaultTooltip"/> class.
             </summary>
-            <exception cref="T:System.Exception">default tempalte not found</exception>
+            <exception cref="T:System.Exception">default template not found</exception>
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.DefaultTooltip.TooltipTemplate">
             <summary>
@@ -479,7 +479,7 @@
         </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Avalonia.IAvaloniaChart">
             <summary>
-            Defines a chart only for the the avalonia ui framework
+            Defines a chart only for the avalonia ui framework
             </summary>
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.IAvaloniaChart.TooltipTemplate">
@@ -657,7 +657,7 @@
         </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Avalonia.MotionCanvas">
             <summary>
-            Thje motion canvas control fro avalonia, <see cref="T:LiveChartsCore.Drawing.MotionCanvas`1"/>.
+            The motion canvas control fro avalonia, <see cref="T:LiveChartsCore.Drawing.MotionCanvas`1"/>.
             </summary>
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Avalonia.MotionCanvas.#ctor">
@@ -908,7 +908,7 @@
             Gets or sets the default tool tip background.
             </summary>
             <value>
-            The too ltip background.
+            The tooltip background.
             </value>
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.Tooltip">

@@ -26,7 +26,7 @@ using Avalonia.Media;
 namespace LiveChartsCore.SkiaSharpView.Avalonia
 {
     /// <summary>
-    /// Defines a chart only for the the avalonia ui framework
+    /// Defines a chart only for the avalonia ui framework
     /// </summary>
     public interface IAvaloniaChart
     {

@@ -25,7 +25,7 @@ using LiveChartsCore.Drawing;
 namespace LiveChartsCore.Kernel
 {
     /// <summary>
-    /// Defiens a scatter series.
+    /// Defines a scatter series.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="IDrawableSeries{TDrawingContext}" />

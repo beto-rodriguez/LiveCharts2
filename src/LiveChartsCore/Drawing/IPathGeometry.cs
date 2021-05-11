@@ -23,7 +23,7 @@
 namespace LiveChartsCore.Drawing
 {
     /// <summary>
-    /// Defines a path geometyr in the user interface.
+    /// Defines a path geometry in the user interface.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <typeparam name="TPathArgs">The type of the path arguments.</typeparam>

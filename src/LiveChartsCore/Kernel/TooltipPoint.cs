@@ -23,7 +23,7 @@
 namespace LiveChartsCore.Kernel
 {
     /// <summary>
-    /// Defines the tooltip piont class.
+    /// Defines the tooltip point class.
     /// </summary>
     public class TooltipPoint
     {

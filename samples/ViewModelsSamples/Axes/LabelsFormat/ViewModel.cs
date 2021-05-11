@@ -27,7 +27,7 @@ namespace ViewModelsSamples.Axes.LabelsFormat
 
                     // The MinStep property lets you define the minimum separation (in chart values scale)
                     // between every axis separator, in this case we don't want decimals,
-                    // so lets force it to be greather or equals than 1
+                    // so lets force it to be greater or equals than 1
                     MinStep = 1
                 }
             };

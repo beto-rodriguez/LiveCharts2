@@ -175,7 +175,7 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
 
 
         /// <summary> 
-        /// Removes the first occurence of each item in the specified collection from the <see cref="ObservableCollection{T}"/>.
+        /// Removes the first occurrence of each item in the specified collection from the <see cref="ObservableCollection{T}"/>.
         /// </summary>
         /// <param name="collection">The items to remove.</param>        
         /// <exception cref="ArgumentNullException"><paramref name="collection"/> is null.</exception>

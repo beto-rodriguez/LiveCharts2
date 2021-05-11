@@ -83,7 +83,7 @@ namespace LiveChartsCore.Kernel
         Padding Padding { get; set; }
 
         /// <summary>
-        /// Gets or sets the xo, a refence used internally to calculate the axis position.
+        /// Gets or sets the xo, a reference used internally to calculate the axis position.
         /// </summary>
         /// <value>
         /// The xo.
@@ -91,7 +91,7 @@ namespace LiveChartsCore.Kernel
         float Xo { get; set; }
 
         /// <summary>
-        /// Gets or sets the yo, a refence used internally to calculate the axis position..
+        /// Gets or sets the yo, a reference used internally to calculate the axis position..
         /// </summary>
         /// <value>
         /// The yo.
@@ -136,7 +136,7 @@ namespace LiveChartsCore.Kernel
 
         /// <summary>
         /// Gets or sets the maximum value visible in the axis, any point greater than this value will be hidden, 
-        /// set it null to use a value based on the greather value in the chart.
+        /// set it null to use a value based on the greater value in the chart.
         /// </summary>
         /// <value>
         /// The maximum value.
@@ -202,7 +202,7 @@ namespace LiveChartsCore.Kernel
         /// <summary>
         /// Gets or sets the labels, if labels are not null, then the axis label will be pulled from the labels collection,
         /// the label is mapped to the chart based on the position of the label and the position of the point, both integers,
-        /// if the axis requires a label outsite the bounds of the labels IList then the index will be returned as the label.
+        /// if the axis requires a label outside the bounds of the labels IList then the index will be returned as the label.
         /// Default value is null.
         /// </summary>
         /// <value>
@@ -234,7 +234,7 @@ namespace LiveChartsCore.Kernel
         bool ShowSeparatorLines { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the separator weddges are visible.
+        /// Gets or sets a value indicating whether the separator wedges are visible.
         /// </summary>
         bool ShowSeparatorWedges { get; set; }
 
