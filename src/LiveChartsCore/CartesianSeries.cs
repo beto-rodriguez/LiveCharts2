@@ -25,6 +25,7 @@ using LiveChartsCore.Drawing;
 using System;
 using LiveChartsCore.Measure;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace LiveChartsCore
 {
@@ -46,6 +47,7 @@ namespace LiveChartsCore
     {
         private int _scalesXAt;
         private int _scalesYAt;
+        private DataLabelsPosition _labelsPosition;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -58,6 +60,14 @@ namespace LiveChartsCore
 
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.ScalesYAt"/>
         public int ScalesYAt { get => _scalesYAt; set { _scalesYAt = value; OnPropertyChanged(); } }
+
+        /// <summary>
+        /// Gets or sets the data labels position.
+        /// </summary>
+        /// <value>
+        /// The data labels position.
+        /// </value>
+        public DataLabelsPosition DataLabelsPosition { get => _labelsPosition; set { _labelsPosition = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
         public virtual DimensionalBounds GetBounds(
@@ -97,6 +107,58 @@ namespace LiveChartsCore
             }
 
             foreach (var item in deleted) _ = everFetched.Remove(item);
+        }
+
+        /// <summary>
+        /// Gets the label position.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="labelSize">Size of the label.</param>
+        /// <param name="position">The position.</param>
+        /// <param name="seriesProperties">The series properties.</param>
+        /// <param name="isGreaterThanPivot">if set to <c>true</c> [is greater than pivot].</param>
+        /// <returns></returns>
+        protected virtual PointF GetLabelPosition(
+            float x,
+            float y,
+            float width,
+            float height,
+            SizeF labelSize,
+            DataLabelsPosition position,
+            SeriesProperties seriesProperties,
+            bool isGreaterThanPivot)
+        {
+            var middleX = (x + x + width) * 0.5f;
+            var middleY = (y + y + height) * 0.5f;
+
+            return position switch
+            {
+                DataLabelsPosition.Middle => new PointF(middleX, middleY),
+                DataLabelsPosition.Top => new PointF(middleX, y - labelSize.Height * 0.5f),
+                DataLabelsPosition.Bottom => new PointF(middleX, y + height + labelSize.Height * 0.5f),
+                DataLabelsPosition.Left => new PointF(x - labelSize.Width * 0.5f, middleY),
+                DataLabelsPosition.Right => new PointF(x + width + labelSize.Width * 0.5f, middleY),
+                DataLabelsPosition.End =>
+                (seriesProperties & SeriesProperties.HorizontalOrientation) == SeriesProperties.HorizontalOrientation
+                    ? (isGreaterThanPivot
+                        ? new PointF(x + width + labelSize.Width * 0.5f, middleY)
+                        : new PointF(x - labelSize.Width * 0.5f, middleY))
+                    : (isGreaterThanPivot
+                        ? new PointF(middleX, y - labelSize.Height * 0.5f)
+                        : new PointF(middleX, y + height + labelSize.Height * 0.5f)),
+                DataLabelsPosition.Start =>
+                     (seriesProperties & SeriesProperties.HorizontalOrientation) == SeriesProperties.HorizontalOrientation
+                        ? (isGreaterThanPivot
+                            ? new PointF(x - labelSize.Width * 0.5f, middleY)
+                            : new PointF(x + width + labelSize.Width * 0.5f, middleY))
+                        : (isGreaterThanPivot
+                            ? new PointF(middleX, y + height + labelSize.Height * 0.5f)
+                            : new PointF(middleX, y - labelSize.Height * 0.5f)),
+                _ => throw new Exception("Position not supported"),
+            };
         }
     }
 }

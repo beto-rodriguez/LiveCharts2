@@ -8,10 +8,8 @@
   <UserControl.DataContext>
     <vms:ViewModel/>
   </UserControl.DataContext>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
-    <lvc:PieChart Series="{Binding Series}" Total="{Binding GaugeTotal}" InitialRotation="-90"></lvc:PieChart>
+  <Grid RowDefinitions="40, *">
+      <Slider Width="300" Minimum="-360" Maximum="720" Value="{Binding InitialRotation, Mode=TwoWay}" />
+    <lvc:PieChart Grid.Row="1" Series="{Binding Series}" Total="{Binding GaugeTotal}" InitialRotation="{Binding InitialRotation}"></lvc:PieChart>
   </Grid>
 </UserControl>

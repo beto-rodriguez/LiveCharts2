@@ -65,14 +65,6 @@ namespace LiveChartsCore.Kernel
         double DataLabelsSize { get; set; }
 
         /// <summary>
-        /// Gets or sets the data labels position.
-        /// </summary>
-        /// <value>
-        /// The data labels position.
-        /// </value>
-        DataLabelsPosition DataLabelsPosition { get; set; }
-
-        /// <summary>
         /// Gets or sets the data labels padding.
         /// </summary>
         /// <value>
@@ -87,8 +79,6 @@ namespace LiveChartsCore.Kernel
         /// The default paint context.
         /// </value>
         PaintContext<TDrawingContext> DefaultPaintContext { get; }
-
-
 
         /// <summary>
         /// Gets the stack group, normally used internally to handled the stacked series.

@@ -24,7 +24,6 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
 using System;
-using LiveChartsCore.Measure;
 using System.Collections.Generic;
 
 namespace LiveChartsCore
@@ -58,7 +57,6 @@ namespace LiveChartsCore
         private double _legendShapeSize = 15;
         private IDrawableTask<TDrawingContext>? _dataLabelsDrawableTask;
         private double _dataLabelsSize = 16;
-        private DataLabelsPosition _dataLabelsPosition;
         private Padding _dataLabelsPadding = new() { Left = 6, Top = 8, Right = 6, Bottom = 8 };
 
         /// <summary>
@@ -142,14 +140,6 @@ namespace LiveChartsCore
         /// The size of the data labels.
         /// </value>
         public double DataLabelsSize { get => _dataLabelsSize; set { _dataLabelsSize = value; OnPropertyChanged(); } }
-
-        /// <summary>
-        /// Gets or sets the data labels position.
-        /// </summary>
-        /// <value>
-        /// The data labels position.
-        /// </value>
-        public DataLabelsPosition DataLabelsPosition { get => _dataLabelsPosition; set { _dataLabelsPosition = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the data labels padding.

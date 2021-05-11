@@ -117,7 +117,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             {
                 case Align.Start: dx = 0; break;
                 case Align.Middle: dx = -size.Width * 0.5f; break;
-                case Align.End: dx = size.Width; break;
+                case Align.End: dx = -size.Width; break;
                 default:
                     break;
             }

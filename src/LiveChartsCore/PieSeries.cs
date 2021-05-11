@@ -44,6 +44,7 @@ namespace LiveChartsCore
         private double _innerPadding = 0;
         private double _outerPadding = 0;
         private bool _isFillSeries;
+        private PolarLabelsPosition _labelsPosition;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -73,6 +74,14 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IPieSeries{TDrawingContext}.IsFillSeries"/>
         public bool IsFillSeries { get => _isFillSeries; set { _isFillSeries = value; OnPropertyChanged(); } }
 
+        /// <summary>
+        /// Gets or sets the data labels position.
+        /// </summary>
+        /// <value>
+        /// The data labels position.
+        /// </value>
+        public PolarLabelsPosition DataLabelsPosition { get => _labelsPosition; set { _labelsPosition = value; OnPropertyChanged(); } }
+
         /// <inheritdoc cref="IPieSeries{TDrawingContext}.Measure(PieChart{TDrawingContext})"/>
         public void Measure(PieChart<TDrawingContext> chart)
         {
@@ -89,7 +98,7 @@ namespace LiveChartsCore
             minDimension *= maxOuterRadius;
 
             var view = (IPieChartView<TDrawingContext>)chart.View;
-            var initialRotation = (float)view.InitialRotation;
+            var initialRotation = (float)Math.Truncate(view.InitialRotation);
             var chartTotal = (float?)view.Total;
 
             var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
@@ -107,7 +116,7 @@ namespace LiveChartsCore
             }
             if (DataLabelsDrawableTask != null)
             {
-                DataLabelsDrawableTask.ZIndex = actualZIndex + 0.3;
+                DataLabelsDrawableTask.ZIndex = 1000 + actualZIndex + 0.3;
                 DataLabelsDrawableTask.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
                 chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
             }
@@ -173,7 +182,7 @@ namespace LiveChartsCore
                 if (IsFillSeries)
                 {
                     start = 0;
-                    end = completeAngle;
+                    end = 359.9f;
                 }
 
                 if (visual == null)
@@ -204,7 +213,6 @@ namespace LiveChartsCore
                 if (Stroke != null) Stroke.AddGeometyToPaintTask(visual);
 
                 var dougnutGeometry = visual;
-                //visual.Opacity = 0.2f;
 
                 stackedInnerRadius += relativeInnerRadius;
 
@@ -222,7 +230,7 @@ namespace LiveChartsCore
                 dougnutGeometry.RemoveOnCompleted = false;
                 dougnutGeometry.StartAngle = start + initialRotation;
                 dougnutGeometry.SweepAngle = end;
-                if (start == 0 && end == completeAngle) dougnutGeometry.SweepAngle = completeAngle - 0.0001f;
+                if (start == initialRotation && end == completeAngle) dougnutGeometry.SweepAngle = completeAngle - 0.0001f;
 
                 point.Context.HoverArea = new SemicircleHoverArea()
                     .SetDimensions(cx, cy, start + initialRotation, start + initialRotation + end, md * 0.5f);
@@ -253,6 +261,33 @@ namespace LiveChartsCore
                     label.Text = DataLabelsFormatter(point);
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
+
+                    if (DataLabelsPosition == PolarLabelsPosition.Start)
+                    {
+                        var a = start + initialRotation;
+                        a %= 360;
+                        if (a < 0) a += 360;
+                        var c = 90;
+
+                        if (a > 180) c = -90;
+
+                        label.HorizontalAlign = a > 180 ? Align.End : Align.Start;
+                        label.Rotation = a - c;
+                    }
+
+                    if (DataLabelsPosition == PolarLabelsPosition.End)
+                    {
+                        var a = start + initialRotation + end;
+                        a %= 360;
+                        if (a < 0) a += 360;
+                        var c = 90;
+
+                        if (a > 180) c = -90;
+
+                        label.HorizontalAlign = a > 180 ? Align.Start : Align.End;
+                        label.Rotation = a - c;
+                    }
+
                     var labelPosition = GetLabelPolarPosition(
                         cx, cy, ((w + relativeOuterRadius * 2) * 0.5f + stackedInnerRadius) * 0.5f, start + initialRotation, end,
                         label.Measure(DataLabelsDrawableTask), DataLabelsPosition);
@@ -411,6 +446,55 @@ namespace LiveChartsCore
 
             if (dataProvider == null) throw new Exception("Data provider not found");
             dataProvider.DisposePoint(point);
+        }
+
+        /// <summary>
+        /// Gets the label polar position.
+        /// </summary>
+        /// <param name="centerX">The center x.</param>
+        /// <param name="centerY">The center y.</param>
+        /// <param name="radius">The radius.</param>
+        /// <param name="startAngle">The start angle.</param>
+        /// <param name="sweepAngle">The sweep angle.</param>
+        /// <param name="labelSize">Size of the label.</param>
+        /// <param name="position">The position.</param>
+        /// <returns></returns>
+        protected virtual PointF GetLabelPolarPosition(
+            float centerX,
+            float centerY,
+            float radius,
+            float startAngle,
+            float sweepAngle,
+            SizeF labelSize,
+            PolarLabelsPosition position)
+        {
+            const float toRadians = (float)(Math.PI / 180);
+            float angle = 0;
+
+            switch (position)
+            {
+                case PolarLabelsPosition.End:
+                    angle = startAngle + sweepAngle;
+                    break;
+                case PolarLabelsPosition.Start:
+                    angle = startAngle;
+                    break;
+                case PolarLabelsPosition.Middle:
+                    angle = (startAngle + sweepAngle) * 0.5f;
+                    break;
+                case PolarLabelsPosition.ChartCenter:
+                    return new PointF(centerX, centerY);
+                default:
+                    break;
+            }
+
+            angle %= 360;
+            if (angle < 0) angle += 360;
+            angle *= toRadians;
+
+            return new PointF(
+                 (float)(centerX + Math.Cos(angle) * radius),
+                 (float)(centerY + Math.Sin(angle) * radius));
         }
 
         /// <summary>

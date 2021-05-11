@@ -20,56 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing.Common;
-
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Measure
 {
     /// <summary>
-    /// Defines a label geometry in the user interface.
+    /// 
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IGeometry{TDrawingContext}" />
-    public interface ILabelGeometry<TDrawingContext> : IGeometry<TDrawingContext>
-         where TDrawingContext : DrawingContext
+    public enum PolarLabelsPosition
     {
         /// <summary>
-        /// Gets or sets the padding.
+        /// Places the label at the center of the chart.
         /// </summary>
-        /// <value>
-        /// The padding.
-        /// </value>
-        Padding Padding { get; set; }
+        ChartCenter,
 
         /// <summary>
-        /// Gets or sets the vertical align.
+        /// Aligns the label to the end in the axis direction.
         /// </summary>
-        /// <value>
-        /// The vertical align.
-        /// </value>
-        Align VerticalAlign { get; set; }
+        End,
 
         /// <summary>
-        /// Gets or sets the horizontal align.
+        /// Aligns the label to the start  in the axis direction.
         /// </summary>
-        /// <value>
-        /// The horizontal align.
-        /// </value>
-        Align HorizontalAlign { get; set; }
+        Start,
 
         /// <summary>
-        /// Gets or sets the text.
+        /// Aligns the label to the middle of the axis.
         /// </summary>
-        /// <value>
-        /// The text.
-        /// </value>
-        string Text { get; set; }
-
-        /// <summary>
-        /// Gets or sets the size of the text.
-        /// </summary>
-        /// <value>
-        /// The size of the text.
-        /// </value>
-        float TextSize { get; set; }
+        Middle
     }
 }

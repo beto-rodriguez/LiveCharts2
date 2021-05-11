@@ -23,47 +23,42 @@
 namespace LiveChartsCore.Measure
 {
     /// <summary>
-    /// Defines the data labales position.
+    /// Defines the data labels position.
     /// </summary>
     public enum DataLabelsPosition
     {
         /// <summary>
-        /// The end
+        /// Aligns the label to the end in the axis direction.
         /// </summary>
         End,
 
         /// <summary>
-        /// The start
+        /// Aligns the label to the start  in the axis direction.
         /// </summary>
         Start,
 
         /// <summary>
-        /// The middle
+        /// Aligns the label to the middle of the axis.
         /// </summary>
         Middle,
 
         /// <summary>
-        /// The chart center
-        /// </summary>
-        ChartCenter,
-
-        /// <summary>
-        /// The top
+        /// Aligns the label to the top.
         /// </summary>
         Top,
 
         /// <summary>
-        /// The bottom
+        /// Aligns the label to the top.
         /// </summary>
         Bottom,
 
         /// <summary>
-        /// The left
+        /// Aligns the label to the left.
         /// </summary>
         Left,
 
         /// <summary>
-        /// The right
+        /// Aligns the label to the right.
         /// </summary>
         Right
     }

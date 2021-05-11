@@ -302,6 +302,12 @@
         <member name="P:LiveChartsCore.SkiaSharpView.WinForms.PieChart.Series">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.Series" />
         </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.PieChart.InitialRotation">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.InitialRotation" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.PieChart.Total">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.Total" />
+        </member>
         <member name="M:LiveChartsCore.SkiaSharpView.WinForms.PieChart.InitializeCore">
             <summary>
             Initializes the core.

@@ -236,9 +236,6 @@ namespace LiveChartsCore
                 throw new Exception($"The state '{state}' was not found");
 
             if (chartPoint.Context.Visual == null) return;
-            //throw new Exception(
-            //    $"The {nameof(IChartPoint)}.{nameof(IChartPoint.Context)}.{nameof(IChartPoint.Context.Visual)} property is null, " +
-            //    $"this is probably due the point was not measured yet.");
 
             var visual = (TVisual)chartPoint.Context.Visual;
             var highlitable = visual.HighlightableGeometry;
@@ -265,9 +262,6 @@ namespace LiveChartsCore
                 throw new Exception($"The state '{state}' was not found");
 
             if (chartPoint.Context.Visual == null) return;
-            //throw new Exception(
-            //    $"The {nameof(IChartPoint)}.{nameof(IChartPoint.Context)}.{nameof(IChartPoint.Context.Visual)} property is null, " +
-            //    $"this is probably due the point was not measured yet.");
 
             var visual = (TVisual)chartPoint.Context.Visual;
             var highlitable = visual.HighlightableGeometry;
@@ -358,134 +352,18 @@ namespace LiveChartsCore
         }
 
         /// <summary>
-        /// Defines de default behaviour when a point is added to a state.
+        /// Defines the default behavior when a point is added to a state.
         /// </summary>
         /// <param name="visual">The visual.</param>
         /// <param name="chart">The chart.</param>
         protected virtual void DefaultOnPointAddedToSate(TVisual visual, IChartView<TDrawingContext> chart) { }
 
         /// <summary>
-        /// Defines the default behavious when a point is remvoed from a state.
+        /// Defines the default behavior when a point is removed from a state.
         /// </summary>
         /// <param name="visual">The visual.</param>
         /// <param name="chart">The chart.</param>
         protected virtual void DefaultOnRemovedFromState(TVisual visual, IChartView<TDrawingContext> chart) { }
-
-        /// <summary>
-        /// Gets the label position.
-        /// </summary>
-        /// <param name="x">The x.</param>
-        /// <param name="y">The y.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <param name="labelSize">Size of the label.</param>
-        /// <param name="position">The position.</param>
-        /// <param name="seriesProperties">The series properties.</param>
-        /// <param name="isGreaterThanPivot">if set to <c>true</c> [is greater than pivot].</param>
-        /// <returns></returns>
-        protected virtual PointF GetLabelPosition(
-            float x,
-            float y,
-            float width,
-            float height,
-            SizeF labelSize,
-            DataLabelsPosition position,
-            SeriesProperties seriesProperties,
-            bool isGreaterThanPivot)
-        {
-            var middleX = (x + x + width) * 0.5f;
-            var middleY = (y + y + height) * 0.5f;
-
-#pragma warning disable IDE0072 // Add missing cases
-            return position switch
-#pragma warning restore IDE0072 // Add missing cases
-            {
-                DataLabelsPosition.ChartCenter =>
-                    throw new Exception($"The position {DataLabelsPosition.ChartCenter}, is only supported in polar charts."),
-                DataLabelsPosition.Top => new PointF(middleX, y - labelSize.Height * 0.5f),
-                DataLabelsPosition.Bottom => new PointF(middleX, y + height + labelSize.Height * 0.5f),
-                DataLabelsPosition.Left => new PointF(x - labelSize.Width * 0.5f, middleY),
-                DataLabelsPosition.Right => new PointF(x + width + labelSize.Width * 0.5f, middleY),
-                DataLabelsPosition.Middle => new PointF(middleX, middleY),
-                _ => (seriesProperties & SeriesProperties.HorizontalOrientation) == SeriesProperties.HorizontalOrientation
-#pragma warning disable IDE0072 // Add missing cases
-                    ? position switch
-#pragma warning restore IDE0072 // Add missing cases
-                    {
-                        DataLabelsPosition.End => isGreaterThanPivot
-                            ? new PointF(x + width + labelSize.Width * 0.5f, middleY)
-                            : new PointF(x - labelSize.Width * 0.5f, middleY),
-                        DataLabelsPosition.Start => isGreaterThanPivot
-                            ? new PointF(x - labelSize.Width * 0.5f, middleY)
-                            : new PointF(x + width + labelSize.Width * 0.5f, middleY),
-                        _ => throw new NotImplementedException(),
-                    }
-#pragma warning disable IDE0072 // Add missing cases
-                    : position switch
-#pragma warning restore IDE0072 // Add missing cases
-                    {
-                        DataLabelsPosition.End => isGreaterThanPivot
-                            ? new PointF(middleX, y - labelSize.Height * 0.5f)
-                            : new PointF(middleX, y + height + labelSize.Height * 0.5f),
-                        DataLabelsPosition.Start => isGreaterThanPivot
-                            ? new PointF(middleX, y + height + labelSize.Height * 0.5f)
-                            : new PointF(middleX, y - labelSize.Height * 0.5f),
-                        _ => throw new NotImplementedException(),
-                    }
-            };
-        }
-
-        protected virtual PointF GetLabelPolarPosition(
-            float centerX,
-            float centerY,
-            float radius,
-            float startAngle,
-            float sweepAngle,
-            SizeF labelSize,
-            DataLabelsPosition position)
-        {
-            const float toRadians = (float)(Math.PI / 180);
-            float angle = 0;
-            float d = 0;
-
-            switch (position)
-            {
-                case DataLabelsPosition.End:
-                    angle = (startAngle + sweepAngle);
-                    d = 1;
-                    break;
-                case DataLabelsPosition.Start:
-                    angle = startAngle;
-                    d = -1;
-                    break;
-                case DataLabelsPosition.Middle:
-                    angle = (startAngle + sweepAngle) * 0.5f;
-                    d = 0;
-                    break;
-                case DataLabelsPosition.ChartCenter:
-
-                    break;
-                case DataLabelsPosition.Top:
-                case DataLabelsPosition.Bottom:
-                case DataLabelsPosition.Left:
-                case DataLabelsPosition.Right:
-                default:
-                    throw new Exception(
-                        $"Only {DataLabelsPosition.Start}, {DataLabelsPosition.End}, {DataLabelsPosition.Middle} " +
-                        $"positions are supported in polar charts.");
-            }
-
-            angle %= 360;
-            if (angle < 0) angle += 360;
-
-            var da = (float)Math.Atan(labelSize.Width * 0.5 / radius) / toRadians;
-            angle += d * da;
-            angle *= toRadians;
-
-            return new PointF(
-                 (float)(centerX + Math.Cos(angle) * radius),
-                 (float)(centerY + Math.Sin(angle) * radius));
-        }
 
         /// <summary>
         /// Called when a property changed.

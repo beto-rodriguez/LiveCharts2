@@ -276,6 +276,14 @@
         <member name="P:LiveChartsCore.CartesianSeries`4.ScalesYAt">
             <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianSeries`1.ScalesYAt"/>
         </member>
+        <member name="P:LiveChartsCore.CartesianSeries`4.DataLabelsPosition">
+            <summary>
+            Gets or sets the data labels position.
+            </summary>
+            <value>
+            The data labels position.
+            </value>
+        </member>
         <member name="M:LiveChartsCore.CartesianSeries`4.GetBounds(LiveChartsCore.CartesianChart{`3},LiveChartsCore.Kernel.IAxis{`3},LiveChartsCore.Kernel.IAxis{`3})">
             <inheritdoc cref="M:LiveChartsCore.Kernel.ICartesianSeries`1.GetBounds(LiveChartsCore.CartesianChart{`0},LiveChartsCore.Kernel.IAxis{`0},LiveChartsCore.Kernel.IAxis{`0})"/>
         </member>
@@ -288,6 +296,20 @@
             </summary>
             <param name="chart"></param>
             <inheritdoc cref="M:LiveChartsCore.ISeries.Delete(LiveChartsCore.Kernel.IChartView)" />
+        </member>
+        <member name="M:LiveChartsCore.CartesianSeries`4.GetLabelPosition(System.Single,System.Single,System.Single,System.Single,System.Drawing.SizeF,LiveChartsCore.Measure.DataLabelsPosition,LiveChartsCore.Kernel.SeriesProperties,System.Boolean)">
+            <summary>
+            Gets the label position.
+            </summary>
+            <param name="x">The x.</param>
+            <param name="y">The y.</param>
+            <param name="width">The width.</param>
+            <param name="height">The height.</param>
+            <param name="labelSize">Size of the label.</param>
+            <param name="position">The position.</param>
+            <param name="seriesProperties">The series properties.</param>
+            <param name="isGreaterThanPivot">if set to <c>true</c> [is greater than pivot].</param>
+            <returns></returns>
         </member>
         <member name="T:LiveChartsCore.Chart`1">
             <summary>
@@ -1210,14 +1232,6 @@
             The size of the data labels.
             </value>
         </member>
-        <member name="P:LiveChartsCore.DrawableSeries`4.DataLabelsPosition">
-            <summary>
-            Gets or sets the data labels position.
-            </summary>
-            <value>
-            The data labels position.
-            </value>
-        </member>
         <member name="P:LiveChartsCore.DrawableSeries`4.DataLabelsPadding">
             <summary>
             Gets or sets the data labels padding.
@@ -1941,6 +1955,22 @@
             </summary>
             <value>
             The padding.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Drawing.ILabelGeometry`1.VerticalAlign">
+            <summary>
+            Gets or sets the vertical align.
+            </summary>
+            <value>
+            The vertical align.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Drawing.ILabelGeometry`1.HorizontalAlign">
+            <summary>
+            Gets or sets the horizontal align.
+            </summary>
+            <value>
+            The horizontal align.
             </value>
         </member>
         <member name="P:LiveChartsCore.Drawing.ILabelGeometry`1.Text">
@@ -4486,14 +4516,6 @@
             The size of the data labels.
             </value>
         </member>
-        <member name="P:LiveChartsCore.Kernel.IDrawableSeries`1.DataLabelsPosition">
-            <summary>
-            Gets or sets the data labels position.
-            </summary>
-            <value>
-            The data labels position.
-            </value>
-        </member>
         <member name="P:LiveChartsCore.Kernel.IDrawableSeries`1.DataLabelsPadding">
             <summary>
             Gets or sets the data labels padding.
@@ -5814,47 +5836,42 @@
         </member>
         <member name="T:LiveChartsCore.Measure.DataLabelsPosition">
             <summary>
-            Defines the data labales position.
+            Defines the data labels position.
             </summary>
         </member>
         <member name="F:LiveChartsCore.Measure.DataLabelsPosition.End">
             <summary>
-            The end
+            Aligns the label to the end in the axis direction.
             </summary>
         </member>
         <member name="F:LiveChartsCore.Measure.DataLabelsPosition.Start">
             <summary>
-            The start
+            Aligns the label to the start  in the axis direction.
             </summary>
         </member>
         <member name="F:LiveChartsCore.Measure.DataLabelsPosition.Middle">
             <summary>
-            The middle
-            </summary>
-        </member>
-        <member name="F:LiveChartsCore.Measure.DataLabelsPosition.ChartCenter">
-            <summary>
-            The chart center
+            Aligns the label to the middle of the axis.
             </summary>
         </member>
         <member name="F:LiveChartsCore.Measure.DataLabelsPosition.Top">
             <summary>
-            The top
+            Aligns the label to the top.
             </summary>
         </member>
         <member name="F:LiveChartsCore.Measure.DataLabelsPosition.Bottom">
             <summary>
-            The bottom
+            Aligns the label to the top.
             </summary>
         </member>
         <member name="F:LiveChartsCore.Measure.DataLabelsPosition.Left">
             <summary>
-            The left
+            Aligns the label to the left.
             </summary>
         </member>
         <member name="F:LiveChartsCore.Measure.DataLabelsPosition.Right">
             <summary>
-            The right
+            Aligns the label to the right.
             </summary>
         </member>
         <member name="T:LiveChartsCore.Measure.LegendOrientation">
@@ -5957,6 +5974,31 @@
             <value>
             The bottom.
             </value>
+        </member>
+        <member name="T:LiveChartsCore.Measure.PolarLabelsPosition">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.Measure.PolarLabelsPosition.ChartCenter">
+            <summary>
+            Places the label at the center of the chart.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.Measure.PolarLabelsPosition.End">
+            <summary>
+            Aligns the label to the end in the axis direction.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.Measure.PolarLabelsPosition.Start">
+            <summary>
+            Aligns the label to the start  in the axis direction.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.Measure.PolarLabelsPosition.Middle">
+            <summary>
+            Aligns the label to the middle of the axis.
+            </summary>
         </member>
         <member name="T:LiveChartsCore.Measure.Scaler">
             <summary>
@@ -6353,6 +6395,14 @@
         <member name="P:LiveChartsCore.PieSeries`4.IsFillSeries">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IPieSeries`1.IsFillSeries"/>
         </member>
+        <member name="P:LiveChartsCore.PieSeries`4.DataLabelsPosition">
+            <summary>
+            Gets or sets the data labels position.
+            </summary>
+            <value>
+            The data labels position.
+            </value>
+        </member>
         <member name="M:LiveChartsCore.PieSeries`4.Measure(LiveChartsCore.PieChart{`3})">
             <inheritdoc cref="M:LiveChartsCore.Kernel.IPieSeries`1.Measure(LiveChartsCore.PieChart{`0})"/>
         </member>
@@ -6399,6 +6449,19 @@
             <param name="point">The point.</param>
             <param name="primaryScale">The primary scale.</param>
             <param name="secondaryScale">The secondary scale.</param>
+        </member>
+        <member name="M:LiveChartsCore.PieSeries`4.GetLabelPolarPosition(System.Single,System.Single,System.Single,System.Single,System.Single,System.Drawing.SizeF,LiveChartsCore.Measure.PolarLabelsPosition)">
+            <summary>
+            Gets the label polar position.
+            </summary>
+            <param name="centerX">The center x.</param>
+            <param name="centerY">The center y.</param>
+            <param name="radius">The radius.</param>
+            <param name="startAngle">The start angle.</param>
+            <param name="sweepAngle">The sweep angle.</param>
+            <param name="labelSize">Size of the label.</param>
+            <param name="position">The position.</param>
+            <returns></returns>
         </member>
         <member name="M:LiveChartsCore.PieSeries`4.Delete(LiveChartsCore.Kernel.IChartView)">
             <summary>
@@ -6667,31 +6730,17 @@
         </member>
         <member name="M:LiveChartsCore.Series`4.DefaultOnPointAddedToSate(`1,LiveChartsCore.Kernel.IChartView{`3})">
             <summary>
-            Defines de default behaviour when a point is added to a state.
+            Defines the default behavior when a point is added to a state.
             </summary>
             <param name="visual">The visual.</param>
             <param name="chart">The chart.</param>
         </member>
         <member name="M:LiveChartsCore.Series`4.DefaultOnRemovedFromState(`1,LiveChartsCore.Kernel.IChartView{`3})">
             <summary>
-            Defines the default behavious when a point is remvoed from a state.
+            Defines the default behavior when a point is removed from a state.
             </summary>
             <param name="visual">The visual.</param>
             <param name="chart">The chart.</param>
-        </member>
-        <member name="M:LiveChartsCore.Series`4.GetLabelPosition(System.Single,System.Single,System.Single,System.Single,System.Drawing.SizeF,LiveChartsCore.Measure.DataLabelsPosition,LiveChartsCore.Kernel.SeriesProperties,System.Boolean)">
-            <summary>
-            Gets the label position.
-            </summary>
-            <param name="x">The x.</param>
-            <param name="y">The y.</param>
-            <param name="width">The width.</param>
-            <param name="height">The height.</param>
-            <param name="labelSize">Size of the label.</param>
-            <param name="position">The position.</param>
-            <param name="seriesProperties">The series properties.</param>
-            <param name="isGreaterThanPivot">if set to <c>true</c> [is greater than pivot].</param>
-            <returns></returns>
         </member>
         <member name="M:LiveChartsCore.Series`4.OnPropertyChanged(System.String)">
             <summary>
