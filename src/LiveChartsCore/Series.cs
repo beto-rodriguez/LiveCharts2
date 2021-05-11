@@ -248,8 +248,8 @@ namespace LiveChartsCore
 
             OnAddedToState(visual, chart);
 
-            if (s.Fill != null) s.Fill.AddGeometyToPaintTask(highlitable);
-            if (s.Stroke != null) s.Stroke.AddGeometyToPaintTask(highlitable);
+            if (s.Fill != null) s.Fill.AddGeometryToPaintTask(highlitable);
+            if (s.Stroke != null) s.Stroke.AddGeometryToPaintTask(highlitable);
         }
 
         /// <inheritdoc />
@@ -352,14 +352,22 @@ namespace LiveChartsCore
         }
 
         /// <summary>
+<<<<<<< HEAD
         /// Defines the default behavior when a point is added to a state.
+=======
+        /// Defines the default behaviour when a point is added to a state.
+>>>>>>> 740b1bb1c504c8226214421b6376878232871706
         /// </summary>
         /// <param name="visual">The visual.</param>
         /// <param name="chart">The chart.</param>
         protected virtual void DefaultOnPointAddedToSate(TVisual visual, IChartView<TDrawingContext> chart) { }
 
         /// <summary>
+<<<<<<< HEAD
         /// Defines the default behavior when a point is removed from a state.
+=======
+        /// Defines the default behaviour when a point is removed from a state.
+>>>>>>> 740b1bb1c504c8226214421b6376878232871706
         /// </summary>
         /// <param name="visual">The visual.</param>
         /// <param name="chart">The chart.</param>

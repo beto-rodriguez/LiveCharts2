@@ -388,7 +388,7 @@
             The draw margin size
             </summary>
         </member>
-        <member name="F:LiveChartsCore.Chart`1.drawMaringLocation">
+        <member name="F:LiveChartsCore.Chart`1.drawMarginLocation">
             <summary>
             The draw margin location
             </summary>
@@ -465,12 +465,12 @@
             The size of the control.
             </value>
         </member>
-        <member name="P:LiveChartsCore.Chart`1.DrawMaringLocation">
+        <member name="P:LiveChartsCore.Chart`1.DrawMarginLocation">
             <summary>
-            Gets the draw maring location.
+            Gets the draw margin location.
             </summary>
             <value>
-            The draw maring location.
+            The draw margin location.
             </value>
         </member>
         <member name="P:LiveChartsCore.Chart`1.DrawMarginSize">
@@ -666,7 +666,7 @@
         </member>
         <member name="M:LiveChartsCore.Collections.RangeObservableCollection`1.RemoveRange(System.Collections.Generic.IEnumerable{`0})">
             <summary> 
-            Removes the first occurence of each item in the specified collection from the <see cref="T:System.Collections.ObjectModel.ObservableCollection`1"/>.
+            Removes the first occurrence of each item in the specified collection from the <see cref="T:System.Collections.ObjectModel.ObservableCollection`1"/>.
             </summary>
             <param name="collection">The items to remove.</param>        
             <exception cref="T:System.ArgumentNullException"><paramref name="collection"/> is null.</exception>
@@ -1401,7 +1401,7 @@
         </member>
         <member name="T:LiveChartsCore.Drawing.Common.TransitionBuilder">
             <summary>
-            The Transition builder class helps to build transitions using fluent synstax.
+            The Transition builder class helps to build transitions using fluent syntax.
             </summary>
         </member>
         <member name="M:LiveChartsCore.Drawing.Common.TransitionBuilder.#ctor(LiveChartsCore.Drawing.IAnimatable,System.String[])">
@@ -1552,7 +1552,7 @@
         </member>
         <member name="T:LiveChartsCore.Drawing.DrawingContext">
             <summary>
-            Defines a context that is able to draw 2D shapes in the user intrerface.
+            Defines a context that is able to draw 2D shapes in the user interface.
             </summary>
         </member>
         <member name="M:LiveChartsCore.Drawing.DrawingContext.ClearCanvas">
@@ -1859,9 +1859,9 @@
             </summary>
             <param name="geometries">The geometries.</param>
         </member>
-        <member name="M:LiveChartsCore.Drawing.IDrawableTask`1.AddGeometyToPaintTask(LiveChartsCore.Drawing.IDrawable{`0})">
+        <member name="M:LiveChartsCore.Drawing.IDrawableTask`1.AddGeometryToPaintTask(LiveChartsCore.Drawing.IDrawable{`0})">
             <summary>
-            Adds the geomety to paint task.
+            Adds the geometry to paint task.
             </summary>
             <param name="geometry">The geometry.</param>
         </member>
@@ -2098,7 +2098,7 @@
         </member>
         <member name="T:LiveChartsCore.Drawing.IPathGeometry`2">
             <summary>
-            Defines a path geometyr in the user interface.
+            Defines a path geometry in the user interface.
             </summary>
             <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
             <typeparam name="TPathArgs">The type of the path arguments.</typeparam>
@@ -3092,7 +3092,7 @@
         </member>
         <member name="T:LiveChartsCore.Kernel.AreaHelper`5">
             <summary>
-            Defines the area helper classs.
+            Defines the area helper class.
             </summary>
             <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
             <typeparam name="TGeometryPath">The type of the geometry path.</typeparam>
@@ -3248,7 +3248,7 @@
         </member>
         <member name="T:LiveChartsCore.Kernel.ChartPoint">
             <summary>
-            Defiens a point in a chart.
+            Defines a point in a chart.
             </summary>
         </member>
         <member name="M:LiveChartsCore.Kernel.ChartPoint.#ctor(LiveChartsCore.Kernel.IChartView,LiveChartsCore.ISeries)">
@@ -3573,9 +3573,9 @@
             <c>true</c> if this instance is paused; otherwise, <c>false</c>.
             </value>
         </member>
-        <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.AddGeometyToPaintTask(LiveChartsCore.Drawing.IDrawable{`0})">
+        <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.AddGeometryToPaintTask(LiveChartsCore.Drawing.IDrawable{`0})">
             <summary>
-            Adds the geomety to paint task.
+            Adds the geometry to paint task.
             </summary>
             <param name="geometry">The geometry.</param>
         </member>
@@ -3873,7 +3873,7 @@
         </member>
         <member name="P:LiveChartsCore.Kernel.IAxis.Xo">
             <summary>
-            Gets or sets the xo, a refence used internally to calculate the axis position.
+            Gets or sets the xo, a reference used internally to calculate the axis position.
             </summary>
             <value>
             The xo.
@@ -3881,7 +3881,7 @@
         </member>
         <member name="P:LiveChartsCore.Kernel.IAxis.Yo">
             <summary>
-            Gets or sets the yo, a refence used internally to calculate the axis position..
+            Gets or sets the yo, a reference used internally to calculate the axis position..
             </summary>
             <value>
             The yo.
@@ -3926,7 +3926,7 @@
         <member name="P:LiveChartsCore.Kernel.IAxis.MaxLimit">
             <summary>
             Gets or sets the maximum value visible in the axis, any point greater than this value will be hidden, 
-            set it null to use a value based on the greather value in the chart.
+            set it null to use a value based on the greater value in the chart.
             </summary>
             <value>
             The maximum value.
@@ -3992,7 +3992,7 @@
             <summary>
             Gets or sets the labels, if labels are not null, then the axis label will be pulled from the labels collection,
             the label is mapped to the chart based on the position of the label and the position of the point, both integers,
-            if the axis requires a label outsite the bounds of the labels IList then the index will be returned as the label.
+            if the axis requires a label outside the bounds of the labels IList then the index will be returned as the label.
             Default value is null.
             </summary>
             <value>
@@ -4024,7 +4024,7 @@
         </member>
         <member name="P:LiveChartsCore.Kernel.IAxis.ShowSeparatorWedges">
             <summary>
-            Gets or sets a value indicating whether the separator weddges are visible.
+            Gets or sets a value indicating whether the separator wedges are visible.
             </summary>
         </member>
         <member name="M:LiveChartsCore.Kernel.IAxis.Initialize(LiveChartsCore.Measure.AxisOrientation)">
@@ -4213,7 +4213,7 @@
         </member>
         <member name="M:LiveChartsCore.Kernel.ICartesianSeries`1.GetBounds(LiveChartsCore.CartesianChart{`0},LiveChartsCore.Kernel.IAxis{`0},LiveChartsCore.Kernel.IAxis{`0})">
             <summary>
-            Gets the series bounds bounds.
+            Gets the series bounds.
             </summary>
             <param name="chart">The chart.</param>
             <param name="x">The x.</param>
@@ -4563,7 +4563,7 @@
         </member>
         <member name="P:LiveChartsCore.Kernel.ILineSeries`1.LineSmoothness">
             <summary>
-            Gets or sets the line smoothness, where 0 is a staright line, and 1 the most curved line, default is 0.65
+            Gets or sets the line smoothness, where 0 is a straight line, and 1 the most curved line, default is 0.65
             </summary>
             <value>
             The line smoothness.
@@ -4572,7 +4572,7 @@
         <member name="P:LiveChartsCore.Kernel.ILineSeries`1.EnableNullSplitting">
             <summary>
             Gets or sets a value indicating whether the line should split every null point, 
-            enabling it has a performance impact, defaulty is true.
+            enabling it has a performance impact, default is true.
             </summary>
         </member>
         <member name="P:LiveChartsCore.Kernel.ILineSeries`1.GeometryFill">
@@ -4711,7 +4711,7 @@
         </member>
         <member name="T:LiveChartsCore.Kernel.IScatterSeries`1">
             <summary>
-            Defiens a scatter series.
+            Defines a scatter series.
             </summary>
             <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
             <seealso cref="T:LiveChartsCore.Kernel.IDrawableSeries`1" />
@@ -4734,7 +4734,7 @@
         </member>
         <member name="T:LiveChartsCore.Kernel.IStackedBarSeries`1">
             <summary>
-            Defiens a stacked bar series.
+            Defines a stacked bar series.
             </summary>
             <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
             <seealso cref="T:LiveChartsCore.Kernel.IDrawableSeries`1" />
@@ -5135,7 +5135,7 @@
         </member>
         <member name="M:LiveChartsCore.Kernel.SeriesContext`1.GetColumnPostion(LiveChartsCore.Kernel.IDrawableSeries{`0})">
             <summary>
-            Gets the column postion.
+            Gets the column position.
             </summary>
             <param name="series">The series.</param>
             <returns></returns>
@@ -5148,7 +5148,7 @@
         </member>
         <member name="M:LiveChartsCore.Kernel.SeriesContext`1.GetRowPostion(LiveChartsCore.Kernel.IDrawableSeries{`0})">
             <summary>
-            Gets the row postion.
+            Gets the row position.
             </summary>
             <param name="series">The series.</param>
             <returns></returns>
@@ -5161,7 +5161,7 @@
         </member>
         <member name="M:LiveChartsCore.Kernel.SeriesContext`1.GetStackedColumnPostion(LiveChartsCore.Kernel.IDrawableSeries{`0})">
             <summary>
-            Gets the stacked column postion.
+            Gets the stacked column position.
             </summary>
             <param name="series">The series.</param>
             <returns></returns>
@@ -5174,7 +5174,7 @@
         </member>
         <member name="M:LiveChartsCore.Kernel.SeriesContext`1.GetStackedRowPostion(LiveChartsCore.Kernel.IDrawableSeries{`0})">
             <summary>
-            Gets the stacked row postion.
+            Gets the stacked row position.
             </summary>
             <param name="series">The series.</param>
             <returns></returns>
@@ -5245,7 +5245,7 @@
         </member>
         <member name="T:LiveChartsCore.Kernel.SeriesStyleRule`2">
             <summary>
-            Defiens a series style rule.
+            Defines a series style rule.
             </summary>
             <typeparam name="TVisual">The type of the visual.</typeparam>
             <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
@@ -5368,7 +5368,7 @@
         </member>
         <member name="T:LiveChartsCore.Kernel.TooltipPlacementContext">
             <summary>
-            Defines the tooltopl placement constext class.
+            Defines the tooltip placement context class.
             </summary>
         </member>
         <member name="P:LiveChartsCore.Kernel.TooltipPlacementContext.MostTop">
@@ -5421,7 +5421,7 @@
         </member>
         <member name="T:LiveChartsCore.Kernel.TooltipPoint">
             <summary>
-            Defines the tooltip piont class.
+            Defines the tooltip point class.
             </summary>
         </member>
         <member name="M:LiveChartsCore.Kernel.TooltipPoint.#ctor(LiveChartsCore.ISeries,LiveChartsCore.Kernel.ChartPoint)">
@@ -5760,7 +5760,7 @@
         </member>
         <member name="F:LiveChartsCore.Measure.AxisPosition.Start">
             <summary>
-            Pleaces the axis at the bottom for X axes and at the left for Y axes
+            Places the axis at the bottom for X axes and at the left for Y axes
             </summary>
         </member>
         <member name="F:LiveChartsCore.Measure.AxisPosition.End">
@@ -6009,7 +6009,7 @@
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.Measure.Scaler"/> class.
             </summary>
-            <param name="drawMaringLocation">The draw margin location.</param>
+            <param name="drawMarginLocation">The draw margin location.</param>
             <param name="drawMarginSize">Size of the draw margin.</param>
             <param name="axis">The axis.</param>
             <param name="usePreviousScale">Indicates if the scaler should be built based on the previous known data.</param>
@@ -6730,14 +6730,22 @@
         </member>
         <member name="M:LiveChartsCore.Series`4.DefaultOnPointAddedToSate(`1,LiveChartsCore.Kernel.IChartView{`3})">
             <summary>
+<<<<<<< HEAD
             Defines the default behavior when a point is added to a state.
+=======
+            Defines the default behaviour when a point is added to a state.
+>>>>>>> 740b1bb1c504c8226214421b6376878232871706
             </summary>
             <param name="visual">The visual.</param>
             <param name="chart">The chart.</param>
         </member>
         <member name="M:LiveChartsCore.Series`4.DefaultOnRemovedFromState(`1,LiveChartsCore.Kernel.IChartView{`3})">
             <summary>
+<<<<<<< HEAD
             Defines the default behavior when a point is removed from a state.
+=======
+            Defines the default behaviour when a point is removed from a state.
+>>>>>>> 740b1bb1c504c8226214421b6376878232871706
             </summary>
             <param name="visual">The visual.</param>
             <param name="chart">The chart.</param>
@@ -6751,7 +6759,7 @@
         </member>
         <member name="T:LiveChartsCore.StackedAreaSeries`9">
             <summary>
-            Defienes the stacked area series class.
+            Defines the stacked area series class.
             </summary>
             <typeparam name="TModel">The type of the model.</typeparam>
             <typeparam name="TVisual">The type of the visual.</typeparam>

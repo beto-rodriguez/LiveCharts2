@@ -100,10 +100,10 @@ namespace LiveChartsCore.Drawing
         void SetGeometries(HashSet<IDrawable<TDrawingContext>> geometries);
 
         /// <summary>
-        /// Adds the geomety to paint task.
+        /// Adds the geometry to paint task.
         /// </summary>
         /// <param name="geometry">The geometry.</param>
-        void AddGeometyToPaintTask(IDrawable<TDrawingContext> geometry);
+        void AddGeometryToPaintTask(IDrawable<TDrawingContext> geometry);
 
         /// <summary>
         /// Removes the geometry from pain task.

@@ -28,7 +28,7 @@ namespace LiveChartsCore.Measure
     public enum AxisPosition
     {
         /// <summary>
-        /// Pleaces the axis at the bottom for X axes and at the left for Y axes
+        /// Places the axis at the bottom for X axes and at the left for Y axes
         /// </summary>
         Start,
 

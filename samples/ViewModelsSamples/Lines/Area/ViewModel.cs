@@ -14,7 +14,7 @@ namespace ViewModelsSamples.Lines.Area
             {
                 Values = new List<double> { -2, -1, 3, 5, 3, 4, 6 },
                 // Set he Fill property to build an area series
-                // by defualt the series has a fill color based on your app theme
+                // by default the series has a fill color based on your app theme
                 Fill = new SolidColorPaintTask(SKColors.CornflowerBlue),
 
                 Stroke = null,

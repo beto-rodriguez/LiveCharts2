@@ -25,7 +25,7 @@ using LiveChartsCore.Drawing;
 namespace LiveChartsCore
 {
     /// <summary>
-    /// Defienes the stacked area series class.
+    /// Defines the stacked area series class.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     /// <typeparam name="TVisual">The type of the visual.</typeparam>

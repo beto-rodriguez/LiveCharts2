@@ -113,7 +113,7 @@ namespace LiveChartsCore
         /// <summary>
         /// The draw margin location
         /// </summary>
-        protected PointF drawMaringLocation;
+        protected PointF drawMarginLocation;
 
         #endregion
 
@@ -200,12 +200,12 @@ namespace LiveChartsCore
         public SizeF ControlSize => controlSize;
 
         /// <summary>
-        /// Gets the draw maring location.
+        /// Gets the draw margin location.
         /// </summary>
         /// <value>
-        /// The draw maring location.
+        /// The draw margin location.
         /// </value>
-        public PointF DrawMaringLocation => drawMaringLocation;
+        public PointF DrawMarginLocation => drawMarginLocation;
 
         /// <summary>
         /// Gets the size of the draw margin.
@@ -317,7 +317,7 @@ namespace LiveChartsCore
                 Height = controlSize.Height - margin.Top - margin.Bottom
             };
 
-            drawMaringLocation = new PointF(margin.Left, margin.Top);
+            drawMarginLocation = new PointF(margin.Left, margin.Top);
         }
 
         /// <summary>

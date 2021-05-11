@@ -85,7 +85,7 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IPieSeries{TDrawingContext}.Measure(PieChart{TDrawingContext})"/>
         public void Measure(PieChart<TDrawingContext> chart)
         {
-            var drawLocation = chart.DrawMaringLocation;
+            var drawLocation = chart.DrawMarginLocation;
             var drawMarginSize = chart.DrawMarginSize;
             var minDimension = drawMarginSize.Width < drawMarginSize.Height ? drawMarginSize.Width : drawMarginSize.Height;
 
@@ -209,8 +209,8 @@ namespace LiveChartsCore
                     _ = everFetched.Add(point);
                 }
 
-                if (Fill != null) Fill.AddGeometyToPaintTask(visual);
-                if (Stroke != null) Stroke.AddGeometyToPaintTask(visual);
+                if (Fill != null) Fill.AddGeometryToPaintTask(visual);
+                if (Stroke != null) Stroke.AddGeometryToPaintTask(visual);
 
                 var dougnutGeometry = visual;
 
@@ -255,7 +255,7 @@ namespace LiveChartsCore
                         l.CompleteAllTransitions();
                         label = l;
                         point.Context.Label = l;
-                        DataLabelsDrawableTask.AddGeometyToPaintTask(l);
+                        DataLabelsDrawableTask.AddGeometryToPaintTask(l);
                     }
 
                     label.Text = DataLabelsFormatter(point);
@@ -361,7 +361,7 @@ namespace LiveChartsCore
                 sh = strokeClone.StrokeThickness;
                 strokeClone.ZIndex = 1;
                 w += 2 * strokeClone.StrokeThickness;
-                strokeClone.AddGeometyToPaintTask(visual);
+                strokeClone.AddGeometryToPaintTask(visual);
                 _ = context.PaintTasks.Add(strokeClone);
             }
 
@@ -379,7 +379,7 @@ namespace LiveChartsCore
                     StartAngle = 0,
                     SweepAngle = 359.9999f
                 };
-                fillClone.AddGeometyToPaintTask(visual);
+                fillClone.AddGeometryToPaintTask(visual);
                 _ = context.PaintTasks.Add(fillClone);
             }
 

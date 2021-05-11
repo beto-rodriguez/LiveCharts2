@@ -26,7 +26,7 @@ using System;
 namespace LiveChartsCore.Kernel
 {
     /// <summary>
-    /// Defiens a series style rule.
+    /// Defines a series style rule.
     /// </summary>
     /// <typeparam name="TVisual">The type of the visual.</typeparam>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>

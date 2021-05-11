@@ -94,8 +94,8 @@ namespace LiveChartsCore
             var secondaryAxis = core.XAxes[ScalesXAt];
             var primaryAxis = core.YAxes[ScalesYAt];
 
-            var secondaryScale = new Scaler(core.DrawMaringLocation, core.DrawMarginSize, secondaryAxis);
-            var primaryScale = new Scaler(core.DrawMaringLocation, core.DrawMarginSize, primaryAxis);
+            var secondaryScale = new Scaler(core.DrawMarginLocation, core.DrawMarginSize, secondaryAxis);
+            var primaryScale = new Scaler(core.DrawMarginLocation, core.DrawMarginSize, primaryAxis);
 
             var deleted = new List<ChartPoint>();
             foreach (var point in everFetched)

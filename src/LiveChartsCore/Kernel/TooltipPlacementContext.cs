@@ -23,7 +23,7 @@
 namespace LiveChartsCore.Kernel
 {
     /// <summary>
-    /// Defines the tooltopl placement constext class.
+    /// Defines the tooltip placement context class.
     /// </summary>
     public class TooltipPlacementContext
     {
