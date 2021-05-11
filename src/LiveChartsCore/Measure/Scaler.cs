@@ -111,10 +111,16 @@ namespace LiveChartsCore.Measure
                 _deltaVal = _maxVal - _minVal;
             }
 
+            if (float.IsNaN(_maxVal) || float.IsInfinity(_maxVal))
+                _maxVal = 0;
+            if (float.IsNaN(_minVal) || float.IsInfinity(_minVal))
+                _minVal = 0;
+
             _m = _deltaPx / _deltaVal;
             _mInv = 1 / _m;
 
-            if (!double.IsNaN(_m)) return;
+            if (!float.IsNaN(_m) && !float.IsInfinity(_m) &&
+                !float.IsNaN(_mInv) && !float.IsInfinity(_mInv)) return;
             _m = 0;
             _mInv = 0;
         }
