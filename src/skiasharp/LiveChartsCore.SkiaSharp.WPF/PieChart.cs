@@ -86,7 +86,14 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </summary>
         public static readonly DependencyProperty InitialRotationProperty =
             DependencyProperty.Register(
-                nameof(InitialRotation), typeof(double), typeof(Chart), new PropertyMetadata(0d, OnDependencyPropertyChanged));
+                nameof(InitialRotation), typeof(double), typeof(Chart), new PropertyMetadata(360d, OnDependencyPropertyChanged));
+
+        /// <summary>
+        /// The maximum angle property
+        /// </summary>
+        public static readonly DependencyProperty MaxAngleProperty =
+            DependencyProperty.Register(
+                nameof(MaxAngle), typeof(double), typeof(Chart), new PropertyMetadata(360d, OnDependencyPropertyChanged));
 
         /// <summary>
         /// The total property
@@ -109,6 +116,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         {
             get => (double)GetValue(InitialRotationProperty);
             set => SetValue(InitialRotationProperty, value);
+        }
+
+        /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxAngle" />
+        public double MaxAngle
+        {
+            get => (double)GetValue(MaxAngleProperty);
+            set => SetValue(MaxAngleProperty, value);
         }
 
         /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total" />

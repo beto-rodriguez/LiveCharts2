@@ -59,6 +59,14 @@ namespace LiveChartsCore.Kernel
         public double InitialRotation { get; set; }
 
         /// <summary>
+        /// Gets or sets the maximum angle in degrees, default is 360.
+        /// </summary>
+        /// <value>
+        /// The maximum angle.
+        /// </value>
+        public double MaxAngle { get; set; }
+
+        /// <summary>
         /// Gets or sets the total, it is the maximum value a pie slice can represent, when this property is null, the <see cref="Total"/> property
         /// will be calculated automatically based on the series data. Default value is null.
         /// </summary>

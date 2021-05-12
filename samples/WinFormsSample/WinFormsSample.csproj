@@ -115,6 +115,9 @@
     <Compile Update="Pies\AutoUpdate\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Pies\Gauges\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Pies\Processing\View.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -305,6 +305,9 @@
         <member name="P:LiveChartsCore.SkiaSharpView.WinForms.PieChart.InitialRotation">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.InitialRotation" />
         </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.PieChart.MaxAngle">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.MaxAngle" />
+        </member>
         <member name="P:LiveChartsCore.SkiaSharpView.WinForms.PieChart.Total">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.Total" />
         </member>

@@ -765,6 +765,11 @@
             The initial rotation property
             </summary>
         </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.MaxAngleProperty">
+            <summary>
+            The maximum angle property
+            </summary>
+        </member>
         <member name="F:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.TotalProperty">
             <summary>
             The total property
@@ -890,6 +895,9 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.InitialRotation">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.InitialRotation" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.MaxAngle">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.MaxAngle" />
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.Total">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.Total" />

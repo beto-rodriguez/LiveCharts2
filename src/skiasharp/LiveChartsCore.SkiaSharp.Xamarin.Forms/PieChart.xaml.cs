@@ -120,11 +120,18 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 nameof(InitialRotation), typeof(double), typeof(CartesianChart), 0d, BindingMode.Default, null, OnBindablePropertyChanged);
 
         /// <summary>
+        /// The maximum angle property
+        /// </summary>
+        public static readonly BindableProperty MaxAngleProperty =
+            BindableProperty.Create(
+                nameof(MaxAngle), typeof(double), typeof(CartesianChart), 360d, BindingMode.Default, null, OnBindablePropertyChanged);
+
+        /// <summary>
         /// The total property
         /// </summary>
         public static readonly BindableProperty TotalProperty =
             BindableProperty.Create(
-                nameof(TotalProperty), typeof(double), typeof(CartesianChart), null, BindingMode.Default, null, OnBindablePropertyChanged);
+                nameof(Total), typeof(double?), typeof(CartesianChart), null, BindingMode.Default, null, OnBindablePropertyChanged);
 
         /// <summary>
         /// The draw margin property
@@ -332,6 +339,13 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             get => (double)GetValue(InitialRotationProperty);
             set => SetValue(InitialRotationProperty, value);
+        }
+
+        /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxAngle" />
+        public double MaxAngle
+        {
+            get => (double)GetValue(MaxAngleProperty);
+            set => SetValue(MaxAngleProperty, value);
         }
 
         /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total" />

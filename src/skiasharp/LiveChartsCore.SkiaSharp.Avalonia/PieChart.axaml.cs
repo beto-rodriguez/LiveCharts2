@@ -130,6 +130,12 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             AvaloniaProperty.Register<PieChart, double>(nameof(InitialRotation), 0d, inherits: true);
 
         /// <summary>
+        /// The maximum angle property
+        /// </summary>
+        public static readonly AvaloniaProperty<double> MaxAngleProperty =
+            AvaloniaProperty.Register<PieChart, double>(nameof(MaxAngle), 360d, inherits: true);
+
+        /// <summary>
         /// The total property
         /// </summary>
         public static readonly AvaloniaProperty<double?> TotalProperty =
@@ -329,6 +335,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             get => (double)GetValue(InitialRotationProperty);
             set => SetValue(InitialRotationProperty, value);
+        }
+
+        /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxAngle" />
+        public double MaxAngle
+        {
+            get => (double)GetValue(MaxAngleProperty);
+            set => SetValue(MaxAngleProperty, value);
         }
 
         /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total" />

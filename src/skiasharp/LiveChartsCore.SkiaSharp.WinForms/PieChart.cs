@@ -35,6 +35,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private readonly CollectionDeepObserver<ISeries> _seriesObserver;
         private IEnumerable<ISeries> _series = new List<ISeries>();
         private double _initialRotation;
+        private double _maxAngle = 360;
         private double? _total;
 
         /// <summary>
@@ -78,6 +79,9 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />
         public double InitialRotation { get => _initialRotation; set { _initialRotation = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxAngle" />
+        public double MaxAngle { get => _maxAngle; set { _maxAngle = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total" />
         public double? Total { get => _total; set { _total = value; OnPropertyChanged(); } }

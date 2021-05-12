@@ -38,7 +38,8 @@
             "Pies/Pushout",
             "Pies/Custom",
             "Pies/NightingaleRose",
-            "Pies/Gauge",
+            "Pies/Gauges",
+            //"Pies/Gauge",
 
             "Scatter/Basic",
             "Scatter/AutoUpdate",

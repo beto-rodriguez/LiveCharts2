@@ -683,19 +683,23 @@
             The label formatter.
             </value>
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.GaugeBuilder.AddValue(LiveChartsCore.Defaults.ObservableValue,LiveChartsCore.Drawing.IDrawableTask{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+        <member name="M:LiveChartsCore.SkiaSharpView.GaugeBuilder.AddValue(LiveChartsCore.Defaults.ObservableValue,System.String,LiveChartsCore.Drawing.IDrawableTask{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext},LiveChartsCore.Drawing.IDrawableTask{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
             <summary>
             Adds the value.
             </summary>
             <param name="value">The value.</param>
+            <param name="seriesName">The series name.</param>
+            <param name="seriesDrawableTask">The series drawable task.</param>
             <param name="labelsDrawableTask">The labels drawable task.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.GaugeBuilder.AddValue(LiveChartsCore.Defaults.ObservableValue,SkiaSharp.SKColor)">
+        <member name="M:LiveChartsCore.SkiaSharpView.GaugeBuilder.AddValue(LiveChartsCore.Defaults.ObservableValue,System.String,SkiaSharp.SKColor,System.Nullable{SkiaSharp.SKColor})">
             <summary>
             Adds the value.
             </summary>
             <param name="value">The value.</param>
+            <param name="seriesName">The series name.</param>
+            <param name="seriesColor">Color of the series.</param>
             <param name="labelsColor">Color of the labels.</param>
             <returns></returns>
         </member>
@@ -704,6 +708,14 @@
             Adds the value.
             </summary>
             <param name="value">The value.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.GaugeBuilder.AddValue(LiveChartsCore.Defaults.ObservableValue,System.String)">
+            <summary>
+            Adds the value.
+            </summary>
+            <param name="value">The value.</param>
+            <param name="seriesName">The series name.</param>
             <returns></returns>
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.GaugeBuilder.BuildSeries">

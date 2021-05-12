@@ -99,6 +99,7 @@ namespace LiveChartsCore
 
             var view = (IPieChartView<TDrawingContext>)chart.View;
             var initialRotation = (float)Math.Truncate(view.InitialRotation);
+            var completeAngle = (float)view.MaxAngle;
             var chartTotal = (float?)view.Total;
 
             var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
@@ -120,8 +121,6 @@ namespace LiveChartsCore
                 DataLabelsDrawableTask.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
                 chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
             }
-
-            var completeAngle = 360f;
 
             var cx = drawLocation.X + drawMarginSize.Width * 0.5f;
             var cy = drawLocation.Y + drawMarginSize.Height * 0.5f;
@@ -182,7 +181,7 @@ namespace LiveChartsCore
                 if (IsFillSeries)
                 {
                     start = 0;
-                    end = 359.9f;
+                    end = completeAngle - 0.1f;
                 }
 
                 if (visual == null)
@@ -230,7 +229,7 @@ namespace LiveChartsCore
                 dougnutGeometry.RemoveOnCompleted = false;
                 dougnutGeometry.StartAngle = start + initialRotation;
                 dougnutGeometry.SweepAngle = end;
-                if (start == initialRotation && end == completeAngle) dougnutGeometry.SweepAngle = completeAngle - 0.0001f;
+                if (start == initialRotation && end == completeAngle) dougnutGeometry.SweepAngle = completeAngle - 0.1f;
 
                 point.Context.HoverArea = new SemicircleHoverArea()
                     .SetDimensions(cx, cy, start + initialRotation, start + initialRotation + end, md * 0.5f);
@@ -296,7 +295,6 @@ namespace LiveChartsCore
                 }
 
                 stackedInnerRadius = (w + relativeOuterRadius * 2) * 0.5f;
-
                 i++;
             }
 
