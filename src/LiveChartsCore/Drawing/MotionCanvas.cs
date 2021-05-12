@@ -105,12 +105,10 @@ namespace LiveChartsCore.Drawing
                                 new Tuple<IDrawableTask<TDrawingContext>, IDrawable<TDrawingContext>>(task, geometry));
                     }
 
-                    task.Dispose();
-
                     isValid = isValid && task.IsCompleted;
-                    task.Dispose();
 
                     if (task.RemoveOnCompleted && task.IsCompleted) _ = _paintTasks.Remove(task);
+                    task.Dispose();
                 }
 
                 foreach (var tuple in toRemoveGeometries)

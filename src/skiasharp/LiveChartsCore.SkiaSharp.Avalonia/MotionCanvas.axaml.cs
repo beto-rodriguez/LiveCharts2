@@ -32,6 +32,7 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using Avalonia.Threading;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia
 {
@@ -116,16 +117,21 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             InvalidateVisual();
         }
 
+        private void InvalidateOnUIThread()
+        {
+            _ = Dispatcher.UIThread.InvokeAsync(InvalidateVisual);
+        }
+
         // based on:
         // https://github.com/AvaloniaUI/Avalonia/blob/554aaec5e5cc96c0b4318b6ed1fbf8159f442889/samples/RenderDemo/Pages/CustomSkiaPage.cs
         private class CustomDrawOp : ICustomDrawOperation
         {
-            private readonly Control _avaloniaControl;
+            private readonly MotionCanvas _avaloniaControl;
             private readonly MotionCanvas<SkiaSharpDrawingContext> _motionCanvas;
             private readonly SKColor _backColor;
 
             public CustomDrawOp(
-                Control avaloniaControl, MotionCanvas<SkiaSharpDrawingContext> motionCanvas, Rect bounds, SKColor backColor)
+                MotionCanvas avaloniaControl, MotionCanvas<SkiaSharpDrawingContext> motionCanvas, Rect bounds, SKColor backColor)
             {
                 _avaloniaControl = avaloniaControl;
                 _motionCanvas = motionCanvas;
@@ -161,7 +167,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
                 if (_motionCanvas.IsValid) return;
 
-                _avaloniaControl.InvalidateVisual();
+                _avaloniaControl.InvalidateOnUIThread();
             }
         }
     }

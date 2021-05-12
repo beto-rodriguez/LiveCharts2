@@ -232,7 +232,6 @@ namespace LiveChartsCore.SkiaSharpView
         {
             if (_builtSeries == null) return;
 
-            var i = 1;
             foreach (var item in _builtSeries)
             {
                 if (item.IsFillSeries)
@@ -244,6 +243,7 @@ namespace LiveChartsCore.SkiaSharpView
 
                     continue;
                 }
+
                 item.InnerRadius = InnerRadius;
                 item.RelativeInnerRadius = OffsetRadius;
                 item.RelativeOuterRadius = OffsetRadius;
