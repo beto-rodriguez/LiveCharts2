@@ -47,6 +47,8 @@ namespace LiveChartsCore.SkiaSharpView
         private double _labelsSize = 18;
         private PolarLabelsPosition _labelsPosition;
         private Func<ChartPoint, string> _labelFormatter = point => point.PrimaryValue.ToString();
+        private double _backgroundMaxRadialColumnWidth = double.MaxValue;
+        private double _maxRadialColumnWidth = double.MaxValue;
 
         /// <summary>
         /// Gets or sets the inner radius.
@@ -65,6 +67,14 @@ namespace LiveChartsCore.SkiaSharpView
         public double OffsetRadius { get => _offsetRadius; set { _offsetRadius = value; OnPopertyChanged(); } }
 
         /// <summary>
+        /// Gets or sets the maximum width of the radial column.
+        /// </summary>
+        /// <value>
+        /// The maximum width of the radial column.
+        /// </value>
+        public double MaxRadialColumnWidth { get => _maxRadialColumnWidth; set { _maxRadialColumnWidth = value; OnPopertyChanged(); } }
+
+        /// <summary>
         /// Gets or sets the background inner radius.
         /// </summary>
         /// <value>
@@ -79,6 +89,18 @@ namespace LiveChartsCore.SkiaSharpView
         /// The background relative inner radius.
         /// </value>
         public double BackgroundOffsetRadius { get => _backgroundOffsetRadius; set { _backgroundOffsetRadius = value; OnPopertyChanged(); } }
+
+        /// <summary>
+        /// Gets or sets the width of the background maximum radial column.
+        /// </summary>
+        /// <value>
+        /// The width of the background maximum radial column.
+        /// </value>
+        public double BackgroundMaxRadialColumnWidth
+        {
+            get => _backgroundMaxRadialColumnWidth;
+            set { _backgroundMaxRadialColumnWidth = value; OnPopertyChanged(); }
+        }
 
         /// <summary>
         /// Gets or sets the background.
@@ -202,7 +224,8 @@ namespace LiveChartsCore.SkiaSharpView
                         DataLabelsPosition = LabelsPosition,
                         InnerRadius = InnerRadius,
                         RelativeInnerRadius = OffsetRadius,
-                        RelativeOuterRadius = OffsetRadius
+                        RelativeOuterRadius = OffsetRadius,
+                        MaxRadialColumnWidth = MaxRadialColumnWidth
                     });
 
                 i++;
@@ -220,7 +243,8 @@ namespace LiveChartsCore.SkiaSharpView
                     Values = fillSeriesValues,
                     InnerRadius = BackgroundInnerRadius,
                     RelativeInnerRadius = BackgroundOffsetRadius,
-                    RelativeOuterRadius = BackgroundOffsetRadius
+                    RelativeOuterRadius = BackgroundOffsetRadius,
+                    MaxRadialColumnWidth = BackgroundMaxRadialColumnWidth
                 });
 
             _builtSeries = series;
@@ -240,6 +264,7 @@ namespace LiveChartsCore.SkiaSharpView
                     item.InnerRadius = BackgroundInnerRadius;
                     item.RelativeInnerRadius = BackgroundOffsetRadius;
                     item.RelativeOuterRadius = BackgroundOffsetRadius;
+                    item.MaxRadialColumnWidth = BackgroundMaxRadialColumnWidth;
 
                     continue;
                 }
@@ -250,6 +275,7 @@ namespace LiveChartsCore.SkiaSharpView
                 item.DataLabelsPosition = LabelsPosition;
                 item.DataLabelsFormatter = LabelFormatter;
                 item.DataLabelsSize = LabelsSize;
+                item.MaxRadialColumnWidth = MaxRadialColumnWidth;
             }
         }
     }

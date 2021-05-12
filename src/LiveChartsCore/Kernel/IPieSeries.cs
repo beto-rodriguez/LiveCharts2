@@ -65,6 +65,15 @@ namespace LiveChartsCore.Kernel
         double HoverPushout { get; set; }
 
         /// <summary>
+        /// Gets or sets the maximum width of the radial column, if the width of the radial column slice exceeds this dimension the radial
+        /// column width will be capped to the value of this property, defualt value is double.MaxValue.
+        /// </summary>
+        /// <value>
+        /// The maximum width of the radial column.
+        /// </value>
+        double MaxRadialColumnWidth { get; set; }
+
+        /// <summary>
         /// Gets or sets the relative inner radius, it is the extra inner radius for every stacked slice.
         /// </summary>
         /// <value>

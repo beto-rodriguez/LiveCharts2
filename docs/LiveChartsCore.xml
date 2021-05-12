@@ -4679,6 +4679,15 @@
             The hover pus hout.
             </value>
         </member>
+        <member name="P:LiveChartsCore.Kernel.IPieSeries`1.MaxRadialColumnWidth">
+            <summary>
+            Gets or sets the maximum width of the radial column, if the width of the radial column slice exceeds this dimension the radial
+            column width will be capped to the value of this property, defualt value is double.MaxValue.
+            </summary>
+            <value>
+            The maximum width of the radial column.
+            </value>
+        </member>
         <member name="P:LiveChartsCore.Kernel.IPieSeries`1.RelativeInnerRadius">
             <summary>
             Gets or sets the relative inner radius, it is the extra inner radius for every stacked slice.
@@ -6399,6 +6408,9 @@
         </member>
         <member name="P:LiveChartsCore.PieSeries`4.RelativeOuterRadius">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IPieSeries`1.RelativeOuterRadius"/>
+        </member>
+        <member name="P:LiveChartsCore.PieSeries`4.MaxRadialColumnWidth">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IPieSeries`1.MaxRadialColumnWidth"/>
         </member>
         <member name="P:LiveChartsCore.PieSeries`4.IsFillSeries">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IPieSeries`1.IsFillSeries"/>

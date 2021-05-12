@@ -635,6 +635,14 @@
             The relative inner radius.
             </value>
         </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.MaxRadialColumnWidth">
+            <summary>
+            Gets or sets the maximum width of the radial column.
+            </summary>
+            <value>
+            The maximum width of the radial column.
+            </value>
+        </member>
         <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.BackgroundInnerRadius">
             <summary>
             Gets or sets the background inner radius.
@@ -649,6 +657,14 @@
             </summary>
             <value>
             The background relative inner radius.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.BackgroundMaxRadialColumnWidth">
+            <summary>
+            Gets or sets the width of the background maximum radial column.
+            </summary>
+            <value>
+            The width of the background maximum radial column.
             </value>
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.Background">

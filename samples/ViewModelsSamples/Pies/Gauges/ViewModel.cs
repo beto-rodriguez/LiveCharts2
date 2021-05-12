@@ -10,7 +10,6 @@ namespace ViewModelsSamples.Pies.Gauges
 {
     public class ViewModel
     {
-
         public ViewModel()
         {
             GaugeTotal1 = 100;

@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using LiveChartsCore.Measure;
 using System.Drawing;
 using System.Linq;
+using System.Diagnostics;
 
 namespace LiveChartsCore
 {
@@ -43,6 +44,7 @@ namespace LiveChartsCore
         private double _hoverPushout = 20;
         private double _innerPadding = 0;
         private double _outerPadding = 0;
+        private double _maxRadialColW = double.MaxValue;
         private bool _isFillSeries;
         private PolarLabelsPosition _labelsPosition;
 
@@ -70,6 +72,9 @@ namespace LiveChartsCore
 
         /// <inheritdoc cref="IPieSeries{TDrawingContext}.RelativeOuterRadius"/>
         public double RelativeOuterRadius { get => _outerPadding; set { _outerPadding = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IPieSeries{TDrawingContext}.MaxRadialColumnWidth"/>
+        public double MaxRadialColumnWidth { get => _maxRadialColW; set { _maxRadialColW = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IPieSeries{TDrawingContext}.IsFillSeries"/>
         public bool IsFillSeries { get => _isFillSeries; set { _isFillSeries = value; OnPropertyChanged(); } }
@@ -136,6 +141,19 @@ namespace LiveChartsCore
             var stackedInnerRadius = innerRadius;
             var relativeInnerRadius = (float)RelativeInnerRadius;
             var relativeOuterRadius = (float)RelativeOuterRadius;
+            var maxRadialWidth = (float)MaxRadialColumnWidth;
+
+            var mdc = minDimension;
+            var wc = mdc - (mdc - 2 * innerRadius) * (fetched.Length - 1) / fetched.Length - relativeOuterRadius * 2;
+
+            if (wc * 0.5f - stackedInnerRadius > maxRadialWidth)
+            {
+                var dw = wc * 0.5f - stackedInnerRadius - maxRadialWidth;
+
+                relativeOuterRadius = dw * 0.5f;
+                relativeInnerRadius = dw * 0.5f;
+            }
+
             var i = 1f;
 
             foreach (var point in fetched)
@@ -218,9 +236,11 @@ namespace LiveChartsCore
                 var md = minDimension;
                 var w = md - (md - 2 * innerRadius) * (fetched.Length - i) / fetched.Length - relativeOuterRadius * 2;
 
+                var x = (drawMarginSize.Width - w) * 0.5f;
+
                 dougnutGeometry.CenterX = cx;
                 dougnutGeometry.CenterY = cy;
-                dougnutGeometry.X = (drawMarginSize.Width - w) * 0.5f;
+                dougnutGeometry.X = x;
                 dougnutGeometry.Y = (drawMarginSize.Height - w) * 0.5f;
                 dougnutGeometry.Width = w;
                 dougnutGeometry.Height = w;
@@ -290,6 +310,7 @@ namespace LiveChartsCore
                     var labelPosition = GetLabelPolarPosition(
                         cx, cy, ((w + relativeOuterRadius * 2) * 0.5f + stackedInnerRadius) * 0.5f, start + initialRotation, end,
                         label.Measure(DataLabelsDrawableTask), DataLabelsPosition);
+
                     label.X = labelPosition.X;
                     label.Y = labelPosition.Y;
                 }

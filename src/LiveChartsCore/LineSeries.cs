@@ -124,8 +124,6 @@ namespace LiveChartsCore
         public override void Measure(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
         {
-            Trace.WriteLine(chart.View.CoreCanvas.CountGeometries());
-
             var drawLocation = chart.DrawMarginLocation;
             var drawMarginSize = chart.DrawMarginSize;
             var secondaryScale = new Scaler(drawLocation, drawMarginSize, xAxis);
