@@ -101,5 +101,13 @@ namespace LiveChartsCore.Drawing
         /// The corner radius.
         /// </value>
         float CornerRadius { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the direction of the corner radius is inverted.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if the direction is inverted; otherwise, <c>false</c>.
+        /// </value>
+        bool InvertedCornerRadius { get; set; }
     }
 }

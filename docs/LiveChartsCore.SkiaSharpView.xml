@@ -144,6 +144,9 @@
         <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry.CornerRadius">
             <inheritdoc cref="P:LiveChartsCore.Drawing.IDoughnutGeometry`1.CornerRadius" />
         </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry.InvertedCornerRadius">
+            <inheritdoc cref="P:LiveChartsCore.Drawing.IDoughnutGeometry`1.InvertedCornerRadius" />
+        </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.DoughnutGeometry.OnMeasure(LiveChartsCore.SkiaSharpView.Painting.PaintTask)">
             <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Drawing.Geometries.Geometry.OnMeasure(LiveChartsCore.SkiaSharpView.Painting.PaintTask)" />
         </member>
@@ -619,6 +622,11 @@
             Defines a helper class to build gauges.
             </summary>
         </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.GaugeBuilder.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.GaugeBuilder"/> class.
+            </summary>
+        </member>
         <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.InnerRadius">
             <summary>
             Gets or sets the inner radius.
@@ -643,6 +651,22 @@
             The maximum width of the radial column.
             </value>
         </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.CornerRadius">
+            <summary>
+            Gets or sets the corner radius.
+            </summary>
+            <value>
+            The corner radius.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.RadialAlign">
+            <summary>
+            Gets or sets the inner radius.
+            </summary>
+            <value>
+            The inner radius.
+            </value>
+        </member>
         <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.BackgroundInnerRadius">
             <summary>
             Gets or sets the background inner radius.
@@ -665,6 +689,14 @@
             </summary>
             <value>
             The width of the background maximum radial column.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.BackgroundCornerRadius">
+            <summary>
+            Gets or sets the background corner radius.
+            </summary>
+            <value>
+            The background corner radius.
             </value>
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.Background">
@@ -854,6 +886,14 @@
             </summary>
             <param name="color">The color.</param>
             <param name="alphaOverrides">The alpha overrides.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.WithOpacity(System.Drawing.Color,System.Byte)">
+            <summary>
+            Creates a new color based on the 
+            </summary>
+            <param name="color">The color.</param>
+            <param name="opacity">The opacity from 0 to 255.</param>
             <returns></returns>
         </member>
         <member name="T:LiveChartsCore.SkiaSharpView.Painting.Effects.DashEffect">
@@ -1222,6 +1262,13 @@
             (<see cref="P:LiveChartsCore.Series`4.Mapping"/>).
             </typeparam>
         </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.PieSeries`1.#ctor(System.Boolean,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.PieSeries`1"/> class.
+            </summary>
+            <param name="isGauge"></param>
+            <param name="isGaugeFill"></param>
+        </member>
         <member name="T:LiveChartsCore.SkiaSharpView.PieSeries`2">
             <summary>
             Defines a pie series in the user interface.
@@ -1236,6 +1283,13 @@
             <typeparam name="TVisual">
             The type of the geometry of every point of the series.
             </typeparam>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.PieSeries`2.#ctor(System.Boolean,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.PieSeries`2"/> class.
+            </summary>
+            <param name="isGauge"></param>
+            <param name="isGaugeFill"></param>
         </member>
         <member name="T:LiveChartsCore.SkiaSharpView.PieSeries`3">
             <summary>
@@ -1255,10 +1309,12 @@
             The type of the data label of every point.
             </typeparam>
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.PieSeries`3.#ctor">
+        <member name="M:LiveChartsCore.SkiaSharpView.PieSeries`3.#ctor(System.Boolean,System.Boolean)">
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.PieSeries`3"/> class.
             </summary>
+            <param name="isGauge"></param>
+            <param name="isGaugeFill"></param>
         </member>
         <member name="T:LiveChartsCore.SkiaSharpView.RowSeries`1">
             <summary>

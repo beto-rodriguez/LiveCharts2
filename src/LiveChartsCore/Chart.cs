@@ -103,7 +103,7 @@ namespace LiveChartsCore
         /// <summary>
         /// The easing function
         /// </summary>
-        protected Func<float, float> easingFunction;
+        protected Func<float, float>? easingFunction;
 
         /// <summary>
         /// The draw margin size

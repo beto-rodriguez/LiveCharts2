@@ -386,5 +386,16 @@ namespace LiveChartsCore.SkiaSharpView
         {
             return new SKColor(color.R, color.G, color.B, alphaOverrides ?? color.A);
         }
+
+        /// <summary>
+        /// Creates a new color based on the 
+        /// </summary>
+        /// <param name="color">The color.</param>
+        /// <param name="opacity">The opacity from 0 to 255.</param>
+        /// <returns></returns>
+        public static Color WithOpacity(this Color color, byte opacity)
+        {
+            return Color.FromArgb(opacity, color.R, color.G, color.B);
+        }
     }
 }

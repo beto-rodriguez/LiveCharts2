@@ -178,7 +178,7 @@ namespace LiveChartsCore.Kernel
         /// </returns>
         public static bool IsColumnSeries(this ISeries series)
         {
-            return (series.SeriesProperties & (SeriesProperties.Bar | SeriesProperties.VerticalOrientation)) != 0;
+            return (series.SeriesProperties & (SeriesProperties.Bar | SeriesProperties.PrimaryAxisVerticalOrientation)) != 0;
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace LiveChartsCore.Kernel
         /// </returns>
         public static bool IsRowSeries(this ISeries series)
         {
-            return (series.SeriesProperties & (SeriesProperties.Bar | SeriesProperties.HorizontalOrientation)) != 0;
+            return (series.SeriesProperties & (SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation)) != 0;
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace LiveChartsCore.Kernel
         /// </returns>
         public static bool IsVerticalSeries(this ISeries series)
         {
-            return (series.SeriesProperties & (SeriesProperties.VerticalOrientation)) != 0;
+            return (series.SeriesProperties & (SeriesProperties.PrimaryAxisVerticalOrientation)) != 0;
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace LiveChartsCore.Kernel
         /// </returns>
         public static bool IsHorizontalSeries(this ISeries series)
         {
-            return (series.SeriesProperties & (SeriesProperties.HorizontalOrientation)) != 0;
+            return (series.SeriesProperties & (SeriesProperties.PrimaryAxisHorizontalOrientation)) != 0;
         }
 
         /// <summary>

@@ -85,7 +85,10 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.CornerRadius" />
         public float CornerRadius { get => _cornerRadiusProperty.GetMovement(this); set => _cornerRadiusProperty.SetMovement(value, this); }
 
-        internal static Action<SkiaSharpDrawingContext, SKPaint>? AlternativeDraw { get; set; }
+        /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.InvertedCornerRadius" />
+        public bool InvertedCornerRadius { get; set; }
+
+        internal static Action<DoughnutGeometry, SkiaSharpDrawingContext, SKPaint>? AlternativeDraw { get; set; }
 
         /// <inheritdoc cref="Geometry.OnMeasure(PaintTask)" />
         protected override SizeF OnMeasure(PaintTask paint)
@@ -98,9 +101,11 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         {
             if (AlternativeDraw != null)
             {
-                AlternativeDraw(context, paint);
+                AlternativeDraw(this, context, paint);
                 return;
             }
+
+            if (CornerRadius > 0) throw new NotImplementedException($"{nameof(CornerRadius)} is not implemented.");
 
             using (var path = new SKPath())
             {

@@ -35,20 +35,36 @@ namespace LiveChartsCore.SkiaSharpView
     /// <summary>
     /// Defines a helper class to build gauges.
     /// </summary>
-    public class GaugeBuilder
+    public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     {
         private readonly List<Tuple<ObservableValue, string?, IDrawableTask<SkiaSharpDrawingContext>?, IDrawableTask<SkiaSharpDrawingContext>?>> _tuples = new();
         private List<PieSeries<ObservableValue>>? _builtSeries;
+        private RadialAlign _radialAlign;
         private double _innerRadius;
         private double _offsetRadius;
         private double _backgroundInnerRadius;
         private double _backgroundOffsetRadius;
+        private double _backgroundCornerRadius;
+        private double _cornerRadius;
         private IDrawableTask<SkiaSharpDrawingContext> _background = new SolidColorPaintTask(new SKColor(0, 0, 0, 20));
         private double _labelsSize = 18;
         private PolarLabelsPosition _labelsPosition;
         private Func<ChartPoint, string> _labelFormatter = point => point.PrimaryValue.ToString();
         private double _backgroundMaxRadialColumnWidth = double.MaxValue;
         private double _maxRadialColumnWidth = double.MaxValue;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GaugeBuilder"/> class.
+        /// </summary>
+        public GaugeBuilder()
+        {
+            var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
+            var initializer = stylesBuilder.GetVisualsInitializer();
+            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
+                throw new Exception("Default colors are not valid");
+
+            foreach (var rule in initializer.GaugeBuilder) rule(this);
+        }
 
         /// <summary>
         /// Gets or sets the inner radius.
@@ -73,6 +89,22 @@ namespace LiveChartsCore.SkiaSharpView
         /// The maximum width of the radial column.
         /// </value>
         public double MaxRadialColumnWidth { get => _maxRadialColumnWidth; set { _maxRadialColumnWidth = value; OnPopertyChanged(); } }
+
+        /// <summary>
+        /// Gets or sets the corner radius.
+        /// </summary>
+        /// <value>
+        /// The corner radius.
+        /// </value>
+        public double CornerRadius { get => _cornerRadius; set { _cornerRadius = value; OnPopertyChanged(); } }
+
+        /// <summary>
+        /// Gets or sets the inner radius.
+        /// </summary>
+        /// <value>
+        /// The inner radius.
+        /// </value>
+        public RadialAlign RadialAlign { get => _radialAlign; set { _radialAlign = value; OnPopertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the background inner radius.
@@ -101,6 +133,14 @@ namespace LiveChartsCore.SkiaSharpView
             get => _backgroundMaxRadialColumnWidth;
             set { _backgroundMaxRadialColumnWidth = value; OnPopertyChanged(); }
         }
+
+        /// <summary>
+        /// Gets or sets the background corner radius.
+        /// </summary>
+        /// <value>
+        /// The background corner radius.
+        /// </value>
+        public double BackgroundCornerRadius { get => _backgroundCornerRadius; set { _backgroundCornerRadius = value; OnPopertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the background.
@@ -212,7 +252,7 @@ namespace LiveChartsCore.SkiaSharpView
                 list.Insert(i, item.Item1);
 
                 series.Add(
-                    new PieSeries<ObservableValue>
+                    new PieSeries<ObservableValue>(true)
                     {
                         ZIndex = i + 1,
                         Values = list,
@@ -225,7 +265,8 @@ namespace LiveChartsCore.SkiaSharpView
                         InnerRadius = InnerRadius,
                         RelativeInnerRadius = OffsetRadius,
                         RelativeOuterRadius = OffsetRadius,
-                        MaxRadialColumnWidth = MaxRadialColumnWidth
+                        MaxRadialColumnWidth = MaxRadialColumnWidth,
+                        RadialAlign = RadialAlign
                     });
 
                 i++;
@@ -235,7 +276,7 @@ namespace LiveChartsCore.SkiaSharpView
             while (fillSeriesValues.Count < _tuples.Count) fillSeriesValues.Add(new ObservableValue(0));
 
             series.Add(
-                new PieSeries<ObservableValue>
+                new PieSeries<ObservableValue>(true, true)
                 {
                     ZIndex = -1,
                     IsFillSeries = true,
@@ -244,7 +285,8 @@ namespace LiveChartsCore.SkiaSharpView
                     InnerRadius = BackgroundInnerRadius,
                     RelativeInnerRadius = BackgroundOffsetRadius,
                     RelativeOuterRadius = BackgroundOffsetRadius,
-                    MaxRadialColumnWidth = BackgroundMaxRadialColumnWidth
+                    MaxRadialColumnWidth = BackgroundMaxRadialColumnWidth,
+                    RadialAlign = RadialAlign
                 });
 
             _builtSeries = series;
@@ -265,6 +307,7 @@ namespace LiveChartsCore.SkiaSharpView
                     item.RelativeInnerRadius = BackgroundOffsetRadius;
                     item.RelativeOuterRadius = BackgroundOffsetRadius;
                     item.MaxRadialColumnWidth = BackgroundMaxRadialColumnWidth;
+                    item.RadialAlign = RadialAlign;
 
                     continue;
                 }
@@ -276,6 +319,7 @@ namespace LiveChartsCore.SkiaSharpView
                 item.DataLabelsFormatter = LabelFormatter;
                 item.DataLabelsSize = LabelsSize;
                 item.MaxRadialColumnWidth = MaxRadialColumnWidth;
+                item.RadialAlign = RadialAlign;
             }
         }
     }

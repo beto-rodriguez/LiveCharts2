@@ -31,8 +31,7 @@ namespace LiveChartsCore.Themes
     /// Defines an object that must initialize live charts visual objects, this object defines how things will 
     /// be drawn by default, it is highly related to themes.
     /// </summary>
-    public class VisualsStyle<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContext
     {
         /// <summary>
         /// Gets or sets the chart builder.
@@ -147,6 +146,14 @@ namespace LiveChartsCore.Themes
         public List<Action<IScatterSeries<TDrawingContext>>> ScatterSeriesBuilder { get; set; } = new List<Action<IScatterSeries<TDrawingContext>>>();
 
         /// <summary>
+        /// Gets or sets the gauge builder.
+        /// </summary>
+        /// <value>
+        /// The gauge builder.
+        /// </value>
+        public List<Action<IGaugeBuilder<TDrawingContext>>> GaugeBuilder { get; set; } = new List<Action<IGaugeBuilder<TDrawingContext>>>();
+
+        /// <summary>
         /// Constructs a chart.
         /// </summary>
         /// <param name="chart">The chart.</param>
@@ -188,12 +195,12 @@ namespace LiveChartsCore.Themes
                 var barSeries = (IBarSeries<TDrawingContext>)series;
                 foreach (var rule in BarSeriesBuilder) rule(barSeries);
 
-                if ((series.SeriesProperties & SeriesProperties.VerticalOrientation) == SeriesProperties.VerticalOrientation)
+                if ((series.SeriesProperties & SeriesProperties.PrimaryAxisVerticalOrientation) == SeriesProperties.PrimaryAxisVerticalOrientation)
                 {
                     foreach (var rule in ColumnSeriesBuilder) rule(barSeries);
                 }
 
-                if ((series.SeriesProperties & SeriesProperties.HorizontalOrientation) == SeriesProperties.HorizontalOrientation)
+                if ((series.SeriesProperties & SeriesProperties.PrimaryAxisHorizontalOrientation) == SeriesProperties.PrimaryAxisHorizontalOrientation)
                 {
                     foreach (var rule in RowSeriesBuilder) rule(barSeries);
                 }
@@ -205,12 +212,12 @@ namespace LiveChartsCore.Themes
                 var stackedBarSeries = (IStackedBarSeries<TDrawingContext>)series;
                 foreach (var rule in StackedBarSeriesBuilder) rule(stackedBarSeries);
 
-                if ((series.SeriesProperties & SeriesProperties.VerticalOrientation) == SeriesProperties.VerticalOrientation)
+                if ((series.SeriesProperties & SeriesProperties.PrimaryAxisVerticalOrientation) == SeriesProperties.PrimaryAxisVerticalOrientation)
                 {
                     foreach (var rule in StackedColumnSeriesBuilder) rule(stackedBarSeries);
                 }
 
-                if ((series.SeriesProperties & SeriesProperties.HorizontalOrientation) == SeriesProperties.HorizontalOrientation)
+                if ((series.SeriesProperties & SeriesProperties.PrimaryAxisHorizontalOrientation) == SeriesProperties.PrimaryAxisHorizontalOrientation)
                 {
                     foreach (var rule in StackedRowSeriesBuilder) rule(stackedBarSeries);
                 }

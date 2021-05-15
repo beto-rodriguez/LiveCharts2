@@ -142,7 +142,7 @@ namespace LiveChartsCore
                 DataLabelsPosition.Left => new PointF(x - labelSize.Width * 0.5f, middleY),
                 DataLabelsPosition.Right => new PointF(x + width + labelSize.Width * 0.5f, middleY),
                 DataLabelsPosition.End =>
-                (seriesProperties & SeriesProperties.HorizontalOrientation) == SeriesProperties.HorizontalOrientation
+                (seriesProperties & SeriesProperties.PrimaryAxisHorizontalOrientation) == SeriesProperties.PrimaryAxisHorizontalOrientation
                     ? (isGreaterThanPivot
                         ? new PointF(x + width + labelSize.Width * 0.5f, middleY)
                         : new PointF(x - labelSize.Width * 0.5f, middleY))
@@ -150,7 +150,7 @@ namespace LiveChartsCore
                         ? new PointF(middleX, y - labelSize.Height * 0.5f)
                         : new PointF(middleX, y + height + labelSize.Height * 0.5f)),
                 DataLabelsPosition.Start =>
-                     (seriesProperties & SeriesProperties.HorizontalOrientation) == SeriesProperties.HorizontalOrientation
+                     (seriesProperties & SeriesProperties.PrimaryAxisHorizontalOrientation) == SeriesProperties.PrimaryAxisHorizontalOrientation
                         ? (isGreaterThanPivot
                             ? new PointF(x - labelSize.Width * 0.5f, middleY)
                             : new PointF(x + width + labelSize.Width * 0.5f, middleY))

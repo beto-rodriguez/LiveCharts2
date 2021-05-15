@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using LiveChartsCore.Measure;
 using System.Drawing;
 using System.Linq;
-using System.Diagnostics;
 
 namespace LiveChartsCore
 {
@@ -45,13 +44,18 @@ namespace LiveChartsCore
         private double _innerPadding = 0;
         private double _outerPadding = 0;
         private double _maxRadialColW = double.MaxValue;
+        private double _cornerRadius = 0;
+        private RadialAlign _radialAlign = RadialAlign.Outer;
+        private bool _invertedCornerRadius = false;
         private bool _isFillSeries;
         private PolarLabelsPosition _labelsPosition;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
-        public PieSeries() : base(SeriesProperties.PieSeries | SeriesProperties.Stacked)
+        public PieSeries(bool isGauge = false, bool isGaugeFill = false)
+            : base(SeriesProperties.PieSeries | SeriesProperties.Stacked |
+                  (isGauge ? SeriesProperties.Gauge : 0) | (isGaugeFill ? SeriesProperties.GaugeFill : 0) | SeriesProperties.Solid)
         {
             HoverState = LiveCharts.PieSeriesHoverKey;
         }
@@ -75,6 +79,15 @@ namespace LiveChartsCore
 
         /// <inheritdoc cref="IPieSeries{TDrawingContext}.MaxRadialColumnWidth"/>
         public double MaxRadialColumnWidth { get => _maxRadialColW; set { _maxRadialColW = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IPieSeries{TDrawingContext}.RadialAlign"/>
+        public RadialAlign RadialAlign { get => _radialAlign; set { _radialAlign = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IPieSeries{TDrawingContext}.CornerRadius"/>
+        public double CornerRadius { get => _cornerRadius; set { _cornerRadius = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IPieSeries{TDrawingContext}.InvertedCornerRadius"/>
+        public bool InvertedCornerRadius { get => _invertedCornerRadius; set { _invertedCornerRadius = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IPieSeries{TDrawingContext}.IsFillSeries"/>
         public bool IsFillSeries { get => _isFillSeries; set { _isFillSeries = value; OnPropertyChanged(); } }
@@ -142,6 +155,7 @@ namespace LiveChartsCore
             var relativeInnerRadius = (float)RelativeInnerRadius;
             var relativeOuterRadius = (float)RelativeOuterRadius;
             var maxRadialWidth = (float)MaxRadialColumnWidth;
+            var cornerRadius = (float)CornerRadius;
 
             var mdc = minDimension;
             var wc = mdc - (mdc - 2 * innerRadius) * (fetched.Length - 1) / fetched.Length - relativeOuterRadius * 2;
@@ -150,8 +164,23 @@ namespace LiveChartsCore
             {
                 var dw = wc * 0.5f - stackedInnerRadius - maxRadialWidth;
 
-                relativeOuterRadius = dw * 0.5f;
-                relativeInnerRadius = dw * 0.5f;
+                switch (RadialAlign)
+                {
+                    case RadialAlign.Outer:
+                        relativeOuterRadius = 0;
+                        relativeInnerRadius = dw;
+                        break;
+                    case RadialAlign.Center:
+                        relativeOuterRadius = dw * 0.5f;
+                        relativeInnerRadius = dw * 0.5f;
+                        break;
+                    case RadialAlign.Inner:
+                        relativeOuterRadius = dw;
+                        relativeInnerRadius = 0;
+                        break;
+                    default:
+                        throw new NotImplementedException($"The alignment {RadialAlign} is not supported.");
+                }
             }
 
             var i = 1f;
@@ -174,6 +203,7 @@ namespace LiveChartsCore
                         visual.StartAngle = initialRotation;
                         visual.PushOut = 0;
                         visual.InnerRadius = 0;
+                        visual.CornerRadius = 0;
                         visual.RemoveOnCompleted = true;
                         point.Context.Visual = null;
                     }
@@ -215,7 +245,8 @@ namespace LiveChartsCore
                         StartAngle = chart.IsFirstDraw ? initialRotation : start + initialRotation,
                         SweepAngle = 0,
                         PushOut = 0,
-                        InnerRadius = 0
+                        InnerRadius = 0,
+                        CornerRadius = 0
                     };
 
                     visual = p;
@@ -246,9 +277,11 @@ namespace LiveChartsCore
                 dougnutGeometry.Height = w;
                 dougnutGeometry.InnerRadius = stackedInnerRadius;
                 dougnutGeometry.PushOut = pushout;
-                dougnutGeometry.RemoveOnCompleted = false;
                 dougnutGeometry.StartAngle = start + initialRotation;
                 dougnutGeometry.SweepAngle = end;
+                dougnutGeometry.CornerRadius = cornerRadius;
+                dougnutGeometry.InvertedCornerRadius = InvertedCornerRadius;
+                dougnutGeometry.RemoveOnCompleted = false;
                 if (start == initialRotation && end == completeAngle) dougnutGeometry.SweepAngle = completeAngle - 0.1f;
 
                 point.Context.HoverArea = new SemicircleHoverArea()
@@ -461,6 +494,7 @@ namespace LiveChartsCore
 
             visual.StartAngle += visual.SweepAngle;
             visual.SweepAngle = 0;
+            visual.CornerRadius = 0;
             visual.RemoveOnCompleted = true;
 
             if (dataProvider == null) throw new Exception("Data provider not found");

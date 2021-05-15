@@ -168,7 +168,9 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             if (ClipRectangle != RectangleF.Empty)
             {
                 _ = drawingContext.Canvas.Save();
-                drawingContext.Canvas.ClipRect(new SKRect(ClipRectangle.X, ClipRectangle.Y, ClipRectangle.Width, ClipRectangle.Height));
+                drawingContext.Canvas.ClipRect(
+                    new SKRect(
+                        ClipRectangle.X, ClipRectangle.Y, ClipRectangle.X + ClipRectangle.Width, ClipRectangle.Y + ClipRectangle.Height));
                 _drawingContext = drawingContext;
             }
 
@@ -194,9 +196,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
 
         private SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext)
         {
-            return ClipRectangle == null
-                ? new SKRect(0, 0, drawingContext.Info.Width, drawingContext.Info.Width)
-                : new SKRect(ClipRectangle.X, ClipRectangle.Y, ClipRectangle.Width, ClipRectangle.Height);
+            return new SKRect(0, 0, drawingContext.Info.Width, drawingContext.Info.Width);
         }
     }
 }

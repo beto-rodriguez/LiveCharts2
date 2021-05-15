@@ -72,7 +72,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The easing function.
         /// </value>
-        Func<float, float> EasingFunction { get; set; }
+        Func<float, float>? EasingFunction { get; set; }
 
         /// <summary>
         /// Gets or sets the legend position.

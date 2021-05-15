@@ -26,19 +26,19 @@ namespace ViewModelsSamples.Pies.Processing
                 {
                     Name = "Processing",
                     Values = new []{ _processing },
-                    InnerRadius = 45
+                    //InnerRadius = 45
                 },
                 new PieSeries<ObservableValue>
                 {
                     Name = "Failed",
                     Values = new []{ _failed },
-                    InnerRadius = 45
+                    //InnerRadius = 45
                 },
                 new PieSeries<ObservableValue>
                 {
                     Name = "Completed",
                     Values = new []{ _completed },
-                    InnerRadius = 45
+                    //InnerRadius = 45
                 }
             };
 

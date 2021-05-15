@@ -1766,6 +1766,14 @@
             The corner radius.
             </value>
         </member>
+        <member name="P:LiveChartsCore.Drawing.IDoughnutGeometry`1.InvertedCornerRadius">
+            <summary>
+            Gets or sets a value indicating whether the direction of the corner radius is inverted.
+            </summary>
+            <value>
+              <c>true</c> if the direction is inverted; otherwise, <c>false</c>.
+            </value>
+        </member>
         <member name="T:LiveChartsCore.Drawing.IDoughnutVisualChartPoint`1">
             <summary>
             Defines a douggnut visual chart point.
@@ -4546,6 +4554,115 @@
             The deleting tasks.
             </value>
         </member>
+        <member name="T:LiveChartsCore.Kernel.IGaugeBuilder`1">
+            <summary>
+            Defines a gauge builder
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IGaugeBuilder`1.InnerRadius">
+            <summary>
+            Gets or sets the inner radius.
+            </summary>
+            <value>
+            The inner radius.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IGaugeBuilder`1.OffsetRadius">
+            <summary>
+            Gets or sets the offset radius, the separation between each gauge if multiple gauges are nested.
+            </summary>
+            <value>
+            The relative inner radius.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IGaugeBuilder`1.MaxRadialColumnWidth">
+            <summary>
+            Gets or sets the maximum width of the radial column.
+            </summary>
+            <value>
+            The maximum width of the radial column.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IGaugeBuilder`1.CornerRadius">
+            <summary>
+            Gets or sets the corner radius.
+            </summary>
+            <value>
+            The corner radius.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IGaugeBuilder`1.RadialAlign">
+            <summary>
+            Gets or sets the radial align.
+            </summary>
+            <value>
+            The radial align.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IGaugeBuilder`1.BackgroundInnerRadius">
+            <summary>
+            Gets or sets the background inner radius.
+            </summary>
+            <value>
+            The background inner radius.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IGaugeBuilder`1.BackgroundOffsetRadius">
+            <summary>
+            Gets or sets the background offset radius, the separation between each gauge if multiple gauges are nested.
+            </summary>
+            <value>
+            The background relative inner radius.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IGaugeBuilder`1.BackgroundMaxRadialColumnWidth">
+            <summary>
+            Gets or sets the width of the background maximum radial column.
+            </summary>
+            <value>
+            The width of the background maximum radial column.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IGaugeBuilder`1.BackgroundCornerRadius">
+            <summary>
+            Gets or sets the background corner radius.
+            </summary>
+            <value>
+            The background corner radius.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IGaugeBuilder`1.Background">
+            <summary>
+            Gets or sets the background.
+            </summary>
+            <value>
+            The background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IGaugeBuilder`1.LabelsSize">
+            <summary>
+            Gets or sets the size of the labels.
+            </summary>
+            <value>
+            The size of the labels.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IGaugeBuilder`1.LabelsPosition">
+            <summary>
+            Gets or sets the labels position.
+            </summary>
+            <value>
+            The labels position.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IGaugeBuilder`1.LabelFormatter">
+            <summary>
+            Gets or sets the label formatter.
+            </summary>
+            <value>
+            The label formatter.
+            </value>
+        </member>
         <member name="T:LiveChartsCore.Kernel.ILineSeries`1">
             <summary>
             Defines a line series plot.
@@ -4679,13 +4796,38 @@
             The hover pus hout.
             </value>
         </member>
+        <member name="P:LiveChartsCore.Kernel.IPieSeries`1.CornerRadius">
+            <summary>
+            Gets or sets the corner radius for every pie slice in the series.
+            </summary>
+            <value>
+            The corner radius.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IPieSeries`1.InvertedCornerRadius">
+            <summary>
+            Gets or sets a value indicating whether the direction of the corner radius is inverted.
+            </summary>
+            <value>
+              <c>true</c> if the direction is inverted; otherwise, <c>false</c>.
+            </value>
+        </member>
         <member name="P:LiveChartsCore.Kernel.IPieSeries`1.MaxRadialColumnWidth">
             <summary>
             Gets or sets the maximum width of the radial column, if the width of the radial column slice exceeds this dimension the radial
-            column width will be capped to the value of this property, defualt value is double.MaxValue.
+            column width will be capped to the value of this property, default value is double.MaxValue.
             </summary>
             <value>
             The maximum width of the radial column.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IPieSeries`1.RadialAlign">
+            <summary>
+            Gets or sets the radial align, this property determines the alignment of the pie slice only when the width of the column
+            exceeds <see cref="P:LiveChartsCore.Kernel.IPieSeries`1.MaxRadialColumnWidth"/>.
+            </summary>
+            <value>
+            The radial align.
             </value>
         </member>
         <member name="P:LiveChartsCore.Kernel.IPieSeries`1.RelativeInnerRadius">
@@ -5250,14 +5392,34 @@
             The stacked series
             </summary>
         </member>
-        <member name="F:LiveChartsCore.Kernel.SeriesProperties.VerticalOrientation">
+        <member name="F:LiveChartsCore.Kernel.SeriesProperties.PrimaryAxisVerticalOrientation">
             <summary>
             The vertical orientation
             </summary>
         </member>
-        <member name="F:LiveChartsCore.Kernel.SeriesProperties.HorizontalOrientation">
+        <member name="F:LiveChartsCore.Kernel.SeriesProperties.PrimaryAxisHorizontalOrientation">
             <summary>
             The horizontal orientation
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.Kernel.SeriesProperties.Gauge">
+            <summary>
+            The gauge.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.Kernel.SeriesProperties.GaugeFill">
+            <summary>
+            The gauge fill.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.Kernel.SeriesProperties.Sketch">
+            <summary>
+            The sketch
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.Kernel.SeriesProperties.Solid">
+            <summary>
+            The solid
             </summary>
         </member>
         <member name="T:LiveChartsCore.Kernel.SeriesStyleRule`2">
@@ -6017,6 +6179,26 @@
             Aligns the label to the middle of the axis.
             </summary>
         </member>
+        <member name="T:LiveChartsCore.Measure.RadialAlign">
+            <summary>
+            Defines the radial alignment.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.Measure.RadialAlign.Outer">
+            <summary>
+            Aligns the element to the outer radius.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.Measure.RadialAlign.Center">
+            <summary>
+            Aligns the element to the center of the outer and inner radius.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.Measure.RadialAlign.Inner">
+            <summary>
+            Aligns the element to the inner radius.
+            </summary>
+        </member>
         <member name="T:LiveChartsCore.Measure.Scaler">
             <summary>
             Defines the scaler class, this class helps to scale from the data scale to the user interface scale and vise versa.
@@ -6386,7 +6568,7 @@
         <member name="T:LiveChartsCore.PieSeries`4">
             <inheritdoc cref="T:LiveChartsCore.Kernel.IPieSeries`1" />
         </member>
-        <member name="M:LiveChartsCore.PieSeries`4.#ctor">
+        <member name="M:LiveChartsCore.PieSeries`4.#ctor(System.Boolean,System.Boolean)">
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.PieSeries`4"/> class.
             </summary>
@@ -6411,6 +6593,15 @@
         </member>
         <member name="P:LiveChartsCore.PieSeries`4.MaxRadialColumnWidth">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IPieSeries`1.MaxRadialColumnWidth"/>
+        </member>
+        <member name="P:LiveChartsCore.PieSeries`4.RadialAlign">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IPieSeries`1.RadialAlign"/>
+        </member>
+        <member name="P:LiveChartsCore.PieSeries`4.CornerRadius">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IPieSeries`1.CornerRadius"/>
+        </member>
+        <member name="P:LiveChartsCore.PieSeries`4.InvertedCornerRadius">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IPieSeries`1.InvertedCornerRadius"/>
         </member>
         <member name="P:LiveChartsCore.PieSeries`4.IsFillSeries">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IPieSeries`1.IsFillSeries"/>
@@ -7091,6 +7282,24 @@
             <param name="predicate">The predicate.</param>
             <returns></returns>
         </member>
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.HasRuleForScatterSeries``1(LiveChartsCore.Themes.VisualsStyle{``0},System.Action{LiveChartsCore.Kernel.IScatterSeries{``0}})">
+            <summary>
+             Defines a style builder for <see cref="T:LiveChartsCore.Kernel.IScatterSeries`1"/> objects.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+            <param name="styler">The styler.</param>
+            <param name="predicate">The predicate.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.HasRuleForGaugeBuilders``1(LiveChartsCore.Themes.VisualsStyle{``0},System.Action{LiveChartsCore.Kernel.IGaugeBuilder{``0}})">
+            <summary>
+            Defines a style builder for <see cref="T:LiveChartsCore.Kernel.IGaugeBuilder`1"/> objects.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+            <param name="styler">The styler.</param>
+            <param name="predicate">The predicate.</param>
+            <returns></returns>
+        </member>
         <member name="T:LiveChartsCore.Themes.Theme`1">
             <summary>
             Defines a style builder.
@@ -7292,6 +7501,14 @@
             </summary>
             <value>
             The pie series builder.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Themes.VisualsStyle`1.GaugeBuilder">
+            <summary>
+            Gets or sets the gauge builder.
+            </summary>
+            <value>
+            The gauge builder.
             </value>
         </member>
         <member name="M:LiveChartsCore.Themes.VisualsStyle`1.ApplyStyleToChart(LiveChartsCore.Kernel.IChartView{`0})">

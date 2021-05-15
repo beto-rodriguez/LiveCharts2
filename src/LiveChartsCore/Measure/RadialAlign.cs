@@ -20,76 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Measure
 {
     /// <summary>
-    /// Defines the series properties enumeration.
+    /// Defines the radial alignment.
     /// </summary>
-    [Flags]
-    public enum SeriesProperties
+    public enum RadialAlign
     {
         /// <summary>
-        /// includes all series
+        /// Aligns the element to the outer radius.
         /// </summary>
-        AllSeries = 0,
+        Outer,
 
         /// <summary>
-        /// The Cartesian series
+        /// Aligns the element to the center of the outer and inner radius.
         /// </summary>
-        CartesianSeries = 1 << 1,
-        /// <summary>
-        /// The bar series
-        /// </summary>
-        Bar = 1 << 2,
-        /// <summary>
-        /// The line series
-        /// </summary>
-        Line = 1 << 3,
-        /// <summary>
-        /// The scatter series
-        /// </summary>
-        Scatter = 1 << 4,
+        Center,
 
         /// <summary>
-        /// The pie series
+        /// Aligns the element to the inner radius.
         /// </summary>
-        PieSeries = 1 << 5,
-
-        /// <summary>
-        /// The stacked series
-        /// </summary>
-        Stacked = 1 << 7,
-
-        /// <summary>
-        /// The vertical orientation
-        /// </summary>
-        PrimaryAxisVerticalOrientation = 1 << 8,
-
-        /// <summary>
-        /// The horizontal orientation
-        /// </summary>
-        PrimaryAxisHorizontalOrientation = 1 << 9,
-
-        /// <summary>
-        /// The gauge.
-        /// </summary>
-        Gauge = 1 << 10,
-
-        /// <summary>
-        /// The gauge fill.
-        /// </summary>
-        GaugeFill = 1 << 11,
-
-        /// <summary>
-        /// The sketch
-        /// </summary>
-        Sketch,
-
-        /// <summary>
-        /// The solid
-        /// </summary>
-        Solid
+        Inner
     }
 }

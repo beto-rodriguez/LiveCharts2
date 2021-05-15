@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.Kernel
 {
@@ -65,13 +66,38 @@ namespace LiveChartsCore.Kernel
         double HoverPushout { get; set; }
 
         /// <summary>
+        /// Gets or sets the corner radius for every pie slice in the series.
+        /// </summary>
+        /// <value>
+        /// The corner radius.
+        /// </value>
+        double CornerRadius { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the direction of the corner radius is inverted.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if the direction is inverted; otherwise, <c>false</c>.
+        /// </value>
+        bool InvertedCornerRadius { get; set; }
+
+        /// <summary>
         /// Gets or sets the maximum width of the radial column, if the width of the radial column slice exceeds this dimension the radial
-        /// column width will be capped to the value of this property, defualt value is double.MaxValue.
+        /// column width will be capped to the value of this property, default value is double.MaxValue.
         /// </summary>
         /// <value>
         /// The maximum width of the radial column.
         /// </value>
         double MaxRadialColumnWidth { get; set; }
+
+        /// <summary>
+        /// Gets or sets the radial align, this property determines the alignment of the pie slice only when the width of the column
+        /// exceeds <see cref="MaxRadialColumnWidth"/>.
+        /// </summary>
+        /// <value>
+        /// The radial align.
+        /// </value>
+        RadialAlign RadialAlign { get; set; }
 
         /// <summary>
         /// Gets or sets the relative inner radius, it is the extra inner radius for every stacked slice.

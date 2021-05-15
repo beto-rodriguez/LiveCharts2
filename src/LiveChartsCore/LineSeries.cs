@@ -27,7 +27,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
-using System.Diagnostics;
 
 namespace LiveChartsCore
 {
@@ -57,7 +56,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
         public LineSeries(bool isStacked = false)
-            : base(SeriesProperties.Line | SeriesProperties.VerticalOrientation | (isStacked ? SeriesProperties.Stacked : 0))
+            : base(SeriesProperties.Line | SeriesProperties.PrimaryAxisVerticalOrientation | (isStacked ? SeriesProperties.Stacked : 0) | SeriesProperties.Sketch)
         {
             DataPadding = new PointF(0.5f, 1f);
             HoverState = LiveCharts.LineSeriesHoverKey;

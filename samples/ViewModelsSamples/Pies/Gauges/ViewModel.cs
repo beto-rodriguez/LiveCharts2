@@ -171,18 +171,18 @@ namespace ViewModelsSamples.Pies.Gauges
 
             GaugeTotal14 = 100;
             InitialRotation14 = -90;
-            MaxAngle14 = 270;
+            MaxAngle14 = 350;
             Series14 = new GaugeBuilder()
             {
                 LabelsPosition = PolarLabelsPosition.End,
                 LabelFormatter = point => point.PrimaryValue.ToString(),
                 LabelsSize = 20,
                 InnerRadius = 20,
-                OffsetRadius = 8,
+                MaxRadialColumnWidth = 5,
                 Background = null
             }
             .AddValue(new ObservableValue(50), "Vanessa")
-            .AddValue(new ObservableValue(75), "Charles")
+            .AddValue(new ObservableValue(80), "Charles")
             .AddValue(new ObservableValue(95), "Ana")
             .BuildSeries();
         }

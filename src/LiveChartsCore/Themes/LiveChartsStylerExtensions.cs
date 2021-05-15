@@ -222,5 +222,38 @@ namespace LiveChartsCore.Themes
             styler.StackedRowSeriesBuilder.Add(predicate);
             return styler;
         }
+
+        /// <summary>
+        ///  Defines a style builder for <see cref="IScatterSeries{TDrawingContext}"/> objects.
+        /// </summary>
+        /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+        /// <param name="styler">The styler.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns></returns>
+        public static VisualsStyle<TDrawingContext> HasRuleForScatterSeries<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
+            Action<IScatterSeries<TDrawingContext>> predicate)
+            where TDrawingContext : DrawingContext
+        {
+            styler.ScatterSeriesBuilder.Add(predicate);
+            return styler;
+        }
+
+        /// <summary>
+        /// Defines a style builder for <see cref="IGaugeBuilder{TDrawingContext}"/> objects.
+        /// </summary>
+        /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+        /// <param name="styler">The styler.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns></returns>
+        public static VisualsStyle<TDrawingContext> HasRuleForGaugeBuilders<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
+            Action<IGaugeBuilder<TDrawingContext>> predicate)
+            where TDrawingContext : DrawingContext
+        {
+            styler.GaugeBuilder.Add(predicate);
+            return styler;
+        }
+
     }
 }

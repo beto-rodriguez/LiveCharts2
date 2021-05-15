@@ -39,7 +39,15 @@ namespace LiveChartsCore.SkiaSharpView
     /// </typeparam>
     public class PieSeries<TModel> : PieSeries<TModel, DoughnutGeometry, LabelGeometry>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PieSeries{TModel}"/> class.
+        /// </summary>
+        /// <param name="isGauge"></param>
+        /// <param name="isGaugeFill"></param>
+        public PieSeries(bool isGauge = false, bool isGaugeFill = false) : base(isGauge, isGaugeFill)
+        {
 
+        }
     }
 
     /// <summary>
@@ -58,7 +66,15 @@ namespace LiveChartsCore.SkiaSharpView
     public class PieSeries<TModel, TVisual> : PieSeries<TModel, TVisual, LabelGeometry>
         where TVisual : class, IDoughnutVisualChartPoint<SkiaSharpDrawingContext>, new()
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual}"/> class.
+        /// </summary>
+        /// <param name="isGauge"></param>
+        /// <param name="isGaugeFill"></param>
+        public PieSeries(bool isGauge = false, bool isGaugeFill = false) : base(isGauge, isGaugeFill)
+        {
 
+        }
     }
 
     /// <summary>
@@ -84,7 +100,9 @@ namespace LiveChartsCore.SkiaSharpView
         /// <summary>
         /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel}"/> class.
         /// </summary>
-        public PieSeries()
+        /// <param name="isGauge"></param>
+        /// <param name="isGaugeFill"></param>
+        public PieSeries(bool isGauge = false, bool isGaugeFill = false) : base(isGauge, isGaugeFill)
         {
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
             InitializeSeries();

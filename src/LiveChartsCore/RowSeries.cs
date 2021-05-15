@@ -46,7 +46,7 @@ namespace LiveChartsCore
         /// Initializes a new instance of the <see cref="RowSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
         public RowSeries()
-            : base(SeriesProperties.Bar | SeriesProperties.HorizontalOrientation) { }
+            : base(SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation | SeriesProperties.Solid) { }
 
         /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.Measure"/>
         public override void Measure(
@@ -79,7 +79,7 @@ namespace LiveChartsCore
                 cp = (pos - count / 2f) * uw + uwm;
             }
 
-            if (uw < -1 * MaxBarWidth)
+            if (uw > MaxBarWidth)
             {
                 uw = (float)MaxBarWidth * -1;
                 uwm = uw / 2f;
