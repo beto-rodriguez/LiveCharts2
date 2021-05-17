@@ -35,7 +35,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The measure work.
         /// </value>
-        object MeasureWork { get; set; }
+        object MeasureWork { get; }
 
         /// <summary>
         /// Gets the chart view.

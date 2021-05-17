@@ -55,8 +55,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
         /// </summary>
         public override void ClearCanvas()
         {
-            Canvas.Clear(SKColors.Red);
-            Canvas.Clear(BackColor);
         }
     }
 }

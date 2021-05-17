@@ -688,6 +688,11 @@
             The paint tasks property
             </summary>
         </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Avalonia.MotionCanvas.BackColorProperty">
+            <summary>
+            The back color property
+            </summary>
+        </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.MotionCanvas.PaintTasks">
             <summary>
             Gets or sets the paint tasks.

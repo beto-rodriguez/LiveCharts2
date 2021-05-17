@@ -62,6 +62,12 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             AvaloniaProperty.Register<MotionCanvas, HashSet<IDrawableTask<SkiaSharpDrawingContext>>>(nameof(PaintTasks), inherits: true);
 
         /// <summary>
+        /// The back color property
+        /// </summary>
+        public static readonly AvaloniaProperty<SKColor> BackColorProperty =
+            AvaloniaProperty.Register<MotionCanvas, SKColor>(nameof(BackColor), defaultValue: new SKColor(255, 255, 255, 0), inherits: true);
+
+        /// <summary>
         /// Gets or sets the paint tasks.
         /// </summary>
         /// <value>
@@ -87,7 +93,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <value>
         /// The color of the back.
         /// </value>
-        public SKColor BackColor { get; set; } = new SKColor(255, 255, 255, 0);
+        public SKColor BackColor
+        {
+            get => (SKColor)GetValue(BackColorProperty);
+            set => SetValue(BackColorProperty, value);
+        }
 
         /// <summary>
         /// Gets the canvas core.

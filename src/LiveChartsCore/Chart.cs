@@ -143,12 +143,20 @@ namespace LiveChartsCore
         #region properties
 
         /// <summary>
-        /// Gets or sets the measure work.
+        /// Gets the measure work.
         /// </summary>
         /// <value>
         /// The measure work.
         /// </value>
-        public object MeasureWork { get; set; } = new object();
+        public object MeasureWork { get; protected set; } = new object();
+
+        /// <summary>
+        /// Gets or sets the theme identifier.
+        /// </summary>
+        /// <value>
+        /// The theme identifier.
+        /// </value>
+        public object ThemeId { get; protected set; } = new object();
 
         /// <summary>
         /// Gets or sets a value indicating whether this it is the first draw of this instance.

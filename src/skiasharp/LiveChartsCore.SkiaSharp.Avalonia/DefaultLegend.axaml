@@ -26,7 +26,7 @@
                     VerticalAlignment="Center"/>
                 <TextBlock Text="{Binding Name}" Margin="0 0 8 0"
                     FontFamily="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}"
-                    Foreground="{Binding TextColor, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}"
+                    Foreground="{Binding TextBrush, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}"
                     FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}"
                     FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}"
                     FontStyle="{Binding FontStyle, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}"

@@ -62,7 +62,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The series default resolver.
         /// </value>
-        public Action<Color[], IDrawableSeries<TDrawingContext>>? SeriesDefaultsResolver { get; set; }
+        public Action<Color[], IDrawableSeries<TDrawingContext>, bool>? SeriesDefaultsResolver { get; set; }
 
         /// <summary>
         /// Gets or sets the axis default resolver.
@@ -70,7 +70,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The axis default resolver.
         /// </value>
-        public Action<IAxis<TDrawingContext>>? AxisDefaultResolver { get; set; }
+        public Action<IAxis<TDrawingContext>, bool>? AxisDefaultResolver { get; set; }
 
         /// <summary>
         /// Uses the colors.
@@ -99,7 +99,7 @@ namespace LiveChartsCore.Themes
         /// </summary>
         /// <param name="resolver">The resolver.</param>
         /// <returns></returns>
-        public Theme<TDrawingContext> WithSeriesDefaultsResolver(Action<Color[], IDrawableSeries<TDrawingContext>> resolver)
+        public Theme<TDrawingContext> WithSeriesDefaultsResolver(Action<Color[], IDrawableSeries<TDrawingContext>, bool> resolver)
         {
             SeriesDefaultsResolver = resolver;
             return this;
@@ -110,7 +110,7 @@ namespace LiveChartsCore.Themes
         /// </summary>
         /// <param name="resolver">The resolver.</param>
         /// <returns></returns>
-        public Theme<TDrawingContext> WithAxisDefaultsResolver(Action<IAxis<TDrawingContext>> resolver)
+        public Theme<TDrawingContext> WithAxisDefaultsResolver(Action<IAxis<TDrawingContext>, bool> resolver)
         {
             AxisDefaultResolver = resolver;
             return this;
@@ -132,18 +132,20 @@ namespace LiveChartsCore.Themes
         /// </summary>
         /// <param name="colors">The colors.</param>
         /// <param name="series">The series.</param>
-        public virtual void ResolveSeriesDefaults(Color[] colors, IDrawableSeries<TDrawingContext> series)
+        /// <param name="forceApply">Forces the apply of the theme.</param>
+        public virtual void ResolveSeriesDefaults(Color[] colors, IDrawableSeries<TDrawingContext> series, bool forceApply)
         {
-            SeriesDefaultsResolver?.Invoke(colors, series);
+            SeriesDefaultsResolver?.Invoke(colors, series, forceApply);
         }
 
         /// <summary>
         /// Resolves the axis defaults.
         /// </summary>
         /// <param name="axis">The axis.</param>
-        public virtual void ResolveAxisDefaults(IAxis<TDrawingContext> axis)
+        /// /// <param name="forceApply">Forces the apply of the theme.</param>
+        public virtual void ResolveAxisDefaults(IAxis<TDrawingContext> axis, bool forceApply)
         {
-            AxisDefaultResolver?.Invoke(axis);
+            AxisDefaultResolver?.Invoke(axis, forceApply);
         }
     }
 }

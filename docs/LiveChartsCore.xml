@@ -411,10 +411,18 @@
         </member>
         <member name="P:LiveChartsCore.Chart`1.MeasureWork">
             <summary>
-            Gets or sets the measure work.
+            Gets the measure work.
             </summary>
             <value>
             The measure work.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Chart`1.ThemeId">
+            <summary>
+            Gets or sets the theme identifier.
+            </summary>
+            <value>
+            The theme identifier.
             </value>
         </member>
         <member name="P:LiveChartsCore.Chart`1.IsFirstDraw">
@@ -4999,6 +5007,14 @@
             The default tooltip finding strategy.
             </value>
         </member>
+        <member name="P:LiveChartsCore.Kernel.LiveChartsSettings.ThemeId">
+            <summary>
+            Gets the theme identifier.
+            </summary>
+            <value>
+            The theme identifier.
+            </value>
+        </member>
         <member name="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})">
             <summary>
             Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a<see cref="T:LiveChartsCore.Kernel.ChartPoint"/> instance,
@@ -7352,14 +7368,14 @@
             <param name="predicate">The predicate.</param>
             <returns>The current theme instance</returns>
         </member>
-        <member name="M:LiveChartsCore.Themes.Theme`1.WithSeriesDefaultsResolver(System.Action{System.Drawing.Color[],LiveChartsCore.Kernel.IDrawableSeries{`0}})">
+        <member name="M:LiveChartsCore.Themes.Theme`1.WithSeriesDefaultsResolver(System.Action{System.Drawing.Color[],LiveChartsCore.Kernel.IDrawableSeries{`0},System.Boolean})">
             <summary>
             Sets the series defaults resolver.
             </summary>
             <param name="resolver">The resolver.</param>
             <returns></returns>
         </member>
-        <member name="M:LiveChartsCore.Themes.Theme`1.WithAxisDefaultsResolver(System.Action{LiveChartsCore.Kernel.IAxis{`0}})">
+        <member name="M:LiveChartsCore.Themes.Theme`1.WithAxisDefaultsResolver(System.Action{LiveChartsCore.Kernel.IAxis{`0},System.Boolean})">
             <summary>
             Sets the axis defaults resolver.
             </summary>
@@ -7372,18 +7388,20 @@
             </summary>
             <returns>The current theme instance</returns>
         </member>
-        <member name="M:LiveChartsCore.Themes.Theme`1.ResolveSeriesDefaults(System.Drawing.Color[],LiveChartsCore.Kernel.IDrawableSeries{`0})">
+        <member name="M:LiveChartsCore.Themes.Theme`1.ResolveSeriesDefaults(System.Drawing.Color[],LiveChartsCore.Kernel.IDrawableSeries{`0},System.Boolean)">
             <summary>
             Resolves the series defaults.
             </summary>
             <param name="colors">The colors.</param>
             <param name="series">The series.</param>
+            <param name="forceApply">Forces the apply of the theme.</param>
         </member>
-        <member name="M:LiveChartsCore.Themes.Theme`1.ResolveAxisDefaults(LiveChartsCore.Kernel.IAxis{`0})">
+        <member name="M:LiveChartsCore.Themes.Theme`1.ResolveAxisDefaults(LiveChartsCore.Kernel.IAxis{`0},System.Boolean)">
             <summary>
             Resolves the axis defaults.
             </summary>
             <param name="axis">The axis.</param>
+            /// <param name="forceApply">Forces the apply of the theme.</param>
         </member>
         <member name="T:LiveChartsCore.Themes.VisualsStyle`1">
             <summary>

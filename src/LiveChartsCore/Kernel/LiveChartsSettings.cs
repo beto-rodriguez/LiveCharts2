@@ -35,6 +35,7 @@ namespace LiveChartsCore.Kernel
     public class LiveChartsSettings
     {
         private object? _currentFactory;
+        private object _themeId = new object();
         private readonly Dictionary<Type, object> _mappers = new();
         private readonly Dictionary<Type, object> _seriesStyleBuilder = new();
 
@@ -101,6 +102,19 @@ namespace LiveChartsCore.Kernel
         /// The default tooltip finding strategy.
         /// </value>
         public TooltipFindingStrategy DefaultTooltipFindingStrategy { get; set; } = TooltipFindingStrategy.CompareOnlyX;
+
+        /// <summary>
+        /// Gets the theme identifier.
+        /// </summary>
+        /// <value>
+        /// The theme identifier.
+        /// </value>
+        public object ThemeId { get => _themeId; private set
+            {
+                var changed = _themeId != value;
+                _themeId = value;
+            }
+        }
 
         /// <summary>
         /// Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a<see cref="ChartPoint"/> instance,
@@ -212,6 +226,7 @@ namespace LiveChartsCore.Kernel
                 _seriesStyleBuilder[typeof(TDrawingContext)] = stylesBuilder;
             }
 
+            ThemeId = new object();
             var sb = (Theme<TDrawingContext>)stylesBuilder;
             builder(sb);
 

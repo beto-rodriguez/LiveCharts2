@@ -357,24 +357,25 @@ namespace LiveChartsCore
                 var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
                 if (theme.CurrentColors == null || theme.CurrentColors.Length == 0)
                     throw new Exception("Default colors are not valid");
+                var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
 
                 // restart axes bounds and meta data
                 foreach (var axis in XAxes)
                 {
                     axis.Initialize(AxisOrientation.X);
-                    theme.ResolveAxisDefaults(axis);
+                    theme.ResolveAxisDefaults(axis, forceApply);
                 }
                 foreach (var axis in YAxes)
                 {
                     axis.Initialize(AxisOrientation.Y);
-                    theme.ResolveAxisDefaults(axis);
+                    theme.ResolveAxisDefaults(axis, forceApply);
                 }
 
                 // get seriesBounds
                 foreach (var series in Series)
                 {
                     if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
-                    theme.ResolveSeriesDefaults(theme.CurrentColors, series);
+                    theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
 
                     var secondaryAxis = XAxes[series.ScalesXAt];
                     var primaryAxis = YAxes[series.ScalesYAt];
@@ -532,6 +533,7 @@ namespace LiveChartsCore
                 InvokeOnUpdateStarted();
 
                 IsFirstDraw = false;
+                ThemeId = LiveCharts.CurrentSettings.ThemeId;
             }
 
             Canvas.Invalidate();

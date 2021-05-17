@@ -27,7 +27,7 @@ namespace LiveChartsCore
     /// <summary>
     /// Defines a set of predefined colors to use.
     /// </summary>
-    public static class ColorPacks
+    public static partial class ColorPacks
     {
         /// <summary>
         /// Gets the fluent design colors.
