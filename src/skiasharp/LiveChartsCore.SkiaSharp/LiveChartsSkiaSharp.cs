@@ -79,12 +79,12 @@ namespace LiveChartsCore.SkiaSharpView
                 .HasTheme((Theme<SkiaSharpDrawingContext> theme) =>
                 {
                     _ = theme
-                       .WithColors(ColorPacks.MaterialDesign500)
+                       .WithColors(ColorPalletes.MaterialDesign500)
                        .WithStyle(style =>
                            style
                                .HasRuleForCharts(chart =>
                                {
-                                   chart.BackColor = Color.FromArgb(255, 255, 255, 255);
+                                   //chart.BackColor = Color.FromArgb(255, 255, 255, 255);
                                    chart.AnimationsSpeed = TimeSpan.FromMilliseconds(700);
                                    chart.EasingFunction = EasingFunctions.ExponentialOut;
 
@@ -174,12 +174,12 @@ namespace LiveChartsCore.SkiaSharpView
                 .HasTheme((Theme<SkiaSharpDrawingContext> theme) =>
                 {
                     _ = theme
-                       .WithColors(ColorPacks.MaterialDesign200)
+                       .WithColors(ColorPalletes.MaterialDesign200)
                        .WithStyle(style =>
                            style
                                .HasRuleForCharts(chart =>
                                {
-                                   chart.BackColor = Color.FromArgb(255, 40, 40, 40);
+                                   //chart.BackColor = Color.FromArgb(255, 40, 40, 40);
                                    chart.AnimationsSpeed = TimeSpan.FromMilliseconds(700);
                                    chart.EasingFunction = EasingFunctions.ExponentialOut;
 
@@ -283,6 +283,13 @@ namespace LiveChartsCore.SkiaSharpView
                             initializer.ApplyStyleToSeries(series);
                         }
 
+                        if ((series.SeriesProperties & SeriesProperties.GaugeFill) != 0)
+                        {
+                            if (series.Stroke == DefaultPaintTask) series.Stroke = null;
+                            if (series.Fill == DefaultPaintTask) series.Fill = new SolidColorPaintTask(new SKColor(0, 0, 0, 15));
+                            return;
+                        }
+
                         var color = colors[series.SeriesId % colors.Length];
                         if (series.Name == null) series.Name = $"Series {series.SeriesId + 1}";
 
@@ -318,14 +325,14 @@ namespace LiveChartsCore.SkiaSharpView
                 .WithAxisDefaultsResolver(
                     (IAxis<SkiaSharpDrawingContext> axis, bool forceApply) =>
                     {
-                        //if (forceApply)
-                        //{
-                        //    if (!LiveCharts.IsConfigured) LiveCharts.Configure(DefaultPlatformBuilder);
-                        //    var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-                        //    var initializer = stylesBuilder.GetVisualsInitializer();
+                        if (forceApply)
+                        {
+                            if (!LiveCharts.IsConfigured) LiveCharts.Configure(DefaultPlatformBuilder);
+                            var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
+                            var initializer = stylesBuilder.GetVisualsInitializer();
 
-                        //    initializer.ApplyStyleToAxis(axis);
-                        //}
+                            initializer.ApplyStyleToAxis(axis);
+                        }
 
                         if (axis.SeparatorsBrush == DefaultPaintTask)
                             axis.SeparatorsBrush = axis.Orientation == AxisOrientation.X
@@ -349,6 +356,22 @@ namespace LiveChartsCore.SkiaSharpView
                 .WithSeriesDefaultsResolver(
                     (Color[] colors, IDrawableSeries<SkiaSharpDrawingContext> series, bool forceApply) =>
                     {
+                        if (forceApply)
+                        {
+                            if (!LiveCharts.IsConfigured) LiveCharts.Configure(DefaultPlatformBuilder);
+                            var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
+                            var initializer = stylesBuilder.GetVisualsInitializer();
+
+                            initializer.ApplyStyleToSeries(series);
+                        }
+
+                        if ((series.SeriesProperties & SeriesProperties.GaugeFill) != 0)
+                        {
+                            if (series.Stroke == DefaultPaintTask) series.Stroke = null;
+                            if (series.Fill == DefaultPaintTask) series.Fill = new SolidColorPaintTask(new SKColor(255, 255, 255, 15));
+                            return;
+                        }
+
                         var color = colors[series.SeriesId % colors.Length];
                         if (series.Name == null) series.Name = $"Series {series.SeriesId + 1}";
 
@@ -384,6 +407,15 @@ namespace LiveChartsCore.SkiaSharpView
                 .WithAxisDefaultsResolver(
                     (IAxis<SkiaSharpDrawingContext> axis, bool forceApply) =>
                     {
+                        if (forceApply)
+                        {
+                            if (!LiveCharts.IsConfigured) LiveCharts.Configure(DefaultPlatformBuilder);
+                            var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
+                            var initializer = stylesBuilder.GetVisualsInitializer();
+
+                            initializer.ApplyStyleToAxis(axis);
+                        }
+
                         if (axis.SeparatorsBrush == DefaultPaintTask)
                             axis.SeparatorsBrush = axis.Orientation == AxisOrientation.X
                                 ? null

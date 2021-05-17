@@ -4227,6 +4227,14 @@
             The index of the axis.
             </value>
         </member>
+        <member name="P:LiveChartsCore.Kernel.ICartesianSeries`1.DataLabelsPosition">
+            <summary>
+            Gets or sets the data labels position.
+            </summary>
+            <value>
+            The data labels position.
+            </value>
+        </member>
         <member name="M:LiveChartsCore.Kernel.ICartesianSeries`1.GetBounds(LiveChartsCore.CartesianChart{`0},LiveChartsCore.Kernel.IAxis{`0},LiveChartsCore.Kernel.IAxis{`0})">
             <summary>
             Gets the series bounds.
@@ -4827,6 +4835,14 @@
             </summary>
             <value>
             The maximum width of the radial column.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IPieSeries`1.DataLabelsPosition">
+            <summary>
+            Gets or sets the data labels position.
+            </summary>
+            <value>
+            The data labels position.
             </value>
         </member>
         <member name="P:LiveChartsCore.Kernel.IPieSeries`1.RadialAlign">
@@ -6195,22 +6211,22 @@
             Aligns the label to the middle of the axis.
             </summary>
         </member>
-        <member name="T:LiveChartsCore.Measure.RadialAlign">
+        <member name="T:LiveChartsCore.Measure.RadialAlignment">
             <summary>
             Defines the radial alignment.
             </summary>
         </member>
-        <member name="F:LiveChartsCore.Measure.RadialAlign.Outer">
+        <member name="F:LiveChartsCore.Measure.RadialAlignment.Outer">
             <summary>
             Aligns the element to the outer radius.
             </summary>
         </member>
-        <member name="F:LiveChartsCore.Measure.RadialAlign.Center">
+        <member name="F:LiveChartsCore.Measure.RadialAlignment.Center">
             <summary>
             Aligns the element to the center of the outer and inner radius.
             </summary>
         </member>
-        <member name="F:LiveChartsCore.Measure.RadialAlign.Inner">
+        <member name="F:LiveChartsCore.Measure.RadialAlignment.Inner">
             <summary>
             Aligns the element to the inner radius.
             </summary>
@@ -7148,12 +7164,12 @@
             <param name="primaryScale">The primary scale.</param>
             <param name="secondaryScale">The secondary scale.</param>
         </member>
-        <member name="T:LiveChartsCore.ColorPacks">
+        <member name="T:LiveChartsCore.Themes.ColorPalletes">
             <summary>
             Defines a set of predefined colors to use.
             </summary>
         </member>
-        <member name="P:LiveChartsCore.ColorPacks.FluentDesign">
+        <member name="P:LiveChartsCore.Themes.ColorPalletes.FluentDesign">
             <summary>
             Gets the fluent design colors.
             </summary>
@@ -7161,7 +7177,7 @@
             The fluent design.
             </value>
         </member>
-        <member name="P:LiveChartsCore.ColorPacks.MaterialDesign500">
+        <member name="P:LiveChartsCore.Themes.ColorPalletes.MaterialDesign500">
             <summary>
             Gets the material design500 colors.
             </summary>
@@ -7169,7 +7185,7 @@
             The material design500.
             </value>
         </member>
-        <member name="P:LiveChartsCore.ColorPacks.MaterialDesign200">
+        <member name="P:LiveChartsCore.Themes.ColorPalletes.MaterialDesign200">
             <summary>
             Gets the material design200 colors.
             </summary>
@@ -7177,7 +7193,7 @@
             The material design200.
             </value>
         </member>
-        <member name="P:LiveChartsCore.ColorPacks.MaterialDesign800">
+        <member name="P:LiveChartsCore.Themes.ColorPalletes.MaterialDesign800">
             <summary>
             Gets the material design800 colors.
             </summary>
@@ -7220,6 +7236,24 @@
         <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.HasRuleForPieSeries``1(LiveChartsCore.Themes.VisualsStyle{``0},System.Action{LiveChartsCore.Kernel.IPieSeries{``0}})">
             <summary>
              Defines a style builder for <see cref="T:LiveChartsCore.Kernel.IPieSeries`1"/> objects.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+            <param name="styler">The styler.</param>
+            <param name="predicate">The predicate.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.HasRuleForGaugeSeries``1(LiveChartsCore.Themes.VisualsStyle{``0},System.Action{LiveChartsCore.Kernel.IPieSeries{``0}})">
+            <summary>
+             Defines a style builder for <see cref="T:LiveChartsCore.Kernel.IPieSeries`1"/> objects when used as gauges.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+            <param name="styler">The styler.</param>
+            <param name="predicate">The predicate.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.HasRuleForGaugeFillSeries``1(LiveChartsCore.Themes.VisualsStyle{``0},System.Action{LiveChartsCore.Kernel.IPieSeries{``0}})">
+            <summary>
+             Defines a style builder for <see cref="T:LiveChartsCore.Kernel.IPieSeries`1"/> objects when used as gauges fills.
             </summary>
             <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
             <param name="styler">The styler.</param>
@@ -7301,15 +7335,6 @@
         <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.HasRuleForScatterSeries``1(LiveChartsCore.Themes.VisualsStyle{``0},System.Action{LiveChartsCore.Kernel.IScatterSeries{``0}})">
             <summary>
              Defines a style builder for <see cref="T:LiveChartsCore.Kernel.IScatterSeries`1"/> objects.
-            </summary>
-            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-            <param name="styler">The styler.</param>
-            <param name="predicate">The predicate.</param>
-            <returns></returns>
-        </member>
-        <member name="M:LiveChartsCore.Themes.LiveChartsStylerExtensions.HasRuleForGaugeBuilders``1(LiveChartsCore.Themes.VisualsStyle{``0},System.Action{LiveChartsCore.Kernel.IGaugeBuilder{``0}})">
-            <summary>
-            Defines a style builder for <see cref="T:LiveChartsCore.Kernel.IGaugeBuilder`1"/> objects.
             </summary>
             <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
             <param name="styler">The styler.</param>
@@ -7441,6 +7466,22 @@
             The pie series builder.
             </value>
         </member>
+        <member name="P:LiveChartsCore.Themes.VisualsStyle`1.GaugeSeriesBuilder">
+            <summary>
+            Gets or sets the gauge series builder.
+            </summary>
+            <value>
+            The pie series builder.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Themes.VisualsStyle`1.GaugeFillSeriesBuilder">
+            <summary>
+            Gets or sets the gauge fill series builder.
+            </summary>
+            <value>
+            The pie series builder.
+            </value>
+        </member>
         <member name="P:LiveChartsCore.Themes.VisualsStyle`1.CartesianSeriesBuilder">
             <summary>
             Gets or sets the Cartesian series builder.
@@ -7519,14 +7560,6 @@
             </summary>
             <value>
             The pie series builder.
-            </value>
-        </member>
-        <member name="P:LiveChartsCore.Themes.VisualsStyle`1.GaugeBuilder">
-            <summary>
-            Gets or sets the gauge builder.
-            </summary>
-            <value>
-            The gauge builder.
             </value>
         </member>
         <member name="M:LiveChartsCore.Themes.VisualsStyle`1.ApplyStyleToChart(LiveChartsCore.Kernel.IChartView{`0})">

@@ -25,7 +25,7 @@ namespace LiveChartsCore.Measure
     /// <summary>
     /// Defines the radial alignment.
     /// </summary>
-    public enum RadialAlign
+    public enum RadialAlignment
     {
         /// <summary>
         /// Aligns the element to the outer radius.

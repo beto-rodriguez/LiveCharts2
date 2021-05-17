@@ -622,14 +622,9 @@
             Defines a helper class to build gauges.
             </summary>
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.GaugeBuilder.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.GaugeBuilder"/> class.
-            </summary>
-        </member>
         <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.InnerRadius">
             <summary>
-            Gets or sets the inner radius.
+            Gets or sets the inner radius, setting this property to null will let the theme decide the value, default is null.
             </summary>
             <value>
             The inner radius.
@@ -637,7 +632,8 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.OffsetRadius">
             <summary>
-            Gets or sets the offset radius, the separation between each gauge if multiple gauges are nested.
+            Gets or sets the offset radius, the separation between each gauge if multiple gauges are nested,
+            setting this property to null will let the theme decide the value, default is null.
             </summary>
             <value>
             The relative inner radius.
@@ -645,7 +641,7 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.MaxRadialColumnWidth">
             <summary>
-            Gets or sets the maximum width of the radial column.
+            Gets or sets the maximum width of the radial column, setting this property to null will let the theme decide the value, default is null.
             </summary>
             <value>
             The maximum width of the radial column.
@@ -653,7 +649,7 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.CornerRadius">
             <summary>
-            Gets or sets the corner radius.
+            Gets or sets the corner radius, setting this property to null will let the theme decide the value, default is null.
             </summary>
             <value>
             The corner radius.
@@ -661,7 +657,7 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.RadialAlign">
             <summary>
-            Gets or sets the inner radius.
+            Gets or sets the inner radius, setting this property to null will let the theme decide the value, default is null.
             </summary>
             <value>
             The inner radius.
@@ -669,7 +665,7 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.BackgroundInnerRadius">
             <summary>
-            Gets or sets the background inner radius.
+            Gets or sets the background inner radius, setting this property to null will let the theme decide the value, default is null.
             </summary>
             <value>
             The background inner radius.
@@ -677,7 +673,8 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.BackgroundOffsetRadius">
             <summary>
-            Gets or sets the background offset radius, the separation between each gauge if multiple gauges are nested.
+            Gets or sets the background offset radius, the separation between each gauge if multiple gauges are nested,
+            setting this property to null will let the theme decide the value, default is null.
             </summary>
             <value>
             The background relative inner radius.
@@ -685,7 +682,8 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.BackgroundMaxRadialColumnWidth">
             <summary>
-            Gets or sets the width of the background maximum radial column.
+            Gets or sets the width of the background maximum radial column, setting this property to null will let the theme
+            decide the value, default is null.
             </summary>
             <value>
             The width of the background maximum radial column.
@@ -693,7 +691,7 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.BackgroundCornerRadius">
             <summary>
-            Gets or sets the background corner radius.
+            Gets or sets the background corner radius, setting this property to null will let the theme decide the value, default is null.
             </summary>
             <value>
             The background corner radius.
@@ -701,7 +699,8 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.Background">
             <summary>
-            Gets or sets the background.
+            Gets or sets the background, setting this property to <see cref="P:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.DefaultPaintTask"/> will let the theme decide
+            the value, default is <see cref="P:LiveChartsCore.SkiaSharpView.LiveChartsSkiaSharp.DefaultPaintTask"/>.
             </summary>
             <value>
             The background.
@@ -709,7 +708,7 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.LabelsSize">
             <summary>
-            Gets or sets the size of the labels.
+            Gets or sets the size of the labels, setting this property to null will let the theme decide the value, default is null.
             </summary>
             <value>
             The size of the labels.
@@ -717,7 +716,7 @@
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.GaugeBuilder.LabelsPosition">
             <summary>
-            Gets or sets the labels position.
+            Gets or sets the labels position, setting this property to null will let the theme decide the value, default is null.
             </summary>
             <value>
             The labels position.
@@ -771,6 +770,28 @@
             Builds the series.
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.GaugeBuilder.ApplyStyles(LiveChartsCore.Kernel.IPieSeries{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <summary>
+            Applies the styles the specified series.
+            </summary>
+            <param name="series">The series.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.GaugeBuilder.ApplyStylesToFill(LiveChartsCore.Kernel.IPieSeries{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <summary>
+            Applies the styles to fill series.
+            </summary>
+            <param name="series">The series.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.GaugeBuilder.ApplyStylesToSeries(LiveChartsCore.Kernel.IPieSeries{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <summary>
+            Applies the styles to series.
+            </summary>
+            <param name="series">The series.</param>
+            <returns></returns>
+            <exception cref="T:System.NotImplementedException"></exception>
         </member>
         <member name="T:LiveChartsCore.SkiaSharpView.LineSeries`1">
             <summary>

@@ -91,13 +91,21 @@ namespace LiveChartsCore.Kernel
         double MaxRadialColumnWidth { get; set; }
 
         /// <summary>
+        /// Gets or sets the data labels position.
+        /// </summary>
+        /// <value>
+        /// The data labels position.
+        /// </value>
+        PolarLabelsPosition DataLabelsPosition { get; set; }
+
+        /// <summary>
         /// Gets or sets the radial align, this property determines the alignment of the pie slice only when the width of the column
         /// exceeds <see cref="MaxRadialColumnWidth"/>.
         /// </summary>
         /// <value>
         /// The radial align.
         /// </value>
-        RadialAlign RadialAlign { get; set; }
+        RadialAlignment RadialAlign { get; set; }
 
         /// <summary>
         /// Gets or sets the relative inner radius, it is the extra inner radius for every stacked slice.

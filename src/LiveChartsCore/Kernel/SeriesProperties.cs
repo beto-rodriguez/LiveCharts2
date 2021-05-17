@@ -85,11 +85,11 @@ namespace LiveChartsCore.Kernel
         /// <summary>
         /// The sketch
         /// </summary>
-        Sketch,
+        Sketch = 1 << 12,
 
         /// <summary>
         /// The solid
         /// </summary>
-        Solid
+        Solid = 1 << 13
     }
 }

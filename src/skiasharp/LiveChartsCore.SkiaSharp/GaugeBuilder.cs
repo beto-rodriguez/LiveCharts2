@@ -37,113 +37,106 @@ namespace LiveChartsCore.SkiaSharpView
     /// </summary>
     public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     {
+        private readonly Dictionary<ISeries, Tuple<ObservableValue, string?, IDrawableTask<SkiaSharpDrawingContext>?, IDrawableTask<SkiaSharpDrawingContext>?>> _keyValuePairs = new();
         private readonly List<Tuple<ObservableValue, string?, IDrawableTask<SkiaSharpDrawingContext>?, IDrawableTask<SkiaSharpDrawingContext>?>> _tuples = new();
         private List<PieSeries<ObservableValue>>? _builtSeries;
-        private RadialAlign _radialAlign;
-        private double _innerRadius;
-        private double _offsetRadius;
-        private double _backgroundInnerRadius;
-        private double _backgroundOffsetRadius;
-        private double _backgroundCornerRadius;
-        private double _cornerRadius;
-        private IDrawableTask<SkiaSharpDrawingContext> _background = new SolidColorPaintTask(new SKColor(0, 0, 0, 20));
-        private double _labelsSize = 18;
-        private PolarLabelsPosition _labelsPosition;
+
+        private RadialAlignment? _radialAlign = null;
+        private double? _innerRadius = null;
+        private double? _offsetRadius = null;
+        private double? _backgroundInnerRadius = null;
+        private double? _backgroundOffsetRadius = null;
+        private double? _backgroundCornerRadius = null;
+        private double? _cornerRadius = null ;
+        private IDrawableTask<SkiaSharpDrawingContext> _background = LiveChartsSkiaSharp.DefaultPaintTask;
+        private double? _labelsSize = null;
+        private PolarLabelsPosition? _labelsPosition = null;
+        private double? _backgroundMaxRadialColumnWidth = null;
+        private double? _maxRadialColumnWidth = null;
         private Func<ChartPoint, string> _labelFormatter = point => point.PrimaryValue.ToString();
-        private double _backgroundMaxRadialColumnWidth = double.MaxValue;
-        private double _maxRadialColumnWidth = double.MaxValue;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GaugeBuilder"/> class.
-        /// </summary>
-        public GaugeBuilder()
-        {
-            var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-            var initializer = stylesBuilder.GetVisualsInitializer();
-            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
-                throw new Exception("Default colors are not valid");
-
-            foreach (var rule in initializer.GaugeBuilder) rule(this);
-        }
-
-        /// <summary>
-        /// Gets or sets the inner radius.
+        /// Gets or sets the inner radius, setting this property to null will let the theme decide the value, default is null.
         /// </summary>
         /// <value>
         /// The inner radius.
         /// </value>
-        public double InnerRadius { get => _innerRadius; set { _innerRadius = value; OnPopertyChanged(); } }
+        public double? InnerRadius { get => _innerRadius; set { _innerRadius = value; OnPopertyChanged(); } }
 
         /// <summary>
-        /// Gets or sets the offset radius, the separation between each gauge if multiple gauges are nested.
+        /// Gets or sets the offset radius, the separation between each gauge if multiple gauges are nested,
+        /// setting this property to null will let the theme decide the value, default is null.
         /// </summary>
         /// <value>
         /// The relative inner radius.
         /// </value>
-        public double OffsetRadius { get => _offsetRadius; set { _offsetRadius = value; OnPopertyChanged(); } }
+        public double? OffsetRadius { get => _offsetRadius; set { _offsetRadius = value; OnPopertyChanged(); } }
 
         /// <summary>
-        /// Gets or sets the maximum width of the radial column.
+        /// Gets or sets the maximum width of the radial column, setting this property to null will let the theme decide the value, default is null.
         /// </summary>
         /// <value>
         /// The maximum width of the radial column.
         /// </value>
-        public double MaxRadialColumnWidth { get => _maxRadialColumnWidth; set { _maxRadialColumnWidth = value; OnPopertyChanged(); } }
+        public double? MaxRadialColumnWidth { get => _maxRadialColumnWidth; set { _maxRadialColumnWidth = value; OnPopertyChanged(); } }
 
         /// <summary>
-        /// Gets or sets the corner radius.
+        /// Gets or sets the corner radius, setting this property to null will let the theme decide the value, default is null.
         /// </summary>
         /// <value>
         /// The corner radius.
         /// </value>
-        public double CornerRadius { get => _cornerRadius; set { _cornerRadius = value; OnPopertyChanged(); } }
+        public double? CornerRadius { get => _cornerRadius; set { _cornerRadius = value; OnPopertyChanged(); } }
 
         /// <summary>
-        /// Gets or sets the inner radius.
+        /// Gets or sets the inner radius, setting this property to null will let the theme decide the value, default is null.
         /// </summary>
         /// <value>
         /// The inner radius.
         /// </value>
-        public RadialAlign RadialAlign { get => _radialAlign; set { _radialAlign = value; OnPopertyChanged(); } }
+        public RadialAlignment? RadialAlign { get => _radialAlign; set { _radialAlign = value; OnPopertyChanged(); } }
 
         /// <summary>
-        /// Gets or sets the background inner radius.
+        /// Gets or sets the background inner radius, setting this property to null will let the theme decide the value, default is null.
         /// </summary>
         /// <value>
         /// The background inner radius.
         /// </value>
-        public double BackgroundInnerRadius { get => _backgroundInnerRadius; set { _backgroundInnerRadius = value; OnPopertyChanged(); } }
+        public double? BackgroundInnerRadius { get => _backgroundInnerRadius; set { _backgroundInnerRadius = value; OnPopertyChanged(); } }
 
         /// <summary>
-        /// Gets or sets the background offset radius, the separation between each gauge if multiple gauges are nested.
+        /// Gets or sets the background offset radius, the separation between each gauge if multiple gauges are nested,
+        /// setting this property to null will let the theme decide the value, default is null.
         /// </summary>
         /// <value>
         /// The background relative inner radius.
         /// </value>
-        public double BackgroundOffsetRadius { get => _backgroundOffsetRadius; set { _backgroundOffsetRadius = value; OnPopertyChanged(); } }
+        public double? BackgroundOffsetRadius { get => _backgroundOffsetRadius; set { _backgroundOffsetRadius = value; OnPopertyChanged(); } }
 
         /// <summary>
-        /// Gets or sets the width of the background maximum radial column.
+        /// Gets or sets the width of the background maximum radial column, setting this property to null will let the theme
+        /// decide the value, default is null.
         /// </summary>
         /// <value>
         /// The width of the background maximum radial column.
         /// </value>
-        public double BackgroundMaxRadialColumnWidth
+        public double? BackgroundMaxRadialColumnWidth
         {
             get => _backgroundMaxRadialColumnWidth;
             set { _backgroundMaxRadialColumnWidth = value; OnPopertyChanged(); }
         }
 
         /// <summary>
-        /// Gets or sets the background corner radius.
+        /// Gets or sets the background corner radius, setting this property to null will let the theme decide the value, default is null.
         /// </summary>
         /// <value>
         /// The background corner radius.
         /// </value>
-        public double BackgroundCornerRadius { get => _backgroundCornerRadius; set { _backgroundCornerRadius = value; OnPopertyChanged(); } }
+        public double? BackgroundCornerRadius { get => _backgroundCornerRadius; set { _backgroundCornerRadius = value; OnPopertyChanged(); } }
 
         /// <summary>
-        /// Gets or sets the background.
+        /// Gets or sets the background, setting this property to <see cref="LiveChartsSkiaSharp.DefaultPaintTask"/> will let the theme decide
+        /// the value, default is <see cref="LiveChartsSkiaSharp.DefaultPaintTask"/>.
         /// </summary>
         /// <value>
         /// The background.
@@ -151,20 +144,20 @@ namespace LiveChartsCore.SkiaSharpView
         public IDrawableTask<SkiaSharpDrawingContext> Background { get => _background; set { _background = value; OnPopertyChanged(); } }
 
         /// <summary>
-        /// Gets or sets the size of the labels.
+        /// Gets or sets the size of the labels, setting this property to null will let the theme decide the value, default is null.
         /// </summary>
         /// <value>
         /// The size of the labels.
         /// </value>
-        public double LabelsSize { get => _labelsSize; set { _labelsSize = value; OnPopertyChanged(); } }
+        public double? LabelsSize { get => _labelsSize; set { _labelsSize = value; OnPopertyChanged(); } }
 
         /// <summary>
-        /// Gets or sets the labels position.
+        /// Gets or sets the labels position, setting this property to null will let the theme decide the value, default is null.
         /// </summary>
         /// <value>
         /// The labels position.
         /// </value>
-        public PolarLabelsPosition LabelsPosition { get => _labelsPosition; set { _labelsPosition = value; OnPopertyChanged(); } }
+        public PolarLabelsPosition? LabelsPosition { get => _labelsPosition; set { _labelsPosition = value; OnPopertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the label formatter.
@@ -251,23 +244,18 @@ namespace LiveChartsCore.SkiaSharpView
                 }
                 list.Insert(i, item.Item1);
 
-                series.Add(
-                    new PieSeries<ObservableValue>(true)
-                    {
-                        ZIndex = i + 1,
-                        Values = list,
-                        Name = item.Item2,
-                        Fill = item.Item3,
-                        DataLabelsDrawableTask = item.Item4,
-                        DataLabelsSize = LabelsSize,
-                        DataLabelsFormatter = LabelFormatter,
-                        DataLabelsPosition = LabelsPosition,
-                        InnerRadius = InnerRadius,
-                        RelativeInnerRadius = OffsetRadius,
-                        RelativeOuterRadius = OffsetRadius,
-                        MaxRadialColumnWidth = MaxRadialColumnWidth,
-                        RadialAlign = RadialAlign
-                    });
+                var sf = new PieSeries<ObservableValue>(true)
+                {
+                    ZIndex = i + 1,
+                    Values = list,
+                    Name = item.Item2,
+                    DataLabelsDrawableTask = item.Item4,
+                    DataLabelsFormatter = LabelFormatter,
+                    Fill = item.Item3
+                };
+                ApplyStyles(sf);
+                series.Add(sf);
+                _keyValuePairs.Add(sf, item);
 
                 i++;
             }
@@ -275,23 +263,77 @@ namespace LiveChartsCore.SkiaSharpView
             var fillSeriesValues = new List<ObservableValue>();
             while (fillSeriesValues.Count < _tuples.Count) fillSeriesValues.Add(new ObservableValue(0));
 
-            series.Add(
-                new PieSeries<ObservableValue>(true, true)
-                {
-                    ZIndex = -1,
-                    IsFillSeries = true,
-                    Fill = Background,
-                    Values = fillSeriesValues,
-                    InnerRadius = BackgroundInnerRadius,
-                    RelativeInnerRadius = BackgroundOffsetRadius,
-                    RelativeOuterRadius = BackgroundOffsetRadius,
-                    MaxRadialColumnWidth = BackgroundMaxRadialColumnWidth,
-                    RadialAlign = RadialAlign
-                });
+            var s = new PieSeries<ObservableValue>(true, true)
+            {
+                ZIndex = -1,
+                IsFillSeries = true,
+                Values = fillSeriesValues
+            };
+            ApplyStyles(s);
+            series.Add(s);
 
             _builtSeries = series;
 
             return series;
+        }
+
+        /// <summary>
+        /// Applies the styles the specified series.
+        /// </summary>
+        /// <param name="series">The series.</param>
+        /// <returns></returns>
+        public void ApplyStyles(IPieSeries<SkiaSharpDrawingContext> series)
+        {
+            if (series.SeriesProperties.HasFlag(SeriesProperties.GaugeFill))
+            {
+                ApplyStylesToFill(series);
+                return;
+            }
+
+            ApplyStylesToSeries(series);
+        }
+
+        /// <summary>
+        /// Applies the styles to fill series.
+        /// </summary>
+        /// <param name="series">The series.</param>
+        /// <returns></returns>
+        public void ApplyStylesToFill(IPieSeries<SkiaSharpDrawingContext> series)
+        {
+            if (Background != LiveChartsSkiaSharp.DefaultPaintTask) series.Fill = Background;
+            if (BackgroundInnerRadius != null) series.InnerRadius = BackgroundInnerRadius.Value;
+            if (BackgroundOffsetRadius != null)
+            {
+                series.RelativeOuterRadius = BackgroundOffsetRadius.Value;
+                series.RelativeInnerRadius = BackgroundOffsetRadius.Value;
+            }
+            if (BackgroundMaxRadialColumnWidth != null) series.MaxRadialColumnWidth = BackgroundMaxRadialColumnWidth.Value;
+            if (RadialAlign != null) series.RadialAlign = RadialAlign.Value;
+        }
+
+        /// <summary>
+        /// Applies the styles to series.
+        /// </summary>
+        /// <param name="series">The series.</param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public void ApplyStylesToSeries(IPieSeries<SkiaSharpDrawingContext> series)
+        {
+            if (_keyValuePairs.TryGetValue(series, out var t))
+            {
+                if (t.Item3 != LiveChartsSkiaSharp.DefaultPaintTask) series.Fill = t.Item3;
+            }
+            if (LabelsSize != null) series.DataLabelsSize = LabelsSize.Value;
+            if (LabelsPosition != null) series.DataLabelsPosition = LabelsPosition.Value;
+            if (InnerRadius != null) series.InnerRadius = InnerRadius.Value;
+            if (OffsetRadius != null)
+            {
+                series.RelativeInnerRadius = OffsetRadius.Value;
+                series.RelativeOuterRadius = OffsetRadius.Value;
+            }
+            if (MaxRadialColumnWidth != null) series.MaxRadialColumnWidth = MaxRadialColumnWidth.Value;
+            if (RadialAlign != null) series.RadialAlign = RadialAlign.Value;
+            series.DataLabelsFormatter = LabelFormatter;
         }
 
         private void OnPopertyChanged()
@@ -300,26 +342,7 @@ namespace LiveChartsCore.SkiaSharpView
 
             foreach (var item in _builtSeries)
             {
-                if (item.IsFillSeries)
-                {
-                    item.Fill = Background;
-                    item.InnerRadius = BackgroundInnerRadius;
-                    item.RelativeInnerRadius = BackgroundOffsetRadius;
-                    item.RelativeOuterRadius = BackgroundOffsetRadius;
-                    item.MaxRadialColumnWidth = BackgroundMaxRadialColumnWidth;
-                    item.RadialAlign = RadialAlign;
-
-                    continue;
-                }
-
-                item.InnerRadius = InnerRadius;
-                item.RelativeInnerRadius = OffsetRadius;
-                item.RelativeOuterRadius = OffsetRadius;
-                item.DataLabelsPosition = LabelsPosition;
-                item.DataLabelsFormatter = LabelFormatter;
-                item.DataLabelsSize = LabelsSize;
-                item.MaxRadialColumnWidth = MaxRadialColumnWidth;
-                item.RadialAlign = RadialAlign;
+                ApplyStyles(item);
             }
         }
     }

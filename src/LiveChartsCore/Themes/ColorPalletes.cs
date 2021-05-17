@@ -22,12 +22,12 @@
 
 using System.Drawing;
 
-namespace LiveChartsCore
+namespace LiveChartsCore.Themes
 {
     /// <summary>
     /// Defines a set of predefined colors to use.
     /// </summary>
-    public static partial class ColorPacks
+    public static partial class ColorPalletes
     {
         /// <summary>
         /// Gets the fluent design colors.
@@ -39,10 +39,10 @@ namespace LiveChartsCore
         {
             RGB(116,77,169),
             RGB(231,72,86),
-            RGB(1,133,116),
+            RGB(255,140,0),
             RGB(0,153,188),
             RGB(191,0,119),
-            RGB(255,140,0),
+            RGB(1,133,116),
             RGB(194,57,179),
             RGB(76,74,72),
             RGB(0,183,195)

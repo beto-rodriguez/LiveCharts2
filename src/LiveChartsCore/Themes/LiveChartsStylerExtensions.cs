@@ -96,6 +96,38 @@ namespace LiveChartsCore.Themes
         }
 
         /// <summary>
+        ///  Defines a style builder for <see cref="IPieSeries{TDrawingContext}"/> objects when used as gauges.
+        /// </summary>
+        /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+        /// <param name="styler">The styler.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns></returns>
+        public static VisualsStyle<TDrawingContext> HasRuleForGaugeSeries<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
+            Action<IPieSeries<TDrawingContext>> predicate)
+            where TDrawingContext : DrawingContext
+        {
+            styler.GaugeSeriesBuilder.Add(predicate);
+            return styler;
+        }
+
+        /// <summary>
+        ///  Defines a style builder for <see cref="IPieSeries{TDrawingContext}"/> objects when used as gauges fills.
+        /// </summary>
+        /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+        /// <param name="styler">The styler.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns></returns>
+        public static VisualsStyle<TDrawingContext> HasRuleForGaugeFillSeries<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
+            Action<IPieSeries<TDrawingContext>> predicate)
+            where TDrawingContext : DrawingContext
+        {
+            styler.GaugeFillSeriesBuilder.Add(predicate);
+            return styler;
+        }
+
+        /// <summary>
         ///  Defines a style builder for <see cref="ILineSeries{TDrawingContext}"/> objects.
         /// </summary>
         /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
@@ -238,22 +270,5 @@ namespace LiveChartsCore.Themes
             styler.ScatterSeriesBuilder.Add(predicate);
             return styler;
         }
-
-        /// <summary>
-        /// Defines a style builder for <see cref="IGaugeBuilder{TDrawingContext}"/> objects.
-        /// </summary>
-        /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-        /// <param name="styler">The styler.</param>
-        /// <param name="predicate">The predicate.</param>
-        /// <returns></returns>
-        public static VisualsStyle<TDrawingContext> HasRuleForGaugeBuilders<TDrawingContext>(
-            this VisualsStyle<TDrawingContext> styler,
-            Action<IGaugeBuilder<TDrawingContext>> predicate)
-            where TDrawingContext : DrawingContext
-        {
-            styler.GaugeBuilder.Add(predicate);
-            return styler;
-        }
-
     }
 }

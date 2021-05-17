@@ -38,7 +38,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The inner radius.
         /// </value>
-        double InnerRadius { get; set; }
+        double? InnerRadius { get; set; }
 
         /// <summary>
         /// Gets or sets the offset radius, the separation between each gauge if multiple gauges are nested.
@@ -46,7 +46,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The relative inner radius.
         /// </value>
-        double OffsetRadius { get; set; }
+        double? OffsetRadius { get; set; }
 
         /// <summary>
         /// Gets or sets the maximum width of the radial column.
@@ -54,7 +54,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The maximum width of the radial column.
         /// </value>
-        double MaxRadialColumnWidth { get; set; }
+        double? MaxRadialColumnWidth { get; set; }
 
         /// <summary>
         /// Gets or sets the corner radius.
@@ -62,7 +62,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The corner radius.
         /// </value>
-        double CornerRadius { get; set; }
+        double? CornerRadius { get; set; }
 
         /// <summary>
         /// Gets or sets the radial align.
@@ -70,7 +70,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The radial align.
         /// </value>
-        public RadialAlign RadialAlign { get; set; }
+        RadialAlignment? RadialAlign { get; set; }
 
         /// <summary>
         /// Gets or sets the background inner radius.
@@ -78,7 +78,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The background inner radius.
         /// </value>
-        double BackgroundInnerRadius { get; set; }
+        double? BackgroundInnerRadius { get; set; }
 
         /// <summary>
         /// Gets or sets the background offset radius, the separation between each gauge if multiple gauges are nested.
@@ -86,7 +86,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The background relative inner radius.
         /// </value>
-        double BackgroundOffsetRadius { get; set; }
+        double? BackgroundOffsetRadius { get; set; }
 
         /// <summary>
         /// Gets or sets the width of the background maximum radial column.
@@ -94,7 +94,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The width of the background maximum radial column.
         /// </value>
-        double BackgroundMaxRadialColumnWidth { get; set; }
+        double? BackgroundMaxRadialColumnWidth { get; set; }
 
         /// <summary>
         /// Gets or sets the background corner radius.
@@ -102,7 +102,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The background corner radius.
         /// </value>
-        double BackgroundCornerRadius { get; set; }
+        double? BackgroundCornerRadius { get; set; }
 
         /// <summary>
         /// Gets or sets the background.
@@ -110,7 +110,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The background.
         /// </value>
-        public IDrawableTask<TDrawingContext> Background { get; set; }
+        IDrawableTask<TDrawingContext> Background { get; set; }
 
         /// <summary>
         /// Gets or sets the size of the labels.
@@ -118,7 +118,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The size of the labels.
         /// </value>
-        double LabelsSize { get; set; }
+        double? LabelsSize { get; set; }
 
         /// <summary>
         /// Gets or sets the labels position.
@@ -126,7 +126,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The labels position.
         /// </value>
-        public PolarLabelsPosition LabelsPosition { get; set; }
+        PolarLabelsPosition? LabelsPosition { get; set; }
 
         /// <summary>
         /// Gets or sets the label formatter.
@@ -134,6 +134,6 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The label formatter.
         /// </value>
-        public Func<ChartPoint, string> LabelFormatter { get; set; }
+        Func<ChartPoint, string> LabelFormatter { get; set; }
     }
 }

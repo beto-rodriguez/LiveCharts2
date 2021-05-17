@@ -37,7 +37,7 @@ namespace LiveChartsCore
         where TVisual : class, IDoughnutVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
-        private double _pushout = 5;
+        private double _pushout = 0;
         private double _innerRadius = 0;
         private double _maxOuterRadius = 1;
         private double _hoverPushout = 20;
@@ -45,7 +45,7 @@ namespace LiveChartsCore
         private double _outerPadding = 0;
         private double _maxRadialColW = double.MaxValue;
         private double _cornerRadius = 0;
-        private RadialAlign _radialAlign = RadialAlign.Outer;
+        private RadialAlignment _radialAlign = RadialAlignment.Outer;
         private bool _invertedCornerRadius = false;
         private bool _isFillSeries;
         private PolarLabelsPosition _labelsPosition;
@@ -81,7 +81,7 @@ namespace LiveChartsCore
         public double MaxRadialColumnWidth { get => _maxRadialColW; set { _maxRadialColW = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IPieSeries{TDrawingContext}.RadialAlign"/>
-        public RadialAlign RadialAlign { get => _radialAlign; set { _radialAlign = value; OnPropertyChanged(); } }
+        public RadialAlignment RadialAlign { get => _radialAlign; set { _radialAlign = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IPieSeries{TDrawingContext}.CornerRadius"/>
         public double CornerRadius { get => _cornerRadius; set { _cornerRadius = value; OnPropertyChanged(); } }
@@ -166,15 +166,15 @@ namespace LiveChartsCore
 
                 switch (RadialAlign)
                 {
-                    case RadialAlign.Outer:
+                    case RadialAlignment.Outer:
                         relativeOuterRadius = 0;
                         relativeInnerRadius = dw;
                         break;
-                    case RadialAlign.Center:
+                    case RadialAlignment.Center:
                         relativeOuterRadius = dw * 0.5f;
                         relativeInnerRadius = dw * 0.5f;
                         break;
-                    case RadialAlign.Inner:
+                    case RadialAlignment.Inner:
                         relativeOuterRadius = dw;
                         relativeInnerRadius = 0;
                         break;

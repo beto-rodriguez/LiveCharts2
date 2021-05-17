@@ -66,6 +66,22 @@ namespace LiveChartsCore.Themes
         public List<Action<IPieSeries<TDrawingContext>>> PieSeriesBuilder { get; set; } = new List<Action<IPieSeries<TDrawingContext>>>();
 
         /// <summary>
+        /// Gets or sets the gauge series builder.
+        /// </summary>
+        /// <value>
+        /// The pie series builder.
+        /// </value>
+        public List<Action<IPieSeries<TDrawingContext>>> GaugeSeriesBuilder { get; set; } = new List<Action<IPieSeries<TDrawingContext>>>();
+
+        /// <summary>
+        /// Gets or sets the gauge fill series builder.
+        /// </summary>
+        /// <value>
+        /// The pie series builder.
+        /// </value>
+        public List<Action<IPieSeries<TDrawingContext>>> GaugeFillSeriesBuilder { get; set; } = new List<Action<IPieSeries<TDrawingContext>>>();
+
+        /// <summary>
         /// Gets or sets the Cartesian series builder.
         /// </summary>
         /// <value>
@@ -146,14 +162,6 @@ namespace LiveChartsCore.Themes
         public List<Action<IScatterSeries<TDrawingContext>>> ScatterSeriesBuilder { get; set; } = new List<Action<IScatterSeries<TDrawingContext>>>();
 
         /// <summary>
-        /// Gets or sets the gauge builder.
-        /// </summary>
-        /// <value>
-        /// The gauge builder.
-        /// </value>
-        public List<Action<IGaugeBuilder<TDrawingContext>>> GaugeBuilder { get; set; } = new List<Action<IGaugeBuilder<TDrawingContext>>>();
-
-        /// <summary>
         /// Constructs a chart.
         /// </summary>
         /// <param name="chart">The chart.</param>
@@ -181,7 +189,21 @@ namespace LiveChartsCore.Themes
 
             if ((series.SeriesProperties & SeriesProperties.PieSeries) == SeriesProperties.PieSeries)
             {
-                foreach (var rule in PieSeriesBuilder) rule((IPieSeries<TDrawingContext>)series);
+                if ((series.SeriesProperties & SeriesProperties.Gauge) != 0)
+                {
+                    if ((series.SeriesProperties & SeriesProperties.GaugeFill) != 0)
+                    {
+                        foreach (var rule in GaugeFillSeriesBuilder) rule((IPieSeries<TDrawingContext>)series);
+                    }
+                    else
+                    {
+                        foreach (var rule in GaugeSeriesBuilder) rule((IPieSeries<TDrawingContext>)series);
+                    }
+                }
+                else
+                {
+                    foreach (var rule in PieSeriesBuilder) rule((IPieSeries<TDrawingContext>)series);
+                }
             }
 
             if ((series.SeriesProperties & SeriesProperties.CartesianSeries) == SeriesProperties.CartesianSeries)
