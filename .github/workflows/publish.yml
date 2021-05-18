@@ -17,7 +17,7 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build ./src/LiveChartsCore --configuration Release --no-restore
 
     - name: LiveChartsCore
       uses: brandedoutcast/publish-nuget@v2.5.2
