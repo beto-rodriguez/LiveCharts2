@@ -10,12 +10,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.101
+        
     - name: Install dependencies
       run: dotnet restore ./src/LiveChartsCore
+      
     - name: Build
       run: dotnet build ./src/LiveChartsCore --configuration Release --no-restore
 
