@@ -16,6 +16,15 @@ jobs:
       
     - name: Build
       run: dotnet build ./src/LiveChartsCore --configuration Release --no-restore
+      
+    - name: Release build
+      run: |
+        dotnet build  ./src/LiveChartsCore --configuration Release --no-restore
+        dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp --configuration Release --no-restore
+        dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia --configuration Release --no-restore
+        dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.WinForms --configuration Release --no-restore
+        dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.WPF --configuration Release --no-restore
+        dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms --configuration Release --no-restore
 
     - name: Publish LiveChartsCore
       uses: brandedoutcast/publish-nuget@v2.5.5
