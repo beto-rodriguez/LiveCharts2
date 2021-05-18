@@ -1,12 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <OutputType>Library</OutputType>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
+    <TargetFrameworks>net462;netcoreapp3.0</TargetFrameworks>
+    <AssemblyName>LiveChartsCore.SkiaSharpView.WinForms</AssemblyName>
+    <RootNamespace>LiveChartsCore.SkiaSharpView.WinForms</RootNamespace>
+    <Version>2.0.0-beta.3</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>LiveChartsCore.SkiaSharpView.Xamarin.Forms</name>
+        <name>LiveChartsCore.SkiaSharpView.XamarinForms</name>
     </assembly>
     <members>
         <member name="T:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart">

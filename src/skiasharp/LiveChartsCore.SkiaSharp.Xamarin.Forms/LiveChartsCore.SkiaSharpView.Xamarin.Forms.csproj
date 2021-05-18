@@ -1,9 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
+    <TargetFrameworks>netstandard2.0;</TargetFrameworks>
+    <AssemblyName>LiveChartsCore.SkiaSharpView.XamarinForms</AssemblyName>
+    <RootNamespace>LiveChartsCore.SkiaSharpView.XamarinForms</RootNamespace>
+    <Version>2.0.0-beta.3</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
