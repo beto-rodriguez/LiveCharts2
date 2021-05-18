@@ -3,9 +3,7 @@
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <LangVersion>9.0</LangVersion>
-    <TargetFramework>net5.0</TargetFramework>
-    <TargetFramework>netstandard1.1</TargetFramework>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net45;net451;net452;net46;net461;net462;net47;net471;net472;</TargetFrameworks>
     <AssemblyName>LiveChartsCore</AssemblyName>
     <RootNamespace>LiveChartsCore</RootNamespace>
     <Version>2.0.0-beta.1</Version>
