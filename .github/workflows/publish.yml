@@ -6,21 +6,19 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.101
+        
     - name: Install dependencies
-      run: dotnet restore
+      run: dotnet restore ./src/LiveChartsCore
+      
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build ./src/LiveChartsCore --configuration Release --no-restore
 
     - name: LiveChartsCore
-      uses: brandedoutcast/publish-nuget@v2.5.2
+      uses: brandedoutcast/publish-nuget@v2.5.5
       with:
           PROJECT_FILE_PATH: src/LiveChartsCore/LiveChartsCore.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
