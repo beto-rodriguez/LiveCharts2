@@ -202,7 +202,6 @@ namespace LiveChartsCore
                         point.Context.Label = label;
                     }
 
-
                     DataLabelsDrawableTask.AddGeometryToPaintTask(label);
                     label.Text = DataLabelsFormatter(point);
                     label.TextSize = dls;
