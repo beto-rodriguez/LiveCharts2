@@ -234,11 +234,6 @@ namespace LiveChartsCore.Kernel
         bool ShowSeparatorLines { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the separator wedges are visible.
-        /// </summary>
-        bool ShowSeparatorWedges { get; set; }
-
-        /// <summary>
         /// Initializes the axis for the specified orientation.
         /// </summary>
         /// <param name="orientation">The orientation.</param>

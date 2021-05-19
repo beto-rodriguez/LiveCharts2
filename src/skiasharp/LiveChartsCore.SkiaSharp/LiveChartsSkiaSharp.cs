@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing.Common;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -63,7 +64,9 @@ namespace LiveChartsCore.SkiaSharpView
         /// <returns></returns>
         public static LiveChartsSettings AddSkiaSharp(this LiveChartsSettings settings)
         {
-            return settings.HasDataFactory(new DataFactory<SkiaSharpDrawingContext>());
+            return settings
+                .HasDataFactory(new DataFactory<SkiaSharpDrawingContext>())
+                .HasAxisProvider(() => new Axis());
         }
 
         /// <summary>
@@ -341,6 +344,9 @@ namespace LiveChartsCore.SkiaSharpView
 
                         if (axis.TextBrush == DefaultPaintTask)
                             axis.TextBrush = new SolidColorPaintTask(new SKColor(90, 90, 90));
+
+                        if (axis.Padding == Padding.Default)
+                            axis.Padding = new Padding { Bottom = 8, Left = 8, Right = 8, Top = 8 };
                     });
         }
 
@@ -423,6 +429,9 @@ namespace LiveChartsCore.SkiaSharpView
 
                         if (axis.TextBrush == DefaultPaintTask)
                             axis.TextBrush = new SolidColorPaintTask(new SKColor(200, 200, 200));
+
+                        if (axis.Padding == Padding.Default)
+                            axis.Padding = new Padding { Bottom = 8, Left = 8, Right = 8, Top = 8 };
                     });
         }
 

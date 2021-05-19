@@ -79,8 +79,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-            XAxes = new List<IAxis>() { new Axis() };
-            YAxes = new List<IAxis>() { new Axis() };
+            XAxes = new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
+            YAxes = new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
             Series = new ObservableCollection<ISeries>();
 
             canvas.SkCanvasView.EnableTouchEvents = true;
@@ -90,8 +90,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             core.Measuring += OnCoreMeasuring;
             core.UpdateStarted += OnCoreUpdateStarted;
             core.UpdateFinished += OnCoreUpdateFinished;
-
-            
         }
 
         #region bindable properties 
@@ -117,8 +115,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// </summary>
         public static readonly BindableProperty XAxesProperty =
             BindableProperty.Create(
-                nameof(XAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>() { new Axis() }, BindingMode.Default, null,
-                (BindableObject o, object oldValue, object newValue) =>
+                nameof(XAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() },
+                BindingMode.Default, null, (BindableObject o, object oldValue, object newValue) =>
                 {
                     var chart = (CartesianChart)o;
                     var observer = chart.xObserver;
@@ -133,8 +131,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// </summary>
         public static readonly BindableProperty YAxesProperty =
             BindableProperty.Create(
-                nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>() { new Axis() }, BindingMode.Default, null,
-                (BindableObject o, object oldValue, object newValue) =>
+                nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() },
+                BindingMode.Default, null, (BindableObject o, object oldValue, object newValue) =>
                 {
                     var chart = (CartesianChart)o;
                     var observer = chart.yObserver;

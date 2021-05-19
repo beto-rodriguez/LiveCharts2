@@ -154,7 +154,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         /// <inheritdoc cref="IChartView.AnimationsSpeed" />
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Func<float, float> EasingFunction { get; set; } = LiveCharts.CurrentSettings.DefaultEasingFunction;
+        public Func<float, float>? EasingFunction { get; set; } = LiveCharts.CurrentSettings.DefaultEasingFunction;
 
         /// <inheritdoc cref="IChartView.LegendPosition" />
         public LegendPosition LegendPosition { get => _legendPosition; set { _legendPosition = value; OnPropertyChanged(); } }

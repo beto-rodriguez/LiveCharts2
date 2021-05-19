@@ -35,7 +35,6 @@ namespace LiveChartsCore.Kernel
     public class LiveChartsSettings
     {
         private object? _currentFactory;
-        private object _themeId = new object();
         private readonly Dictionary<Type, object> _mappers = new();
         private readonly Dictionary<Type, object> _seriesStyleBuilder = new();
 
@@ -109,12 +108,16 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The theme identifier.
         /// </value>
-        public object ThemeId { get => _themeId; private set
-            {
-                var changed = _themeId != value;
-                _themeId = value;
-            }
-        }
+        public object ThemeId { get; private set; } = new object();
+
+        /// <summary>
+        /// Gets the axis provider.
+        /// </summary>
+        /// <value>
+        /// The axis provider.
+        /// </value>
+        internal Func<IAxis> AxisProvider { get; set; } =
+            () => throw new NotImplementedException($"{nameof(AxisProvider)} is not defined yet.");
 
         /// <summary>
         /// Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a<see cref="ChartPoint"/> instance,
@@ -144,6 +147,12 @@ namespace LiveChartsCore.Kernel
             where TDrawingContext : DrawingContext
         {
             _currentFactory = factory;
+            return this;
+        }
+
+        internal LiveChartsSettings HasAxisProvider(Func<IAxis> provider)
+        {
+            AxisProvider = provider;
             return this;
         }
 

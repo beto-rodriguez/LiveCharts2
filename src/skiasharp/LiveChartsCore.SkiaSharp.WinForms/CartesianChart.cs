@@ -36,16 +36,16 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}" />
     public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext>
     {
-        private readonly CollectionDeepObserver<ISeries> seriesObserver;
-        private readonly CollectionDeepObserver<IAxis> xObserver;
-        private readonly CollectionDeepObserver<IAxis> yObserver;
-        private readonly ActionThrottler panningThrottler;
-        private Point? previous;
-        private Point? current;
-        private bool isPanning = false;
-        private IEnumerable<ISeries> series = new List<ISeries>();
-        private IEnumerable<IAxis> xAxes = new List<Axis> { new Axis() };
-        private IEnumerable<IAxis> yAxes = new List<Axis> { new Axis() };
+        private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+        private readonly CollectionDeepObserver<IAxis> _xObserver;
+        private readonly CollectionDeepObserver<IAxis> _yObserver;
+        private readonly ActionThrottler _panningThrottler;
+        private Point? _previous;
+        private Point? _current;
+        private bool _isPanning = false;
+        private IEnumerable<ISeries> _series = new List<ISeries>();
+        private IEnumerable<IAxis> _xAxes = new List<Axis> { new Axis() };
+        private IEnumerable<IAxis> _yAxes = new List<Axis> { new Axis() };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CartesianChart"/> class.
@@ -55,12 +55,12 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         public CartesianChart(IChartTooltip<SkiaSharpDrawingContext>? tooltip = null, IChartLegend<SkiaSharpDrawingContext>? legend = null)
             : base(tooltip, legend)
         {
-            seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-            XAxes = new List<IAxis>() { new Axis() };
-            YAxes = new List<IAxis>() { new Axis() };
+            XAxes = new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
+            YAxes = new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
             Series = new ObservableCollection<ISeries>();
 
             var c = Controls[0].Controls[0];
@@ -70,7 +70,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             c.MouseMove += OnMoseMove;
             c.MouseUp += OnMouseUp;
 
-            panningThrottler = new ActionThrottler(DoPan, TimeSpan.FromMilliseconds(30));
+            _panningThrottler = new ActionThrottler(DoPan, TimeSpan.FromMilliseconds(30));
         }
 
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => core == null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
@@ -80,12 +80,12 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IEnumerable<ISeries> Series
         {
-            get => series;
+            get => _series;
             set
             {
-                seriesObserver.Dispose(series);
-                seriesObserver.Initialize(value);
-                series = value;
+                _seriesObserver.Dispose(_series);
+                _seriesObserver.Initialize(value);
+                _series = value;
                 core?.Update();
             }
         }
@@ -94,12 +94,12 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IEnumerable<IAxis> XAxes
         {
-            get => xAxes;
+            get => _xAxes;
             set
             {
-                xObserver.Dispose(xAxes);
-                xObserver.Initialize(value);
-                xAxes = value;
+                _xObserver.Dispose(_xAxes);
+                _xObserver.Initialize(value);
+                _xAxes = value;
                 core?.Update();
             }
         }
@@ -108,12 +108,12 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IEnumerable<IAxis> YAxes
         {
-            get => yAxes;
+            get => _yAxes;
             set
             {
-                yObserver.Dispose(yAxes);
-                yObserver.Initialize(value);
-                yAxes = value;
+                _yObserver.Dispose(_yAxes);
+                _yObserver.Initialize(value);
+                _yAxes = value;
                 core?.Update();
             }
         }
@@ -167,37 +167,37 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         private void OnMouseDown(object? sender, System.Windows.Forms.MouseEventArgs e)
         {
-            isPanning = true;
-            previous = e.Location;
+            _isPanning = true;
+            _previous = e.Location;
         }
 
         private void OnMoseMove(object? sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (!isPanning || previous == null) return;
+            if (!_isPanning || _previous == null) return;
 
-            current = e.Location;
-            panningThrottler.Call();
+            _current = e.Location;
+            _panningThrottler.Call();
         }
 
         private void DoPan()
         {
-            if (previous == null || current == null || core == null) return;
+            if (_previous == null || _current == null || core == null) return;
 
             var c = (CartesianChart<SkiaSharpDrawingContext>)core;
 
             c.Pan(
                 new PointF(
-                current.Value.X - previous.Value.X,
-                current.Value.Y - previous.Value.Y));
+                _current.Value.X - _previous.Value.X,
+                _current.Value.Y - _previous.Value.Y));
 
-            previous = new Point(current.Value.X, current.Value.Y);
+            _previous = new Point(_current.Value.X, _current.Value.Y);
         }
 
         private void OnMouseUp(object? sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (!isPanning) return;
-            isPanning = false;
-            previous = null;
+            if (!_isPanning) return;
+            _isPanning = false;
+            _previous = null;
         }
     }
 }

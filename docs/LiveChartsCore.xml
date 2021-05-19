@@ -24,6 +24,11 @@
             Gets a <see cref="T:System.Collections.Generic.HashSet`1"/> reference to the pending to delete paint tasks.
             </summary>
         </member>
+        <member name="F:LiveChartsCore.Axis`3.activeSeparators">
+            <summary>
+            The active separators
+            </summary>
+        </member>
         <member name="P:LiveChartsCore.Axis`3.Orientation">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.Orientation"/>
         </member>
@@ -59,9 +64,6 @@
         </member>
         <member name="P:LiveChartsCore.Axis`3.ShowSeparatorLines">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.ShowSeparatorLines"/>
-        </member>
-        <member name="P:LiveChartsCore.Axis`3.ShowSeparatorWedges">
-            <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.ShowSeparatorWedges"/>
         </member>
         <member name="P:LiveChartsCore.Axis`3.IsVisible">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IAxis.IsVisible"/>
@@ -104,6 +106,15 @@
             Called when a property changes.
             </summary>
             <param name="propertyName">Name of the property.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.Axis`3.SoftDeleteSeparator(LiveChartsCore.Chart{`0},LiveChartsCore.Drawing.AxisVisualSeprator{`0},LiveChartsCore.Measure.Scaler)">
+            <summary>
+            Softly deletes the separator.
+            </summary>
+            <param name="chart">The chart.</param>
+            <param name="separator">The separator.</param>
+            <param name="scale">The scale.</param>
             <returns></returns>
         </member>
         <member name="T:LiveChartsCore.BarSeries`4">
@@ -1373,6 +1384,11 @@
         <member name="T:LiveChartsCore.Drawing.Common.Padding">
             <summary>
             Defines the padding measure helped class,.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.Drawing.Common.Padding.Default">
+            <summary>
+            The default padding.
             </summary>
         </member>
         <member name="P:LiveChartsCore.Drawing.Common.Padding.Left">
@@ -4038,11 +4054,6 @@
             Gets or sets a value indicating whether the separator lines are visible.
             </summary>
         </member>
-        <member name="P:LiveChartsCore.Kernel.IAxis.ShowSeparatorWedges">
-            <summary>
-            Gets or sets a value indicating whether the separator wedges are visible.
-            </summary>
-        </member>
         <member name="M:LiveChartsCore.Kernel.IAxis.Initialize(LiveChartsCore.Measure.AxisOrientation)">
             <summary>
             Initializes the axis for the specified orientation.
@@ -5029,6 +5040,14 @@
             </summary>
             <value>
             The theme identifier.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.LiveChartsSettings.AxisProvider">
+            <summary>
+            Gets the axis provider.
+            </summary>
+            <value>
+            The axis provider.
             </value>
         </member>
         <member name="M:LiveChartsCore.Kernel.LiveChartsSettings.HasMap``1(System.Action{``0,LiveChartsCore.Kernel.ChartPoint})">

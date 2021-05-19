@@ -56,17 +56,22 @@ namespace LiveChartsCore
         /// Gets a <see cref="HashSet{T}"/> reference to the pending to delete paint tasks.
         /// </summary>
         protected List<IDrawableTask<TDrawingContext>> deletingTasks = new();
+
+        /// <summary>
+        /// The active separators
+        /// </summary>
+        protected readonly Dictionary<CartesianChart<TDrawingContext>, Dictionary<string, AxisVisualSeprator<TDrawingContext>>> activeSeparators = new();
+
         internal AxisOrientation _orientation;
         private double _minStep = 0;
         private Bounds? _dataBounds = null;
         private Bounds? _visibleDataBounds = null;
         private double _labelsRotation;
-        private readonly Dictionary<CartesianChart<TDrawingContext>, Dictionary<string, AxisVisualSeprator<TDrawingContext>>> _activeSeparators = new();
         // xo (x origin) and yo (y origin) are the distance to the center of the axis to the control bounds
         internal float _xo = 0f, _yo = 0f;
         private AxisPosition _position = AxisPosition.Start;
         private Func<double, string> _labeler = Labelers.Default;
-        private Padding _padding = new() { Left = 8, Top = 8, Bottom = 8, Right = 9 };
+        private Padding _padding = Padding.Default;
         private double? _minLimit = null;
         private double? _maxLimit = null;
         private IDrawableTask<TDrawingContext>? _textBrush;
@@ -74,7 +79,6 @@ namespace LiveChartsCore
         private double _textSize = 16;
         private IDrawableTask<TDrawingContext>? _separatorsBrush;
         private bool _showSeparatorLines = true;
-        private bool _showSeparatorWedges = true;
         private bool _isVisible = true;
         private bool _isInverted;
 
@@ -135,9 +139,6 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IAxis.ShowSeparatorLines"/>
         public bool ShowSeparatorLines { get => _showSeparatorLines; set { _showSeparatorLines = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis.ShowSeparatorWedges"/>
-        public bool ShowSeparatorWedges { get => _showSeparatorWedges; set { _showSeparatorWedges = value; OnPropertyChanged(); } }
-
         /// <inheritdoc cref="IAxis.IsVisible"/>
         public bool IsVisible { get => _isVisible; set { _isVisible = value; OnPropertyChanged(); } }
 
@@ -183,7 +184,7 @@ namespace LiveChartsCore
         public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <inheritdoc cref="IAxis{TDrawingContext}.Measure(CartesianChart{TDrawingContext})"/>
-        public void Measure(CartesianChart<TDrawingContext> chart)
+        public virtual void Measure(CartesianChart<TDrawingContext> chart)
         {
             if (_dataBounds == null) throw new Exception("DataBounds not found");
 
@@ -196,7 +197,7 @@ namespace LiveChartsCore
             var scale = new Scaler(drawLocation, drawMarginSize, this);
             var previousSacale = ((IAxis)this).PreviousDataBounds == null
                 ? null
-                : new Scaler(drawLocation, drawMarginSize, this);
+                : new Scaler(drawLocation, drawMarginSize, this, true);
             var axisTick = this.GetTick(drawMarginSize);
 
             var labeler = Labeler;
@@ -249,10 +250,10 @@ namespace LiveChartsCore
             var min = MinLimit == null ? _dataBounds.Min : MinLimit.Value;
 
             var start = Math.Truncate(min / s) * s;
-            if (!_activeSeparators.TryGetValue(chart, out var separators))
+            if (!activeSeparators.TryGetValue(chart, out var separators))
             {
                 separators = new Dictionary<string, AxisVisualSeprator<TDrawingContext>>();
-                _activeSeparators[chart] = separators;
+                activeSeparators[chart] = separators;
             }
 
             var measured = new HashSet<AxisVisualSeprator<TDrawingContext>>();
@@ -402,6 +403,8 @@ namespace LiveChartsCore
                     if (((IAxis)this).PreviousDataBounds == null) visualSeparator.Line.CompleteAllTransitions();
                 }
 
+
+
                 if (visualSeparator.Text != null || visualSeparator.Line != null) _ = measured.Add(visualSeparator);
             }
 
@@ -483,7 +486,7 @@ namespace LiveChartsCore
                     _separatorsBrush.ClearGeometriesFromPaintTask();
                 }
 
-                _ = _activeSeparators.Remove(cartesianChart);
+                _ = activeSeparators.Remove(cartesianChart);
             }
             subscribedTo.Clear();
         }
@@ -498,7 +501,14 @@ namespace LiveChartsCore
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void SoftDeleteSeparator(
+        /// <summary>
+        /// Softly deletes the separator.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
+        /// <param name="separator">The separator.</param>
+        /// <param name="scale">The scale.</param>
+        /// <returns></returns>
+        protected virtual void SoftDeleteSeparator(
             Chart<TDrawingContext> chart,
             AxisVisualSeprator<TDrawingContext> separator,
             Scaler scale)

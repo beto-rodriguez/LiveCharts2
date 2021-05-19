@@ -62,8 +62,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             _xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-            SetCurrentValue(XAxesProperty, new List<IAxis>() { new Axis() });
-            SetCurrentValue(YAxesProperty, new List<IAxis>() { new Axis() });
+            SetCurrentValue(XAxesProperty, new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() });
+            SetCurrentValue(YAxesProperty, new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() });
             SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
 
             MouseWheel += OnMouseWheel;
@@ -113,7 +113,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     },
                     (DependencyObject o, object value) =>
                     {
-                        return value is IEnumerable<IAxis> ? value : new List<IAxis>() { new Axis() };
+                        return value is IEnumerable<IAxis> ? value : new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
                     }));
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     },
                     (DependencyObject o, object value) =>
                     {
-                        return value is IEnumerable<IAxis> ? value : new List<IAxis>() { new Axis() };
+                        return value is IEnumerable<IAxis> ? value : new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
                     }));
 
         /// <summary>

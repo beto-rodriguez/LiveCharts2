@@ -28,6 +28,11 @@ namespace LiveChartsCore.Drawing.Common
     public class Padding
     {
         /// <summary>
+        /// The default padding.
+        /// </summary>
+        public static Padding Default = new();
+
+        /// <summary>
         /// Gets or sets the left.
         /// </summary>
         /// <value>
