@@ -352,14 +352,14 @@ namespace LiveChartsCore
         }
 
         /// <summary>
-        /// Defines the default behaviour when a point is added to a state.
+        /// Defines the default behavior when a point is added to a state.
         /// </summary>
         /// <param name="visual">The visual.</param>
         /// <param name="chart">The chart.</param>
         protected virtual void DefaultOnPointAddedToSate(TVisual visual, IChartView<TDrawingContext> chart) { }
 
         /// <summary>
-        /// Defines the default behaviour when a point is removed from a state.
+        /// Defines the default behavior when a point is removed from a state.
         /// </summary>
         /// <param name="visual">The visual.</param>
         /// <param name="chart">The chart.</param>

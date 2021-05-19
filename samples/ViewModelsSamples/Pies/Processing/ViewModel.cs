@@ -67,8 +67,9 @@ namespace ViewModelsSamples.Pies.Processing
             var r = new Random();
             var processed = 0;
             var ellapsed = 0;
+            var isProcessing = true;
 
-            while (true)
+            while (isProcessing)
             {
                 var succeed = 0.8 + r.NextDouble() * 0.4;
                 var failed = 1 - succeed;
@@ -99,6 +100,7 @@ namespace ViewModelsSamples.Pies.Processing
                 };
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ValueSeries)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
+                isProcessing = _completed.Value < 1000;
             }
         }
     }

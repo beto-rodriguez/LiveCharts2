@@ -212,7 +212,7 @@ namespace LiveChartsCore.SkiaSharpView
         /// <returns></returns>
         public GaugeBuilder AddValue(ObservableValue value)
         {
-            return AddValue(value, null, LiveChartsSkiaSharp.DefaultPaintTask, new SolidColorPaintTask(new SKColor(35, 35, 35)));
+            return AddValue(value, null, LiveChartsSkiaSharp.DefaultPaintTask, LiveChartsSkiaSharp.DefaultPaintTask);
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace LiveChartsCore.SkiaSharpView
         /// <returns></returns>
         public GaugeBuilder AddValue(ObservableValue value, string? seriesName)
         {
-            return AddValue(value, seriesName, LiveChartsSkiaSharp.DefaultPaintTask, new SolidColorPaintTask(new SKColor(35, 35, 35)));
+            return AddValue(value, seriesName, LiveChartsSkiaSharp.DefaultPaintTask, LiveChartsSkiaSharp.DefaultPaintTask);
         }
 
         /// <summary>

@@ -189,9 +189,9 @@ namespace LiveChartsCore
                         l.CompleteAllTransitions();
                         label = l;
                         point.Context.Label = l;
-                        DataLabelsDrawableTask.AddGeometryToPaintTask(l);
                     }
 
+                    DataLabelsDrawableTask.AddGeometryToPaintTask(label);
                     label.Text = DataLabelsFormatter(point);
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
