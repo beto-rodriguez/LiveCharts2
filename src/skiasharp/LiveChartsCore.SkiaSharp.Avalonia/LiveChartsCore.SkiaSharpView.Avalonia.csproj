@@ -6,7 +6,7 @@
     <TargetFrameworks>netcoreapp2.0;netstandard2.0;net462;</TargetFrameworks>
     <AssemblyName>LiveChartsCore.SkiaSharpView.Avalonia</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView.Avalonia</RootNamespace>
-    <Version>2.0.0-beta.4</Version>
+    <Version>2.0.0-beta.5</Version>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>../../../docs/LiveChartsCore.SkiaSharpView.Avalonia.xml</DocumentationFile>
