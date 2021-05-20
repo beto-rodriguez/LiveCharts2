@@ -1,5 +1,5 @@
   
-name: Publish Packages
+name: Publish Core
 
 on:
   push:
