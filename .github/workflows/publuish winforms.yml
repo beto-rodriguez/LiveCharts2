@@ -1,0 +1,21 @@
+  
+name: Publish Packages
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Publish LiveChartsCore.SkiaSharpView.WinForms
+      uses: brandedoutcast/publish-nuget@v2.5.5
+      with:
+          PROJECT_FILE_PATH: src/skiasharp/LiveChartsCore.SkiaSharp.WinForms/LiveChartsCore.SkiaSharpView.WinForms.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          NUGET_SOURCE: https://api.nuget.org
+          INCLUDE_SYMBOLS: true
