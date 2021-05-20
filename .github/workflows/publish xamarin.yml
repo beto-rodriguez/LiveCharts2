@@ -1,4 +1,4 @@
-name: Publish Packages
+name: Publish Xamarin
 
 on:
   push:
