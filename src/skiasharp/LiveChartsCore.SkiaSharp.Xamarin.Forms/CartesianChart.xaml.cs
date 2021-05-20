@@ -115,7 +115,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// </summary>
         public static readonly BindableProperty XAxesProperty =
             BindableProperty.Create(
-                nameof(XAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() },
+                nameof(XAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>() { new Axis() },
                 BindingMode.Default, null, (BindableObject o, object oldValue, object newValue) =>
                 {
                     var chart = (CartesianChart)o;
@@ -131,7 +131,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// </summary>
         public static readonly BindableProperty YAxesProperty =
             BindableProperty.Create(
-                nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() },
+                nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>() { new Axis() },
                 BindingMode.Default, null, (BindableObject o, object oldValue, object newValue) =>
                 {
                     var chart = (CartesianChart)o;

@@ -40,10 +40,10 @@ namespace XamarinSample
                     {
                         Content = i == 0 ? Activator.CreateInstance(t) : null
                     };
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
-                    var a = 1;
-                    return;
+                    throw ex;
                 }
 
                 shell_section.Items.Add(content);
