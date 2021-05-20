@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="WPFSample.Axes.Shared.View"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+             xmlns:vms="clr-namespace:ViewModelsSamples.Axes.Shared;assembly=ViewModelsSamples">
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--
+          Notice we are binding the XAxes to the same instance, this way we are sharing both charts zooming and panning
+          no matter in which chart you zoom, the other chart will share the view.
+        -->
+
+        <lvc:CartesianChart Grid.Row="0" Series="{Binding SeriesCollection1}" XAxes="{Binding SharedXAxis}" ZoomMode="X"></lvc:CartesianChart>
+        <lvc:CartesianChart Grid.Row="1" Series="{Binding SeriesCollection2}" XAxes="{Binding SharedXAxis}" ZoomMode="X"></lvc:CartesianChart>
+    </Grid>
+</UserControl>

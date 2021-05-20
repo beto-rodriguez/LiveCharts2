@@ -209,6 +209,9 @@
         <member name="E:LiveChartsCore.SkiaSharpView.WPF.Chart.UpdateFinished">
             <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateFinished" />
         </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.Core">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.Core" />
+        </member>
         <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.DrawMargin">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.DrawMargin" />
         </member>

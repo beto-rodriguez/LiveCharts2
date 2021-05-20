@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\src\skiasharp\LiveChartsCore.SkiaSharp.Xamarin.Forms\LiveChartsCore.SkiaSharpView.Xamarin.Forms.csproj" />
+    <ProjectReference Include="..\..\..\..\src\skiasharp\LiveChartsCore.SkiaSharp.Xamarin.Forms\LiveChartsCore.SkiaSharpView.XamarinForms.csproj" />
     <ProjectReference Include="..\..\..\ViewModelsSamples\ViewModelsSamples.csproj" />
   </ItemGroup>
 
@@ -32,6 +32,9 @@
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Axes\DateTimeScaled\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Axes\Shared\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Axes\Multiple\View.xaml.cs">

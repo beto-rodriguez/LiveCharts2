@@ -30,6 +30,9 @@
     <Compile Update="Axes\DateTimeScaled\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Axes\Shared\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Axes\Multiple\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -171,6 +174,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Axes\DateTimeScaled\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Axes\Shared\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

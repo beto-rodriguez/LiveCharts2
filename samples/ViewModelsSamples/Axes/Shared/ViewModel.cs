@@ -23,9 +23,8 @@ namespace ViewModelsSamples.Axes.Shared
                 values2[i] = t2;
             }
 
-            var lineSeries = new ScatterSeries<int> { Values = values };
-            SeriesCollection1 = new ISeries[] { lineSeries };
-            SeriesCollection2 = new ISeries[] { new ColumnSeries<int> { Values = values2 }, lineSeries };
+            SeriesCollection1 = new ISeries[] { new LineSeries<int> { Values = values } };
+            SeriesCollection2 = new ISeries[] { new ColumnSeries<int> { Values = values2 } };
 
             // sharing the same instance for both charts will keep the zooming and panning synced
             SharedXAxis = new Axis[] { new Axis() };

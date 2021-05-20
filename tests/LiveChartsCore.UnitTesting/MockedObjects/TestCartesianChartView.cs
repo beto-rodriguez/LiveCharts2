@@ -25,6 +25,8 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
                 this, LiveChartsSkiaSharp.DefaultPlatformBuilder, CoreCanvas);
         }
 
+        IChart IChartView.Core => Core;
+
         public CartesianChart<SkiaSharpDrawingContext> Core { get; }
 
         public IEnumerable<IAxis> XAxes { get; set; }

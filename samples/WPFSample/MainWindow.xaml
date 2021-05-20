@@ -45,7 +45,7 @@
             </ScrollViewer>
         </Grid>
 
-        <Border Grid.Column="1" >
+        <Border Grid.Column="1" Background="White">
             <!--<Border Background="White" Margin="20 60 20 20" Padding="20" CornerRadius="8" MaxWidth="900" MaxHeight="600">-->
                 <Border.Effect>
                     <DropShadowEffect 

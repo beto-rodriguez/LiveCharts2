@@ -147,6 +147,9 @@
         <member name="E:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.UpdateFinished">
             <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateFinished" />
         </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.Core">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.Core" />
+        </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.CoreCanvas">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.CoreCanvas" />
         </member>
@@ -889,6 +892,9 @@
         </member>
         <member name="E:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.UpdateFinished">
             <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateFinished" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.Core">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.Core" />
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.CoreCanvas">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.CoreCanvas" />

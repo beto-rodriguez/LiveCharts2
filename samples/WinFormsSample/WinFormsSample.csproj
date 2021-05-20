@@ -16,6 +16,9 @@
     <Compile Update="Axes\DateTimeScaled\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Axes\Shared\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Axes\Multiple\View.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -11,9 +11,13 @@
           <RowDefinition Height="*"/>
           <RowDefinition Height="*"/>
       </Grid.RowDefinitions>
-      <lvc:CartesianChart Grid.Row="0" Series="{Binding SeriesCollection1}" ZoomMode="X"></lvc:CartesianChart>
-      <Border Grid.Row="1" Padding="50">
-          <lvc:CartesianChart Grid.Row="1" Series="{Binding SeriesCollection2}" ZoomMode="X"></lvc:CartesianChart>
-      </Border>
+
+      <!--
+          Notice we are binding the XAxes to the same instance, this way we are sharing both charts zooming and panning
+          no matter in which chart you zoom, the other chart will share the view.
+      -->
+      
+      <lvc:CartesianChart Grid.Row="0" Series="{Binding SeriesCollection1}" XAxes="{Binding SharedXAxis}" ZoomMode="X"></lvc:CartesianChart>
+      <lvc:CartesianChart Grid.Row="1" Series="{Binding SeriesCollection2}" XAxes="{Binding SharedXAxis}" ZoomMode="X"></lvc:CartesianChart>
   </Grid> 
 </UserControl>

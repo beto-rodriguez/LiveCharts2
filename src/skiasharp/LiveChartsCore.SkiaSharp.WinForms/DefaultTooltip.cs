@@ -99,7 +99,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 Controls.Add(new MotionCanvas
                 {
                     Location = new Point(6, (int)h + 6),
-                    PaintTasks = drawableSeries.DefaultPaintContext.PaintTasks,
+                    //PaintTasks = drawableSeries.DefaultPaintContext.PaintTasks,
                     Width = (int)drawableSeries.DefaultPaintContext.Width,
                     Height = (int)drawableSeries.DefaultPaintContext.Height
                 });
