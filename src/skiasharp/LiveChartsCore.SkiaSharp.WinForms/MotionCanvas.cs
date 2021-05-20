@@ -52,7 +52,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         private void SkControl_PaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
-            CanvasCore.DrawFrame(new SkiaSharpDrawingContext(e.Info, e.Surface, e.Surface.Canvas));
+            CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
         }
 
         private void CanvasCore_Invalidated(MotionCanvas<SkiaSharpDrawingContext> sender)

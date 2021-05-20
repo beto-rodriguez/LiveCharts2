@@ -1865,13 +1865,23 @@
               <c>true</c> if this instance is paused; otherwise, <c>false</c>.
             </value>
         </member>
-        <member name="P:LiveChartsCore.Drawing.IDrawableTask`1.ClipRectangle">
+        <member name="M:LiveChartsCore.Drawing.IDrawableTask`1.GetClipRectangle(LiveChartsCore.Drawing.MotionCanvas{`0})">
             <summary>
             Gets or sets the clip rectangle.
             </summary>
-            <value>
+            <returns>
+            <param name="canvas">The canvas.</param>
             The clip rectangle.
-            </value>
+            </returns>
+        </member>
+        <member name="M:LiveChartsCore.Drawing.IDrawableTask`1.SetClipRectangle(LiveChartsCore.Drawing.MotionCanvas{`0},System.Drawing.RectangleF)">
+            <summary>
+            Gets or sets the clip rectangle.
+            </summary>
+            <param name="canvas">The canvas.</param>
+            <param name="value">
+            The clip rectangle.
+            </param>
         </member>
         <member name="M:LiveChartsCore.Drawing.IDrawableTask`1.InitializeTask(`0)">
             <summary>
@@ -1879,34 +1889,39 @@
             </summary>
             <param name="context">The context.</param>
         </member>
-        <member name="M:LiveChartsCore.Drawing.IDrawableTask`1.GetGeometries">
+        <member name="M:LiveChartsCore.Drawing.IDrawableTask`1.GetGeometries(LiveChartsCore.Drawing.MotionCanvas{`0})">
             <summary>
             Gets the geometries.
             </summary>
             <returns></returns>
+            <param name="canvas">The canvas.</param>
         </member>
-        <member name="M:LiveChartsCore.Drawing.IDrawableTask`1.SetGeometries(System.Collections.Generic.HashSet{LiveChartsCore.Drawing.IDrawable{`0}})">
+        <member name="M:LiveChartsCore.Drawing.IDrawableTask`1.SetGeometries(LiveChartsCore.Drawing.MotionCanvas{`0},System.Collections.Generic.HashSet{LiveChartsCore.Drawing.IDrawable{`0}})">
             <summary>
             Sets the geometries.
             </summary>
+            <param name="canvas">The canvas.</param>
             <param name="geometries">The geometries.</param>
         </member>
-        <member name="M:LiveChartsCore.Drawing.IDrawableTask`1.AddGeometryToPaintTask(LiveChartsCore.Drawing.IDrawable{`0})">
+        <member name="M:LiveChartsCore.Drawing.IDrawableTask`1.AddGeometryToPaintTask(LiveChartsCore.Drawing.MotionCanvas{`0},LiveChartsCore.Drawing.IDrawable{`0})">
             <summary>
             Adds the geometry to paint task.
             </summary>
+            <param name="canvas">The canvas.</param>
             <param name="geometry">The geometry.</param>
         </member>
-        <member name="M:LiveChartsCore.Drawing.IDrawableTask`1.RemoveGeometryFromPainTask(LiveChartsCore.Drawing.IDrawable{`0})">
+        <member name="M:LiveChartsCore.Drawing.IDrawableTask`1.RemoveGeometryFromPainTask(LiveChartsCore.Drawing.MotionCanvas{`0},LiveChartsCore.Drawing.IDrawable{`0})">
             <summary>
             Removes the geometry from pain task.
             </summary>
+            <param name="canvas">The canvas.</param>
             <param name="geometry">The geometry.</param>
         </member>
-        <member name="M:LiveChartsCore.Drawing.IDrawableTask`1.ClearGeometriesFromPaintTask">
+        <member name="M:LiveChartsCore.Drawing.IDrawableTask`1.ClearGeometriesFromPaintTask(LiveChartsCore.Drawing.MotionCanvas{`0})">
             <summary>
             Removes all geometry from paint task.
             </summary>
+            <param name="canvas">The canvas.</param>
         </member>
         <member name="M:LiveChartsCore.Drawing.IDrawableTask`1.SetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})">
             <summary>
@@ -3589,14 +3604,6 @@
               <c>true</c> if remove on completed; otherwise, <c>false</c>.
             </value>
         </member>
-        <member name="P:LiveChartsCore.Kernel.DefaultPaintTask`1.ClipRectangle">
-            <summary>
-            Gets or sets the clip rectangle.
-            </summary>
-            <value>
-            The clip rectangle.
-            </value>
-        </member>
         <member name="P:LiveChartsCore.Kernel.DefaultPaintTask`1.IsPaused">
             <summary>
             Gets or sets a value indicating whether this instance is paused.
@@ -3605,10 +3612,11 @@
             <c>true</c> if this instance is paused; otherwise, <c>false</c>.
             </value>
         </member>
-        <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.AddGeometryToPaintTask(LiveChartsCore.Drawing.IDrawable{`0})">
+        <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.AddGeometryToPaintTask(LiveChartsCore.Drawing.MotionCanvas{`0},LiveChartsCore.Drawing.IDrawable{`0})">
             <summary>
             Adds the geometry to paint task.
             </summary>
+            <param name="canvas">The canvas.</param>
             <param name="geometry">The geometry.</param>
         </member>
         <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.CloneTask">
@@ -3628,10 +3636,12 @@
             Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
             </summary>
         </member>
-        <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.GetGeometries">
+        <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.GetGeometries(LiveChartsCore.Drawing.MotionCanvas{`0})">
             <summary>
             Gets the geometries.
             </summary>
+            <param name="canvas">The canvas.</param>
+            <param name="">The .</param>
             <returns></returns>
         </member>
         <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.GetTransitionProperty(System.String)">
@@ -3640,7 +3650,6 @@
             </summary>
             <param name="propertyName">Name of the property.</param>
             <returns></returns>
-            <exception cref="T:System.NotImplementedException"></exception>
         </member>
         <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.InitializeTask(`0)">
             <summary>
@@ -3648,16 +3657,18 @@
             </summary>
             <param name="context">The context.</param>
         </member>
-        <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.RemoveGeometryFromPainTask(LiveChartsCore.Drawing.IDrawable{`0})">
+        <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.RemoveGeometryFromPainTask(LiveChartsCore.Drawing.MotionCanvas{`0},LiveChartsCore.Drawing.IDrawable{`0})">
             <summary>
             Removes the geometry from pain task.
             </summary>
+            <param name="canvas">The canvas.</param>
             <param name="geometry">The geometry.</param>
         </member>
-        <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.ClearGeometriesFromPaintTask">
+        <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.ClearGeometriesFromPaintTask(LiveChartsCore.Drawing.MotionCanvas{`0})">
             <summary>
             Removes all geometry from paint task.
             </summary>
+            <param name="canvas">The canvas.</param>
         </member>
         <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.RemovePropertyTransition(System.String)">
             <summary>
@@ -3665,12 +3676,12 @@
             </summary>
             <param name="propertyName">Name of the property.</param>
         </member>
-        <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.SetGeometries(System.Collections.Generic.HashSet{LiveChartsCore.Drawing.IDrawable{`0}})">
+        <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.SetGeometries(LiveChartsCore.Drawing.MotionCanvas{`0},System.Collections.Generic.HashSet{LiveChartsCore.Drawing.IDrawable{`0}})">
             <summary>
             Sets the geometries.
             </summary>
+            <param name="canvas">The canvas.</param>
             <param name="geometries">The geometries.</param>
-            <exception cref="T:System.NotImplementedException"></exception>
         </member>
         <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.SetPropertiesTransitions(LiveChartsCore.Drawing.Animation,System.String[])">
             <summary>
@@ -3697,6 +3708,12 @@
         </member>
         <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.ResetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.ResetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})" />
+        </member>
+        <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.GetClipRectangle(LiveChartsCore.Drawing.MotionCanvas{`0})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.GetClipRectangle(LiveChartsCore.Drawing.MotionCanvas{`0})" />
+        </member>
+        <member name="M:LiveChartsCore.Kernel.DefaultPaintTask`1.SetClipRectangle(LiveChartsCore.Drawing.MotionCanvas{`0},System.Drawing.RectangleF)">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.SetClipRectangle(LiveChartsCore.Drawing.MotionCanvas{`0},System.Drawing.RectangleF)" />
         </member>
         <member name="T:LiveChartsCore.Kernel.Extensions">
             <summary>
@@ -4284,6 +4301,14 @@
             The view.
             </value>
         </member>
+        <member name="P:LiveChartsCore.Kernel.IChart.Canvas">
+            <summary>
+            Gets the canvas.
+            </summary>
+            <value>
+            The canvas.
+            </value>
+        </member>
         <member name="P:LiveChartsCore.Kernel.IChart.LegendPosition">
             <summary>
             Gets the legend position.
@@ -4355,6 +4380,14 @@
             <summary>
             Defines a chart view
             </summary>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.IChartView.Core">
+            <summary>
+            Gets the core.
+            </summary>
+            <value>
+            The core.
+            </value>
         </member>
         <member name="P:LiveChartsCore.Kernel.IChartView.BackColor">
             <summary>
@@ -5158,12 +5191,48 @@
             The height.
             </value>
         </member>
-        <member name="P:LiveChartsCore.Kernel.PaintContext`1.PaintTasks">
+        <member name="P:LiveChartsCore.Kernel.PaintContext`1.PaintTasksSchedule">
             <summary>
-            Gets or sets the paint tasks.
+            Gets or sets the paint tasks schedule.
             </summary>
             <value>
-            The paint tasks.
+            The paint tasks schedule.
+            </value>
+        </member>
+        <member name="T:LiveChartsCore.Kernel.PaintTaskSchedule`1">
+            <summary>
+            Defines a schedule to be drawn by an <see cref="T:LiveChartsCore.Drawing.IDrawableTask`1"/> instance.
+            </summary>
+            <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.PaintTaskSchedule`1.#ctor(LiveChartsCore.Drawing.IDrawableTask{`0},System.Collections.Generic.HashSet{LiveChartsCore.Drawing.IDrawable{`0}})">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.Kernel.PaintTaskSchedule`1"/> class.
+            </summary>
+            <param name="task">The task.</param>
+            <param name="geometries">The geometries.</param>
+        </member>
+        <member name="M:LiveChartsCore.Kernel.PaintTaskSchedule`1.#ctor(LiveChartsCore.Drawing.IDrawableTask{`0},LiveChartsCore.Drawing.IDrawable{`0}[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.Kernel.PaintTaskSchedule`1"/> class.
+            </summary>
+            <param name="task">The task.</param>
+            <param name="geometries">The geometries.</param>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.PaintTaskSchedule`1.DrawableTask">
+            <summary>
+            Gets or sets the drawable task.
+            </summary>
+            <value>
+            The drawable task.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.Kernel.PaintTaskSchedule`1.Geometries">
+            <summary>
+            Gets or sets the geometries.
+            </summary>
+            <value>
+            The geometries.
             </value>
         </member>
         <member name="T:LiveChartsCore.Kernel.PointStatesDictionary`1">

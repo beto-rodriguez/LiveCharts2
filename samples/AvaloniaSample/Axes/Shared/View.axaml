@@ -1,0 +1,19 @@
+<UserControl x:Class="AvaloniaSample.Axes.Shared.View"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:vms="using:ViewModelsSamples.Axes.Shared">
+  <UserControl.DataContext>
+    <vms:ViewModel/>
+  </UserControl.DataContext>
+  <Grid>
+      <Grid.RowDefinitions>
+          <RowDefinition Height="*"/>
+          <RowDefinition Height="*"/>
+      </Grid.RowDefinitions>
+      <lvc:CartesianChart Grid.Row="0" Series="{Binding SeriesCollection1}" ZoomMode="X"></lvc:CartesianChart>
+      <Border Grid.Row="1" Padding="50">
+          <lvc:CartesianChart Grid.Row="1" Series="{Binding SeriesCollection2}" ZoomMode="X"></lvc:CartesianChart>
+      </Border>
+  </Grid> 
+</UserControl>

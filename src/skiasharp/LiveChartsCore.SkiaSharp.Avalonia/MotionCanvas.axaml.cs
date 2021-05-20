@@ -170,7 +170,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
                 _motionCanvas.DrawFrame(
                    new AvaloniaDrawingContext(
-                       new SKImageInfo((int)Bounds.Width, (int)Bounds.Height), skiaContext.SkSurface, skiaContext.SkCanvas)
+                       _motionCanvas, new SKImageInfo((int)Bounds.Width, (int)Bounds.Height), skiaContext.SkSurface, skiaContext.SkCanvas)
                    {
                        BackColor = _backColor
                    });

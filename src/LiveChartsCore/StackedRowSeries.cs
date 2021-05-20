@@ -94,19 +94,19 @@ namespace LiveChartsCore
             if (Fill != null)
             {
                 Fill.ZIndex = actualZIndex + 0.1;
-                Fill.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
+                Fill.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 chart.Canvas.AddDrawableTask(Fill);
             }
             if (Stroke != null)
             {
                 Stroke.ZIndex = actualZIndex + 0.2;
-                Stroke.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
+                Stroke.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 chart.Canvas.AddDrawableTask(Stroke);
             }
             if (DataLabelsDrawableTask != null)
             {
                 DataLabelsDrawableTask.ZIndex = actualZIndex + 0.3;
-                DataLabelsDrawableTask.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
+                DataLabelsDrawableTask.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
             }
             var dls = (float)DataLabelsSize;
@@ -160,8 +160,8 @@ namespace LiveChartsCore
                     _ = everFetched.Add(point);
                 }
 
-                if (Fill != null) Fill.AddGeometryToPaintTask(visual);
-                if (Stroke != null) Stroke.AddGeometryToPaintTask(visual);
+                if (Fill != null) Fill.AddGeometryToPaintTask(chart.Canvas, visual);
+                if (Stroke != null) Stroke.AddGeometryToPaintTask(chart.Canvas, visual);
 
                 var sizedGeometry = visual;
 
@@ -202,7 +202,7 @@ namespace LiveChartsCore
                         point.Context.Label = label;
                     }
 
-                    DataLabelsDrawableTask.AddGeometryToPaintTask(label);
+                    DataLabelsDrawableTask.AddGeometryToPaintTask(chart.Canvas, label);
                     label.Text = DataLabelsFormatter(point);
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;

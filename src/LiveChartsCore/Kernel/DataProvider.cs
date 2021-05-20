@@ -34,8 +34,8 @@ namespace LiveChartsCore.Kernel
     public class DataProvider<TModel, TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        private readonly Dictionary<int, ChartPoint> _byValueVisualMap = new();
-        private readonly Dictionary<TModel, ChartPoint> _byReferenceVisualMap = new();
+        private readonly Dictionary<object, Dictionary<int, ChartPoint>> _byChartbyValueVisualMap = new();
+        private readonly Dictionary<object, Dictionary<TModel, ChartPoint>> _byChartByReferenceVisualMap = new();
         private readonly bool _isValueType = false;
 
         /// <summary>
@@ -62,10 +62,19 @@ namespace LiveChartsCore.Kernel
 
             if (_isValueType)
             {
+                var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
+                _ = _byChartbyValueVisualMap.TryGetValue(canvas.Sync, out var d);
+                if (d == null)
+                {
+                    d = new Dictionary<int, ChartPoint>();
+                    _byChartbyValueVisualMap[canvas.Sync] = d;
+                }
+                var byValueVisualMap = d;
+
                 foreach (var item in series.Values)
                 {
-                    if (!_byValueVisualMap.TryGetValue(index, out var cp))
-                        _byValueVisualMap[index] = cp = new ChartPoint(chart.View, series);
+                    if (!byValueVisualMap.TryGetValue(index, out var cp))
+                        byValueVisualMap[index] = cp = new ChartPoint(chart.View, series);
 
                     cp.Context.Index = index++;
                     cp.Context.DataSource = item;
@@ -79,8 +88,17 @@ namespace LiveChartsCore.Kernel
             {
                 foreach (var item in series.Values)
                 {
-                    if (!_byReferenceVisualMap.TryGetValue(item, out var cp))
-                        _byReferenceVisualMap[item] = cp = new ChartPoint(chart.View, series);
+                    var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
+                    _ = _byChartByReferenceVisualMap.TryGetValue(canvas.Sync, out var d);
+                    if (d == null)
+                    {
+                        d = new Dictionary<TModel, ChartPoint>();
+                        _byChartByReferenceVisualMap[canvas.Sync] = d;
+                    }
+                    var byReferenceVisualMap = d;
+
+                    if (!byReferenceVisualMap.TryGetValue(item, out var cp))
+                        byReferenceVisualMap[item] = cp = new ChartPoint(chart.View, series);
 
                     cp.Context.Index = index++;
                     cp.Context.DataSource = item;
@@ -100,12 +118,20 @@ namespace LiveChartsCore.Kernel
         {
             if (_isValueType)
             {
-                _ = _byValueVisualMap.Remove(point.Context.Index);
+                var canvas = (MotionCanvas<TDrawingContext>)point.Context.Chart.Core.Canvas;
+                _ = _byChartbyValueVisualMap.TryGetValue(canvas.Sync, out var d);
+                var byValueVisualMap = d;
+                if (d == null) return;
+                _ = byValueVisualMap.Remove(point.Context.Index);
             }
             else
             {
                 if (point.Context.DataSource == null) return;
-                _ = _byReferenceVisualMap.Remove((TModel)point.Context.DataSource);
+                var canvas = (MotionCanvas<TDrawingContext>)point.Context.Chart.Core.Canvas;
+                _ = _byChartByReferenceVisualMap.TryGetValue(canvas.Sync, out var d);
+                var byReferenceVisualMap = d;
+                if (d == null) return;
+                _ = byReferenceVisualMap.Remove((TModel)point.Context.DataSource);
             }
         }
 
@@ -195,19 +221,25 @@ namespace LiveChartsCore.Kernel
         /// <returns></returns>
         public virtual void RestartVisuals()
         {
-            foreach (var item in _byReferenceVisualMap)
+            foreach (var byReferenceVisualMap in _byChartByReferenceVisualMap)
             {
-                if (item.Value.Context.Visual is not IAnimatable visual) continue;
-                visual.RemoveTransitions();
+                foreach (var item in byReferenceVisualMap.Value)
+                {
+                    if (item.Value.Context.Visual is not IAnimatable visual) continue;
+                    visual.RemoveTransitions();
+                }
+                byReferenceVisualMap.Value.Clear();
             }
-            _byReferenceVisualMap.Clear();
 
-            foreach (var item in _byValueVisualMap)
+            foreach (var byValueVisualMap in _byChartbyValueVisualMap)
             {
-                if (item.Value.Context.Visual is not IAnimatable visual) continue;
-                visual.RemoveTransitions();
+                foreach (var item in byValueVisualMap.Value)
+                {
+                    if (item.Value.Context.Visual is not IAnimatable visual) continue;
+                    visual.RemoveTransitions();
+                }
+                byValueVisualMap.Value.Clear();
             }
-            _byValueVisualMap.Clear();
         }
     }
 }

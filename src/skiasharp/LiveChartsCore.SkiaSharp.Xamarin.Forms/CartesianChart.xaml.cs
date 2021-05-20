@@ -319,6 +319,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         #region properties
 
+        /// <inheritdoc cref="IChartView.Core" />
+        public IChart Core => core ?? throw new Exception("Core not set yet.");
+
         System.Drawing.Color IChartView.BackColor
         {
             get => Background is not SolidColorBrush b

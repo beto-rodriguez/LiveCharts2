@@ -248,8 +248,8 @@ namespace LiveChartsCore
 
             OnAddedToState(visual, chart);
 
-            if (s.Fill != null) s.Fill.AddGeometryToPaintTask(highlitable);
-            if (s.Stroke != null) s.Stroke.AddGeometryToPaintTask(highlitable);
+            if (s.Fill != null) s.Fill.AddGeometryToPaintTask(chart.CoreCanvas, highlitable);
+            if (s.Stroke != null) s.Stroke.AddGeometryToPaintTask(chart.CoreCanvas, highlitable);
         }
 
         /// <inheritdoc />
@@ -274,8 +274,8 @@ namespace LiveChartsCore
 
             OnRemovedFromState(visual, chart);
 
-            if (s.Fill != null) s.Fill.RemoveGeometryFromPainTask(highlitable);
-            if (s.Stroke != null) s.Stroke.RemoveGeometryFromPainTask(highlitable);
+            if (s.Fill != null) s.Fill.RemoveGeometryFromPainTask(chart.CoreCanvas, highlitable);
+            if (s.Stroke != null) s.Stroke.RemoveGeometryFromPainTask(chart.CoreCanvas, highlitable);
         }
 
         /// <inheritdoc cref="ISeries.RestartAnimations"/>

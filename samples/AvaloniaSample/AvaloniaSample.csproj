@@ -29,6 +29,9 @@
     <Compile Update="Axes\DateTimeScaled\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Axes\Shared\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Axes\Multiple\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

@@ -167,6 +167,9 @@
         <member name="E:LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart.UpdateFinished">
             <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateFinished" />
         </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart.Core">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.Core" />
+        </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart.CoreCanvas">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.CoreCanvas" />
         </member>
@@ -888,6 +891,9 @@
         </member>
         <member name="E:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.UpdateFinished">
             <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateFinished" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.Core">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.Core" />
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Avalonia.PieChart.CoreCanvas">
             <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.CoreCanvas" />

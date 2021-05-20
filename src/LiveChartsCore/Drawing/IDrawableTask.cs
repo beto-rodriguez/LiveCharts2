@@ -76,10 +76,20 @@ namespace LiveChartsCore.Drawing
         /// <summary>
         /// Gets or sets the clip rectangle.
         /// </summary>
-        /// <value>
+        /// <returns>
+        /// <param name="canvas">The canvas.</param>
         /// The clip rectangle.
-        /// </value>
-        RectangleF ClipRectangle { get; set; }
+        /// </returns>
+        RectangleF GetClipRectangle(MotionCanvas<TDrawingContext> canvas);
+
+        /// <summary>
+        /// Gets or sets the clip rectangle.
+        /// </summary>
+        /// <param name="canvas">The canvas.</param>
+        /// <param name="value">
+        /// The clip rectangle.
+        /// </param>
+        void SetClipRectangle(MotionCanvas<TDrawingContext> canvas, RectangleF value);
 
         /// <summary>
         /// Initializes the task.
@@ -91,30 +101,35 @@ namespace LiveChartsCore.Drawing
         /// Gets the geometries.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<IDrawable<TDrawingContext>> GetGeometries();
+        /// <param name="canvas">The canvas.</param>
+        IEnumerable<IDrawable<TDrawingContext>> GetGeometries(MotionCanvas<TDrawingContext> canvas);
 
         /// <summary>
         /// Sets the geometries.
         /// </summary>
+        /// <param name="canvas">The canvas.</param>
         /// <param name="geometries">The geometries.</param>
-        void SetGeometries(HashSet<IDrawable<TDrawingContext>> geometries);
+        void SetGeometries(MotionCanvas<TDrawingContext> canvas, HashSet<IDrawable<TDrawingContext>> geometries);
 
         /// <summary>
         /// Adds the geometry to paint task.
         /// </summary>
+        /// <param name="canvas">The canvas.</param>
         /// <param name="geometry">The geometry.</param>
-        void AddGeometryToPaintTask(IDrawable<TDrawingContext> geometry);
+        void AddGeometryToPaintTask(MotionCanvas<TDrawingContext> canvas, IDrawable<TDrawingContext> geometry);
 
         /// <summary>
         /// Removes the geometry from pain task.
         /// </summary>
+        /// <param name="canvas">The canvas.</param>
         /// <param name="geometry">The geometry.</param>
-        void RemoveGeometryFromPainTask(IDrawable<TDrawingContext> geometry);
+        void RemoveGeometryFromPainTask(MotionCanvas<TDrawingContext> canvas, IDrawable<TDrawingContext> geometry);
 
         /// <summary>
         /// Removes all geometry from paint task.
         /// </summary>
-        void ClearGeometriesFromPaintTask();
+        /// <param name="canvas">The canvas.</param>
+        void ClearGeometriesFromPaintTask(MotionCanvas<TDrawingContext> canvas);
 
         /// <summary>
         /// Sets the opacity according to the given geometry.

@@ -88,19 +88,19 @@ namespace LiveChartsCore
             if (Fill != null)
             {
                 Fill.ZIndex = actualZIndex + 0.1;
-                Fill.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
+                Fill.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 chart.Canvas.AddDrawableTask(Fill);
             }
             if (Stroke != null)
             {
                 Stroke.ZIndex = actualZIndex + 0.2;
-                Stroke.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
+                Stroke.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 chart.Canvas.AddDrawableTask(Stroke);
             }
             if (DataLabelsDrawableTask != null)
             {
                 DataLabelsDrawableTask.ZIndex = actualZIndex + 0.3;
-                DataLabelsDrawableTask.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
+                DataLabelsDrawableTask.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
             }
 
@@ -158,8 +158,8 @@ namespace LiveChartsCore
                     _ = everFetched.Add(point);
                 }
 
-                if (Fill != null) Fill.AddGeometryToPaintTask(visual);
-                if (Stroke != null) Stroke.AddGeometryToPaintTask(visual);
+                if (Fill != null) Fill.AddGeometryToPaintTask(chart.Canvas, visual);
+                if (Stroke != null) Stroke.AddGeometryToPaintTask(chart.Canvas, visual);
 
                 var sizedGeometry = visual;
 
@@ -191,7 +191,7 @@ namespace LiveChartsCore
                         point.Context.Label = l;
                     }
 
-                    DataLabelsDrawableTask.AddGeometryToPaintTask(label);
+                    DataLabelsDrawableTask.AddGeometryToPaintTask(chart.Canvas, label);
                     label.Text = DataLabelsFormatter(point);
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
@@ -270,16 +270,14 @@ namespace LiveChartsCore
                 sh = strokeClone.StrokeThickness;
                 strokeClone.ZIndex = 1;
                 w += 2 * strokeClone.StrokeThickness;
-                strokeClone.AddGeometryToPaintTask(visual);
-                _ = context.PaintTasks.Add(strokeClone);
+                context.PaintTasksSchedule.Add(new PaintTaskSchedule<TDrawingContext>(strokeClone, visual));
             }
 
             if (Fill != null)
             {
                 var fillClone = Fill.CloneTask();
                 var visual = new TVisual { X = sh, Y = sh, Height = (float)LegendShapeSize, Width = (float)LegendShapeSize };
-                fillClone.AddGeometryToPaintTask(visual);
-                _ = context.PaintTasks.Add(fillClone);
+                context.PaintTasksSchedule.Add(new PaintTaskSchedule<TDrawingContext>(fillClone, visual));
             }
 
             context.Width = w;

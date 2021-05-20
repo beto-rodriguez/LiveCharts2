@@ -165,12 +165,11 @@ namespace LiveChartsCore.SkiaSharpView.Painting
                 skiaPaint.PathEffect = PathEffect.SKPathEffect;
             }
 
-            if (ClipRectangle != RectangleF.Empty)
+            var clip = GetClipRectangle(drawingContext.MotionCanvas);
+            if (clip != RectangleF.Empty)
             {
                 _ = drawingContext.Canvas.Save();
-                drawingContext.Canvas.ClipRect(
-                    new SKRect(
-                        ClipRectangle.X, ClipRectangle.Y, ClipRectangle.X + ClipRectangle.Width, ClipRectangle.Y + ClipRectangle.Height));
+                drawingContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
                 _drawingContext = drawingContext;
             }
 
@@ -185,7 +184,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         {
             if (PathEffect != null) PathEffect.Dispose();
 
-            if (ClipRectangle != RectangleF.Empty && _drawingContext != null)
+            if (_drawingContext != null && GetClipRectangle(_drawingContext.MotionCanvas) != RectangleF.Empty)
             {
                 _drawingContext.Canvas.Restore();
                 _drawingContext = null;

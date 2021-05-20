@@ -307,6 +307,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         #region properties 
 
+        /// <inheritdoc cref="IChartView.Core" />
+        public IChart Core => core ?? throw new Exception("Core not set yet.");
+
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => core == null ? throw new Exception("core not found") : core.Canvas;
 

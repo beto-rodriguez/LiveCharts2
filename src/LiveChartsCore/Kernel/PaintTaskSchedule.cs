@@ -26,34 +26,48 @@ using System.Collections.Generic;
 namespace LiveChartsCore.Kernel
 {
     /// <summary>
-    /// Defines the paint context.
+    /// Defines a schedule to be drawn by an <see cref="IDrawableTask{TDrawingContext}"/> instance.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public class PaintContext<TDrawingContext>
+    public class PaintTaskSchedule<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Gets or sets the width.
+        /// Initializes a new instance of the <see cref="PaintTaskSchedule{TDrawingContext}"/> class.
         /// </summary>
-        /// <value>
-        /// The width.
-        /// </value>
-        public double Width { get; set; }
+        /// <param name="task">The task.</param>
+        /// <param name="geometries">The geometries.</param>
+        public PaintTaskSchedule(IDrawableTask<TDrawingContext> task, HashSet<IDrawable<TDrawingContext>> geometries)
+        {
+            DrawableTask = task;
+            Geometries = geometries;
+        }
 
         /// <summary>
-        /// Gets or sets the height.
+        /// Initializes a new instance of the <see cref="PaintTaskSchedule{TDrawingContext}"/> class.
         /// </summary>
-        /// <value>
-        /// The height.
-        /// </value>
-        public double Height { get; set; }
+        /// <param name="task">The task.</param>
+        /// <param name="geometries">The geometries.</param>
+        public PaintTaskSchedule(IDrawableTask<TDrawingContext> task, params IDrawable<TDrawingContext>[] geometries)
+        {
+            DrawableTask = task;
+            Geometries = new HashSet<IDrawable<TDrawingContext>>(geometries);
+        }
 
         /// <summary>
-        /// Gets or sets the paint tasks schedule.
+        /// Gets or sets the drawable task.
         /// </summary>
         /// <value>
-        /// The paint tasks schedule.
+        /// The drawable task.
         /// </value>
-        public List<PaintTaskSchedule<TDrawingContext>> PaintTasksSchedule { get; set; } = new List<PaintTaskSchedule<TDrawingContext>>();
+        public IDrawableTask<TDrawingContext> DrawableTask { get; set; }
+
+        /// <summary>
+        /// Gets or sets the geometries.
+        /// </summary>
+        /// <value>
+        /// The geometries.
+        /// </value>
+        public HashSet<IDrawable<TDrawingContext>> Geometries { get; set; }
     }
 }

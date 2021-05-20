@@ -50,6 +50,7 @@
             "Axes/NamedLabels",
             "Axes/LabelsRotation",
             "Axes/Multiple",
+            "Axes/Shared",
             "Axes/DateTimeScaled",
             "Axes/Logaritmic",
 

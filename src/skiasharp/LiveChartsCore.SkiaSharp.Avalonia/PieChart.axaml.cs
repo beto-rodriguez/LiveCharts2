@@ -292,6 +292,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         #region properties
 
+        /// <inheritdoc cref="IChartView.Core" />
+        public IChart Core => core ?? throw new Exception("Core not set yet.");
+
         System.Drawing.Color IChartView.BackColor
         {
             get => Background is not ISolidColorBrush b
@@ -359,7 +362,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         }
 
         /// <inheritdoc cref="IChartView.EasingFunction" />
-        public Func<float, float> EasingFunction
+        public Func<float, float>? EasingFunction
         {
             get => (Func<float, float>)GetValue(EasingFunctionProperty);
             set => SetValue(EasingFunctionProperty, value);

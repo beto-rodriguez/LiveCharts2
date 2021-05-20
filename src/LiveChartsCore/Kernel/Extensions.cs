@@ -134,12 +134,7 @@ namespace LiveChartsCore.Kernel
             var magnitude = Math.Pow(10, Math.Floor(Math.Log(minimum) / Math.Log(10)));
 
             var residual = minimum / magnitude;
-            double tick;
-
-            if (residual > 5) tick = 10 * magnitude;
-            else if (residual > 2) tick = 5 * magnitude;
-            else tick = residual > 1 ? 2 * magnitude : magnitude;
-
+            var tick = residual > 5 ? 10 * magnitude : residual > 2 ? 5 * magnitude : residual > 1 ? 2 * magnitude : magnitude;
             return new AxisTick { Value = tick, Magnitude = magnitude };
         }
 

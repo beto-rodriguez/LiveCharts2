@@ -92,7 +92,7 @@ namespace LiveChartsCore.Drawing
                     task.CurrentTime = frameTime;
                     task.InitializeTask(context);
 
-                    foreach (var geometry in task.GetGeometries())
+                    foreach (var geometry in task.GetGeometries(this))
                     {
                         geometry.IsCompleted = true;
                         geometry.CurrentTime = frameTime;
@@ -113,7 +113,7 @@ namespace LiveChartsCore.Drawing
 
                 foreach (var tuple in toRemoveGeometries)
                 {
-                    tuple.Item1.RemoveGeometryFromPainTask(tuple.Item2);
+                    tuple.Item1.RemoveGeometryFromPainTask(this, tuple.Item2);
 
                     // if we removed at least one geometry, we need to redraw the chart
                     // to ensure it is not present in the next frame
@@ -187,7 +187,7 @@ namespace LiveChartsCore.Drawing
 
             foreach (var task in _paintTasks)
             {
-                foreach (var geometry in task.GetGeometries())
+                foreach (var geometry in task.GetGeometries(this))
                 {
                     count++;
                 }

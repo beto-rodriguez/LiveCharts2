@@ -285,7 +285,9 @@ namespace LiveChartsCore
         /// <value>
         /// The easing function.
         /// </value>
-        public Func<float, float> EasingFunction => easingFunction;
+        public Func<float, float>? EasingFunction => easingFunction;
+
+        object IChart.Canvas => Canvas;
 
         #endregion region
 

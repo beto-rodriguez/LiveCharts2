@@ -33,6 +33,14 @@ namespace LiveChartsCore.Kernel
     public interface IChartView
     {
         /// <summary>
+        /// Gets the core.
+        /// </summary>
+        /// <value>
+        /// The core.
+        /// </value>
+        IChart Core { get; }
+
+        /// <summary>
         /// Sets the back color of the control.
         /// </summary>
         /// <value>

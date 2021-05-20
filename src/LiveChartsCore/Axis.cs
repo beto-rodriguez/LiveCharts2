@@ -218,7 +218,7 @@ namespace LiveChartsCore
             if (SeparatorsBrush != null)
             {
                 SeparatorsBrush.ZIndex = -1;
-                SeparatorsBrush.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
+                SeparatorsBrush.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 chart.Canvas.AddDrawableTask(SeparatorsBrush);
             }
 
@@ -369,8 +369,10 @@ namespace LiveChartsCore
                     separators.Add(label, visualSeparator);
                 }
 
-                if (TextBrush != null && visualSeparator.Text != null) TextBrush.AddGeometryToPaintTask(visualSeparator.Text);
-                if (SeparatorsBrush != null && ShowSeparatorLines && visualSeparator.Line != null) SeparatorsBrush.AddGeometryToPaintTask(visualSeparator.Line);
+                if (TextBrush != null && visualSeparator.Text != null)
+                    TextBrush.AddGeometryToPaintTask(chart.Canvas, visualSeparator.Text);
+                if (SeparatorsBrush != null && ShowSeparatorLines && visualSeparator.Line != null)
+                    SeparatorsBrush.AddGeometryToPaintTask(chart.Canvas, visualSeparator.Line);
 
                 if (visualSeparator.Text != null)
                 {
@@ -402,8 +404,6 @@ namespace LiveChartsCore
 
                     if (((IAxis)this).PreviousDataBounds == null) visualSeparator.Line.CompleteAllTransitions();
                 }
-
-
 
                 if (visualSeparator.Text != null || visualSeparator.Line != null) _ = measured.Add(visualSeparator);
             }
@@ -478,12 +478,12 @@ namespace LiveChartsCore
                 if (_textBrush != null)
                 {
                     canvas.RemovePaintTask(_textBrush);
-                    _textBrush.ClearGeometriesFromPaintTask();
+                    _textBrush.ClearGeometriesFromPaintTask(canvas);
                 }
                 if (_separatorsBrush != null)
                 {
                     canvas.RemovePaintTask(_separatorsBrush);
-                    _separatorsBrush.ClearGeometriesFromPaintTask();
+                    _separatorsBrush.ClearGeometriesFromPaintTask(canvas);
                 }
 
                 _ = activeSeparators.Remove(cartesianChart);

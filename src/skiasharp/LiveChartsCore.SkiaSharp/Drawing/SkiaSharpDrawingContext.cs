@@ -35,15 +35,25 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
         /// <summary>
         /// Initializes a new instance of the <see cref="SkiaSharpDrawingContext"/> class.
         /// </summary>
+        /// <param name="motionCanvas">The motion canvas.</param>
         /// <param name="info">The information.</param>
         /// <param name="surface">The surface.</param>
         /// <param name="canvas">The canvas.</param>
-        public SkiaSharpDrawingContext(SKImageInfo info, SKSurface surface, SKCanvas canvas)
+        public SkiaSharpDrawingContext(MotionCanvas<SkiaSharpDrawingContext> motionCanvas, SKImageInfo info, SKSurface surface, SKCanvas canvas)
         {
+            MotionCanvas = motionCanvas;
             Info = info;
             Surface = surface;
             Canvas = canvas;
         }
+
+        /// <summary>
+        /// Gets or sets the motion canvas.
+        /// </summary>
+        /// <value>
+        /// The motion canvas.
+        /// </value>
+        public MotionCanvas<SkiaSharpDrawingContext> MotionCanvas { get; set; }
 
         /// <summary>
         /// Gets or sets the information.

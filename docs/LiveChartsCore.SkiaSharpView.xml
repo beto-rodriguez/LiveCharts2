@@ -68,10 +68,11 @@
             </summary>
             <seealso cref="T:LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.AvaloniaDrawingContext.#ctor(SkiaSharp.SKImageInfo,SkiaSharp.SKSurface,SkiaSharp.SKCanvas)">
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.AvaloniaDrawingContext.#ctor(LiveChartsCore.Drawing.MotionCanvas{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext},SkiaSharp.SKImageInfo,SkiaSharp.SKSurface,SkiaSharp.SKCanvas)">
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Drawing.AvaloniaDrawingContext"/> class.
             </summary>
+            <param name="motionCanvas">The motion canvas.</param>
             <param name="info">The information.</param>
             <param name="surface">The surface.</param>
             <param name="canvas">The canvas.</param>
@@ -564,13 +565,22 @@
             </summary>
             <seealso cref="T:LiveChartsCore.Drawing.DrawingContext" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext.#ctor(SkiaSharp.SKImageInfo,SkiaSharp.SKSurface,SkiaSharp.SKCanvas)">
+        <member name="M:LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext.#ctor(LiveChartsCore.Drawing.MotionCanvas{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext},SkiaSharp.SKImageInfo,SkiaSharp.SKSurface,SkiaSharp.SKCanvas)">
             <summary>
             Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext"/> class.
             </summary>
+            <param name="motionCanvas">The motion canvas.</param>
             <param name="info">The information.</param>
             <param name="surface">The surface.</param>
             <param name="canvas">The canvas.</param>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext.MotionCanvas">
+            <summary>
+            Gets or sets the motion canvas.
+            </summary>
+            <value>
+            The motion canvas.
+            </value>
         </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext.Info">
             <summary>
@@ -1091,14 +1101,6 @@
             The color.
             </value>
         </member>
-        <member name="P:LiveChartsCore.SkiaSharpView.Painting.PaintTask.ClipRectangle">
-            <summary>
-            Gets or sets the clip rectangle.
-            </summary>
-            <value>
-            The clip rectangle.
-            </value>
-        </member>
         <member name="P:LiveChartsCore.SkiaSharpView.Painting.PaintTask.IsPaused">
             <summary>
             Gets or sets a value indicating whether this instance is paused.
@@ -1110,20 +1112,26 @@
         <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.InitializeTask(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.InitializeTask(`0)" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.GetGeometries">
-            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.GetGeometries" />
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.GetGeometries(LiveChartsCore.Drawing.MotionCanvas{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.GetGeometries(LiveChartsCore.Drawing.MotionCanvas{`0})" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.SetGeometries(System.Collections.Generic.HashSet{LiveChartsCore.Drawing.IDrawable{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext}})">
-            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.SetGeometries(System.Collections.Generic.HashSet{LiveChartsCore.Drawing.IDrawable{`0}})" />
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.SetGeometries(LiveChartsCore.Drawing.MotionCanvas{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext},System.Collections.Generic.HashSet{LiveChartsCore.Drawing.IDrawable{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext}})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.SetGeometries(LiveChartsCore.Drawing.MotionCanvas{`0},System.Collections.Generic.HashSet{LiveChartsCore.Drawing.IDrawable{`0}})" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.AddGeometryToPaintTask(LiveChartsCore.Drawing.IDrawable{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
-            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.AddGeometryToPaintTask(LiveChartsCore.Drawing.IDrawable{`0})" />
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.AddGeometryToPaintTask(LiveChartsCore.Drawing.MotionCanvas{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext},LiveChartsCore.Drawing.IDrawable{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.AddGeometryToPaintTask(LiveChartsCore.Drawing.MotionCanvas{`0},LiveChartsCore.Drawing.IDrawable{`0})" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.RemoveGeometryFromPainTask(LiveChartsCore.Drawing.IDrawable{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
-            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.RemoveGeometryFromPainTask(LiveChartsCore.Drawing.IDrawable{`0})" />
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.RemoveGeometryFromPainTask(LiveChartsCore.Drawing.MotionCanvas{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext},LiveChartsCore.Drawing.IDrawable{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.RemoveGeometryFromPainTask(LiveChartsCore.Drawing.MotionCanvas{`0},LiveChartsCore.Drawing.IDrawable{`0})" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.ClearGeometriesFromPaintTask">
-            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.ClearGeometriesFromPaintTask"/>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.ClearGeometriesFromPaintTask(LiveChartsCore.Drawing.MotionCanvas{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.ClearGeometriesFromPaintTask(LiveChartsCore.Drawing.MotionCanvas{`0})"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.GetClipRectangle(LiveChartsCore.Drawing.MotionCanvas{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.GetClipRectangle(LiveChartsCore.Drawing.MotionCanvas{`0})" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.SetClipRectangle(LiveChartsCore.Drawing.MotionCanvas{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext},System.Drawing.RectangleF)">
+            <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.SetClipRectangle(LiveChartsCore.Drawing.MotionCanvas{`0},System.Drawing.RectangleF)" />
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Painting.PaintTask.CloneTask">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.CloneTask" />

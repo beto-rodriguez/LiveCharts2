@@ -115,7 +115,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
             args.Surface.Canvas.Scale(dpiX, dpiY);
 
-            CanvasCore.DrawFrame(new SkiaSharpDrawingContext(args.Info, args.Surface, args.Surface.Canvas));
+            CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
         }
 
         private (float dpiX, float dpiY) GetPixelDensity()

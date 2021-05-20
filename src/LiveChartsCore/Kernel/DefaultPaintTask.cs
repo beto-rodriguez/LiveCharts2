@@ -93,14 +93,6 @@ namespace LiveChartsCore.Kernel
         public bool RemoveOnCompleted { get; set; }
 
         /// <summary>
-        /// Gets or sets the clip rectangle.
-        /// </summary>
-        /// <value>
-        /// The clip rectangle.
-        /// </value>
-        public RectangleF ClipRectangle { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether this instance is paused.
         /// </summary>
         /// <value>
@@ -111,8 +103,9 @@ namespace LiveChartsCore.Kernel
         /// <summary>
         /// Adds the geometry to paint task.
         /// </summary>
+        /// <param name="canvas">The canvas.</param>
         /// <param name="geometry">The geometry.</param>
-        public void AddGeometryToPaintTask(IDrawable<TDrawingContext> geometry)
+        public void AddGeometryToPaintTask(MotionCanvas<TDrawingContext> canvas, IDrawable<TDrawingContext> geometry)
         {
 
         }
@@ -144,8 +137,10 @@ namespace LiveChartsCore.Kernel
         /// <summary>
         /// Gets the geometries.
         /// </summary>
+        /// <param name="canvas">The canvas.</param>
+        /// <param name="">The .</param>
         /// <returns></returns>
-        public IEnumerable<IDrawable<TDrawingContext>> GetGeometries()
+        public IEnumerable<IDrawable<TDrawingContext>> GetGeometries(MotionCanvas<TDrawingContext> canvas)
         {
             return Enumerable.Empty<IDrawable<TDrawingContext>>();
         }
@@ -155,7 +150,6 @@ namespace LiveChartsCore.Kernel
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <returns></returns>
-        /// <exception cref="System.NotImplementedException"></exception>
         public IMotionProperty GetTransitionProperty(string propertyName)
         {
             throw new System.NotImplementedException();
@@ -172,15 +166,17 @@ namespace LiveChartsCore.Kernel
         /// <summary>
         /// Removes the geometry from pain task.
         /// </summary>
+        /// <param name="canvas">The canvas.</param>
         /// <param name="geometry">The geometry.</param>
-        public void RemoveGeometryFromPainTask(IDrawable<TDrawingContext> geometry)
+        public void RemoveGeometryFromPainTask(MotionCanvas<TDrawingContext> canvas, IDrawable<TDrawingContext> geometry)
         {
         }
 
         /// <summary>
         /// Removes all geometry from paint task.
         /// </summary>
-        public void ClearGeometriesFromPaintTask()
+        /// <param name="canvas">The canvas.</param>
+        public void ClearGeometriesFromPaintTask(MotionCanvas<TDrawingContext> canvas)
         {
         }
 
@@ -195,9 +191,9 @@ namespace LiveChartsCore.Kernel
         /// <summary>
         /// Sets the geometries.
         /// </summary>
+        /// <param name="canvas">The canvas.</param>
         /// <param name="geometries">The geometries.</param>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public void SetGeometries(HashSet<IDrawable<TDrawingContext>> geometries)
+        public void SetGeometries(MotionCanvas<TDrawingContext> canvas, HashSet<IDrawable<TDrawingContext>> geometries)
         {
             throw new System.NotImplementedException();
         }
@@ -241,6 +237,17 @@ namespace LiveChartsCore.Kernel
         public void ResetOpacity(TDrawingContext context, IGeometry<TDrawingContext> geometry)
         {
             throw new System.NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.GetClipRectangle(MotionCanvas{TDrawingContext})" />
+        public RectangleF GetClipRectangle(MotionCanvas<TDrawingContext> canvas)
+        {
+            return RectangleF.Empty;
+        }
+
+        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.SetClipRectangle(MotionCanvas{TDrawingContext}, RectangleF)" />
+        public void SetClipRectangle(MotionCanvas<TDrawingContext> canvas, RectangleF value)
+        {
         }
     }
 }

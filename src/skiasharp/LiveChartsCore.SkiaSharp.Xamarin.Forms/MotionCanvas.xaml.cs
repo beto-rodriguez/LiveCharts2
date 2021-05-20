@@ -38,8 +38,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MotionCanvas : ContentView
     {
-        private bool isDrawingLoopRunning = false;
-        private double framesPerSecond = 90;
+        private bool _isDrawingLoopRunning = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
@@ -77,7 +76,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <value>
         /// The frames per second.
         /// </value>
-        public double FramesPerSecond { get => framesPerSecond; set => framesPerSecond = value; }
+        public double FramesPerSecond { get; set; } = 90;
 
         /// <summary>
         /// Gets or sets the paint tasks.
@@ -108,9 +107,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             MainThread.BeginInvokeOnMainThread(RunDrawingLoop);
         }
 
-        void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs args)
+        private void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs args)
         {
-            CanvasCore.DrawFrame(new SkiaSharpDrawingContext(args.Info, args.Surface, args.Surface.Canvas));
+            CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
         }
 
         private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
@@ -120,17 +119,17 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         private async void RunDrawingLoop()
         {
-            if (isDrawingLoopRunning) return;
-            isDrawingLoopRunning = true;
+            if (_isDrawingLoopRunning) return;
+            _isDrawingLoopRunning = true;
 
-            var ts = TimeSpan.FromSeconds(1 / framesPerSecond);
+            var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
             while (!CanvasCore.IsValid)
             {
                 skiaElement.InvalidateSurface();
                 await Task.Delay(ts);
             }
 
-            isDrawingLoopRunning = false;
+            _isDrawingLoopRunning = false;
         }
 
         private static void PaintTasksChanged(BindableObject bindable, object oldValue, object newValue)

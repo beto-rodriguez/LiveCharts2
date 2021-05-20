@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing
@@ -33,11 +34,12 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
         /// <summary>
         /// Initializes a new instance of the <see cref="AvaloniaDrawingContext"/> class.
         /// </summary>
+        /// <param name="motionCanvas">The motion canvas.</param>
         /// <param name="info">The information.</param>
         /// <param name="surface">The surface.</param>
         /// <param name="canvas">The canvas.</param>
-        public AvaloniaDrawingContext(SKImageInfo info, SKSurface surface, SKCanvas canvas)
-            : base(info, surface, canvas)
+        public AvaloniaDrawingContext(MotionCanvas<SkiaSharpDrawingContext> motionCanvas, SKImageInfo info, SKSurface surface, SKCanvas canvas)
+            : base(motionCanvas, info, surface, canvas)
         {
 
         }

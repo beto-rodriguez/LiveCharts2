@@ -46,6 +46,14 @@ namespace LiveChartsCore.Kernel
         IChartView View { get; }
 
         /// <summary>
+        /// Gets the canvas.
+        /// </summary>
+        /// <value>
+        /// The canvas.
+        /// </value>
+        object Canvas { get; }
+
+        /// <summary>
         /// Gets the legend position.
         /// </summary>
         /// <value>

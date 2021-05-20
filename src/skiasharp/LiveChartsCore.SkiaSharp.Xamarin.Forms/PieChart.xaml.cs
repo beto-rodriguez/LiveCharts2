@@ -1,4 +1,5 @@
-﻿// The MIT License(MIT)
+﻿
+// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -292,6 +293,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         #endregion
 
         #region properties
+
+        /// <inheritdoc cref="IChartView.Core" />
+        public IChart Core => core ?? throw new Exception("Core not set yet.");
 
         System.Drawing.Color IChartView.BackColor
         {
