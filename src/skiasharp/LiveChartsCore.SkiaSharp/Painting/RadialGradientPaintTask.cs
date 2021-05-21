@@ -176,7 +176,11 @@ namespace LiveChartsCore.SkiaSharpView.Painting
 
         private SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext)
         {
-            return new SKRect(0, 0, drawingContext.Info.Width, drawingContext.Info.Width);
+            var clip = GetClipRectangle(drawingContext.MotionCanvas);
+
+            return clip == RectangleF.Empty
+                ? new SKRect(0, 0, drawingContext.Info.Width, drawingContext.Info.Width)
+                : new SKRect(clip.X, clip.Y, clip.Width, clip.Height);
         }
     }
 }
