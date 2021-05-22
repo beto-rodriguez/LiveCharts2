@@ -37,6 +37,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
     /// <inheritdoc cref="IDrawableTask{TDrawingContext}" />
     public abstract class PaintTask : Animatable, IDisposable, IDrawableTask<SkiaSharpDrawingContext>
     {
+        private readonly FloatMotionProperty _strokeMiterTransition;
         private readonly Dictionary<object, HashSet<IDrawable<SkiaSharpDrawingContext>>> _geometriesByCanvas = new();
         private readonly Dictionary<object, RectangleF> _clipRectangles = new();
 
@@ -56,6 +57,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         public PaintTask()
         {
             strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness), 0f));
+            _strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
         }
 
         /// <summary>
@@ -93,6 +95,34 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         ///   <c>true</c> if this instance is antialias; otherwise, <c>false</c>.
         /// </value>
         public bool IsAntialias { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets the stroke cap.
+        /// </summary>
+        /// <value>
+        /// The stroke cap.
+        /// </value>
+        public SKStrokeCap StrokeCap { get; set; }
+
+        /// <summary>
+        /// Gets or sets the stroke join.
+        /// </summary>
+        /// <value>
+        /// The stroke join.
+        /// </value>
+        public SKStrokeJoin StrokeJoin { get; set; }
+
+        /// <summary>
+        /// Gets or sets the stroke miter.
+        /// </summary>
+        /// <value>
+        /// The stroke miter.
+        /// </value>
+        public float StrokeMiter
+        {
+            get => _strokeMiterTransition.GetMovement(this);
+            set => _strokeMiterTransition.SetMovement(value, this);
+        }
 
         /// <summary>
         /// Gets or sets the color.

@@ -61,6 +61,16 @@ namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters
         }
 
         /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public override ImageFilter Clone()
+        {
+            return new DropShadow(_dx, _dy, _sigmaX, _sigmaY, _color, _filter, _cropRect);
+        }
+
+        /// <summary>
         /// Creates the image filter.
         /// </summary>
         /// <param name="drawingContext">The drawing context.</param>

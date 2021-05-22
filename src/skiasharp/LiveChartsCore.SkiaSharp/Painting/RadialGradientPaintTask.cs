@@ -92,7 +92,12 @@ namespace LiveChartsCore.SkiaSharpView.Painting
                 IsFill = IsFill,
                 Color = Color,
                 IsAntialias = IsAntialias,
-                StrokeThickness = StrokeThickness
+                StrokeThickness = StrokeThickness,
+                StrokeCap = StrokeCap,
+                StrokeJoin = StrokeJoin,
+                StrokeMiter = StrokeMiter,
+                PathEffect = PathEffect?.Clone(),
+                ImageFilter = ImageFilter?.Clone()
             };
         }
 
@@ -118,6 +123,9 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             skiaPaint.IsAntialias = IsAntialias;
             skiaPaint.IsStroke = true;
             skiaPaint.StrokeWidth = StrokeThickness;
+            skiaPaint.StrokeCap = StrokeCap;
+            skiaPaint.StrokeJoin = StrokeJoin;
+            skiaPaint.StrokeMiter = StrokeMiter;
             skiaPaint.Style = IsStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
 
             if (PathEffect != null)
@@ -162,6 +170,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         public override void Dispose()
         {
             if (PathEffect != null) PathEffect.Dispose();
+            if (ImageFilter != null) ImageFilter.Dispose();
 
             if (_drawingContext != null && GetClipRectangle(_drawingContext.MotionCanvas) != RectangleF.Empty)
             {

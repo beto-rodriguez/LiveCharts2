@@ -23,7 +23,7 @@
 namespace LiveChartsCore.Motion
 {
     /// <summary>
-    /// Defines a float motion property.
+    /// Defines the float motion property class.
     /// </summary>
     public class FloatMotionProperty : MotionProperty<float>
     {

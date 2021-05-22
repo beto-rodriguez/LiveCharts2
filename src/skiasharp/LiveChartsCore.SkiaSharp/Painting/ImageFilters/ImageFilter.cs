@@ -47,6 +47,12 @@ namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters
         public abstract void CreateFilter(SkiaSharpDrawingContext drawingContext);
 
         /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
+        public abstract ImageFilter Clone();
+
+        /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public virtual void Dispose()

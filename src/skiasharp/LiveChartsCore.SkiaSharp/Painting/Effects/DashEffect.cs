@@ -44,6 +44,18 @@ namespace LiveChartsCore.SkiaSharpView.Painting.Effects
         }
 
         /// <summary>
+        /// Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns>
+        /// A new object that is a copy of this instance.
+        /// </returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public override PathEffect Clone()
+        {
+            return new DashEffect(_dashArray, _phase);
+        }
+
+        /// <summary>
         /// Creates the path effect.
         /// </summary>
         /// <param name="drawingContext">The drawing context.</param>
