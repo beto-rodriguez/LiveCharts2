@@ -20,40 +20,60 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters
 {
     /// <summary>
-    /// A wrapper object for skia sharp image filters.
+    /// Merges multiple image filters.
     /// </summary>
-    /// <seealso cref="IDisposable" />
-    public abstract class ImageFilter : IDisposable
+    /// <seealso cref="ImageFilter" />
+    public class ImageFiltersMergeOperation : ImageFilter
     {
+        private readonly ImageFilter[] _filters;
+        private readonly SKImageFilter.CropRect? _cropRect = null;
+
         /// <summary>
-        /// Gets or sets the sk image filter.
+        /// Initializes a new instance of the <see cref="ImageFiltersMergeOperation"/> class.
         /// </summary>
-        /// <value>
-        /// The sk image filter.
-        /// </value>
-        public SKImageFilter? SKImageFilter { get; set; }
+        /// <param name="imageFilters">The image filters.</param>
+        /// <param name="cropRect">The crop rect.</param>
+        public ImageFiltersMergeOperation(ImageFilter[] imageFilters, SKImageFilter.CropRect? cropRect = null)
+        {
+            _filters = imageFilters;
+            _cropRect = cropRect;
+        }
 
         /// <summary>
         /// Creates the image filter.
         /// </summary>
         /// <param name="drawingContext">The drawing context.</param>
-        public abstract void CreateFilter(SkiaSharpDrawingContext drawingContext);
+        /// <exception cref="System.NotImplementedException"></exception>
+        public override void CreateFilter(SkiaSharpDrawingContext drawingContext)
+        {
+            var imageFilters = new SKImageFilter[_filters.Length];
+            var i = 0;
+
+            foreach (var item in _filters)
+            {
+                item.CreateFilter(drawingContext);
+                if (item.SKImageFilter == null) throw new System.Exception("Image filter is not valid");
+                imageFilters[i++] = item.SKImageFilter;
+            }
+
+            SKImageFilter = SKImageFilter.CreateMerge(imageFilters, _cropRect);
+        }
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public virtual void Dispose()
+        public override void Dispose()
         {
-            if (SKImageFilter == null) return;
-            SKImageFilter.Dispose();
-            SKImageFilter = null;
+            foreach (var item in _filters)
+            {
+                item.Dispose();
+            }
         }
     }
 }

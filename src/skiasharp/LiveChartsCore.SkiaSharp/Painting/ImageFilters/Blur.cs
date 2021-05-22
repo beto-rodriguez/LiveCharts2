@@ -20,40 +20,45 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters
 {
     /// <summary>
-    /// A wrapper object for skia sharp image filters.
+    /// Creates a blur image filter.
     /// </summary>
-    /// <seealso cref="IDisposable" />
-    public abstract class ImageFilter : IDisposable
+    /// <seealso cref="ImageFilter" />
+    public class Blur : ImageFilter
     {
-        /// <summary>
-        /// Gets or sets the sk image filter.
-        /// </summary>
-        /// <value>
-        /// The sk image filter.
-        /// </value>
-        public SKImageFilter? SKImageFilter { get; set; }
+        private readonly float _sigmaX;
+        private readonly float _sigmaY;
+        private readonly SKImageFilter? _filter = null;
+        private readonly SKImageFilter.CropRect? _cropRect = null;
 
         /// <summary>
-        /// Creates the image filter.
+        /// Initializes a new instance of the <see cref="Blur"/> class.
+        /// </summary>
+        /// <param name="sigmaX">The sigma x.</param>
+        /// <param name="sigmaY">The sigma y.</param>
+        /// <param name="input">The input.</param>
+        /// <param name="cropRect">The crop rect.</param>
+        public Blur(float sigmaX, float sigmaY, SKImageFilter? input = null, SKImageFilter.CropRect? cropRect = null)
+        {
+            _sigmaX = sigmaX;
+            _sigmaY = sigmaY;
+            _filter = input;
+            _cropRect = cropRect;
+        }
+
+        /// <summary>
+        /// Creates the filter.
         /// </summary>
         /// <param name="drawingContext">The drawing context.</param>
-        public abstract void CreateFilter(SkiaSharpDrawingContext drawingContext);
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public virtual void Dispose()
+        /// <returns></returns>
+        public override void CreateFilter(SkiaSharpDrawingContext drawingContext)
         {
-            if (SKImageFilter == null) return;
-            SKImageFilter.Dispose();
-            SKImageFilter = null;
+            SKImageFilter = SKImageFilter.CreateBlur(_sigmaX, _sigmaY, _filter, _cropRect);
         }
     }
 }
