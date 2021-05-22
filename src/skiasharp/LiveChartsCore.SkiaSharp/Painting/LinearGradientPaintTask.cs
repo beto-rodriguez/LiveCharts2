@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System.Drawing;
+using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
@@ -136,8 +137,15 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             if (skiaPaint == null) skiaPaint = new SKPaint();
 
             var size = GetDrawRectangleSize(drawingContext);
-            var start = new SKPoint(size.Location.X + _startPoint.X * size.Width, size.Location.Y + _startPoint.Y * size.Height);
-            var end = new SKPoint(size.Location.X + _endPoint.X * size.Width, size.Location.Y + _endPoint.Y * size.Height);
+
+            var xf = size.Location.X;
+            var xt = xf + size.Width;
+
+            var yf = size.Location.Y;
+            var yt = yf + size.Height;
+
+            var start = new SKPoint(xf + (xt - xf) * _startPoint.X, yf + (yt - yf) * _startPoint.Y);
+            var end = new SKPoint(xf + (xt - xf) * _endPoint.X, yf + (yt - yf) * _endPoint.Y);
 
             skiaPaint.Shader = SKShader.CreateLinearGradient(
                     start,
@@ -193,7 +201,11 @@ namespace LiveChartsCore.SkiaSharpView.Painting
 
         private SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext)
         {
-            return new SKRect(0, 0, drawingContext.Info.Width, drawingContext.Info.Width);
+            var clip = GetClipRectangle(drawingContext.MotionCanvas);
+
+            return clip == RectangleF.Empty
+                ? new SKRect(0, 0, drawingContext.Info.Width, drawingContext.Info.Width)
+                : new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height);
         }
     }
 }

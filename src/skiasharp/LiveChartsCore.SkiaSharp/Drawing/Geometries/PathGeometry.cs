@@ -62,6 +62,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
                 }
 
                 if (IsClosed) path.Close();
+
                 context.Canvas.DrawPath(path, context.Paint);
 
                 if (!isValid) Invalidate();
