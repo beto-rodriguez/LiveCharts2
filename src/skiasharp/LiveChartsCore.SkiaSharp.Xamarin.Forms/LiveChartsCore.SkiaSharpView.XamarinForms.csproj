@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <LangVersion>9.0</LangVersion>
@@ -6,7 +6,7 @@
     <TargetFrameworks>netstandard2.0;</TargetFrameworks>
     <AssemblyName>LiveChartsCore.SkiaSharpView.XamarinForms</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView.XamarinForms</RootNamespace>
-    <Version>2.0.0-beta.7</Version>
+    <Version>2.0.0-beta.8</Version>
   </PropertyGroup>
 
   <PropertyGroup>
