@@ -286,6 +286,11 @@ namespace LiveChartsCore.SkiaSharpView
                             initializer.ApplyStyleToSeries(series);
                         }
 
+                        if (series.DataLabelsDrawableTask == DefaultPaintTask)
+                        {
+                            series.DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40));
+                        }
+
                         if ((series.SeriesProperties & SeriesProperties.GaugeFill) != 0)
                         {
                             if (series.Stroke == DefaultPaintTask) series.Stroke = null;
@@ -369,6 +374,11 @@ namespace LiveChartsCore.SkiaSharpView
                             var initializer = stylesBuilder.GetVisualsInitializer();
 
                             initializer.ApplyStyleToSeries(series);
+                        }
+
+                        if (series.DataLabelsDrawableTask == DefaultPaintTask)
+                        {
+                            series.DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(230, 230, 230));
                         }
 
                         if ((series.SeriesProperties & SeriesProperties.GaugeFill) != 0)

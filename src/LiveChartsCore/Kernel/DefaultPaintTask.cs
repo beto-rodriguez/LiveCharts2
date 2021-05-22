@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -152,7 +153,7 @@ namespace LiveChartsCore.Kernel
         /// <returns></returns>
         public IMotionProperty GetTransitionProperty(string propertyName)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -195,7 +196,6 @@ namespace LiveChartsCore.Kernel
         /// <param name="geometries">The geometries.</param>
         public void SetGeometries(MotionCanvas<TDrawingContext> canvas, HashSet<IDrawable<TDrawingContext>> geometries)
         {
-            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -206,7 +206,6 @@ namespace LiveChartsCore.Kernel
         /// <exception cref="System.NotImplementedException"></exception>
         public void SetPropertiesTransitions(Animation? animation, params string[] propertyName)
         {
-            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -215,7 +214,6 @@ namespace LiveChartsCore.Kernel
         /// <exception cref="System.NotImplementedException"></exception>
         public void CompleteAllTransitions()
         {
-            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -224,19 +222,16 @@ namespace LiveChartsCore.Kernel
         /// <exception cref="System.NotImplementedException"></exception>
         public void RemoveTransitions()
         {
-            throw new System.NotImplementedException();
         }
 
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.SetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
         public void SetOpacity(TDrawingContext context, IGeometry<TDrawingContext> geometry)
         {
-            throw new System.NotImplementedException();
         }
 
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.ResetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
         public void ResetOpacity(TDrawingContext context, IGeometry<TDrawingContext> geometry)
         {
-            throw new System.NotImplementedException();
         }
 
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.GetClipRectangle(MotionCanvas{TDrawingContext})" />
