@@ -20,36 +20,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Painting.Effects
+namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters
 {
     /// <summary>
-    /// Creates a stroke dash effect.
+    /// A wrapper object for skia sharp image filters.
     /// </summary>
-    /// <seealso cref="PathEffect" />
-    public class DashEffect : PathEffect
+    /// <seealso cref="IDisposable" />
+    public abstract class ImageFilter : IDisposable
     {
-        private readonly float[] _dashArray;
-        private readonly float _phase = 0;
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="DashEffect"/> class.
+        /// Gets or sets the sk image filter.
         /// </summary>
-        public DashEffect(float[] dashArray, float phase = 0)
-        {
-            _dashArray = dashArray;
-            _phase = phase;
-        }
+        /// <value>
+        /// The sk image filter.
+        /// </value>
+        public SKImageFilter? SKImageFilter { get; set; }
 
         /// <summary>
-        /// Creates the path effect.
+        /// Creates the image filter.
         /// </summary>
         /// <param name="drawingContext">The drawing context.</param>
-        public override void CreateEffect(SkiaSharpDrawingContext drawingContext)
+        public abstract void CreateFilter(SkiaSharpDrawingContext drawingContext);
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
         {
-            SKPathEffect = SKPathEffect.CreateDash(_dashArray, _phase);
+            if (SKImageFilter == null) return;
+            SKImageFilter.Dispose();
+            SKImageFilter = null;
         }
     }
 }

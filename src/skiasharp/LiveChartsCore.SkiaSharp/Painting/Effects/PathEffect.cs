@@ -52,7 +52,9 @@ namespace LiveChartsCore.SkiaSharpView.Painting.Effects
         /// <exception cref="NotImplementedException"></exception>
         public virtual void Dispose()
         {
-            SKPathEffect?.Dispose();
+            if (SKPathEffect == null) return;
+            SKPathEffect.Dispose();
+            SKPathEffect = null;
         }
     }
 }

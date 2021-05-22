@@ -23,7 +23,6 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using SkiaSharp;
 using System.Drawing;
 
@@ -98,14 +97,6 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             set => _strokeMiterTransition.SetMovement(value, this);
         }
 
-        /// <summary>
-        /// Gets or sets the path effect.
-        /// </summary>
-        /// <value>
-        /// The path effect.
-        /// </value>
-        public PathEffect? PathEffect { get; set; }
-
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.CloneTask" />
         public override IDrawableTask<SkiaSharpDrawingContext> CloneTask()
         {
@@ -143,6 +134,12 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             {
                 PathEffect.CreateEffect(drawingContext);
                 skiaPaint.PathEffect = PathEffect.SKPathEffect;
+            }
+
+            if (ImageFilter != null)
+            {
+                ImageFilter.CreateFilter(drawingContext);
+                skiaPaint.ImageFilter = ImageFilter.SKImageFilter;
             }
 
             var clip = GetClipRectangle(drawingContext.MotionCanvas);
@@ -192,4 +189,4 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             base.Dispose();
         }
     }
-}
+ }

@@ -104,14 +104,6 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         public LinearGradientPaintTask(SKColor start, SKColor end)
             : this(start, end, s_defaultStartPoint, s_defaultEndPoint) { }
 
-        /// <summary>
-        /// Gets or sets the path effect.
-        /// </summary>
-        /// <value>
-        /// The path effect.
-        /// </value>
-        public PathEffect? PathEffect { get; set; }
-
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.CloneTask" />
         public override IDrawableTask<SkiaSharpDrawingContext> CloneTask()
         {
@@ -163,6 +155,12 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             {
                 PathEffect.CreateEffect(drawingContext);
                 skiaPaint.PathEffect = PathEffect.SKPathEffect;
+            }
+
+            if (ImageFilter != null)
+            {
+                ImageFilter.CreateFilter(drawingContext);
+                skiaPaint.ImageFilter = ImageFilter.SKImageFilter;
             }
 
             var clip = GetClipRectangle(drawingContext.MotionCanvas);

@@ -24,6 +24,8 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Painting.Effects;
+using LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -107,6 +109,23 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <c>true</c> if this instance is paused; otherwise, <c>false</c>.
         /// </value>
         public bool IsPaused { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets the path effect.
+        /// </summary>
+        /// <value>
+        /// The path effect.
+        /// </value>
+        public PathEffect? PathEffect { get; set; }
+
+        /// <summary>
+        /// Gets or sets the image filer.
+        /// </summary>
+        /// <value>
+        /// The image filer.
+        /// </value>
+        public ImageFilter? ImageFilter { get; set; }
 
         /// <inheritdoc cref="IDrawableTask{TDrawingContext}.InitializeTask(TDrawingContext)" />
         public abstract void InitializeTask(SkiaSharpDrawingContext drawingContext);
