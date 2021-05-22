@@ -11,7 +11,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-      
+
+    - name: Build
+      run: dotnet build  ./src/LiveChartsCore --configuration Release
+
     - name: Publish LiveChartsCore
       uses: brandedoutcast/publish-nuget@v2.5.5
       with:

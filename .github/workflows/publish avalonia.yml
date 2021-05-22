@@ -11,6 +11,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: Build
+      run: dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia --configuration Release
           
     - name: Publish LiveChartsCore.SkiaSharpView.Avalonia
       uses: brandedoutcast/publish-nuget@v2.5.5

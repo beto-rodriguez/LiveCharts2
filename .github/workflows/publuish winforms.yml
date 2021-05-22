@@ -10,6 +10,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: Build
+      run: dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.WinForms --configuration Release
       
     - name: Publish LiveChartsCore.SkiaSharpView.WinForms
       uses: brandedoutcast/publish-nuget@v2.5.5
