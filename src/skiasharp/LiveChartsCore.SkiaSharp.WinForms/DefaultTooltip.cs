@@ -24,6 +24,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -59,6 +60,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
                 return;
             }
+
+            if (_activePoints.Count > 0 && tooltipPoints.All(x => _activePoints.ContainsKey(x.Point))) return;
 
             var size = DrawAndMesure(tooltipPoints, wfChart);
             PointF? location = null;
