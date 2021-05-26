@@ -284,7 +284,7 @@ namespace LiveChartsCore.UnitTesting
             var drawables = canvas.DrawablesCount;
             var geometries = canvas.CountGeometries();
 
-            axis.TextBrush = new SolidColorPaintTask();
+            axis.LabelsPaint = new SolidColorPaintTask();
 
             chart.Core.Update(new ChartUpdateParams { Throttling = false });
             DrawChart();
@@ -330,7 +330,7 @@ namespace LiveChartsCore.UnitTesting
             var drawables = canvas.DrawablesCount;
             var geometries = canvas.CountGeometries();
 
-            axis.SeparatorsBrush = new SolidColorPaintTask();
+            axis.SeparatorsPaint = new SolidColorPaintTask();
 
             chart.Core.Update(new ChartUpdateParams { Throttling = false });
             DrawChart();

@@ -63,8 +63,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </summary>
         public static readonly DependencyProperty PaintTasksProperty =
             DependencyProperty.Register(
-                nameof(PaintTasks), typeof(HashSet<IDrawableTask<SkiaSharpDrawingContext>>), typeof(MotionCanvas),
-                new PropertyMetadata(new HashSet<IDrawableTask<SkiaSharpDrawingContext>>(), new PropertyChangedCallback(OnPaintTaskChanged)));
+                nameof(PaintTasks), typeof(HashSet<IPaintTask<SkiaSharpDrawingContext>>), typeof(MotionCanvas),
+                new PropertyMetadata(new HashSet<IPaintTask<SkiaSharpDrawingContext>>(), new PropertyChangedCallback(OnPaintTaskChanged)));
 
         /// <summary>
         /// Gets or sets the paint tasks.
@@ -72,9 +72,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <value>
         /// The paint tasks.
         /// </value>
-        public HashSet<IDrawableTask<SkiaSharpDrawingContext>> PaintTasks
+        public HashSet<IPaintTask<SkiaSharpDrawingContext>> PaintTasks
         {
-            get => (HashSet<IDrawableTask<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty);
+            get => (HashSet<IPaintTask<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty);
             set => SetValue(PaintTasksProperty, value);
         }
 

@@ -104,8 +104,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         public LinearGradientPaintTask(SKColor start, SKColor end)
             : this(start, end, s_defaultStartPoint, s_defaultEndPoint) { }
 
-        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.CloneTask" />
-        public override IDrawableTask<SkiaSharpDrawingContext> CloneTask()
+        /// <inheritdoc cref="IPaintTask{TDrawingContext}.CloneTask" />
+        public override IPaintTask<SkiaSharpDrawingContext> CloneTask()
         {
             return new LinearGradientPaintTask(_gradientStops, _startPoint, _endPoint, _colorPos, _tileMode)
             {
@@ -123,19 +123,19 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             };
         }
 
-        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.SetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
+        /// <inheritdoc cref="IPaintTask{TDrawingContext}.SetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
         public override void SetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
         {
             throw new System.NotImplementedException();
         }
 
-        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.ResetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
+        /// <inheritdoc cref="IPaintTask{TDrawingContext}.ResetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
         public override void ResetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
         {
             throw new System.NotImplementedException();
         }
 
-        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.InitializeTask(TDrawingContext)" />
+        /// <inheritdoc cref="IPaintTask{TDrawingContext}.InitializeTask(TDrawingContext)" />
         public override void InitializeTask(SkiaSharpDrawingContext drawingContext)
         {
             if (skiaPaint == null) skiaPaint = new SKPaint();

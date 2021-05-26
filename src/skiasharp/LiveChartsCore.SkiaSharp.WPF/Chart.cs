@@ -277,8 +277,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         #region properties
 
-        /// <inheritdoc cref="IChartView.Core" />
-        public IChart Core => core ?? throw new Exception("Core not set yet.");
+        /// <inheritdoc cref="IChartView.CoreChart" />
+        public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
 
         System.Drawing.Color IChartView.BackColor
         {
@@ -674,7 +674,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </summary>
         /// <param name="dp">The identifier of the dependency property to set.</param>
         /// <param name="value">The new local value.</param>
-        protected void SetValueOrCurrentValue(DependencyProperty dp, object value)
+        protected void SetValueOrCurrentValue(DependencyProperty dp, object? value)
         {
             if (IsInitialized)
                 SetValue(dp, value);

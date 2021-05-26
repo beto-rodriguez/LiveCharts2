@@ -15,7 +15,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     public partial class MotionCanvas : UserControl
     {
         private bool isDrawingLoopRunning = false;
-        private HashSet<IDrawableTask<SkiaSharpDrawingContext>> paintTasks = new();
+        private HashSet<IPaintTask<SkiaSharpDrawingContext>> paintTasks = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
@@ -32,7 +32,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <value>
         /// The paint tasks.
         /// </value>
-        public HashSet<IDrawableTask<SkiaSharpDrawingContext>> PaintTasks { get => paintTasks; set { paintTasks = value; OnPaintTasksChanged(); } }
+        public HashSet<IPaintTask<SkiaSharpDrawingContext>> PaintTasks { get => paintTasks; set { paintTasks = value; OnPaintTasksChanged(); } }
 
         /// <summary>
         /// Gets or sets the frames per second.

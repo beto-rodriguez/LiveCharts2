@@ -59,7 +59,7 @@ namespace LiveChartsCore
                 primaryAxis.PreviousDataBounds == null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis);
             var primaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
 
-            var uw = secondaryScale.ToPixels((float) primaryAxis.UnitWidth) - secondaryScale.ToPixels(0f);
+            var uw = secondaryScale.ToPixels((float)primaryAxis.UnitWidth) - secondaryScale.ToPixels(0f);
             var uwm = 0.5f * uw;
 
             uw -= (float)GroupPadding;
@@ -98,11 +98,11 @@ namespace LiveChartsCore
                 Stroke.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 chart.Canvas.AddDrawableTask(Stroke);
             }
-            if (DataLabelsDrawableTask != null)
+            if (DataLabelsPaint != null)
             {
-                DataLabelsDrawableTask.ZIndex = actualZIndex + 0.1;
-                DataLabelsDrawableTask.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
-                chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
+                DataLabelsPaint.ZIndex = actualZIndex + 0.1;
+                DataLabelsPaint.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                chart.Canvas.AddDrawableTask(DataLabelsPaint);
             }
 
             var dls = (float)DataLabelsSize;
@@ -176,7 +176,7 @@ namespace LiveChartsCore
                 OnPointMeasured(point);
                 _ = toDeletePoints.Remove(point);
 
-                if (DataLabelsDrawableTask != null)
+                if (DataLabelsPaint != null)
                 {
                     var label = (TLabel?)point.Context.Label;
 
@@ -195,12 +195,12 @@ namespace LiveChartsCore
                         point.Context.Label = l;
                     }
 
-                    DataLabelsDrawableTask.AddGeometryToPaintTask(chart.Canvas, label);
+                    DataLabelsPaint.AddGeometryToPaintTask(chart.Canvas, label);
                     label.Text = DataLabelsFormatter(point);
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
                     var labelPosition = GetLabelPosition(
-                        cx, y, b, uw, label.Measure(DataLabelsDrawableTask), DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot);
+                        cx, y, b, uw, label.Measure(DataLabelsPaint), DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot);
                     label.X = labelPosition.X;
                     label.Y = labelPosition.Y;
                 }

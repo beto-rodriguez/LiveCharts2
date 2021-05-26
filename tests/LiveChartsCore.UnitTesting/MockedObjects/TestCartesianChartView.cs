@@ -25,7 +25,7 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
                 this, LiveChartsSkiaSharp.DefaultPlatformBuilder, CoreCanvas);
         }
 
-        IChart IChartView.Core => Core;
+        IChart IChartView.CoreChart => Core;
 
         public CartesianChart<SkiaSharpDrawingContext> Core { get; }
 
@@ -69,6 +69,13 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
         public event ChartEventHandler<SkiaSharpDrawingContext> Measuring;
         public event ChartEventHandler<SkiaSharpDrawingContext> UpdateStarted;
         public event ChartEventHandler<SkiaSharpDrawingContext> UpdateFinished;
+
+        public void DummyRaiseEvents()
+        {
+            Measuring?.Invoke(this);
+            UpdateStarted?.Invoke(this);
+            UpdateFinished?.Invoke(this);
+        }
 
         public void HideTooltip()
         {

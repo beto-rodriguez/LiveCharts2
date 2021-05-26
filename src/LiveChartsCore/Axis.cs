@@ -55,7 +55,7 @@ namespace LiveChartsCore
         /// <summary>
         /// Gets a <see cref="HashSet{T}"/> reference to the pending to delete paint tasks.
         /// </summary>
-        protected List<IDrawableTask<TDrawingContext>> deletingTasks = new();
+        protected List<IPaintTask<TDrawingContext>> deletingTasks = new();
 
         /// <summary>
         /// The active separators
@@ -74,10 +74,10 @@ namespace LiveChartsCore
         private Padding _padding = Padding.Default;
         private double? _minLimit = null;
         private double? _maxLimit = null;
-        private IDrawableTask<TDrawingContext>? _textBrush;
+        private IPaintTask<TDrawingContext>? _labelsPaint;
         private double _unitWidth = 1;
         private double _textSize = 16;
-        private IDrawableTask<TDrawingContext>? _separatorsBrush;
+        private IPaintTask<TDrawingContext>? _separatorsPaint;
         private bool _showSeparatorLines = true;
         private bool _isVisible = true;
         private bool _isInverted;
@@ -86,7 +86,7 @@ namespace LiveChartsCore
 
         #region properties
 
-        List<IDrawableTask<TDrawingContext>> IAxis<TDrawingContext>.DeletingTasks => deletingTasks;
+        List<IPaintTask<TDrawingContext>> IAxis<TDrawingContext>.DeletingTasks => deletingTasks;
 
         float IAxis.Xo { get => _xo; set => _xo = value; }
         float IAxis.Yo { get => _yo; set => _yo = value; }
@@ -145,29 +145,37 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IAxis.IsInverted"/>
         public bool IsInverted { get => _isInverted; set { _isInverted = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.TextBrush"/>
-        public IDrawableTask<TDrawingContext>? TextBrush
+        /// <inheritdoc cref="IAxis{TDrawingContext}.LabelsPaint"/>
+        public IPaintTask<TDrawingContext>? LabelsPaint
         {
-            get => _textBrush;
+            get => _labelsPaint;
             set
             {
-                if (_textBrush != null) deletingTasks.Add(_textBrush);
-                _textBrush = value;
+                if (_labelsPaint != null) deletingTasks.Add(_labelsPaint);
+                _labelsPaint = value;
                 OnPropertyChanged();
             }
         }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.SeparatorsBrush"/>
-        public IDrawableTask<TDrawingContext>? SeparatorsBrush
+        /// <inheritdoc cref="IAxis{TDrawingContext}.SeparatorsPaint"/>
+        public IPaintTask<TDrawingContext>? SeparatorsPaint
         {
-            get => _separatorsBrush;
+            get => _separatorsPaint;
             set
             {
-                if (_separatorsBrush != null) deletingTasks.Add(_separatorsBrush);
-                _separatorsBrush = value;
+                if (_separatorsPaint != null) deletingTasks.Add(_separatorsPaint);
+                _separatorsPaint = value;
                 OnPropertyChanged();
             }
         }
+
+        /// <inheritdoc cref="IAxis{TDrawingContext}.TextBrush"/>
+        [Obsolete("Renamed to LabelsPaint")]
+        public IPaintTask<TDrawingContext>? TextBrush { get => LabelsPaint; set => LabelsPaint = value; }
+
+        /// <inheritdoc cref="IAxis{TDrawingContext}.SeparatorsBrush"/>
+        [Obsolete("Renamed to SeparatorsPaint")]
+        public IPaintTask<TDrawingContext>? SeparatorsBrush { get => SeparatorsPaint; set => SeparatorsPaint = value; }
 
         /// <inheritdoc cref="IAxis.AnimationsSpeed"/>
         public TimeSpan? AnimationsSpeed { get; set; }
@@ -210,16 +218,16 @@ namespace LiveChartsCore
             var s = axisTick.Value;
             if (s < _minStep) s = _minStep;
 
-            if (TextBrush != null)
+            if (LabelsPaint != null)
             {
-                TextBrush.ZIndex = -1;
-                chart.Canvas.AddDrawableTask(TextBrush);
+                LabelsPaint.ZIndex = -1;
+                chart.Canvas.AddDrawableTask(LabelsPaint);
             }
-            if (SeparatorsBrush != null)
+            if (SeparatorsPaint != null)
             {
-                SeparatorsBrush.ZIndex = -1;
-                SeparatorsBrush.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
-                chart.Canvas.AddDrawableTask(SeparatorsBrush);
+                SeparatorsPaint.ZIndex = -1;
+                SeparatorsPaint.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                chart.Canvas.AddDrawableTask(SeparatorsPaint);
             }
 
             var lyi = drawLocation.Y;
@@ -279,7 +287,7 @@ namespace LiveChartsCore
                 {
                     visualSeparator = new AxisVisualSeprator<TDrawingContext>() { Value = (float)i };
 
-                    if (TextBrush != null)
+                    if (LabelsPaint != null)
                     {
                         var textGeometry = new TTextGeometry { TextSize = size };
                         visualSeparator.Text = textGeometry;
@@ -316,7 +324,7 @@ namespace LiveChartsCore
                         }
                     }
 
-                    if (SeparatorsBrush != null && ShowSeparatorLines)
+                    if (SeparatorsPaint != null && ShowSeparatorLines)
                     {
                         var lineGeometry = new TLineGeometry();
 
@@ -369,10 +377,10 @@ namespace LiveChartsCore
                     separators.Add(label, visualSeparator);
                 }
 
-                if (TextBrush != null && visualSeparator.Text != null)
-                    TextBrush.AddGeometryToPaintTask(chart.Canvas, visualSeparator.Text);
-                if (SeparatorsBrush != null && ShowSeparatorLines && visualSeparator.Line != null)
-                    SeparatorsBrush.AddGeometryToPaintTask(chart.Canvas, visualSeparator.Line);
+                if (LabelsPaint != null && visualSeparator.Text != null)
+                    LabelsPaint.AddGeometryToPaintTask(chart.Canvas, visualSeparator.Text);
+                if (SeparatorsPaint != null && ShowSeparatorLines && visualSeparator.Line != null)
+                    SeparatorsPaint.AddGeometryToPaintTask(chart.Canvas, visualSeparator.Line);
 
                 if (visualSeparator.Text != null)
                 {
@@ -422,7 +430,7 @@ namespace LiveChartsCore
         public SizeF GetPossibleSize(CartesianChart<TDrawingContext> chart)
         {
             if (_dataBounds == null) throw new Exception("DataBounds not found");
-            if (TextBrush == null) return new SizeF(0f, 0f);
+            if (LabelsPaint == null) return new SizeF(0f, 0f);
 
             var ts = (float)TextSize;
             var labeler = Labeler;
@@ -452,7 +460,7 @@ namespace LiveChartsCore
                     Rotation = r,
                     Padding = _padding
                 };
-                var m = textGeometry.Measure(TextBrush); // TextBrush.MeasureText(labeler(i, axisTick));
+                var m = textGeometry.Measure(LabelsPaint); // TextBrush.MeasureText(labeler(i, axisTick));
                 if (m.Width > w) w = m.Width;
                 if (m.Height > h) h = m.Height;
             }
@@ -475,15 +483,15 @@ namespace LiveChartsCore
             {
                 var cartesianChart = (CartesianChart<TDrawingContext>)chart;
                 var canvas = cartesianChart.View.CoreCanvas;
-                if (_textBrush != null)
+                if (_labelsPaint != null)
                 {
-                    canvas.RemovePaintTask(_textBrush);
-                    _textBrush.ClearGeometriesFromPaintTask(canvas);
+                    canvas.RemovePaintTask(_labelsPaint);
+                    _labelsPaint.ClearGeometriesFromPaintTask(canvas);
                 }
-                if (_separatorsBrush != null)
+                if (_separatorsPaint != null)
                 {
-                    canvas.RemovePaintTask(_separatorsBrush);
-                    _separatorsBrush.ClearGeometriesFromPaintTask(canvas);
+                    canvas.RemovePaintTask(_separatorsPaint);
+                    _separatorsPaint.ClearGeometriesFromPaintTask(canvas);
                 }
 
                 _ = activeSeparators.Remove(cartesianChart);

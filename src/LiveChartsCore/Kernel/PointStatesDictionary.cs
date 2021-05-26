@@ -91,8 +91,8 @@ namespace LiveChartsCore.Kernel
         /// <returns></returns>
         public PointStatesDictionary<TDrawingContext> WithState(
             string key,
-            IDrawableTask<TDrawingContext>? fill,
-            IDrawableTask<TDrawingContext>? stroke)
+            IPaintTask<TDrawingContext>? fill,
+            IPaintTask<TDrawingContext>? stroke)
         {
             _states.Add(key, new StrokeAndFillDrawable<TDrawingContext>(fill, stroke));
             return this;

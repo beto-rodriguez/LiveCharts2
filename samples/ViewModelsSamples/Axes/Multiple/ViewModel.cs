@@ -61,17 +61,17 @@ namespace ViewModelsSamples.Axes.Multiple
             {
                 new Axis // the "units" and "tens" series will be scaled on this axis
                 {
-                    TextBrush = new SolidColorPaintTask(blue)
+                    LabelsPaint = new SolidColorPaintTask(blue)
                 },
                 new Axis // the "hundreds" series will be scaled on this axis
                 {
-                    TextBrush = new SolidColorPaintTask(red),
+                    LabelsPaint = new SolidColorPaintTask(red),
                     ShowSeparatorLines = false,
                     Position = LiveChartsCore.Measure.AxisPosition.End
                 },
                 new Axis() // the "thousands" series will be scaled on this axis
                 {
-                    TextBrush = new SolidColorPaintTask(yellow),
+                    LabelsPaint = new SolidColorPaintTask(yellow),
                     ShowSeparatorLines = false,
                     Position = LiveChartsCore.Measure.AxisPosition.End
                 }

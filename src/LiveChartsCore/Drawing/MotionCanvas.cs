@@ -35,7 +35,7 @@ namespace LiveChartsCore.Drawing
         where TDrawingContext : DrawingContext
     {
         private readonly Stopwatch _stopwatch = new();
-        private HashSet<IDrawableTask<TDrawingContext>> _paintTasks = new();
+        private HashSet<IPaintTask<TDrawingContext>> _paintTasks = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MotionCanvas{TDrawingContext}"/> class.
@@ -84,7 +84,7 @@ namespace LiveChartsCore.Drawing
                 var frameTime = _stopwatch.ElapsedMilliseconds;
                 context.ClearCanvas();
 
-                var toRemoveGeometries = new List<Tuple<IDrawableTask<TDrawingContext>, IDrawable<TDrawingContext>>>();
+                var toRemoveGeometries = new List<Tuple<IPaintTask<TDrawingContext>, IDrawable<TDrawingContext>>>();
 
                 foreach (var task in _paintTasks.OrderBy(x => x.ZIndex).ToArray())
                 {
@@ -102,7 +102,7 @@ namespace LiveChartsCore.Drawing
 
                         if (geometry.IsCompleted && geometry.RemoveOnCompleted)
                             toRemoveGeometries.Add(
-                                new Tuple<IDrawableTask<TDrawingContext>, IDrawable<TDrawingContext>>(task, geometry));
+                                new Tuple<IPaintTask<TDrawingContext>, IDrawable<TDrawingContext>>(task, geometry));
                     }
 
                     isValid = isValid && task.IsCompleted;
@@ -149,7 +149,7 @@ namespace LiveChartsCore.Drawing
         /// </summary>
         /// <param name="task">The task.</param>
         /// <returns></returns>
-        public void AddDrawableTask(IDrawableTask<TDrawingContext> task)
+        public void AddDrawableTask(IPaintTask<TDrawingContext> task)
         {
             _ = _paintTasks.Add(task);
             Invalidate();
@@ -160,7 +160,7 @@ namespace LiveChartsCore.Drawing
         /// </summary>
         /// <param name="tasks">The tasks.</param>
         /// <returns></returns>
-        public void SetPaintTasks(HashSet<IDrawableTask<TDrawingContext>> tasks)
+        public void SetPaintTasks(HashSet<IPaintTask<TDrawingContext>> tasks)
         {
             _paintTasks = tasks;
             Invalidate();
@@ -171,7 +171,7 @@ namespace LiveChartsCore.Drawing
         /// </summary>
         /// <param name="task">The task.</param>
         /// <returns></returns>
-        public void RemovePaintTask(IDrawableTask<TDrawingContext> task)
+        public void RemovePaintTask(IPaintTask<TDrawingContext> task)
         {
             _ = _paintTasks.Remove(task);
             Invalidate();

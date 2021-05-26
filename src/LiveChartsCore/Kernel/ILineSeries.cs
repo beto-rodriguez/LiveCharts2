@@ -60,7 +60,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The shapes fill.
         /// </value>
-        IDrawableTask<TDrawingContext>? GeometryFill { get; set; }
+        IPaintTask<TDrawingContext>? GeometryFill { get; set; }
 
         /// <summary>
         /// Gets or sets the geometry stroke.
@@ -68,6 +68,6 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The shapes stroke.
         /// </value>
-        IDrawableTask<TDrawingContext>? GeometryStroke { get; set; }
+        IPaintTask<TDrawingContext>? GeometryStroke { get; set; }
     }
 }

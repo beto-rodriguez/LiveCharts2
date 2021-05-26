@@ -30,7 +30,7 @@ namespace LiveChartsCore.Drawing
     /// Defines a set of geometries that will be drawn according to this instance specifications.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public interface IDrawableTask<TDrawingContext> : IAnimatable, IDisposable
+    public interface IPaintTask<TDrawingContext> : IAnimatable, IDisposable
         where TDrawingContext : DrawingContext
     {
         /// <summary>
@@ -149,6 +149,6 @@ namespace LiveChartsCore.Drawing
         /// Clones the task.
         /// </summary>
         /// <returns></returns>
-        IDrawableTask<TDrawingContext> CloneTask();
+        IPaintTask<TDrawingContext> CloneTask();
     }
 }

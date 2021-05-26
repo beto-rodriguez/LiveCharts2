@@ -110,7 +110,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The background.
         /// </value>
-        IDrawableTask<TDrawingContext> Background { get; set; }
+        IPaintTask<TDrawingContext> Background { get; set; }
 
         /// <summary>
         /// Gets or sets the size of the labels.

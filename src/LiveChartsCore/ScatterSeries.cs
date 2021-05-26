@@ -97,11 +97,11 @@ namespace LiveChartsCore
                 Stroke.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 chart.Canvas.AddDrawableTask(Stroke);
             }
-            if (DataLabelsDrawableTask != null)
+            if (DataLabelsPaint != null)
             {
-                DataLabelsDrawableTask.ZIndex = actualZIndex + 0.3;
-                DataLabelsDrawableTask.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
-                chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
+                DataLabelsPaint.ZIndex = actualZIndex + 0.3;
+                DataLabelsPaint.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                chart.Canvas.AddDrawableTask(DataLabelsPaint);
             }
 
             var dls = (float)DataLabelsSize;
@@ -174,7 +174,7 @@ namespace LiveChartsCore
                 OnPointMeasured(point);
                 _ = toDeletePoints.Remove(point);
 
-                if (DataLabelsDrawableTask != null)
+                if (DataLabelsPaint != null)
                 {
                     if (point.Context.Label is not TLabel label)
                     {
@@ -191,12 +191,12 @@ namespace LiveChartsCore
                         point.Context.Label = l;
                     }
 
-                    DataLabelsDrawableTask.AddGeometryToPaintTask(chart.Canvas, label);
+                    DataLabelsPaint.AddGeometryToPaintTask(chart.Canvas, label);
                     label.Text = DataLabelsFormatter(point);
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
                     var labelPosition = GetLabelPosition(
-                        x - hgs, y - hgs, gs, gs, label.Measure(DataLabelsDrawableTask), DataLabelsPosition, SeriesProperties, point.PrimaryValue > 0);
+                        x - hgs, y - hgs, gs, gs, label.Measure(DataLabelsPaint), DataLabelsPosition, SeriesProperties, point.PrimaryValue > 0);
                     label.X = labelPosition.X;
                     label.Y = labelPosition.Y;
                 }

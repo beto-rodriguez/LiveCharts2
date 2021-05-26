@@ -59,7 +59,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// The paint tasks property
         /// </summary>
         public static readonly BindableProperty PaintTasksProperty = BindableProperty.Create(
-            nameof(PaintTasks), typeof(HashSet<IDrawableTask<SkiaSharpDrawingContext>>),
+            nameof(PaintTasks), typeof(HashSet<IPaintTask<SkiaSharpDrawingContext>>),
             typeof(MotionCanvas), propertyChanged: PaintTasksChanged);
 
         /// <summary>
@@ -84,9 +84,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <value>
         /// The paint tasks.
         /// </value>
-        public HashSet<IDrawableTask<SkiaSharpDrawingContext>> PaintTasks
+        public HashSet<IPaintTask<SkiaSharpDrawingContext>> PaintTasks
         {
-            get => (HashSet<IDrawableTask<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty);
+            get => (HashSet<IPaintTask<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty);
             set => SetValue(PaintTasksProperty, value);
         }
 

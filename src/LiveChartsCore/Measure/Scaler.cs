@@ -36,7 +36,7 @@ namespace LiveChartsCore.Measure
         /// <summary>
         /// Initializes a new instance of the <see cref="Scaler"/> class.
         /// </summary>
-        /// <param name="drawMarginLocation">The draw margin location.</param>
+        /// <param name="drawMagrinLocation">The draw margin location.</param>
         /// <param name="drawMarginSize">Size of the draw margin.</param>
         /// <param name="axis">The axis.</param>
         /// <param name="usePreviousScale">Indicates if the scaler should be built based on the previous known data.</param>

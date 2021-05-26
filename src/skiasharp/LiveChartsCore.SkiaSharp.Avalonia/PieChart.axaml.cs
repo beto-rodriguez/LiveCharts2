@@ -292,8 +292,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         #region properties
 
-        /// <inheritdoc cref="IChartView.Core" />
-        public IChart Core => core ?? throw new Exception("Core not set yet.");
+        /// <inheritdoc cref="IChartView.CoreChart" />
+        public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
 
         System.Drawing.Color IChartView.BackColor
         {

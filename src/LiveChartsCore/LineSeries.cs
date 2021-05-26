@@ -48,8 +48,8 @@ namespace LiveChartsCore
         private float _lineSmoothness = 0.65f;
         private float _geometrySize = 14f;
         private bool _enableNullSplitting = true;
-        private IDrawableTask<TDrawingContext>? _geometryFill;
-        private IDrawableTask<TDrawingContext>? _geometryStroke;
+        private IPaintTask<TDrawingContext>? _geometryFill;
+        private IPaintTask<TDrawingContext>? _geometryStroke;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs}"/> class.
@@ -83,7 +83,7 @@ namespace LiveChartsCore
         public bool EnableNullSplitting { get => _enableNullSplitting; set { _enableNullSplitting = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometryFill"/>
-        public IDrawableTask<TDrawingContext>? GeometryFill
+        public IPaintTask<TDrawingContext>? GeometryFill
         {
             get => _geometryFill;
             set
@@ -102,7 +102,7 @@ namespace LiveChartsCore
         }
 
         /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometrySize"/>
-        public IDrawableTask<TDrawingContext>? GeometryStroke
+        public IPaintTask<TDrawingContext>? GeometryStroke
         {
             get => _geometryStroke;
             set
@@ -331,8 +331,8 @@ namespace LiveChartsCore
                             {
                                 if (chart.IsZoomingOrPanning && previousPrimaryScale != null && previousSecondaryScale != null)
                                 {
-                                    strokePathHelper.StartPoint.X = previousSecondaryScale.ToPixels(data.OriginalData.X0);
-                                    strokePathHelper.StartPoint.Y = previousPrimaryScale.ToPixels(data.OriginalData.Y0);
+                                    strokePathHelper.StartPoint.X = previousSecondaryScale.ToPixels(data.OriginalData?.X0 ?? 0);
+                                    strokePathHelper.StartPoint.Y = previousPrimaryScale.ToPixels(data.OriginalData?.Y0 ?? 0);
                                 }
                                 else
                                 {
@@ -366,7 +366,7 @@ namespace LiveChartsCore
                     OnPointMeasured(data.TargetPoint);
                     _ = toDeletePoints.Remove(data.TargetPoint);
 
-                    if (DataLabelsDrawableTask != null)
+                    if (DataLabelsPaint != null)
                     {
                         var label = (TLabel?)data.TargetPoint.Context.Label;
 
@@ -385,12 +385,12 @@ namespace LiveChartsCore
                             data.TargetPoint.Context.Label = l;
                         }
 
-                        DataLabelsDrawableTask.AddGeometryToPaintTask(chart.Canvas, label);
+                        DataLabelsPaint.AddGeometryToPaintTask(chart.Canvas, label);
                         label.Text = DataLabelsFormatter(data.TargetPoint);
                         label.TextSize = dls;
                         label.Padding = DataLabelsPadding;
                         var labelPosition = GetLabelPosition(
-                            x - hgs, y - hgs, gs, gs, label.Measure(DataLabelsDrawableTask), DataLabelsPosition,
+                            x - hgs, y - hgs, gs, gs, label.Measure(DataLabelsPaint), DataLabelsPosition,
                             SeriesProperties, data.TargetPoint.PrimaryValue > Pivot);
                         label.X = labelPosition.X;
                         label.Y = labelPosition.Y;
@@ -425,11 +425,11 @@ namespace LiveChartsCore
                 _strokePathHelperContainer.RemoveAt(iStroke);
             }
 
-            if (DataLabelsDrawableTask != null)
+            if (DataLabelsPaint != null)
             {
-                chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
-                DataLabelsDrawableTask.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
-                DataLabelsDrawableTask.ZIndex = actualZIndex + 0.5;
+                chart.Canvas.AddDrawableTask(DataLabelsPaint);
+                DataLabelsPaint.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                DataLabelsPaint.ZIndex = actualZIndex + 0.5;
             }
 
             foreach (var point in toDeletePoints)

@@ -34,7 +34,7 @@ namespace LiveChartsCore.Themes
     public class Theme<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        private VisualsStyle<TDrawingContext> _style;
+        private VisualsStyle<TDrawingContext>? _style;
 
         /// <summary>
         /// Gets the current colors.

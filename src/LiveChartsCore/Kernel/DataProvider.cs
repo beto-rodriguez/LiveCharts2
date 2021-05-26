@@ -118,7 +118,7 @@ namespace LiveChartsCore.Kernel
         {
             if (_isValueType)
             {
-                var canvas = (MotionCanvas<TDrawingContext>)point.Context.Chart.Core.Canvas;
+                var canvas = (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas;
                 _ = _byChartbyValueVisualMap.TryGetValue(canvas.Sync, out var d);
                 var byValueVisualMap = d;
                 if (d == null) return;
@@ -127,7 +127,7 @@ namespace LiveChartsCore.Kernel
             else
             {
                 if (point.Context.DataSource == null) return;
-                var canvas = (MotionCanvas<TDrawingContext>)point.Context.Chart.Core.Canvas;
+                var canvas = (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas;
                 _ = _byChartByReferenceVisualMap.TryGetValue(canvas.Sync, out var d);
                 var byReferenceVisualMap = d;
                 if (d == null) return;

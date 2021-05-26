@@ -22,7 +22,7 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
-using LiveChartsCore.Measure;
+using System;
 using System.Collections.Generic;
 
 namespace LiveChartsCore.Kernel
@@ -41,7 +41,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The stroke.
         /// </value>
-        IDrawableTask<TDrawingContext>? Stroke { get; set; }
+        IPaintTask<TDrawingContext>? Stroke { get; set; }
 
         /// <summary>
         /// Gets or sets the fill  drawable task.
@@ -49,12 +49,21 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The fill.
         /// </value>
-        IDrawableTask<TDrawingContext>? Fill { get; set; }
+        IPaintTask<TDrawingContext>? Fill { get; set; }
 
         /// <summary>
         /// Gets or sets the data labels  drawable task.
         /// </summary>
-        IDrawableTask<TDrawingContext>? DataLabelsDrawableTask { get; set; }
+        [Obsolete("Renamed to DataLabelsPaint")]
+        IPaintTask<TDrawingContext>? DataLabelsDrawableTask { get; set; }
+
+        /// <summary>
+        /// Gets or sets the data labels paint.
+        /// </summary>
+        /// <value>
+        /// The data labels paint.
+        /// </value>
+        IPaintTask<TDrawingContext>? DataLabelsPaint { get; set; }
 
         /// <summary>
         /// Gets or sets the size of the data labels.
@@ -92,6 +101,6 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The deleting tasks.
         /// </value>
-        List<IDrawableTask<TDrawingContext>> DeletingTasks { get; }
+        List<IPaintTask<TDrawingContext>> DeletingTasks { get; }
     }
 }

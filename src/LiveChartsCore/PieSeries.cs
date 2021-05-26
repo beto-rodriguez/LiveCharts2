@@ -133,11 +133,11 @@ namespace LiveChartsCore
                 Stroke.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 chart.Canvas.AddDrawableTask(Stroke);
             }
-            if (DataLabelsDrawableTask != null)
+            if (DataLabelsPaint != null)
             {
-                DataLabelsDrawableTask.ZIndex = 1000 + actualZIndex + 0.3;
-                DataLabelsDrawableTask.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
-                chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
+                DataLabelsPaint.ZIndex = 1000 + actualZIndex + 0.3;
+                DataLabelsPaint.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                chart.Canvas.AddDrawableTask(DataLabelsPaint);
             }
 
             var cx = drawLocation.X + drawMarginSize.Width * 0.5f;
@@ -290,7 +290,7 @@ namespace LiveChartsCore
                 OnPointMeasured(point);
                 _ = toDeletePoints.Remove(point);
 
-                if (DataLabelsDrawableTask != null && point.PrimaryValue > 0)
+                if (DataLabelsPaint != null && point.PrimaryValue > 0)
                 {
                     var label = (TLabel?)point.Context.Label;
 
@@ -309,7 +309,7 @@ namespace LiveChartsCore
                         point.Context.Label = l;
                     }
 
-                    DataLabelsDrawableTask.AddGeometryToPaintTask(chart.Canvas, label);
+                    DataLabelsPaint.AddGeometryToPaintTask(chart.Canvas, label);
 
                     label.Text = DataLabelsFormatter(point);
                     label.TextSize = dls;
@@ -343,7 +343,7 @@ namespace LiveChartsCore
 
                     var labelPosition = GetLabelPolarPosition(
                         cx, cy, ((w + relativeOuterRadius * 2) * 0.5f + stackedInnerRadius) * 0.5f, start + initialRotation, end,
-                        label.Measure(DataLabelsDrawableTask), DataLabelsPosition);
+                        label.Measure(DataLabelsPaint), DataLabelsPosition);
 
                     label.X = labelPosition.X;
                     label.Y = labelPosition.Y;

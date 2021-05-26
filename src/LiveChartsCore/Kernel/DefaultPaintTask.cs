@@ -33,8 +33,8 @@ namespace LiveChartsCore.Kernel
     /// Defines a default paint task.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IDrawableTask{TDrawingContext}" />
-    public class DefaultPaintTask<TDrawingContext> : IDrawableTask<TDrawingContext>
+    /// <seealso cref="IPaintTask{TDrawingContext}" />
+    public class DefaultPaintTask<TDrawingContext> : IPaintTask<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
@@ -115,7 +115,7 @@ namespace LiveChartsCore.Kernel
         /// Clones the task.
         /// </summary>
         /// <returns></returns>
-        public IDrawableTask<TDrawingContext> CloneTask()
+        public IPaintTask<TDrawingContext> CloneTask()
         {
             return this;
         }
@@ -139,7 +139,6 @@ namespace LiveChartsCore.Kernel
         /// Gets the geometries.
         /// </summary>
         /// <param name="canvas">The canvas.</param>
-        /// <param name="">The .</param>
         /// <returns></returns>
         public IEnumerable<IDrawable<TDrawingContext>> GetGeometries(MotionCanvas<TDrawingContext> canvas)
         {
@@ -203,7 +202,7 @@ namespace LiveChartsCore.Kernel
         /// </summary>
         /// <param name="animation">The animation.</param>
         /// <param name="propertyName">Name of the property.</param>
-        /// <exception cref="System.NotImplementedException"></exception>
+        /// <exception cref="NotImplementedException"></exception>
         public void SetPropertiesTransitions(Animation? animation, params string[] propertyName)
         {
         }
@@ -211,7 +210,7 @@ namespace LiveChartsCore.Kernel
         /// <summary>
         /// Completes all transitions.
         /// </summary>
-        /// <exception cref="System.NotImplementedException"></exception>
+        /// <exception cref="NotImplementedException"></exception>
         public void CompleteAllTransitions()
         {
         }
@@ -219,28 +218,28 @@ namespace LiveChartsCore.Kernel
         /// <summary>
         /// Removes all the current transitions.
         /// </summary>
-        /// <exception cref="System.NotImplementedException"></exception>
+        /// <exception cref="NotImplementedException"></exception>
         public void RemoveTransitions()
         {
         }
 
-        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.SetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
+        /// <inheritdoc cref="IPaintTask{TDrawingContext}.SetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
         public void SetOpacity(TDrawingContext context, IGeometry<TDrawingContext> geometry)
         {
         }
 
-        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.ResetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
+        /// <inheritdoc cref="IPaintTask{TDrawingContext}.ResetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
         public void ResetOpacity(TDrawingContext context, IGeometry<TDrawingContext> geometry)
         {
         }
 
-        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.GetClipRectangle(MotionCanvas{TDrawingContext})" />
+        /// <inheritdoc cref="IPaintTask{TDrawingContext}.GetClipRectangle(MotionCanvas{TDrawingContext})" />
         public RectangleF GetClipRectangle(MotionCanvas<TDrawingContext> canvas)
         {
             return RectangleF.Empty;
         }
 
-        /// <inheritdoc cref="IDrawableTask{TDrawingContext}.SetClipRectangle(MotionCanvas{TDrawingContext}, RectangleF)" />
+        /// <inheritdoc cref="IPaintTask{TDrawingContext}.SetClipRectangle(MotionCanvas{TDrawingContext}, RectangleF)" />
         public void SetClipRectangle(MotionCanvas<TDrawingContext> canvas, RectangleF value)
         {
         }

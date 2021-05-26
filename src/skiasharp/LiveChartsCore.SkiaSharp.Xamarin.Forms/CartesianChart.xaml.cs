@@ -49,10 +49,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// </summary>
         protected Chart<SkiaSharpDrawingContext>? core;
 
-        private readonly CollectionDeepObserver<ISeries> seriesObserver;
-        private readonly CollectionDeepObserver<IAxis> xObserver;
-        private readonly CollectionDeepObserver<IAxis> yObserver;
-        private Grid? grid;
+        private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+        private readonly CollectionDeepObserver<IAxis> _xObserver;
+        private readonly CollectionDeepObserver<IAxis> _yObserver;
+        private Grid? _grid;
 
         #endregion
 
@@ -75,9 +75,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             InitializeCore();
             SizeChanged += OnSizeChanged;
 
-            seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
             XAxes = new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
             YAxes = new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
@@ -103,7 +103,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 (BindableObject o, object oldValue, object newValue) =>
                 {
                     var chart = (CartesianChart)o;
-                    var seriesObserver = chart.seriesObserver;
+                    var seriesObserver = chart._seriesObserver;
                     seriesObserver.Dispose((IEnumerable<ISeries>)oldValue);
                     seriesObserver.Initialize((IEnumerable<ISeries>)newValue);
                     if (chart.core == null) return;
@@ -119,7 +119,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 BindingMode.Default, null, (BindableObject o, object oldValue, object newValue) =>
                 {
                     var chart = (CartesianChart)o;
-                    var observer = chart.xObserver;
+                    var observer = chart._xObserver;
                     observer.Dispose((IEnumerable<IAxis>)oldValue);
                     observer.Initialize((IEnumerable<IAxis>)newValue);
                     if (chart.core == null) return;
@@ -135,7 +135,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 BindingMode.Default, null, (BindableObject o, object oldValue, object newValue) =>
                 {
                     var chart = (CartesianChart)o;
-                    var observer = chart.yObserver;
+                    var observer = chart._yObserver;
                     observer.Dispose((IEnumerable<IAxis>)oldValue);
                     observer.Initialize((IEnumerable<IAxis>)newValue);
                     if (chart.core == null) return;
@@ -319,8 +319,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         #region properties
 
-        /// <inheritdoc cref="IChartView.Core" />
-        public IChart Core => core ?? throw new Exception("Core not set yet.");
+        /// <inheritdoc cref="IChartView.CoreChart" />
+        public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
 
         System.Drawing.Color IChartView.BackColor
         {
@@ -342,7 +342,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
 
-        Grid IMobileChart.LayoutGrid => grid ??= this.FindByName<Grid>("gridLayout");
+        Grid IMobileChart.LayoutGrid => _grid ??= this.FindByName<Grid>("gridLayout");
 
         BindableObject IMobileChart.Canvas => canvas;
 
@@ -384,7 +384,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         }
 
         /// <inheritdoc cref="IChartView.EasingFunction" />
-        public Func<float, float> EasingFunction
+        public Func<float, float>? EasingFunction
         {
             get => (Func<float, float>)GetValue(EasingFunctionProperty);
             set => SetValue(AnimationsSpeedProperty, value);
@@ -658,7 +658,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         private void PanGestureRecognizer_PanUpdated(object? sender, PanUpdatedEventArgs e)
         {
-            if (e.StatusType != GestureStatus.Running || core == null) return;
+            if (core == null) return;
+            if (e.StatusType != GestureStatus.Running) return;
 
             var c = (CartesianChart<SkiaSharpDrawingContext>)core;
             c.Pan(new PointF((float)e.TotalX, (float)e.TotalY));

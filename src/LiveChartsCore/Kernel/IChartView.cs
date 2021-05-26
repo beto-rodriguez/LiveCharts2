@@ -38,7 +38,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The core.
         /// </value>
-        IChart Core { get; }
+        IChart CoreChart { get; }
 
         /// <summary>
         /// Sets the back color of the control.

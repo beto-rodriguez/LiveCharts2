@@ -294,8 +294,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         #region properties
 
-        /// <inheritdoc cref="IChartView.Core" />
-        public IChart Core => core ?? throw new Exception("Core not set yet.");
+        /// <inheritdoc cref="IChartView.CoreChart" />
+        public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
 
         System.Drawing.Color IChartView.BackColor
         {
@@ -367,7 +367,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         }
 
         /// <inheritdoc cref="IChartView.EasingFunction" />
-        public Func<float, float> EasingFunction
+        public Func<float, float>? EasingFunction
         {
             get => (Func<float, float>)GetValue(EasingFunctionProperty);
             set => SetValue(AnimationsSpeedProperty, value);

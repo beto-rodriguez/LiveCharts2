@@ -29,7 +29,7 @@ using System.Collections.Generic;
 namespace LiveChartsCore
 {
     /// <summary>
-    /// Defines a data series that has at least a <see cref="IDrawableTask{TDrawingContext}"/> to draw the data in the user interface.
+    /// Defines a data series that has at least a <see cref="IPaintTask{TDrawingContext}"/> to draw the data in the user interface.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     /// <typeparam name="TVisual">The type of the visual.</typeparam>
@@ -51,11 +51,11 @@ namespace LiveChartsCore
         /// <summary>
         /// The pending to delete tasks.
         /// </summary>
-        protected List<IDrawableTask<TDrawingContext>> deletingTasks = new();
-        private IDrawableTask<TDrawingContext>? _stroke = null;
-        private IDrawableTask<TDrawingContext>? _fill = null;
+        protected List<IPaintTask<TDrawingContext>> deletingTasks = new();
+        private IPaintTask<TDrawingContext>? _stroke = null;
+        private IPaintTask<TDrawingContext>? _fill = null;
         private double _legendShapeSize = 15;
-        private IDrawableTask<TDrawingContext>? _dataLabelsDrawableTask;
+        private IPaintTask<TDrawingContext>? _dataLabelsPaint;
         private double _dataLabelsSize = 16;
         private Padding _dataLabelsPadding = new() { Left = 6, Top = 8, Right = 6, Bottom = 8 };
 
@@ -67,7 +67,7 @@ namespace LiveChartsCore
         {
         }
 
-        List<IDrawableTask<TDrawingContext>> IDrawableSeries<TDrawingContext>.DeletingTasks => deletingTasks;
+        List<IPaintTask<TDrawingContext>> IDrawableSeries<TDrawingContext>.DeletingTasks => deletingTasks;
 
         /// <summary>
         /// Gets or sets the stroke.
@@ -75,7 +75,7 @@ namespace LiveChartsCore
         /// <value>
         /// The stroke.
         /// </value>
-        public IDrawableTask<TDrawingContext>? Stroke
+        public IPaintTask<TDrawingContext>? Stroke
         {
             get => _stroke;
             set
@@ -98,7 +98,7 @@ namespace LiveChartsCore
         /// <value>
         /// The fill.
         /// </value>
-        public IDrawableTask<TDrawingContext>? Fill
+        public IPaintTask<TDrawingContext>? Fill
         {
             get => _fill;
             set
@@ -122,16 +122,25 @@ namespace LiveChartsCore
         /// <value>
         /// The data labels drawable task.
         /// </value>
-        public IDrawableTask<TDrawingContext>? DataLabelsDrawableTask
+        public IPaintTask<TDrawingContext>? DataLabelsPaint
         {
-            get => _dataLabelsDrawableTask;
+            get => _dataLabelsPaint;
             set
             {
-                if (_dataLabelsDrawableTask != null) deletingTasks.Add(_dataLabelsDrawableTask);
-                _dataLabelsDrawableTask = value;
+                if (_dataLabelsPaint != null) deletingTasks.Add(_dataLabelsPaint);
+                _dataLabelsPaint = value;
                 OnPropertyChanged();
             }
         }
+
+        /// <summary>
+        /// Gets or sets the data labels drawable task.
+        /// </summary>
+        /// <value>
+        /// The data labels drawable task.
+        /// </value>
+        [Obsolete("Renamed to DataLabelsPaint")]
+        public IPaintTask<TDrawingContext>? DataLabelsDrawableTask { get => DataLabelsPaint; set => DataLabelsPaint = value; }
 
         /// <summary>
         /// Gets or sets the size of the data labels.

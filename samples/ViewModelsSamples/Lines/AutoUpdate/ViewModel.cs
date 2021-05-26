@@ -10,18 +10,17 @@ namespace ViewModelsSamples.Lines.AutoUpdate
 {
     public class ViewModel
     {
-        private int index = 0;
-        private Random random = new Random();
-        private ObservableCollection<ObservablePoint> observableValues;
+        private int _index = 0;
+        private readonly Random _random = new Random();
+        private readonly ObservableCollection<ObservablePoint> _observableValues;
 
         public ViewModel()
         {
-
-            // using an INotifyCollectionChanged as your values collection
+            // using an INotifyCollectionChanged instance as your values collection
             // will let the chart update every time a point is added, removed, replaced or the whole list was cleared
-            observableValues = new ObservableCollection<ObservablePoint>
+            _observableValues = new ObservableCollection<ObservablePoint>
             {
-                // using object that implements INotifyPropertyChanged
+                // using an object that implements INotifyPropertyChanged
                 // will allow the chart to update everytime a property in a point changes.
 
                 // LiveCharts already provides the ObservableValue class
@@ -29,19 +28,19 @@ namespace ViewModelsSamples.Lines.AutoUpdate
                 // for more info please see:
                 // https://github.com/beto-rodriguez/LiveCharts2/blob/master/samples/ViewModelsSamples/General/UserDefinedTypes/ViewModel.cs#L22
 
-                new ObservablePoint(index++, 2),
-                new ObservablePoint(index++, 5),
-                new ObservablePoint(index++, 4),
-                new ObservablePoint(index++, 5),
-                new ObservablePoint(index++, 2),
-                new ObservablePoint(index++, 6),
-                new ObservablePoint(index++, 6),
-                new ObservablePoint(index++, 6),
-                new ObservablePoint(index++, 4),
-                new ObservablePoint(index++, 2),
-                new ObservablePoint(index++, 3),
-                new ObservablePoint(index++, 4),
-                new ObservablePoint(index++, 3)
+                new ObservablePoint(_index++, 2),
+                new ObservablePoint(_index++, 5),
+                new ObservablePoint(_index++, 4),
+                new ObservablePoint(_index++, 5),
+                new ObservablePoint(_index++, 2),
+                new ObservablePoint(_index++, 6),
+                new ObservablePoint(_index++, 6),
+                new ObservablePoint(_index++, 6),
+                new ObservablePoint(_index++, 4),
+                new ObservablePoint(_index++, 2),
+                new ObservablePoint(_index++, 3),
+                new ObservablePoint(_index++, 4),
+                new ObservablePoint(_index++, 3)
             };
 
             // using a collection that implements INotifyCollectionChanged as your series collection
@@ -49,7 +48,7 @@ namespace ViewModelsSamples.Lines.AutoUpdate
             // .Net already provides the System.Collections.ObjectModel.ObservableCollection class
             Series = new ObservableCollection<ISeries>
             {
-                new LineSeries<ObservablePoint> { Values = observableValues }
+                new LineSeries<ObservablePoint> { Values = _observableValues }
             };
 
             // in the following series notice that the type int does not implement INotifyPropertyChanged
@@ -63,28 +62,28 @@ namespace ViewModelsSamples.Lines.AutoUpdate
 
         public void AddItem()
         {
-            var randomValue = random.Next(1, 10);
-            observableValues.Add(
-                new ObservablePoint { X = index++, Y = randomValue });
+            var randomValue = _random.Next(1, 10);
+            _observableValues.Add(
+                new ObservablePoint { X = _index++, Y = randomValue });
         }
 
         public void RemoveFirstItem()
         {
-            observableValues.RemoveAt(0);
+            _observableValues.RemoveAt(0);
         }
 
         public void UpdateLastItem()
         {
-            var randomValue = random.Next(1, 10);
-            observableValues[observableValues.Count - 1].Y = randomValue;
+            var randomValue = _random.Next(1, 10);
+            _observableValues[_observableValues.Count - 1].Y = randomValue;
         }
 
         public void ReplaceRandomItem()
         {
-            var randomValue = random.Next(1, 10);
-            var randomIndex = random.Next(0, observableValues.Count - 1);
-            observableValues[randomIndex] =
-                new ObservablePoint { X = observableValues[randomIndex].X, Y = randomValue };
+            var randomValue = _random.Next(1, 10);
+            var randomIndex = _random.Next(0, _observableValues.Count - 1);
+            _observableValues[randomIndex] =
+                new ObservablePoint { X = _observableValues[randomIndex].X, Y = randomValue };
         }
 
         public void AddSeries()
@@ -95,7 +94,7 @@ namespace ViewModelsSamples.Lines.AutoUpdate
             Series.Add(
                 new LineSeries<int>
                 {
-                    Values = new List<int> { random.Next(0, 10), random.Next(0, 10), random.Next(0, 10) }
+                    Values = new List<int> { _random.Next(0, 10), _random.Next(0, 10), _random.Next(0, 10) }
                 });
         }
 

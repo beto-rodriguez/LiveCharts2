@@ -108,8 +108,8 @@ namespace LiveChartsCore.SkiaSharpView
                                {
                                    axis.TextSize = 16;
                                    axis.ShowSeparatorLines = true;
-                                   axis.TextBrush = DefaultPaintTask;
-                                   axis.SeparatorsBrush = DefaultPaintTask;
+                                   axis.LabelsPaint = DefaultPaintTask;
+                                   axis.SeparatorsPaint = DefaultPaintTask;
                                })
                                // ForAnySeries() will be called for all the series
                                .HasRuleForAnySeries(series =>
@@ -209,8 +209,8 @@ namespace LiveChartsCore.SkiaSharpView
                                {
                                    axis.TextSize = 18;
                                    axis.ShowSeparatorLines = true;
-                                   axis.TextBrush = DefaultPaintTask;
-                                   axis.SeparatorsBrush = DefaultPaintTask;
+                                   axis.LabelsPaint = DefaultPaintTask;
+                                   axis.SeparatorsPaint = DefaultPaintTask;
                                })
                                // ForAnySeries() will be called for all the series
                                .HasRuleForAnySeries(series =>
@@ -286,9 +286,9 @@ namespace LiveChartsCore.SkiaSharpView
                             initializer.ApplyStyleToSeries(series);
                         }
 
-                        if (series.DataLabelsDrawableTask == DefaultPaintTask)
+                        if (series.DataLabelsPaint == DefaultPaintTask)
                         {
-                            series.DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40));
+                            series.DataLabelsPaint = new SolidColorPaintTask(new SKColor(40, 40, 40));
                         }
 
                         if ((series.SeriesProperties & SeriesProperties.GaugeFill) != 0)
@@ -342,13 +342,13 @@ namespace LiveChartsCore.SkiaSharpView
                             initializer.ApplyStyleToAxis(axis);
                         }
 
-                        if (axis.SeparatorsBrush == DefaultPaintTask)
-                            axis.SeparatorsBrush = axis.Orientation == AxisOrientation.X
+                        if (axis.SeparatorsPaint == DefaultPaintTask)
+                            axis.SeparatorsPaint = axis.Orientation == AxisOrientation.X
                                 ? null
                                 : new SolidColorPaintTask(new SKColor(235, 235, 235));
 
-                        if (axis.TextBrush == DefaultPaintTask)
-                            axis.TextBrush = new SolidColorPaintTask(new SKColor(90, 90, 90));
+                        if (axis.LabelsPaint == DefaultPaintTask)
+                            axis.LabelsPaint = new SolidColorPaintTask(new SKColor(90, 90, 90));
 
                         if (axis.Padding == Padding.Default)
                             axis.Padding = new Padding { Bottom = 8, Left = 8, Right = 8, Top = 8 };
@@ -376,9 +376,9 @@ namespace LiveChartsCore.SkiaSharpView
                             initializer.ApplyStyleToSeries(series);
                         }
 
-                        if (series.DataLabelsDrawableTask == DefaultPaintTask)
+                        if (series.DataLabelsPaint == DefaultPaintTask)
                         {
-                            series.DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(230, 230, 230));
+                            series.DataLabelsPaint = new SolidColorPaintTask(new SKColor(230, 230, 230));
                         }
 
                         if ((series.SeriesProperties & SeriesProperties.GaugeFill) != 0)
@@ -432,13 +432,13 @@ namespace LiveChartsCore.SkiaSharpView
                             initializer.ApplyStyleToAxis(axis);
                         }
 
-                        if (axis.SeparatorsBrush == DefaultPaintTask)
-                            axis.SeparatorsBrush = axis.Orientation == AxisOrientation.X
+                        if (axis.SeparatorsPaint == DefaultPaintTask)
+                            axis.SeparatorsPaint = axis.Orientation == AxisOrientation.X
                                 ? null
                                 : new SolidColorPaintTask(new SKColor(90, 90, 90));
 
-                        if (axis.TextBrush == DefaultPaintTask)
-                            axis.TextBrush = new SolidColorPaintTask(new SKColor(200, 200, 200));
+                        if (axis.LabelsPaint == DefaultPaintTask)
+                            axis.LabelsPaint = new SolidColorPaintTask(new SKColor(200, 200, 200));
 
                         if (axis.Padding == Padding.Default)
                             axis.Padding = new Padding { Bottom = 8, Left = 8, Right = 8, Top = 8 };

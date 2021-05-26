@@ -141,7 +141,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// </summary>
         /// <param name="drawableTask">The drawable task.</param>
         /// <returns>the size of the geometry.</returns>
-        public SizeF Measure(IDrawableTask<SkiaSharpDrawingContext> drawableTask)
+        public SizeF Measure(IPaintTask<SkiaSharpDrawingContext> drawableTask)
         {
             var measure = OnMeasure((PaintTask)drawableTask);
 

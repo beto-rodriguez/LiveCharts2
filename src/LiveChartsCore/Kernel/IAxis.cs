@@ -184,7 +184,7 @@ namespace LiveChartsCore.Kernel
         AxisPosition Position { get; set; }
 
         /// <summary>
-        /// Gets or sets the labels rotation.
+        /// Gets or sets the labels rotation in degrees.
         /// </summary>
         /// <value>
         /// The labels rotation.
@@ -192,7 +192,7 @@ namespace LiveChartsCore.Kernel
         double LabelsRotation { get; set; }
 
         /// <summary>
-        /// Gets or sets the size of the text.
+        /// Gets or sets the size of the labels.
         /// </summary>
         /// <value>
         /// The size of the text.
@@ -202,7 +202,7 @@ namespace LiveChartsCore.Kernel
         /// <summary>
         /// Gets or sets the labels, if labels are not null, then the axis label will be pulled from the labels collection,
         /// the label is mapped to the chart based on the position of the label and the position of the point, both integers,
-        /// if the axis requires a label outside the bounds of the labels IList then the index will be returned as the label.
+        /// if the axis requires a label outside the bounds of the labels collection, then the index will be returned as the label.
         /// Default value is null.
         /// </summary>
         /// <value>
@@ -254,7 +254,16 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The text brush.
         /// </value>
-        IDrawableTask<TDrawingContext>? TextBrush { get; set; }
+        [Obsolete("Renamed to TextPaint")]
+        IPaintTask<TDrawingContext>? TextBrush { get; set; }
+
+        /// <summary>
+        /// Gets or sets the text paint.
+        /// </summary>
+        /// <value>
+        /// The text paint.
+        /// </value>
+        IPaintTask<TDrawingContext>? LabelsPaint { get; set; }
 
         /// <summary>
         /// Gets or sets the separators brush.
@@ -262,7 +271,16 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The separators brush.
         /// </value>
-        IDrawableTask<TDrawingContext>? SeparatorsBrush { get; set; }
+        [Obsolete("Renamed to SeparatorsPaint")]
+        IPaintTask<TDrawingContext>? SeparatorsBrush { get; set; }
+
+        /// <summary>
+        /// Gets or sets the separators paint.
+        /// </summary>
+        /// <value>
+        /// The separators paint.
+        /// </value>
+        IPaintTask<TDrawingContext>? SeparatorsPaint { get; set; }
 
         /// <summary>
         /// Measures the axis.
@@ -283,6 +301,6 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The deleting tasks.
         /// </value>
-        List<IDrawableTask<TDrawingContext>> DeletingTasks { get; }
+        List<IPaintTask<TDrawingContext>> DeletingTasks { get; }
     }
 }
