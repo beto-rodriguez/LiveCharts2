@@ -7,7 +7,7 @@
     <TargetFrameworks>net462;netcoreapp3.0</TargetFrameworks>
     <AssemblyName>LiveChartsCore.SkiaSharpView.WPF</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView.WPF</RootNamespace>
-    <Version>2.0.0-beta.9</Version>
+    <Version>2.0.0-beta.10</Version>
   </PropertyGroup>
 
   <PropertyGroup>
