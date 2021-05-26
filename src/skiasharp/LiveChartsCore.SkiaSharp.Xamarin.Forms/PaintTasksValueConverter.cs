@@ -22,6 +22,8 @@
 
 using System;
 using System.Globalization;
+using LiveChartsCore.Kernel;
+using LiveChartsCore.SkiaSharpView.Drawing;
 using Xamarin.Forms;
 
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
@@ -46,9 +48,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// </remarks>
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return null;
-            //var v = (IDrawableSeries<SkiaSharpDrawingContext>)value;
-            //return v == null ? null : v.DefaultPaintContext.PaintTasks;
+            var v = (IDrawableSeries<SkiaSharpDrawingContext>)value;
+            return v?.CanvasSchedule.PaintSchedules;
         }
 
         /// <summary>

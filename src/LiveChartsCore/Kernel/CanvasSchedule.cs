@@ -29,7 +29,7 @@ namespace LiveChartsCore.Kernel
     /// Defines the paint context.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public class PaintContext<TDrawingContext>
+    public class CanvasSchedule<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
@@ -49,11 +49,11 @@ namespace LiveChartsCore.Kernel
         public double Height { get; set; }
 
         /// <summary>
-        /// Gets or sets the paint tasks schedule.
+        /// Gets or sets the paint schedules.
         /// </summary>
         /// <value>
         /// The paint tasks schedule.
         /// </value>
-        public List<PaintTaskSchedule<TDrawingContext>> PaintTasksSchedule { get; set; } = new List<PaintTaskSchedule<TDrawingContext>>();
+        public List<PaintSchedule<TDrawingContext>> PaintSchedules { get; set; } = new List<PaintSchedule<TDrawingContext>>();
     }
 }

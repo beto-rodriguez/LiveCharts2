@@ -46,7 +46,7 @@ namespace LiveChartsCore
         /// <summary>
         /// The paint context.
         /// </summary>
-        protected PaintContext<TDrawingContext> paintContext = new();
+        protected CanvasSchedule<TDrawingContext> canvaSchedule = new();
 
         /// <summary>
         /// The pending to delete tasks.
@@ -164,7 +164,7 @@ namespace LiveChartsCore
         /// <value>
         /// The default paint context.
         /// </value>
-        public PaintContext<TDrawingContext> DefaultPaintContext => paintContext;
+        public CanvasSchedule<TDrawingContext> CanvasSchedule => canvaSchedule;
 
         /// <summary>
         /// Gets or sets the size of the legend shape.

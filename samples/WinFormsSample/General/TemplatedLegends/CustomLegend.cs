@@ -57,18 +57,18 @@ namespace WinFormsSample.General.TemplatedLegends
                 {
                     Location = new Point(6, 0),
                     //PaintTasks = s.DefaultPaintContext.PaintTasks,
-                    Width = (int)s.DefaultPaintContext.Width,
-                    Height = (int)s.DefaultPaintContext.Height
+                    Width = (int)s.CanvasSchedule.Width,
+                    Height = (int)s.CanvasSchedule.Height
                 });
                 p.Controls.Add(new Label
                 {
                     Text = s.Name,
                     ForeColor = Color.Blue,
                     Font = chart.LegendFont,
-                    Location = new Point(6 + (int)s.DefaultPaintContext.Width + 6, 0)
+                    Location = new Point(6 + (int)s.CanvasSchedule.Width + 6, 0)
                 });
 
-                var thisW = size.Width + 36 + (int)s.DefaultPaintContext.Width;
+                var thisW = size.Width + 36 + (int)s.CanvasSchedule.Width;
                 p.Width = (int)thisW + 6;
                 p.Height = (int)size.Height + 6;
                 h += size.Height + 6;

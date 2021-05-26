@@ -46,9 +46,9 @@
                         <Border Padding="15 4">
                             <StackPanel Orientation="Horizontal">
                                 <local:MotionCanvas Margin="0 0 8 0" 
-                                    PaintTasks="{Binding DefaultPaintContext.PaintTasks}"
-                                    Width="{Binding DefaultPaintContext.Width}"
-                                    Height="{Binding DefaultPaintContext.Height}"
+                                    PaintTasks="{Binding CanvasSchedule.PaintSchedules}"
+                                    Width="{Binding CanvasSchedule.Width}"
+                                    Height="{Binding CanvasSchedule.Height}"
                                     VerticalAlignment="Center"/>
                                 <TextBlock Text="{Binding Name}" 
                                     FontFamily="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}" 

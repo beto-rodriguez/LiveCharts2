@@ -82,12 +82,12 @@ namespace LiveChartsCore.Kernel
         Padding DataLabelsPadding { get; set; }
 
         /// <summary>
-        /// Gets the default paint context, normally handled internally to display tooltips and legends.
+        /// Gets the paint schedule, normally handled internally to display tool tips and legends.
         /// </summary>
         /// <value>
         /// The default paint context.
         /// </value>
-        PaintContext<TDrawingContext> DefaultPaintContext { get; }
+        CanvasSchedule<TDrawingContext> CanvasSchedule { get; }
 
         /// <summary>
         /// Gets the stack group, normally used internally to handled the stacked series.

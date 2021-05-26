@@ -520,7 +520,7 @@ namespace LiveChartsCore
         /// <inheritdoc cref="DrawableSeries{TModel, TVisual, TLabel, TDrawingContext}.OnPaintContextChanged"/>
         protected override void OnPaintContextChanged()
         {
-            var context = new PaintContext<TDrawingContext>();
+            var context = new CanvasSchedule<TDrawingContext>();
             var lss = (float)LegendShapeSize;
             var w = LegendShapeSize;
             var sh = 0f;
@@ -538,7 +538,7 @@ namespace LiveChartsCore
                 sh = _geometryStroke.StrokeThickness;
                 strokeClone.ZIndex = 1;
                 w += 2 * _geometryStroke.StrokeThickness;
-                context.PaintTasksSchedule.Add(new PaintTaskSchedule<TDrawingContext>(strokeClone, visual));
+                context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
             }
             else if (Stroke != null)
             {
@@ -553,27 +553,27 @@ namespace LiveChartsCore
                 sh = strokeClone.StrokeThickness;
                 strokeClone.ZIndex = 1;
                 w += 2 * strokeClone.StrokeThickness;
-                context.PaintTasksSchedule.Add(new PaintTaskSchedule<TDrawingContext>(strokeClone, visual));
+                context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
             }
 
             if (_geometryFill != null)
             {
                 var fillClone = _geometryFill.CloneTask();
                 var visual = new TVisual { X = sh, Y = sh, Height = lss, Width = lss };
-                context.PaintTasksSchedule.Add(new PaintTaskSchedule<TDrawingContext>(fillClone, visual));
+                context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(fillClone, visual));
             }
             else if (Fill != null)
             {
                 var fillClone = Fill.CloneTask();
                 var visual = new TVisual { X = sh, Y = sh, Height = lss, Width = lss };
-                context.PaintTasksSchedule.Add(new PaintTaskSchedule<TDrawingContext>(fillClone, visual));
+                context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(fillClone, visual));
             }
 
             context.Width = w;
             context.Height = w;
 
-            paintContext = context;
-            OnPropertyChanged(nameof(DefaultPaintContext));
+            canvaSchedule = context;
+            OnPropertyChanged(nameof(CanvasSchedule));
         }
 
         private IEnumerable<BezierData> GetSpline(

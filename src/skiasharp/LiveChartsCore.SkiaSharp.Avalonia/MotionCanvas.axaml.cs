@@ -33,6 +33,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using Avalonia.Threading;
+using LiveChartsCore.Kernel;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia
 {
@@ -58,8 +59,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <summary>
         /// The paint tasks property
         /// </summary>
-        public static readonly AvaloniaProperty<HashSet<IPaintTask<SkiaSharpDrawingContext>>> PaintTasksProperty =
-            AvaloniaProperty.Register<MotionCanvas, HashSet<IPaintTask<SkiaSharpDrawingContext>>>(nameof(PaintTasks), inherits: true);
+        public static readonly AvaloniaProperty<List<PaintSchedule<SkiaSharpDrawingContext>>> PaintTasksProperty =
+            AvaloniaProperty.Register<MotionCanvas, List<PaintSchedule<SkiaSharpDrawingContext>>>(nameof(PaintTasks), inherits: true);
 
         /// <summary>
         /// The back color property
@@ -73,9 +74,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <value>
         /// The paint tasks.
         /// </value>
-        public HashSet<IPaintTask<SkiaSharpDrawingContext>> PaintTasks
+        public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
         {
-            get => (HashSet<IPaintTask<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty);
+            get => (List<PaintSchedule<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty);
             set => SetValue(PaintTasksProperty, value);
         }
 
@@ -117,7 +118,18 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})" />
         protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
         {
-            if (change.Property.Name == nameof(PaintTasks)) CanvasCore.SetPaintTasks(PaintTasks);
+            if (change.Property.Name == nameof(PaintTasks))
+            {
+                var tasks = new HashSet<IPaintTask<SkiaSharpDrawingContext>>();
+
+                foreach (var item in PaintTasks)
+                {
+                    item.PaintTask.SetGeometries(CanvasCore, item.Geometries);
+                    _ = tasks.Add(item.PaintTask);
+                }
+
+                CanvasCore.SetPaintTasks(tasks);
+            }
 
             base.OnPropertyChanged(change);
         }

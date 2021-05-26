@@ -1,4 +1,5 @@
 ﻿using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp.Views.Desktop;
 using System;
@@ -14,8 +15,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     /// <seealso cref="UserControl" />
     public partial class MotionCanvas : UserControl
     {
-        private bool isDrawingLoopRunning = false;
-        private HashSet<IPaintTask<SkiaSharpDrawingContext>> paintTasks = new();
+        private bool _isDrawingLoopRunning = false;
+        private List<PaintSchedule<SkiaSharpDrawingContext>> _paintTasksSchedule = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
@@ -32,7 +33,15 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <value>
         /// The paint tasks.
         /// </value>
-        public HashSet<IPaintTask<SkiaSharpDrawingContext>> PaintTasks { get => paintTasks; set { paintTasks = value; OnPaintTasksChanged(); } }
+        public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
+        {
+            get => _paintTasksSchedule;
+            set
+            {
+                _paintTasksSchedule = value;
+                OnPaintTasksChanged();
+            }
+        }
 
         /// <summary>
         /// Gets or sets the frames per second.
@@ -62,8 +71,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         private async void RunDrawingLoop()
         {
-            if (isDrawingLoopRunning) return;
-            isDrawingLoopRunning = true;
+            if (_isDrawingLoopRunning) return;
+            _isDrawingLoopRunning = true;
 
             var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
             while (!CanvasCore.IsValid)
@@ -72,12 +81,20 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 await Task.Delay(ts);
             }
 
-            isDrawingLoopRunning = false;
+            _isDrawingLoopRunning = false;
         }
 
         private void OnPaintTasksChanged()
         {
-            CanvasCore.SetPaintTasks(paintTasks);
+            var tasks = new HashSet<IPaintTask<SkiaSharpDrawingContext>>();
+
+            foreach (var item in _paintTasksSchedule)
+            {
+                item.PaintTask.SetGeometries(CanvasCore, item.Geometries);
+                _ = tasks.Add(item.PaintTask);
+            }
+
+            CanvasCore.SetPaintTasks(tasks);
         }
     }
 }

@@ -69,7 +69,7 @@ namespace LiveChartsCore
         /// </summary>
         protected override void OnPaintContextChanged()
         {
-            var context = new PaintContext<TDrawingContext>();
+            var context = new CanvasSchedule<TDrawingContext>();
             var w = LegendShapeSize;
             var sh = 0f;
             if (Stroke != null)
@@ -85,22 +85,22 @@ namespace LiveChartsCore
                 sh = strokeClone.StrokeThickness;
                 strokeClone.ZIndex = 1;
                 w += 2 * strokeClone.StrokeThickness;
-                context.PaintTasksSchedule.Add(new PaintTaskSchedule<TDrawingContext>(strokeClone, visual));
+                context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
             }
 
             if (Fill != null)
             {
                 var fillClone = Fill.CloneTask();
                 var visual = new TVisual { X = sh, Y = sh, Height = (float)LegendShapeSize, Width = (float)LegendShapeSize };
-                context.PaintTasksSchedule.Add(new PaintTaskSchedule<TDrawingContext>(fillClone, visual));
+                context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(fillClone, visual));
             }
 
             context.Width = w;
             context.Height = w;
 
-            paintContext = context;
+            canvaSchedule = context;
 
-            OnPropertyChanged(nameof(DefaultPaintContext));
+            OnPropertyChanged(nameof(CanvasSchedule));
         }
     }
 }

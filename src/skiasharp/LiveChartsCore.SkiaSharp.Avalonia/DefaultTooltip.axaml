@@ -24,9 +24,9 @@
                     <local:MotionCanvas
                         BackColor="#fafafa"
                         Margin="0 0 8 0"
-                        PaintTasks="{Binding Series.DefaultPaintContext.PaintTasks}"
-                        Width="{Binding Series.DefaultPaintContext.Width}"
-                        Height="{Binding Series.DefaultPaintContext.Height}"
+                        PaintTasks="{Binding Series.CanvasSchedule.PaintSchedules}"
+                        Width="{Binding Series.CanvasSchedule.Width}"
+                        Height="{Binding Series.CanvasSchedule.Height}"
                         VerticalAlignment="Center"/>
                     <TextBlock 
                         Margin="0 0 8 0"

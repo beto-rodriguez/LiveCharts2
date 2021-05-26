@@ -393,7 +393,7 @@ namespace LiveChartsCore
         /// </summary>
         protected override void OnPaintContextChanged()
         {
-            var context = new PaintContext<TDrawingContext>();
+            var context = new CanvasSchedule<TDrawingContext>();
 
             var w = LegendShapeSize;
             var sh = 0f;
@@ -414,7 +414,7 @@ namespace LiveChartsCore
                 sh = strokeClone.StrokeThickness;
                 strokeClone.ZIndex = 1;
                 w += 2 * strokeClone.StrokeThickness;
-                context.PaintTasksSchedule.Add(new PaintTaskSchedule<TDrawingContext>(strokeClone, visual));
+                context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
             }
 
             if (Fill != null)
@@ -431,14 +431,14 @@ namespace LiveChartsCore
                     StartAngle = 0,
                     SweepAngle = 359.9999f
                 };
-                context.PaintTasksSchedule.Add(new PaintTaskSchedule<TDrawingContext>(fillClone, visual));
+                context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(fillClone, visual));
             }
 
             context.Width = w;
             context.Height = w;
 
-            paintContext = context;
-            OnPropertyChanged(nameof(DefaultPaintContext));
+            canvaSchedule = context;
+            OnPropertyChanged(nameof(CanvasSchedule));
         }
 
         /// <summary>
