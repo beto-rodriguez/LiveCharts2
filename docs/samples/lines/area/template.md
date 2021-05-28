@@ -1,7 +1,7 @@
 # {{ name | to_title_case }}
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/{{ full_name }}/result.gif" />
+  <img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/{{ unique_name }}/result.gif" />
 </p>
 
 {{~ if xaml ~}}
