@@ -156,6 +156,8 @@ namespace LiveChartsCore.Kernel
             var yMin = y.MinLimit ?? float.MinValue;
             var yMax = y.MaxLimit ?? float.MaxValue;
 
+            var hasData = false;
+
             var bounds = new DimensionalBounds();
             ChartPoint? previous = null;
             foreach (var point in series.Fetch(chart))
@@ -186,6 +188,41 @@ namespace LiveChartsCore.Kernel
                 }
 
                 previous = point;
+                hasData = true;
+            }
+
+            if (!hasData)
+            {
+                if (x.PreviousDataBounds == null || y.PreviousDataBounds == null)
+                {
+                    bounds.VisiblePrimaryBounds.AppendValue(0);
+                    bounds.VisiblePrimaryBounds.AppendValue(10);
+                    bounds.PrimaryBounds.AppendValue(0);
+                    bounds.PrimaryBounds.AppendValue(10);
+
+                    bounds.VisibleSecondaryBounds.AppendValue(0);
+                    bounds.VisibleSecondaryBounds.AppendValue(10);
+                    bounds.SecondaryBounds.AppendValue(0);
+                    bounds.SecondaryBounds.AppendValue(10);
+
+                    bounds.VisibleTertiaryBounds.AppendValue(1);
+                    bounds.TertiaryBounds.AppendValue(1);
+                }
+                else
+                {
+                    bounds.VisiblePrimaryBounds.AppendValue(x.PreviousDataBounds.Max);
+                    bounds.VisiblePrimaryBounds.AppendValue(x.PreviousDataBounds.Min);
+                    bounds.PrimaryBounds.AppendValue(x.PreviousDataBounds.Max);
+                    bounds.PrimaryBounds.AppendValue(x.PreviousDataBounds.Min);
+
+                    bounds.VisibleSecondaryBounds.AppendValue(y.PreviousDataBounds.Max);
+                    bounds.VisibleSecondaryBounds.AppendValue(y.PreviousDataBounds.Min);
+                    bounds.SecondaryBounds.AppendValue(y.PreviousDataBounds.Max);
+                    bounds.SecondaryBounds.AppendValue(y.PreviousDataBounds.Min);
+
+                    bounds.VisibleTertiaryBounds.AppendValue(1);
+                    bounds.TertiaryBounds.AppendValue(1);
+                }
             }
 
             return bounds;
@@ -198,18 +235,29 @@ namespace LiveChartsCore.Kernel
         /// <param name="series">The series.</param>
         /// <returns></returns>
         /// <exception cref="NullReferenceException">Unexpected null stacker</exception>
-        public virtual DimensionalBounds GetPieBounds(PieChart<TDrawingContext> chart, IPieSeries<TDrawingContext> series)
+        public virtual DimensionalBounds GetPieBounds(
+            PieChart<TDrawingContext> chart, IPieSeries<TDrawingContext> series)
         {
             var stack = chart.SeriesContext.GetStackPosition(series, series.GetStackGroup());
             if (stack == null) throw new NullReferenceException("Unexpected null stacker");
 
             var bounds = new DimensionalBounds();
+            var hasData = false;
+
             foreach (var point in series.Fetch(chart))
             {
                 _ = stack.StackPoint(point);
                 bounds.PrimaryBounds.AppendValue(point.PrimaryValue);
                 bounds.SecondaryBounds.AppendValue(point.SecondaryValue);
                 bounds.TertiaryBounds.AppendValue(series.Pushout > series.HoverPushout ? series.Pushout : series.HoverPushout);
+                hasData = true;
+            }
+
+            if (!hasData)
+            {
+                bounds.PrimaryBounds.AppendValue(0);
+                bounds.SecondaryBounds.AppendValue(0);
+                bounds.TertiaryBounds.AppendValue(0);
             }
 
             return bounds;

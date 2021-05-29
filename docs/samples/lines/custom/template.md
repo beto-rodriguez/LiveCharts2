@@ -1,8 +1,12 @@
 # {{ name | to_title_case }}
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/{{ unique_name }}/result.gif" />
-</p>
+![sample image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/{{ unique_name }}/result.gif)
+
+## View model
+
+```
+{{ full_name | get_vm_from_docs }}
+```
 
 {{~ if xaml ~}}
 ## XAML
@@ -14,10 +18,4 @@
 
 ```
 {{ full_name | get_view_from_docs }}
-```
-
-## View model
-
-```
-{{ full_name | get_vm_from_docs }}
 ```

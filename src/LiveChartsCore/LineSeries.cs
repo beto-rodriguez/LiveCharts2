@@ -167,6 +167,9 @@ namespace LiveChartsCore
             var segmentI = 0;
             var toDeletePoints = new HashSet<ChartPoint>(everFetched);
 
+            foreach (var item in _strokePathHelperContainer) item.Path.ClearCommands();
+            foreach (var item in _fillPathHelperContainer) item.Path.ClearCommands();
+
             foreach (var segment in segments)
             {
                 var wasFillInitialized = false;
@@ -195,7 +198,6 @@ namespace LiveChartsCore
                     chart.Canvas.AddDrawableTask(Fill);
                     Fill.ZIndex = actualZIndex + 0.1;
                     Fill.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
-                    fillPathHelper.Path.ClearCommands();
                 }
                 if (Stroke != null)
                 {
@@ -204,7 +206,6 @@ namespace LiveChartsCore
                     chart.Canvas.AddDrawableTask(Stroke);
                     Stroke.ZIndex = actualZIndex + 0.2;
                     Stroke.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
-                    strokePathHelper.Path.ClearCommands();
                 }
 
                 foreach (var data in GetSpline(segment, secondaryScale, primaryScale, stacker))
