@@ -20,6 +20,6 @@
       <Button Margin="6" Command="{Binding RemoveSeriesCommand}">Remove Series</Button>
       <Button Margin="6" Click="ButtonClick">Constant changes</Button>
     </StackPanel>
-    <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}"></lvc:CartesianChart>
+    <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" AnimationsSpeed="0:0:1" ></lvc:CartesianChart>
   </Grid>  
 </UserControl>

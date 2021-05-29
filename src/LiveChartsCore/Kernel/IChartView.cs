@@ -83,6 +83,14 @@ namespace LiveChartsCore.Kernel
         Func<float, float>? EasingFunction { get; set; }
 
         /// <summary>
+        /// Gets or sets the updater throttler, this property controls the interval where the user interface updates.
+        /// </summary>
+        /// <value>
+        /// The updater throttler.
+        /// </value>
+        TimeSpan UpdaterThrottler { get; set; }
+
+        /// <summary>
         /// Gets or sets the legend position.
         /// </summary>
         /// <value>

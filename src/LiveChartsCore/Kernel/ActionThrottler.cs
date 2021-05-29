@@ -32,7 +32,6 @@ namespace LiveChartsCore.Kernel
     {
         private readonly object _sync = new();
         private readonly Action _action;
-        private readonly TimeSpan _time;
         private bool _isWaiting = false;
 
         /// <summary>
@@ -43,8 +42,16 @@ namespace LiveChartsCore.Kernel
         public ActionThrottler(Action targetAction, TimeSpan time)
         {
             _action = targetAction;
-            _time = time;
+            ThrottlerTimeSpan = time;
         }
+
+        /// <summary>
+        /// Gets or sets the throttler time span.
+        /// </summary>
+        /// <value>
+        /// The throttler time span.
+        /// </value>
+        public TimeSpan ThrottlerTimeSpan { get; set; }
 
         /// <summary>
         /// Schedules a call to the target action.
@@ -58,7 +65,7 @@ namespace LiveChartsCore.Kernel
                 _isWaiting = true;
             }
 
-            await Task.Delay(_time);
+            await Task.Delay(ThrottlerTimeSpan);
             _action.Invoke();
 
             lock (_sync)

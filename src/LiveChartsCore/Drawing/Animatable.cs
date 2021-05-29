@@ -43,8 +43,8 @@ namespace LiveChartsCore.Drawing.Common
         /// </summary>
         public Animatable() { }
 
-        /// <inheritdoc cref="IAnimatable.IsCompleted" />
-        bool IAnimatable.IsCompleted { get => _isCompleted; set => _isCompleted = value; }
+        /// <inheritdoc cref="IAnimatable.IsValid" />
+        bool IAnimatable.IsValid { get => _isCompleted; set => _isCompleted = value; }
 
         /// <inheritdoc cref="IAnimatable.CurrentTime" />
         long IAnimatable.CurrentTime { get => _currentTime; set => _currentTime = value; }

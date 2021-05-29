@@ -65,6 +65,7 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
 
         public Color BackColor { get; set; }
         public bool AutoUpdateEnaled { get; set; } = true;
+        public TimeSpan UpdaterThrottler { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public event ChartEventHandler<SkiaSharpDrawingContext> Measuring;
         public event ChartEventHandler<SkiaSharpDrawingContext> UpdateStarted;

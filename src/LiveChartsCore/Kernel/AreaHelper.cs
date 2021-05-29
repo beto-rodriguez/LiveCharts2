@@ -96,5 +96,15 @@ namespace LiveChartsCore.Kernel
 
             return true;
         }
+
+        /// <summary>
+        /// Clears the limits.
+        /// </summary>
+        public void ClearLimits()
+        {
+            Path.RemoveCommand(StartPoint);
+            Path.RemoveCommand(StartSegment);
+            Path.RemoveCommand(EndSegment);
+        }
     }
 }

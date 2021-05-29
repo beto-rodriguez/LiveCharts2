@@ -48,7 +48,11 @@ namespace ViewModelsSamples.Lines.AutoUpdate
             // .Net already provides the System.Collections.ObjectModel.ObservableCollection class
             Series = new ObservableCollection<ISeries>
             {
-                new LineSeries<ObservablePoint> { Values = _observableValues }
+                new LineSeries<ObservablePoint>
+                {
+                    Values = _observableValues,
+                    Fill = null
+                }
             };
 
             // in the following series notice that the type int does not implement INotifyPropertyChanged

@@ -23,7 +23,7 @@ namespace LiveChartsCore.UnitTesting
             void DrawFrame(long time)
             {
                 a.CurrentTime = time;
-                a.IsCompleted = true;
+                a.IsValid = true;
             }
 
             float DoTransition(float from, float to, float start, float end, long time, Func<float, float> easing)
@@ -68,12 +68,12 @@ namespace LiveChartsCore.UnitTesting
                 Assert.IsTrue(w == DoTransition(50, 100, 50, 1050, time - laps, easing));
                 Assert.IsTrue(h == DoTransition(50, 100, 50, 1050, time - laps, easing));
 
-                Assert.IsTrue(!a.IsCompleted);
+                Assert.IsTrue(!a.IsValid);
                 time += 500;
             }
 
             // not completed yet because the duration of the animation in this case is infinite
-            Assert.IsTrue(!a.IsCompleted);
+            Assert.IsTrue(!a.IsValid);
         }
 
         [TestMethod]
@@ -91,7 +91,7 @@ namespace LiveChartsCore.UnitTesting
             void DrawFrame(long time)
             {
                 a.CurrentTime = time;
-                a.IsCompleted = true;
+                a.IsValid = true;
 
                 // Calling the property getter moves the transition with the current animatable time
                 var x = r.X;
@@ -111,7 +111,7 @@ namespace LiveChartsCore.UnitTesting
             r.CompleteTransitions(nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
             DrawFrame(time);
 
-            Assert.IsTrue(a.IsCompleted);
+            Assert.IsTrue(a.IsValid);
 
             r.Y = 100;
             DrawFrame(time);

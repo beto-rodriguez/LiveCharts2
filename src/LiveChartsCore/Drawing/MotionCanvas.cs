@@ -88,26 +88,26 @@ namespace LiveChartsCore.Drawing
 
                 foreach (var task in _paintTasks.OrderBy(x => x.ZIndex).ToArray())
                 {
-                    task.IsCompleted = true;
+                    task.IsValid = true;
                     task.CurrentTime = frameTime;
                     task.InitializeTask(context);
 
                     foreach (var geometry in task.GetGeometries(this))
                     {
-                        geometry.IsCompleted = true;
+                        geometry.IsValid = true;
                         geometry.CurrentTime = frameTime;
                         if (!task.IsPaused) geometry.Draw(context);
 
-                        isValid = isValid && geometry.IsCompleted;
+                        isValid = isValid && geometry.IsValid;
 
-                        if (geometry.IsCompleted && geometry.RemoveOnCompleted)
+                        if (geometry.IsValid && geometry.RemoveOnCompleted)
                             toRemoveGeometries.Add(
                                 new Tuple<IPaintTask<TDrawingContext>, IDrawable<TDrawingContext>>(task, geometry));
                     }
 
-                    isValid = isValid && task.IsCompleted;
+                    isValid = isValid && task.IsValid;
 
-                    if (task.RemoveOnCompleted && task.IsCompleted) _ = _paintTasks.Remove(task);
+                    if (task.RemoveOnCompleted && task.IsValid) _ = _paintTasks.Remove(task);
                     task.Dispose();
                 }
 

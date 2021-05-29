@@ -167,8 +167,8 @@ namespace LiveChartsCore
             var segmentI = 0;
             var toDeletePoints = new HashSet<ChartPoint>(everFetched);
 
-            foreach (var item in _strokePathHelperContainer) item.Path.ClearCommands();
-            foreach (var item in _fillPathHelperContainer) item.Path.ClearCommands();
+            foreach (var item in _strokePathHelperContainer) item.Path.ClearCommands(); // item.ClearLimits(); //item.Path.RemoveCommand(item.StartSegment); // ;
+            foreach (var item in _fillPathHelperContainer) item.Path.ClearCommands(); //item.ClearLimits(); //item.Path.RemoveCommand(item.StartSegment); // item.Path.ClearCommands();
 
             foreach (var segment in segments)
             {
@@ -249,9 +249,9 @@ namespace LiveChartsCore
                             x0b = previousSecondaryScale.ToPixels(data.OriginalData.X0);
                             x1b = previousSecondaryScale.ToPixels(data.OriginalData.X1);
                             x2b = previousSecondaryScale.ToPixels(data.OriginalData.X2);
-                            y0b = chart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y0) : pg - hgs;
-                            y1b = chart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y1) : pg - hgs;
-                            y2b = chart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y2) : pg - hgs;
+                            y0b = previousPrimaryScale.ToPixels(data.OriginalData.Y0); //chart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y0) : pg - hgs;
+                            y1b = previousPrimaryScale.ToPixels(data.OriginalData.Y1); //chart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y1) : pg - hgs;
+                            y2b = previousPrimaryScale.ToPixels(data.OriginalData.Y2); //chart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y2) : pg - hgs;
                         }
 
                         v.Geometry.X = xg;
@@ -342,12 +342,22 @@ namespace LiveChartsCore
                                 }
 
                                 strokePathHelper.StartPoint.CompleteTransitions(
-                                   nameof(fillPathHelper.StartPoint.Y), nameof(fillPathHelper.StartPoint.X));
+                                   nameof(strokePathHelper.StartPoint.Y), nameof(strokePathHelper.StartPoint.X));
+                            }
+
+                            if (!chart.IsFirstDraw && previousSecondaryScale != null && previousPrimaryScale != null)
+                            {
+                                strokePathHelper.StartPoint.X = previousSecondaryScale.ToPixels(data.OriginalData?.X0 ?? 0);
+                                strokePathHelper.StartPoint.Y = previousPrimaryScale.ToPixels(data.OriginalData?.Y0 ?? 0);
+                                strokePathHelper.StartPoint.CompleteTransitions(
+                                   nameof(strokePathHelper.StartPoint.Y), nameof(strokePathHelper.StartPoint.X));
                             }
 
                             strokePathHelper.StartPoint.X = data.X0;
                             strokePathHelper.StartPoint.Y = data.Y0;
                             strokePathHelper.Path.AddCommand(strokePathHelper.StartPoint);
+
+                            // add deleting...
                         }
 
                         strokePathHelper.Path.AddCommand(visual.Bezier);
@@ -358,6 +368,9 @@ namespace LiveChartsCore
                     visual.Geometry.Width = gs;
                     visual.Geometry.Height = gs;
                     visual.Geometry.RemoveOnCompleted = false;
+
+                    visual.FillPath = fillPathHelper.Path;
+                    visual.StrokePath = strokePathHelper.Path;
 
                     var hags = gs < 8 ? 8 : gs;
 
@@ -722,7 +735,8 @@ namespace LiveChartsCore
         {
             var chart = chartPoint.Context.Chart;
 
-            if (chartPoint.Context.Visual is not LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs> visual) throw new Exception("Unable to initialize the point instance.");
+            if (chartPoint.Context.Visual is not LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs> visual)
+                throw new Exception("Unable to initialize the point instance.");
 
             _ = visual.Geometry
                 .TransitionateProperties(
@@ -766,8 +780,11 @@ namespace LiveChartsCore
             var gs = _geometrySize;
             var hgs = gs / 2f;
 
-            visual.Geometry.X = secondaryScale.ToPixels(point.SecondaryValue) - hgs;
-            visual.Geometry.Y = primaryScale.ToPixels(point.PrimaryValue) - hgs;
+            var x = secondaryScale.ToPixels(point.SecondaryValue) - hgs;
+            var y = primaryScale.ToPixels(point.PrimaryValue) - hgs;
+
+            visual.Geometry.X = x;
+            visual.Geometry.Y = y;
             visual.Geometry.Height = 0;
             visual.Geometry.Width = 0;
             visual.Geometry.RemoveOnCompleted = true;

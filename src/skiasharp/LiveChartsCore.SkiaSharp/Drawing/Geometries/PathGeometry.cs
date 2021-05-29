@@ -50,15 +50,25 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 
             var toExecute = _drawingCommands ??= _commands.ToArray();
 
+            var toRemoveSegments = new List<IPathCommand<SKPath>>();
+
             using (var path = new SKPath())
             {
                 var isValid = true;
 
                 foreach (var segment in toExecute)
                 {
-                    segment.IsCompleted = true;
+                    segment.IsValid = true;
                     segment.Execute(path, GetCurrentTime(), this);
-                    isValid = isValid && segment.IsCompleted;
+                    isValid = isValid && segment.IsValid;
+
+                    if (segment.IsValid && segment.RemoveOnCompleted) toRemoveSegments.Add(segment);
+                }
+
+                foreach (var segment in toRemoveSegments)
+                {
+                    _ = _commands.Remove(segment);
+                    isValid = false;
                 }
 
                 if (IsClosed) path.Close();

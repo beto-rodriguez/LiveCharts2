@@ -328,7 +328,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set => SetValue(EasingFunctionProperty, value);
         }
 
-        Func<float, float> IChartView.EasingFunction
+        Func<float, float>? IChartView.EasingFunction
         {
             get => EasingFunction;
             set => SetValueOrCurrentValue(EasingFunctionProperty, value);
@@ -577,6 +577,17 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnaled" />
         public bool AutoUpdateEnaled { get; set; } = true;
+
+        /// <inheritdoc cref="IChartView.UpdaterThrottler" />
+        public TimeSpan UpdaterThrottler
+        {
+            get => core?.UpdaterThrottler ?? throw new Exception("core not set yet.");
+            set
+            {
+                if (core == null) throw new Exception("core not set yet.");
+                core.UpdaterThrottler = value;
+            }
+        }
 
         #endregion
 

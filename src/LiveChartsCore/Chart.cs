@@ -287,6 +287,14 @@ namespace LiveChartsCore
         /// </value>
         public Func<float, float>? EasingFunction => easingFunction;
 
+        /// <summary>
+        /// Gets or sets the updater throttler.
+        /// </summary>
+        /// <value>
+        /// The updater throttler.
+        /// </value>
+        public TimeSpan UpdaterThrottler { get => updateThrottler.ThrottlerTimeSpan; set => updateThrottler.ThrottlerTimeSpan = value; }
+
         object IChart.Canvas => Canvas;
 
         #endregion region

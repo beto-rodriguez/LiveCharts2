@@ -52,6 +52,22 @@ namespace LiveChartsCore.Drawing
         public TBezierSegment Bezier { get; set; } = new TBezierSegment();
 
         /// <summary>
+        /// Gets or sets the path.
+        /// </summary>
+        /// <value>
+        /// The path.
+        /// </value>
+        public IPathGeometry<TDrawingContext, TPathArgs>? FillPath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the stroke path.
+        /// </summary>
+        /// <value>
+        /// The stroke path.
+        /// </value>
+        public IPathGeometry<TDrawingContext, TPathArgs>? StrokePath { get; set; }
+
+        /// <summary>
         /// Gets the main <see cref="T:LiveChartsCore.Drawing.IDrawable`1" />.
         /// </summary>
         public IDrawable<TDrawingContext>? HighlightableGeometry => Geometry?.HighlightableGeometry;

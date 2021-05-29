@@ -75,7 +75,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         ///   <c>true</c> if this instance is completed; otherwise, <c>false</c>.
         /// </value>
-        public bool IsCompleted { get; set; }
+        public bool IsValid { get; set; }
 
         /// <summary>
         /// Gets or sets the current time.

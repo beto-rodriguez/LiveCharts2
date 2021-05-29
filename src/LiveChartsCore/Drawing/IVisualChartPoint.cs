@@ -29,7 +29,7 @@ namespace LiveChartsCore.Drawing
         where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Gets the main <see cref="IDrawable{TDrawingContext}"/>.
+        /// Gets the drawable to style when a chart points requires to highlight it.
         /// </summary>
         IDrawable<TDrawingContext>? HighlightableGeometry { get; }
     }

@@ -35,7 +35,7 @@ namespace LiveChartsCore.Drawing
         /// <value>
         ///   <c>true</c> if this instance is completed; otherwise, <c>false</c>.
         /// </value>
-        bool IsCompleted { get; set; }
+        bool IsValid { get; set; }
 
         /// <summary>
         /// Gets or sets the current time.

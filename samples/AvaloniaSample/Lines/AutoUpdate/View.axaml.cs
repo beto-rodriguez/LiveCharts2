@@ -25,7 +25,7 @@ namespace AvaloniaSample.Lines.AutoUpdate
             {
                 vm.RemoveFirstItem();
                 vm.AddItem();
-                await Task.Delay(1000);
+                await Task.Delay(100);
             }
         }
 
