@@ -6,7 +6,8 @@
     <TargetFrameworks>netcoreapp2.0;netstandard2.0;net462;</TargetFrameworks>
     <AssemblyName>LiveChartsCore.SkiaSharpView.Avalonia</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView.Avalonia</RootNamespace>
-    <Version>2.0.0-beta.10</Version>
+    <Version>2.0.0-beta.11</Version>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
   <PropertyGroup>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
@@ -29,5 +30,8 @@
     <Compile Update="MotionCanvas.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\icon.png" Pack="true" PackagePath="\"/>
   </ItemGroup>
 </Project>
