@@ -200,6 +200,9 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ISeries.EasingFunction" />
         public Func<float, float>? EasingFunction { get; set; }
 
+        /// <inheritdoc cref="ISeries.IsNotifyingChanges"/>
+        bool ISeries.IsNotifyingChanges { get; set; }
+
         /// <inheritdoc />
         public virtual int GetStackGroup()
         {
@@ -372,6 +375,7 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
+            if (!((ISeries)this).IsNotifyingChanges) return;
             NotifySubscribers();
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

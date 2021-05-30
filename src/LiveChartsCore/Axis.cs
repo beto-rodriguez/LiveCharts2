@@ -183,6 +183,9 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IAxis.EasingFunction"/>
         public Func<float, float>? EasingFunction { get; set; }
 
+        /// <inheritdoc cref="IAxis.IsNotifyingChanges"/>
+        bool IAxis.IsNotifyingChanges { get; set; }
+
         #endregion
 
         /// <summary>
@@ -506,6 +509,7 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
+            if (!((IAxis)this).IsNotifyingChanges) return;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
