@@ -231,7 +231,8 @@ namespace LiveChartsCore
         public void AddPointToState(ChartPoint chartPoint, string state)
         {
             var chart = (IChartView<TDrawingContext>)chartPoint.Context.Chart;
-            if (chart.PointStates == null) return;
+            if (chart.PointStates == null ||
+                (chart.TooltipPosition == TooltipPosition.Hidden && state == HoverState)) return;
 
             var s = chart.PointStates[state];
 

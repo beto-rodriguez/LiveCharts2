@@ -2,14 +2,21 @@
              xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Bars.Basic">
+             xmlns:vms="using:ViewModelsSamples.Bars.Basic"
+             xmlns:lvcore="using:LiveChartsCore">
   <UserControl.DataContext>
     <vms:ViewModel/>
   </UserControl.DataContext>
   <Grid>
+
     <Grid.RowDefinitions>
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
-    <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
-  </Grid>  
+
+    <lvc:CartesianChart
+        Series="{Binding Series}"
+        EasingFunction="{x:Null}">
+
+    </lvc:CartesianChart>
+  </Grid>
 </UserControl>

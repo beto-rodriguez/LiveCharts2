@@ -19,16 +19,13 @@ namespace AvaloniaSample
             DataContext = new MainWindowViewModel();
             LoadContent("Home");
 
-            LiveCharts.Configure(settings =>
-                settings.
-                    AddDefaultMappers()
-                    .AddSkiaSharp()
-                    .AddLightTheme()
-
-                    // .., your custom settings here
-                    // .HasMap<Foo>( ... )
-
-                    );
+            //LiveCharts.Configure(settings =>
+            //    settings.
+            //    AddDefaultMappers()
+            //    .AddSkiaSharp()
+            //    .AddBackersAxis()
+            //    .AddRoundedDoughnuts()
+            //    .AddTheme(Themes.Dimmed.ForBackground(ChartBackground.Light)));
         }
 
         private void OnPointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)

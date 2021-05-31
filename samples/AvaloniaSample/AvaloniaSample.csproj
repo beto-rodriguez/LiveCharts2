@@ -16,6 +16,7 @@
     <PackageReference Include="Avalonia.Diagnostics" Version="0.10.5" />
    </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\LiveChartsBackersPackage\LiveChartsBackersPackage\LiveChartsBackersPackage.csproj" />
     <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharp.Avalonia\LiveChartsCore.SkiaSharpView.Avalonia.csproj" />
     <ProjectReference Include="..\ViewModelsSamples\ViewModelsSamples.csproj" />
   </ItemGroup>

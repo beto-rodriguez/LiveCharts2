@@ -25,7 +25,7 @@ namespace AvaloniaSample.Bars.AutoUpdate
             {
                 vm.RemoveFirstItem();
                 vm.AddRandomItem();
-                await Task.Delay(1000);
+                await Task.Delay(50);
             }
         }
 

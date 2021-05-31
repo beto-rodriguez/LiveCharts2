@@ -28,13 +28,17 @@ namespace ViewModelsSamples.Bars.DelayedAnimation
             var columnSeries1 = new ColumnSeries<float>
             {
                 Values = values1,
-                Stroke = null
+                Stroke = null,
+                MaxBarWidth = 100000,
+                GroupPadding = 0
             };
 
             var columnSeries2 = new ColumnSeries<float>
             {
                 Values = values2,
-                Stroke = null
+                Stroke = null,
+                MaxBarWidth = 100000,
+                GroupPadding = 0
             };
 
             columnSeries1.PointMeasured += OnPointMeasured;
