@@ -29,6 +29,7 @@ using System.Drawing;
 using LiveChartsCore.Measure;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Linq;
 
 namespace LiveChartsCore
 {
@@ -384,15 +385,56 @@ namespace LiveChartsCore
         private IEnumerable<TooltipPoint> FilterTooltipPoints(
             IEnumerable<ChartPoint>? points, IChart chart, PointF pointerPosition)
         {
-            if (points == null) yield break;
+            if (points == null) return Enumerable.Empty<TooltipPoint>();
+            var tolerance = float.MaxValue;
+
+            if (this is ICartesianSeries<TDrawingContext> cartesianSeries)
+            {
+                var cartesianChart = (CartesianChart<TDrawingContext>)chart;
+                var drawLocation = cartesianChart.DrawMarginLocation;
+                var drawMarginSize = cartesianChart.DrawMarginSize;
+                var x = cartesianChart.XAxes[cartesianSeries.ScalesXAt];
+                var y = cartesianChart.YAxes[cartesianSeries.ScalesYAt];
+                var xScale = new Scaler(drawLocation, drawMarginSize, x);
+                var yScale = new Scaler(drawLocation, drawMarginSize, y);
+                var uwx = xScale.ToPixels((float)x.UnitWidth) - xScale.ToPixels(0);
+                var uwy = yScale.ToPixels((float)y.UnitWidth) - yScale.ToPixels(0);
+
+                switch (chart.TooltipFindingStrategy)
+                {
+                    case TooltipFindingStrategy.CompareAll:
+                        tolerance = (float)Math.Sqrt(Math.Pow(uwx, 2) + Math.Pow(uwy, 2));
+                        break;
+                    case TooltipFindingStrategy.CompareOnlyX:
+                        tolerance = uwx;
+                        break;
+                    case TooltipFindingStrategy.CompareOnlyY:
+                        tolerance = uwy;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            var minD = new Tuple<float, List<TooltipPoint>>(10000, new List<TooltipPoint>());
 
             foreach (var point in points)
             {
                 if (point == null || point.Context.HoverArea == null) continue;
-                if (!point.Context.HoverArea.IsTriggerBy(pointerPosition, chart.TooltipFindingStrategy)) continue;
+                var d = point.Context.HoverArea.GetDistanceToPoint(pointerPosition, chart.TooltipFindingStrategy);
+                if (d > tolerance || d > minD.Item1) continue;
 
-                yield return new TooltipPoint(this, point);
+                if (minD.Item1 == d)
+                {
+                    // in case of a tie, we add a new point to the same result
+                    minD.Item2.Add(new TooltipPoint(this, point));
+                    continue;
+                }
+
+                minD = new Tuple<float, List<TooltipPoint>>(d, new List<TooltipPoint> { new TooltipPoint(this, point) });
             }
+
+            return minD.Item2;
         }
 
         private void NotifySubscribers()

@@ -86,7 +86,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </summary>
         public static readonly DependencyProperty InitialRotationProperty =
             DependencyProperty.Register(
-                nameof(InitialRotation), typeof(double), typeof(Chart), new PropertyMetadata(360d, OnDependencyPropertyChanged));
+                nameof(InitialRotation), typeof(double), typeof(Chart), new PropertyMetadata(0d, OnDependencyPropertyChanged));
 
         /// <summary>
         /// The maximum angle property

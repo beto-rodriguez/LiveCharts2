@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Measure;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 
 namespace LiveChartsCore.Kernel
@@ -32,8 +33,6 @@ namespace LiveChartsCore.Kernel
     /// <seealso cref="HoverArea" />
     public class SemicircleHoverArea : HoverArea
     {
-        private float centerY;
-
         /// <summary>
         /// Gets or sets the center x.
         /// </summary>
@@ -48,7 +47,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The center y coordinate.
         /// </value>
-        public float CenterY { get => centerY; set => centerY = value; }
+        public float CenterY { get; set; }
 
         /// <summary>
         /// Gets or sets the start angle in degrees.
@@ -79,26 +78,31 @@ namespace LiveChartsCore.Kernel
         /// <returns></returns>
         public SemicircleHoverArea SetDimensions(float centerX, float centerY, float startAngle, float endAngle, float radius)
         {
-            this.CenterX = centerX;
-            this.centerY = centerY;
-            this.StartAngle = startAngle;
-            this.EndAngle = endAngle;
-            this.Radius = radius;
+            CenterX = centerX;
+            CenterY = centerY;
+            StartAngle = startAngle;
+            EndAngle = endAngle;
+            Radius = radius;
             return this;
         }
 
-        /// <inheritdoc cref="IsTriggerBy(PointF, TooltipFindingStrategy)"/>
-        public override bool IsTriggerBy(PointF point, TooltipFindingStrategy strategy)
+        /// <inheritdoc cref="GetDistanceToPoint(PointF, TooltipFindingStrategy)"/>
+        public override float GetDistanceToPoint(PointF point, TooltipFindingStrategy strategy)
         {
+            var startAngle = StartAngle % 360;
+            // -0.01 is a work around to avoid the case where the last slice (360) would be converted to 0 also
+            var endAngle = (EndAngle - 0.01) % 360;
+
             var dx = CenterX - point.X;
-            var dy = centerY - point.Y;
+            var dy = CenterY - point.Y;
             var beta = Math.Atan(dy / dx) * (180 / Math.PI);
+
             if ((dx > 0 && dy < 0) || (dx > 0 && dy > 0)) beta += 180;
             if (dx < 0 && dy > 0) beta += 360;
 
             var r = Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2));
 
-            return StartAngle <= beta && EndAngle >= beta && r < Radius;
+            return startAngle <= beta && endAngle >= beta && r < Radius ? 0 : float.MaxValue;
         }
 
         /// <inheritdoc cref="SuggestTooltipPlacement(TooltipPlacementContext)"/>
@@ -106,7 +110,7 @@ namespace LiveChartsCore.Kernel
         {
             var angle = (StartAngle + EndAngle) / 2;
             context.PieX = CenterX + (float)Math.Cos(angle * (Math.PI / 180)) * Radius;
-            context.PieY = centerY + (float)Math.Sin(angle * (Math.PI / 180)) * Radius;
+            context.PieY = CenterY + (float)Math.Sin(angle * (Math.PI / 180)) * Radius;
         }
     }
 }

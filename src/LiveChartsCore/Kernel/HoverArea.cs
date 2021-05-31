@@ -38,7 +38,7 @@ namespace LiveChartsCore.Kernel
         /// <returns>
         ///   <c>true</c> if [is trigger by] [the specified point]; otherwise, <c>false</c>.
         /// </returns>
-        public abstract bool IsTriggerBy(PointF point, TooltipFindingStrategy strategy);
+        public abstract float GetDistanceToPoint(PointF point, TooltipFindingStrategy strategy);
 
         /// <summary>
         /// Suggests the tooltip placement.
