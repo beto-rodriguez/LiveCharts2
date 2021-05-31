@@ -19,15 +19,7 @@ namespace ViewModelsSamples.Lines.Zoom
                 values[i] = t;
             }
 
-            SeriesCollection = new ISeries[] {
-                new LineSeries<int>
-                {
-                    Values = values,
-                    LineSmoothness = 1,
-                    GeometryFill = null,
-                    GeometryStroke = null,
-                }
-            };
+            SeriesCollection = new ISeries[] { new LineSeries<int> { Values = values } };
         }
 
         public IEnumerable<ISeries> SeriesCollection { get; set; }

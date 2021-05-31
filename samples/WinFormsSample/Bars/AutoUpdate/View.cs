@@ -22,8 +22,6 @@ namespace WinFormsSample.Bars.AutoUpdate
             cartesianChart = new CartesianChart
             {
                 Series = viewModel.Series,
-                UpdaterThrottler = TimeSpan.FromMilliseconds(500),
-                AnimationsSpeed = TimeSpan.FromMilliseconds(300),
 
                 // out of livecharts properties...
                 Location = new System.Drawing.Point(0, 50),
