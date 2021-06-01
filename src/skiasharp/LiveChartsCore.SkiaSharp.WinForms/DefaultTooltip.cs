@@ -68,7 +68,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             if (chart is CartesianChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetCartesianTooltipLocation(
-                    chart.TooltipPosition, new SizeF((float)size.Width, (float)size.Height));
+                    chart.TooltipPosition, new SizeF((float)size.Width, (float)size.Height), chart.ControlSize);
             }
             if (chart is PieChart<SkiaSharpDrawingContext>)
             {
@@ -131,7 +131,9 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 {
                     Text = text,
                     Font = chart.TooltipFont,
-                    Location = new Point(6 + (int)drawableSeries.CanvasSchedule.Width + 6, (int)h + 6)
+                    ForeColor = chart.TooltipTextColor,
+                    Location = new Point(6 + (int)drawableSeries.CanvasSchedule.Width + 6, (int)h + 6),
+                    AutoSize = true
                 });
 
                 var thisW = size.Width + 18 + (int)drawableSeries.CanvasSchedule.Width;

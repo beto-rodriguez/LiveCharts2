@@ -436,8 +436,6 @@ namespace LiveChartsCore
                 minD = new Tuple<float, List<TooltipPoint>>(d, new List<TooltipPoint> { new TooltipPoint(this, point) });
             }
 
-            Trace.WriteLine(minD.Item2.Count);
-
             return minD.Item2;
         }
 

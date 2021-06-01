@@ -249,7 +249,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// </summary>
         public static readonly BindableProperty TooltipTextColorProperty =
             BindableProperty.Create(
-                nameof(TooltipTextColor), typeof(c), typeof(CartesianChart),
+                nameof(TooltipTextBrush), typeof(c), typeof(CartesianChart),
                 new c(35 / 255d, 35 / 255d, 35 / 255d), propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// </summary>
         public static readonly BindableProperty TooltipBackgroundProperty =
             BindableProperty.Create(
-                nameof(TooltipTextColor), typeof(c), typeof(CartesianChart),
+                nameof(TooltipBackground), typeof(c), typeof(CartesianChart),
                 new c(250 / 255d, 250 / 255d, 250 / 255d), propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>
@@ -361,7 +361,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         public Func<float, float>? EasingFunction
         {
             get => (Func<float, float>)GetValue(EasingFunctionProperty);
-            set => SetValue(AnimationsSpeedProperty, value);
+            set => SetValue(EasingFunctionProperty, value);
         }
 
         /// <inheritdoc cref="IChartView.LegendPosition" />
@@ -502,7 +502,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <value>
         /// The color of the tool tip text.
         /// </value>
-        public c TooltipTextColor
+        public c TooltipTextBrush
         {
             get => (c)GetValue(TooltipTextColorProperty);
             set => SetValue(TooltipTextColorProperty, value);
@@ -514,7 +514,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <value>
         /// The color of the tool tip background.
         /// </value>
-        public c TooltipBackgroundColor
+        public c TooltipBackground
         {
             get => (c)GetValue(TooltipBackgroundProperty);
             set => SetValue(TooltipBackgroundProperty, value);

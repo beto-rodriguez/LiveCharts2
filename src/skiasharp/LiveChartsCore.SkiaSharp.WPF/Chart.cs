@@ -155,9 +155,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <summary>
         /// The tool tip text color property
         /// </summary>
-        public static readonly DependencyProperty TooltipTextColorProperty =
+        public static readonly DependencyProperty TooltipTextBrushProperty =
            DependencyProperty.Register(
-               nameof(TooltipTextColor), typeof(SolidColorBrush), typeof(Chart),
+               nameof(TooltipTextBrush), typeof(SolidColorBrush), typeof(Chart),
                new PropertyMetadata(new SolidColorBrush(System.Windows.Media.Color.FromRgb(35, 35, 35)), OnDependencyPropertyChanged));
 
         /// <summary>
@@ -407,10 +407,10 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <value>
         /// The color of the tool tip text.
         /// </value>
-        public SolidColorBrush TooltipTextColor
+        public SolidColorBrush TooltipTextBrush
         {
-            get => (SolidColorBrush)GetValue(TooltipTextColorProperty);
-            set => SetValue(TooltipTextColorProperty, value);
+            get => (SolidColorBrush)GetValue(TooltipTextBrushProperty);
+            set => SetValue(TooltipTextBrushProperty, value);
         }
 
         /// <summary>

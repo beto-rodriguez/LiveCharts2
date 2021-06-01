@@ -34,7 +34,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DefaultLegend : ContentView, IChartLegend<SkiaSharpDrawingContext>
     {
-        private readonly DataTemplate defaultTemplate;
+        private readonly DataTemplate _defaultTemplate;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultLegend"/> class.
@@ -42,7 +42,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         public DefaultLegend()
         {
             InitializeComponent();
-            defaultTemplate = (DataTemplate)Resources["defaultTemplate"];
+            _defaultTemplate = (DataTemplate)Resources["defaultTemplate"];
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <value>
         /// The font family.
         /// </value>
-        public string? FontFamily { get; set; }
+        public string? LegendFontFamily { get; set; }
 
         /// <summary>
         /// Gets or sets the size of the font.
@@ -75,7 +75,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <value>
         /// The size of the font.
         /// </value>
-        public double FontSize { get; set; }
+        public double LegendFontSize { get; set; }
 
         /// <summary>
         /// Gets or sets the color of the text.
@@ -83,7 +83,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <value>
         /// The color of the text.
         /// </value>
-        public Color TextColor { get; set; }
+        public Color LegendTextColor { get; set; }
 
         /// <summary>
         /// Gets or sets the font attributes.
@@ -91,7 +91,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <value>
         /// The font attributes.
         /// </value>
-        public FontAttributes FontAttributes { get; set; }
+        public FontAttributes LegendFontAttributes { get; set; }
 
         /// <summary>
         /// Gets or sets the orientation.
@@ -99,7 +99,15 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <value>
         /// The orientation.
         /// </value>
-        public StackOrientation Orientation { get; set; }
+        public StackOrientation LegendOrientation { get; set; }
+
+        // <summary>
+        /// Gets or sets the color of the tooltip background.
+        /// </summary>
+        /// <value>
+        /// The color of the tooltip background.
+        /// </value>
+        public Color LegendBackgroundColor { get; set; }
 
         void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
         {
@@ -116,7 +124,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     break;
                 case LegendPosition.Top:
                     IsVisible = true;
-                    if (legendOrientation == LegendOrientation.Auto) Orientation = StackOrientation.Horizontal;
+                    if (legendOrientation == LiveChartsCore.Measure.LegendOrientation.Auto) LegendOrientation = StackOrientation.Horizontal;
                     mobileChart.LayoutGrid.ColumnDefinitions = new ColumnDefinitionCollection
                     {
                         new ColumnDefinition { Width = GridLength.Star }
@@ -133,7 +141,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     break;
                 case LegendPosition.Left:
                     IsVisible = true;
-                    if (legendOrientation == LegendOrientation.Auto) Orientation = StackOrientation.Vertical;
+                    if (legendOrientation == LiveChartsCore.Measure.LegendOrientation.Auto) LegendOrientation = StackOrientation.Vertical;
                     mobileChart.LayoutGrid.RowDefinitions = new RowDefinitionCollection
                     {
                         new RowDefinition { Height = GridLength.Star }
@@ -150,7 +158,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     break;
                 case LegendPosition.Right:
                     IsVisible = true;
-                    if (legendOrientation == LegendOrientation.Auto) Orientation = StackOrientation.Vertical;
+                    if (legendOrientation == LiveChartsCore.Measure.LegendOrientation.Auto) LegendOrientation = StackOrientation.Vertical;
                     mobileChart.LayoutGrid.RowDefinitions = new RowDefinitionCollection
                     {
                         new RowDefinition { Height = GridLength.Star }
@@ -167,7 +175,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     break;
                 case LegendPosition.Bottom:
                     IsVisible = true;
-                    if (legendOrientation == LegendOrientation.Auto) Orientation = StackOrientation.Horizontal;
+                    if (legendOrientation == LiveChartsCore.Measure.LegendOrientation.Auto) LegendOrientation = StackOrientation.Horizontal;
                     mobileChart.LayoutGrid.ColumnDefinitions = new ColumnDefinitionCollection
                     {
                         new ColumnDefinition { Width = GridLength.Star }
@@ -186,16 +194,17 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     break;
             }
 
-            if (legendOrientation != LegendOrientation.Auto)
-                Orientation = legendOrientation == LegendOrientation.Horizontal
+            if (legendOrientation != LiveChartsCore.Measure.LegendOrientation.Auto)
+                LegendOrientation = legendOrientation == LiveChartsCore.Measure.LegendOrientation.Horizontal
                     ? StackOrientation.Horizontal
                     : StackOrientation.Vertical;
 
             LegendTemplate = mobileChart.LegendTemplate;
-            FontFamily = mobileChart.LegendFontFamily;
-            FontSize = mobileChart.LegendFontSize;
-            TextColor = mobileChart.LegendTextColor;
-            FontAttributes = mobileChart.LegendFontAttributes;
+            LegendBackgroundColor = mobileChart.TooltipBackground;
+            LegendFontFamily = mobileChart.LegendFontFamily;
+            LegendFontSize = mobileChart.LegendFontSize;
+            LegendTextColor = mobileChart.LegendTextColor;
+            LegendFontAttributes = mobileChart.LegendFontAttributes;
 
             BuildContent();
         }
@@ -205,17 +214,18 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// </summary>
         protected void BuildContent()
         {
-            var template = LegendTemplate ?? defaultTemplate;
+            var template = LegendTemplate ?? _defaultTemplate;
             if (template.CreateContent() is not View view) return;
 
             view.BindingContext = new LegendBindingContext
             {
                 Series = Series,
-                FontFamily = FontFamily,
-                FontSize = FontSize,
-                TextColor = TextColor,
-                FontAttributes = FontAttributes,
-                Orientation = Orientation
+                FontFamily = LegendFontFamily,
+                FontSize = LegendFontSize,
+                TextColor = LegendTextColor,
+                FontAttributes = LegendFontAttributes,
+                Orientation = LegendOrientation,
+                BackgroundColor = LegendBackgroundColor
             };
 
             Content = view;

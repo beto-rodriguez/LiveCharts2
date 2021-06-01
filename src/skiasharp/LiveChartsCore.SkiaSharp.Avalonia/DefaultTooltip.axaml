@@ -9,7 +9,7 @@
   <UserControl.Resources>
     <DataTemplate x:Key="defaultTemplate">
       <Border Background="Transparent" Padding="12">
-        <Border Background="#fafafa" CornerRadius="4"
+        <Border Background="{Binding TooltipBackground, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}" CornerRadius="4"
              BoxShadow="0 0 10 0 #09000000, 0 0 10 0 #09000000, 0 0 10 0 #09000000, 0 0 10 0 #09000000">
           <ItemsControl Items="{Binding Points, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}">
             <ItemsControl.ItemsPanel>
@@ -31,11 +31,11 @@
                     <TextBlock 
                         Margin="0 0 8 0"
                         Text="{Binding Point.AsTooltipString}"
-                        FontFamily="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
+                        FontFamily="{Binding TooltipFontFamily, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
                         Foreground="{Binding TooltipTextBrush, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
-                        FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
-                        FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
-                        FontStyle="{Binding FontStyle, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
+                        FontSize="{Binding TooltipFontSize, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
+                        FontWeight="{Binding TooltipFontWeight, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
+                        FontStyle="{Binding TooltipFontStyle, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
                         VerticalAlignment="Center"/>
                   </StackPanel>
                 </Border>

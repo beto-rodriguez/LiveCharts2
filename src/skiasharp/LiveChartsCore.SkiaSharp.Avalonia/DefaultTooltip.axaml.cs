@@ -147,7 +147,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             if (chart is CartesianChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetCartesianTooltipLocation(
-                    chart.TooltipPosition, new System.Drawing.SizeF((float)Bounds.Width, (float)Bounds.Height));
+                    chart.TooltipPosition, new System.Drawing.SizeF((float)Bounds.Width, (float)Bounds.Height), chart.ControlSize);
             }
             if (chart is PieChart<SkiaSharpDrawingContext>)
             {

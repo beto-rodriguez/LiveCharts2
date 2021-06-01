@@ -13,7 +13,14 @@ namespace ViewModelsSamples.Axes.NamedLabels
             {
                 new ColumnSeries<int>
                 {
+                    Name = "Sales",
                     Values = new ObservableCollection<int> { 200, 558, 458, 249 },
+                },
+                new LineSeries<int>
+                {
+                    Name = "Projected",
+                    Values = new ObservableCollection<int> { 300, 450, 400, 280 },
+                    Fill = null
                 }
             };
 

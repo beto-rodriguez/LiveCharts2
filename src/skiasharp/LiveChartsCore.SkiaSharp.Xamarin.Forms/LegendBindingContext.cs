@@ -64,6 +64,14 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         public Color TextColor { get; set; }
 
         /// <summary>
+        /// Gets or sets the color of the background.
+        /// </summary>
+        /// <value>
+        /// The color of the background.
+        /// </value>
+        public Color BackgroundColor { get; set; }
+
+        /// <summary>
         /// Gets or sets the font attributes.
         /// </summary>
         /// <value>

@@ -32,7 +32,6 @@ using System.ComponentModel;
 using System.Drawing;
 using Xamarin.Essentials;
 using Xamarin.Forms.Xaml;
-using System.Diagnostics;
 using Xamarin.Forms;
 using c = Xamarin.Forms.Color;
 
@@ -281,9 +280,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <summary>
         /// The tool tip text color property
         /// </summary>
-        public static readonly BindableProperty TooltipTextColorProperty =
+        public static readonly BindableProperty TooltipTextBrushProperty =
             BindableProperty.Create(
-                nameof(TooltipTextColor), typeof(c), typeof(CartesianChart),
+                nameof(TooltipTextBrush), typeof(c), typeof(CartesianChart),
                 new c(35 / 255d, 35 / 255d, 35 / 255d), propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>
@@ -291,7 +290,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// </summary>
         public static readonly BindableProperty TooltipBackgroundProperty =
             BindableProperty.Create(
-                nameof(TooltipTextColor), typeof(c), typeof(CartesianChart),
+                nameof(TooltipBackground), typeof(c), typeof(CartesianChart),
                 new c(250 / 255d, 250 / 255d, 250 / 255d), propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>
@@ -346,7 +345,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         BindableObject IMobileChart.Canvas => canvas;
 
-        BindableObject IMobileChart.Legend => legend;
+        BindableObject IMobileChart.Legend => null;// legend;
 
         /// <inheritdoc cref="IChartView.DrawMargin" />
         public Margin? DrawMargin
@@ -387,7 +386,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         public Func<float, float>? EasingFunction
         {
             get => (Func<float, float>)GetValue(EasingFunctionProperty);
-            set => SetValue(AnimationsSpeedProperty, value);
+            set => SetValue(EasingFunctionProperty, value);
         }
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomMode" />
@@ -491,7 +490,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
-        public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
+        public IChartLegend<SkiaSharpDrawingContext>? Legend => null;// legend;
 
         /// <inheritdoc cref="IChartView.TooltipPosition" />
         public TooltipPosition TooltipPosition
@@ -500,7 +499,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             set => SetValue(TooltipPositionProperty, value);
         }
 
-        /// <inheritdoc cref="IChartView.TooltipFindingStrategy" />
+        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy" />
         public TooltipFindingStrategy TooltipFindingStrategy
         {
             get => (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty);
@@ -549,10 +548,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <value>
         /// The color of the tool tip text.
         /// </value>
-        public c TooltipTextColor
+        public c TooltipTextBrush
         {
-            get => (c)GetValue(TooltipTextColorProperty);
-            set => SetValue(TooltipTextColorProperty, value);
+            get => (c)GetValue(TooltipTextBrushProperty);
+            set => SetValue(TooltipTextBrushProperty, value);
         }
 
         /// <summary>
@@ -561,7 +560,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <value>
         /// The color of the tool tip background.
         /// </value>
-        public c TooltipBackgroundColor
+        public c TooltipBackground
         {
             get => (c)GetValue(TooltipBackgroundProperty);
             set => SetValue(TooltipBackgroundProperty, value);
@@ -678,7 +677,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         private void PinchGestureRecognizer_PinchUpdated(object? sender, PinchGestureUpdatedEventArgs e)
         {
-            Trace.WriteLine($"{e.ScaleOrigin.X}, {e.ScaleOrigin.Y}");
             if (e.Status != GestureStatus.Running || Math.Abs(e.Scale - 1) < 0.05 || core == null) return;
 
             var c = (CartesianChart<SkiaSharpDrawingContext>)core;

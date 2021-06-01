@@ -42,9 +42,10 @@ namespace LiveChartsCore.Kernel
         /// <param name="foundPoints"></param>
         /// <param name="position"></param>
         /// <param name="tooltipSize"></param>
+        /// <param name="chartSize"></param>
         /// <returns></returns>
         public static PointF? GetCartesianTooltipLocation(
-            this IEnumerable<TooltipPoint> foundPoints, TooltipPosition position, SizeF tooltipSize)
+            this IEnumerable<TooltipPoint> foundPoints, TooltipPosition position, SizeF tooltipSize, SizeF chartSize)
         {
             var count = 0f;
 
@@ -58,6 +59,10 @@ namespace LiveChartsCore.Kernel
             }
 
             if (count == 0) return null;
+
+            if (placementContext.MostBottom > chartSize.Height - tooltipSize.Height)
+                placementContext.MostBottom = chartSize.Height - tooltipSize.Height;
+            if (placementContext.MostTop < 0) placementContext.MostTop = 0;
 
             var avrgX = (placementContext.MostRight + placementContext.MostLeft) / 2f - tooltipSize.Width * 0.5f;
             var avrgY = (placementContext.MostTop + placementContext.MostBottom) / 2f - tooltipSize.Height * 0.5f;

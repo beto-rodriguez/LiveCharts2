@@ -51,6 +51,8 @@ namespace XamarinSample
                 Items.Add(shell_section);
                 _routesSamples.Add("//" + content.Route, item);
                 i++;
+
+                //if (i > 4) break;
             }
 
             Navigating += AppShell_Navigating;

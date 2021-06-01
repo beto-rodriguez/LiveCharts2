@@ -6,7 +6,8 @@
 
     <ContentView.Resources>
         <DataTemplate x:Key="defaultTemplate">
-            <Frame Background="#fafafa" CornerRadius="4" HasShadow="True" Padding="6">
+            <Frame CornerRadius="4" HasShadow="True" Padding="6"
+                   BackgroundColor="{Binding BackgroundColor, Source={RelativeSource AncestorType={x:Type local:TooltipBindingContext}}}">
                 <StackLayout BindableLayout.ItemsSource="{Binding Points, Source={RelativeSource AncestorType={x:Type local:TooltipBindingContext}}}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
@@ -20,8 +21,8 @@
                                 <Label Text="{Binding Point.AsTooltipString}"
                                     TextColor="{Binding TextColor, Source={RelativeSource AncestorType={x:Type local:TooltipBindingContext}}}"
                                     FontFamily="{Binding FontFamily, Source={RelativeSource AncestorType={x:Type local:TooltipBindingContext}}}"
-                                    FontSize="{Binding FontSize}"
-                                    FontAttributes="{Binding FontAttributes}" />
+                                    FontSize="{Binding FontSize, Source={RelativeSource AncestorType={x:Type local:TooltipBindingContext}}}"
+                                    FontAttributes="{Binding FontAttributes, Source={RelativeSource AncestorType={x:Type local:TooltipBindingContext}}}" />
                             </StackLayout>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>

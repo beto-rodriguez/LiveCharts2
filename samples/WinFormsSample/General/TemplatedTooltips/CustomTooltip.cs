@@ -40,7 +40,7 @@ namespace WinFormsSample.General.TemplatedTooltips
             if (chart is CartesianChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetCartesianTooltipLocation(
-                    chart.TooltipPosition, new SizeF((float)size.Width, (float)size.Height));
+                    chart.TooltipPosition, new SizeF((float)size.Width, (float)size.Height), chart.ControlSize);
             }
             if (chart is PieChart<SkiaSharpDrawingContext>)
             {

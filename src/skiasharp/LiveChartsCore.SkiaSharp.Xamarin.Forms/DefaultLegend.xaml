@@ -7,7 +7,7 @@
 
     <ContentView.Resources>
         <DataTemplate x:Key="defaultTemplate">
-            <Frame>
+            <Frame BackgroundColor="{Binding BackgroundColor, Source={RelativeSource AncestorType={x:Type local:LegendBindingContext}}}">
                 <StackLayout 
                     BindableLayout.ItemsSource="{Binding Series, Source={RelativeSource AncestorType={x:Type local:LegendBindingContext}}}"
                     Orientation="{Binding Orientation, Source={RelativeSource AncestorType={x:Type local:LegendBindingContext}}}"
@@ -25,8 +25,8 @@
                                 <Label Text="{Binding Name}"
                                     TextColor="{Binding TextColor, Source={RelativeSource AncestorType={x:Type local:LegendBindingContext}}}"
                                     FontFamily="{Binding FontFamily, Source={RelativeSource AncestorType={x:Type local:LegendBindingContext}}}"
-                                    FontSize="{Binding FontSize}"
-                                    FontAttributes="{Binding FontAttributes}" />
+                                    FontSize="{Binding FontSize, Source={RelativeSource AncestorType={x:Type local:LegendBindingContext}}}"
+                                    FontAttributes="{Binding FontAttributes, Source={RelativeSource AncestorType={x:Type local:LegendBindingContext}}}" />
                             </StackLayout>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>

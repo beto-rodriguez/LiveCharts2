@@ -267,7 +267,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             if (chart is CartesianChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetCartesianTooltipLocation(
-                    chart.TooltipPosition, new System.Drawing.SizeF((float)border.ActualWidth, (float)border.ActualHeight));
+                    chart.TooltipPosition, new System.Drawing.SizeF((float)border.ActualWidth, (float)border.ActualHeight), chart.ControlSize);
             }
             if (chart is PieChart<SkiaSharpDrawingContext>)
             {
@@ -290,7 +290,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
             Background = wpfChart.TooltipBackground;
             FontFamily = wpfChart.TooltipFontFamily;
-            TextColor = wpfChart.TooltipTextColor;
+            TextColor = wpfChart.TooltipTextBrush;
             FontSize = wpfChart.TooltipFontSize;
             FontWeight = wpfChart.TooltipFontWeight;
             FontStyle = wpfChart.TooltipFontStyle;

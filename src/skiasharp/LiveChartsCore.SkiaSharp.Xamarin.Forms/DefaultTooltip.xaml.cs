@@ -73,7 +73,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <value>
         /// The font family.
         /// </value>
-        public string? FontFamily { get; set; }
+        public string? TooltipFontFamily { get; set; }
 
         /// <summary>
         /// Gets or sets the size of the font.
@@ -81,7 +81,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <value>
         /// The size of the font.
         /// </value>
-        public double FontSize { get; set; }
+        public double TooltipFontSize { get; set; }
 
         /// <summary>
         /// Gets or sets the color of the text.
@@ -89,7 +89,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <value>
         /// The color of the text.
         /// </value>
-        public Color TextColor { get; set; }
+        public Color TooltipTextColor { get; set; }
 
         /// <summary>
         /// Gets or sets the font attributes.
@@ -97,7 +97,15 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <value>
         /// The font attributes.
         /// </value>
-        public FontAttributes FontAttributes { get; set; }
+        public FontAttributes TooltipFontAttributes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the color of the tool tip background.
+        /// </summary>
+        /// <value>
+        /// The color of the tool tip background.
+        /// </value>
+        public Color TooltipBackgroundColor { get; set; }
 
         void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
@@ -125,7 +133,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             if (chart is CartesianChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetCartesianTooltipLocation(
-                    chart.TooltipPosition, new System.Drawing.SizeF((float)size.Width, (float)size.Height));
+                    chart.TooltipPosition, new System.Drawing.SizeF((float)size.Width, (float)size.Height), chart.ControlSize);
             }
             if (chart is PieChart<SkiaSharpDrawingContext>)
             {
@@ -136,10 +144,11 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
             var template = mobileChart.TooltipTemplate ?? _defaultTemplate;
             if (TooltipTemplate != template) TooltipTemplate = template;
-            FontFamily = mobileChart.TooltipFontFamily;
-            TextColor = mobileChart.TooltipTextColor;
-            FontSize = mobileChart.TooltipFontSize;
-            FontAttributes = mobileChart.TooltipFontAttributes;
+            TooltipFontFamily = mobileChart.TooltipFontFamily;
+            TooltipTextColor = mobileChart.TooltipTextBrush;
+            TooltipFontSize = mobileChart.TooltipFontSize;
+            TooltipFontAttributes = mobileChart.TooltipFontAttributes;
+            TooltipBackgroundColor = mobileChart.TooltipBackground;
             BuildContent();
 
             _ = Measure(double.PositiveInfinity, double.PositiveInfinity);
@@ -183,10 +192,11 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             view.BindingContext = new TooltipBindingContext
             {
                 Points = Points,
-                FontFamily = FontFamily,
-                FontSize = FontSize,
-                TextColor = TextColor,
-                FontAttributes = FontAttributes
+                FontFamily = TooltipFontFamily,
+                FontSize = TooltipFontSize,
+                TextColor = TooltipTextColor,
+                FontAttributes = TooltipFontAttributes,
+                BackgroundColor = TooltipBackgroundColor
             };
 
             Content = view;

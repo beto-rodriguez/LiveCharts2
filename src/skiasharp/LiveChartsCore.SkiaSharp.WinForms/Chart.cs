@@ -64,6 +64,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private Color _tooltipBackColor = Color.FromArgb(255, 250, 250, 250);
         private Font _legendFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
         private Color _legendBackColor = Color.FromArgb(255, 250, 250, 250);
+        private Color _tooltipTextColor;
         private readonly ActionThrottler _mouseMoveThrottler;
 
         /// <summary>
@@ -193,6 +194,14 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// The tool tip font.
         /// </value>
         public Font TooltipFont { get => _tooltipFont; set { _tooltipFont = value; OnPropertyChanged(); } }
+
+        /// <summary>
+        /// Gets or sets the color of the tool tip text.
+        /// </summary>
+        /// <value>
+        /// The color of the tool tip text.
+        /// </value>
+        public Color TooltipTextColor { get => _tooltipTextColor; set { _tooltipTextColor = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the color of the default tool tip back.
