@@ -9,7 +9,7 @@
     <TargetFrameworks>net462;netcoreapp3.0</TargetFrameworks>
     <AssemblyName>LiveChartsCore.SkiaSharpView.WinForms</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView.WinForms</RootNamespace>
-    <Version>2.0.0-beta.11</Version>
+    <Version>2.0.0-beta.12</Version>
     <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
