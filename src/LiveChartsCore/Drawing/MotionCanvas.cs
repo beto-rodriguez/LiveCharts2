@@ -94,6 +94,8 @@ namespace LiveChartsCore.Drawing
 
                     foreach (var geometry in task.GetGeometries(this))
                     {
+                        if (geometry == null) continue;
+
                         geometry.IsValid = true;
                         geometry.CurrentTime = frameTime;
                         if (!task.IsPaused) geometry.Draw(context);

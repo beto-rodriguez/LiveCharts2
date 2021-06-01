@@ -156,8 +156,9 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="chart">the chart</param>
         /// <param name="pointerPosition">the pointer position</param>
+        /// <param name="automaticStategy">the already resolved strategy when strategy is set to automatic.</param>
         /// <returns></returns>
-        IEnumerable<TooltipPoint> FindPointsNearTo(IChart chart, PointF pointerPosition);
+        IEnumerable<TooltipPoint> FindPointsNearTo(IChart chart, PointF pointerPosition, TooltipFindingStrategy automaticStategy);
 
         /// <summary>
         /// Marks a given point as a given state.

@@ -49,7 +49,7 @@ namespace LiveChartsCore
         /// Initializes a new instance of the <see cref="ScatterSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
         public ScatterSeries()
-            : base(SeriesProperties.Scatter | SeriesProperties.Solid)
+            : base(SeriesProperties.Scatter | SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips)
         {
             DataPadding = new PointF(1, 1);
 

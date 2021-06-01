@@ -152,6 +152,14 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 nameof(ZoomingSpeed), typeof(double), typeof(CartesianChart),
                 new PropertyMetadata(LiveCharts.CurrentSettings.DefaultZoomSpeed));
 
+        /// <summary>
+        /// The tool tip finding strategy property
+        /// </summary>
+        public static readonly DependencyProperty TooltipFindingStrategyProperty =
+            DependencyProperty.Register(
+                nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(Chart),
+                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, OnDependencyPropertyChanged));
+
         #endregion
 
         #region properties
@@ -204,6 +212,14 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         {
             get => ZoomingSpeed;
             set => SetValueOrCurrentValue(ZoomingSpeedProperty, value);
+        }
+
+
+        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy" />
+        public TooltipFindingStrategy TooltipFindingStrategy
+        {
+            get => (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty);
+            set => SetValue(TooltipFindingStrategyProperty, value);
         }
 
         #endregion

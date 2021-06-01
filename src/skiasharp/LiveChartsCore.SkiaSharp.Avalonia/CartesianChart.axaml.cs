@@ -398,7 +398,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             set => SetValue(TooltipPositionProperty, value);
         }
 
-        /// <inheritdoc cref="IChartView.TooltipFindingStrategy" />
+        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy" />
         public TooltipFindingStrategy TooltipFindingStrategy
         {
             get => (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty);

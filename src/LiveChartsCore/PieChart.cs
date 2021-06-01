@@ -127,7 +127,8 @@ namespace LiveChartsCore
         /// <returns></returns>
         public override IEnumerable<TooltipPoint> FindPointsNearTo(PointF pointerPosition)
         {
-            return _chartView.Series.SelectMany(series => series.FindPointsNearTo(this, pointerPosition));
+            return _chartView.Series.SelectMany(
+                series => series.FindPointsNearTo(this, pointerPosition, TooltipFindingStrategy.CompareAll));
         }
 
         /// <inheritdoc cref="IChart.Update(ChartUpdateParams?)" />
@@ -175,7 +176,6 @@ namespace LiveChartsCore
                 legend = _chartView.Legend;
 
                 tooltipPosition = _chartView.TooltipPosition;
-                tooltipFindingStrategy = _chartView.TooltipFindingStrategy;
                 tooltip = _chartView.Tooltip;
 
                 animationsSpeed = _chartView.AnimationsSpeed;

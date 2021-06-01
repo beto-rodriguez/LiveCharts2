@@ -1,5 +1,4 @@
-﻿\
-// The MIT License(MIT)
+﻿// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -223,14 +222,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
            BindableProperty.Create(
                nameof(TooltipPosition), typeof(TooltipPosition), typeof(CartesianChart),
                LiveCharts.CurrentSettings.DefaultTooltipPosition, propertyChanged: OnBindablePropertyChanged);
-
-        /// <summary>
-        /// The tool tip finding strategy property
-        /// </summary>
-        public static readonly BindableProperty TooltipFindingStrategyProperty =
-            BindableProperty.Create(
-                nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(CartesianChart),
-                LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy);
 
         /// <summary>
         /// The tool tip template property
@@ -467,13 +458,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             get => (TooltipPosition)GetValue(TooltipPositionProperty);
             set => SetValue(TooltipPositionProperty, value);
-        }
-
-        /// <inheritdoc cref="IChartView.TooltipFindingStrategy" />
-        public TooltipFindingStrategy TooltipFindingStrategy
-        {
-            get => (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty);
-            set => SetValue(TooltipFindingStrategyProperty, value);
         }
 
         /// <summary>

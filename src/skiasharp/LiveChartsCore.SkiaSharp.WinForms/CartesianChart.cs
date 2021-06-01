@@ -46,6 +46,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private IEnumerable<ISeries> _series = new List<ISeries>();
         private IEnumerable<IAxis> _xAxes = new List<Axis> { new Axis() };
         private IEnumerable<IAxis> _yAxes = new List<Axis> { new Axis() };
+        private TooltipFindingStrategy _tooltipFindingStrategy = LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CartesianChart"/> class.
@@ -125,6 +126,9 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomingSpeed" />
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public double ZoomingSpeed { get; set; } = LiveCharts.CurrentSettings.DefaultZoomSpeed;
+
+        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy" />
+        public TooltipFindingStrategy TooltipFindingStrategy { get => _tooltipFindingStrategy; set { _tooltipFindingStrategy = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Initializes the core.

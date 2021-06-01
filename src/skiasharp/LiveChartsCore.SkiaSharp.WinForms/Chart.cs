@@ -60,7 +60,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private LegendOrientation _legendOrientation = LiveCharts.CurrentSettings.DefaultLegendOrientation;
         private Margin? _drawMargin = null;
         private TooltipPosition _tooltipPosition = LiveCharts.CurrentSettings.DefaultTooltipPosition;
-        private TooltipFindingStrategy _tooltipFindingStrategy = LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy;
         private Font _tooltipFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
         private Color _tooltipBackColor = Color.FromArgb(255, 250, 250, 250);
         private Font _legendFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
@@ -186,9 +185,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         /// <inheritdoc cref="IChartView.LegendPosition" />
         public TooltipPosition TooltipPosition { get => _tooltipPosition; set { _tooltipPosition = value; OnPropertyChanged(); } }
-
-        /// <inheritdoc cref="IChartView.TooltipFindingStrategy" />
-        public TooltipFindingStrategy TooltipFindingStrategy { get => _tooltipFindingStrategy; set { _tooltipFindingStrategy = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the default tool tip font.

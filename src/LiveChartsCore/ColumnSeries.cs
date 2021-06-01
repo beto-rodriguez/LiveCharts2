@@ -45,7 +45,9 @@ namespace LiveChartsCore
         /// Initializes a new instance of the <see cref="ColumnSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
         public ColumnSeries()
-            : base(SeriesProperties.Bar | SeriesProperties.PrimaryAxisVerticalOrientation | SeriesProperties.Solid)
+            : base(
+                  SeriesProperties.Bar | SeriesProperties.PrimaryAxisVerticalOrientation |
+                  SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
         {
             DataPadding = new PointF(0, 1);
         }

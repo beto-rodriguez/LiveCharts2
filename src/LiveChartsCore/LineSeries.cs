@@ -56,7 +56,9 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
         public LineSeries(bool isStacked = false)
-            : base(SeriesProperties.Line | SeriesProperties.PrimaryAxisVerticalOrientation | (isStacked ? SeriesProperties.Stacked : 0) | SeriesProperties.Sketch)
+            : base(
+                  SeriesProperties.Line | SeriesProperties.PrimaryAxisVerticalOrientation |
+                  (isStacked ? SeriesProperties.Stacked : 0) | SeriesProperties.Sketch | SeriesProperties.PrefersXStrategyTooltips)
         {
             DataPadding = new PointF(0.5f, 1f);
             HoverState = LiveCharts.LineSeriesHoverKey;

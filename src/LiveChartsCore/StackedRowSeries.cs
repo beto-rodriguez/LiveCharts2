@@ -46,7 +46,9 @@ namespace LiveChartsCore
         /// Initializes a new instance of the <see cref="StackedRowSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
         public StackedRowSeries()
-            : base(SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation | SeriesProperties.Stacked | SeriesProperties.Solid)
+            : base(
+                  SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation | SeriesProperties.Stacked |
+                  SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
         {
 
         }

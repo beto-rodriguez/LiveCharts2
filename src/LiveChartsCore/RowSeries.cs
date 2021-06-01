@@ -46,7 +46,9 @@ namespace LiveChartsCore
         /// Initializes a new instance of the <see cref="RowSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
         public RowSeries()
-            : base(SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation | SeriesProperties.Solid) { }
+            : base(
+                  SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation
+                  | SeriesProperties.Solid | SeriesProperties.PrefersYStrategyTooltips) { }
 
         /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.Measure"/>
         public override void Measure(
@@ -59,7 +61,7 @@ namespace LiveChartsCore
                 primaryAxis.PreviousDataBounds == null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis);
             var primaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
 
-            var uw = secondaryScale.ToPixels((float)primaryAxis.UnitWidth) - secondaryScale.ToPixels(0f);
+            var uw = secondaryScale.ToPixels(0f) - secondaryScale.ToPixels((float)primaryAxis.UnitWidth);
             var uwm = 0.5f * uw;
 
             uw -= (float)GroupPadding;
@@ -81,7 +83,7 @@ namespace LiveChartsCore
 
             if (uw > MaxBarWidth)
             {
-                uw = (float)MaxBarWidth * -1;
+                uw = (float)MaxBarWidth;
                 uwm = uw / 2f;
             }
 
@@ -171,7 +173,7 @@ namespace LiveChartsCore
                 sizedGeometry.Ry = ry;
                 sizedGeometry.RemoveOnCompleted = false;
 
-                point.Context.HoverArea = new RectangleHoverArea().SetDimensions(primary, secondary - uwm + cp, b, uw);
+                point.Context.HoverArea = new RectangleHoverArea().SetDimensions(cx, y, b, uw);
 
                 OnPointMeasured(point);
                 _ = toDeletePoints.Remove(point);

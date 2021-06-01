@@ -113,14 +113,6 @@ namespace LiveChartsCore.Kernel
         /// The tooltip position.
         /// </value>
         TooltipPosition TooltipPosition { get; set; }
-
-        /// <summary>
-        /// Gets or sets the tooltip finding strategy.
-        /// </summary>
-        /// <value>
-        /// The tooltip finding strategy.
-        /// </value>
-        TooltipFindingStrategy TooltipFindingStrategy { get; set; }
     }
 
     /// <summary>

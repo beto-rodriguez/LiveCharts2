@@ -75,6 +75,15 @@ namespace LiveChartsCore.Kernel
         /// </value>
         ZoomAndPanMode ZoomMode { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets the tool tip finding strategy.
+        /// </summary>
+        /// <value>
+        /// The tool tip finding strategy.
+        /// </value>
+        TooltipFindingStrategy TooltipFindingStrategy { get; set; }
+
         /// <summary>
         /// Gets or sets the zooming speed from 0 to 1, where 0 is the fastest and 1 the slowest.
         /// </summary>

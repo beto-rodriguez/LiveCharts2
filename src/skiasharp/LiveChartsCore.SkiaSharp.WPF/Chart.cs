@@ -137,14 +137,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipPosition, OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The tool tip finding strategy property
-        /// </summary>
-        public static readonly DependencyProperty TooltipFindingStrategyProperty =
-            DependencyProperty.Register(
-                nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(Chart),
-                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, OnDependencyPropertyChanged));
-
-        /// <summary>
         /// The tool tip background property
         /// </summary>
         public static readonly DependencyProperty TooltipBackgroundProperty =
@@ -371,19 +363,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         {
             get => TooltipPosition;
             set => SetValueOrCurrentValue(TooltipPositionProperty, value);
-        }
-
-        /// <inheritdoc cref="IChartView.TooltipFindingStrategy" />
-        public TooltipFindingStrategy TooltipFindingStrategy
-        {
-            get => (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty);
-            set => SetValue(TooltipFindingStrategyProperty, value);
-        }
-
-        TooltipFindingStrategy IChartView.TooltipFindingStrategy
-        {
-            get => TooltipFindingStrategy;
-            set => SetValueOrCurrentValue(TooltipFindingStrategyProperty, value);
         }
 
         /// <summary>

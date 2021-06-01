@@ -30,6 +30,7 @@ using LiveChartsCore.Measure;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Linq;
+using System.Diagnostics;
 
 namespace LiveChartsCore
 {
@@ -223,9 +224,9 @@ namespace LiveChartsCore
             return Fetch(chart);
         }
 
-        IEnumerable<TooltipPoint> ISeries.FindPointsNearTo(IChart chart, PointF pointerPosition)
+        IEnumerable<TooltipPoint> ISeries.FindPointsNearTo(IChart chart, PointF pointerPosition, TooltipFindingStrategy automaticStategy)
         {
-            return FilterTooltipPoints(Fetch(chart), chart, pointerPosition);
+            return FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy);
         }
 
         /// <inheritdoc />
@@ -383,7 +384,7 @@ namespace LiveChartsCore
         }
 
         private IEnumerable<TooltipPoint> FilterTooltipPoints(
-            IEnumerable<ChartPoint>? points, IChart chart, PointF pointerPosition)
+            IEnumerable<ChartPoint>? points, IChart chart, PointF pointerPosition, TooltipFindingStrategy automaticStategy)
         {
             if (points == null) return Enumerable.Empty<TooltipPoint>();
             var tolerance = float.MaxValue;
@@ -406,11 +407,12 @@ namespace LiveChartsCore
                         tolerance = (float)Math.Sqrt(Math.Pow(uwx, 2) + Math.Pow(uwy, 2));
                         break;
                     case TooltipFindingStrategy.CompareOnlyX:
-                        tolerance = uwx;
+                        tolerance = Math.Abs(uwx);
                         break;
                     case TooltipFindingStrategy.CompareOnlyY:
-                        tolerance = uwy;
+                        tolerance = Math.Abs(uwy);
                         break;
+                    case TooltipFindingStrategy.Automatic:
                     default:
                         break;
                 }
@@ -421,7 +423,7 @@ namespace LiveChartsCore
             foreach (var point in points)
             {
                 if (point == null || point.Context.HoverArea == null) continue;
-                var d = point.Context.HoverArea.GetDistanceToPoint(pointerPosition, chart.TooltipFindingStrategy);
+                var d = point.Context.HoverArea.GetDistanceToPoint(pointerPosition, automaticStategy); //chart.TooltipFindingStrategy
                 if (d > tolerance || d > minD.Item1) continue;
 
                 if (minD.Item1 == d)
@@ -433,6 +435,8 @@ namespace LiveChartsCore
 
                 minD = new Tuple<float, List<TooltipPoint>>(d, new List<TooltipPoint> { new TooltipPoint(this, point) });
             }
+
+            Trace.WriteLine(minD.Item2.Count);
 
             return minD.Item2;
         }

@@ -23,10 +23,15 @@
 namespace LiveChartsCore.Measure
 {
     /// <summary>
-    /// Defines the tooltip finding strategy.
+    /// Defines the tool tip finding strategy.
     /// </summary>
     public enum TooltipFindingStrategy
     {
+        /// <summary>
+        /// The automatic mode, it will be calculated based on the series in the chart.
+        /// </summary>
+        Automatic,
+
         /// <summary>
         /// Compares X and Y coordinates.
         /// </summary>

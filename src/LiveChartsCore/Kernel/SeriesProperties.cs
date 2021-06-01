@@ -90,6 +90,21 @@ namespace LiveChartsCore.Kernel
         /// <summary>
         /// The solid
         /// </summary>
-        Solid = 1 << 13
+        Solid = 1 << 13,
+
+        /// <summary>
+        /// The prefers x tool tips
+        /// </summary>
+        PrefersXStrategyTooltips = 1 << 14,
+
+        /// <summary>
+        /// The prefers y tool tips
+        /// </summary>
+        PrefersYStrategyTooltips = 1 << 15,
+
+        /// <summary>
+        /// The prefers xy tool tips
+        /// </summary>
+        PrefersXYStrategyTooltips = 1 << 16
     }
 }

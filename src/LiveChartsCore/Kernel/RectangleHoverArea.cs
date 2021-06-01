@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Measure;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 
 namespace LiveChartsCore.Kernel
@@ -88,12 +89,14 @@ namespace LiveChartsCore.Kernel
             var dx = point.X - (X + Width * 0.5f);
             var dy = point.Y - (Y + Height * 0.5f);
 
+            //Trace.WriteLine($"{Y:N2} {point.Y:N2}");
+
             return strategy switch
             {
-                TooltipFindingStrategy.CompareAll => (float)Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dx, 2)),
+                TooltipFindingStrategy.CompareAll => (float)Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2)),
                 TooltipFindingStrategy.CompareOnlyX => Math.Abs(dx),
                 TooltipFindingStrategy.CompareOnlyY => Math.Abs(dy),
-                _ => throw new Exception($"The strategy {strategy} is not supported."),
+                TooltipFindingStrategy.Automatic or _ => throw new Exception($"The strategy {strategy} is not supported.")
             };
         }
 

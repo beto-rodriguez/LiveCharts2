@@ -46,7 +46,9 @@ namespace LiveChartsCore
         /// Initializes a new instance of the <see cref="StackedColumnSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
         public StackedColumnSeries()
-            : base(SeriesProperties.Bar | SeriesProperties.PrimaryAxisVerticalOrientation | SeriesProperties.Stacked | SeriesProperties.Solid)
+            : base(
+                  SeriesProperties.Bar | SeriesProperties.PrimaryAxisVerticalOrientation | SeriesProperties.Stacked |
+                  SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
         {
             DataPadding = new PointF(0, 1);
         }

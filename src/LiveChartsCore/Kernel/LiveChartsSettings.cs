@@ -100,7 +100,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The default tooltip finding strategy.
         /// </value>
-        public TooltipFindingStrategy DefaultTooltipFindingStrategy { get; set; } = TooltipFindingStrategy.CompareOnlyX;
+        public TooltipFindingStrategy DefaultTooltipFindingStrategy { get; set; } = TooltipFindingStrategy.Automatic;
 
         /// <summary>
         /// Gets the theme identifier.

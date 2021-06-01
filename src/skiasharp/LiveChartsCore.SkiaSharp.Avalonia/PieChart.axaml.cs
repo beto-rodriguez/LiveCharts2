@@ -169,13 +169,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 nameof(TooltipPosition), LiveCharts.CurrentSettings.DefaultTooltipPosition, inherits: true);
 
         /// <summary>
-        /// The tool tip finding strategy property
-        /// </summary>
-        public static readonly AvaloniaProperty<TooltipFindingStrategy> TooltipFindingStrategyProperty =
-            AvaloniaProperty.Register<CartesianChart, TooltipFindingStrategy>(
-                nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, inherits: true);
-
-        /// <summary>
         /// The tool tip font family property
         /// </summary>
         public static readonly AvaloniaProperty<A.Media.FontFamily> TooltipFontFamilyProperty =
@@ -373,13 +366,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             get => (TooltipPosition)GetValue(TooltipPositionProperty);
             set => SetValue(TooltipPositionProperty, value);
-        }
-
-        /// <inheritdoc cref="IChartView.TooltipFindingStrategy" />
-        public TooltipFindingStrategy TooltipFindingStrategy
-        {
-            get => (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty);
-            set => SetValue(TooltipFindingStrategyProperty, value);
         }
 
         /// <summary>
