@@ -36,6 +36,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawingContext>
     {
+        private Chart<SkiaSharpDrawingContext> _chart;
         private readonly DataTemplate _defaultTemplate;
         private readonly Dictionary<ChartPoint, object> _activePoints = new();
         private readonly Timer _closeTimer = new();
@@ -142,6 +143,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             }
             if (location == null) throw new Exception("location not supported");
 
+            IsVisible = true;
             var template = mobileChart.TooltipTemplate ?? _defaultTemplate;
             if (TooltipTemplate != template) TooltipTemplate = template;
             TooltipFontFamily = mobileChart.TooltipFontFamily;
@@ -150,14 +152,17 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             TooltipFontAttributes = mobileChart.TooltipFontAttributes;
             TooltipBackgroundColor = mobileChart.TooltipBackground;
             BuildContent();
+            InvalidateLayout();
 
             _ = Measure(double.PositiveInfinity, double.PositiveInfinity);
             var chartSize = chart.ControlSize;
+            _chart = chart;
 
             AbsoluteLayout.SetLayoutBounds(
                 this,
                 new Rectangle(
-                    location.Value.X / chartSize.Width, location.Value.Y / chartSize.Height,
+                    location.Value.X / chartSize.Width,
+                    location.Value.Y / chartSize.Height,
                     AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
 
             var o = new object();
@@ -191,12 +196,12 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
             view.BindingContext = new TooltipBindingContext
             {
+                TooltipBackgroundColor = TooltipBackgroundColor,
                 Points = Points,
                 FontFamily = TooltipFontFamily,
                 FontSize = TooltipFontSize,
                 TextColor = TooltipTextColor,
-                FontAttributes = TooltipFontAttributes,
-                BackgroundColor = TooltipBackgroundColor
+                FontAttributes = TooltipFontAttributes
             };
 
             Content = view;
@@ -204,12 +209,20 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         void IChartTooltip<SkiaSharpDrawingContext>.Hide()
         {
-            Content = null;
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                AbsoluteLayout.SetLayoutBounds(
+                    this,
+                    new Rectangle(
+                        -1, -1,
+                        AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
+            });
         }
 
         private void _closeTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             ((IChartTooltip<SkiaSharpDrawingContext>)this).Hide();
+            _closeTimer.Stop();
         }
     }
 }

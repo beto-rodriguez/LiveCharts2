@@ -78,6 +78,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <value>
         /// The color of the background.
         /// </value>
-        public Color BackgroundColor { get; set; }
+        public Color TooltipBackgroundColor { get; set; }
     }
 }

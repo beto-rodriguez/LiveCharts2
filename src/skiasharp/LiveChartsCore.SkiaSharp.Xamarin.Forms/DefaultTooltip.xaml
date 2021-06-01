@@ -6,9 +6,11 @@
 
     <ContentView.Resources>
         <DataTemplate x:Key="defaultTemplate">
-            <Frame CornerRadius="4" HasShadow="True" Padding="6"
-                   BackgroundColor="{Binding BackgroundColor, Source={RelativeSource AncestorType={x:Type local:TooltipBindingContext}}}">
-                <StackLayout BindableLayout.ItemsSource="{Binding Points, Source={RelativeSource AncestorType={x:Type local:TooltipBindingContext}}}">
+            <Frame HasShadow="True" Padding="0">
+                <StackLayout
+                     Padding="6"
+                     BindableLayout.ItemsSource="{Binding Points, Source={RelativeSource AncestorType={x:Type local:TooltipBindingContext}}}"
+                     BackgroundColor="{Binding TooltipBackgroundColor, Source={RelativeSource AncestorType={x:Type local:TooltipBindingContext}}}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
                             <StackLayout Orientation="Horizontal" VerticalOptions="Center">
