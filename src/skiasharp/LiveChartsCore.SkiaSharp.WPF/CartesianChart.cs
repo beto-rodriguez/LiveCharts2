@@ -139,6 +139,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <summary>
         /// The zoom mode property
         /// </summary>
+        public static readonly DependencyProperty DrawMarginFrameProperty =
+            DependencyProperty.Register(
+                nameof(DrawMarginFrame), typeof(DrawMarginFrame<SkiaSharpDrawingContext>), typeof(CartesianChart), new PropertyMetadata(null));
+
+        /// <summary>
+        /// The zoom mode property
+        /// </summary>
         public static readonly DependencyProperty ZoomModeProperty =
             DependencyProperty.Register(
                 nameof(ZoomMode), typeof(ZoomAndPanMode), typeof(CartesianChart),
@@ -186,6 +193,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         {
             get => (IEnumerable<IAxis>)GetValue(YAxesProperty);
             set => SetValue(YAxesProperty, value);
+        }
+
+        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
+        public DrawMarginFrame<SkiaSharpDrawingContext> DrawMarginFrame
+        {
+            get => (DrawMarginFrame<SkiaSharpDrawingContext>)GetValue(DrawMarginFrameProperty);
+            set => SetValue(DrawMarginFrameProperty, value);
         }
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomMode" />

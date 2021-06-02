@@ -143,6 +143,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             AvaloniaProperty.Register<CartesianChart, IEnumerable<IAxis>>(nameof(YAxes), Enumerable.Empty<IAxis>(), inherits: true);
 
         /// <summary>
+        /// The draw margin frame property
+        /// </summary>
+        public static readonly AvaloniaProperty<DrawMarginFrame<SkiaSharpDrawingContext>?> DrawMarginFrameProperty =
+            AvaloniaProperty.Register<CartesianChart, DrawMarginFrame<SkiaSharpDrawingContext>?>(
+                nameof(DrawMarginFrame), null, inherits: true);
+
+        /// <summary>
         /// The zoom mode property
         /// </summary>
         public static readonly AvaloniaProperty<ZoomAndPanMode> ZoomModeProperty =
@@ -361,6 +368,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             get => (IEnumerable<IAxis>)GetValue(YAxesProperty);
             set => SetValue(YAxesProperty, value);
+        }
+
+        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
+        public DrawMarginFrame<SkiaSharpDrawingContext>? DrawMarginFrame
+        {
+            get => (DrawMarginFrame)GetValue(DrawMarginFrameProperty);
+            set => SetValue(DrawMarginFrameProperty, value);
         }
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomMode" />

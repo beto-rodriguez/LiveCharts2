@@ -46,6 +46,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private IEnumerable<ISeries> _series = new List<ISeries>();
         private IEnumerable<IAxis> _xAxes = new List<Axis> { new Axis() };
         private IEnumerable<IAxis> _yAxes = new List<Axis> { new Axis() };
+        private DrawMarginFrame<SkiaSharpDrawingContext>? _drawMarginFrame;
         private TooltipFindingStrategy _tooltipFindingStrategy = LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy;
 
         /// <summary>
@@ -115,6 +116,18 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 _yObserver.Dispose(_yAxes);
                 _yObserver.Initialize(value);
                 _yAxes = value;
+                core?.Update();
+            }
+        }
+
+        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public DrawMarginFrame<SkiaSharpDrawingContext>? DrawMarginFrame
+        {
+            get => _drawMarginFrame;
+            set
+            {
+                _drawMarginFrame = value;
                 core?.Update();
             }
         }

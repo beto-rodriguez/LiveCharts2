@@ -64,6 +64,22 @@ namespace LiveChartsCore.Themes
         }
 
         /// <summary>
+        /// Defines a style builder for <see cref="DrawMarginFrame{TDrawingContext}"/> objects.
+        /// </summary>
+        /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+        /// <param name="styler">The styler.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns></returns>
+        public static VisualsStyle<TDrawingContext> HasRuleForDrawMargin<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
+            Action<DrawMarginFrame<TDrawingContext>> predicate)
+            where TDrawingContext : DrawingContext
+        {
+            styler.DrawMarginFrameBuilder.Add(predicate);
+            return styler;
+        }
+
+        /// <summary>
         ///  Defines a style builder for <see cref="IDrawableSeries{TDrawingContext}"/> objects.
         /// </summary>
         /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>

@@ -142,6 +142,14 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 });
 
         /// <summary>
+        /// The draw margin frame property
+        /// </summary>
+        public static readonly BindableProperty DrawMarginFrameProperty =
+            BindableProperty.Create(
+                nameof(DrawMarginFrame), typeof(DrawMarginFrame<SkiaSharpDrawingContext>), typeof(CartesianChart), null,
+                BindingMode.Default, null, OnBindablePropertyChanged);
+
+        /// <summary>
         /// The draw margin property
         /// </summary>
         public static readonly BindableProperty DrawMarginProperty =
@@ -373,6 +381,13 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             get => (IEnumerable<IAxis>)GetValue(YAxesProperty);
             set => SetValue(YAxesProperty, value);
+        }
+
+        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
+        public DrawMarginFrame<SkiaSharpDrawingContext> DrawMarginFrame
+        {
+            get => (DrawMarginFrame<SkiaSharpDrawingContext>)GetValue(DrawMarginFrameProperty);
+            set => SetValue(DrawMarginFrameProperty, value);
         }
 
         /// <inheritdoc cref="IChartView.AnimationsSpeed" />

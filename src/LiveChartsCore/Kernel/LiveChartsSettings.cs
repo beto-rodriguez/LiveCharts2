@@ -197,7 +197,6 @@ namespace LiveChartsCore.Kernel
             return this;
         }
 
-
         /// <summary>
         /// Withes the default zoom mode.
         /// </summary>

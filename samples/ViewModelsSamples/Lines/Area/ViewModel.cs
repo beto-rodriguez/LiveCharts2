@@ -22,5 +22,12 @@ namespace ViewModelsSamples.Lines.Area
                 GeometryStroke = null
             }
         };
+
+        // Creates a gray background and border in the draw margin.
+        public DrawMarginFrame DrawMarginFrame => new DrawMarginFrame
+        {
+            Fill = new SolidColorPaintTask(new SKColor(220, 220, 220)),
+            Stroke = new SolidColorPaintTask(new SKColor(180, 180, 180), 2)
+        };
     }
 }

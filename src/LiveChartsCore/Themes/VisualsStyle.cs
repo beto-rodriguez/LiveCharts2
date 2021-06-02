@@ -50,6 +50,14 @@ namespace LiveChartsCore.Themes
         public List<Action<IAxis<TDrawingContext>>> AxisBuilder { get; set; } = new List<Action<IAxis<TDrawingContext>>>();
 
         /// <summary>
+        /// Gets or sets the draw margin frame builder.
+        /// </summary>
+        /// <value>
+        /// The draw margin frame builder.
+        /// </value>
+        public List<Action<DrawMarginFrame<TDrawingContext>>> DrawMarginFrameBuilder { get; set; } = new List<Action<DrawMarginFrame<TDrawingContext>>>();
+
+        /// <summary>
         /// Gets or sets the series builder.
         /// </summary>
         /// <value>

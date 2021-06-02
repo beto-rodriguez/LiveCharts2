@@ -44,6 +44,7 @@ namespace LiveChartsCore
         private int _nextSeries = 0;
         private double _zoomingSpeed = 0;
         private ZoomAndPanMode _zoomMode;
+        private DrawMarginFrame<TDrawingContext>? _previousDrawMarginFrame;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CartesianChart{TDrawingContext}"/> class.
@@ -532,6 +533,22 @@ namespace LiveChartsCore
                         deleted = true;
                     }
                     if (deleted) series.DeletingTasks.Clear();
+                }
+
+                if (_previousDrawMarginFrame != null && _chartView.DrawMarginFrame != _previousDrawMarginFrame)
+                {
+                    _previousDrawMarginFrame.Dispose(this);
+                    _previousDrawMarginFrame = null;
+                }
+                if (_chartView.DrawMarginFrame != null)
+                {
+                    _chartView.DrawMarginFrame.Measure(this);
+                    foreach (var item in _chartView.DrawMarginFrame.DeletingTasks)
+                    {
+                        canvas.RemovePaintTask(item);
+                        item.Dispose();
+                    }
+                    _previousDrawMarginFrame = _chartView.DrawMarginFrame;
                 }
 
                 foreach (var series in toDeleteSeries)

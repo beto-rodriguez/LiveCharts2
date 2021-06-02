@@ -68,6 +68,14 @@ namespace LiveChartsCore.Kernel
         IEnumerable<ISeries> Series { get; set; }
 
         /// <summary>
+        /// Gets or sets the draw margin frame.
+        /// </summary>
+        /// <value>
+        /// The draw margin frame.
+        /// </value>
+        DrawMarginFrame<TDrawingContext> DrawMarginFrame { get; set; }
+
+        /// <summary>
         /// Gets or sets the zoom mode.
         /// </summary>
         /// <value>
