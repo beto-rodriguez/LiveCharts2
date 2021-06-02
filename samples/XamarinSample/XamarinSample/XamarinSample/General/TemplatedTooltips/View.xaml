@@ -22,16 +22,13 @@
         <lvc:CartesianChart Grid.Row="0" Series="{Binding Series}">
             <lvc:CartesianChart.TooltipTemplate>
                 <DataTemplate>
-                    <Frame Background="#fafafa" CornerRadius="4" HasShadow="True" Padding="6">
+                    <Frame Background="#353535" CornerRadius="4" HasShadow="True" Padding="6">
                         <StackLayout BindableLayout.ItemsSource="{Binding Points, Source={RelativeSource AncestorType={x:Type lvc:TooltipBindingContext}}}">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
                                     <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                                         <Label Text="{Binding Point.AsTooltipString}"
-                                            TextColor="{Binding TextColor, Source={RelativeSource AncestorType={x:Type lvc:TooltipBindingContext}}}"
-                                            FontFamily="{Binding FontFamily, Source={RelativeSource AncestorType={x:Type lvc:TooltipBindingContext}}}"
-                                            FontSize="{Binding FontSize}"
-                                            FontAttributes="{Binding FontAttributes}" />
+                                            TextColor="#fafafa"/>
                                         <lvc:MotionCanvas 
                                             VerticalOptions="Center"
                                             Margin="5, 0, 0, 0"

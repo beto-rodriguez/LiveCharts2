@@ -34,6 +34,8 @@ namespace WinFormsSample.General.TemplatedTooltips
                 return;
             }
 
+            if (activePoints.Count > 0 && tooltipPoints.All(x => activePoints.ContainsKey(x.Point))) return;
+
             var size = DrawAndMesure(tooltipPoints, wfChart);
             PointF? location = null;
 
@@ -48,7 +50,7 @@ namespace WinFormsSample.General.TemplatedTooltips
                     chart.TooltipPosition, new SizeF((float)size.Width, (float)size.Height));
             }
 
-            BackColor = wfChart.TooltipBackColor;
+            BackColor = Color.FromArgb(255, 30, 30, 30);
             Height = (int)size.Height;
             Width = (int)size.Width;
 
@@ -88,14 +90,25 @@ namespace WinFormsSample.General.TemplatedTooltips
                 var text = point.Point.AsTooltipString;
                 var size = g.MeasureString(text, chart.TooltipFont);
 
+                var drawableSeries = (IDrawableSeries<SkiaSharpDrawingContext>)point.Series;
+
+                Controls.Add(new MotionCanvas
+                {
+                    Location = new Point(6, (int)h + 6),
+                    PaintTasks = drawableSeries.CanvasSchedule.PaintSchedules,
+                    Width = (int)drawableSeries.CanvasSchedule.Width,
+                    Height = (int)drawableSeries.CanvasSchedule.Height
+                });
                 Controls.Add(new Label
                 {
                     Text = text,
+                    ForeColor = Color.FromArgb(255, 250, 250, 250),
                     Font = chart.TooltipFont,
-                    Location = new Point(6, (int)h + 6)
+                    Location = new Point(6 + (int)drawableSeries.CanvasSchedule.Width + 6, (int)h + 6),
+                    AutoSize = true
                 });
 
-                var thisW = size.Width + 12;
+                var thisW = size.Width + 18 + (int)drawableSeries.CanvasSchedule.Width;
                 h += size.Height + 6;
                 w = thisW > w ? thisW : w;
             }

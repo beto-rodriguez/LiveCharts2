@@ -24,18 +24,18 @@
               <DataTemplate>
                 <Border Padding="7 5">
                   <StackPanel Orientation="Horizontal">
+                    <lvc:MotionCanvas
+                        Margin="8 0 0 0"
+                        PaintTasks="{Binding CanvasSchedule.PaintSchedules}"
+                        Width="{Binding CanvasSchedule.Width}"
+                        Height="{Binding CanvasSchedule.Height}"
+                        VerticalAlignment="Center"/>
                     <TextBlock Text="{Binding Name}"
                         FontFamily="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=lvc:DefaultLegend}}"
                         Foreground="{Binding TextColor, RelativeSource={RelativeSource AncestorType=lvc:DefaultLegend}}"
                         FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=lvc:DefaultLegend}}"
                         FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=lvc:DefaultLegend}}"
                         FontStyle="{Binding FontStyle, RelativeSource={RelativeSource AncestorType=lvc:DefaultLegend}}"
-                        VerticalAlignment="Center"/>
-                    <lvc:MotionCanvas
-                        Margin="8 0 0 0"
-                        PaintTasks="{Binding DefaultPaintContext.PaintTasks}"
-                        Width="{Binding DefaultPaintContext.Width}"
-                        Height="{Binding DefaultPaintContext.Height}"
                         VerticalAlignment="Center"/>
                   </StackPanel>
                 </Border>
