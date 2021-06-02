@@ -46,7 +46,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         protected IChartLegend<SkiaSharpDrawingContext> legend = new DefaultLegend();
 
         /// <summary>
-        /// The tooltip
+        /// The tool tip
         /// </summary>
         protected IChartTooltip<SkiaSharpDrawingContext> tooltip = new DefaultTooltip();
 
@@ -144,7 +144,17 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             set => BackColor = value;
         }
 
-        SizeF IChartView.ControlSize => new() { Width = motionCanvas.Width, Height = motionCanvas.Height };
+        SizeF IChartView.ControlSize
+        {
+            get
+            {
+                // return the full control size as a workaround when the lergend is not set.
+                // for some reason WinForms has not loaded the correct size at this point when the control loads.
+                return LegendPosition == LegendPosition.Hidden
+                    ? new SizeF() { Width = ClientSize.Width, Height = ClientSize.Height }
+                    : new SizeF() { Width = motionCanvas.Width, Height = motionCanvas.Height };
+            }
+        }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => motionCanvas.CanvasCore;
