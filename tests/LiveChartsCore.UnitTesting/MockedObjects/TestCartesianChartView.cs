@@ -65,8 +65,8 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
 
         public Color BackColor { get; set; }
         public bool AutoUpdateEnaled { get; set; } = true;
-        public TimeSpan UpdaterThrottler { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public DrawMarginFrame<SkiaSharpDrawingContext> DrawMarginFrame { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public TimeSpan UpdaterThrottler { get; set; }
+        public DrawMarginFrame<SkiaSharpDrawingContext> DrawMarginFrame { get; set; }
 
         public event ChartEventHandler<SkiaSharpDrawingContext> Measuring;
         public event ChartEventHandler<SkiaSharpDrawingContext> UpdateStarted;
