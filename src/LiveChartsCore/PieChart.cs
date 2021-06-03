@@ -157,6 +157,12 @@ namespace LiveChartsCore
             {
                 InvokeOnMeasuring();
 
+                if (preserveFirstDraw)
+                {
+                    IsFirstDraw = true;
+                    preserveFirstDraw = false;
+                }
+
                 MeasureWork = new object();
 
                 viewDrawMargin = _chartView.DrawMargin;
@@ -183,8 +189,6 @@ namespace LiveChartsCore
 
                 seriesContext = new SeriesContext<TDrawingContext>(Series);
 
-                if (legend != null) legend.Draw(this);
-
                 var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
                 if (theme.CurrentColors == null || theme.CurrentColors.Length == 0)
                     throw new Exception("Default colors are not valid");
@@ -195,6 +199,8 @@ namespace LiveChartsCore
                 PushoutBounds = new Bounds();
                 foreach (var series in Series)
                 {
+                    series.IsNotifyingChanges = false;
+
                     if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
                     theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
 
@@ -206,12 +212,20 @@ namespace LiveChartsCore
                     IndexBounds.AppendValue(seriesBounds.SecondaryBounds.Min);
                     PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Max);
                     PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Min);
+
+                    series.IsNotifyingChanges = true;
+                }
+
+                if (legend != null && SeriesMiniatureChanged(Series))
+                {
+                    legend.Draw(this);
+                    Update();
+                    preserveFirstDraw = IsFirstDraw;
                 }
 
                 if (viewDrawMargin == null)
                 {
                     var m = viewDrawMargin ?? new Margin();
-                    SetDrawMargin(controlSize, m);
                     SetDrawMargin(controlSize, m);
                 }
 
@@ -245,6 +259,7 @@ namespace LiveChartsCore
                 InvokeOnUpdateStarted();
                 IsFirstDraw = false;
                 ThemeId = LiveCharts.CurrentSettings.ThemeId;
+                previousSeries = Series;
             }
 
             Canvas.Invalidate();

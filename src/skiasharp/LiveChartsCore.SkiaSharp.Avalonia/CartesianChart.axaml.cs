@@ -337,14 +337,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             }
         }
 
-        SizeF IChartView.ControlSize =>
-            _avaloniaCanvas == null
-            ? new()
-            : new()
-            {
-                Width = (float)_avaloniaCanvas.Bounds.Width,
-                Height = (float)_avaloniaCanvas.Bounds.Height
-            };
+        SizeF IChartView.ControlSize => _avaloniaCanvas == null
+                    ? new()
+                    : new()
+                    {
+                        Width = (float)_avaloniaCanvas.Bounds.Width,
+                        Height = (float)_avaloniaCanvas.Bounds.Height
+                    };
 
         /// <inheritdoc cref="IChartView.DrawMargin" />
         public Margin? DrawMargin

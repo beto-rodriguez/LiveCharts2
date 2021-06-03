@@ -18,6 +18,7 @@ namespace WinFormsSample.Design.LinearGradients
             cartesianChart = new CartesianChart
             {
                 Series = viewModel.Series,
+                LegendPosition = LiveChartsCore.Measure.LegendPosition.Right,
 
                 // out of livecharts properties...
                 Location = new System.Drawing.Point(0, 0),

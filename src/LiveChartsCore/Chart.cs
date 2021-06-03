@@ -115,6 +115,16 @@ namespace LiveChartsCore
         /// </summary>
         protected PointF drawMarginLocation;
 
+        /// <summary>
+        /// The previous series
+        /// </summary>
+        protected IDrawableSeries<TDrawingContext>[] previousSeries = new IDrawableSeries<TDrawingContext>[0];
+
+        /// <summary>
+        /// The preserve first draw
+        /// </summary>
+        protected bool preserveFirstDraw = false;
+
         #endregion
 
         /// <summary>
@@ -303,6 +313,13 @@ namespace LiveChartsCore
         public abstract void Update(ChartUpdateParams? chartUpdateParams = null);
 
         /// <summary>
+        /// Finds the points near to the specified point.
+        /// </summary>
+        /// <param name="pointerPosition">The pointer position.</param>
+        /// <returns></returns>
+        public abstract IEnumerable<TooltipPoint> FindPointsNearTo(PointF pointerPosition);
+
+        /// <summary>
         /// Measures this chart.
         /// </summary>
         /// <returns></returns>
@@ -313,13 +330,6 @@ namespace LiveChartsCore
         /// </summary>
         /// <returns></returns>
         protected abstract void UpdateThrottlerUnlocked();
-
-        /// <summary>
-        /// Finds the points near to the specified point.
-        /// </summary>
-        /// <param name="pointerPosition">The pointer position.</param>
-        /// <returns></returns>
-        public abstract IEnumerable<TooltipPoint> FindPointsNearTo(PointF pointerPosition);
 
         /// <summary>
         /// Sets the draw margin.
@@ -363,6 +373,28 @@ namespace LiveChartsCore
         protected void InvokeOnUpdateFinished()
         {
             UpdateFinished?.Invoke(View);
+        }
+
+        /// <summary>
+        /// SDetermines whether the series miniature changed or not.
+        /// </summary>
+        /// <param name="newSeries">The new series.</param>
+        /// <returns></returns>
+        protected bool SeriesMiniatureChanged(IDrawableSeries<TDrawingContext>[] newSeries)
+        {
+            if (previousSeries.Length != newSeries.Length) return true;
+
+            for (var i = 0; i < newSeries.Length; i++)
+            {
+                if (i + 1 > previousSeries.Length) return true;
+
+                var a = previousSeries[i];
+                var b = newSeries[i];
+
+                if (a.Name != b.Name || a.Fill != b.Fill || a.Stroke != b.Stroke) return true;
+            }
+
+            return false;
         }
 
         private void OnCanvasValidated(MotionCanvas<TDrawingContext> chart)

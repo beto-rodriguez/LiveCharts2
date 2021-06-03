@@ -66,12 +66,17 @@ namespace LiveChartsCore.Kernel
             }
 
             await Task.Delay(ThrottlerTimeSpan);
-            _action.Invoke();
+
+            // notice it is important that the unlock comes before invoking the Action
+            // this way we can call the throttler again from the Action
+            // otherwise calling the throttler from the Action will be ignored always.
 
             lock (_sync)
             {
                 _isWaiting = false;
             }
+
+            _action.Invoke();
         }
 
         /// <summary>

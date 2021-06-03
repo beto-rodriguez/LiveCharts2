@@ -342,8 +342,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         SizeF IChartView.ControlSize => new()
         {
-            Width = (float)(Width * DeviceDisplay.MainDisplayInfo.Density),
-            Height = (float)(Height * DeviceDisplay.MainDisplayInfo.Density)
+            Width = (float)(canvas.Width * DeviceDisplay.MainDisplayInfo.Density),
+            Height = (float)(canvas.Height * DeviceDisplay.MainDisplayInfo.Density)
         };
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
@@ -353,7 +353,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         BindableObject IMobileChart.Canvas => canvas;
 
-        BindableObject IMobileChart.Legend => null;// legend;
+        BindableObject IMobileChart.Legend => legend;
 
         /// <inheritdoc cref="IChartView.DrawMargin" />
         public Margin? DrawMargin
@@ -505,7 +505,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
-        public IChartLegend<SkiaSharpDrawingContext>? Legend => null;// legend;
+        public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
 
         /// <inheritdoc cref="IChartView.TooltipPosition" />
         public TooltipPosition TooltipPosition

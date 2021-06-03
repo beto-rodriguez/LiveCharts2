@@ -128,9 +128,7 @@ namespace LiveChartsCore
         public override void Update(ChartUpdateParams? chartUpdateParams = null)
         {
             if (chartUpdateParams == null) chartUpdateParams = new ChartUpdateParams();
-
             if (chartUpdateParams.IsAutomaticUpdate && !View.AutoUpdateEnaled) return;
-
             if (!chartUpdateParams.Throttling)
             {
                 updateThrottler.ForceCall();
@@ -339,10 +337,17 @@ namespace LiveChartsCore
             {
                 InvokeOnMeasuring();
 
+                if (preserveFirstDraw)
+                {
+                    IsFirstDraw = true;
+                    preserveFirstDraw = false;
+                }
+
                 MeasureWork = new object();
 
                 viewDrawMargin = _chartView.DrawMargin;
                 controlSize = _chartView.ControlSize;
+
                 YAxes = _chartView.YAxes.Cast<IAxis<TDrawingContext>>().Select(x => x).ToArray();
                 XAxes = _chartView.XAxes.Cast<IAxis<TDrawingContext>>().Select(x => x).ToArray();
 
@@ -422,7 +427,12 @@ namespace LiveChartsCore
                     series.IsNotifyingChanges = true;
                 }
 
-                if (legend != null) legend.Draw(this);
+                if (legend != null && SeriesMiniatureChanged(Series))
+                {
+                    legend.Draw(this);
+                    Update();
+                    preserveFirstDraw = IsFirstDraw;
+                }
 
                 if (viewDrawMargin == null)
                 {
@@ -575,9 +585,17 @@ namespace LiveChartsCore
 
                 IsFirstDraw = false;
                 ThemeId = LiveCharts.CurrentSettings.ThemeId;
+                previousSeries = Series;
             }
 
             Canvas.Invalidate();
+        }
+
+        private void CartesianChart_UpdateStarted(IChartView<TDrawingContext> chart)
+        {
+            Update();
+            UpdateStarted -= CartesianChart_UpdateStarted;
+            //Update(new ChartUpdateParams { Throttling = false });
         }
 
         /// <summary>
