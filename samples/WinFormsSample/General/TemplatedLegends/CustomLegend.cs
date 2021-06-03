@@ -43,6 +43,7 @@ namespace WinFormsSample.General.TemplatedLegends
             var w = 0f;
 
             var parent = new Panel();
+            parent.BackColor = Color.FromArgb(255, 245, 245, 220);
             Controls.Add(parent);
             using var g = CreateGraphics();
             foreach (var s in series)
@@ -56,14 +57,14 @@ namespace WinFormsSample.General.TemplatedLegends
                 p.Controls.Add(new MotionCanvas
                 {
                     Location = new Point(6, 0),
-                    //PaintTasks = s.DefaultPaintContext.PaintTasks,
+                    PaintTasks = s.CanvasSchedule.PaintSchedules,
                     Width = (int)s.CanvasSchedule.Width,
                     Height = (int)s.CanvasSchedule.Height
                 });
                 p.Controls.Add(new Label
                 {
                     Text = s.Name,
-                    ForeColor = Color.Blue,
+                    ForeColor = Color.Black,
                     Font = chart.LegendFont,
                     Location = new Point(6 + (int)s.CanvasSchedule.Width + 6, 0)
                 });

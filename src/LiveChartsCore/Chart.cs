@@ -121,6 +121,11 @@ namespace LiveChartsCore
         protected IDrawableSeries<TDrawingContext>[] previousSeries = new IDrawableSeries<TDrawingContext>[0];
 
         /// <summary>
+        /// The previous legend position
+        /// </summary>
+        protected LegendPosition previousLegendPosition = LegendPosition.Hidden;
+
+        /// <summary>
         /// The preserve first draw
         /// </summary>
         protected bool preserveFirstDraw = false;
@@ -379,9 +384,11 @@ namespace LiveChartsCore
         /// SDetermines whether the series miniature changed or not.
         /// </summary>
         /// <param name="newSeries">The new series.</param>
+        /// <param name="position">The legend position.</param>
         /// <returns></returns>
-        protected bool SeriesMiniatureChanged(IDrawableSeries<TDrawingContext>[] newSeries)
+        protected bool SeriesMiniatureChanged(IDrawableSeries<TDrawingContext>[] newSeries, LegendPosition position)
         {
+            if (position != previousLegendPosition) return true;
             if (previousSeries.Length != newSeries.Length) return true;
 
             for (var i = 0; i < newSeries.Length; i++)

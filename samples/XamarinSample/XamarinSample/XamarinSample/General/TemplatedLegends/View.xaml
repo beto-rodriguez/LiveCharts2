@@ -23,7 +23,7 @@
         <lvc:CartesianChart Grid.Row="0" Series="{Binding Series}" LegendPosition="Bottom">
             <lvc:CartesianChart.LegendTemplate>
                 <DataTemplate>
-                    <Frame Background="#fafafa" CornerRadius="4" Padding="6">
+                    <Frame Background="#F5F5DC" CornerRadius="4" Padding="6">
                         <StackLayout 
                                 BindableLayout.ItemsSource="{Binding Series, Source={RelativeSource AncestorType={x:Type lvc:LegendBindingContext}}}"
                                 Orientation="{Binding Orientation, Source={RelativeSource AncestorType={x:Type lvc:LegendBindingContext}}}"
@@ -31,11 +31,8 @@
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
                                     <StackLayout Orientation="Horizontal" VerticalOptions="Center">
-                                        <Label Text="{Binding Name}"
-                                            TextColor="{Binding TextColor, Source={RelativeSource AncestorType={x:Type lvc:LegendBindingContext}}}"
-                                            FontFamily="{Binding FontFamily, Source={RelativeSource AncestorType={x:Type lvc:LegendBindingContext}}}"
-                                            FontSize="{Binding FontSize}"
-                                            FontAttributes="{Binding FontAttributes}" />
+                                        <Label
+                                            Text="{Binding Name}" />
                                         <lvc:MotionCanvas 
                                             VerticalOptions="Center"
                                             Margin="5, 0, 0, 0"

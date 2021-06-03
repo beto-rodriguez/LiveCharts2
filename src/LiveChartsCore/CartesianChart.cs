@@ -427,7 +427,7 @@ namespace LiveChartsCore
                     series.IsNotifyingChanges = true;
                 }
 
-                if (legend != null && SeriesMiniatureChanged(Series))
+                if (legend != null && SeriesMiniatureChanged(Series, LegendPosition))
                 {
                     legend.Draw(this);
                     Update();
@@ -586,6 +586,7 @@ namespace LiveChartsCore
                 IsFirstDraw = false;
                 ThemeId = LiveCharts.CurrentSettings.ThemeId;
                 previousSeries = Series;
+                previousLegendPosition = LegendPosition;
             }
 
             Canvas.Invalidate();

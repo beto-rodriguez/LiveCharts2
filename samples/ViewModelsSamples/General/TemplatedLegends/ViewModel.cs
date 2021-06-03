@@ -11,8 +11,7 @@ namespace ViewModelsSamples.General.TemplatedLegends
         {
             new ColumnSeries<double>
             {
-                Values = new ObservableCollection<double> { 2, 1, 3, 5, 3, 4, 6 },
-                Fill = null
+                Values = new ObservableCollection<double> { 2, 1, 3, 5, 3, 4, 6 }
             }
         };
     }
