@@ -88,7 +88,15 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <value>
         /// The text brush.
         /// </value>
-        public SolidColorBrush TextBrush { get; set; } = new SolidColorBrush(Color.FromRgb(35, 35, 35));
+        public IBrush TextBrush { get; set; } = new SolidColorBrush(Color.FromRgb(35, 35, 35));
+
+        /// <summary>
+        /// Gets or sets the background brush.
+        /// </summary>
+        /// <value>
+        /// The background brush.
+        /// </value>
+        public IBrush? BackgroundBrush { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the orientation.
@@ -163,6 +171,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             FontWeight = avaloniaChart.LegendFontWeight;
             FontStyle = avaloniaChart.LegendFontStyle;
             TextBrush = avaloniaChart.LegendTextBrush;
+            BackgroundBrush = avaloniaChart.LegendBackground;
 
             BuildContent();
             Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
@@ -178,7 +187,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             {
                 Series = Series,
                 FontFamily = FontFamily,
-                Background = Background,
+                Background = BackgroundBrush,
                 FontSize = FontSize,
                 FontStyle = FontStyle,
                 FontWeight = FontWeight,

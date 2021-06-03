@@ -11,12 +11,13 @@
       <ItemsControl Items="{Binding Series, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}">
         <ItemsControl.ItemsPanel>
           <ItemsPanelTemplate>
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="{Binding Orientation, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}" />
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Orientation="{Binding Orientation, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}" />
           </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate>
           <DataTemplate DataType="{x:Type lvc:ISeries}">
-            <Border Padding="7 5">
+            <Border Padding="7 5" Background="{Binding BackgroundBrush, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}">
               <StackPanel Orientation="Horizontal">
                 <local:MotionCanvas
                     Margin="0 0 8 0"

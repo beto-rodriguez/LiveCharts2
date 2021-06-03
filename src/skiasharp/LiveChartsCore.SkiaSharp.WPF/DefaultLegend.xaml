@@ -37,8 +37,10 @@
             <ItemsControl ItemsSource="{Binding Series, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center" 
-                           Orientation="{Binding Orientation, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}" />
+                        <WrapPanel
+                            HorizontalAlignment="Center" VerticalAlignment="Center" 
+                            Orientation="{Binding Orientation, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}"
+                            Background="{Binding LegendBackground, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>

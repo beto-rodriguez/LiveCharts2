@@ -81,6 +81,14 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                nameof(TextColor), typeof(SolidColorBrush), typeof(DefaultLegend), new PropertyMetadata(new SolidColorBrush(Color.FromRgb(35, 35, 35))));
 
         /// <summary>
+        /// The text color property
+        /// </summary>
+        public static readonly DependencyProperty LegendBackgroundProperty =
+           DependencyProperty.Register(
+               nameof(LegendBackground), typeof(SolidColorBrush), typeof(DefaultLegend),
+               new PropertyMetadata(new SolidColorBrush(Color.FromRgb(35, 35, 35))));
+
+        /// <summary>
         /// Gets or sets the series.
         /// </summary>
         /// <value>
@@ -140,6 +148,18 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set => SetValue(TextColorProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the color of the text.
+        /// </summary>
+        /// <value>
+        /// The color of the text.
+        /// </value>
+        public SolidColorBrush LegendBackground
+        {
+            get => (SolidColorBrush)GetValue(LegendBackgroundProperty);
+            set => SetValue(LegendBackgroundProperty, value);
+        }
+
         void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
         {
             var wpfChart = (Chart)chart.View;
@@ -187,11 +207,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     : Orientation.Vertical;
 
             FontFamily = wpfChart.LegendFontFamily;
-            TextColor = wpfChart.LegendTextColor;
+            TextColor = wpfChart.LegendTextBrush;
             FontSize = wpfChart.LegendFontSize;
             FontWeight = wpfChart.LegendFontWeight;
             FontStyle = wpfChart.LegendFontStyle;
             FontStretch = wpfChart.LegendFontStretch;
+            LegendBackground = wpfChart.LegendBackground;
 
             UpdateLayout();
         }

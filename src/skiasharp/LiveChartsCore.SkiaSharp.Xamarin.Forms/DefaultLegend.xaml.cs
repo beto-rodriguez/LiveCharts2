@@ -203,7 +203,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             LegendBackgroundColor = mobileChart.TooltipBackground;
             LegendFontFamily = mobileChart.LegendFontFamily;
             LegendFontSize = mobileChart.LegendFontSize;
-            LegendTextColor = mobileChart.LegendTextColor;
+            LegendTextColor = mobileChart.LegendTextBrush;
             LegendFontAttributes = mobileChart.LegendFontAttributes;
 
             BuildContent();

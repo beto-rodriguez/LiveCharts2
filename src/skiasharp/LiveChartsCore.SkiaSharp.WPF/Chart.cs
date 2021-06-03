@@ -209,9 +209,17 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <summary>
         /// The legend text color property
         /// </summary>
-        public static readonly DependencyProperty LegendTextColorProperty =
+        public static readonly DependencyProperty LegendTextBrushProperty =
            DependencyProperty.Register(
-               nameof(LegendTextColor), typeof(SolidColorBrush), typeof(Chart),
+               nameof(LegendTextBrush), typeof(SolidColorBrush), typeof(Chart),
+               new PropertyMetadata(new SolidColorBrush(System.Windows.Media.Color.FromRgb(35, 35, 35)), OnDependencyPropertyChanged));
+
+        /// <summary>
+        /// The legend background property
+        /// </summary>
+        public static readonly DependencyProperty LegendBackgroundProperty =
+           DependencyProperty.Register(
+               nameof(LegendBackground), typeof(SolidColorBrush), typeof(Chart),
                new PropertyMetadata(new SolidColorBrush(System.Windows.Media.Color.FromRgb(35, 35, 35)), OnDependencyPropertyChanged));
 
         /// <summary>
@@ -494,10 +502,22 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <value>
         /// The color of the legend text.
         /// </value>
-        public SolidColorBrush LegendTextColor
+        public SolidColorBrush LegendTextBrush
         {
-            get => (SolidColorBrush)GetValue(LegendTextColorProperty);
-            set => SetValue(LegendTextColorProperty, value);
+            get => (SolidColorBrush)GetValue(LegendTextBrushProperty);
+            set => SetValue(LegendTextBrushProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the legend background.
+        /// </summary>
+        /// <value>
+        /// The legend t background.
+        /// </value>
+        public SolidColorBrush LegendBackground
+        {
+            get => (SolidColorBrush)GetValue(LegendBackgroundProperty);
+            set => SetValue(LegendBackgroundProperty, value);
         }
 
         /// <summary>

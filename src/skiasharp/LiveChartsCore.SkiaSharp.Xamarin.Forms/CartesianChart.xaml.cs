@@ -227,9 +227,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <summary>
         /// The legend text color property
         /// </summary>
-        public static readonly BindableProperty LegendTextColorProperty =
+        public static readonly BindableProperty LegendTextBrushProperty =
             BindableProperty.Create(
-                nameof(LegendTextColor), typeof(c), typeof(CartesianChart),
+                nameof(LegendTextBrush), typeof(c), typeof(CartesianChart),
                 new c(35 / 255d, 35 / 255d, 35 / 255d), propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// </summary>
         public static readonly BindableProperty LegendBackgroundProperty =
             BindableProperty.Create(
-                nameof(LegendTextColor), typeof(c), typeof(CartesianChart),
+                nameof(LegendTextBrush), typeof(c), typeof(CartesianChart),
                 new c(250 / 255d, 250 / 255d, 250 / 255d), propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>
@@ -474,10 +474,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <value>
         /// The color of the legend text.
         /// </value>
-        public c LegendTextColor
+        public c LegendTextBrush
         {
-            get => (c)GetValue(LegendTextColorProperty);
-            set => SetValue(LegendTextColorProperty, value);
+            get => (c)GetValue(LegendTextBrushProperty);
+            set => SetValue(LegendTextBrushProperty, value);
         }
 
         /// <summary>
@@ -486,7 +486,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <value>
         /// The color of the legend background.
         /// </value>
-        public c LegendBackgroundColor
+        public c LegendBackground
         {
             get => (c)GetValue(LegendBackgroundProperty);
             set => SetValue(LegendBackgroundProperty, value);
