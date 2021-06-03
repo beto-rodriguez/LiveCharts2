@@ -19,6 +19,10 @@ namespace WinFormsSample.Axes.Multiple
             {
                 Series = viewModel.Series,
                 YAxes = viewModel.YAxes,
+                LegendPosition = LiveChartsCore.Measure.LegendPosition.Left,
+                LegendFont = new System.Drawing.Font("Courier New", 25),
+                LegendTextColor = System.Drawing.Color.FromArgb(255, 50, 50, 50),
+                LegendBackColor = System.Drawing.Color.FromArgb(255, 250, 250, 250),
 
                 // out of livecharts properties...
                 Location = new System.Drawing.Point(0, 0),

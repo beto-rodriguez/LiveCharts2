@@ -64,6 +64,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private Color _tooltipBackColor = Color.FromArgb(255, 250, 250, 250);
         private Font _legendFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
         private Color _legendBackColor = Color.FromArgb(255, 250, 250, 250);
+        private Color _legendTextColor = Color.FromArgb(255, 250, 250, 250);
         private Color _tooltipTextColor;
         private readonly ActionThrottler _mouseMoveThrottler;
 
@@ -182,6 +183,14 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// The legend font.
         /// </value>
         public Font LegendFont { get => _legendFont; set { _legendFont = value; OnPropertyChanged(); } }
+
+        /// <summary>
+        /// Gets or sets the default color of the legend text.
+        /// </summary>
+        /// <value>
+        /// The color of the legend back.
+        /// </value>
+        public Color LegendTextColor { get => _legendTextColor; set { _legendTextColor = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the default color of the legend back.

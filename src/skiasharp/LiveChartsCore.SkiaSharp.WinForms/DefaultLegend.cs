@@ -81,6 +81,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 if (Orientation == LegendOrientation.Vertical)
                 {
                     var parent = new Panel();
+                    parent.BackColor = chart.LegendBackColor;
                     Controls.Add(parent);
                     using var g = CreateGraphics();
                     foreach (var s in series)
@@ -102,7 +103,9 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                         {
                             Text = s.Name,
                             Font = chart.LegendFont,
-                            Location = new Point(6 + (int)s.CanvasSchedule.Width + 6, 0)
+                            ForeColor = chart.LegendTextColor,
+                            Location = new Point(6 + (int)s.CanvasSchedule.Width + 6, 0),
+                            AutoSize = true
                         });
 
                         var thisW = size.Width + 36 + (int)s.CanvasSchedule.Width;
