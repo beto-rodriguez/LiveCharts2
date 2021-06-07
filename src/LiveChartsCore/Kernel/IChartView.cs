@@ -24,6 +24,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace LiveChartsCore.Kernel
 {
@@ -113,6 +114,13 @@ namespace LiveChartsCore.Kernel
         /// The tooltip position.
         /// </value>
         TooltipPosition TooltipPosition { get; set; }
+
+        /// <summary>
+        /// Sets the tooltip style.
+        /// </summary>
+        /// <param name="background">The background.</param>
+        /// <param name="textColor">Color of the text.</param>
+        void SetTooltipStyle(Color background, Color textColor);
     }
 
     /// <summary>

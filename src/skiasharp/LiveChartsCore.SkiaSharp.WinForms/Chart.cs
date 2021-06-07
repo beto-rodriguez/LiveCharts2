@@ -268,6 +268,13 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             tooltip.Hide();
         }
 
+        /// <inheritdoc cref="IChartView.SetTooltipStyle(Color, Color)"/>
+        public void SetTooltipStyle(Color background, Color textColor)
+        {
+            TooltipBackColor = background;
+            TooltipTextColor = textColor;
+        }
+
         /// <summary>
         /// Initializes the core.
         /// </summary>

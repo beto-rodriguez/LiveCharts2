@@ -653,6 +653,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             tooltip.Hide();
         }
 
+        /// <inheritdoc cref="IChartView.SetTooltipStyle(System.Drawing.Color, System.Drawing.Color)"/>
+        public void SetTooltipStyle(System.Drawing.Color background, System.Drawing.Color textColor)
+        {
+            TooltipBackground = new SolidColorBrush(new A.Media.Color(background.A, background.R, background.G, background.B));
+            TooltipTextBrush = new SolidColorBrush(new A.Media.Color(textColor.A, textColor.R, textColor.G, textColor.B));
+        }
+
         /// <summary>
         /// Initializes the core.
         /// </summary>

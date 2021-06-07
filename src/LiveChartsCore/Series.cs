@@ -225,6 +225,8 @@ namespace LiveChartsCore
 
         IEnumerable<TooltipPoint> ISeries.FindPointsNearTo(IChart chart, PointF pointerPosition, TooltipFindingStrategy automaticStategy)
         {
+            if (this is IPieSeries<TDrawingContext> pieSeries && pieSeries.IsFillSeries) return Enumerable.Empty<TooltipPoint>();
+
             return FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy);
         }
 

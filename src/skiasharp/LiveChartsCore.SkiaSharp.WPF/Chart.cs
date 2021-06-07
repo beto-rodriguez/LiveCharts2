@@ -625,6 +625,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             tooltip.Hide();
         }
 
+        /// <inheritdoc cref="IChartView.SetTooltipStyle(System.Drawing.Color, System.Drawing.Color)"/>
+        public void SetTooltipStyle(System.Drawing.Color background, System.Drawing.Color textColor)
+        {
+            TooltipBackground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(background.A, background.R, background.G, background.B));
+            TooltipTextBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(textColor.A, textColor.R, textColor.G, textColor.B));
+        }
+
         /// <summary>
         /// Initializes the core.
         /// </summary>

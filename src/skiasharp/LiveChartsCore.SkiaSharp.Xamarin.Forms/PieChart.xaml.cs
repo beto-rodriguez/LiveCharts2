@@ -570,6 +570,13 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
         }
 
+        /// <inheritdoc cref="IChartView.SetTooltipStyle(System.Drawing.Color, System.Drawing.Color)"/>
+        public void SetTooltipStyle(System.Drawing.Color background, System.Drawing.Color textColor)
+        {
+            TooltipBackground = background;
+            TooltipTextBrush = textColor;
+        }
+
         /// <summary>
         /// Initializes the core.
         /// </summary>
