@@ -265,6 +265,13 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         {
             if (tooltip == null || core == null) return;
 
+            foreach (var state in PointStates.GetStates())
+            {
+                if (!state.IsHoverState) continue;
+                if (state.Fill != null) state.Fill.ClearGeometriesFromPaintTask(core.Canvas);
+                if (state.Stroke != null) state.Stroke.ClearGeometriesFromPaintTask(core.Canvas);
+            }
+
             tooltip.Hide();
         }
 
@@ -345,7 +352,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         private void Chart_MouseLeave(object? sender, EventArgs e)
         {
-            tooltip?.Hide();
+            HideTooltip();
         }
     }
 }

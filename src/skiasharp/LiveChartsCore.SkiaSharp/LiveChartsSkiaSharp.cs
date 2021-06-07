@@ -98,11 +98,11 @@ namespace LiveChartsCore.SkiaSharpView
                                    // new SKColor(255, 255, 255, 180) as the fill (defaultHoverColor).
                                    var defaultHoverColor = Color.FromArgb(180, 255, 255, 255).AsSKColor();
                                    chart.PointStates = new PointStatesDictionary<SkiaSharpDrawingContext>()
-                                        .WithState(LiveCharts.BarSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor))
-                                        .WithState(LiveCharts.LineSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor))
-                                        .WithState(LiveCharts.PieSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor))
-                                        .WithState(LiveCharts.ScatterSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor))
-                                        .WithState(LiveCharts.StackedBarSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor));
+                                        .WithState(LiveCharts.BarSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
+                                        .WithState(LiveCharts.LineSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
+                                        .WithState(LiveCharts.PieSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
+                                        .WithState(LiveCharts.ScatterSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
+                                        .WithState(LiveCharts.StackedBarSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true);
                                })
                                .HasRuleForAxes(axis =>
                                {
@@ -195,15 +195,15 @@ namespace LiveChartsCore.SkiaSharpView
                                    chart.PointStates =
                                        new PointStatesDictionary<SkiaSharpDrawingContext>()
                                            .WithState(
-                                               LiveCharts.BarSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor))
+                                               LiveCharts.BarSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
                                            .WithState(
-                                               LiveCharts.LineSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor))
+                                               LiveCharts.LineSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
                                            .WithState(
-                                               LiveCharts.PieSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor))
+                                               LiveCharts.PieSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
                                            .WithState(
-                                               LiveCharts.ScatterSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor))
+                                               LiveCharts.ScatterSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
                                            .WithState(
-                                               LiveCharts.StackedBarSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor));
+                                               LiveCharts.StackedBarSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true);
                                })
                                .HasRuleForAxes(axis =>
                                {

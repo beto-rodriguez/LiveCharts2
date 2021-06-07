@@ -225,9 +225,9 @@ namespace LiveChartsCore
 
         IEnumerable<TooltipPoint> ISeries.FindPointsNearTo(IChart chart, PointF pointerPosition, TooltipFindingStrategy automaticStategy)
         {
-            if (this is IPieSeries<TDrawingContext> pieSeries && pieSeries.IsFillSeries) return Enumerable.Empty<TooltipPoint>();
-
-            return FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy);
+            return this is IPieSeries<TDrawingContext> pieSeries && pieSeries.IsFillSeries
+                ? Enumerable.Empty<TooltipPoint>()
+                : FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy);
         }
 
         /// <inheritdoc />
@@ -255,8 +255,22 @@ namespace LiveChartsCore
 
             OnAddedToState(visual, chart);
 
-            if (s.Fill != null) s.Fill.AddGeometryToPaintTask(chart.CoreCanvas, highlitable);
-            if (s.Stroke != null) s.Stroke.AddGeometryToPaintTask(chart.CoreCanvas, highlitable);
+            var core = (Chart<TDrawingContext>)chartPoint.Context.Chart.CoreChart;
+
+            if (s.Fill != null)
+            {
+                s.Fill.SetClipRectangle(
+                    core.Canvas,
+                    new RectangleF(core.DrawMarginLocation, core.DrawMarginSize));
+                s.Fill.AddGeometryToPaintTask(chart.CoreCanvas, highlitable);
+            }
+            if (s.Stroke != null)
+            {
+                s.Stroke.SetClipRectangle(
+                    core.Canvas,
+                    new RectangleF(core.DrawMarginLocation, core.DrawMarginSize));
+                s.Stroke.AddGeometryToPaintTask(chart.CoreCanvas, highlitable);
+            }
         }
 
         /// <inheritdoc />

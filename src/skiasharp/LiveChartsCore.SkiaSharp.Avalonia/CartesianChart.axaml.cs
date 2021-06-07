@@ -650,6 +650,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             if (tooltip == null || core == null) return;
 
+            foreach (var state in PointStates.GetStates())
+            {
+                if (!state.IsHoverState) continue;
+                if (state.Fill != null) state.Fill.ClearGeometriesFromPaintTask(core.Canvas);
+                if (state.Stroke != null) state.Stroke.ClearGeometriesFromPaintTask(core.Canvas);
+            }
+
             tooltip.Hide();
         }
 
@@ -816,7 +823,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         private void CartesianChart_PointerLeave(object? sender, PointerEventArgs e)
         {
-            tooltip?.Hide();
+            HideTooltip();
         }
     }
 }

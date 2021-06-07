@@ -216,6 +216,15 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     new Rectangle(
                         -1, -1,
                         AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
+
+                foreach (var state in _chart.View.PointStates.GetStates())
+                {
+                    if (!state.IsHoverState) continue;
+                    if (state.Fill != null) state.Fill.ClearGeometriesFromPaintTask(_chart.Canvas);
+                    if (state.Stroke != null) state.Stroke.ClearGeometriesFromPaintTask(_chart.Canvas);
+                }
+
+                _chart.Update();
             });
         }
 

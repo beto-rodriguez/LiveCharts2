@@ -88,13 +88,15 @@ namespace LiveChartsCore.Kernel
         /// <param name="key">The key.</param>
         /// <param name="fill">The fill.</param>
         /// <param name="stroke">The stroke.</param>
+        /// <param name="isHoverState">Indicates whether the state should be remover when the pointer goes out of a chart.</param>
         /// <returns></returns>
         public PointStatesDictionary<TDrawingContext> WithState(
             string key,
             IPaintTask<TDrawingContext>? fill,
-            IPaintTask<TDrawingContext>? stroke)
+            IPaintTask<TDrawingContext>? stroke,
+            bool isHoverState = false)
         {
-            _states.Add(key, new StrokeAndFillDrawable<TDrawingContext>(fill, stroke));
+            _states.Add(key, new StrokeAndFillDrawable<TDrawingContext>(fill, stroke, isHoverState));
             return this;
         }
 
