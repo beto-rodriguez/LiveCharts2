@@ -172,21 +172,9 @@ namespace LiveChartsCore.Kernel
                 bounds.SecondaryBounds.AppendValue(secondary);
                 bounds.TertiaryBounds.AppendValue(tertiary);
 
-                //if (primary >= yMin && primary <= yMax && secondary >= xMin && secondary <= xMax)
-                //{
-                //    bounds.VisiblePrimaryBounds.AppendValue(primary);
-                //    bounds.VisibleSecondaryBounds.AppendValue(secondary);
-                //    bounds.VisibleTertiaryBounds.AppendValue(tertiary);
-                //}
-
-                if (primary >= yMin && primary <= yMax)
+                if (primary >= yMin && primary <= yMax && secondary >= xMin && secondary <= xMax)
                 {
                     bounds.VisiblePrimaryBounds.AppendValue(primary);
-                    bounds.VisibleTertiaryBounds.AppendValue(tertiary);
-                }
-
-                if (secondary >= xMin && secondary <= xMax)
-                {
                     bounds.VisibleSecondaryBounds.AppendValue(secondary);
                     bounds.VisibleTertiaryBounds.AppendValue(tertiary);
                 }
