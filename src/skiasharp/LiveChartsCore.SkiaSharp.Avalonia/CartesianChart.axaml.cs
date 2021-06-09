@@ -691,7 +691,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             base.OnPropertyChanged(change);
 
-            if (core == null) return;
+            if (core == null || change.Property.Name == nameof(IsPointerOver)) return;
 
             if (change.Property.Name == nameof(Series))
             {

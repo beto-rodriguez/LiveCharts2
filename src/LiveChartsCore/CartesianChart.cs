@@ -345,6 +345,8 @@ namespace LiveChartsCore
 
                 MeasureWork = new object();
 
+                #region copy the current data in the view
+
                 viewDrawMargin = _chartView.DrawMargin;
                 controlSize = _chartView.ControlSize;
 
@@ -354,14 +356,10 @@ namespace LiveChartsCore
                 _zoomingSpeed = _chartView.ZoomingSpeed;
                 _zoomMode = _chartView.ZoomMode;
 
-                Series = _chartView.Series
-                    .Where(x => x.IsVisible)
-                    .Cast<ICartesianSeries<TDrawingContext>>()
-                    .Select(series =>
-                    {
-                        _ = series.Fetch(this);
-                        return series;
-                    }).ToArray();
+                var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
+                if (theme.CurrentColors == null || theme.CurrentColors.Length == 0)
+                    throw new Exception("Default colors are not valid");
+                var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
 
                 legendPosition = _chartView.LegendPosition;
                 legendOrientation = _chartView.LegendOrientation;
@@ -374,13 +372,14 @@ namespace LiveChartsCore
                 animationsSpeed = _chartView.AnimationsSpeed;
                 easingFunction = _chartView.EasingFunction;
 
-                seriesContext = new SeriesContext<TDrawingContext>(Series);
-                var totalAxes = XAxes.Concat(YAxes).ToArray();
+                Series = _chartView.Series
+                    .Where(x => x.IsVisible)
+                    .Cast<ICartesianSeries<TDrawingContext>>()
+                    .ToArray();
 
-                var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-                if (theme.CurrentColors == null || theme.CurrentColors.Length == 0)
-                    throw new Exception("Default colors are not valid");
-                var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
+                #endregion
+
+                seriesContext = new SeriesContext<TDrawingContext>(Series);
 
                 // restart axes bounds and meta data
                 foreach (var axis in XAxes)
@@ -434,6 +433,7 @@ namespace LiveChartsCore
                     preserveFirstDraw = IsFirstDraw;
                 }
 
+                // calculate draw margin
                 if (viewDrawMargin == null)
                 {
                     var m = viewDrawMargin ?? new Margin();
@@ -497,6 +497,7 @@ namespace LiveChartsCore
                 // or it is initializing in the UI and has no dimensions yet
                 if (drawMarginSize.Width <= 0 || drawMarginSize.Height <= 0) return;
 
+                var totalAxes = XAxes.Concat(YAxes).ToArray();
                 var toDeleteAxes = new HashSet<IAxis<TDrawingContext>>(_everMeasuredAxes);
                 foreach (var axis in totalAxes)
                 {
@@ -525,7 +526,6 @@ namespace LiveChartsCore
                 }
 
                 var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
-
                 foreach (var series in Series)
                 {
                     var secondaryAxis = XAxes[series.ScalesXAt];
