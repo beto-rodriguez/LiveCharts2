@@ -448,13 +448,16 @@ namespace LiveChartsCore
             var s = axisTick.Value;
             if (s < _minStep) s = _minStep;
 
-            var start = Math.Truncate(_dataBounds.Min / s) * s;
+            var max = MaxLimit == null ? (_visibleDataBounds ?? _dataBounds).Max : MaxLimit.Value;
+            var min = MinLimit == null ? (_visibleDataBounds ?? _dataBounds).Min : MinLimit.Value;
+
+            var start = Math.Truncate(min / s) * s;
 
             var w = 0f;
             var h = 0f;
             var r = (float)LabelsRotation;
 
-            for (var i = start; i <= _dataBounds.Max; i += s)
+            for (var i = start; i <= max; i += s)
             {
                 var textGeometry = new TTextGeometry
                 {
