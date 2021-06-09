@@ -257,8 +257,8 @@ namespace LiveChartsCore
             var r = (float)_labelsRotation;
             var hasRotation = Math.Abs(r) > 0.01f;
 
-            var max = MaxLimit == null ? _dataBounds.Max : MaxLimit.Value;
-            var min = MinLimit == null ? _dataBounds.Min : MinLimit.Value;
+            var max = MaxLimit == null ? (_visibleDataBounds ?? _dataBounds).Max : MaxLimit.Value;
+            var min = MinLimit == null ? (_visibleDataBounds ?? _dataBounds).Min : MinLimit.Value;
 
             var start = Math.Truncate(min / s) * s;
             if (!activeSeparators.TryGetValue(chart, out var separators))
