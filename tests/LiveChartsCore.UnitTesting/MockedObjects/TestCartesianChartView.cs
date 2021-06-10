@@ -79,19 +79,15 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
             UpdateFinished?.Invoke(this);
         }
 
-        public void HideTooltip()
-        {
-            throw new NotImplementedException();
-        }
+        public void HideTooltip() { }
 
         public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
             return new PointF();
         }
 
-        public void ShowTooltip(IEnumerable<TooltipPoint> points)
-        {
-            throw new NotImplementedException();
-        }
+        public void ShowTooltip(IEnumerable<TooltipPoint> points) { }
+
+        public void SetTooltipStyle(Color background, Color textColor) { }
     }
 }
