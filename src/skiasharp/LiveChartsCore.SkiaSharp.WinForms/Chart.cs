@@ -55,7 +55,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// </summary>
         protected MotionCanvas motionCanvas;
 
-        private PointF _mousePosition = new();
         private LegendPosition _legendPosition = LiveCharts.CurrentSettings.DefaultLegendPosition;
         private LegendOrientation _legendOrientation = LiveCharts.CurrentSettings.DefaultLegendOrientation;
         private Margin? _drawMargin = null;
@@ -66,7 +65,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private Color _legendBackColor = Color.FromArgb(255, 250, 250, 250);
         private Color _legendTextColor = Color.FromArgb(255, 250, 250, 250);
         private Color _tooltipTextColor;
-        private readonly ActionThrottler _mouseMoveThrottler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Chart"/> class.
@@ -88,7 +86,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             motionCanvas.Size = new Size(150, 150);
             motionCanvas.TabIndex = 0;
             motionCanvas.Resize += OnResized;
-            motionCanvas.MouseMove += OnMouseMove;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(motionCanvas);
@@ -107,7 +104,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             initializer.ApplyStyleToChart(this);
 
             var c = Controls[0].Controls[0];
-            c.MouseMove += ChartOnMouseMove;
+            //MouseMove += ChartOnMouseMove;
+            c.MouseMove += OnMouseMove;
 
             InitializeCore();
 
@@ -117,8 +115,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             core.UpdateFinished += OnCoreUpdateFinished;
 
             c.MouseLeave += Chart_MouseLeave;
-
-            _mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
+            //MouseLeave += Chart_MouseLeave;
         }
 
         #region events
@@ -145,17 +142,12 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             set => BackColor = value;
         }
 
-        SizeF IChartView.ControlSize
-        {
-            get
-            {
-                // return the full control size as a workaround when the lergend is not set.
+        SizeF IChartView.ControlSize =>
+                // return the full control size as a workaround when the legend is not set.
                 // for some reason WinForms has not loaded the correct size at this point when the control loads.
-                return LegendPosition == LegendPosition.Hidden
+                LegendPosition == LegendPosition.Hidden
                     ? new SizeF() { Width = ClientSize.Width, Height = ClientSize.Height }
                     : new SizeF() { Width = motionCanvas.Width, Height = motionCanvas.Height };
-            }
-        }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => motionCanvas.CanvasCore;
@@ -317,22 +309,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         private void OnMouseMove(object? sender, MouseEventArgs e)
         {
-            var p = e.Location;
-            _mousePosition = new PointF(p.X, p.Y);
-            _mouseMoveThrottler.Call();
-        }
-
-        private void MouseMoveThrottlerUnlocked()
-        {
-            if (core == null || TooltipPosition == TooltipPosition.Hidden) return;
-            tooltip.Show(core.FindPointsNearTo(_mousePosition), core);
-        }
-
-        private void ChartOnMouseMove(object? sender, MouseEventArgs e)
-        {
-            var p = e.Location;
-            _mousePosition = new PointF(p.X, p.Y);
-            _mouseMoveThrottler.Call();
+            core?.InvokePointerMove(new PointF(e.Location.X, e.Location.Y));
         }
 
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)

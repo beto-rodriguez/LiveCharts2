@@ -612,6 +612,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             if (core == null) return;
             if (TooltipPosition == TooltipPosition.Hidden) return;
             var location = new PointF(e.Location.X, e.Location.Y);
+            core.InvokePointerDown(location);
             ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindPointsNearTo(location), core);
         }
 

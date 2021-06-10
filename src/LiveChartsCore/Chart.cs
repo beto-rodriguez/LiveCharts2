@@ -130,6 +130,13 @@ namespace LiveChartsCore
         /// </summary>
         protected bool preserveFirstDraw = false;
 
+        private readonly ActionThrottler _tooltipThrottler;
+        private readonly ActionThrottler _panningThrottler;
+        private PointF _pointerPosition = new(-10, -10);
+        private PointF _pointerPanningPosition = new(-10, -10);
+        private PointF _pointerPreviousPanningPosition = new(-10, -10);
+        private bool _isPanning = false;
+
         #endregion
 
         /// <summary>
@@ -144,6 +151,53 @@ namespace LiveChartsCore
             easingFunction = EasingFunctions.QuadraticOut;
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(defaultPlatformConfig);
             updateThrottler = new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
+
+            PointerDown += Chart_PointerDown;
+            PointerMove += Chart_PointerMove;
+            PointerUp += Chart_PointerUp;
+
+            _tooltipThrottler = new ActionThrottler(TooltipThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
+            _panningThrottler = new ActionThrottler(PanningThrottlerUnlocked, TimeSpan.FromMilliseconds(30));
+        }
+
+        private void TooltipThrottlerUnlocked()
+        {
+            if (tooltip == null || TooltipPosition == TooltipPosition.Hidden) return;
+            tooltip.Show(FindPointsNearTo(_pointerPosition), this);
+        }
+
+        private void PanningThrottlerUnlocked()
+        {
+            if (this is not CartesianChart<TDrawingContext> cartesianChart) return;
+
+            cartesianChart.Pan(
+                new PointF(
+                (float)(_pointerPanningPosition.X - _pointerPreviousPanningPosition.X),
+                (float)(_pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y)));
+
+            _pointerPreviousPanningPosition = new PointF(_pointerPanningPosition.X, _pointerPanningPosition.Y);
+        }
+
+        private void Chart_PointerDown(PointF pointerPosition)
+        {
+            _isPanning = true;
+            _pointerPreviousPanningPosition = pointerPosition;
+        }
+
+        private void Chart_PointerMove(PointF pointerPosition)
+        {
+            _pointerPosition = pointerPosition;
+
+            if (tooltip != null && TooltipPosition != TooltipPosition.Hidden) _tooltipThrottler.Call();
+            if (!_isPanning) return;
+            _pointerPanningPosition = pointerPosition;
+            _panningThrottler.Call();
+        }
+
+        private void Chart_PointerUp(PointF pointerPosition)
+        {
+            if (!_isPanning) return;
+            _isPanning = false;
         }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
@@ -154,6 +208,14 @@ namespace LiveChartsCore
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
         public event ChartEventHandler<TDrawingContext>? UpdateFinished;
+
+        internal event Action<PointF> PointerDown;
+
+        internal event Action<PointF> PointerMove;
+
+        internal event Action<PointF> PointerUp;
+
+        internal event Action<PanGestureEventArgs> PanGesture;
 
         #region properties
 
@@ -323,6 +385,26 @@ namespace LiveChartsCore
         /// <param name="pointerPosition">The pointer position.</param>
         /// <returns></returns>
         public abstract IEnumerable<TooltipPoint> FindPointsNearTo(PointF pointerPosition);
+
+        internal void InvokePointerDown(PointF point)
+        {
+            PointerDown?.Invoke(point);
+        }
+
+        internal void InvokePointerMove(PointF point)
+        {
+            PointerMove?.Invoke(point);
+        }
+
+        internal void InvokePointerUp(PointF point)
+        {
+            PointerUp?.Invoke(point);
+        }
+
+        internal void InvokePanGestrue(PanGestureEventArgs eventArgs)
+        {
+            PanGesture?.Invoke(eventArgs);
+        }
 
         /// <summary>
         /// Measures this chart.

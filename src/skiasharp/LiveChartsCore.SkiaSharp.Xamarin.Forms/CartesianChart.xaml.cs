@@ -694,7 +694,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             if (e.StatusType != GestureStatus.Running) return;
 
             var c = (CartesianChart<SkiaSharpDrawingContext>)core;
-            c.Pan(new PointF((float)e.TotalX, (float)e.TotalY));
+            var delta = new PointF((float)e.TotalX, (float)e.TotalY);
+            var args = new PanGestureEventArgs(delta);
+            c.InvokePanGestrue(args);
+            if (!args.Handled) c.Pan(delta);
         }
 
         private void PinchGestureRecognizer_PinchUpdated(object? sender, PinchGestureUpdatedEventArgs e)
@@ -715,6 +718,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             if (core == null) return;
             if (TooltipPosition == TooltipPosition.Hidden) return;
             var location = new PointF(e.Location.X, e.Location.Y);
+            core.InvokePointerDown(location);
             ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindPointsNearTo(location), core);
         }
 

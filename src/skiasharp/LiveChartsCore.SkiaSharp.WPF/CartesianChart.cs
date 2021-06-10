@@ -41,10 +41,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         private readonly CollectionDeepObserver<ISeries> _seriesObserver;
         private readonly CollectionDeepObserver<IAxis> _xObserver;
         private readonly CollectionDeepObserver<IAxis> _yObserver;
-        private readonly ActionThrottler _panningThrottler;
-        private System.Windows.Point? _previous;
-        private System.Windows.Point? _current;
-        private bool _isPanning = false;
 
         #endregion
 
@@ -70,8 +66,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             MouseDown += OnMouseDown;
             MouseMove += OnMouseMove;
             MouseUp += OnMouseUp;
-
-            _panningThrottler = new ActionThrottler(DoPan, TimeSpan.FromMilliseconds(30));
         }
 
         #region dependency properties
@@ -282,39 +276,21 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         private void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            _isPanning = true;
-            _previous = e.GetPosition(this);
             _ = CaptureMouse();
+            var p = e.GetPosition(this);
+            core?.InvokePointerDown(new PointF((float)p.X, (float)p.Y));
         }
 
         private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (!_isPanning || _previous == null) return;
-
-            _current = e.GetPosition(this);
-            _panningThrottler.Call();
-        }
-
-        private void DoPan()
-        {
-            if (core == null) throw new Exception("core not found");
-            if (_previous == null || _current == null) return;
-
-            var c = (CartesianChart<SkiaSharpDrawingContext>)core;
-
-            c.Pan(
-                new PointF(
-                (float)(_current.Value.X - _previous.Value.X),
-                (float)(_current.Value.Y - _previous.Value.Y)));
-
-            _previous = new System.Windows.Point(_current.Value.X, _current.Value.Y);
+            var p = e.GetPosition(this);
+            core?.InvokePointerMove(new PointF((float)p.X, (float)p.Y));
         }
 
         private void OnMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (!_isPanning) return;
-            _isPanning = false;
-            _previous = null;
+            var p = e.GetPosition(this);
+            core?.InvokePointerUp(new PointF((float)p.X, (float)p.Y));
             ReleaseMouseCapture();
         }
     }

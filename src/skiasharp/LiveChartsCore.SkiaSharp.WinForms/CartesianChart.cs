@@ -39,10 +39,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private readonly CollectionDeepObserver<ISeries> _seriesObserver;
         private readonly CollectionDeepObserver<IAxis> _xObserver;
         private readonly CollectionDeepObserver<IAxis> _yObserver;
-        private readonly ActionThrottler _panningThrottler;
-        private Point? _previous;
-        private Point? _current;
-        private bool _isPanning = false;
         private IEnumerable<ISeries> _series = new List<ISeries>();
         private IEnumerable<IAxis> _xAxes = new List<Axis> { new Axis() };
         private IEnumerable<IAxis> _yAxes = new List<Axis> { new Axis() };
@@ -69,10 +65,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
             c.MouseWheel += OnMouseWheel;
             c.MouseDown += OnMouseDown;
-            c.MouseMove += OnMoseMove;
             c.MouseUp += OnMouseUp;
-
-            _panningThrottler = new ActionThrottler(DoPan, TimeSpan.FromMilliseconds(30));
         }
 
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => core == null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
@@ -183,37 +176,12 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         private void OnMouseDown(object? sender, System.Windows.Forms.MouseEventArgs e)
         {
-            _isPanning = true;
-            _previous = e.Location;
-        }
-
-        private void OnMoseMove(object? sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            if (!_isPanning || _previous == null) return;
-
-            _current = e.Location;
-            _panningThrottler.Call();
-        }
-
-        private void DoPan()
-        {
-            if (_previous == null || _current == null || core == null) return;
-
-            var c = (CartesianChart<SkiaSharpDrawingContext>)core;
-
-            c.Pan(
-                new PointF(
-                _current.Value.X - _previous.Value.X,
-                _current.Value.Y - _previous.Value.Y));
-
-            _previous = new Point(_current.Value.X, _current.Value.Y);
+            core?.InvokePointerDown(new PointF(e.Location.X, e.Location.Y));
         }
 
         private void OnMouseUp(object? sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (!_isPanning) return;
-            _isPanning = false;
-            _previous = null;
+            core?.InvokePointerUp(new PointF(e.Location.X, e.Location.Y));
         }
     }
 }

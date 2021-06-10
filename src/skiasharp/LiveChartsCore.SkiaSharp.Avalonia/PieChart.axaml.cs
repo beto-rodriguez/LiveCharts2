@@ -61,8 +61,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </summary>
         protected IChartTooltip<SkiaSharpDrawingContext>? tooltip;
 
-        private readonly ActionThrottler _mouseMoveThrottler;
-        private PointF _mousePosition = new();
         private readonly CollectionDeepObserver<ISeries> _seriesObserver;
 
         #endregion
@@ -88,8 +86,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             initializer.ApplyStyleToChart(this);
 
             InitializeCore();
-
-            _mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
 
             _seriesObserver = new CollectionDeepObserver<ISeries>(
                (object? sender, NotifyCollectionChangedEventArgs e) =>
@@ -649,12 +645,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             _ = Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
         }
 
-        private void MouseMoveThrottlerUnlocked()
-        {
-            if (core == null || tooltip == null || TooltipPosition == TooltipPosition.Hidden) return;
-            tooltip.Show(core.FindPointsNearTo(_mousePosition), core);
-        }
-
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
@@ -663,8 +653,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         private void CartesianChart_PointerMoved(object? sender, PointerEventArgs e)
         {
             var p = e.GetPosition(this);
-            _mousePosition = new PointF((float)p.X, (float)p.Y);
-            _mouseMoveThrottler.Call();
+            core?.InvokePointerMove(new PointF((float)p.X, (float)p.Y));
         }
 
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
@@ -684,7 +673,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         private void CartesianChart_PointerLeave(object? sender, PointerEventArgs e)
         {
-            HideTooltip();
+            _ = Dispatcher.UIThread.InvokeAsync(HideTooltip, DispatcherPriority.Background);
         }
     }
 }

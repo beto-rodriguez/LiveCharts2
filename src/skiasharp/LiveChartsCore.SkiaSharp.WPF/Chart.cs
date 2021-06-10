@@ -61,9 +61,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </summary>
         protected IChartTooltip<SkiaSharpDrawingContext>? tooltip;
 
-        private readonly ActionThrottler _mouseMoveThrottler;
-        private PointF _mousePosition = new();
-
         #endregion
 
         /// <summary>
@@ -83,8 +80,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             SizeChanged += OnSizeChanged;
             MouseMove += OnMouseMove;
             MouseLeave += OnMouseLeave;
-
-            _mouseMoveThrottler = new ActionThrottler(MouseMoveThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
         }
 
         #region dependency properties
@@ -666,15 +661,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            var p = e.GetPosition(canvas);
-            _mousePosition = new PointF((float)p.X, (float)p.Y);
-            _mouseMoveThrottler.Call();
-        }
-
-        private void MouseMoveThrottlerUnlocked()
-        {
-            if (core == null || tooltip == null || TooltipPosition == TooltipPosition.Hidden) return;
-            tooltip.Show(core.FindPointsNearTo(_mousePosition), core);
+            var p = e.GetPosition(this);
+            core?.InvokePointerMove(new PointF((float)p.X, (float)p.Y));
         }
 
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
