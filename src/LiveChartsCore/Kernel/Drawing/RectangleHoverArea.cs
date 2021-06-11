@@ -22,10 +22,9 @@
 
 using LiveChartsCore.Measure;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel.Drawing
 {
     /// <summary>
     /// Defines a rectangle hover area.

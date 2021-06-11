@@ -1,4 +1,4 @@
-﻿using LiveChartsCore.Kernel;
+﻿using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System.Collections.Generic;

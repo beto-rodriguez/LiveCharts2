@@ -20,9 +20,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Kernel
+using System.Drawing;
+
+namespace LiveChartsCore.Kernel.Events
 {
-    internal class HashSet<T1, T2>
+    /// <summary>
+    /// The pan gesture event arguments.
+    /// </summary>
+    public class PanGestureEventArgs
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PanGestureEventArgs"/> class.
+        /// </summary>
+        public PanGestureEventArgs(PointF delta)
+        {
+            Delta = delta;
+            Handled = false;
+        }
+
+        /// <summary>
+        /// Gets or sets the delta.
+        /// </summary>
+        /// <value>
+        /// The delta.
+        /// </value>
+        public PointF Delta { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="PanGestureEventArgs"/> is handled.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if handled; otherwise, <c>false</c>.
+        /// </value>
+        public bool Handled { get; set; }
     }
 }

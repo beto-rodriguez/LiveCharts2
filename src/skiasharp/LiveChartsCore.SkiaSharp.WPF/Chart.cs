@@ -33,6 +33,8 @@ using System.Collections.Generic;
 using Brush = System.Windows.Media.Brush;
 using FontFamily = System.Windows.Media.FontFamily;
 using FontStyle = System.Windows.FontStyle;
+using LiveChartsCore.Kernel.Events;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView.WPF
 {

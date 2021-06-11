@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel.Drawing
 {
     /// <summary>
     /// Defines a default paint task.

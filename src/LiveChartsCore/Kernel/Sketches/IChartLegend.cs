@@ -22,13 +22,19 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
-    /// Defines a method that will handle an event in a chart.
+    /// Defines a chart legend.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <param name="chart">The chart.</param>
-    public delegate void ChartEventHandler<TDrawingContext>(IChartView<TDrawingContext> chart)
-        where TDrawingContext : DrawingContext;
+    public interface IChartLegend<TDrawingContext>
+        where TDrawingContext : DrawingContext
+    {
+        /// <summary>
+        /// Draws the legend for the specified chart.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
+        void Draw(Chart<TDrawingContext> chart);
+    }
 }

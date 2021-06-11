@@ -21,59 +21,53 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
-    /// Defines a Cartesian series.
+    /// Defines a line series plot.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="IPaintableSeries{TDrawingContext}" />
-    public interface ICartesianSeries<TDrawingContext> : IPaintableSeries<TDrawingContext>
+    public interface ILineSeries<TDrawingContext> : IPaintableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Gets or sets the axis index where the series is scaled in the X plane, the index must exist 
-        /// in the <see cref="ICartesianChartView{TDrawingContext}.XAxes"/> collection.
+        /// Gets or sets the size of the geometry.
         /// </summary>
         /// <value>
-        /// The index of the axis.
+        /// The size of the geometry.
         /// </value>
-        int ScalesXAt { get; set; }
+        double GeometrySize { get; set; }
 
         /// <summary>
-        /// Gets or sets the axis index where the series is scaled in the Y plane, the index must exist 
-        /// in the <see cref="ICartesianChartView{TDrawingContext}.YAxes"/> collection.
+        /// Gets or sets the line smoothness, where 0 is a straight line, and 1 the most curved line, default is 0.65
         /// </summary>
         /// <value>
-        /// The index of the axis.
+        /// The line smoothness.
         /// </value>
-        int ScalesYAt { get; set; }
+        double LineSmoothness { get; set; }
 
         /// <summary>
-        /// Gets or sets the data labels position.
+        /// Gets or sets a value indicating whether the line should split every null point, 
+        /// enabling it has a performance impact, default is true.
+        /// </summary>
+        bool EnableNullSplitting { get; set; }
+
+        /// <summary>
+        /// Gets or sets the geometry fill.
         /// </summary>
         /// <value>
-        /// The data labels position.
+        /// The shapes fill.
         /// </value>
-        DataLabelsPosition DataLabelsPosition { get; set; }
+        IPaintTask<TDrawingContext>? GeometryFill { get; set; }
 
         /// <summary>
-        /// Gets the series bounds.
+        /// Gets or sets the geometry stroke.
         /// </summary>
-        /// <param name="chart">The chart.</param>
-        /// <param name="x">The x.</param>
-        /// <param name="y">The y.</param>
-        /// <returns>the series bounds</returns>
-        DimensionalBounds GetBounds(CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
-
-        /// <summary>
-        /// Measures the series and schedules the draw in specified chart.
-        /// </summary>
-        /// <param name="chart">The chart.</param>
-        /// <param name="x">The x axis.</param>
-        /// <param name="y">The y axis.</param>
-        void Measure(CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
+        /// <value>
+        /// The shapes stroke.
+        /// </value>
+        IPaintTask<TDrawingContext>? GeometryStroke { get; set; }
     }
 }

@@ -21,10 +21,11 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
 using System;
 using System.Collections.Generic;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel.Data
 {
     /// <summary>
     /// Defines a data provider.
@@ -85,7 +86,6 @@ namespace LiveChartsCore.Kernel
                 }
             }
             else
-            {
                 foreach (var item in series.Values)
                 {
                     var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
@@ -106,7 +106,6 @@ namespace LiveChartsCore.Kernel
 
                     yield return cp;
                 }
-            }
         }
 
         /// <summary>
@@ -192,7 +191,6 @@ namespace LiveChartsCore.Kernel
             }
 
             if (!hasData)
-            {
                 if (x.PreviousDataBounds == null || y.PreviousDataBounds == null)
                 {
                     bounds.VisiblePrimaryBounds.AppendValue(0);
@@ -223,7 +221,6 @@ namespace LiveChartsCore.Kernel
                     bounds.VisibleTertiaryBounds.AppendValue(1);
                     bounds.TertiaryBounds.AppendValue(1);
                 }
-            }
 
             return bounds;
         }

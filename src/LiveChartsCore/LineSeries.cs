@@ -27,6 +27,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
+using LiveChartsCore.Kernel.Drawing;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore
 {

@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore
 {

@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Data;
 
 namespace LiveChartsCore.Kernel
 {

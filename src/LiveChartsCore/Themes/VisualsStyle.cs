@@ -24,6 +24,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using System;
 using System.Collections.Generic;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Themes
 {

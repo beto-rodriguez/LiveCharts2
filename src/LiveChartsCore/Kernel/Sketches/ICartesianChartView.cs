@@ -20,102 +20,93 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Kernel
+using LiveChartsCore.Drawing;
+using LiveChartsCore.Measure;
+using System.Collections.Generic;
+using System.Drawing;
+
+namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
-    /// Defines the bezier data class.
+    /// Defines a Cartesian chart view, this view is able to host one or many series in a Cartesian coordinate system.
     /// </summary>
-    public class BezierData
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="IChartView{TDrawingContext}" />
+    public interface ICartesianChartView<TDrawingContext> : IChartView<TDrawingContext>
+        where TDrawingContext : DrawingContext
     {
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="BezierData"/> class.
-        /// </summary>
-        /// <param name="chartPoint">The chart point.</param>
-        public BezierData(ChartPoint chartPoint)
-        {
-            TargetPoint = chartPoint;
-        }
-
-        /// <summary>
-        /// Gets or sets the target point.
+        /// Gets the core.
         /// </summary>
         /// <value>
-        /// The target point.
+        /// The core.
         /// </value>
-        public ChartPoint TargetPoint { get; set; }
+        CartesianChart<TDrawingContext> Core { get; }
 
         /// <summary>
-        /// Gets or sets the x0.
+        /// Gets or sets the x axes.
         /// </summary>
         /// <value>
-        /// The x0.
+        /// The x axes.
         /// </value>
-        public float X0 { get; set; }
+        IEnumerable<IAxis> XAxes { get; set; }
 
         /// <summary>
-        /// Gets or sets the y0.
+        /// Gets or sets the y axes.
         /// </summary>
         /// <value>
-        /// The y0.
+        /// The y axes.
         /// </value>
-        public float Y0 { get; set; }
+        IEnumerable<IAxis> YAxes { get; set; }
 
         /// <summary>
-        /// Gets or sets the x1.
+        /// Gets or sets the series to plot in the user interface.
         /// </summary>
         /// <value>
-        /// The x1.
+        /// The series.
         /// </value>
-        public float X1 { get; set; }
+        IEnumerable<ISeries> Series { get; set; }
 
         /// <summary>
-        /// Gets or sets the y1.
+        /// Gets or sets the draw margin frame.
         /// </summary>
         /// <value>
-        /// The y1.
+        /// The draw margin frame.
         /// </value>
-        public float Y1 { get; set; }
+        DrawMarginFrame<TDrawingContext> DrawMarginFrame { get; set; }
 
         /// <summary>
-        /// Gets or sets the x2.
+        /// Gets or sets the zoom mode.
         /// </summary>
         /// <value>
-        /// The x2.
+        /// The zoom mode.
         /// </value>
-        public float X2 { get; set; }
+        ZoomAndPanMode ZoomMode { get; set; }
+
 
         /// <summary>
-        /// Gets or sets the y2.
+        /// Gets or sets the tool tip finding strategy.
         /// </summary>
         /// <value>
-        /// The y2.
+        /// The tool tip finding strategy.
         /// </value>
-        public float Y2 { get; set; }
+        TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
         /// <summary>
-        /// Gets or sets the original data.
+        /// Gets or sets the zooming speed from 0 to 1, where 0 is the fastest and 1 the slowest.
         /// </summary>
         /// <value>
-        /// The original data.
+        /// The zooming speed.
         /// </value>
-        public BezierData? OriginalData { get; set; }
+        double ZoomingSpeed { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is first.
+        /// Scales the UI point.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is first; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsFirst { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is last.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is last; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsLast { get; set; }
+        /// <param name="point">The point.</param>
+        /// <param name="xAxisIndex">Index of the x axis.</param>
+        /// <param name="yAxisIndex">Index of the y axis.</param>
+        /// <returns></returns>
+        PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0);
     }
 }
-

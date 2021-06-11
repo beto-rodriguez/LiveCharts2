@@ -20,79 +20,102 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Kernel.Sketches;
-
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel.Drawing
 {
     /// <summary>
-    /// Defines a point in a chart.
+    /// Defines the bezier data class.
     /// </summary>
-    public class ChartPoint
+    public class BezierData
     {
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="ChartPoint"/> class.
+        /// Initializes a new instance of the <see cref="BezierData"/> class.
         /// </summary>
-        /// <param name="chart">The chart.</param>
-        /// <param name="series">The series.</param>
-        public ChartPoint(IChartView chart, ISeries series)
+        /// <param name="chartPoint">The chart point.</param>
+        public BezierData(ChartPoint chartPoint)
         {
-            Context = new ChartPointContext(chart, series);
+            TargetPoint = chartPoint;
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is null.
+        /// Gets or sets the target point.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this instance is null; otherwise, <c>false</c>.
+        /// The target point.
         /// </value>
-        public bool IsNull { get; set; }
+        public ChartPoint TargetPoint { get; set; }
 
         /// <summary>
-        /// Gets or sets the primary value.
+        /// Gets or sets the x0.
         /// </summary>
         /// <value>
-        /// The primary value.
+        /// The x0.
         /// </value>
-        public float PrimaryValue { get; set; }
+        public float X0 { get; set; }
 
         /// <summary>
-        /// Gets or sets the secondary value.
+        /// Gets or sets the y0.
         /// </summary>
         /// <value>
-        /// The secondary value.
+        /// The y0.
         /// </value>
-        public float SecondaryValue { get; set; }
+        public float Y0 { get; set; }
 
         /// <summary>
-        /// Gets or sets the tertiary value.
+        /// Gets or sets the x1.
         /// </summary>
         /// <value>
-        /// The tertiary value.
+        /// The x1.
         /// </value>
-        public float TertiaryValue { get; set; }
+        public float X1 { get; set; }
 
         /// <summary>
-        /// Gets the point as tooltip string.
+        /// Gets or sets the y1.
         /// </summary>
         /// <value>
-        /// As tooltip string.
+        /// The y1.
         /// </value>
-        public string AsTooltipString => Context.Series.TooltipLabelFormatter(this);
+        public float Y1 { get; set; }
 
         /// <summary>
-        /// Gets the point as data label.
+        /// Gets or sets the x2.
         /// </summary>
         /// <value>
-        /// As tooltip string.
+        /// The x2.
         /// </value>
-        public string AsDataLabel => Context.Series.DataLabelsFormatter(this);
+        public float X2 { get; set; }
 
         /// <summary>
-        /// Gets the context.
+        /// Gets or sets the y2.
         /// </summary>
         /// <value>
-        /// The context.
+        /// The y2.
         /// </value>
-        public ChartPointContext Context { get; }
+        public float Y2 { get; set; }
+
+        /// <summary>
+        /// Gets or sets the original data.
+        /// </summary>
+        /// <value>
+        /// The original data.
+        /// </value>
+        public BezierData? OriginalData { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is first.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is first; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsFirst { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is last.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is last; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsLast { get; set; }
     }
 }
+

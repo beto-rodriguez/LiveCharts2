@@ -30,6 +30,7 @@ using System.Linq;
 using LiveChartsCore.Measure;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore
 {
@@ -41,21 +42,12 @@ namespace LiveChartsCore
     /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
     /// <seealso cref="IAxis{TDrawingContext}" />
     /// <seealso cref="INotifyPropertyChanged" />
-    public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry> : PaintableElement<TDrawingContext>, IAxis<TDrawingContext>, INotifyPropertyChanged
+    public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry> : UIElement<TDrawingContext>, IAxis<TDrawingContext>, INotifyPropertyChanged
         where TDrawingContext : DrawingContext
         where TTextGeometry : ILabelGeometry<TDrawingContext>, new()
         where TLineGeometry : ILineGeometry<TDrawingContext>, new()
     {
         #region fields
-
-        /// <summary>
-        /// Get a <see cref="HashSet{T}"/> reference to the charts that are subscribed to this axis.
-        /// </summary>
-        protected readonly HashSet<IChart> subscribedTo = new();
-        /// <summary>
-        /// Gets a <see cref="HashSet{T}"/> reference to the pending to delete paint tasks.
-        /// </summary>
-        protected List<IPaintTask<TDrawingContext>> deletingTasks = new();
 
         /// <summary>
         /// The active separators
@@ -186,8 +178,6 @@ namespace LiveChartsCore
         public virtual void Measure(CartesianChart<TDrawingContext> chart)
         {
             if (_dataBounds == null) throw new Exception("DataBounds not found");
-
-            _ = subscribedTo.Add(chart);
 
             var controlSize = chart.ControlSize;
             var drawLocation = chart.DrawMarginLocation;
@@ -587,7 +577,7 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected override void OnPaintChanged(string? propertyName)
         {
-            OnPropertyChanged();
+            OnPropertyChanged(propertyName);
         }
 
         /// <summary>

@@ -27,7 +27,7 @@ using LiveChartsCore.Measure;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing.Common;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
     /// Defines an Axis in a Cartesian chart.

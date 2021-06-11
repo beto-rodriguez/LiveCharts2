@@ -23,7 +23,7 @@
 using LiveChartsCore.Drawing;
 using System;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel.Drawing
 {
     /// <summary>
     /// Defines the area helper class.

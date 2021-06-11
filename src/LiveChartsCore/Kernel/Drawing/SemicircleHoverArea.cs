@@ -22,10 +22,9 @@
 
 using LiveChartsCore.Measure;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel.Drawing
 {
     /// <summary>
     /// Defines a semicircle hover area.
@@ -97,7 +96,7 @@ namespace LiveChartsCore.Kernel
             var dy = CenterY - point.Y;
             var beta = Math.Atan(dy / dx) * (180 / Math.PI);
 
-            if ((dx > 0 && dy < 0) || (dx > 0 && dy > 0)) beta += 180;
+            if (dx > 0 && dy < 0 || dx > 0 && dy > 0) beta += 180;
             if (dx < 0 && dy > 0) beta += 360;
 
             var r = Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2));

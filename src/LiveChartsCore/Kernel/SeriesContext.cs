@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using System.Collections.Generic;
 

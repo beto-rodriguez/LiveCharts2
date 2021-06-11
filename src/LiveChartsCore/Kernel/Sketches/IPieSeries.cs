@@ -23,7 +23,7 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
     /// Defines a pie series.

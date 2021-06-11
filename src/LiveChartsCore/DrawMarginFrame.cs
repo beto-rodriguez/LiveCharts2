@@ -29,7 +29,7 @@ namespace LiveChartsCore
     /// Defines the draw margin frame visual.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public abstract class DrawMarginFrame<TDrawingContext> : PaintableElement<TDrawingContext>
+    public abstract class DrawMarginFrame<TDrawingContext> : UIElement<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         private IPaintTask<TDrawingContext>? _stroke = null;

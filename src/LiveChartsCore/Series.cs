@@ -30,6 +30,8 @@ using LiveChartsCore.Measure;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Linq;
+using LiveChartsCore.Kernel.Data;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore
 {
@@ -44,7 +46,7 @@ namespace LiveChartsCore
     /// <seealso cref="ISeries{TModel}" />
     /// <seealso cref="IDisposable" />
     /// <seealso cref="INotifyPropertyChanged" />
-    public abstract class Series<TModel, TVisual, TLabel, TDrawingContext> : PaintableElement<TDrawingContext>, ISeries, ISeries<TModel>, INotifyPropertyChanged
+    public abstract class Series<TModel, TVisual, TLabel, TDrawingContext> : UIElement<TDrawingContext>, ISeries, ISeries<TModel>, INotifyPropertyChanged
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()

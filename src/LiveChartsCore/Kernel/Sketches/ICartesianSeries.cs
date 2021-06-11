@@ -21,53 +21,59 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
-    /// Defines a bar series point.
+    /// Defines a Cartesian series.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="IPaintableSeries{TDrawingContext}" />
-    public interface IBarSeries<TDrawingContext> : IPaintableSeries<TDrawingContext>
+    public interface ICartesianSeries<TDrawingContext> : IPaintableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Gets or sets the rx, the radius used in the x axis to round the corners of each column in pixels.
+        /// Gets or sets the axis index where the series is scaled in the X plane, the index must exist 
+        /// in the <see cref="ICartesianChartView{TDrawingContext}.XAxes"/> collection.
         /// </summary>
         /// <value>
-        /// The rx.
+        /// The index of the axis.
         /// </value>
-        double Rx { get; set; }
+        int ScalesXAt { get; set; }
 
         /// <summary>
-        /// Gets or sets the ry, the radius used in the y axis to round the corners of each column in pixels.
+        /// Gets or sets the axis index where the series is scaled in the Y plane, the index must exist 
+        /// in the <see cref="ICartesianChartView{TDrawingContext}.YAxes"/> collection.
         /// </summary>
         /// <value>
-        /// The ry.
+        /// The index of the axis.
         /// </value>
-        double Ry { get; set; }
+        int ScalesYAt { get; set; }
 
         /// <summary>
-        /// Gets or sets the padding for each group of bars that share the same secondary coordinate.
+        /// Gets or sets the data labels position.
         /// </summary>
         /// <value>
-        /// The bar group padding.
+        /// The data labels position.
         /// </value>
-        double GroupPadding { get; set; }
+        DataLabelsPosition DataLabelsPosition { get; set; }
 
         /// <summary>
-        /// Gets or sets the maximum width of the bar.
+        /// Gets the series bounds.
         /// </summary>
-        /// <value>
-        /// The maximum width of the bar.
-        /// </value>
-        double MaxBarWidth { get; set; }
+        /// <param name="chart">The chart.</param>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns>the series bounds</returns>
+        DimensionalBounds GetBounds(CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
 
         /// <summary>
-        /// Gets or sets a value indicating whether the bar position respects the other bars that share 
-        /// the same <see cref="ChartPoint.SecondaryValue"/>.
+        /// Measures the series and schedules the draw in specified chart.
         /// </summary>
-        bool IgnoresBarPosition { get; set; }
+        /// <param name="chart">The chart.</param>
+        /// <param name="x">The x axis.</param>
+        /// <param name="y">The y axis.</param>
+        void Measure(CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
     }
 }

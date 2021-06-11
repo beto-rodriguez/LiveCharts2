@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore
 {
@@ -99,6 +100,14 @@ namespace LiveChartsCore
         /// The series.
         /// </value>
         public ICartesianSeries<TDrawingContext>[] Series { get; private set; } = new ICartesianSeries<TDrawingContext>[0];
+
+        /// <summary>
+        /// Gets the sections.
+        /// </summary>
+        /// <value>
+        /// The sections.
+        /// </value>
+        public Section<TDrawingContext>[] Sections { get; private set; } = new Section<TDrawingContext>[0];
 
         /// <summary>
         /// Gets the drawable series.

@@ -22,7 +22,7 @@
 
 using System;
 using System.Globalization;
-using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Xamarin.Forms;
 

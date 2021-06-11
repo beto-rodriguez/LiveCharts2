@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;

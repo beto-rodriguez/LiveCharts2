@@ -20,48 +20,75 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
+using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
-    /// Defines a stacked bar series.
+    /// Defines a chart.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IPaintableSeries{TDrawingContext}" />
-    public interface IStackedBarSeries<TDrawingContext> : IPaintableSeries<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public interface IChart
     {
         /// <summary>
-        /// Gets or sets the rx, the radius used in the x axis to round the corners of each column, it goes from 0 to 1.
+        /// Gets or sets the measure work.
         /// </summary>
         /// <value>
-        /// The rx.
+        /// The measure work.
         /// </value>
-        double Rx { get; set; }
+        object MeasureWork { get; }
 
         /// <summary>
-        /// Gets or sets the ry, the radius used in the y axis to round the corners of each column, it goes from 0 to 1.
+        /// Gets the chart view.
         /// </summary>
         /// <value>
-        /// The ry.
+        /// The view.
         /// </value>
-        double Ry { get; set; }
+        IChartView View { get; }
 
         /// <summary>
-        /// Gets or sets the maximum width of the bar.
+        /// Gets the canvas.
         /// </summary>
         /// <value>
-        /// The maximum width of the bar.
+        /// The canvas.
         /// </value>
-        double MaxBarWidth { get; set; }
+        object Canvas { get; }
 
         /// <summary>
-        /// Gets or sets the stack group.
+        /// Gets the legend position.
         /// </summary>
         /// <value>
-        /// The stack group.
+        /// The legend position.
         /// </value>
-        int StackGroup { get; set; }
+        LegendPosition LegendPosition { get; }
+
+        /// <summary>
+        /// Gets the legend orientation.
+        /// </summary>
+        /// <value>
+        /// The legend orientation.
+        /// </value>
+        LegendOrientation LegendOrientation { get; }
+
+
+        /// <summary>
+        /// Gets the toolTip position.
+        /// </summary>
+        /// <value>
+        /// The toolTip position.
+        /// </value>
+        TooltipPosition TooltipPosition { get; }
+
+        /// <summary>
+        /// Gets the toolTip finding strategy.
+        /// </summary>
+        /// <value>
+        /// The toolTip finding strategy.
+        /// </value>
+        TooltipFindingStrategy TooltipFindingStrategy { get; }
+
+        /// <summary>
+        /// Updates the chart in the user interface.
+        /// </summary>
+        void Update(ChartUpdateParams? chartUpdateParams = null);
     }
 }

@@ -21,39 +21,47 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using System.Collections.Generic;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
-    /// Defines the paint context.
+    /// Defines a stacked bar series.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public class CanvasSchedule<TDrawingContext>
+    /// <seealso cref="IPaintableSeries{TDrawingContext}" />
+    public interface IStackedBarSeries<TDrawingContext> : IPaintableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Gets or sets the width.
+        /// Gets or sets the rx, the radius used in the x axis to round the corners of each column, it goes from 0 to 1.
         /// </summary>
         /// <value>
-        /// The width.
+        /// The rx.
         /// </value>
-        public double Width { get; set; }
+        double Rx { get; set; }
 
         /// <summary>
-        /// Gets or sets the height.
+        /// Gets or sets the ry, the radius used in the y axis to round the corners of each column, it goes from 0 to 1.
         /// </summary>
         /// <value>
-        /// The height.
+        /// The ry.
         /// </value>
-        public double Height { get; set; }
+        double Ry { get; set; }
 
         /// <summary>
-        /// Gets or sets the paint schedules.
+        /// Gets or sets the maximum width of the bar.
         /// </summary>
         /// <value>
-        /// The paint tasks schedule.
+        /// The maximum width of the bar.
         /// </value>
-        public List<PaintSchedule<TDrawingContext>> PaintSchedules { get; set; } = new List<PaintSchedule<TDrawingContext>>();
+        double MaxBarWidth { get; set; }
+
+        /// <summary>
+        /// Gets or sets the stack group.
+        /// </summary>
+        /// <value>
+        /// The stack group.
+        /// </value>
+        int StackGroup { get; set; }
     }
 }

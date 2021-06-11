@@ -23,25 +23,37 @@
 using LiveChartsCore.Drawing;
 using System.Collections.Generic;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel.Drawing
 {
     /// <summary>
-    /// Defines a tool tip.
+    /// Defines the paint context.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public interface IChartTooltip<TDrawingContext>
+    public class CanvasSchedule<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Shows the tool tip in the specified chart.
+        /// Gets or sets the width.
         /// </summary>
-        /// <param name="foundPoints">The found points.</param>
-        /// <param name="chart">The chart.</param>
-        void Show(IEnumerable<TooltipPoint> foundPoints, Chart<TDrawingContext> chart);
+        /// <value>
+        /// The width.
+        /// </value>
+        public double Width { get; set; }
 
         /// <summary>
-        /// Hides this tool tip instance.
+        /// Gets or sets the height.
         /// </summary>
-        void Hide();
+        /// <value>
+        /// The height.
+        /// </value>
+        public double Height { get; set; }
+
+        /// <summary>
+        /// Gets or sets the paint schedules.
+        /// </summary>
+        /// <value>
+        /// The paint tasks schedule.
+        /// </value>
+        public List<PaintSchedule<TDrawingContext>> PaintSchedules { get; set; } = new List<PaintSchedule<TDrawingContext>>();
     }
 }

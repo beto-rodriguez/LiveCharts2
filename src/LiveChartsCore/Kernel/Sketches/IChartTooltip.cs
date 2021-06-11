@@ -21,31 +21,27 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using System.Collections.Generic;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
-    /// Defines a scatter series.
+    /// Defines a tool tip.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IPaintableSeries{TDrawingContext}" />
-    public interface IScatterSeries<TDrawingContext> : IPaintableSeries<TDrawingContext>
+    public interface IChartTooltip<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Gets or sets the size of the geometry.
+        /// Shows the tool tip in the specified chart.
         /// </summary>
-        /// <value>
-        /// The size of the geometry.
-        /// </value>
-        double GeometrySize { get; set; }
+        /// <param name="foundPoints">The found points.</param>
+        /// <param name="chart">The chart.</param>
+        void Show(IEnumerable<TooltipPoint> foundPoints, Chart<TDrawingContext> chart);
 
         /// <summary>
-        /// Gets or sets the minimum size of the geometry.
+        /// Hides this tool tip instance.
         /// </summary>
-        /// <value>
-        /// The minimum size of the geometry.
-        /// </value>
-        double MinGeometrySize { get; set; }
+        void Hide();
     }
 }

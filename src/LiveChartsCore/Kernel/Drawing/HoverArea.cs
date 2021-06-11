@@ -20,26 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
+using LiveChartsCore.Measure;
+using System.Drawing;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel.Drawing
 {
     /// <summary>
-    /// Defines the data factory class.
+    /// Defines a hover area.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IDataFactoryProvider{TDrawingContext}" />
-    public class DataFactory<TDrawingContext> : IDataFactoryProvider<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public abstract class HoverArea
     {
         /// <summary>
-        /// Gets the provider.
+        /// Determines whether the area is trigger by the specified point in the user interface.
         /// </summary>
-        /// <typeparam name="TModel">The type of the model.</typeparam>
-        /// <returns></returns>
-        public DataProvider<TModel, TDrawingContext> GetProvider<TModel>()
-        {
-            return new();
-        }
+        /// <param name="point">The point.</param>
+        /// <param name="strategy">The strategy.</param>
+        /// <returns>
+        ///   <c>true</c> if [is trigger by] [the specified point]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract float GetDistanceToPoint(PointF point, TooltipFindingStrategy strategy);
+
+        /// <summary>
+        /// Suggests the tooltip placement.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        public abstract void SuggestTooltipPlacement(TooltipPlacementContext context);
     }
 }

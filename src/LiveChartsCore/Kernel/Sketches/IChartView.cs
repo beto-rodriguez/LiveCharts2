@@ -21,12 +21,13 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Measure;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
     /// Defines a chart view
@@ -47,7 +48,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The color of the back.
         /// </value>
-        System.Drawing.Color BackColor { get; set; }
+        Color BackColor { get; set; }
 
         /// <summary>
         /// Gets the size of the control.
@@ -55,7 +56,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The size of the control.
         /// </value>
-        System.Drawing.SizeF ControlSize { get; }
+        SizeF ControlSize { get; }
 
         /// <summary>
         /// Gets or sets the draw margin, if this property is null, the library will calculate a margin, this margin is the distance 

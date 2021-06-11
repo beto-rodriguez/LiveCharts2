@@ -20,30 +20,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Measure;
-using System.Drawing;
+using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
-    /// Defines a hover area.
+    /// Defines a scatter series.
     /// </summary>
-    public abstract class HoverArea
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="IPaintableSeries{TDrawingContext}" />
+    public interface IScatterSeries<TDrawingContext> : IPaintableSeries<TDrawingContext>
+        where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Determines whether the area is trigger by the specified point in the user interface.
+        /// Gets or sets the size of the geometry.
         /// </summary>
-        /// <param name="point">The point.</param>
-        /// <param name="strategy">The strategy.</param>
-        /// <returns>
-        ///   <c>true</c> if [is trigger by] [the specified point]; otherwise, <c>false</c>.
-        /// </returns>
-        public abstract float GetDistanceToPoint(PointF point, TooltipFindingStrategy strategy);
+        /// <value>
+        /// The size of the geometry.
+        /// </value>
+        double GeometrySize { get; set; }
 
         /// <summary>
-        /// Suggests the tooltip placement.
+        /// Gets or sets the minimum size of the geometry.
         /// </summary>
-        /// <param name="context">The context.</param>
-        public abstract void SuggestTooltipPlacement(TooltipPlacementContext context);
+        /// <value>
+        /// The minimum size of the geometry.
+        /// </value>
+        double MinGeometrySize { get; set; }
     }
 }

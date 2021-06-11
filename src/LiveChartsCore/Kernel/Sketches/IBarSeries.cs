@@ -20,75 +20,54 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Measure;
+using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
-    /// Defines a chart.
+    /// Defines a bar series point.
     /// </summary>
-    public interface IChart
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="IPaintableSeries{TDrawingContext}" />
+    public interface IBarSeries<TDrawingContext> : IPaintableSeries<TDrawingContext>
+        where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Gets or sets the measure work.
+        /// Gets or sets the rx, the radius used in the x axis to round the corners of each column in pixels.
         /// </summary>
         /// <value>
-        /// The measure work.
+        /// The rx.
         /// </value>
-        object MeasureWork { get; }
+        double Rx { get; set; }
 
         /// <summary>
-        /// Gets the chart view.
+        /// Gets or sets the ry, the radius used in the y axis to round the corners of each column in pixels.
         /// </summary>
         /// <value>
-        /// The view.
+        /// The ry.
         /// </value>
-        IChartView View { get; }
+        double Ry { get; set; }
 
         /// <summary>
-        /// Gets the canvas.
+        /// Gets or sets the padding for each group of bars that share the same secondary coordinate.
         /// </summary>
         /// <value>
-        /// The canvas.
+        /// The bar group padding.
         /// </value>
-        object Canvas { get; }
+        double GroupPadding { get; set; }
 
         /// <summary>
-        /// Gets the legend position.
+        /// Gets or sets the maximum width of the bar.
         /// </summary>
         /// <value>
-        /// The legend position.
+        /// The maximum width of the bar.
         /// </value>
-        LegendPosition LegendPosition { get; }
+        double MaxBarWidth { get; set; }
 
         /// <summary>
-        /// Gets the legend orientation.
+        /// Gets or sets a value indicating whether the bar position respects the other bars that share 
+        /// the same <see cref="ChartPoint.SecondaryValue"/>.
         /// </summary>
-        /// <value>
-        /// The legend orientation.
-        /// </value>
-        LegendOrientation LegendOrientation { get; }
-
-
-        /// <summary>
-        /// Gets the toolTip position.
-        /// </summary>
-        /// <value>
-        /// The toolTip position.
-        /// </value>
-        TooltipPosition TooltipPosition { get; }
-
-        /// <summary>
-        /// Gets the toolTip finding strategy.
-        /// </summary>
-        /// <value>
-        /// The toolTip finding strategy.
-        /// </value>
-        TooltipFindingStrategy TooltipFindingStrategy { get; }
-
-        /// <summary>
-        /// Updates the chart in the user interface.
-        /// </summary>
-        void Update(ChartUpdateParams? chartUpdateParams = null);
+        bool IgnoresBarPosition { get; set; }
     }
 }

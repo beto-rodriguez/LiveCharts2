@@ -22,9 +22,10 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
+using LiveChartsCore.Kernel.Drawing;
 using System;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
     /// Defines a series a chart series that has a visual representation in the user interface.

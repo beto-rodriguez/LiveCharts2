@@ -34,6 +34,8 @@ using Xamarin.Essentials;
 using Xamarin.Forms.Xaml;
 using Xamarin.Forms;
 using c = Xamarin.Forms.Color;
+using LiveChartsCore.Kernel.Events;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 {

@@ -23,13 +23,14 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Kernel
 {
     /// <summary>
     /// Defines an element with a stroke and a fill in the user interface.
     /// </summary>
-    public abstract class PaintableElement<TDrawingContext>
+    public abstract class UIElement<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         private readonly List<IPaintTask<TDrawingContext>> _deletingTasks = new();

@@ -38,6 +38,8 @@ using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
 using A = Avalonia;
 using Avalonia.Input;
+using LiveChartsCore.Kernel.Events;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia
 {

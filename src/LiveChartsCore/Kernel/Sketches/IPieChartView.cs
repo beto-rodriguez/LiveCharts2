@@ -21,18 +21,16 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Measure;
 using System.Collections.Generic;
-using System.Drawing;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
-    /// Defines a Cartesian chart view, this view is able to host one or many series in a Cartesian coordinate system.
+    /// Defines a pie chart.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="IChartView{TDrawingContext}" />
-    public interface ICartesianChartView<TDrawingContext> : IChartView<TDrawingContext>
+    public interface IPieChartView<TDrawingContext> : IChartView<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
@@ -41,26 +39,10 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The core.
         /// </value>
-        CartesianChart<TDrawingContext> Core { get; }
+        PieChart<TDrawingContext> Core { get; }
 
         /// <summary>
-        /// Gets or sets the x axes.
-        /// </summary>
-        /// <value>
-        /// The x axes.
-        /// </value>
-        IEnumerable<IAxis> XAxes { get; set; }
-
-        /// <summary>
-        /// Gets or sets the y axes.
-        /// </summary>
-        /// <value>
-        /// The y axes.
-        /// </value>
-        IEnumerable<IAxis> YAxes { get; set; }
-
-        /// <summary>
-        /// Gets or sets the series to plot in the user interface.
+        /// Gets or sets the series.
         /// </summary>
         /// <value>
         /// The series.
@@ -68,45 +50,29 @@ namespace LiveChartsCore.Kernel
         IEnumerable<ISeries> Series { get; set; }
 
         /// <summary>
-        /// Gets or sets the draw margin frame.
+        /// Gets or sets the initial rotation in degrees, this angle specifies where the first pie slice will be drawn, then the remaining
+        /// slices will stack according to its corresponding position.
         /// </summary>
         /// <value>
-        /// The draw margin frame.
+        /// The initial rotation.
         /// </value>
-        DrawMarginFrame<TDrawingContext> DrawMarginFrame { get; set; }
+        public double InitialRotation { get; set; }
 
         /// <summary>
-        /// Gets or sets the zoom mode.
+        /// Gets or sets the maximum angle in degrees, default is 360.
         /// </summary>
         /// <value>
-        /// The zoom mode.
+        /// The maximum angle.
         /// </value>
-        ZoomAndPanMode ZoomMode { get; set; }
-
+        public double MaxAngle { get; set; }
 
         /// <summary>
-        /// Gets or sets the tool tip finding strategy.
+        /// Gets or sets the total, it is the maximum value a pie slice can represent, when this property is null, the <see cref="Total"/> property
+        /// will be calculated automatically based on the series data. Default value is null.
         /// </summary>
         /// <value>
-        /// The tool tip finding strategy.
+        /// The total stacked.
         /// </value>
-        TooltipFindingStrategy TooltipFindingStrategy { get; set; }
-
-        /// <summary>
-        /// Gets or sets the zooming speed from 0 to 1, where 0 is the fastest and 1 the slowest.
-        /// </summary>
-        /// <value>
-        /// The zooming speed.
-        /// </value>
-        double ZoomingSpeed { get; set; }
-
-        /// <summary>
-        /// Scales the UI point.
-        /// </summary>
-        /// <param name="point">The point.</param>
-        /// <param name="xAxisIndex">Index of the x axis.</param>
-        /// <param name="yAxisIndex">Index of the y axis.</param>
-        /// <returns></returns>
-        PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0);
+        public double? Total { get; set; }
     }
 }
