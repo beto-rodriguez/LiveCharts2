@@ -32,7 +32,7 @@ namespace LiveChartsCore
     /// <summary>
     /// Defines a chart series.
     /// </summary>
-    public interface ISeries : IDisposable
+    public interface ISeries
     {
         /// <summary>
         /// Gets or sets a series unique identifier, the library handles this id automatically.
@@ -182,7 +182,7 @@ namespace LiveChartsCore
         /// <summary>
         /// Deletes the series from the user interface.
         /// </summary>
-        void Delete(IChartView chart);
+        void SoftDelete(IChartView chart);
     }
 
     /// <summary>

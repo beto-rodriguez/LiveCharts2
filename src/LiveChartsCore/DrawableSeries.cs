@@ -24,7 +24,6 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
 using System;
-using System.Collections.Generic;
 
 namespace LiveChartsCore
 {
@@ -36,9 +35,9 @@ namespace LiveChartsCore
     /// <typeparam name="TLabel">The type of the label.</typeparam>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="Series{TModel, TVisual, TLabel, TDrawingContext}" />
-    /// <seealso cref="IDrawableSeries{TDrawingContext}" />
+    /// <seealso cref="IPaintableSeries{TDrawingContext}" />
     public abstract class DrawableSeries<TModel, TVisual, TLabel, TDrawingContext>
-        : Series<TModel, TVisual, TLabel, TDrawingContext>, IDrawableSeries<TDrawingContext>
+        : Series<TModel, TVisual, TLabel, TDrawingContext>, IPaintableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
@@ -48,10 +47,6 @@ namespace LiveChartsCore
         /// </summary>
         protected CanvasSchedule<TDrawingContext> canvaSchedule = new();
 
-        /// <summary>
-        /// The pending to delete tasks.
-        /// </summary>
-        protected List<IPaintTask<TDrawingContext>> deletingTasks = new();
         private IPaintTask<TDrawingContext>? _stroke = null;
         private IPaintTask<TDrawingContext>? _fill = null;
         private double _legendShapeSize = 15;
@@ -63,11 +58,7 @@ namespace LiveChartsCore
         /// Initializes a new instance of the <see cref="DrawableSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
         /// <param name="properties">The properties.</param>
-        public DrawableSeries(SeriesProperties properties) : base(properties)
-        {
-        }
-
-        List<IPaintTask<TDrawingContext>> IDrawableSeries<TDrawingContext>.DeletingTasks => deletingTasks;
+        public DrawableSeries(SeriesProperties properties) : base(properties) { }
 
         /// <summary>
         /// Gets or sets the stroke.
@@ -78,18 +69,7 @@ namespace LiveChartsCore
         public IPaintTask<TDrawingContext>? Stroke
         {
             get => _stroke;
-            set
-            {
-                if (_stroke != null) deletingTasks.Add(_stroke);
-                _stroke = value;
-                if (_stroke != null)
-                {
-                    _stroke.IsStroke = true;
-                    _stroke.IsFill = false;
-                }
-                OnPaintContextChanged();
-                OnPropertyChanged();
-            }
+            set => SetPaintProperty(ref _stroke, value, true);
         }
 
         /// <summary>
@@ -101,19 +81,7 @@ namespace LiveChartsCore
         public IPaintTask<TDrawingContext>? Fill
         {
             get => _fill;
-            set
-            {
-                if (_fill != null) deletingTasks.Add(_fill);
-                _fill = value;
-                if (_fill != null)
-                {
-                    _fill.IsStroke = false;
-                    _fill.IsFill = true;
-                    _fill.StrokeThickness = 0;
-                }
-                OnPaintContextChanged();
-                OnPropertyChanged();
-            }
+            set => SetPaintProperty(ref _fill, value);
         }
 
         /// <summary>
@@ -125,12 +93,7 @@ namespace LiveChartsCore
         public IPaintTask<TDrawingContext>? DataLabelsPaint
         {
             get => _dataLabelsPaint;
-            set
-            {
-                if (_dataLabelsPaint != null) deletingTasks.Add(_dataLabelsPaint);
-                _dataLabelsPaint = value;
-                OnPropertyChanged();
-            }
+            set => SetPaintProperty(ref _dataLabelsPaint, value);
         }
 
         /// <summary>
@@ -175,22 +138,6 @@ namespace LiveChartsCore
         public double LegendShapeSize { get => _legendShapeSize; set { _legendShapeSize = value; OnPropertyChanged(); } }
 
         /// <summary>
-        /// Releases unmanaged and - optionally - managed resources.
-        /// </summary>
-        /// <returns></returns>
-        public override void Dispose()
-        {
-            foreach (var chart in subscribedTo)
-            {
-                var c = (Chart<TDrawingContext>)chart;
-                if (_fill != null) c.Canvas.RemovePaintTask(_fill);
-                if (_stroke != null) c.Canvas.RemovePaintTask(_stroke);
-            }
-
-            base.Dispose();
-        }
-
-        /// <summary>
         /// Called when the paint context changed.
         /// </summary>
         /// <returns></returns>
@@ -212,6 +159,27 @@ namespace LiveChartsCore
 
             var factory = LiveCharts.CurrentSettings.GetFactory<TDrawingContext>();
             dataProvider = factory.GetProvider<TModel>();
+        }
+
+        /// <summary>
+        /// Called when [paint changed].
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <returns></returns>
+        protected override void OnPaintChanged(string? propertyName)
+        {
+            OnPaintContextChanged();
+            OnPropertyChanged();
+        }
+
+        /// <summary>
+        /// Gets the paint tasks.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        protected override IPaintTask<TDrawingContext>?[] GetPaintTasks()
+        {
+            return new[] { _stroke, _fill, _dataLabelsPaint };
         }
     }
 }

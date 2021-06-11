@@ -106,7 +106,7 @@ namespace LiveChartsCore
         /// <value>
         /// The drawable series.
         /// </value>
-        public override IEnumerable<IDrawableSeries<TDrawingContext>> DrawableSeries => Series;
+        public override IEnumerable<IPaintableSeries<TDrawingContext>> DrawableSeries => Series;
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is zooming or panning.
@@ -146,7 +146,7 @@ namespace LiveChartsCore
         public override IEnumerable<TooltipPoint> FindPointsNearTo(PointF pointerPosition)
         {
             var actualStrategy = TooltipFindingStrategy;
-            if (TooltipFindingStrategy == TooltipFindingStrategy.Automatic)
+            if (actualStrategy == TooltipFindingStrategy.Automatic)
             {
                 var areAllX = true;
                 var areAllY = true;
@@ -515,14 +515,7 @@ namespace LiveChartsCore
                         _ = toDeleteAxes.Remove(axis);
                     }
 
-                    var deleted = false;
-                    foreach (var item in axis.DeletingTasks)
-                    {
-                        canvas.RemovePaintTask(item);
-                        item.Dispose();
-                        deleted = true;
-                    }
-                    if (deleted) axis.DeletingTasks.Clear();
+                    axis.RemoveOldPaints(View);
                 }
 
                 var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
@@ -532,52 +525,42 @@ namespace LiveChartsCore
                     var primaryAxis = YAxes[series.ScalesYAt];
 
                     series.Measure(this, secondaryAxis, primaryAxis);
+                    series.RemoveOldPaints(View);
                     _ = _everMeasuredSeries.Add(series);
                     _ = toDeleteSeries.Remove(series);
-
-                    var deleted = false;
-                    foreach (var item in series.DeletingTasks)
-                    {
-                        canvas.RemovePaintTask(item);
-                        item.Dispose();
-                        deleted = true;
-                    }
-                    if (deleted) series.DeletingTasks.Clear();
                 }
 
                 if (_previousDrawMarginFrame != null && _chartView.DrawMarginFrame != _previousDrawMarginFrame)
                 {
-                    _previousDrawMarginFrame.Dispose(this);
+                    _previousDrawMarginFrame.RemoveFromUI(canvas);
                     _previousDrawMarginFrame = null;
                 }
                 if (_chartView.DrawMarginFrame != null)
                 {
                     _chartView.DrawMarginFrame.Measure(this);
-                    foreach (var item in _chartView.DrawMarginFrame.DeletingTasks)
-                    {
-                        canvas.RemovePaintTask(item);
-                        item.Dispose();
-                    }
+                    _chartView.DrawMarginFrame.RemoveOldPaints(View);
                     _previousDrawMarginFrame = _chartView.DrawMarginFrame;
                 }
 
                 foreach (var series in toDeleteSeries)
                 {
-                    series.Dispose();
+                    series.SoftDelete(View);
                     _ = _everMeasuredSeries.Remove(series);
                 }
                 foreach (var axis in toDeleteAxes)
                 {
-                    axis.Dispose();
+                    axis.Delete(this);
                     _ = _everMeasuredAxes.Remove(axis);
                 }
 
                 foreach (var axis in totalAxes)
                 {
+                    axis.IsNotifyingChanges = false;
                     axis.PreviousDataBounds = axis.DataBounds;
                     axis.PreviousVisibleDataBounds = axis.VisibleDataBounds;
                     axis.PreviousMaxLimit = axis.MaxLimit;
                     axis.PreviousMinLimit = axis.MinLimit;
+                    axis.IsNotifyingChanges = true;
                 }
 
                 IsZoomingOrPanning = false;

@@ -40,7 +40,7 @@ namespace LiveChartsCore
     /// <seealso cref="IDisposable" />
     /// <seealso cref="ICartesianSeries{TDrawingContext}" />
     public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
-        : DrawableSeries<TModel, TVisual, TLabel, TDrawingContext>, IDisposable, ICartesianSeries<TDrawingContext>
+        : DrawableSeries<TModel, TVisual, TLabel, TDrawingContext>, ICartesianSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
@@ -87,7 +87,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="chart"></param>
         /// <inheritdoc cref="M:LiveChartsCore.ISeries.Delete(LiveChartsCore.Kernel.IChartView)" />
-        public override void Delete(IChartView chart)
+        public override void SoftDelete(IChartView chart)
         {
             var core = ((ICartesianChartView<TDrawingContext>)chart).Core;
 
@@ -105,6 +105,10 @@ namespace LiveChartsCore
                 SoftDeletePoint(point, primaryScale, secondaryScale);
                 deleted.Add(point);
             }
+
+            if (Fill != null) core.Canvas.RemovePaintTask(Fill);
+            if (Stroke != null) core.Canvas.RemovePaintTask(Stroke);
+            if (DataLabelsPaint != null) core.Canvas.RemovePaintTask(DataLabelsPaint);
 
             foreach (var item in deleted) _ = everFetched.Remove(item);
         }

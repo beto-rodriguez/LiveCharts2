@@ -32,7 +32,7 @@ namespace LiveChartsCore.Kernel
     /// <summary>
     /// Defines an Axis in a Cartesian chart.
     /// </summary>
-    public interface IAxis : IDisposable
+    public interface IAxis
     {
         /// <summary>
         /// Gets the previous data bounds.
@@ -305,11 +305,15 @@ namespace LiveChartsCore.Kernel
         SizeF GetPossibleSize(CartesianChart<TDrawingContext> chart);
 
         /// <summary>
-        /// Gets the deleting tasks.
+        /// Deletes the <see cref="IPaintTask{TDrawingContext}"/> instances that changed from the user interface.
         /// </summary>
-        /// <value>
-        /// The deleting tasks.
-        /// </value>
-        List<IPaintTask<TDrawingContext>> DeletingTasks { get; }
+        /// <param name="chart">The chart.</param>
+        void RemoveOldPaints(IChartView<TDrawingContext> chart);
+
+        /// <summary>
+        /// Deletes the specified chart.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
+        void Delete(CartesianChart<TDrawingContext> chart);
     }
 }

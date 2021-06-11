@@ -86,7 +86,7 @@ namespace LiveChartsCore
         /// <value>
         /// The drawable series.
         /// </value>
-        public override IEnumerable<IDrawableSeries<TDrawingContext>> DrawableSeries => Series;
+        public override IEnumerable<IPaintableSeries<TDrawingContext>> DrawableSeries => Series;
 
         /// <summary>
         /// Gets the view.
@@ -237,22 +237,14 @@ namespace LiveChartsCore
                 foreach (var series in Series)
                 {
                     series.Measure(this);
+                    series.RemoveOldPaints(View);
                     _ = _everMeasuredSeries.Add(series);
                     _ = toDeleteSeries.Remove(series);
-
-                    var deleted = false;
-                    foreach (var item in series.DeletingTasks)
-                    {
-                        canvas.RemovePaintTask(item);
-                        item.Dispose();
-                        deleted = true;
-                    }
-                    if (deleted) series.DeletingTasks.Clear();
                 }
 
                 foreach (var series in toDeleteSeries)
                 {
-                    series.Dispose();
+                    series.SoftDelete(View);
                     _ = _everMeasuredSeries.Remove(series);
                 }
 

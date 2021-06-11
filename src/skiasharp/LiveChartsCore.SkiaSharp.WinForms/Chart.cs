@@ -104,7 +104,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             initializer.ApplyStyleToChart(this);
 
             var c = Controls[0].Controls[0];
-            //MouseMove += ChartOnMouseMove;
             c.MouseMove += OnMouseMove;
 
             InitializeCore();
@@ -115,7 +114,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             core.UpdateFinished += OnCoreUpdateFinished;
 
             c.MouseLeave += Chart_MouseLeave;
-            //MouseLeave += Chart_MouseLeave;
         }
 
         #region events

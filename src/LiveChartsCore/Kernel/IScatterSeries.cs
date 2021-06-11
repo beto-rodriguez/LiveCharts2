@@ -28,8 +28,8 @@ namespace LiveChartsCore.Kernel
     /// Defines a scatter series.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IDrawableSeries{TDrawingContext}" />
-    public interface IScatterSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
+    /// <seealso cref="IPaintableSeries{TDrawingContext}" />
+    public interface IScatterSeries<TDrawingContext> : IPaintableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>

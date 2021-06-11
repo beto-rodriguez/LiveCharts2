@@ -29,8 +29,8 @@ namespace LiveChartsCore.Kernel
     /// Defines a Cartesian series.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IDrawableSeries{TDrawingContext}" />
-    public interface ICartesianSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
+    /// <seealso cref="IPaintableSeries{TDrawingContext}" />
+    public interface ICartesianSeries<TDrawingContext> : IPaintableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>

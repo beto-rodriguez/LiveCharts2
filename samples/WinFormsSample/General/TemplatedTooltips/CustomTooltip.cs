@@ -90,7 +90,7 @@ namespace WinFormsSample.General.TemplatedTooltips
                 var text = point.Point.AsTooltipString;
                 var size = g.MeasureString(text, chart.TooltipFont);
 
-                var drawableSeries = (IDrawableSeries<SkiaSharpDrawingContext>)point.Series;
+                var drawableSeries = (IPaintableSeries<SkiaSharpDrawingContext>)point.Series;
 
                 Controls.Add(new MotionCanvas
                 {

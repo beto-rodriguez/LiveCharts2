@@ -63,7 +63,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The pie series builder.
         /// </value>
-        public List<Action<IDrawableSeries<TDrawingContext>>> SeriesBuilder { get; set; } = new List<Action<IDrawableSeries<TDrawingContext>>>();
+        public List<Action<IPaintableSeries<TDrawingContext>>> SeriesBuilder { get; set; } = new List<Action<IPaintableSeries<TDrawingContext>>>();
 
         /// <summary>
         /// Gets or sets the pie series builder.
@@ -191,7 +191,7 @@ namespace LiveChartsCore.Themes
         /// Constructs a series.
         /// </summary>
         /// <param name="series">The series.</param>
-        public virtual void ApplyStyleToSeries(IDrawableSeries<TDrawingContext> series)
+        public virtual void ApplyStyleToSeries(IPaintableSeries<TDrawingContext> series)
         {
             foreach (var rule in SeriesBuilder) rule(series);
 

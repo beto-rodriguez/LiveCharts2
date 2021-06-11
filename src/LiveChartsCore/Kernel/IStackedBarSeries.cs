@@ -28,8 +28,8 @@ namespace LiveChartsCore.Kernel
     /// Defines a stacked bar series.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IDrawableSeries{TDrawingContext}" />
-    public interface IStackedBarSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
+    /// <seealso cref="IPaintableSeries{TDrawingContext}" />
+    public interface IStackedBarSeries<TDrawingContext> : IPaintableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>

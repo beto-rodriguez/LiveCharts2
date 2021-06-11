@@ -56,8 +56,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </summary>
         public static readonly DependencyProperty SeriesProperty =
             DependencyProperty.Register(
-                nameof(Series), typeof(IEnumerable<IDrawableSeries<SkiaSharpDrawingContext>>),
-                typeof(DefaultLegend), new PropertyMetadata(new List<IDrawableSeries<SkiaSharpDrawingContext>>()));
+                nameof(Series), typeof(IEnumerable<IPaintableSeries<SkiaSharpDrawingContext>>),
+                typeof(DefaultLegend), new PropertyMetadata(new List<IPaintableSeries<SkiaSharpDrawingContext>>()));
 
         /// <summary>
         /// The orientation property
@@ -94,9 +94,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <value>
         /// The series.
         /// </value>
-        public IEnumerable<IDrawableSeries<SkiaSharpDrawingContext>> Series
+        public IEnumerable<IPaintableSeries<SkiaSharpDrawingContext>> Series
         {
-            get => (IEnumerable<IDrawableSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty);
+            get => (IEnumerable<IPaintableSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty);
             set => SetValue(SeriesProperty, value);
         }
 

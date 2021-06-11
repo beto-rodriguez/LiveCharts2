@@ -88,37 +88,14 @@ namespace LiveChartsCore
         public IPaintTask<TDrawingContext>? GeometryFill
         {
             get => _geometryFill;
-            set
-            {
-                if (_geometryFill != null) deletingTasks.Add(_geometryFill);
-                _geometryFill = value;
-                if (_geometryFill != null)
-                {
-                    _geometryFill.IsStroke = false;
-                    _geometryFill.StrokeThickness = 0;
-                }
-
-                OnPaintContextChanged();
-                OnPropertyChanged();
-            }
+            set => SetPaintProperty(ref _geometryFill, value);
         }
 
         /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometrySize"/>
         public IPaintTask<TDrawingContext>? GeometryStroke
         {
             get => _geometryStroke;
-            set
-            {
-                if (_geometryStroke != null) deletingTasks.Add(_geometryStroke);
-                _geometryStroke = value;
-                if (_geometryStroke != null)
-                {
-                    _geometryStroke.IsStroke = true;
-                }
-
-                OnPaintContextChanged();
-                OnPropertyChanged();
-            }
+            set => SetPaintProperty(ref _geometryStroke, value, true);
         }
 
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.Measure(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})" />
@@ -169,8 +146,8 @@ namespace LiveChartsCore
             var segmentI = 0;
             var toDeletePoints = new HashSet<ChartPoint>(everFetched);
 
-            foreach (var item in _strokePathHelperContainer) item.Path.ClearCommands(); // item.ClearLimits(); //item.Path.RemoveCommand(item.StartSegment); // ;
-            foreach (var item in _fillPathHelperContainer) item.Path.ClearCommands(); //item.ClearLimits(); //item.Path.RemoveCommand(item.StartSegment); // item.Path.ClearCommands();
+            foreach (var item in _strokePathHelperContainer) item.Path.ClearCommands();
+            foreach (var item in _fillPathHelperContainer) item.Path.ClearCommands();
 
             foreach (var segment in segments)
             {
@@ -795,35 +772,35 @@ namespace LiveChartsCore
             dataProvider.DisposePoint(point);
         }
 
-        /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Delete(IChartView)"/>
-        public override void Delete(IChartView chart)
+        /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SoftDelete(IChartView)"/>
+        public override void SoftDelete(IChartView chart)
         {
-            base.Delete(chart);
+            base.SoftDelete(chart);
             var canvas = ((ICartesianChartView<TDrawingContext>)chart).CoreCanvas;
 
             if (Fill != null)
+            {
                 foreach (var pathHelper in _fillPathHelperContainer.ToArray())
                     Fill.RemoveGeometryFromPainTask(canvas, pathHelper.Path);
+            }
 
             if (Stroke != null)
+            {
                 foreach (var pathHelper in _strokePathHelperContainer.ToArray())
                     Stroke.RemoveGeometryFromPainTask(canvas, pathHelper.Path);
+            }
+
+            if (GeometryFill != null) canvas.RemovePaintTask(GeometryFill);
+            if (GeometryStroke != null) canvas.RemovePaintTask(GeometryStroke);
         }
 
         /// <summary>
-        /// Releases unmanaged and - optionally - managed resources.
+        /// Gets the paint tasks.
         /// </summary>
         /// <returns></returns>
-        public override void Dispose()
+        protected override IPaintTask<TDrawingContext>?[] GetPaintTasks()
         {
-            foreach (var chart in subscribedTo)
-            {
-                var c = (Chart<TDrawingContext>)chart;
-                if (_geometryFill != null) c.Canvas.RemovePaintTask(_geometryFill);
-                if (_geometryStroke != null) c.Canvas.RemovePaintTask(_geometryStroke);
-            }
-
-            base.Dispose();
+            return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint };
         }
     }
 }

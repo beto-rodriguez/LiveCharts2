@@ -41,7 +41,7 @@ namespace LiveChartsCore
     /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
     /// <seealso cref="IAxis{TDrawingContext}" />
     /// <seealso cref="INotifyPropertyChanged" />
-    public class Axis<TDrawingContext, TTextGeometry, TLineGeometry> : IAxis<TDrawingContext>, INotifyPropertyChanged
+    public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry> : PaintableElement<TDrawingContext>, IAxis<TDrawingContext>, INotifyPropertyChanged
         where TDrawingContext : DrawingContext
         where TTextGeometry : ILabelGeometry<TDrawingContext>, new()
         where TLineGeometry : ILineGeometry<TDrawingContext>, new()
@@ -85,8 +85,6 @@ namespace LiveChartsCore
         #endregion
 
         #region properties
-
-        List<IPaintTask<TDrawingContext>> IAxis<TDrawingContext>.DeletingTasks => deletingTasks;
 
         float IAxis.Xo { get => _xo; set => _xo = value; }
         float IAxis.Yo { get => _yo; set => _yo = value; }
@@ -149,24 +147,14 @@ namespace LiveChartsCore
         public IPaintTask<TDrawingContext>? LabelsPaint
         {
             get => _labelsPaint;
-            set
-            {
-                if (_labelsPaint != null) deletingTasks.Add(_labelsPaint);
-                _labelsPaint = value;
-                OnPropertyChanged();
-            }
+            set => SetPaintProperty(ref _labelsPaint, value);
         }
 
         /// <inheritdoc cref="IAxis{TDrawingContext}.SeparatorsPaint"/>
         public IPaintTask<TDrawingContext>? SeparatorsPaint
         {
             get => _separatorsPaint;
-            set
-            {
-                if (_separatorsPaint != null) deletingTasks.Add(_separatorsPaint);
-                _separatorsPaint = value;
-                OnPropertyChanged();
-            }
+            set => SetPaintProperty(ref _separatorsPaint, value);
         }
 
         /// <inheritdoc cref="IAxis{TDrawingContext}.TextBrush"/>
@@ -482,27 +470,25 @@ namespace LiveChartsCore
             _visibleDataBounds = new Bounds();
         }
 
-        /// <inheritdoc cref="IDisposable.Dispose"/>
-        public virtual void Dispose()
+        /// <summary>
+        /// Deletes the specified chart.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
+        /// <returns></returns>
+        public virtual void Delete(CartesianChart<TDrawingContext> chart)
         {
-            foreach (var chart in subscribedTo.ToArray())
+            if (_labelsPaint != null)
             {
-                var cartesianChart = (CartesianChart<TDrawingContext>)chart;
-                var canvas = cartesianChart.View.CoreCanvas;
-                if (_labelsPaint != null)
-                {
-                    canvas.RemovePaintTask(_labelsPaint);
-                    _labelsPaint.ClearGeometriesFromPaintTask(canvas);
-                }
-                if (_separatorsPaint != null)
-                {
-                    canvas.RemovePaintTask(_separatorsPaint);
-                    _separatorsPaint.ClearGeometriesFromPaintTask(canvas);
-                }
-
-                _ = activeSeparators.Remove(cartesianChart);
+                chart.Canvas.RemovePaintTask(_labelsPaint);
+                _labelsPaint.ClearGeometriesFromPaintTask(chart.Canvas);
             }
-            subscribedTo.Clear();
+            if (_separatorsPaint != null)
+            {
+                chart.Canvas.RemovePaintTask(_separatorsPaint);
+                _separatorsPaint.ClearGeometriesFromPaintTask(chart.Canvas);
+            }
+
+            _ = activeSeparators.Remove(chart);
         }
 
         /// <summary>
@@ -592,6 +578,25 @@ namespace LiveChartsCore
                 separator.Text.Opacity = 0;
                 separator.Text.RemoveOnCompleted = true;
             }
+        }
+
+        /// <summary>
+        /// Called when [paint changed].
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <returns></returns>
+        protected override void OnPaintChanged(string? propertyName)
+        {
+            OnPropertyChanged();
+        }
+
+        /// <summary>
+        /// Gets the paint tasks.
+        /// </summary>
+        /// <returns></returns>
+        protected override IPaintTask<TDrawingContext>?[] GetPaintTasks()
+        {
+            return new[] { _separatorsPaint, _labelsPaint };
         }
     }
 }

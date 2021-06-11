@@ -32,7 +32,7 @@ namespace LiveChartsCore
 {
     /// <inheritdoc cref="IPieSeries{TDrawingContext}" />
     public class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
-        : DrawableSeries<TModel, TVisual, TLabel, TDrawingContext>, IDisposable, IPieSeries<TDrawingContext>
+        : DrawableSeries<TModel, TVisual, TLabel, TDrawingContext>, IPieSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TVisual : class, IDoughnutVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
@@ -550,11 +550,11 @@ namespace LiveChartsCore
         }
 
         /// <summary>
-        /// Deletes the point from the chart.
+        /// Softly deletes the all points from the chart.
         /// </summary>
         /// <param name="chart"></param>
         /// <inheritdoc cref="M:LiveChartsCore.ISeries.Delete(LiveChartsCore.Kernel.IChartView)" />
-        public override void Delete(IChartView chart)
+        public override void SoftDelete(IChartView chart)
         {
             var u = new Scaler();
 

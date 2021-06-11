@@ -23,7 +23,6 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
 using System;
-using System.Collections.Generic;
 
 namespace LiveChartsCore.Kernel
 {
@@ -32,7 +31,7 @@ namespace LiveChartsCore.Kernel
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="ISeries" />
-    public interface IDrawableSeries<TDrawingContext> : ISeries
+    public interface IPaintableSeries<TDrawingContext> : ISeries
          where TDrawingContext : DrawingContext
     {
         /// <summary>
@@ -96,11 +95,9 @@ namespace LiveChartsCore.Kernel
         int GetStackGroup();
 
         /// <summary>
-        /// Gets the deleting tasks.
+        /// Deletes the <see cref="IPaintTask{TDrawingContext}"/> instances that changed from the user interface.
         /// </summary>
-        /// <value>
-        /// The deleting tasks.
-        /// </value>
-        List<IPaintTask<TDrawingContext>> DeletingTasks { get; }
+        /// <param name="chart">The chart.</param>
+        void RemoveOldPaints(IChartView<TDrawingContext> chart);
     }
 }

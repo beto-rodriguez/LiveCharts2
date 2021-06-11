@@ -34,7 +34,7 @@ namespace WinFormsSample.General.TemplatedLegends
             BackColor = wfChart.LegendBackColor;
         }
 
-        private void DrawAndMesure(IEnumerable<IDrawableSeries<SkiaSharpDrawingContext>> series, Chart chart)
+        private void DrawAndMesure(IEnumerable<IPaintableSeries<SkiaSharpDrawingContext>> series, Chart chart)
         {
             SuspendLayout();
             Controls.Clear();

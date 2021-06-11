@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
 
 namespace LiveChartsCore
 {
@@ -29,24 +29,11 @@ namespace LiveChartsCore
     /// Defines the draw margin frame visual.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public abstract class DrawMarginFrame<TDrawingContext>
+    public abstract class DrawMarginFrame<TDrawingContext> : PaintableElement<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         private IPaintTask<TDrawingContext>? _stroke = null;
         private IPaintTask<TDrawingContext>? _fill = null;
-
-        /// <summary>
-        /// The pending to delete tasks.
-        /// </summary>
-        protected List<IPaintTask<TDrawingContext>> deletingTasks = new();
-
-        /// <summary>
-        /// Gets the deleting tasks.
-        /// </summary>
-        /// <value>
-        /// The deleting tasks.
-        /// </value>
-        internal List<IPaintTask<TDrawingContext>> DeletingTasks => deletingTasks;
 
         /// <summary>
         /// Gets or sets the stroke.
@@ -57,16 +44,7 @@ namespace LiveChartsCore
         public IPaintTask<TDrawingContext>? Stroke
         {
             get => _stroke;
-            set
-            {
-                if (_stroke != null) deletingTasks.Add(_stroke);
-                _stroke = value;
-                if (_stroke != null)
-                {
-                    _stroke.IsStroke = true;
-                    _stroke.IsFill = false;
-                }
-            }
+            set => SetPaintProperty(ref _stroke, value, true);
         }
 
         /// <summary>
@@ -78,17 +56,7 @@ namespace LiveChartsCore
         public IPaintTask<TDrawingContext>? Fill
         {
             get => _fill;
-            set
-            {
-                if (_fill != null) deletingTasks.Add(_fill);
-                _fill = value;
-                if (_fill != null)
-                {
-                    _fill.IsStroke = false;
-                    _fill.IsFill = true;
-                    _fill.StrokeThickness = 0;
-                }
-            }
+            set => SetPaintProperty(ref _fill, value);
         }
 
         /// <summary>
@@ -98,14 +66,12 @@ namespace LiveChartsCore
         public abstract void Measure(CartesianChart<TDrawingContext> chart);
 
         /// <summary>
-        /// Disposes the specified chart.
+        /// Gets the paint tasks.
         /// </summary>
-        /// <param name="chart">The chart.</param>
         /// <returns></returns>
-        public void Dispose(CartesianChart<TDrawingContext> chart)
+        protected override IPaintTask<TDrawingContext>?[] GetPaintTasks()
         {
-            if (_fill != null) chart.Canvas.RemovePaintTask(_fill);
-            if (_stroke != null) chart.Canvas.RemovePaintTask(_stroke);
+            return new[] { _stroke, _fill };
         }
     }
 

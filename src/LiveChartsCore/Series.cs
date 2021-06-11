@@ -44,7 +44,7 @@ namespace LiveChartsCore
     /// <seealso cref="ISeries{TModel}" />
     /// <seealso cref="IDisposable" />
     /// <seealso cref="INotifyPropertyChanged" />
-    public abstract class Series<TModel, TVisual, TLabel, TDrawingContext> : ISeries, ISeries<TModel>, IDisposable, INotifyPropertyChanged
+    public abstract class Series<TModel, TVisual, TLabel, TDrawingContext> : PaintableElement<TDrawingContext>, ISeries, ISeries<TModel>, INotifyPropertyChanged
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
@@ -306,16 +306,8 @@ namespace LiveChartsCore
             dataProvider.RestartVisuals();
         }
 
-        /// <inheritdoc cref="ISeries.Delete"/>
-        public virtual void Delete(IChartView chart) { }
-
-        /// <inheritdoc cref="IDisposable.Dispose"/>
-        public virtual void Dispose()
-        {
-            Disposing?.Invoke(this);
-            foreach (var chart in subscribedTo) Delete(chart.View);
-            _observer.Dispose(_values);
-        }
+        /// <inheritdoc cref="ISeries.SoftDelete"/>
+        public abstract void SoftDelete(IChartView chart);
 
         /// <summary>
         /// Softs the delete point.

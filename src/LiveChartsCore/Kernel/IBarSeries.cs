@@ -28,8 +28,8 @@ namespace LiveChartsCore.Kernel
     /// Defines a bar series point.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IDrawableSeries{TDrawingContext}" />
-    public interface IBarSeries<TDrawingContext> : IDrawableSeries<TDrawingContext>
+    /// <seealso cref="IPaintableSeries{TDrawingContext}" />
+    public interface IBarSeries<TDrawingContext> : IPaintableSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>

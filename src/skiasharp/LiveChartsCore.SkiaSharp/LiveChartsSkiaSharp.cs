@@ -275,7 +275,7 @@ namespace LiveChartsCore.SkiaSharpView
         {
             return theme
                 .WithSeriesDefaultsResolver(
-                    (Color[] colors, IDrawableSeries<SkiaSharpDrawingContext> series, bool forceApply) =>
+                    (Color[] colors, IPaintableSeries<SkiaSharpDrawingContext> series, bool forceApply) =>
                     {
                         if (forceApply)
                         {
@@ -365,7 +365,7 @@ namespace LiveChartsCore.SkiaSharpView
         {
             return theme
                 .WithSeriesDefaultsResolver(
-                    (Color[] colors, IDrawableSeries<SkiaSharpDrawingContext> series, bool forceApply) =>
+                    (Color[] colors, IPaintableSeries<SkiaSharpDrawingContext> series, bool forceApply) =>
                     {
                         if (forceApply)
                         {

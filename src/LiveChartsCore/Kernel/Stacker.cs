@@ -32,7 +32,7 @@ namespace LiveChartsCore.Kernel
     public class Stacker<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        private readonly Dictionary<IDrawableSeries<TDrawingContext>, int> _stackPositions = new();
+        private readonly Dictionary<IPaintableSeries<TDrawingContext>, int> _stackPositions = new();
         private readonly List<List<StackedValue>> _stack = new();
         private readonly List<float> _totals = new();
         private int _stackCount = 0;
@@ -58,7 +58,7 @@ namespace LiveChartsCore.Kernel
         /// </summary>
         /// <param name="series">The series.</param>
         /// <returns></returns>
-        public int GetSeriesStackPosition(IDrawableSeries<TDrawingContext> series)
+        public int GetSeriesStackPosition(IPaintableSeries<TDrawingContext> series)
         {
             if (!_stackPositions.TryGetValue(series, out var i))
             {
