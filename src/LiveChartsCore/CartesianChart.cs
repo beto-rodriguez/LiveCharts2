@@ -115,7 +115,7 @@ namespace LiveChartsCore
         /// <value>
         /// The drawable series.
         /// </value>
-        public override IEnumerable<IPaintableSeries<TDrawingContext>> DrawableSeries => Series;
+        public override IEnumerable<IChartSeries<TDrawingContext>> DrawableSeries => Series;
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is zooming or panning.
@@ -530,10 +530,7 @@ namespace LiveChartsCore
                 var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
                 foreach (var series in Series)
                 {
-                    var secondaryAxis = XAxes[series.ScalesXAt];
-                    var primaryAxis = YAxes[series.ScalesYAt];
-
-                    series.Measure(this, secondaryAxis, primaryAxis);
+                    series.Measure(this);
                     series.RemoveOldPaints(View);
                     _ = _everMeasuredSeries.Add(series);
                     _ = toDeleteSeries.Remove(series);

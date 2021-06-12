@@ -46,7 +46,7 @@ namespace LiveChartsCore
     /// <seealso cref="ISeries{TModel}" />
     /// <seealso cref="IDisposable" />
     /// <seealso cref="INotifyPropertyChanged" />
-    public abstract class Series<TModel, TVisual, TLabel, TDrawingContext> : UIElement<TDrawingContext>, ISeries, ISeries<TModel>, INotifyPropertyChanged
+    public abstract class Series<TModel, TVisual, TLabel, TDrawingContext> : ChartElement<TDrawingContext>, ISeries, ISeries<TModel>, INotifyPropertyChanged
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()

@@ -87,7 +87,7 @@ namespace LiveChartsCore
         /// <value>
         /// The drawable series.
         /// </value>
-        public override IEnumerable<IPaintableSeries<TDrawingContext>> DrawableSeries => Series;
+        public override IEnumerable<IChartSeries<TDrawingContext>> DrawableSeries => Series;
 
         /// <summary>
         /// Gets the view.

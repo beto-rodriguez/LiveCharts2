@@ -49,6 +49,6 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The rule.
         /// </value>
-        public Action<IPaintableSeries<TDrawingContext>>? Rule { get; set; }
+        public Action<IChartSeries<TDrawingContext>>? Rule { get; set; }
     }
 }

@@ -68,7 +68,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             BackColor = wfChart.LegendBackColor;
         }
 
-        private void DrawAndMesure(IEnumerable<IPaintableSeries<SkiaSharpDrawingContext>> series, Chart chart)
+        private void DrawAndMesure(IEnumerable<IChartSeries<SkiaSharpDrawingContext>> series, Chart chart)
         {
             SuspendLayout();
             Controls.Clear();

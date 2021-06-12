@@ -29,8 +29,8 @@ namespace LiveChartsCore.Kernel.Sketches
     /// Defines a Cartesian series.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IPaintableSeries{TDrawingContext}" />
-    public interface ICartesianSeries<TDrawingContext> : IPaintableSeries<TDrawingContext>
+    /// <seealso cref="IChartSeries{TDrawingContext}" />
+    public interface ICartesianSeries<TDrawingContext> : IChartSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
@@ -67,13 +67,5 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <param name="y">The y.</param>
         /// <returns>the series bounds</returns>
         DimensionalBounds GetBounds(CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
-
-        /// <summary>
-        /// Measures the series and schedules the draw in specified chart.
-        /// </summary>
-        /// <param name="chart">The chart.</param>
-        /// <param name="x">The x axis.</param>
-        /// <param name="y">The y axis.</param>
-        void Measure(CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
     }
 }

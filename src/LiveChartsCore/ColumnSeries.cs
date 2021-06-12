@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using System;
@@ -53,12 +54,15 @@ namespace LiveChartsCore
             DataPadding = new PointF(0, 1);
         }
 
-        /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.Measure(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
-        public override void Measure(
-           CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> secondaryAxis, IAxis<TDrawingContext> primaryAxis)
+        /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
+        public override void Measure(Chart<TDrawingContext> chart)
         {
-            var drawLocation = chart.DrawMarginLocation;
-            var drawMarginSize = chart.DrawMarginSize;
+            var cartesianChart = (CartesianChart<TDrawingContext>)chart;
+            var primaryAxis = cartesianChart.YAxes[ScalesYAt];
+            var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
+
+            var drawLocation = cartesianChart.DrawMarginLocation;
+            var drawMarginSize = cartesianChart.DrawMarginSize;
             var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
             var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
             var previousPrimaryScale =
@@ -74,8 +78,8 @@ namespace LiveChartsCore
 
             var uwm = 0.5f * uw;
 
-            var pos = chart.SeriesContext.GetColumnPostion(this);
-            var count = chart.SeriesContext.GetColumnSeriesCount();
+            var pos = cartesianChart.SeriesContext.GetColumnPostion(this);
+            var count = cartesianChart.SeriesContext.GetColumnSeriesCount();
             var cp = 0f;
 
             if (!IgnoresBarPosition && count > 1)
@@ -100,20 +104,20 @@ namespace LiveChartsCore
             if (Fill != null)
             {
                 Fill.ZIndex = actualZIndex + 0.1;
-                Fill.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
-                chart.Canvas.AddDrawableTask(Fill);
+                Fill.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                cartesianChart.Canvas.AddDrawableTask(Fill);
             }
             if (Stroke != null)
             {
                 Stroke.ZIndex = actualZIndex + 0.2;
-                Stroke.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
-                chart.Canvas.AddDrawableTask(Stroke);
+                Stroke.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                cartesianChart.Canvas.AddDrawableTask(Stroke);
             }
             if (DataLabelsPaint != null)
             {
                 DataLabelsPaint.ZIndex = actualZIndex + 0.3;
-                DataLabelsPaint.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
-                chart.Canvas.AddDrawableTask(DataLabelsPaint);
+                DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
             }
 
             var dls = (float)DataLabelsSize;
@@ -122,7 +126,7 @@ namespace LiveChartsCore
             var rx = (float)Rx;
             var ry = (float)Ry;
 
-            foreach (var point in Fetch(chart))
+            foreach (var point in Fetch(cartesianChart))
             {
                 var visual = point.Context.Visual as TVisual;
                 var primary = primaryScale.ToPixels(point.PrimaryValue);
@@ -158,9 +162,9 @@ namespace LiveChartsCore
                         var cyp = point.PrimaryValue > pivot ? previousPrimary : previousPrimary - bp;
 
                         xi = previousSecondaryScale.ToPixels(point.SecondaryValue) - uwm + cp;
-                        pi = chart.IsZoomingOrPanning ? cyp : previousP;
+                        pi = cartesianChart.IsZoomingOrPanning ? cyp : previousP;
                         uwi = puw;
-                        hi = chart.IsZoomingOrPanning ? bp : 0;
+                        hi = cartesianChart.IsZoomingOrPanning ? bp : 0;
                     }
 
                     var r = new TVisual
@@ -181,8 +185,8 @@ namespace LiveChartsCore
                     _ = everFetched.Add(point);
                 }
 
-                if (Fill != null) Fill.AddGeometryToPaintTask(chart.Canvas, visual);
-                if (Stroke != null) Stroke.AddGeometryToPaintTask(chart.Canvas, visual);
+                if (Fill != null) Fill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                if (Stroke != null) Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
 
                 var cy = point.PrimaryValue > pivot ? primary : primary - b;
                 var x = secondary - uwm + cp;
@@ -212,15 +216,15 @@ namespace LiveChartsCore
                         _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
                             .WithAnimation(animation =>
                                 animation
-                                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
+                                    .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
+                                    .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
 
                         l.CompleteAllTransitions();
                         label = l;
                         point.Context.Label = l;
                     }
 
-                    DataLabelsPaint.AddGeometryToPaintTask(chart.Canvas, label);
+                    DataLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, label);
 
                     label.Text = DataLabelsFormatter(point);
                     label.TextSize = dls;
@@ -234,7 +238,7 @@ namespace LiveChartsCore
 
             foreach (var point in toDeletePoints)
             {
-                if (point.Context.Chart != chart.View) continue;
+                if (point.Context.Chart != cartesianChart.View) continue;
                 SoftDeletePoint(point, primaryScale, secondaryScale);
                 _ = everFetched.Remove(point);
             }

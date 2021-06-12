@@ -37,9 +37,9 @@ namespace LiveChartsCore
     /// <typeparam name="TLabel">The type of the label.</typeparam>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="Series{TModel, TVisual, TLabel, TDrawingContext}" />
-    /// <seealso cref="IPaintableSeries{TDrawingContext}" />
-    public abstract class DrawableSeries<TModel, TVisual, TLabel, TDrawingContext>
-        : Series<TModel, TVisual, TLabel, TDrawingContext>, IPaintableSeries<TDrawingContext>
+    /// <seealso cref="IChartSeries{TDrawingContext}" />
+    public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
+        : Series<TModel, TVisual, TLabel, TDrawingContext>, IChartSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
@@ -57,10 +57,10 @@ namespace LiveChartsCore
         private Padding _dataLabelsPadding = new() { Left = 6, Top = 8, Right = 6, Bottom = 8 };
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DrawableSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+        /// Initializes a new instance of the <see cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
         /// <param name="properties">The properties.</param>
-        public DrawableSeries(SeriesProperties properties) : base(properties) { }
+        public ChartSeries(SeriesProperties properties) : base(properties) { }
 
         /// <summary>
         /// Gets or sets the stroke.

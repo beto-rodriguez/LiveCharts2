@@ -27,6 +27,7 @@ using LiveChartsCore.Measure;
 using System.Collections.Generic;
 using System.Drawing;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Kernel.Drawing;
 
 namespace LiveChartsCore
 {
@@ -49,14 +50,18 @@ namespace LiveChartsCore
         public RowSeries()
             : base(
                   SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation
-                  | SeriesProperties.Solid | SeriesProperties.PrefersYStrategyTooltips) { }
+                  | SeriesProperties.Solid | SeriesProperties.PrefersYStrategyTooltips)
+        { }
 
-        /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.Measure"/>
-        public override void Measure(
-           CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> secondaryAxis, IAxis<TDrawingContext> primaryAxis)
+        /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
+        public override void Measure(Chart<TDrawingContext> chart)
         {
-            var drawLocation = chart.DrawMarginLocation;
-            var drawMarginSize = chart.DrawMarginSize;
+            var cartesianChart = (CartesianChart<TDrawingContext>)chart;
+            var primaryAxis = cartesianChart.YAxes[ScalesYAt];
+            var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
+
+            var drawLocation = cartesianChart.DrawMarginLocation;
+            var drawMarginSize = cartesianChart.DrawMarginSize;
             var secondaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
             var previousSecondaryScale =
                 primaryAxis.PreviousDataBounds == null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis);
@@ -71,8 +76,8 @@ namespace LiveChartsCore
             var sw = Stroke?.StrokeThickness ?? 0;
             var p = primaryScale.ToPixels((float)Pivot);
 
-            var pos = chart.SeriesContext.GetColumnPostion(this);
-            var count = chart.SeriesContext.GetColumnSeriesCount();
+            var pos = cartesianChart.SeriesContext.GetColumnPostion(this);
+            var count = cartesianChart.SeriesContext.GetColumnSeriesCount();
             var cp = 0f;
 
             if (!IgnoresBarPosition && count > 1)
@@ -92,20 +97,20 @@ namespace LiveChartsCore
             if (Fill != null)
             {
                 Fill.ZIndex = actualZIndex + 0.1;
-                Fill.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
-                chart.Canvas.AddDrawableTask(Fill);
+                Fill.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                cartesianChart.Canvas.AddDrawableTask(Fill);
             }
             if (Stroke != null)
             {
                 Stroke.ZIndex = actualZIndex + 0.1;
-                Stroke.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
-                chart.Canvas.AddDrawableTask(Stroke);
+                Stroke.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                cartesianChart.Canvas.AddDrawableTask(Stroke);
             }
             if (DataLabelsPaint != null)
             {
                 DataLabelsPaint.ZIndex = actualZIndex + 0.1;
-                DataLabelsPaint.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
-                chart.Canvas.AddDrawableTask(DataLabelsPaint);
+                DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
             }
 
             var dls = (float)DataLabelsSize;
@@ -114,7 +119,7 @@ namespace LiveChartsCore
             var rx = (float)Rx;
             var ry = (float)Ry;
 
-            foreach (var point in Fetch(chart))
+            foreach (var point in Fetch(cartesianChart))
             {
                 var visual = point.Context.Visual as TVisual;
                 var primary = primaryScale.ToPixels(point.PrimaryValue);
@@ -158,8 +163,8 @@ namespace LiveChartsCore
                     _ = everFetched.Add(point);
                 }
 
-                if (Fill != null) Fill.AddGeometryToPaintTask(chart.Canvas, visual);
-                if (Stroke != null) Stroke.AddGeometryToPaintTask(chart.Canvas, visual);
+                if (Fill != null) Fill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                if (Stroke != null) Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
 
                 var sizedGeometry = visual;
 
@@ -190,15 +195,15 @@ namespace LiveChartsCore
                         _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
                             .WithAnimation(animation =>
                                 animation
-                                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
+                                    .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
+                                    .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
 
                         l.CompleteAllTransitions();
                         label = l;
                         point.Context.Label = l;
                     }
 
-                    DataLabelsPaint.AddGeometryToPaintTask(chart.Canvas, label);
+                    DataLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, label);
                     label.Text = DataLabelsFormatter(point);
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
@@ -211,7 +216,7 @@ namespace LiveChartsCore
 
             foreach (var point in toDeletePoints)
             {
-                if (point.Context.Chart != chart.View) continue;
+                if (point.Context.Chart != cartesianChart.View) continue;
                 SoftDeletePoint(point, primaryScale, secondaryScale);
                 _ = everFetched.Remove(point);
             }

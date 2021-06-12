@@ -80,7 +80,7 @@ namespace LiveChartsCore.Themes
         }
 
         /// <summary>
-        ///  Defines a style builder for <see cref="IPaintableSeries{TDrawingContext}"/> objects.
+        ///  Defines a style builder for <see cref="IChartSeries{TDrawingContext}"/> objects.
         /// </summary>
         /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
         /// <param name="styler">The styler.</param>
@@ -88,7 +88,7 @@ namespace LiveChartsCore.Themes
         /// <returns></returns>
         public static VisualsStyle<TDrawingContext> HasRuleForAnySeries<TDrawingContext>(
             this VisualsStyle<TDrawingContext> styler,
-            Action<IPaintableSeries<TDrawingContext>> predicate)
+            Action<IChartSeries<TDrawingContext>> predicate)
             where TDrawingContext : DrawingContext
         {
             styler.SeriesBuilder.Add(predicate);

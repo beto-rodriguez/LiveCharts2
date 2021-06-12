@@ -30,10 +30,16 @@ namespace LiveChartsCore.Kernel
     /// <summary>
     /// Defines an element with a stroke and a fill in the user interface.
     /// </summary>
-    public abstract class UIElement<TDrawingContext>
+    public abstract class ChartElement<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         private readonly List<IPaintTask<TDrawingContext>> _deletingTasks = new();
+
+        /// <summary>
+        /// Measures and schedule the draw of the element in the user interface.
+        /// </summary>
+        /// <param name="chart"></param>
+        public abstract void Measure(Chart<TDrawingContext> chart);
 
         /// <summary>
         /// Deletes the <see cref="IPaintTask{TDrawingContext}"/> instances that changed from the user interface.

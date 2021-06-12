@@ -24,18 +24,27 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore
 {
     /// <summary>
-    /// Defines a draw margin frame visual in a chart.
+    /// Defines a visual section in a chart.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public abstract class DrawMarginFrame<TDrawingContext> : ChartElement<TDrawingContext>, INotifyPropertyChanged
+    /// <seealso cref="ChartElement{TDrawingContext}" />
+    public abstract class Section<TDrawingContext> : ChartElement<TDrawingContext>, INotifyPropertyChanged
         where TDrawingContext : DrawingContext
     {
         private IPaintTask<TDrawingContext>? _stroke = null;
         private IPaintTask<TDrawingContext>? _fill = null;
+        private double? _xi;
+        private double? _xj;
+        private double? _yi;
+        private double? _yj;
+        private int _scalesXAt;
+        private int _scalesYAt;
 
         /// <summary>
         /// Gets or sets the stroke.
@@ -60,6 +69,60 @@ namespace LiveChartsCore
             get => _fill;
             set => SetPaintProperty(ref _fill, value);
         }
+
+        /// <summary>
+        /// Gets or sets the xi, the value where the section starts at the X axis,
+        /// set the property to null to indicate that the section must start at the beginning of the X axis, default is null.
+        /// </summary>
+        /// <value>
+        /// The xi.
+        /// </value>
+        public double? Xi { get => _xi; set { _xi = value; OnPropertyChanged(); } }
+
+        /// <summary>
+        /// Gets or sets the xj, the value where the section ends and the X axis.
+        /// set the property to null to indicate that the section must go to the end of the X axis, default is null.
+        /// </summary>
+        /// <value>
+        /// The xj.
+        /// </value>
+        public double? Xj { get => _xj; set { _xj = value; OnPropertyChanged(); } }
+
+        /// <summary>
+        /// Gets or sets the yi, the value where the section starts and the Y axis.
+        /// set the property to null to indicate that the section must start at the beginning of the Y axis, default is null.
+        /// </summary>
+        /// <value>
+        /// The yi.
+        /// </value>
+        public double? Yi { get => _yi; set { _yi = value; OnPropertyChanged(); } }
+
+        /// <summary>
+        /// Gets or sets the yj, the value where the section ends and the Y axis.
+        /// set the property to null to indicate that the section must go to the end of the Y axis, default is null.
+        /// </summary>
+        /// <value>
+        /// The yj.
+        /// </value>
+        public double? Yj { get => _yj; set { _yj = value; OnPropertyChanged(); } }
+
+        /// <summary>
+        /// Gets or sets the axis index where the section is scaled in the X plane, the index must exist 
+        /// in the <see cref="ICartesianChartView{TDrawingContext}.XAxes"/> collection.
+        /// </summary>
+        /// <value>
+        /// The index of the axis.
+        /// </value>
+        public int ScalesXAt { get => _scalesXAt; set { _scalesXAt = value; OnPropertyChanged(); } }
+
+        /// <summary>
+        /// Gets or sets the axis index where the section is scaled in the Y plane, the index must exist 
+        /// in the <see cref="ICartesianChartView{TDrawingContext}.YAxes"/> collection.
+        /// </summary>
+        /// <value>
+        /// The index of the axis.
+        /// </value>
+        public int ScalesYAt { get => _scalesYAt; set { _scalesYAt = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Occurs when a property value changes.
@@ -97,11 +160,12 @@ namespace LiveChartsCore
     }
 
     /// <summary>
-    /// Defines a draw margin frame visual in a chart.
+    /// Defines a visual section in a chart.
     /// </summary>
     /// <typeparam name="TSizedGeometry">The type of the sized geometry.</typeparam>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public abstract class DrawMarginFrame<TSizedGeometry, TDrawingContext> : DrawMarginFrame<TDrawingContext>
+    /// <seealso cref="ChartElement{TDrawingContext}" />
+    public abstract class Section<TSizedGeometry, TDrawingContext> : Section<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TSizedGeometry : ISizedGeometry<TDrawingContext>, new()
     {
@@ -117,11 +181,23 @@ namespace LiveChartsCore
             var drawLocation = chart.DrawMarginLocation;
             var drawMarginSize = chart.DrawMarginSize;
 
+            var cartesianChart = (CartesianChart<TDrawingContext>)chart;
+            var primaryAxis = cartesianChart.YAxes[ScalesYAt];
+            var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
+
+            var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
+            var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
+
             if (Fill != null)
             {
-                Fill.ZIndex = -3;
+                Fill.ZIndex = -0.5;
 
-                if (_fillSizedGeometry == null) _fillSizedGeometry = new TSizedGeometry();
+                if (_fillSizedGeometry == null)
+                {
+                    _fillSizedGeometry = new TSizedGeometry();
+
+
+                }
 
                 _fillSizedGeometry.X = drawLocation.X;
                 _fillSizedGeometry.Y = drawLocation.Y;
@@ -134,9 +210,13 @@ namespace LiveChartsCore
 
             if (Stroke != null)
             {
-                Stroke.ZIndex = -2;
+                Stroke.ZIndex = -0.5;
 
-                if (_strokeSizedGeometry == null) _strokeSizedGeometry = new TSizedGeometry();
+                if (_strokeSizedGeometry == null)
+                {
+                    _strokeSizedGeometry = new TSizedGeometry();
+
+                }
 
                 _strokeSizedGeometry.X = drawLocation.X;
                 _strokeSizedGeometry.Y = drawLocation.Y;

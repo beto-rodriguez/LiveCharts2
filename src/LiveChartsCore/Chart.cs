@@ -45,7 +45,7 @@ namespace LiveChartsCore
         /// <summary>
         /// The series context
         /// </summary>
-        protected SeriesContext<TDrawingContext> seriesContext = new(Enumerable.Empty<IPaintableSeries<TDrawingContext>>());
+        protected SeriesContext<TDrawingContext> seriesContext = new(Enumerable.Empty<IChartSeries<TDrawingContext>>());
 
         /// <summary>
         /// The canvas
@@ -120,7 +120,7 @@ namespace LiveChartsCore
         /// <summary>
         /// The previous series
         /// </summary>
-        protected IPaintableSeries<TDrawingContext>[] previousSeries = new IPaintableSeries<TDrawingContext>[0];
+        protected IChartSeries<TDrawingContext>[] previousSeries = new IChartSeries<TDrawingContext>[0];
 
         /// <summary>
         /// The previous legend position
@@ -267,7 +267,7 @@ namespace LiveChartsCore
         /// <value>
         /// The drawable series.
         /// </value>
-        public abstract IEnumerable<IPaintableSeries<TDrawingContext>> DrawableSeries { get; }
+        public abstract IEnumerable<IChartSeries<TDrawingContext>> DrawableSeries { get; }
 
         /// <summary>
         /// Gets the view.
@@ -470,7 +470,7 @@ namespace LiveChartsCore
         /// <param name="newSeries">The new series.</param>
         /// <param name="position">The legend position.</param>
         /// <returns></returns>
-        protected bool SeriesMiniatureChanged(IPaintableSeries<TDrawingContext>[] newSeries, LegendPosition position)
+        protected bool SeriesMiniatureChanged(IChartSeries<TDrawingContext>[] newSeries, LegendPosition position)
         {
             if (position != previousLegendPosition) return true;
             if (previousSeries.Length != newSeries.Length) return true;

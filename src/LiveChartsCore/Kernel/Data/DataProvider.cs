@@ -144,7 +144,7 @@ namespace LiveChartsCore.Kernel.Data
         /// <returns></returns>
         public virtual DimensionalBounds GetCartesianBounds(
             CartesianChart<TDrawingContext> chart,
-            IPaintableSeries<TDrawingContext> series,
+            IChartSeries<TDrawingContext> series,
             IAxis<TDrawingContext> x,
             IAxis<TDrawingContext> y)
         {

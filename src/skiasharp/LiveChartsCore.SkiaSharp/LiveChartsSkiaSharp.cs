@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Drawing.Common;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Data;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -277,7 +278,7 @@ namespace LiveChartsCore.SkiaSharpView
         {
             return theme
                 .WithSeriesDefaultsResolver(
-                    (Color[] colors, IPaintableSeries<SkiaSharpDrawingContext> series, bool forceApply) =>
+                    (Color[] colors, IChartSeries<SkiaSharpDrawingContext> series, bool forceApply) =>
                     {
                         if (forceApply)
                         {
@@ -367,7 +368,7 @@ namespace LiveChartsCore.SkiaSharpView
         {
             return theme
                 .WithSeriesDefaultsResolver(
-                    (Color[] colors, IPaintableSeries<SkiaSharpDrawingContext> series, bool forceApply) =>
+                    (Color[] colors, IChartSeries<SkiaSharpDrawingContext> series, bool forceApply) =>
                     {
                         if (forceApply)
                         {

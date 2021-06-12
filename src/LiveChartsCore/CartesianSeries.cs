@@ -37,11 +37,11 @@ namespace LiveChartsCore
     /// <typeparam name="TVisual">The type of the visual.</typeparam>
     /// <typeparam name="TLabel">The type of the label.</typeparam>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="DrawableSeries{TModel, TVisual, TLabel, TDrawingContext}" />
+    /// <seealso cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}" />
     /// <seealso cref="IDisposable" />
     /// <seealso cref="ICartesianSeries{TDrawingContext}" />
     public abstract class CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
-        : DrawableSeries<TModel, TVisual, TLabel, TDrawingContext>, ICartesianSeries<TDrawingContext>
+        : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>, ICartesianSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
@@ -78,10 +78,6 @@ namespace LiveChartsCore
                 ? throw new Exception("A data provider is required")
                 : dataProvider.GetCartesianBounds(chart, this, x, y);
         }
-
-        /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.Measure(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
-        public abstract void Measure(
-            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
 
         /// <summary>
         /// Deletes the series from the user interface.

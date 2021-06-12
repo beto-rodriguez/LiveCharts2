@@ -29,8 +29,8 @@ namespace LiveChartsCore.Kernel.Sketches
     /// Defines a pie series.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IPaintableSeries{TDrawingContext}" />
-    public interface IPieSeries<TDrawingContext> : IPaintableSeries<TDrawingContext>
+    /// <seealso cref="IChartSeries{TDrawingContext}" />
+    public interface IPieSeries<TDrawingContext> : IChartSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
@@ -138,11 +138,5 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <param name="chart">The chart.</param>
         /// <returns></returns>
         DimensionalBounds GetBounds(PieChart<TDrawingContext> chart);
-
-        /// <summary>
-        /// Measures the series and schedules the draw in specified chart.
-        /// </summary>
-        /// <param name="chart">The chart.</param>
-        void Measure(PieChart<TDrawingContext> chart);
     }
 }

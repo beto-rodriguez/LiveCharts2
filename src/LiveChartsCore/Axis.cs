@@ -42,7 +42,7 @@ namespace LiveChartsCore
     /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
     /// <seealso cref="IAxis{TDrawingContext}" />
     /// <seealso cref="INotifyPropertyChanged" />
-    public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry> : UIElement<TDrawingContext>, IAxis<TDrawingContext>, INotifyPropertyChanged
+    public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry> : ChartElement<TDrawingContext>, IAxis<TDrawingContext>, INotifyPropertyChanged
         where TDrawingContext : DrawingContext
         where TTextGeometry : ILabelGeometry<TDrawingContext>, new()
         where TLineGeometry : ILineGeometry<TDrawingContext>, new()
@@ -174,14 +174,16 @@ namespace LiveChartsCore
         /// <returns></returns>
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.Measure(CartesianChart{TDrawingContext})"/>
-        public virtual void Measure(CartesianChart<TDrawingContext> chart)
+        /// <inheritdoc cref="IAxis{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
+        public override void Measure(Chart<TDrawingContext> chart)
         {
+            var cartesianChart = (CartesianChart<TDrawingContext>)chart;
+
             if (_dataBounds == null) throw new Exception("DataBounds not found");
 
-            var controlSize = chart.ControlSize;
-            var drawLocation = chart.DrawMarginLocation;
-            var drawMarginSize = chart.DrawMarginSize;
+            var controlSize = cartesianChart.ControlSize;
+            var drawLocation = cartesianChart.DrawMarginLocation;
+            var drawMarginSize = cartesianChart.DrawMarginSize;
 
             var scale = new Scaler(drawLocation, drawMarginSize, this);
             var previousSacale = ((IAxis)this).PreviousDataBounds == null
@@ -202,13 +204,13 @@ namespace LiveChartsCore
             if (LabelsPaint != null)
             {
                 LabelsPaint.ZIndex = -1;
-                chart.Canvas.AddDrawableTask(LabelsPaint);
+                cartesianChart.Canvas.AddDrawableTask(LabelsPaint);
             }
             if (SeparatorsPaint != null)
             {
                 SeparatorsPaint.ZIndex = -1;
-                SeparatorsPaint.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
-                chart.Canvas.AddDrawableTask(SeparatorsPaint);
+                SeparatorsPaint.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                cartesianChart.Canvas.AddDrawableTask(SeparatorsPaint);
             }
 
             var lyi = drawLocation.Y;
@@ -239,10 +241,10 @@ namespace LiveChartsCore
             var min = MinLimit == null ? (_visibleDataBounds ?? _dataBounds).Min : MinLimit.Value;
 
             var start = Math.Truncate(min / s) * s;
-            if (!activeSeparators.TryGetValue(chart, out var separators))
+            if (!activeSeparators.TryGetValue(cartesianChart, out var separators))
             {
                 separators = new Dictionary<string, AxisVisualSeprator<TDrawingContext>>();
-                activeSeparators[chart] = separators;
+                activeSeparators[cartesianChart] = separators;
             }
 
             var measured = new HashSet<AxisVisualSeprator<TDrawingContext>>();
@@ -281,8 +283,8 @@ namespace LiveChartsCore
                                 nameof(textGeometry.Opacity))
                             .WithAnimation(animation =>
                                 animation
-                                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
+                                    .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
+                                    .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
 
                         if (previousSacale != null)
                         {
@@ -318,8 +320,8 @@ namespace LiveChartsCore
                                 nameof(lineGeometry.Opacity))
                             .WithAnimation(animation =>
                                 animation
-                                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
+                                    .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
+                                    .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
 
                         if (previousSacale != null)
                         {
@@ -359,9 +361,9 @@ namespace LiveChartsCore
                 }
 
                 if (LabelsPaint != null && visualSeparator.Text != null)
-                    LabelsPaint.AddGeometryToPaintTask(chart.Canvas, visualSeparator.Text);
+                    LabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Text);
                 if (SeparatorsPaint != null && ShowSeparatorLines && visualSeparator.Line != null)
-                    SeparatorsPaint.AddGeometryToPaintTask(chart.Canvas, visualSeparator.Line);
+                    SeparatorsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Line);
 
                 if (visualSeparator.Text != null)
                 {
@@ -402,7 +404,7 @@ namespace LiveChartsCore
                 if (measured.Contains(separator.Value)) continue;
 
 
-                SoftDeleteSeparator(chart, separator.Value, scale);
+                SoftDeleteSeparator(cartesianChart, separator.Value, scale);
                 _ = separators.Remove(separator.Key);
             }
         }

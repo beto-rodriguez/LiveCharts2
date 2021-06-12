@@ -28,12 +28,13 @@ using LiveChartsCore.Measure;
 using System.Drawing;
 using System.Linq;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Kernel.Drawing;
 
 namespace LiveChartsCore
 {
     /// <inheritdoc cref="IPieSeries{TDrawingContext}" />
     public class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
-        : DrawableSeries<TModel, TVisual, TLabel, TDrawingContext>, IPieSeries<TDrawingContext>
+        : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>, IPieSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TVisual : class, IDoughnutVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
@@ -101,14 +102,16 @@ namespace LiveChartsCore
         /// </value>
         public PolarLabelsPosition DataLabelsPosition { get => _labelsPosition; set { _labelsPosition = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IPieSeries{TDrawingContext}.Measure(PieChart{TDrawingContext})"/>
-        public void Measure(PieChart<TDrawingContext> chart)
+        /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
+        public override void Measure(Chart<TDrawingContext> chart)
         {
-            var drawLocation = chart.DrawMarginLocation;
-            var drawMarginSize = chart.DrawMarginSize;
+            var pieChart = (PieChart<TDrawingContext>)chart;
+
+            var drawLocation = pieChart.DrawMarginLocation;
+            var drawMarginSize = pieChart.DrawMarginSize;
             var minDimension = drawMarginSize.Width < drawMarginSize.Height ? drawMarginSize.Width : drawMarginSize.Height;
 
-            var maxPushout = (float)chart.PushoutBounds.Max;
+            var maxPushout = (float)pieChart.PushoutBounds.Max;
             var pushout = (float)Pushout;
             var innerRadius = (float)InnerRadius;
             var maxOuterRadius = (float)MaxOuterRadius;
@@ -116,7 +119,7 @@ namespace LiveChartsCore
             minDimension = minDimension - (Stroke?.StrokeThickness ?? 0) * 2 - maxPushout * 2;
             minDimension *= maxOuterRadius;
 
-            var view = (IPieChartView<TDrawingContext>)chart.View;
+            var view = (IPieChartView<TDrawingContext>)pieChart.View;
             var initialRotation = (float)Math.Truncate(view.InitialRotation);
             var completeAngle = (float)view.MaxAngle;
             var chartTotal = (float?)view.Total;
@@ -125,32 +128,32 @@ namespace LiveChartsCore
             if (Fill != null)
             {
                 Fill.ZIndex = actualZIndex + 0.1;
-                Fill.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
-                chart.Canvas.AddDrawableTask(Fill);
+                Fill.SetClipRectangle(pieChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                pieChart.Canvas.AddDrawableTask(Fill);
             }
             if (Stroke != null)
             {
                 Stroke.ZIndex = actualZIndex + 0.2;
-                Stroke.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
-                chart.Canvas.AddDrawableTask(Stroke);
+                Stroke.SetClipRectangle(pieChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                pieChart.Canvas.AddDrawableTask(Stroke);
             }
             if (DataLabelsPaint != null)
             {
                 DataLabelsPaint.ZIndex = 1000 + actualZIndex + 0.3;
-                DataLabelsPaint.SetClipRectangle(chart.Canvas, new RectangleF(drawLocation, drawMarginSize));
-                chart.Canvas.AddDrawableTask(DataLabelsPaint);
+                DataLabelsPaint.SetClipRectangle(pieChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                pieChart.Canvas.AddDrawableTask(DataLabelsPaint);
             }
 
             var cx = drawLocation.X + drawMarginSize.Width * 0.5f;
             var cy = drawLocation.Y + drawMarginSize.Height * 0.5f;
 
             var dls = (float)DataLabelsSize;
-            var stacker = chart.SeriesContext.GetStackPosition(this, GetStackGroup());
+            var stacker = pieChart.SeriesContext.GetStackPosition(this, GetStackGroup());
             if (stacker == null) throw new NullReferenceException("Unexpected null stacker");
 
             var toDeletePoints = new HashSet<ChartPoint>(everFetched);
 
-            var fetched = Fetch(chart).ToArray();
+            var fetched = Fetch(pieChart).ToArray();
 
             var stackedInnerRadius = innerRadius;
             var relativeInnerRadius = (float)RelativeInnerRadius;
@@ -243,7 +246,7 @@ namespace LiveChartsCore
                         Y = cy,
                         Width = 0,
                         Height = 0,
-                        StartAngle = chart.IsFirstDraw ? initialRotation : start + initialRotation,
+                        StartAngle = pieChart.IsFirstDraw ? initialRotation : start + initialRotation,
                         SweepAngle = 0,
                         PushOut = 0,
                         InnerRadius = 0,
@@ -258,8 +261,8 @@ namespace LiveChartsCore
                     _ = everFetched.Add(point);
                 }
 
-                if (Fill != null) Fill.AddGeometryToPaintTask(chart.Canvas, visual);
-                if (Stroke != null) Stroke.AddGeometryToPaintTask(chart.Canvas, visual);
+                if (Fill != null) Fill.AddGeometryToPaintTask(pieChart.Canvas, visual);
+                if (Stroke != null) Stroke.AddGeometryToPaintTask(pieChart.Canvas, visual);
 
                 var dougnutGeometry = visual;
 
@@ -302,15 +305,15 @@ namespace LiveChartsCore
                         _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
                             .WithAnimation(animation =>
                                 animation
-                                    .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                                    .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
+                                    .WithDuration(AnimationsSpeed ?? pieChart.AnimationsSpeed)
+                                    .WithEasingFunction(EasingFunction ?? pieChart.EasingFunction));
 
                         l.CompleteAllTransitions();
                         label = l;
                         point.Context.Label = l;
                     }
 
-                    DataLabelsPaint.AddGeometryToPaintTask(chart.Canvas, label);
+                    DataLabelsPaint.AddGeometryToPaintTask(pieChart.Canvas, label);
 
                     label.Text = DataLabelsFormatter(point);
                     label.TextSize = dls;
@@ -357,7 +360,7 @@ namespace LiveChartsCore
             var u = new Scaler();
             foreach (var point in toDeletePoints)
             {
-                if (point.Context.Chart != chart.View) continue;
+                if (point.Context.Chart != pieChart.View) continue;
                 SoftDeletePoint(point, u, u);
                 _ = everFetched.Remove(point);
             }

@@ -34,7 +34,7 @@ namespace LiveChartsCore.Kernel
     public class SeriesContext<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        private readonly IEnumerable<IPaintableSeries<TDrawingContext>> _series;
+        private readonly IEnumerable<IChartSeries<TDrawingContext>> _series;
 
         private int _columnsCount = 0;
         private int _rowsCount = 0;
@@ -42,8 +42,8 @@ namespace LiveChartsCore.Kernel
         private int _stackedRowsCount = 0;
         private bool _areBarsIndexed = false;
 
-        private readonly Dictionary<IPaintableSeries<TDrawingContext>, int> _columnPositions = new();
-        private readonly Dictionary<IPaintableSeries<TDrawingContext>, int> _rowPositions = new();
+        private readonly Dictionary<IChartSeries<TDrawingContext>, int> _columnPositions = new();
+        private readonly Dictionary<IChartSeries<TDrawingContext>, int> _rowPositions = new();
         private readonly Dictionary<int, int> _stackColumnPositions = new();
         private readonly Dictionary<int, int> _stackRowsPositions = new();
 
@@ -53,7 +53,7 @@ namespace LiveChartsCore.Kernel
         /// Initializes a new instance of the <see cref="SeriesContext{TDrawingContext}"/> class.
         /// </summary>
         /// <param name="series">The series.</param>
-        public SeriesContext(IEnumerable<IPaintableSeries<TDrawingContext>> series)
+        public SeriesContext(IEnumerable<IChartSeries<TDrawingContext>> series)
         {
             _series = series;
         }
@@ -65,7 +65,7 @@ namespace LiveChartsCore.Kernel
         /// </summary>
         /// <param name="series">The series.</param>
         /// <returns></returns>
-        public int GetColumnPostion(IPaintableSeries<TDrawingContext> series)
+        public int GetColumnPostion(IChartSeries<TDrawingContext> series)
         {
             if (_areBarsIndexed) return _columnPositions[series];
             IndexBars();
@@ -88,7 +88,7 @@ namespace LiveChartsCore.Kernel
         /// </summary>
         /// <param name="series">The series.</param>
         /// <returns></returns>
-        public int GetRowPostion(IPaintableSeries<TDrawingContext> series)
+        public int GetRowPostion(IChartSeries<TDrawingContext> series)
         {
             if (_areBarsIndexed) return _rowPositions[series];
             IndexBars();
@@ -111,7 +111,7 @@ namespace LiveChartsCore.Kernel
         /// </summary>
         /// <param name="series">The series.</param>
         /// <returns></returns>
-        public int GetStackedColumnPostion(IPaintableSeries<TDrawingContext> series)
+        public int GetStackedColumnPostion(IChartSeries<TDrawingContext> series)
         {
             if (_areBarsIndexed) return _stackColumnPositions[series.GetStackGroup()];
             IndexBars();
@@ -134,7 +134,7 @@ namespace LiveChartsCore.Kernel
         /// </summary>
         /// <param name="series">The series.</param>
         /// <returns></returns>
-        public int GetStackedRowPostion(IPaintableSeries<TDrawingContext> series)
+        public int GetStackedRowPostion(IChartSeries<TDrawingContext> series)
         {
             if (_areBarsIndexed) return _stackRowsPositions[series.GetStackGroup()];
             IndexBars();
@@ -205,7 +205,7 @@ namespace LiveChartsCore.Kernel
         /// <param name="series">The series.</param>
         /// <param name="stackGroup">The stack group.</param>
         /// <returns></returns>
-        public StackPosition<TDrawingContext>? GetStackPosition(IPaintableSeries<TDrawingContext> series, int stackGroup)
+        public StackPosition<TDrawingContext>? GetStackPosition(IChartSeries<TDrawingContext> series, int stackGroup)
         {
             if (!series.IsStackedSeries()) return null;
 
@@ -220,7 +220,7 @@ namespace LiveChartsCore.Kernel
                 };
         }
 
-        private Stacker<TDrawingContext> GetStacker(IPaintableSeries<TDrawingContext> series, int stackGroup)
+        private Stacker<TDrawingContext> GetStacker(IChartSeries<TDrawingContext> series, int stackGroup)
         {
             var key = $"{series.SeriesProperties}.{stackGroup}";
 

@@ -62,7 +62,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The series default resolver.
         /// </value>
-        public Action<Color[], IPaintableSeries<TDrawingContext>, bool>? SeriesDefaultsResolver { get; set; }
+        public Action<Color[], IChartSeries<TDrawingContext>, bool>? SeriesDefaultsResolver { get; set; }
 
         /// <summary>
         /// Gets or sets the axis default resolver.
@@ -99,7 +99,7 @@ namespace LiveChartsCore.Themes
         /// </summary>
         /// <param name="resolver">The resolver.</param>
         /// <returns></returns>
-        public Theme<TDrawingContext> WithSeriesDefaultsResolver(Action<Color[], IPaintableSeries<TDrawingContext>, bool> resolver)
+        public Theme<TDrawingContext> WithSeriesDefaultsResolver(Action<Color[], IChartSeries<TDrawingContext>, bool> resolver)
         {
             SeriesDefaultsResolver = resolver;
             return this;
@@ -133,7 +133,7 @@ namespace LiveChartsCore.Themes
         /// <param name="colors">The colors.</param>
         /// <param name="series">The series.</param>
         /// <param name="forceApply">Forces the apply of the theme.</param>
-        public virtual void ResolveSeriesDefaults(Color[] colors, IPaintableSeries<TDrawingContext> series, bool forceApply)
+        public virtual void ResolveSeriesDefaults(Color[] colors, IChartSeries<TDrawingContext> series, bool forceApply)
         {
             SeriesDefaultsResolver?.Invoke(colors, series, forceApply);
         }

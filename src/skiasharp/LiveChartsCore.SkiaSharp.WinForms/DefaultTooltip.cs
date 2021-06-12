@@ -119,7 +119,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 var text = point.Point.AsTooltipString;
                 var size = g.MeasureString(text, chart.TooltipFont);
 
-                var drawableSeries = (IPaintableSeries<SkiaSharpDrawingContext>)point.Series;
+                var drawableSeries = (IChartSeries<SkiaSharpDrawingContext>)point.Series;
 
                 Controls.Add(new MotionCanvas
                 {
