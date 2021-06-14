@@ -83,6 +83,9 @@
     <Compile Update="Design\LinearGradients\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="General\Sections\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="General\TemplatedLegends\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

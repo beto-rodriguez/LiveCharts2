@@ -85,6 +85,9 @@
     <Compile Update="General\Animations\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="General\Sections\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="General\Visibility\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

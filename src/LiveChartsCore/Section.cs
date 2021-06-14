@@ -45,6 +45,7 @@ namespace LiveChartsCore
         private double? _yj;
         private int _scalesXAt;
         private int _scalesYAt;
+        private int? _zIndex;
 
         /// <summary>
         /// Gets or sets the stroke.
@@ -125,6 +126,14 @@ namespace LiveChartsCore
         public int ScalesYAt { get => _scalesYAt; set { _scalesYAt = value; OnPropertyChanged(); } }
 
         /// <summary>
+        /// Gets or sets the index of the z axis.
+        /// </summary>
+        /// <value>
+        /// The index of the z.
+        /// </value>
+        public int? ZIndex { get => _zIndex; set { _zIndex = value; OnPropertyChanged(); } }
+
+        /// <summary>
         /// Occurs when a property value changes.
         /// </summary>
         /// <returns></returns>
@@ -191,16 +200,22 @@ namespace LiveChartsCore
             var xi = Xi == null ? drawLocation.X : secondaryScale.ToPixels((float)Xi);
             var xj = Xj == null ? drawLocation.X + drawMarginSize.Width : secondaryScale.ToPixels((float)Xj);
 
-            var yi = Yi == null ? drawLocation.Y : secondaryScale.ToPixels((float)Yi);
-            var yj = Yj == null ? drawLocation.Y + drawMarginSize.Height : secondaryScale.ToPixels((float)Yj);
+            var yi = Yi == null ? drawLocation.Y : primaryScale.ToPixels((float)Yi);
+            var yj = Yj == null ? drawLocation.Y + drawMarginSize.Height : primaryScale.ToPixels((float)Yj);
 
             if (Fill != null)
             {
-                Fill.ZIndex = -0.5;
+                Fill.ZIndex = ZIndex ?? -3;
 
                 if (_fillSizedGeometry == null)
                 {
-                    _fillSizedGeometry = new TSizedGeometry();
+                    _fillSizedGeometry = new TSizedGeometry
+                    {
+                        X = xi,
+                        Y = yi,
+                        Width = xj - xi,
+                        Height = yj - yi
+                    };
 
                     _ = _fillSizedGeometry
                        .TransitionateProperties(
@@ -227,11 +242,17 @@ namespace LiveChartsCore
 
             if (Stroke != null)
             {
-                Stroke.ZIndex = -0.5;
+                Stroke.ZIndex = ZIndex ?? -3;
 
                 if (_strokeSizedGeometry == null)
                 {
-                    _strokeSizedGeometry = new TSizedGeometry();
+                    _strokeSizedGeometry = new TSizedGeometry
+                    {
+                        X = xi,
+                        Y = yi,
+                        Width = xj - xi,
+                        Height = yj - yi
+                    };
 
                     _ = _strokeSizedGeometry
                        .TransitionateProperties(

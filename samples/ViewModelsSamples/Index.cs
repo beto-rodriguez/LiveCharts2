@@ -54,6 +54,7 @@
             "Axes/DateTimeScaled",
             "Axes/Logaritmic",
 
+            "General/Sections",
             "General/Tooltips",
             "General/Legends",
             "General/Animations",

@@ -73,6 +73,9 @@
     <Compile Update="General\Animations\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="General\Sections\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="General\Visibility\View.cs">
       <SubType>UserControl</SubType>
     </Compile>

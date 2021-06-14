@@ -81,6 +81,9 @@
     <Compile Update="Design\LinearGradients\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="General\Sections\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="General\TemplatedLegends\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -242,6 +245,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Design\LinearGradients\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="General\Sections\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
