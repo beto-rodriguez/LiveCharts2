@@ -387,7 +387,7 @@ namespace LiveChartsCore
                     .Cast<ICartesianSeries<TDrawingContext>>()
                     .ToArray();
 
-                Sections = _chartView.Sections.ToArray();
+                Sections = _chartView.Sections?.ToArray() ?? new Section<TDrawingContext>[0];
 
                 #endregion
 
