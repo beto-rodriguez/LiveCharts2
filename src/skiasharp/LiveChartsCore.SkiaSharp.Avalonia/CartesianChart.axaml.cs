@@ -69,6 +69,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         private readonly CollectionDeepObserver<ISeries> _seriesObserver;
         private readonly CollectionDeepObserver<IAxis> _xObserver;
         private readonly CollectionDeepObserver<IAxis> _yObserver;
+        private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
 
         #endregion
 
@@ -97,6 +98,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
+                OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
             XAxes = new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
             YAxes = new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
@@ -134,6 +137,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </summary>
         public static readonly AvaloniaProperty<IEnumerable<IAxis>> YAxesProperty =
             AvaloniaProperty.Register<CartesianChart, IEnumerable<IAxis>>(nameof(YAxes), Enumerable.Empty<IAxis>(), inherits: true);
+
+        /// <summary>
+        /// The sections property
+        /// </summary>
+        public static readonly AvaloniaProperty<IEnumerable<Section<SkiaSharpDrawingContext>>> SectionsProperty =
+            AvaloniaProperty.Register<CartesianChart, IEnumerable<Section<SkiaSharpDrawingContext>>>(
+                nameof(Sections), Enumerable.Empty<Section<SkiaSharpDrawingContext>>(), inherits: true);
 
         /// <summary>
         /// The draw margin frame property
@@ -363,6 +373,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             get => (IEnumerable<IAxis>)GetValue(YAxesProperty);
             set => SetValue(YAxesProperty, value);
+        }
+
+        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections" />
+        public IEnumerable<Section<SkiaSharpDrawingContext>> Sections
+        {
+            get => (IEnumerable<Section<SkiaSharpDrawingContext>>)GetValue(SectionsProperty);
+            set => SetValue(SectionsProperty, value);
         }
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
@@ -701,6 +718,12 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             {
                 _yObserver.Dispose((IEnumerable<IAxis>)change.OldValue.Value);
                 _yObserver.Initialize((IEnumerable<IAxis>)change.NewValue.Value);
+            }
+
+            if (change.Property.Name == nameof(Sections))
+            {
+                _sectionsObserver.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)change.OldValue.Value);
+                _sectionsObserver.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)change.NewValue.Value);
             }
 
             if (change.Property.Name == nameof(Background))

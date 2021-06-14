@@ -41,6 +41,7 @@ namespace LiveChartsCore
     {
         internal readonly HashSet<ISeries> _everMeasuredSeries = new();
         internal readonly HashSet<IAxis<TDrawingContext>> _everMeasuredAxes = new();
+        internal readonly HashSet<Section<TDrawingContext>> _everMeasuredSections = new();
         private readonly ICartesianChartView<TDrawingContext> _chartView;
         private int _nextSeries = 0;
         private double _zoomingSpeed = 0;
@@ -386,6 +387,8 @@ namespace LiveChartsCore
                     .Cast<ICartesianSeries<TDrawingContext>>()
                     .ToArray();
 
+                Sections = _chartView.Sections.ToArray();
+
                 #endregion
 
                 seriesContext = new SeriesContext<TDrawingContext>(Series);
@@ -527,6 +530,15 @@ namespace LiveChartsCore
                     axis.RemoveOldPaints(View);
                 }
 
+                var toDeleteSections = new HashSet<Section<TDrawingContext>>(_everMeasuredSections);
+                foreach (var section in Sections)
+                {
+                    section.Measure(this);
+                    section.RemoveOldPaints(View);
+                    _ = _everMeasuredSections.Add(section);
+                    _ = toDeleteSections.Remove(section);
+                }
+
                 var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
                 foreach (var series in Series)
                 {
@@ -538,7 +550,7 @@ namespace LiveChartsCore
 
                 if (_previousDrawMarginFrame != null && _chartView.DrawMarginFrame != _previousDrawMarginFrame)
                 {
-                    _previousDrawMarginFrame.RemoveFromUI(canvas);
+                    _previousDrawMarginFrame.RemoveFromUI(this);
                     _previousDrawMarginFrame = null;
                 }
                 if (_chartView.DrawMarginFrame != null)
@@ -555,8 +567,13 @@ namespace LiveChartsCore
                 }
                 foreach (var axis in toDeleteAxes)
                 {
-                    axis.Delete(this);
+                    axis.RemoveFromUI(this);
                     _ = _everMeasuredAxes.Remove(axis);
+                }
+                foreach (var section in toDeleteSections)
+                {
+                    section.RemoveFromUI(this);
+                    _ = _everMeasuredSections.Remove(section);
                 }
 
                 foreach (var axis in totalAxes)

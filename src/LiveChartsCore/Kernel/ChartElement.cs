@@ -28,22 +28,17 @@ using LiveChartsCore.Kernel.Sketches;
 namespace LiveChartsCore.Kernel
 {
     /// <summary>
-    /// Defines an element with a stroke and a fill in the user interface.
+    /// Defines a visual element in a chart.
     /// </summary>
-    public abstract class ChartElement<TDrawingContext>
+    public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         private readonly List<IPaintTask<TDrawingContext>> _deletingTasks = new();
 
-        /// <summary>
-        /// Measures and schedule the draw of the element in the user interface.
-        /// </summary>
-        /// <param name="chart"></param>
+        /// <inheritdoc cref="IChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})" />
         public abstract void Measure(Chart<TDrawingContext> chart);
 
-        /// <summary>
-        /// Deletes the <see cref="IPaintTask{TDrawingContext}"/> instances that changed from the user interface.
-        /// </summary>
+        /// <inheritdoc cref="IChartElement{TDrawingContext}.RemoveOldPaints(IChartView{TDrawingContext})" />
         public void RemoveOldPaints(IChartView<TDrawingContext> chart)
         {
             if (_deletingTasks.Count == 0) return;
@@ -57,17 +52,14 @@ namespace LiveChartsCore.Kernel
             _deletingTasks.Clear();
         }
 
-        /// <summary>
-        /// Deletes the specified paints tasks in the given chart.
-        /// </summary>
-        /// <param name="canvas">The canvas.</param>
-        /// <returns></returns>
-        public void RemoveFromUI(MotionCanvas<TDrawingContext> canvas)
+        /// <inheritdoc cref="IChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})" />
+        public virtual void RemoveFromUI(Chart<TDrawingContext> chart)
         {
             foreach (var item in GetPaintTasks())
             {
                 if (item == null) continue;
-                canvas.RemovePaintTask(item);
+                chart.Canvas.RemovePaintTask(item);
+                item.ClearGeometriesFromPaintTask(chart.Canvas);
             }
         }
 

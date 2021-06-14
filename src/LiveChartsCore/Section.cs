@@ -188,6 +188,12 @@ namespace LiveChartsCore
             var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
             var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
 
+            var xi = Xi == null ? drawLocation.X : secondaryScale.ToPixels((float)Xi);
+            var xj = Xj == null ? drawLocation.X + drawMarginSize.Width : secondaryScale.ToPixels((float)Xj);
+
+            var yi = Yi == null ? drawLocation.Y : secondaryScale.ToPixels((float)Yi);
+            var yj = Yj == null ? drawLocation.Y + drawMarginSize.Height : secondaryScale.ToPixels((float)Yj);
+
             if (Fill != null)
             {
                 Fill.ZIndex = -0.5;
@@ -196,13 +202,24 @@ namespace LiveChartsCore
                 {
                     _fillSizedGeometry = new TSizedGeometry();
 
+                    _ = _fillSizedGeometry
+                       .TransitionateProperties(
+                           nameof(_fillSizedGeometry.X),
+                           nameof(_fillSizedGeometry.Width),
+                           nameof(_fillSizedGeometry.Y),
+                           nameof(_fillSizedGeometry.Height))
+                       .WithAnimation(animation =>
+                           animation
+                               .WithDuration(chart.AnimationsSpeed)
+                               .WithEasingFunction(chart.EasingFunction));
 
+                    _fillSizedGeometry.CompleteAllTransitions();
                 }
 
-                _fillSizedGeometry.X = drawLocation.X;
-                _fillSizedGeometry.Y = drawLocation.Y;
-                _fillSizedGeometry.Width = drawMarginSize.Width;
-                _fillSizedGeometry.Height = drawMarginSize.Height;
+                _fillSizedGeometry.X = xi;
+                _fillSizedGeometry.Y = yi;
+                _fillSizedGeometry.Width = xj - xi;
+                _fillSizedGeometry.Height = yj - yi;
 
                 Fill.AddGeometryToPaintTask(chart.Canvas, _fillSizedGeometry);
                 chart.Canvas.AddDrawableTask(Fill);
@@ -216,12 +233,24 @@ namespace LiveChartsCore
                 {
                     _strokeSizedGeometry = new TSizedGeometry();
 
+                    _ = _strokeSizedGeometry
+                       .TransitionateProperties(
+                           nameof(_strokeSizedGeometry.X),
+                           nameof(_strokeSizedGeometry.Width),
+                           nameof(_strokeSizedGeometry.Y),
+                           nameof(_strokeSizedGeometry.Height))
+                       .WithAnimation(animation =>
+                           animation
+                               .WithDuration(chart.AnimationsSpeed)
+                               .WithEasingFunction(chart.EasingFunction));
+
+                    _strokeSizedGeometry.CompleteAllTransitions();
                 }
 
-                _strokeSizedGeometry.X = drawLocation.X;
-                _strokeSizedGeometry.Y = drawLocation.Y;
-                _strokeSizedGeometry.Width = drawMarginSize.Width;
-                _strokeSizedGeometry.Height = drawMarginSize.Height;
+                _strokeSizedGeometry.X = xi;
+                _strokeSizedGeometry.Y = yi;
+                _strokeSizedGeometry.Width = xj - xi;
+                _strokeSizedGeometry.Height = yj - yi;
 
                 Stroke.AddGeometryToPaintTask(chart.Canvas, _strokeSizedGeometry);
                 chart.Canvas.AddDrawableTask(Stroke);

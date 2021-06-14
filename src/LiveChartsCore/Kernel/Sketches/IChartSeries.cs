@@ -32,7 +32,7 @@ namespace LiveChartsCore.Kernel.Sketches
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="ISeries" />
-    public interface IChartSeries<TDrawingContext> : ISeries
+    public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawingContext>
          where TDrawingContext : DrawingContext
     {
         /// <summary>
@@ -94,17 +94,5 @@ namespace LiveChartsCore.Kernel.Sketches
         /// </summary>
         /// <returns></returns>
         int GetStackGroup();
-
-        /// <summary>
-        /// / Measures and schedule the draw of the element in the user interface.
-        /// </summary>
-        /// <param name="chart">The chart.</param>
-        void Measure(Chart<TDrawingContext> chart);
-
-        /// <summary>
-        /// Deletes the <see cref="IPaintTask{TDrawingContext}"/> instances that changed from the user interface.
-        /// </summary>
-        /// <param name="chart">The chart.</param>
-        void RemoveOldPaints(IChartView<TDrawingContext> chart);
     }
 }

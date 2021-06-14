@@ -40,9 +40,11 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private readonly CollectionDeepObserver<ISeries> _seriesObserver;
         private readonly CollectionDeepObserver<IAxis> _xObserver;
         private readonly CollectionDeepObserver<IAxis> _yObserver;
+        private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserverer;
         private IEnumerable<ISeries> _series = new List<ISeries>();
         private IEnumerable<IAxis> _xAxes = new List<Axis> { new Axis() };
         private IEnumerable<IAxis> _yAxes = new List<Axis> { new Axis() };
+        private IEnumerable<Section<SkiaSharpDrawingContext>> _sections = new List<Section<SkiaSharpDrawingContext>> ();
         private DrawMarginFrame<SkiaSharpDrawingContext>? _drawMarginFrame;
         private TooltipFindingStrategy _tooltipFindingStrategy = LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy;
 
@@ -57,6 +59,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _sectionsObserverer = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
+                OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
             XAxes = new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
             YAxes = new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
@@ -110,6 +114,20 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 _yObserver.Dispose(_yAxes);
                 _yObserver.Initialize(value);
                 _yAxes = value;
+                core?.Update();
+            }
+        }
+
+        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections" />
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public IEnumerable<Section<SkiaSharpDrawingContext>> Sections
+        {
+            get => _sections;
+            set
+            {
+                _sectionsObserverer.Dispose(_sections);
+                _sectionsObserverer.Initialize(value);
+                _sections = value;
                 core?.Update();
             }
         }

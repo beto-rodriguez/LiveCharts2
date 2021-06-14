@@ -42,6 +42,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         private readonly CollectionDeepObserver<ISeries> _seriesObserver;
         private readonly CollectionDeepObserver<IAxis> _xObserver;
         private readonly CollectionDeepObserver<IAxis> _yObserver;
+        private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
 
         #endregion
 
@@ -58,10 +59,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
+                OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-            SetCurrentValue(XAxesProperty, new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() });
-            SetCurrentValue(YAxesProperty, new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() });
+            SetCurrentValue(XAxesProperty, new ObservableCollection<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() });
+            SetCurrentValue(YAxesProperty, new ObservableCollection<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() });
             SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
+            SetCurrentValue(SectionsProperty, new ObservableCollection<Section<SkiaSharpDrawingContext>>());
 
             MouseWheel += OnMouseWheel;
             MouseDown += OnMouseDown;
@@ -132,6 +136,28 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     }));
 
         /// <summary>
+        /// The sections property
+        /// </summary>
+        public static readonly DependencyProperty SectionsProperty =
+            DependencyProperty.Register(
+                nameof(Sections), typeof(IEnumerable<Section<SkiaSharpDrawingContext>>), typeof(CartesianChart), new PropertyMetadata(null,
+                    (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                    {
+                        var chart = (CartesianChart)o;
+                        var observer = chart._sectionsObserver;
+                        observer.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)args.OldValue);
+                        observer.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)args.NewValue);
+                        if (chart.core == null) return;
+                        Application.Current.Dispatcher.Invoke(() => chart.core.Update());
+                    },
+                    (DependencyObject o, object value) =>
+                    {
+                        return value is IEnumerable<Section<SkiaSharpDrawingContext>>
+                        ? value
+                        : new List<Section<SkiaSharpDrawingContext>>();
+                    }));
+
+        /// <summary>
         /// The zoom mode property
         /// </summary>
         public static readonly DependencyProperty DrawMarginFrameProperty =
@@ -188,6 +214,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         {
             get => (IEnumerable<IAxis>)GetValue(YAxesProperty);
             set => SetValue(YAxesProperty, value);
+        }
+
+        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections" />
+        public IEnumerable<Section<SkiaSharpDrawingContext>> Sections
+        {
+            get => (IEnumerable<Section<SkiaSharpDrawingContext>>)GetValue(SectionsProperty);
+            set => SetValue(SectionsProperty, value);
         }
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />

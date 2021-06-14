@@ -60,6 +60,14 @@ namespace LiveChartsCore.Kernel.Sketches
         IEnumerable<IAxis> YAxes { get; set; }
 
         /// <summary>
+        /// Gets or sets the sections.
+        /// </summary>
+        /// <value>
+        /// The sections.
+        /// </value>
+        IEnumerable<Section<TDrawingContext>> Sections { get; set; }
+
+        /// <summary>
         /// Gets or sets the series to plot in the user interface.
         /// </summary>
         /// <value>

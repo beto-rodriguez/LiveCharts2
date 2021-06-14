@@ -254,7 +254,7 @@ namespace LiveChartsCore.Kernel.Sketches
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="IDisposable" />
-    public interface IAxis<TDrawingContext> : IAxis
+    public interface IAxis<TDrawingContext> : IAxis, IChartElement<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
@@ -297,23 +297,5 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <param name="chart">The chart.</param>
         /// <returns></returns>
         SizeF GetPossibleSize(CartesianChart<TDrawingContext> chart);
-
-        /// <summary>
-        /// / Measures and schedule the draw of the element in the user interface.
-        /// </summary>
-        /// <param name="chart">The chart.</param>
-        void Measure(Chart<TDrawingContext> chart);
-
-        /// <summary>
-        /// Deletes the <see cref="IPaintTask{TDrawingContext}"/> instances that changed from the user interface.
-        /// </summary>
-        /// <param name="chart">The chart.</param>
-        void RemoveOldPaints(IChartView<TDrawingContext> chart);
-
-        /// <summary>
-        /// Deletes the specified chart.
-        /// </summary>
-        /// <param name="chart">The chart.</param>
-        void Delete(CartesianChart<TDrawingContext> chart);
     }
 }

@@ -52,7 +52,7 @@ namespace LiveChartsCore
         /// <summary>
         /// The active separators
         /// </summary>
-        protected readonly Dictionary<CartesianChart<TDrawingContext>, Dictionary<string, AxisVisualSeprator<TDrawingContext>>> activeSeparators = new();
+        protected readonly Dictionary<IChart, Dictionary<string, AxisVisualSeprator<TDrawingContext>>> activeSeparators = new();
 
         internal AxisOrientation _orientation;
         private double _minStep = 0;
@@ -467,8 +467,9 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="chart">The chart.</param>
         /// <returns></returns>
-        public virtual void Delete(CartesianChart<TDrawingContext> chart)
+        public virtual void Delete(Chart<TDrawingContext> chart)
         {
+
             if (_labelsPaint != null)
             {
                 chart.Canvas.RemovePaintTask(_labelsPaint);
@@ -480,6 +481,13 @@ namespace LiveChartsCore
                 _separatorsPaint.ClearGeometriesFromPaintTask(chart.Canvas);
             }
 
+            _ = activeSeparators.Remove(chart);
+        }
+
+        /// <inheritdoc cref="IChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
+        public override void RemoveFromUI(Chart<TDrawingContext> chart)
+        {
+            base.RemoveFromUI(chart);
             _ = activeSeparators.Remove(chart);
         }
 
