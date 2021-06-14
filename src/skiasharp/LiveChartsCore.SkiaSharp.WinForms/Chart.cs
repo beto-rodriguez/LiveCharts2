@@ -88,14 +88,13 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             motionCanvas.Size = new Size(150, 150);
             motionCanvas.TabIndex = 0;
             motionCanvas.Resize += OnResized;
-            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(motionCanvas);
             var l = (Control)this.legend;
             l.Dock = DockStyle.Right;
             Controls.Add(l);
             Name = "CartesianChart";
-            ResumeLayout(false);
+            ResumeLayout(true);
 
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
