@@ -40,5 +40,13 @@ namespace LiveChartsCore.Kernel.Sketches
         /// The heat map.
         /// </value>
         Color[] HeatMap { get; set; }
+
+        /// <summary>
+        /// Gets or sets the color stops.
+        /// </summary>
+        /// <value>
+        /// The color stops.
+        /// </value>
+        double[]? ColorStops { get; set; }
     }
 }

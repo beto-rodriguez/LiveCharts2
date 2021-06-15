@@ -45,6 +45,8 @@
             "Scatter/AutoUpdate",
             "Scatter/Custom",
 
+            "Heat/Basic",
+
             "Axes/ColorsAndPosition",
             "Axes/LabelsFormat",
             "Axes/NamedLabels",

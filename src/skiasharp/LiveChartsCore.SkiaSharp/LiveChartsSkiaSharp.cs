@@ -105,7 +105,8 @@ namespace LiveChartsCore.SkiaSharpView
                                         .WithState(LiveCharts.LineSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
                                         .WithState(LiveCharts.PieSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
                                         .WithState(LiveCharts.ScatterSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
-                                        .WithState(LiveCharts.StackedBarSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true);
+                                        .WithState(LiveCharts.StackedBarSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
+                                        .WithState(LiveCharts.HeatSeriesHoverState, null, new SolidColorPaintTask(defaultHoverColor), true);
                                })
                                .HasRuleForAxes(axis =>
                                {
@@ -207,7 +208,9 @@ namespace LiveChartsCore.SkiaSharpView
                                            .WithState(
                                                LiveCharts.ScatterSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
                                            .WithState(
-                                               LiveCharts.StackedBarSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true);
+                                               LiveCharts.StackedBarSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
+                                           .WithState(
+                                                LiveCharts.HeatSeriesHoverState, null, new SolidColorPaintTask(defaultHoverColor), true);
                                })
                                .HasRuleForAxes(axis =>
                                {

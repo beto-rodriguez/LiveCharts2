@@ -44,6 +44,9 @@ namespace LiveChartsCore
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         private IPaintTask<TDrawingContext>? _paintTaks;
+        private Bounds _weightBounds = new();
+        private int _heatKnownLength = 0;
+        private List<Tuple<double, Color>> _heatStops = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HeatSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -51,9 +54,11 @@ namespace LiveChartsCore
         public HeatSeries()
             : base(
                  SeriesProperties.Heat | SeriesProperties.PrimaryAxisVerticalOrientation |
-                 SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
+                 SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips)
         {
             HoverState = LiveCharts.HeatSeriesHoverState;
+            DataPadding = new PointF(0, 0);
+            TooltipLabelFormatter = (point) => $"{Name}: {point.TertiaryValue:N}";
         }
 
         /// <inheritdoc cref="IHeatSeries{TDrawingContext}.HeatMap"/>
@@ -62,6 +67,9 @@ namespace LiveChartsCore
             Color.FromArgb(255, 66, 165, 245), // hot (max value)
             Color.FromArgb(255, 239, 83, 80) // cold (min value)
         };
+
+        /// <inheritdoc cref="IHeatSeries{TDrawingContext}.ColorStops"/>
+        public double[]? ColorStops { get; set; }
 
         /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
         public override void Measure(Chart<TDrawingContext> chart)
@@ -101,11 +109,16 @@ namespace LiveChartsCore
             var dls = (float)DataLabelsSize;
             var toDeletePoints = new HashSet<ChartPoint>(everFetched);
 
+            BuildColorStops();
+
             foreach (var point in Fetch(cartesianChart))
             {
                 var visual = point.Context.Visual as TVisual;
                 var primary = primaryScale.ToPixels(point.PrimaryValue);
                 var secondary = secondaryScale.ToPixels(point.SecondaryValue);
+                var tertiary = point.TertiaryValue;
+
+                var baseColor = InterpolateColor(tertiary);
 
                 if (point.IsNull)
                 {
@@ -144,6 +157,7 @@ namespace LiveChartsCore
                         Y = yi,
                         Width = uws,
                         Height = uwp,
+                        Color = Color.FromArgb(0, baseColor.R, baseColor.G, baseColor.B)
                     };
 
                     visual = r;
@@ -160,6 +174,7 @@ namespace LiveChartsCore
                 visual.Y = primary - uwp * 0.5f;
                 visual.Width = uws;
                 visual.Height = uwp;
+                visual.Color = Color.FromArgb(baseColor.A, baseColor.R, baseColor.G, baseColor.B);
                 visual.RemoveOnCompleted = false;
 
                 var ha = new RectangleHoverArea().SetDimensions(secondary - uws * 0.5f, primary - uwp * 0.5f, uws, uwp);
@@ -205,6 +220,7 @@ namespace LiveChartsCore
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> secondaryAxis, IAxis<TDrawingContext> primaryAxis)
         {
             var baseBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
+            _weightBounds = baseBounds.TertiaryBounds;
 
             var tickPrimary = primaryAxis.GetTick(chart.ControlSize, baseBounds.VisiblePrimaryBounds);
             var tickSecondary = secondaryAxis.GetTick(chart.ControlSize, baseBounds.VisibleSecondaryBounds);
@@ -234,7 +250,7 @@ namespace LiveChartsCore
                 PrimaryBounds = new Bounds
                 {
                     Max = baseBounds.PrimaryBounds.Max + 0.5 * primaryAxis.UnitWidth + tp,
-                    Min = baseBounds.PrimaryBounds.Min - 0.5 * primaryAxis.UnitWidth + tp
+                    Min = baseBounds.PrimaryBounds.Min - 0.5 * primaryAxis.UnitWidth - tp
                 },
                 VisibleSecondaryBounds = new Bounds
                 {
@@ -244,7 +260,7 @@ namespace LiveChartsCore
                 VisiblePrimaryBounds = new Bounds
                 {
                     Max = baseBounds.VisiblePrimaryBounds.Max + 0.5 * primaryAxis.UnitWidth + tp,
-                    Min = baseBounds.VisiblePrimaryBounds.Min - 0.5 * primaryAxis.UnitWidth + tp
+                    Min = baseBounds.VisiblePrimaryBounds.Min - 0.5 * primaryAxis.UnitWidth - tp
                 },
                 MinDeltaPrimary = baseBounds.MinDeltaPrimary,
                 MinDeltaSecondary = baseBounds.MinDeltaSecondary
@@ -377,6 +393,64 @@ namespace LiveChartsCore
             if (DataLabelsPaint != null) core.Canvas.RemovePaintTask(DataLabelsPaint);
 
             foreach (var item in deleted) _ = everFetched.Remove(item);
+        }
+
+        private void BuildColorStops()
+        {
+            if (_heatKnownLength == HeatMap.Length) return;
+
+            if (HeatMap.Length < 2) throw new Exception("At least 2 colors are required in aa heat map.");
+
+            if (ColorStops == null)
+            {
+                var s = 1 / (double)(HeatMap.Length - 1);
+                ColorStops = new double[HeatMap.Length];
+                var x = 0d;
+                for (var i = 0; i < HeatMap.Length; i++)
+                {
+                    ColorStops[i] = x;
+                    x += s;
+                }
+            }
+
+            if (ColorStops.Length != HeatMap.Length)
+                throw new Exception($"{nameof(ColorStops)} and {nameof(HeatMap)} must have the same length.");
+
+            var st = 1 / (double)(HeatMap.Length - 1);
+            var xt = 0d;
+            _heatStops = new List<Tuple<double, Color>>();
+            for (var i = 0; i < ColorStops.Length; i++)
+            {
+                _heatStops.Add(new Tuple<double, Color>(xt, HeatMap[i]));
+                xt += st;
+            }
+
+            _heatKnownLength = HeatMap.Length;
+        }
+
+        private Color InterpolateColor(float weight)
+        {
+            var p = (weight - _weightBounds.Min) / (_weightBounds.Max - _weightBounds.Min);
+            if (p < 0) p = 0;
+            if (p > 1) p = 1;
+
+            var previous = _heatStops[0];
+
+            for (var i = 1; i < _heatStops.Count; i++)
+            {
+                var next = _heatStops[i];
+                if (next.Item1 < p) continue;
+
+                var px = (p - previous.Item1) / (next.Item1 - previous.Item1);
+
+                return Color.FromArgb(
+                    (int)(previous.Item2.A + px * (next.Item2.A - previous.Item2.A)),
+                    (int)(previous.Item2.R + px * (next.Item2.R - previous.Item2.R)),
+                    (int)(previous.Item2.G + px * (next.Item2.G - previous.Item2.G)),
+                    (int)(previous.Item2.B + px * (next.Item2.B - previous.Item2.B)));
+            }
+
+            return HeatMap[HeatMap.Length - 1];
         }
     }
 }
