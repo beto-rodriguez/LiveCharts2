@@ -108,6 +108,9 @@
     <Compile Update="General\Visibility\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Heat\Basic\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Lines\Area\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -281,6 +284,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="General\Visibility\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Heat\Basic\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

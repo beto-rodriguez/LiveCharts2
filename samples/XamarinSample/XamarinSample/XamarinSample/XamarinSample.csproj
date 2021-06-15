@@ -109,6 +109,9 @@
     <Compile Update="General\NullPoints\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Heat\Basic\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Lines\Area\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
