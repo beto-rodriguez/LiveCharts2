@@ -33,12 +33,14 @@ using LiveChartsCore.Kernel.Drawing;
 namespace LiveChartsCore
 {
     /// <inheritdoc cref="IPieSeries{TDrawingContext}" />
-    public class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
+    public abstract class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
         : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>, IPieSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TVisual : class, IDoughnutVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
+        private IPaintTask<TDrawingContext>? _stroke = null;
+        private IPaintTask<TDrawingContext>? _fill = null;
         private double _pushout = 0;
         private double _innerRadius = 0;
         private double _maxOuterRadius = 1;
@@ -60,6 +62,30 @@ namespace LiveChartsCore
                   (isGauge ? SeriesProperties.Gauge : 0) | (isGaugeFill ? SeriesProperties.GaugeFill : 0) | SeriesProperties.Solid)
         {
             HoverState = LiveCharts.PieSeriesHoverKey;
+        }
+
+        /// <summary>
+        /// Gets or sets the stroke.
+        /// </summary>
+        /// <value>
+        /// The stroke.
+        /// </value>
+        public IPaintTask<TDrawingContext>? Stroke
+        {
+            get => _stroke;
+            set => SetPaintProperty(ref _stroke, value, true);
+        }
+
+        /// <summary>
+        /// Gets or sets the fill.
+        /// </summary>
+        /// <value>
+        /// The fill.
+        /// </value>
+        public IPaintTask<TDrawingContext>? Fill
+        {
+            get => _fill;
+            set => SetPaintProperty(ref _fill, value);
         }
 
         /// <inheritdoc cref="IPieSeries{TDrawingContext}.Pushout"/>
@@ -395,7 +421,7 @@ namespace LiveChartsCore
         /// <summary>
         /// Called when the paint context changed.
         /// </summary>
-        protected override void OnPaintContextChanged()
+        protected override void OnSeriesMiniatureChanged()
         {
             var context = new CanvasSchedule<TDrawingContext>();
 
@@ -453,6 +479,30 @@ namespace LiveChartsCore
         public override int GetStackGroup()
         {
             return 0;
+        }
+
+        /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
+        protected override IPaintTask<TDrawingContext>?[] GetPaintTasks()
+        {
+            return new[] { _fill, _stroke, DataLabelsPaint };
+        }
+
+        /// <summary>
+        /// Called when [paint changed].
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <returns></returns>
+        protected override void OnPaintChanged(string? propertyName)
+        {
+            OnSeriesMiniatureChanged();
+            OnPropertyChanged();
+        }
+
+        /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
+        public override bool MiniatureEquals(IChartSeries<TDrawingContext> instance)
+        {
+            return instance is PieSeries<TModel, TVisual, TLabel, TDrawingContext> pieSeries &&
+               Name == pieSeries.Name && Fill == pieSeries.Fill && Stroke == pieSeries.Stroke;
         }
 
         /// <summary>

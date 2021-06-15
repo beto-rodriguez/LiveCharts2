@@ -107,6 +107,14 @@ namespace LiveChartsCore.Themes
         public List<Action<ILineSeries<TDrawingContext>>> LineSeriesBuilder { get; set; } = new List<Action<ILineSeries<TDrawingContext>>>();
 
         /// <summary>
+        /// Gets or sets the line series builder.
+        /// </summary>
+        /// <value>
+        /// The pie series builder.
+        /// </value>
+        public List<Action<IHeatSeries<TDrawingContext>>> HeatSeriesBuilder { get; set; } = new List<Action<IHeatSeries<TDrawingContext>>>();
+
+        /// <summary>
         /// Gets or sets the stacked line series builder.
         /// </summary>
         /// <value>
@@ -268,6 +276,12 @@ namespace LiveChartsCore.Themes
                 {
                     foreach (var rule in StackedLineSeriesBuilder) rule(lineSeries);
                 }
+            }
+
+            if ((series.SeriesProperties & SeriesProperties.Heat) == SeriesProperties.Heat)
+            {
+                var heatSeries = (IHeatSeries<TDrawingContext>)series;
+                foreach (var rule in HeatSeriesBuilder) rule(heatSeries);
             }
         }
     }

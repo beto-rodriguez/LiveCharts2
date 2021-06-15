@@ -36,7 +36,7 @@ namespace LiveChartsCore
     /// Defines the data to plot as a line.
     /// </summary>
     public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>
-        : CartesianSeries<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>, ILineSeries<TDrawingContext>
+        : StrokeAndFillCartesianSeries<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>, ILineSeries<TDrawingContext>
         where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
         where TLineSegment : ILinePathSegment<TPathArgs>, new()
         where TBezierSegment : IBezierSegment<TPathArgs>, new()
@@ -515,8 +515,8 @@ namespace LiveChartsCore
                 .CompleteCurrentTransitions();
         }
 
-        /// <inheritdoc cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}.OnPaintContextChanged"/>
-        protected override void OnPaintContextChanged()
+        /// <inheritdoc cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}.OnSeriesMiniatureChanged"/>
+        protected override void OnSeriesMiniatureChanged()
         {
             var context = new CanvasSchedule<TDrawingContext>();
             var lss = (float)LegendShapeSize;

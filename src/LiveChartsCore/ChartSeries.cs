@@ -30,7 +30,7 @@ using LiveChartsCore.Kernel.Sketches;
 namespace LiveChartsCore
 {
     /// <summary>
-    /// Defines a data series that has at least a <see cref="IPaintTask{TDrawingContext}"/> to draw the data in the user interface.
+    /// Defines a chart data series.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     /// <typeparam name="TVisual">The type of the visual.</typeparam>
@@ -38,8 +38,7 @@ namespace LiveChartsCore
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="Series{TModel, TVisual, TLabel, TDrawingContext}" />
     /// <seealso cref="IChartSeries{TDrawingContext}" />
-    public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
-        : Series<TModel, TVisual, TLabel, TDrawingContext>, IChartSeries<TDrawingContext>
+    public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext> : Series<TModel, TVisual, TLabel, TDrawingContext>, IChartSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
@@ -49,8 +48,6 @@ namespace LiveChartsCore
         /// </summary>
         protected CanvasSchedule<TDrawingContext> canvaSchedule = new();
 
-        private IPaintTask<TDrawingContext>? _stroke = null;
-        private IPaintTask<TDrawingContext>? _fill = null;
         private double _legendShapeSize = 15;
         private IPaintTask<TDrawingContext>? _dataLabelsPaint;
         private double _dataLabelsSize = 16;
@@ -62,36 +59,7 @@ namespace LiveChartsCore
         /// <param name="properties">The properties.</param>
         public ChartSeries(SeriesProperties properties) : base(properties) { }
 
-        /// <summary>
-        /// Gets or sets the stroke.
-        /// </summary>
-        /// <value>
-        /// The stroke.
-        /// </value>
-        public IPaintTask<TDrawingContext>? Stroke
-        {
-            get => _stroke;
-            set => SetPaintProperty(ref _stroke, value, true);
-        }
-
-        /// <summary>
-        /// Gets or sets the fill.
-        /// </summary>
-        /// <value>
-        /// The fill.
-        /// </value>
-        public IPaintTask<TDrawingContext>? Fill
-        {
-            get => _fill;
-            set => SetPaintProperty(ref _fill, value);
-        }
-
-        /// <summary>
-        /// Gets or sets the data labels drawable task.
-        /// </summary>
-        /// <value>
-        /// The data labels drawable task.
-        /// </value>
+        /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsPaint"/>
         public IPaintTask<TDrawingContext>? DataLabelsPaint
         {
             get => _dataLabelsPaint;
@@ -107,28 +75,13 @@ namespace LiveChartsCore
         [Obsolete("Renamed to DataLabelsPaint")]
         public IPaintTask<TDrawingContext>? DataLabelsDrawableTask { get => DataLabelsPaint; set => DataLabelsPaint = value; }
 
-        /// <summary>
-        /// Gets or sets the size of the data labels.
-        /// </summary>
-        /// <value>
-        /// The size of the data labels.
-        /// </value>
+        /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsSize"/>
         public double DataLabelsSize { get => _dataLabelsSize; set { _dataLabelsSize = value; OnPropertyChanged(); } }
 
-        /// <summary>
-        /// Gets or sets the data labels padding.
-        /// </summary>
-        /// <value>
-        /// The data labels padding.
-        /// </value>
+        /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsPadding"/>
         public Padding DataLabelsPadding { get => _dataLabelsPadding; set { _dataLabelsPadding = value; OnPropertyChanged(); } }
 
-        /// <summary>
-        /// Gets the default paint context.
-        /// </summary>
-        /// <value>
-        /// The default paint context.
-        /// </value>
+        /// <inheritdoc cref="IChartSeries{TDrawingContext}.CanvasSchedule"/>
         public CanvasSchedule<TDrawingContext> CanvasSchedule => canvaSchedule;
 
         /// <summary>
@@ -143,7 +96,7 @@ namespace LiveChartsCore
         /// Called when the paint context changed.
         /// </summary>
         /// <returns></returns>
-        protected abstract void OnPaintContextChanged();
+        protected abstract void OnSeriesMiniatureChanged();
 
         /// <summary>
         /// Initializes the series.
@@ -163,25 +116,7 @@ namespace LiveChartsCore
             dataProvider = factory.GetProvider<TModel>();
         }
 
-        /// <summary>
-        /// Called when [paint changed].
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        /// <returns></returns>
-        protected override void OnPaintChanged(string? propertyName)
-        {
-            OnPaintContextChanged();
-            OnPropertyChanged();
-        }
-
-        /// <summary>
-        /// Gets the paint tasks.
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        protected override IPaintTask<TDrawingContext>?[] GetPaintTasks()
-        {
-            return new[] { _stroke, _fill, _dataLabelsPaint };
-        }
+        /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
+        public abstract bool MiniatureEquals(IChartSeries<TDrawingContext> instance);
     }
 }

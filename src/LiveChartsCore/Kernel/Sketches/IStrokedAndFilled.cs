@@ -25,27 +25,26 @@ using LiveChartsCore.Drawing;
 namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
-    /// Defines a scatter series.
+    /// Defines an object with a stroke and fill.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IChartSeries{TDrawingContext}" />
-    public interface IScatterSeries<TDrawingContext> : IChartSeries<TDrawingContext>, IStrokedAndFilled<TDrawingContext>
+    public interface IStrokedAndFilled<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Gets or sets the size of the geometry.
+        /// Gets or sets the fill.
         /// </summary>
         /// <value>
-        /// The size of the geometry.
+        /// The fill.
         /// </value>
-        double GeometrySize { get; set; }
+        IPaintTask<TDrawingContext>? Fill { get; set; }
 
         /// <summary>
-        /// Gets or sets the minimum size of the geometry.
+        /// Gets or sets the stroke.
         /// </summary>
         /// <value>
-        /// The minimum size of the geometry.
+        /// The stroke.
         /// </value>
-        double MinGeometrySize { get; set; }
+        IPaintTask<TDrawingContext>? Stroke { get; set; }
     }
 }

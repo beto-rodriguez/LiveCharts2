@@ -40,7 +40,7 @@ namespace LiveChartsCore
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
     /// <seealso cref="IScatterSeries{TDrawingContext}" />
-    public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext> : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IScatterSeries<TDrawingContext>
+    public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext> : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IScatterSeries<TDrawingContext>
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
@@ -255,8 +255,8 @@ namespace LiveChartsCore
             };
         }
 
-        /// <inheritdoc cref="OnPaintContextChanged"/>
-        protected override void OnPaintContextChanged()
+        /// <inheritdoc cref="OnSeriesMiniatureChanged"/>
+        protected override void OnSeriesMiniatureChanged()
         {
             var context = new CanvasSchedule<TDrawingContext>();
 

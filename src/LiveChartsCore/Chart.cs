@@ -482,7 +482,8 @@ namespace LiveChartsCore
                 var a = previousSeries[i];
                 var b = newSeries[i];
 
-                if (a.Name != b.Name || a.Fill != b.Fill || a.Stroke != b.Stroke) return true;
+                if (!a.MiniatureEquals(b)) return true;
+                //if (a.Name != b.Name || a.Fill != b.Fill || a.Stroke != b.Stroke) return true;
             }
 
             return false;

@@ -57,6 +57,14 @@ namespace LiveChartsCore
         public static string BarSeriesHoverKey => nameof(BarSeriesHoverKey);
 
         /// <summary>
+        /// Gets the heat bar series hover key.
+        /// </summary>
+        /// <value>
+        /// The bar series hover key.
+        /// </value>
+        public static string HeatSeriesHoverState => nameof(HeatSeriesHoverState);
+
+        /// <summary>
         /// Gets the line series hover key.
         /// </summary>
         /// <value>

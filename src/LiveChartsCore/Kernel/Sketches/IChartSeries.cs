@@ -35,21 +35,21 @@ namespace LiveChartsCore.Kernel.Sketches
     public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawingContext>
          where TDrawingContext : DrawingContext
     {
-        /// <summary>
-        /// Gets or sets the stroke drawable task.
-        /// </summary>
-        /// <value>
-        /// The stroke.
-        /// </value>
-        IPaintTask<TDrawingContext>? Stroke { get; set; }
+        ///// <summary>
+        ///// Gets or sets the stroke drawable task.
+        ///// </summary>
+        ///// <value>
+        ///// The stroke.
+        ///// </value>
+        //IPaintTask<TDrawingContext>? Stroke { get; set; }
 
-        /// <summary>
-        /// Gets or sets the fill  drawable task.
-        /// </summary>
-        /// <value>
-        /// The fill.
-        /// </value>
-        IPaintTask<TDrawingContext>? Fill { get; set; }
+        ///// <summary>
+        ///// Gets or sets the fill  drawable task.
+        ///// </summary>
+        ///// <value>
+        ///// The fill.
+        ///// </value>
+        //IPaintTask<TDrawingContext>? Fill { get; set; }
 
         /// <summary>
         /// Gets or sets the data labels  drawable task.
@@ -94,5 +94,12 @@ namespace LiveChartsCore.Kernel.Sketches
         /// </summary>
         /// <returns></returns>
         int GetStackGroup();
+
+        /// <summary>
+        /// Determines if the given instance has the same series miniature.
+        /// </summary>
+        /// <param name="instance">The instance to compare.</param>
+        /// <returns></returns>
+        bool MiniatureEquals(IChartSeries<TDrawingContext> instance);
     }
 }

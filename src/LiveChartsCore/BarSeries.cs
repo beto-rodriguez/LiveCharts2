@@ -36,7 +36,7 @@ namespace LiveChartsCore
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
     /// <seealso cref="IBarSeries{TDrawingContext}" />
-    public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext> : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IBarSeries<TDrawingContext>
+    public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext> : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IBarSeries<TDrawingContext>
         where TVisual : class, IRoundedRectangleChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
@@ -69,7 +69,7 @@ namespace LiveChartsCore
         /// <summary>
         /// Called when the paint context changes.
         /// </summary>
-        protected override void OnPaintContextChanged()
+        protected override void OnSeriesMiniatureChanged()
         {
             var context = new CanvasSchedule<TDrawingContext>();
             var w = LegendShapeSize;

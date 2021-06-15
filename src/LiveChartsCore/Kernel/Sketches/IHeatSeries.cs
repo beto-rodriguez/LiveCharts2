@@ -20,32 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Drawing;
 using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
-    /// Defines a scatter series.
+    /// Defines a heat series plot.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="IChartSeries{TDrawingContext}" />
-    public interface IScatterSeries<TDrawingContext> : IChartSeries<TDrawingContext>, IStrokedAndFilled<TDrawingContext>
+    public interface IHeatSeries<TDrawingContext> : IChartSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Gets or sets the size of the geometry.
+        /// Gets or sets the heat map.
         /// </summary>
         /// <value>
-        /// The size of the geometry.
+        /// The heat map.
         /// </value>
-        double GeometrySize { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum size of the geometry.
-        /// </summary>
-        /// <value>
-        /// The minimum size of the geometry.
-        /// </value>
-        double MinGeometrySize { get; set; }
+        Color[] HeatMap { get; set; }
     }
 }

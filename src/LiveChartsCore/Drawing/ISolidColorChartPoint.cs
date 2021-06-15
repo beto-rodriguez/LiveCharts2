@@ -20,32 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-
-namespace LiveChartsCore.Kernel.Sketches
+namespace LiveChartsCore.Drawing
 {
     /// <summary>
-    /// Defines a scatter series.
+    /// Defines a sized and solid color visual chart point.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IChartSeries{TDrawingContext}" />
-    public interface IScatterSeries<TDrawingContext> : IChartSeries<TDrawingContext>, IStrokedAndFilled<TDrawingContext>
+    public interface ISolidColorChartPoint<TDrawingContext> : ISolidColorGeometry<TDrawingContext>, IVisualChartPoint<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        /// <summary>
-        /// Gets or sets the size of the geometry.
-        /// </summary>
-        /// <value>
-        /// The size of the geometry.
-        /// </value>
-        double GeometrySize { get; set; }
 
-        /// <summary>
-        /// Gets or sets the minimum size of the geometry.
-        /// </summary>
-        /// <value>
-        /// The minimum size of the geometry.
-        /// </value>
-        double MinGeometrySize { get; set; }
     }
 }

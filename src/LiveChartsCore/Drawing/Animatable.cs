@@ -124,13 +124,13 @@ namespace LiveChartsCore.Drawing.Common
         /// Registers a motion property.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="transition">The transition.</param>
+        /// <param name="motionProperty">The transition.</param>
         /// <returns></returns>
-        protected T RegisterMotionProperty<T>(T transition)
+        protected T RegisterMotionProperty<T>(T motionProperty)
             where T : IMotionProperty
         {
-            transitionProperties[transition.PropertyName] = transition;
-            return transition;
+            transitionProperties[motionProperty.PropertyName] = motionProperty;
+            return motionProperty;
         }
 
         /// <summary>

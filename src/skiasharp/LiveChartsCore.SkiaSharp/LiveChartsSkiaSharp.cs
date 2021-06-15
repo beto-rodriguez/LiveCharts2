@@ -117,8 +117,9 @@ namespace LiveChartsCore.SkiaSharpView
                                // ForAnySeries() will be called for all the series
                                .HasRuleForAnySeries(series =>
                                {
-                                   series.Fill = DefaultPaintTask;
-                                   series.Stroke = DefaultPaintTask;
+                                   if (series is not IStrokedAndFilled<SkiaSharpDrawingContext> strokedAndFilled) return;
+                                   strokedAndFilled.Fill = DefaultPaintTask;
+                                   strokedAndFilled.Stroke = DefaultPaintTask;
                                })
                                .HasRuleForLineSeries(lineSeries =>
                                {
@@ -218,13 +219,12 @@ namespace LiveChartsCore.SkiaSharpView
                                // ForAnySeries() will be called for all the series
                                .HasRuleForAnySeries(series =>
                                {
-                                   series.Fill = DefaultPaintTask;
-                                   series.Stroke = DefaultPaintTask;
+                                   if (series is not IStrokedAndFilled<SkiaSharpDrawingContext> strokedAndFilled) return;
+                                   strokedAndFilled.Fill = DefaultPaintTask;
+                                   strokedAndFilled.Stroke = DefaultPaintTask;
                                })
                                .HasRuleForLineSeries(lineSeries =>
                                {
-                                   // at this point ForAnySeries() was already called
-                                   // we are configuring the missing properties
                                    lineSeries.GeometrySize = 18;
                                    lineSeries.GeometryFill = new SolidColorPaintTask(Color.FromArgb(255, 40, 40, 40).AsSKColor());
                                    lineSeries.GeometryStroke = DefaultPaintTask;
@@ -296,8 +296,9 @@ namespace LiveChartsCore.SkiaSharpView
 
                         if ((series.SeriesProperties & SeriesProperties.GaugeFill) != 0)
                         {
-                            if (series.Stroke == DefaultPaintTask) series.Stroke = null;
-                            if (series.Fill == DefaultPaintTask) series.Fill = new SolidColorPaintTask(new SKColor(0, 0, 0, 15));
+                            var gaugeSeries = (IPieSeries<SkiaSharpDrawingContext>)series;
+                            if (gaugeSeries.Stroke == DefaultPaintTask) gaugeSeries.Stroke = null;
+                            if (gaugeSeries.Fill == DefaultPaintTask) gaugeSeries.Fill = new SolidColorPaintTask(new SKColor(0, 0, 0, 15));
                             return;
                         }
 
@@ -307,20 +308,27 @@ namespace LiveChartsCore.SkiaSharpView
                         if ((series.SeriesProperties & SeriesProperties.PieSeries) == SeriesProperties.PieSeries ||
                             (series.SeriesProperties & SeriesProperties.Bar) == SeriesProperties.Bar)
                         {
-                            if (series.Fill == DefaultPaintTask) series.Fill = new SolidColorPaintTask(color.AsSKColor());
-                            if (series.Stroke == DefaultPaintTask) series.Stroke = new SolidColorPaintTask(color.AsSKColor(), 3);
+                            var sf = (IStrokedAndFilled<SkiaSharpDrawingContext>)series;
+
+                            if (sf.Fill == DefaultPaintTask) sf.Fill = new SolidColorPaintTask(color.AsSKColor());
+                            if (sf.Stroke == DefaultPaintTask) sf.Stroke = new SolidColorPaintTask(color.AsSKColor(), 3);
 
                             return;
                         }
 
-                        if (series.Fill == DefaultPaintTask)
-                        {
-                            var mask = SeriesProperties.Line | SeriesProperties.Stacked;
-                            var opacity = (series.SeriesProperties & mask) == mask ? 1 : 0.2;
 
-                            series.Fill = new SolidColorPaintTask(color.AsSKColor((byte)(opacity * 255)));
+                        if (series is IStrokedAndFilled<SkiaSharpDrawingContext> strokedAndFilled)
+                        {
+                            if (strokedAndFilled.Fill == DefaultPaintTask)
+                            {
+                                var mask = SeriesProperties.Line | SeriesProperties.Stacked;
+                                var opacity = (series.SeriesProperties & mask) == mask ? 1 : 0.2;
+
+                                strokedAndFilled.Fill = new SolidColorPaintTask(color.AsSKColor((byte)(opacity * 255)));
+                            }
+                            if (strokedAndFilled.Stroke == DefaultPaintTask)
+                                strokedAndFilled.Stroke = new SolidColorPaintTask(color.AsSKColor(), 5);
                         }
-                        if (series.Stroke == DefaultPaintTask) series.Stroke = new SolidColorPaintTask(color.AsSKColor(), 5);
 
                         if ((series.SeriesProperties & SeriesProperties.Line) == SeriesProperties.Line)
                         {
@@ -386,8 +394,9 @@ namespace LiveChartsCore.SkiaSharpView
 
                         if ((series.SeriesProperties & SeriesProperties.GaugeFill) != 0)
                         {
-                            if (series.Stroke == DefaultPaintTask) series.Stroke = null;
-                            if (series.Fill == DefaultPaintTask) series.Fill = new SolidColorPaintTask(new SKColor(255, 255, 255, 15));
+                            var gaugeSeries = (IPieSeries<SkiaSharpDrawingContext>)series;
+                            if (gaugeSeries.Stroke == DefaultPaintTask) gaugeSeries.Stroke = null;
+                            if (gaugeSeries.Fill == DefaultPaintTask) gaugeSeries.Fill = new SolidColorPaintTask(new SKColor(255, 255, 255, 15));
                             return;
                         }
 
@@ -397,20 +406,25 @@ namespace LiveChartsCore.SkiaSharpView
                         if ((series.SeriesProperties & SeriesProperties.PieSeries) == SeriesProperties.PieSeries ||
                             (series.SeriesProperties & SeriesProperties.Bar) == SeriesProperties.Bar)
                         {
-                            if (series.Fill == DefaultPaintTask) series.Fill = new SolidColorPaintTask(color.AsSKColor());
-                            if (series.Stroke == DefaultPaintTask) series.Stroke = new SolidColorPaintTask(color.AsSKColor(), 3);
+                            var sf = (IStrokedAndFilled<SkiaSharpDrawingContext>)series;
+                            if (sf.Fill == DefaultPaintTask) sf.Fill = new SolidColorPaintTask(color.AsSKColor());
+                            if (sf.Stroke == DefaultPaintTask) sf.Stroke = new SolidColorPaintTask(color.AsSKColor(), 3);
 
                             return;
                         }
 
-                        if (series.Fill == DefaultPaintTask)
+                        if (series is IStrokedAndFilled<SkiaSharpDrawingContext> strokedAndFilled)
                         {
-                            var mask = SeriesProperties.Line | SeriesProperties.Stacked;
-                            var opacity = (series.SeriesProperties & mask) == mask ? 1 : 0.2;
+                            if (strokedAndFilled.Fill == DefaultPaintTask)
+                            {
+                                var mask = SeriesProperties.Line | SeriesProperties.Stacked;
+                                var opacity = (series.SeriesProperties & mask) == mask ? 1 : 0.2;
 
-                            series.Fill = new SolidColorPaintTask(color.AsSKColor((byte)(opacity * 255)));
+                                strokedAndFilled.Fill = new SolidColorPaintTask(color.AsSKColor((byte)(opacity * 255)));
+                            }
+                            if (strokedAndFilled.Stroke == DefaultPaintTask)
+                                strokedAndFilled.Stroke = new SolidColorPaintTask(color.AsSKColor(), 5);
                         }
-                        if (series.Stroke == DefaultPaintTask) series.Stroke = new SolidColorPaintTask(color.AsSKColor(), 5);
 
                         if ((series.SeriesProperties & SeriesProperties.Line) == SeriesProperties.Line)
                         {
