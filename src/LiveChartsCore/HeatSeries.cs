@@ -64,8 +64,8 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IHeatSeries{TDrawingContext}.HeatMap"/>
         public Color[] HeatMap { get; set; } = new[]
         {
-            Color.FromArgb(255, 66, 165, 245), // hot (max value)
-            Color.FromArgb(255, 239, 83, 80) // cold (min value)
+            Color.FromArgb(255, 118, 200, 147), // hot (max value)
+            Color.FromArgb(255, 30, 96, 145) // cold (min value)
         };
 
         /// <inheritdoc cref="IHeatSeries{TDrawingContext}.ColorStops"/>
@@ -159,6 +159,13 @@ namespace LiveChartsCore
                         Height = uwp,
                         Color = Color.FromArgb(0, baseColor.R, baseColor.G, baseColor.B)
                     };
+
+                    _ = r
+                        .TransitionateProperties(nameof(r.Color))
+                        .WithAnimation(animation =>
+                            animation
+                                .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
+                                .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
 
                     visual = r;
                     point.Context.Visual = visual;
