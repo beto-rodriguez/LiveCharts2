@@ -159,6 +159,9 @@
     <Compile Update="Scatter\Basic\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="StackedArea\StepArea\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="StackedArea\Basic\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -373,6 +376,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Scatter\Basic\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="StackedArea\StepArea\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

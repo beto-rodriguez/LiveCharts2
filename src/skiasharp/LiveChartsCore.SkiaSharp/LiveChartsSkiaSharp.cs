@@ -360,13 +360,15 @@ namespace LiveChartsCore.SkiaSharpView
                             return;
                         }
 
-
                         if (series is IStrokedAndFilled<SkiaSharpDrawingContext> strokedAndFilled)
                         {
                             if (strokedAndFilled.Fill == DefaultPaintTask)
                             {
-                                var mask = SeriesProperties.Line | SeriesProperties.Stacked;
-                                var opacity = (series.SeriesProperties & mask) == mask ? 1 : 0.2;
+                                var opacity = 0.2;
+                                var mask1 = SeriesProperties.Line | SeriesProperties.Stacked;
+                                var mask2 = SeriesProperties.StepLine | SeriesProperties.Stacked;
+                                if ((series.SeriesProperties & mask1) == mask1 || (series.SeriesProperties & mask2) == mask2)
+                                    opacity = 1;
 
                                 strokedAndFilled.Fill = new SolidColorPaintTask(color.AsSKColor((byte)(opacity * 255)));
                             }
@@ -486,8 +488,11 @@ namespace LiveChartsCore.SkiaSharpView
                         {
                             if (strokedAndFilled.Fill == DefaultPaintTask)
                             {
-                                var mask = SeriesProperties.Line | SeriesProperties.Stacked;
-                                var opacity = (series.SeriesProperties & mask) == mask ? 1 : 0.2;
+                                var opacity = 0.2;
+                                var mask1 = SeriesProperties.Line | SeriesProperties.Stacked;
+                                var mask2 = SeriesProperties.StepLine | SeriesProperties.Stacked;
+                                if ((series.SeriesProperties & mask1) == mask1 || (series.SeriesProperties & mask2) == mask2)
+                                    opacity = 1;
 
                                 strokedAndFilled.Fill = new SolidColorPaintTask(color.AsSKColor((byte)(opacity * 255)));
                             }

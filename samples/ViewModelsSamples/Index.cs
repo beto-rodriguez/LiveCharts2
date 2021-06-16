@@ -24,6 +24,7 @@
             "StepLines/Zoom",
 
             "StackedArea/Basic",
+            "StackedArea/StepArea",
 
             "Bars/Basic",
             "Bars/AutoUpdate",

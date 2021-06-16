@@ -35,6 +35,15 @@ namespace LiveChartsCore
     /// <summary>
     /// Defines the data to plot as a line.
     /// </summary>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <typeparam name="TVisual">The type of the visual.</typeparam>
+    /// <typeparam name="TLabel">The type of the label.</typeparam>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
+    /// <typeparam name="TLineSegment">The type of the line segment.</typeparam>
+    /// <typeparam name="TStepLineSegment">The type of the step segment.</typeparam>
+    /// <typeparam name="TMoveToCommand">The type of the move to command.</typeparam>
+    /// <typeparam name="TPathArgs">The type of the path arguments.</typeparam>
     public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TStepLineSegment, TMoveToCommand, TPathArgs>
         : StrokeAndFillCartesianSeries<TModel, StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPathArgs>, TLabel, TDrawingContext>, IStepLineSeries<TDrawingContext>
         where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
@@ -59,7 +68,7 @@ namespace LiveChartsCore
         public StepLineSeries(bool isStacked = false)
             : base(
                   SeriesProperties.StepLine | SeriesProperties.PrimaryAxisVerticalOrientation |
-                  SeriesProperties.Sketch | SeriesProperties.PrefersXStrategyTooltips)
+                  (isStacked ? SeriesProperties.Stacked : 0) | SeriesProperties.Sketch | SeriesProperties.PrefersXStrategyTooltips)
         {
             DataPadding = new PointF(0.5f, 1f);
             HoverState = LiveCharts.StepLineSeriesHoverKey;
@@ -177,9 +186,13 @@ namespace LiveChartsCore
                     Stroke.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 }
 
-                foreach (var data in GetSpline(segment, secondaryScale, primaryScale))
+                foreach (var data in GetStepLine(segment, secondaryScale, primaryScale, stacker))
                 {
                     var s = 0f;
+                    if (stacker != null)
+                    {
+                        s = stacker.GetStack(data.TargetPoint).Start;
+                    }
 
                     var x = secondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
                     var y = primaryScale.ToPixels(data.TargetPoint.PrimaryValue + s);
@@ -549,31 +562,39 @@ namespace LiveChartsCore
             OnPropertyChanged(nameof(CanvasSchedule));
         }
 
-        private IEnumerable<BezierData> GetSpline(
+        private IEnumerable<BezierData> GetStepLine(
             ChartPoint[] points,
             Scaler xScale,
-            Scaler yScale)
+            Scaler yScale,
+            StackPosition<TDrawingContext>? stacker)
         {
             if (points.Length == 0) yield break;
 
             ChartPoint current, next;
+
+            var cys = 0f;
 
             for (var i = 0; i < points.Length; i++)
             {
                 current = points[i];
                 next = points[i + 1 > points.Length - 1 ? points.Length - 1 : i + 1];
 
+                if (stacker != null)
+                {
+                    cys = stacker.GetStack(current).Start;
+                }
+
                 var c1X = current.SecondaryValue;
-                var c1Y = current.PrimaryValue;
+                var c1Y = current.PrimaryValue + cys;
                 var c2X = next.SecondaryValue;
-                var c2Y = current.PrimaryValue;
+                var c2Y = current.PrimaryValue + cys;
 
                 float x0, y0;
 
                 if (i == 0)
                 {
                     x0 = current.SecondaryValue;
-                    y0 = current.PrimaryValue;
+                    y0 = current.PrimaryValue + cys;
                 }
                 else
                 {
