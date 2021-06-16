@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -166,6 +166,24 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="StackedBars\Basic\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="StepLines\Area\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="StepLines\AutoUpdate\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="StepLines\Basic\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="StepLines\Custom\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="StepLines\Properties\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="StepLines\Zoom\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -367,6 +385,30 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="StackedBars\Basic\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="StepLines\Area\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="StepLines\AutoUpdate\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="StepLines\Basic\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="StepLines\Custom\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="StepLines\Properties\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="StepLines\Zoom\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

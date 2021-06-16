@@ -16,6 +16,13 @@
             "Lines/Custom",
             "Lines/Zoom",
 
+            "StepLines/Basic",
+            "StepLines/AutoUpdate",
+            "StepLines/Properties",
+            "StepLines/Area",
+            "StepLines/Custom",
+            "StepLines/Zoom",
+
             "StackedArea/Basic",
 
             "Bars/Basic",
