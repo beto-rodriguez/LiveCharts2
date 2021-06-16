@@ -224,15 +224,15 @@ namespace LiveChartsCore
                         v.Geometry.Width = gs;
                         v.Geometry.Height = gs;
 
-                        v.StepLine.X0 = x0b;
-                        v.StepLine.Y0 = y0b;
-                        v.StepLine.X1 = x1b;
-                        v.StepLine.Y1 = y1b;
+                        v.StepSegment.X0 = x0b;
+                        v.StepSegment.Y0 = y0b;
+                        v.StepSegment.X1 = x1b;
+                        v.StepSegment.Y1 = y1b;
 
                         data.TargetPoint.Context.Visual = v;
                         OnPointCreated(data.TargetPoint);
                         v.Geometry.CompleteAllTransitions();
-                        v.StepLine.CompleteAllTransitions();
+                        v.StepSegment.CompleteAllTransitions();
                     }
 
                     _ = everFetched.Add(data.TargetPoint);
@@ -240,10 +240,10 @@ namespace LiveChartsCore
                     if (GeometryFill != null) GeometryFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
                     if (GeometryStroke != null) GeometryStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
 
-                    visual.StepLine.X0 = data.X0;
-                    visual.StepLine.Y0 = data.Y0;
-                    visual.StepLine.X1 = data.X1;
-                    visual.StepLine.Y1 = data.Y1;
+                    visual.StepSegment.X0 = data.X0;
+                    visual.StepSegment.Y0 = data.Y0;
+                    visual.StepSegment.X1 = data.X1;
+                    visual.StepSegment.Y1 = data.Y1;
 
                     if (Fill != null)
                     {
@@ -272,7 +272,7 @@ namespace LiveChartsCore
                             fillPathHelper.Path.AddCommand(fillPathHelper.StartSegment);
                         }
 
-                        fillPathHelper.Path.AddCommand(visual.StepLine);
+                        fillPathHelper.Path.AddCommand(visual.StepSegment);
 
                         if (data.IsLast)
                         {
@@ -319,7 +319,7 @@ namespace LiveChartsCore
                             strokePathHelper.Path.AddCommand(strokePathHelper.StartPoint);
                         }
 
-                        strokePathHelper.Path.AddCommand(visual.StepLine);
+                        strokePathHelper.Path.AddCommand(visual.StepSegment);
                     }
 
                     visual.Geometry.X = x - hgs;
@@ -623,12 +623,12 @@ namespace LiveChartsCore
                         .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
                         .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
 
-            _ = visual.StepLine
+            _ = visual.StepSegment
                 .TransitionateProperties(
-                    nameof(visual.StepLine.X0),
-                    nameof(visual.StepLine.Y0),
-                    nameof(visual.StepLine.X1),
-                    nameof(visual.StepLine.Y1))
+                    nameof(visual.StepSegment.X0),
+                    nameof(visual.StepSegment.Y0),
+                    nameof(visual.StepSegment.X1),
+                    nameof(visual.StepSegment.Y1))
                 .WithAnimation(animation =>
                     animation
                         .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)

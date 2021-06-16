@@ -49,7 +49,7 @@ namespace LiveChartsCore.Drawing
         /// <value>
         /// The stepline.
         /// </value>
-        public TStepLineSegment StepLine { get; set; } = new TStepLineSegment();
+        public TStepLineSegment StepSegment { get; set; } = new TStepLineSegment();
 
         /// <summary>
         /// Gets or sets the path.
@@ -73,6 +73,6 @@ namespace LiveChartsCore.Drawing
         public IDrawable<TDrawingContext>? HighlightableGeometry => Geometry?.HighlightableGeometry;
 
         ISizedGeometry<TDrawingContext> IStepLineVisualChartPoint<TDrawingContext>.Geometry => Geometry;
-        IAnimatableStepLineSegment IStepLineVisualChartPoint<TDrawingContext>.StepLine => StepLine;
+        IAnimatableStepLineSegment IStepLineVisualChartPoint<TDrawingContext>.StepLine => StepSegment;
     }
 }
