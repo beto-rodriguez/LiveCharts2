@@ -115,6 +115,27 @@
     <Compile Update="Heat\Basic\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="StackedArea\StepArea\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="StepLines\Area\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="StepLines\AutoUpdate\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="StepLines\Basic\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="StepLines\Custom\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="StepLines\Properties\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="StepLines\Zoom\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Lines\Area\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

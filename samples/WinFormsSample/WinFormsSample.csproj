@@ -106,6 +106,27 @@
     <Compile Update="Heat\Basic\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="StackedArea\StepArea\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="StepLines\Area\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="StepLines\AutoUpdate\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="StepLines\Basic\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="StepLines\Custom\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="StepLines\Properties\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="StepLines\Zoom\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Lines\Area\View.cs">
       <SubType>UserControl</SubType>
     </Compile>

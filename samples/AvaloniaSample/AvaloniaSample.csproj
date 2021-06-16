@@ -173,6 +173,9 @@
     <Compile Update="Scatter\Basic\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="StackedArea\StepArea\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="StackedArea\Basic\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
@@ -180,6 +183,24 @@
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="StackedBars\Basic\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="StepLines\Area\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="StepLines\AutoUpdate\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="StepLines\Basic\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="StepLines\Custom\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="StepLines\Properties\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="StepLines\Zoom\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
   </ItemGroup>
