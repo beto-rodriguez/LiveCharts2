@@ -54,13 +54,6 @@ namespace LiveChartsCore.Kernel
         /// <summary>
         /// The scatter series
         /// </summary>
-<<<<<<< HEAD
-        Scatter = 1 << 4,
-        /// <summary>
-        /// The heat series.
-        /// </summary>
-        Heat = 1 << 5,
-=======
         Scatter = 1 << 5,
 
         /// <summary>
@@ -68,7 +61,6 @@ namespace LiveChartsCore.Kernel
         /// </summary>
         Heat = 1 << 6,
 
->>>>>>> 6677cdc8a86d006dba66bf034bdbcb6e002c3fbd
         /// <summary>
         /// The financial series.
         /// </summary>
