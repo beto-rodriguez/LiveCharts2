@@ -57,7 +57,8 @@ namespace LiveChartsCore
         /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
         public StepLineSeries(bool isStacked = false)
             : base(
-                  SeriesProperties.StepLine | SeriesProperties.PrimaryAxisVerticalOrientation | SeriesProperties.Sketch | SeriesProperties.PrefersXStrategyTooltips)
+                  SeriesProperties.StepLine | SeriesProperties.PrimaryAxisVerticalOrientation |
+                  SeriesProperties.Sketch | SeriesProperties.PrefersXStrategyTooltips)
         {
             DataPadding = new PointF(0.5f, 1f);
             HoverState = LiveCharts.StepLineSeriesHoverKey;
@@ -65,7 +66,6 @@ namespace LiveChartsCore
 
         /// <inheritdoc cref="IStepLineSeries{TDrawingContext}.GeometrySize"/>
         public double GeometrySize { get => _geometrySize; set { _geometrySize = (float)value; OnPropertyChanged(); } }
-
 
         /// <inheritdoc cref="IStepLineSeries{TDrawingContext}.GeometryFill"/>
         public IPaintTask<TDrawingContext>? GeometryFill
@@ -109,10 +109,21 @@ namespace LiveChartsCore
 
             var segments = new ChartPoint[][] { points };
 
-
+            var stacker = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked
+                ? cartesianChart.SeriesContext.GetStackPosition(this, GetStackGroup())
+                : null;
 
             var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
 
+            if (stacker != null)
+            {
+                // easy workaround to set an automatic and valid z-index for stacked area series
+                // the problem of this solution is that the user needs to set z-indexes above 1000
+                // if the user needs to add more series to the chart.
+                actualZIndex = 1000 - stacker.Position;
+                if (Fill != null) Fill.ZIndex = actualZIndex;
+                if (Stroke != null) Stroke.ZIndex = actualZIndex;
+            }
 
             var dls = unchecked((float)DataLabelsSize);
 
@@ -300,8 +311,6 @@ namespace LiveChartsCore
                             strokePathHelper.StartPoint.X = data.X0;
                             strokePathHelper.StartPoint.Y = data.Y0;
                             strokePathHelper.Path.AddCommand(strokePathHelper.StartPoint);
-
-                            // add deleting...
                         }
 
                         strokePathHelper.Path.AddCommand(visual.StepLine);
@@ -547,8 +556,6 @@ namespace LiveChartsCore
             {
                 current = points[i];
                 next = points[i + 1 > points.Length - 1 ? points.Length - 1 : i + 1];
-
-
 
                 var c1X = current.SecondaryValue;
                 var c1Y = current.PrimaryValue;

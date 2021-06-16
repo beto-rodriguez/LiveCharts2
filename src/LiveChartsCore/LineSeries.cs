@@ -340,8 +340,6 @@ namespace LiveChartsCore
                             strokePathHelper.StartPoint.X = data.X0;
                             strokePathHelper.StartPoint.Y = data.Y0;
                             strokePathHelper.Path.AddCommand(strokePathHelper.StartPoint);
-
-                            // add deleting...
                         }
 
                         strokePathHelper.Path.AddCommand(visual.Bezier);
