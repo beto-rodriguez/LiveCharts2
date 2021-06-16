@@ -33,6 +33,12 @@ namespace LiveChartsCore.Kernel.Sketches
         where TDrawingContext : DrawingContext
     {
         /// <summary>
+        /// Gets or sets a value indicating whether the line should split every null point, 
+        /// enabling it has a performance impact, default is true.
+        /// </summary>
+        bool EnableNullSplitting { get; set; }
+
+        /// <summary>
         /// Gets or sets the size of the geometry.
         /// </summary>
         /// <value>

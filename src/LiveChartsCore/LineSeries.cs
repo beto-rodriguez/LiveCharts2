@@ -674,44 +674,6 @@ namespace LiveChartsCore
             }
         }
 
-        private IEnumerable<ChartPoint[]> SplitEachNull(
-            ChartPoint[] points,
-            Scaler xScale,
-            Scaler yScale)
-        {
-            var l = new List<ChartPoint>(points.Length);
-
-            foreach (var point in points)
-            {
-                if (point.IsNull)
-                {
-                    if (point.Context.Visual is LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs> visual)
-                    {
-                        var x = xScale.ToPixels(point.SecondaryValue);
-                        var y = yScale.ToPixels(point.PrimaryValue);
-                        var gs = _geometrySize;
-                        var hgs = gs / 2f;
-                        var sw = Stroke?.StrokeThickness ?? 0;
-                        var p = yScale.ToPixels(pivot);
-                        visual.Geometry.X = x - hgs;
-                        visual.Geometry.Y = p - hgs;
-                        visual.Geometry.Width = gs;
-                        visual.Geometry.Height = gs;
-                        visual.Geometry.RemoveOnCompleted = true;
-                        point.Context.Visual = null;
-                    }
-
-                    if (l.Count > 0) yield return l.ToArray();
-                    l = new List<ChartPoint>(points.Length);
-                    continue;
-                }
-
-                l.Add(point);
-            }
-
-            if (l.Count > 0) yield return l.ToArray();
-        }
-
         /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SetDefaultPointTransitions(ChartPoint)"/>
         protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
         {
@@ -804,6 +766,44 @@ namespace LiveChartsCore
         protected override IPaintTask<TDrawingContext>?[] GetPaintTasks()
         {
             return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint };
+        }
+
+        private IEnumerable<ChartPoint[]> SplitEachNull(
+            ChartPoint[] points,
+            Scaler xScale,
+            Scaler yScale)
+        {
+            var l = new List<ChartPoint>(points.Length);
+
+            foreach (var point in points)
+            {
+                if (point.IsNull)
+                {
+                    if (point.Context.Visual is LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs> visual)
+                    {
+                        var x = xScale.ToPixels(point.SecondaryValue);
+                        var y = yScale.ToPixels(point.PrimaryValue);
+                        var gs = _geometrySize;
+                        var hgs = gs / 2f;
+                        var sw = Stroke?.StrokeThickness ?? 0;
+                        var p = yScale.ToPixels(pivot);
+                        visual.Geometry.X = x - hgs;
+                        visual.Geometry.Y = p - hgs;
+                        visual.Geometry.Width = gs;
+                        visual.Geometry.Height = gs;
+                        visual.Geometry.RemoveOnCompleted = true;
+                        point.Context.Visual = null;
+                    }
+
+                    if (l.Count > 0) yield return l.ToArray();
+                    l = new List<ChartPoint>(points.Length);
+                    continue;
+                }
+
+                l.Add(point);
+            }
+
+            if (l.Count > 0) yield return l.ToArray();
         }
     }
 }

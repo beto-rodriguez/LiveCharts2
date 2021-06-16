@@ -50,6 +50,7 @@ namespace LiveChartsCore
         private float _geometrySize = 14f;
         private IPaintTask<TDrawingContext>? _geometryFill;
         private IPaintTask<TDrawingContext>? _geometryStroke;
+        private bool _enableNullSplitting = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TStepLineSegment, TMoveToCommand, TPathArgs}"/> class.
@@ -63,6 +64,9 @@ namespace LiveChartsCore
             DataPadding = new PointF(0.5f, 1f);
             HoverState = LiveCharts.StepLineSeriesHoverKey;
         }
+
+        /// <inheritdoc cref="IStepLineSeries{TDrawingContext}.EnableNullSplitting"/>
+        public bool EnableNullSplitting { get => _enableNullSplitting; set { _enableNullSplitting = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IStepLineSeries{TDrawingContext}.GeometrySize"/>
         public double GeometrySize { get => _geometrySize; set { _geometrySize = (float)value; OnPropertyChanged(); } }
@@ -107,7 +111,9 @@ namespace LiveChartsCore
             var fetched = Fetch(cartesianChart);
             if (fetched is not ChartPoint[] points) points = fetched.ToArray();
 
-            var segments = new ChartPoint[][] { points };
+            var segments = _enableNullSplitting
+                ? SplitEachNull(points, secondaryScale, primaryScale)
+                : new ChartPoint[][] { points };
 
             var stacker = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked
                 ? cartesianChart.SeriesContext.GetStackPosition(this, GetStackGroup())
@@ -688,6 +694,44 @@ namespace LiveChartsCore
         protected override IPaintTask<TDrawingContext>?[] GetPaintTasks()
         {
             return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint };
+        }
+
+        private IEnumerable<ChartPoint[]> SplitEachNull(
+           ChartPoint[] points,
+           Scaler xScale,
+           Scaler yScale)
+        {
+            var l = new List<ChartPoint>(points.Length);
+
+            foreach (var point in points)
+            {
+                if (point.IsNull)
+                {
+                    if (point.Context.Visual is StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPathArgs> visual)
+                    {
+                        var x = xScale.ToPixels(point.SecondaryValue);
+                        var y = yScale.ToPixels(point.PrimaryValue);
+                        var gs = _geometrySize;
+                        var hgs = gs / 2f;
+                        var sw = Stroke?.StrokeThickness ?? 0;
+                        var p = yScale.ToPixels(pivot);
+                        visual.Geometry.X = x - hgs;
+                        visual.Geometry.Y = p - hgs;
+                        visual.Geometry.Width = gs;
+                        visual.Geometry.Height = gs;
+                        visual.Geometry.RemoveOnCompleted = true;
+                        point.Context.Visual = null;
+                    }
+
+                    if (l.Count > 0) yield return l.ToArray();
+                    l = new List<ChartPoint>(points.Length);
+                    continue;
+                }
+
+                l.Add(point);
+            }
+
+            if (l.Count > 0) yield return l.ToArray();
         }
     }
 }

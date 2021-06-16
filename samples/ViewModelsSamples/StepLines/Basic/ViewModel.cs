@@ -9,9 +9,9 @@ namespace ViewModelsSamples.StepLines.Basic
     {
         public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
         {
-            new StepLineSeries<double>
+            new StepLineSeries<double?>
             {
-                Values = new ObservableCollection<double> { 2, 1, 3, 5, 3, 4, 6 },
+                Values = new ObservableCollection<double?> { 2, 1, 3, null, 3, 4, 6 },
                 Fill = null
             }
         };
