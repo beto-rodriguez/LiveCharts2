@@ -115,6 +115,14 @@ namespace LiveChartsCore.Themes
         public List<Action<IHeatSeries<TDrawingContext>>> HeatSeriesBuilder { get; set; } = new List<Action<IHeatSeries<TDrawingContext>>>();
 
         /// <summary>
+        /// Gets or sets the financial series builder.
+        /// </summary>
+        /// <value>
+        /// The pie series builder.
+        /// </value>
+        public List<Action<IFinancialSeries<TDrawingContext>>> FinancialSeriesBuilder { get; set; } = new List<Action<IFinancialSeries<TDrawingContext>>>();
+
+        /// <summary>
         /// Gets or sets the stacked line series builder.
         /// </summary>
         /// <value>
@@ -282,6 +290,12 @@ namespace LiveChartsCore.Themes
             {
                 var heatSeries = (IHeatSeries<TDrawingContext>)series;
                 foreach (var rule in HeatSeriesBuilder) rule(heatSeries);
+            }
+
+            if ((series.SeriesProperties & SeriesProperties.Financial) == SeriesProperties.Financial)
+            {
+                var financialSeries = (IFinancialSeries<TDrawingContext>)series;
+                foreach (var rule in FinancialSeriesBuilder) rule(financialSeries);
             }
         }
     }

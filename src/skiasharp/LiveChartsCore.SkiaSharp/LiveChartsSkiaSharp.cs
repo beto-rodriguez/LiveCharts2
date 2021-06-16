@@ -158,6 +158,17 @@ namespace LiveChartsCore.SkiaSharpView
                                    pieSeries.Fill = DefaultPaintTask;
                                    pieSeries.Stroke = null;
                                    pieSeries.Pushout = 0;
+                               })
+                               .HasRuleForHeatSeries(heatSeries =>
+                               {
+                                   // ... rules here
+                               })
+                               .HasRuleForFinancialSeries(financialSeries =>
+                               {
+                                   financialSeries.UpFill = DefaultPaintTask;
+                                   financialSeries.DownFill = DefaultPaintTask;
+                                   financialSeries.UpStroke = DefaultPaintTask;
+                                   financialSeries.DownStroke = DefaultPaintTask;
                                }))
                        // finally add a resolver for the DefaultPaintTask
                        // the library already provides the AddDefaultLightResolvers() and AddDefaultDarkResolvers methods
@@ -260,6 +271,17 @@ namespace LiveChartsCore.SkiaSharpView
                                    pieSeries.Fill = DefaultPaintTask;
                                    pieSeries.Stroke = null;
                                    pieSeries.Pushout = 0;
+                               })
+                               .HasRuleForHeatSeries(heatSeries =>
+                               {
+                                   // ... rules here
+                               })
+                               .HasRuleForFinancialSeries(financialSeries =>
+                               {
+                                   financialSeries.UpFill = DefaultPaintTask;
+                                   financialSeries.DownFill = DefaultPaintTask;
+                                   financialSeries.UpStroke = DefaultPaintTask;
+                                   financialSeries.DownStroke = DefaultPaintTask;
                                }))
                        // finally add a resolver for the DefaultPaintTask
                        // the library already provides the AddDefaultResolvers() method
@@ -342,6 +364,20 @@ namespace LiveChartsCore.SkiaSharpView
                             if (lineSeries.GeometryStroke == DefaultPaintTask)
                                 lineSeries.GeometryStroke =
                                     new SolidColorPaintTask(color.AsSKColor(), lineSeries.Stroke?.StrokeThickness ?? 5);
+                        }
+
+                        if ((series.SeriesProperties & SeriesProperties.Financial) == SeriesProperties.Financial)
+                        {
+                            var financialSeries = (IFinancialSeries<SkiaSharpDrawingContext>)series;
+
+                            if (financialSeries.UpFill == DefaultPaintTask)
+                                financialSeries.UpFill = new SolidColorPaintTask(new SKColor(139, 195, 74, 255));
+                            if (financialSeries.UpStroke == DefaultPaintTask)
+                                financialSeries.UpStroke = new SolidColorPaintTask(new SKColor(139, 195, 74, 255), 3);
+                            if (financialSeries.DownFill == DefaultPaintTask)
+                                financialSeries.DownFill = new SolidColorPaintTask(new SKColor(239, 83, 80, 255));
+                            if (financialSeries.DownStroke == DefaultPaintTask)
+                                financialSeries.DownStroke = new SolidColorPaintTask(new SKColor(239, 83, 80, 255), 3);
                         }
                     })
                 .WithAxisDefaultsResolver(
@@ -438,6 +474,20 @@ namespace LiveChartsCore.SkiaSharpView
                             if (lineSeries.GeometryStroke == DefaultPaintTask)
                                 lineSeries.GeometryStroke =
                                     new SolidColorPaintTask(color.AsSKColor(), lineSeries.Stroke?.StrokeThickness ?? 5);
+                        }
+
+                        if ((series.SeriesProperties & SeriesProperties.Financial) == SeriesProperties.Financial)
+                        {
+                            var financialSeries = (IFinancialSeries<SkiaSharpDrawingContext>)series;
+
+                            if (financialSeries.UpFill == DefaultPaintTask)
+                                financialSeries.UpFill = new SolidColorPaintTask(new SKColor(139, 195, 74, 255));
+                            if (financialSeries.UpStroke == DefaultPaintTask)
+                                financialSeries.UpStroke = new SolidColorPaintTask(new SKColor(139, 195, 74, 255), 3);
+                            if (financialSeries.DownFill == DefaultPaintTask)
+                                financialSeries.DownFill = new SolidColorPaintTask(new SKColor(239, 83, 80, 255));
+                            if (financialSeries.DownStroke == DefaultPaintTask)
+                                financialSeries.DownStroke = new SolidColorPaintTask(new SKColor(239, 83, 80, 255), 3);
                         }
                     })
                 .WithAxisDefaultsResolver(

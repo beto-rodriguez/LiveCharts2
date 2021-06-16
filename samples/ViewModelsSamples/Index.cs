@@ -45,6 +45,8 @@
             "Scatter/AutoUpdate",
             "Scatter/Custom",
 
+            "Financial/BasicCandlesticks",
+
             "Heat/Basic",
 
             "Axes/ColorsAndPosition",

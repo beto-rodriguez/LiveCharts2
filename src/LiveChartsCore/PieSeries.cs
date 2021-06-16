@@ -395,7 +395,9 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IPieSeries{TDrawingContext}.GetBounds(PieChart{TDrawingContext})"/>
         public DimensionalBounds GetBounds(PieChart<TDrawingContext> chart)
         {
-            return dataProvider == null ? throw new Exception("Data provider not found") : dataProvider.GetPieBounds(chart, this);
+            return dataProvider == null
+                ? throw new Exception("Data provider not found")
+                : dataProvider.GetPieBounds(chart, this);
         }
 
         /// <summary>

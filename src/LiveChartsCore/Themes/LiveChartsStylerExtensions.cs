@@ -286,5 +286,37 @@ namespace LiveChartsCore.Themes
             styler.ScatterSeriesBuilder.Add(predicate);
             return styler;
         }
+
+        /// <summary>
+        ///  Defines a style builder for <see cref="IHeatSeries{TDrawingContext}"/> objects.
+        /// </summary>
+        /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+        /// <param name="styler">The styler.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns></returns>
+        public static VisualsStyle<TDrawingContext> HasRuleForHeatSeries<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
+            Action<IHeatSeries<TDrawingContext>> predicate)
+            where TDrawingContext : DrawingContext
+        {
+            styler.HeatSeriesBuilder.Add(predicate);
+            return styler;
+        }
+
+        /// <summary>
+        ///  Defines a style builder for <see cref="IFinancialSeries{TDrawingContext}"/> objects.
+        /// </summary>
+        /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+        /// <param name="styler">The styler.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns></returns>
+        public static VisualsStyle<TDrawingContext> HasRuleForFinancialSeries<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
+            Action<IFinancialSeries<TDrawingContext>> predicate)
+            where TDrawingContext : DrawingContext
+        {
+            styler.FinancialSeriesBuilder.Add(predicate);
+            return styler;
+        }
     }
 }

@@ -23,14 +23,43 @@
 namespace LiveChartsCore.Drawing
 {
     /// <summary>
-    /// Defines a dough nut visual chart point.
+    /// Defines a financial geometry.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IDoughnutGeometry{TDrawingContext}" />
-    /// <seealso cref="IVisualChartPoint{TDrawingContext}" />
-    public interface IDoughnutVisualChartPoint<TDrawingContext> : IDoughnutGeometry<TDrawingContext>, IVisualChartPoint<TDrawingContext>
+    /// <seealso cref="ISizedGeometry{TDrawingContext}" />
+    public interface IFinancialGeometry<TDrawingContext> : IGeometry<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Gets or sets the width.
+        /// </summary>
+        /// <value>
+        /// The width.
+        /// </value>
+        float Width { get; set; }
 
+        /// <summary>
+        /// Gets or sets the open.
+        /// </summary>
+        /// <value>
+        /// The open.
+        /// </value>
+        float Open { get; set; }
+
+        /// <summary>
+        /// Gets or sets the close.
+        /// </summary>
+        /// <value>
+        /// The close.
+        /// </value>
+        float Close { get; set; }
+
+        /// <summary>
+        /// Gets or sets the low.
+        /// </summary>
+        /// <value>
+        /// The low.
+        /// </value>
+        float Low { get; set; }
     }
 }

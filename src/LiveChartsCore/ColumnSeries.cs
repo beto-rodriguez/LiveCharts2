@@ -97,7 +97,6 @@ namespace LiveChartsCore
                 puw = uw;
             }
 
-            var sw = Stroke?.StrokeThickness ?? 0;
             var p = primaryScale.ToPixels(pivot);
 
             var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;

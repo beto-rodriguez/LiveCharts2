@@ -20,62 +20,82 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using System.Collections.Generic;
+using System.Drawing;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 
 namespace LiveChartsCore
 {
     /// <summary>
-    /// Defines a column series.
+    /// Defines a candle sticks series.
     /// </summary>
-    /// <typeparam name="TModel"></typeparam>
-    /// <typeparam name="TVisual"></typeparam>
-    /// <typeparam name="TLabel"></typeparam>
-    /// <typeparam name="TDrawingContext"></typeparam>
-    public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext> : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, ICartesianSeries<TDrawingContext>, IHeatSeries<TDrawingContext>
-        where TVisual : class, ISolidColorChartPoint<TDrawingContext>, new()
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <typeparam name="TVisual">The type of the visual.</typeparam>
+    /// <typeparam name="TLabel">The type of the label.</typeparam>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
+    /// <seealso cref="ICartesianSeries{TDrawingContext}" />
+    /// <seealso cref="IHeatSeries{TDrawingContext}" />
+    public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext> : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IFinancialSeries<TDrawingContext>
+        where TVisual : class, IFinancialVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
-        private IPaintTask<TDrawingContext>? _paintTaks;
-        private Bounds _weightBounds = new();
-        private int _heatKnownLength = 0;
-        private List<Tuple<double, Color>> _heatStops = new();
+        private IPaintTask<TDrawingContext>? _upStroke = null;
+        private IPaintTask<TDrawingContext>? _upFill = null;
+        private IPaintTask<TDrawingContext>? _downStroke = null;
+        private IPaintTask<TDrawingContext>? _downFill = null;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HeatSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+        /// Initializes a new instance of the <see cref="FinancialSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
-        public HeatSeries()
+        public FinancialSeries()
             : base(
-                 SeriesProperties.Heat | SeriesProperties.PrimaryAxisVerticalOrientation |
-                 SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips)
+                 SeriesProperties.Financial | SeriesProperties.PrimaryAxisVerticalOrientation |
+                 SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
         {
-            HoverState = LiveCharts.HeatSeriesHoverState;
-            DataPadding = new PointF(0, 0);
-            TooltipLabelFormatter = (point) => $"{Name}: {point.TertiaryValue:N}";
+            HoverState = LiveCharts.BarSeriesHoverKey;
         }
 
-        /// <inheritdoc cref="IHeatSeries{TDrawingContext}.HeatMap"/>
-        public Color[] HeatMap { get; set; } = new[]
-        {
-            Color.FromArgb(255, 118, 200, 147), // hot (max value)
-            Color.FromArgb(255, 30, 96, 145) // cold (min value)
-        };
+        /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.MaxBarWidth"/>
+        public double MaxBarWidth { get; set; } = 25;
 
-        /// <inheritdoc cref="IHeatSeries{TDrawingContext}.ColorStops"/>
-        public double[]? ColorStops { get; set; }
+        /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.UpStroke"/>
+        public IPaintTask<TDrawingContext>? UpStroke
+        {
+            get => _upStroke;
+            set => SetPaintProperty(ref _upStroke, value, true);
+        }
+
+        /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.UpFill"/>
+        public IPaintTask<TDrawingContext>? UpFill
+        {
+            get => _upFill;
+            set => SetPaintProperty(ref _upFill, value);
+        }
+
+        /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.DownStroke"/>
+        public IPaintTask<TDrawingContext>? DownStroke
+        {
+            get => _upStroke;
+            set => SetPaintProperty(ref _downStroke, value, true);
+        }
+
+        /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.DownFill"/>
+        public IPaintTask<TDrawingContext>? DownFill
+        {
+            get => _downFill;
+            set => SetPaintProperty(ref _downFill, value);
+        }
 
         /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
         public override void Measure(Chart<TDrawingContext> chart)
         {
-            if (_paintTaks == null) _paintTaks = GetSolidColorPaintTask();
-
             var cartesianChart = (CartesianChart<TDrawingContext>)chart;
             var primaryAxis = cartesianChart.YAxes[ScalesYAt];
             var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
@@ -89,15 +109,42 @@ namespace LiveChartsCore
             var previousSecondaryScale =
                 secondaryAxis.PreviousDataBounds == null ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
 
-            var uws = secondaryScale.ToPixels((float)secondaryAxis.UnitWidth) - secondaryScale.ToPixels(0f);
-            var uwp = primaryScale.ToPixels((float)primaryAxis.UnitWidth) - primaryScale.ToPixels(0f);
+            var uw = secondaryScale.ToPixels((float)secondaryAxis.UnitWidth) - secondaryScale.ToPixels(0f);
+            var puw = previousSecondaryScale == null ? 0 : previousSecondaryScale.ToPixels((float)secondaryAxis.UnitWidth) - previousSecondaryScale.ToPixels(0f);
+            var uwm = 0.5f * uw;
+
+            if (uw > MaxBarWidth)
+            {
+                uw = (float)MaxBarWidth;
+                uwm = uw * 0.5f;
+                puw = uw;
+            }
 
             var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
-            if (_paintTaks != null)
+
+            if (UpFill != null)
             {
-                _paintTaks.ZIndex = actualZIndex + 0.2;
-                _paintTaks.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
-                cartesianChart.Canvas.AddDrawableTask(_paintTaks);
+                UpFill.ZIndex = actualZIndex + 0.1;
+                UpFill.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                cartesianChart.Canvas.AddDrawableTask(UpFill);
+            }
+            if (DownFill != null)
+            {
+                DownFill.ZIndex = actualZIndex + 0.1;
+                DownFill.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                cartesianChart.Canvas.AddDrawableTask(DownFill);
+            }
+            if (UpStroke != null)
+            {
+                UpStroke.ZIndex = actualZIndex + 0.2;
+                UpStroke.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                cartesianChart.Canvas.AddDrawableTask(UpStroke);
+            }
+            if (DownStroke != null)
+            {
+                DownStroke.ZIndex = actualZIndex + 0.2;
+                DownStroke.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                cartesianChart.Canvas.AddDrawableTask(DownStroke);
             }
             if (DataLabelsPaint != null)
             {
@@ -109,27 +156,28 @@ namespace LiveChartsCore
             var dls = (float)DataLabelsSize;
             var toDeletePoints = new HashSet<ChartPoint>(everFetched);
 
-            BuildColorStops();
-
             foreach (var point in Fetch(cartesianChart))
             {
                 var visual = point.Context.Visual as TVisual;
-                var primary = primaryScale.ToPixels(point.PrimaryValue);
                 var secondary = secondaryScale.ToPixels(point.SecondaryValue);
-                var tertiary = point.TertiaryValue;
 
-                var baseColor = InterpolateColor(tertiary);
+                var high = primaryScale.ToPixels(point.PrimaryValue);
+                var open = primaryScale.ToPixels(point.TertiaryValue);
+                var close = primaryScale.ToPixels(point.QuaternaryValue);
+                var low = primaryScale.ToPixels(point.QuinaryValue);
+                var middle = (high - low) * 0.5f;
 
                 if (point.IsNull)
                 {
                     if (visual != null)
                     {
-                        visual.X = secondary - uws * 0.5f;
-                        visual.Y = primary - uwp * 0.5f;
-                        visual.Width = uws;
-                        visual.Height = uwp;
+                        visual.X = secondary - uwm;
+                        visual.Width = uw;
+                        visual.Y = middle; // y coordinate is the highest
+                        visual.Open = middle;
+                        visual.Close = middle;
+                        visual.Low = middle;
                         visual.RemoveOnCompleted = true;
-                        visual.Color = Color.FromArgb(0, visual.Color);
                         point.Context.Visual = null;
                     }
                     continue;
@@ -137,8 +185,9 @@ namespace LiveChartsCore
 
                 if (visual == null)
                 {
-                    var xi = secondary - uws * 0.5f;
-                    var yi = primary - uwp * 0.5f;
+                    var xi = secondary - uwm;
+                    var uwi = uw;
+                    var hi = 0f;
 
                     if (previousSecondaryScale != null && previousPrimaryScale != null)
                     {
@@ -147,17 +196,19 @@ namespace LiveChartsCore
                         var bp = Math.Abs(previousPrimary - previousP);
                         var cyp = point.PrimaryValue > pivot ? previousPrimary : previousPrimary - bp;
 
-                        xi = previousSecondaryScale.ToPixels(point.SecondaryValue) - uws * 0.5f;
-                        yi = previousPrimaryScale.ToPixels(point.PrimaryValue) - uwp * 0.5f;
+                        xi = previousSecondaryScale.ToPixels(point.SecondaryValue) - uwm;
+                        uwi = puw;
+                        hi = cartesianChart.IsZoomingOrPanning ? bp : 0;
                     }
 
                     var r = new TVisual
                     {
                         X = xi,
-                        Y = yi,
-                        Width = uws,
-                        Height = uwp,
-                        Color = Color.FromArgb(0, baseColor.R, baseColor.G, baseColor.B)
+                        Width = uwi,
+                        Y = middle, // y == high
+                        Open = middle,
+                        Close = middle,
+                        Low = middle
                     };
 
                     visual = r;
@@ -168,16 +219,32 @@ namespace LiveChartsCore
                     _ = everFetched.Add(point);
                 }
 
-                if (_paintTaks != null) _paintTaks.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                if (open > close)
+                {
+                    if (UpFill != null) UpFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                    if (UpStroke != null) UpStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                    if (DownFill != null) DownFill.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
+                    if (DownStroke != null) DownStroke.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
+                }
+                else
+                {
+                    if (DownFill != null) DownFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                    if (DownStroke != null) DownStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                    if (UpFill != null) UpFill.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
+                    if (UpStroke != null) UpStroke.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
+                }
 
-                visual.X = secondary - uws * 0.5f;
-                visual.Y = primary - uwp * 0.5f;
-                visual.Width = uws;
-                visual.Height = uwp;
-                visual.Color = Color.FromArgb(baseColor.A, baseColor.R, baseColor.G, baseColor.B);
+                var x = secondary - uwm;
+
+                visual.X = x;
+                visual.Width = uw;
+                visual.Y = high;
+                visual.Open = open;
+                visual.Close = close;
+                visual.Low = low;
                 visual.RemoveOnCompleted = false;
 
-                var ha = new RectangleHoverArea().SetDimensions(secondary - uws * 0.5f, primary - uwp * 0.5f, uws, uwp);
+                var ha = new RectangleHoverArea().SetDimensions(secondary - uwm, high, uw, Math.Abs(low - high));
                 point.Context.HoverArea = ha;
 
                 OnPointMeasured(point);
@@ -189,7 +256,7 @@ namespace LiveChartsCore
 
                     if (label == null)
                     {
-                        var l = new TLabel { X = secondary - uws * 0.5f, Y = primary - uws * 0.5f };
+                        var l = new TLabel { X = secondary - uwm, Y = high };
 
                         _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
                             .WithAnimation(animation =>
@@ -208,7 +275,8 @@ namespace LiveChartsCore
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
                     var labelPosition = GetLabelPosition(
-                         secondary, primary, uws, uws, label.Measure(DataLabelsPaint), DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot);
+                        x, high, uw, Math.Abs(low - high),
+                        label.Measure(DataLabelsPaint), DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot);
                     label.X = labelPosition.X;
                     label.Y = labelPosition.Y;
                 }
@@ -226,8 +294,9 @@ namespace LiveChartsCore
         public override DimensionalBounds GetBounds(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> secondaryAxis, IAxis<TDrawingContext> primaryAxis)
         {
-            var baseBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
-            _weightBounds = baseBounds.TertiaryBounds;
+            if (dataProvider == null) throw new Exception("A data provider is required");
+
+            var baseBounds = dataProvider.GetFinancialBounds(chart, this, secondaryAxis, primaryAxis);
 
             var tickPrimary = primaryAxis.GetTick(chart.ControlSize, baseBounds.VisiblePrimaryBounds);
             var tickSecondary = secondaryAxis.GetTick(chart.ControlSize, baseBounds.VisibleSecondaryBounds);
@@ -256,8 +325,8 @@ namespace LiveChartsCore
                 },
                 PrimaryBounds = new Bounds
                 {
-                    Max = baseBounds.PrimaryBounds.Max + 0.5 * primaryAxis.UnitWidth + tp,
-                    Min = baseBounds.PrimaryBounds.Min - 0.5 * primaryAxis.UnitWidth - tp
+                    Max = baseBounds.PrimaryBounds.Max + tp,
+                    Min = baseBounds.PrimaryBounds.Min - tp
                 },
                 VisibleSecondaryBounds = new Bounds
                 {
@@ -266,8 +335,8 @@ namespace LiveChartsCore
                 },
                 VisiblePrimaryBounds = new Bounds
                 {
-                    Max = baseBounds.VisiblePrimaryBounds.Max + 0.5 * primaryAxis.UnitWidth + tp,
-                    Min = baseBounds.VisiblePrimaryBounds.Min - 0.5 * primaryAxis.UnitWidth - tp
+                    Max = baseBounds.VisiblePrimaryBounds.Max + tp,
+                    Min = baseBounds.VisiblePrimaryBounds.Min - tp
                 },
                 MinDeltaPrimary = baseBounds.MinDeltaPrimary,
                 MinDeltaSecondary = baseBounds.MinDeltaSecondary
@@ -286,40 +355,44 @@ namespace LiveChartsCore
                     nameof(visual.X),
                     nameof(visual.Width),
                     nameof(visual.Y),
-                    nameof(visual.Height),
-                    nameof(visual.Color))
+                    nameof(visual.Open),
+                    nameof(visual.Close),
+                    nameof(visual.Low))
                 .WithAnimation(animation =>
                     animation
                         .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
                         .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
         }
 
-        /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SoftDeletePoint(ChartPoint, Scaler, Scaler)"/>
-        protected override void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
+        /// <summary>
+        /// Gets the paint tasks.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        protected override IPaintTask<TDrawingContext>?[] GetPaintTasks()
         {
-            var visual = (TVisual?)point.Context.Visual;
-            if (visual == null) return;
-
-            var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
-            if (chartView.Core.IsZoomingOrPanning)
-            {
-                visual.CompleteAllTransitions();
-                visual.RemoveOnCompleted = true;
-                return;
-            }
-
-            visual.Color = Color.FromArgb(255, visual.Color);
-            visual.RemoveOnCompleted = true;
-
-            if (dataProvider == null) throw new Exception("Data provider not found");
-            dataProvider.DisposePoint(point);
+            return new[] { _upFill, _upStroke, _downFill, _downStroke, DataLabelsPaint };
         }
 
         /// <summary>
-        /// returns a new solid color paint task.
+        /// Called when [paint changed].
         /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
         /// <returns></returns>
-        protected abstract IPaintTask<TDrawingContext> GetSolidColorPaintTask();
+        protected override void OnPaintChanged(string? propertyName)
+        {
+            OnSeriesMiniatureChanged();
+            OnPropertyChanged();
+        }
+
+        /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
+        public override bool MiniatureEquals(IChartSeries<TDrawingContext> series)
+        {
+            return series is FinancialSeries<TModel, TVisual, TLabel, TDrawingContext> financial &&
+                Name == series.Name &&
+                UpFill == financial.UpFill && UpStroke == financial.UpStroke &&
+                DownFill == financial.DownFill && DownStroke == financial.DownStroke;
+        }
 
         /// <summary>
         /// Called when the paint context changes.
@@ -360,19 +433,6 @@ namespace LiveChartsCore
             OnPropertyChanged(nameof(CanvasSchedule));
         }
 
-        /// <inheritdoc cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
-        public override bool MiniatureEquals(IChartSeries<TDrawingContext> instance)
-        {
-            return instance is HeatSeries<TModel, TVisual, TLabel, TDrawingContext> hSeries
-                && Name == instance.Name && HeatMap == hSeries.HeatMap;
-        }
-
-        /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-        protected override IPaintTask<TDrawingContext>?[] GetPaintTasks()
-        {
-            return new[] { _paintTaks };
-        }
-
         /// <summary>
         /// Deletes the series from the user interface.
         /// </summary>
@@ -397,68 +457,12 @@ namespace LiveChartsCore
                 deleted.Add(point);
             }
 
-            if (_paintTaks != null) core.Canvas.RemovePaintTask(_paintTaks);
-            if (DataLabelsPaint != null) core.Canvas.RemovePaintTask(DataLabelsPaint);
+            foreach (var pt in GetPaintTasks())
+            {
+                if (pt != null) core.Canvas.RemovePaintTask(pt);
+            }
 
             foreach (var item in deleted) _ = everFetched.Remove(item);
-        }
-
-        private void BuildColorStops()
-        {
-            if (_heatKnownLength == HeatMap.Length) return;
-
-            if (HeatMap.Length < 2) throw new Exception("At least 2 colors are required in a heat map.");
-
-            if (ColorStops == null)
-            {
-                var s = 1 / (double)(HeatMap.Length - 1);
-                ColorStops = new double[HeatMap.Length];
-                var x = 0d;
-                for (var i = 0; i < HeatMap.Length; i++)
-                {
-                    ColorStops[i] = x;
-                    x += s;
-                }
-            }
-
-            if (ColorStops.Length != HeatMap.Length)
-                throw new Exception($"{nameof(ColorStops)} and {nameof(HeatMap)} must have the same length.");
-
-            var st = 1 / (double)(HeatMap.Length - 1);
-            var xt = 0d;
-            _heatStops = new List<Tuple<double, Color>>();
-            for (var i = 0; i < ColorStops.Length; i++)
-            {
-                _heatStops.Add(new Tuple<double, Color>(xt, HeatMap[i]));
-                xt += st;
-            }
-
-            _heatKnownLength = HeatMap.Length;
-        }
-
-        private Color InterpolateColor(float weight)
-        {
-            var p = (weight - _weightBounds.Min) / (_weightBounds.Max - _weightBounds.Min);
-            if (p < 0) p = 0;
-            if (p > 1) p = 1;
-
-            var previous = _heatStops[0];
-
-            for (var i = 1; i < _heatStops.Count; i++)
-            {
-                var next = _heatStops[i];
-                if (next.Item1 < p) continue;
-
-                var px = (p - previous.Item1) / (next.Item1 - previous.Item1);
-
-                return Color.FromArgb(
-                    (int)(previous.Item2.A + px * (next.Item2.A - previous.Item2.A)),
-                    (int)(previous.Item2.R + px * (next.Item2.R - previous.Item2.R)),
-                    (int)(previous.Item2.G + px * (next.Item2.G - previous.Item2.G)),
-                    (int)(previous.Item2.B + px * (next.Item2.B - previous.Item2.B)));
-            }
-
-            return HeatMap[HeatMap.Length - 1];
         }
     }
 }

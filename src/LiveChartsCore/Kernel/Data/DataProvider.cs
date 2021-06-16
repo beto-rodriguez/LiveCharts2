@@ -49,7 +49,7 @@ namespace LiveChartsCore.Kernel.Data
         }
 
         /// <summary>
-        /// Fetches the the points for the specified series.
+        /// Fetches the points for the specified series.
         /// </summary>
         /// <param name="series">The series.</param>
         /// <param name="chart">The chart.</param>
@@ -174,6 +174,96 @@ namespace LiveChartsCore.Kernel.Data
                 if (primary >= yMin && primary <= yMax && secondary >= xMin && secondary <= xMax)
                 {
                     bounds.VisiblePrimaryBounds.AppendValue(primary);
+                    bounds.VisibleSecondaryBounds.AppendValue(secondary);
+                    bounds.VisibleTertiaryBounds.AppendValue(tertiary);
+                }
+
+                if (previous != null)
+                {
+                    var dx = Math.Abs(previous.SecondaryValue - point.SecondaryValue);
+                    var dy = Math.Abs(previous.PrimaryValue - point.PrimaryValue);
+                    if (dx < bounds.MinDeltaSecondary) bounds.MinDeltaSecondary = dx;
+                    if (dy < bounds.MinDeltaPrimary) bounds.MinDeltaPrimary = dy;
+                }
+
+                previous = point;
+                hasData = true;
+            }
+
+            if (!hasData)
+                if (x.PreviousDataBounds == null || y.PreviousDataBounds == null)
+                {
+                    bounds.VisiblePrimaryBounds.AppendValue(0);
+                    bounds.VisiblePrimaryBounds.AppendValue(10);
+                    bounds.PrimaryBounds.AppendValue(0);
+                    bounds.PrimaryBounds.AppendValue(10);
+
+                    bounds.VisibleSecondaryBounds.AppendValue(0);
+                    bounds.VisibleSecondaryBounds.AppendValue(10);
+                    bounds.SecondaryBounds.AppendValue(0);
+                    bounds.SecondaryBounds.AppendValue(10);
+
+                    bounds.VisibleTertiaryBounds.AppendValue(1);
+                    bounds.TertiaryBounds.AppendValue(1);
+                }
+                else
+                {
+                    bounds.VisiblePrimaryBounds.AppendValue(x.PreviousDataBounds.Max);
+                    bounds.VisiblePrimaryBounds.AppendValue(x.PreviousDataBounds.Min);
+                    bounds.PrimaryBounds.AppendValue(x.PreviousDataBounds.Max);
+                    bounds.PrimaryBounds.AppendValue(x.PreviousDataBounds.Min);
+
+                    bounds.VisibleSecondaryBounds.AppendValue(y.PreviousDataBounds.Max);
+                    bounds.VisibleSecondaryBounds.AppendValue(y.PreviousDataBounds.Min);
+                    bounds.SecondaryBounds.AppendValue(y.PreviousDataBounds.Max);
+                    bounds.SecondaryBounds.AppendValue(y.PreviousDataBounds.Min);
+
+                    bounds.VisibleTertiaryBounds.AppendValue(1);
+                    bounds.TertiaryBounds.AppendValue(1);
+                }
+
+            return bounds;
+        }
+
+        /// <summary>
+        /// Gets the financial bounds.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
+        /// <param name="series">The series.</param>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
+        public virtual DimensionalBounds GetFinancialBounds(
+            CartesianChart<TDrawingContext> chart,
+            IChartSeries<TDrawingContext> series,
+            IAxis<TDrawingContext> x,
+            IAxis<TDrawingContext> y)
+        {
+            var xMin = x.MinLimit ?? float.MinValue;
+            var xMax = x.MaxLimit ?? float.MaxValue;
+            var yMin = y.MinLimit ?? float.MinValue;
+            var yMax = y.MaxLimit ?? float.MaxValue;
+
+            var hasData = false;
+
+            var bounds = new DimensionalBounds();
+            ChartPoint? previous = null;
+            foreach (var point in series.Fetch(chart))
+            {
+                var primaryMax = point.PrimaryValue;
+                var primaryMin = point.QuinaryValue;
+                var secondary = point.SecondaryValue;
+                var tertiary = point.TertiaryValue;
+
+                bounds.PrimaryBounds.AppendValue(primaryMax);
+                bounds.PrimaryBounds.AppendValue(primaryMin);
+                bounds.SecondaryBounds.AppendValue(secondary);
+                bounds.TertiaryBounds.AppendValue(tertiary);
+
+                if (primaryMax >= yMin && primaryMin <= yMax && secondary >= xMin && secondary <= xMax)
+                {
+                    bounds.VisiblePrimaryBounds.AppendValue(primaryMax);
+                    bounds.VisiblePrimaryBounds.AppendValue(primaryMin);
                     bounds.VisibleSecondaryBounds.AppendValue(secondary);
                     bounds.VisibleTertiaryBounds.AppendValue(tertiary);
                 }

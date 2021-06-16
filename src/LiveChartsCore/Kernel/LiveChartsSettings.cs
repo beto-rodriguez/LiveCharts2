@@ -486,6 +486,19 @@ namespace LiveChartsCore.Kernel
                      point.IsNull = false;
                      point.PrimaryValue = model.Value.Value;
                      point.SecondaryValue = model.DateTime.Ticks;
+                 })
+                 .HasMap<FinancialPoint>((model, point) =>
+                 {
+                     if (model == null)
+                         throw new Exception(
+                             $"A {nameof(DateTimePointF)} can not be null, instead set to null the " +
+                             $"{nameof(DateTimePointF.Value)} property.");
+
+                     point.PrimaryValue = (float)model.High;
+                     point.SecondaryValue = model.Date.Ticks;
+                     point.TertiaryValue = (float)model.Open;
+                     point.QuaternaryValue = (float)model.Close;
+                     point.QuinaryValue = (float)model.Low;
                  });
         }
     }

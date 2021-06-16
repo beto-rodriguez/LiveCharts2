@@ -72,6 +72,22 @@ namespace LiveChartsCore.Kernel
         public float TertiaryValue { get; set; }
 
         /// <summary>
+        /// Gets or sets the quaternary value.
+        /// </summary>
+        /// <value>
+        /// The quaternary value.
+        /// </value>
+        public float QuaternaryValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets the quinary value.
+        /// </summary>
+        /// <value>
+        /// The quinary value.
+        /// </value>
+        public float QuinaryValue { get; set; }
+
+        /// <summary>
         /// Gets the point as tooltip string.
         /// </summary>
         /// <value>

@@ -20,65 +20,88 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace LiveChartsCore.Defaults
 {
     /// <summary>
-    /// Defines a point with a weighted coordinate.
+    /// Defines a point with financial data.
     /// </summary>
-    /// <seealso cref="INotifyPropertyChanged" />
-    public class WeightedPoint : INotifyPropertyChanged
+    public class FinancialPoint : INotifyPropertyChanged
     {
-        private double? _x;
-        private double? _y;
-        private double? _weight;
+        private double _high;
+        private double _open;
+        private double _close;
+        private double _low;
+        private DateTime _date;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WeightedPoint"/> class.
+        /// Initializes a new instance of the <see cref="FinancialPoint"/> class.
         /// </summary>
-        public WeightedPoint()
+        public FinancialPoint()
         {
 
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WeightedPoint"/> class.
+        /// Initializes a new instance of the <see cref="FinancialPoint"/> class.
         /// </summary>
-        /// <param name="x">The x.</param>
-        /// <param name="y">The y.</param>
-        /// <param name="weight">The weight.</param>
-        public WeightedPoint(double? x, double? y, double? weight)
+        /// <param name="date">The date.</param>
+        /// <param name="high">The high.</param>
+        /// <param name="open">The open.</param>
+        /// <param name="close">The close.</param>
+        /// <param name="low">The low.</param>
+        public FinancialPoint(DateTime date, double high, double open, double close, double low)
         {
-            _x = x;
-            _y = y;
-            _weight = weight;
+            _date = date;
+            _high = high;
+            _open = open;
+            _close = close;
+            _low = low;
         }
 
         /// <summary>
-        /// Gets or sets the x.
+        /// Gets or sets the date.
         /// </summary>
         /// <value>
-        /// The x.
+        /// The date.
         /// </value>
-        public double? X { get => _x; set { _x = value; OnPropertyChanged(); } }
+        public DateTime Date { get => _date; set { _date = value; OnPropertyChanged(); } }
 
         /// <summary>
-        /// Gets or sets the y.
+        /// Gets or sets the high.
         /// </summary>
         /// <value>
-        /// The y.
+        /// The high.
         /// </value>
-        public double? Y { get => _y; set { _y = value; OnPropertyChanged(); } }
+        public double High { get => _high; set { _high = value; OnPropertyChanged(); } }
 
         /// <summary>
-        /// Gets or sets the weight.
+        /// Gets or sets the open.
         /// </summary>
         /// <value>
-        /// The weight.
+        /// The open.
         /// </value>
-        public double? Weight { get => _weight; set { _weight = value; OnPropertyChanged(); } }
+        public double Open { get => _open; set { _open = value; OnPropertyChanged(); } }
+
+        /// <summary>
+        /// Gets or sets the close.
+        /// </summary>
+        /// <value>
+        /// The close.
+        /// </value>
+        public double Close { get => _close; set { _close = value; OnPropertyChanged(); } }
+
+        /// <summary>
+        /// Gets or sets the low.
+        /// </summary>
+        /// <value>
+        /// The low.
+        /// </value>
+        public double Low { get => _low; set { _low = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Occurs when a property value changes.
