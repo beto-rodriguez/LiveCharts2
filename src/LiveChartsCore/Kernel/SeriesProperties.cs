@@ -48,73 +48,77 @@ namespace LiveChartsCore.Kernel
         /// </summary>
         Line = 1 << 3,
         /// <summary>
+        /// The stepline series
+        /// </summary>
+        StepLine = 1 << 4,
+        /// <summary>
         /// The scatter series
         /// </summary>
-        Scatter = 1 << 4,
+        Scatter = 1 << 5,
 
         /// <summary>
         /// The heat series.
         /// </summary>
-        Heat = 1 << 5,
+        Heat = 1 << 6,
 
         /// <summary>
         /// The financial series.
         /// </summary>
-        Financial = 1 << 6,
+        Financial = 1 << 7,
 
         /// <summary>
         /// The pie series.
         /// </summary>
-        PieSeries = 1 << 7,
+        PieSeries = 1 << 8,
 
         /// <summary>
         /// The stacked series
         /// </summary>
-        Stacked = 1 << 8,
+        Stacked = 1 << 9,
 
         /// <summary>
         /// The vertical orientation
         /// </summary>
-        PrimaryAxisVerticalOrientation = 1 << 9,
+        PrimaryAxisVerticalOrientation = 1 << 10,
 
         /// <summary>
         /// The horizontal orientation
         /// </summary>
-        PrimaryAxisHorizontalOrientation = 1 << 10,
+        PrimaryAxisHorizontalOrientation = 1 << 11,
 
         /// <summary>
         /// The gauge.
         /// </summary>
-        Gauge = 1 << 11,
+        Gauge = 1 << 12,
 
         /// <summary>
         /// The gauge fill.
         /// </summary>
-        GaugeFill = 1 << 12,
+        GaugeFill = 1 << 13,
 
         /// <summary>
         /// The sketch
         /// </summary>
-        Sketch = 1 << 13,
+        Sketch = 1 << 14,
 
         /// <summary>
         /// The solid
         /// </summary>
-        Solid = 1 << 14,
+        Solid = 1 << 15,
 
         /// <summary>
         /// The prefers x tool tips
         /// </summary>
-        PrefersXStrategyTooltips = 1 << 15,
+        PrefersXStrategyTooltips = 1 << 16,
 
         /// <summary>
         /// The prefers y tool tips
         /// </summary>
-        PrefersYStrategyTooltips = 1 << 16,
+        PrefersYStrategyTooltips = 1 << 17,
 
         /// <summary>
         /// The prefers xy tool tips
         /// </summary>
-        PrefersXYStrategyTooltips = 1 << 17
+        PrefersXYStrategyTooltips = 1 << 18
     }
 }

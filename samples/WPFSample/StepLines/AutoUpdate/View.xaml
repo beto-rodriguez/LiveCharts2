@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="WPFSample.StepLines.AutoUpdate.View"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+             xmlns:vms="clr-namespace:ViewModelsSamples.StepLines.AutoUpdate;assembly=ViewModelsSamples">
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Margin="6" Command="{Binding AddItemCommand}">Add item</Button>
+            <Button Margin="6" Command="{Binding RemoveItemCommand}">Remove item</Button>
+            <Button Margin="6" Command="{Binding ReplaceItemCommand}">Replace item</Button>
+            <Button Margin="6" Command="{Binding AddSeriesCommand}">Add Series</Button>
+            <Button Margin="6" Command="{Binding RemoveSeriesCommand}">Remove Series</Button>
+            <Button Margin="6" Click="Button_Click">Constant changes</Button>
+        </StackPanel>
+        <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}"></lvc:CartesianChart>
+    </Grid>
+</UserControl>
