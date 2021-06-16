@@ -82,6 +82,9 @@
     <Compile Update="Design\LinearGradients\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Financial\Basic\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="General\Animations\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
