@@ -65,6 +65,14 @@ namespace LiveChartsCore
         public static string HeatSeriesHoverState => nameof(HeatSeriesHoverState);
 
         /// <summary>
+        /// Gets the stepline series hover key.
+        /// </summary>
+        /// <value>
+        /// The stepline series hover key.
+        /// </value>
+        public static string StepLineSeriesHoverKey => nameof(StepLineSeriesHoverKey);
+
+        /// <summary>
         /// Gets the line series hover key.
         /// </summary>
         /// <value>

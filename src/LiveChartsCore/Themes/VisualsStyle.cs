@@ -99,6 +99,14 @@ namespace LiveChartsCore.Themes
         public List<Action<ICartesianSeries<TDrawingContext>>> CartesianSeriesBuilder { get; set; } = new List<Action<ICartesianSeries<TDrawingContext>>>();
 
         /// <summary>
+        /// Gets or sets the stepline series builder.
+        /// </summary>
+        /// <value>
+        /// The pie series builder.
+        /// </value>
+        public List<Action<IStepLineSeries<TDrawingContext>>> StepLineSeriesBuilder { get; set; } = new List<Action<IStepLineSeries<TDrawingContext>>>();
+
+        /// <summary>
         /// Gets or sets the line series builder.
         /// </summary>
         /// <value>
@@ -273,6 +281,11 @@ namespace LiveChartsCore.Themes
             if ((series.SeriesProperties & SeriesProperties.Scatter) == SeriesProperties.Scatter)
             {
                 foreach (var rule in ScatterSeriesBuilder) rule((IScatterSeries<TDrawingContext>)series);
+            }
+
+            if ((series.SeriesProperties & SeriesProperties.StepLine) == SeriesProperties.StepLine)
+            {
+                foreach (var rule in StepLineSeriesBuilder) rule((IStepLineSeries<TDrawingContext>)series);
             }
 
             if ((series.SeriesProperties & SeriesProperties.Line) == SeriesProperties.Line)
