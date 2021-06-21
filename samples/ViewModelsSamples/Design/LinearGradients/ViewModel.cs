@@ -51,11 +51,11 @@ namespace ViewModelsSamples.Design.LinearGradients
                         // where 0 is the start of the axis and 1 the end. Then to build our vertical gradient
 
                         // we must go from the point:
-                        // (x0, y0) where x0 could be read as "the middle of the x axis" and y0 as "the start of the y axis"
+                        // (x0, y0) where x0 could be read as "the middle of the x axis" (0.5) and y0 as "the start of the y axis" (0)
                         new SKPoint(0.5f, 0),
 
                         // to the point:
-                        // (x1, y1) where x1 could be read as "the middle of the x axis" and y0 as "the end of the y axis"
+                        // (x1, y1) where x1 could be read as "the middle of the x axis" (0.5) and y0 as "the end of the y axis" (1)
                         new SKPoint(0.5f, 1))
                 },
                 new LineSeries<int>
