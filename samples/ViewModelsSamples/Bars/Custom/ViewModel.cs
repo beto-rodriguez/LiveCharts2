@@ -15,7 +15,7 @@ namespace ViewModelsSamples.Bars.Custom
             // use the second type argument to specify the geometry to draw for every point
             // there are already many predefined geometries in the
             // LiveChartsCore.SkiaSharpView.Drawing.Geometries namespace
-            new ColumnSeries<double, LiveChartsCore.SkiaSharpView.Drawing.Geometries.RoundedRectangleGeometry>
+            new ColumnSeries<double, LiveChartsCore.SkiaSharpView.Drawing.Geometries.OvalGeometry>
             {
                 Values = new List<double> { 4, 2, 0, 5, 2, 6 },
                 Fill = new SolidColorPaintTask(SKColors.CornflowerBlue)
@@ -31,8 +31,7 @@ namespace ViewModelsSamples.Bars.Custom
         };
     }
 
-    // Just for the case of a column series, the geometry must implement IRoundedRectangleChartPoint<T>
-    public class MyGeometry : LiveChartsCore.SkiaSharpView.Drawing.Geometries.SVGPathGeometry, IRoundedRectangleChartPoint<SkiaSharpDrawingContext>
+    public class MyGeometry : LiveChartsCore.SkiaSharpView.Drawing.Geometries.SVGPathGeometry
     {
         // Icon made by Freepik from www.flaticon.com
         // https://www.flaticon.es/icono-gratis/lineas-en-zigzag-en-posicion-de-vista-lateral_28680?term=line&page=1&position=9&page=1&position=9&related_id=28680&origin=search
@@ -47,9 +46,5 @@ namespace ViewModelsSamples.Bars.Custom
         {
 
         }
-
-        // the following properties were added to implement IRoundedRectangleChartPoint<T>
-        public float Rx { get; set; }
-        public float Ry { get; set; }
     }
 }

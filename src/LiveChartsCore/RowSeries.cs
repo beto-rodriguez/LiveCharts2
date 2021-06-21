@@ -40,10 +40,12 @@ namespace LiveChartsCore
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="BarSeries{TModel, TVisual, TLabel, TDrawingContext}" />
     public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
-        where TVisual : class, IRoundedRectangleChartPoint<TDrawingContext>, new()
+        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
+        private readonly bool _isRounded = false;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RowSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
@@ -51,7 +53,9 @@ namespace LiveChartsCore
             : base(
                   SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation
                   | SeriesProperties.Solid | SeriesProperties.PrefersYStrategyTooltips)
-        { }
+        {
+            _isRounded = typeof(IRoundedRectangleChartPoint<TDrawingContext>).IsAssignableFrom(typeof(TVisual));
+        }
 
         /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
         public override void Measure(Chart<TDrawingContext> chart)
@@ -150,10 +154,15 @@ namespace LiveChartsCore
                         X = p,
                         Y = yi,
                         Width = 0,
-                        Height = uw,
-                        Rx = rx,
-                        Ry = ry
+                        Height = uw
                     };
+
+                    if (_isRounded)
+                    {
+                        var rounded = (IRoundedRectangleChartPoint<TDrawingContext>)r;
+                        rounded.Rx = rx;
+                        rounded.Ry = ry;
+                    }
 
                     visual = r;
                     point.Context.Visual = visual;
@@ -175,8 +184,12 @@ namespace LiveChartsCore
                 sizedGeometry.Y = y;
                 sizedGeometry.Width = b;
                 sizedGeometry.Height = uw;
-                sizedGeometry.Rx = rx;
-                sizedGeometry.Ry = ry;
+                if (_isRounded)
+                {
+                    var rounded = (IRoundedRectangleChartPoint<TDrawingContext>)visual;
+                    rounded.Rx = rx;
+                    rounded.Ry = ry;
+                }
                 sizedGeometry.RemoveOnCompleted = false;
 
                 point.Context.HoverArea = new RectangleHoverArea().SetDimensions(cx, y, b, uw);
