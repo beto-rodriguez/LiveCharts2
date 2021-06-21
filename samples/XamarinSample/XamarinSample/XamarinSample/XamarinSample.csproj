@@ -115,6 +115,9 @@
     <Compile Update="Heat\Basic\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Scatter\Bubbles\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="StackedArea\StepArea\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

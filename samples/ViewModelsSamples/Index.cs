@@ -50,6 +50,7 @@
             //"Pies/Gauge",
 
             "Scatter/Basic",
+            "Scatter/Bubbles",
             "Scatter/AutoUpdate",
             "Scatter/Custom",
 

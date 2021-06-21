@@ -153,6 +153,9 @@
     <Compile Update="Scatter\AutoUpdate\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Scatter\Bubbles\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Scatter\Custom\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -368,6 +371,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Scatter\AutoUpdate\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Scatter\Bubbles\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
