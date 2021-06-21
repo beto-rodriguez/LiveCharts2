@@ -107,6 +107,14 @@ namespace LiveChartsCore.Themes
         public List<Action<IStepLineSeries<TDrawingContext>>> StepLineSeriesBuilder { get; set; } = new List<Action<IStepLineSeries<TDrawingContext>>>();
 
         /// <summary>
+        /// Gets or sets the  stacked stepline series builder.
+        /// </summary>
+        /// <value>
+        /// The pie series builder.
+        /// </value>
+        public List<Action<IStepLineSeries<TDrawingContext>>> StackedStepLineSeriesBuilder { get; set; } = new List<Action<IStepLineSeries<TDrawingContext>>>();
+
+        /// <summary>
         /// Gets or sets the line series builder.
         /// </summary>
         /// <value>
@@ -285,7 +293,13 @@ namespace LiveChartsCore.Themes
 
             if ((series.SeriesProperties & SeriesProperties.StepLine) == SeriesProperties.StepLine)
             {
-                foreach (var rule in StepLineSeriesBuilder) rule((IStepLineSeries<TDrawingContext>)series);
+                var stepSeries = (IStepLineSeries<TDrawingContext>)series;
+                foreach (var rule in StepLineSeriesBuilder) rule(stepSeries);
+
+                if ((series.SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked)
+                {
+                    foreach (var rule in StackedStepLineSeriesBuilder) rule(stepSeries);
+                }
             }
 
             if ((series.SeriesProperties & SeriesProperties.Line) == SeriesProperties.Line)

@@ -168,6 +168,14 @@ namespace LiveChartsCore.SkiaSharpView
                                    pieSeries.Stroke = null;
                                    pieSeries.Pushout = 0;
                                })
+                               .HasRuleForStackedStepLineSeries(stackedStep =>
+                               {
+                                   stackedStep.GeometrySize = 0;
+                                   stackedStep.GeometryFill = null;
+                                   stackedStep.GeometryStroke = null;
+                                   stackedStep.Stroke = null;
+                                   stackedStep.Fill = DefaultPaintTask;
+                               })
                                .HasRuleForHeatSeries(heatSeries =>
                                {
                                    // ... rules here
@@ -290,6 +298,14 @@ namespace LiveChartsCore.SkiaSharpView
                                    pieSeries.Fill = DefaultPaintTask;
                                    pieSeries.Stroke = null;
                                    pieSeries.Pushout = 0;
+                               })
+                               .HasRuleForStackedStepLineSeries(stackedStep =>
+                               {
+                                   stackedStep.GeometrySize = 0;
+                                   stackedStep.GeometryFill = null;
+                                   stackedStep.GeometryStroke = null;
+                                   stackedStep.Stroke = null;
+                                   stackedStep.Fill = DefaultPaintTask;
                                })
                                .HasRuleForHeatSeries(heatSeries =>
                                {

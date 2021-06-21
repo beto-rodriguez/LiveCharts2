@@ -176,6 +176,22 @@ namespace LiveChartsCore.Themes
         }
 
         /// <summary>
+        ///  Defines a style builder for stacked <see cref="IStepLineSeries{TDrawingContext}"/> objects.
+        /// </summary>
+        /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+        /// <param name="styler">The styler.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns></returns>
+        public static VisualsStyle<TDrawingContext> HasRuleForStackedStepLineSeries<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
+            Action<IStepLineSeries<TDrawingContext>> predicate)
+            where TDrawingContext : DrawingContext
+        {
+            styler.StackedStepLineSeriesBuilder.Add(predicate);
+            return styler;
+        }
+
+        /// <summary>
         ///  Defines a style builder for tacked <see cref="ILineSeries{TDrawingContext}"/> objects.
         /// </summary>
         /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
