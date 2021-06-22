@@ -57,20 +57,13 @@ namespace LiveChartsCore
             HoverState = LiveCharts.StackedBarSeriesHoverKey;
         }
 
-        /// <summary>
-        /// Gets or sets the stack group.
-        /// </summary>
-        /// <value>
-        /// The stack group.
-        /// </value>
+        /// <inheritdoc cref="IBarSeries{TDrawingContext}.GroupPadding"/>
+        public double GroupPadding { get; set; } = 10;
+
+        /// <inheritdoc cref="IStackedBarSeries{TDrawingContext}.StackGroup"/>
         public int StackGroup { get => stackGroup; set => stackGroup = value; }
 
-        /// <summary>
-        /// Gets or sets the maximum width of the bar.
-        /// </summary>
-        /// <value>
-        /// The maximum width of the bar.
-        /// </value>
+        /// <inheritdoc cref="IStackedBarSeries{TDrawingContext}.MaxBarWidth"/>
         public double MaxBarWidth { get; set; } = 50;
 
         /// <inheritdoc cref="IStackedBarSeries{TDrawingContext}.Rx"/>

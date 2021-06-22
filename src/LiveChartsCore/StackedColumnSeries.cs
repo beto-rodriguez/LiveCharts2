@@ -70,8 +70,10 @@ namespace LiveChartsCore
                 secondaryAxis.PreviousDataBounds == null ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis);
 
             var uw = secondaryScale.ToPixels(1f) - secondaryScale.ToPixels(0f);
+
+            uw -= (float)GroupPadding;
+
             var uwm = 0.5f * uw;
-            var sw = Stroke?.StrokeThickness ?? 0;
             var p = primaryScale.ToPixels(pivot);
 
             var pos = cartesianChart.SeriesContext.GetStackedColumnPostion(this);

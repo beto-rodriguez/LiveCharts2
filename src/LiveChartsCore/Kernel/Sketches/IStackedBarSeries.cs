@@ -49,6 +49,14 @@ namespace LiveChartsCore.Kernel.Sketches
         double Ry { get; set; }
 
         /// <summary>
+        /// Gets or sets the padding for each group of bars that share the same secondary coordinate.
+        /// </summary>
+        /// <value>
+        /// The bar group padding.
+        /// </value>
+        double GroupPadding { get; set; }
+
+        /// <summary>
         /// Gets or sets the maximum width of the bar.
         /// </summary>
         /// <value>
