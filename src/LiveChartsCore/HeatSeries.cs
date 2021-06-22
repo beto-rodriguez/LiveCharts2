@@ -65,8 +65,8 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IHeatSeries{TDrawingContext}.HeatMap"/>
         public Color[] HeatMap { get; set; } = new[]
         {
-            Color.FromArgb(255, 118, 200, 147), // hot (max value)
-            Color.FromArgb(255, 30, 96, 145) // cold (min value)
+            Color.FromArgb(255, 87, 103, 222), // cold (min value)
+            Color.FromArgb(255, 95, 207, 249) // hot (max value)
         };
 
         /// <inheritdoc cref="IHeatSeries{TDrawingContext}.ColorStops"/>
@@ -430,13 +430,10 @@ namespace LiveChartsCore
             if (ColorStops.Length != HeatMap.Length)
                 throw new Exception($"{nameof(ColorStops)} and {nameof(HeatMap)} must have the same length.");
 
-            var st = 1 / (double)(HeatMap.Length - 1);
-            var xt = 0d;
             _heatStops = new List<Tuple<double, Color>>();
             for (var i = 0; i < ColorStops.Length; i++)
             {
-                _heatStops.Add(new Tuple<double, Color>(xt, HeatMap[i]));
-                xt += st;
+                _heatStops.Add(new Tuple<double, Color>(ColorStops[i], HeatMap[i]));
             }
 
             _heatKnownLength = HeatMap.Length;
@@ -453,7 +450,12 @@ namespace LiveChartsCore
             for (var i = 1; i < _heatStops.Count; i++)
             {
                 var next = _heatStops[i];
-                if (next.Item1 < p) continue;
+
+                if (next.Item1 < p)
+                {
+                    previous = _heatStops[i];
+                    continue;
+                }
 
                 var px = (p - previous.Item1) / (next.Item1 - previous.Item1);
 
