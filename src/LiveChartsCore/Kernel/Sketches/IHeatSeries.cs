@@ -22,6 +22,7 @@
 
 using System.Drawing;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Common;
 
 namespace LiveChartsCore.Kernel.Sketches
 {
@@ -30,7 +31,7 @@ namespace LiveChartsCore.Kernel.Sketches
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="IChartSeries{TDrawingContext}" />
-    public interface IHeatSeries<TDrawingContext> : IChartSeries<TDrawingContext>
+    public interface IHeatSeries<TDrawingContext> : ICartesianSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
@@ -48,5 +49,10 @@ namespace LiveChartsCore.Kernel.Sketches
         /// The color stops.
         /// </value>
         double[]? ColorStops { get; set; }
+
+        /// <summary>
+        /// Gets or sets the padding for each point.
+        /// </summary>
+        Padding PointPadding { get; set; }
     }
 }

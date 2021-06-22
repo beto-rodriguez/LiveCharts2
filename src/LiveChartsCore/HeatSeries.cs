@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Common;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
@@ -38,7 +39,7 @@ namespace LiveChartsCore
     /// <typeparam name="TVisual"></typeparam>
     /// <typeparam name="TLabel"></typeparam>
     /// <typeparam name="TDrawingContext"></typeparam>
-    public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext> : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, ICartesianSeries<TDrawingContext>, IHeatSeries<TDrawingContext>
+    public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext> : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IHeatSeries<TDrawingContext>
         where TVisual : class, ISolidColorChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
@@ -71,6 +72,9 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IHeatSeries{TDrawingContext}.ColorStops"/>
         public double[]? ColorStops { get; set; }
 
+        /// <inheritdoc cref="IHeatSeries{TDrawingContext}.PointPadding"/>
+        public Padding PointPadding { get; set; } = new Padding(4);
+
         /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
         public override void Measure(Chart<TDrawingContext> chart)
         {
@@ -90,7 +94,7 @@ namespace LiveChartsCore
                 secondaryAxis.PreviousDataBounds == null ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
 
             var uws = secondaryScale.ToPixels((float)secondaryAxis.UnitWidth) - secondaryScale.ToPixels(0f);
-            var uwp = primaryScale.ToPixels((float)primaryAxis.UnitWidth) - primaryScale.ToPixels(0f);
+            var uwp = primaryScale.ToPixels(0f) - primaryScale.ToPixels((float)primaryAxis.UnitWidth);
 
             var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
             if (_paintTaks != null)
@@ -108,6 +112,8 @@ namespace LiveChartsCore
 
             var dls = (float)DataLabelsSize;
             var toDeletePoints = new HashSet<ChartPoint>(everFetched);
+
+            var p = PointPadding;
 
             BuildColorStops();
 
@@ -153,10 +159,10 @@ namespace LiveChartsCore
 
                     var r = new TVisual
                     {
-                        X = xi,
-                        Y = yi,
-                        Width = uws,
-                        Height = uwp,
+                        X = xi + p.Left,
+                        Y = yi + p.Top,
+                        Width = uws - p.Left - p.Right,
+                        Height = uwp - p.Top - p.Bottom,
                         Color = Color.FromArgb(0, baseColor.R, baseColor.G, baseColor.B)
                     };
 
@@ -170,10 +176,10 @@ namespace LiveChartsCore
 
                 if (_paintTaks != null) _paintTaks.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
 
-                visual.X = secondary - uws * 0.5f;
-                visual.Y = primary - uwp * 0.5f;
-                visual.Width = uws;
-                visual.Height = uwp;
+                visual.X = secondary - uws * 0.5f + p.Left;
+                visual.Y = primary - uwp * 0.5f + p.Top;
+                visual.Width = uws - p.Left - p.Right;
+                visual.Height = uwp - p.Top - p.Bottom;
                 visual.Color = Color.FromArgb(baseColor.A, baseColor.R, baseColor.G, baseColor.B);
                 visual.RemoveOnCompleted = false;
 

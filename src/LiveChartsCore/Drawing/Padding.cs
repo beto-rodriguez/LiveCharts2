@@ -28,6 +28,57 @@ namespace LiveChartsCore.Drawing.Common
     public class Padding
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="Padding"/> class.
+        /// </summary>
+        public Padding()
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Padding"/> class.
+        /// </summary>
+        /// <param name="padding">The padding.</param>
+        public Padding(double padding)
+        {
+            var p = (float)padding;
+            Left = p;
+            Top = p;
+            Right = p;
+            Bottom = p;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Padding"/> class.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        public Padding(double x, double y)
+        {
+            var px = (float)x;
+            var py = (float)y;
+            Left = px;
+            Top = py;
+            Right = px;
+            Bottom = py;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Padding"/> class.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="top">The top.</param>
+        /// <param name="right">The right.</param>
+        /// <param name="bottom">The bottom.</param>
+        public Padding(double left, double top, double right, double bottom)
+        {
+            Left = (float)left;
+            Top = (float)top;
+            Right = (float)right;
+            Bottom = (float)bottom;
+        }
+
+        /// <summary>
         /// The default padding.
         /// </summary>
         public static Padding Default = new();
