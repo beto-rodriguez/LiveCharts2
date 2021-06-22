@@ -12,7 +12,6 @@ namespace ViewModelsSamples.Heat.Basic
         {
             new HeatSeries<WeightedPoint>
             {
-                PointPadding = new LiveChartsCore.Drawing.Common.Padding(20),
                 HeatMap = new[]
                 {
                     Color.FromArgb(255, 255, 241, 118), // the first element is the "coldest"
