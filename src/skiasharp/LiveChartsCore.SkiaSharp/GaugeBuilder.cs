@@ -283,7 +283,7 @@ namespace LiveChartsCore.SkiaSharpView
         /// </summary>
         /// <param name="series">The series.</param>
         /// <returns></returns>
-        public void ApplyStyles(IPieSeries<SkiaSharpDrawingContext> series)
+        public void ApplyStyles(PieSeries<ObservableValue> series)
         {
             if (series.SeriesProperties.HasFlag(SeriesProperties.GaugeFill))
             {
@@ -299,7 +299,7 @@ namespace LiveChartsCore.SkiaSharpView
         /// </summary>
         /// <param name="series">The series.</param>
         /// <returns></returns>
-        public void ApplyStylesToFill(IPieSeries<SkiaSharpDrawingContext> series)
+        public void ApplyStylesToFill(PieSeries<ObservableValue> series)
         {
             if (Background != LiveChartsSkiaSharp.DefaultPaintTask) series.Fill = Background;
             if (BackgroundInnerRadius != null) series.InnerRadius = BackgroundInnerRadius.Value;
@@ -318,7 +318,7 @@ namespace LiveChartsCore.SkiaSharpView
         /// <param name="series">The series.</param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public void ApplyStylesToSeries(IPieSeries<SkiaSharpDrawingContext> series)
+        public void ApplyStylesToSeries(PieSeries<ObservableValue> series)
         {
             if (_keyValuePairs.TryGetValue(series, out var t))
             {
@@ -334,6 +334,7 @@ namespace LiveChartsCore.SkiaSharpView
             }
             if (MaxRadialColumnWidth != null) series.MaxRadialColumnWidth = MaxRadialColumnWidth.Value;
             if (RadialAlign != null) series.RadialAlign = RadialAlign.Value;
+
             series.DataLabelsFormatter = LabelFormatter;
         }
 

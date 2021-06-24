@@ -113,24 +113,6 @@ namespace LiveChartsCore
         Func<float, float>? EasingFunction { get; set; }
 
         /// <summary>
-        /// Gets or sets the tool tip label formatter, this function will build the label when a point in this series 
-        /// is shown inside a tool tip.
-        /// </summary>
-        /// <value>
-        /// The tool tip label formatter.
-        /// </value>
-        Func<ChartPoint, string> TooltipLabelFormatter { get; set; }
-
-        /// <summary>
-        /// Gets or sets the data label formatter, this function will build the label when a point in this series 
-        /// is shown as data label.
-        /// </summary>
-        /// <value>
-        /// The data label formatter.
-        /// </value>
-        Func<ChartPoint, string> DataLabelsFormatter { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether this instance is notifying changes, this property is used internally to turn off
         /// notifications while the theme is being applied, this property is not designed to be used by the user.
         /// </summary>
@@ -139,10 +121,25 @@ namespace LiveChartsCore
         /// </value>
         bool IsNotifyingChanges { get; set; }
 
-        /// <summary>
-        /// Occurs before the series is disposed.
-        /// </summary>
-        event Action<ISeries>? Disposing;
+        ///// <summary>
+        ///// Gets or sets the tool tip label formatter, this function will build the label when a point in this series 
+        ///// is shown inside a tool tip.
+        ///// </summary>
+        ///// <value>
+        ///// The tool tip label formatter.
+        ///// </value>
+        //Func<object, string> TooltipLabelFormatter { get; set; }
+        string GetTooltipText(ChartPoint point);
+
+        ///// <summary>
+        ///// Gets or sets the data label formatter, this function will build the label when a point in this series 
+        ///// is shown as data label.
+        ///// </summary>
+        ///// <value>
+        ///// The data label formatter.
+        ///// </value>
+        //Func<ChartPoint, string> DataLabelsFormatter { get; set; }
+        string GetDataLabelText(ChartPoint point);
 
         /// <summary>
         /// Gets a <see cref="ChartPoint"/> array with the points used to generate the plot.

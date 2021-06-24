@@ -93,7 +93,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// As tooltip string.
         /// </value>
-        public string AsTooltipString => Context.Series.TooltipLabelFormatter(this);
+        public string AsTooltipString => Context.Series.GetTooltipText(this);
 
         /// <summary>
         /// Gets the point as data label.
@@ -101,7 +101,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// As tooltip string.
         /// </value>
-        public string AsDataLabel => Context.Series.DataLabelsFormatter(this);
+        public string AsDataLabel => Context.Series.GetDataLabelText(this);
 
         /// <summary>
         /// Gets the context.

@@ -382,7 +382,8 @@ namespace LiveChartsCore
                         }
 
                         DataLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, label);
-                        label.Text = DataLabelsFormatter(data.TargetPoint);
+                        label.Text = DataLabelsFormatter(
+                            new TypedChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>(data.TargetPoint));
                         label.TextSize = dls;
                         label.Padding = DataLabelsPadding;
                         var labelPosition = GetLabelPosition(

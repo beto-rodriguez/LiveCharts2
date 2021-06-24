@@ -80,8 +80,8 @@ namespace LiveChartsCore
         private string? _name;
         private Action<TModel, ChartPoint>? _mapping;
         private int _zIndex;
-        private Func<ChartPoint, string> _tooltipLabelFormatter = (point) => $"{point.Context.Series.Name} {point.PrimaryValue}";
-        private Func<ChartPoint, string> _dataLabelsFormatter = (point) => $"{point.PrimaryValue}";
+        private Func<TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>, string> _tooltipLabelFormatter = (point) => $"{point.Context.Series.Name} {point.PrimaryValue}";
+        private Func<TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>, string> _dataLabelsFormatter = (point) => $"{point.PrimaryValue}";
         private bool _isVisible = true;
         private PointF _dataPadding = new(0.5f, 0.5f);
 
@@ -138,20 +138,17 @@ namespace LiveChartsCore
         /// <summary>
         /// Occurs when an instance of <see cref="ChartPoint"/> is measured.
         /// </summary>
-        public event Action<TypedChartPoint<TVisual, TLabel, TDrawingContext>>? PointMeasured;
+        public event Action<TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>>? PointMeasured;
 
         /// <summary>
         /// Occurs when an instance of <see cref="ChartPoint"/> is created.
         /// </summary>
-        public event Action<TypedChartPoint<TVisual, TLabel, TDrawingContext>>? PointCreated;
+        public event Action<TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>>? PointCreated;
 
         /// <summary>
         /// Occurs when a property changes.
         /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
-
-        /// <inheritdoc cref="ISeries.Disposing" />
-        public event Action<ISeries>? Disposing;
 
         /// <summary>
         /// Gets or sets a delegate that will be called every time a <see cref="ChartPoint"/> instance
@@ -168,15 +165,27 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ISeries.ZIndex" />
         public int ZIndex { get => _zIndex; set { _zIndex = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="ISeries.TooltipLabelFormatter" />
-        public Func<ChartPoint, string> TooltipLabelFormatter
+        /// <summary>
+        /// Gets or sets the tool tip label formatter, this function will build the label when a point in this series 
+        /// is shown inside a tool tip.
+        /// </summary>
+        /// <value>
+        /// The tool tip label formatter.
+        /// </value>
+        public Func<TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>, string> TooltipLabelFormatter
         {
             get => _tooltipLabelFormatter;
             set { _tooltipLabelFormatter = value; OnPropertyChanged(); }
         }
 
-        /// <inheritdoc cref="ISeries.DataLabelsFormatter" />
-        public Func<ChartPoint, string> DataLabelsFormatter
+        /// <summary>
+        /// Gets or sets the data label formatter, this function will build the label when a point in this series 
+        /// is shown as data label.
+        /// </summary>
+        /// <value>
+        /// The data label formatter.
+        /// </value>
+        public Func<TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>, string> DataLabelsFormatter
         {
             get => _dataLabelsFormatter;
             set { _dataLabelsFormatter = value; OnPropertyChanged(); }
@@ -232,7 +241,7 @@ namespace LiveChartsCore
                 : FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy);
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISeries.AddPointToState(ChartPoint, string)" />
         public void AddPointToState(ChartPoint chartPoint, string state)
         {
             var chart = (IChartView<TDrawingContext>)chartPoint.Context.Chart;
@@ -275,7 +284,7 @@ namespace LiveChartsCore
             }
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISeries.RemovePointFromState(ChartPoint, string)" />
         public virtual void RemovePointFromState(ChartPoint chartPoint, string state)
         {
             var chart = (IChartView<TDrawingContext>)chartPoint.Context.Chart;
@@ -308,6 +317,18 @@ namespace LiveChartsCore
             dataProvider.RestartVisuals();
         }
 
+        /// <inheritdoc cref="ISeries.GetTooltipText(ChartPoint)"/>
+        public string GetTooltipText(ChartPoint point)
+        {
+            return TooltipLabelFormatter(new TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>(point));
+        }
+
+        /// <inheritdoc cref="ISeries.GetDataLabelText(ChartPoint)"/>
+        public string GetDataLabelText(ChartPoint point)
+        {
+            return DataLabelsFormatter(new TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>(point));
+        }
+
         /// <inheritdoc cref="ISeries.SoftDelete"/>
         public abstract void SoftDelete(IChartView chart);
 
@@ -326,7 +347,7 @@ namespace LiveChartsCore
         /// <param name="chartPoint">The chart point.</param>
         protected virtual void OnPointMeasured(ChartPoint chartPoint)
         {
-            PointMeasured?.Invoke(new TypedChartPoint<TVisual, TLabel, TDrawingContext>(chartPoint));
+            PointMeasured?.Invoke(new TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>(chartPoint));
         }
 
         /// <summary>
@@ -336,7 +357,7 @@ namespace LiveChartsCore
         protected virtual void OnPointCreated(ChartPoint chartPoint)
         {
             SetDefaultPointTransitions(chartPoint);
-            PointCreated?.Invoke(new TypedChartPoint<TVisual, TLabel, TDrawingContext>(chartPoint));
+            PointCreated?.Invoke(new TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>(chartPoint));
         }
 
         /// <summary>

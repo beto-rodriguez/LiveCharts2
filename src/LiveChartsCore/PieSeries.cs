@@ -341,7 +341,7 @@ namespace LiveChartsCore
 
                     DataLabelsPaint.AddGeometryToPaintTask(pieChart.Canvas, label);
 
-                    label.Text = DataLabelsFormatter(point);
+                    label.Text = DataLabelsFormatter(new TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>(point));
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
 
