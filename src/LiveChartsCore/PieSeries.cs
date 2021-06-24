@@ -397,7 +397,7 @@ namespace LiveChartsCore
         {
             return dataProvider == null
                 ? throw new Exception("Data provider not found")
-                : dataProvider.GetPieBounds(chart, this);
+                : dataProvider.GetPieBounds(chart, this).Bounds;
         }
 
         /// <summary>

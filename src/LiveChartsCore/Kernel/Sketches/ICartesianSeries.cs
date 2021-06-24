@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Data;
 using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.Kernel.Sketches
@@ -66,6 +67,6 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <returns>the series bounds</returns>
-        DimensionalBounds GetBounds(CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
+        SeriesBounds GetBounds(CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
     }
 }

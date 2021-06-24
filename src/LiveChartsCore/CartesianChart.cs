@@ -419,7 +419,7 @@ namespace LiveChartsCore
                     var secondaryAxis = XAxes[series.ScalesXAt];
                     var primaryAxis = YAxes[series.ScalesYAt];
 
-                    var seriesBounds = series.GetBounds(this, secondaryAxis, primaryAxis);
+                    var seriesBounds = series.GetBounds(this, secondaryAxis, primaryAxis).Bounds;
 
                     secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.Max);
                     secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.Min);

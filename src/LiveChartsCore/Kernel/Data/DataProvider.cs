@@ -38,6 +38,7 @@ namespace LiveChartsCore.Kernel.Data
         private readonly Dictionary<object, Dictionary<int, ChartPoint>> _byChartbyValueVisualMap = new();
         private readonly Dictionary<object, Dictionary<TModel, ChartPoint>> _byChartByReferenceVisualMap = new();
         private readonly bool _isValueType = false;
+        private DimensionalBounds _previousKnownBounds;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataProvider{TModel, TDrawingContext}"/> class.
@@ -46,6 +47,23 @@ namespace LiveChartsCore.Kernel.Data
         {
             var t = typeof(TModel);
             _isValueType = t.IsValueType;
+
+            var bounds = new DimensionalBounds();
+
+            bounds.VisiblePrimaryBounds.AppendValue(0);
+            bounds.VisiblePrimaryBounds.AppendValue(10);
+            bounds.PrimaryBounds.AppendValue(0);
+            bounds.PrimaryBounds.AppendValue(10);
+
+            bounds.VisibleSecondaryBounds.AppendValue(0);
+            bounds.VisibleSecondaryBounds.AppendValue(10);
+            bounds.SecondaryBounds.AppendValue(0);
+            bounds.SecondaryBounds.AppendValue(10);
+
+            bounds.VisibleTertiaryBounds.AppendValue(1);
+            bounds.TertiaryBounds.AppendValue(1);
+
+            _previousKnownBounds = bounds;
         }
 
         /// <summary>
@@ -142,7 +160,7 @@ namespace LiveChartsCore.Kernel.Data
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <returns></returns>
-        public virtual DimensionalBounds GetCartesianBounds(
+        public virtual SeriesBounds GetCartesianBounds(
             CartesianChart<TDrawingContext> chart,
             IChartSeries<TDrawingContext> series,
             IAxis<TDrawingContext> x,
@@ -158,7 +176,9 @@ namespace LiveChartsCore.Kernel.Data
             var hasData = false;
 
             var bounds = new DimensionalBounds();
+
             ChartPoint? previous = null;
+
             foreach (var point in series.Fetch(chart))
             {
                 var primary = point.PrimaryValue;
@@ -190,39 +210,9 @@ namespace LiveChartsCore.Kernel.Data
                 hasData = true;
             }
 
-            if (!hasData)
-                if (x.PreviousDataBounds == null || y.PreviousDataBounds == null)
-                {
-                    bounds.VisiblePrimaryBounds.AppendValue(0);
-                    bounds.VisiblePrimaryBounds.AppendValue(10);
-                    bounds.PrimaryBounds.AppendValue(0);
-                    bounds.PrimaryBounds.AppendValue(10);
-
-                    bounds.VisibleSecondaryBounds.AppendValue(0);
-                    bounds.VisibleSecondaryBounds.AppendValue(10);
-                    bounds.SecondaryBounds.AppendValue(0);
-                    bounds.SecondaryBounds.AppendValue(10);
-
-                    bounds.VisibleTertiaryBounds.AppendValue(1);
-                    bounds.TertiaryBounds.AppendValue(1);
-                }
-                else
-                {
-                    bounds.VisiblePrimaryBounds.AppendValue(x.PreviousDataBounds.Max);
-                    bounds.VisiblePrimaryBounds.AppendValue(x.PreviousDataBounds.Min);
-                    bounds.PrimaryBounds.AppendValue(x.PreviousDataBounds.Max);
-                    bounds.PrimaryBounds.AppendValue(x.PreviousDataBounds.Min);
-
-                    bounds.VisibleSecondaryBounds.AppendValue(y.PreviousDataBounds.Max);
-                    bounds.VisibleSecondaryBounds.AppendValue(y.PreviousDataBounds.Min);
-                    bounds.SecondaryBounds.AppendValue(y.PreviousDataBounds.Max);
-                    bounds.SecondaryBounds.AppendValue(y.PreviousDataBounds.Min);
-
-                    bounds.VisibleTertiaryBounds.AppendValue(1);
-                    bounds.TertiaryBounds.AppendValue(1);
-                }
-
-            return bounds;
+            return !hasData
+                ? new SeriesBounds(_previousKnownBounds, true)
+                : new SeriesBounds(_previousKnownBounds = bounds, false);
         }
 
         /// <summary>
@@ -233,7 +223,7 @@ namespace LiveChartsCore.Kernel.Data
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <returns></returns>
-        public virtual DimensionalBounds GetFinancialBounds(
+        public virtual SeriesBounds GetFinancialBounds(
             CartesianChart<TDrawingContext> chart,
             IChartSeries<TDrawingContext> series,
             IAxis<TDrawingContext> x,
@@ -280,39 +270,9 @@ namespace LiveChartsCore.Kernel.Data
                 hasData = true;
             }
 
-            if (!hasData)
-                if (x.PreviousDataBounds == null || y.PreviousDataBounds == null)
-                {
-                    bounds.VisiblePrimaryBounds.AppendValue(0);
-                    bounds.VisiblePrimaryBounds.AppendValue(10);
-                    bounds.PrimaryBounds.AppendValue(0);
-                    bounds.PrimaryBounds.AppendValue(10);
-
-                    bounds.VisibleSecondaryBounds.AppendValue(0);
-                    bounds.VisibleSecondaryBounds.AppendValue(10);
-                    bounds.SecondaryBounds.AppendValue(0);
-                    bounds.SecondaryBounds.AppendValue(10);
-
-                    bounds.VisibleTertiaryBounds.AppendValue(1);
-                    bounds.TertiaryBounds.AppendValue(1);
-                }
-                else
-                {
-                    bounds.VisiblePrimaryBounds.AppendValue(x.PreviousDataBounds.Max);
-                    bounds.VisiblePrimaryBounds.AppendValue(x.PreviousDataBounds.Min);
-                    bounds.PrimaryBounds.AppendValue(x.PreviousDataBounds.Max);
-                    bounds.PrimaryBounds.AppendValue(x.PreviousDataBounds.Min);
-
-                    bounds.VisibleSecondaryBounds.AppendValue(y.PreviousDataBounds.Max);
-                    bounds.VisibleSecondaryBounds.AppendValue(y.PreviousDataBounds.Min);
-                    bounds.SecondaryBounds.AppendValue(y.PreviousDataBounds.Max);
-                    bounds.SecondaryBounds.AppendValue(y.PreviousDataBounds.Min);
-
-                    bounds.VisibleTertiaryBounds.AppendValue(1);
-                    bounds.TertiaryBounds.AppendValue(1);
-                }
-
-            return bounds;
+            return !hasData
+                ? new SeriesBounds(_previousKnownBounds, true)
+                : new SeriesBounds(_previousKnownBounds = bounds, false);
         }
 
         /// <summary>
@@ -322,7 +282,7 @@ namespace LiveChartsCore.Kernel.Data
         /// <param name="series">The series.</param>
         /// <returns></returns>
         /// <exception cref="NullReferenceException">Unexpected null stacker</exception>
-        public virtual DimensionalBounds GetPieBounds(
+        public virtual SeriesBounds GetPieBounds(
             PieChart<TDrawingContext> chart, IPieSeries<TDrawingContext> series)
         {
             var stack = chart.SeriesContext.GetStackPosition(series, series.GetStackGroup());
@@ -347,7 +307,7 @@ namespace LiveChartsCore.Kernel.Data
                 bounds.TertiaryBounds.AppendValue(0);
             }
 
-            return bounds;
+            return new SeriesBounds(bounds, false);
         }
 
         /// <summary>

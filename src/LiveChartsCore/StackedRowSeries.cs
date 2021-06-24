@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Kernel.Drawing;
+using LiveChartsCore.Kernel.Data;
 
 namespace LiveChartsCore
 {
@@ -229,10 +230,12 @@ namespace LiveChartsCore
         /// <param name="secondaryAxis">The secondary axis.</param>
         /// <param name="primaryAxis">The primary axis.</param>
         /// <returns></returns>
-        public override DimensionalBounds GetBounds(
+        public override SeriesBounds GetBounds(
          CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> secondaryAxis, IAxis<TDrawingContext> primaryAxis)
         {
-            var baseBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
+            var baseSeriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
+            if (baseSeriesBounds.IsPrevious) return baseSeriesBounds;
+            var baseBounds = baseSeriesBounds.Bounds;
 
             var tickPrimary = primaryAxis.GetTick(chart.ControlSize, baseBounds.VisiblePrimaryBounds);
             var tickSecondary = secondaryAxis.GetTick(chart.ControlSize, baseBounds.VisibleSecondaryBounds);
@@ -252,31 +255,33 @@ namespace LiveChartsCore
                 tp = 0.1 * mp * DataPadding.Y;
             }
 
-            return new DimensionalBounds
-            {
-                PrimaryBounds = new Bounds
-                {
-                    Max = baseBounds.SecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth + ts,
-                    Min = baseBounds.SecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth - ts
-                },
-                SecondaryBounds = new Bounds
-                {
-                    Max = baseBounds.PrimaryBounds.Max + tp,
-                    Min = baseBounds.PrimaryBounds.Min < 0 ? baseBounds.PrimaryBounds.Min - tp : 0
-                },
-                VisiblePrimaryBounds = new Bounds
-                {
-                    Max = baseBounds.VisibleSecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth + ts,
-                    Min = baseBounds.VisibleSecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth - ts
-                },
-                VisibleSecondaryBounds = new Bounds
-                {
-                    Max = baseBounds.VisiblePrimaryBounds.Max + tp,
-                    Min = baseBounds.VisiblePrimaryBounds.Min < 0 ? baseBounds.PrimaryBounds.Min - tp : 0
-                },
-                MinDeltaPrimary = baseBounds.MinDeltaPrimary,
-                MinDeltaSecondary = baseBounds.MinDeltaSecondary
-            };
+            return
+                new SeriesBounds(
+                    new DimensionalBounds
+                    {
+                        PrimaryBounds = new Bounds
+                        {
+                            Max = baseBounds.SecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth + ts,
+                            Min = baseBounds.SecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth - ts
+                        },
+                        SecondaryBounds = new Bounds
+                        {
+                            Max = baseBounds.PrimaryBounds.Max + tp,
+                            Min = baseBounds.PrimaryBounds.Min < 0 ? baseBounds.PrimaryBounds.Min - tp : 0
+                        },
+                        VisiblePrimaryBounds = new Bounds
+                        {
+                            Max = baseBounds.VisibleSecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth + ts,
+                            Min = baseBounds.VisibleSecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth - ts
+                        },
+                        VisibleSecondaryBounds = new Bounds
+                        {
+                            Max = baseBounds.VisiblePrimaryBounds.Max + tp,
+                            Min = baseBounds.VisiblePrimaryBounds.Min < 0 ? baseBounds.PrimaryBounds.Min - tp : 0
+                        },
+                        MinDeltaPrimary = baseBounds.MinDeltaPrimary,
+                        MinDeltaSecondary = baseBounds.MinDeltaSecondary
+                    }, false);
         }
 
         /// <summary>

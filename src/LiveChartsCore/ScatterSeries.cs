@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Kernel.Drawing;
+using LiveChartsCore.Kernel.Data;
 
 namespace LiveChartsCore
 {
@@ -216,10 +217,14 @@ namespace LiveChartsCore
         }
 
         /// <inheritdoc cref="GetBounds(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
-        public override DimensionalBounds GetBounds(
+        public override SeriesBounds GetBounds(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> secondaryAxis, IAxis<TDrawingContext> primaryAxis)
         {
-            var baseBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
+            var baseSeriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
+
+            if (baseSeriesBounds.IsPrevious) return baseSeriesBounds;
+            var baseBounds = baseSeriesBounds.Bounds;
+
             _weightBounds = baseBounds.TertiaryBounds;
 
             var tickPrimary = primaryAxis.GetTick(chart.ControlSize, baseBounds.VisiblePrimaryBounds);
@@ -228,31 +233,34 @@ namespace LiveChartsCore
             var ts = tickSecondary.Value * DataPadding.X;
             var tp = tickPrimary.Value * DataPadding.Y;
 
-            return new DimensionalBounds
-            {
-                SecondaryBounds = new Bounds
-                {
-                    Max = baseBounds.SecondaryBounds.Max + ts,
-                    Min = baseBounds.SecondaryBounds.Min - ts
-                },
-                PrimaryBounds = new Bounds
-                {
-                    Max = baseBounds.PrimaryBounds.Max + tp,
-                    Min = baseBounds.PrimaryBounds.Min - tp
-                },
-                VisibleSecondaryBounds = new Bounds
-                {
-                    Max = baseBounds.VisibleSecondaryBounds.Max + ts,
-                    Min = baseBounds.VisibleSecondaryBounds.Min - ts
-                },
-                VisiblePrimaryBounds = new Bounds
-                {
-                    Max = baseBounds.VisiblePrimaryBounds.Max + tp,
-                    Min = baseBounds.VisiblePrimaryBounds.Min - tp
-                },
-                MinDeltaPrimary = baseBounds.MinDeltaPrimary,
-                MinDeltaSecondary = baseBounds.MinDeltaSecondary
-            };
+            return
+                new SeriesBounds(
+                    new DimensionalBounds
+                    {
+                        SecondaryBounds = new Bounds
+                        {
+                            Max = baseBounds.SecondaryBounds.Max + ts,
+                            Min = baseBounds.SecondaryBounds.Min - ts
+                        },
+                        PrimaryBounds = new Bounds
+                        {
+                            Max = baseBounds.PrimaryBounds.Max + tp,
+                            Min = baseBounds.PrimaryBounds.Min - tp
+                        },
+                        VisibleSecondaryBounds = new Bounds
+                        {
+                            Max = baseBounds.VisibleSecondaryBounds.Max + ts,
+                            Min = baseBounds.VisibleSecondaryBounds.Min - ts
+                        },
+                        VisiblePrimaryBounds = new Bounds
+                        {
+                            Max = baseBounds.VisiblePrimaryBounds.Max + tp,
+                            Min = baseBounds.VisiblePrimaryBounds.Min - tp
+                        },
+                        MinDeltaPrimary = baseBounds.MinDeltaPrimary,
+                        MinDeltaSecondary = baseBounds.MinDeltaSecondary
+                    },
+                    false);
         }
 
         /// <inheritdoc cref="OnSeriesMiniatureChanged"/>

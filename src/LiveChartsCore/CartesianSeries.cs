@@ -27,6 +27,7 @@ using LiveChartsCore.Measure;
 using System.Collections.Generic;
 using System.Drawing;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Kernel.Data;
 
 namespace LiveChartsCore
 {
@@ -66,7 +67,7 @@ namespace LiveChartsCore
         public DataLabelsPosition DataLabelsPosition { get => _labelsPosition; set { _labelsPosition = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
-        public virtual DimensionalBounds GetBounds(
+        public virtual SeriesBounds GetBounds(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
             return dataProvider == null
