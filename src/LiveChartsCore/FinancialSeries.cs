@@ -83,7 +83,7 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.DownStroke"/>
         public IPaintTask<TDrawingContext>? DownStroke
         {
-            get => _upStroke;
+            get => _downStroke;
             set => SetPaintProperty(ref _downStroke, value, true);
         }
 

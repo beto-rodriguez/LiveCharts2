@@ -16,6 +16,9 @@ namespace ViewModelsSamples.Financial.BasicCandlesticks
             {
                 LabelsRotation = 15,
                 Labeler = value => new DateTime((long)value).ToString("yyyy MMM dd"),
+                // set the unit width of the axis to "days"
+                // since our X axis is of type date time and 
+                // the interval between our points is in days
                 UnitWidth = TimeSpan.FromDays(1).Ticks
             }
         };

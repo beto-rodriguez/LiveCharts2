@@ -58,14 +58,12 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments
         /// <inheritdoc cref="IAnimatableBezierSegment.Y1" />
         public float Y1 { get => _y1Property.GetMovement(this); set => _y1Property.SetMovement(value, this); }
 
-
         /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
         public override void Execute(SKPath path, long currentTime, Animatable pathGeometry)
         {
             SetCurrentTime(currentTime);
             path.LineTo(X0, Y0);
             path.LineTo(X1, Y1);
-            ;
         }
     }
 }

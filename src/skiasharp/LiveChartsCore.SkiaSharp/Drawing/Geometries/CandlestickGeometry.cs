@@ -65,16 +65,35 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
-            var cx = X + Width * 0.5f;
-            context.Canvas.DrawLine(cx, Y, cx, Low, paint);
-            var y = Open > Close ? Close : Open;
-            context.Canvas.DrawRect(X, y, Width, Math.Abs(Open - Close), paint);
+            var w = Width;
+            var cx = X + w * 0.5f;
+            var h = Y;
+            var o = Open;
+            var c = Close;
+            var l = Low;
+
+            float yi, yj;
+
+            if (o > c)
+            {
+                yi = c;
+                yj = o;
+            }
+            else
+            {
+                yi = o;
+                yj = c;
+            }
+
+            context.Canvas.DrawLine(cx, h, cx, yi, paint);
+            context.Canvas.DrawRect(X, yi, w, Math.Abs(o - c), paint);
+            context.Canvas.DrawLine(cx, yj, cx, l, paint);
         }
 
         /// <inheritdoc cref="Geometry.OnMeasure(PaintTask)" />
         protected override SizeF OnMeasure(PaintTask paintTaks)
         {
-            return new(Width, Low - Y);
+            return new(Width, Math.Abs(Low - Y));
         }
     }
 }
