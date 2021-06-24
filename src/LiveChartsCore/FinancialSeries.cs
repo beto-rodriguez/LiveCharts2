@@ -60,6 +60,7 @@ namespace LiveChartsCore
                  SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
         {
             HoverState = LiveCharts.BarSeriesHoverKey;
+            TooltipLabelFormatter = p => $"{Name}, H: {p.PrimaryValue:N2}, O: {p.TertiaryValue:N2}, C: {p.QuaternaryValue:N2}, L: {p.QuinaryValue:N2}";
         }
 
         /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.MaxBarWidth"/>
@@ -165,7 +166,7 @@ namespace LiveChartsCore
                 var open = primaryScale.ToPixels(point.TertiaryValue);
                 var close = primaryScale.ToPixels(point.QuaternaryValue);
                 var low = primaryScale.ToPixels(point.QuinaryValue);
-                var middle = (high - low) * 0.5f;
+                var middle = open;
 
                 if (point.IsNull)
                 {

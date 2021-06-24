@@ -67,7 +67,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         {
             var cx = X + Width * 0.5f;
             context.Canvas.DrawLine(cx, Y, cx, Low, paint);
-            context.Canvas.DrawRect(X, Open, Width, Math.Abs(Open - Close), paint);
+            var y = Open > Close ? Close : Open;
+            context.Canvas.DrawRect(X, y, Width, Math.Abs(Open - Close), paint);
         }
 
         /// <inheritdoc cref="Geometry.OnMeasure(PaintTask)" />
