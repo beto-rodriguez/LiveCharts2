@@ -743,6 +743,12 @@ namespace LiveChartsCore
 
             if (dataProvider == null) throw new Exception("Data provider not found");
             dataProvider.DisposePoint(point);
+
+            var label = (TLabel?)point.Context.Label;
+            if (label == null) return;
+
+            label.TextSize = 1;
+            label.RemoveOnCompleted = true;
         }
 
         /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SoftDelete(IChartView)"/>

@@ -339,7 +339,7 @@ namespace LiveChartsCore
         /// <param name="primaryScale">The primary scale.</param>
         /// <param name="secondaryScale">The secondary scale.</param>
         /// <returns></returns>
-        protected virtual void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale) { }
+        protected abstract void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale);
 
         /// <summary>
         /// Called when a point was measured.
