@@ -76,6 +76,8 @@
             "General/TemplatedLegends",
             "General/UserDefinedTypes",
             "General/NullPoints",
+
+            "Maps/World"
         };
     }
 }

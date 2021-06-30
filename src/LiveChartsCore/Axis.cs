@@ -174,7 +174,7 @@ namespace LiveChartsCore
         /// <returns></returns>
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
+        /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
         public override void Measure(Chart<TDrawingContext> chart)
         {
             var cartesianChart = (CartesianChart<TDrawingContext>)chart;
