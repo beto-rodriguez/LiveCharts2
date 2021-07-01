@@ -1,4 +1,4 @@
-// The MIT License(MIT)
+﻿// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -23,81 +23,90 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-using Avalonia.Media;
+using System.Windows;
+using System.Windows.Controls;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 
-namespace LiveChartsCore.SkiaSharpView.Avalonia
+namespace LiveChartsCore.SkiaSharpView.WPF
 {
     /// <summary>
     /// Defines a geographic map.
     /// </summary>
-    public partial class GeoMap : UserControl
+    /// <seealso cref="Control" />
+    public class GeoMap : Control
     {
         private static GeoJsonFile? s_map = null;
         private int _heatKnownLength = 0;
         private List<Tuple<double, System.Drawing.Color>> _heatStops = new();
+
+        static GeoMap()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(GeoMap), new FrameworkPropertyMetadata(typeof(GeoMap)));
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeoMap"/> class.
         /// </summary>
         public GeoMap()
         {
-            InitializeComponent();
+            SetCurrentValue(ValuesProperty, new Dictionary<string, double>());
+            SizeChanged += GeoMap_SizeChanged;
         }
 
         /// <summary>
-        /// The projection property.
+        /// The projection property
         /// </summary>
-        public static readonly AvaloniaProperty<Projection> ProjectionProperty =
-           AvaloniaProperty.Register<CartesianChart, Projection>(nameof(Projection), Projection.Default, inherits: true);
+        public static readonly DependencyProperty ProjectionProperty =
+            DependencyProperty.Register(nameof(Projection), typeof(Projection), typeof(GeoMap), new PropertyMetadata(Projection.Default));
 
         /// <summary>
-        /// The heat map property.
+        /// The heat map property
         /// </summary>
-        public static readonly AvaloniaProperty<Color[]> HeatMapProperty =
-          AvaloniaProperty.Register<CartesianChart, Color[]>(nameof(HeatMap),
-              new[]
-              {
-                  Color.FromArgb(255, 179, 229, 252), // cold (min value)
-                  Color.FromArgb(255, 2, 136, 209) // hot (max value)
-              }, inherits: true);
+        public static readonly DependencyProperty HeatMapProperty =
+            DependencyProperty.Register(
+                nameof(HeatMap), typeof(System.Windows.Media.Color[]), typeof(GeoMap),
+                new PropertyMetadata(
+                    new[]
+                    {
+                        System.Windows.Media.Color.FromArgb(255, 179, 229, 252), // cold (min value)
+                        System.Windows.Media.Color.FromArgb(255, 2, 136, 209) // hot (max value)
+                    }));
 
         /// <summary>
-        /// The color stops property.
+        /// The color stops property
         /// </summary>
-        public static readonly AvaloniaProperty<double[]?> ColorStopsProperty =
-          AvaloniaProperty.Register<CartesianChart, double[]?>(nameof(ColorStops), null, inherits: true);
+        public static readonly DependencyProperty ColorStopsProperty =
+            DependencyProperty.Register(nameof(ColorStops), typeof(double[]), typeof(GeoMap), new PropertyMetadata(null));
 
         /// <summary>
-        /// The values property.
+        /// The values property
         /// </summary>
-        public static readonly AvaloniaProperty<Dictionary<string, double>> ValuesProperty =
-          AvaloniaProperty.Register<CartesianChart, Dictionary<string, double>>(nameof(ColorStops), new Dictionary<string, double>(), inherits: true);
+        public static readonly DependencyProperty ValuesProperty =
+            DependencyProperty.Register(nameof(Values), typeof(Dictionary<string, double>), typeof(GeoMap), new PropertyMetadata(null));
 
         /// <summary>
-        /// The stroke color property.
+        /// The stroke color property
         /// </summary>
-        public static readonly AvaloniaProperty<Color> StrokeColorProperty =
-          AvaloniaProperty.Register<CartesianChart, Color>(nameof(ColorStops), Color.FromArgb(255, 224, 224, 224), inherits: true);
+        public static readonly DependencyProperty StrokeColorProperty =
+            DependencyProperty.Register(
+                nameof(StrokeColor), typeof(System.Windows.Media.Color), typeof(GeoMap), new PropertyMetadata(System.Windows.Media.Color.FromRgb(224, 224, 224)));
 
         /// <summary>
-        /// The stroke thickness property.
+        /// The stroke thickness property
         /// </summary>
-        public static readonly AvaloniaProperty<double> StrokeThicknessProperty =
-          AvaloniaProperty.Register<CartesianChart, double>(nameof(ColorStops), 1d, inherits: true);
+        public static readonly DependencyProperty StrokeThicknessProperty =
+            DependencyProperty.Register(nameof(StrokeThickness), typeof(double), typeof(GeoMap), new PropertyMetadata(1d));
 
         /// <summary>
-        /// The fill color property.
+        /// The fill color property
         /// </summary>
-        public static readonly AvaloniaProperty<Color> FillColorProperty =
-          AvaloniaProperty.Register<CartesianChart, Color>(nameof(ColorStops), Color.FromArgb(255, 250, 250, 250), inherits: true);
+        public static readonly DependencyProperty FillColorProperty =
+            DependencyProperty.Register(
+                nameof(FillColor), typeof(System.Windows.Media.Color), typeof(GeoMap), new PropertyMetadata(System.Windows.Media.Color.FromRgb(250, 250, 250)));
 
         /// <summary>
         /// Gets or sets the projection.
@@ -111,9 +120,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <summary>
         /// Gets or sets the heat map.
         /// </summary>
-        public Color[] HeatMap
+        public System.Windows.Media.Color[] HeatMap
         {
-            get => (Color[])GetValue(HeatMapProperty);
+            get => (System.Windows.Media.Color[])GetValue(HeatMapProperty);
             set => SetValue(HeatMapProperty, value);
         }
 
@@ -129,9 +138,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <summary>
         /// Gets or sets the color stops.
         /// </summary>
-        public Color StrokeColor
+        public System.Windows.Media.Color StrokeColor
         {
-            get => (Color)GetValue(StrokeColorProperty);
+            get => (System.Windows.Media.Color)GetValue(StrokeColorProperty);
             set => SetValue(StrokeColorProperty, value);
         }
 
@@ -147,9 +156,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <summary>
         /// Gets or sets the color stops.
         /// </summary>
-        public Color FillColor
+        public System.Windows.Media.Color FillColor
         {
-            get => (Color)GetValue(FillColorProperty);
+            get => (System.Windows.Media.Color)GetValue(FillColorProperty);
             set => SetValue(FillColorProperty, value);
         }
 
@@ -162,22 +171,12 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             set => SetValue(ValuesProperty, value);
         }
 
-        /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})"/>
-        protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
+        private void GeoMap_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            base.OnPropertyChanged(change);
-
-            if (change.Property.Name == nameof(Bounds)) load();
-        }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
-
-        private void load()
-        {
-            var canvas = this.FindControl<MotionCanvas>("canvas");
+            if (Template.FindName("canvas", this) is not MotionCanvas canvas)
+                throw new Exception(
+                    $"{nameof(MotionCanvas)} not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
+                    $"If you override the template please add an {nameof(MotionCanvas)} to the template and name it 'canvas'");
 
             var paint = new SolidColorPaintTask();
 
@@ -194,7 +193,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             }
 
             var worldMap = s_map ??= Maps.GetWorldMap();
-            var projector = Maps.BuildProjector(Projection, new[] { (float)Bounds.Width, (float)Bounds.Height });
+            var projector = Maps.BuildProjector(Projection, new[] { (float)ActualWidth, (float)ActualHeight });
             var shapes = worldMap.AsHeatMapShapes(Values, hm, _heatStops, stroke, fill, thickness, projector);
 
             canvas.PaintTasks = new List<PaintSchedule<SkiaSharpDrawingContext>>

@@ -22,6 +22,16 @@
     <Style TargetType="{x:Type local:PieChart}">
         <Setter Property="Template" Value="{StaticResource DefaultChartTempalte}" />
     </Style>
+
+    <Style TargetType="{x:Type local:GeoMap}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:GeoMap}">
+                    <local:MotionCanvas x:Name="canvas"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     
     <Style TargetType="{x:Type local:MotionCanvas}">
         <Setter Property="Template">
