@@ -116,7 +116,11 @@ namespace LiveChartsCore
 
             var p = PointPadding;
 
-            BuildColorStops();
+            if (_heatKnownLength != HeatMap.Length)
+            {
+                _heatStops = HeatFunctions.BuildColorStops(HeatMap, ColorStops);
+                _heatKnownLength = HeatMap.Length;
+            }
 
             foreach (var point in Fetch(cartesianChart))
             {
@@ -125,7 +129,7 @@ namespace LiveChartsCore
                 var secondary = secondaryScale.ToPixels(point.SecondaryValue);
                 var tertiary = point.TertiaryValue;
 
-                var baseColor = InterpolateColor(tertiary);
+                var baseColor = HeatFunctions.InterpolateColor(tertiary, _weightBounds, HeatMap, _heatStops);
 
                 if (point.IsNull)
                 {
@@ -420,66 +424,6 @@ namespace LiveChartsCore
             if (DataLabelsPaint != null) core.Canvas.RemovePaintTask(DataLabelsPaint);
 
             foreach (var item in deleted) _ = everFetched.Remove(item);
-        }
-
-        private void BuildColorStops()
-        {
-            if (_heatKnownLength == HeatMap.Length) return;
-
-            if (HeatMap.Length < 2) throw new Exception("At least 2 colors are required in a heat map.");
-
-            if (ColorStops == null)
-            {
-                var s = 1 / (double)(HeatMap.Length - 1);
-                ColorStops = new double[HeatMap.Length];
-                var x = 0d;
-                for (var i = 0; i < HeatMap.Length; i++)
-                {
-                    ColorStops[i] = x;
-                    x += s;
-                }
-            }
-
-            if (ColorStops.Length != HeatMap.Length)
-                throw new Exception($"{nameof(ColorStops)} and {nameof(HeatMap)} must have the same length.");
-
-            _heatStops = new List<Tuple<double, Color>>();
-            for (var i = 0; i < ColorStops.Length; i++)
-            {
-                _heatStops.Add(new Tuple<double, Color>(ColorStops[i], HeatMap[i]));
-            }
-
-            _heatKnownLength = HeatMap.Length;
-        }
-
-        private Color InterpolateColor(float weight)
-        {
-            var p = (weight - _weightBounds.Min) / (_weightBounds.Max - _weightBounds.Min);
-            if (p < 0) p = 0;
-            if (p > 1) p = 1;
-
-            var previous = _heatStops[0];
-
-            for (var i = 1; i < _heatStops.Count; i++)
-            {
-                var next = _heatStops[i];
-
-                if (next.Item1 < p)
-                {
-                    previous = _heatStops[i];
-                    continue;
-                }
-
-                var px = (p - previous.Item1) / (next.Item1 - previous.Item1);
-
-                return Color.FromArgb(
-                    (int)(previous.Item2.A + px * (next.Item2.A - previous.Item2.A)),
-                    (int)(previous.Item2.R + px * (next.Item2.R - previous.Item2.R)),
-                    (int)(previous.Item2.G + px * (next.Item2.G - previous.Item2.G)),
-                    (int)(previous.Item2.B + px * (next.Item2.B - previous.Item2.B)));
-            }
-
-            return HeatMap[HeatMap.Length - 1];
         }
     }
 }

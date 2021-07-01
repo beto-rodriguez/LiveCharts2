@@ -28,17 +28,17 @@ using SkiaSharp;
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
     /// <summary>
-    /// Defines rectangle geometry with a specified color.
+    /// Defines a rectangle geometry with a specified color.
     /// </summary>
     /// <seealso cref="SizedGeometry" />
-    public class RectangleSolidColorGeometry : SizedGeometry, ISolidColorChartPoint<SkiaSharpDrawingContext>
+    public class ColoredRectangleGeometry : SizedGeometry, ISolidColorChartPoint<SkiaSharpDrawingContext>
     {
         private readonly ColorMotionProperty _colorProperty;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RectangleSolidColorGeometry"/> class.
+        /// Initializes a new instance of the <see cref="ColoredRectangleGeometry"/> class.
         /// </summary>
-        public RectangleSolidColorGeometry() : base()
+        public ColoredRectangleGeometry() : base()
         {
             _colorProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(Color)));
         }

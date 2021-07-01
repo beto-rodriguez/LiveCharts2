@@ -1,0 +1,713 @@
+{
+  "version": "2.0",
+  "lands": [
+    {
+      "shortName": "afg",
+      "name": "Afghanistan"
+    },
+    {
+      "shortName": "ago",
+      "name": "Angola"
+    },
+    {
+      "shortName": "alb",
+      "name": "Albania"
+    },
+    {
+      "shortName": "are",
+      "name": "United Arab Emirates"
+    },
+    {
+      "shortName": "arg",
+      "name": "Argentina"
+    },
+    {
+      "shortName": "arm",
+      "name": "Armenia"
+    },
+    {
+      "shortName": "ata",
+      "name": "Antarctica"
+    },
+    {
+      "shortName": "atf",
+      "name": "Fr. S. Antarctic Lands"
+    },
+    {
+      "shortName": "aus",
+      "name": "Australia"
+    },
+    {
+      "shortName": "aut",
+      "name": "Austria"
+    },
+    {
+      "shortName": "aze",
+      "name": "Azerbaijan"
+    },
+    {
+      "shortName": "bdi",
+      "name": "Burundi"
+    },
+    {
+      "shortName": "bel",
+      "name": "Belgium"
+    },
+    {
+      "shortName": "ben",
+      "name": "Benin"
+    },
+    {
+      "shortName": "bfa",
+      "name": "Burkina Faso"
+    },
+    {
+      "shortName": "bgd",
+      "name": "Bangladesh"
+    },
+    {
+      "shortName": "bgr",
+      "name": "Bulgaria"
+    },
+    {
+      "shortName": "bhs",
+      "name": "Bahamas"
+    },
+    {
+      "shortName": "bih",
+      "name": "Bosnia and Herz."
+    },
+    {
+      "shortName": "blr",
+      "name": "Belarus"
+    },
+    {
+      "shortName": "blz",
+      "name": "Belize"
+    },
+    {
+      "shortName": "bol",
+      "name": "Bolivia"
+    },
+    {
+      "shortName": "bra",
+      "name": "Brazil"
+    },
+    {
+      "shortName": "brn",
+      "name": "Brunei"
+    },
+    {
+      "shortName": "btn",
+      "name": "Bhutan"
+    },
+    {
+      "shortName": "bwa",
+      "name": "Botswana"
+    },
+    {
+      "shortName": "caf",
+      "name": "Central African Rep."
+    },
+    {
+      "shortName": "can",
+      "name": "Canada"
+    },
+    {
+      "shortName": "che",
+      "name": "Switzerland"
+    },
+    {
+      "shortName": "chl",
+      "name": "Chile"
+    },
+    {
+      "shortName": "chn",
+      "name": "China"
+    },
+    {
+      "shortName": "civ",
+      "name": "Côte d'Ivoire"
+    },
+    {
+      "shortName": "cmr",
+      "name": "Cameroon"
+    },
+    {
+      "shortName": "cod",
+      "name": "Dem. Rep. Congo"
+    },
+    {
+      "shortName": "cog",
+      "name": "Congo"
+    },
+    {
+      "shortName": "col",
+      "name": "Colombia"
+    },
+    {
+      "shortName": "cri",
+      "name": "Costa Rica"
+    },
+    {
+      "shortName": "cub",
+      "name": "Cuba"
+    },
+    {
+      "shortName": "cyn",
+      "name": "N. Cyprus"
+    },
+    {
+      "shortName": "cyp",
+      "name": "Cyprus"
+    },
+    {
+      "shortName": "cze",
+      "name": "Czechia"
+    },
+    {
+      "shortName": "deu",
+      "name": "Germany"
+    },
+    {
+      "shortName": "dji",
+      "name": "Djibouti"
+    },
+    {
+      "shortName": "dnk",
+      "name": "Denmark"
+    },
+    {
+      "shortName": "dom",
+      "name": "Dominican Rep."
+    },
+    {
+      "shortName": "dza",
+      "name": "Algeria"
+    },
+    {
+      "shortName": "ecu",
+      "name": "Ecuador"
+    },
+    {
+      "shortName": "egy",
+      "name": "Egypt"
+    },
+    {
+      "shortName": "eri",
+      "name": "Eritrea"
+    },
+    {
+      "shortName": "esp",
+      "name": "Spain"
+    },
+    {
+      "shortName": "est",
+      "name": "Estonia"
+    },
+    {
+      "shortName": "eth",
+      "name": "Ethiopia"
+    },
+    {
+      "shortName": "fin",
+      "name": "Finland"
+    },
+    {
+      "shortName": "fji",
+      "name": "Fiji"
+    },
+    {
+      "shortName": "flk",
+      "name": "Falkland Is."
+    },
+    {
+      "shortName": "fra",
+      "name": "France"
+    },
+    {
+      "shortName": "gab",
+      "name": "Gabon"
+    },
+    {
+      "shortName": "gbr",
+      "name": "United Kingdom"
+    },
+    {
+      "shortName": "geo",
+      "name": "Georgia"
+    },
+    {
+      "shortName": "gha",
+      "name": "Ghana"
+    },
+    {
+      "shortName": "gin",
+      "name": "Guinea"
+    },
+    {
+      "shortName": "gmb",
+      "name": "Gambia"
+    },
+    {
+      "shortName": "gnb",
+      "name": "Guinea-Bissau"
+    },
+    {
+      "shortName": "gnq",
+      "name": "Eq. Guinea"
+    },
+    {
+      "shortName": "grc",
+      "name": "Greece"
+    },
+    {
+      "shortName": "grl",
+      "name": "Greenland"
+    },
+    {
+      "shortName": "gtm",
+      "name": "Guatemala"
+    },
+    {
+      "shortName": "guy",
+      "name": "Guyana"
+    },
+    {
+      "shortName": "hnd",
+      "name": "Honduras"
+    },
+    {
+      "shortName": "hrv",
+      "name": "Croatia"
+    },
+    {
+      "shortName": "hti",
+      "name": "Haiti"
+    },
+    {
+      "shortName": "hun",
+      "name": "Hungary"
+    },
+    {
+      "shortName": "idn",
+      "name": "Indonesia"
+    },
+    {
+      "shortName": "ind",
+      "name": "India"
+    },
+    {
+      "shortName": "irl",
+      "name": "Ireland"
+    },
+    {
+      "shortName": "irn",
+      "name": "Iran"
+    },
+    {
+      "shortName": "irq",
+      "name": "Iraq"
+    },
+    {
+      "shortName": "isl",
+      "name": "Iceland"
+    },
+    {
+      "shortName": "isr",
+      "name": "Israel"
+    },
+    {
+      "shortName": "ita",
+      "name": "Italy"
+    },
+    {
+      "shortName": "jam",
+      "name": "Jamaica"
+    },
+    {
+      "shortName": "jor",
+      "name": "Jordan"
+    },
+    {
+      "shortName": "jpn",
+      "name": "Japan"
+    },
+    {
+      "shortName": "kaz",
+      "name": "Kazakhstan"
+    },
+    {
+      "shortName": "ken",
+      "name": "Kenya"
+    },
+    {
+      "shortName": "kgz",
+      "name": "Kyrgyzstan"
+    },
+    {
+      "shortName": "khm",
+      "name": "Cambodia"
+    },
+    {
+      "shortName": "kor",
+      "name": "South Korea"
+    },
+    {
+      "shortName": "kos",
+      "name": "Kosovo"
+    },
+    {
+      "shortName": "kwt",
+      "name": "Kuwait"
+    },
+    {
+      "shortName": "lao",
+      "name": "Laos"
+    },
+    {
+      "shortName": "lbn",
+      "name": "Lebanon"
+    },
+    {
+      "shortName": "lbr",
+      "name": "Liberia"
+    },
+    {
+      "shortName": "lby",
+      "name": "Libya"
+    },
+    {
+      "shortName": "lka",
+      "name": "Sri Lanka"
+    },
+    {
+      "shortName": "lso",
+      "name": "Lesotho"
+    },
+    {
+      "shortName": "ltu",
+      "name": "Lithuania"
+    },
+    {
+      "shortName": "lux",
+      "name": "Luxembourg"
+    },
+    {
+      "shortName": "lva",
+      "name": "Latvia"
+    },
+    {
+      "shortName": "mar",
+      "name": "Morocco"
+    },
+    {
+      "shortName": "mda",
+      "name": "Moldova"
+    },
+    {
+      "shortName": "mdg",
+      "name": "Madagascar"
+    },
+    {
+      "shortName": "mex",
+      "name": "Mexico"
+    },
+    {
+      "shortName": "mkd",
+      "name": "Macedonia"
+    },
+    {
+      "shortName": "mli",
+      "name": "Mali"
+    },
+    {
+      "shortName": "mmr",
+      "name": "Myanmar"
+    },
+    {
+      "shortName": "mne",
+      "name": "Montenegro"
+    },
+    {
+      "shortName": "mng",
+      "name": "Mongolia"
+    },
+    {
+      "shortName": "moz",
+      "name": "Mozambique"
+    },
+    {
+      "shortName": "mrt",
+      "name": "Mauritania"
+    },
+    {
+      "shortName": "mwi",
+      "name": "Malawi"
+    },
+    {
+      "shortName": "mys",
+      "name": "Malaysia"
+    },
+    {
+      "shortName": "nam",
+      "name": "Namibia"
+    },
+    {
+      "shortName": "ncl",
+      "name": "New Caledonia"
+    },
+    {
+      "shortName": "ner",
+      "name": "Niger"
+    },
+    {
+      "shortName": "nga",
+      "name": "Nigeria"
+    },
+    {
+      "shortName": "nic",
+      "name": "Nicaragua"
+    },
+    {
+      "shortName": "nld",
+      "name": "Netherlands"
+    },
+    {
+      "shortName": "nor",
+      "name": "Norway"
+    },
+    {
+      "shortName": "npl",
+      "name": "Nepal"
+    },
+    {
+      "shortName": "nzl",
+      "name": "New Zealand"
+    },
+    {
+      "shortName": "omn",
+      "name": "Oman"
+    },
+    {
+      "shortName": "pak",
+      "name": "Pakistan"
+    },
+    {
+      "shortName": "pan",
+      "name": "Panama"
+    },
+    {
+      "shortName": "per",
+      "name": "Peru"
+    },
+    {
+      "shortName": "phl",
+      "name": "Philippines"
+    },
+    {
+      "shortName": "png",
+      "name": "Papua New Guinea"
+    },
+    {
+      "shortName": "pol",
+      "name": "Poland"
+    },
+    {
+      "shortName": "pri",
+      "name": "Puerto Rico"
+    },
+    {
+      "shortName": "prk",
+      "name": "North Korea"
+    },
+    {
+      "shortName": "prt",
+      "name": "Portugal"
+    },
+    {
+      "shortName": "pry",
+      "name": "Paraguay"
+    },
+    {
+      "shortName": "psx",
+      "name": "Palestine"
+    },
+    {
+      "shortName": "qat",
+      "name": "Qatar"
+    },
+    {
+      "shortName": "rou",
+      "name": "Romania"
+    },
+    {
+      "shortName": "rus",
+      "name": "Russia"
+    },
+    {
+      "shortName": "rwa",
+      "name": "Rwanda"
+    },
+    {
+      "shortName": "sah",
+      "name": "W. Sahara"
+    },
+    {
+      "shortName": "sau",
+      "name": "Saudi Arabia"
+    },
+    {
+      "shortName": "sdn",
+      "name": "Sudan"
+    },
+    {
+      "shortName": "sds",
+      "name": "S. Sudan"
+    },
+    {
+      "shortName": "sen",
+      "name": "Senegal"
+    },
+    {
+      "shortName": "slb",
+      "name": "Solomon Is."
+    },
+    {
+      "shortName": "sle",
+      "name": "Sierra Leone"
+    },
+    {
+      "shortName": "slv",
+      "name": "El Salvador"
+    },
+    {
+      "shortName": "sol",
+      "name": "Somaliland"
+    },
+    {
+      "shortName": "som",
+      "name": "Somalia"
+    },
+    {
+      "shortName": "srb",
+      "name": "Serbia"
+    },
+    {
+      "shortName": "sur",
+      "name": "Suriname"
+    },
+    {
+      "shortName": "svk",
+      "name": "Slovakia"
+    },
+    {
+      "shortName": "svn",
+      "name": "Slovenia"
+    },
+    {
+      "shortName": "swe",
+      "name": "Sweden"
+    },
+    {
+      "shortName": "swz",
+      "name": "eSwatini"
+    },
+    {
+      "shortName": "syr",
+      "name": "Syria"
+    },
+    {
+      "shortName": "tcd",
+      "name": "Chad"
+    },
+    {
+      "shortName": "tgo",
+      "name": "Togo"
+    },
+    {
+      "shortName": "tha",
+      "name": "Thailand"
+    },
+    {
+      "shortName": "tjk",
+      "name": "Tajikistan"
+    },
+    {
+      "shortName": "tkm",
+      "name": "Turkmenistan"
+    },
+    {
+      "shortName": "tls",
+      "name": "Timor-Leste"
+    },
+    {
+      "shortName": "tto",
+      "name": "Trinidad and Tobago"
+    },
+    {
+      "shortName": "tun",
+      "name": "Tunisia"
+    },
+    {
+      "shortName": "tur",
+      "name": "Turkey"
+    },
+    {
+      "shortName": "twn",
+      "name": "Taiwan"
+    },
+    {
+      "shortName": "tza",
+      "name": "Tanzania"
+    },
+    {
+      "shortName": "uga",
+      "name": "Uganda"
+    },
+    {
+      "shortName": "ukr",
+      "name": "Ukraine"
+    },
+    {
+      "shortName": "ury",
+      "name": "Uruguay"
+    },
+    {
+      "shortName": "usa",
+      "name": "United States of America"
+    },
+    {
+      "shortName": "uzb",
+      "name": "Uzbekistan"
+    },
+    {
+      "shortName": "ven",
+      "name": "Venezuela"
+    },
+    {
+      "shortName": "vnm",
+      "name": "Vietnam"
+    },
+    {
+      "shortName": "vut",
+      "name": "Vanuatu"
+    },
+    {
+      "shortName": "yem",
+      "name": "Yemen"
+    },
+    {
+      "shortName": "zaf",
+      "name": "South Africa"
+    },
+    {
+      "shortName": "zmb",
+      "name": "Zambia"
+    },
+    {
+      "shortName": "zwe",
+      "name": "Zimbabwe"
+    }
+  ]
+}

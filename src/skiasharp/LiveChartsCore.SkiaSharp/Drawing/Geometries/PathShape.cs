@@ -21,34 +21,71 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Motion;
 using SkiaSharp;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}" />
-    public class PathGeometry : Drawable, IPathGeometry<SkiaSharpDrawingContext, SKPath>
+    /// <summary>
+    /// Defines a path geometry with a specified color.
+    /// </summary>
+    /// <seealso cref="PathGeometry" />
+    public class PathShape : PathGeometry
     {
-        /// <summary>
-        /// The commands
-        /// </summary>
-        protected readonly HashSet<IPathCommand<SKPath>> _commands = new();
+        private readonly ColorMotionProperty _strokeProperty;
+        private readonly ColorMotionProperty _fillProperty;
+        private readonly FloatMotionProperty _stProperty;
 
         /// <summary>
-        /// The drawing commands
+        /// Initializes a new instance of the <see cref="PathShape"/> class.
         /// </summary>
-        protected IPathCommand<SKPath>[]? _drawingCommands = null;
+        public PathShape() : base()
+        {
+            _strokeProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(StrokeColor), Color.FromArgb(0, 255, 255, 255)));
+            _stProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness)));
+            _fillProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(StrokeColor), Color.FromArgb(0, 255, 255, 255)));
+        }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PathGeometry"/> class.
+        /// Gets or sets the color of the stroke.
         /// </summary>
-        public PathGeometry() { }
+        /// <value>
+        /// The color of the stroke.
+        /// </value>
+        public Color StrokeColor
+        {
+            get => _strokeProperty.GetMovement(this);
+            set => _strokeProperty.SetMovement(value, this);
+        }
 
-        /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.IsClosed" />
-        public bool IsClosed { get; set; }
+        /// <summary>
+        /// Gets or sets the stroke thickness.
+        /// </summary>
+        /// <value>
+        /// The stroke thickness.
+        /// </value>
+        public float StrokeThickness
+        {
+            get => _stProperty.GetMovement(this);
+            set => _stProperty.SetMovement(value, this);
+        }
 
-        /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
+        /// <summary>
+        /// Gets or sets the color of the fill.
+        /// </summary>
+        /// <value>
+        /// The color of the fill.
+        /// </value>
+        public Color FillColor
+        {
+            get => _fillProperty.GetMovement(this);
+            set => _fillProperty.SetMovement(value, this);
+        }
+
+        /// <inheritdoc cref="Draw(SkiaSharpDrawingContext)"/>
         public override void Draw(SkiaSharpDrawingContext context)
         {
             if (_commands.Count == 0) return;
@@ -78,38 +115,18 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 
                 if (IsClosed) path.Close();
 
+                context.Paint.Color = FillColor.AsSKColor();
+                context.Paint.StrokeWidth = 0;
+                context.Paint.Style = SKPaintStyle.Fill;
+                context.Canvas.DrawPath(path, context.Paint);
+
+                context.Paint.Color = StrokeColor.AsSKColor();
+                context.Paint.StrokeWidth = StrokeThickness;
+                context.Paint.Style = SKPaintStyle.Stroke;
                 context.Canvas.DrawPath(path, context.Paint);
 
                 if (!isValid) Invalidate();
             }
-        }
-
-        /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.AddCommand(IPathCommand{TPathArgs})" />
-        public void AddCommand(IPathCommand<SKPath> segment)
-        {
-            _ = _commands.Add(segment);
-            _drawingCommands = null;
-            Invalidate();
-        }
-
-        /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.ContainsCommand(IPathCommand{TPathArgs})" />
-        public bool ContainsCommand(IPathCommand<SKPath> segment)
-        {
-            return _commands.Contains(segment);
-        }
-
-        /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.RemoveCommand(IPathCommand{TPathArgs})" />
-        public void RemoveCommand(IPathCommand<SKPath> segment)
-        {
-            _ = _commands.Remove(segment);
-            _drawingCommands = null;
-            Invalidate();
-        }
-
-        /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.ClearCommands" />
-        public void ClearCommands()
-        {
-            _commands.Clear();
         }
     }
 }
