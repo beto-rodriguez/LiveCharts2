@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Xamarin.Forms"
+             x:Class="LiveChartsCore.SkiaSharpView.Xamarin.Forms.GeoMap">
+  <ContentView.Content>
+        <lvc:MotionCanvas Grid.Column="0" x:Name="canvas" >
+        </lvc:MotionCanvas>
+    </ContentView.Content>
+</ContentView>

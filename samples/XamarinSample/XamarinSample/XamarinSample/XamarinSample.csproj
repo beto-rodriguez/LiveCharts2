@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\src\skiasharp\LiveChartsCore.SkiaSharp.Xamarin.Forms\LiveChartsCore.SkiaSharpView.XamarinForms.csproj" />
+    <ProjectReference Include="..\..\..\..\src\skiasharp\LiveChartsCore.SkiaSharp.Xamarin.Forms\LiveChartsCore.SkiaSharpView.Xamarin.Forms.csproj" />
     <ProjectReference Include="..\..\..\ViewModelsSamples\ViewModelsSamples.csproj" />
   </ItemGroup>
 
@@ -113,6 +113,9 @@
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Heat\Basic\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Maps\World\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Scatter\Bubbles\View.xaml.cs">

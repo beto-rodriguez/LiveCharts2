@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewModelsSamples", "sample
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPFSample", "samples\WPFSample\WPFSample.csproj", "{9C96A9CA-5627-4DED-B0DF-8BFA3E351F23}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView.XamarinForms", "src\skiasharp\LiveChartsCore.SkiaSharp.Xamarin.Forms\LiveChartsCore.SkiaSharpView.XamarinForms.csproj", "{A909CCCB-4A4E-4AB2-89C9-224CBFB0523C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView.Xamarin.Forms", "src\skiasharp\LiveChartsCore.SkiaSharp.Xamarin.Forms\LiveChartsCore.SkiaSharpView.Xamarin.Forms.csproj", "{A909CCCB-4A4E-4AB2-89C9-224CBFB0523C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView.WinForms", "src\skiasharp\LiveChartsCore.SkiaSharp.WinForms\LiveChartsCore.SkiaSharpView.WinForms.csproj", "{16C1C709-3249-46B1-B500-09D7E0704F86}"
 EndProject
