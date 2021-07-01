@@ -4,6 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaSample.Maps.World.View"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia">
-    <lvc:GeoMap Background="#BBDEFB"></lvc:GeoMap>
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:vms="using:ViewModelsSamples.Maps.World">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:GeoMap Values="{Binding Values}"></lvc:GeoMap>
 </UserControl>

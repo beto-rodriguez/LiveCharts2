@@ -45,7 +45,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         private static GeoJsonFile? s_map = null;
         private int _heatKnownLength = 0;
         private List<Tuple<double, System.Drawing.Color>> _heatStops = new();
-        private Bounds _weightBounds = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeoMap"/> class.
@@ -68,8 +67,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
           AvaloniaProperty.Register<CartesianChart, System.Drawing.Color[]>(nameof(HeatMap),
               new[]
               {
-                  System.Drawing.Color.FromArgb(255, 255, 205, 210), // cold (min value)
-                  System.Drawing.Color.FromArgb(255, 244, 67, 54) // hot (max value)
+                  System.Drawing.Color.FromArgb(255, 179, 229, 252), // cold (min value)
+                  System.Drawing.Color.FromArgb(255, 2, 136, 209) // hot (max value)
               }, inherits: true);
 
         /// <summary>
@@ -88,7 +87,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// The stroke color property.
         /// </summary>
         public static readonly AvaloniaProperty<Color> StrokeColorProperty =
-          AvaloniaProperty.Register<CartesianChart, Color>(nameof(ColorStops), Color.FromArgb(255, 236, 239, 241), inherits: true);
+          AvaloniaProperty.Register<CartesianChart, Color>(nameof(ColorStops), Color.FromArgb(255, 224, 224, 224), inherits: true);
 
         /// <summary>
         /// The stroke thickness property.
@@ -188,83 +187,21 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             var stroke = System.Drawing.Color.FromArgb(255, StrokeColor.R, StrokeColor.G, StrokeColor.B);
             var fill = System.Drawing.Color.FromArgb(255, FillColor.R, FillColor.G, FillColor.B);
 
-            Values = new Dictionary<string, double>
-            {
-                ["mex"] = 10,
-                ["usa"] = 15,
-                ["can"] = 8,
-                ["ind"] = 12,
-                ["deu"] = 13,
-                ["chn"] = 14,
-                ["rus"] = 11,
-                ["fra"] = 8,
-                ["esp"] = 7,
-                ["kor"] = 10,
-                ["zaf"] = 12,
-                ["bra"] = 13,
-                ["are"] = 13
-            };
-
-            var worldMap = s_map ??= Maps.GetWorldMap();
-
-            var d = new double[0][][][];
-            var paths = new List<PathShape>();
-            var projector = Maps.BuildProjector(Projection, new[] { (float)Bounds.Width, (float)Bounds.Height });
-
             if (_heatKnownLength != HeatMap.Length)
             {
                 _heatStops = HeatFunctions.BuildColorStops(HeatMap, ColorStops);
                 _heatKnownLength = HeatMap.Length;
             }
 
-            _weightBounds = new Bounds();
-            foreach (var value in Values)
-            {
-                _weightBounds.AppendValue(value.Value);
-            }
-
-            foreach (var feature in worldMap.Features ?? new GeoJsonFeature[0])
-            {
-                var name = feature.Properties != null ? feature.Properties["shortName"] : "";
-                System.Drawing.Color? baseColor = Values.TryGetValue(name, out var weight)
-                    ? HeatFunctions.InterpolateColor((float)weight, _weightBounds, HeatMap, _heatStops)
-                    : null;
-
-                foreach (var geometry in feature.Geometry?.Coordinates ?? d)
-                {
-                    foreach (var segment in geometry)
-                    {
-                        var path = new PathShape
-                        {
-                            StrokeColor = stroke,
-                            FillColor = baseColor ?? fill,
-                            StrokeThickness = thickness,
-                            IsClosed = true
-                        };
-                        var isFirst = true;
-                        foreach (var point in segment)
-                        {
-                            var p = projector.ToMap(point);
-
-                            if (isFirst)
-                            {
-                                isFirst = false;
-                                path.AddCommand(new MoveToPathCommand { X = p[0], Y = p[1] });
-                                continue;
-                            }
-
-                            path.AddCommand(new Drawing.Geometries.Segments.LineSegment { X = p[0], Y = p[1] });
-                        }
-                        paths.Add(path);
-                    }
-                }
-            }
+            var worldMap = s_map ??= Maps.GetWorldMap();
+            var projector = Maps.BuildProjector(Projection, new[] { (float)Bounds.Width, (float)Bounds.Height });
+            var shapes = worldMap.AsHeatMapShapes(Values, HeatMap, _heatStops, stroke, fill, thickness, projector);
 
             canvas.PaintTasks = new List<PaintSchedule<SkiaSharpDrawingContext>>
             {
                  new PaintSchedule<SkiaSharpDrawingContext>(
                     paint,
-                    new HashSet<IDrawable<SkiaSharpDrawingContext>>(paths))
+                    new HashSet<IDrawable<SkiaSharpDrawingContext>>(shapes))
             };
         }
     }
