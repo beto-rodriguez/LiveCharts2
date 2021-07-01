@@ -149,6 +149,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                     : new SizeF() { Width = motionCanvas.Width, Height = motionCanvas.Height };
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => motionCanvas.CanvasCore;
 
         /// <inheritdoc cref="IChartView.DrawMargin" />

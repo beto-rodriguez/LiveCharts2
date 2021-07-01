@@ -4,6 +4,11 @@ namespace ViewModelsSamples.Maps.World
 {
     public class ViewModel
     {
+        // every country has a unique identifier
+        // check the "shortName" property in the following
+        // json file to assign a value to a country in the heat map
+        // https://github.com/beto-rodriguez/LiveCharts2/blob/master/docs/_assets/word-map-index.json
+
         public Dictionary<string, double> Values { get; set; } = new Dictionary<string, double>
         {
             ["mex"] = 10,

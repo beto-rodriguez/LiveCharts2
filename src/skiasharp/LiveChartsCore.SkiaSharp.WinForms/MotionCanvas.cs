@@ -4,6 +4,7 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp.Views.Desktop;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -33,6 +34,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <value>
         /// The paint tasks.
         /// </value>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
         {
             get => _paintTasksSchedule;
@@ -57,6 +59,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <value>
         /// The canvas core.
         /// </value>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
 
         private void SkControl_PaintSurface(object sender, SKPaintSurfaceEventArgs e)

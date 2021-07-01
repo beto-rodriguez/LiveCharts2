@@ -106,6 +106,9 @@
     <Compile Update="Heat\Basic\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Maps\World\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Scatter\Bubbles\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
