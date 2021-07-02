@@ -20,41 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
-using LiveChartsCore.SkiaSharpView.Drawing;
-using SkiaSharp.Views.Desktop;
-using SkiaSharp.Views.WPF;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
+using LiveChartsCore.SkiaSharpView.Drawing;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using SkiaSharp.Views.Windows;
 
-namespace LiveChartsCore.SkiaSharpView.WPF
+namespace LiveChartsCore.SkiaSharpView.WinUI
 {
-    /// <summary>
-    /// Defines the motion canvas control for WPF, <see cref="MotionCanvas{TDrawingContext}"/>.
-    /// </summary>
-    /// <seealso cref="Control" />
-    public class MotionCanvas : Control
+    public sealed partial class MotionCanvas : UserControl
     {
-        /// <summary>
-        /// The skia element
-        /// </summary>
-        private SKElement? skiaElement;
-        private bool _isDrawingLoopRunning = false;
-
-        static MotionCanvas()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(MotionCanvas), new FrameworkPropertyMetadata(typeof(MotionCanvas)));
-        }
+        private SKXamlCanvas? _skiaElement;
+        private bool _isDrawingLoopRunning;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
         /// </summary>
         public MotionCanvas()
         {
+            InitializeComponent();
+            Loaded += OnLoaded;
             CanvasCore.Invalidated += OnCanvasCoreInvalidated;
             Unloaded += OnUnloaded;
         }
@@ -95,64 +84,36 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </value>
         public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
 
-        /// <inheritdoc cref="OnApplyTemplate" />
-        public override void OnApplyTemplate()
+        private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            base.OnApplyTemplate();
-
-            skiaElement = Template.FindName("skiaElement", this) as SKElement;
-            if (skiaElement == null)
-                throw new Exception(
-                    $"SkiaElement not found. This was probably caused because the control {nameof(MotionCanvas)} template was overridden, " +
-                    $"If you override the template please add an {nameof(SKElement)} to the template and name it 'skiaElement'");
-
-            skiaElement.PaintSurface += OnPaintSurface;
+            var canvas = (SKXamlCanvas)FindName("canvas");
+            _skiaElement = canvas;
+            _skiaElement.PaintSurface += OnPaintSurface;
         }
 
-        /// <inheritdoc cref="OnPaintSurface(object?, SKPaintSurfaceEventArgs)" />
-        protected virtual void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
+        private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
         {
-            (var dpiX, var dpiY) = GetPixelDensity();
-
-            args.Surface.Canvas.Scale(dpiX, dpiY);
-
             CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
-        }
-
-        private (float dpiX, float dpiY) GetPixelDensity()
-        {
-            var presentationSource = PresentationSource.FromVisual(this);
-            if (presentationSource == null) return (1f, 1f);
-            var compositionTarget = presentationSource.CompositionTarget;
-            if (compositionTarget == null) return (1f, 1f);
-
-            var matrix = compositionTarget.TransformToDevice;
-            return ((float)matrix.M11, (float)matrix.M22);
-        }
-
-        private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
-        {
-            RunDrawingLoop();
-        }
-
-        private void OnUnloaded(object sender, RoutedEventArgs e)
-        {
-            CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
         }
 
         private async void RunDrawingLoop()
         {
-            if (_isDrawingLoopRunning || skiaElement == null) return;
+            if (_isDrawingLoopRunning || _skiaElement == null) return;
             _isDrawingLoopRunning = true;
 
             var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
             while (!CanvasCore.IsValid)
             {
-                skiaElement.InvalidateVisual();
+                _skiaElement.Invalidate();
                 await Task.Delay(ts);
             }
 
             _isDrawingLoopRunning = false;
+        }
+
+        private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
+        {
+            RunDrawingLoop();
         }
 
         private static void OnPaintTaskChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
@@ -168,6 +129,11 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             }
 
             motionCanvas.CanvasCore.SetPaintTasks(tasks);
+        }
+
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
         }
     }
 }

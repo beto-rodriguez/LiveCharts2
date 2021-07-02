@@ -18,6 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\src\skiasharp\LiveChartsCore.SkiaSharpVew.WinUI\LiveChartsCore.SkiaSharpVew.WinUI.csproj" />
+    <ProjectReference Include="..\..\..\..\src\skiasharp\LiveChartsCore.SkiaSharpVew.WinUI\LiveChartsCore.SkiaSharpView.WinUI.csproj" />
   </ItemGroup>
 </Project>

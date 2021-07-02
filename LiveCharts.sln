@@ -56,7 +56,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveChartsCore.SkiaSharpVew.WinUI", "src\skiasharp\LiveChartsCore.SkiaSharpVew.WinUI\LiveChartsCore.SkiaSharpVew.WinUI.csproj", "{6EE8BD32-C2F8-4065-A363-108482EA8685}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveChartsCore.SkiaSharpView.WinUI", "src\skiasharp\LiveChartsCore.SkiaSharpVew.WinUI\LiveChartsCore.SkiaSharpView.WinUI.csproj", "{6EE8BD32-C2F8-4065-A363-108482EA8685}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinUI", "WinUI", "{CB7A0AD9-6416-4990-946F-4F3B8A1B41C0}"
 EndProject

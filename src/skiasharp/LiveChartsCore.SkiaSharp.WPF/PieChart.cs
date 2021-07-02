@@ -87,21 +87,21 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </summary>
         public static readonly DependencyProperty InitialRotationProperty =
             DependencyProperty.Register(
-                nameof(InitialRotation), typeof(double), typeof(Chart), new PropertyMetadata(0d, OnDependencyPropertyChanged));
+                nameof(InitialRotation), typeof(double), typeof(PieChart), new PropertyMetadata(0d, OnDependencyPropertyChanged));
 
         /// <summary>
         /// The maximum angle property
         /// </summary>
         public static readonly DependencyProperty MaxAngleProperty =
             DependencyProperty.Register(
-                nameof(MaxAngle), typeof(double), typeof(Chart), new PropertyMetadata(360d, OnDependencyPropertyChanged));
+                nameof(MaxAngle), typeof(double), typeof(PieChart), new PropertyMetadata(360d, OnDependencyPropertyChanged));
 
         /// <summary>
         /// The total property
         /// </summary>
         public static readonly DependencyProperty TotalProperty =
             DependencyProperty.Register(
-                nameof(Total), typeof(double?), typeof(Chart), new PropertyMetadata(null, OnDependencyPropertyChanged));
+                nameof(Total), typeof(double?), typeof(PieChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
 
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => core == null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
 

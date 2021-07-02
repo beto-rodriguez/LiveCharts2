@@ -285,7 +285,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
             legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
             tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
-            Application.Current.Dispatcher.Invoke(() => core.Update());
+            core.Update();
         }
 
         private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -318,6 +318,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             var p = e.GetPosition(this);
+            // ToDo: CHECK IF THIS WAS ALREARY INVOKED BY THE BASE CLASS????
             core?.InvokePointerMove(new PointF((float)p.X, (float)p.Y));
         }
 
