@@ -62,7 +62,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinUI", "WinUI", "{CB7A0AD9
 EndProject
 Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "WinUI (Package)", "samples\WinUISample\WinUI\WinUI (Package)\WinUI (Package).wapproj", "{35885ABD-DBDE-4270-A9AD-5EBC4C7229A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinUI", "samples\WinUISample\WinUI\WinUI\WinUI.csproj", "{59DC8BC8-3F81-4252-BCD5-90C1B67C44A1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinUISample", "samples\WinUISample\WinUI\WinUI\WinUISample.csproj", "{59DC8BC8-3F81-4252-BCD5-90C1B67C44A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
