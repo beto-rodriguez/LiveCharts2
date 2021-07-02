@@ -5,9 +5,15 @@
     xmlns:local="using:WinUI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:ViewModelsSamples.Lines.Basic"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
     mc:Ignorable="d">
 
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
-    </StackPanel>
+    <Grid>
+        <Grid.DataContext>
+            <vm:ViewModel></vm:ViewModel>
+        </Grid.DataContext>
+
+        <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
+    </Grid>
 </Window>
