@@ -32,6 +32,11 @@ using SkiaSharp.Views.Windows;
 
 namespace LiveChartsCore.SkiaSharpView.WinUI
 {
+    /// <summary>
+    /// The motion canvas control.
+    /// </summary>
+    /// <seealso cref="UserControl" />
+    /// <seealso cref="Microsoft.UI.Xaml.Markup.IComponentConnector" />
     public sealed partial class MotionCanvas : UserControl
     {
         private SKXamlCanvas? _skiaElement;

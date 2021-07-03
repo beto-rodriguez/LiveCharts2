@@ -18,6 +18,7 @@
     <None Remove="CartesianChart.xaml" />
     <None Remove="MotionCanvas.xaml" />
     <None Remove="PieChart.xaml" />
+    <None Remove="TestControl.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +31,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\LiveChartsCore\LiveChartsCore.csproj" />
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="TestControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

@@ -5,15 +5,22 @@
     xmlns:local="using:WinUI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="using:ViewModelsSamples.Lines.Basic"
+    xmlns:vm="using:ViewModelsSamples.Bars.Basic"
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
     mc:Ignorable="d">
 
-    <Grid>
-        <Grid.DataContext>
-            <vm:ViewModel></vm:ViewModel>
-        </Grid.DataContext>
+    <!--xmlns:vm="using:ViewModelsSamples.Lines.Basic"
+    -->
 
-        <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
-    </Grid>
+    <Border Background="White">
+        <Border.DataContext>
+            <vm:ViewModel></vm:ViewModel>
+        </Border.DataContext>
+
+        <StackPanel>
+            <lvc:TestControl></lvc:TestControl>
+            <!--<lvc:CartesianChart Height="400" Width="400" Series="{Binding Series}"></lvc:CartesianChart>-->
+        </StackPanel>
+    </Border>
+
 </Window>
