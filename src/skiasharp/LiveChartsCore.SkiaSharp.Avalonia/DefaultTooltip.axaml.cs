@@ -66,7 +66,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <value>
         /// The tool tip template.
         /// </value>
-        public DataTemplate? TooltipTemplate { get; set; } = null;
+        public DataTemplate? TooltipTemplate { get; set; }
 
         /// <summary>
         /// Gets or sets the points.

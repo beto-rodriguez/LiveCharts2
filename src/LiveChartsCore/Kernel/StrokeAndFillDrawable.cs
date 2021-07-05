@@ -62,7 +62,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The stroke.
         /// </value>
-        public IPaintTask<TDrawingContext>? Stroke { get; } = null;
+        public IPaintTask<TDrawingContext>? Stroke { get; }
 
         /// <summary>
         /// Gets the fill.
@@ -70,7 +70,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The fill.
         /// </value>
-        public IPaintTask<TDrawingContext>? Fill { get; } = null;
+        public IPaintTask<TDrawingContext>? Fill { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is hover state.

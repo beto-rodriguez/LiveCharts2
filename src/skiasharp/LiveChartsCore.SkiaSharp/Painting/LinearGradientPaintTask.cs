@@ -38,8 +38,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         private readonly SKColor[] _gradientStops;
         private readonly SKPoint _startPoint;
         private readonly SKPoint _endPoint;
-        private readonly float[]? _colorPos = null;
-        private readonly SKShaderTileMode _tileMode = SKShaderTileMode.Repeat;
+        private readonly float[]? _colorPos;
+        private readonly SKShaderTileMode _tileMode;
         private SkiaSharpDrawingContext? _drawingContext;
 
         /// <summary>
