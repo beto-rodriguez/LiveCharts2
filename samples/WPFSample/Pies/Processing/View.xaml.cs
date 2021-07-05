@@ -26,17 +26,13 @@ namespace WPFSample.Pies.Processing
             if (value is not IEnumerable enumerable) return null;
 
             var enumerator = enumerable.GetEnumerator();
-            enumerator.MoveNext();
-
-            var firstPaintTask = enumerator.Current;
-            if (firstPaintTask is not SolidColorPaintTask solidPaintTask) return null;
-
-            return new SolidColorBrush(
-                Color.FromArgb(
+            return enumerator.MoveNext() && enumerator.Current is SolidColorPaintTask solidPaintTask
+                ? new SolidColorBrush(Color.FromArgb(
                     solidPaintTask.Color.Alpha,
                     solidPaintTask.Color.Red,
                     solidPaintTask.Color.Green,
-                    solidPaintTask.Color.Blue));
+                    solidPaintTask.Color.Blue))
+                : null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

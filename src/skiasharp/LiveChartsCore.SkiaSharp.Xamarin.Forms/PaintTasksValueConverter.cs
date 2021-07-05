@@ -48,8 +48,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// </remarks>
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var v = (IChartSeries<SkiaSharpDrawingContext>)value;
-            return v?.CanvasSchedule.PaintSchedules;
+            return value is IChartSeries<SkiaSharpDrawingContext> v
+                ? v.CanvasSchedule.PaintSchedules
+                : null;
         }
 
         /// <summary>
