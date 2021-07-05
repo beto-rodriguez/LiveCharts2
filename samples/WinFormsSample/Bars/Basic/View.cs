@@ -1,7 +1,4 @@
-﻿using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.WinForms;
-using System;
+﻿using LiveChartsCore.SkiaSharpView.WinForms;
 using System.Windows.Forms;
 using ViewModelsSamples.Bars.Basic;
 

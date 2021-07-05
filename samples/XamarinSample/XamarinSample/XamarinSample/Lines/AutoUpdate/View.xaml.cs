@@ -1,5 +1,4 @@
-﻿
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ViewModelsSamples.Lines.AutoUpdate;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
