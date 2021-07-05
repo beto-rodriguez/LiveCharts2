@@ -117,7 +117,7 @@ namespace LiveChartsCore
         /// <exception cref="NullReferenceException">$"{nameof(LiveChartsSettings)} must not be null.</exception>
         public static void Configure(Action<LiveChartsSettings> configuration)
         {
-            if (configuration == null) throw new NullReferenceException($"{nameof(LiveChartsSettings)} must not be null.");
+            if (configuration is null) throw new NullReferenceException($"{nameof(LiveChartsSettings)} must not be null.");
 
             IsConfigured = true;
             configuration(CurrentSettings);

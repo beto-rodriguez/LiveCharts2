@@ -57,7 +57,7 @@ namespace LiveChartsCore.Kernel
             _onCollectionChanged = onCollectionChanged;
             _onItemPropertyChanged = onItemPropertyChanged;
 
-            if (checkINotifyPropertyChanged != null)
+            if (checkINotifyPropertyChanged is not null)
             {
                 this.checkINotifyPropertyChanged = checkINotifyPropertyChanged.Value;
                 return;
@@ -73,7 +73,7 @@ namespace LiveChartsCore.Kernel
         /// <returns></returns>
         public void Initialize(IEnumerable<T>? instance)
         {
-            if (instance == null) return;
+            if (instance is null) return;
 
             if (instance is INotifyCollectionChanged incc)
             {
@@ -92,7 +92,7 @@ namespace LiveChartsCore.Kernel
         /// <returns></returns>
         public void Dispose(IEnumerable<T>? instance)
         {
-            if (instance == null) return;
+            if (instance is null) return;
 
             if (instance is INotifyCollectionChanged incc)
             {

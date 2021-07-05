@@ -164,7 +164,7 @@ namespace LiveChartsCore
 
         private void TooltipThrottlerUnlocked()
         {
-            if (tooltip == null || TooltipPosition == TooltipPosition.Hidden) return;
+            if (tooltip is null || TooltipPosition == TooltipPosition.Hidden) return;
             tooltip.Show(FindPointsNearTo(_pointerPosition), this);
         }
 
@@ -190,7 +190,7 @@ namespace LiveChartsCore
         {
             _pointerPosition = pointerPosition;
 
-            if (tooltip != null && TooltipPosition != TooltipPosition.Hidden) _tooltipThrottler.Call();
+            if (tooltip is not null && TooltipPosition != TooltipPosition.Hidden) _tooltipThrottler.Call();
             if (!_isPanning) return;
             _pointerPanningPosition = pointerPosition;
             _panningThrottler.Call();

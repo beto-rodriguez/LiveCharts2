@@ -107,7 +107,7 @@ namespace LiveChartsCore
         {
             var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
             var initializer = stylesBuilder.GetVisualsInitializer();
-            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
+            if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
                 throw new Exception("Default colors are not valid");
 
             initializer.ApplyStyleToSeries(this);

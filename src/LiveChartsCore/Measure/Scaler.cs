@@ -51,7 +51,7 @@ namespace LiveChartsCore.Measure
             var maxLimit = usePreviousScale ? axis.PreviousMaxLimit : axis.MaxLimit;
             var minLimit = usePreviousScale ? axis.PreviousMinLimit : axis.MinLimit;
 
-            if (actualBounds == null || actualVisibleBounds == null) throw new Exception("bounds not found");
+            if (actualBounds is null || actualVisibleBounds is null) throw new Exception("bounds not found");
 
             if (double.IsInfinity(actualBounds.Delta) || double.IsInfinity(actualVisibleBounds.Delta))
             {
@@ -87,7 +87,7 @@ namespace LiveChartsCore.Measure
                 _maxVal = (float)(axis.IsInverted ? actualBounds.Min : actualBounds.Max);
                 _minVal = (float)(axis.IsInverted ? actualBounds.Max : actualBounds.Min);
 
-                if (maxLimit != null || minLimit != null)
+                if (maxLimit is not null || minLimit is not null)
                 {
                     _maxVal = (float)(axis.IsInverted ? minLimit ?? _minVal : maxLimit ?? _maxVal);
                     _minVal = (float)(axis.IsInverted ? maxLimit ?? _maxVal : minLimit ?? _minVal);
@@ -115,7 +115,7 @@ namespace LiveChartsCore.Measure
                 _maxVal = (float)(axis.IsInverted ? actualBounds.Max : actualBounds.Min);
                 _minVal = (float)(axis.IsInverted ? actualBounds.Min : actualBounds.Max);
 
-                if (maxLimit != null || minLimit != null)
+                if (maxLimit is not null || minLimit is not null)
                 {
                     _maxVal = (float)(axis.IsInverted ? maxLimit ?? _maxVal : minLimit ?? _minVal);
                     _minVal = (float)(axis.IsInverted ? minLimit ?? _minVal : maxLimit ?? _maxVal);

@@ -112,9 +112,9 @@ namespace LiveChartsCore
                 deleted.Add(point);
             }
 
-            if (Fill != null) core.Canvas.RemovePaintTask(Fill);
-            if (Stroke != null) core.Canvas.RemovePaintTask(Stroke);
-            if (DataLabelsPaint != null) core.Canvas.RemovePaintTask(DataLabelsPaint);
+            if (Fill is not null) core.Canvas.RemovePaintTask(Fill);
+            if (Stroke is not null) core.Canvas.RemovePaintTask(Stroke);
+            if (DataLabelsPaint is not null) core.Canvas.RemovePaintTask(DataLabelsPaint);
 
             foreach (var item in deleted) _ = everFetched.Remove(item);
         }

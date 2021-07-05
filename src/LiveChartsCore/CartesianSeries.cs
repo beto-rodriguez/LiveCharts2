@@ -69,7 +69,7 @@ namespace LiveChartsCore
         public virtual SeriesBounds GetBounds(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
-            return dataProvider == null
+            return dataProvider is null
                 ? throw new Exception("A data provider is required")
                 : dataProvider.GetCartesianBounds(chart, this, x, y);
         }

@@ -54,7 +54,7 @@ namespace LiveChartsCore.Kernel
 
             foreach (var point in foundPoints)
             {
-                if (point.Point.Context.HoverArea == null) continue;
+                if (point.Point.Context.HoverArea is null) continue;
                 point.Point.Context.HoverArea.SuggestTooltipPlacement(placementContext);
                 count++;
             }
@@ -95,7 +95,7 @@ namespace LiveChartsCore.Kernel
 
             foreach (var foundPoint in foundPoints)
             {
-                if (foundPoint.Point.Context.HoverArea == null) continue;
+                if (foundPoint.Point.Context.HoverArea is null) continue;
                 foundPoint.Point.Context.HoverArea.SuggestTooltipPlacement(placementContext);
                 found = true;
                 break; // we only care about the first one.
@@ -128,8 +128,8 @@ namespace LiveChartsCore.Kernel
         public static AxisTick GetTick<TDrawingContext>(this IAxis<TDrawingContext> axis, SizeF controlSize, Bounds bounds)
            where TDrawingContext : DrawingContext
         {
-            var max = axis.MaxLimit == null ? bounds.Max : axis.MaxLimit.Value;
-            var min = axis.MinLimit == null ? bounds.Min : axis.MinLimit.Value;
+            var max = axis.MaxLimit is null ? bounds.Max : axis.MaxLimit.Value;
+            var min = axis.MinLimit is null ? bounds.Min : axis.MinLimit.Value;
 
             var range = max - min;
             var separations = axis.Orientation == AxisOrientation.Y
@@ -153,7 +153,7 @@ namespace LiveChartsCore.Kernel
         /// <exception cref="Exception">At least one property is required when calling {nameof(TransitionateProperties)}</exception>
         public static TransitionBuilder TransitionateProperties(this IAnimatable animatable, params string[] properties)
         {
-            return properties == null || properties.Length == 0
+            return properties is null || properties.Length == 0
                 ? throw new Exception($"At least one property is required when calling {nameof(TransitionateProperties)}")
                 : new TransitionBuilder(animatable, properties);
         }

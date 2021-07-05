@@ -76,7 +76,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 location = tooltipPoints.GetPieTooltipLocation(
                     chart.TooltipPosition, new SizeF((float)size.Width, (float)size.Height));
             }
-            if (location == null) throw new Exception("location not supported");
+            if (location is null) throw new Exception("location not supported");
 
             BackColor = wfChart.TooltipBackColor;
             Height = (int)size.Height;
@@ -160,7 +160,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <returns></returns>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && (components is not null))
             {
                 components.Dispose();
             }

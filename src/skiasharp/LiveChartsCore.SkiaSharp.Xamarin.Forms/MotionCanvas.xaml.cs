@@ -47,7 +47,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         public MotionCanvas()
         {
             InitializeComponent();
-            if (skiaElement == null)
+            if (skiaElement is null)
                 throw new Exception(
                     $"SkiaElement not found. This was probably caused because the control {nameof(MotionCanvas)} template was overridden, " +
                     $"If you override the template please add an {nameof(SKCanvasView)} to the template and name it 'skiaElement'");

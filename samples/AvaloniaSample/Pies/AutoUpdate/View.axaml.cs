@@ -17,9 +17,9 @@ namespace AvaloniaSample.Pies.AutoUpdate
         private async void ButtonClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             var vm = (ViewModel?)DataContext;
-            if (vm == null) return;
+            if (vm is null) return;
 
-            isStreaming = isStreaming == null ? true : !isStreaming;
+            isStreaming = isStreaming is null ? true : !isStreaming;
 
             while (isStreaming.Value)
             {

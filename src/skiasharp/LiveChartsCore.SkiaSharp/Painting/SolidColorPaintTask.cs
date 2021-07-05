@@ -90,7 +90,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <inheritdoc cref="IPaintTask{TDrawingContext}.InitializeTask(TDrawingContext)" />
         public override void InitializeTask(SkiaSharpDrawingContext drawingContext)
         {
-            if (skiaPaint == null) skiaPaint = new SKPaint();
+            if (skiaPaint is null) skiaPaint = new SKPaint();
 
             skiaPaint.Color = Color;
             skiaPaint.IsAntialias = IsAntialias;
@@ -101,13 +101,13 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             skiaPaint.StrokeWidth = StrokeThickness;
             skiaPaint.Style = IsStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
 
-            if (PathEffect != null)
+            if (PathEffect is not null)
             {
                 PathEffect.CreateEffect(drawingContext);
                 skiaPaint.PathEffect = PathEffect.SKPathEffect;
             }
 
-            if (ImageFilter != null)
+            if (ImageFilter is not null)
             {
                 ImageFilter.CreateFilter(drawingContext);
                 skiaPaint.ImageFilter = ImageFilter.SKImageFilter;
@@ -128,7 +128,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <inheritdoc cref="IPaintTask{TDrawingContext}.SetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
         public override void SetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
         {
-            if (context.PaintTask == null || context.Paint == null) return;
+            if (context.PaintTask is null || context.Paint is null) return;
 
             var baseColor = context.PaintTask.Color;
             context.Paint.Color =
@@ -138,8 +138,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <inheritdoc cref="IPaintTask{TDrawingContext}.ResetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
         public override void ResetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
         {
-            if (context.PaintTask == null || context.Paint == null) return;
-            if (ImageFilter != null) ImageFilter.Dispose();
+            if (context.PaintTask is null || context.Paint is null) return;
+            if (ImageFilter is not null) ImageFilter.Dispose();
 
             var baseColor = context.PaintTask.Color;
             context.Paint.Color = baseColor;
@@ -150,9 +150,9 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// </summary>
         public override void Dispose()
         {
-            if (PathEffect != null) PathEffect.Dispose();
+            if (PathEffect is not null) PathEffect.Dispose();
 
-            if (_drawingContext != null && GetClipRectangle(_drawingContext.MotionCanvas) != RectangleF.Empty)
+            if (_drawingContext is not null && GetClipRectangle(_drawingContext.MotionCanvas) != RectangleF.Empty)
             {
                 _drawingContext.Canvas.Restore();
                 _drawingContext = null;

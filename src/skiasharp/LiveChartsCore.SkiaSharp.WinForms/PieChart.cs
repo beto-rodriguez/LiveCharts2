@@ -50,19 +50,19 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             _seriesObserver = new CollectionDeepObserver<ISeries>(
                (object? sender, NotifyCollectionChangedEventArgs e) =>
                {
-                   if (core == null) return;
+                   if (core is null) return;
                    core.Update();
                },
                (object? sender, PropertyChangedEventArgs e) =>
                {
-                   if (core == null) return;
+                   if (core is null) return;
                    core.Update();
                },
                true);
         }
 
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core =>
-            core == null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
+            core is null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
 
         /// <inheritdoc cref="IPieChartView{TDrawingContext}.Series" />
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

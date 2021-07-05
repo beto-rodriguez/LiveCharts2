@@ -65,12 +65,12 @@ namespace LiveChartsCore
             view.PointStates.Chart = this;
             foreach (var item in view.PointStates.GetStates())
             {
-                if (item.Fill != null)
+                if (item.Fill is not null)
                 {
                     item.Fill.ZIndex += 1000000;
                     canvas.AddDrawableTask(item.Fill);
                 }
-                if (item.Stroke != null)
+                if (item.Stroke is not null)
                 {
                     item.Stroke.ZIndex += 1000000;
                     canvas.AddDrawableTask(item.Stroke);
@@ -137,7 +137,7 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IChart.Update(ChartUpdateParams?)" />
         public override void Update(ChartUpdateParams? chartUpdateParams = null)
         {
-            if (chartUpdateParams == null) chartUpdateParams = new ChartUpdateParams();
+            if (chartUpdateParams is null) chartUpdateParams = new ChartUpdateParams();
             if (chartUpdateParams.IsAutomaticUpdate && !View.AutoUpdateEnaled) return;
             if (!chartUpdateParams.Throttling)
             {
@@ -201,7 +201,7 @@ namespace LiveChartsCore
         /// <returns></returns>
         public void Zoom(PointF pivot, ZoomDirection direction)
         {
-            if (YAxes == null || XAxes == null) return;
+            if (YAxes is null || XAxes is null) return;
 
             var speed = _zoomingSpeed < 0.1 ? 0.1 : (_zoomingSpeed > 0.95 ? 0.95 : _zoomingSpeed);
             var m = direction == ZoomDirection.ZoomIn ? speed : 1 / speed;
@@ -213,8 +213,8 @@ namespace LiveChartsCore
                     var xi = XAxes[index];
                     var px = new Scaler(DrawMarginLocation, drawMarginSize, xi).ToChartValues(pivot.X);
 
-                    var max = xi.MaxLimit == null ? xi.DataBounds.Max : xi.MaxLimit.Value;
-                    var min = xi.MinLimit == null ? xi.DataBounds.Min : xi.MinLimit.Value;
+                    var max = xi.MaxLimit is null ? xi.DataBounds.Max : xi.MaxLimit.Value;
+                    var min = xi.MinLimit is null ? xi.DataBounds.Min : xi.MinLimit.Value;
 
                     var l = max - min;
 
@@ -242,8 +242,8 @@ namespace LiveChartsCore
                     var yi = YAxes[index];
                     var px = new Scaler(DrawMarginLocation, drawMarginSize, yi).ToChartValues(pivot.Y);
 
-                    var max = yi.MaxLimit == null ? yi.DataBounds.Max : yi.MaxLimit.Value;
-                    var min = yi.MinLimit == null ? yi.DataBounds.Min : yi.MinLimit.Value;
+                    var max = yi.MaxLimit is null ? yi.DataBounds.Max : yi.MaxLimit.Value;
+                    var min = yi.MinLimit is null ? yi.DataBounds.Min : yi.MinLimit.Value;
 
                     var l = max - min;
 
@@ -282,8 +282,8 @@ namespace LiveChartsCore
                     var scale = new Scaler(DrawMarginLocation, drawMarginSize, xi);
                     var dx = scale.ToChartValues(-delta.X) - scale.ToChartValues(0);
 
-                    var max = xi.MaxLimit == null ? xi.DataBounds.Max : xi.MaxLimit.Value;
-                    var min = xi.MinLimit == null ? xi.DataBounds.Min : xi.MinLimit.Value;
+                    var max = xi.MaxLimit is null ? xi.DataBounds.Max : xi.MaxLimit.Value;
+                    var min = xi.MinLimit is null ? xi.DataBounds.Min : xi.MinLimit.Value;
 
                     if (max + dx > xi.DataBounds.Max)
                     {
@@ -312,8 +312,8 @@ namespace LiveChartsCore
                     var scale = new Scaler(DrawMarginLocation, drawMarginSize, yi);
                     var dy = -(scale.ToChartValues(delta.Y) - scale.ToChartValues(0));
 
-                    var max = yi.MaxLimit == null ? yi.DataBounds.Max : yi.MaxLimit.Value;
-                    var min = yi.MinLimit == null ? yi.DataBounds.Min : yi.MinLimit.Value;
+                    var max = yi.MaxLimit is null ? yi.DataBounds.Max : yi.MaxLimit.Value;
+                    var min = yi.MinLimit is null ? yi.DataBounds.Min : yi.MinLimit.Value;
 
                     if (max + dy > yi.DataBounds.Max)
                     {
@@ -367,7 +367,7 @@ namespace LiveChartsCore
                 _zoomMode = _chartView.ZoomMode;
 
                 var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-                if (theme.CurrentColors == null || theme.CurrentColors.Length == 0)
+                if (theme.CurrentColors is null || theme.CurrentColors.Length == 0)
                     throw new Exception("Default colors are not valid");
                 var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
 
@@ -438,7 +438,7 @@ namespace LiveChartsCore
                     series.IsNotifyingChanges = true;
                 }
 
-                if (legend != null && SeriesMiniatureChanged(Series, LegendPosition))
+                if (legend is not null && SeriesMiniatureChanged(Series, LegendPosition))
                 {
                     legend.Draw(this);
                     Update();
@@ -446,7 +446,7 @@ namespace LiveChartsCore
                 }
 
                 // calculate draw margin
-                if (viewDrawMargin == null)
+                if (viewDrawMargin is null)
                 {
                     var m = viewDrawMargin ?? new Margin();
                     float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
@@ -548,12 +548,12 @@ namespace LiveChartsCore
                     _ = toDeleteSeries.Remove(series);
                 }
 
-                if (_previousDrawMarginFrame != null && _chartView.DrawMarginFrame != _previousDrawMarginFrame)
+                if (_previousDrawMarginFrame is not null && _chartView.DrawMarginFrame != _previousDrawMarginFrame)
                 {
                     _previousDrawMarginFrame.RemoveFromUI(this);
                     _previousDrawMarginFrame = null;
                 }
-                if (_chartView.DrawMarginFrame != null)
+                if (_chartView.DrawMarginFrame is not null)
                 {
                     _chartView.DrawMarginFrame.Measure(this);
                     _chartView.DrawMarginFrame.RemoveOldPaints(View);

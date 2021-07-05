@@ -179,20 +179,20 @@ namespace LiveChartsCore
         {
             var cartesianChart = (CartesianChart<TDrawingContext>)chart;
 
-            if (_dataBounds == null) throw new Exception("DataBounds not found");
+            if (_dataBounds is null) throw new Exception("DataBounds not found");
 
             var controlSize = cartesianChart.ControlSize;
             var drawLocation = cartesianChart.DrawMarginLocation;
             var drawMarginSize = cartesianChart.DrawMarginSize;
 
             var scale = new Scaler(drawLocation, drawMarginSize, this);
-            var previousSacale = ((IAxis)this).PreviousDataBounds == null
+            var previousSacale = ((IAxis)this).PreviousDataBounds is null
                 ? null
                 : new Scaler(drawLocation, drawMarginSize, this, true);
             var axisTick = this.GetTick(drawMarginSize);
 
             var labeler = Labeler;
-            if (Labels != null)
+            if (Labels is not null)
             {
                 labeler = Labelers.BuildNamedLabeler(Labels).Function;
                 _minStep = 1;
@@ -201,12 +201,12 @@ namespace LiveChartsCore
             var s = axisTick.Value;
             if (s < _minStep) s = _minStep;
 
-            if (LabelsPaint != null)
+            if (LabelsPaint is not null)
             {
                 LabelsPaint.ZIndex = -1;
                 cartesianChart.Canvas.AddDrawableTask(LabelsPaint);
             }
-            if (SeparatorsPaint != null)
+            if (SeparatorsPaint is not null)
             {
                 SeparatorsPaint.ZIndex = -1;
                 SeparatorsPaint.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
@@ -237,8 +237,8 @@ namespace LiveChartsCore
             var r = (float)_labelsRotation;
             var hasRotation = Math.Abs(r) > 0.01f;
 
-            var max = MaxLimit == null ? (_visibleDataBounds ?? _dataBounds).Max : MaxLimit.Value;
-            var min = MinLimit == null ? (_visibleDataBounds ?? _dataBounds).Min : MinLimit.Value;
+            var max = MaxLimit is null ? (_visibleDataBounds ?? _dataBounds).Max : MaxLimit.Value;
+            var min = MinLimit is null ? (_visibleDataBounds ?? _dataBounds).Min : MinLimit.Value;
 
             var start = Math.Truncate(min / s) * s;
             if (!activeSeparators.TryGetValue(cartesianChart, out var separators))
@@ -270,7 +270,7 @@ namespace LiveChartsCore
                 {
                     visualSeparator = new AxisVisualSeprator<TDrawingContext>() { Value = (float)i };
 
-                    if (LabelsPaint != null)
+                    if (LabelsPaint is not null)
                     {
                         var textGeometry = new TTextGeometry { TextSize = size };
                         visualSeparator.Text = textGeometry;
@@ -286,7 +286,7 @@ namespace LiveChartsCore
                                     .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
                                     .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
 
-                        if (previousSacale != null)
+                        if (previousSacale is not null)
                         {
                             float xi, yi;
 
@@ -307,7 +307,7 @@ namespace LiveChartsCore
                         }
                     }
 
-                    if (SeparatorsPaint != null && ShowSeparatorLines)
+                    if (SeparatorsPaint is not null && ShowSeparatorLines)
                     {
                         var lineGeometry = new TLineGeometry();
 
@@ -323,7 +323,7 @@ namespace LiveChartsCore
                                     .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
                                     .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
 
-                        if (previousSacale != null)
+                        if (previousSacale is not null)
                         {
                             float xi, yi;
 
@@ -360,12 +360,12 @@ namespace LiveChartsCore
                     separators.Add(label, visualSeparator);
                 }
 
-                if (LabelsPaint != null && visualSeparator.Text != null)
+                if (LabelsPaint is not null && visualSeparator.Text is not null)
                     LabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Text);
-                if (SeparatorsPaint != null && ShowSeparatorLines && visualSeparator.Line != null)
+                if (SeparatorsPaint is not null && ShowSeparatorLines && visualSeparator.Line is not null)
                     SeparatorsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Line);
 
-                if (visualSeparator.Text != null)
+                if (visualSeparator.Text is not null)
                 {
                     visualSeparator.Text.Text = label;
                     visualSeparator.Text.Padding = _padding;
@@ -373,10 +373,10 @@ namespace LiveChartsCore
                     visualSeparator.Text.Y = y;
                     if (hasRotation) visualSeparator.Text.Rotation = r;
 
-                    if (((IAxis)this).PreviousDataBounds == null) visualSeparator.Text.CompleteAllTransitions();
+                    if (((IAxis)this).PreviousDataBounds is null) visualSeparator.Text.CompleteAllTransitions();
                 }
 
-                if (visualSeparator.Line != null)
+                if (visualSeparator.Line is not null)
                 {
                     if (_orientation == AxisOrientation.X)
                     {
@@ -393,10 +393,10 @@ namespace LiveChartsCore
                         visualSeparator.Line.Y1 = y;
                     }
 
-                    if (((IAxis)this).PreviousDataBounds == null) visualSeparator.Line.CompleteAllTransitions();
+                    if (((IAxis)this).PreviousDataBounds is null) visualSeparator.Line.CompleteAllTransitions();
                 }
 
-                if (visualSeparator.Text != null || visualSeparator.Line != null) _ = measured.Add(visualSeparator);
+                if (visualSeparator.Text is not null || visualSeparator.Line is not null) _ = measured.Add(visualSeparator);
             }
 
             foreach (var separator in separators.ToArray())
@@ -412,13 +412,13 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IAxis{TDrawingContext}.GetPossibleSize(CartesianChart{TDrawingContext})"/>
         public SizeF GetPossibleSize(CartesianChart<TDrawingContext> chart)
         {
-            if (_dataBounds == null) throw new Exception("DataBounds not found");
-            if (LabelsPaint == null) return new SizeF(0f, 0f);
+            if (_dataBounds is null) throw new Exception("DataBounds not found");
+            if (LabelsPaint is null) return new SizeF(0f, 0f);
 
             var ts = (float)TextSize;
             var labeler = Labeler;
 
-            if (Labels != null)
+            if (Labels is not null)
             {
                 labeler = Labelers.BuildNamedLabeler(Labels).Function;
                 _minStep = 1;
@@ -428,8 +428,8 @@ namespace LiveChartsCore
             var s = axisTick.Value;
             if (s < _minStep) s = _minStep;
 
-            var max = MaxLimit == null ? (_visibleDataBounds ?? _dataBounds).Max : MaxLimit.Value;
-            var min = MinLimit == null ? (_visibleDataBounds ?? _dataBounds).Min : MinLimit.Value;
+            var max = MaxLimit is null ? (_visibleDataBounds ?? _dataBounds).Max : MaxLimit.Value;
+            var min = MinLimit is null ? (_visibleDataBounds ?? _dataBounds).Min : MinLimit.Value;
 
             var start = Math.Truncate(min / s) * s;
 
@@ -470,12 +470,12 @@ namespace LiveChartsCore
         public virtual void Delete(Chart<TDrawingContext> chart)
         {
 
-            if (_labelsPaint != null)
+            if (_labelsPaint is not null)
             {
                 chart.Canvas.RemovePaintTask(_labelsPaint);
                 _labelsPaint.ClearGeometriesFromPaintTask(chart.Canvas);
             }
-            if (_separatorsPaint != null)
+            if (_separatorsPaint is not null)
             {
                 chart.Canvas.RemovePaintTask(_separatorsPaint);
                 _separatorsPaint.ClearGeometriesFromPaintTask(chart.Canvas);
@@ -550,7 +550,7 @@ namespace LiveChartsCore
                 y = scale.ToPixels((float)separator.Value);
             }
 
-            if (separator.Line != null)
+            if (separator.Line is not null)
             {
                 if (_orientation == AxisOrientation.X)
                 {
@@ -571,7 +571,7 @@ namespace LiveChartsCore
                 separator.Line.RemoveOnCompleted = true;
             }
 
-            if (separator.Text != null)
+            if (separator.Text is not null)
             {
                 separator.Text.X = x;
                 separator.Text.Y = y;

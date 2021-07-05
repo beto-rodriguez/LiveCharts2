@@ -142,7 +142,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 location = tooltipPoints.GetPieTooltipLocation(
                     chart.TooltipPosition, new System.Drawing.SizeF((float)size.Width, (float)size.Height));
             }
-            if (location == null) throw new Exception("location not supported");
+            if (location is null) throw new Exception("location not supported");
 
             IsVisible = true;
             var template = mobileChart.TooltipTemplate ?? _defaultTemplate;
@@ -221,8 +221,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 foreach (var state in _chart.View.PointStates.GetStates())
                 {
                     if (!state.IsHoverState) continue;
-                    if (state.Fill != null) state.Fill.ClearGeometriesFromPaintTask(_chart.Canvas);
-                    if (state.Stroke != null) state.Stroke.ClearGeometriesFromPaintTask(_chart.Canvas);
+                    if (state.Fill is not null) state.Fill.ClearGeometriesFromPaintTask(_chart.Canvas);
+                    if (state.Stroke is not null) state.Stroke.ClearGeometriesFromPaintTask(_chart.Canvas);
                 }
 
                 _chart.Update();

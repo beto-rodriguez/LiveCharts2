@@ -180,7 +180,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         public void AddGeometryToPaintTask(MotionCanvas<SkiaSharpDrawingContext> canvas, IDrawable<SkiaSharpDrawingContext> geometry)
         {
             var g = GetGeometriesByCanvas(canvas);
-            if (g == null)
+            if (g is null)
             {
                 g = new HashSet<IDrawable<SkiaSharpDrawingContext>>();
                 _geometriesByCanvas[canvas.Sync] = g;

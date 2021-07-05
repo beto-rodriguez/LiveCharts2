@@ -75,7 +75,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
             var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
             var initializer = stylesBuilder.GetVisualsInitializer();
-            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
+            if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
                 throw new Exception("Default colors are not valid");
             initializer.ApplyStyleToChart(this);
 
@@ -298,12 +298,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set => SetValueOrCurrentValue(DrawMarginProperty, value);
         }
 
-        SizeF IChartView.ControlSize => canvas == null
+        SizeF IChartView.ControlSize => canvas is null
                     ? throw new Exception("Canvas not found")
                     : (new() { Width = (float)canvas.ActualWidth, Height = (float)canvas.ActualHeight });
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
-        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas == null ? throw new Exception("Canvas not found") : canvas.CanvasCore;
+        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas is null ? throw new Exception("Canvas not found") : canvas.CanvasCore;
 
         /// <inheritdoc cref="IChartView.AnimationsSpeed" />
         public TimeSpan AnimationsSpeed
@@ -580,7 +580,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             get => core?.UpdaterThrottler ?? throw new Exception("core not set yet.");
             set
             {
-                if (core == null) throw new Exception("core not set yet.");
+                if (core is null) throw new Exception("core not set yet.");
                 core.UpdaterThrottler = value;
             }
         }
@@ -600,7 +600,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             this.canvas = canvas;
             InitializeCore();
 
-            if (core == null) throw new Exception("Core not found!");
+            if (core is null) throw new Exception("Core not found!");
             core.Measuring += OnCoreMeasuring;
             core.UpdateStarted += OnCoreUpdateStarted;
             core.UpdateFinished += OnCoreUpdateFinished;
@@ -609,7 +609,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
         public void ShowTooltip(IEnumerable<TooltipPoint> points)
         {
-            if (tooltip == null || core == null) return;
+            if (tooltip is null || core is null) return;
 
             tooltip.Show(points, core);
         }
@@ -617,13 +617,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
         public void HideTooltip()
         {
-            if (tooltip == null || core == null) return;
+            if (tooltip is null || core is null) return;
 
             foreach (var state in PointStates.GetStates())
             {
                 if (!state.IsHoverState) continue;
-                if (state.Fill != null) state.Fill.ClearGeometriesFromPaintTask(core.Canvas);
-                if (state.Stroke != null) state.Stroke.ClearGeometriesFromPaintTask(core.Canvas);
+                if (state.Fill is not null) state.Fill.ClearGeometriesFromPaintTask(core.Canvas);
+                if (state.Stroke is not null) state.Stroke.ClearGeometriesFromPaintTask(core.Canvas);
             }
 
             tooltip.Hide();
@@ -651,13 +651,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         protected static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
         {
             var chart = (Chart)o;
-            if (chart.core == null) return;
+            if (chart.core is null) return;
             Application.Current.Dispatcher.Invoke(() => chart.core.Update());
         }
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (core == null) return;
+            if (core is null) return;
             Application.Current.Dispatcher.Invoke(() => core.Update());
         }
 

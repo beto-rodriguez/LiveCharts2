@@ -60,12 +60,12 @@ namespace LiveChartsCore
             view.PointStates.Chart = this;
             foreach (var item in view.PointStates.GetStates())
             {
-                if (item.Fill != null)
+                if (item.Fill is not null)
                 {
                     item.Fill.ZIndex += 1000000;
                     canvas.AddDrawableTask(item.Fill);
                 }
-                if (item.Stroke != null)
+                if (item.Stroke is not null)
                 {
                     item.Stroke.ZIndex += 1000000;
                     canvas.AddDrawableTask(item.Stroke);
@@ -135,7 +135,7 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IChart.Update(ChartUpdateParams?)" />
         public override void Update(ChartUpdateParams? chartUpdateParams = null)
         {
-            if (chartUpdateParams == null) chartUpdateParams = new ChartUpdateParams();
+            if (chartUpdateParams is null) chartUpdateParams = new ChartUpdateParams();
 
             if (chartUpdateParams.IsAutomaticUpdate && !View.AutoUpdateEnaled) return;
 
@@ -191,7 +191,7 @@ namespace LiveChartsCore
                 seriesContext = new SeriesContext<TDrawingContext>(Series);
 
                 var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-                if (theme.CurrentColors == null || theme.CurrentColors.Length == 0)
+                if (theme.CurrentColors is null || theme.CurrentColors.Length == 0)
                     throw new Exception("Default colors are not valid");
                 var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
 
@@ -217,14 +217,14 @@ namespace LiveChartsCore
                     series.IsNotifyingChanges = true;
                 }
 
-                if (legend != null && SeriesMiniatureChanged(Series, LegendPosition))
+                if (legend is not null && SeriesMiniatureChanged(Series, LegendPosition))
                 {
                     legend.Draw(this);
                     Update();
                     preserveFirstDraw = IsFirstDraw;
                 }
 
-                if (viewDrawMargin == null)
+                if (viewDrawMargin is null)
                 {
                     var m = viewDrawMargin ?? new Margin();
                     SetDrawMargin(controlSize, m);

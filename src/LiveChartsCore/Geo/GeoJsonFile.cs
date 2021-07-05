@@ -78,11 +78,11 @@ namespace LiveChartsCore.Geo
         {
             var index = new Dictionary<string, GeoJsonFeature>();
 
-            if (Features == null) return index;
+            if (Features is null) return index;
 
             foreach (var feature in Features)
             {
-                if (feature.Geometry == null || feature.Geometry.Coordinates == null) continue;
+                if (feature.Geometry is null || feature.Geometry.Coordinates is null) continue;
 
                 foreach (var geometry in feature.Geometry.Coordinates)
                 {

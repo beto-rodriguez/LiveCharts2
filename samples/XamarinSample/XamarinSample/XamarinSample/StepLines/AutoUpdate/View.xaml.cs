@@ -19,7 +19,7 @@ namespace XamarinSample.StepLines.AutoUpdate
         {
             var vm = (ViewModel)BindingContext;
 
-            isStreaming = isStreaming == null ? true : !isStreaming;
+            isStreaming = isStreaming is null ? true : !isStreaming;
 
             while (isStreaming.Value)
             {

@@ -117,11 +117,11 @@ namespace LiveChartsCore
             var drawLocation = chart.DrawMarginLocation;
             var drawMarginSize = chart.DrawMarginSize;
 
-            if (Fill != null)
+            if (Fill is not null)
             {
                 Fill.ZIndex = -3;
 
-                if (_fillSizedGeometry == null) _fillSizedGeometry = new TSizedGeometry();
+                if (_fillSizedGeometry is null) _fillSizedGeometry = new TSizedGeometry();
 
                 _fillSizedGeometry.X = drawLocation.X;
                 _fillSizedGeometry.Y = drawLocation.Y;
@@ -132,11 +132,11 @@ namespace LiveChartsCore
                 chart.Canvas.AddDrawableTask(Fill);
             }
 
-            if (Stroke != null)
+            if (Stroke is not null)
             {
                 Stroke.ZIndex = -2;
 
-                if (_strokeSizedGeometry == null) _strokeSizedGeometry = new TSizedGeometry();
+                if (_strokeSizedGeometry is null) _strokeSizedGeometry = new TSizedGeometry();
 
                 _strokeSizedGeometry.X = drawLocation.X;
                 _strokeSizedGeometry.Y = drawLocation.Y;

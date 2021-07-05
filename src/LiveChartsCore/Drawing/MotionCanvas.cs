@@ -94,7 +94,7 @@ namespace LiveChartsCore.Drawing
 
                     foreach (var geometry in task.GetGeometries(this))
                     {
-                        if (geometry == null) continue;
+                        if (geometry is null) continue;
 
                         geometry.IsValid = true;
                         geometry.CurrentTime = frameTime;

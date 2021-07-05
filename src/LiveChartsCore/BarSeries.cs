@@ -74,7 +74,7 @@ namespace LiveChartsCore
             var context = new CanvasSchedule<TDrawingContext>();
             var w = LegendShapeSize;
             var sh = 0f;
-            if (Stroke != null)
+            if (Stroke is not null)
             {
                 var strokeClone = Stroke.CloneTask();
                 var visual = new TVisual
@@ -90,7 +90,7 @@ namespace LiveChartsCore
                 context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
             }
 
-            if (Fill != null)
+            if (Fill is not null)
             {
                 var fillClone = Fill.CloneTask();
                 var visual = new TVisual { X = sh, Y = sh, Height = (float)LegendShapeSize, Width = (float)LegendShapeSize };

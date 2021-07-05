@@ -50,7 +50,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var v = (IChartSeries<SkiaSharpDrawingContext>)value;
-            return v == null ? null : v.CanvasSchedule.Height / DeviceDisplay.MainDisplayInfo.Density;
+            return v is null ? null : v.CanvasSchedule.Height / DeviceDisplay.MainDisplayInfo.Density;
         }
 
         /// <summary>

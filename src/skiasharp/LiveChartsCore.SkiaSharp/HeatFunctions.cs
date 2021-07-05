@@ -68,7 +68,7 @@ namespace LiveChartsCore.SkiaSharpView
 
             foreach (var feature in geoJson.Features ?? new GeoJsonFeature[0])
             {
-                var name = feature.Properties != null ? feature.Properties["shortName"] : "";
+                var name = feature.Properties is not null ? feature.Properties["shortName"] : "";
                 Color? baseColor = values.TryGetValue(name, out var weight)
                     ? HeatFunctions.InterpolateColor((float)weight, weightBounds, heatMap, heatStops)
                     : null;
