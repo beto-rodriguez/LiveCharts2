@@ -49,9 +49,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         public DefaultLegend()
         {
             InitializeComponent();
-            var t = (DataTemplate?)Resources["defaultTemplate"];
-            if (t is null) throw new Exception("default template not found");
-            _defaultTemplate = t;
+            _defaultTemplate = (DataTemplate?)Resources["defaultTemplate"] ??
+                               throw new Exception("default template not found");
         }
 
         /// <summary>

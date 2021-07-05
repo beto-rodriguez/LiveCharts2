@@ -50,10 +50,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         public DefaultTooltip()
         {
             InitializeComponent();
-            var t = (DataTemplate?)Resources["defaultTemplate"];
-            if (t is null) throw new Exception("default template not found");
-            _defaultTemplate = t;
-            TooltipTemplate = t;
+
+            var template = (DataTemplate?)Resources["defaultTemplate"] ??
+                           throw new Exception("default template not found");
+
+            _defaultTemplate = template;
+            TooltipTemplate = template;
+
             Canvas.SetTop(this, 0);
             Canvas.SetLeft(this, 0);
         }
