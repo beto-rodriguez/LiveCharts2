@@ -94,7 +94,7 @@ namespace LiveChartsCore
             set => SetPaintProperty(ref _geometryFill, value);
         }
 
-        /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometrySize"/>
+        /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometryStroke"/>
         public IPaintTask<TDrawingContext>? GeometryStroke
         {
             get => _geometryStroke;
