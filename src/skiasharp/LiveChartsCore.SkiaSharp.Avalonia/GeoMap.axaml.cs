@@ -79,25 +79,25 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// The values property.
         /// </summary>
         public static readonly AvaloniaProperty<Dictionary<string, double>> ValuesProperty =
-          AvaloniaProperty.Register<CartesianChart, Dictionary<string, double>>(nameof(ColorStops), new Dictionary<string, double>(), inherits: true);
+          AvaloniaProperty.Register<CartesianChart, Dictionary<string, double>>(nameof(ValuesProperty), new Dictionary<string, double>(), inherits: true);
 
         /// <summary>
         /// The stroke color property.
         /// </summary>
         public static readonly AvaloniaProperty<Color> StrokeColorProperty =
-          AvaloniaProperty.Register<CartesianChart, Color>(nameof(ColorStops), Color.FromArgb(255, 224, 224, 224), inherits: true);
+          AvaloniaProperty.Register<CartesianChart, Color>(nameof(StrokeColor), Color.FromArgb(255, 224, 224, 224), inherits: true);
 
         /// <summary>
         /// The stroke thickness property.
         /// </summary>
         public static readonly AvaloniaProperty<double> StrokeThicknessProperty =
-          AvaloniaProperty.Register<CartesianChart, double>(nameof(ColorStops), 1d, inherits: true);
+          AvaloniaProperty.Register<CartesianChart, double>(nameof(StrokeThickness), 1d, inherits: true);
 
         /// <summary>
         /// The fill color property.
         /// </summary>
         public static readonly AvaloniaProperty<Color> FillColorProperty =
-          AvaloniaProperty.Register<CartesianChart, Color>(nameof(ColorStops), Color.FromArgb(255, 250, 250, 250), inherits: true);
+          AvaloniaProperty.Register<CartesianChart, Color>(nameof(FillColor), Color.FromArgb(255, 250, 250, 250), inherits: true);
 
         /// <summary>
         /// Gets or sets the projection.
