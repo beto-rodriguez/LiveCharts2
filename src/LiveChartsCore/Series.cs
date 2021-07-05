@@ -89,7 +89,7 @@ namespace LiveChartsCore
         /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
         /// <param name="properties">The properties.</param>
-        public Series(SeriesProperties properties)
+        protected Series(SeriesProperties properties)
         {
             SeriesProperties = properties;
             _observer = new CollectionDeepObserver<TModel>(
@@ -224,7 +224,7 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ISeries.Fetch(IChart)"/>
         protected IEnumerable<ChartPoint> Fetch(IChart chart)
         {
-            if (dataProvider == null) throw new Exception("Data provider not found");
+            if (dataProvider is null) throw new Exception("Data provider not found");
             _ = subscribedTo.Add(chart);
             return dataProvider.Fetch(this, chart);
         }
@@ -245,20 +245,20 @@ namespace LiveChartsCore
         public void AddPointToState(ChartPoint chartPoint, string state)
         {
             var chart = (IChartView<TDrawingContext>)chartPoint.Context.Chart;
-            if (chart.PointStates == null ||
+            if (chart.PointStates is null ||
                 (chart.TooltipPosition == TooltipPosition.Hidden && state == HoverState)) return;
 
             var s = chart.PointStates[state];
 
-            if (s == null)
+            if (s is null)
                 throw new Exception($"The state '{state}' was not found");
 
-            if (chartPoint.Context.Visual == null) return;
+            if (chartPoint.Context.Visual is null) return;
 
             var visual = (TVisual)chartPoint.Context.Visual;
             var highlitable = visual.HighlightableGeometry;
 
-            if (highlitable == null)
+            if (highlitable is null)
                 throw new Exception(
                     $"The {nameof(ChartPoint)}.{nameof(ChartPoint.Context)}.{nameof(ChartPoint.Context.Visual)}" +
                     $".{nameof(IVisualChartPoint<TDrawingContext>.HighlightableGeometry)} property is null, " +
@@ -268,14 +268,14 @@ namespace LiveChartsCore
 
             var core = (Chart<TDrawingContext>)chartPoint.Context.Chart.CoreChart;
 
-            if (s.Fill != null)
+            if (s.Fill is not null)
             {
                 s.Fill.SetClipRectangle(
                     core.Canvas,
                     new RectangleF(core.DrawMarginLocation, core.DrawMarginSize));
                 s.Fill.AddGeometryToPaintTask(chart.CoreCanvas, highlitable);
             }
-            if (s.Stroke != null)
+            if (s.Stroke is not null)
             {
                 s.Stroke.SetClipRectangle(
                     core.Canvas,
@@ -290,15 +290,15 @@ namespace LiveChartsCore
             var chart = (IChartView<TDrawingContext>)chartPoint.Context.Chart;
             var s = chart.PointStates[state];
 
-            if (s == null)
+            if (s is null)
                 throw new Exception($"The state '{state}' was not found");
 
-            if (chartPoint.Context.Visual == null) return;
+            if (chartPoint.Context.Visual is null) return;
 
             var visual = (TVisual)chartPoint.Context.Visual;
             var highlitable = visual.HighlightableGeometry;
 
-            if (highlitable == null)
+            if (highlitable is null)
                 throw new Exception(
                     $"The {nameof(ChartPoint)}.{nameof(ChartPoint.Context)}.{nameof(ChartPoint.Context.Visual)}" +
                     $".{nameof(IVisualChartPoint<TDrawingContext>.HighlightableGeometry)} property is null, " +
@@ -306,14 +306,14 @@ namespace LiveChartsCore
 
             OnRemovedFromState(visual, chart);
 
-            if (s.Fill != null) s.Fill.RemoveGeometryFromPainTask(chart.CoreCanvas, highlitable);
-            if (s.Stroke != null) s.Stroke.RemoveGeometryFromPainTask(chart.CoreCanvas, highlitable);
+            if (s.Fill is not null) s.Fill.RemoveGeometryFromPainTask(chart.CoreCanvas, highlitable);
+            if (s.Stroke is not null) s.Stroke.RemoveGeometryFromPainTask(chart.CoreCanvas, highlitable);
         }
 
         /// <inheritdoc cref="ISeries.RestartAnimations"/>
         public void RestartAnimations()
         {
-            if (dataProvider == null) throw new Exception("Data provider not found");
+            if (dataProvider is null) throw new Exception("Data provider not found");
             dataProvider.RestartVisuals();
         }
 
@@ -416,7 +416,7 @@ namespace LiveChartsCore
         private IEnumerable<TooltipPoint> FilterTooltipPoints(
             IEnumerable<ChartPoint>? points, IChart chart, PointF pointerPosition, TooltipFindingStrategy automaticStategy)
         {
-            if (points == null) return Enumerable.Empty<TooltipPoint>();
+            if (points is null) return Enumerable.Empty<TooltipPoint>();
             var tolerance = float.MaxValue;
 
             if (this is ICartesianSeries<TDrawingContext> cartesianSeries)
@@ -452,7 +452,7 @@ namespace LiveChartsCore
 
             foreach (var point in points)
             {
-                if (point == null || point.Context.HoverArea == null) continue;
+                if (point is null || point.Context.HoverArea is null) continue;
                 var d = point.Context.HoverArea.GetDistanceToPoint(pointerPosition, automaticStategy); //chart.TooltipFindingStrategy
                 if (d > tolerance || d > minD.Item1) continue;
 

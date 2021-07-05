@@ -67,7 +67,7 @@ namespace LiveChartsCore
             var drawMarginSize = cartesianChart.DrawMarginSize;
             var secondaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
             var previousSecondaryScale =
-                primaryAxis.PreviousDataBounds == null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis);
+                primaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis);
             var primaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
 
             var uw = secondaryScale.ToPixels(1f) - secondaryScale.ToPixels(0f);
@@ -93,19 +93,19 @@ namespace LiveChartsCore
             }
 
             var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
-            if (Fill != null)
+            if (Fill is not null)
             {
                 Fill.ZIndex = actualZIndex + 0.1;
                 Fill.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(Fill);
             }
-            if (Stroke != null)
+            if (Stroke is not null)
             {
                 Stroke.ZIndex = actualZIndex + 0.2;
                 Stroke.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(Stroke);
             }
-            if (DataLabelsPaint != null)
+            if (DataLabelsPaint is not null)
             {
                 DataLabelsPaint.ZIndex = actualZIndex + 0.3;
                 DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
@@ -115,7 +115,7 @@ namespace LiveChartsCore
             var toDeletePoints = new HashSet<ChartPoint>(everFetched);
 
             var stacker = cartesianChart.SeriesContext.GetStackPosition(this, GetStackGroup());
-            if (stacker == null) throw new NullReferenceException("Unexpected null stacker");
+            if (stacker is null) throw new NullReferenceException("Unexpected null stacker");
 
             var rx = (float)Rx;
             var ry = (float)Ry;
@@ -127,7 +127,7 @@ namespace LiveChartsCore
 
                 if (point.IsNull)
                 {
-                    if (visual != null)
+                    if (visual is not null)
                     {
                         visual.X = p;
                         visual.Y = secondary - uwm + cp;
@@ -139,10 +139,10 @@ namespace LiveChartsCore
                     continue;
                 }
 
-                if (visual == null)
+                if (visual is null)
                 {
                     var yi = secondary - uwm + cp;
-                    if (previousSecondaryScale != null) yi = previousSecondaryScale.ToPixels(point.SecondaryValue) - uwm + cp;
+                    if (previousSecondaryScale is not null) yi = previousSecondaryScale.ToPixels(point.SecondaryValue) - uwm + cp;
 
                     var r = new TVisual
                     {
@@ -162,8 +162,8 @@ namespace LiveChartsCore
                     _ = everFetched.Add(point);
                 }
 
-                if (Fill != null) Fill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                if (Stroke != null) Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                if (Fill is not null) Fill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                if (Stroke is not null) Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
 
                 var sizedGeometry = visual;
 
@@ -185,11 +185,11 @@ namespace LiveChartsCore
                 OnPointMeasured(point);
                 _ = toDeletePoints.Remove(point);
 
-                if (DataLabelsPaint != null)
+                if (DataLabelsPaint is not null)
                 {
                     var label = (TLabel?)point.Context.Label;
 
-                    if (label == null)
+                    if (label is null)
                     {
                         var l = new TLabel { X = secondary - uwm + cp, Y = p };
 
@@ -323,7 +323,7 @@ namespace LiveChartsCore
         protected override void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
         {
             var visual = (TVisual?)point.Context.Visual;
-            if (visual == null) return;
+            if (visual is null) return;
 
             var p = primaryScale.ToPixels(pivot);
 
@@ -334,11 +334,11 @@ namespace LiveChartsCore
             visual.Width = 0;
             visual.RemoveOnCompleted = true;
 
-            if (dataProvider == null) throw new Exception("Data provider not found");
+            if (dataProvider is null) throw new Exception("Data provider not found");
             dataProvider.DisposePoint(point);
 
             var label = (TLabel?)point.Context.Label;
-            if (label == null) return;
+            if (label is null) return;
 
             label.TextSize = 1;
             label.RemoveOnCompleted = true;

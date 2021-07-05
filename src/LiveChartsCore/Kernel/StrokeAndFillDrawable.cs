@@ -40,14 +40,14 @@ namespace LiveChartsCore.Kernel
         public StrokeAndFillDrawable(IPaintTask<TDrawingContext>? stroke, IPaintTask<TDrawingContext>? fill, bool isHoverState = false)
         {
             Stroke = stroke;
-            if (stroke != null)
+            if (stroke is not null)
             {
                 stroke.IsStroke = true;
                 stroke.IsFill = false;
             }
 
             Fill = fill;
-            if (fill != null)
+            if (fill is not null)
             {
                 fill.IsStroke = false;
                 fill.IsFill = true;

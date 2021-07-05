@@ -51,7 +51,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             InitializeComponent();
             var t = (DataTemplate?)Resources["defaultTemplate"];
-            if (t == null) throw new Exception("default template not found");
+            if (t is null) throw new Exception("default template not found");
             _defaultTemplate = t;
             TooltipTemplate = t;
             Canvas.SetTop(this, 0);
@@ -156,7 +156,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                     chart.TooltipPosition, new System.Drawing.SizeF((float)Bounds.Width, (float)Bounds.Height));
             }
 
-            if (location == null) throw new Exception("location not found");
+            if (location is null) throw new Exception("location not found");
 
             Points = tooltipPoints;
             TooltipBackground = avaloniaChart.TooltipBackground;
@@ -179,12 +179,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             if (location.Value.Y < 0) y = 0;
             if (location.Value.Y + Bounds.Height > h) x = h - Bounds.Height;
 
-            if (Transitions == null)
-                Transitions = new Transitions
-                {
-                    new DoubleTransition { Property = Canvas.TopProperty, Duration = TimeSpan.FromMilliseconds(300) },
-                    new DoubleTransition { Property = Canvas.LeftProperty, Duration = TimeSpan.FromMilliseconds(300) },
-                };
+            Transitions ??= new Transitions
+            {
+                new DoubleTransition {Property = Canvas.TopProperty, Duration = TimeSpan.FromMilliseconds(300)},
+                new DoubleTransition {Property = Canvas.LeftProperty, Duration = TimeSpan.FromMilliseconds(300)},
+            };
 
             Canvas.SetTop(this, y);
             Canvas.SetLeft(this, x);
@@ -225,7 +224,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             };
 
             var templated = template.Build(model);
-            if (templated == null) return;
+            if (templated is null) return;
 
             Content = templated;
         }

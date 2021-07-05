@@ -1,5 +1,4 @@
-﻿
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ViewModelsSamples.Scatter.AutoUpdate;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -20,7 +19,7 @@ namespace XamarinSample.Scatter.AutoUpdate
         {
             var vm = (ViewModel)BindingContext;
 
-            isStreaming = isStreaming == null ? true : !isStreaming;
+            isStreaming = isStreaming is null ? true : !isStreaming;
 
             while (isStreaming.Value)
             {

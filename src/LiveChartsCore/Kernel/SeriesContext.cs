@@ -211,7 +211,7 @@ namespace LiveChartsCore.Kernel
 
             var s = GetStacker(series, stackGroup);
 
-            return s == null
+            return s is null
                 ? null
                 : new StackPosition<TDrawingContext>
                 {

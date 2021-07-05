@@ -99,7 +99,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
-            if (AlternativeDraw != null)
+            if (AlternativeDraw is not null)
             {
                 AlternativeDraw(this, context, paint);
                 return;

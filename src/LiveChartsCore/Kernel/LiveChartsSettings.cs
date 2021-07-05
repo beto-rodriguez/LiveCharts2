@@ -160,7 +160,7 @@ namespace LiveChartsCore.Kernel
         internal IDataFactoryProvider<TDrawingContext> GetFactory<TDrawingContext>()
             where TDrawingContext : DrawingContext
         {
-            return _currentFactory == null
+            return _currentFactory is null
                 ? throw new NotImplementedException($"There is no a {nameof(IDataFactoryProvider<TDrawingContext>)} registered")
                 : (IDataFactoryProvider<TDrawingContext>)_currentFactory;
         }
@@ -296,7 +296,7 @@ namespace LiveChartsCore.Kernel
                  })
                  .HasMap<short?>((model, point) =>
                  {
-                     if (model == null)
+                     if (model is null)
                      {
                          point.IsNull = true;
                          return;
@@ -307,7 +307,7 @@ namespace LiveChartsCore.Kernel
                  })
                  .HasMap<int?>((model, point) =>
                  {
-                     if (model == null)
+                     if (model is null)
                      {
                          point.IsNull = true;
                          return;
@@ -318,7 +318,7 @@ namespace LiveChartsCore.Kernel
                  })
                  .HasMap<long?>((model, point) =>
                  {
-                     if (model == null)
+                     if (model is null)
                      {
                          point.IsNull = true;
                          return;
@@ -329,7 +329,7 @@ namespace LiveChartsCore.Kernel
                  })
                  .HasMap<float?>((model, point) =>
                  {
-                     if (model == null)
+                     if (model is null)
                      {
                          point.IsNull = true;
                          return;
@@ -340,7 +340,7 @@ namespace LiveChartsCore.Kernel
                  })
                  .HasMap<double?>((model, point) =>
                  {
-                     if (model == null)
+                     if (model is null)
                      {
                          point.IsNull = true;
                          return;
@@ -351,7 +351,7 @@ namespace LiveChartsCore.Kernel
                  })
                  .HasMap<decimal?>((model, point) =>
                  {
-                     if (model == null)
+                     if (model is null)
                      {
                          point.IsNull = true;
                          return;
@@ -362,11 +362,11 @@ namespace LiveChartsCore.Kernel
                  })
                  .HasMap<WeightedPoint>((model, point) =>
                  {
-                     if (model == null)
+                     if (model is null)
                          throw new Exception(
                              $"A {nameof(WeightedPoint)} can not be null, instead set to null to any of its properties.");
 
-                     if (model.Weight == null || model.X == null || model.Y == null)
+                     if (model.Weight is null || model.X is null || model.Y is null)
                      {
                          point.IsNull = true;
                          return;
@@ -382,11 +382,11 @@ namespace LiveChartsCore.Kernel
                  })
                  .HasMap<ObservableValue>((model, point) =>
                  {
-                     if (model == null)
+                     if (model is null)
                          throw new Exception(
                              $"A {nameof(ObservableValue)} can not be null, instead set to null to any of its properties.");
 
-                     if (model.Value == null)
+                     if (model.Value is null)
                      {
                          point.IsNull = true;
                          return;
@@ -401,11 +401,11 @@ namespace LiveChartsCore.Kernel
                  })
                  .HasMap<ObservableValueF>((model, point) =>
                  {
-                     if (model == null)
+                     if (model is null)
                          throw new Exception(
                              $"A {nameof(ObservableValueF)} can not be null, instead set to null to any of its properties.");
 
-                     if (model.Value == null)
+                     if (model.Value is null)
                      {
                          point.IsNull = true;
                          return;
@@ -420,11 +420,11 @@ namespace LiveChartsCore.Kernel
                  })
                  .HasMap<ObservablePoint>((model, point) =>
                  {
-                     if (model == null)
+                     if (model is null)
                          throw new Exception(
                              $"A {nameof(ObservablePoint)} can not be null, instead set to null to any of its properties.");
 
-                     if (model.X == null || model.Y == null)
+                     if (model.X is null || model.Y is null)
                      {
                          point.IsNull = true;
                          return;
@@ -439,11 +439,11 @@ namespace LiveChartsCore.Kernel
                  })
                  .HasMap<ObservablePointF>((model, point) =>
                  {
-                     if (model == null)
+                     if (model is null)
                          throw new Exception(
                              $"A {nameof(ObservablePointF)} can not be null, instead set to null to any of its properties.");
 
-                     if (model.X == null || model.Y == null)
+                     if (model.X is null || model.Y is null)
                      {
                          point.IsNull = true;
                          return;
@@ -455,12 +455,12 @@ namespace LiveChartsCore.Kernel
                  })
                  .HasMap<DateTimePoint>((model, point) =>
                  {
-                     if (model == null)
+                     if (model is null)
                          throw new Exception(
                              $"A {nameof(DateTimePoint)} can not be null, instead set to null the " +
                              $"{nameof(DateTimePoint.Value)} property.");
 
-                     if (model.Value == null)
+                     if (model.Value is null)
                      {
                          point.IsNull = true;
                          return;
@@ -472,12 +472,12 @@ namespace LiveChartsCore.Kernel
                  })
                  .HasMap<DateTimePointF>((model, point) =>
                  {
-                     if (model == null)
+                     if (model is null)
                          throw new Exception(
                              $"A {nameof(DateTimePointF)} can not be null, instead set to null the " +
                              $"{nameof(DateTimePointF.Value)} property.");
 
-                     if (model.Value == null)
+                     if (model.Value is null)
                      {
                          point.IsNull = true;
                          return;
@@ -489,7 +489,7 @@ namespace LiveChartsCore.Kernel
                  })
                  .HasMap<FinancialPoint>((model, point) =>
                  {
-                     if (model == null)
+                     if (model is null)
                          throw new Exception(
                              $"A {nameof(DateTimePointF)} can not be null, instead set to null the " +
                              $"{nameof(DateTimePointF.Value)} property.");

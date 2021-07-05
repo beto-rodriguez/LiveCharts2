@@ -57,7 +57,7 @@ namespace LiveChartsCore
         /// Initializes a new instance of the <see cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
         /// <param name="properties">The properties.</param>
-        public ChartSeries(SeriesProperties properties) : base(properties) { }
+        protected ChartSeries(SeriesProperties properties) : base(properties) { }
 
         /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsPaint"/>
         public IPaintTask<TDrawingContext>? DataLabelsPaint
@@ -107,7 +107,7 @@ namespace LiveChartsCore
         {
             var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
             var initializer = stylesBuilder.GetVisualsInitializer();
-            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
+            if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
                 throw new Exception("Default colors are not valid");
 
             initializer.ApplyStyleToSeries(this);

@@ -50,7 +50,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             InitializeComponent();
             var t = (DataTemplate?)Resources["defaultTemplate"];
-            if (t == null) throw new Exception("default template not found");
+            if (t is null) throw new Exception("default template not found");
             _defaultTemplate = t;
         }
 
@@ -195,7 +195,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             };
 
             var templated = template.Build(model);
-            if (templated == null) return;
+            if (templated is null) return;
 
             Content = templated;
         }

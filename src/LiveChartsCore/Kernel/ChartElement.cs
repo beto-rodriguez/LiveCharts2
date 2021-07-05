@@ -57,7 +57,7 @@ namespace LiveChartsCore.Kernel
         {
             foreach (var item in GetPaintTasks())
             {
-                if (item == null) continue;
+                if (item is null) continue;
                 chart.Canvas.RemovePaintTask(item);
                 item.ClearGeometriesFromPaintTask(chart.Canvas);
             }
@@ -77,9 +77,9 @@ namespace LiveChartsCore.Kernel
             bool isStroke = false,
             [CallerMemberName] string? propertyName = null)
         {
-            if (reference != null) ScheduleDeleteFor(reference);
+            if (reference is not null) ScheduleDeleteFor(reference);
             reference = value;
-            if (reference != null)
+            if (reference is not null)
             {
                 reference.IsStroke = isStroke;
                 reference.IsFill = !isStroke; // seems unnecessary ????

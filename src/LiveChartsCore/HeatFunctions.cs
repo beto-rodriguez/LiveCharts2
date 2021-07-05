@@ -47,7 +47,7 @@ namespace LiveChartsCore
         {
             if (heatMap.Length < 2) throw new Exception("At least 2 colors are required in a heat map.");
 
-            if (colorStops == null)
+            if (colorStops is null)
             {
                 var s = 1 / (double)(heatMap.Length - 1);
                 colorStops = new double[heatMap.Length];

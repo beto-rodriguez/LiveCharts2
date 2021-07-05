@@ -21,7 +21,7 @@ namespace XamarinSample.Pies.Processing
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var enumerable = value as IEnumerable;
-            if (value == null) return null;
+            if (value is null) return null;
 
             var enumerator = enumerable.GetEnumerator();
             enumerator.MoveNext();

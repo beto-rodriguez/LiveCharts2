@@ -87,7 +87,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                         var seriesObserver = chart._seriesObserver;
                         seriesObserver.Dispose((IEnumerable<ISeries>)args.OldValue);
                         seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
-                        if (chart.core == null) return;
+                        if (chart.core is null) return;
                         Application.Current.Dispatcher.Invoke(() => chart.core.Update());
                     },
                     (DependencyObject o, object value) =>
@@ -107,7 +107,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                         var observer = chart._xObserver;
                         observer.Dispose((IEnumerable<IAxis>)args.OldValue);
                         observer.Initialize((IEnumerable<IAxis>)args.NewValue);
-                        if (chart.core == null) return;
+                        if (chart.core is null) return;
                         Application.Current.Dispatcher.Invoke(() => chart.core.Update());
                     },
                     (DependencyObject o, object value) =>
@@ -127,7 +127,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                         var observer = chart._yObserver;
                         observer.Dispose((IEnumerable<IAxis>)args.OldValue);
                         observer.Initialize((IEnumerable<IAxis>)args.NewValue);
-                        if (chart.core == null) return;
+                        if (chart.core is null) return;
                         Application.Current.Dispatcher.Invoke(() => chart.core.Update());
                     },
                     (DependencyObject o, object value) =>
@@ -147,7 +147,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                         var observer = chart._sectionsObserver;
                         observer.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)args.OldValue);
                         observer.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)args.NewValue);
-                        if (chart.core == null) return;
+                        if (chart.core is null) return;
                         Application.Current.Dispatcher.Invoke(() => chart.core.Update());
                     },
                     (DependencyObject o, object value) =>
@@ -193,7 +193,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         #region properties
 
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core =>
-            core == null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
+            core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
         public IEnumerable<ISeries> Series
@@ -269,7 +269,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(PointF, int, int)" />
         public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
-            if (core == null) throw new Exception("core not found");
+            if (core is null) throw new Exception("core not found");
             var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
             return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
         }
@@ -280,7 +280,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <exception cref="Exception">canvas not found</exception>
         protected override void InitializeCore()
         {
-            if (canvas == null) throw new Exception("canvas not found");
+            if (canvas is null) throw new Exception("canvas not found");
 
             core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
             legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
@@ -290,19 +290,19 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (core == null) return;
+            if (core is null) return;
             Application.Current.Dispatcher.Invoke(() => core.Update());
         }
 
         private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (core == null) return;
+            if (core is null) return;
             Application.Current.Dispatcher.Invoke(() => core.Update());
         }
 
         private void OnMouseWheel(object? sender, System.Windows.Input.MouseWheelEventArgs e)
         {
-            if (core == null) throw new Exception("core not found");
+            if (core is null) throw new Exception("core not found");
             var c = (CartesianChart<SkiaSharpDrawingContext>)core;
             var p = e.GetPosition(this);
             c.Zoom(new PointF((float)p.X, (float)p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);

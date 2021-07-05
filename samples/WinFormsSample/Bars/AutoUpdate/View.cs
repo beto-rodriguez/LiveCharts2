@@ -1,5 +1,4 @@
 ﻿using LiveChartsCore.SkiaSharpView.WinForms;
-using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ViewModelsSamples.Bars.AutoUpdate;
@@ -58,7 +57,7 @@ namespace WinFormsSample.Bars.AutoUpdate
 
         private async void OnConstantChangesClick(object sender, System.EventArgs e)
         {
-            isStreaming = isStreaming == null ? true : !isStreaming;
+            isStreaming = isStreaming is null ? true : !isStreaming;
 
             while (isStreaming.Value)
             {

@@ -54,7 +54,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <summary>
         /// Initializes a new instance of the <see cref="PaintTask"/> class.
         /// </summary>
-        public PaintTask()
+        protected PaintTask()
         {
             strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness), 0f));
             _strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
@@ -64,7 +64,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// Initializes a new instance of the <see cref="PaintTask"/> class.
         /// </summary>
         /// <param name="color">The color.</param>
-        public PaintTask(SKColor color) : this()
+        protected PaintTask(SKColor color) : this()
         {
             Color = color;
         }
@@ -180,7 +180,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         public void AddGeometryToPaintTask(MotionCanvas<SkiaSharpDrawingContext> canvas, IDrawable<SkiaSharpDrawingContext> geometry)
         {
             var g = GetGeometriesByCanvas(canvas);
-            if (g == null)
+            if (g is null)
             {
                 g = new HashSet<IDrawable<SkiaSharpDrawingContext>>();
                 _geometriesByCanvas[canvas.Sync] = g;

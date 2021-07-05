@@ -70,7 +70,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
             var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
             var initializer = stylesBuilder.GetVisualsInitializer();
-            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
+            if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
                 throw new Exception("Default colors are not valid");
             initializer.ApplyStyleToChart(this);
 
@@ -90,7 +90,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             canvas.SkCanvasView.EnableTouchEvents = true;
             canvas.SkCanvasView.Touch += OnSkCanvasTouched;
 
-            if (core == null) throw new Exception("Core not found!");
+            if (core is null) throw new Exception("Core not found!");
             core.Measuring += OnCoreMeasuring;
             core.UpdateStarted += OnCoreUpdateStarted;
             core.UpdateFinished += OnCoreUpdateFinished;
@@ -110,7 +110,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     var seriesObserver = chart._seriesObserver;
                     seriesObserver.Dispose((IEnumerable<ISeries>)oldValue);
                     seriesObserver.Initialize((IEnumerable<ISeries>)newValue);
-                    if (chart.core == null) return;
+                    if (chart.core is null) return;
                     MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
                 });
 
@@ -126,7 +126,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     var observer = chart._xObserver;
                     observer.Dispose((IEnumerable<IAxis>)oldValue);
                     observer.Initialize((IEnumerable<IAxis>)newValue);
-                    if (chart.core == null) return;
+                    if (chart.core is null) return;
                     MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
                 });
 
@@ -142,7 +142,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     var observer = chart._yObserver;
                     observer.Dispose((IEnumerable<IAxis>)oldValue);
                     observer.Initialize((IEnumerable<IAxis>)newValue);
-                    if (chart.core == null) return;
+                    if (chart.core is null) return;
                     MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
                 });
 
@@ -155,7 +155,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     var observer = chart._sectionsObserverer;
                     observer.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)oldValue);
                     observer.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)newValue);
-                    if (chart.core == null) return;
+                    if (chart.core is null) return;
                     MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
                 });
 
@@ -356,7 +356,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             set => Background = new SolidColorBrush(new c(value.R / 255, value.G / 255, value.B / 255, value.A / 255));
         }
 
-        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => core == null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
+        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
 
         SizeF IChartView.ControlSize => new()
         {
@@ -633,7 +633,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             get => core?.UpdaterThrottler ?? throw new Exception("core not set yet.");
             set
             {
-                if (core == null) throw new Exception("core not set yet.");
+                if (core is null) throw new Exception("core not set yet.");
                 core.UpdaterThrottler = value;
             }
         }
@@ -643,7 +643,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(PointF, int, int)" />
         public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
-            if (core == null) throw new Exception("core not found");
+            if (core is null) throw new Exception("core not found");
             var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
             return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
         }
@@ -651,7 +651,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
         public void ShowTooltip(IEnumerable<TooltipPoint> points)
         {
-            if (tooltip == null || core == null) return;
+            if (tooltip is null || core is null) return;
 
             ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(points, core);
         }
@@ -659,7 +659,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
         public void HideTooltip()
         {
-            if (tooltip == null || core == null) return;
+            if (tooltip is null || core is null) return;
 
             ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
         }
@@ -691,31 +691,31 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         protected static void OnBindablePropertyChanged(BindableObject o, object oldValue, object newValue)
         {
             var chart = (CartesianChart)o;
-            if (chart.core == null) return;
+            if (chart.core is null) return;
             MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
         }
 
         private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (core == null) return;
+            if (core is null) return;
             MainThread.BeginInvokeOnMainThread(() => core.Update());
         }
 
         private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (core == null) return;
+            if (core is null) return;
             MainThread.BeginInvokeOnMainThread(() => core.Update());
         }
 
         private void OnSizeChanged(object? sender, EventArgs e)
         {
-            if (core == null) return;
+            if (core is null) return;
             MainThread.BeginInvokeOnMainThread(() => core.Update());
         }
 
         private void PanGestureRecognizer_PanUpdated(object? sender, PanUpdatedEventArgs e)
         {
-            if (core == null) return;
+            if (core is null) return;
             if (e.StatusType != GestureStatus.Running) return;
 
             var c = (CartesianChart<SkiaSharpDrawingContext>)core;
@@ -727,7 +727,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         private void PinchGestureRecognizer_PinchUpdated(object? sender, PinchGestureUpdatedEventArgs e)
         {
-            if (e.Status != GestureStatus.Running || Math.Abs(e.Scale - 1) < 0.05 || core == null) return;
+            if (e.Status != GestureStatus.Running || Math.Abs(e.Scale - 1) < 0.05 || core is null) return;
 
             var c = (CartesianChart<SkiaSharpDrawingContext>)core;
             var p = e.ScaleOrigin;
@@ -740,7 +740,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         private void OnSkCanvasTouched(object? sender, SkiaSharp.Views.Forms.SKTouchEventArgs e)
         {
-            if (core == null) return;
+            if (core is null) return;
             if (TooltipPosition == TooltipPosition.Hidden) return;
             var location = new PointF(e.Location.X, e.Location.Y);
             core.InvokePointerDown(location);

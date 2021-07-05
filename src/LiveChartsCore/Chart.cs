@@ -146,7 +146,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="canvas">The canvas.</param>
         /// <param name="defaultPlatformConfig">The default platform configuration.</param>
-        public Chart(MotionCanvas<TDrawingContext> canvas, Action<LiveChartsSettings> defaultPlatformConfig)
+        protected Chart(MotionCanvas<TDrawingContext> canvas, Action<LiveChartsSettings> defaultPlatformConfig)
         {
             this.canvas = canvas;
             canvas.Validated += OnCanvasValidated;
@@ -164,7 +164,7 @@ namespace LiveChartsCore
 
         private void TooltipThrottlerUnlocked()
         {
-            if (tooltip == null || TooltipPosition == TooltipPosition.Hidden) return;
+            if (tooltip is null || TooltipPosition == TooltipPosition.Hidden) return;
             tooltip.Show(FindPointsNearTo(_pointerPosition), this);
         }
 
@@ -190,7 +190,7 @@ namespace LiveChartsCore
         {
             _pointerPosition = pointerPosition;
 
-            if (tooltip != null && TooltipPosition != TooltipPosition.Hidden) _tooltipThrottler.Call();
+            if (tooltip is not null && TooltipPosition != TooltipPosition.Hidden) _tooltipThrottler.Call();
             if (!_isPanning) return;
             _pointerPanningPosition = pointerPosition;
             _panningThrottler.Call();

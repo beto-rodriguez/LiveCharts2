@@ -363,7 +363,7 @@ namespace LiveChartsCore.SkiaSharpView
                         }
 
                         var color = colors[series.SeriesId % colors.Length];
-                        if (series.Name == null) series.Name = $"Series {series.SeriesId + 1}";
+                        series.Name ??= $"Series {series.SeriesId + 1}";
 
                         if ((series.SeriesProperties & SeriesProperties.PieSeries) == SeriesProperties.PieSeries ||
                             (series.SeriesProperties & SeriesProperties.Bar) == SeriesProperties.Bar)
@@ -488,7 +488,7 @@ namespace LiveChartsCore.SkiaSharpView
                         }
 
                         var color = colors[series.SeriesId % colors.Length];
-                        if (series.Name == null) series.Name = $"Series {series.SeriesId + 1}";
+                        series.Name ??= $"Series {series.SeriesId + 1}";
 
                         if ((series.SeriesProperties & SeriesProperties.PieSeries) == SeriesProperties.PieSeries ||
                             (series.SeriesProperties & SeriesProperties.Bar) == SeriesProperties.Bar)

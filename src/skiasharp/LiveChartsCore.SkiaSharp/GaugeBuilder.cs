@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -302,14 +301,14 @@ namespace LiveChartsCore.SkiaSharpView
         public void ApplyStylesToFill(PieSeries<ObservableValue> series)
         {
             if (Background != LiveChartsSkiaSharp.DefaultPaintTask) series.Fill = Background;
-            if (BackgroundInnerRadius != null) series.InnerRadius = BackgroundInnerRadius.Value;
-            if (BackgroundOffsetRadius != null)
+            if (BackgroundInnerRadius is not null) series.InnerRadius = BackgroundInnerRadius.Value;
+            if (BackgroundOffsetRadius is not null)
             {
                 series.RelativeOuterRadius = BackgroundOffsetRadius.Value;
                 series.RelativeInnerRadius = BackgroundOffsetRadius.Value;
             }
-            if (BackgroundMaxRadialColumnWidth != null) series.MaxRadialColumnWidth = BackgroundMaxRadialColumnWidth.Value;
-            if (RadialAlign != null) series.RadialAlign = RadialAlign.Value;
+            if (BackgroundMaxRadialColumnWidth is not null) series.MaxRadialColumnWidth = BackgroundMaxRadialColumnWidth.Value;
+            if (RadialAlign is not null) series.RadialAlign = RadialAlign.Value;
         }
 
         /// <summary>
@@ -324,23 +323,23 @@ namespace LiveChartsCore.SkiaSharpView
             {
                 if (t.Item3 != LiveChartsSkiaSharp.DefaultPaintTask) series.Fill = t.Item3;
             }
-            if (LabelsSize != null) series.DataLabelsSize = LabelsSize.Value;
-            if (LabelsPosition != null) series.DataLabelsPosition = LabelsPosition.Value;
-            if (InnerRadius != null) series.InnerRadius = InnerRadius.Value;
-            if (OffsetRadius != null)
+            if (LabelsSize is not null) series.DataLabelsSize = LabelsSize.Value;
+            if (LabelsPosition is not null) series.DataLabelsPosition = LabelsPosition.Value;
+            if (InnerRadius is not null) series.InnerRadius = InnerRadius.Value;
+            if (OffsetRadius is not null)
             {
                 series.RelativeInnerRadius = OffsetRadius.Value;
                 series.RelativeOuterRadius = OffsetRadius.Value;
             }
-            if (MaxRadialColumnWidth != null) series.MaxRadialColumnWidth = MaxRadialColumnWidth.Value;
-            if (RadialAlign != null) series.RadialAlign = RadialAlign.Value;
+            if (MaxRadialColumnWidth is not null) series.MaxRadialColumnWidth = MaxRadialColumnWidth.Value;
+            if (RadialAlign is not null) series.RadialAlign = RadialAlign.Value;
 
             series.DataLabelsFormatter = LabelFormatter;
         }
 
         private void OnPopertyChanged()
         {
-            if (_builtSeries == null) return;
+            if (_builtSeries is null) return;
 
             foreach (var item in _builtSeries)
             {

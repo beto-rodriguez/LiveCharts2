@@ -48,7 +48,7 @@ namespace LiveChartsCore.Motion
         /// Initializes a new instance of the <see cref="MotionProperty{T}"/> class.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
-        public MotionProperty(string propertyName)
+        protected MotionProperty(string propertyName)
         {
             PropertyName = propertyName;
         }
@@ -90,7 +90,7 @@ namespace LiveChartsCore.Motion
         {
             fromValue = GetMovement(animatable);
             toValue = value;
-            if (Animation != null)
+            if (Animation is not null)
             {
                 if (animatable._currentTime == long.MinValue) // the animatable is not in the canvas yet.
                 {
@@ -115,7 +115,7 @@ namespace LiveChartsCore.Motion
         /// <returns></returns>
         public T GetMovement(Animatable animatable)
         {
-            if (Animation == null || Animation.EasingFunction == null || fromValue == null || IsCompleted) return OnGetMovement(1);
+            if (Animation is null || Animation.EasingFunction is null || fromValue is null || IsCompleted) return OnGetMovement(1);
 
             if (_requiresToInitialize)
             {
