@@ -94,39 +94,37 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 
             var toRemoveSegments = new List<IPathCommand<SKPath>>();
 
-            using (var path = new SKPath())
+            using var path = new SKPath();
+            var isValid = true;
+
+            foreach (var segment in toExecute)
             {
-                var isValid = true;
+                segment.IsValid = true;
+                segment.Execute(path, GetCurrentTime(), this);
+                isValid = isValid && segment.IsValid;
 
-                foreach (var segment in toExecute)
-                {
-                    segment.IsValid = true;
-                    segment.Execute(path, GetCurrentTime(), this);
-                    isValid = isValid && segment.IsValid;
-
-                    if (segment.IsValid && segment.RemoveOnCompleted) toRemoveSegments.Add(segment);
-                }
-
-                foreach (var segment in toRemoveSegments)
-                {
-                    _ = _commands.Remove(segment);
-                    isValid = false;
-                }
-
-                if (IsClosed) path.Close();
-
-                context.Paint.Color = FillColor.AsSKColor();
-                context.Paint.StrokeWidth = 0;
-                context.Paint.Style = SKPaintStyle.Fill;
-                context.Canvas.DrawPath(path, context.Paint);
-
-                context.Paint.Color = StrokeColor.AsSKColor();
-                context.Paint.StrokeWidth = StrokeThickness;
-                context.Paint.Style = SKPaintStyle.Stroke;
-                context.Canvas.DrawPath(path, context.Paint);
-
-                if (!isValid) Invalidate();
+                if (segment.IsValid && segment.RemoveOnCompleted) toRemoveSegments.Add(segment);
             }
+
+            foreach (var segment in toRemoveSegments)
+            {
+                _ = _commands.Remove(segment);
+                isValid = false;
+            }
+
+            if (IsClosed) path.Close();
+
+            context.Paint.Color = FillColor.AsSKColor();
+            context.Paint.StrokeWidth = 0;
+            context.Paint.Style = SKPaintStyle.Fill;
+            context.Canvas.DrawPath(path, context.Paint);
+
+            context.Paint.Color = StrokeColor.AsSKColor();
+            context.Paint.StrokeWidth = StrokeThickness;
+            context.Paint.Style = SKPaintStyle.Stroke;
+            context.Canvas.DrawPath(path, context.Paint);
+
+            if (!isValid) Invalidate();
         }
     }
 }

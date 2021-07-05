@@ -190,13 +190,13 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
             {
                 if (countable.Count == 0)
                     return;
-                else if (countable.Count == 1)
-                    using (var enumerator = countable.GetEnumerator())
-                    {
-                        _ = enumerator.MoveNext();
-                        _ = Remove(enumerator.Current);
-                        return;
-                    }
+                if (countable.Count == 1)
+                {
+                    using var enumerator = countable.GetEnumerator();
+                    _ = enumerator.MoveNext();
+                    _ = Remove(enumerator.Current);
+                    return;
+                }
             }
             else if (!collection.Any())
                 return;

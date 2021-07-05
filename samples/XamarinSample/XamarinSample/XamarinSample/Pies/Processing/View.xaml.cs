@@ -20,20 +20,16 @@ namespace XamarinSample.Pies.Processing
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var enumerable = value as IEnumerable;
-            if (value is null) return null;
+            if (value is not IEnumerable enumerable) return null;
 
             var enumerator = enumerable.GetEnumerator();
-            enumerator.MoveNext();
-
-            var firstPaintTask = enumerator.Current;
-            if (!(firstPaintTask is SolidColorPaintTask solidPaintTask)) return null;
-
-            return Color.FromRgba(
+            return enumerator.MoveNext() && enumerator.Current is SolidColorPaintTask solidPaintTask
+                ? Color.FromRgba(
                     solidPaintTask.Color.Red,
                     solidPaintTask.Color.Green,
                     solidPaintTask.Color.Blue,
-                    solidPaintTask.Color.Alpha);
+                    solidPaintTask.Color.Alpha)
+                : null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
