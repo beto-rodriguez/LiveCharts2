@@ -55,7 +55,7 @@ namespace LiveChartsCore
         /// <summary>
         /// Initializes a new instance of the <see cref="FinancialSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
-        public FinancialSeries()
+        protected FinancialSeries()
             : base(
                  SeriesProperties.Financial | SeriesProperties.PrimaryAxisVerticalOrientation |
                  SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)

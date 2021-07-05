@@ -69,7 +69,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// Initializes a new instance of the <see cref="Chart"/> class.
         /// </summary>
         /// <exception cref="Exception">Default colors are not valid</exception>
-        public Chart()
+        protected Chart()
         {
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 

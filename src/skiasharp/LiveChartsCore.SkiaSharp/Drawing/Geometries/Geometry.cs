@@ -63,7 +63,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <summary>
         /// Initializes a new instance of the <see cref="Geometry"/> class.
         /// </summary>
-        public Geometry(bool hasCustomTransform = false)
+        protected Geometry(bool hasCustomTransform = false)
         {
             xProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0));
             yProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0));

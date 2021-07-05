@@ -41,7 +41,7 @@ namespace LiveChartsCore.Drawing.Common
         /// <summary>
         /// Initializes a new instance of the <see cref="Animatable"/> class.
         /// </summary>
-        public Animatable() { }
+        protected Animatable() { }
 
         /// <inheritdoc cref="IAnimatable.IsValid" />
         bool IAnimatable.IsValid { get => _isCompleted; set => _isCompleted = value; }

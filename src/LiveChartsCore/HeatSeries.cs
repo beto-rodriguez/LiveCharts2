@@ -53,7 +53,7 @@ namespace LiveChartsCore
         /// <summary>
         /// Initializes a new instance of the <see cref="HeatSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
-        public HeatSeries()
+        protected HeatSeries()
             : base(
                  SeriesProperties.Heat | SeriesProperties.PrimaryAxisVerticalOrientation |
                  SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips)

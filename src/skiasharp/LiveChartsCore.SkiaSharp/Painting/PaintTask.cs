@@ -54,7 +54,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <summary>
         /// Initializes a new instance of the <see cref="PaintTask"/> class.
         /// </summary>
-        public PaintTask()
+        protected PaintTask()
         {
             strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness), 0f));
             _strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
@@ -64,7 +64,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// Initializes a new instance of the <see cref="PaintTask"/> class.
         /// </summary>
         /// <param name="color">The color.</param>
-        public PaintTask(SKColor color) : this()
+        protected PaintTask(SKColor color) : this()
         {
             Color = color;
         }

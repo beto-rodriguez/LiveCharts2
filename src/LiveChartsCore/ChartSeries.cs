@@ -57,7 +57,7 @@ namespace LiveChartsCore
         /// Initializes a new instance of the <see cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
         /// <param name="properties">The properties.</param>
-        public ChartSeries(SeriesProperties properties) : base(properties) { }
+        protected ChartSeries(SeriesProperties properties) : base(properties) { }
 
         /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsPaint"/>
         public IPaintTask<TDrawingContext>? DataLabelsPaint

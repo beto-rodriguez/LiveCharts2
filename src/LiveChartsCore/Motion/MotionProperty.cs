@@ -48,7 +48,7 @@ namespace LiveChartsCore.Motion
         /// Initializes a new instance of the <see cref="MotionProperty{T}"/> class.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
-        public MotionProperty(string propertyName)
+        protected MotionProperty(string propertyName)
         {
             PropertyName = propertyName;
         }

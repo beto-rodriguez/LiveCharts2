@@ -54,7 +54,7 @@ namespace LiveChartsCore
         /// Initializes a new instance of the <see cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
         /// <param name="properties">The series properties.</param>
-        public CartesianSeries(SeriesProperties properties) : base(properties) { }
+        protected CartesianSeries(SeriesProperties properties) : base(properties) { }
 
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.ScalesXAt"/>
         public int ScalesXAt { get => _scalesXAt; set { _scalesXAt = value; OnPropertyChanged(); } }

@@ -89,7 +89,7 @@ namespace LiveChartsCore
         /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
         /// <param name="properties">The properties.</param>
-        public Series(SeriesProperties properties)
+        protected Series(SeriesProperties properties)
         {
             SeriesProperties = properties;
             _observer = new CollectionDeepObserver<TModel>(

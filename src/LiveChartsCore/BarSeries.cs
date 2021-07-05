@@ -45,7 +45,7 @@ namespace LiveChartsCore
         /// Initializes a new instance of the <see cref="BarSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
         /// <param name="properties">The properties.</param>
-        public BarSeries(SeriesProperties properties)
+        protected BarSeries(SeriesProperties properties)
             : base(properties)
         {
             HoverState = LiveCharts.BarSeriesHoverKey;

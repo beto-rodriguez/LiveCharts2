@@ -57,7 +57,7 @@ namespace LiveChartsCore
         /// <summary>
         /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
-        public PieSeries(bool isGauge = false, bool isGaugeFill = false)
+        protected PieSeries(bool isGauge = false, bool isGaugeFill = false)
             : base(SeriesProperties.PieSeries | SeriesProperties.Stacked |
                   (isGauge ? SeriesProperties.Gauge : 0) | (isGaugeFill ? SeriesProperties.GaugeFill : 0) | SeriesProperties.Solid)
         {

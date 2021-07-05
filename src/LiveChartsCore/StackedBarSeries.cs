@@ -51,7 +51,7 @@ namespace LiveChartsCore
         /// Initializes a new instance of the <see cref="StackedBarSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
         /// <param name="properties">The series properties.</param>
-        public StackedBarSeries(SeriesProperties properties)
+        protected StackedBarSeries(SeriesProperties properties)
             : base(properties)
         {
             HoverState = LiveCharts.StackedBarSeriesHoverKey;

@@ -49,7 +49,7 @@ namespace LiveChartsCore
         /// <summary>
         /// Initializes a new instance of the <see cref="ColumnSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
-        public ColumnSeries()
+        protected ColumnSeries()
             : base(
                   SeriesProperties.Bar | SeriesProperties.PrimaryAxisVerticalOrientation |
                   SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)

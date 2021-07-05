@@ -74,7 +74,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <param name="tooltip">The default tool tip control.</param>
         /// <param name="legend">The default legend.</param>
         /// <exception cref="MotionCanvas"></exception>
-        public Chart(IChartTooltip<SkiaSharpDrawingContext>? tooltip, IChartLegend<SkiaSharpDrawingContext>? legend)
+        protected Chart(IChartTooltip<SkiaSharpDrawingContext>? tooltip, IChartLegend<SkiaSharpDrawingContext>? legend)
         {
             if (tooltip != null) this.tooltip = tooltip;
             if (legend != null) this.legend = legend;

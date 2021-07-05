@@ -146,7 +146,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="canvas">The canvas.</param>
         /// <param name="defaultPlatformConfig">The default platform configuration.</param>
-        public Chart(MotionCanvas<TDrawingContext> canvas, Action<LiveChartsSettings> defaultPlatformConfig)
+        protected Chart(MotionCanvas<TDrawingContext> canvas, Action<LiveChartsSettings> defaultPlatformConfig)
         {
             this.canvas = canvas;
             canvas.Validated += OnCanvasValidated;
