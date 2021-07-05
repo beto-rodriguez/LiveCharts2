@@ -90,7 +90,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <inheritdoc cref="IPaintTask{TDrawingContext}.InitializeTask(TDrawingContext)" />
         public override void InitializeTask(SkiaSharpDrawingContext drawingContext)
         {
-            if (skiaPaint is null) skiaPaint = new SKPaint();
+            skiaPaint ??= new SKPaint();
 
             skiaPaint.Color = Color;
             skiaPaint.IsAntialias = IsAntialias;

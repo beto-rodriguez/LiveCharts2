@@ -179,12 +179,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             if (location.Value.Y < 0) y = 0;
             if (location.Value.Y + Bounds.Height > h) x = h - Bounds.Height;
 
-            if (Transitions is null)
-                Transitions = new Transitions
-                {
-                    new DoubleTransition { Property = Canvas.TopProperty, Duration = TimeSpan.FromMilliseconds(300) },
-                    new DoubleTransition { Property = Canvas.LeftProperty, Duration = TimeSpan.FromMilliseconds(300) },
-                };
+            Transitions ??= new Transitions
+            {
+                new DoubleTransition {Property = Canvas.TopProperty, Duration = TimeSpan.FromMilliseconds(300)},
+                new DoubleTransition {Property = Canvas.LeftProperty, Duration = TimeSpan.FromMilliseconds(300)},
+            };
 
             Canvas.SetTop(this, y);
             Canvas.SetLeft(this, x);

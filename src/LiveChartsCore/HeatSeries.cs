@@ -79,7 +79,7 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
         public override void Measure(Chart<TDrawingContext> chart)
         {
-            if (_paintTaks is null) _paintTaks = GetSolidColorPaintTask();
+            _paintTaks ??= GetSolidColorPaintTask();
 
             var cartesianChart = (CartesianChart<TDrawingContext>)chart;
             var primaryAxis = cartesianChart.YAxes[ScalesYAt];

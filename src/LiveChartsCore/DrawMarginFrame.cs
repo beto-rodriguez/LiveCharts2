@@ -121,7 +121,7 @@ namespace LiveChartsCore
             {
                 Fill.ZIndex = -3;
 
-                if (_fillSizedGeometry is null) _fillSizedGeometry = new TSizedGeometry();
+                _fillSizedGeometry ??= new TSizedGeometry();
 
                 _fillSizedGeometry.X = drawLocation.X;
                 _fillSizedGeometry.Y = drawLocation.Y;
@@ -136,7 +136,7 @@ namespace LiveChartsCore
             {
                 Stroke.ZIndex = -2;
 
-                if (_strokeSizedGeometry is null) _strokeSizedGeometry = new TSizedGeometry();
+                _strokeSizedGeometry ??= new TSizedGeometry();
 
                 _strokeSizedGeometry.X = drawLocation.X;
                 _strokeSizedGeometry.Y = drawLocation.Y;

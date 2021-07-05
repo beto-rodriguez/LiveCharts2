@@ -135,7 +135,7 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IChart.Update(ChartUpdateParams?)" />
         public override void Update(ChartUpdateParams? chartUpdateParams = null)
         {
-            if (chartUpdateParams is null) chartUpdateParams = new ChartUpdateParams();
+            chartUpdateParams ??= new ChartUpdateParams();
 
             if (chartUpdateParams.IsAutomaticUpdate && !View.AutoUpdateEnaled) return;
 

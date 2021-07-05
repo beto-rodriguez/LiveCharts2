@@ -103,7 +103,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <inheritdoc cref="IPaintTask{TDrawingContext}.InitializeTask(TDrawingContext)" />
         public override void InitializeTask(SkiaSharpDrawingContext drawingContext)
         {
-            if (skiaPaint is null) skiaPaint = new SKPaint();
+            skiaPaint ??= new SKPaint();
 
             var size = GetDrawRectangleSize(drawingContext);
             var center = new SKPoint(size.Location.X + _center.X * size.Width, size.Location.Y + _center.Y * size.Height);
