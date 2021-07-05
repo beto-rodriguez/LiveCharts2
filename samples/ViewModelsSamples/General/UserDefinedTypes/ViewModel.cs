@@ -55,7 +55,7 @@ namespace ViewModelsSamples.General.UserDefinedTypes
                 );
         }
 
-        public ISeries[] Series { get; set; } = new[]
+        public ISeries[] Series { get; set; } = new ISeries[]
         {
             new LineSeries<City>
             {
