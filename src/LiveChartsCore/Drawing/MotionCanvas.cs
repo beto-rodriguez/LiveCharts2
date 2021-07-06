@@ -46,6 +46,14 @@ namespace LiveChartsCore.Drawing
         }
 
         /// <summary>
+        /// Gets a value indicating whether the aniamtions are disabled.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [disable animations]; otherwise, <c>false</c>.
+        /// </value>
+        internal bool DisableAnimations { get; set; }
+
+        /// <summary>
         /// Occurs when the visual is invalidated.
         /// </summary>
         public event Action<MotionCanvas<TDrawingContext>>? Invalidated;
@@ -88,6 +96,7 @@ namespace LiveChartsCore.Drawing
 
                 foreach (var task in _paintTasks.OrderBy(x => x.ZIndex).ToArray())
                 {
+                    if (DisableAnimations) task.CompleteAllTransitions();
                     task.IsValid = true;
                     task.CurrentTime = frameTime;
                     task.InitializeTask(context);
@@ -95,6 +104,7 @@ namespace LiveChartsCore.Drawing
                     foreach (var geometry in task.GetGeometries(this))
                     {
                         if (geometry is null) continue;
+                        if (DisableAnimations) geometry.CompleteAllTransitions();
 
                         geometry.IsValid = true;
                         geometry.CurrentTime = frameTime;
