@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Drawing;
 using System.IO;
 using System.Reflection;
 using Newtonsoft.Json;
@@ -43,8 +44,10 @@ namespace LiveChartsCore.Geo
 
             var map = "LiveChartsCore.Geo.world.geojson";
 
-            using var reader = new StreamReader(a.GetManifestResourceStream(map));
-            return JsonConvert.DeserializeObject<GeoJsonFile>(reader.ReadToEnd()) ?? throw new Exception("Map not found");
+            using (var reader = new StreamReader(a.GetManifestResourceStream(map)))
+            {
+                return JsonConvert.DeserializeObject<GeoJsonFile>(reader.ReadToEnd()) ?? throw new Exception("Map not found");
+            }
         }
 
         /// <summary>
@@ -52,35 +55,44 @@ namespace LiveChartsCore.Geo
         /// </summary>
         /// <param name="projection">The projection.</param>
         /// <param name="mapSize">Size of the map.</param>
+        /// <param name="panningOffset">The offset.</param>
         /// <returns></returns>
-        public static MapProjector BuildProjector(Projection projection, float[] mapSize)
+        public static MapProjector BuildProjector(Projection projection, float[] mapSize, PointF panningOffset)
         {
             var mapRatio =
                 projection == Projection.Default
                 ? ControlCoordinatesProjector.PreferredRatio
                 : MercatorProjector.PreferredRatio;
 
-            var normalizedW = mapSize[0] / mapRatio[0];
-            var normalizedH = mapSize[1] / mapRatio[1];
-            float ox = 0f, oy = 0f;
+            var scalingFactor = mapSize.Length >= 3 ? mapSize[2] : 1f;
+            var actualW = mapSize[0];
+            var actualH = mapSize[1];
+            var scaledW = actualW * scalingFactor;
+            var scaledH = actualH * scalingFactor;
+
+            var normalizedW = scaledW / mapRatio[0];
+            var normalizedH = scaledH / mapRatio[1];
+            float ox = panningOffset.X, oy = panningOffset.Y;
 
             if (normalizedW < normalizedH)
             {
-                var h = mapSize[0] * mapRatio[1] / mapRatio[0];
-                oy = (float)(mapSize[1] - h) * 0.5f;
-                mapSize[1] = h;
+                var h = scaledW * mapRatio[1] / mapRatio[0];
+                oy += (float)(scaledH - h) * 0.5f - (scaledH - actualH) * 0.5f;
+                ox += (actualW - scaledW) * 0.5f;
+                scaledH = h;
             }
             else
             {
-                var w = mapSize[1] * mapRatio[0] / mapRatio[1];
-                ox = (float)(mapSize[0] - w) * 0.5f;
-                mapSize[0] = w;
+                var w = scaledH * mapRatio[0] / mapRatio[1];
+                ox += (float)(scaledW - w) * 0.5f - (scaledW - actualW) * 0.5f;
+                oy += (scaledH - actualH) * 0.5f;
+                scaledW = w;
             }
 
             return
                 projection == Projection.Default
-                ? new ControlCoordinatesProjector(mapSize[0], mapSize[1], ox, oy)
-                : new MercatorProjector(mapSize[0], mapSize[1], ox, oy);
+                ? new ControlCoordinatesProjector(scaledW, scaledH, ox, oy)
+                : new MercatorProjector(scaledW, scaledH, ox, oy);
         }
     }
 }

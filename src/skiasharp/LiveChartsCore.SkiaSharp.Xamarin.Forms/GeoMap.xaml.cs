@@ -197,7 +197,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 {
                     (float)(Bounds.Width * DeviceDisplay.MainDisplayInfo.Density),
                     (float)(Bounds.Height * DeviceDisplay.MainDisplayInfo.Density)
-                });
+                },
+                new System.Drawing.PointF(0f, 0f));
             var shapes = worldMap.AsHeatMapShapes(Values, hm, _heatStops, stroke, fill, thickness, projector);
 
             canvas.PaintTasks = new List<PaintSchedule<SkiaSharpDrawingContext>>

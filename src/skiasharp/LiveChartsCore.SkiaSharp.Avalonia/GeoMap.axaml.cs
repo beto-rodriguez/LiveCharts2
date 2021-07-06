@@ -194,7 +194,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             }
 
             var worldMap = s_map ??= Maps.GetWorldMap();
-            var projector = Maps.BuildProjector(Projection, new[] { (float)Bounds.Width, (float)Bounds.Height });
+            var projector = Maps.BuildProjector(Projection, new[] { (float)Bounds.Width, (float)Bounds.Height }, new System.Drawing.PointF(0f, 0f));
             var shapes = worldMap.AsHeatMapShapes(Values, hm, _heatStops, stroke, fill, thickness, projector);
 
             canvas.PaintTasks = new List<PaintSchedule<SkiaSharpDrawingContext>>

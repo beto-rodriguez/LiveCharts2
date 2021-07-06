@@ -22,13 +22,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 
 namespace LiveChartsCore.SkiaSharpView.WPF
@@ -41,7 +44,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     {
         private static GeoJsonFile? s_map = null;
         private int _heatKnownLength = 0;
-        private List<Tuple<double, System.Drawing.Color>> _heatStops = new();
+        private float _scalingFactor = 1f;
+        private List<Tuple<double, Color>> _heatStops = new();
+        private PointF _pointerPanningOffset = new(0f, 0f);
+        private PointF _pointerPanningPosition = new(0f, 0f);
+        private PointF _pointerPreviousPanningPosition = new(0f, 0f);
+        private readonly ActionThrottler _panningThrottler;
+        private bool _isPanning = false;
 
         static GeoMap()
         {
@@ -54,7 +63,15 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         public GeoMap()
         {
             SetCurrentValue(ValuesProperty, new Dictionary<string, double>());
+
+            MouseWheel += OnMouseWheel;
+            MouseDown += OnMouseDown;
+            MouseMove += OnMouseMove;
+            MouseUp += OnMouseUp;
+
             SizeChanged += GeoMap_SizeChanged;
+
+            _panningThrottler = new ActionThrottler(PanningThrottlerUnlocked, TimeSpan.FromMilliseconds(30));
         }
 
         /// <summary>
@@ -107,6 +124,49 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         public static readonly DependencyProperty FillColorProperty =
             DependencyProperty.Register(
                 nameof(FillColor), typeof(System.Windows.Media.Color), typeof(GeoMap), new PropertyMetadata(System.Windows.Media.Color.FromRgb(250, 250, 250)));
+
+        /// <summary>
+        /// The zoom mode property
+        /// </summary>
+        public static readonly DependencyProperty ZoomModeProperty =
+            DependencyProperty.Register(
+                nameof(ZoomMode), typeof(ZoomAndPanMode), typeof(GeoMap),
+                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultZoomMode));
+
+        /// <summary>
+        /// The zooming speed property
+        /// </summary>
+        public static readonly DependencyProperty ZoomingSpeedProperty =
+            DependencyProperty.Register(
+                nameof(ZoomingSpeed), typeof(double), typeof(GeoMap),
+                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultZoomSpeed));
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is zooming or panning.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is zooming or panning; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsZoomingOrPanning { get; private set; }
+
+        /// <summary>
+        /// Gets or sets zoomi mode.
+        /// </summary>
+        public ZoomAndPanMode ZoomMode
+        {
+            get => (ZoomAndPanMode)GetValue(ZoomModeProperty);
+            set => SetValue(ZoomModeProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets zooming speed.
+        /// </summary>
+        public double ZoomingSpeed
+        {
+            get => (double)GetValue(ZoomingSpeedProperty);
+            set => SetValue(ZoomingSpeedProperty, value);
+        }
+
 
         /// <summary>
         /// Gets or sets the projection.
@@ -178,13 +238,24 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     $"{nameof(MotionCanvas)} not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
                     $"If you override the template please add an {nameof(MotionCanvas)} to the template and name it 'canvas'");
 
-            var paint = new SolidColorPaintTask();
+            var projector = Maps.BuildProjector(Projection, new[] { (float)ActualWidth, (float)ActualHeight, _scalingFactor }, new PointF(0f, 0f));
+            var shapes = buildPathShapes(projector);
 
+            canvas.PaintTasks = new List<PaintSchedule<SkiaSharpDrawingContext>>
+            {
+                 new PaintSchedule<SkiaSharpDrawingContext>(
+                    new SolidColorPaintTask(),
+                    new HashSet<IDrawable<SkiaSharpDrawingContext>>(shapes))
+            };
+        }
+
+        private IEnumerable<PathShape> buildPathShapes(MapProjector projector)
+        {
             var thickness = (float)StrokeThickness;
-            var stroke = System.Drawing.Color.FromArgb(255, StrokeColor.R, StrokeColor.G, StrokeColor.B);
-            var fill = System.Drawing.Color.FromArgb(255, FillColor.R, FillColor.G, FillColor.B);
+            var stroke = Color.FromArgb(255, StrokeColor.R, StrokeColor.G, StrokeColor.B);
+            var fill = Color.FromArgb(255, FillColor.R, FillColor.G, FillColor.B);
 
-            var hm = HeatMap.Select(x => System.Drawing.Color.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
+            var hm = HeatMap.Select(x => Color.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
 
             if (_heatKnownLength != HeatMap.Length)
             {
@@ -193,13 +264,101 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             }
 
             var worldMap = s_map ??= Maps.GetWorldMap();
-            var projector = Maps.BuildProjector(Projection, new[] { (float)ActualWidth, (float)ActualHeight });
-            var shapes = worldMap.AsHeatMapShapes(Values, hm, _heatStops, stroke, fill, thickness, projector);
+
+            return worldMap.AsHeatMapShapes(Values, hm, _heatStops, stroke, fill, thickness, projector);
+        }
+
+        private void OnMouseWheel(object? sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            var p = e.GetPosition(this);
+            _scalingFactor *= e.Delta > 0 ? 1.1f : 0.9f;
+            _scalingFactor = _scalingFactor < 1 ? 1 : _scalingFactor;
+
+            Zoom(_scalingFactor);
+            _pointerPanningOffset = new PointF(0f, 0f);
+        }
+
+        private void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            _ = CaptureMouse();
+            _isPanning = true;
+            var p = e.GetPosition(this);
+            _pointerPreviousPanningPosition = new PointF((float)p.X, (float)p.Y);
+        }
+
+        private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            var p = e.GetPosition(this);
+
+            if (!_isPanning) return;
+            _pointerPanningPosition = new PointF((float)p.X, (float)p.Y);
+            _panningThrottler.Call();
+        }
+
+        private void OnMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ReleaseMouseCapture();
+
+            if (!_isPanning) return;
+            _isPanning = false;
+        }
+
+        private void PanningThrottlerUnlocked()
+        {
+            _pointerPanningOffset = new PointF(_pointerPanningOffset.X + _pointerPanningPosition.X - _pointerPreviousPanningPosition.X, _pointerPanningOffset.Y + _pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y);
+            Pan(_pointerPanningOffset);
+
+            _pointerPreviousPanningPosition = new PointF(_pointerPanningPosition.X, _pointerPanningPosition.Y);
+        }
+
+        /// <summary>
+        /// Zooms to the specified pivot.
+        /// </summary>
+        /// <param name="scalingFactor">The scaling factor.</param>
+        /// <returns></returns>
+        public void Zoom(float scalingFactor)
+        {
+            var speed = ZoomingSpeed < 0.1 ? 0.1 : (ZoomingSpeed > 0.95 ? 0.95 : ZoomingSpeed);
+
+            if (Template.FindName("canvas", this) is not MotionCanvas canvas)
+                throw new Exception(
+                    $"{nameof(MotionCanvas)} not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
+                    $"If you override the template please add an {nameof(MotionCanvas)} to the template and name it 'canvas'");
+
+
+            var projector = Maps.BuildProjector(Projection, new[] { (float)ActualWidth, (float)ActualHeight, scalingFactor }, new PointF(0f, 0f));
+            var shapes = buildPathShapes(projector);
 
             canvas.PaintTasks = new List<PaintSchedule<SkiaSharpDrawingContext>>
             {
                  new PaintSchedule<SkiaSharpDrawingContext>(
-                    paint,
+                    new SolidColorPaintTask(),
+                    new HashSet<IDrawable<SkiaSharpDrawingContext>>(shapes))
+            };
+        }
+
+        /// <summary>
+        /// Pans with the specified delta.
+        /// </summary>
+        /// <param name="delta">The delta.</param>
+        /// <returns></returns>
+        public void Pan(PointF delta)
+        {
+            var speed = ZoomingSpeed < 0.1 ? 0.1 : (ZoomingSpeed > 0.95 ? 0.95 : ZoomingSpeed);
+
+            if (Template.FindName("canvas", this) is not MotionCanvas canvas)
+                throw new Exception(
+                    $"{nameof(MotionCanvas)} not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
+                    $"If you override the template please add an {nameof(MotionCanvas)} to the template and name it 'canvas'");
+
+
+            var projector = Maps.BuildProjector(Projection, new[] { (float)ActualWidth, (float)ActualHeight, _scalingFactor }, delta);
+            var shapes = buildPathShapes(projector);
+
+            canvas.PaintTasks = new List<PaintSchedule<SkiaSharpDrawingContext>>
+            {
+                 new PaintSchedule<SkiaSharpDrawingContext>(
+                    new SolidColorPaintTask(),
                     new HashSet<IDrawable<SkiaSharpDrawingContext>>(shapes))
             };
         }
