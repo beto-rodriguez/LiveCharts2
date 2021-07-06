@@ -74,7 +74,12 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         public float StartAngle { get => _startProperty.GetMovement(this); set => _startProperty.SetMovement(value, this); }
 
         /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.SweepAngle" />
-        public float SweepAngle { get => _sweepProperty.GetMovement(this); set => _sweepProperty.SetMovement(value, this); }
+        public float SweepAngle
+        {
+            get =>
+                _sweepProperty.GetMovement(this);
+            set => _sweepProperty.SetMovement(value, this);
+        }
 
         /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.PushOut" />
         public float PushOut { get => _pushoutProperty.GetMovement(this); set => _pushoutProperty.SetMovement(value, this); }

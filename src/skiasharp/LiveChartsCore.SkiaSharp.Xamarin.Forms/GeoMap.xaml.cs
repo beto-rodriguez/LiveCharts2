@@ -38,7 +38,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
     /// Defines a geographic map.
     /// </summary>
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class GeoMap : ContentView
+    public partial class GeoMap : ContentView, IGeoMap
     {
         private static GeoJsonFile? s_map = null;
         private int _heatKnownLength = 0;
@@ -125,10 +125,16 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             set => SetValue(HeatMapProperty, value);
         }
 
+        System.Drawing.Color[] IGeoMap.HeatMap
+        {
+            get => HeatMap.Select(x => System.Drawing.Color.FromArgb((int)(x.A * 255), (int)(x.R * 255), (int)(x.G * 255), (int)(x.B * 255))).ToArray();
+            set => HeatMap = value.Select(x => new Color(x.R / 255d, x.G / 255d, x.B / 255d, x.A / 255d)).ToArray();
+        }
+
         /// <summary>
         /// Gets or sets the color stops.
         /// </summary>
-        public double[] ColorStops
+        public double[]? ColorStops
         {
             get => (double[])GetValue(ColorStopsProperty);
             set => SetValue(ColorStopsProperty, value);
@@ -141,6 +147,12 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             get => (Color)GetValue(StrokeColorProperty);
             set => SetValue(StrokeColorProperty, value);
+        }
+
+        System.Drawing.Color IGeoMap.StrokeColor
+        {
+            get => System.Drawing.Color.FromArgb((int)(StrokeColor.A * 255), (int)(StrokeColor.R * 255), (int)(StrokeColor.G * 255), (int)(StrokeColor.B * 255));
+            set => StrokeColor = new Color(value.R / 255d, value.G / 255d, value.B / 255d, value.A / 255d);
         }
 
         /// <summary>
@@ -159,6 +171,12 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             get => (Color)GetValue(FillColorProperty);
             set => SetValue(FillColorProperty, value);
+        }
+
+        System.Drawing.Color IGeoMap.FillColor
+        {
+            get => System.Drawing.Color.FromArgb((int)(FillColor.A * 255), (int)(FillColor.R * 255), (int)(FillColor.G * 255), (int)(FillColor.B * 255));
+            set => FillColor = new Color(value.R / 255d, value.G / 255d, value.B / 255d, value.A / 255d);
         }
 
         /// <summary>

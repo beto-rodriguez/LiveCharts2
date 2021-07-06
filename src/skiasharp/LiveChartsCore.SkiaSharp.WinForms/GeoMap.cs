@@ -36,7 +36,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     /// The geo map control.
     /// </summary>
     /// <seealso cref="UserControl" />
-    public partial class GeoMap : UserControl
+    public partial class GeoMap : UserControl, IGeoMap
     {
         private static GeoJsonFile? s_map = null;
         private int _heatKnownLength = 0;
