@@ -44,10 +44,8 @@ namespace LiveChartsCore.Geo
 
             var map = "LiveChartsCore.Geo.world.geojson";
 
-            using (var reader = new StreamReader(a.GetManifestResourceStream(map)))
-            {
-                return JsonConvert.DeserializeObject<GeoJsonFile>(reader.ReadToEnd()) ?? throw new Exception("Map not found");
-            }
+            using var reader = new StreamReader(a.GetManifestResourceStream(map));
+            return JsonConvert.DeserializeObject<GeoJsonFile>(reader.ReadToEnd()) ?? throw new Exception("Map not found");
         }
 
         /// <summary>
