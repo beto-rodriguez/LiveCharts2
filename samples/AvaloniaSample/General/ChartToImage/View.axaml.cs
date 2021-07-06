@@ -15,26 +15,67 @@ namespace AvaloniaSample.General.ChartToImage
             var vm = new ViewModel();
             DataContext = vm;
 
+            // CARTESIAN CHART
+
             // you can create a image of a chart from memory using the
             // SKCartesianChart, SKPieChart or SKGeoMap controls.
-            var skChart = new SKCartesianChart
+
+            // in the case of this sample
+            // the image was generated at the root folder ( samples/AvaloniaSample/bin/Debug/{targetFramework}/ )
+            new SKCartesianChart
             {
                 Width = 900,
                 Height = 600,
-                Series = vm.Series
-            };
-
-            skChart.SaveImage("chartImageFromMemory.png");
+                Series = vm.CaterianSeries
+            }.SaveImage("CartesianImageFromMemory.png"); // <- path where the image will be generated
 
             // or you could also use a chart in the user interface to create an image
-            CreateImageFromControl();
+            CreateImageFromCartesianControl();
+
+
+            // PIE CHART
+            new SKPieChart
+            {
+                Width = 900,
+                Height = 600,
+                Series = vm.PieSeries
+            }.SaveImage("PieImageFromMemory.png");
+
+            // or create it from a control in the UI
+            CreateImageFromPieControl();
+
+
+            // GEO MAP CHART
+            new SKGeoMap
+            {
+                Width = 900,
+                Height = 600,
+                Values = vm.MapValues
+            }.SaveImage("MapImageFromMemory.png");
+
+            // or create it from a control in the UI
+            CreateImageFromGeoControl();
         }
 
-        private void CreateImageFromControl()
+        private void CreateImageFromCartesianControl()
         {
-            var chartControl = this.FindControl<CartesianChart>("chart");
+            var chartControl = this.FindControl<CartesianChart>("cartesianChart");
             var skChart = new SKCartesianChart(chartControl) { Width = 900, Height = 600, };
-            skChart.SaveImage("chartImageFromControl.png");
+            skChart.SaveImage("CartesianImageFromControl.png");
+        }
+
+        private void CreateImageFromPieControl()
+        {
+            var chartControl = this.FindControl<PieChart>("pieChart");
+            var skChart = new SKPieChart(chartControl) { Width = 900, Height = 600, };
+            skChart.SaveImage("PieImageFromControl.png");
+        }
+
+        private void CreateImageFromGeoControl()
+        {
+            var chartControl = this.FindControl<GeoMap>("geoChart");
+            var skChart = new SKGeoMap(chartControl) { Width = 900, Height = 600, };
+            skChart.SaveImage("MapImageFromControl.png");
         }
 
         private void InitializeComponent()

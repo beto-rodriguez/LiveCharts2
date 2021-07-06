@@ -34,18 +34,17 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts
 {
-
     /// <summary>
     /// In-memory chart that is able to generate a chart images.
     /// </summary>
-    public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IImageChart
+    public class SKPieChart : IPieChartView<SkiaSharpDrawingContext>, IImageChart
     {
         private Color _backColor;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SKCartesianChart"/> class.
+        /// Initializes a new instance of the <see cref="SKPieChart"/> class.
         /// </summary>
-        public SKCartesianChart()
+        public SKPieChart()
         {
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
@@ -55,24 +54,22 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
                 throw new Exception("Default colors are not valid");
             initializer.ApplyStyleToChart(this);
 
-            Core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, CoreCanvas);
+            Core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, CoreCanvas);
             Core.Measuring += OnCoreMeasuring;
             Core.UpdateStarted += OnCoreUpdateStarted;
             Core.UpdateFinished += OnCoreUpdateFinished;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SKCartesianChart"/> class.
+        /// Initializes a new instance of the <see cref="SKPieChart"/> class.
         /// </summary>
         /// <param name="view">The view.</param>
-        public SKCartesianChart(ICartesianChartView<SkiaSharpDrawingContext> view) : this()
+        public SKPieChart(IPieChartView<SkiaSharpDrawingContext> view) : this()
         {
-            XAxes = view.XAxes;
-            YAxes = view.YAxes;
             Series = view.Series;
-            Sections = view.Sections;
-            DrawMarginFrame = view.DrawMarginFrame;
-            PointStates = view.PointStates;
+            InitialRotation = view.InitialRotation;
+            MaxAngle = view.MaxAngle;
+            Total = view.Total;
         }
 
         /// <summary>
@@ -99,35 +96,23 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         /// </value>
         public int Width { get; set; } = 900;
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Core"/>
-        public CartesianChart<SkiaSharpDrawingContext> Core { get; }
+        /// <inheritdoc cref="IPieChartView{TDrawingContext}.Core"/>
+        public PieChart<SkiaSharpDrawingContext> Core { get; }
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.XAxes"/>
-        public IEnumerable<IAxis> XAxes { get; set; } = new Axis[] { new Axis() };
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.YAxes"/>
-        public IEnumerable<IAxis> YAxes { get; set; } = new Axis[] { new Axis() };
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections"/>
-        public IEnumerable<Section<SkiaSharpDrawingContext>> Sections { get; set; } = new RectangularSection[0];
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series"/>
+        /// <inheritdoc cref="IPieChartView{TDrawingContext}.Series"/>
         public IEnumerable<ISeries> Series { get; set; } = new ISeries[0];
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame"/>
-        public DrawMarginFrame<SkiaSharpDrawingContext>? DrawMarginFrame { get; set; }
+        /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation"/>
+        public double InitialRotation { get; set; }
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomMode"/>
-        public ZoomAndPanMode ZoomMode { get; set; }
+        /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxAngle"/>
+        public double MaxAngle { get; set; } = 360;
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomingSpeed"/>
-        public double ZoomingSpeed { get; set; }
+        /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total"/>
+        public double? Total { get; set; }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnaled"/>
         public bool AutoUpdateEnaled { get; set; }
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy"/>
-        public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas"/>
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas { get; } = new();
@@ -163,7 +148,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         public TimeSpan AnimationsSpeed { get; set; }
 
         /// <inheritdoc cref="IChartView.EasingFunction"/>
-        public Func<float, float>? EasingFunction { get; set; } = null;
+        public Func<float, float>? EasingFunction { get; set; }
 
         /// <inheritdoc cref="IChartView.UpdaterThrottler"/>
         public TimeSpan UpdaterThrottler { get; set; }
@@ -188,12 +173,6 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
         public void HideTooltip()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(PointF, int, int)"/>
-        public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
             throw new NotImplementedException();
         }
