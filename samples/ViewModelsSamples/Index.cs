@@ -68,6 +68,7 @@
             "Axes/Logaritmic",
 
             "General/Sections",
+            "General/ChartToImage",
             "General/Tooltips",
             "General/Legends",
             "General/Animations",

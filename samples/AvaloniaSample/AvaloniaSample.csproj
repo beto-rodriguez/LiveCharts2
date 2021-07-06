@@ -86,6 +86,9 @@
     <Compile Update="Financial\BasicCandlesticks\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="General\ChartToImage\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="General\Sections\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
