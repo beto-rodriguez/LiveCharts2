@@ -88,7 +88,7 @@ namespace LiveChartsCore.Drawing.Common
         }
 
         /// <inheritdoc cref="IAnimatable.CompleteTransitions(string[])" />
-        public void CompleteTransitions(params string[] propertyNames)
+        public virtual void CompleteTransitions(params string[] propertyNames)
         {
             if (propertyNames is null || propertyNames.Length == 0)
                 throw new Exception(
@@ -106,9 +106,12 @@ namespace LiveChartsCore.Drawing.Common
         }
 
         /// <inheritdoc cref="IAnimatable.CompleteAllTransitions" />
-        public void CompleteAllTransitions()
+        public virtual void CompleteAllTransitions()
         {
-            CompleteTransitions(transitionProperties.Keys.ToArray());
+            var p = transitionProperties.Keys.ToArray();
+            if (p.Length == 0) return;
+
+            CompleteTransitions(p);
         }
 
         /// <inheritdoc cref="IAnimatable.GetTransitionProperty(string)" />

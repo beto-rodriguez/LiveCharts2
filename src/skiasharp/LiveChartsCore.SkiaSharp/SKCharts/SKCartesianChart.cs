@@ -320,10 +320,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         /// <returns></returns>
         public void SaveImage(string path, SKEncodedImageFormat format = SKEncodedImageFormat.Png, int quality = 80)
         {
-            EasingFunction = null;
-            foreach (var series in Series) series.EasingFunction = null;
-            foreach (var axis in XAxes) axis.EasingFunction = null;
-            foreach (var axis in YAxes) axis.EasingFunction = null;
+            CoreCanvas.DisableAnimations = true;
 
             using var surface = SKSurface.Create(new SKImageInfo(Width, Height));
 

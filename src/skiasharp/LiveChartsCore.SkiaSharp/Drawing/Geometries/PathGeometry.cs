@@ -109,5 +109,18 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         {
             _commands.Clear();
         }
+
+        /// <inheritdoc cref="IAnimatable.CompleteAllTransitions" />
+        public override void CompleteAllTransitions()
+        {
+            var toExecute = _drawingCommands ??= _commands.ToArray();
+
+            foreach (var segment in toExecute)
+            {
+                segment.CompleteAllTransitions();
+            }
+
+            base.CompleteAllTransitions();
+        }
     }
 }
