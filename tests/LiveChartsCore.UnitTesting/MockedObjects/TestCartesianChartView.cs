@@ -66,7 +66,7 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
         public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
         public Color BackColor { get; set; }
-        public bool AutoUpdateEnaled { get; set; } = true;
+        public bool AutoUpdateEnabled { get; set; } = true;
         public TimeSpan UpdaterThrottler { get; set; }
         public DrawMarginFrame<SkiaSharpDrawingContext> DrawMarginFrame { get; set; }
         public IEnumerable<Section<SkiaSharpDrawingContext>> Sections { get; set; }
