@@ -51,6 +51,11 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <summary>
         /// Initializes a new instance of the <see cref="CartesianChart"/> class.
         /// </summary>
+        public CartesianChart() : this(null, null) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CartesianChart"/> class.
+        /// </summary>
         /// <param name="tooltip">The default tool tip control.</param>
         /// <param name="legend">The default legend control.</param>
         public CartesianChart(IChartTooltip<SkiaSharpDrawingContext>? tooltip = null, IChartLegend<SkiaSharpDrawingContext>? legend = null)
