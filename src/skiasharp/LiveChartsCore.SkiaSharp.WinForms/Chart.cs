@@ -228,8 +228,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <inheritdoc cref="IChartView{TDrawingContext}.PointStates" />
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnaled" />
-        public bool AutoUpdateEnaled { get; set; } = true;
+        /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
+        public bool AutoUpdateEnabled { get; set; } = true;
 
         /// <inheritdoc cref="IChartView.UpdaterThrottler" />
         public TimeSpan UpdaterThrottler

@@ -624,7 +624,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <inheritdoc cref="IChartView{TDrawingContext}.PointStates" />
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnaled" />
+        /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
         public bool AutoUpdateEnaled { get; set; } = true;
 
         /// <inheritdoc cref="IChartView.UpdaterThrottler" />

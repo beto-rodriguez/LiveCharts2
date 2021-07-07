@@ -138,7 +138,7 @@ namespace LiveChartsCore
         public override void Update(ChartUpdateParams? chartUpdateParams = null)
         {
             chartUpdateParams ??= new ChartUpdateParams();
-            if (chartUpdateParams.IsAutomaticUpdate && !View.AutoUpdateEnaled) return;
+            if (chartUpdateParams.IsAutomaticUpdate && !View.AutoUpdateEnabled) return;
             if (!chartUpdateParams.Throttling)
             {
                 updateThrottler.ForceCall();

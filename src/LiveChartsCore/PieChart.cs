@@ -137,7 +137,7 @@ namespace LiveChartsCore
         {
             chartUpdateParams ??= new ChartUpdateParams();
 
-            if (chartUpdateParams.IsAutomaticUpdate && !View.AutoUpdateEnaled) return;
+            if (chartUpdateParams.IsAutomaticUpdate && !View.AutoUpdateEnabled) return;
 
             if (!chartUpdateParams.Throttling)
             {

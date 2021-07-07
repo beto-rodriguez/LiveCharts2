@@ -123,8 +123,8 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomingSpeed"/>
         public double ZoomingSpeed { get; set; }
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnaled"/>
-        public bool AutoUpdateEnaled { get; set; }
+        /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled"/>
+        public bool AutoUpdateEnabled { get; set; }
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy"/>
         public TooltipFindingStrategy TooltipFindingStrategy { get; set; }

@@ -111,8 +111,8 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total"/>
         public double? Total { get; set; }
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnaled"/>
-        public bool AutoUpdateEnaled { get; set; }
+        /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled"/>
+        public bool AutoUpdateEnabled { get; set; }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas"/>
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas { get; } = new();
