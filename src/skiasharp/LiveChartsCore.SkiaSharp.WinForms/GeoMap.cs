@@ -113,7 +113,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             }
 
             var worldMap = s_map ??= Maps.GetWorldMap();
-            var projector = Maps.BuildProjector(Projection, new float[] { Width, Height });
+            var projector = Maps.BuildProjector(Projection, new float[] { Width, Height }, new System.Drawing.PointF(0f, 0f));
             var shapes = worldMap.AsHeatMapShapes(Values, HeatMap, _heatStops, stroke, fill, thickness, projector);
 
             canvas.PaintTasks = new List<PaintSchedule<SkiaSharpDrawingContext>>
