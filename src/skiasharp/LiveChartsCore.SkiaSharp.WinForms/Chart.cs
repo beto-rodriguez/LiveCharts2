@@ -74,10 +74,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <param name="tooltip">The default tool tip control.</param>
         /// <param name="legend">The default legend.</param>
         /// <exception cref="MotionCanvas"></exception>
-        public Chart(IChartTooltip<SkiaSharpDrawingContext>? tooltip, IChartLegend<SkiaSharpDrawingContext>? legend)
+        protected Chart(IChartTooltip<SkiaSharpDrawingContext>? tooltip, IChartLegend<SkiaSharpDrawingContext>? legend)
         {
-            if (tooltip != null) this.tooltip = tooltip;
-            if (legend != null) this.legend = legend;
+            if (tooltip is not null) this.tooltip = tooltip;
+            if (legend is not null) this.legend = legend;
 
             motionCanvas = new MotionCanvas();
             SuspendLayout();
@@ -100,7 +100,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
             var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
             var initializer = stylesBuilder.GetVisualsInitializer();
-            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
+            if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
                 throw new Exception("Default colors are not valid");
             initializer.ApplyStyleToChart(this);
 
@@ -109,7 +109,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
             InitializeCore();
 
-            if (core == null) throw new Exception("Core not found!");
+            if (core is null) throw new Exception("Core not found!");
             core.Measuring += OnCoreMeasuring;
             core.UpdateStarted += OnCoreUpdateStarted;
             core.UpdateFinished += OnCoreUpdateFinished;
@@ -228,8 +228,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <inheritdoc cref="IChartView{TDrawingContext}.PointStates" />
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnaled" />
-        public bool AutoUpdateEnaled { get; set; } = true;
+        /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
+        public bool AutoUpdateEnabled { get; set; } = true;
 
         /// <inheritdoc cref="IChartView.UpdaterThrottler" />
         public TimeSpan UpdaterThrottler
@@ -237,7 +237,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             get => core?.UpdaterThrottler ?? throw new Exception("core not set yet.");
             set
             {
-                if (core == null) throw new Exception("core not set yet.");
+                if (core is null) throw new Exception("core not set yet.");
                 core.UpdaterThrottler = value;
             }
         }
@@ -247,7 +247,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
         public void ShowTooltip(IEnumerable<TooltipPoint> points)
         {
-            if (tooltip == null || core == null) return;
+            if (tooltip is null || core is null) return;
 
             tooltip.Show(points, core);
         }
@@ -255,13 +255,13 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
         public void HideTooltip()
         {
-            if (tooltip == null || core == null) return;
+            if (tooltip is null || core is null) return;
 
             foreach (var state in PointStates.GetStates())
             {
                 if (!state.IsHoverState) continue;
-                if (state.Fill != null) state.Fill.ClearGeometriesFromPaintTask(core.Canvas);
-                if (state.Stroke != null) state.Stroke.ClearGeometriesFromPaintTask(core.Canvas);
+                if (state.Fill is not null) state.Fill.ClearGeometriesFromPaintTask(core.Canvas);
+                if (state.Stroke is not null) state.Stroke.ClearGeometriesFromPaintTask(core.Canvas);
             }
 
             tooltip.Hide();
@@ -286,7 +286,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <returns></returns>
         protected void OnPropertyChanged()
         {
-            if (core == null) return;
+            if (core is null) return;
             core.Update();
         }
 
@@ -303,7 +303,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         private void OnResized(object? sender, EventArgs e)
         {
-            if (core == null) return;
+            if (core is null) return;
             core.Update();
         }
 

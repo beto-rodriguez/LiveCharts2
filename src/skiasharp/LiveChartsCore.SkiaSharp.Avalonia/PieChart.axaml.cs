@@ -83,7 +83,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
             var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
             var initializer = stylesBuilder.GetVisualsInitializer();
-            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
+            if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
                 throw new Exception("Default colors are not valid");
             initializer.ApplyStyleToChart(this);
 
@@ -92,12 +92,12 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             _seriesObserver = new CollectionDeepObserver<ISeries>(
                (object? sender, NotifyCollectionChangedEventArgs e) =>
                {
-                   if (core == null) return;
+                   if (core is null) return;
                    _ = Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
                },
                (object? sender, PropertyChangedEventArgs e) =>
                {
-                   if (core == null) return;
+                   if (core is null) return;
                    _ = Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
                });
 
@@ -306,9 +306,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         };
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
-        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => core == null ? throw new Exception("core not found") : core.Canvas;
+        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => core is null ? throw new Exception("core not found") : core.Canvas;
 
-        PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => core == null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
+        PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core => core is null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
 
         /// <inheritdoc cref="IChartView.DrawMargin" />
         public Margin? DrawMargin
@@ -557,8 +557,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <inheritdoc cref="IChartView{TDrawingContext}.PointStates" />
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnaled" />
-        public bool AutoUpdateEnaled { get; set; } = true;
+        /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
+        public bool AutoUpdateEnabled { get; set; } = true;
 
         /// <inheritdoc cref="IChartView.UpdaterThrottler" />
         public TimeSpan UpdaterThrottler
@@ -566,7 +566,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             get => core?.UpdaterThrottler ?? throw new Exception("core not set yet.");
             set
             {
-                if (core == null) throw new Exception("core not set yet.");
+                if (core is null) throw new Exception("core not set yet.");
                 core.UpdaterThrottler = value;
             }
         }
@@ -576,7 +576,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
         public void ShowTooltip(IEnumerable<TooltipPoint> points)
         {
-            if (tooltip == null || core == null) return;
+            if (tooltip is null || core is null) return;
 
             tooltip.Show(points, core);
         }
@@ -584,13 +584,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
         public void HideTooltip()
         {
-            if (tooltip == null || core == null) return;
+            if (tooltip is null || core is null) return;
 
             foreach (var state in PointStates.GetStates())
             {
                 if (!state.IsHoverState) continue;
-                if (state.Fill != null) state.Fill.ClearGeometriesFromPaintTask(core.Canvas);
-                if (state.Stroke != null) state.Stroke.ClearGeometriesFromPaintTask(core.Canvas);
+                if (state.Fill is not null) state.Fill.ClearGeometriesFromPaintTask(core.Canvas);
+                if (state.Stroke is not null) state.Stroke.ClearGeometriesFromPaintTask(core.Canvas);
             }
 
             tooltip.Hide();
@@ -626,7 +626,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             base.OnPropertyChanged(change);
 
-            if (core == null) return;
+            if (core is null) return;
 
             if (change.Property.Name == nameof(Series))
             {

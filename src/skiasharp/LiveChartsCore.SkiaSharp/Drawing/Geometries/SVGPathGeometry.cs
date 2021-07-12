@@ -61,7 +61,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
-            if (_svgPath == null)
+            if (_svgPath is null)
                 throw new System.NullReferenceException(
                     $"{nameof(SVG)} property is null and there is not a defined path to draw.");
 

@@ -48,7 +48,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <summary>
         /// Initializes a new instance of the <see cref="SizedGeometry"/> class.
         /// </summary>
-        public SizedGeometry() : base()
+        protected SizedGeometry() : base()
         {
             widthProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 0));
             heightProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Height), 0));

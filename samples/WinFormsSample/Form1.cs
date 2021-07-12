@@ -22,7 +22,7 @@ namespace WinFormsSample
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (activeControl != null)
+            if (activeControl is not null)
             {
                 Controls.Remove(activeControl);
                 activeControl.Dispose();

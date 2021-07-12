@@ -55,7 +55,7 @@ namespace LiveChartsCore
         /// <summary>
         /// Initializes a new instance of the <see cref="FinancialSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
-        public FinancialSeries()
+        protected FinancialSeries()
             : base(
                  SeriesProperties.Financial | SeriesProperties.PrimaryAxisVerticalOrientation |
                  SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
@@ -107,12 +107,12 @@ namespace LiveChartsCore
             var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
             var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
             var previousPrimaryScale =
-                primaryAxis.PreviousDataBounds == null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis, true);
+                primaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis, true);
             var previousSecondaryScale =
-                secondaryAxis.PreviousDataBounds == null ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
+                secondaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
 
             var uw = secondaryScale.ToPixels((float)secondaryAxis.UnitWidth) - secondaryScale.ToPixels(0f);
-            var puw = previousSecondaryScale == null ? 0 : previousSecondaryScale.ToPixels((float)secondaryAxis.UnitWidth) - previousSecondaryScale.ToPixels(0f);
+            var puw = previousSecondaryScale is null ? 0 : previousSecondaryScale.ToPixels((float)secondaryAxis.UnitWidth) - previousSecondaryScale.ToPixels(0f);
             var uwm = 0.5f * uw;
 
             if (uw > MaxBarWidth)
@@ -124,31 +124,31 @@ namespace LiveChartsCore
 
             var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
 
-            if (UpFill != null)
+            if (UpFill is not null)
             {
                 UpFill.ZIndex = actualZIndex + 0.1;
                 UpFill.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(UpFill);
             }
-            if (DownFill != null)
+            if (DownFill is not null)
             {
                 DownFill.ZIndex = actualZIndex + 0.1;
                 DownFill.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(DownFill);
             }
-            if (UpStroke != null)
+            if (UpStroke is not null)
             {
                 UpStroke.ZIndex = actualZIndex + 0.2;
                 UpStroke.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(UpStroke);
             }
-            if (DownStroke != null)
+            if (DownStroke is not null)
             {
                 DownStroke.ZIndex = actualZIndex + 0.2;
                 DownStroke.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(DownStroke);
             }
-            if (DataLabelsPaint != null)
+            if (DataLabelsPaint is not null)
             {
                 DataLabelsPaint.ZIndex = actualZIndex + 0.3;
                 DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
@@ -171,7 +171,7 @@ namespace LiveChartsCore
 
                 if (point.IsNull)
                 {
-                    if (visual != null)
+                    if (visual is not null)
                     {
                         visual.X = secondary - uwm;
                         visual.Width = uw;
@@ -185,13 +185,13 @@ namespace LiveChartsCore
                     continue;
                 }
 
-                if (visual == null)
+                if (visual is null)
                 {
                     var xi = secondary - uwm;
                     var uwi = uw;
                     var hi = 0f;
 
-                    if (previousSecondaryScale != null && previousPrimaryScale != null)
+                    if (previousSecondaryScale is not null && previousPrimaryScale is not null)
                     {
                         var previousP = previousPrimaryScale.ToPixels(pivot);
                         var previousPrimary = previousPrimaryScale.ToPixels(point.PrimaryValue);
@@ -223,17 +223,17 @@ namespace LiveChartsCore
 
                 if (open > close)
                 {
-                    if (UpFill != null) UpFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                    if (UpStroke != null) UpStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                    if (DownFill != null) DownFill.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
-                    if (DownStroke != null) DownStroke.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
+                    if (UpFill is not null) UpFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                    if (UpStroke is not null) UpStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                    if (DownFill is not null) DownFill.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
+                    if (DownStroke is not null) DownStroke.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
                 }
                 else
                 {
-                    if (DownFill != null) DownFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                    if (DownStroke != null) DownStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                    if (UpFill != null) UpFill.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
-                    if (UpStroke != null) UpStroke.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
+                    if (DownFill is not null) DownFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                    if (DownStroke is not null) DownStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                    if (UpFill is not null) UpFill.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
+                    if (UpStroke is not null) UpStroke.RemoveGeometryFromPainTask(cartesianChart.Canvas, visual);
                 }
 
                 var x = secondary - uwm;
@@ -252,11 +252,11 @@ namespace LiveChartsCore
                 OnPointMeasured(point);
                 _ = toDeletePoints.Remove(point);
 
-                if (DataLabelsPaint != null)
+                if (DataLabelsPaint is not null)
                 {
                     var label = (TLabel?)point.Context.Label;
 
-                    if (label == null)
+                    if (label is null)
                     {
                         var l = new TLabel { X = secondary - uwm, Y = high };
 
@@ -296,7 +296,7 @@ namespace LiveChartsCore
         public override SeriesBounds GetBounds(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> secondaryAxis, IAxis<TDrawingContext> primaryAxis)
         {
-            if (dataProvider == null) throw new Exception("A data provider is required");
+            if (dataProvider is null) throw new Exception("A data provider is required");
 
             var baseSeriesBounds = dataProvider.GetFinancialBounds(chart, this, secondaryAxis, primaryAxis);
             if (baseSeriesBounds.IsPrevious) return baseSeriesBounds;
@@ -375,7 +375,7 @@ namespace LiveChartsCore
         protected override void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
         {
             var visual = (TVisual?)point.Context.Visual;
-            if (visual == null) return;
+            if (visual is null) return;
 
             var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
             if (chartView.Core.IsZoomingOrPanning)
@@ -395,11 +395,11 @@ namespace LiveChartsCore
             visual.Low = p;
             visual.RemoveOnCompleted = true;
 
-            if (dataProvider == null) throw new Exception("Data provider not found");
+            if (dataProvider is null) throw new Exception("Data provider not found");
             dataProvider.DisposePoint(point);
 
             var label = (TLabel?)point.Context.Label;
-            if (label == null) return;
+            if (label is null) return;
 
             label.TextSize = 1;
             label.RemoveOnCompleted = true;
@@ -443,7 +443,7 @@ namespace LiveChartsCore
             var context = new CanvasSchedule<TDrawingContext>();
             var w = LegendShapeSize;
             var sh = 0f;
-            //if (Stroke != null)
+            //if (Stroke is not null)
             //{
             //    var strokeClone = Stroke.CloneTask();
             //    var visual = new TVisual
@@ -459,7 +459,7 @@ namespace LiveChartsCore
             //    context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
             //}
 
-            //if (Fill != null)
+            //if (Fill is not null)
             //{
             //    var fillClone = Fill.CloneTask();
             //    var visual = new TVisual { X = sh, Y = sh, Height = (float)LegendShapeSize, Width = (float)LegendShapeSize };
@@ -500,7 +500,7 @@ namespace LiveChartsCore
 
             foreach (var pt in GetPaintTasks())
             {
-                if (pt != null) core.Canvas.RemovePaintTask(pt);
+                if (pt is not null) core.Canvas.RemovePaintTask(pt);
             }
 
             foreach (var item in deleted) _ = everFetched.Remove(item);

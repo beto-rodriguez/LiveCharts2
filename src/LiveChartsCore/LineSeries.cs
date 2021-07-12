@@ -94,7 +94,7 @@ namespace LiveChartsCore
             set => SetPaintProperty(ref _geometryFill, value);
         }
 
-        /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometrySize"/>
+        /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometryStroke"/>
         public IPaintTask<TDrawingContext>? GeometryStroke
         {
             get => _geometryStroke;
@@ -113,9 +113,9 @@ namespace LiveChartsCore
             var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
             var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
             var previousPrimaryScale =
-                primaryAxis.PreviousDataBounds == null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis, true);
+                primaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis, true);
             var previousSecondaryScale =
-                secondaryAxis.PreviousDataBounds == null ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
+                secondaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
 
             var gs = _geometrySize;
             var hgs = gs / 2f;
@@ -137,14 +137,14 @@ namespace LiveChartsCore
 
             var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
 
-            if (stacker != null)
+            if (stacker is not null)
             {
                 // easy workaround to set an automatic and valid z-index for stacked area series
                 // the problem of this solution is that the user needs to set z-indexes above 1000
                 // if the user needs to add more series to the chart.
                 actualZIndex = 1000 - stacker.Position;
-                if (Fill != null) Fill.ZIndex = actualZIndex;
-                if (Stroke != null) Stroke.ZIndex = actualZIndex;
+                if (Fill is not null) Fill.ZIndex = actualZIndex;
+                if (Stroke is not null) Stroke.ZIndex = actualZIndex;
             }
 
             var dls = unchecked((float)DataLabelsSize);
@@ -176,7 +176,7 @@ namespace LiveChartsCore
                     strokePathHelper = _strokePathHelperContainer[segmentI];
                 }
 
-                if (Fill != null)
+                if (Fill is not null)
                 {
                     wasFillInitialized = fillPathHelper.Initialize(SetDefaultPathTransitions, chartAnimation);
                     Fill.AddGeometryToPaintTask(cartesianChart.Canvas, fillPathHelper.Path);
@@ -184,7 +184,7 @@ namespace LiveChartsCore
                     Fill.ZIndex = actualZIndex + 0.1;
                     Fill.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 }
-                if (Stroke != null)
+                if (Stroke is not null)
                 {
                     wasStrokeInitialized = strokePathHelper.Initialize(SetDefaultPathTransitions, chartAnimation);
                     Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, strokePathHelper.Path);
@@ -196,7 +196,7 @@ namespace LiveChartsCore
                 foreach (var data in GetSpline(segment, secondaryScale, primaryScale, stacker))
                 {
                     var s = 0f;
-                    if (stacker != null)
+                    if (stacker is not null)
                     {
                         s = stacker.GetStack(data.TargetPoint).Start;
                     }
@@ -206,7 +206,7 @@ namespace LiveChartsCore
 
                     var visual = (LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>?)data.TargetPoint.Context.Visual;
 
-                    if (visual == null)
+                    if (visual is null)
                     {
                         var v = new LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>();
 
@@ -223,13 +223,13 @@ namespace LiveChartsCore
                         var y1b = p - hgs;
                         var y2b = p - hgs;
 
-                        if (previousSecondaryScale != null && previousPrimaryScale != null)
+                        if (previousSecondaryScale is not null && previousPrimaryScale is not null)
                         {
                             pg = previousPrimaryScale.ToPixels(pivot);
                             xg = previousSecondaryScale.ToPixels(data.TargetPoint.SecondaryValue) - hgs;
                             yg = previousPrimaryScale.ToPixels(data.TargetPoint.PrimaryValue + s) - hgs;
 
-                            if (data.OriginalData == null) throw new Exception("Original data not found");
+                            if (data.OriginalData is null) throw new Exception("Original data not found");
 
                             x0b = previousSecondaryScale.ToPixels(data.OriginalData.X0);
                             x1b = previousSecondaryScale.ToPixels(data.OriginalData.X1);
@@ -259,8 +259,8 @@ namespace LiveChartsCore
 
                     _ = everFetched.Add(data.TargetPoint);
 
-                    if (GeometryFill != null) GeometryFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
-                    if (GeometryStroke != null) GeometryStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
+                    if (GeometryFill is not null) GeometryFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
+                    if (GeometryStroke is not null) GeometryStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
 
                     visual.Bezier.X0 = data.X0;
                     visual.Bezier.Y0 = data.Y0;
@@ -269,7 +269,7 @@ namespace LiveChartsCore
                     visual.Bezier.X2 = data.X2;
                     visual.Bezier.Y2 = data.Y2;
 
-                    if (Fill != null)
+                    if (Fill is not null)
                     {
                         if (data.IsFirst)
                         {
@@ -309,13 +309,13 @@ namespace LiveChartsCore
                                     nameof(fillPathHelper.EndSegment.Y), nameof(fillPathHelper.EndSegment.X));
                         }
                     }
-                    if (Stroke != null)
+                    if (Stroke is not null)
                     {
                         if (data.IsFirst)
                         {
                             if (wasStrokeInitialized || cartesianChart.IsZoomingOrPanning)
                             {
-                                if (cartesianChart.IsZoomingOrPanning && previousPrimaryScale != null && previousSecondaryScale != null)
+                                if (cartesianChart.IsZoomingOrPanning && previousPrimaryScale is not null && previousSecondaryScale is not null)
                                 {
                                     strokePathHelper.StartPoint.X = previousSecondaryScale.ToPixels(data.OriginalData?.X0 ?? 0);
                                     strokePathHelper.StartPoint.Y = previousPrimaryScale.ToPixels(data.OriginalData?.Y0 ?? 0);
@@ -330,7 +330,7 @@ namespace LiveChartsCore
                                    nameof(strokePathHelper.StartPoint.Y), nameof(strokePathHelper.StartPoint.X));
                             }
 
-                            if (!cartesianChart.IsFirstDraw && previousSecondaryScale != null && previousPrimaryScale != null)
+                            if (!cartesianChart.IsFirstDraw && previousSecondaryScale is not null && previousPrimaryScale is not null)
                             {
                                 strokePathHelper.StartPoint.X = previousSecondaryScale.ToPixels(data.OriginalData?.X0 ?? 0);
                                 strokePathHelper.StartPoint.Y = previousPrimaryScale.ToPixels(data.OriginalData?.Y0 ?? 0);
@@ -363,11 +363,11 @@ namespace LiveChartsCore
                     OnPointMeasured(data.TargetPoint);
                     _ = toDeletePoints.Remove(data.TargetPoint);
 
-                    if (DataLabelsPaint != null)
+                    if (DataLabelsPaint is not null)
                     {
                         var label = (TLabel?)data.TargetPoint.Context.Label;
 
-                        if (label == null)
+                        if (label is null)
                         {
                             var l = new TLabel { X = x - hgs, Y = p - hgs };
 
@@ -395,13 +395,13 @@ namespace LiveChartsCore
                     }
                 }
 
-                if (GeometryFill != null)
+                if (GeometryFill is not null)
                 {
                     cartesianChart.Canvas.AddDrawableTask(GeometryFill);
                     GeometryFill.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                     GeometryFill.ZIndex = actualZIndex + 0.3;
                 }
-                if (GeometryStroke != null)
+                if (GeometryStroke is not null)
                 {
                     cartesianChart.Canvas.AddDrawableTask(GeometryStroke);
                     GeometryStroke.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
@@ -414,16 +414,16 @@ namespace LiveChartsCore
             {
                 var iFill = _fillPathHelperContainer.Count - 1;
                 var fillHelper = _fillPathHelperContainer[iFill];
-                if (Fill != null) Fill.RemoveGeometryFromPainTask(cartesianChart.Canvas, fillHelper.Path);
+                if (Fill is not null) Fill.RemoveGeometryFromPainTask(cartesianChart.Canvas, fillHelper.Path);
                 _fillPathHelperContainer.RemoveAt(iFill);
 
                 var iStroke = _strokePathHelperContainer.Count - 1;
                 var strokeHelper = _strokePathHelperContainer[iStroke];
-                if (Stroke != null) Stroke.RemoveGeometryFromPainTask(cartesianChart.Canvas, strokeHelper.Path);
+                if (Stroke is not null) Stroke.RemoveGeometryFromPainTask(cartesianChart.Canvas, strokeHelper.Path);
                 _strokePathHelperContainer.RemoveAt(iStroke);
             }
 
-            if (DataLabelsPaint != null)
+            if (DataLabelsPaint is not null)
             {
                 cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
                 DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
@@ -529,7 +529,7 @@ namespace LiveChartsCore
             var w = LegendShapeSize;
             var sh = 0f;
 
-            if (_geometryStroke != null)
+            if (_geometryStroke is not null)
             {
                 var strokeClone = _geometryStroke.CloneTask();
                 var visual = new TVisual
@@ -544,7 +544,7 @@ namespace LiveChartsCore
                 w += 2 * _geometryStroke.StrokeThickness;
                 context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
             }
-            else if (Stroke != null)
+            else if (Stroke is not null)
             {
                 var strokeClone = Stroke.CloneTask();
                 var visual = new TVisual
@@ -560,13 +560,13 @@ namespace LiveChartsCore
                 context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
             }
 
-            if (_geometryFill != null)
+            if (_geometryFill is not null)
             {
                 var fillClone = _geometryFill.CloneTask();
                 var visual = new TVisual { X = sh, Y = sh, Height = lss, Width = lss };
                 context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(fillClone, visual));
             }
-            else if (Fill != null)
+            else if (Fill is not null)
             {
                 var fillClone = Fill.CloneTask();
                 var visual = new TVisual { X = sh, Y = sh, Height = lss, Width = lss };
@@ -602,7 +602,7 @@ namespace LiveChartsCore
                 var nys = 0f;
                 var nnys = 0f;
 
-                if (stacker != null)
+                if (stacker is not null)
                 {
                     pys = stacker.GetStack(previous).Start;
                     cys = stacker.GetStack(current).Start;
@@ -719,7 +719,7 @@ namespace LiveChartsCore
         protected override void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
         {
             var visual = (LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>?)point.Context.Visual;
-            if (visual == null) return;
+            if (visual is null) return;
 
             var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
             if (chartView.Core.IsZoomingOrPanning)
@@ -741,11 +741,11 @@ namespace LiveChartsCore
             visual.Geometry.Width = 0;
             visual.Geometry.RemoveOnCompleted = true;
 
-            if (dataProvider == null) throw new Exception("Data provider not found");
+            if (dataProvider is null) throw new Exception("Data provider not found");
             dataProvider.DisposePoint(point);
 
             var label = (TLabel?)point.Context.Label;
-            if (label == null) return;
+            if (label is null) return;
 
             label.TextSize = 1;
             label.RemoveOnCompleted = true;
@@ -757,20 +757,20 @@ namespace LiveChartsCore
             base.SoftDelete(chart);
             var canvas = ((ICartesianChartView<TDrawingContext>)chart).CoreCanvas;
 
-            if (Fill != null)
+            if (Fill is not null)
             {
                 foreach (var pathHelper in _fillPathHelperContainer.ToArray())
                     Fill.RemoveGeometryFromPainTask(canvas, pathHelper.Path);
             }
 
-            if (Stroke != null)
+            if (Stroke is not null)
             {
                 foreach (var pathHelper in _strokePathHelperContainer.ToArray())
                     Stroke.RemoveGeometryFromPainTask(canvas, pathHelper.Path);
             }
 
-            if (GeometryFill != null) canvas.RemovePaintTask(GeometryFill);
-            if (GeometryStroke != null) canvas.RemovePaintTask(GeometryStroke);
+            if (GeometryFill is not null) canvas.RemovePaintTask(GeometryFill);
+            if (GeometryStroke is not null) canvas.RemovePaintTask(GeometryStroke);
         }
 
         /// <summary>

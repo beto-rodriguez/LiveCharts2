@@ -66,7 +66,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
             var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
             var initializer = stylesBuilder.GetVisualsInitializer();
-            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
+            if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
                 throw new Exception("Default colors are not valid");
             initializer.ApplyStyleToChart(this);
 
@@ -76,12 +76,12 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             _seriesObserver = new CollectionDeepObserver<ISeries>(
                (object sender, NotifyCollectionChangedEventArgs e) =>
                {
-                   if (core == null) return;
+                   if (core is null) return;
                    MainThread.BeginInvokeOnMainThread(() => core.Update());
                },
                (object sender, PropertyChangedEventArgs e) =>
                {
-                   if (core == null) return;
+                   if (core is null) return;
                    MainThread.BeginInvokeOnMainThread(() => core.Update());
                });
 
@@ -90,7 +90,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             canvas.SkCanvasView.EnableTouchEvents = true;
             canvas.SkCanvasView.Touch += OnSkCanvasTouched;
 
-            if (core == null) throw new Exception("Core not found!");
+            if (core is null) throw new Exception("Core not found!");
             core.Measuring += OnCoreMeasuring;
             core.UpdateStarted += OnCoreUpdateStarted;
             core.UpdateFinished += OnCoreUpdateFinished;
@@ -110,7 +110,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                       var seriesObserver = chart._seriesObserver;
                       seriesObserver.Dispose((IEnumerable<ISeries>)oldValue);
                       seriesObserver.Initialize((IEnumerable<ISeries>)newValue);
-                      if (chart.core == null) return;
+                      if (chart.core is null) return;
                       MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
                   });
 
@@ -300,7 +300,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         }
 
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core =>
-            core == null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
+            core is null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
 
         SizeF IChartView.ControlSize => new()
         {
@@ -540,8 +540,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <inheritdoc cref="IChartView{TDrawingContext}.PointStates" />
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnaled" />
-        public bool AutoUpdateEnaled { get; set; } = true;
+        /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
+        public bool AutoUpdateEnabled { get; set; } = true;
 
         /// <inheritdoc cref="IChartView.UpdaterThrottler" />
         public TimeSpan UpdaterThrottler
@@ -549,7 +549,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             get => core?.UpdaterThrottler ?? throw new Exception("core not set yet.");
             set
             {
-                if (core == null) throw new Exception("core not set yet.");
+                if (core is null) throw new Exception("core not set yet.");
                 core.UpdaterThrottler = value;
             }
         }
@@ -559,7 +559,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
         public void ShowTooltip(IEnumerable<TooltipPoint> points)
         {
-            if (tooltip == null || core == null) return;
+            if (tooltip is null || core is null) return;
 
             ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(points, core);
         }
@@ -567,7 +567,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
         public void HideTooltip()
         {
-            if (tooltip == null || core == null) return;
+            if (tooltip is null || core is null) return;
 
             ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
         }
@@ -599,19 +599,19 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         protected static void OnBindablePropertyChanged(BindableObject o, object oldValue, object newValue)
         {
             var chart = (PieChart)o;
-            if (chart.core == null) return;
+            if (chart.core is null) return;
             MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
         }
 
         private void OnSizeChanged(object sender, EventArgs e)
         {
-            if (core == null) return;
+            if (core is null) return;
             MainThread.BeginInvokeOnMainThread(() => core.Update());
         }
 
         private void OnSkCanvasTouched(object? sender, SkiaSharp.Views.Forms.SKTouchEventArgs e)
         {
-            if (core == null) return;
+            if (core is null) return;
             if (TooltipPosition == TooltipPosition.Hidden) return;
             var location = new PointF(e.Location.X, e.Location.Y);
             core.InvokePointerDown(location);

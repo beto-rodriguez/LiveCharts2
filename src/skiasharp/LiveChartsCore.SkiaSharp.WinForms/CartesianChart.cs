@@ -51,6 +51,11 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <summary>
         /// Initializes a new instance of the <see cref="CartesianChart"/> class.
         /// </summary>
+        public CartesianChart() : this(null, null) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CartesianChart"/> class.
+        /// </summary>
         /// <param name="tooltip">The default tool tip control.</param>
         /// <param name="legend">The default legend control.</param>
         public CartesianChart(IChartTooltip<SkiaSharpDrawingContext>? tooltip = null, IChartLegend<SkiaSharpDrawingContext>? legend = null)
@@ -73,7 +78,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             c.MouseUp += OnMouseUp;
         }
 
-        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => core == null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
+        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
 
@@ -167,26 +172,26 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(PointF, int, int)" />
         public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
-            if (core == null) throw new Exception("core not found");
+            if (core is null) throw new Exception("core not found");
             var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
             return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
         }
 
         private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (core == null) return;
+            if (core is null) return;
             core.Update();
         }
 
         private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (core == null) return;
+            if (core is null) return;
             core.Update();
         }
 
         private void OnMouseWheel(object? sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (core == null) throw new Exception("core not found");
+            if (core is null) throw new Exception("core not found");
             var c = (CartesianChart<SkiaSharpDrawingContext>)core;
             var p = e.Location;
             c.Zoom(new PointF(p.X, p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);

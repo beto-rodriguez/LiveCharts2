@@ -57,7 +57,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters
         /// </summary>
         public virtual void Dispose()
         {
-            if (SKImageFilter == null) return;
+            if (SKImageFilter is null) return;
             SKImageFilter.Dispose();
             SKImageFilter = null;
         }

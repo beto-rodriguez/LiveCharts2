@@ -96,11 +96,19 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
         public SKPaint Paint { get; set; }
 
         /// <summary>
+        /// Gets or sets the color of the clear.
+        /// </summary>
+        /// <value>
+        /// The color of the clear.
+        /// </value>
+        public SKColor ClearColor { get; set; } = SKColor.Empty;
+
+        /// <summary>
         /// Clears the canvas.
         /// </summary>
         public override void ClearCanvas()
         {
-            Canvas.Clear();
+            Canvas.Clear(ClearColor);
         }
     }
 }

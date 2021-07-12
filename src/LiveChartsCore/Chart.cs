@@ -120,7 +120,7 @@ namespace LiveChartsCore
         /// <summary>
         /// The previous series
         /// </summary>
-        protected IChartSeries<TDrawingContext>[] previousSeries = new IChartSeries<TDrawingContext>[0];
+        protected IReadOnlyList<IChartSeries<TDrawingContext>> previousSeries = new IChartSeries<TDrawingContext>[0];
 
         /// <summary>
         /// The previous legend position
@@ -146,7 +146,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="canvas">The canvas.</param>
         /// <param name="defaultPlatformConfig">The default platform configuration.</param>
-        public Chart(MotionCanvas<TDrawingContext> canvas, Action<LiveChartsSettings> defaultPlatformConfig)
+        protected Chart(MotionCanvas<TDrawingContext> canvas, Action<LiveChartsSettings> defaultPlatformConfig)
         {
             this.canvas = canvas;
             canvas.Validated += OnCanvasValidated;
@@ -164,7 +164,7 @@ namespace LiveChartsCore
 
         private void TooltipThrottlerUnlocked()
         {
-            if (tooltip == null || TooltipPosition == TooltipPosition.Hidden) return;
+            if (tooltip is null || TooltipPosition == TooltipPosition.Hidden) return;
             tooltip.Show(FindPointsNearTo(_pointerPosition), this);
         }
 
@@ -190,7 +190,7 @@ namespace LiveChartsCore
         {
             _pointerPosition = pointerPosition;
 
-            if (tooltip != null && TooltipPosition != TooltipPosition.Hidden) _tooltipThrottler.Call();
+            if (tooltip is not null && TooltipPosition != TooltipPosition.Hidden) _tooltipThrottler.Call();
             if (!_isPanning) return;
             _pointerPanningPosition = pointerPosition;
             _panningThrottler.Call();
@@ -470,14 +470,14 @@ namespace LiveChartsCore
         /// <param name="newSeries">The new series.</param>
         /// <param name="position">The legend position.</param>
         /// <returns></returns>
-        protected bool SeriesMiniatureChanged(IChartSeries<TDrawingContext>[] newSeries, LegendPosition position)
+        protected bool SeriesMiniatureChanged(IReadOnlyList<IChartSeries<TDrawingContext>> newSeries, LegendPosition position)
         {
             if (position != previousLegendPosition) return true;
-            if (previousSeries.Length != newSeries.Length) return true;
+            if (previousSeries.Count != newSeries.Count) return true;
 
-            for (var i = 0; i < newSeries.Length; i++)
+            for (var i = 0; i < newSeries.Count; i++)
             {
-                if (i + 1 > previousSeries.Length) return true;
+                if (i + 1 > previousSeries.Count) return true;
 
                 var a = previousSeries[i];
                 var b = newSeries[i];

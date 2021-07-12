@@ -19,7 +19,7 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
 
             var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
             var initializer = stylesBuilder.GetVisualsInitializer();
-            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
+            if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
                 throw new Exception("Default colors are not valid");
             initializer.ApplyStyleToChart(this);
 
@@ -66,7 +66,7 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
         public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
         public Color BackColor { get; set; }
-        public bool AutoUpdateEnaled { get; set; } = true;
+        public bool AutoUpdateEnabled { get; set; } = true;
         public TimeSpan UpdaterThrottler { get; set; }
         public DrawMarginFrame<SkiaSharpDrawingContext> DrawMarginFrame { get; set; }
         public IEnumerable<Section<SkiaSharpDrawingContext>> Sections { get; set; }

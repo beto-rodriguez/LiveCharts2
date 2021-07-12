@@ -1,6 +1,5 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
-using System.Collections.Generic;
 
 namespace ViewModelsSamples.General.UserDefinedTypes
 {
@@ -56,7 +55,7 @@ namespace ViewModelsSamples.General.UserDefinedTypes
                 );
         }
 
-        public ISeries[] Series { get; set; } = new[]
+        public ISeries[] Series { get; set; } = new ISeries[]
         {
             new LineSeries<City>
             {

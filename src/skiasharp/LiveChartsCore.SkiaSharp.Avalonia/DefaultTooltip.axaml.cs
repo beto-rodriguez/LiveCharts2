@@ -50,10 +50,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         public DefaultTooltip()
         {
             InitializeComponent();
-            var t = (DataTemplate?)Resources["defaultTemplate"];
-            if (t == null) throw new Exception("default template not found");
-            _defaultTemplate = t;
-            TooltipTemplate = t;
+
+            var template = (DataTemplate?)Resources["defaultTemplate"] ??
+                           throw new Exception("default template not found");
+
+            _defaultTemplate = template;
+            TooltipTemplate = template;
+
             Canvas.SetTop(this, 0);
             Canvas.SetLeft(this, 0);
         }
@@ -66,7 +69,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <value>
         /// The tool tip template.
         /// </value>
-        public DataTemplate? TooltipTemplate { get; set; } = null;
+        public DataTemplate? TooltipTemplate { get; set; }
 
         /// <summary>
         /// Gets or sets the points.
@@ -156,7 +159,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                     chart.TooltipPosition, new System.Drawing.SizeF((float)Bounds.Width, (float)Bounds.Height));
             }
 
-            if (location == null) throw new Exception("location not found");
+            if (location is null) throw new Exception("location not found");
 
             Points = tooltipPoints;
             TooltipBackground = avaloniaChart.TooltipBackground;
@@ -179,12 +182,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             if (location.Value.Y < 0) y = 0;
             if (location.Value.Y + Bounds.Height > h) x = h - Bounds.Height;
 
-            if (Transitions == null)
-                Transitions = new Transitions
-                {
-                    new DoubleTransition { Property = Canvas.TopProperty, Duration = TimeSpan.FromMilliseconds(300) },
-                    new DoubleTransition { Property = Canvas.LeftProperty, Duration = TimeSpan.FromMilliseconds(300) },
-                };
+            Transitions ??= new Transitions
+            {
+                new DoubleTransition {Property = Canvas.TopProperty, Duration = TimeSpan.FromMilliseconds(300)},
+                new DoubleTransition {Property = Canvas.LeftProperty, Duration = TimeSpan.FromMilliseconds(300)},
+            };
 
             Canvas.SetTop(this, y);
             Canvas.SetLeft(this, x);
@@ -225,7 +227,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             };
 
             var templated = template.Build(model);
-            if (templated == null) return;
+            if (templated is null) return;
 
             Content = templated;
         }

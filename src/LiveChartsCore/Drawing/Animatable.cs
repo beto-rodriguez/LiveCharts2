@@ -41,7 +41,7 @@ namespace LiveChartsCore.Drawing.Common
         /// <summary>
         /// Initializes a new instance of the <see cref="Animatable"/> class.
         /// </summary>
-        public Animatable() { }
+        protected Animatable() { }
 
         /// <inheritdoc cref="IAnimatable.IsValid" />
         bool IAnimatable.IsValid { get => _isCompleted; set => _isCompleted = value; }
@@ -88,9 +88,9 @@ namespace LiveChartsCore.Drawing.Common
         }
 
         /// <inheritdoc cref="IAnimatable.CompleteTransitions(string[])" />
-        public void CompleteTransitions(params string[] propertyNames)
+        public virtual void CompleteTransitions(params string[] propertyNames)
         {
-            if (propertyNames == null || propertyNames.Length == 0)
+            if (propertyNames is null || propertyNames.Length == 0)
                 throw new Exception(
                     $"At least one property is required to call {nameof(CompleteTransitions)}.");
 
@@ -100,15 +100,18 @@ namespace LiveChartsCore.Drawing.Common
                     throw new Exception(
                         $"The property {property} is not a transition property of this instance.");
 
-                if (transitionProperty.Animation == null) continue;
+                if (transitionProperty.Animation is null) continue;
                 transitionProperty.IsCompleted = true;
             }
         }
 
         /// <inheritdoc cref="IAnimatable.CompleteAllTransitions" />
-        public void CompleteAllTransitions()
+        public virtual void CompleteAllTransitions()
         {
-            CompleteTransitions(transitionProperties.Keys.ToArray());
+            var p = transitionProperties.Keys.ToArray();
+            if (p.Length == 0) return;
+
+            CompleteTransitions(p);
         }
 
         /// <inheritdoc cref="IAnimatable.GetTransitionProperty(string)" />

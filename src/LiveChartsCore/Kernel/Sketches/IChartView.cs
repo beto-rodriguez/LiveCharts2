@@ -152,7 +152,7 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <value>
         ///   <c>true</c> if automatic update are enabled; otherwise, <c>false</c>.
         /// </value>
-        bool AutoUpdateEnaled { get; set; }
+        bool AutoUpdateEnabled { get; set; }
 
         /// <summary>
         /// Gets the core canvas.

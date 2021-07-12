@@ -74,7 +74,7 @@ namespace LiveChartsCore.Kernel.Data
         /// <returns></returns>
         public virtual IEnumerable<ChartPoint> Fetch(ISeries<TModel> series, IChart chart)
         {
-            if (series.Values == null) yield break;
+            if (series.Values is null) yield break;
 
             var mapper = series.Mapping ?? LiveCharts.CurrentSettings.GetMap<TModel>();
             var index = 0;
@@ -83,7 +83,7 @@ namespace LiveChartsCore.Kernel.Data
             {
                 var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
                 _ = _byChartbyValueVisualMap.TryGetValue(canvas.Sync, out var d);
-                if (d == null)
+                if (d is null)
                 {
                     d = new Dictionary<int, ChartPoint>();
                     _byChartbyValueVisualMap[canvas.Sync] = d;
@@ -108,7 +108,7 @@ namespace LiveChartsCore.Kernel.Data
                 {
                     var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
                     _ = _byChartByReferenceVisualMap.TryGetValue(canvas.Sync, out var d);
-                    if (d == null)
+                    if (d is null)
                     {
                         d = new Dictionary<TModel, ChartPoint>();
                         _byChartByReferenceVisualMap[canvas.Sync] = d;
@@ -138,16 +138,16 @@ namespace LiveChartsCore.Kernel.Data
                 var canvas = (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas;
                 _ = _byChartbyValueVisualMap.TryGetValue(canvas.Sync, out var d);
                 var byValueVisualMap = d;
-                if (d == null) return;
+                if (d is null) return;
                 _ = byValueVisualMap.Remove(point.Context.Index);
             }
             else
             {
-                if (point.Context.DataSource == null) return;
+                if (point.Context.DataSource is null) return;
                 var canvas = (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas;
                 _ = _byChartByReferenceVisualMap.TryGetValue(canvas.Sync, out var d);
                 var byReferenceVisualMap = d;
-                if (d == null) return;
+                if (d is null) return;
                 _ = byReferenceVisualMap.Remove((TModel)point.Context.DataSource);
             }
         }
@@ -185,7 +185,7 @@ namespace LiveChartsCore.Kernel.Data
                 var secondary = point.SecondaryValue;
                 var tertiary = point.TertiaryValue;
 
-                if (stack != null) primary = stack.StackPoint(point);
+                if (stack is not null) primary = stack.StackPoint(point);
 
                 bounds.PrimaryBounds.AppendValue(primary);
                 bounds.SecondaryBounds.AppendValue(secondary);
@@ -198,7 +198,7 @@ namespace LiveChartsCore.Kernel.Data
                     bounds.VisibleTertiaryBounds.AppendValue(tertiary);
                 }
 
-                if (previous != null)
+                if (previous is not null)
                 {
                     var dx = Math.Abs(previous.SecondaryValue - point.SecondaryValue);
                     var dy = Math.Abs(previous.PrimaryValue - point.PrimaryValue);
@@ -258,7 +258,7 @@ namespace LiveChartsCore.Kernel.Data
                     bounds.VisibleTertiaryBounds.AppendValue(tertiary);
                 }
 
-                if (previous != null)
+                if (previous is not null)
                 {
                     var dx = Math.Abs(previous.SecondaryValue - point.SecondaryValue);
                     var dy = Math.Abs(previous.PrimaryValue - point.PrimaryValue);
@@ -286,7 +286,7 @@ namespace LiveChartsCore.Kernel.Data
             PieChart<TDrawingContext> chart, IPieSeries<TDrawingContext> series)
         {
             var stack = chart.SeriesContext.GetStackPosition(series, series.GetStackGroup());
-            if (stack == null) throw new NullReferenceException("Unexpected null stacker");
+            if (stack is null) throw new NullReferenceException("Unexpected null stacker");
 
             var bounds = new DimensionalBounds();
             var hasData = false;

@@ -276,7 +276,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     chart.TooltipPosition, new System.Drawing.SizeF((float)border.ActualWidth, (float)border.ActualHeight));
             }
 
-            if (location == null) throw new Exception("location not supported");
+            if (location is null) throw new Exception("location not supported");
 
             IsOpen = true;
             Points = tooltipPoints;

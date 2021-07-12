@@ -68,7 +68,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters
             foreach (var item in _filters)
             {
                 item.CreateFilter(drawingContext);
-                if (item.SKImageFilter == null) throw new System.Exception("Image filter is not valid");
+                if (item.SKImageFilter is null) throw new System.Exception("Image filter is not valid");
                 imageFilters[i++] = item.SKImageFilter;
             }
 

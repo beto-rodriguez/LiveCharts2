@@ -45,7 +45,7 @@ namespace LiveChartsCore
         /// Initializes a new instance of the <see cref="BarSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
         /// <param name="properties">The properties.</param>
-        public BarSeries(SeriesProperties properties)
+        protected BarSeries(SeriesProperties properties)
             : base(properties)
         {
             HoverState = LiveCharts.BarSeriesHoverKey;
@@ -74,7 +74,7 @@ namespace LiveChartsCore
             var context = new CanvasSchedule<TDrawingContext>();
             var w = LegendShapeSize;
             var sh = 0f;
-            if (Stroke != null)
+            if (Stroke is not null)
             {
                 var strokeClone = Stroke.CloneTask();
                 var visual = new TVisual
@@ -90,7 +90,7 @@ namespace LiveChartsCore
                 context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
             }
 
-            if (Fill != null)
+            if (Fill is not null)
             {
                 var fillClone = Fill.CloneTask();
                 var visual = new TVisual { X = sh, Y = sh, Height = (float)LegendShapeSize, Width = (float)LegendShapeSize };

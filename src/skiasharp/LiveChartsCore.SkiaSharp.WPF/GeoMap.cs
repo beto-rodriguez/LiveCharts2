@@ -37,7 +37,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     /// Defines a geographic map.
     /// </summary>
     /// <seealso cref="Control" />
-    public class GeoMap : Control
+    public class GeoMap : Control, IGeoMap
     {
         private static GeoJsonFile? s_map = null;
         private int _heatKnownLength = 0;
@@ -126,10 +126,16 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set => SetValue(HeatMapProperty, value);
         }
 
+        System.Drawing.Color[] IGeoMap.HeatMap
+        {
+            get => HeatMap.Select(x => System.Drawing.Color.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
+            set => HeatMap = value.Select(x => System.Windows.Media.Color.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
+        }
+
         /// <summary>
         /// Gets or sets the color stops.
         /// </summary>
-        public double[] ColorStops
+        public double[]? ColorStops
         {
             get => (double[])GetValue(ColorStopsProperty);
             set => SetValue(ColorStopsProperty, value);
@@ -142,6 +148,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         {
             get => (System.Windows.Media.Color)GetValue(StrokeColorProperty);
             set => SetValue(StrokeColorProperty, value);
+        }
+
+        System.Drawing.Color IGeoMap.StrokeColor
+        {
+            get => System.Drawing.Color.FromArgb(StrokeColor.A, StrokeColor.R, StrokeColor.G, StrokeColor.B);
+            set => StrokeColor = System.Windows.Media.Color.FromArgb(value.A, value.R, value.G, value.B);
         }
 
         /// <summary>
@@ -160,6 +172,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         {
             get => (System.Windows.Media.Color)GetValue(FillColorProperty);
             set => SetValue(FillColorProperty, value);
+        }
+
+        System.Drawing.Color IGeoMap.FillColor
+        {
+            get => System.Drawing.Color.FromArgb(FillColor.A, FillColor.R, FillColor.G, FillColor.B);
+            set => FillColor = System.Windows.Media.Color.FromArgb(value.A, value.R, value.G, value.B);
         }
 
         /// <summary>

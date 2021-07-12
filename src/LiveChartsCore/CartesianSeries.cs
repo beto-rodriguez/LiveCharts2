@@ -24,7 +24,6 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using System;
 using LiveChartsCore.Measure;
-using System.Collections.Generic;
 using System.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Kernel.Data;
@@ -55,7 +54,7 @@ namespace LiveChartsCore
         /// Initializes a new instance of the <see cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
         /// <param name="properties">The series properties.</param>
-        public CartesianSeries(SeriesProperties properties) : base(properties) { }
+        protected CartesianSeries(SeriesProperties properties) : base(properties) { }
 
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.ScalesXAt"/>
         public int ScalesXAt { get => _scalesXAt; set { _scalesXAt = value; OnPropertyChanged(); } }
@@ -70,7 +69,7 @@ namespace LiveChartsCore
         public virtual SeriesBounds GetBounds(
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
         {
-            return dataProvider == null
+            return dataProvider is null
                 ? throw new Exception("A data provider is required")
                 : dataProvider.GetCartesianBounds(chart, this, x, y);
         }

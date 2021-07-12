@@ -35,10 +35,8 @@ using LiveChartsCore.SkiaSharpView.Painting;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia
 {
-    /// <summary>
-    /// Defines a geographic map.
-    /// </summary>
-    public partial class GeoMap : UserControl
+    /// <inheritdoc cref="IGeoMap"/>
+    public partial class GeoMap : UserControl, IGeoMap
     {
         private static GeoJsonFile? s_map = null;
         private int _heatKnownLength = 0;
@@ -79,83 +77,87 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// The values property.
         /// </summary>
         public static readonly AvaloniaProperty<Dictionary<string, double>> ValuesProperty =
-          AvaloniaProperty.Register<CartesianChart, Dictionary<string, double>>(nameof(ColorStops), new Dictionary<string, double>(), inherits: true);
+          AvaloniaProperty.Register<CartesianChart, Dictionary<string, double>>(nameof(ValuesProperty), new Dictionary<string, double>(), inherits: true);
 
         /// <summary>
         /// The stroke color property.
         /// </summary>
         public static readonly AvaloniaProperty<Color> StrokeColorProperty =
-          AvaloniaProperty.Register<CartesianChart, Color>(nameof(ColorStops), Color.FromArgb(255, 224, 224, 224), inherits: true);
+          AvaloniaProperty.Register<CartesianChart, Color>(nameof(StrokeColor), Color.FromArgb(255, 224, 224, 224), inherits: true);
 
         /// <summary>
         /// The stroke thickness property.
         /// </summary>
         public static readonly AvaloniaProperty<double> StrokeThicknessProperty =
-          AvaloniaProperty.Register<CartesianChart, double>(nameof(ColorStops), 1d, inherits: true);
+          AvaloniaProperty.Register<CartesianChart, double>(nameof(StrokeThickness), 1d, inherits: true);
 
         /// <summary>
         /// The fill color property.
         /// </summary>
         public static readonly AvaloniaProperty<Color> FillColorProperty =
-          AvaloniaProperty.Register<CartesianChart, Color>(nameof(ColorStops), Color.FromArgb(255, 250, 250, 250), inherits: true);
+          AvaloniaProperty.Register<CartesianChart, Color>(nameof(FillColor), Color.FromArgb(255, 250, 250, 250), inherits: true);
 
-        /// <summary>
-        /// Gets or sets the projection.
-        /// </summary>
+        /// <inheritdoc cref="IGeoMap.Projection"/>
         public Projection Projection
         {
             get => (Projection)GetValue(ProjectionProperty);
             set => SetValue(ProjectionProperty, value);
         }
 
-        /// <summary>
-        /// Gets or sets the heat map.
-        /// </summary>
+        /// <inheritdoc cref="IGeoMap.HeatMap"/>
         public Color[] HeatMap
         {
             get => (Color[])GetValue(HeatMapProperty);
             set => SetValue(HeatMapProperty, value);
         }
 
-        /// <summary>
-        /// Gets or sets the color stops.
-        /// </summary>
-        public double[] ColorStops
+        System.Drawing.Color[] IGeoMap.HeatMap
+        {
+            get => HeatMap.Select(x => System.Drawing.Color.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
+            set => HeatMap = value.Select(x => new Color(x.A, x.R, x.G, x.B)).ToArray();
+        }
+
+        /// <inheritdoc cref="IGeoMap.ColorStops"/>
+        public double[]? ColorStops
         {
             get => (double[])GetValue(ColorStopsProperty);
             set => SetValue(ColorStopsProperty, value);
         }
 
-        /// <summary>
-        /// Gets or sets the color stops.
-        /// </summary>
+        /// <inheritdoc cref="IGeoMap.StrokeColor"/>
         public Color StrokeColor
         {
             get => (Color)GetValue(StrokeColorProperty);
             set => SetValue(StrokeColorProperty, value);
         }
 
-        /// <summary>
-        /// Gets or sets the color stops.
-        /// </summary>
+        System.Drawing.Color IGeoMap.StrokeColor
+        {
+            get => System.Drawing.Color.FromArgb(StrokeColor.A, StrokeColor.R, StrokeColor.G, StrokeColor.B);
+            set => StrokeColor = new Color(value.A, value.R, value.G, value.B);
+        }
+
+        /// <inheritdoc cref="IGeoMap.StrokeThickness"/>
         public double StrokeThickness
         {
             get => (double)GetValue(StrokeThicknessProperty);
             set => SetValue(StrokeThicknessProperty, value);
         }
 
-        /// <summary>
-        /// Gets or sets the color stops.
-        /// </summary>
+        /// <inheritdoc cref="IGeoMap.FillColor"/>
         public Color FillColor
         {
             get => (Color)GetValue(FillColorProperty);
             set => SetValue(FillColorProperty, value);
         }
 
-        /// <summary>
-        /// Gets or sets the values.
-        /// </summary>
+        System.Drawing.Color IGeoMap.FillColor
+        {
+            get => System.Drawing.Color.FromArgb(FillColor.A, FillColor.R, FillColor.G, FillColor.B);
+            set => FillColor = new Color(value.A, value.R, value.G, value.B);
+        }
+
+        /// <inheritdoc cref="IGeoMap.Values"/>
         public Dictionary<string, double> Values
         {
             get => (Dictionary<string, double>)GetValue(ValuesProperty);

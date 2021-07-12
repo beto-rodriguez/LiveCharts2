@@ -23,7 +23,6 @@
 using System.Drawing;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Painting
@@ -39,8 +38,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         private readonly SKColor[] _gradientStops;
         private readonly SKPoint _startPoint;
         private readonly SKPoint _endPoint;
-        private readonly float[]? _colorPos = null;
-        private readonly SKShaderTileMode _tileMode = SKShaderTileMode.Repeat;
+        private readonly float[]? _colorPos;
+        private readonly SKShaderTileMode _tileMode;
         private SkiaSharpDrawingContext? _drawingContext;
 
         /// <summary>
@@ -138,7 +137,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <inheritdoc cref="IPaintTask{TDrawingContext}.InitializeTask(TDrawingContext)" />
         public override void InitializeTask(SkiaSharpDrawingContext drawingContext)
         {
-            if (skiaPaint == null) skiaPaint = new SKPaint();
+            skiaPaint ??= new SKPaint();
 
             var size = GetDrawRectangleSize(drawingContext);
 
@@ -166,13 +165,13 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             skiaPaint.StrokeMiter = StrokeMiter;
             skiaPaint.Style = IsStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
 
-            if (PathEffect != null)
+            if (PathEffect is not null)
             {
                 PathEffect.CreateEffect(drawingContext);
                 skiaPaint.PathEffect = PathEffect.SKPathEffect;
             }
 
-            if (ImageFilter != null)
+            if (ImageFilter is not null)
             {
                 ImageFilter.CreateFilter(drawingContext);
                 skiaPaint.ImageFilter = ImageFilter.SKImageFilter;
@@ -195,10 +194,10 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// </summary>
         public override void Dispose()
         {
-            if (PathEffect != null) PathEffect.Dispose();
-            if (ImageFilter != null) ImageFilter.Dispose();
+            if (PathEffect is not null) PathEffect.Dispose();
+            if (ImageFilter is not null) ImageFilter.Dispose();
 
-            if (_drawingContext != null && GetClipRectangle(_drawingContext.MotionCanvas) != RectangleF.Empty)
+            if (_drawingContext is not null && GetClipRectangle(_drawingContext.MotionCanvas) != RectangleF.Empty)
             {
                 _drawingContext.Canvas.Restore();
                 _drawingContext = null;

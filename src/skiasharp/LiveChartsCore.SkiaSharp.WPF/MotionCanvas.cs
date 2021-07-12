@@ -101,7 +101,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             base.OnApplyTemplate();
 
             skiaElement = Template.FindName("skiaElement", this) as SKElement;
-            if (skiaElement == null)
+            if (skiaElement is null)
                 throw new Exception(
                     $"SkiaElement not found. This was probably caused because the control {nameof(MotionCanvas)} template was overridden, " +
                     $"If you override the template please add an {nameof(SKElement)} to the template and name it 'skiaElement'");
@@ -122,9 +122,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         private (float dpiX, float dpiY) GetPixelDensity()
         {
             var presentationSource = PresentationSource.FromVisual(this);
-            if (presentationSource == null) return (1f, 1f);
+            if (presentationSource is null) return (1f, 1f);
             var compositionTarget = presentationSource.CompositionTarget;
-            if (compositionTarget == null) return (1f, 1f);
+            if (compositionTarget is null) return (1f, 1f);
 
             var matrix = compositionTarget.TransformToDevice;
             return ((float)matrix.M11, (float)matrix.M22);
@@ -142,7 +142,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         private async void RunDrawingLoop()
         {
-            if (_isDrawingLoopRunning || skiaElement == null) return;
+            if (_isDrawingLoopRunning || skiaElement is null) return;
             _isDrawingLoopRunning = true;
 
             var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);

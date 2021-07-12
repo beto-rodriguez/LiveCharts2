@@ -91,19 +91,19 @@ namespace LiveChartsCore
             var yScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
 
             var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
-            if (Fill != null)
+            if (Fill is not null)
             {
                 Fill.ZIndex = actualZIndex + 0.1;
                 Fill.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(Fill);
             }
-            if (Stroke != null)
+            if (Stroke is not null)
             {
                 Stroke.ZIndex = actualZIndex + 0.2;
                 Stroke.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(Stroke);
             }
-            if (DataLabelsPaint != null)
+            if (DataLabelsPaint is not null)
             {
                 DataLabelsPaint.ZIndex = actualZIndex + 0.3;
                 DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
@@ -128,7 +128,7 @@ namespace LiveChartsCore
 
                 if (point.IsNull)
                 {
-                    if (visual != null)
+                    if (visual is not null)
                     {
                         visual.X = x - hgs;
                         visual.Y = y - hgs;
@@ -146,7 +146,7 @@ namespace LiveChartsCore
                     hgs = gs / 2f;
                 }
 
-                if (visual == null)
+                if (visual is null)
                 {
                     var r = new TVisual
                     {
@@ -164,8 +164,8 @@ namespace LiveChartsCore
                     _ = everFetched.Add(point);
                 }
 
-                if (Fill != null) Fill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                if (Stroke != null) Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                if (Fill is not null) Fill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                if (Stroke is not null) Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
 
                 var sizedGeometry = visual;
 
@@ -180,7 +180,7 @@ namespace LiveChartsCore
                 OnPointMeasured(point);
                 _ = toDeletePoints.Remove(point);
 
-                if (DataLabelsPaint != null)
+                if (DataLabelsPaint is not null)
                 {
                     if (point.Context.Label is not TLabel label)
                     {
@@ -270,7 +270,7 @@ namespace LiveChartsCore
 
             var w = LegendShapeSize;
             var sh = 0f;
-            if (Stroke != null)
+            if (Stroke is not null)
             {
                 var strokeClone = Stroke.CloneTask();
                 var visual = new TVisual
@@ -286,7 +286,7 @@ namespace LiveChartsCore
                 context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
             }
 
-            if (Fill != null)
+            if (Fill is not null)
             {
                 var fillClone = Fill.CloneTask();
                 var visual = new TVisual { X = sh, Y = sh, Height = (float)LegendShapeSize, Width = (float)LegendShapeSize };
@@ -306,7 +306,7 @@ namespace LiveChartsCore
             var visual = (TVisual?)chartPoint.Context.Visual;
             var chart = chartPoint.Context.Chart;
 
-            if (visual == null) throw new Exception("Unable to initialize the point instance.");
+            if (visual is null) throw new Exception("Unable to initialize the point instance.");
 
             _ = visual
                .TransitionateProperties(
@@ -324,17 +324,17 @@ namespace LiveChartsCore
         protected override void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
         {
             var visual = (TVisual?)point.Context.Visual;
-            if (visual == null) return;
+            if (visual is null) return;
 
             visual.Height = 0;
             visual.Width = 0;
             visual.RemoveOnCompleted = true;
 
-            if (dataProvider == null) throw new Exception("Data provider not found");
+            if (dataProvider is null) throw new Exception("Data provider not found");
             dataProvider.DisposePoint(point);
 
             var label = (TLabel?)point.Context.Label;
-            if (label == null) return;
+            if (label is null) return;
 
             label.TextSize = 1;
             label.RemoveOnCompleted = true;

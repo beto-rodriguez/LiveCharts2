@@ -49,8 +49,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// </remarks>
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var v = (IChartSeries<SkiaSharpDrawingContext>)value;
-            return v == null ? null : v.CanvasSchedule.Width / DeviceDisplay.MainDisplayInfo.Density;
+            return value is IChartSeries<SkiaSharpDrawingContext> v
+                ? v.CanvasSchedule.Width / DeviceDisplay.MainDisplayInfo.Density
+                : null;
         }
 
         /// <summary>

@@ -81,7 +81,7 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <value>
         /// The draw margin frame.
         /// </value>
-        DrawMarginFrame<TDrawingContext> DrawMarginFrame { get; set; }
+        DrawMarginFrame<TDrawingContext>? DrawMarginFrame { get; set; }
 
         /// <summary>
         /// Gets or sets the zoom mode.

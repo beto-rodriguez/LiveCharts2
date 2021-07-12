@@ -50,7 +50,7 @@ namespace LiveChartsCore.Kernel
             get => !_states.TryGetValue(stateName, out var state) ? null : state;
             set
             {
-                if (value == null)
+                if (value is null)
                     throw new InvalidOperationException(
                         $"A null instance is not valid at this point, to delete a key please use the {nameof(DeleteState)}() method.");
 
@@ -58,10 +58,10 @@ namespace LiveChartsCore.Kernel
 
                 _states[stateName] = value;
 
-                if (Chart == null) return;
+                if (Chart is null) return;
 
-                if (value.Fill != null) Chart.Canvas.AddDrawableTask(value.Fill);
-                if (value.Stroke != null) Chart.Canvas.AddDrawableTask(value.Stroke);
+                if (value.Fill is not null) Chart.Canvas.AddDrawableTask(value.Fill);
+                if (value.Stroke is not null) Chart.Canvas.AddDrawableTask(value.Stroke);
             }
         }
 
@@ -118,10 +118,10 @@ namespace LiveChartsCore.Kernel
         /// <returns></returns>
         private void RemoveState(StrokeAndFillDrawable<TDrawingContext> state)
         {
-            if (Chart == null) return;
+            if (Chart is null) return;
 
-            if (state.Fill != null) Chart.Canvas.RemovePaintTask(state.Fill);
-            if (state.Stroke != null) Chart.Canvas.RemovePaintTask(state.Stroke);
+            if (state.Fill is not null) Chart.Canvas.RemovePaintTask(state.Fill);
+            if (state.Stroke is not null) Chart.Canvas.RemovePaintTask(state.Stroke);
         }
     }
 }

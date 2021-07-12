@@ -57,7 +57,7 @@ namespace WinFormsSample.Lines.AutoUpdate
 
         private async void OnConstantChangesClick(object sender, System.EventArgs e)
         {
-            isStreaming = isStreaming == null ? true : !isStreaming;
+            isStreaming = isStreaming is null ? true : !isStreaming;
 
             while (isStreaming.Value)
             {

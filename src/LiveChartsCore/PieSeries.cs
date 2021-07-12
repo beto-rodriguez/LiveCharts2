@@ -57,7 +57,7 @@ namespace LiveChartsCore
         /// <summary>
         /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
-        public PieSeries(bool isGauge = false, bool isGaugeFill = false)
+        protected PieSeries(bool isGauge = false, bool isGaugeFill = false)
             : base(SeriesProperties.PieSeries | SeriesProperties.Stacked |
                   (isGauge ? SeriesProperties.Gauge : 0) | (isGaugeFill ? SeriesProperties.GaugeFill : 0) | SeriesProperties.Solid)
         {
@@ -151,19 +151,19 @@ namespace LiveChartsCore
             var chartTotal = (float?)view.Total;
 
             var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
-            if (Fill != null)
+            if (Fill is not null)
             {
                 Fill.ZIndex = actualZIndex + 0.1;
                 Fill.SetClipRectangle(pieChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 pieChart.Canvas.AddDrawableTask(Fill);
             }
-            if (Stroke != null)
+            if (Stroke is not null)
             {
                 Stroke.ZIndex = actualZIndex + 0.2;
                 Stroke.SetClipRectangle(pieChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
                 pieChart.Canvas.AddDrawableTask(Stroke);
             }
-            if (DataLabelsPaint != null)
+            if (DataLabelsPaint is not null)
             {
                 DataLabelsPaint.ZIndex = 1000 + actualZIndex + 0.3;
                 DataLabelsPaint.SetClipRectangle(pieChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
@@ -175,7 +175,7 @@ namespace LiveChartsCore
 
             var dls = (float)DataLabelsSize;
             var stacker = pieChart.SeriesContext.GetStackPosition(this, GetStackGroup());
-            if (stacker == null) throw new NullReferenceException("Unexpected null stacker");
+            if (stacker is null) throw new NullReferenceException("Unexpected null stacker");
 
             var toDeletePoints = new HashSet<ChartPoint>(everFetched);
 
@@ -221,7 +221,7 @@ namespace LiveChartsCore
 
                 if (point.IsNull)
                 {
-                    if (visual != null)
+                    if (visual is not null)
                     {
                         visual.CenterX = cx;
                         visual.CenterY = cy;
@@ -262,7 +262,7 @@ namespace LiveChartsCore
                     end = completeAngle - 0.1f;
                 }
 
-                if (visual == null)
+                if (visual is null)
                 {
                     var p = new TVisual
                     {
@@ -287,8 +287,8 @@ namespace LiveChartsCore
                     _ = everFetched.Add(point);
                 }
 
-                if (Fill != null) Fill.AddGeometryToPaintTask(pieChart.Canvas, visual);
-                if (Stroke != null) Stroke.AddGeometryToPaintTask(pieChart.Canvas, visual);
+                if (Fill is not null) Fill.AddGeometryToPaintTask(pieChart.Canvas, visual);
+                if (Stroke is not null) Stroke.AddGeometryToPaintTask(pieChart.Canvas, visual);
 
                 var dougnutGeometry = visual;
 
@@ -320,11 +320,11 @@ namespace LiveChartsCore
                 OnPointMeasured(point);
                 _ = toDeletePoints.Remove(point);
 
-                if (DataLabelsPaint != null && point.PrimaryValue > 0)
+                if (DataLabelsPaint is not null && point.PrimaryValue > 0)
                 {
                     var label = (TLabel?)point.Context.Label;
 
-                    if (label == null)
+                    if (label is null)
                     {
                         var l = new TLabel { X = cx, Y = cy };
 
@@ -395,7 +395,7 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IPieSeries{TDrawingContext}.GetBounds(PieChart{TDrawingContext})"/>
         public DimensionalBounds GetBounds(PieChart<TDrawingContext> chart)
         {
-            return dataProvider == null
+            return dataProvider is null
                 ? throw new Exception("Data provider not found")
                 : dataProvider.GetPieBounds(chart, this).Bounds;
         }
@@ -429,7 +429,7 @@ namespace LiveChartsCore
 
             var w = LegendShapeSize;
             var sh = 0f;
-            if (Stroke != null)
+            if (Stroke is not null)
             {
                 var strokeClone = Stroke.CloneTask();
                 var visual = new TVisual
@@ -449,7 +449,7 @@ namespace LiveChartsCore
                 context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
             }
 
-            if (Fill != null)
+            if (Fill is not null)
             {
                 var fillClone = Fill.CloneTask();
                 var visual = new TVisual
@@ -545,18 +545,18 @@ namespace LiveChartsCore
         protected override void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
         {
             var visual = (TVisual?)point.Context.Visual;
-            if (visual == null) return;
+            if (visual is null) return;
 
             visual.StartAngle += visual.SweepAngle;
             visual.SweepAngle = 0;
             visual.CornerRadius = 0;
             visual.RemoveOnCompleted = true;
 
-            if (dataProvider == null) throw new Exception("Data provider not found");
+            if (dataProvider is null) throw new Exception("Data provider not found");
             dataProvider.DisposePoint(point);
 
             var label = (TLabel?)point.Context.Label;
-            if (label == null) return;
+            if (label is null) return;
 
             label.TextSize = 1;
             label.RemoveOnCompleted = true;
