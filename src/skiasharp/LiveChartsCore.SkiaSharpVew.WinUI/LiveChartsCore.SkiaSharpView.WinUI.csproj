@@ -16,6 +16,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="CartesianChart.xaml" />
+    <None Remove="DefaultTooltip.xaml" />
     <None Remove="MotionCanvas.xaml" />
     <None Remove="PieChart.xaml" />
   </ItemGroup>
@@ -30,6 +31,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\LiveChartsCore\LiveChartsCore.csproj" />
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="DefaultTooltip.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

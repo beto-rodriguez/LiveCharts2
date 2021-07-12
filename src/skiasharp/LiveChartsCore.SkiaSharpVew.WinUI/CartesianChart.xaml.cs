@@ -47,7 +47,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         private Chart<SkiaSharpDrawingContext>? core;
         private MotionCanvas? canvas;
         private IChartLegend<SkiaSharpDrawingContext>? legend;
-        private IChartTooltip<SkiaSharpDrawingContext>? tooltip;
+        //private IChartTooltip<SkiaSharpDrawingContext>? tooltip;
         private readonly CollectionDeepObserver<ISeries> _seriesObserver;
         private readonly CollectionDeepObserver<IAxis> _xObserver;
         private readonly CollectionDeepObserver<IAxis> _yObserver;
@@ -759,7 +759,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         {
             if (tooltip == null || core == null) return;
 
-            tooltip.Show(points, core);
+            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(points, core);
         }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
@@ -774,7 +774,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
                 if (state.Stroke != null) state.Stroke.ClearGeometriesFromPaintTask(core.Canvas);
             }
 
-            tooltip.Hide();
+            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
         }
 
         /// <inheritdoc cref="IChartView.SetTooltipStyle(System.Drawing.Color, System.Drawing.Color)"/>
@@ -786,6 +786,14 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+
+            var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
+            var initializer = stylesBuilder.GetVisualsInitializer();
+            if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
+                throw new Exception("Default colors are not valid");
+            initializer.ApplyStyleToChart(this);
+
             var canvas = (MotionCanvas)FindName("motionCanvas");
             this.canvas = canvas;
 

@@ -51,18 +51,19 @@
                             <Border Padding="7 5">
                                 <StackPanel Orientation="Horizontal">
                                     <local:MotionCanvas Margin="0 0 8 0" 
-                                        PaintTasks="{Binding Series.CanvasSchedule.PaintSchedules}"
-                                        Width="{Binding Series.CanvasSchedule.Width}"
-                                        Height="{Binding Series.CanvasSchedule.Height}"
-                                        VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding Point.AsTooltipString}" Margin="0 0 8 0"
-                                        FontFamily="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}" 
-                                        Foreground="{Binding TextColor, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
-                                        FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}" 
-                                        FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
-                                        FontStyle="{Binding FontStyle, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
-                                        FontStretch="{Binding FontStretch, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
-                                        VerticalAlignment="Center"/>
+                                                        PaintTasks="{Binding Series.CanvasSchedule.PaintSchedules}"
+                                                        Width="{Binding Series.CanvasSchedule.Width}"
+                                                        Height="{Binding Series.CanvasSchedule.Height}"
+                                                        VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Point.AsTooltipString}"
+                                               Margin="0 0 8 0"
+                                               FontFamily="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}" 
+                                               Foreground="{Binding TextColor, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
+                                               FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}" 
+                                               FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
+                                               FontStyle="{Binding FontStyle, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
+                                               FontStretch="{Binding FontStretch, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
+                                               VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Border>
                         </DataTemplate>

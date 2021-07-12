@@ -5,7 +5,37 @@
     xmlns:local="using:LiveChartsCore.SkiaSharpView.WinUI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ctx="using:LiveChartsCore.Kernel"
     mc:Ignorable="d">
+
+    <ToolTipService.ToolTip>
+        <local:DefaultTooltip x:Name="tooltip">
+            <ItemsControl ItemsSource="{Binding Points, ElementName=tooltip}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="ctx:TooltipPoint">
+                        <Border Padding="7 5">
+                            <StackPanel Orientation="Horizontal">
+                                <local:MotionCanvas Margin="0 0 8 0" 
+                                                    PaintTasks="{Binding Series.CanvasSchedule.PaintSchedules}"
+                                                    Width="{Binding Series.CanvasSchedule.Width}"
+                                                    Height="{Binding Series.CanvasSchedule.Height}"
+                                                    VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding Point.AsTooltipString}"
+                                           Foreground="Black"
+                                           Margin="0 0 8 0"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </local:DefaultTooltip>
+    </ToolTipService.ToolTip>
 
     <Grid>
         <local:MotionCanvas x:Name="motionCanvas"></local:MotionCanvas>
