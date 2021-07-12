@@ -805,25 +805,25 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             PointerMoved += OnPointerMoved;
             PointerExited += OnPointerExited;
 
-            _ = Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => core.Update());
+            _ = DispatcherQueue.TryEnqueue(() => core.Update());
         }
 
         private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (core == null) return;
-            _ = Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => core.Update());
+            _ = DispatcherQueue.TryEnqueue(() => core.Update());
         }
 
         private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (core == null) return;
-            _ = Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => core.Update());
+            _ = DispatcherQueue.TryEnqueue(() => core.Update());
         }
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (core == null) throw new Exception("Core not found!");
-            _ = Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => core.Update());
+            _ = DispatcherQueue.TryEnqueue(() => core.Update());
         }
 
         private void OnPointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)

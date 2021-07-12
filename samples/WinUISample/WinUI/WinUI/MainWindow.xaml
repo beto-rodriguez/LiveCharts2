@@ -16,11 +16,7 @@
         <Border.DataContext>
             <vm:ViewModel></vm:ViewModel>
         </Border.DataContext>
-
-        <StackPanel>
-            <lvc:TestControl></lvc:TestControl>
-            <!--<lvc:CartesianChart Height="400" Width="400" Series="{Binding Series}"></lvc:CartesianChart>-->
-        </StackPanel>
+        <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
     </Border>
 
 </Window>
