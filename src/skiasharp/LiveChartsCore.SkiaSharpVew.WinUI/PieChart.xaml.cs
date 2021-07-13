@@ -39,12 +39,10 @@ using Windows.UI.Text;
 namespace LiveChartsCore.SkiaSharpView.WinUI
 {
     /// <inheritdoc cref="IChartView{TDrawingContext}" />
-    public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>
+    public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IWinUIChart
     {
-        private Chart<SkiaSharpDrawingContext>? core;
-        private MotionCanvas? canvas;
-        private IChartLegend<SkiaSharpDrawingContext>? legend;
-        private IChartTooltip<SkiaSharpDrawingContext>? tooltip;
+        private Chart<SkiaSharpDrawingContext>? _core;
+        private MotionCanvas? _canvas;
         private readonly CollectionDeepObserver<ISeries> _seriesObserver;
 
         /// <summary>
@@ -57,13 +55,13 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             _seriesObserver = new CollectionDeepObserver<ISeries>(
                 (object? sender, NotifyCollectionChangedEventArgs e) =>
                 {
-                    if (core == null) return;
-                    _ = DispatcherQueue.TryEnqueue(() => core.Update());
+                    if (_core == null) return;
+                    _ = DispatcherQueue.TryEnqueue(() => _core.Update());
                 },
                 (object? sender, PropertyChangedEventArgs e) =>
                 {
-                    if (core == null) return;
-                    _ = DispatcherQueue.TryEnqueue(() => core.Update());
+                    if (_core == null) return;
+                    _ = DispatcherQueue.TryEnqueue(() => _core.Update());
                 });
 
             Loaded += OnLoaded;
@@ -83,8 +81,8 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
                         var seriesObserver = chart._seriesObserver;
                         seriesObserver.Dispose((IEnumerable<ISeries>)args.OldValue);
                         seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
-                        if (chart.core == null) return;
-                        _ = Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => chart.core.Update());
+                        if (chart._core == null) return;
+                        _ = Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => chart._core.Update());
                     }));
 
         /// <summary>
@@ -176,7 +174,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// </summary>
         public static readonly DependencyProperty TooltipTextBrushProperty =
            DependencyProperty.Register(
-               nameof(TooltipTextBrush), typeof(SolidColorBrush), typeof(PieChart),
+               nameof(TooltipTextBrush), typeof(Brush), typeof(PieChart),
                new PropertyMetadata(new SolidColorBrush(Windows.UI.Color.FromArgb(255, 35, 35, 35)), OnDependencyPropertyChanged));
 
         /// <summary>
@@ -230,7 +228,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// </summary>
         public static readonly DependencyProperty LegendTextBrushProperty =
            DependencyProperty.Register(
-               nameof(LegendTextBrush), typeof(SolidColorBrush), typeof(PieChart),
+               nameof(LegendTextBrush), typeof(Brush), typeof(PieChart),
                new PropertyMetadata(new SolidColorBrush(Windows.UI.Color.FromArgb(255, 35, 35, 35)), OnDependencyPropertyChanged));
 
         /// <summary>
@@ -238,7 +236,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// </summary>
         public static readonly DependencyProperty LegendBackgroundProperty =
            DependencyProperty.Register(
-               nameof(LegendBackground), typeof(SolidColorBrush), typeof(PieChart),
+               nameof(LegendBackground), typeof(Brush), typeof(PieChart),
                new PropertyMetadata(new SolidColorBrush(Windows.UI.Color.FromArgb(255, 35, 35, 35)), OnDependencyPropertyChanged));
 
         /// <summary>
@@ -296,11 +294,15 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
 
         #region properties
 
+        Grid IWinUIChart.LayoutGrid => grid;
+        FrameworkElement IWinUIChart.Canvas => motionCanvas;
+        FrameworkElement IWinUIChart.Legend => legend;
+
         /// <inheritdoc cref="IChartView.CoreChart" />
-        public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
+        public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
 
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core
-            => core == null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
+            => _core == null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)_core;
 
         System.Drawing.Color IChartView.BackColor
         {
@@ -351,12 +353,12 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             set => SetValue(DrawMarginProperty, value);
         }
 
-        System.Drawing.SizeF IChartView.ControlSize => canvas == null
+        System.Drawing.SizeF IChartView.ControlSize => _canvas == null
                     ? throw new Exception("Canvas not found")
-                    : (new() { Width = (float)canvas.ActualWidth, Height = (float)canvas.ActualHeight });
+                    : (new() { Width = (float)_canvas.ActualWidth, Height = (float)_canvas.ActualHeight });
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
-        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas == null ? throw new Exception("Canvas not found") : canvas.CanvasCore;
+        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => _canvas == null ? throw new Exception("Canvas not found") : _canvas.CanvasCore;
 
         /// <inheritdoc cref="IChartView.AnimationsSpeed" />
         public TimeSpan AnimationsSpeed
@@ -465,7 +467,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// <value>
         /// The color of the tool tip text.
         /// </value>
-        public SolidColorBrush TooltipTextBrush
+        public Brush TooltipTextBrush
         {
             get => (SolidColorBrush)GetValue(TooltipTextBrushProperty);
             set => SetValue(TooltipTextBrushProperty, value);
@@ -552,7 +554,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// <value>
         /// The color of the legend text.
         /// </value>
-        public SolidColorBrush LegendTextBrush
+        public Brush LegendTextBrush
         {
             get => (SolidColorBrush)GetValue(LegendTextBrushProperty);
             set => SetValue(LegendTextBrushProperty, value);
@@ -564,7 +566,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// <value>
         /// The legend t background.
         /// </value>
-        public SolidColorBrush LegendBackground
+        public Brush LegendBackground
         {
             get => (SolidColorBrush)GetValue(LegendBackgroundProperty);
             set => SetValue(LegendBackgroundProperty, value);
@@ -630,11 +632,11 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// <inheritdoc cref="IChartView.UpdaterThrottler" />
         public TimeSpan UpdaterThrottler
         {
-            get => core?.UpdaterThrottler ?? throw new Exception("core not set yet.");
+            get => _core?.UpdaterThrottler ?? throw new Exception("core not set yet.");
             set
             {
-                if (core == null) throw new Exception("core not set yet.");
-                core.UpdaterThrottler = value;
+                if (_core == null) throw new Exception("core not set yet.");
+                _core.UpdaterThrottler = value;
             }
         }
 
@@ -643,24 +645,24 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
         public void ShowTooltip(IEnumerable<TooltipPoint> points)
         {
-            if (tooltip == null || core == null) return;
+            if (tooltip == null || _core == null) return;
 
-            tooltip.Show(points, core);
+            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(points, _core);
         }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
         public void HideTooltip()
         {
-            if (tooltip == null || core == null) return;
+            if (tooltip == null || _core == null) return;
 
             foreach (var state in PointStates.GetStates())
             {
                 if (!state.IsHoverState) continue;
-                if (state.Fill != null) state.Fill.ClearGeometriesFromPaintTask(core.Canvas);
-                if (state.Stroke != null) state.Stroke.ClearGeometriesFromPaintTask(core.Canvas);
+                if (state.Fill != null) state.Fill.ClearGeometriesFromPaintTask(_core.Canvas);
+                if (state.Stroke != null) state.Stroke.ClearGeometriesFromPaintTask(_core.Canvas);
             }
 
-            tooltip.Hide();
+            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
         }
 
         /// <inheritdoc cref="IChartView.SetTooltipStyle(System.Drawing.Color, System.Drawing.Color)"/>
@@ -681,36 +683,36 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             initializer.ApplyStyleToChart(this);
 
             var canvas = (MotionCanvas)FindName("motionCanvas");
-            this.canvas = canvas;
+            this._canvas = canvas;
 
-            core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            _core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
             //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
             //tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
 
-            if (core == null) throw new Exception("Core not found!");
-            core.Update();
+            if (_core == null) throw new Exception("Core not found!");
+            _core.Update();
 
-            core.Measuring += OnCoreMeasuring;
-            core.UpdateStarted += OnCoreUpdateStarted;
-            core.UpdateFinished += OnCoreUpdateFinished;
+            _core.Measuring += OnCoreMeasuring;
+            _core.UpdateStarted += OnCoreUpdateStarted;
+            _core.UpdateFinished += OnCoreUpdateFinished;
 
             SizeChanged += OnSizeChanged;
             PointerMoved += OnPointerMoved;
             PointerExited += OnPointerExited;
 
-            _ = DispatcherQueue.TryEnqueue(() => core.Update());
+            _ = DispatcherQueue.TryEnqueue(() => _core.Update());
         }
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (core == null) throw new Exception("Core not found!");
-            _ = DispatcherQueue.TryEnqueue(() => core.Update());
+            if (_core == null) throw new Exception("Core not found!");
+            _ = DispatcherQueue.TryEnqueue(() => _core.Update());
         }
 
         private void OnPointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             var p = e.GetCurrentPoint(this);
-            core?.InvokePointerMove(new System.Drawing.PointF((float)p.Position.X, (float)p.Position.Y));
+            _core?.InvokePointerMove(new System.Drawing.PointF((float)p.Position.X, (float)p.Position.Y));
         }
 
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
@@ -736,9 +738,9 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
         {
             var chart = (PieChart)o;
-            if (chart.core == null) return;
+            if (chart._core == null) return;
 
-            _ = Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => chart.core.Update());
+            _ = Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => chart._core.Update());
         }
     }
 }

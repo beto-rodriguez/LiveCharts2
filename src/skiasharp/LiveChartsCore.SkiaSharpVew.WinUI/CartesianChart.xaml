@@ -37,7 +37,18 @@
         </local:DefaultTooltip>
     </ToolTipService.ToolTip>
 
-    <Grid>
-        <local:MotionCanvas x:Name="motionCanvas"></local:MotionCanvas>
+    <Grid x:Name="grid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <local:MotionCanvas Grid.Row="1" Grid.Column="1" x:Name="motionCanvas"></local:MotionCanvas>
+        <local:DefaultLegend Grid.Row="1" Grid.Column="2" x:Name="legend"></local:DefaultLegend>
     </Grid>
 </UserControl>

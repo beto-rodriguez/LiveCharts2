@@ -87,31 +87,25 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
 
             System.Drawing.PointF? location = null;
 
+            IsOpen = true;
+            Points = tooltipPoints;
+
+            Measure(new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity));
+
             if (chart is CartesianChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetCartesianTooltipLocation(
-                    chart.TooltipPosition, new System.Drawing.SizeF(100, 100), chart.ControlSize);
+                    chart.TooltipPosition, new System.Drawing.SizeF((float)DesiredSize.Width, (float)DesiredSize.Height), chart.ControlSize);
             }
             if (chart is PieChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetPieTooltipLocation(
-                    chart.TooltipPosition, new System.Drawing.SizeF(100, 100));
+                    chart.TooltipPosition, new System.Drawing.SizeF((float)DesiredSize.Width, (float)DesiredSize.Height));
             }
 
             if (location is null) throw new Exception("location not supported");
 
-            IsOpen = true;
-            Points = tooltipPoints;
-
-            //Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-
-            //var from = PlacementRectangle;
-            //var to = new Rect(location.Value.X, location.Value.Y, 0, 0);
-            //if (from == Rect.Empty) from = to;
-            //var animation = new RectAnimation(from, to, AnimationsSpeed) { EasingFunction = EasingFunction };
-            //BeginAnimation(PlacementRectangleProperty, animation);
-
-            PlacementRect = new Windows.Foundation.Rect(location.Value.X, location.Value.Y, 200, 200);
+            PlacementRect = new Windows.Foundation.Rect(location.Value.X, location.Value.Y, 0, 0);
 
             Background = winuiChart.TooltipBackground;
             FontFamily = winuiChart.TooltipFontFamily;
