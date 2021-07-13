@@ -9,7 +9,7 @@ namespace WPFSample.Bars.AutoUpdate
     /// </summary>
     public partial class View : UserControl
     {
-        private bool? isStreaming = false;
+        private bool? _isStreaming = false;
 
         public View()
         {
@@ -19,9 +19,9 @@ namespace WPFSample.Bars.AutoUpdate
         private async void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             var vm = (ViewModel)DataContext;
-            isStreaming = isStreaming is null ? true : !isStreaming;
+            _isStreaming = _isStreaming is null ? true : !_isStreaming;
 
-            while (isStreaming.Value)
+            while (_isStreaming.Value)
             {
                 vm.RemoveFirstItem();
                 vm.AddRandomItem();

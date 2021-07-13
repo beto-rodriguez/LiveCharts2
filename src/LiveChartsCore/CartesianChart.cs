@@ -442,6 +442,8 @@ namespace LiveChartsCore
                 {
                     legend.Draw(this);
                     Update();
+                    previousLegendPosition = legendPosition;
+                    previousSeries = Series;
                     preserveFirstDraw = IsFirstDraw;
                 }
 

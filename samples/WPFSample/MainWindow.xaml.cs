@@ -20,8 +20,7 @@ namespace WPFSample
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            var ctx = (sender as FrameworkElement).DataContext as string;
-            if (ctx is null) throw new Exception("Sample not found");
+            if ((sender as FrameworkElement).DataContext is not string ctx) throw new Exception("Sample not found");
             content.Content = Activator.CreateInstance(null, $"WPFSample.{ctx.Replace('/', '.')}.View").Unwrap();
         }
     }

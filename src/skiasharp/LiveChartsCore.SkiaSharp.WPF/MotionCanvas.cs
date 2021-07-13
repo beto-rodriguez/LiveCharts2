@@ -42,7 +42,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <summary>
         /// The skia element
         /// </summary>
-        protected SKElement? skiaElement;
+        private SKElement? skiaElement;
         private bool _isDrawingLoopRunning = false;
 
         static MotionCanvas()
