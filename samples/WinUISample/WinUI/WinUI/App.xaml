@@ -1,5 +1,5 @@
 ﻿<Application
-    x:Class="WinUI.App"
+    x:Class="WinUISample.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:WinUI">

@@ -69,7 +69,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
 
         void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
-            var winuiChart = (CartesianChart)chart.View;
+            var winuiChart = (IWinUIChart)chart.View;
             //var template = wpfChart.TooltipTemplate ?? _defaultTempalte;
             //if (Template != template) Template = template;
 
