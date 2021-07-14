@@ -182,6 +182,8 @@ PublishScripts/
 
 # NuGet Packages
 *.nupkg
+*.snupkg
+nupkgs/
 # The packages folder can be ignored because of Package Restore
 **/[Pp]ackages/*
 # except build/, which is used as an MSBuild target.
@@ -340,3 +342,5 @@ ASALocalRun/
 healthchecksdb
 /nupkgs/pack.bat
 /nupkgs/publish.bat
+/nupkgs/nuget.config
+/nupkgs/push.github.bat
