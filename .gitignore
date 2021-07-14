@@ -338,3 +338,5 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/nupkgs/pack.bat
+/nupkgs/publish.bat

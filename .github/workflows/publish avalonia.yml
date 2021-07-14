@@ -15,10 +15,10 @@ jobs:
     - name: Build
       run: dotnet build  ./src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia --configuration Release
           
-    - name: Publish LiveChartsCore.SkiaSharpView.Avalonia
-      uses: brandedoutcast/publish-nuget@v2.5.5
-      with:
-          PROJECT_FILE_PATH: src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia/LiveChartsCore.SkiaSharpView.Avalonia.csproj
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
-          NUGET_SOURCE: https://api.nuget.org
-          INCLUDE_SYMBOLS: true
+    # - name: Publish LiveChartsCore.SkiaSharpView.Avalonia
+    #   uses: brandedoutcast/publish-nuget@v2.5.5
+    #   with:
+    #       PROJECT_FILE_PATH: src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia/LiveChartsCore.SkiaSharpView.Avalonia.csproj
+    #       NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+    #       NUGET_SOURCE: https://api.nuget.org
+    #       INCLUDE_SYMBOLS: true
