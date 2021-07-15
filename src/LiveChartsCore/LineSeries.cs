@@ -46,8 +46,8 @@ namespace LiveChartsCore
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
-        private readonly List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>> _fillPathHelperContainer = new();
-        private readonly List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>> _strokePathHelperContainer = new();
+        private readonly Dictionary<object, List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>> _fillPathHelperDictionary = new();
+        private readonly Dictionary<object, List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>> _strokePathHelperDictionary = new();
         private float _lineSmoothness = 0.65f;
         private float _geometrySize = 14f;
         private bool _enableNullSplitting = true;
@@ -152,8 +152,20 @@ namespace LiveChartsCore
             var segmentI = 0;
             var toDeletePoints = new HashSet<ChartPoint>(everFetched);
 
-            foreach (var item in _strokePathHelperContainer) item.Path.ClearCommands();
-            foreach (var item in _fillPathHelperContainer) item.Path.ClearCommands();
+            if (!_strokePathHelperDictionary.TryGetValue(chart.Canvas.Sync, out var strokePathHelperContainer))
+            {
+                strokePathHelperContainer = new List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>();
+                _strokePathHelperDictionary[chart.Canvas.Sync] = strokePathHelperContainer;
+            }
+
+            if (!_fillPathHelperDictionary.TryGetValue(chart.Canvas.Sync, out var fillPathHelperContainer))
+            {
+                fillPathHelperContainer = new List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>();
+                _fillPathHelperDictionary[chart.Canvas.Sync] = fillPathHelperContainer;
+            }
+
+            foreach (var item in strokePathHelperContainer) item.Path.ClearCommands();
+            foreach (var item in fillPathHelperContainer) item.Path.ClearCommands();
 
             foreach (var segment in segments)
             {
@@ -163,17 +175,17 @@ namespace LiveChartsCore
                 AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs> fillPathHelper;
                 AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs> strokePathHelper;
 
-                if (segmentI >= _fillPathHelperContainer.Count)
+                if (segmentI >= fillPathHelperContainer.Count)
                 {
                     fillPathHelper = new AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>();
                     strokePathHelper = new AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>();
-                    _fillPathHelperContainer.Add(fillPathHelper);
-                    _strokePathHelperContainer.Add(strokePathHelper);
+                    fillPathHelperContainer.Add(fillPathHelper);
+                    strokePathHelperContainer.Add(strokePathHelper);
                 }
                 else
                 {
-                    fillPathHelper = _fillPathHelperContainer[segmentI];
-                    strokePathHelper = _strokePathHelperContainer[segmentI];
+                    fillPathHelper = fillPathHelperContainer[segmentI];
+                    strokePathHelper = strokePathHelperContainer[segmentI];
                 }
 
                 if (Fill is not null)
@@ -410,17 +422,17 @@ namespace LiveChartsCore
                 segmentI++;
             }
 
-            while (segmentI > _fillPathHelperContainer.Count)
+            while (segmentI > fillPathHelperContainer.Count)
             {
-                var iFill = _fillPathHelperContainer.Count - 1;
-                var fillHelper = _fillPathHelperContainer[iFill];
+                var iFill = fillPathHelperContainer.Count - 1;
+                var fillHelper = fillPathHelperContainer[iFill];
                 if (Fill is not null) Fill.RemoveGeometryFromPainTask(cartesianChart.Canvas, fillHelper.Path);
-                _fillPathHelperContainer.RemoveAt(iFill);
+                fillPathHelperContainer.RemoveAt(iFill);
 
-                var iStroke = _strokePathHelperContainer.Count - 1;
-                var strokeHelper = _strokePathHelperContainer[iStroke];
+                var iStroke = strokePathHelperContainer.Count - 1;
+                var strokeHelper = strokePathHelperContainer[iStroke];
                 if (Stroke is not null) Stroke.RemoveGeometryFromPainTask(cartesianChart.Canvas, strokeHelper.Path);
-                _strokePathHelperContainer.RemoveAt(iStroke);
+                strokePathHelperContainer.RemoveAt(iStroke);
             }
 
             if (DataLabelsPaint is not null)
@@ -759,14 +771,16 @@ namespace LiveChartsCore
 
             if (Fill is not null)
             {
-                foreach (var pathHelper in _fillPathHelperContainer.ToArray())
-                    Fill.RemoveGeometryFromPainTask(canvas, pathHelper.Path);
+                foreach (var activeChartContainer in _fillPathHelperDictionary.ToArray())
+                    foreach (var pathHelper in activeChartContainer.Value.ToArray())
+                        Fill.RemoveGeometryFromPainTask(canvas, pathHelper.Path);
             }
 
             if (Stroke is not null)
             {
-                foreach (var pathHelper in _strokePathHelperContainer.ToArray())
-                    Stroke.RemoveGeometryFromPainTask(canvas, pathHelper.Path);
+                foreach (var activeChartContainer in _strokePathHelperDictionary.ToArray())
+                    foreach (var pathHelper in activeChartContainer.Value.ToArray())
+                        Stroke.RemoveGeometryFromPainTask(canvas, pathHelper.Path);
             }
 
             if (GeometryFill is not null) canvas.RemovePaintTask(GeometryFill);

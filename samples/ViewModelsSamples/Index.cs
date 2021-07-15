@@ -75,6 +75,7 @@
             "General/Visibility",
             "General/TemplatedTooltips",
             "General/TemplatedLegends",
+            //"General/TwoChartsOneSeries",
             "General/UserDefinedTypes",
             "General/NullPoints",
 
