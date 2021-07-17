@@ -178,8 +178,15 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
         where TSizedGeometry : ISizedGeometry<TDrawingContext>, new()
     {
-        private TSizedGeometry? _fillSizedGeometry;
-        private TSizedGeometry? _strokeSizedGeometry;
+        /// <summary>
+        /// The fill sized geometry
+        /// </summary>
+        protected internal TSizedGeometry? _fillSizedGeometry;
+
+        /// <summary>
+        /// The stroke sized geometry
+        /// </summary>
+        protected internal TSizedGeometry? _strokeSizedGeometry;
 
         /// <summary>
         /// Measures the specified chart.
