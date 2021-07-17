@@ -26,13 +26,14 @@ using System.Drawing;
 using LiveChartsCore.Measure;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing.Common;
+using System.ComponentModel;
 
 namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
     /// Defines an Axis in a Cartesian chart.
     /// </summary>
-    public interface IAxis
+    public interface IAxis : INotifyPropertyChanged
     {
         /// <summary>
         /// Gets the previous data bounds.

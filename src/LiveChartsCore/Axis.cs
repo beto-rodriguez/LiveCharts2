@@ -42,7 +42,7 @@ namespace LiveChartsCore
     /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
     /// <seealso cref="IAxis{TDrawingContext}" />
     /// <seealso cref="INotifyPropertyChanged" />
-    public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry> : ChartElement<TDrawingContext>, IAxis<TDrawingContext>, INotifyPropertyChanged
+    public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry> : ChartElement<TDrawingContext>, IAxis<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TTextGeometry : ILabelGeometry<TDrawingContext>, new()
         where TLineGeometry : ILineGeometry<TDrawingContext>, new()
