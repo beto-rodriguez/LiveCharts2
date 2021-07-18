@@ -31,7 +31,7 @@ using System.ComponentModel;
 namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
-    /// Defines an Axis in a Cartesian chart.
+    /// Defines an Axis in a Cartesian chart. 
     /// </summary>
     public interface IAxis : INotifyPropertyChanged
     {
@@ -248,6 +248,11 @@ namespace LiveChartsCore.Kernel.Sketches
         /// </summary>
         /// <param name="orientation">The orientation.</param>
         void Initialize(AxisOrientation orientation);
+
+        /// <summary>
+        /// Occurs when the axis is initialized.
+        /// </summary>
+        event Action<IAxis>? Initialized;
     }
 
     /// <summary>
