@@ -91,6 +91,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(motionCanvas);
             var l = (Control)this.legend;
+            l.Visible = false;
             l.Dock = DockStyle.Right;
             Controls.Add(l);
             Name = "CartesianChart";
