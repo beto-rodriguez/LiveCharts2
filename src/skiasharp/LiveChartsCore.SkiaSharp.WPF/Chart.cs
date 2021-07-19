@@ -699,6 +699,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         private void OnMouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
             HideTooltip();
+            core?.InvokePointerLeft();
         }
     }
 }

@@ -733,6 +733,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         private void OnPointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             HideTooltip();
+            core?.InvokePointerLeft();
         }
 
         private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)

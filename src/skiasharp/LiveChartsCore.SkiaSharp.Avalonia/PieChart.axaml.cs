@@ -676,6 +676,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         private void CartesianChart_PointerLeave(object? sender, PointerEventArgs e)
         {
             _ = Dispatcher.UIThread.InvokeAsync(HideTooltip, DispatcherPriority.Background);
+            core?.InvokePointerLeft();
         }
     }
 }

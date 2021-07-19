@@ -142,6 +142,7 @@ namespace LiveChartsCore
         private PointF _pointerPanningPosition = new(-10, -10);
         private PointF _pointerPreviousPanningPosition = new(-10, -10);
         private bool _isPanning = false;
+        private bool _isPointerIn = false;
 
         #endregion
 
@@ -161,6 +162,7 @@ namespace LiveChartsCore
             PointerDown += Chart_PointerDown;
             PointerMove += Chart_PointerMove;
             PointerUp += Chart_PointerUp;
+            PointerLeft += Chart_PointerLeft;
 
             _tooltipThrottler = new ActionThrottler(TooltipThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
             _panningThrottler = new ActionThrottler(PanningThrottlerUnlocked, TimeSpan.FromMilliseconds(30));
@@ -168,7 +170,7 @@ namespace LiveChartsCore
 
         private void TooltipThrottlerUnlocked()
         {
-            if (tooltip is null || TooltipPosition == TooltipPosition.Hidden) return;
+            if (tooltip is null || TooltipPosition == TooltipPosition.Hidden || !_isPointerIn) return;
             tooltip.Show(FindPointsNearTo(_pointerPosition), this);
         }
 
@@ -193,11 +195,16 @@ namespace LiveChartsCore
         private void Chart_PointerMove(PointF pointerPosition)
         {
             _pointerPosition = pointerPosition;
-
+            _isPointerIn = true;
             if (tooltip is not null && TooltipPosition != TooltipPosition.Hidden) _tooltipThrottler.Call();
             if (!_isPanning) return;
             _pointerPanningPosition = pointerPosition;
             _panningThrottler.Call();
+        }
+
+        private void Chart_PointerLeft()
+        {
+            _isPointerIn = false;
         }
 
         private void Chart_PointerUp(PointF pointerPosition)
@@ -220,6 +227,8 @@ namespace LiveChartsCore
         internal event Action<PointF> PointerMove;
 
         internal event Action<PointF> PointerUp;
+
+        internal event Action PointerLeft;
 
         internal event Action<PanGestureEventArgs> PanGesture;
 
@@ -405,6 +414,11 @@ namespace LiveChartsCore
         internal void InvokePointerUp(PointF point)
         {
             PointerUp?.Invoke(point);
+        }
+
+        internal void InvokePointerLeft()
+        {
+            PointerLeft?.Invoke();
         }
 
         internal void InvokePanGestrue(PanGestureEventArgs eventArgs)
