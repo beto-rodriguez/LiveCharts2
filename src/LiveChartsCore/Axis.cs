@@ -42,7 +42,7 @@ namespace LiveChartsCore
     /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
     /// <seealso cref="IAxis{TDrawingContext}" />
     /// <seealso cref="INotifyPropertyChanged" />
-    public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry> : ChartElement<TDrawingContext>, IAxis<TDrawingContext>, INotifyPropertyChanged
+    public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry> : ChartElement<TDrawingContext>, IAxis<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TTextGeometry : ILabelGeometry<TDrawingContext>, new()
         where TLineGeometry : ILineGeometry<TDrawingContext>, new()
@@ -167,6 +167,9 @@ namespace LiveChartsCore
         bool IAxis.IsNotifyingChanges { get; set; }
 
         #endregion
+
+        /// <inheritdoc cref="IAxis.Initialized"/>
+        public event Action<IAxis>? Initialized;
 
         /// <summary>
         /// Occurs when a property value changes.
@@ -455,11 +458,12 @@ namespace LiveChartsCore
         }
 
         /// <inheritdoc cref="IAxis.Initialize(AxisOrientation)"/>
-        public void Initialize(AxisOrientation orientation)
+        void IAxis.Initialize(AxisOrientation orientation)
         {
             _orientation = orientation;
             _dataBounds = new Bounds();
             _visibleDataBounds = new Bounds();
+            Initialized?.Invoke(this);
         }
 
         /// <summary>
