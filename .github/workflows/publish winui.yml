@@ -1,5 +1,5 @@
 
-name: Publish Skia
+name: Publish WinUI
 
 on:
   push:
