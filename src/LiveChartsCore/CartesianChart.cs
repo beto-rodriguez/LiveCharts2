@@ -28,6 +28,7 @@ using System.Drawing;
 using System.Linq;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Kernel.Sketches;
+using System.Diagnostics;
 
 namespace LiveChartsCore
 {
@@ -345,6 +346,10 @@ namespace LiveChartsCore
         {
             lock (canvas.Sync)
             {
+#if DEBUG
+                Trace.WriteLine("=== CHART MEASURED ===");
+#endif
+
                 InvokeOnMeasuring();
 
                 if (preserveFirstDraw)
@@ -604,7 +609,6 @@ namespace LiveChartsCore
         {
             Update();
             UpdateStarted -= CartesianChart_UpdateStarted;
-            //Update(new ChartUpdateParams { Throttling = false });
         }
 
         /// <summary>

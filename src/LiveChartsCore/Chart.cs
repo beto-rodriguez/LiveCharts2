@@ -42,6 +42,10 @@ namespace LiveChartsCore
     {
         #region fields
 
+#if DEBUG
+        internal ActionThrottler UpdateThrottlerInspector => updateThrottler;
+#endif
+
         /// <summary>
         /// The series context
         /// </summary>
@@ -152,7 +156,7 @@ namespace LiveChartsCore
             canvas.Validated += OnCanvasValidated;
             easingFunction = EasingFunctions.QuadraticOut;
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(defaultPlatformConfig);
-            updateThrottler = new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
+            updateThrottler = new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
 
             PointerDown += Chart_PointerDown;
             PointerMove += Chart_PointerMove;
@@ -472,6 +476,7 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected bool SeriesMiniatureChanged(IReadOnlyList<IChartSeries<TDrawingContext>> newSeries, LegendPosition position)
         {
+            if (position == LegendPosition.Hidden) return false;
             if (position != previousLegendPosition) return true;
             if (previousSeries.Count != newSeries.Count) return true;
 

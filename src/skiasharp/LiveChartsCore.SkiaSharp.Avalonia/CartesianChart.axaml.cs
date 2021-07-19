@@ -692,7 +692,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
             legend = this.FindControl<DefaultLegend>("legend");
             tooltip = this.FindControl<DefaultTooltip>("tooltip");
-            _ = Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
+
+            core.Update();
         }
 
         /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})" />
@@ -735,7 +736,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 canvas.BackColor = new SkiaSharp.SKColor(color.R, color.G, color.B, color.A);
             }
 
-            _ = Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
+            core.Update();
         }
 
         private void InitializeComponent()
@@ -747,14 +748,14 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             if (core is null) return;
 
-            _ = Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
+            core.Update();
         }
 
         private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (core is null) return;
 
-            _ = Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
+            core.Update();
         }
 
         private void CartesianChart_PointerWheelChanged(object? sender, PointerWheelEventArgs e)

@@ -45,6 +45,16 @@ namespace LiveChartsCore.Kernel
             ThrottlerTimeSpan = time;
         }
 
+#if DEBUG
+        /// <summary>
+        /// Gets the calls.
+        /// </summary>
+        /// <value>
+        /// The calls.
+        /// </value>
+        public int Calls { get; private set; } = 0;
+#endif
+
         /// <summary>
         /// Gets or sets the throttler time span.
         /// </summary>
@@ -61,6 +71,10 @@ namespace LiveChartsCore.Kernel
         {
             lock (_sync)
             {
+#if DEBUG
+                Calls++;
+#endif
+
                 if (_isWaiting) return;
                 _isWaiting = true;
             }
