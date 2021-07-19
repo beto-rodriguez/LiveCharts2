@@ -73,5 +73,53 @@ namespace LiveChartsCore.Measure
             if (Max <= value) Max = value;
             if (Min >= value) Min = value;
         }
+
+        /// <summary>
+        /// Implements the operator ==.
+        /// </summary>
+        /// <param name="b1">The b1.</param>
+        /// <param name="b2">The b2.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
+        public static bool operator ==(Bounds? b1, Bounds? b2) => b1 is null ? b2 is null : b1.Equals(b2);
+
+        /// <summary>
+        /// Implements the operator !=.
+        /// </summary>
+        /// <param name="b1">The b1.</param>
+        /// <param name="b2">The b2.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
+        public static bool operator !=(Bounds b1, Bounds? b2) => !b1.Equals(b2);
+
+        /// <summary>
+        /// Determines whether the specified object is equal to the current object.
+        /// </summary>
+        /// <param name="obj">The object to compare with the current object.</param>
+        /// <returns>
+        /// true if the specified object  is equal to the current object; otherwise, false.
+        /// </returns>
+        public override bool Equals(object? obj)
+        {
+            return obj is Bounds bounds &&
+                   Max == bounds.Max &&
+                   Min == bounds.Min;
+        }
+
+        /// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// </returns>
+        public override int GetHashCode()
+        {
+            var hashCode = 2105617304;
+            hashCode = hashCode * -1521134295 + Max.GetHashCode();
+            hashCode = hashCode * -1521134295 + Min.GetHashCode();
+            return hashCode;
+        }
     }
 }
