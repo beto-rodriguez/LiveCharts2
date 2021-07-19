@@ -69,7 +69,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
             MouseWheel += OnMouseWheel;
             MouseDown += OnMouseDown;
-            MouseMove += OnMouseMove;
             MouseUp += OnMouseUp;
         }
 
@@ -313,13 +312,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             _ = CaptureMouse();
             var p = e.GetPosition(this);
             core?.InvokePointerDown(new PointF((float)p.X, (float)p.Y));
-        }
-
-        private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            var p = e.GetPosition(this);
-            // ToDo: CHECK IF THIS WAS ALREARY INVOKED BY THE BASE CLASS????
-            core?.InvokePointerMove(new PointF((float)p.X, (float)p.Y));
         }
 
         private void OnMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
