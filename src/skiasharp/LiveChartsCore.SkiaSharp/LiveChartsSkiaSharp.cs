@@ -113,6 +113,7 @@ namespace LiveChartsCore.SkiaSharpView
                                {
                                    axis.TextSize = 16;
                                    axis.ShowSeparatorLines = true;
+                                   axis.NamePaint = DefaultPaintTask;
                                    axis.LabelsPaint = DefaultPaintTask;
                                    axis.SeparatorsPaint = DefaultPaintTask;
                                })
@@ -189,7 +190,7 @@ namespace LiveChartsCore.SkiaSharpView
                                }))
                        // finally add a resolver for the DefaultPaintTask
                        // the library already provides the AddDefaultLightResolvers() and AddDefaultDarkResolvers methods
-                       // these method only translates 'DefaultPaintTask' to a valid stroke/fill based on
+                       // this method only translates 'DefaultPaintTask' to a valid stroke/fill based on
                        // the series context
                        .AddDefaultLightResolvers();
 
@@ -246,6 +247,7 @@ namespace LiveChartsCore.SkiaSharpView
                                {
                                    axis.TextSize = 18;
                                    axis.ShowSeparatorLines = true;
+                                   axis.NamePaint = DefaultPaintTask;
                                    axis.LabelsPaint = DefaultPaintTask;
                                    axis.SeparatorsPaint = DefaultPaintTask;
                                })
@@ -440,6 +442,9 @@ namespace LiveChartsCore.SkiaSharpView
                             initializer.ApplyStyleToAxis(axis);
                         }
 
+                        if (axis.NamePaint == DefaultPaintTask)
+                            axis.NamePaint = new SolidColorPaintTask(new SKColor(35, 35, 35));
+
                         if (axis.SeparatorsPaint == DefaultPaintTask)
                             axis.SeparatorsPaint = axis.Orientation == AxisOrientation.X
                                 ? null
@@ -563,6 +568,9 @@ namespace LiveChartsCore.SkiaSharpView
 
                             initializer.ApplyStyleToAxis(axis);
                         }
+
+                        if (axis.NamePaint == DefaultPaintTask)
+                            axis.NamePaint = new SolidColorPaintTask(new SKColor(235, 235, 235));
 
                         if (axis.SeparatorsPaint == DefaultPaintTask)
                             axis.SeparatorsPaint = axis.Orientation == AxisOrientation.X

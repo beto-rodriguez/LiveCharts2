@@ -39,7 +39,7 @@ namespace LiveChartsCore.Drawing
         float Opacity { get; set; }
 
         /// <summary>
-        /// Gets or sets the rotation.
+        /// Gets or sets the rotation in degrees.
         /// </summary>
         /// <value>
         /// The rotation.

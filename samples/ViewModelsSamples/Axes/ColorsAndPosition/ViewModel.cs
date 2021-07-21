@@ -36,6 +36,7 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
             {
                 new Axis
                 {
+                    Name = "X axis",
                     TextSize = 20,
 
                     // LabelsPaint = null will not draw the axis labels.
@@ -52,6 +53,7 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
             {
                 new Axis
                 {
+                    Name = "Y axis",
                     TextSize = 20,
                     LabelsPaint = new SolidColorPaintTask { Color = SKColors.Red },
                     SeparatorsPaint = new SolidColorPaintTask { Color = SKColors.LightPink, StrokeThickness = 3 },
@@ -77,6 +79,7 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
         {
             _selectedPosition = _selectedPosition == AxisPosition.End ? AxisPosition.Start : AxisPosition.End;
             XAxes[0].Position = _selectedPosition;
+            YAxes[0].Position = _selectedPosition;
         }
 
         // The next commands are only to enable XAML bindings

@@ -61,11 +61,15 @@ namespace LiveChartsCore
         private double _labelsRotation;
         // xo (x origin) and yo (y origin) are the distance to the center of the axis to the control bounds
         internal float _xo = 0f, _yo = 0f;
+        private TTextGeometry? _nameGeometry;
         private AxisPosition _position = AxisPosition.Start;
         private Func<double, string> _labeler = Labelers.Default;
         private Padding _padding = Padding.Default;
         private double? _minLimit = null;
         private double? _maxLimit = null;
+        private IPaintTask<TDrawingContext>? _namePaint;
+        private double _nameTextSize = 20;
+        private Padding _namePadding = new Padding(5);
         private IPaintTask<TDrawingContext>? _labelsPaint;
         private double _unitWidth = 1;
         private double _textSize = 16;
@@ -92,6 +96,15 @@ namespace LiveChartsCore
         Bounds IAxis.DataBounds => _dataBounds ?? throw new Exception("bounds not found");
 
         Bounds IAxis.VisibleDataBounds => _visibleDataBounds ?? throw new Exception("bounds not found");
+
+        /// <inheritdoc cref="IAxis.Name"/>
+        public string? Name { get; set; } = null;
+
+        /// <inheritdoc cref="IAxis.NameTextSize"/>
+        public double NameTextSize { get => _nameTextSize; set { _nameTextSize = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IAxis.NamePadding"/>
+        public Padding NamePadding { get => _namePadding; set { _namePadding = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IAxis.Orientation"/>
         public AxisOrientation Orientation => _orientation;
@@ -134,6 +147,13 @@ namespace LiveChartsCore
 
         /// <inheritdoc cref="IAxis.IsInverted"/>
         public bool IsInverted { get => _isInverted; set { _isInverted = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IAxis{TDrawingContext}.NamePaint"/>
+        public IPaintTask<TDrawingContext>? NamePaint
+        {
+            get => _namePaint;
+            set => SetPaintProperty(ref _namePaint, value);
+        }
 
         /// <inheritdoc cref="IAxis{TDrawingContext}.LabelsPaint"/>
         public IPaintTask<TDrawingContext>? LabelsPaint
@@ -204,6 +224,11 @@ namespace LiveChartsCore
             var s = axisTick.Value;
             if (s < _minStep) s = _minStep;
 
+            if (NamePaint is not null)
+            {
+                NamePaint.ZIndex = -1;
+                cartesianChart.Canvas.AddDrawableTask(NamePaint);
+            }
             if (LabelsPaint is not null)
             {
                 LabelsPaint.ZIndex = -1;
@@ -248,6 +273,37 @@ namespace LiveChartsCore
             {
                 separators = new Dictionary<string, AxisVisualSeprator<TDrawingContext>>();
                 activeSeparators[cartesianChart] = separators;
+            }
+
+            if (Name is not null && NamePaint is not null)
+            {
+                if (_nameGeometry is null)
+                {
+                    _nameGeometry = new TTextGeometry
+                    {
+                        TextSize = size,
+                        HorizontalAlign = Align.Middle,
+                        VerticalAlign = Align.Middle
+                    };
+                }
+
+                _nameGeometry.Padding = NamePadding;
+                _nameGeometry.Text = Name;
+                _nameGeometry.TextSize = (float)NameTextSize;
+
+                if (_orientation == AxisOrientation.X)
+                {
+                    var nameSize = _nameGeometry.Measure(NamePaint);
+                    _nameGeometry.X = (lxi + lxj) * 0.5f;
+                    _nameGeometry.Y = Position == AxisPosition.Start ? yoo + nameSize.Height : yoo - nameSize.Height;
+                }
+                else
+                {
+                    _nameGeometry.Rotation = -90;
+                    var nameSize = _nameGeometry.Measure(NamePaint);
+                    _nameGeometry.X = Position == AxisPosition.Start ? xoo - nameSize.Width - Padding.Bottom : xoo + nameSize.Width + Padding.Bottom;
+                    _nameGeometry.Y = (lyi + lyj) * 0.5f;
+                }
             }
 
             var measured = new HashSet<AxisVisualSeprator<TDrawingContext>>();
@@ -363,6 +419,8 @@ namespace LiveChartsCore
                     separators.Add(label, visualSeparator);
                 }
 
+                if (NamePaint is not null && _nameGeometry is not null)
+                    NamePaint.AddGeometryToPaintTask(cartesianChart.Canvas, _nameGeometry);
                 if (LabelsPaint is not null && visualSeparator.Text is not null)
                     LabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Text);
                 if (SeparatorsPaint is not null && ShowSeparatorLines && visualSeparator.Line is not null)
@@ -410,6 +468,22 @@ namespace LiveChartsCore
                 SoftDeleteSeparator(cartesianChart, separator.Value, scale);
                 _ = separators.Remove(separator.Key);
             }
+        }
+
+        /// <inheritdoc cref="IAxis{TDrawingContext}.GetNameLabelSize(CartesianChart{TDrawingContext})"/>
+        public SizeF GetNameLabelSize(CartesianChart<TDrawingContext> chart)
+        {
+            if (NamePaint is null || string.IsNullOrWhiteSpace(Name)) return new SizeF(0, 0);
+
+            var textGeometry = new TTextGeometry
+            {
+                Text = Name ?? string.Empty,
+                TextSize = (float)NameTextSize,
+                Rotation = Orientation == AxisOrientation.X ? 0 : -90,
+                Padding = Padding
+            };
+
+            return textGeometry.Measure(NamePaint);
         }
 
         /// <inheritdoc cref="IAxis{TDrawingContext}.GetPossibleSize(CartesianChart{TDrawingContext})"/>
@@ -600,7 +674,7 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected override IPaintTask<TDrawingContext>?[] GetPaintTasks()
         {
-            return new[] { _separatorsPaint, _labelsPaint };
+            return new[] { _separatorsPaint, _labelsPaint, _namePaint };
         }
     }
 }

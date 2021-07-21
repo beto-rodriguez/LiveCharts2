@@ -490,7 +490,7 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected bool SeriesMiniatureChanged(IReadOnlyList<IChartSeries<TDrawingContext>> newSeries, LegendPosition position)
         {
-            if (position == LegendPosition.Hidden) return false;
+            if (position == LegendPosition.Hidden && previousLegendPosition == LegendPosition.Hidden) return false;
             if (position != previousLegendPosition) return true;
             if (previousSeries.Count != newSeries.Count) return true;
 

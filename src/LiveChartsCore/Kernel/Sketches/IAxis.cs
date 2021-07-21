@@ -36,6 +36,24 @@ namespace LiveChartsCore.Kernel.Sketches
     public interface IAxis : INotifyPropertyChanged
     {
         /// <summary>
+        /// Gets or sets the axis name.
+        /// </summary>
+        string? Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the size of the name label.
+        /// </summary>
+        /// <value>
+        /// The size of the text.
+        /// </value>
+        double NameTextSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets the padding of the name label.
+        /// </summary>
+        Padding NamePadding { get; set; }
+
+        /// <summary>
         /// Gets the previous data bounds.
         /// </summary>
         /// <value>
@@ -264,6 +282,14 @@ namespace LiveChartsCore.Kernel.Sketches
         where TDrawingContext : DrawingContext
     {
         /// <summary>
+        /// Gets or sets the name paint.
+        /// </summary>
+        /// <value>
+        /// The text paint.
+        /// </value>
+        IPaintTask<TDrawingContext>? NamePaint { get; set; }
+
+        /// <summary>
         /// Gets or sets the text brush.
         /// </summary>
         /// <value>
@@ -303,5 +329,12 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <param name="chart">The chart.</param>
         /// <returns></returns>
         SizeF GetPossibleSize(CartesianChart<TDrawingContext> chart);
+
+        /// <summary>
+        /// Gets the size of the axis name label.
+        /// </summary>
+        /// <param name="chart"></param>
+        /// <returns></returns>
+        SizeF GetNameLabelSize(CartesianChart<TDrawingContext> chart);
     }
 }

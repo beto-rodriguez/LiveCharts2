@@ -21,6 +21,8 @@ namespace ViewModelsSamples.Axes.LabelsFormat
             {
                 new Axis
                 {
+                    Name = "Worked days",
+
                     // Use the Label property to indicate the format of the labels in the axis
                     // The Labeler takes the value of the label as parameter and must return it as string
                     Labeler = (value) => "Day " + value,
@@ -36,6 +38,8 @@ namespace ViewModelsSamples.Axes.LabelsFormat
             {
                 new Axis
                 {
+                    Name = "Sales",
+
                     // Now the Y axis we will display it as currency
                     // LiveCharts provides some common formatters
                     // in this case we are using the currency formatter.
