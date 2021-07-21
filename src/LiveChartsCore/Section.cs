@@ -212,7 +212,7 @@ namespace LiveChartsCore
 
             if (Fill is not null)
             {
-                Fill.ZIndex = ZIndex ?? -3;
+                Fill.ZIndex = ZIndex ?? -2.5;
 
                 if (_fillSizedGeometry is null)
                 {
@@ -249,7 +249,7 @@ namespace LiveChartsCore
 
             if (Stroke is not null)
             {
-                Stroke.ZIndex = ZIndex ?? -3;
+                Stroke.ZIndex = ZIndex ?? 0;
 
                 if (_strokeSizedGeometry is null)
                 {
