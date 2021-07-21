@@ -860,7 +860,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         private void OnPointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             HideTooltip();
-            core?.InvokePointerLeft();
+            _core?.InvokePointerLeft();
         }
 
         private void OnPointerReleased(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)

@@ -30,7 +30,7 @@ namespace LiveChartsCore.UnitTesting
 
             await Task.Delay(TimeSpan.FromSeconds(0.5));
 
-            Assert.IsTrue(runs == 1);
+            Assert.IsTrue(runs == 1 && throttler.Calls == 6);
         }
 
         [TestMethod]
@@ -60,7 +60,7 @@ namespace LiveChartsCore.UnitTesting
             await Task.Delay(TimeSpan.FromSeconds(0.5));
 
             var calls = throttler.Calls;
-            Assert.IsTrue(runs == 1);
+            Assert.IsTrue(runs == 1 && throttler.Calls == 9);
         }
     }
 }
