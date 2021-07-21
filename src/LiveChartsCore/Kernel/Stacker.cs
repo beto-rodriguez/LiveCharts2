@@ -35,7 +35,7 @@ namespace LiveChartsCore.Kernel
     {
         private readonly Dictionary<IChartSeries<TDrawingContext>, int> _stackPositions = new();
         private readonly List<List<StackedValue>> _stack = new();
-        private readonly List<float> _totals = new();
+        private readonly List<double> _totals = new();
         private int _stackCount = 0;
         private int _knownMaxLenght = 0;
 
@@ -78,7 +78,7 @@ namespace LiveChartsCore.Kernel
         /// <param name="point">The point.</param>
         /// <param name="seriesStackPosition">The series stack position.</param>
         /// <returns></returns>
-        public float StackPoint(ChartPoint point, int seriesStackPosition)
+        public double StackPoint(ChartPoint point, int seriesStackPosition)
         {
             var index = unchecked((int)point.SecondaryValue);
             var start = seriesStackPosition == 0 ? 0 : _stack[seriesStackPosition - 1][index].End;

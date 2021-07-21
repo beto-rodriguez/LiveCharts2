@@ -33,7 +33,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The start.
         /// </value>
-        public float Start { get; set; }
+        public double Start { get; set; }
 
         /// <summary>
         /// Gets or sets the end.
@@ -41,7 +41,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The end.
         /// </value>
-        public float End { get; set; }
+        public double End { get; set; }
 
         /// <summary>
         /// Gets or sets the total stacked.
@@ -49,6 +49,6 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The total.
         /// </value>
-        public float Total { get; set; }
+        public double Total { get; set; }
     }
 }

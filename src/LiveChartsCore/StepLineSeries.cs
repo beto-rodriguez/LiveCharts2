@@ -198,7 +198,7 @@ namespace LiveChartsCore
 
                 foreach (var data in GetStepLine(segment, secondaryScale, primaryScale, stacker))
                 {
-                    var s = 0f;
+                    var s = 0d;
                     if (stacker is not null)
                     {
                         s = stacker.GetStack(data.TargetPoint).Start;
@@ -586,7 +586,7 @@ namespace LiveChartsCore
 
             ChartPoint current, next;
 
-            var cys = 0f;
+            var cys = 0d;
 
             for (var i = 0; i < points.Length; i++)
             {
@@ -603,7 +603,7 @@ namespace LiveChartsCore
                 var c2X = next.SecondaryValue;
                 var c2Y = current.PrimaryValue + cys;
 
-                float x0, y0;
+                double x0, y0;
 
                 if (i == 0)
                 {
@@ -628,12 +628,12 @@ namespace LiveChartsCore
                     Y2 = yScale.ToPixels(next.PrimaryValue),
                     OriginalData = new BezierData(points[i])
                     {
-                        X0 = x0,
-                        Y0 = y0,
-                        X1 = c2X,
-                        Y1 = c2Y,
-                        X2 = next.SecondaryValue,
-                        Y2 = next.PrimaryValue,
+                        X0 = (float)x0,
+                        Y0 = (float)y0,
+                        X1 = (float)c2X,
+                        Y1 = (float)c2Y,
+                        X2 = (float)next.SecondaryValue,
+                        Y2 = (float)next.PrimaryValue,
                     }
                 };
             }

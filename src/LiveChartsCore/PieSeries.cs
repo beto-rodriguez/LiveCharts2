@@ -244,7 +244,7 @@ namespace LiveChartsCore
                 var stackedValue = stack.Start;
                 var total = chartTotal ?? stack.Total;
 
-                float start, end;
+                double start, end;
                 if (total == 0)
                 {
                     start = 0;
@@ -272,7 +272,7 @@ namespace LiveChartsCore
                         Y = cy,
                         Width = 0,
                         Height = 0,
-                        StartAngle = pieChart.IsFirstDraw ? initialRotation : start + initialRotation,
+                        StartAngle = (float)(pieChart.IsFirstDraw ? initialRotation : start + initialRotation),
                         SweepAngle = 0,
                         PushOut = 0,
                         InnerRadius = 0,
@@ -307,15 +307,15 @@ namespace LiveChartsCore
                 dougnutGeometry.Height = w;
                 dougnutGeometry.InnerRadius = stackedInnerRadius;
                 dougnutGeometry.PushOut = pushout;
-                dougnutGeometry.StartAngle = start + initialRotation;
-                dougnutGeometry.SweepAngle = end;
+                dougnutGeometry.StartAngle = (float)(start + initialRotation);
+                dougnutGeometry.SweepAngle = (float)end;
                 dougnutGeometry.CornerRadius = cornerRadius;
                 dougnutGeometry.InvertedCornerRadius = InvertedCornerRadius;
                 dougnutGeometry.RemoveOnCompleted = false;
                 if (start == initialRotation && end == completeAngle) dougnutGeometry.SweepAngle = completeAngle - 0.1f;
 
                 point.Context.HoverArea = new SemicircleHoverArea()
-                    .SetDimensions(cx, cy, start + initialRotation, start + initialRotation + end, md * 0.5f);
+                    .SetDimensions(cx, cy, (float)(start + initialRotation), (float)(start + initialRotation + end), md * 0.5f);
 
                 OnPointMeasured(point);
                 _ = toDeletePoints.Remove(point);
@@ -355,7 +355,7 @@ namespace LiveChartsCore
                         if (a > 180) c = -90;
 
                         label.HorizontalAlign = a > 180 ? Align.End : Align.Start;
-                        label.Rotation = a - c;
+                        label.Rotation = (float)(a - c);
                     }
 
                     if (DataLabelsPosition == PolarLabelsPosition.End)
@@ -368,11 +368,12 @@ namespace LiveChartsCore
                         if (a > 180) c = -90;
 
                         label.HorizontalAlign = a > 180 ? Align.Start : Align.End;
-                        label.Rotation = a - c;
+                        label.Rotation = (float)(a - c);
                     }
 
                     var labelPosition = GetLabelPolarPosition(
-                        cx, cy, ((w + relativeOuterRadius * 2) * 0.5f + stackedInnerRadius) * 0.5f, start + initialRotation, end,
+                        cx, cy, ((w + relativeOuterRadius * 2) * 0.5f + stackedInnerRadius) * 0.5f,
+                        (float)(start + initialRotation), (float)end,
                         label.Measure(DataLabelsPaint), DataLabelsPosition);
 
                     label.X = labelPosition.X;

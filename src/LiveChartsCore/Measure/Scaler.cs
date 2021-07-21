@@ -31,7 +31,7 @@ namespace LiveChartsCore.Measure
     /// </summary>
     public class Scaler
     {
-        private readonly float _m, _mInv, _minPx, _maxPx, _deltaPx, _minVal, _maxVal, _deltaVal;
+        private readonly double _minVal, _maxVal, _deltaVal, _m, _mInv, _minPx, _maxPx, _deltaPx;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Scaler"/> class.
@@ -84,18 +84,18 @@ namespace LiveChartsCore.Measure
                 _maxPx = drawMagrinLocation.X + drawMarginSize.Width;
                 _deltaPx = _maxPx - _minPx;
 
-                _maxVal = (float)(axis.IsInverted ? actualBounds.Min : actualBounds.Max);
-                _minVal = (float)(axis.IsInverted ? actualBounds.Max : actualBounds.Min);
+                _maxVal = axis.IsInverted ? actualBounds.Min : actualBounds.Max;
+                _minVal = axis.IsInverted ? actualBounds.Max : actualBounds.Min;
 
                 if (maxLimit is not null || minLimit is not null)
                 {
-                    _maxVal = (float)(axis.IsInverted ? minLimit ?? _minVal : maxLimit ?? _maxVal);
-                    _minVal = (float)(axis.IsInverted ? maxLimit ?? _maxVal : minLimit ?? _minVal);
+                    _maxVal = axis.IsInverted ? minLimit ?? _minVal : maxLimit ?? _maxVal;
+                    _minVal = axis.IsInverted ? maxLimit ?? _maxVal : minLimit ?? _minVal;
                 }
                 else
                 {
-                    var visibleMax = (float)(axis.IsInverted ? actualVisibleBounds.Min : actualVisibleBounds.Max);
-                    var visibleMin = (float)(axis.IsInverted ? actualVisibleBounds.Max : actualVisibleBounds.Min);
+                    var visibleMax = axis.IsInverted ? actualVisibleBounds.Min : actualVisibleBounds.Max;
+                    var visibleMin = axis.IsInverted ? actualVisibleBounds.Max : actualVisibleBounds.Min;
 
                     if (visibleMax != _maxVal || visibleMin != _minVal)
                     {
@@ -112,18 +112,18 @@ namespace LiveChartsCore.Measure
                 _maxPx = drawMagrinLocation.Y + drawMarginSize.Height;
                 _deltaPx = _maxPx - _minPx;
 
-                _maxVal = (float)(axis.IsInverted ? actualBounds.Max : actualBounds.Min);
-                _minVal = (float)(axis.IsInverted ? actualBounds.Min : actualBounds.Max);
+                _maxVal = axis.IsInverted ? actualBounds.Max : actualBounds.Min;
+                _minVal = axis.IsInverted ? actualBounds.Min : actualBounds.Max;
 
                 if (maxLimit is not null || minLimit is not null)
                 {
-                    _maxVal = (float)(axis.IsInverted ? maxLimit ?? _maxVal : minLimit ?? _minVal);
-                    _minVal = (float)(axis.IsInverted ? minLimit ?? _minVal : maxLimit ?? _maxVal);
+                    _maxVal = axis.IsInverted ? maxLimit ?? _maxVal : minLimit ?? _minVal;
+                    _minVal = axis.IsInverted ? minLimit ?? _minVal : maxLimit ?? _maxVal;
                 }
                 else
                 {
-                    var visibleMax = (float)(axis.IsInverted ? actualVisibleBounds.Max : actualVisibleBounds.Min);
-                    var visibleMin = (float)(axis.IsInverted ? actualVisibleBounds.Min : actualVisibleBounds.Max);
+                    var visibleMax = axis.IsInverted ? actualVisibleBounds.Max : actualVisibleBounds.Min;
+                    var visibleMin = axis.IsInverted ? actualVisibleBounds.Min : actualVisibleBounds.Max;
 
                     if (visibleMax != _maxVal || visibleMin != _minVal)
                     {
@@ -162,9 +162,9 @@ namespace LiveChartsCore.Measure
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-        public float ToPixels(float value)
+        public float ToPixels(double value)
         {
-            return _minPx + (value - _minVal) * _m;
+            return unchecked((float)(_minPx + (value - _minVal) * _m));
         }
 
         /// <summary>
@@ -172,9 +172,9 @@ namespace LiveChartsCore.Measure
         /// </summary>
         /// <param name="pixels">The pixels.</param>
         /// <returns></returns>
-        public float ToChartValues(float pixels)
+        public float ToChartValues(double pixels)
         {
-            return _minVal + (pixels - _minPx) * _mInv;
+            return unchecked((float)(_minVal + (pixels - _minPx) * _mInv));
         }
     }
 }

@@ -78,7 +78,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The minimum delta primary.
         /// </value>
-        public float MinDeltaPrimary { get; set; } = float.MaxValue;
+        public double MinDeltaPrimary { get; set; } = float.MaxValue;
 
         /// <summary>
         /// Gets or sets the minimum delta secondary.
@@ -86,6 +86,6 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The minimum delta secondary.
         /// </value>
-        public float MinDeltaSecondary { get; set; } = float.MaxValue;
+        public double MinDeltaSecondary { get; set; } = float.MaxValue;
     }
 }

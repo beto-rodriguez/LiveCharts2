@@ -260,18 +260,18 @@ namespace LiveChartsCore
                 float x, y;
                 if (_orientation == AxisOrientation.X)
                 {
-                    x = scale.ToPixels((float)i);
+                    x = scale.ToPixels(i);
                     y = yoo;
                 }
                 else
                 {
                     x = xoo;
-                    y = scale.ToPixels((float)i);
+                    y = scale.ToPixels(i);
                 }
 
                 if (!separators.TryGetValue(label, out var visualSeparator))
                 {
-                    visualSeparator = new AxisVisualSeprator<TDrawingContext>() { Value = (float)i };
+                    visualSeparator = new AxisVisualSeprator<TDrawingContext>() { Value = i };
 
                     if (LabelsPaint is not null)
                     {
@@ -295,13 +295,13 @@ namespace LiveChartsCore
 
                             if (_orientation == AxisOrientation.X)
                             {
-                                xi = previousSacale.ToPixels((float)i);
+                                xi = previousSacale.ToPixels(i);
                                 yi = yoo;
                             }
                             else
                             {
                                 xi = xoo;
-                                yi = previousSacale.ToPixels((float)i);
+                                yi = previousSacale.ToPixels(i);
                             }
 
                             textGeometry.X = xi;
@@ -332,13 +332,13 @@ namespace LiveChartsCore
 
                             if (_orientation == AxisOrientation.X)
                             {
-                                xi = previousSacale.ToPixels((float)i);
+                                xi = previousSacale.ToPixels(i);
                                 yi = yoo;
                             }
                             else
                             {
                                 xi = xoo;
-                                yi = previousSacale.ToPixels((float)i);
+                                yi = previousSacale.ToPixels(i);
                             }
 
                             if (_orientation == AxisOrientation.X)

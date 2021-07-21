@@ -35,7 +35,7 @@ namespace LiveChartsCore.Drawing
         /// <value>
         /// The value.
         /// </value>
-        public float Value { get; set; }
+        public double Value { get; set; }
 
         /// <summary>
         /// Gets or sets the text.

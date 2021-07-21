@@ -72,7 +72,7 @@ namespace LiveChartsCore
                 primaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis);
             var primaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
 
-            var uw = secondaryScale.ToPixels(0f) - secondaryScale.ToPixels((float)primaryAxis.UnitWidth);
+            var uw = secondaryScale.ToPixels(0f) - secondaryScale.ToPixels(primaryAxis.UnitWidth);
             var uwm = 0.5f * uw;
 
             uw -= (float)GroupPadding;

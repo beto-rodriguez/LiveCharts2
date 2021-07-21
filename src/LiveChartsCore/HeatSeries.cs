@@ -127,7 +127,7 @@ namespace LiveChartsCore
                 var visual = point.Context.Visual as TVisual;
                 var primary = primaryScale.ToPixels(point.PrimaryValue);
                 var secondary = secondaryScale.ToPixels(point.SecondaryValue);
-                var tertiary = point.TertiaryValue;
+                var tertiary = (float)point.TertiaryValue;
 
                 var baseColor = HeatFunctions.InterpolateColor(tertiary, _weightBounds, HeatMap, _heatStops);
 

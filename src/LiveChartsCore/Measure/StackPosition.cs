@@ -53,7 +53,7 @@ namespace LiveChartsCore.Measure
         /// </summary>
         /// <param name="point">The point.</param>
         /// <returns></returns>
-        public float StackPoint(ChartPoint point)
+        public double StackPoint(ChartPoint point)
         {
             return Stacker.StackPoint(point, Position);
         }

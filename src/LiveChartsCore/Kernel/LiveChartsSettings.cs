@@ -258,248 +258,187 @@ namespace LiveChartsCore.Kernel
 
         /// <summary>
         /// Enables LiveCharts to be able to plot short, int, long, float, double, decimal, short?, int?, long?, float?, double?, decimal?,
-        /// <see cref="WeightedPoint"/>, <see cref="ObservableValue"/>, <see cref="ObservablePoint"/>, <see cref="WeightedPointF"/>,
-        /// <see cref="ObservableValueF"/> and <see cref="ObservablePointF"/>.
+        /// <see cref="WeightedPoint"/>, <see cref="ObservableValue"/>, <see cref="ObservablePoint"/>, <see cref="DateTimePoint"/> and
+        /// <see cref="FinancialPoint"/>.
         /// </summary>
         /// <returns></returns>
         public LiveChartsSettings AddDefaultMappers()
         {
-            return HasMap<short>((model, point) =>
-                 {
-                     point.PrimaryValue = model;
-                     point.SecondaryValue = point.Context.Index;
-                 })
-                 .HasMap<int>((model, point) =>
-                 {
-                     point.PrimaryValue = model;
-                     point.SecondaryValue = point.Context.Index;
-                 })
-                 .HasMap<long>((model, point) =>
-                 {
-                     point.PrimaryValue = model;
-                     point.SecondaryValue = point.Context.Index;
-                 })
-                 .HasMap<float>((model, point) =>
-                 {
-                     point.PrimaryValue = model;
-                     point.SecondaryValue = point.Context.Index;
-                 })
-                 .HasMap<double>((model, point) =>
-                 {
-                     point.PrimaryValue = unchecked((float)model);
-                     point.SecondaryValue = point.Context.Index;
-                 })
-                 .HasMap<decimal>((model, point) =>
-                 {
-                     point.PrimaryValue = unchecked((float)model);
-                     point.SecondaryValue = point.Context.Index;
-                 })
-                 .HasMap<short?>((model, point) =>
-                 {
-                     if (model is null)
-                     {
-                         point.IsNull = true;
-                         return;
-                     }
-                     point.IsNull = false;
-                     point.PrimaryValue = model.Value;
-                     point.SecondaryValue = point.Context.Index;
-                 })
-                 .HasMap<int?>((model, point) =>
-                 {
-                     if (model is null)
-                     {
-                         point.IsNull = true;
-                         return;
-                     }
-                     point.IsNull = false;
-                     point.PrimaryValue = model.Value;
-                     point.SecondaryValue = point.Context.Index;
-                 })
-                 .HasMap<long?>((model, point) =>
-                 {
-                     if (model is null)
-                     {
-                         point.IsNull = true;
-                         return;
-                     }
-                     point.IsNull = false;
-                     point.PrimaryValue = model.Value;
-                     point.SecondaryValue = point.Context.Index;
-                 })
-                 .HasMap<float?>((model, point) =>
-                 {
-                     if (model is null)
-                     {
-                         point.IsNull = true;
-                         return;
-                     }
-                     point.IsNull = false;
-                     point.PrimaryValue = model.Value;
-                     point.SecondaryValue = point.Context.Index;
-                 })
-                 .HasMap<double?>((model, point) =>
-                 {
-                     if (model is null)
-                     {
-                         point.IsNull = true;
-                         return;
-                     }
-                     point.IsNull = false;
-                     point.PrimaryValue = unchecked((float)model.Value);
-                     point.SecondaryValue = point.Context.Index;
-                 })
-                 .HasMap<decimal?>((model, point) =>
-                 {
-                     if (model is null)
-                     {
-                         point.IsNull = true;
-                         return;
-                     }
-                     point.IsNull = false;
-                     point.PrimaryValue = unchecked((float)model.Value);
-                     point.SecondaryValue = point.Context.Index;
-                 })
-                 .HasMap<WeightedPoint>((model, point) =>
-                 {
-                     if (model is null)
-                         throw new Exception(
-                             $"A {nameof(WeightedPoint)} can not be null, instead set to null to any of its properties.");
+            return
+                HasMap<short>((model, point) =>
+                {
+                    point.PrimaryValue = model;
+                    point.SecondaryValue = point.Context.Index;
+                })
+                .HasMap<int>((model, point) =>
+                {
+                    point.PrimaryValue = model;
+                    point.SecondaryValue = point.Context.Index;
+                })
+                .HasMap<long>((model, point) =>
+                {
+                    point.PrimaryValue = model;
+                    point.SecondaryValue = point.Context.Index;
+                })
+                .HasMap<float>((model, point) =>
+                {
+                    point.PrimaryValue = model;
+                    point.SecondaryValue = point.Context.Index;
+                })
+                .HasMap<double>((model, point) =>
+                {
+                    point.PrimaryValue = model;
+                    point.SecondaryValue = point.Context.Index;
+                })
+                .HasMap<decimal>((model, point) =>
+                {
+                    point.PrimaryValue = unchecked((double)model);
+                    point.SecondaryValue = point.Context.Index;
+                })
+                .HasMap<short?>((model, point) =>
+                {
+                    if (model is null)
+                    {
+                        point.IsNull = true;
+                        return;
+                    }
+                    point.IsNull = false;
+                    point.PrimaryValue = model.Value;
+                    point.SecondaryValue = point.Context.Index;
+                })
+                .HasMap<int?>((model, point) =>
+                {
+                    if (model is null)
+                    {
+                        point.IsNull = true;
+                        return;
+                    }
+                    point.IsNull = false;
+                    point.PrimaryValue = model.Value;
+                    point.SecondaryValue = point.Context.Index;
+                })
+                .HasMap<long?>((model, point) =>
+                {
+                    if (model is null)
+                    {
+                        point.IsNull = true;
+                        return;
+                    }
+                    point.IsNull = false;
+                    point.PrimaryValue = model.Value;
+                    point.SecondaryValue = point.Context.Index;
+                })
+                .HasMap<float?>((model, point) =>
+                {
+                    if (model is null)
+                    {
+                        point.IsNull = true;
+                        return;
+                    }
+                    point.IsNull = false;
+                    point.PrimaryValue = model.Value;
+                    point.SecondaryValue = point.Context.Index;
+                })
+                .HasMap<double?>((model, point) =>
+                {
+                    if (model is null)
+                    {
+                        point.IsNull = true;
+                        return;
+                    }
+                    point.IsNull = false;
+                    point.PrimaryValue = model.Value;
+                    point.SecondaryValue = point.Context.Index;
+                })
+                .HasMap<decimal?>((model, point) =>
+                {
+                    if (model is null)
+                    {
+                        point.IsNull = true;
+                        return;
+                    }
+                    point.IsNull = false;
+                    point.PrimaryValue = unchecked((double)model.Value);
+                    point.SecondaryValue = point.Context.Index;
+                })
+                .HasMap<WeightedPoint>((model, point) =>
+                {
+                    if (model is null)
+                        throw new Exception(
+                            $"A {nameof(WeightedPoint)} can not be null, instead set to null to any of its properties.");
 
-                     if (model.Weight is null || model.X is null || model.Y is null)
-                     {
-                         point.IsNull = true;
-                         return;
-                     }
+                    if (model.Weight is null || model.X is null || model.Y is null)
+                    {
+                        point.IsNull = true;
+                        return;
+                    }
 
-                     point.IsNull = false;
-                     unchecked
-                     {
-                         point.PrimaryValue = (float)model.Y.Value;
-                         point.SecondaryValue = (float)model.X.Value;
-                         point.TertiaryValue = (float)model.Weight.Value;
-                     }
-                 })
-                 .HasMap<ObservableValue>((model, point) =>
-                 {
-                     if (model is null)
-                         throw new Exception(
-                             $"A {nameof(ObservableValue)} can not be null, instead set to null to any of its properties.");
+                    point.IsNull = false;
+                    point.PrimaryValue = model.Y.Value;
+                    point.SecondaryValue = model.X.Value;
+                    point.TertiaryValue = model.Weight.Value;
+                })
+                .HasMap<ObservableValue>((model, point) =>
+                {
+                    if (model is null)
+                        throw new Exception(
+                            $"A {nameof(ObservableValue)} can not be null, instead set to null to any of its properties.");
 
-                     if (model.Value is null)
-                     {
-                         point.IsNull = true;
-                         return;
-                     }
+                    if (model.Value is null)
+                    {
+                        point.IsNull = true;
+                        return;
+                    }
 
-                     point.IsNull = false;
-                     unchecked
-                     {
-                         point.PrimaryValue = (float)model.Value.Value;
-                         point.SecondaryValue = point.Context.Index;
-                     }
-                 })
-                 .HasMap<ObservableValueF>((model, point) =>
-                 {
-                     if (model is null)
-                         throw new Exception(
-                             $"A {nameof(ObservableValueF)} can not be null, instead set to null to any of its properties.");
+                    point.IsNull = false;
+                    point.PrimaryValue = model.Value.Value;
+                    point.SecondaryValue = point.Context.Index;
+                })
+                .HasMap<ObservablePoint>((model, point) =>
+                {
+                    if (model is null)
+                        throw new Exception(
+                            $"A {nameof(ObservablePoint)} can not be null, instead set to null to any of its properties.");
 
-                     if (model.Value is null)
-                     {
-                         point.IsNull = true;
-                         return;
-                     }
+                    if (model.X is null || model.Y is null)
+                    {
+                        point.IsNull = true;
+                        return;
+                    }
 
-                     point.IsNull = false;
-                     unchecked
-                     {
-                         point.PrimaryValue = model.Value.Value;
-                         point.SecondaryValue = point.Context.Index;
-                     }
-                 })
-                 .HasMap<ObservablePoint>((model, point) =>
-                 {
-                     if (model is null)
-                         throw new Exception(
-                             $"A {nameof(ObservablePoint)} can not be null, instead set to null to any of its properties.");
+                    point.IsNull = false;
+                    point.PrimaryValue = model.Y.Value;
+                    point.SecondaryValue = model.X.Value;
+                })
+                .HasMap<DateTimePoint>((model, point) =>
+                {
+                    if (model is null)
+                        throw new Exception(
+                            $"A {nameof(DateTimePoint)} can not be null, instead set to null the " +
+                            $"{nameof(DateTimePoint.Value)} property.");
 
-                     if (model.X is null || model.Y is null)
-                     {
-                         point.IsNull = true;
-                         return;
-                     }
+                    if (model.Value is null)
+                    {
+                        point.IsNull = true;
+                        return;
+                    }
 
-                     point.IsNull = false;
-                     unchecked
-                     {
-                         point.PrimaryValue = (float)model.Y.Value;
-                         point.SecondaryValue = (float)model.X.Value;
-                     }
-                 })
-                 .HasMap<ObservablePointF>((model, point) =>
-                 {
-                     if (model is null)
-                         throw new Exception(
-                             $"A {nameof(ObservablePointF)} can not be null, instead set to null to any of its properties.");
+                    point.IsNull = false;
+                    point.PrimaryValue = model.Value.Value;
+                    point.SecondaryValue = model.DateTime.Ticks;
+                })
+                .HasMap<FinancialPoint>((model, point) =>
+                {
+                    if (model is null)
+                        throw new Exception(
+                            $"A {nameof(FinancialPoint)} can not be null");
 
-                     if (model.X is null || model.Y is null)
-                     {
-                         point.IsNull = true;
-                         return;
-                     }
-
-                     point.IsNull = false;
-                     point.PrimaryValue = model.Y.Value;
-                     point.SecondaryValue = model.X.Value;
-                 })
-                 .HasMap<DateTimePoint>((model, point) =>
-                 {
-                     if (model is null)
-                         throw new Exception(
-                             $"A {nameof(DateTimePoint)} can not be null, instead set to null the " +
-                             $"{nameof(DateTimePoint.Value)} property.");
-
-                     if (model.Value is null)
-                     {
-                         point.IsNull = true;
-                         return;
-                     }
-
-                     point.IsNull = false;
-                     point.PrimaryValue = (float)model.Value.Value;
-                     point.SecondaryValue = model.DateTime.Ticks;
-                 })
-                 .HasMap<DateTimePointF>((model, point) =>
-                 {
-                     if (model is null)
-                         throw new Exception(
-                             $"A {nameof(DateTimePointF)} can not be null, instead set to null the " +
-                             $"{nameof(DateTimePointF.Value)} property.");
-
-                     if (model.Value is null)
-                     {
-                         point.IsNull = true;
-                         return;
-                     }
-
-                     point.IsNull = false;
-                     point.PrimaryValue = model.Value.Value;
-                     point.SecondaryValue = model.DateTime.Ticks;
-                 })
-                 .HasMap<FinancialPoint>((model, point) =>
-                 {
-                     if (model is null)
-                         throw new Exception(
-                             $"A {nameof(DateTimePointF)} can not be null, instead set to null the " +
-                             $"{nameof(DateTimePointF.Value)} property.");
-
-                     point.PrimaryValue = (float)model.High;
-                     point.SecondaryValue = model.Date.Ticks;
-                     point.TertiaryValue = (float)model.Open;
-                     point.QuaternaryValue = (float)model.Close;
-                     point.QuinaryValue = (float)model.Low;
-                 });
+                    point.PrimaryValue = model.High;
+                    point.SecondaryValue = model.Date.Ticks;
+                    point.TertiaryValue = model.Open;
+                    point.QuaternaryValue = model.Close;
+                    point.QuinaryValue = model.Low;
+                });
         }
     }
 }

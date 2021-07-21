@@ -168,10 +168,10 @@ namespace LiveChartsCore.Kernel.Data
         {
             var stack = chart.SeriesContext.GetStackPosition(series, series.GetStackGroup());
 
-            var xMin = x.MinLimit ?? float.MinValue;
-            var xMax = x.MaxLimit ?? float.MaxValue;
-            var yMin = y.MinLimit ?? float.MinValue;
-            var yMax = y.MaxLimit ?? float.MaxValue;
+            var xMin = x.MinLimit ?? double.MinValue;
+            var xMax = x.MaxLimit ?? double.MaxValue;
+            var yMin = y.MinLimit ?? double.MinValue;
+            var yMax = y.MaxLimit ?? double.MaxValue;
 
             var hasData = false;
 
@@ -229,10 +229,10 @@ namespace LiveChartsCore.Kernel.Data
             IAxis<TDrawingContext> x,
             IAxis<TDrawingContext> y)
         {
-            var xMin = x.MinLimit ?? float.MinValue;
-            var xMax = x.MaxLimit ?? float.MaxValue;
-            var yMin = y.MinLimit ?? float.MinValue;
-            var yMax = y.MaxLimit ?? float.MaxValue;
+            var xMin = x.MinLimit ?? double.MinValue;
+            var xMax = x.MaxLimit ?? double.MaxValue;
+            var yMin = y.MinLimit ?? double.MinValue;
+            var yMax = y.MaxLimit ?? double.MaxValue;
 
             var hasData = false;
 

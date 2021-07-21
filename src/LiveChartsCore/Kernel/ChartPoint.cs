@@ -53,7 +53,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The primary value.
         /// </value>
-        public float PrimaryValue { get; set; }
+        public double PrimaryValue { get; set; }
 
         /// <summary>
         /// Gets or sets the secondary value.
@@ -61,7 +61,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The secondary value.
         /// </value>
-        public float SecondaryValue { get; set; }
+        public double SecondaryValue { get; set; }
 
         /// <summary>
         /// Gets or sets the tertiary value.
@@ -69,7 +69,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The tertiary value.
         /// </value>
-        public float TertiaryValue { get; set; }
+        public double TertiaryValue { get; set; }
 
         /// <summary>
         /// Gets or sets the quaternary value.
@@ -77,7 +77,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The quaternary value.
         /// </value>
-        public float QuaternaryValue { get; set; }
+        public double QuaternaryValue { get; set; }
 
         /// <summary>
         /// Gets or sets the quinary value.
@@ -85,7 +85,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The quinary value.
         /// </value>
-        public float QuinaryValue { get; set; }
+        public double QuinaryValue { get; set; }
 
         /// <summary>
         /// Gets the point as tooltip string.

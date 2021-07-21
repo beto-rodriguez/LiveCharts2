@@ -207,7 +207,7 @@ namespace LiveChartsCore
 
                 foreach (var data in GetSpline(segment, secondaryScale, primaryScale, stacker))
                 {
-                    var s = 0f;
+                    var s = 0d;
                     if (stacker is not null)
                     {
                         s = stacker.GetStack(data.TargetPoint).Start;
@@ -609,10 +609,10 @@ namespace LiveChartsCore
                 next = points[i + 1 > points.Length - 1 ? points.Length - 1 : i + 1];
                 next2 = points[i + 2 > points.Length - 1 ? points.Length - 1 : i + 2];
 
-                var pys = 0f;
-                var cys = 0f;
-                var nys = 0f;
-                var nnys = 0f;
+                var pys = 0d;
+                var cys = 0d;
+                var nys = 0d;
+                var nnys = 0d;
 
                 if (stacker is not null)
                 {
@@ -658,7 +658,7 @@ namespace LiveChartsCore
                 var c2X = xm2 + (xc2 - xm2) * _lineSmoothness + next.SecondaryValue - xm2;
                 var c2Y = ym2 + (yc2 - ym2) * _lineSmoothness + next.PrimaryValue + nys - ym2;
 
-                float x0, y0;
+                double x0, y0;
 
                 if (i == 0)
                 {
@@ -683,12 +683,12 @@ namespace LiveChartsCore
                     Y2 = yScale.ToPixels(next.PrimaryValue + nys),
                     OriginalData = new BezierData(points[i])
                     {
-                        X0 = x0,
-                        Y0 = y0,
-                        X1 = c2X,
-                        Y1 = c2Y,
-                        X2 = next.SecondaryValue,
-                        Y2 = next.PrimaryValue + nys,
+                        X0 = (float)x0,
+                        Y0 = (float)y0,
+                        X1 = (float)c2X,
+                        Y1 = (float)c2Y,
+                        X2 = (float)next.SecondaryValue,
+                        Y2 = (float)(next.PrimaryValue + nys),
                     }
                 };
             }
