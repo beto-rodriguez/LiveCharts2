@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <Nullable>enable</Nullable>
@@ -7,7 +7,7 @@
     <TargetFrameworks>net462;netcoreapp3.0</TargetFrameworks>
     <AssemblyName>LiveChartsCore.SkiaSharpView.WPF</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView.WPF</RootNamespace>
-    <Version>2.0.0-beta.32</Version>
+    <Version>2.0.0-beta.33</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for WPF.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
