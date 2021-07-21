@@ -50,7 +50,7 @@ namespace LiveChartsCore.Kernel
             var index = (int)value;
 
             return index < 0 || index > _labels.Count - 1
-                ? index.ToString()
+                ? string.Empty
                 : _labels[index];
         }
     }
