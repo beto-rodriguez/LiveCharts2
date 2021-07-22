@@ -172,9 +172,9 @@ namespace LiveChartsCore.Measure
         /// </summary>
         /// <param name="pixels">The pixels.</param>
         /// <returns></returns>
-        public float ToChartValues(double pixels)
+        public double ToChartValues(double pixels)
         {
-            return unchecked((float)(_minVal + (pixels - _minPx) * _mInv));
+            return _minVal + (pixels - _minPx) * _mInv);
         }
     }
 }
