@@ -487,7 +487,7 @@ namespace LiveChartsCore
         }
 
         /// <inheritdoc cref="IAxis{TDrawingContext}.GetPossibleSize(CartesianChart{TDrawingContext})"/>
-        public SizeF GetPossibleSize(CartesianChart<TDrawingContext> chart)
+        public virtual SizeF GetPossibleSize(CartesianChart<TDrawingContext> chart)
         {
             if (_dataBounds is null) throw new Exception("DataBounds not found");
             if (LabelsPaint is null) return new SizeF(0f, 0f);
