@@ -55,7 +55,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </summary>
         public MotionCanvas()
         {
-            CanvasCore.Invalidated += OnCanvasCoreInvalidated;
+            Loaded += OnLoaded;
             Unloaded += OnUnloaded;
         }
 
@@ -133,6 +133,11 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
         {
             RunDrawingLoop();
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            CanvasCore.Invalidated += OnCanvasCoreInvalidated;
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
