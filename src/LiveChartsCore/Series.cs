@@ -240,7 +240,9 @@ namespace LiveChartsCore
             {
                 IPieSeries<TDrawingContext> pieSeries when pieSeries.IsFillSeries => Enumerable.Empty<TooltipPoint>(),
                 IBarSeries<TDrawingContext> barSeries  => FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy),
-                _ => FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy).GroupBy(g => g.PointerDistance).OrderBy(g => g.Key).First(),
+                _ => FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy).GroupBy(g => g.PointerDistance)
+                                                                                                .OrderBy(g => g.Key)
+                                                                                                .DefaultIfEmpty(Enumerable.Empty<TooltipPoint>()).First(),
             };
         }
 
@@ -456,7 +458,7 @@ namespace LiveChartsCore
                                    .Where(point => point.PointerDistance < tolerance)
                                    .OrderBy(dtp => dtp.PointerDistance);
 
-            var lowestD = distancesT.FirstOrDefault().PointerDistance;
+            var lowestD = distancesT.FirstOrDefault()?.PointerDistance;
             var secondLowestD = distancesT.FirstOrDefault(dtp => dtp.PointerDistance > lowestD)?.PointerDistance;
 
             return distancesT.TakeWhile(dtp => dtp.PointerDistance == lowestD || dtp.PointerDistance == secondLowestD);

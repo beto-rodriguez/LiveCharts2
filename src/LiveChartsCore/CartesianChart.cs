@@ -173,7 +173,15 @@ namespace LiveChartsCore
                     : (areAllY ? TooltipFindingStrategy.CompareOnlyY : TooltipFindingStrategy.CompareAll);
             }
 
-            return _chartView.Series.SelectMany(series => series.FindPointsNearTo(this, pointerPosition, actualStrategy));
+            var columnSeries = _chartView.Series.Where(s => s.IsColumnSeries())
+                                                .SelectMany(series => series.FindPointsNearTo(this, pointerPosition, actualStrategy))
+                                                .GroupBy(tp => tp.Point.Context.Index)
+                                                .Select(gtp => new { group = gtp, minD = gtp.Min(tp => tp.PointerDistance) })
+                                                .OrderBy(mgtp => mgtp.minD)
+                                                .Select(a => a.group)
+                                                .FirstOrDefault() ?? Enumerable.Empty<TooltipPoint>();
+
+            return Enumerable.Concat(columnSeries, _chartView.Series.Where(s => !s.IsColumnSeries()).SelectMany(series => series.FindPointsNearTo(this, pointerPosition, actualStrategy)));
         }
 
         /// <summary>
