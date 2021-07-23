@@ -183,7 +183,7 @@ namespace LiveChartsCore
         /// <param name="xAxisIndex">Index of the x axis.</param>
         /// <param name="yAxisIndex">Index of the y axis.</param>
         /// <returns></returns>
-        public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
+        public double[] ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
             var xAxis = XAxes[xAxisIndex];
             var yAxis = YAxes[yAxisIndex];
@@ -191,7 +191,7 @@ namespace LiveChartsCore
             var xScaler = new Scaler(DrawMarginLocation, drawMarginSize, xAxis);
             var yScaler = new Scaler(DrawMarginLocation, drawMarginSize, yAxis);
 
-            return new PointF(xScaler.ToChartValues(point.X), yScaler.ToChartValues(point.Y));
+            return new double[] { xScaler.ToChartValues(point.X), yScaler.ToChartValues(point.Y) };
         }
 
         /// <summary>

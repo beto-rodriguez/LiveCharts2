@@ -84,9 +84,9 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
 
         public void HideTooltip() { }
 
-        public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
+        public double[] ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
-            return new PointF();
+            return new double[2];
         }
 
         public void ShowTooltip(IEnumerable<TooltipPoint> points) { }

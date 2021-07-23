@@ -115,6 +115,6 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <param name="xAxisIndex">Index of the x axis.</param>
         /// <param name="yAxisIndex">Index of the y axis.</param>
         /// <returns></returns>
-        PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0);
+        double[] ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0);
     }
 }

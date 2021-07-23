@@ -174,7 +174,7 @@ namespace LiveChartsCore.Measure
         /// <returns></returns>
         public double ToChartValues(double pixels)
         {
-            return _minVal + (pixels - _minPx) * _mInv);
+            return _minVal + (pixels - _minPx) * _mInv;
         }
     }
 }

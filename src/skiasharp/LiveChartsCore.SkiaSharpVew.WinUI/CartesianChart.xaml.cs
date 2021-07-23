@@ -749,7 +749,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         #endregion
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(System.Drawing.PointF, int, int)" />
-        public System.Drawing.PointF ScaleUIPoint(System.Drawing.PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
+        public double[] ScaleUIPoint(System.Drawing.PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
             if (_core == null) throw new Exception("core not found");
             var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)_core;
