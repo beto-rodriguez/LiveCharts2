@@ -31,7 +31,7 @@ namespace LiveChartsCore.Measure
     /// </summary>
     public class Scaler
     {
-        private readonly double _minVal, _maxVal, _deltaVal, _m, _mInv, _minPx, _maxPx, _deltaPx;
+        internal readonly double _minVal, _maxVal, _deltaVal, _m, _mInv, _minPx, _maxPx, _deltaPx;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Scaler"/> class.

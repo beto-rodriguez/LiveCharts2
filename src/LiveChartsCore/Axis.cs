@@ -52,7 +52,7 @@ namespace LiveChartsCore
         /// <summary>
         /// The active separators
         /// </summary>
-        protected readonly Dictionary<IChart, Dictionary<string, AxisVisualSeprator<TDrawingContext>>> activeSeparators = new();
+        protected readonly Dictionary<IChart, Dictionary<double, AxisVisualSeprator<TDrawingContext>>> activeSeparators = new();
 
         internal AxisOrientation _orientation;
         private double _minStep = 0;
@@ -69,7 +69,7 @@ namespace LiveChartsCore
         private double? _maxLimit = null;
         private IPaintTask<TDrawingContext>? _namePaint;
         private double _nameTextSize = 20;
-        private Padding _namePadding = new Padding(5);
+        private Padding _namePadding = new(5);
         private IPaintTask<TDrawingContext>? _labelsPaint;
         private double _unitWidth = 1;
         private double _textSize = 16;
@@ -271,7 +271,7 @@ namespace LiveChartsCore
             var start = Math.Truncate(min / s) * s;
             if (!activeSeparators.TryGetValue(cartesianChart, out var separators))
             {
-                separators = new Dictionary<string, AxisVisualSeprator<TDrawingContext>>();
+                separators = new Dictionary<double, AxisVisualSeprator<TDrawingContext>>();
                 activeSeparators[cartesianChart] = separators;
             }
 
@@ -325,7 +325,7 @@ namespace LiveChartsCore
                     y = scale.ToPixels(i);
                 }
 
-                if (!separators.TryGetValue(label, out var visualSeparator))
+                if (!separators.TryGetValue(i, out var visualSeparator))
                 {
                     visualSeparator = new AxisVisualSeprator<TDrawingContext>() { Value = i };
 
@@ -416,7 +416,7 @@ namespace LiveChartsCore
                         }
                     }
 
-                    separators.Add(label, visualSeparator);
+                    separators.Add(i, visualSeparator);
                 }
 
                 if (NamePaint is not null && _nameGeometry is not null)
@@ -619,13 +619,13 @@ namespace LiveChartsCore
             float x, y;
             if (_orientation == AxisOrientation.X)
             {
-                x = scale.ToPixels((float)separator.Value);
+                x = scale.ToPixels(separator.Value);
                 y = yoo;
             }
             else
             {
                 x = xoo;
-                y = scale.ToPixels((float)separator.Value);
+                y = scale.ToPixels(separator.Value);
             }
 
             if (separator.Line is not null)
