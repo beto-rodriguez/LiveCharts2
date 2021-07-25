@@ -49,7 +49,6 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         {
             InitializeComponent();
             Loaded += OnLoaded;
-            CanvasCore.Invalidated += OnCanvasCoreInvalidated;
             Unloaded += OnUnloaded;
         }
 
@@ -91,6 +90,8 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
+            CanvasCore.Invalidated += OnCanvasCoreInvalidated;
+
             var canvas = (SKXamlCanvas)FindName("canvas");
             _skiaElement = canvas;
             _skiaElement.PaintSurface += OnPaintSurface;
