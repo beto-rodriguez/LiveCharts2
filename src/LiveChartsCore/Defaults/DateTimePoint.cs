@@ -45,7 +45,7 @@ namespace LiveChartsCore.Defaults
         /// </summary>
         /// <param name="dateTime">The date time.</param>
         /// <param name="value">The value.</param>
-        public DateTimePoint(DateTime dateTime, double value)
+        public DateTimePoint(DateTime dateTime, double? value)
         {
             _dateTime = dateTime;
             _value = value;
