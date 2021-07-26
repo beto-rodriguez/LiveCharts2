@@ -35,6 +35,7 @@ namespace LiveChartsCore.SkiaSharpView
         /// </summary>
         public DrawMarginFrame()
         {
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
             var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
             var initializer = stylesBuilder.GetVisualsInitializer();
 
