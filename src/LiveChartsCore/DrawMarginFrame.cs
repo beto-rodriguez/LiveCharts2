@@ -114,38 +114,53 @@ namespace LiveChartsCore
         /// <param name="chart">The chart.</param>
         public override void Measure(Chart<TDrawingContext> chart)
         {
-            var drawLocation = chart.DrawMarginLocation;
-            var drawMarginSize = chart.DrawMarginSize;
-
             if (Fill is not null)
             {
-                Fill.ZIndex = -3;
-
-                _fillSizedGeometry ??= new TSizedGeometry();
-
-                _fillSizedGeometry.X = drawLocation.X;
-                _fillSizedGeometry.Y = drawLocation.Y;
-                _fillSizedGeometry.Width = drawMarginSize.Width;
-                _fillSizedGeometry.Height = drawMarginSize.Height;
-
-                Fill.AddGeometryToPaintTask(chart.Canvas, _fillSizedGeometry);
+                MeasureFill(chart);
                 chart.Canvas.AddDrawableTask(Fill);
             }
 
             if (Stroke is not null)
             {
-                Stroke.ZIndex = -2;
-
-                _strokeSizedGeometry ??= new TSizedGeometry();
-
-                _strokeSizedGeometry.X = drawLocation.X;
-                _strokeSizedGeometry.Y = drawLocation.Y;
-                _strokeSizedGeometry.Width = drawMarginSize.Width;
-                _strokeSizedGeometry.Height = drawMarginSize.Height;
-
-                Stroke.AddGeometryToPaintTask(chart.Canvas, _strokeSizedGeometry);
+                MeasureStroke(chart);
                 chart.Canvas.AddDrawableTask(Stroke);
             }
+        }
+
+        /// <summary>
+        /// Measures the <see cref="DrawMarginFrame{TDrawingContext}.Fill"/> of the draw margin for the specified chart.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
+        protected virtual void MeasureFill(Chart<TDrawingContext> chart)
+        {
+            Fill!.ZIndex = -3;
+
+            _fillSizedGeometry ??= new TSizedGeometry();
+
+            _fillSizedGeometry.X = chart.DrawMarginLocation.X;
+            _fillSizedGeometry.Y = chart.DrawMarginLocation.Y;
+            _fillSizedGeometry.Width = chart.DrawMarginSize.Width;
+            _fillSizedGeometry.Height = chart.DrawMarginSize.Height;
+
+            Fill.AddGeometryToPaintTask(chart.Canvas, _fillSizedGeometry);
+        }
+
+        /// <summary>
+        /// Measures the <see cref="DrawMarginFrame{TDrawingContext}.Stroke"/> of the draw margin for the specified chart.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
+        protected virtual void MeasureStroke(Chart<TDrawingContext> chart)
+        {
+            Stroke!.ZIndex = -2;
+
+            _strokeSizedGeometry ??= new TSizedGeometry();
+
+            _strokeSizedGeometry.X = chart.DrawMarginLocation.X;
+            _strokeSizedGeometry.Y = chart.DrawMarginLocation.Y;
+            _strokeSizedGeometry.Width = chart.DrawMarginSize.Width;
+            _strokeSizedGeometry.Height = chart.DrawMarginSize.Height;
+
+            Stroke.AddGeometryToPaintTask(chart.Canvas, _strokeSizedGeometry);
         }
     }
 }
