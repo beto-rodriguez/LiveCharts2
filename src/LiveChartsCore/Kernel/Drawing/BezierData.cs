@@ -51,7 +51,7 @@ namespace LiveChartsCore.Kernel.Drawing
         /// <value>
         /// The x0.
         /// </value>
-        public float X0 { get; set; }
+        public double X0 { get; set; }
 
         /// <summary>
         /// Gets or sets the y0.
@@ -59,7 +59,7 @@ namespace LiveChartsCore.Kernel.Drawing
         /// <value>
         /// The y0.
         /// </value>
-        public float Y0 { get; set; }
+        public double Y0 { get; set; }
 
         /// <summary>
         /// Gets or sets the x1.
@@ -67,7 +67,7 @@ namespace LiveChartsCore.Kernel.Drawing
         /// <value>
         /// The x1.
         /// </value>
-        public float X1 { get; set; }
+        public double X1 { get; set; }
 
         /// <summary>
         /// Gets or sets the y1.
@@ -75,7 +75,7 @@ namespace LiveChartsCore.Kernel.Drawing
         /// <value>
         /// The y1.
         /// </value>
-        public float Y1 { get; set; }
+        public double Y1 { get; set; }
 
         /// <summary>
         /// Gets or sets the x2.
@@ -83,7 +83,7 @@ namespace LiveChartsCore.Kernel.Drawing
         /// <value>
         /// The x2.
         /// </value>
-        public float X2 { get; set; }
+        public double X2 { get; set; }
 
         /// <summary>
         /// Gets or sets the y2.
@@ -91,7 +91,7 @@ namespace LiveChartsCore.Kernel.Drawing
         /// <value>
         /// The y2.
         /// </value>
-        public float Y2 { get; set; }
+        public double Y2 { get; set; }
 
         /// <summary>
         /// Gets or sets the original data.

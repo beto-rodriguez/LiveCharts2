@@ -247,9 +247,9 @@ namespace LiveChartsCore
                         v.Geometry.Width = gs;
                         v.Geometry.Height = gs;
 
-                        v.StepSegment.X0 = x0b;
+                        v.StepSegment.X0 = (float)x0b;
                         v.StepSegment.Y0 = y0b;
-                        v.StepSegment.X1 = x1b;
+                        v.StepSegment.X1 = (float)x1b;
                         v.StepSegment.Y1 = y1b;
 
                         data.TargetPoint.Context.Visual = v;
@@ -263,10 +263,10 @@ namespace LiveChartsCore
                     if (GeometryFill is not null) GeometryFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
                     if (GeometryStroke is not null) GeometryStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
 
-                    visual.StepSegment.X0 = data.X0;
-                    visual.StepSegment.Y0 = data.Y0;
-                    visual.StepSegment.X1 = data.X1;
-                    visual.StepSegment.Y1 = data.Y1;
+                    visual.StepSegment.X0 = (float)data.X0;
+                    visual.StepSegment.Y0 = (float)data.Y0;
+                    visual.StepSegment.X1 = (float)data.X1;
+                    visual.StepSegment.Y1 = (float)data.Y1;
 
                     if (Fill is not null)
                     {
@@ -274,10 +274,10 @@ namespace LiveChartsCore
                         {
                             if (wasFillInitialized)
                             {
-                                fillPathHelper.StartPoint.X = data.X0;
+                                fillPathHelper.StartPoint.X = (float)data.X0;
                                 fillPathHelper.StartPoint.Y = p;
 
-                                fillPathHelper.StartSegment.X = data.X0;
+                                fillPathHelper.StartSegment.X = (float)data.X0;
                                 fillPathHelper.StartSegment.Y = p;
 
                                 fillPathHelper.StartPoint.CompleteTransitions(
@@ -286,12 +286,12 @@ namespace LiveChartsCore
                                     nameof(fillPathHelper.StartSegment.Y), nameof(fillPathHelper.StartSegment.X));
                             }
 
-                            fillPathHelper.StartPoint.X = data.X0;
+                            fillPathHelper.StartPoint.X = (float)data.X0;
                             fillPathHelper.StartPoint.Y = p;
                             fillPathHelper.Path.AddCommand(fillPathHelper.StartPoint);
 
-                            fillPathHelper.StartSegment.X = data.X0;
-                            fillPathHelper.StartSegment.Y = data.Y0;
+                            fillPathHelper.StartSegment.X = (float)data.X0;
+                            fillPathHelper.StartSegment.Y = (float)data.Y0;
                             fillPathHelper.Path.AddCommand(fillPathHelper.StartSegment);
                         }
 
@@ -299,7 +299,7 @@ namespace LiveChartsCore
 
                         if (data.IsLast)
                         {
-                            fillPathHelper.EndSegment.X = data.X2;
+                            fillPathHelper.EndSegment.X = (float)data.X2;
                             fillPathHelper.EndSegment.Y = p;
                             fillPathHelper.Path.AddCommand(fillPathHelper.EndSegment);
 
@@ -321,7 +321,7 @@ namespace LiveChartsCore
                                 }
                                 else
                                 {
-                                    strokePathHelper.StartPoint.X = data.X0;
+                                    strokePathHelper.StartPoint.X = (float)data.X0;
                                     strokePathHelper.StartPoint.Y = p;
                                 }
 
@@ -337,8 +337,8 @@ namespace LiveChartsCore
                                    nameof(strokePathHelper.StartPoint.Y), nameof(strokePathHelper.StartPoint.X));
                             }
 
-                            strokePathHelper.StartPoint.X = data.X0;
-                            strokePathHelper.StartPoint.Y = data.Y0;
+                            strokePathHelper.StartPoint.X = (float)data.X0;
+                            strokePathHelper.StartPoint.Y = (float)data.Y0;
                             strokePathHelper.Path.AddCommand(strokePathHelper.StartPoint);
                         }
 
@@ -628,12 +628,12 @@ namespace LiveChartsCore
                     Y2 = yScale.ToPixels(next.PrimaryValue),
                     OriginalData = new BezierData(points[i])
                     {
-                        X0 = (float)x0,
-                        Y0 = (float)y0,
-                        X1 = (float)c2X,
-                        Y1 = (float)c2Y,
-                        X2 = (float)next.SecondaryValue,
-                        Y2 = (float)next.PrimaryValue,
+                        X0 = x0,
+                        Y0 = y0,
+                        X1 = c2X,
+                        Y1 = c2Y,
+                        X2 = next.SecondaryValue,
+                        Y2 = next.PrimaryValue,
                     }
                 };
             }
