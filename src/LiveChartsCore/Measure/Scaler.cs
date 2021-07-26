@@ -31,7 +31,8 @@ namespace LiveChartsCore.Measure
     /// </summary>
     public class Scaler
     {
-        internal readonly double _minVal, _maxVal, _deltaVal, _m, _mInv, _minPx, _maxPx, _deltaPx;
+        private readonly double _minVal, _maxVal, _deltaVal, _m, _mInv, _minPx, _maxPx, _deltaPx;
+        private readonly AxisOrientation _orientation;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Scaler"/> class.
@@ -45,6 +46,8 @@ namespace LiveChartsCore.Measure
             PointF drawMagrinLocation, SizeF drawMarginSize, IAxis axis, bool usePreviousScale = false)
         {
             if (axis.Orientation == AxisOrientation.Unknown) throw new Exception("The axis is not ready to be scaled.");
+
+            _orientation = axis.Orientation;
 
             var actualBounds = usePreviousScale ? axis.PreviousDataBounds : axis.DataBounds;
             var actualVisibleBounds = usePreviousScale ? axis.PreviousVisibleDataBounds : axis.VisibleDataBounds;
@@ -155,6 +158,21 @@ namespace LiveChartsCore.Measure
 
             _m = _deltaPx / _deltaVal;
             _mInv = 1 / _m;
+        }
+
+        /// <summary>
+        /// Converts to pixels.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        public float MeasureInPixels(double value)
+        {
+            unchecked
+            {
+                return _orientation == AxisOrientation.X
+                    ? (float)(_minPx + (value - _minVal) * _m - (_minPx + (0 - _minVal) * _m))
+                    : (float)(_minPx + (0 - _minVal) * _m - (_minPx + (value - _minVal) * _m));
+            }
         }
 
         /// <summary>

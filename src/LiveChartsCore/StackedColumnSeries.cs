@@ -70,7 +70,7 @@ namespace LiveChartsCore
             var previousSecondaryScale =
                 secondaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis);
 
-            var uw = secondaryScale.ToPixels(1f) - secondaryScale.ToPixels(0f);
+            var uw = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
 
             uw -= (float)GroupPadding;
 

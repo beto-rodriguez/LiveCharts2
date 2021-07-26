@@ -111,8 +111,8 @@ namespace LiveChartsCore
             var previousSecondaryScale =
                 secondaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
 
-            var uw = secondaryScale.ToPixels(secondaryAxis.UnitWidth) - secondaryScale.ToPixels(0f);
-            var puw = previousSecondaryScale is null ? 0 : previousSecondaryScale.ToPixels((float)secondaryAxis.UnitWidth) - previousSecondaryScale.ToPixels(0f);
+            var uw = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
+            var puw = previousSecondaryScale is null ? 0 : previousSecondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
             var uwm = 0.5f * uw;
 
             if (uw > MaxBarWidth)

@@ -70,7 +70,7 @@ namespace LiveChartsCore
                 primaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis);
             var primaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
 
-            var uw = secondaryScale.ToPixels(1f) - secondaryScale.ToPixels(0f);
+            var uw = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth); //secondaryScale.ToPixels(1f) - secondaryScale.ToPixels(0f);
             var uwm = 0.5f * uw;
             var sw = Stroke?.StrokeThickness ?? 0;
             var p = primaryScale.ToPixels(pivot);

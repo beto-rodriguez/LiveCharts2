@@ -94,8 +94,8 @@ namespace LiveChartsCore
             var previousSecondaryScale =
                 secondaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
 
-            var uws = secondaryScale.ToPixels((float)secondaryAxis.UnitWidth) - secondaryScale.ToPixels(0f);
-            var uwp = primaryScale.ToPixels(0f) - primaryScale.ToPixels((float)primaryAxis.UnitWidth);
+            var uws = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
+            var uwp = primaryScale.MeasureInPixels(primaryAxis.UnitWidth);
 
             var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
             if (_paintTaks is not null)
