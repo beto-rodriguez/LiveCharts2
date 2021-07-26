@@ -345,6 +345,8 @@ namespace LiveChartsCore
                                     .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
                                     .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
 
+                        textGeometry.Opacity = 0;
+
                         if (previousSacale is not null)
                         {
                             float xi, yi;
@@ -381,6 +383,8 @@ namespace LiveChartsCore
                                 animation
                                     .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
                                     .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
+
+                        lineGeometry.Opacity = 0;
 
                         if (previousSacale is not null)
                         {
@@ -434,6 +438,8 @@ namespace LiveChartsCore
                     visualSeparator.Text.Y = y;
                     if (hasRotation) visualSeparator.Text.Rotation = r;
 
+                    visualSeparator.Text.Opacity = 1;
+
                     if (((IAxis)this).PreviousDataBounds is null) visualSeparator.Text.CompleteAllTransitions();
                 }
 
@@ -453,6 +459,8 @@ namespace LiveChartsCore
                         visualSeparator.Line.Y = y;
                         visualSeparator.Line.Y1 = y;
                     }
+
+                    visualSeparator.Line.Opacity = 1;
 
                     if (((IAxis)this).PreviousDataBounds is null) visualSeparator.Line.CompleteAllTransitions();
                 }
