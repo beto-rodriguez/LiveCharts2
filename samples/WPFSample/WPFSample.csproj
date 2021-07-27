@@ -22,6 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Axes\TimeSpanScaled\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Axes\Logaritmic\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -202,6 +205,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Axes\TimeSpanScaled\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Axes\Logaritmic\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>

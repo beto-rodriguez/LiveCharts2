@@ -24,6 +24,9 @@
     <Resource Include="Assets\livecharts.png" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Axes\TimeSpanScaled\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Axes\Logaritmic\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

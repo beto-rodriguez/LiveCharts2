@@ -65,6 +65,7 @@
             "Axes/Multiple",
             "Axes/Shared",
             "Axes/DateTimeScaled",
+            "Axes/TimeSpanScaled",
             "Axes/Logaritmic",
 
             "General/Sections",

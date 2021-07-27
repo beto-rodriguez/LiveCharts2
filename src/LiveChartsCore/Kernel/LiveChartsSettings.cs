@@ -427,6 +427,23 @@ namespace LiveChartsCore.Kernel
                     point.PrimaryValue = model.Value.Value;
                     point.SecondaryValue = model.DateTime.Ticks;
                 })
+                .HasMap<TimeSpanPoint>((model, point) =>
+                {
+                    if (model is null)
+                        throw new Exception(
+                            $"A {nameof(TimeSpanPoint)} can not be null, instead set to null the " +
+                            $"{nameof(TimeSpanPoint.Value)} property.");
+
+                    if (model.Value is null)
+                    {
+                        point.IsNull = true;
+                        return;
+                    }
+
+                    point.IsNull = false;
+                    point.PrimaryValue = model.Value.Value;
+                    point.SecondaryValue = model.TimeSpan.Ticks;
+                })
                 .HasMap<FinancialPoint>((model, point) =>
                 {
                     if (model is null)

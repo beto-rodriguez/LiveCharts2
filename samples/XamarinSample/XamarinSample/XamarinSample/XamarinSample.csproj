@@ -24,6 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Axes\TimeSpanScaled\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Axes\Logaritmic\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
