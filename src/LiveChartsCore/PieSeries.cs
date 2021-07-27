@@ -595,7 +595,7 @@ namespace LiveChartsCore
                     angle = startAngle;
                     break;
                 case PolarLabelsPosition.Middle:
-                    angle = (startAngle + sweepAngle) * 0.5f;
+                    angle = startAngle + sweepAngle * 0.5f;
                     break;
                 case PolarLabelsPosition.ChartCenter:
                     return new PointF(centerX, centerY);
