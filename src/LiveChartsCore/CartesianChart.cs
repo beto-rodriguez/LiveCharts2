@@ -344,6 +344,8 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected override void Measure()
         {
+            if (_chartView.ControlSize.IsEmpty) return;
+
             lock (canvas.Sync)
             {
 #if DEBUG

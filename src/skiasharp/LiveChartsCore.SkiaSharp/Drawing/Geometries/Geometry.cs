@@ -101,6 +101,10 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <param name="context">The context.</param>
         public override void Draw(SkiaSharpDrawingContext context)
         {
+            if ((context == null) || (context.Canvas == null))
+            {
+                return;
+            }
             var hasRotation = Rotation != 0;
 
             if (_hasTransform || hasRotation || hasCustomTransform)

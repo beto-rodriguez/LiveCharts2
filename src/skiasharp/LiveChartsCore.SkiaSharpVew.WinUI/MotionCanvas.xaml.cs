@@ -41,6 +41,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
     {
         private SKXamlCanvas? _skiaElement;
         private bool _isDrawingLoopRunning;
+        private bool _isStopDrawing = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
@@ -95,6 +96,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             var canvas = (SKXamlCanvas)FindName("canvas");
             _skiaElement = canvas;
             _skiaElement.PaintSurface += OnPaintSurface;
+            _isStopDrawing = false;
         }
 
         private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
@@ -104,12 +106,24 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
 
         private async void RunDrawingLoop()
         {
+            if (_isStopDrawing) return;
             if (_isDrawingLoopRunning || _skiaElement == null) return;
+            if (_skiaElement.Parent == null)
+            {
+                _isStopDrawing = true;
+                return;
+            }
+
             _isDrawingLoopRunning = true;
 
             var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
             while (!CanvasCore.IsValid)
             {
+                if (_skiaElement.Parent == null)
+                {
+                    _isStopDrawing = true;
+                    break;
+                }
                 _skiaElement.Invalidate();
                 await Task.Delay(ts);
             }
@@ -139,6 +153,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
+            _isStopDrawing = true;
             CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
         }
     }

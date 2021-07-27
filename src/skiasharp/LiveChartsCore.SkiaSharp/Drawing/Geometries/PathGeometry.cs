@@ -51,6 +51,10 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void Draw(SkiaSharpDrawingContext context)
         {
+            if ((context == null) || (context.Canvas == null))
+            {
+                return;
+            }
             if (_commands.Count == 0) return;
 
             var toExecute = _drawingCommands ??= _commands.ToArray();
