@@ -173,15 +173,27 @@ namespace LiveChartsCore
                     : (areAllY ? TooltipFindingStrategy.CompareOnlyY : TooltipFindingStrategy.CompareAll);
             }
 
-            var columnSeries = _chartView.Series.Where(s => s.IsColumnSeries())
-                                                .SelectMany(series => series.FindPointsNearTo(this, pointerPosition, actualStrategy))
-                                                .GroupBy(tp => tp.Point.Context.Index)
-                                                .Select(gtp => new { group = gtp, minD = gtp.Min(tp => tp.PointerDistance) })
-                                                .OrderBy(mgtp => mgtp.minD)
-                                                .Select(a => a.group)
-                                                .FirstOrDefault() ?? Enumerable.Empty<TooltipPoint>();
+            var barLikeSeries = new List<ISeries>();
+            var otherSeries = new List<ISeries>();
 
-            return Enumerable.Concat(columnSeries, _chartView.Series.Where(s => !s.IsColumnSeries()).SelectMany(series => series.FindPointsNearTo(this, pointerPosition, actualStrategy)));
+            foreach (var item in _chartView.Series)
+            {
+                if (item.IsBarSeries() || item.IsFinancialSeries())
+                {
+                    barLikeSeries.Add(item);
+                    continue;
+                }
+                otherSeries.Add(item);
+            }
+
+            return Enumerable.Concat(
+                barLikeSeries.SelectMany(series => series.FindPointsNearTo(this, pointerPosition, actualStrategy))
+                    .GroupBy(tp => tp.Point.Context.Index)
+                    .Select(gtp => new { group = gtp, minD = gtp.Min(tp => tp.PointerDistance) })
+                    .OrderBy(mgtp => mgtp.minD)
+                    .Select(a => a.group)
+                    .FirstOrDefault() ?? Enumerable.Empty<TooltipPoint>(),
+                otherSeries.SelectMany(series => series.FindPointsNearTo(this, pointerPosition, actualStrategy)));
         }
 
         /// <summary>
