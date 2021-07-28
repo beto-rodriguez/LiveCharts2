@@ -453,10 +453,12 @@ namespace LiveChartsCore
                 }
             }
 
-            var distancesT = points.Where(point => !(point is null || point.Context.HoverArea is null))
-                                   .Select(point => new TooltipPoint(this, point, point.Context.HoverArea.GetDistanceToPoint(pointerPosition, automaticStategy)))
-                                   .Where(point => point.PointerDistance < tolerance)
-                                   .OrderBy(dtp => dtp.PointerDistance);
+            var distancesT = points
+                .Where(point => !(point is null || point.Context.HoverArea is null))
+                .Select(point => new TooltipPoint(
+                    this, point, point.Context.HoverArea.GetDistanceToPoint(pointerPosition, automaticStategy)))
+                .Where(point => point.PointerDistance < tolerance)
+                .OrderBy(dtp => dtp.PointerDistance);
 
             var lowestD = distancesT.FirstOrDefault()?.PointerDistance;
             var secondLowestD = distancesT.FirstOrDefault(dtp => dtp.PointerDistance > lowestD)?.PointerDistance;
