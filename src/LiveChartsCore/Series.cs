@@ -239,10 +239,11 @@ namespace LiveChartsCore
             return this switch
             {
                 IPieSeries<TDrawingContext> pieSeries when pieSeries.IsFillSeries => Enumerable.Empty<TooltipPoint>(),
-                IBarSeries<TDrawingContext> barSeries  => FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy),
-                _ => FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy).GroupBy(g => g.PointerDistance)
-                                                                                                .OrderBy(g => g.Key)
-                                                                                                .DefaultIfEmpty(Enumerable.Empty<TooltipPoint>()).First(),
+                IBarSeries<TDrawingContext> barSeries => FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy),
+                _ => FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy)
+                    .GroupBy(g => g.PointerDistance)
+                    .OrderBy(g => g.Key)
+                    .DefaultIfEmpty(Enumerable.Empty<TooltipPoint>()).First(),
             };
         }
 
