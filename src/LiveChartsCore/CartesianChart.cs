@@ -173,7 +173,27 @@ namespace LiveChartsCore
                     : (areAllY ? TooltipFindingStrategy.CompareOnlyY : TooltipFindingStrategy.CompareAll);
             }
 
-            return _chartView.Series.SelectMany(series => series.FindPointsNearTo(this, pointerPosition, actualStrategy));
+            var barLikeSeries = new List<ISeries>();
+            var otherSeries = new List<ISeries>();
+
+            foreach (var item in _chartView.Series)
+            {
+                if (item.IsBarSeries() || item.IsFinancialSeries())
+                {
+                    barLikeSeries.Add(item);
+                    continue;
+                }
+                otherSeries.Add(item);
+            }
+
+            return Enumerable.Concat(
+                barLikeSeries.SelectMany(series => series.FindPointsNearTo(this, pointerPosition, actualStrategy))
+                    .GroupBy(tp => tp.Point.Context.Index)
+                    .Select(gtp => new { group = gtp, minD = gtp.Min(tp => tp.PointerDistance) })
+                    .OrderBy(mgtp => mgtp.minD)
+                    .Select(a => a.group)
+                    .FirstOrDefault() ?? Enumerable.Empty<TooltipPoint>(),
+                otherSeries.SelectMany(series => series.FindPointsNearTo(this, pointerPosition, actualStrategy)));
         }
 
         /// <summary>

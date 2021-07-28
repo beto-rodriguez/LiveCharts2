@@ -27,17 +27,18 @@ namespace LiveChartsCore.Kernel
     /// </summary>
     public class TooltipPoint
     {
-        private ChartPoint point;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TooltipPoint"/> class.
         /// </summary>
         /// <param name="series">The series.</param>
         /// <param name="point">The point.</param>
-        public TooltipPoint(ISeries series, ChartPoint point)
+        /// <param name="pointerDistance">The distance to the pointer.</param>
+        public TooltipPoint(ISeries series, ChartPoint point, float pointerDistance)
         {
-            this.Series = series;
-            this.point = point;
+            Series = series;
+            Point = point;
+            PointerDistance = pointerDistance;
         }
 
         /// <summary>
@@ -54,6 +55,14 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The point.
         /// </value>
-        public ChartPoint Point { get => point; set => point = value; }
+        public ChartPoint Point { get; set; }
+
+        /// <summary>
+        /// Gets or sets the current distance to pointer.
+        /// </summary>
+        /// <value>
+        /// The pointer distance.
+        /// </value>
+        public float PointerDistance { get; set; }
     }
 }

@@ -231,6 +231,16 @@ namespace LiveChartsCore.Kernel
         }
 
         /// <summary>
+        /// Determines whether is a financial series.
+        /// </summary>
+        /// <param name="series"></param>
+        /// <returns></returns>
+        public static bool IsFinancialSeries(this ISeries series)
+        {
+            return (series.SeriesProperties & SeriesProperties.Financial) != 0;
+        }
+
+        /// <summary>
         /// Adds a point to the specified state.
         /// </summary>
         /// <param name="chartPoint">The chart point.</param>

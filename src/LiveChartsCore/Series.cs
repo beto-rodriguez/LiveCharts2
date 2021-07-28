@@ -236,9 +236,15 @@ namespace LiveChartsCore
 
         IEnumerable<TooltipPoint> ISeries.FindPointsNearTo(IChart chart, PointF pointerPosition, TooltipFindingStrategy automaticStategy)
         {
-            return this is IPieSeries<TDrawingContext> pieSeries && pieSeries.IsFillSeries
-                ? Enumerable.Empty<TooltipPoint>()
-                : FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy);
+            return this switch
+            {
+                IPieSeries<TDrawingContext> pieSeries when pieSeries.IsFillSeries => Enumerable.Empty<TooltipPoint>(),
+                IBarSeries<TDrawingContext> barSeries => FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy),
+                _ => FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy)
+                    .GroupBy(g => g.PointerDistance)
+                    .OrderBy(g => g.Key)
+                    .DefaultIfEmpty(Enumerable.Empty<TooltipPoint>()).First(),
+            };
         }
 
         /// <inheritdoc cref="ISeries.AddPointToState(ChartPoint, string)" />
@@ -448,25 +454,17 @@ namespace LiveChartsCore
                 }
             }
 
-            var minD = new Tuple<float, List<TooltipPoint>>(10000, new List<TooltipPoint>());
+            var distancesT = points
+                .Where(point => !(point is null || point.Context.HoverArea is null))
+                .Select(point => new TooltipPoint(
+                    this, point, point.Context.HoverArea!.GetDistanceToPoint(pointerPosition, automaticStategy)))
+                .Where(point => point.PointerDistance < tolerance)
+                .OrderBy(dtp => dtp.PointerDistance);
 
-            foreach (var point in points)
-            {
-                if (point is null || point.Context.HoverArea is null) continue;
-                var d = point.Context.HoverArea.GetDistanceToPoint(pointerPosition, automaticStategy); //chart.TooltipFindingStrategy
-                if (d > tolerance || d > minD.Item1) continue;
+            var lowestD = distancesT.FirstOrDefault()?.PointerDistance;
+            var secondLowestD = distancesT.FirstOrDefault(dtp => dtp.PointerDistance > lowestD)?.PointerDistance;
 
-                if (minD.Item1 == d)
-                {
-                    // in case of a tie, we add a new point to the same result
-                    minD.Item2.Add(new TooltipPoint(this, point));
-                    continue;
-                }
-
-                minD = new Tuple<float, List<TooltipPoint>>(d, new List<TooltipPoint> { new TooltipPoint(this, point) });
-            }
-
-            return minD.Item2;
+            return distancesT.TakeWhile(dtp => dtp.PointerDistance == lowestD || dtp.PointerDistance == secondLowestD);
         }
 
         private void NotifySubscribers()
