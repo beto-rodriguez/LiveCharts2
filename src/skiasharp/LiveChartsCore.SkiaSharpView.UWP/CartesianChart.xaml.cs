@@ -31,16 +31,17 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using Microsoft.UI.Text;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
 using Windows.UI.Text;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 
-namespace LiveChartsCore.SkiaSharpView.WinUI
+// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
+
+namespace LiveChartsCore.SkiaSharpView.UWP
 {
-    /// <inheritdoc cref="IChartView{TDrawingContext}" />
-    public sealed partial class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingContext>, IWinUIChart
+    public sealed partial class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingContext>, IUwpChart
     {
         #region fields
 
@@ -359,9 +360,9 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
 
         #region properties
 
-        Grid IWinUIChart.LayoutGrid => grid;
-        FrameworkElement IWinUIChart.Canvas => motionCanvas;
-        FrameworkElement IWinUIChart.Legend => legend;
+        Grid IUwpChart.LayoutGrid => grid;
+        FrameworkElement IUwpChart.Canvas => motionCanvas;
+        FrameworkElement IUwpChart.Legend => legend;
 
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
@@ -797,11 +798,13 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             initializer.ApplyStyleToChart(this);
 
             var canvas = (MotionCanvas)FindName("motionCanvas");
-            this._canvas = canvas;
+            _canvas = canvas;
 
             _core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
-            //_legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
-            //_tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
+            //_motionCanvas = FindName("motionCanvas") as MotionCanvas;
+            //_grid = FindName("grid") as Grid;
+            //_legend = FindName("legend") as IChartLegend<SkiaSharpDrawingContext>;
+            //_tooltip = FindName("tooltip") as IChartTooltip<SkiaSharpDrawingContext>;
 
             if (_core == null) throw new Exception("Core not found!");
             _core.Measuring += OnCoreMeasuring;
@@ -815,28 +818,32 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             PointerMoved += OnPointerMoved;
             PointerExited += OnPointerExited;
 
-            _ = DispatcherQueue.TryEnqueue(() => _core.Update());
+            //_ = DispatcherQueue.TryEnqueue(() => _core.Update());
+            _core.Update();
         }
 
         private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (_core == null) return;
-            _ = DispatcherQueue.TryEnqueue(() => _core.Update());
+            //_ = DispatcherQueue.TryEnqueue(() => _core.Update());
+            _core.Update();
         }
 
         private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (_core == null) return;
-            _ = DispatcherQueue.TryEnqueue(() => _core.Update());
+            _core.Update();
+            //_ = DispatcherQueue.TryEnqueue(() => _core.Update());
         }
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (_core == null) throw new Exception("Core not found!");
-            _ = DispatcherQueue.TryEnqueue(() => _core.Update());
+            //_ = DispatcherQueue.TryEnqueue(() => _core.Update());
+            _core.Update();
         }
 
-        private void OnPointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
         {
             var p = e.GetCurrentPoint(this);
             _core?.InvokePointerMove(new System.Drawing.PointF((float)p.Position.X, (float)p.Position.Y));
@@ -857,27 +864,27 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             Measuring?.Invoke(this);
         }
 
-        private void OnPointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void OnPointerExited(object sender, PointerRoutedEventArgs e)
         {
             HideTooltip();
             _core?.InvokePointerLeft();
         }
 
-        private void OnPointerReleased(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
             var p = e.GetCurrentPoint(this);
             _core?.InvokePointerUp(new System.Drawing.PointF((float)p.Position.X, (float)p.Position.Y));
             ReleasePointerCapture(e.Pointer);
         }
 
-        private void OnPointerPressed(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             _ = CapturePointer(e.Pointer);
             var p = e.GetCurrentPoint(this);
             _core?.InvokePointerDown(new System.Drawing.PointF((float)p.Position.X, (float)p.Position.Y));
         }
 
-        private void OnWheelChanged(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void OnWheelChanged(object sender, PointerRoutedEventArgs e)
         {
             if (_core == null) throw new Exception("core not found");
             var c = (CartesianChart<SkiaSharpDrawingContext>)_core;

@@ -24,15 +24,11 @@ using System.Collections.Generic;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
-namespace LiveChartsCore.SkiaSharpView.WinUI
+namespace LiveChartsCore.SkiaSharpView.UWP
 {
-    /// <summary>
-    /// The default legend class.
-    /// </summary>
-    /// <seealso cref="UserControl" />
     public sealed partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
     {
         /// <summary>
@@ -84,7 +80,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
 
         void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
         {
-            var winuiChart = (IWinUIChart)chart.View;
+            var winuiChart = (IUwpChart)chart.View;
 
             var series = chart.DrawableSeries;
             var legendOrientation = chart.LegendOrientation;
