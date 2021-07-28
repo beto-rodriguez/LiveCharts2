@@ -69,39 +69,18 @@ namespace LiveChartsCore
             var drawMarginSize = cartesianChart.DrawMarginSize;
             var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
             var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
-            var previousPrimaryScale =
-                primaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis, true);
-            var previousSecondaryScale =
-                secondaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
+            var previousPrimaryScale = primaryAxis.PreviousDataBounds is null
+                ? null
+                : new Scaler(drawLocation, drawMarginSize, primaryAxis, true);
+            var previousSecondaryScale = secondaryAxis.PreviousDataBounds is null
+                ? null
+                : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
 
-            var uw = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
-            var puw = previousSecondaryScale is null ? 0 : previousSecondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
-
-            uw -= (float)GroupPadding;
-            puw -= (float)GroupPadding;
-
-            var uwm = 0.5f * uw;
-
-            var pos = cartesianChart.SeriesContext.GetColumnPostion(this);
-            var count = cartesianChart.SeriesContext.GetColumnSeriesCount();
-            var cp = 0f;
-
-            if (!IgnoresBarPosition && count > 1)
-            {
-                uw /= count;
-                puw /= count;
-                uwm = 0.5f * uw;
-                cp = (pos - count / 2f) * uw + uwm;
-            }
-
-            if (uw > MaxBarWidth)
-            {
-                uw = (float)MaxBarWidth;
-                uwm = uw * 0.5f;
-                puw = uw;
-            }
-
-            var p = primaryScale.ToPixels(pivot);
+            var helper = new MeasureHelper(secondaryScale, cartesianChart, this, secondaryAxis, primaryScale.ToPixels(pivot));
+            var pHelper = previousSecondaryScale == null || previousPrimaryScale == null
+                ? null
+                : new MeasureHelper(
+                    previousSecondaryScale, cartesianChart, this, secondaryAxis, previousPrimaryScale.ToPixels(pivot));
 
             var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
             if (Fill is not null)
@@ -134,15 +113,15 @@ namespace LiveChartsCore
                 var visual = point.Context.Visual as TVisual;
                 var primary = primaryScale.ToPixels(point.PrimaryValue);
                 var secondary = secondaryScale.ToPixels(point.SecondaryValue);
-                var b = Math.Abs(primary - p);
+                var b = Math.Abs(primary - helper.p);
 
                 if (point.IsNull)
                 {
                     if (visual is not null)
                     {
-                        visual.X = secondary - uwm + cp;
-                        visual.Y = p;
-                        visual.Width = uw;
+                        visual.X = secondary - helper.uwm + helper.cp;
+                        visual.Y = helper.p;
+                        visual.Width = helper.uw;
                         visual.Height = 0;
                         visual.RemoveOnCompleted = true;
                         point.Context.Visual = null;
@@ -152,21 +131,20 @@ namespace LiveChartsCore
 
                 if (visual is null)
                 {
-                    var xi = secondary - uwm + cp;
-                    var pi = p;
-                    var uwi = uw;
+                    var xi = secondary - helper.uwm + helper.cp;
+                    var pi = helper.p;
+                    var uwi = helper.uw;
                     var hi = 0f;
 
-                    if (previousSecondaryScale is not null && previousPrimaryScale is not null)
+                    if (previousSecondaryScale is not null && previousPrimaryScale is not null && pHelper is not null)
                     {
-                        var previousP = previousPrimaryScale.ToPixels(pivot);
                         var previousPrimary = previousPrimaryScale.ToPixels(point.PrimaryValue);
-                        var bp = Math.Abs(previousPrimary - previousP);
+                        var bp = Math.Abs(previousPrimary - pHelper.p);
                         var cyp = point.PrimaryValue > pivot ? previousPrimary : previousPrimary - bp;
 
-                        xi = previousSecondaryScale.ToPixels(point.SecondaryValue) - uwm + cp;
-                        pi = cartesianChart.IsZoomingOrPanning ? cyp : previousP;
-                        uwi = puw;
+                        xi = previousSecondaryScale.ToPixels(point.SecondaryValue) - pHelper.uwm + pHelper.cp;
+                        pi = cartesianChart.IsZoomingOrPanning ? cyp : pHelper.p;
+                        uwi = pHelper.uw;
                         hi = cartesianChart.IsZoomingOrPanning ? bp : 0;
                     }
 
@@ -175,7 +153,7 @@ namespace LiveChartsCore
                         X = xi,
                         Y = pi,
                         Width = uwi,
-                        Height = 0
+                        Height = hi
                     };
 
                     if (_isRounded)
@@ -197,11 +175,11 @@ namespace LiveChartsCore
                 if (Stroke is not null) Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
 
                 var cy = point.PrimaryValue > pivot ? primary : primary - b;
-                var x = secondary - uwm + cp;
+                var x = secondary - helper.uwm + helper.cp;
 
                 visual.X = x;
                 visual.Y = cy;
-                visual.Width = uw;
+                visual.Width = helper.uw;
                 visual.Height = b;
                 if (_isRounded)
                 {
@@ -211,7 +189,7 @@ namespace LiveChartsCore
                 }
                 visual.RemoveOnCompleted = false;
 
-                var ha = new RectangleHoverArea().SetDimensions(secondary - uwm + cp, cy, uw, b);
+                var ha = new RectangleHoverArea().SetDimensions(secondary - helper.uwm + helper.cp, cy, helper.uw, b);
                 point.Context.HoverArea = ha;
 
                 OnPointMeasured(point);
@@ -223,7 +201,7 @@ namespace LiveChartsCore
 
                     if (label is null)
                     {
-                        var l = new TLabel { X = secondary - uwm + cp, Y = p };
+                        var l = new TLabel { X = secondary - helper.uwm + helper.cp, Y = helper.p };
 
                         _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
                             .WithAnimation(animation =>
@@ -242,7 +220,8 @@ namespace LiveChartsCore
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
                     var labelPosition = GetLabelPosition(
-                        x, cy, uw, b, label.Measure(DataLabelsPaint), DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot);
+                        x, cy, helper.uw, b, label.Measure(DataLabelsPaint),
+                        DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot);
                     label.X = labelPosition.X;
                     label.Y = labelPosition.Y;
                 }
@@ -362,6 +341,47 @@ namespace LiveChartsCore
 
             label.TextSize = 1;
             label.RemoveOnCompleted = true;
+        }
+
+        private class MeasureHelper
+        {
+            public MeasureHelper(
+                Scaler scaler,
+                CartesianChart<TDrawingContext> cartesianChart,
+                IBarSeries<TDrawingContext> barSeries,
+                IAxis axis,
+                float p)
+            {
+                this.p = p;
+
+                uw = scaler.MeasureInPixels(axis.UnitWidth);
+
+                var gp = (float)barSeries.GroupPadding;
+
+                if (uw - gp < 1) gp = 0;
+
+                uw -= gp;
+                uwm = 0.5f * uw;
+
+                var pos = cartesianChart.SeriesContext.GetColumnPostion(barSeries);
+                var count = cartesianChart.SeriesContext.GetColumnSeriesCount();
+                cp = 0f;
+
+                if (!barSeries.IgnoresBarPosition && count > 1)
+                {
+                    uw /= count;
+                    uwm = 0.5f * uw;
+                    cp = (pos - count / 2f) * uw + uwm;
+                }
+
+                if (uw > barSeries.MaxBarWidth)
+                {
+                    uw = (float)barSeries.MaxBarWidth;
+                    uwm = uw * 0.5f;
+                }
+            }
+
+            public float uw, uwm, cp, p;
         }
     }
 }
