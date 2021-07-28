@@ -379,6 +379,12 @@ namespace LiveChartsCore
                     uw = (float)barSeries.MaxBarWidth;
                     uwm = uw * 0.5f;
                 }
+
+                if (uw < 1)
+                {
+                    uw = 1;
+                    uwm = 0.5f;
+                }
             }
 
             public float uw, uwm, cp, p;
