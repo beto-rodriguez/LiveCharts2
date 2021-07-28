@@ -33,11 +33,12 @@ namespace LiveChartsCore.Kernel
         /// </summary>
         /// <param name="series">The series.</param>
         /// <param name="point">The point.</param>
+        /// <param name="pointerDistance">The distance to the pointer.</param>
         public TooltipPoint(ISeries series, ChartPoint point, float pointerDistance)
         {
-            this.Series = series;
-            this.Point = point;
-            this.PointerDistance = pointerDistance;
+            Series = series;
+            Point = point;
+            PointerDistance = pointerDistance;
         }
 
         /// <summary>
