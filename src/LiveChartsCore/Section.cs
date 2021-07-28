@@ -204,11 +204,11 @@ namespace LiveChartsCore
             var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
             var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
 
-            var xi = Xi is null ? drawLocation.X : secondaryScale.ToPixels((float)Xi);
-            var xj = Xj is null ? drawLocation.X + drawMarginSize.Width : secondaryScale.ToPixels((float)Xj);
+            var xi = Xi is null ? drawLocation.X : secondaryScale.ToPixels(Xi.Value);
+            var xj = Xj is null ? drawLocation.X + drawMarginSize.Width : secondaryScale.ToPixels(Xj.Value);
 
-            var yi = Yi is null ? drawLocation.Y : primaryScale.ToPixels((float)Yi);
-            var yj = Yj is null ? drawLocation.Y + drawMarginSize.Height : primaryScale.ToPixels((float)Yj);
+            var yi = Yi is null ? drawLocation.Y : primaryScale.ToPixels(Yi.Value);
+            var yj = Yj is null ? drawLocation.Y + drawMarginSize.Height : primaryScale.ToPixels(Yj.Value);
 
             if (Fill is not null)
             {
