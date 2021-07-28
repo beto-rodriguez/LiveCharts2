@@ -46,17 +46,6 @@
         </Grid>
 
         <Border Name="contentBorder" Grid.Column="1" Background="White">
-            <!--<Border Background="White" Margin="20 60 20 20" Padding="20" CornerRadius="8" MaxWidth="900" MaxHeight="600">-->
-            <!--<Border.Effect>
-                <DropShadowEffect 
-                           BlurRadius="10" 
-                           ShadowDepth="0" 
-                           Opacity="0.1"
-                           Color="#303030"/>
-            </Border.Effect>-->
-
-
-            
             <ContentControl x:Name="content"
                             HorizontalContentAlignment="Stretch"
                             VerticalContentAlignment="Stretch">
@@ -66,11 +55,9 @@
                         <Setter Property="Foreground" Value="Black"></Setter>
                     </Style>
                 </ContentControl.Resources>
-                
-            </ContentControl>
-            <!--</Border>-->
-        </Border>
 
+            </ContentControl>
+        </Border>
     </Grid>
 
 </Window>
