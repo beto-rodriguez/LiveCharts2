@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
@@ -41,8 +42,24 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
-            context.Canvas.DrawRect(
+            if (context.PaintTask.GetType() == typeof(BackImagePaintTask))
+            {
+                var paintTask = (BackImagePaintTask)context.PaintTask;
+                if(paintTask.BackImageBitmapForRendering != null)
+                {
+                    context.Canvas.DrawBitmap(paintTask.BackImageBitmapForRendering, new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } });
+                }
+                else
+                {
+                    context.Canvas.DrawRect(
+                    new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } }, paint);
+                }
+            }
+            else
+            {
+                context.Canvas.DrawRect(
                 new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } }, paint);
+            }
         }
     }
 }

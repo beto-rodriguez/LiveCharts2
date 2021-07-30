@@ -36,6 +36,7 @@ namespace LiveChartsCore
     {
         private IPaintTask<TDrawingContext>? _stroke = null;
         private IPaintTask<TDrawingContext>? _fill = null;
+        private IPaintTask<TDrawingContext>? _backImage = null;
 
         /// <summary>
         /// Gets or sets the stroke.
@@ -59,6 +60,18 @@ namespace LiveChartsCore
         {
             get => _fill;
             set => SetPaintProperty(ref _fill, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the background image.
+        /// </summary>
+        /// <value>
+        /// The background image.
+        /// </value>
+        public IPaintTask<TDrawingContext>? BackImage
+        {
+            get => _backImage;
+            set => SetPaintProperty(ref _backImage, value);
         }
 
         /// <summary>
@@ -107,6 +120,7 @@ namespace LiveChartsCore
     {
         private TSizedGeometry? _fillSizedGeometry;
         private TSizedGeometry? _strokeSizedGeometry;
+        private TSizedGeometry? _backImageGeometry;
 
         /// <summary>
         /// Measures the specified chart.
@@ -145,6 +159,20 @@ namespace LiveChartsCore
 
                 Stroke.AddGeometryToPaintTask(chart.Canvas, _strokeSizedGeometry);
                 chart.Canvas.AddDrawableTask(Stroke);
+            }
+
+            if (BackImage is not null)
+            {
+                BackImage.ZIndex = -4;
+                _backImageGeometry ??= new TSizedGeometry();
+
+                _backImageGeometry.X = drawLocation.X;
+                _backImageGeometry.Y = drawLocation.Y;
+                _backImageGeometry.Width = drawMarginSize.Width;
+                _backImageGeometry.Height = drawMarginSize.Height;
+
+                BackImage.AddGeometryToPaintTask(chart.Canvas, _backImageGeometry);
+                chart.Canvas.AddDrawableTask(BackImage);
             }
         }
     }

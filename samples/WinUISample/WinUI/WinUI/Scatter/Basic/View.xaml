@@ -12,7 +12,7 @@
         <vms:ViewModel/>
     </UserControl.DataContext>
     <Grid>
-        <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
+        <lvc:CartesianChart Series="{Binding Series}" DrawMarginFrame="{Binding DrawMarginFrame}"></lvc:CartesianChart>
     </Grid>
 
 </UserControl>
