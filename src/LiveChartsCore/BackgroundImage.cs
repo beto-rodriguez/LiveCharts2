@@ -77,7 +77,7 @@ namespace LiveChartsCore
             /// <summary>
             /// sync with real data
             /// </summary>
-            SyncWithData
+            MappingWithData
         }
         /// <summary>
         /// Determine whether use background image.

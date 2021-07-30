@@ -80,7 +80,7 @@ namespace ViewModelsSamples.Scatter.Basic
             }
             backImagePaintTask.BackImage = new BackgroundImage(imgFormat, bitmap.Bytes, bitmap.Width, bitmap.Height, 30)
             {
-                RenderMode = BackgroundImage.ImageRenderMode.SyncWithData,
+                RenderMode = BackgroundImage.ImageRenderMode.MappingWithData,
                 ImageMapping = new ImageMapping(new System.Drawing.PointF(0, 0.7f), new System.Drawing.PointF(0.7f, 0))
             };
         }

@@ -73,14 +73,14 @@ namespace LiveChartsCore.SkiaSharpView
                         paintTask.BackImageBitmap = bitmap;
                     }
                     BackgroundImage.ImageRenderMode renderMode;
-                    if (paintTask.BackImage.RenderMode == BackgroundImage.ImageRenderMode.SyncWithData)
+                    if (paintTask.BackImage.RenderMode == BackgroundImage.ImageRenderMode.MappingWithData)
                     {
                         //if chart type is not cartesianchart, render-mode is forcefully set to ImageRenderMode.Stretch.
                         renderMode = chart.GetType() == typeof(CartesianChart<SkiaSharpDrawingContext>)
-                            ? BackgroundImage.ImageRenderMode.SyncWithData
+                            ? BackgroundImage.ImageRenderMode.MappingWithData
                             : BackgroundImage.ImageRenderMode.Stretch;
                         var cartesianChart = (CartesianChart<SkiaSharpDrawingContext>)chart;
-                        if (renderMode == BackgroundImage.ImageRenderMode.SyncWithData)
+                        if (renderMode == BackgroundImage.ImageRenderMode.MappingWithData)
                         {
                             if ((cartesianChart.XAxes == null) || (cartesianChart.XAxes.Length <= 0) ||
                             (cartesianChart.YAxes == null) || (cartesianChart.YAxes.Length <= 0))
@@ -101,9 +101,9 @@ namespace LiveChartsCore.SkiaSharpView
                     var width = (int)chart.DrawMarginSize.Width;
                     var height = (int)chart.DrawMarginSize.Height;
                     SKBitmap? result = null;
-                    if (renderMode == BackgroundImage.ImageRenderMode.SyncWithData)
+                    if (renderMode == BackgroundImage.ImageRenderMode.MappingWithData)
                     {
-                        #region RenderMode-SyncWithData                        
+                        #region RenderMode-MappingWithData                        
                         var cartesianChart = (CartesianChart<SkiaSharpDrawingContext>)chart;
                         var secondaryAxis = cartesianChart.XAxes[0];
                         var primaryAxis = cartesianChart.YAxes[0];
@@ -114,14 +114,14 @@ namespace LiveChartsCore.SkiaSharpView
                         var bottomLimit = primaryAxis.MinLimit.HasValue ? primaryAxis.MinLimit : primaryAxis.DataBounds.Min;
                         var leftLimit = secondaryAxis.MinLimit.HasValue ? secondaryAxis.MinLimit : secondaryAxis.DataBounds.Min;
                         var rightLimit = secondaryAxis.MaxLimit.HasValue ? secondaryAxis.MaxLimit : secondaryAxis.DataBounds.Max;
-                        var dSecondary = secondaryScale.ToChartValues(-secondaryAxis.DataBounds.Delta) - secondaryScale.ToChartValues(0);
-                        var dPrimary = primaryScale.ToChartValues(-primaryAxis.DataBounds.Delta) - primaryScale.ToChartValues(0);
+
+                        var map = paintTask.BackImage.ImageMapping;
 
                         //valid range check
-                        if ((leftLimit >= paintTask.BackImage.ImageMapping.RightBottomMapping.X) ||
-                            (rightLimit <= paintTask.BackImage.ImageMapping.LefTopMapping.X) ||
-                            (topLimit <= paintTask.BackImage.ImageMapping.RightBottomMapping.Y) ||
-                            (bottomLimit >= paintTask.BackImage.ImageMapping.LefTopMapping.Y) ||
+                        if ((leftLimit >= map.RightBottomMapping.X) ||
+                            (rightLimit <= map.LefTopMapping.X) ||
+                            (topLimit <= map.RightBottomMapping.Y) ||
+                            (bottomLimit >= map.LefTopMapping.Y) ||
                             ((rightLimit - leftLimit) <= 0) ||
                             ((topLimit - bottomLimit) <= 0))
                         {
@@ -129,31 +129,29 @@ namespace LiveChartsCore.SkiaSharpView
                         }
                         else
                         {
-                            if ((leftLimit == paintTask.BackImage.ImageMapping.LefTopMapping.X) &&
-                            (topLimit == paintTask.BackImage.ImageMapping.LefTopMapping.Y) &&
-                            (rightLimit == paintTask.BackImage.ImageMapping.RightBottomMapping.X) &&
-                            (bottomLimit == paintTask.BackImage.ImageMapping.RightBottomMapping.Y))
+                            if ((leftLimit == map.LefTopMapping.X) &&
+                                (topLimit == map.LefTopMapping.Y) &&
+                                (rightLimit == map.RightBottomMapping.X) &&
+                                (bottomLimit == map.RightBottomMapping.Y))
                             {
                                 result = paintTask.BackImageBitmap.Resize(new SKImageInfo(width, height, SKColorType.Rgba8888), SKFilterQuality.High);
                             }
                             else
                             {
-                                var backImageMappingWidth = paintTask.BackImage.ImageMapping.RightBottomMapping.X - paintTask.BackImage.ImageMapping.LefTopMapping.X;
-                                var backImageMappingHeight = paintTask.BackImage.ImageMapping.LefTopMapping.Y - paintTask.BackImage.ImageMapping.RightBottomMapping.Y;
+                                var backImageMappingWidth = map.RightBottomMapping.X - map.LefTopMapping.X;
+                                var backImageMappingHeight = map.LefTopMapping.Y - map.RightBottomMapping.Y;
 
 
+                                var cropLeft = (leftLimit <= map.LefTopMapping.X) ? map.LefTopMapping.X : leftLimit;
+                                var cropRight = (rightLimit >= map.RightBottomMapping.X) ? map.RightBottomMapping.X : rightLimit;
+                                var cropTop = (topLimit >= map.LefTopMapping.Y) ? map.LefTopMapping.Y : topLimit;
+                                var cropBottom = (bottomLimit <= map.RightBottomMapping.Y) ? map.RightBottomMapping.Y : bottomLimit;
 
 
-                                var cropLeft = (leftLimit <= paintTask.BackImage.ImageMapping.LefTopMapping.X) ? paintTask.BackImage.ImageMapping.LefTopMapping.X : leftLimit;
-                                var cropRight = (rightLimit >= paintTask.BackImage.ImageMapping.RightBottomMapping.X) ? paintTask.BackImage.ImageMapping.RightBottomMapping.X : rightLimit;
-                                var cropTop = (topLimit >= paintTask.BackImage.ImageMapping.LefTopMapping.Y) ? paintTask.BackImage.ImageMapping.LefTopMapping.Y : topLimit;
-                                var cropBottom = (bottomLimit <= paintTask.BackImage.ImageMapping.RightBottomMapping.Y) ? paintTask.BackImage.ImageMapping.RightBottomMapping.Y : bottomLimit;
-
-
-                                var cropLeftPixel = (int)((paintTask.BackImageBitmap.Width - 1) * ((cropLeft - paintTask.BackImage.ImageMapping.LefTopMapping.X) / backImageMappingWidth));
-                                var cropRightPixel = (int)((paintTask.BackImageBitmap.Width - 1) * ((cropRight - paintTask.BackImage.ImageMapping.LefTopMapping.X) / backImageMappingWidth));
-                                var cropTopPixel = (int)((paintTask.BackImageBitmap.Width - 1) * ((paintTask.BackImage.ImageMapping.LefTopMapping.Y - cropTop) / backImageMappingHeight));
-                                var cropBottomPixel = (int)((paintTask.BackImageBitmap.Width - 1) * ((paintTask.BackImage.ImageMapping.LefTopMapping.Y - cropBottom) / backImageMappingWidth));
+                                var cropLeftPixel = (int)((paintTask.BackImageBitmap.Width - 1) * ((cropLeft - map.LefTopMapping.X) / backImageMappingWidth));
+                                var cropRightPixel = (int)((paintTask.BackImageBitmap.Width - 1) * ((cropRight - map.LefTopMapping.X) / backImageMappingWidth));
+                                var cropTopPixel = (int)((paintTask.BackImageBitmap.Width - 1) * ((map.LefTopMapping.Y - cropTop) / backImageMappingHeight));
+                                var cropBottomPixel = (int)((paintTask.BackImageBitmap.Width - 1) * ((map.LefTopMapping.Y - cropBottom) / backImageMappingWidth));
                                 var roi = new SKRectI(cropLeftPixel, cropTopPixel, cropRightPixel, cropBottomPixel);
 
                                 var croppedBitmap = new SKBitmap(new SKImageInfo(cropRightPixel - cropLeftPixel + 1, cropBottomPixel - cropTopPixel + 1, SKColorType.Rgba8888));
@@ -161,27 +159,23 @@ namespace LiveChartsCore.SkiaSharpView
                                 {
                                     System.Diagnostics.Debug.Assert(false);
                                 }
-                                //크롭된 영역 리사이즈.
+                                //resize the cropped image.
                                 var xScale = (cropRight - cropLeft) / (rightLimit - leftLimit);
                                 var yScale = (cropTop - cropBottom) / (topLimit - bottomLimit);
                                 var resizeTargetWidth = (xScale != 1) ? width * xScale : width;
                                 var resizeTargetHeight = (yScale != 1) ? height * yScale : height;
                                 var croppedBitmapResized = croppedBitmap.Resize(new SKImageInfo((int)resizeTargetWidth, (int)resizeTargetHeight, SKColorType.Rgba8888), SKFilterQuality.High);
-                                var fs = new SKFileWStream("D:\\cropimage.png");
-                                _ = croppedBitmap.Encode(fs, SKEncodedImageFormat.Png, 100);
-                                croppedBitmap.Dispose();
 
-
-                                //width, height 사이즈 blank이미지 생성
+                                //create blank image
                                 result = new SKBitmap(new SKImageInfo(width, height, SKColorType.Rgba8888));
                                 var canvas = new SKCanvas(result);
+                                canvas.Clear(new SKColor(0, 0, 0, 0));
 
-
+                                //mapping cropped image to blank image.
                                 var offsetY = (topLimit - cropTop) / (topLimit - bottomLimit) * height;
                                 var offsetX = (cropLeft - leftLimit) / (rightLimit - leftLimit) * width;
                                 canvas.DrawBitmap(croppedBitmapResized, (float)offsetX, (float)offsetY);
                                 croppedBitmapResized.Dispose();
-
                             }
                         }
                         #endregion
@@ -189,7 +183,7 @@ namespace LiveChartsCore.SkiaSharpView
                     else if (renderMode == BackgroundImage.ImageRenderMode.KeepAspectRatio)
                     {
 
-                        #region RenderMode-KeepAspectRatio                        
+                        #region RenderMode-KeepAspectRatio
                         //if srcAspectRatio > 1, landscape.
                         var srcAspectRatio = (float)paintTask.BackImageBitmap.Width / paintTask.BackImageBitmap.Height;
                         var targetAspectRatio = (float)width / height;
@@ -201,7 +195,6 @@ namespace LiveChartsCore.SkiaSharpView
                         else
                         {
                             //adjust aspect ratio
-                            //SKBitmap? drawingBitmap = new SKBitmap(new SKImageInfo(width, height, SKColorType.Rgba8888));
                             result = new SKBitmap(new SKImageInfo(width, height, SKColorType.Rgba8888));
                             var canvas = new SKCanvas(result);
                             canvas.Clear(new SKColor(0, 0, 0, 0));
@@ -226,7 +219,6 @@ namespace LiveChartsCore.SkiaSharpView
                             }
                         }
                         #endregion
-
                     }
                     else
                     {
