@@ -463,6 +463,17 @@ namespace LiveChartsCore
                     {
                         if (!axis.IsVisible) continue;
 
+                        // In axis.GetPossibleSize(), VisibleDataBound is used. So this block must be excuted before axis.GetPossibleSize().
+                        if (axis.DataBounds.Max == axis.DataBounds.Min)
+                        {
+                            var c = axis.DataBounds.Min * 0.3;
+                            axis.DataBounds.Min = axis.DataBounds.Min - c;
+                            axis.DataBounds.Max = axis.DataBounds.Max + c;
+                            axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - c;
+                            axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + c;
+                        }
+
+
                         var ns = axis.GetNameLabelSize(this);
                         var s = axis.GetPossibleSize(this);
                         if (axis.Position == AxisPosition.Start)
@@ -487,6 +498,16 @@ namespace LiveChartsCore
                     foreach (var axis in YAxes)
                     {
                         if (!axis.IsVisible) continue;
+
+                        // In axis.GetPossibleSize(), VisibleDataBound is used. So this block must be excuted before axis.GetPossibleSize().
+                        if (axis.DataBounds.Max == axis.DataBounds.Min)
+                        {
+                            var c = axis.DataBounds.Min * 0.3;
+                            axis.DataBounds.Min = axis.DataBounds.Min - c;
+                            axis.DataBounds.Max = axis.DataBounds.Max + c;
+                            axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - c;
+                            axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + c;
+                        }
 
                         var ns = axis.GetNameLabelSize(this);
                         var s = axis.GetPossibleSize(this);
@@ -522,13 +543,6 @@ namespace LiveChartsCore
                 var toDeleteAxes = new HashSet<IAxis<TDrawingContext>>(_everMeasuredAxes);
                 foreach (var axis in totalAxes)
                 {
-                    if (axis.DataBounds.Max == axis.DataBounds.Min)
-                    {
-                        var c = axis.DataBounds.Min * 0.3;
-                        axis.DataBounds.Min = axis.DataBounds.Min - c;
-                        axis.DataBounds.Max = axis.DataBounds.Max + c;
-                    }
-
                     _ = _everMeasuredAxes.Add(axis);
                     if (axis.IsVisible)
                     {
