@@ -121,15 +121,18 @@ namespace LiveChartsCore
         /// <param name="imageBuffer">imagebuffer</param>
         /// <param name="width">width of image</param>
         /// <param name="height">height of image</param>
-        /// <param name="opacity">Opacity of image. range: 0~100</param>
-        public BackgroundImage(ImageFormat imageFormat, byte[] imageBuffer, int width, int height, int opacity = 100)
+        /// <param name="opacity">Opacity of image. range: 0~100. If opacity is -1, opacity will not be setted. </param>
+        public BackgroundImage(ImageFormat imageFormat, byte[] imageBuffer, int width, int height, int opacity = -1)
         {
             UseBackImage = true;
             Format = imageFormat;
             Width = width;
             Height = height;
-            opacity = Math.Min(100, opacity);
-            opacity = Math.Max(0, opacity);
+            if (opacity >= 0)
+            {
+                opacity = Math.Min(100, opacity);
+                opacity = Math.Max(0, opacity);
+            }
             Opacity = opacity;
 
             switch (Format)
@@ -140,8 +143,7 @@ namespace LiveChartsCore
                     break;
                 case ImageFormat.RGBA8:
                     if (imageBuffer.Length != width * height * 4) { return; }
-                    ImageBuffer = new byte[width * height * 4];
-                    imageBuffer.CopyTo(ImageBuffer, 0);
+                    ImageBuffer = RgbaToRgba(imageBuffer, width, height);
                     break;
                 case ImageFormat.BGR8:
                     if (imageBuffer.Length != width * height * 3) { return; }
@@ -185,7 +187,8 @@ namespace LiveChartsCore
         /// <returns></returns>
         private byte[] RgbToRgba(byte[] rgb, int width, int height)
         {
-            var byteOpacity = (byte)(0xFF * Opacity / 100f);
+            var opacity = Opacity < 0 ? 0xFF : Opacity;
+            var byteOpacity = (byte)(0xFF * opacity / 100f);
             var arrRgba = new byte[width * height * 4];
             for (var i = 0; i < rgb.Length; i++)
             {
@@ -206,7 +209,8 @@ namespace LiveChartsCore
         /// <returns></returns>
         private byte[] BgrToRgba(byte[] bgr, int width, int height)
         {
-            var byteOpacity = (byte)(0xFF * Opacity / 100f);
+            var opacity = Opacity < 0 ? 0xFF : Opacity;
+            var byteOpacity = (byte)(0xFF * opacity / 100f);
             var arrRgba = new byte[width * height * 4];
             for (var i = 0; i < bgr.Length; i++)
             {
@@ -227,7 +231,8 @@ namespace LiveChartsCore
         /// <returns></returns>
         private byte[] GreyToRgba(byte[] grey, int width, int height)
         {
-            var byteOpacity = (byte)(0xFF * Opacity / 100f);
+            var opacity = Opacity < 0 ? 0xFF : Opacity;
+            var byteOpacity = (byte)(0xFF * opacity / 100f);
             var arrRgba = new byte[width * height * 4];
             for (var i = 0; i < grey.Length; i++)
             {
@@ -249,13 +254,34 @@ namespace LiveChartsCore
         /// <returns></returns>
         private byte[] BgraToRgba(byte[] bgra, int width, int height)
         {
+            var isUseExistOpacity = Opacity < 0;
+            var opacityScale = isUseExistOpacity ? 0 : Opacity / 100f;
             var arrRgba = new byte[width * height * 4];
             for (var i = 0; i < bgra.Length; i++)
             {
                 arrRgba[i] = bgra[i + 2];
                 arrRgba[++i] = bgra[i];
                 arrRgba[++i] = bgra[i - 2];
-                arrRgba[++i] = bgra[i];
+                arrRgba[++i] = isUseExistOpacity ? bgra[i] : (byte)(0xFF * opacityScale);
+            }
+            return arrRgba;
+        }
+
+        /// <summary>
+        /// Convert RGBA to RGBA
+        /// </summary>
+        /// <param name="rgba"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns></returns>
+        private byte[] RgbaToRgba(byte[] rgba, int width, int height)
+        {
+            var isUseExistOpacity = Opacity < 0;
+            var opacityScale = isUseExistOpacity ? 0 : Opacity / 100f;
+            var arrRgba = new byte[width * height * 4];
+            for (var i = 3; i < rgba.Length; i += 4)
+            {
+                arrRgba[i] = isUseExistOpacity ? rgba[i] : (byte)(0xFF * opacityScale);
             }
             return arrRgba;
         }

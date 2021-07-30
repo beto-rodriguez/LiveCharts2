@@ -45,6 +45,7 @@
     <None Remove="General\ChartToImage\View.xaml" />
     <None Remove="General\Animations\View.xaml" />
     <None Remove="Heat\Basic\View.xaml" />
+    <None Remove="Scatter\BackImage\View.xaml" />
     <None Remove="StepLines\Area\View.xaml" />
     <None Remove="StepLines\AutoUpdate\View.xaml" />
     <None Remove="StepLines\Basic\View.xaml" />
@@ -260,6 +261,10 @@
     <Page Update="Scatter\AutoUpdate\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
+    <Page Update="Scatter\BackgroundImage\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Scatter\Basic - Copy\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
@@ -287,5 +292,23 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Scatter\BackImage\CIE1975.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Scatter\BackImage\family.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Scatter\BackImage\wood.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>
