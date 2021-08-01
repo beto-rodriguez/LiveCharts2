@@ -34,6 +34,8 @@ using System;
 using System.Collections.Generic;
 using Avalonia.Threading;
 using LiveChartsCore.Kernel;
+using System.Diagnostics;
+using System.Threading;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia
 {
@@ -139,10 +141,10 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             InvalidateVisual();
         }
 
-        private void InvalidateOnUIThread()
-        {
-            _ = Dispatcher.UIThread.InvokeAsync(InvalidateVisual);
-        }
+        //private void InvalidateOnUIThread()
+        //{
+        //    _ = Dispatcher.UIThread.InvokeAsync(InvalidateVisual);
+        //}
 
         // based on:
         // https://github.com/AvaloniaUI/Avalonia/blob/554aaec5e5cc96c0b4318b6ed1fbf8159f442889/samples/RenderDemo/Pages/CustomSkiaPage.cs
@@ -180,16 +182,29 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 if (context is not ISkiaDrawingContextImpl skiaContext)
                     throw new Exception("SkiaSharp is not supported.");
 
-                _motionCanvas.DrawFrame(
-                   new AvaloniaDrawingContext(
-                       _motionCanvas, new SKImageInfo((int)Bounds.Width, (int)Bounds.Height), skiaContext.SkSurface, skiaContext.SkCanvas)
-                   {
-                       BackColor = _backColor
-                   });
+                // why isn't the render method called on the UI thread always?
+                // as a workaround we lock the canvas to draw the frame.
+                lock (_motionCanvas.Sync)
+                {
+#if DEBUG
+                    if (LiveCharts.EnableLogging)
+                    {
+                        //Trace.WriteLine(
+                        //    $"[avalonia motion canvas renderer] ".PadRight(60) +
+                        //    $"tread: {Thread.CurrentThread.ManagedThreadId}");
+                    }
+#endif
+                    _motionCanvas.DrawFrame(
+                       new AvaloniaDrawingContext(
+                           _motionCanvas, new SKImageInfo((int)Bounds.Width, (int)Bounds.Height), skiaContext.SkSurface, skiaContext.SkCanvas)
+                       {
+                           BackColor = _backColor
+                       });
+                }
 
                 if (_motionCanvas.IsValid) return;
 
-                _avaloniaControl.InvalidateOnUIThread();
+                _avaloniaControl.InvalidateVisual();
             }
         }
     }

@@ -121,6 +121,12 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
            AvaloniaProperty.Register<CartesianChart, Margin?>(nameof(DrawMargin), null, inherits: true);
 
         /// <summary>
+        /// The sync context property.
+        /// </summary>
+        public static readonly AvaloniaProperty<object> SyncContextProperty =
+           AvaloniaProperty.Register<CartesianChart, object>(nameof(SyncContext), new object(), inherits: true);
+
+        /// <summary>
         /// The series property
         /// </summary>
         public static readonly AvaloniaProperty<IEnumerable<ISeries>> SeriesProperty =
@@ -352,6 +358,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             get => (Margin?)GetValue(DrawMarginProperty);
             set => SetValue(DrawMarginProperty, value);
+        }
+
+        /// <inheritdoc cref="IChartView.SyncContext" />
+        public object SyncContext
+        {
+            get => GetValue(SyncContextProperty);
+            set => SetValue(SyncContextProperty, value);
         }
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
@@ -676,6 +689,20 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             TooltipTextBrush = new SolidColorBrush(new A.Media.Color(textColor.A, textColor.R, textColor.G, textColor.B));
         }
 
+        void IChartView.InvokeOnUIThread(Action action)
+        {
+            _ = Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Normal);
+        }
+
+        /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
+        public void SyncAction(Action action)
+        {
+            lock (CoreCanvas.Sync)
+            {
+                action();
+            }
+        }
+
         /// <summary>
         /// Initializes the core.
         /// </summary>
@@ -702,6 +729,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             base.OnPropertyChanged(change);
 
             if (core is null || change.Property.Name == nameof(IsPointerOver)) return;
+
+            if (change.Property.Name == nameof(SyncContext))
+            {
+                CoreCanvas.Sync = change.NewValue;
+            }
 
             if (change.Property.Name == nameof(Series))
             {

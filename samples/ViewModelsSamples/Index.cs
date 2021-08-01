@@ -79,6 +79,7 @@
             //"General/TwoChartsOneSeries",
             "General/UserDefinedTypes",
             "General/NullPoints",
+            "General/MultiThreading",
 
             "Maps/World"
         };

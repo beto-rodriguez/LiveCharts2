@@ -99,6 +99,20 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         #region bindable properties 
 
         /// <summary>
+        /// The sync context property.
+        /// </summary>
+        public static readonly BindableProperty SyncContextProperty =
+            BindableProperty.Create(
+                nameof(SyncContext), typeof(object), typeof(CartesianChart), new ObservableCollection<ISeries>(), BindingMode.Default, null,
+                (BindableObject o, object oldValue, object newValue) =>
+                {
+                    var chart = (CartesianChart)o;
+                    chart.CoreCanvas.Sync = newValue;
+                    if (chart.core is null) return;
+                    chart.core.Update();
+                });
+
+        /// <summary>
         /// The series property
         /// </summary>
         public static readonly BindableProperty SeriesProperty =
@@ -111,7 +125,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     seriesObserver.Dispose((IEnumerable<ISeries>)oldValue);
                     seriesObserver.Initialize((IEnumerable<ISeries>)newValue);
                     if (chart.core is null) return;
-                    MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
+                    chart.core.Update();
                 });
 
         /// <summary>
@@ -127,7 +141,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     observer.Dispose((IEnumerable<IAxis>)oldValue);
                     observer.Initialize((IEnumerable<IAxis>)newValue);
                     if (chart.core is null) return;
-                    MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
+                    chart.core.Update();
                 });
 
         /// <summary>
@@ -143,7 +157,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     observer.Dispose((IEnumerable<IAxis>)oldValue);
                     observer.Initialize((IEnumerable<IAxis>)newValue);
                     if (chart.core is null) return;
-                    MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
+                    chart.core.Update();
                 });
 
         public static readonly BindableProperty SectionsProperty =
@@ -156,7 +170,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     observer.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)oldValue);
                     observer.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)newValue);
                     if (chart.core is null) return;
-                    MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
+                    chart.core.Update();
                 });
 
         /// <summary>
@@ -372,6 +386,13 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         BindableObject IMobileChart.Canvas => canvas;
 
         BindableObject IMobileChart.Legend => legend;
+
+        /// <inheritdoc cref="IChartView.SyncContext" />
+        public object SyncContext
+        {
+            get => GetValue(SyncContextProperty);
+            set => SetValue(SyncContextProperty, value);
+        }
 
         /// <inheritdoc cref="IChartView.DrawMargin" />
         public Margin? DrawMargin
@@ -671,6 +692,20 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             TooltipTextBrush = textColor;
         }
 
+        void IChartView.InvokeOnUIThread(Action action)
+        {
+            MainThread.BeginInvokeOnMainThread(action);
+        }
+
+        /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
+        public void SyncAction(Action action)
+        {
+            lock (CoreCanvas.Sync)
+            {
+                action();
+            }
+        }
+
         /// <summary>
         /// Initializes the core.
         /// </summary>
@@ -678,7 +713,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         protected void InitializeCore()
         {
             core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
-            MainThread.BeginInvokeOnMainThread(() => core.Update());
+            core.Update();
         }
 
         /// <summary>
@@ -692,25 +727,25 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             var chart = (CartesianChart)o;
             if (chart.core is null) return;
-            MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
+            chart.core.Update();
         }
 
         private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (core is null) return;
-            MainThread.BeginInvokeOnMainThread(() => core.Update());
+            core.Update();
         }
 
         private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (core is null) return;
-            MainThread.BeginInvokeOnMainThread(() => core.Update());
+            core.Update();
         }
 
         private void OnSizeChanged(object? sender, EventArgs e)
         {
             if (core is null) return;
-            MainThread.BeginInvokeOnMainThread(() => core.Update());
+            core.Update();
         }
 
         private void PanGestureRecognizer_PanUpdated(object? sender, PanUpdatedEventArgs e)

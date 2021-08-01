@@ -29,6 +29,10 @@ using System.Drawing;
 using System.Linq;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
+#if DEBUG
+using System.Diagnostics;
+using System.Threading;
+#endif
 
 namespace LiveChartsCore
 {
@@ -171,7 +175,19 @@ namespace LiveChartsCore
         private void TooltipThrottlerUnlocked()
         {
             if (tooltip is null || TooltipPosition == TooltipPosition.Hidden || !_isPointerIn) return;
-            tooltip.Show(FindPointsNearTo(_pointerPosition), this);
+
+            View.InvokeOnUIThread(() =>
+            {
+                if (LiveCharts.EnableLogging)
+                {
+                    Trace.WriteLine(
+                        $"[tooltip view thread]".PadRight(60) +
+                        $"tread: {Thread.CurrentThread.ManagedThreadId}");
+                }
+
+                var points = FindPointsNearTo(_pointerPosition).ToArray();
+                tooltip.Show(points, this);
+            });
         }
 
         private void PanningThrottlerUnlocked()

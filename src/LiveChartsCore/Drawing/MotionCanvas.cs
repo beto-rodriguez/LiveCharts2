@@ -22,8 +22,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+#if DEBUG
+using System.Diagnostics;
+#endif
 
 namespace LiveChartsCore.Drawing
 {
@@ -77,7 +80,7 @@ namespace LiveChartsCore.Drawing
         /// <value>
         /// The synchronize.
         /// </value>
-        public object Sync { get; } = new();
+        public object Sync { get; internal set; } = new();
 
         /// <summary>
         /// Draws the frame.
@@ -86,54 +89,64 @@ namespace LiveChartsCore.Drawing
         /// <returns></returns>
         public void DrawFrame(TDrawingContext context)
         {
-            lock (Sync)
+#if DEBUG
+            if (LiveCharts.EnableLogging)
             {
-                var isValid = true;
-                var frameTime = _stopwatch.ElapsedMilliseconds;
-                context.ClearCanvas();
-
-                var toRemoveGeometries = new List<Tuple<IPaintTask<TDrawingContext>, IDrawable<TDrawingContext>>>();
-
-                foreach (var task in _paintTasks.OrderBy(x => x.ZIndex).ToArray())
-                {
-                    if (DisableAnimations) task.CompleteAllTransitions();
-                    task.IsValid = true;
-                    task.CurrentTime = frameTime;
-                    task.InitializeTask(context);
-
-                    foreach (var geometry in task.GetGeometries(this))
-                    {
-                        if (geometry is null) continue;
-                        if (DisableAnimations) geometry.CompleteAllTransitions();
-
-                        geometry.IsValid = true;
-                        geometry.CurrentTime = frameTime;
-                        if (!task.IsPaused) geometry.Draw(context);
-
-                        isValid = isValid && geometry.IsValid;
-
-                        if (geometry.IsValid && geometry.RemoveOnCompleted)
-                            toRemoveGeometries.Add(
-                                new Tuple<IPaintTask<TDrawingContext>, IDrawable<TDrawingContext>>(task, geometry));
-                    }
-
-                    isValid = isValid && task.IsValid;
-
-                    if (task.RemoveOnCompleted && task.IsValid) _ = _paintTasks.Remove(task);
-                    task.Dispose();
-                }
-
-                foreach (var tuple in toRemoveGeometries)
-                {
-                    tuple.Item1.RemoveGeometryFromPainTask(this, tuple.Item2);
-
-                    // if we removed at least one geometry, we need to redraw the chart
-                    // to ensure it is not present in the next frame
-                    isValid = false;
-                }
-
-                IsValid = isValid;
+                //Trace.WriteLine(
+                //    $"[core canvas frame drawn] ".PadRight(60) +
+                //    $"tread: {Thread.CurrentThread.ManagedThreadId}");
             }
+#endif
+
+            if (context.LockOnDraw) Monitor.Enter(Sync);
+
+            var isValid = true;
+            var frameTime = _stopwatch.ElapsedMilliseconds;
+            context.ClearCanvas();
+
+            var toRemoveGeometries = new List<Tuple<IPaintTask<TDrawingContext>, IDrawable<TDrawingContext>>>();
+
+            foreach (var task in _paintTasks.OrderBy(x => x.ZIndex))
+            {
+                if (DisableAnimations) task.CompleteAllTransitions();
+                task.IsValid = true;
+                task.CurrentTime = frameTime;
+                task.InitializeTask(context);
+
+                foreach (var geometry in task.GetGeometries(this))
+                {
+                    if (geometry is null) continue;
+                    if (DisableAnimations) geometry.CompleteAllTransitions();
+
+                    geometry.IsValid = true;
+                    geometry.CurrentTime = frameTime;
+                    if (!task.IsPaused) geometry.Draw(context);
+
+                    isValid = isValid && geometry.IsValid;
+
+                    if (geometry.IsValid && geometry.RemoveOnCompleted)
+                        toRemoveGeometries.Add(
+                            new Tuple<IPaintTask<TDrawingContext>, IDrawable<TDrawingContext>>(task, geometry));
+                }
+
+                isValid = isValid && task.IsValid;
+
+                if (task.RemoveOnCompleted && task.IsValid) _ = _paintTasks.Remove(task);
+                task.Dispose();
+            }
+
+            foreach (var tuple in toRemoveGeometries)
+            {
+                tuple.Item1.RemoveGeometryFromPainTask(this, tuple.Item2);
+
+                // if we removed at least one geometry, we need to redraw the chart
+                // to ensure it is not present in the next frame
+                isValid = false;
+            }
+
+            IsValid = isValid;
+
+            if (context.LockOnDraw) Monitor.Exit(Sync);
 
             if (IsValid) Validated?.Invoke(this);
         }

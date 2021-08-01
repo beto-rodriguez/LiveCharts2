@@ -161,6 +161,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Margin? DrawMargin { get => _drawMargin; set { _drawMargin = value; OnPropertyChanged(); } }
 
+        /// <inheritdoc cref="IChartView.SyncContext" />
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public object SyncContext { get => CoreCanvas.Sync; set { CoreCanvas.Sync = value; OnPropertyChanged(); } }
+
         /// <inheritdoc cref="IChartView.AnimationsSpeed" />
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public TimeSpan AnimationsSpeed { get; set; } = LiveCharts.CurrentSettings.DefaultAnimationsSpeed;
@@ -292,6 +296,20 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         {
             TooltipBackColor = background;
             TooltipTextColor = textColor;
+        }
+
+        void IChartView.InvokeOnUIThread(Action action)
+        {
+            _ = BeginInvoke(action);
+        }
+
+        /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
+        public void SyncAction(Action action)
+        {
+            lock (CoreCanvas.Sync)
+            {
+                action();
+            }
         }
 
         /// <summary>

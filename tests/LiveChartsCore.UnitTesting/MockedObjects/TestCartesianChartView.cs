@@ -70,6 +70,7 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
         public TimeSpan UpdaterThrottler { get; set; }
         public DrawMarginFrame<SkiaSharpDrawingContext> DrawMarginFrame { get; set; }
         public IEnumerable<Section<SkiaSharpDrawingContext>> Sections { get; set; }
+        public object SyncContext { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public event ChartEventHandler<SkiaSharpDrawingContext> Measuring;
         public event ChartEventHandler<SkiaSharpDrawingContext> UpdateStarted;
@@ -92,5 +93,15 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
         public void ShowTooltip(IEnumerable<TooltipPoint> points) { }
 
         public void SetTooltipStyle(Color background, Color textColor) { }
+
+        public void InvokeOnUIThread(Action action)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SyncAction(Action action)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

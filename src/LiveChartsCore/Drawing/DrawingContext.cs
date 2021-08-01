@@ -28,6 +28,22 @@ namespace LiveChartsCore.Drawing
     public abstract class DrawingContext
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="DrawingContext"/> class.
+        /// </summary>
+        public DrawingContext(bool lockOnDraw = false)
+        {
+            LockOnDraw = lockOnDraw;
+        }
+
+        /// <summary>
+        /// Gets or sets a property indicating whether the canvas should be locked while the
+        /// charts is being drawn. This property was created to prevent an Issue in Avalonia where
+        /// the a custom renderer is called on multiple threads, this causes that the elements on
+        /// composed geometries (like paths) could change their segments from multiple threads.
+        /// </summary>
+        public bool LockOnDraw { get; }
+
+        /// <summary>
         /// Clears the canvas.
         /// </summary>
         public abstract void ClearCanvas();

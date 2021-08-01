@@ -30,6 +30,13 @@ namespace LiveChartsCore
     /// </summary>
     public static class LiveCharts
     {
+#if DEBUG
+        /// <summary>
+        /// Gets a value indicating whether LiveCharts should create a log as it renders the charts.
+        /// </summary>
+        public static bool EnableLogging { get; set; } = true;
+#endif
+
         private static readonly object s_defaultPaintTask = new();
 
         /// <summary>

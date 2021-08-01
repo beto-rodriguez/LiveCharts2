@@ -89,6 +89,20 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <summary>
         /// The draw margin property
         /// </summary>
+        public static readonly DependencyProperty SyncContextProperty =
+           DependencyProperty.Register(
+               nameof(SyncContext), typeof(object), typeof(Chart), new PropertyMetadata(null,
+                   (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                   {
+                       var chart = (Chart)o;
+                       if (chart.canvas != null) chart.CoreCanvas.Sync = args.NewValue;
+                       if (chart.core is null) return;
+                       chart.core.Update();
+                   }));
+
+        /// <summary>
+        /// The draw margin property
+        /// </summary>
         public static readonly DependencyProperty DrawMarginProperty =
            DependencyProperty.Register(
                nameof(DrawMargin), typeof(Margin), typeof(Chart), new PropertyMetadata(null, OnDependencyPropertyChanged));
@@ -283,6 +297,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     ? new System.Drawing.Color()
                     : System.Drawing.Color.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
             set => SetValueOrCurrentValue(BackgroundProperty, new SolidColorBrush(System.Windows.Media.Color.FromArgb(value.A, value.R, value.G, value.B)));
+        }
+
+        /// <inheritdoc cref="IChartView.SyncContext" />
+        public object SyncContext
+        {
+            get => GetValue(SyncContextProperty);
+            set => SetValue(SyncContextProperty, value);
         }
 
         /// <inheritdoc cref="IChartView.DrawMargin" />
@@ -598,6 +619,10 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     $"If you override the template please add an {nameof(MotionCanvas)} to the template and name it 'canvas'");
 
             this.canvas = canvas;
+
+            if (SyncContext != null)
+                this.canvas.CanvasCore.Sync = SyncContext;
+
             InitializeCore();
 
             if (core is null) throw new Exception("Core not found!");
@@ -636,6 +661,20 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             TooltipTextBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(textColor.A, textColor.R, textColor.G, textColor.B));
         }
 
+        void IChartView.InvokeOnUIThread(Action action)
+        {
+            Application.Current.Dispatcher.Invoke(action);
+        }
+
+        /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
+        public void SyncAction(Action action)
+        {
+            lock (CoreCanvas.Sync)
+            {
+                action();
+            }
+        }
+
         /// <summary>
         /// Initializes the core.
         /// </summary>
@@ -652,13 +691,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         {
             var chart = (Chart)o;
             if (chart.core is null) return;
-            Application.Current.Dispatcher.Invoke(() => chart.core.Update());
+            chart.core.Update();
         }
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (core is null) return;
-            Application.Current.Dispatcher.Invoke(() => core.Update());
+            core.Update();
         }
 
         private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)

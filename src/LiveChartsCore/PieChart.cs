@@ -28,6 +28,10 @@ using System.Drawing;
 using System.Linq;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Kernel.Sketches;
+#if DEBUG
+using System.Diagnostics;
+using System.Threading;
+#endif
 
 namespace LiveChartsCore
 {
@@ -154,107 +158,109 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected override void Measure()
         {
-            lock (canvas.Sync)
+#if DEBUG
+            if (LiveCharts.EnableLogging)
             {
-                InvokeOnMeasuring();
-
-                if (preserveFirstDraw)
-                {
-                    IsFirstDraw = true;
-                    preserveFirstDraw = false;
-                }
-
-                MeasureWork = new object();
-
-                viewDrawMargin = _chartView.DrawMargin;
-                controlSize = _chartView.ControlSize;
-
-                Series = _chartView.Series
-                    .Where(x => x.IsVisible)
-                    .Cast<IPieSeries<TDrawingContext>>()
-                    .Select(series =>
-                    {
-                        _ = series.Fetch(this);
-                        return series;
-                    }).ToArray();
-
-                legendPosition = _chartView.LegendPosition;
-                legendOrientation = _chartView.LegendOrientation;
-                legend = _chartView.Legend;
-
-                tooltipPosition = _chartView.TooltipPosition;
-                tooltip = _chartView.Tooltip;
-
-                animationsSpeed = _chartView.AnimationsSpeed;
-                easingFunction = _chartView.EasingFunction;
-
-                seriesContext = new SeriesContext<TDrawingContext>(Series);
-
-                var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-                if (theme.CurrentColors is null || theme.CurrentColors.Length == 0)
-                    throw new Exception("Default colors are not valid");
-                var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
-
-                ValueBounds = new Bounds();
-                IndexBounds = new Bounds();
-                PushoutBounds = new Bounds();
-                foreach (var series in Series)
-                {
-                    series.IsNotifyingChanges = false;
-
-                    if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
-                    theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
-
-                    var seriesBounds = series.GetBounds(this);
-
-                    ValueBounds.AppendValue(seriesBounds.PrimaryBounds.Max);
-                    ValueBounds.AppendValue(seriesBounds.PrimaryBounds.Min);
-                    IndexBounds.AppendValue(seriesBounds.SecondaryBounds.Max);
-                    IndexBounds.AppendValue(seriesBounds.SecondaryBounds.Min);
-                    PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Max);
-                    PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Min);
-
-                    series.IsNotifyingChanges = true;
-                }
-
-                if (legend is not null && SeriesMiniatureChanged(Series, LegendPosition))
-                {
-                    legend.Draw(this);
-                    Update();
-                    preserveFirstDraw = IsFirstDraw;
-                }
-
-                if (viewDrawMargin is null)
-                {
-                    var m = viewDrawMargin ?? new Margin();
-                    SetDrawMargin(controlSize, m);
-                }
-
-                // invalid dimensions, probably the chart is too small
-                // or it is initializing in the UI and has no dimensions yet
-                if (drawMarginSize.Width <= 0 || drawMarginSize.Height <= 0) return;
-
-                var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
-                foreach (var series in Series)
-                {
-                    series.Measure(this);
-                    series.RemoveOldPaints(View);
-                    _ = _everMeasuredSeries.Add(series);
-                    _ = toDeleteSeries.Remove(series);
-                }
-
-                foreach (var series in toDeleteSeries)
-                {
-                    series.SoftDelete(View);
-                    _ = _everMeasuredSeries.Remove(series);
-                }
-
-                InvokeOnUpdateStarted();
-                IsFirstDraw = false;
-                ThemeId = LiveCharts.CurrentSettings.ThemeId;
-                previousSeries = Series;
-                previousLegendPosition = LegendPosition;
+                Trace.WriteLine(
+                    $"[Cartesian chart measured]".PadRight(60) +
+                    $"tread: {Thread.CurrentThread.ManagedThreadId}");
             }
+#endif
+
+            InvokeOnMeasuring();
+
+            if (preserveFirstDraw)
+            {
+                IsFirstDraw = true;
+                preserveFirstDraw = false;
+            }
+
+            MeasureWork = new object();
+
+            viewDrawMargin = _chartView.DrawMargin;
+            controlSize = _chartView.ControlSize;
+
+            Series = _chartView.Series
+                .Where(x => x.IsVisible)
+                .Cast<IPieSeries<TDrawingContext>>()
+                .ToArray();
+
+            legendPosition = _chartView.LegendPosition;
+            legendOrientation = _chartView.LegendOrientation;
+            legend = _chartView.Legend;
+
+            tooltipPosition = _chartView.TooltipPosition;
+            tooltip = _chartView.Tooltip;
+
+            animationsSpeed = _chartView.AnimationsSpeed;
+            easingFunction = _chartView.EasingFunction;
+
+            seriesContext = new SeriesContext<TDrawingContext>(Series);
+
+            var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
+            if (theme.CurrentColors is null || theme.CurrentColors.Length == 0)
+                throw new Exception("Default colors are not valid");
+            var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
+
+            ValueBounds = new Bounds();
+            IndexBounds = new Bounds();
+            PushoutBounds = new Bounds();
+            foreach (var series in Series)
+            {
+                series.IsNotifyingChanges = false;
+
+                if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
+                theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
+
+                var seriesBounds = series.GetBounds(this);
+
+                ValueBounds.AppendValue(seriesBounds.PrimaryBounds.Max);
+                ValueBounds.AppendValue(seriesBounds.PrimaryBounds.Min);
+                IndexBounds.AppendValue(seriesBounds.SecondaryBounds.Max);
+                IndexBounds.AppendValue(seriesBounds.SecondaryBounds.Min);
+                PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Max);
+                PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Min);
+
+                series.IsNotifyingChanges = true;
+            }
+
+            if (legend is not null && SeriesMiniatureChanged(Series, LegendPosition))
+            {
+                legend.Draw(this);
+                Update();
+                preserveFirstDraw = IsFirstDraw;
+            }
+
+            if (viewDrawMargin is null)
+            {
+                var m = viewDrawMargin ?? new Margin();
+                SetDrawMargin(controlSize, m);
+            }
+
+            // invalid dimensions, probably the chart is too small
+            // or it is initializing in the UI and has no dimensions yet
+            if (drawMarginSize.Width <= 0 || drawMarginSize.Height <= 0) return;
+
+            var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
+            foreach (var series in Series)
+            {
+                series.Measure(this);
+                series.RemoveOldPaints(View);
+                _ = _everMeasuredSeries.Add(series);
+                _ = toDeleteSeries.Remove(series);
+            }
+
+            foreach (var series in toDeleteSeries)
+            {
+                series.SoftDelete(View);
+                _ = _everMeasuredSeries.Remove(series);
+            }
+
+            InvokeOnUpdateStarted();
+            IsFirstDraw = false;
+            ThemeId = LiveCharts.CurrentSettings.ThemeId;
+            previousSeries = Series;
+            previousLegendPosition = LegendPosition;
 
             Canvas.Invalidate();
         }

@@ -77,12 +77,12 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                (object sender, NotifyCollectionChangedEventArgs e) =>
                {
                    if (core is null) return;
-                   MainThread.BeginInvokeOnMainThread(() => core.Update());
+                   core.Update();
                },
                (object sender, PropertyChangedEventArgs e) =>
                {
                    if (core is null) return;
-                   MainThread.BeginInvokeOnMainThread(() => core.Update());
+                   core.Update();
                });
 
             Series = new ObservableCollection<ISeries>();
@@ -99,6 +99,21 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         #region bindable properties
 
         /// <summary>
+        /// The sync context property.
+        /// </summary>
+        public static readonly BindableProperty SyncContextProperty =
+            BindableProperty.Create(
+                nameof(SyncContext), typeof(object), typeof(PieChart), new ObservableCollection<ISeries>(), BindingMode.Default, null,
+                (BindableObject o, object oldValue, object newValue) =>
+                {
+                    var chart = (PieChart)o;
+                    chart.CoreCanvas.Sync = newValue;
+                    if (chart.core is null) return;
+                    chart.core.Update();
+                });
+
+
+        /// <summary>
         /// The series property
         /// </summary>
         public static readonly BindableProperty SeriesProperty =
@@ -111,7 +126,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                       seriesObserver.Dispose((IEnumerable<ISeries>)oldValue);
                       seriesObserver.Initialize((IEnumerable<ISeries>)newValue);
                       if (chart.core is null) return;
-                      MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
+                      chart.core.Update();
                   });
 
         /// <summary>
@@ -301,6 +316,13 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core =>
             core is null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
+
+        /// <inheritdoc cref="IChartView.SyncContext" />
+        public object SyncContext
+        {
+            get => GetValue(SyncContextProperty);
+            set => SetValue(SyncContextProperty, value);
+        }
 
         SizeF IChartView.ControlSize => new()
         {
@@ -579,6 +601,20 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             TooltipTextBrush = textColor;
         }
 
+        void IChartView.InvokeOnUIThread(Action action)
+        {
+            MainThread.BeginInvokeOnMainThread(action);
+        }
+
+        /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
+        public void SyncAction(Action action)
+        {
+            lock (CoreCanvas.Sync)
+            {
+                action();
+            }
+        }
+
         /// <summary>
         /// Initializes the core.
         /// </summary>
@@ -586,7 +622,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         protected void InitializeCore()
         {
             core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
-            MainThread.BeginInvokeOnMainThread(() => core.Update());
+            core.Update();
         }
 
         /// <summary>
@@ -600,13 +636,13 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             var chart = (PieChart)o;
             if (chart.core is null) return;
-            MainThread.BeginInvokeOnMainThread(() => chart.core.Update());
+            chart.core.Update();
         }
 
         private void OnSizeChanged(object sender, EventArgs e)
         {
             if (core is null) return;
-            MainThread.BeginInvokeOnMainThread(() => core.Update());
+            core.Update();
         }
 
         private void OnSkCanvasTouched(object? sender, SkiaSharp.Views.Forms.SKTouchEventArgs e)

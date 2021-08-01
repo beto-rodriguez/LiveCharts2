@@ -83,6 +83,9 @@
     <Compile Update="General\ChartToImage\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="General\MultiThreading\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="General\Sections\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
