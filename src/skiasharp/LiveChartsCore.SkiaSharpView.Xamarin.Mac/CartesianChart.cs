@@ -122,17 +122,17 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Mac
             set => SetAndUpdateIfChanged(ref _backColor, value.FromNSColor());
         }
 
-        [Export(nameof(BackColor)), Browsable(true)]
+        [Export(nameof(ZoomMode)), Browsable(true)]
         public ZoomAndPanMode ZoomMode { get; set; } = LiveCharts.CurrentSettings.DefaultZoomMode;
 
-        [Export(nameof(BackColor)), Browsable(true)]
+        [Export(nameof(ZoomingSpeed)), Browsable(true)]
         public double ZoomingSpeed { get; set; } = LiveCharts.CurrentSettings.DefaultZoomSpeed;
 
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core =>
             (CartesianChart<SkiaSharpDrawingContext>?)Core ??
             throw new InvalidOperationException("Core is not initialized.");
 
-        [Export(nameof(BackColor)), Browsable(true)]
+        [Export(nameof(AutoUpdateEnabled)), Browsable(true)]
         public bool AutoUpdateEnabled { get; set; }
 
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => _motionCanvas?.CanvasCore ??
@@ -149,21 +149,21 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Mac
 
         public Func<float, float>? EasingFunction { get; set; } = LiveCharts.CurrentSettings.DefaultEasingFunction;
 
-        [Export(nameof(BackColor)), Browsable(true)]
+        [Export(nameof(LegendPosition)), Browsable(true)]
         public LegendPosition LegendPosition
         {
             get => _legendPosition;
             set => SetAndUpdateIfChanged(ref _legendPosition, value);
         }
 
-        [Export(nameof(BackColor)), Browsable(true)]
+        [Export(nameof(LegendOrientation)), Browsable(true)]
         public LegendOrientation LegendOrientation
         {
             get => _legendOrientation;
             set => SetAndUpdateIfChanged(ref _legendOrientation, value);
         }
 
-        [Export(nameof(BackColor)), Browsable(true)]
+        [Export(nameof(TooltipPosition)), Browsable(true)]
         public TooltipPosition TooltipPosition
         {
             get => _tooltipPosition;
