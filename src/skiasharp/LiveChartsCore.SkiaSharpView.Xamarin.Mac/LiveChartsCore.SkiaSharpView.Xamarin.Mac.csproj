@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>Xamarin.Mac20</TargetFramework>
+    <RootNamespace>LiveChartsCore.SkiaSharp.Xamarin.Mac</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
