@@ -189,9 +189,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 #if DEBUG
                     if (LiveCharts.EnableLogging)
                     {
-                        //Trace.WriteLine(
-                        //    $"[avalonia motion canvas renderer] ".PadRight(60) +
-                        //    $"tread: {Thread.CurrentThread.ManagedThreadId}");
+                        Trace.WriteLine(
+                            $"[avalonia motion canvas renderer] ".PadRight(60) +
+                            $"tread: {Thread.CurrentThread.ManagedThreadId}");
                     }
 #endif
                     _motionCanvas.DrawFrame(

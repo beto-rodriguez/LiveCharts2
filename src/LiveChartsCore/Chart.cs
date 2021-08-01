@@ -29,10 +29,8 @@ using System.Drawing;
 using System.Linq;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
-#if DEBUG
 using System.Diagnostics;
 using System.Threading;
-#endif
 
 namespace LiveChartsCore
 {
@@ -155,7 +153,11 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="canvas">The canvas.</param>
         /// <param name="defaultPlatformConfig">The default platform configuration.</param>
-        protected Chart(MotionCanvas<TDrawingContext> canvas, Action<LiveChartsSettings> defaultPlatformConfig)
+        /// <param name="lockOnMeasure">Indicates if the thread should lock the measure operation</param>
+        protected Chart(
+            MotionCanvas<TDrawingContext> canvas,
+            Action<LiveChartsSettings> defaultPlatformConfig,
+            bool lockOnMeasure = false)
         {
             this.canvas = canvas;
             canvas.Validated += OnCanvasValidated;
@@ -170,6 +172,7 @@ namespace LiveChartsCore
 
             _tooltipThrottler = new ActionThrottler(TooltipThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
             _panningThrottler = new ActionThrottler(PanningThrottlerUnlocked, TimeSpan.FromMilliseconds(30));
+            LockOnMeasure = true;//lockOnMeasure;
         }
 
         private void TooltipThrottlerUnlocked()
@@ -178,12 +181,14 @@ namespace LiveChartsCore
 
             View.InvokeOnUIThread(() =>
             {
+#if DEBUG
                 if (LiveCharts.EnableLogging)
                 {
                     Trace.WriteLine(
                         $"[tooltip view thread]".PadRight(60) +
                         $"tread: {Thread.CurrentThread.ManagedThreadId}");
                 }
+#endif
 
                 var points = FindPointsNearTo(_pointerPosition).ToArray();
                 tooltip.Show(points, this);
@@ -249,6 +254,11 @@ namespace LiveChartsCore
         internal event Action<PanGestureEventArgs> PanGesture;
 
         #region properties
+
+        /// <summary>
+        /// Indicates whether the thread should lock the measure operation.
+        /// </summary>
+        protected bool LockOnMeasure { get; }
 
         /// <summary>
         /// Gets the measure work.

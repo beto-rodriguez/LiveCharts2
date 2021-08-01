@@ -51,17 +51,17 @@ namespace LiveChartsCore.Threading
                     : collection.SyncRoot;
             }
 
-            lock (locker)
+            //lock (locker)
+            //{
+            var enumerator = enumerable.GetEnumerator();
+
+            while (enumerator.MoveNext())
             {
-                var enumerator = enumerable.GetEnumerator();
-
-                while (enumerator.MoveNext())
-                {
-                    yield return enumerator.Current;
-                }
-
-                enumerator.Dispose();
+                yield return enumerator.Current;
             }
+
+            enumerator.Dispose();
+            //}
         }
     }
 }

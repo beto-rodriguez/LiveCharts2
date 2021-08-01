@@ -637,7 +637,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         protected void InitializeCore()
         {
             var canvas = this.FindControl<MotionCanvas>("canvas");
-            core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            core = new PieChart<SkiaSharpDrawingContext>(
+                this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore, true);
 
             core.Measuring += OnCoreMeasuring;
             core.UpdateStarted += OnCoreUpdateStarted;

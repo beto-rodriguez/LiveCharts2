@@ -28,10 +28,8 @@ using System.Drawing;
 using System.Linq;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Kernel.Sketches;
-#if DEBUG
 using System.Diagnostics;
 using System.Threading;
-#endif
 
 namespace LiveChartsCore
 {
@@ -53,11 +51,13 @@ namespace LiveChartsCore
         /// <param name="view">The view.</param>
         /// <param name="defaultPlatformConfig">The default platform configuration.</param>
         /// <param name="canvas">The canvas.</param>
+        /// <param name="lockOnMeasure">Indicates if the thread should lock the measure operation</param>
         public PieChart(
             IPieChartView<TDrawingContext> view,
             Action<LiveChartsSettings> defaultPlatformConfig,
-            MotionCanvas<TDrawingContext> canvas)
-            : base(canvas, defaultPlatformConfig)
+            MotionCanvas<TDrawingContext> canvas,
+            bool lockOnMeasure = false)
+            : base(canvas, defaultPlatformConfig, lockOnMeasure)
         {
             _chartView = view;
 
@@ -169,6 +169,8 @@ namespace LiveChartsCore
 
             InvokeOnMeasuring();
 
+            if (LockOnMeasure) Monitor.Enter(canvas.Sync);
+
             if (preserveFirstDraw)
             {
                 IsFirstDraw = true;
@@ -261,6 +263,8 @@ namespace LiveChartsCore
             ThemeId = LiveCharts.CurrentSettings.ThemeId;
             previousSeries = Series;
             previousLegendPosition = LegendPosition;
+
+            if (LockOnMeasure) Monitor.Exit(canvas.Sync);
 
             Canvas.Invalidate();
         }

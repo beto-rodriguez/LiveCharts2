@@ -711,7 +711,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             var canvas = this.FindControl<MotionCanvas>("canvas");
             _avaloniaCanvas = canvas;
-            core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            core = new CartesianChart<SkiaSharpDrawingContext>(
+                this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore, true);
 
             core.Measuring += OnCoreMeasuring;
             core.UpdateStarted += OnCoreUpdateStarted;
