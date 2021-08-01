@@ -10,18 +10,17 @@ namespace ViewModelsSamples.Lines.AutoUpdate
 {
     public class ViewModel
     {
-        private int index = 0;
-        private Random random = new Random();
-        private ObservableCollection<ObservablePoint> observableValues;
+        private int _index = 0;
+        private readonly Random _random = new Random();
+        private readonly ObservableCollection<ObservablePoint> _observableValues;
 
         public ViewModel()
         {
-
-            // using an INotifyCollectionChanged as your values collection
+            // using an INotifyCollectionChanged instance as your values collection
             // will let the chart update every time a point is added, removed, replaced or the whole list was cleared
-            observableValues = new ObservableCollection<ObservablePoint>
+            _observableValues = new ObservableCollection<ObservablePoint>
             {
-                // using object that implements INotifyPropertyChanged
+                // using an object that implements INotifyPropertyChanged
                 // will allow the chart to update everytime a property in a point changes.
 
                 // LiveCharts already provides the ObservableValue class
@@ -29,19 +28,19 @@ namespace ViewModelsSamples.Lines.AutoUpdate
                 // for more info please see:
                 // https://github.com/beto-rodriguez/LiveCharts2/blob/master/samples/ViewModelsSamples/General/UserDefinedTypes/ViewModel.cs#L22
 
-                new ObservablePoint(index++, 2),
-                new ObservablePoint(index++, 5),
-                new ObservablePoint(index++, 4),
-                new ObservablePoint(index++, 5),
-                new ObservablePoint(index++, 2),
-                new ObservablePoint(index++, 6),
-                new ObservablePoint(index++, 6),
-                new ObservablePoint(index++, 6),
-                new ObservablePoint(index++, 4),
-                new ObservablePoint(index++, 2),
-                new ObservablePoint(index++, 3),
-                new ObservablePoint(index++, 8),
-                new ObservablePoint(index++, 3)
+                new ObservablePoint(_index++, 2),
+                new ObservablePoint(_index++, 5),
+                new ObservablePoint(_index++, 4),
+                new ObservablePoint(_index++, 5),
+                new ObservablePoint(_index++, 2),
+                new ObservablePoint(_index++, 6),
+                new ObservablePoint(_index++, 6),
+                new ObservablePoint(_index++, 6),
+                new ObservablePoint(_index++, 4),
+                new ObservablePoint(_index++, 2),
+                new ObservablePoint(_index++, 3),
+                new ObservablePoint(_index++, 4),
+                new ObservablePoint(_index++, 3)
             };
 
             // using a collection that implements INotifyCollectionChanged as your series collection
@@ -49,7 +48,11 @@ namespace ViewModelsSamples.Lines.AutoUpdate
             // .Net already provides the System.Collections.ObjectModel.ObservableCollection class
             Series = new ObservableCollection<ISeries>
             {
-                new LineSeries<ObservablePoint> { Values = observableValues }
+                new LineSeries<ObservablePoint>
+                {
+                    Values = _observableValues,
+                    Fill = null
+                }
             };
 
             // in the following series notice that the type int does not implement INotifyPropertyChanged
@@ -61,27 +64,30 @@ namespace ViewModelsSamples.Lines.AutoUpdate
 
         public ObservableCollection<ISeries> Series { get; set; }
 
-        public void AddRandomItem()
+        public void AddItem()
         {
-            // for this sample only 50 items are suported.
-            if (observableValues.Count > 50) return;
-
-            var randomValue = random.Next(1, 10);
-            observableValues.Add(new ObservablePoint(index++, randomValue));
+            var randomValue = _random.Next(1, 10);
+            _observableValues.Add(
+                new ObservablePoint { X = _index++, Y = randomValue });
         }
 
         public void RemoveFirstItem()
         {
-            if (observableValues.Count < 2) return;
+            _observableValues.RemoveAt(0);
+        }
 
-            observableValues.RemoveAt(0);
+        public void UpdateLastItem()
+        {
+            var randomValue = _random.Next(1, 10);
+            _observableValues[_observableValues.Count - 1].Y = randomValue;
         }
 
         public void ReplaceRandomItem()
         {
-            var randomValue = random.Next(1, 10);
-            var randomIndex = random.Next(0, observableValues.Count - 1);
-            observableValues[randomIndex] = new ObservablePoint(observableValues[randomIndex].X, randomValue);
+            var randomValue = _random.Next(1, 10);
+            var randomIndex = _random.Next(0, _observableValues.Count - 1);
+            _observableValues[randomIndex] =
+                new ObservablePoint { X = _observableValues[randomIndex].X, Y = randomValue };
         }
 
         public void AddSeries()
@@ -90,9 +96,9 @@ namespace ViewModelsSamples.Lines.AutoUpdate
             if (Series.Count == 5) return;
 
             Series.Add(
-                new LineSeries<int> 
-                { 
-                    Values = new List<int> { random.Next(0, 10), random.Next(0, 10), random.Next(0, 10) }
+                new LineSeries<int>
+                {
+                    Values = new List<int> { _random.Next(0, 10), _random.Next(0, 10), _random.Next(0, 10) }
                 });
         }
 
@@ -105,8 +111,9 @@ namespace ViewModelsSamples.Lines.AutoUpdate
 
         // The next commands are only to enable XAML bindings
         // they are not used in the WinForms sample
-        public ICommand AddItemCommand => new Command(o => AddRandomItem());
+        public ICommand AddItemCommand => new Command(o => AddItem());
         public ICommand RemoveItemCommand => new Command(o => RemoveFirstItem());
+        public ICommand UpdateItemCommand => new Command(o => UpdateLastItem());
         public ICommand ReplaceItemCommand => new Command(o => ReplaceRandomItem());
         public ICommand AddSeriesCommand => new Command(o => AddSeries());
         public ICommand RemoveSeriesCommand => new Command(o => RemoveLastSeries());

@@ -1,0 +1,46 @@
+﻿<UserControl
+    x:Class="WinUISample.General.TemplatedTooltips.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    xmlns:vms="using:ViewModelsSamples.General.TemplatedTooltips"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <lvc:CartesianChart Series="{Binding Series}" TooltipPosition="Top" >
+            <!--<lvc:CartesianChart.TooltipTemplate>
+                <DataTemplate>
+                    <Border Background="#303030">
+                        <ItemsControl ItemsSource="{Binding Points, RelativeSource={RelativeSource AncestorType=lvc:DefaultTooltip}}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type ctx:TooltipPoint}">
+                                    <Border Padding="7 5">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Point.AsTooltipString}" Margin="0 0 8 0" Foreground="AntiqueWhite" />
+                                            <lvc:MotionCanvas Margin="0 0 8 0" 
+                                                PaintTasks="{Binding Series.CanvasSchedule.PaintSchedules}"
+                                                Width="{Binding Series.CanvasSchedule.Width}"
+                                                Height="{Binding Series.CanvasSchedule.Height}"
+                                                VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
+                </DataTemplate>
+            </lvc:CartesianChart.TooltipTemplate>-->
+        </lvc:CartesianChart>
+    </Grid>
+
+</UserControl>

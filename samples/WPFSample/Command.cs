@@ -13,8 +13,14 @@ namespace WPFSample
             this.command = command;
         }
 
-        public bool CanExecute(object parameter) => true;
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
 
-        public void Execute(object parameter) => command(parameter);
+        public void Execute(object parameter)
+        {
+            command(parameter);
+        }
     }
 }

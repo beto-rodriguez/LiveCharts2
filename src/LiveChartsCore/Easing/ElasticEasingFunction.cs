@@ -1,14 +1,24 @@
-﻿// This function is inpired on
+﻿// This function is inspired on
 // https://github.com/d3/d3-ease/blob/master/src/elastic.js
 
 using System;
 
 namespace LiveChartsCore.Easing
 {
+    /// <summary>
+    /// Defines the ElasticEasingFunction.
+    /// </summary>
     public static class ElasticEasingFunction
     {
         private static readonly float tau = (float)(2 * Math.PI);
 
+        /// <summary>
+        /// The ease in.
+        /// </summary>
+        /// <param name="t">The t.</param>
+        /// <param name="a">a.</param>
+        /// <param name="p">The p.</param>
+        /// <returns></returns>
         public static float In(float t, float a = 1f, float p = 0.3f)
         {
             var s = Math.Asin(1 / (a = Math.Max(1, a))) * (p /= tau);
@@ -18,6 +28,13 @@ namespace LiveChartsCore.Easing
             }
         }
 
+        /// <summary>
+        /// The ease out.
+        /// </summary>
+        /// <param name="t">The t.</param>
+        /// <param name="a">a.</param>
+        /// <param name="p">The p.</param>
+        /// <returns></returns>
         public static float Out(float t, float a = 1f, float p = 0.3f)
         {
             var s = Math.Asin(1 / (a = Math.Max(1, a))) * (p /= tau);
@@ -27,6 +44,13 @@ namespace LiveChartsCore.Easing
             }
         }
 
+        /// <summary>
+        /// The ease in out.
+        /// </summary>
+        /// <param name="t">The t.</param>
+        /// <param name="a">a.</param>
+        /// <param name="p">The p.</param>
+        /// <returns></returns>
         public static float InOut(float t, float a = 1f, float p = 0.3f)
         {
             var s = Math.Asin(1 / (a = Math.Max(1, a))) * (p /= tau);

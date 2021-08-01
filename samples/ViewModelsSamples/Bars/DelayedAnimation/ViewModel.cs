@@ -4,8 +4,6 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 using System.Collections.Generic;
 
 namespace ViewModelsSamples.Bars.DelayedAnimation
@@ -17,26 +15,26 @@ namespace ViewModelsSamples.Bars.DelayedAnimation
             var values1 = new List<float>();
             var values2 = new List<float>();
 
+            var fx = EasingFunctions.BounceInOut; // this is the function we are going to plot
             var x = 0f;
-            while(x <= 1)
+
+            while (x <= 1)
             {
-                values1.Add(EasingFunctions.BounceInOut(x));
-                values2.Add(EasingFunctions.BounceInOut(x - 0.15f));
-                x += 0.01f;
+                values1.Add(fx(x));
+                values2.Add(fx(x - 0.15f));
+                x += 0.025f;
             }
 
             var columnSeries1 = new ColumnSeries<float>
-            { 
+            {
                 Values = values1,
-                Stroke = null,
-                Fill = new SolidColorPaintTask(SKColors.CornflowerBlue),
+                Stroke = null
             };
 
             var columnSeries2 = new ColumnSeries<float>
             {
                 Values = values2,
-                Stroke = null,
-                Fill = new SolidColorPaintTask(SKColors.YellowGreen)
+                Stroke = null
             };
 
             columnSeries1.PointMeasured += OnPointMeasured;
@@ -45,12 +43,12 @@ namespace ViewModelsSamples.Bars.DelayedAnimation
             Series = new List<ISeries> { columnSeries1, columnSeries2 };
         }
 
-        private void OnPointMeasured(TypedChartPoint<RectangleGeometry, LabelGeometry, SkiaSharpDrawingContext> point)
+        private void OnPointMeasured(TypedChartPoint<float, RoundedRectangleGeometry, LabelGeometry, SkiaSharpDrawingContext> point)
         {
             var visual = point.Visual;
-            var delayedFunction = new DelayedFunction(EasingFunctions.BuildCustomElasticOut(1.5f, 0.60f), point.ChartPoint, 15f);
+            var delayedFunction = new DelayedFunction(EasingFunctions.BuildCustomElasticOut(1.5f, 0.60f), point, 30f);
 
-            visual
+            _ = visual
                 .TransitionateProperties(
                     nameof(visual.Y),
                     nameof(visual.Height))

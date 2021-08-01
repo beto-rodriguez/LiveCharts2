@@ -2,6 +2,7 @@
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.Themes;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,9 +13,9 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
 {
     public class ViewModel
     {
-        private AxisPosition selectedPosition;
-        private int selectedColor = 0;
-        private Color[] colors = ColorPacks.FluentDesign;
+        private AxisPosition _selectedPosition;
+        private int _selectedColor = 0;
+        private readonly Color[] _colors = ColorPalletes.FluentDesign;
 
         public ViewModel()
         {
@@ -29,21 +30,22 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
             };
 
             // Places the axis to the right (or top for X axes)
-            selectedPosition = AxisPosition.End;
+            _selectedPosition = AxisPosition.End;
 
             XAxes = new List<Axis>
             {
                 new Axis
                 {
+                    Name = "X axis",
                     TextSize = 20,
 
-                    // TextBrush = null will not draw the axis labels.
-                    TextBrush = new SolidColorPaintTask{ Color = SKColors.CornflowerBlue },
+                    // LabelsPaint = null will not draw the axis labels.
+                    LabelsPaint = new SolidColorPaintTask{ Color = SKColors.CornflowerBlue },
 
-                    // SeparatorsBrush = null will not draw the separator lines
-                    SeparatorsBrush = new SolidColorPaintTask { Color = SKColors.LightBlue, StrokeThickness = 3 },
+                    // SeparatorsPaint = null will not draw the separator lines
+                    SeparatorsPaint = new SolidColorPaintTask { Color = SKColors.LightBlue, StrokeThickness = 3 },
 
-                    Position = selectedPosition
+                    Position = _selectedPosition
                 }
             };
 
@@ -51,10 +53,11 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
             {
                 new Axis
                 {
+                    Name = "Y axis",
                     TextSize = 20,
-                    TextBrush = new SolidColorPaintTask { Color = SKColors.Red },
-                    SeparatorsBrush = new SolidColorPaintTask { Color = SKColors.LightPink, StrokeThickness = 3 },
-                    Position = selectedPosition
+                    LabelsPaint = new SolidColorPaintTask { Color = SKColors.Red },
+                    SeparatorsPaint = new SolidColorPaintTask { Color = SKColors.LightPink, StrokeThickness = 3 },
+                    Position = _selectedPosition
                 }
             };
         }
@@ -67,17 +70,20 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
 
         public void SetNewColor()
         {
-            var nextColor = colors[selectedColor++ % colors.Length];
-            XAxes[0].TextBrush = new SolidColorPaintTask(new SKColor(nextColor.R, nextColor.G, nextColor.B));
-            XAxes[0].SeparatorsBrush = new SolidColorPaintTask(new SKColor(nextColor.R, nextColor.G, nextColor.B), 3);
+            var nextColor = _colors[_selectedColor++ % _colors.Length];
+            XAxes[0].LabelsPaint = new SolidColorPaintTask(new SKColor(nextColor.R, nextColor.G, nextColor.B));
+            XAxes[0].SeparatorsPaint = new SolidColorPaintTask(new SKColor(nextColor.R, nextColor.G, nextColor.B), 3);
         }
 
         public void TogglePosition()
         {
-            selectedPosition = selectedPosition == AxisPosition.End ? AxisPosition.Start : AxisPosition.End;
-            XAxes[0].Position = selectedPosition;
+            _selectedPosition = _selectedPosition == AxisPosition.End ? AxisPosition.Start : AxisPosition.End;
+            XAxes[0].Position = _selectedPosition;
+            YAxes[0].Position = _selectedPosition;
         }
 
+        // The next commands are only to enable XAML bindings
+        // they are not used in the WinForms sample
         public ICommand SetNewColorCommand => new Command(o => SetNewColor());
         public ICommand TogglePositionCommand => new Command(o => TogglePosition());
     }

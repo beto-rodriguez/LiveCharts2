@@ -5,12 +5,12 @@
     xmlns:skia="clr-namespace:SkiaSharp.Views.WPF;assembly=SkiaSharp.Views.WPF">
 
     <ControlTemplate x:Key="DefaultChartTempalte" TargetType="{x:Type local:Chart}">
-        <DockPanel LastChildFill="true">
+        <DockPanel LastChildFill="true" Background="{Binding Background, RelativeSource={RelativeSource AncestorType=local:Chart}}">
             <local:DefaultTooltip x:Name="tooltip" />
             <local:DefaultLegend x:Name="legend"
-                                             DockPanel.Dock="{Binding ElementName=legend, Path=Dock}"
-                                             Orientation="{Binding ElementName=legend, Path=Orientation}"
-                                             Visibility="{Binding ElementName=legend, Path=Visibility}" />
+                DockPanel.Dock="{Binding ElementName=legend, Path=Dock}"
+                Orientation="{Binding ElementName=legend, Path=Orientation}"
+                Visibility="{Binding ElementName=legend, Path=Visibility}" />
             <local:MotionCanvas x:Name="canvas"/>
         </DockPanel>
     </ControlTemplate>
@@ -21,6 +21,16 @@
 
     <Style TargetType="{x:Type local:PieChart}">
         <Setter Property="Template" Value="{StaticResource DefaultChartTempalte}" />
+    </Style>
+
+    <Style TargetType="{x:Type local:GeoMap}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:GeoMap}">
+                    <local:MotionCanvas x:Name="canvas"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
     
     <Style TargetType="{x:Type local:MotionCanvas}">

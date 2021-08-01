@@ -1,7 +1,5 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -23,13 +21,15 @@ namespace ViewModelsSamples.Axes.LabelsFormat
             {
                 new Axis
                 {
+                    Name = "Worked days",
+
                     // Use the Label property to indicate the format of the labels in the axis
                     // The Labeler takes the value of the label as parameter and must return it as string
                     Labeler = (value) => "Day " + value,
 
                     // The MinStep property lets you define the minimum separation (in chart values scale)
                     // between every axis separator, in this case we don't want decimals,
-                    // so lets force it to be greather or equals than 1
+                    // so lets force it to be greater or equals than 1
                     MinStep = 1
                 }
             };
@@ -38,6 +38,8 @@ namespace ViewModelsSamples.Axes.LabelsFormat
             {
                 new Axis
                 {
+                    Name = "Sales",
+
                     // Now the Y axis we will display it as currency
                     // LiveCharts provides some common formatters
                     // in this case we are using the currency formatter.

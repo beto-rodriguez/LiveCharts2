@@ -42,7 +42,7 @@ namespace ViewModelsSamples.Pies.AutoUpdate
             if (Series.Count == 15) return;
 
             Series.Add(
-                new PieSeries<ObservableValue> { Values = new [] { new ObservableValue(random.Next(1, 10)) } });
+                new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(random.Next(1, 10)) } });
         }
 
         public void UpdateAll()

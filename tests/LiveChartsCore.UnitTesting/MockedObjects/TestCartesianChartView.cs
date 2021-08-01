@@ -1,5 +1,7 @@
 ﻿using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Events;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -11,21 +13,21 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
 {
     public class TestCartesianChartView : ICartesianChartView<SkiaSharpDrawingContext>
     {
-        private readonly MotionCanvas<SkiaSharpDrawingContext> canvas = new();
-
         public TestCartesianChartView()
         {
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
-            var stylesBuilder = LiveCharts.CurrentSettings.GetStylesBuilder<SkiaSharpDrawingContext>();
-            var initializer = stylesBuilder.GetInitializer();
-            if (stylesBuilder.CurrentColors == null || stylesBuilder.CurrentColors.Length == 0)
+            var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
+            var initializer = stylesBuilder.GetVisualsInitializer();
+            if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
                 throw new Exception("Default colors are not valid");
-            initializer.ConstructChart(this);
+            initializer.ApplyStyleToChart(this);
 
             Core = new CartesianChart<SkiaSharpDrawingContext>(
-                this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas);
+                this, LiveChartsSkiaSharp.DefaultPlatformBuilder, CoreCanvas);
         }
+
+        IChart IChartView.CoreChart => Core;
 
         public CartesianChart<SkiaSharpDrawingContext> Core { get; }
 
@@ -39,7 +41,7 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
 
         public double ZoomingSpeed { get; set; }
 
-        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas;
+        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas { get; } = new();
 
         public IChartLegend<SkiaSharpDrawingContext> Legend => null;
 
@@ -63,9 +65,32 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
 
         public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
-        public PointF ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
+        public Color BackColor { get; set; }
+        public bool AutoUpdateEnabled { get; set; } = true;
+        public TimeSpan UpdaterThrottler { get; set; }
+        public DrawMarginFrame<SkiaSharpDrawingContext> DrawMarginFrame { get; set; }
+        public IEnumerable<Section<SkiaSharpDrawingContext>> Sections { get; set; }
+
+        public event ChartEventHandler<SkiaSharpDrawingContext> Measuring;
+        public event ChartEventHandler<SkiaSharpDrawingContext> UpdateStarted;
+        public event ChartEventHandler<SkiaSharpDrawingContext> UpdateFinished;
+
+        public void DummyRaiseEvents()
         {
-            return new PointF();
+            Measuring?.Invoke(this);
+            UpdateStarted?.Invoke(this);
+            UpdateFinished?.Invoke(this);
         }
+
+        public void HideTooltip() { }
+
+        public double[] ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
+        {
+            return new double[2];
+        }
+
+        public void ShowTooltip(IEnumerable<TooltipPoint> points) { }
+
+        public void SetTooltipStyle(Color background, Color textColor) { }
     }
 }

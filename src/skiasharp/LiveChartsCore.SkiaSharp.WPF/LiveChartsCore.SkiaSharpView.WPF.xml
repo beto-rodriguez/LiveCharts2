@@ -1,0 +1,689 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LiveChartsCore.SkiaSharpView.WPF</name>
+    </assembly>
+    <members>
+        <member name="T:LiveChartsCore.SkiaSharpView.WPF.CartesianChart">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.ICartesianChartView`1" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WPF.CartesianChart.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.WPF.CartesianChart"/> class.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.CartesianChart.SeriesProperty">
+            <summary>
+            The series property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.CartesianChart.XAxesProperty">
+            <summary>
+            The x axes property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.CartesianChart.YAxesProperty">
+            <summary>
+            The y axes property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.CartesianChart.ZoomModeProperty">
+            <summary>
+            The zoom mode property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.CartesianChart.ZoomingSpeedProperty">
+            <summary>
+            The zooming speed property
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.CartesianChart.Series">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.Series" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.CartesianChart.XAxes">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.XAxes" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.CartesianChart.YAxes">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.YAxes" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.CartesianChart.ZoomMode">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.ZoomMode" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.CartesianChart.ZoomingSpeed">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.ZoomingSpeed" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WPF.CartesianChart.ScaleUIPoint(System.Drawing.PointF,System.Int32,System.Int32)">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.ICartesianChartView`1.ScaleUIPoint(System.Drawing.PointF,System.Int32,System.Int32)" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WPF.CartesianChart.InitializeCore">
+            <summary>
+            Initializes the core.
+            </summary>
+            <exception cref="T:System.Exception">canvas not found</exception>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WPF.Chart">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.IChartView`1" />
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.core">
+            <summary>
+            The core
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.canvas">
+            <summary>
+            The canvas
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.legend">
+            <summary>
+            The legend
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.tooltip">
+            <summary>
+            The tool tip
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WPF.Chart.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.WPF.Chart"/> class.
+            </summary>
+            <exception cref="T:System.Exception">Default colors are not valid</exception>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.DrawMarginProperty">
+            <summary>
+            The draw margin property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.AnimationsSpeedProperty">
+            <summary>
+            The animations speed property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.EasingFunctionProperty">
+            <summary>
+            The easing function property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.LegendPositionProperty">
+            <summary>
+            The legend position property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.LegendOrientationProperty">
+            <summary>
+            The legend orientation property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.TooltipPositionProperty">
+            <summary>
+            The tool tip position property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.TooltipFindingStrategyProperty">
+            <summary>
+            The tool tip finding strategy property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.TooltipBackgroundProperty">
+            <summary>
+            The tool tip background property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.TooltipFontFamilyProperty">
+            <summary>
+            The tool tip font family property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.TooltipTextColorProperty">
+            <summary>
+            The tool tip text color property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.TooltipFontSizeProperty">
+            <summary>
+            The tool tip font size property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.TooltipFontWeightProperty">
+            <summary>
+            The tool tip font weight property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.TooltipFontStretchProperty">
+            <summary>
+            The tool tip font stretch property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.TooltipFontStyleProperty">
+            <summary>
+            The tool tip font style property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.TooltipTemplateProperty">
+            <summary>
+            The tool tip template property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.LegendFontFamilyProperty">
+            <summary>
+            The legend font family property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.LegendTextColorProperty">
+            <summary>
+            The legend text color property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.LegendFontSizeProperty">
+            <summary>
+            The legend font size property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.LegendFontWeightProperty">
+            <summary>
+            The legend font weight property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.LegendFontStretchProperty">
+            <summary>
+            The legend font stretch property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.LegendFontStyleProperty">
+            <summary>
+            The legend font style property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.Chart.LegendTemplateProperty">
+            <summary>
+            The legend template property
+            </summary>
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WPF.Chart.Measuring">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.Measuring" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WPF.Chart.UpdateStarted">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateStarted" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WPF.Chart.UpdateFinished">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateFinished" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.DrawMargin">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.DrawMargin" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.CoreCanvas">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.CoreCanvas" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.AnimationsSpeed">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.AnimationsSpeed" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.EasingFunction">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.EasingFunction" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.LegendPosition">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.LegendPosition" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.LegendOrientation">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.LegendOrientation" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.TooltipPosition">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.TooltipPosition" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.TooltipFindingStrategy">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.TooltipFindingStrategy" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.TooltipTemplate">
+            <summary>
+            Gets or sets the tool tip template.
+            </summary>
+            <value>
+            The tool tip template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.TooltipBackground">
+            <summary>
+            Gets or sets the default tool tip background.
+            </summary>
+            <value>
+            The tool tip background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.TooltipFontFamily">
+            <summary>
+            Gets or sets the default tool tip font family.
+            </summary>
+            <value>
+            The tool tip font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.TooltipTextColor">
+            <summary>
+            Gets or sets the default color of the tool tip text.
+            </summary>
+            <value>
+            The color of the tool tip text.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.TooltipFontSize">
+            <summary>
+            Gets or sets the default size of the tool tip font.
+            </summary>
+            <value>
+            The size of the tool tip font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.TooltipFontWeight">
+            <summary>
+            Gets or sets the default tool tip font weight.
+            </summary>
+            <value>
+            The tool tip font weight.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.TooltipFontStretch">
+            <summary>
+            Gets or sets the default tool tip font stretch.
+            </summary>
+            <value>
+            The tool tip font stretch.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.TooltipFontStyle">
+            <summary>
+            Gets or sets the default tool tip font style.
+            </summary>
+            <value>
+            The tool tip font style.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.Tooltip">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.Tooltip" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.LegendTemplate">
+            <summary>
+            Gets or sets the legend template.
+            </summary>
+            <value>
+            The legend template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.LegendFontFamily">
+            <summary>
+            Gets or sets the default legend font family.
+            </summary>
+            <value>
+            The legend font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.LegendTextColor">
+            <summary>
+            Gets or sets the default color of the legend text.
+            </summary>
+            <value>
+            The color of the legend text.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.LegendFontSize">
+            <summary>
+            Gets or sets the default size of the legend font.
+            </summary>
+            <value>
+            The size of the legend font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.LegendFontWeight">
+            <summary>
+            Gets or sets the default legend font weight.
+            </summary>
+            <value>
+            The legend font weight.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.LegendFontStretch">
+            <summary>
+            Gets or sets the default legend font stretch.
+            </summary>
+            <value>
+            The legend font stretch.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.LegendFontStyle">
+            <summary>
+            Gets or sets the default legend font style.
+            </summary>
+            <value>
+            The legend font style.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.Legend">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.Legend" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.PointStates">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.PointStates" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.Chart.AutoUpdateEnaled">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.AutoUpdateEnaled" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WPF.Chart.OnApplyTemplate">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.WPF.Chart.OnApplyTemplate" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WPF.Chart.InitializeCore">
+            <summary>
+            Initializes the core.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WPF.Chart.OnDependencyPropertyChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            Called when a dependency property changes.
+            </summary>
+            <param name="o">The o.</param>
+            <param name="args">The <see cref="T:System.Windows.DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
+            <returns></returns>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WPF.DefaultLegend">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.IChartLegend`1" />
+            <summary>
+            DefaultLegend
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WPF.DefaultLegend.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.WPF.DefaultLegend"/> class.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.DefaultLegend.CustomTemplateProperty">
+            <summary>
+            The custom template property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.DefaultLegend.SeriesProperty">
+            <summary>
+            The series property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.DefaultLegend.OrientationProperty">
+            <summary>
+            The orientation property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.DefaultLegend.DockProperty">
+            <summary>
+            The dock property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.DefaultLegend.TextColorProperty">
+            <summary>
+            The text color property
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.DefaultLegend.Series">
+            <summary>
+            Gets or sets the series.
+            </summary>
+            <value>
+            The series.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.DefaultLegend.CustomTemplate">
+            <summary>
+            Gets or sets the custom template.
+            </summary>
+            <value>
+            The custom template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.DefaultLegend.Orientation">
+            <summary>
+            Gets or sets the orientation.
+            </summary>
+            <value>
+            The orientation.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.DefaultLegend.Dock">
+            <summary>
+            Gets or sets the dock.
+            </summary>
+            <value>
+            The dock.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.DefaultLegend.TextColor">
+            <summary>
+            Gets or sets the color of the text.
+            </summary>
+            <value>
+            The color of the text.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WPF.DefaultLegend.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.IChartTooltip`1" />
+            <summary>
+            DefaultTooltip
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip"/> class.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.TemplateProperty">
+            <summary>
+            The template property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.PointsProperty">
+            <summary>
+            The points property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.BackgroundProperty">
+            <summary>
+            The background property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.FontFamilyProperty">
+            <summary>
+            The font family property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.FontSizeProperty">
+            <summary>
+            The font size property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.FontWeightProperty">
+            <summary>
+            The font weight property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.FontStyleProperty">
+            <summary>
+            The font style property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.FontStretchProperty">
+            <summary>
+            The font stretch property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.TextColorProperty">
+            <summary>
+            The text color property
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.AnimationsSpeed">
+            <summary>
+            Gets or sets the animations speed.
+            </summary>
+            <value>
+            The animations speed.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.EasingFunction">
+            <summary>
+            Gets or sets the easing function.
+            </summary>
+            <value>
+            The easing function.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.Template">
+            <summary>
+            Gets or sets the template.
+            </summary>
+            <value>
+            The template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.Background">
+            <summary>
+            Gets or sets the background.
+            </summary>
+            <value>
+            The background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.Points">
+            <summary>
+            Gets or sets the points.
+            </summary>
+            <value>
+            The points.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.FontFamily">
+            <summary>
+            Gets or sets the font family.
+            </summary>
+            <value>
+            The font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.FontSize">
+            <summary>
+            Gets or sets the size of the font.
+            </summary>
+            <value>
+            The size of the font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.FontWeight">
+            <summary>
+            Gets or sets the font weight.
+            </summary>
+            <value>
+            The font weight.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.FontStyle">
+            <summary>
+            Gets or sets the font style.
+            </summary>
+            <value>
+            The font style.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.FontStretch">
+            <summary>
+            Gets or sets the font stretch.
+            </summary>
+            <value>
+            The font stretch.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.TextColor">
+            <summary>
+            Gets or sets the color of the text.
+            </summary>
+            <value>
+            The color of the text.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WPF.DefaultTooltip.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WPF.MotionCanvas">
+            <summary>
+            Defines the motion canvas control for WPF, <see cref="T:LiveChartsCore.Drawing.MotionCanvas`1"/>.
+            </summary>
+            <seealso cref="T:System.Windows.Controls.Control" />
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.MotionCanvas.skiaElement">
+            <summary>
+            The skia element
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WPF.MotionCanvas.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.WPF.MotionCanvas"/> class.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.MotionCanvas.PaintTasksProperty">
+            <summary>
+            The paint tasks property
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.MotionCanvas.PaintTasks">
+            <summary>
+            Gets or sets the paint tasks.
+            </summary>
+            <value>
+            The paint tasks.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.MotionCanvas.FramesPerSecond">
+            <summary>
+            Gets or sets the frames per second.
+            </summary>
+            <value>
+            The frames per second.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.MotionCanvas.CanvasCore">
+            <summary>
+            Gets the canvas core.
+            </summary>
+            <value>
+            The canvas core.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WPF.MotionCanvas.OnApplyTemplate">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.WPF.MotionCanvas.OnApplyTemplate" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WPF.MotionCanvas.OnPaintSurface(System.Object,SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs)">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.WPF.MotionCanvas.OnPaintSurface(System.Object,SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs)" />
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WPF.PieChart">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.IPieChartView`1" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WPF.PieChart.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.WPF.PieChart"/> class.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WPF.PieChart.SeriesProperty">
+            <summary>
+            The series property
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WPF.PieChart.Series">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.Series" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WPF.PieChart.InitializeCore">
+            <summary>
+            Initializes the core.
+            </summary>
+            <exception cref="T:System.Exception">canvas not found</exception>
+        </member>
+    </members>
+</doc>

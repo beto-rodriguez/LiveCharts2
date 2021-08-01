@@ -85,6 +85,10 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
 
         #region Public Properties
         EqualityComparer<T>? _Comparer;
+
+        /// <summary>
+        /// ...
+        /// </summary>
         public EqualityComparer<T> Comparer
         {
             get => _Comparer ??= EqualityComparer<T>.Default;
@@ -126,13 +130,14 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
         /// Inserts the elements of a collection into the <see cref="ObservableCollection{T}"/> at the specified index.
         /// </summary>
         /// <param name="index">The zero-based index at which the new elements should be inserted.</param>
-        /// <param name="collection">The collection whose elements should be inserted into the List<T>.
-        /// The collection itself cannot be null, but it can contain elements that are null, if type T is a reference type.</param>                
+        /// <param name="collection">The collection whose elements should be inserted into the list.
+        /// The collection itself cannot be null, but it can contain elements that are null, if type T is a reference type.
+        /// </param>
         /// <exception cref="ArgumentNullException"><paramref name="collection"/> is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is not in the collection range.</exception>
         public void InsertRange(int index, IEnumerable<T> collection)
         {
-            if (collection == null)
+            if (collection is null)
                 throw new ArgumentNullException(nameof(collection));
             if (index < 0)
                 throw new ArgumentOutOfRangeException(nameof(index));
@@ -170,13 +175,13 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
 
 
         /// <summary> 
-        /// Removes the first occurence of each item in the specified collection from the <see cref="ObservableCollection{T}"/>.
+        /// Removes the first occurrence of each item in the specified collection from the <see cref="ObservableCollection{T}"/>.
         /// </summary>
         /// <param name="collection">The items to remove.</param>        
         /// <exception cref="ArgumentNullException"><paramref name="collection"/> is null.</exception>
         public void RemoveRange(IEnumerable<T> collection)
         {
-            if (collection == null)
+            if (collection is null)
                 throw new ArgumentNullException(nameof(collection));
 
             if (Count == 0)
@@ -185,13 +190,13 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
             {
                 if (countable.Count == 0)
                     return;
-                else if (countable.Count == 1)
-                    using (IEnumerator<T> enumerator = countable.GetEnumerator())
-                    {
-                        enumerator.MoveNext();
-                        Remove(enumerator.Current);
-                        return;
-                    }
+                if (countable.Count == 1)
+                {
+                    using var enumerator = countable.GetEnumerator();
+                    _ = enumerator.MoveNext();
+                    _ = Remove(enumerator.Current);
+                    return;
+                }
             }
             else if (!collection.Any())
                 return;
@@ -201,7 +206,7 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
             var clusters = new Dictionary<int, List<T>>();
             var lastIndex = -1;
             List<T>? lastCluster = null;
-            foreach (T item in collection)
+            foreach (var item in collection)
             {
                 var index = IndexOf(item);
                 if (index < 0)
@@ -209,7 +214,7 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
 
                 Items.RemoveAt(index);
 
-                if (lastIndex == index && lastCluster != null)
+                if (lastIndex == index && lastCluster is not null)
                     lastCluster.Add(item);
                 else
                     clusters[lastIndex = index] = lastCluster = new List<T> { item };
@@ -220,7 +225,7 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
             if (Count == 0)
                 OnCollectionReset();
             else
-                foreach (KeyValuePair<int, List<T>> cluster in clusters)
+                foreach (var cluster in clusters)
                     OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, cluster.Value, cluster.Key));
 
         }
@@ -256,7 +261,7 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
                 throw new ArgumentOutOfRangeException(nameof(count));
             if (index + count > Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
-            if (match == null)
+            if (match is null)
                 throw new ArgumentNullException(nameof(match));
 
             if (Count == 0)
@@ -271,7 +276,7 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
             {
                 for (var i = 0; i < count; i++, index++)
                 {
-                    T item = Items[index];
+                    var item = Items[index];
                     if (match(item))
                     {
                         Items.RemoveAt(index);
@@ -279,7 +284,7 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
 
                         if (clusterIndex == index)
                         {
-                            Debug.Assert(cluster != null);
+                            Debug.Assert(cluster is not null);
                             cluster!.Add(item);
                         }
                         else
@@ -334,7 +339,7 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
 
             //Items will always be List<T>, see constructors
             var items = (List<T>)Items;
-            List<T> removedItems = items.GetRange(index, count);
+            var removedItems = items.GetRange(index, count);
 
             CheckReentrancy();
 
@@ -368,7 +373,6 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is out of range.</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/> is out of range.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="collection"/> is null.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="comparer"/> is null.</exception>
         public void ReplaceRange(int index, int count, IEnumerable<T> collection)
         {
             if (index < 0)
@@ -378,7 +382,7 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
             if (index + count > Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
-            if (collection == null)
+            if (collection is null)
                 throw new ArgumentNullException(nameof(collection));
 
             if (!AllowDuplicates)
@@ -422,7 +426,7 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
                   oldCluster = null;
 
 
-                int i = index;
+                var i = index;
                 for (; i < rangeCount && i - index < addedCount; i++)
                 {
                     //parallel position
@@ -436,9 +440,9 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
                     {
                         Items[i] = @new;
 
-                        if (newCluster == null)
+                        if (newCluster is null)
                         {
-                            Debug.Assert(oldCluster == null);
+                            Debug.Assert(oldCluster is null);
                             newCluster = new List<T> { @new };
                             oldCluster = new List<T> { old };
                         }
@@ -461,7 +465,7 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
                     if (count > addedCount)
                     {
                         var removedCount = rangeCount - addedCount;
-                        T[] removed = new T[removedCount];
+                        var removed = new T[removedCount];
                         items.CopyTo(i, removed, 0, removed.Length);
                         items.RemoveRange(i, removedCount);
                         OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed, i));
@@ -469,10 +473,10 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
                     else
                     {
                         var k = i - index;
-                        T[] added = new T[addedCount - k];
-                        for (int j = k; j < addedCount; j++)
+                        var added = new T[addedCount - k];
+                        for (var j = k; j < addedCount; j++)
                         {
-                            T @new = list[j];
+                            var @new = list[j];
                             added[j - k] = @new;
                         }
                         items.InsertRange(i, added);
@@ -536,7 +540,7 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
                 return;
 
             CheckReentrancy();
-            T oldItem = this[index];
+            var oldItem = this[index];
             base.SetItem(index, item);
 
             OnIndexerPropertyChanged();
@@ -550,11 +554,10 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
         /// </summary>
         /// <remarks>
         /// When overriding this method, either call its base implementation
-        /// or call <see cref="BlockReentrancy"/> to guard against reentrant collection changes.
         /// </remarks>
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            if (_deferredEvents != null)
+            if (_deferredEvents is not null)
             {
                 _deferredEvents.Add(e);
                 return;
@@ -562,7 +565,14 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
             base.OnCollectionChanged(e);
         }
 
-        protected virtual IDisposable DeferEvents() => new DeferredEventsCollection(this);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected virtual IDisposable DeferEvents()
+        {
+            return new DeferredEventsCollection(this);
+        }
 
         #endregion Protected Methods
 
@@ -587,20 +597,26 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
         /// <summary>
         /// /// Helper to raise a PropertyChanged event for the Indexer property
         /// /// </summary>
-        void OnIndexerPropertyChanged() =>
-         OnPropertyChanged(EventArgsCache.IndexerPropertyChanged);
+        void OnIndexerPropertyChanged()
+        {
+            OnPropertyChanged(EventArgsCache.IndexerPropertyChanged);
+        }
 
         /// <summary>
         /// Helper to raise CollectionChanged event to any listeners
         /// </summary>
-        void OnCollectionChanged(NotifyCollectionChangedAction action, object oldItem, object newItem, int index) =>
-         OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, newItem, oldItem, index));
+        void OnCollectionChanged(NotifyCollectionChangedAction action, object oldItem, object newItem, int index)
+        {
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, newItem, oldItem, index));
+        }
 
         /// <summary>
         /// Helper to raise CollectionChanged event with action == Reset to any listeners
         /// </summary>
-        void OnCollectionReset() =>
-         OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
+        void OnCollectionReset()
+        {
+            OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
+        }
 
         /// <summary>
         /// Helper to raise event for clustered action and clear cluster.
@@ -612,9 +628,9 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
         //move when supported language version updated.
         void OnRangeReplaced(int followingItemIndex, ICollection<T> newCluster, ICollection<T> oldCluster)
         {
-            if (oldCluster == null || oldCluster.Count == 0)
+            if (oldCluster is null || oldCluster.Count == 0)
             {
-                Debug.Assert(newCluster == null || newCluster.Count == 0);
+                Debug.Assert(newCluster is null || newCluster.Count == 0);
                 return;
             }
 
@@ -643,9 +659,9 @@ namespace LiveChartsCore.Collections // we use this namespace, because .Net migh
             readonly RangeObservableCollection<T> _collection;
             public DeferredEventsCollection(RangeObservableCollection<T> collection)
             {
-                Debug.Assert(collection != null);
+                Debug.Assert(collection is not null);
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-                Debug.Assert(collection._deferredEvents == null);
+                Debug.Assert(collection._deferredEvents is null);
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
                 _collection = collection;
                 _collection._deferredEvents = this;

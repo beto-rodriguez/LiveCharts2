@@ -1,0 +1,53 @@
+<UserControl x:Class="AvaloniaSample.General.TemplatedTooltips.View"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:vms="using:ViewModelsSamples.General.TemplatedTooltips"
+             xmlns:ctx="using:LiveChartsCore.Kernel">
+  <UserControl.DataContext>
+    <vms:ViewModel/>
+  </UserControl.DataContext>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <lvc:CartesianChart Series="{Binding Series}">
+      <lvc:CartesianChart.TooltipTemplate>
+        <DataTemplate>
+          <Border Background="Transparent" Padding="12">
+            <Border Background="#353535" CornerRadius="4"
+                 BoxShadow="0 0 10 0 #40000000, 0 0 10 0 #40000000, 0 0 10 0 #40000000, 0 0 10 0 #40000000">
+              <ItemsControl Items="{Binding Points, RelativeSource={RelativeSource AncestorType=lvc:DefaultTooltip}}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" />
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate DataType="{x:Type ctx:TooltipPoint}">
+                    <Border Padding="7 5">
+                      <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            Foreground="#fafafa"
+                            Text="{Binding Point.AsTooltipString}"
+                            Margin="0 0 8 0"
+                            VerticalAlignment="Center"/>
+                        <!-- LiveCharts uses the motion canvas control to display the series miniature -->
+                        <lvc:MotionCanvas
+                            Margin="0 0 8 0"
+                            PaintTasks="{Binding Series.CanvasSchedule.PaintSchedules}"
+                            Width="{Binding Series.CanvasSchedule.Width}"
+                            Height="{Binding Series.CanvasSchedule.Height}"
+                            VerticalAlignment="Center"/>
+                      </StackPanel>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </Border>
+          </Border>
+        </DataTemplate>
+      </lvc:CartesianChart.TooltipTemplate>
+    </lvc:CartesianChart>
+  </Grid>  
+</UserControl>

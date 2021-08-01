@@ -19,12 +19,12 @@ namespace WPFSample.Lines.AutoUpdate
         private async void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             var vm = (ViewModel)DataContext;
-            isStreaming = isStreaming == null ? true : !isStreaming;
+            isStreaming = isStreaming is null ? true : !isStreaming;
 
-            while(isStreaming.Value)
+            while (isStreaming.Value)
             {
                 vm.RemoveFirstItem();
-                vm.AddRandomItem();
+                vm.AddItem();
                 await Task.Delay(1000);
             }
         }

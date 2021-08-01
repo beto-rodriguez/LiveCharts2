@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,38 +27,52 @@ using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
+    /// <inheritdoc cref="ISizedGeometry{TDrawingContext}" />
     public abstract class SizedGeometry : Geometry, ISizedVisualChartPoint<SkiaSharpDrawingContext>
     {
-        protected readonly FloatMotionProperty width;
-        protected readonly FloatMotionProperty height;
+        /// <summary>
+        /// The width
+        /// </summary>
+        protected FloatMotionProperty widthProperty;
+
+        /// <summary>
+        /// The height
+        /// </summary>
+        protected FloatMotionProperty heightProperty;
+
+        /// <summary>
+        /// The match dimensions
+        /// </summary>
         protected bool matchDimensions = false;
 
-        public SizedGeometry() : base()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SizedGeometry"/> class.
+        /// </summary>
+        protected SizedGeometry() : base()
         {
-            width = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 0));
-            height = RegisterMotionProperty(new FloatMotionProperty(nameof(Height), 0));
+            widthProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 0));
+            heightProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Height), 0));
         }
 
-        public float Width { get => width.GetMovement(this); set => width.SetMovement(value, this); }
+        /// <inheritdoc cref="ISizedGeometry{TDrawingContext}.Width" />
+        public float Width { get => widthProperty.GetMovement(this); set => widthProperty.SetMovement(value, this); }
 
+        /// <inheritdoc cref="ISizedGeometry{TDrawingContext}.Height" />
         public float Height
         {
-            get
-            {
-                if (matchDimensions) return width.GetMovement(this);
-                return height.GetMovement(this);
-            }
+            get => matchDimensions ? widthProperty.GetMovement(this) : heightProperty.GetMovement(this);
             set
             {
                 if (matchDimensions)
                 {
-                    width.SetMovement(value, this);
+                    widthProperty.SetMovement(value, this);
                     return;
                 }
-                height.SetMovement(value, this);
+                heightProperty.SetMovement(value, this);
             }
         }
 
+        /// <inheritdoc cref="Geometry.OnMeasure(PaintTask)" />
         protected override SizeF OnMeasure(PaintTask paint)
         {
             return new SizeF(Width, Height);

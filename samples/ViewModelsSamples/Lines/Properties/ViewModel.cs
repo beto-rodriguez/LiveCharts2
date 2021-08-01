@@ -1,6 +1,7 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.Themes;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace ViewModelsSamples.Lines.Properties
 {
     public class ViewModel : INotifyPropertyChanged
     {
-        private readonly Color[] colors = ColorPacks.FluentDesign;
+        private readonly Color[] colors = ColorPalletes.FluentDesign;
         private readonly Random random = new Random();
         private LineSeries<double> lineSeries;
         private int currentColor = 0;
@@ -41,7 +42,7 @@ namespace ViewModelsSamples.Lines.Properties
         {
             var t = 0;
             var values = new List<double>();
-            for (int i = 0; i < 10; i++)
+            for (var i = 0; i < 10; i++)
             {
                 t += random.Next(-5, 10);
                 values.Add(t);

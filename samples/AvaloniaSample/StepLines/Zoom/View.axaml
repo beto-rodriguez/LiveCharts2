@@ -1,0 +1,17 @@
+<UserControl x:Class="AvaloniaSample.StepLines.Zoom.View"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:vms="using:ViewModelsSamples.StepLines.Zoom">
+  <UserControl.DataContext>
+    <vms:ViewModel/>
+  </UserControl.DataContext>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="50"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <TextBlock Text="Use the mouse wheel to zoom in/out, click hold and drag to move panning"></TextBlock>
+    <lvc:CartesianChart Grid.Row="1" Series="{Binding SeriesCollection}" ZoomMode="X"></lvc:CartesianChart>
+  </Grid>  
+</UserControl>

@@ -18,6 +18,7 @@ namespace WinFormsSample.Lines.Area
             cartesianChart = new CartesianChart
             {
                 Series = viewModel.Series,
+                DrawMarginFrame = viewModel.DrawMarginFrame,
 
                 // out of livecharts properties...
                 Location = new System.Drawing.Point(0, 0),

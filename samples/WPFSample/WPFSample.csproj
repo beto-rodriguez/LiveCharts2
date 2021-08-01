@@ -1,9 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +22,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Axes\ColorsAndSeparators\View.xaml.cs">
+    <Compile Update="Axes\Logaritmic\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Axes\LabelsRotation\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Axes\DateTimeScaled\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Axes\Shared\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Axes\Multiple\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Axes\ColorsAndPosition\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Axes\NamedLabels\View.xaml.cs">
@@ -57,10 +73,46 @@
     <Compile Update="Bars\Custom\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Design\StrokeDashArray\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Design\RadialGradients\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Design\LinearGradients\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="General\ChartToImage\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="General\Sections\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="General\TemplatedLegends\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="General\TemplatedTooltips\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="General\Legends\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="General\Animations\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="General\Tooltips\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="General\UserDefinedTypes\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="General\NullPoints\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="General\Visibility\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Heat\Basic\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Lines\Area\View.xaml.cs">
@@ -81,7 +133,13 @@
     <Compile Update="Lines\Custom\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Maps\World\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Pies\AutoUpdate\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Pies\Processing\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Pies\Pushout\View.xaml.cs">
@@ -102,10 +160,16 @@
     <Compile Update="Scatter\AutoUpdate\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Scatter\Bubbles\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Scatter\Custom\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Scatter\Basic\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="StackedArea\StepArea\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="StackedArea\Basic\View.xaml.cs">
@@ -117,10 +181,48 @@
     <Compile Update="StackedBars\Basic\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="StepLines\Area\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="StepLines\AutoUpdate\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="StepLines\Basic\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="StepLines\Custom\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="StepLines\Properties\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="StepLines\Zoom\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Axes\ColorsAndSeparators\View.xaml">
+    <Page Update="Axes\Logaritmic\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Axes\LabelsRotation\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Axes\DateTimeScaled\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Axes\Shared\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Axes\Multiple\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Axes\ColorsAndPosition\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
@@ -168,11 +270,59 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Design\StrokeDashArray\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Design\RadialGradients\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Design\LinearGradients\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="General\ChartToImage\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="General\Sections\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="General\TemplatedLegends\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="General\TemplatedTooltips\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="General\Legends\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="General\Animations\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="General\Tooltips\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="General\UserDefinedTypes\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
     <Page Update="General\NullPoints\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="General\Visibility\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Heat\Basic\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
@@ -200,7 +350,18 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Maps\World\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Pies\AutoUpdate\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pies\Gauges\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Pies\Processing\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
@@ -228,11 +389,19 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Scatter\Bubbles\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Scatter\Custom\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Scatter\Basic\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="StackedArea\StepArea\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
@@ -245,6 +414,30 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="StackedBars\Basic\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="StepLines\Area\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="StepLines\AutoUpdate\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="StepLines\Basic\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="StepLines\Custom\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="StepLines\Properties\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="StepLines\Zoom\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

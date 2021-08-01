@@ -1,0 +1,286 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>WinUISample</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>x86;x64;arm64</Platforms>
+    <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+    <UseWinUI>true</UseWinUI>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Axes\Shared\View.xaml" />
+    <None Remove="Axes\NamedLabels\View.xaml" />
+    <None Remove="Axes\Multiple\View.xaml" />
+    <None Remove="Axes\Logaritmic\View.xaml" />
+    <None Remove="Axes\LabelsRotation\View.xaml" />
+    <None Remove="Axes\LabelsFormat\View.xaml" />
+    <None Remove="Axes\DateTimeScaled\View.xaml" />
+    <None Remove="Axes\ColorsAndPosition\View.xaml" />
+    <None Remove="Bars\Custom\View.xaml" />
+    <None Remove="Bars\WithBackground\View.xaml" />
+    <None Remove="Bars\States\View.xaml" />
+    <None Remove="Bars\RowsWithLabels\View.xaml" />
+    <None Remove="Bars\Race\View.xaml" />
+    <None Remove="Bars\Layered\View.xaml" />
+    <None Remove="Bars\DelayedAnimation\View.xaml" />
+    <None Remove="Bars\Basic\View.xaml" />
+    <None Remove="Bars\AutoUpdate\View.xaml" />
+    <None Remove="Design\StrokeDashArray\View.xaml" />
+    <None Remove="Design\RadialGradients\View.xaml" />
+    <None Remove="Design\LinearGradients\View.xaml" />
+    <None Remove="Financial\BasicCandlesticks\View.xaml" />
+    <None Remove="General\Visibility\View.xaml" />
+    <None Remove="General\UserDefinedTypes\View.xaml" />
+    <None Remove="General\Tooltips\View.xaml" />
+    <None Remove="General\TemplatedTooltips\View.xaml" />
+    <None Remove="General\TemplatedLegends\View.xaml" />
+    <None Remove="General\Sections\View.xaml" />
+    <None Remove="General\NullPoints\View.xaml" />
+    <None Remove="General\Legends\View.xaml" />
+    <None Remove="General\ChartToImage\View.xaml" />
+    <None Remove="General\Animations\View.xaml" />
+    <None Remove="Heat\Basic\View.xaml" />
+    <None Remove="StepLines\Area\View.xaml" />
+    <None Remove="StepLines\AutoUpdate\View.xaml" />
+    <None Remove="StepLines\Basic\View.xaml" />
+    <None Remove="StepLines\Custom\View.xaml" />
+    <None Remove="StepLines\Properties\View.xaml" />
+    <None Remove="StepLines\Zoom\View.xaml" />
+    <None Remove="Lines\Zoom\View.xaml" />
+    <None Remove="Lines\Straight\View.xaml" />
+    <None Remove="Lines\Properties\View.xaml" />
+    <None Remove="Lines\Custom\View.xaml" />
+    <None Remove="Lines\Basic\View.xaml" />
+    <None Remove="Lines\AutoUpdate\View.xaml" />
+    <None Remove="Lines\Area\View.xaml" />
+    <None Remove="Maps\World\View.xaml" />
+    <None Remove="Pies\Pushout\View.xaml" />
+    <None Remove="Pies\Processing\View.xaml" />
+    <None Remove="Pies\NightingaleRose\View.xaml" />
+    <None Remove="Pies\Gauges\View.xaml" />
+    <None Remove="Pies\Gauge\View.xaml" />
+    <None Remove="Pies\Doughnut\View.xaml" />
+    <None Remove="Pies\Custom\View.xaml" />
+    <None Remove="Pies\Basic\View.xaml" />
+    <None Remove="Pies\AutoUpdate\View.xaml" />
+    <None Remove="Scatter\AutoUpdate\View.xaml" />
+    <None Remove="Scatter\Custom\View.xaml" />
+    <None Remove="Scatter\Bubbles\View.xaml" />
+    <None Remove="Scatter\Basic\View.xaml" />
+    <None Remove="StackedArea\StepArea\View.xaml" />
+    <None Remove="StackedArea\Basic\View.xaml" />
+    <None Remove="StackedBars\Groups\View.xaml" />
+    <None Remove="StackedBars\Basic\View.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.0" />
+    <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.0" />
+    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.0" />
+    <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.80.3" />
+    <Manifest Include="$(ApplicationManifest)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\skiasharp\LiveChartsCore.SkiaSharpVew.WinUI\LiveChartsCore.SkiaSharpView.WinUI.csproj" />
+    <ProjectReference Include="..\..\..\ViewModelsSamples\ViewModelsSamples.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Axes\ColorsAndPosition - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Axes\ColorsAndPosition\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Axes\LabelsFormat - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Axes\LabelsRotation - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Axes\Logaritmic - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Axes\Multiple - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Axes\NamedLabels - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Bars\Area\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Bars\AutoUpdate - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Bars\Basic - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Bars\Custom - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Bars\DelayedAnimation - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Bars\Layered - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Bars\Race - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Bars\RowsWithLabels - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Bars\States - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Design\Area\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Design\LinearGradients - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Design\RadialGradients - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Financial\LinearGradients\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="General\Animations - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="General\BasicCandlesticks\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="General\Legends - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="General\NullPoints - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="General\Sections - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="General\TemplatedLegends - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="General\Tooltips - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Heat\Basic\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Lines - Copy\Area\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Lines - Copy\AutoUpdate\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Lines - Copy\Basic\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Lines - Copy\Custom\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Lines - Copy\Properties\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Lines - Copy\Straight\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Lines - Copy\Zoom\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Lines\Area - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Lines\Area\View.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Lines\Basic - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Lines\Custom - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Lines\Properties - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Lines\Straight - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Maps\World\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pies\AutoUpdate - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pies\AutoUpdate\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Pies\Basic - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Pies\Custom - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Pies\Doughnut - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Pies\Gauge - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Pies\Gauges - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Pies\NightingaleRose - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Scatter\AutoUpdate - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Scatter\AutoUpdate\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Scatter\Basic - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Scatter\Basic\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Scatter\Bubbles - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="StackedArea\Basic - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="StackedArea\Basic\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="StackedBars\Basic - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="StackedBars\Basic\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+</Project>

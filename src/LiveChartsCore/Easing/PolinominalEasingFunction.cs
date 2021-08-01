@@ -1,12 +1,21 @@
-﻿// This function is inpired on
+﻿// This function is inspired on
 // https://github.com/d3/d3-ease/blob/master/src/poly.js
 
 using System;
 
 namespace LiveChartsCore.Easing
 {
+    /// <summary>
+    /// Defines the PolinominalEasingFunction.
+    /// </summary>
     public static class PolinominalEasingFunction
     {
+        /// <summary>
+        /// The ease in.
+        /// </summary>
+        /// <param name="t">The t.</param>
+        /// <param name="e">The e.</param>
+        /// <returns></returns>
         public static float In(float t, float e = 3f)
         {
             unchecked
@@ -15,6 +24,12 @@ namespace LiveChartsCore.Easing
             }
         }
 
+        /// <summary>
+        /// The ease out.
+        /// </summary>
+        /// <param name="t">The t.</param>
+        /// <param name="e">The e.</param>
+        /// <returns></returns>
         public static float Out(float t, float e = 3f)
         {
             unchecked
@@ -23,6 +38,12 @@ namespace LiveChartsCore.Easing
             }
         }
 
+        /// <summary>
+        /// The ease in out.
+        /// </summary>
+        /// <param name="t">The t.</param>
+        /// <param name="e">The e.</param>
+        /// <returns></returns>
         public static float InOut(float t, float e = 3f)
         {
             unchecked

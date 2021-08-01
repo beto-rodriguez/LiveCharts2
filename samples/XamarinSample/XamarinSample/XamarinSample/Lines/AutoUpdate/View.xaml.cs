@@ -1,5 +1,4 @@
-﻿
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ViewModelsSamples.Lines.AutoUpdate;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -20,12 +19,12 @@ namespace XamarinSample.Lines.AutoUpdate
         {
             var vm = (ViewModel)BindingContext;
 
-            isStreaming = isStreaming == null ? true : !isStreaming;
+            isStreaming = isStreaming is null ? true : !isStreaming;
 
             while (isStreaming.Value)
             {
                 vm.RemoveFirstItem();
-                vm.AddRandomItem();
+                vm.AddItem();
                 await Task.Delay(1000);
             }
         }

@@ -1,0 +1,1146 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LiveChartsCore.SkiaSharpView.XamarinForms</name>
+    </assembly>
+    <members>
+        <member name="T:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.ICartesianChartView`1" />
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.core">
+            <summary>
+            The core
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart"/> class.
+            </summary>
+            <exception cref="T:System.Exception">Default colors are not valid</exception>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.SeriesProperty">
+            <summary>
+            The series property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.XAxesProperty">
+            <summary>
+            The x axes property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.YAxesProperty">
+            <summary>
+            The y axes property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.DrawMarginProperty">
+            <summary>
+            The draw margin property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.ZoomModeProperty">
+            <summary>
+            The zoom mode property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.ZoomingSpeedProperty">
+            <summary>
+            The zooming speed property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.AnimationsSpeedProperty">
+            <summary>
+            The animations speed property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.EasingFunctionProperty">
+            <summary>
+            The easing function property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.LegendPositionProperty">
+            <summary>
+            The legend position property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.LegendOrientationProperty">
+            <summary>
+            The legend orientation property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.LegendTemplateProperty">
+            <summary>
+            The legend template property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.LegendFontFamilyProperty">
+            <summary>
+            The legend font family property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.LegendFontSizeProperty">
+            <summary>
+            The legend font size property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.LegendTextColorProperty">
+            <summary>
+            The legend text color property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.LegendBackgroundProperty">
+            <summary>
+            The legend background property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.LegendFontAttributesProperty">
+            <summary>
+            The legend font attributes property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.TooltipPositionProperty">
+            <summary>
+            The tool tip position property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.TooltipFindingStrategyProperty">
+            <summary>
+            The too ltip finding strategy property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.TooltipTemplateProperty">
+            <summary>
+            The tool tip template property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.TooltipFontFamilyProperty">
+            <summary>
+            The tool tip font family property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.TooltipFontSizeProperty">
+            <summary>
+            The tool tip font size property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.TooltipTextColorProperty">
+            <summary>
+            The tool tip text color property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.TooltipBackgroundProperty">
+            <summary>
+            The tool tip background property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.TooltipFontAttributesProperty">
+            <summary>
+            The tool tip font attributes property
+            </summary>
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.Measuring">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.Measuring" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.UpdateStarted">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateStarted" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.UpdateFinished">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateFinished" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.Core">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.Core" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.CoreCanvas">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.CoreCanvas" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.DrawMargin">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.DrawMargin" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.Series">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.Series" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.XAxes">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.XAxes" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.YAxes">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.YAxes" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.AnimationsSpeed">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.AnimationsSpeed" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.EasingFunction">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.EasingFunction" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.ZoomMode">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.ZoomMode" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.ZoomingSpeed">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.ZoomingSpeed" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.LegendPosition">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.LegendPosition" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.LegendOrientation">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.LegendOrientation" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.LegendTemplate">
+            <summary>
+            Gets or sets the legend template.
+            </summary>
+            <value>
+            The legend template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.LegendFontFamily">
+            <summary>
+            Gets or sets the default legend font family.
+            </summary>
+            <value>
+            The legend font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.LegendFontSize">
+            <summary>
+            Gets or sets the default size of the legend font.
+            </summary>
+            <value>
+            The size of the legend font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.LegendTextColor">
+            <summary>
+            Gets or sets the default color of the legend text.
+            </summary>
+            <value>
+            The color of the legend text.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.LegendBackgroundColor">
+            <summary>
+            Gets or sets the default color of the legend background.
+            </summary>
+            <value>
+            The color of the legend background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.LegendFontAttributes">
+            <summary>
+            Gets or sets the default legend font attributes.
+            </summary>
+            <value>
+            The legend font attributes.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.Legend">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.Legend" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.TooltipPosition">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.TooltipPosition" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.TooltipFindingStrategy">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.TooltipFindingStrategy" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.TooltipTemplate">
+            <summary>
+            Gets or sets the tool tip template.
+            </summary>
+            <value>
+            The tool tip template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.TooltipFontFamily">
+            <summary>
+            Gets or sets the default tool tip font family.
+            </summary>
+            <value>
+            The tool tip font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.TooltipFontSize">
+            <summary>
+            Gets or sets the default size of the tool tip font.
+            </summary>
+            <value>
+            The size of the tool tip font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.TooltipTextColor">
+            <summary>
+            Gets or sets the default color of the tool tip text.
+            </summary>
+            <value>
+            The color of the tool tip text.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.TooltipBackgroundColor">
+            <summary>
+            Gets or sets the default color of the tool tip background.
+            </summary>
+            <value>
+            The color of the tool tip background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.TooltipFontAttributes">
+            <summary>
+            Gets or sets the default tool tip font attributes.
+            </summary>
+            <value>
+            The tool tip font attributes.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.Tooltip">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.Tooltip" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.PointStates">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.PointStates" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.AutoUpdateEnaled">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.AutoUpdateEnaled" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.ScaleUIPoint(System.Drawing.PointF,System.Int32,System.Int32)">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.ICartesianChartView`1.ScaleUIPoint(System.Drawing.PointF,System.Int32,System.Int32)" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.TooltipPoint})">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IChartView`1.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.TooltipPoint})"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.HideTooltip">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IChartView`1.HideTooltip"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.InitializeCore">
+            <summary>
+            Initializes the core.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.CartesianChart.OnBindablePropertyChanged(Xamarin.Forms.BindableObject,System.Object,System.Object)">
+            <summary>
+            Called when a bindable property changed.
+            </summary>
+            <param name="o">The o.</param>
+            <param name="oldValue">The old value.</param>
+            <param name="newValue">The new value.</param>
+            <returns></returns>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultLegend">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.IChartLegend`1" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultLegend.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultLegend"/> class.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultLegend.LegendTemplate">
+            <summary>
+            Gets or sets the legend template.
+            </summary>
+            <value>
+            The legend template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultLegend.Series">
+            <summary>
+            Gets or sets the series.
+            </summary>
+            <value>
+            The series.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultLegend.FontFamily">
+            <summary>
+            Gets or sets the font family.
+            </summary>
+            <value>
+            The font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultLegend.FontSize">
+            <summary>
+            Gets or sets the size of the font.
+            </summary>
+            <value>
+            The size of the font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultLegend.TextColor">
+            <summary>
+            Gets or sets the color of the text.
+            </summary>
+            <value>
+            The color of the text.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultLegend.FontAttributes">
+            <summary>
+            Gets or sets the font attributes.
+            </summary>
+            <value>
+            The font attributes.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultLegend.Orientation">
+            <summary>
+            Gets or sets the orientation.
+            </summary>
+            <value>
+            The orientation.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultLegend.BuildContent">
+            <summary>
+            Builds the content.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultTooltip">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.IChartTooltip`1" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultTooltip.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultTooltip"/> class.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultTooltip.TooltipTemplate">
+            <summary>
+            Gets or sets the tool tip template.
+            </summary>
+            <value>
+            The tool tip template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultTooltip.Points">
+            <summary>
+            Gets or sets the points.
+            </summary>
+            <value>
+            The points.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultTooltip.FontFamily">
+            <summary>
+            Gets or sets the font family.
+            </summary>
+            <value>
+            The font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultTooltip.FontSize">
+            <summary>
+            Gets or sets the size of the font.
+            </summary>
+            <value>
+            The size of the font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultTooltip.TextColor">
+            <summary>
+            Gets or sets the color of the text.
+            </summary>
+            <value>
+            The color of the text.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultTooltip.FontAttributes">
+            <summary>
+            Gets or sets the font attributes.
+            </summary>
+            <value>
+            The font attributes.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.DefaultTooltip.BuildContent">
+            <summary>
+            Builds the content.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Xamarin.Forms.HeightConverter">
+            <summary>
+            A converter value helper
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.HeightConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Implement this method to convert <paramref name="value" /> to <paramref name="targetType" /> by using <paramref name="parameter" /> and <paramref name="culture" />.
+            </summary>
+            <param name="value">The value to convert.</param>
+            <param name="targetType">The type to which to convert the value.</param>
+            <param name="parameter">A parameter to use during the conversion.</param>
+            <param name="culture">The culture to use during the conversion.</param>
+            <returns>
+            To be added.
+            </returns>
+            <remarks>
+            To be added.
+            </remarks>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.HeightConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Implement this method to convert <paramref name="value" /> back from <paramref name="targetType" /> by using <paramref name="parameter" /> and <paramref name="culture" />.
+            </summary>
+            <param name="value">The value to convert.</param>
+            <param name="targetType">The type to which to convert the value.</param>
+            <param name="parameter">A parameter to use during the conversion.</param>
+            <param name="culture">The culture to use during the conversion.</param>
+            <returns>
+            To be added.
+            </returns>
+            <exception cref="T:System.NotImplementedException"></exception>
+            <remarks>
+            To be added.
+            </remarks>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Xamarin.Forms.IMobileChart">
+            <summary>
+            A chart for Xamarin.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.IMobileChart.LayoutGrid">
+            <summary>
+            Gets the layout grid.
+            </summary>
+            <value>
+            The layout grid.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.IMobileChart.Canvas">
+            <summary>
+            Gets the canvas.
+            </summary>
+            <value>
+            The canvas.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.IMobileChart.Legend">
+            <summary>
+            Gets the legend.
+            </summary>
+            <value>
+            The legend.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.IMobileChart.TooltipTemplate">
+            <summary>
+            Gets or sets the tool tip template.
+            </summary>
+            <value>
+            The tool tip template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.IMobileChart.TooltipFontFamily">
+            <summary>
+            Gets or sets the tool tip font family.
+            </summary>
+            <value>
+            The tool tip font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.IMobileChart.TooltipFontSize">
+            <summary>
+            Gets or sets the size of the tool tip font.
+            </summary>
+            <value>
+            The size of the tool tip font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.IMobileChart.TooltipTextColor">
+            <summary>
+            Gets or sets the color of the tool tip text.
+            </summary>
+            <value>
+            The color of the tool tip text.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.IMobileChart.TooltipBackgroundColor">
+            <summary>
+            Gets or sets the color of the tool tip background.
+            </summary>
+            <value>
+            The color of the tool tip background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.IMobileChart.TooltipFontAttributes">
+            <summary>
+            Gets or sets the tool tip font attributes.
+            </summary>
+            <value>
+            The tool tip font attributes.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.IMobileChart.LegendTemplate">
+            <summary>
+            Gets or sets the legend template.
+            </summary>
+            <value>
+            The legend template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.IMobileChart.LegendFontFamily">
+            <summary>
+            Gets or sets the legend font family.
+            </summary>
+            <value>
+            The legend font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.IMobileChart.LegendFontSize">
+            <summary>
+            Gets or sets the size of the legend font.
+            </summary>
+            <value>
+            The size of the legend font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.IMobileChart.LegendTextColor">
+            <summary>
+            Gets or sets the color of the legend text.
+            </summary>
+            <value>
+            The color of the legend text.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.IMobileChart.LegendBackgroundColor">
+            <summary>
+            Gets or sets the color of the legend background.
+            </summary>
+            <value>
+            The color of the legend background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.IMobileChart.LegendFontAttributes">
+            <summary>
+            Gets or sets the legend font attributes.
+            </summary>
+            <value>
+            The legend font attributes.
+            </value>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Xamarin.Forms.LegendBindingContext">
+            <summary>
+            Defines the legend binding context.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.LegendBindingContext.Series">
+            <summary>
+            Gets or sets the series.
+            </summary>
+            <value>
+            The series.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.LegendBindingContext.FontFamily">
+            <summary>
+            Gets or sets the font family.
+            </summary>
+            <value>
+            The font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.LegendBindingContext.FontSize">
+            <summary>
+            Gets or sets the size of the font.
+            </summary>
+            <value>
+            The size of the font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.LegendBindingContext.TextColor">
+            <summary>
+            Gets or sets the color of the text.
+            </summary>
+            <value>
+            The color of the text.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.LegendBindingContext.FontAttributes">
+            <summary>
+            Gets or sets the font attributes.
+            </summary>
+            <value>
+            The font attributes.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.LegendBindingContext.Orientation">
+            <summary>
+            Gets or sets the orientation.
+            </summary>
+            <value>
+            The orientation.
+            </value>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Xamarin.Forms.MotionCanvas">
+            <summary>
+            The motion canvas control fro Xamarin, <see cref="T:LiveChartsCore.Drawing.MotionCanvas`1"/>.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.MotionCanvas.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Xamarin.Forms.MotionCanvas"/> class.
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.MotionCanvas.PaintTasksProperty">
+            <summary>
+            The paint tasks property
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.MotionCanvas.SkCanvasView">
+            <summary>
+            Gets the sk canvas view.
+            </summary>
+            <value>
+            The sk canvas view.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.MotionCanvas.FramesPerSecond">
+            <summary>
+            Gets or sets the frames per second.
+            </summary>
+            <value>
+            The frames per second.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.MotionCanvas.PaintTasks">
+            <summary>
+            Gets or sets the paint tasks.
+            </summary>
+            <value>
+            The paint tasks.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.MotionCanvas.CanvasCore">
+            <summary>
+            Gets the canvas core.
+            </summary>
+            <value>
+            The canvas core.
+            </value>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.MotionCanvas.Invalidate">
+            <summary>
+            Invalidates this instance.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PaintTasksValueConverter">
+            <summary>
+            A converter value helper
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PaintTasksValueConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Implement this method to convert <paramref name="value" /> to <paramref name="targetType" /> by using <paramref name="parameter" /> and <paramref name="culture" />.
+            </summary>
+            <param name="value">The value to convert.</param>
+            <param name="targetType">The type to which to convert the value.</param>
+            <param name="parameter">A parameter to use during the conversion.</param>
+            <param name="culture">The culture to use during the conversion.</param>
+            <returns>
+            To be added.
+            </returns>
+            <remarks>
+            To be added.
+            </remarks>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PaintTasksValueConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Implement this method to convert <paramref name="value" /> back from <paramref name="targetType" /> by using <paramref name="parameter" /> and <paramref name="culture" />.
+            </summary>
+            <param name="value">The value to convert.</param>
+            <param name="targetType">The type to which to convert the value.</param>
+            <param name="parameter">A parameter to use during the conversion.</param>
+            <param name="culture">The culture to use during the conversion.</param>
+            <returns>
+            To be added.
+            </returns>
+            <exception cref="T:System.NotImplementedException"></exception>
+            <remarks>
+            To be added.
+            </remarks>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.IPieChartView`1" />
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.core">
+            <summary>
+            The core
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart"/> class.
+            </summary>
+            <exception cref="T:System.Exception">Default colors are not valid</exception>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.SeriesProperty">
+            <summary>
+            The series property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.InitialRotationProperty">
+            <summary>
+            The initial rotation property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.MaxAngleProperty">
+            <summary>
+            The maximum angle property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.TotalProperty">
+            <summary>
+            The total property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.DrawMarginProperty">
+            <summary>
+            The draw margin property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.AnimationsSpeedProperty">
+            <summary>
+            The animations speed property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.EasingFunctionProperty">
+            <summary>
+            The easing function property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.LegendPositionProperty">
+            <summary>
+            The legend position property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.LegendOrientationProperty">
+            <summary>
+            The legend orientation property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.LegendTemplateProperty">
+            <summary>
+            The legend template property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.LegendFontFamilyProperty">
+            <summary>
+            The legend font family property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.LegendFontSizeProperty">
+            <summary>
+            The legend font size property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.LegendTextColorProperty">
+            <summary>
+            The legend text color property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.LegendBackgroundProperty">
+            <summary>
+            The legend background property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.LegendFontAttributesProperty">
+            <summary>
+            The legend font attributes property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.TooltipPositionProperty">
+            <summary>
+            The tool tip position property;
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.TooltipFindingStrategyProperty">
+            <summary>
+            The tool tip finding strategy property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.TooltipTemplateProperty">
+            <summary>
+            The tool tip template property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.TooltipFontFamilyProperty">
+            <summary>
+            The tool tip font family property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.TooltipFontSizeProperty">
+            <summary>
+            The tool tip font size property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.TooltipTextColorProperty">
+            <summary>
+            The tool tip text color property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.TooltipBackgroundProperty">
+            <summary>
+            The tool tip background property
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.TooltipFontAttributesProperty">
+            <summary>
+            The tool tip font attributes property
+            </summary>
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.Measuring">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.Measuring" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.UpdateStarted">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateStarted" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.UpdateFinished">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateFinished" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.Core">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.Core" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.CoreCanvas">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.CoreCanvas" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.DrawMargin">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.DrawMargin" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.Series">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.Series" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.InitialRotation">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.InitialRotation" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.MaxAngle">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.MaxAngle" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.Total">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.Total" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.AnimationsSpeed">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.AnimationsSpeed" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.EasingFunction">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.EasingFunction" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.LegendPosition">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.LegendPosition" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.LegendOrientation">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.LegendOrientation" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.LegendTemplate">
+            <summary>
+            Gets or sets the legend template.
+            </summary>
+            <value>
+            The legend template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.LegendFontFamily">
+            <summary>
+            Gets or sets the legend font family.
+            </summary>
+            <value>
+            The legend font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.LegendFontSize">
+            <summary>
+            Gets or sets the size of the legend font.
+            </summary>
+            <value>
+            The size of the legend font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.LegendTextColor">
+            <summary>
+            Gets or sets the color of the legend text.
+            </summary>
+            <value>
+            The color of the legend text.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.LegendBackgroundColor">
+            <summary>
+            Gets or sets the color of the legend background.
+            </summary>
+            <value>
+            The color of the legend background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.LegendFontAttributes">
+            <summary>
+            Gets or sets the legend font attributes.
+            </summary>
+            <value>
+            The legend font attributes.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.Legend">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.Legend" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.TooltipPosition">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.TooltipPosition" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.TooltipFindingStrategy">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.TooltipFindingStrategy" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.TooltipTemplate">
+            <summary>
+            Gets or sets the tool tip template.
+            </summary>
+            <value>
+            The tool tip template.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.TooltipFontFamily">
+            <summary>
+            Gets or sets the tool tip font family.
+            </summary>
+            <value>
+            The tool tip font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.TooltipFontSize">
+            <summary>
+            Gets or sets the size of the tool tip font.
+            </summary>
+            <value>
+            The size of the tool tip font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.TooltipTextColor">
+            <summary>
+            Gets or sets the color of the tool tip text.
+            </summary>
+            <value>
+            The color of the tool tip text.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.TooltipBackgroundColor">
+            <summary>
+            Gets or sets the color of the tool tip background.
+            </summary>
+            <value>
+            The color of the tool tip background.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.TooltipFontAttributes">
+            <summary>
+            Gets or sets the tool tip font attributes.
+            </summary>
+            <value>
+            The tool tip font attributes.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.Tooltip">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.Tooltip" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.PointStates">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.PointStates" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.AutoUpdateEnaled">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.AutoUpdateEnaled" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.TooltipPoint})">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IChartView`1.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.TooltipPoint})"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.HideTooltip">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IChartView`1.HideTooltip"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.InitializeCore">
+            <summary>
+            Initializes the core.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.PieChart.OnBindablePropertyChanged(Xamarin.Forms.BindableObject,System.Object,System.Object)">
+            <summary>
+            Called when a bindable property changes.
+            </summary>
+            <param name="o">The o.</param>
+            <param name="oldValue">The old value.</param>
+            <param name="newValue">The new value.</param>
+            <returns></returns>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Xamarin.Forms.TooltipBindingContext">
+            <summary>
+            Defines the tool tip binding context.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.TooltipBindingContext.Points">
+            <summary>
+            Gets or sets the points.
+            </summary>
+            <value>
+            The points.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.TooltipBindingContext.FontFamily">
+            <summary>
+            Gets or sets the font family.
+            </summary>
+            <value>
+            The font family.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.TooltipBindingContext.FontSize">
+            <summary>
+            Gets or sets the size of the font.
+            </summary>
+            <value>
+            The size of the font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.TooltipBindingContext.TextColor">
+            <summary>
+            Gets or sets the color of the text.
+            </summary>
+            <value>
+            The color of the text.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.Xamarin.Forms.TooltipBindingContext.FontAttributes">
+            <summary>
+            Gets or sets the font attributes.
+            </summary>
+            <value>
+            The font attributes.
+            </value>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.Xamarin.Forms.WidthConverter">
+            <summary>
+            A converter value helper
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.WidthConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Implement this method to convert <paramref name="value" /> to <paramref name="targetType" /> by using <paramref name="parameter" /> and <paramref name="culture" />.
+            </summary>
+            <param name="value">The value to convert.</param>
+            <param name="targetType">The type to which to convert the value.</param>
+            <param name="parameter">A parameter to use during the conversion.</param>
+            <param name="culture">The culture to use during the conversion.</param>
+            <returns>
+            To be added.
+            </returns>
+            <remarks>
+            To be added.
+            </remarks>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.Xamarin.Forms.WidthConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Implement this method to convert <paramref name="value" /> back from <paramref name="targetType" /> by using <paramref name="parameter" /> and <paramref name="culture" />.
+            </summary>
+            <param name="value">The value to convert.</param>
+            <param name="targetType">The type to which to convert the value.</param>
+            <param name="parameter">A parameter to use during the conversion.</param>
+            <param name="culture">The culture to use during the conversion.</param>
+            <returns>
+            To be added.
+            </returns>
+            <exception cref="T:System.NotImplementedException"></exception>
+            <remarks>
+            To be added.
+            </remarks>
+        </member>
+    </members>
+</doc>

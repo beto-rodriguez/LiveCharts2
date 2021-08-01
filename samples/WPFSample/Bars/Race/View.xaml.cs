@@ -18,7 +18,7 @@ namespace WPFSample.Bars.Race
 
         public async void Update()
         {
-            var vm = (ViewModel) DataContext;
+            var vm = (ViewModel)DataContext;
             while (true)
             {
                 Application.Current.Dispatcher.Invoke(vm.RandomIncrement);

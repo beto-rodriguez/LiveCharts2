@@ -1,0 +1,15 @@
+<UserControl x:Class="AvaloniaSample.Design.RadialGradients.View"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:vms="using:ViewModelsSamples.Design.RadialGradients">
+  <UserControl.DataContext>
+    <vms:ViewModel/>
+  </UserControl.DataContext>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <lvc:PieChart Series="{Binding Series}" LegendPosition="Right"></lvc:PieChart>
+  </Grid>  
+</UserControl>

@@ -1,9 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +13,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Axes\Logaritmic\View.cs" />
+    <Compile Update="Axes\DateTimeScaled\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Axes\Shared\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Axes\Multiple\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Axes\LabelsRotation\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Axes\NamedLabels\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -48,10 +62,79 @@
     <Compile Update="Bars\Custom\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Design\StrokeDashArray\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Design\RadialGradients\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Design\LinearGradients\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Financial\BasicCandleSticks\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="General\Animations\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="General\ChartToImage\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="General\Sections\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="General\Visibility\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="General\Legends\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="General\TemplatedTooltips\CustomTooltip.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="General\TemplatedTooltips\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="General\TemplatedLegends\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="General\Tooltips\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="General\UserDefinedTypes\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="General\NullPoints\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Heat\Basic\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Maps\World\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Scatter\Bubbles\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="StackedArea\StepArea\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="StepLines\Area\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="StepLines\AutoUpdate\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="StepLines\Basic\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="StepLines\Custom\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="StepLines\Properties\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="StepLines\Zoom\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Lines\Area\View.cs">
@@ -73,6 +156,12 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Pies\AutoUpdate\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Pies\Gauges\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Pies\Processing\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Pies\Pushout\View.cs">

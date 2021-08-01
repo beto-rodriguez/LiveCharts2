@@ -23,7 +23,7 @@ namespace LiveChartsCore.UnitTesting
             void DrawFrame(long time)
             {
                 a.CurrentTime = time;
-                a.IsCompleted = true;
+                a.IsValid = true;
             }
 
             float DoTransition(float from, float to, float start, float end, long time, Func<float, float> easing)
@@ -56,10 +56,10 @@ namespace LiveChartsCore.UnitTesting
             {
                 DrawFrame(time);
 
-                float x = r.X;
-                float y = r.Y;
-                float w = r.Width;
-                float h = r.Height;
+                var x = r.X;
+                var y = r.Y;
+                var w = r.Width;
+                var h = r.Height;
                 var l = Math.Truncate((time - startTime) / duration.TotalMilliseconds);
                 if ((time - startTime) % duration.TotalMilliseconds == 0 && time != startTime) l--;
                 var laps = (long)(l * duration.TotalMilliseconds);
@@ -68,12 +68,12 @@ namespace LiveChartsCore.UnitTesting
                 Assert.IsTrue(w == DoTransition(50, 100, 50, 1050, time - laps, easing));
                 Assert.IsTrue(h == DoTransition(50, 100, 50, 1050, time - laps, easing));
 
-                Assert.IsTrue(!a.IsCompleted);
+                Assert.IsTrue(!a.IsValid);
                 time += 500;
             }
 
             // not completed yet because the duration of the animation in this case is infinite
-            Assert.IsTrue(!a.IsCompleted);
+            Assert.IsTrue(!a.IsValid);
         }
 
         [TestMethod]
@@ -91,13 +91,13 @@ namespace LiveChartsCore.UnitTesting
             void DrawFrame(long time)
             {
                 a.CurrentTime = time;
-                a.IsCompleted = true;
+                a.IsValid = true;
 
                 // Calling the property getter moves the transition with the current animatable time
-                float x = r.X;
-                float y = r.Y;
-                float w = r.Width;
-                float h = r.Height;
+                var x = r.X;
+                var y = r.Y;
+                var w = r.Width;
+                var h = r.Height;
             }
 
             var time = 0;
@@ -111,11 +111,11 @@ namespace LiveChartsCore.UnitTesting
             r.CompleteTransitions(nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
             DrawFrame(time);
 
-            Assert.IsTrue(a.IsCompleted);
+            Assert.IsTrue(a.IsValid);
 
             r.Y = 100;
             DrawFrame(time);
-            var p =  r.GetTransitionProperty(nameof(r.Y));
+            var p = r.GetTransitionProperty(nameof(r.Y));
 
             time += 500;
             DrawFrame(time);

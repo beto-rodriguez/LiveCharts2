@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace XamarinSample.Models
+﻿namespace XamarinSample.Models
 {
     public class Item
     {

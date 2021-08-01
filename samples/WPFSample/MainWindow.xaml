@@ -1,7 +1,7 @@
 ﻿<Window x:Class="WPFSample.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Background="#fafafa"
+        Background="#f0f0f0"
         WindowStartupLocation="CenterScreen"
         BorderThickness="1"
         BorderBrush="#eeeeee">
@@ -45,8 +45,8 @@
             </ScrollViewer>
         </Grid>
 
-        <Border Grid.Column="1" >
-            <Border Background="White" Margin="20 60 20 20" Padding="20" CornerRadius="8" MaxWidth="900" MaxHeight="600">
+        <Border Grid.Column="1" Background="White">
+            <!--<Border Background="White" Margin="20 60 20 20" Padding="20" CornerRadius="8" MaxWidth="900" MaxHeight="600">-->
                 <Border.Effect>
                     <DropShadowEffect 
                            BlurRadius="10" 
@@ -55,7 +55,7 @@
                            Color="#303030"/>
                 </Border.Effect>
                 <ContentControl x:Name="content"></ContentControl>
-            </Border>
+            <!--</Border>-->
         </Border>
 
     </Grid>

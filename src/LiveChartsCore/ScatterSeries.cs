@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,67 +26,100 @@ using System;
 using LiveChartsCore.Measure;
 using System.Collections.Generic;
 using System.Drawing;
+using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Kernel.Drawing;
+using LiveChartsCore.Kernel.Data;
 
 namespace LiveChartsCore
 {
-    public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext> : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IScatterSeries<TDrawingContext>
+    /// <summary>
+    /// Defines a scatter series.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <typeparam name="TVisual">The type of the visual.</typeparam>
+    /// <typeparam name="TLabel">The type of the label.</typeparam>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
+    /// <seealso cref="IScatterSeries{TDrawingContext}" />
+    public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext> : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IScatterSeries<TDrawingContext>
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
     {
-        private Func<float, float> easing = EasingFunctions.BuildCustomElasticOut(1.2f, 0.40f);
-        private double geometrySize = 24d;
-        private double minGeometrySize = 6d;
-        private Bounds weightBounds = new ();
+        private Bounds _weightBounds = new();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ScatterSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+        /// </summary>
         public ScatterSeries()
-            : base(SeriesProperties.Scatter)
+            : base(SeriesProperties.Scatter | SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips)
         {
+            DataPadding = new PointF(1, 1);
+
             HoverState = LiveCharts.ScatterSeriesHoverKey;
+
+            DataLabelsFormatter = (point) => $"{point.SecondaryValue}, {point.PrimaryValue}";
+            TooltipLabelFormatter = (point) => $"{point.Context.Series.Name} {point.SecondaryValue}, {point.PrimaryValue}";
         }
 
-        public double MinGeometrySize { get => minGeometrySize; set => minGeometrySize = value; }
+        /// <summary>
+        /// Gets or sets the minimum size of the geometry.
+        /// </summary>
+        /// <value>
+        /// The minimum size of the geometry.
+        /// </value>
+        public double MinGeometrySize { get; set; } = 6d;
 
-        public double GeometrySize { get => geometrySize; set => geometrySize = value; }
+        /// <summary>
+        /// Gets or sets the size of the geometry.
+        /// </summary>
+        /// <value>
+        /// The size of the geometry.
+        /// </value>
+        public double GeometrySize { get; set; } = 24d;
 
-        public override void Measure(
-            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> xAxis, IAxis<TDrawingContext> yAxis)
+        /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
+        public override void Measure(Chart<TDrawingContext> chart)
         {
-            var drawLocation = chart.DrawMaringLocation;
-            var drawMarginSize = chart.DrawMarginSize;
-            var xScale = new Scaler(drawLocation, drawMarginSize, xAxis);
-            var yScale = new Scaler(drawLocation, drawMarginSize, yAxis);
+            var cartesianChart = (CartesianChart<TDrawingContext>)chart;
+            var primaryAxis = cartesianChart.YAxes[ScalesYAt];
+            var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
+
+            var drawLocation = cartesianChart.DrawMarginLocation;
+            var drawMarginSize = cartesianChart.DrawMarginSize;
+            var xScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
+            var yScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
 
             var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
-            if (Fill != null)
+            if (Fill is not null)
             {
                 Fill.ZIndex = actualZIndex + 0.1;
-                Fill.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
-                chart.Canvas.AddDrawableTask(Fill);
+                Fill.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                cartesianChart.Canvas.AddDrawableTask(Fill);
             }
-            if (Stroke != null)
+            if (Stroke is not null)
             {
                 Stroke.ZIndex = actualZIndex + 0.2;
-                Stroke.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
-                chart.Canvas.AddDrawableTask(Stroke);
+                Stroke.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                cartesianChart.Canvas.AddDrawableTask(Stroke);
             }
-            if (DataLabelsDrawableTask != null)
+            if (DataLabelsPaint is not null)
             {
-                DataLabelsDrawableTask.ZIndex = actualZIndex + 0.3;
-                DataLabelsDrawableTask.ClipRectangle = new RectangleF(drawLocation, drawMarginSize);
-                chart.Canvas.AddDrawableTask(DataLabelsDrawableTask);
+                DataLabelsPaint.ZIndex = actualZIndex + 0.3;
+                DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
             }
 
             var dls = (float)DataLabelsSize;
             var toDeletePoints = new HashSet<ChartPoint>(everFetched);
 
-            var gs = (float)geometrySize;
+            var gs = (float)GeometrySize;
             var hgs = gs / 2f;
-            float sw = Stroke?.StrokeThickness ?? 0;
-            var requiresWScale = weightBounds.max - weightBounds.min > 0;
-            var wm = -(geometrySize - minGeometrySize) / (weightBounds.max - weightBounds.min);
+            var sw = Stroke?.StrokeThickness ?? 0;
+            var requiresWScale = _weightBounds.Max - _weightBounds.Min > 0;
+            var wm = -(GeometrySize - MinGeometrySize) / (_weightBounds.Max - _weightBounds.Min);
 
-            foreach (var point in Fetch(chart))
+            foreach (var point in Fetch(cartesianChart))
             {
                 var visual = (TVisual?)point.Context.Visual;
 
@@ -95,7 +128,7 @@ namespace LiveChartsCore
 
                 if (point.IsNull)
                 {
-                    if (visual != null)
+                    if (visual is not null)
                     {
                         visual.X = x - hgs;
                         visual.Y = y - hgs;
@@ -109,11 +142,11 @@ namespace LiveChartsCore
 
                 if (requiresWScale)
                 {
-                    gs = (float)(wm * (weightBounds.max - point.TertiaryValue) + geometrySize);
+                    gs = (float)(wm * (_weightBounds.Max - point.TertiaryValue) + GeometrySize);
                     hgs = gs / 2f;
                 }
 
-                if (visual == null)
+                if (visual is null)
                 {
                     var r = new TVisual
                     {
@@ -128,11 +161,11 @@ namespace LiveChartsCore
                     OnPointCreated(point);
                     r.CompleteAllTransitions();
 
-                    everFetched.Add(point);
+                    _ = everFetched.Add(point);
                 }
 
-                if (Fill != null) Fill.AddGeometyToPaintTask(visual);
-                if (Stroke != null) Stroke.AddGeometyToPaintTask(visual);
+                if (Fill is not null) Fill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                if (Stroke is not null) Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
 
                 var sizedGeometry = visual;
 
@@ -145,32 +178,31 @@ namespace LiveChartsCore
                 point.Context.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs, y - hgs, gs + 2 * sw, gs + 2 * sw);
 
                 OnPointMeasured(point);
-                toDeletePoints.Remove(point);
+                _ = toDeletePoints.Remove(point);
 
-                if (DataLabelsDrawableTask != null)
+                if (DataLabelsPaint is not null)
                 {
-                    var label = point.Context.Label as TLabel;
-
-                    if (label == null)
+                    if (point.Context.Label is not TLabel label)
                     {
                         var l = new TLabel { X = x - hgs, Y = y - hgs };
 
-                        l.TransitionateProperties(nameof(l.X), nameof(l.Y))
-                            .WithAnimation(a =>
-                                a.WithDuration(chart.AnimationsSpeed)
-                                .WithEasingFunction(chart.EasingFunction));
+                        _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
+                            .WithAnimation(animation =>
+                                animation
+                                    .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
+                                    .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
 
                         l.CompleteAllTransitions();
                         label = l;
                         point.Context.Label = l;
-                        DataLabelsDrawableTask.AddGeometyToPaintTask(l);
                     }
 
-                    label.Text = DataLabelFormatter(point);
+                    DataLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, label);
+                    label.Text = DataLabelsFormatter(new TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>(point));
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
                     var labelPosition = GetLabelPosition(
-                        x - hgs, y - hgs, gs, gs, label.Measure(DataLabelsDrawableTask), DataLabelsPosition, SeriesProperties, point.PrimaryValue > 0);
+                        x - hgs, y - hgs, gs, gs, label.Measure(DataLabelsPaint), DataLabelsPosition, SeriesProperties, point.PrimaryValue > 0);
                     label.X = labelPosition.X;
                     label.Y = labelPosition.Y;
                 }
@@ -178,69 +210,67 @@ namespace LiveChartsCore
 
             foreach (var point in toDeletePoints)
             {
-                if (point.Context.Chart != chart.View) continue;
+                if (point.Context.Chart != cartesianChart.View) continue;
                 SoftDeletePoint(point, yScale, xScale);
-                everFetched.Remove(point);
+                _ = everFetched.Remove(point);
             }
         }
 
-        public override DimensionalBounds GetBounds(
-            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
+        /// <inheritdoc cref="GetBounds(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
+        public override SeriesBounds GetBounds(
+            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> secondaryAxis, IAxis<TDrawingContext> primaryAxis)
         {
-            var baseBounds = new DimensionalBounds();
-            weightBounds = new Bounds();
-            foreach (var point in Fetch(chart))
-            {
-                var primary = point.PrimaryValue;
-                var secondary = point.SecondaryValue;
-                var tertiary = point.TertiaryValue;
+            var baseSeriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
 
-                baseBounds.PrimaryBounds.AppendValue(primary);
-                baseBounds.SecondaryBounds.AppendValue(secondary);
-                weightBounds.AppendValue(tertiary);
-            }
+            if (baseSeriesBounds.IsPrevious) return baseSeriesBounds;
+            var baseBounds = baseSeriesBounds.Bounds;
 
-            var tick = y.GetTick(chart.ControlSize, baseBounds.VisiblePrimaryBounds);
+            _weightBounds = baseBounds.TertiaryBounds;
 
-            return new DimensionalBounds
-            {
-                SecondaryBounds = new Bounds
-                {
-                    Max = baseBounds.SecondaryBounds.Max + tick.Value,
-                    Min = baseBounds.SecondaryBounds.Min - tick.Value
-                },
-                PrimaryBounds = new Bounds
-                {
-                    Max = baseBounds.PrimaryBounds.Max + tick.Value,
-                    min = baseBounds.PrimaryBounds.min - tick.Value
-                },
-                VisibleSecondaryBounds = new Bounds
-                {
-                    Max = baseBounds.VisibleSecondaryBounds.Max + tick.Value,
-                    Min = baseBounds.VisibleSecondaryBounds.Min - tick.Value
-                },
-                VisiblePrimaryBounds = new Bounds
-                {
-                    Max = baseBounds.VisiblePrimaryBounds.Max + tick.Value,
-                    min = baseBounds.VisiblePrimaryBounds.min - tick.Value
-                },
-            };
+            var tickPrimary = primaryAxis.GetTick(chart.ControlSize, baseBounds.VisiblePrimaryBounds);
+            var tickSecondary = secondaryAxis.GetTick(chart.ControlSize, baseBounds.VisibleSecondaryBounds);
+
+            var ts = tickSecondary.Value * DataPadding.X;
+            var tp = tickPrimary.Value * DataPadding.Y;
+
+            return
+                new SeriesBounds(
+                    new DimensionalBounds
+                    {
+                        SecondaryBounds = new Bounds
+                        {
+                            Max = baseBounds.SecondaryBounds.Max + ts,
+                            Min = baseBounds.SecondaryBounds.Min - ts
+                        },
+                        PrimaryBounds = new Bounds
+                        {
+                            Max = baseBounds.PrimaryBounds.Max + tp,
+                            Min = baseBounds.PrimaryBounds.Min - tp
+                        },
+                        VisibleSecondaryBounds = new Bounds
+                        {
+                            Max = baseBounds.VisibleSecondaryBounds.Max + ts,
+                            Min = baseBounds.VisibleSecondaryBounds.Min - ts
+                        },
+                        VisiblePrimaryBounds = new Bounds
+                        {
+                            Max = baseBounds.VisiblePrimaryBounds.Max + tp,
+                            Min = baseBounds.VisiblePrimaryBounds.Min - tp
+                        },
+                        MinDeltaPrimary = baseBounds.MinDeltaPrimary,
+                        MinDeltaSecondary = baseBounds.MinDeltaSecondary
+                    },
+                    false);
         }
 
-        protected override void OnPaintContextChanged()
+        /// <inheritdoc cref="OnSeriesMiniatureChanged"/>
+        protected override void OnSeriesMiniatureChanged()
         {
-            var context = new PaintContext<TDrawingContext>();
-
-            if (Fill != null)
-            {
-                var fillClone = Fill.CloneTask();
-                var visual = new TVisual { X = 0, Y = 0, Height = (float)LegendShapeSize, Width = (float)LegendShapeSize };
-                fillClone.AddGeometyToPaintTask(visual);
-                context.PaintTasks.Add(fillClone);
-            }
+            var context = new CanvasSchedule<TDrawingContext>();
 
             var w = LegendShapeSize;
-            if (Stroke != null)
+            var sh = 0f;
+            if (Stroke is not null)
             {
                 var strokeClone = Stroke.CloneTask();
                 var visual = new TVisual
@@ -250,51 +280,64 @@ namespace LiveChartsCore
                     Height = (float)LegendShapeSize,
                     Width = (float)LegendShapeSize
                 };
+                sh = strokeClone.StrokeThickness;
+                strokeClone.ZIndex = 1;
                 w += 2 * strokeClone.StrokeThickness;
-                strokeClone.AddGeometyToPaintTask(visual);
-                context.PaintTasks.Add(strokeClone);
+                context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
+            }
+
+            if (Fill is not null)
+            {
+                var fillClone = Fill.CloneTask();
+                var visual = new TVisual { X = sh, Y = sh, Height = (float)LegendShapeSize, Width = (float)LegendShapeSize };
+                context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(fillClone, visual));
             }
 
             context.Width = w;
             context.Height = w;
 
-            paintContext = context;
+            canvaSchedule = context;
+            OnPropertyChanged(nameof(CanvasSchedule));
         }
 
+        /// <inheritdoc cref="SetDefaultPointTransitions(ChartPoint)"/>
         protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
         {
             var visual = (TVisual?)chartPoint.Context.Visual;
             var chart = chartPoint.Context.Chart;
 
-            if (visual == null) throw new Exception("Unable to initialize the point instance.");
+            if (visual is null) throw new Exception("Unable to initialize the point instance.");
 
-            visual
+            _ = visual
                .TransitionateProperties(
                    nameof(visual.X),
-                   nameof(visual.Y))
-               .WithAnimation(animation =>
-                   animation
-                       .WithDuration(chart.AnimationsSpeed)
-                       .WithEasingFunction(chart.EasingFunction));
-
-            visual
-               .TransitionateProperties(
+                   nameof(visual.Y),
                    nameof(visual.Width),
                    nameof(visual.Height))
                .WithAnimation(animation =>
                    animation
-                       .WithDuration(chart.AnimationsSpeed)
-                       .WithEasingFunction(easing));
+                       .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
+                       .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
         }
 
+        /// <inheritdoc cref="SoftDeletePoint(ChartPoint, Scaler, Scaler)"/>
         protected override void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
         {
             var visual = (TVisual?)point.Context.Visual;
-            if (visual == null) return;
+            if (visual is null) return;
 
             visual.Height = 0;
             visual.Width = 0;
             visual.RemoveOnCompleted = true;
+
+            if (dataProvider is null) throw new Exception("Data provider not found");
+            dataProvider.DisposePoint(point);
+
+            var label = (TLabel?)point.Context.Label;
+            if (label is null) return;
+
+            label.TextSize = 1;
+            label.RemoveOnCompleted = true;
         }
     }
 }

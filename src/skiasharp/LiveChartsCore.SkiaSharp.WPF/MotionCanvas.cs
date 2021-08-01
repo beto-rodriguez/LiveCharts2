@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp.Views.Desktop;
 using SkiaSharp.Views.WPF;
@@ -32,45 +33,75 @@ using System.Windows.Controls;
 
 namespace LiveChartsCore.SkiaSharpView.WPF
 {
+    /// <summary>
+    /// Defines the motion canvas control for WPF, <see cref="MotionCanvas{TDrawingContext}"/>.
+    /// </summary>
+    /// <seealso cref="Control" />
     public class MotionCanvas : Control
     {
-        protected SKElement skiaElement;
-        private bool isDrawingLoopRunning = false;
-        private MotionCanvas<SkiaSharpDrawingContext> canvasCore = new MotionCanvas<SkiaSharpDrawingContext>();
-        private double framesPerSecond = 90;
+        /// <summary>
+        /// The skia element
+        /// </summary>
+        private SKElement? skiaElement;
+        private bool _isDrawingLoopRunning = false;
 
         static MotionCanvas()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(MotionCanvas), new FrameworkPropertyMetadata(typeof(MotionCanvas)));
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
+        /// </summary>
         public MotionCanvas()
         {
-            canvasCore.Invalidated += OnCanvasCoreInvalidated;
+            Loaded += OnLoaded;
             Unloaded += OnUnloaded;
         }
 
+        /// <summary>
+        /// The paint tasks property
+        /// </summary>
         public static readonly DependencyProperty PaintTasksProperty =
             DependencyProperty.Register(
-                nameof(PaintTasks), typeof(HashSet<IDrawableTask<SkiaSharpDrawingContext>>), typeof(MotionCanvas),
-                new PropertyMetadata(new HashSet<IDrawableTask<SkiaSharpDrawingContext>>(), new PropertyChangedCallback(OnPaintTaskChanged)));
+                nameof(PaintTasks), typeof(List<PaintSchedule<SkiaSharpDrawingContext>>), typeof(MotionCanvas),
+                new PropertyMetadata(new List<PaintSchedule<SkiaSharpDrawingContext>>(), new PropertyChangedCallback(OnPaintTaskChanged)));
 
-        public HashSet<IDrawableTask<SkiaSharpDrawingContext>> PaintTasks
+        /// <summary>
+        /// Gets or sets the paint tasks.
+        /// </summary>
+        /// <value>
+        /// The paint tasks.
+        /// </value>
+        public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
         {
-            get { return (HashSet<IDrawableTask<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty); }
-            set { SetValue(PaintTasksProperty, value); }
+            get => (List<PaintSchedule<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty);
+            set => SetValue(PaintTasksProperty, value);
         }
 
-        public double FramesPerSecond { get => framesPerSecond; set => framesPerSecond = value; }
+        /// <summary>
+        /// Gets or sets the frames per second.
+        /// </summary>
+        /// <value>
+        /// The frames per second.
+        /// </value>
+        public double FramesPerSecond { get; set; } = 90;
 
-        public MotionCanvas<SkiaSharpDrawingContext> CanvasCore => canvasCore;
+        /// <summary>
+        /// Gets the canvas core.
+        /// </summary>
+        /// <value>
+        /// The canvas core.
+        /// </value>
+        public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
 
+        /// <inheritdoc cref="OnApplyTemplate" />
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
             skiaElement = Template.FindName("skiaElement", this) as SKElement;
-            if (skiaElement == null)
+            if (skiaElement is null)
                 throw new Exception(
                     $"SkiaElement not found. This was probably caused because the control {nameof(MotionCanvas)} template was overridden, " +
                     $"If you override the template please add an {nameof(SKElement)} to the template and name it 'skiaElement'");
@@ -78,9 +109,25 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             skiaElement.PaintSurface += OnPaintSurface;
         }
 
-        protected virtual void OnPaintSurface(object sender, SKPaintSurfaceEventArgs args)
+        /// <inheritdoc cref="OnPaintSurface(object?, SKPaintSurfaceEventArgs)" />
+        protected virtual void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
         {
-            canvasCore.DrawFrame(new SkiaSharpDrawingContext(args.Info, args.Surface, args.Surface.Canvas));
+            (var dpiX, var dpiY) = GetPixelDensity();
+
+            args.Surface.Canvas.Scale(dpiX, dpiY);
+
+            CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
+        }
+
+        private (float dpiX, float dpiY) GetPixelDensity()
+        {
+            var presentationSource = PresentationSource.FromVisual(this);
+            if (presentationSource is null) return (1f, 1f);
+            var compositionTarget = presentationSource.CompositionTarget;
+            if (compositionTarget is null) return (1f, 1f);
+
+            var matrix = compositionTarget.TransformToDevice;
+            return ((float)matrix.M11, (float)matrix.M22);
         }
 
         private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
@@ -88,30 +135,44 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             RunDrawingLoop();
         }
 
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            CanvasCore.Invalidated += OnCanvasCoreInvalidated;
+        }
+
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
-            canvasCore.Invalidated -= OnCanvasCoreInvalidated;
+            CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
         }
 
         private async void RunDrawingLoop()
         {
-            if (isDrawingLoopRunning || skiaElement == null) return;
-            isDrawingLoopRunning = true;
+            if (_isDrawingLoopRunning || skiaElement is null) return;
+            _isDrawingLoopRunning = true;
 
-            var ts = TimeSpan.FromSeconds(1 / framesPerSecond);
-            while (!canvasCore.IsValid)
+            var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
+            while (!CanvasCore.IsValid)
             {
                 skiaElement.InvalidateVisual();
                 await Task.Delay(ts);
             }
 
-            isDrawingLoopRunning = false;
+            _isDrawingLoopRunning = false;
         }
 
         private static void OnPaintTaskChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            var naturalGeometries = (MotionCanvas)sender;
-            naturalGeometries.canvasCore.SetPaintTasks(naturalGeometries.PaintTasks);
+            var motionCanvas = (MotionCanvas)sender;
+
+            var tasks = new HashSet<IPaintTask<SkiaSharpDrawingContext>>();
+
+            foreach (var item in motionCanvas.PaintTasks)
+            {
+                item.PaintTask.SetGeometries(motionCanvas.CanvasCore, item.Geometries);
+                _ = tasks.Add(item.PaintTask);
+            }
+
+            motionCanvas.CanvasCore.SetPaintTasks(tasks);
         }
     }
 }

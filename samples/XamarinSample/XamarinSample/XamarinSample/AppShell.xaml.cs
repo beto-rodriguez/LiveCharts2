@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace XamarinSample
 {
-    public partial class AppShell : Xamarin.Forms.Shell
+    public partial class AppShell : Shell
     {
-        private bool isLoaded = false;
+        private bool _isLoaded = false;
+        private readonly Dictionary<string, string> _routesSamples = new Dictionary<string, string>();
 
         public AppShell()
         {
@@ -15,23 +18,57 @@ namespace XamarinSample
 
         private void AppShell_SizeChanged(object sender, EventArgs e)
         {
-            if (isLoaded) return;
-            isLoaded = true;
+            if (_isLoaded) return;
+            _isLoaded = true;
 
             var samples = ViewModelsSamples.Index.Samples;
 
+            var i = 0;
             foreach (var item in samples)
             {
-                var shell_section = new ShellSection { Title = item };
-
                 var t = Type.GetType($"XamarinSample.{item.Replace('/', '.')}.View");
-                var i = Activator.CreateInstance(t);
-
+                //var i = Activator.CreateInstance(t);
                 Routing.RegisterRoute(item, t);
 
-                shell_section.Items.Add(new ShellContent() { Content = i });
+                var shell_section = new ShellSection { Title = item };
+
+                ShellContent content;
+
+                try
+                {
+                    content = new ShellContent()
+                    {
+                        Content = i == 0 ? Activator.CreateInstance(t) : null
+                    };
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+                shell_section.Items.Add(content);
+
                 Items.Add(shell_section);
+                _routesSamples.Add("//" + content.Route, item);
+                i++;
+
+                //if (i > 4) break;
             }
+
+            Navigating += AppShell_Navigating;
+        }
+
+        private void AppShell_Navigating(object sender, ShellNavigatingEventArgs e)
+        {
+            var shell = (AppShell)sender;
+            var r = shell.Items.Select(x => x.CurrentItem.CurrentItem.Route).ToArray();
+            var next = Items.FirstOrDefault(x => "//" + x.CurrentItem.CurrentItem.Route == e.Target.Location.OriginalString);
+
+            var item = _routesSamples[e.Target.Location.OriginalString];
+            var t = Type.GetType($"XamarinSample.{item.Replace('/', '.')}.View");
+            var i = Activator.CreateInstance(t);
+            var c = next.Items[0].Items[0];
+            c.Content = i;
         }
 
         private async void OnMenuItemClicked(object sender, EventArgs e)

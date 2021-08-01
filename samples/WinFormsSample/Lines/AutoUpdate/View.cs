@@ -30,8 +30,8 @@ namespace WinFormsSample.Lines.AutoUpdate
 
             Controls.Add(cartesianChart);
 
-            var b1 = new Button { Text = "Add item", Location = new System.Drawing.Point(0,0) };
-            b1.Click += (object sender, System.EventArgs e) => viewModel.AddRandomItem();
+            var b1 = new Button { Text = "Add item", Location = new System.Drawing.Point(0, 0) };
+            b1.Click += (object sender, System.EventArgs e) => viewModel.AddItem();
             Controls.Add(b1);
 
             var b2 = new Button { Text = "Replace item", Location = new System.Drawing.Point(80, 0) };
@@ -57,12 +57,12 @@ namespace WinFormsSample.Lines.AutoUpdate
 
         private async void OnConstantChangesClick(object sender, System.EventArgs e)
         {
-            isStreaming = isStreaming == null ? true : !isStreaming;
+            isStreaming = isStreaming is null ? true : !isStreaming;
 
             while (isStreaming.Value)
             {
                 viewModel.RemoveFirstItem();
-                viewModel.AddRandomItem();
+                viewModel.AddItem();
                 await Task.Delay(1000);
             }
         }

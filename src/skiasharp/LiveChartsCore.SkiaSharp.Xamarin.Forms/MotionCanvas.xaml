@@ -5,9 +5,6 @@
              x:Class="LiveChartsCore.SkiaSharpView.Xamarin.Forms.MotionCanvas">
   <ContentView.Content>
         <forms:SKCanvasView x:Name="skiaElement">
-            <!--<forms:SKCanvasView.GestureRecognizers >
-                <TapGestureRecognizer />
-            </forms:SKCanvasView.GestureRecognizers>-->
         </forms:SKCanvasView>
     </ContentView.Content>
 </ContentView>

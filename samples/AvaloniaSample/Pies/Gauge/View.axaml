@@ -1,0 +1,36 @@
+<UserControl x:Class="AvaloniaSample.Pies.Gauge.View"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lv="clr-namespace:LiveChartsCore;assembly=LiveChartsCore"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:vms="using:ViewModelsSamples.Pies.Gauge">
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    <Grid ColumnDefinitions="300, *">
+        <StackPanel Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="Initial rotation"></TextBlock>
+            <Slider Width="300" Minimum="-360" Maximum="720" Value="{Binding InitialRotation, Mode=TwoWay}" />
+
+            <TextBlock Text="Max angle"></TextBlock>
+            <Slider Width="300" Minimum="0" Maximum="360" Value="{Binding MaxAngle, Mode=TwoWay}" />
+
+            <TextBlock Text="Inner radius"></TextBlock>
+            <Slider Width="300" Minimum="0" Maximum="50" Value="{Binding InnerRadius, Mode=TwoWay}" />
+
+            <TextBlock Text="Offset radius"></TextBlock>
+            <Slider Width="300" Minimum="0" Maximum="50" Value="{Binding OffsetRadius, Mode=TwoWay}" />
+
+            <TextBlock Text="Background inner radius"></TextBlock>
+            <Slider Width="300" Minimum="0" Maximum="50" Value="{Binding BackgroundInnerRadius, Mode=TwoWay}" />
+
+            <TextBlock Text="Background offset radius"></TextBlock>
+            <Slider Width="300" Minimum="0" Maximum="50" Value="{Binding BackgroundOffsetRadius, Mode=TwoWay}" />
+        </StackPanel>
+        <lvc:PieChart Grid.Column="1"
+                      Series="{Binding Series}"
+                      Total="{Binding GaugeTotal}"
+                      MaxAngle="{Binding MaxAngle}"
+                      InitialRotation="{Binding InitialRotation}"/>
+    </Grid>
+</UserControl>

@@ -3,10 +3,22 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             xmlns:local="using:LiveChartsCore.SkiaSharp.Avalonia"
-             x:Class="LiveChartsCore.SkiaSharp.Avalonia.PieChart">
-  
-    <local:MotionCanvas x:Name="canvas">
-    </local:MotionCanvas>
-  
+             xmlns:local="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             x:Class="LiveChartsCore.SkiaSharpView.Avalonia.PieChart"
+             Name="chart"
+             ClipToBounds="False">
+
+    <Canvas ClipToBounds="False">
+        <DockPanel LastChildFill="True"
+                   Width="{Binding ElementName=chart, Path=Bounds.Width}"
+                   Height="{Binding ElementName=chart, Path=Bounds.Height}">
+            <local:DefaultLegend x:Name="legend"
+                                 DockPanel.Dock="{Binding ElementName=legend, Path=Dock}"
+                                 Orientation="{Binding ElementName=legend, Path=Orientation}"
+                                 IsVisible="{Binding ElementName=legend, Path=IsVisible}" />
+            <local:MotionCanvas x:Name="canvas"/>
+        </DockPanel>
+        <local:DefaultTooltip x:Name="tooltip" />
+    </Canvas>
+    
 </UserControl>

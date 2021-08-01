@@ -62,7 +62,7 @@ namespace ViewModelsSamples.Bars.AutoUpdate
 
         public void AddRandomItem()
         {
-            // for this sample only 50 items are suported.
+            // for this sample only 50 items are supported.
             if (observableValues.Count > 50) return;
 
             var randomValue = random.Next(1, 10);
@@ -89,8 +89,8 @@ namespace ViewModelsSamples.Bars.AutoUpdate
             if (Series.Count == 5) return;
 
             Series.Add(
-                new ColumnSeries<int> 
-                { 
+                new ColumnSeries<int>
+                {
                     Values = new List<int> { random.Next(0, 10), random.Next(0, 10), random.Next(0, 10) }
                 });
         }

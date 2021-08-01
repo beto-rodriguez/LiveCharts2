@@ -152,6 +152,18 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\LiveChartsCore\LiveChartsCore.csproj">
+      <Project>{b4853153-b34f-4909-9b8f-a0ad00a3ee85}</Project>
+      <Name>LiveChartsCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\src\skiasharp\LiveChartsCore.SkiaSharp.Xamarin.Forms\LiveChartsCore.SkiaSharpView.Xamarin.Forms.csproj">
+      <Project>{a909cccb-4a4e-4ab2-89c9-224cbfb0523c}</Project>
+      <Name>LiveChartsCore.SkiaSharpView.Xamarin.Forms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\src\skiasharp\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj">
+      <Project>{3b6f3fa0-d35d-49db-90da-709cc481ceee}</Project>
+      <Name>LiveChartsCore.SkiaSharpView</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\ViewModelsSamples\ViewModelsSamples.csproj">
       <Project>{bde9c3d2-5801-4be1-b79e-63686d04ce0f}</Project>
       <Name>ViewModelsSamples</Name>

@@ -11,7 +11,7 @@ namespace ViewModelsSamples.Lines.Basic
         {
             new LineSeries<double>
             {
-                Values = new ObservableCollection<double> { -2, -1, 3, 5, 3, 4, 6 },
+                Values = new ObservableCollection<double> { 2, 1, 3, 5, 3, 4, 6 },
                 Fill = null
             }
         };

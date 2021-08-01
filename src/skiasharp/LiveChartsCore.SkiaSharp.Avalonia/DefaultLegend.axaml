@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:lvc="using:LiveChartsCore"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="LiveChartsCore.SkiaSharpView.Avalonia.DefaultLegend">
+  <UserControl.Resources>
+    <DataTemplate x:Key="defaultTemplate">
+      <ItemsControl Items="{Binding Series, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Orientation="{Binding Orientation, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate DataType="{x:Type lvc:ISeries}">
+            <Border Padding="7 5" Background="{Binding BackgroundBrush, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}">
+              <StackPanel Orientation="Horizontal">
+                <local:MotionCanvas
+                    Margin="0 0 8 0"
+                    PaintTasks="{Binding CanvasSchedule.PaintSchedules}"
+                    Width="{Binding CanvasSchedule.Width}"
+                    Height="{Binding CanvasSchedule.Height}"
+                    VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding Name}" Margin="0 0 8 0"
+                    FontFamily="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}"
+                    Foreground="{Binding TextBrush, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}"
+                    FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}"
+                    FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}"
+                    FontStyle="{Binding FontStyle, RelativeSource={RelativeSource AncestorType=local:DefaultLegend}}"
+                    VerticalAlignment="Center"/>
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </DataTemplate>
+  </UserControl.Resources>
+</UserControl>

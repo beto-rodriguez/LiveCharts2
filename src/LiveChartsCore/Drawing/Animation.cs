@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,88 +24,138 @@ using System;
 
 namespace LiveChartsCore.Drawing
 {
+    /// <summary>
+    /// Defines an animation.
+    /// </summary>
     public class Animation
     {
-        private Func<float, float> easingFunction;
-        internal long duration;
-        internal int animationCompletedCount = 0;
-        internal int repeatTimes;
+        internal long _duration;
+        internal int _animationCompletedCount = 0;
+        internal int _repeatTimes;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Animation"/> class.
+        /// </summary>
         public Animation()
         {
-            easingFunction = t => t;
+            EasingFunction = t => t;
         }
 
-        public Animation(Func<float, float> easingFunction, TimeSpan duration)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Animation"/> class.
+        /// </summary>
+        /// <param name="easingFunction">The easing function.</param>
+        /// <param name="duration">The duration.</param>
+        public Animation(Func<float, float>? easingFunction, TimeSpan duration)
         {
-            this.easingFunction = easingFunction;
-            this.duration = (long)duration.TotalMilliseconds;
+            EasingFunction = easingFunction;
+            _duration = (long)duration.TotalMilliseconds;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Animation"/> class.
+        /// </summary>
+        /// <param name="easingFunction">The easing function.</param>
+        /// <param name="duration">The duration.</param>
+        /// <param name="repeatTimes">The repeat times.</param>
         public Animation(Func<float, float> easingFunction, TimeSpan duration, int repeatTimes)
         {
-            this.easingFunction = easingFunction;
-            this.duration = (long)duration.TotalMilliseconds;
-            this.repeatTimes = repeatTimes;
+            EasingFunction = easingFunction;
+            _duration = (long)duration.TotalMilliseconds;
+            _repeatTimes = repeatTimes;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Animation"/> class.
+        /// </summary>
+        /// <param name="easingFunction">The easing function.</param>
+        /// <param name="duration">The duration.</param>
+        /// <param name="repeatTimes">The repeat times.</param>
         public Animation(Func<float, float> easingFunction, long duration, int repeatTimes)
         {
-            this.easingFunction = easingFunction;
-            this.duration = duration;
-            this.repeatTimes = repeatTimes;
+            EasingFunction = easingFunction;
+            _duration = duration;
+            _repeatTimes = repeatTimes;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Animation"/> class.
+        /// </summary>
+        /// <param name="animation">The animation.</param>
         public Animation(Animation animation)
         {
-            easingFunction = animation.easingFunction;
-            duration = animation.duration;
-            repeatTimes = animation.repeatTimes;
+            EasingFunction = animation.EasingFunction;
+            _duration = animation._duration;
+            _repeatTimes = animation._repeatTimes;
         }
 
         /// <summary>
         /// Gets or sets the easing function.
         /// </summary>
-        public Func<float, float> EasingFunction { get => easingFunction; set => easingFunction = value; }
+        public Func<float, float>? EasingFunction { get; set; }
 
         /// <summary>
         /// Gets or sets the duration of the transition in Milliseconds.
         /// </summary>
-        public long Duration { get => duration; set => duration = value; }
+        public long Duration { get => _duration; set => _duration = value; }
 
         /// <summary>
         /// Gets or sets how many times the animation needs to repeat before it is completed, 
         /// use int.MaxValue to repeat it indefinitely number of times.
         /// </summary>
-        public int Repeat { get => repeatTimes; set => repeatTimes = value; }
+        public int Repeat { get => _repeatTimes; set => _repeatTimes = value; }
 
-        public Animation WithEasingFunction(Func<float, float> easing)
+        /// <summary>
+        /// Sets the easing function.
+        /// </summary>
+        /// <param name="easing">The easing.</param>
+        /// <returns>The animation instance</returns>
+        public Animation WithEasingFunction(Func<float, float>? easing)
         {
-            easingFunction = easing;
+            EasingFunction = easing;
             return this;
         }
 
+        /// <summary>
+        /// Sets the duration.
+        /// </summary>
+        /// <param name="duration">The duration.</param>
+        /// <returns>The animation instance</returns>
         public Animation WithDuration(TimeSpan duration)
         {
-            this.duration = (long)duration.TotalMilliseconds;
+            _duration = (long)duration.TotalMilliseconds;
             return this;
         }
 
+        /// <summary>
+        /// Sets the duration.
+        /// </summary>
+        /// <param name="duration">The duration.</param>
+        /// <returns>The animation instance</returns>
         public Animation WithDuration(long duration)
         {
-            this.duration = duration;
+            _duration = duration;
             return this;
         }
 
+        /// <summary>
+        /// Sets the repeats times.
+        /// </summary>
+        /// <param name="times">The times.</param>
+        /// <returns>The animation instance</returns>
         public Animation RepeatTimes(int times)
         {
-            repeatTimes = times;
+            _repeatTimes = times;
             return this;
         }
 
+        /// <summary>
+        /// Sets he repeats times indefinitely number of times.
+        /// </summary>
+        /// <returns>The animation instance</returns>
         public Animation RepeatIndefinitely()
         {
-            repeatTimes = int.MaxValue;
+            _repeatTimes = int.MaxValue;
             return this;
         }
     }

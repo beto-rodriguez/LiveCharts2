@@ -30,7 +30,7 @@ namespace WinFormsSample.Scatter.AutoUpdate
 
             Controls.Add(cartesianChart);
 
-            var b1 = new Button { Text = "Add item", Location = new System.Drawing.Point(0,0) };
+            var b1 = new Button { Text = "Add item", Location = new System.Drawing.Point(0, 0) };
             b1.Click += (object sender, System.EventArgs e) => viewModel.AddRandomItem();
             Controls.Add(b1);
 
@@ -57,7 +57,7 @@ namespace WinFormsSample.Scatter.AutoUpdate
 
         private async void OnConstantChangesClick(object sender, System.EventArgs e)
         {
-            isStreaming = isStreaming == null ? true : !isStreaming;
+            isStreaming = isStreaming is null ? true : !isStreaming;
 
             while (isStreaming.Value)
             {

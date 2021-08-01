@@ -18,6 +18,7 @@ namespace WinFormsSample.Bars.WithBackground
             cartesianChart = new CartesianChart
             {
                 Series = viewModel.Series,
+                YAxes = viewModel.YAxes,
 
                 // out of livecharts properties...
                 Location = new System.Drawing.Point(0, 0),

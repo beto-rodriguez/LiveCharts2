@@ -20,6 +20,10 @@ namespace WinFormsSample.Axes.NamedLabels
                 Series = viewModel.Series,
                 XAxes = viewModel.XAxes,
                 YAxes = viewModel.YAxes,
+                TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Left,
+                TooltipFont = new System.Drawing.Font("Courier New", 25),
+                TooltipTextColor = System.Drawing.Color.FromArgb(255, 242, 244, 195),
+                TooltipBackColor = System.Drawing.Color.FromArgb(255, 72, 0, 50),
 
                 // out of livecharts properties...
                 Location = new System.Drawing.Point(0, 0),

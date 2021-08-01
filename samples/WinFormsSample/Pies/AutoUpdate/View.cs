@@ -30,7 +30,7 @@ namespace WinFormsSample.Pies.AutoUpdate
 
             Controls.Add(piechart);
 
-            var b1 = new Button { Text = "Add series", Location = new System.Drawing.Point(0,0) };
+            var b1 = new Button { Text = "Add series", Location = new System.Drawing.Point(0, 0) };
             b1.Click += (object sender, System.EventArgs e) => viewModel.AddSeries();
             Controls.Add(b1);
 
@@ -49,7 +49,7 @@ namespace WinFormsSample.Pies.AutoUpdate
 
         private async void OnConstantChangesClick(object sender, System.EventArgs e)
         {
-            isStreaming = isStreaming == null ? true : !isStreaming;
+            isStreaming = isStreaming is null ? true : !isStreaming;
 
             while (isStreaming.Value)
             {

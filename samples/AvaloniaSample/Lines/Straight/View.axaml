@@ -1,7 +1,7 @@
 <UserControl x:Class="AvaloniaSample.Lines.Straight.View"
              xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharp.Avalonia"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              xmlns:vms="using:ViewModelsSamples.Lines.Straight">
   <UserControl.DataContext>
     <vms:ViewModel/>

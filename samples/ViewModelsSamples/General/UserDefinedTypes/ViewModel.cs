@@ -1,86 +1,75 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
-using System.Collections.Generic;
 
 namespace ViewModelsSamples.General.UserDefinedTypes
 {
-    public class Dog
+    public class City
     {
-        public double Age { get; set; }
+        public string Name { get; set; }
+        public double Population { get; set; }
     }
 
-    public class DogAverageAge
+    public class CityDensity
     {
-        public double X { get; set; }
-        public double Y { get; set; }
+        public string Name { get; set; }
+        public double Population { get; set; }
+        public double LandArea { get; set; }
     }
 
     public class ViewModel
     {
         public ViewModel()
         {
-            // in this case we have an array of the Dog class
-            // we need to compare the Age property of every dog in our array
-            // you normally should configure every intance you require to use only when your application starts.
+            // Ideally you should call this when your application starts
+            // If you need help to decide where to add this code
+            // please see the installation guide in this docs.
 
-            // by default LiveCharts already knows how to map the types:
-            // short, int, long, float, double, decimal, short?, int?, long?, float?, double?, decimal?,
-            // WeightedPoint, WeightedPointF, ObservablePoint, ObservablePointF, OversableValue and ObservableValueF
-            // for more info see:
-            // https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/LiveChartsCore/LiveChartsSettings.cs#L122
+            // in this case we have an array of the City class
+            // we need to compare the Population property of every city in our array
+
             LiveCharts.Configure(config =>
-
-                // The HasMap<T>() method helps us to define a map from a type T to a point in our chart
                 config
-                    .HasMap<Dog>((dog, point) =>
+                    .HasMap<City>((city, point) =>
                     {
-                        // in this lambda function we take an intance of the Dog class (see dog parameter)
+                        // in this lambda function we take an instance of the City class (see city parameter)
                         // and the point in the chart for that instance (see point parameter)
-                        // LiveCharts will call this method for every instance of our Dog class,
-                        // now we need to populate the point coordinates from our Dog intance to our point
+                        // LiveCharts will call this method for every instance of our City class array,
+                        // now we need to populate the point coordinates from our City instance to our point
 
-                        // in this case we will use the Age property as our primary value (normally the Y coordinate)
-                        point.PrimaryValue = (float)dog.Age;
+                        // in this case we will use the Population property as our primary value (normally the Y coordinate)
+                        point.PrimaryValue = (float)city.Population;
 
                         // then the secondary value (normally the X coordinate)
                         // will be the index of the given dog class in our array
                         point.SecondaryValue = point.Context.Index;
                     })
 
-                    // lets also set a mapper for the DogAverageAge class
-                    .HasMap<DogAverageAge>((dogAverageAge, point) =>
+                    // lets also set a mapper for the CityDensity class
+                    .HasMap<CityDensity>((cityDensity, point) =>
                     {
-                        // in this case we are ignoring the point paramenter
-                        // every coordinate will be provided by our dogAverageAge instance
-                        point.PrimaryValue = (float)dogAverageAge.Y;
-                        point.SecondaryValue = (float)dogAverageAge.X;
+                        // in this case we will use the Population property in the Y axis (primary)
+                        // and the LandArea property in the X axis (secondary)
+                        point.PrimaryValue = (float)cityDensity.Population;
+                        point.SecondaryValue = (float)cityDensity.LandArea;
                     })
                 );
         }
 
-        public List<ISeries> Series { get; set; } = new List<ISeries>
+        public ISeries[] Series { get; set; } = new ISeries[]
         {
-            new ColumnSeries<Dog>
+            new LineSeries<City>
             {
-                Values = new List<Dog>
+                Name = "Population",
+                //TooltipLabelFormatter = point => point.mode
+                Values = new[]
                 {
-                    new Dog { Age = 4 },
-                    new Dog { Age = 6 },
-                    new Dog { Age = 2 },
-                    new Dog { Age = 8 },
-                    new Dog { Age = 3 },
-                    new Dog { Age = 4 }
+                    new City { Name = "Tokyo", Population = 4 },
+                    new City { Name = "New York", Population = 6 },
+                    new City { Name = "Seoul", Population = 2 },
+                    new City { Name = "Moscow", Population = 8 },
+                    new City { Name = "Shanghai", Population = 3 },
+                    new City { Name = "Guadalajara", Population = 4 }
                 }
-            },
-
-            new LineSeries<DogAverageAge>
-            {
-                Values = new List<DogAverageAge>
-                {
-                    new DogAverageAge { X = 0, Y = (4 + 6 + 2) / 3d },
-                    new DogAverageAge { X = 5, Y = (8 + 3 + 4) / 3d }
-                },
-                Fill = null
             }
         };
     }

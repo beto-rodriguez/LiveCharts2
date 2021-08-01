@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-
+//
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
-
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,65 +23,51 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Motion;
-using LiveChartsCore.SkiaSharpView.Motion.Composed;
 using SkiaSharp;
 using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Painting
 {
+    /// <summary>
+    /// Defines a set of geometries that will be painted using a solid color.
+    /// </summary>
+    /// <seealso cref="PaintTask" />
     public class SolidColorPaintTask : PaintTask
     {
-        private readonly FloatMotionProperty strokeMiterTransition;
-        private readonly PathEffectMotionProperty pathEffectTransition;
-        private readonly ShaderMotionProperty shaderTransition;
-        private SkiaSharpDrawingContext drawingContext;
+        private SkiaSharpDrawingContext? _drawingContext;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SolidColorPaintTask"/> class.
+        /// </summary>
         public SolidColorPaintTask()
         {
-            strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
-            pathEffectTransition = RegisterMotionProperty(new PathEffectMotionProperty(nameof(PathEffect)));
-            shaderTransition = RegisterMotionProperty(new ShaderMotionProperty(nameof(Shader)));
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SolidColorPaintTask"/> class.
+        /// </summary>
+        /// <param name="color">The color.</param>
         public SolidColorPaintTask(SKColor color)
             : base(color)
         {
-            strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
-            pathEffectTransition = RegisterMotionProperty(new PathEffectMotionProperty(nameof(PathEffect)));
-            shaderTransition = RegisterMotionProperty(new ShaderMotionProperty(nameof(Shader)));
+            Color = color;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SolidColorPaintTask"/> class.
+        /// </summary>
+        /// <param name="color">The color.</param>
+        /// <param name="strokeWidth">Width of the stroke.</param>
         public SolidColorPaintTask(SKColor color, float strokeWidth)
             : base(color)
         {
             strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness), strokeWidth));
-            strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), 0f));
-            pathEffectTransition = RegisterMotionProperty(new PathEffectMotionProperty(nameof(PathEffect)));
-            shaderTransition = RegisterMotionProperty(new ShaderMotionProperty(nameof(Shader)));
+            Color = color;
         }
 
-        public SKStrokeCap StrokeCap { get; set; }
 
-        public SKStrokeJoin StrokeJoin { get; set; }
-
-        public float StrokeMiter 
-        {
-            get => strokeMiterTransition.GetMovement(this);
-            set => strokeMiterTransition.SetMovement(value, this);
-        }
-        public PathEffect PathEffect
-        { 
-            get => pathEffectTransition.GetMovement(this); 
-            set => pathEffectTransition.SetMovement(value, this); 
-        }
-        public Shader Shader
-        {
-            get => shaderTransition.GetMovement(this);
-            set => shaderTransition.SetMovement(value, this);
-        }
-
-        public override IDrawableTask<SkiaSharpDrawingContext> CloneTask()
+        /// <inheritdoc cref="IPaintTask{TDrawingContext}.CloneTask" />
+        public override IPaintTask<SkiaSharpDrawingContext> CloneTask()
         {
             var clone = new SolidColorPaintTask
             {
@@ -90,19 +76,21 @@ namespace LiveChartsCore.SkiaSharpView.Painting
                 IsFill = IsFill,
                 Color = Color,
                 IsAntialias = IsAntialias,
-                PathEffect = PathEffect,
+                StrokeThickness = StrokeThickness,
                 StrokeCap = StrokeCap,
                 StrokeJoin = StrokeJoin,
                 StrokeMiter = StrokeMiter,
-                StrokeThickness = StrokeThickness
+                PathEffect = PathEffect?.Clone(),
+                ImageFilter = ImageFilter?.Clone()
             };
 
             return clone;
         }
 
+        /// <inheritdoc cref="IPaintTask{TDrawingContext}.InitializeTask(TDrawingContext)" />
         public override void InitializeTask(SkiaSharpDrawingContext drawingContext)
         {
-            if (skiaPaint == null) skiaPaint = new SKPaint();
+            skiaPaint ??= new SKPaint();
 
             skiaPaint.Color = Color;
             skiaPaint.IsAntialias = IsAntialias;
@@ -112,25 +100,62 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             skiaPaint.StrokeMiter = StrokeMiter;
             skiaPaint.StrokeWidth = StrokeThickness;
             skiaPaint.Style = IsStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
-            if (PathEffect != null) skiaPaint.PathEffect = PathEffect.GetSKPath();
-            if (Shader != null) skiaPaint.Shader = Shader.GetSKShader();
-            if (ClipRectangle != RectangleF.Empty)
+
+            if (PathEffect is not null)
             {
-                drawingContext.Canvas.Save();
-                drawingContext.Canvas.ClipRect(new SKRect(ClipRectangle.X, ClipRectangle.Y, ClipRectangle.Width, ClipRectangle.Height));
-                this.drawingContext = drawingContext;
+                PathEffect.CreateEffect(drawingContext);
+                skiaPaint.PathEffect = PathEffect.SKPathEffect;
+            }
+
+            if (ImageFilter is not null)
+            {
+                ImageFilter.CreateFilter(drawingContext);
+                skiaPaint.ImageFilter = ImageFilter.SKImageFilter;
+            }
+
+            var clip = GetClipRectangle(drawingContext.MotionCanvas);
+            if (clip != RectangleF.Empty)
+            {
+                _ = drawingContext.Canvas.Save();
+                drawingContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
+                _drawingContext = drawingContext;
             }
 
             drawingContext.Paint = skiaPaint;
             drawingContext.PaintTask = this;
         }
 
+        /// <inheritdoc cref="IPaintTask{TDrawingContext}.SetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
+        public override void SetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
+        {
+            if (context.PaintTask is null || context.Paint is null) return;
+
+            var baseColor = context.PaintTask.Color;
+            context.Paint.Color =
+                new SKColor(baseColor.Red, baseColor.Green, baseColor.Blue, unchecked((byte)(255 * geometry.Opacity)));
+        }
+
+        /// <inheritdoc cref="IPaintTask{TDrawingContext}.ResetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
+        public override void ResetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
+        {
+            if (context.PaintTask is null || context.Paint is null) return;
+            if (ImageFilter is not null) ImageFilter.Dispose();
+
+            var baseColor = context.PaintTask.Color;
+            context.Paint.Color = baseColor;
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
         public override void Dispose()
         {
-            if (ClipRectangle != RectangleF.Empty && drawingContext != null)
+            if (PathEffect is not null) PathEffect.Dispose();
+
+            if (_drawingContext is not null && GetClipRectangle(_drawingContext.MotionCanvas) != RectangleF.Empty)
             {
-                drawingContext.Canvas.Restore();
-                drawingContext = null;
+                _drawingContext.Canvas.Restore();
+                _drawingContext = null;
             }
 
             base.Dispose();

@@ -1,0 +1,25 @@
+<UserControl x:Class="AvaloniaSample.General.Tooltips.View"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:vms="using:ViewModelsSamples.General.Tooltips">
+  <UserControl.DataContext>
+    <vms:ViewModel/>
+  </UserControl.DataContext>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="30"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <ComboBox Grid.Row="0"
+              Items="{Binding Positions}"
+              SelectedItem="{Binding SelectedPosition}">
+      <ComboBox.ItemTemplate>
+        <DataTemplate>
+          <TextBlock Text="{Binding Name}"></TextBlock>
+        </DataTemplate>
+      </ComboBox.ItemTemplate>
+    </ComboBox>
+    <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" TooltipPosition="{Binding Position}"></lvc:CartesianChart>
+  </Grid>  
+</UserControl>

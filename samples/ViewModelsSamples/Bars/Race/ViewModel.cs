@@ -11,10 +11,10 @@ using System.Linq;
 
 namespace ViewModelsSamples.Bars.Race
 {
-    public class ViewModel: INotifyPropertyChanged
+    public class ViewModel : INotifyPropertyChanged
     {
-        private Random r = new Random();
-        private List<ISeries> series;
+        private readonly Random _r = new Random();
+        private List<ISeries> _series;
 
         public ViewModel()
         {
@@ -26,9 +26,9 @@ namespace ViewModelsSamples.Bars.Race
                     Name = "Tsunoda",
                     Stroke  = null,
                     MaxBarWidth = 50,
-                    DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
+                    DataLabelsPaint = new SolidColorPaintTask(new SKColor(40, 40, 40)),
                     DataLabelsPosition = DataLabelsPosition.End,
-                    DataLabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
+                    DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
                 new RowSeries<ObservableValue>
                 {
@@ -36,9 +36,9 @@ namespace ViewModelsSamples.Bars.Race
                     Name = "Sainz",
                     Stroke  = null,
                     MaxBarWidth = 50,
-                    DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
+                    DataLabelsPaint = new SolidColorPaintTask(new SKColor(40, 40, 40)),
                     DataLabelsPosition = DataLabelsPosition.End,
-                    DataLabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
+                    DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
                 new RowSeries<ObservableValue>
                 {
@@ -46,9 +46,9 @@ namespace ViewModelsSamples.Bars.Race
                     Name = "Riccardo",
                     Stroke  = null,
                     MaxBarWidth = 52,
-                    DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
+                    DataLabelsPaint = new SolidColorPaintTask(new SKColor(40, 40, 40)),
                     DataLabelsPosition = DataLabelsPosition.End,
-                    DataLabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
+                    DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
                 new RowSeries<ObservableValue>
                 {
@@ -56,9 +56,9 @@ namespace ViewModelsSamples.Bars.Race
                     Name = "Bottas",
                     Stroke  = null,
                     MaxBarWidth = 50,
-                    DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
+                    DataLabelsPaint = new SolidColorPaintTask(new SKColor(40, 40, 40)),
                     DataLabelsPosition = DataLabelsPosition.End,
-                    DataLabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
+                    DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
                 new RowSeries<ObservableValue>
                 {
@@ -66,9 +66,9 @@ namespace ViewModelsSamples.Bars.Race
                     Name = "Perez",
                     Stroke  = null,
                     MaxBarWidth = 50,
-                    DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
+                    DataLabelsPaint = new SolidColorPaintTask(new SKColor(40, 40, 40)),
                     DataLabelsPosition = DataLabelsPosition.End,
-                    DataLabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
+                    DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
                 new RowSeries<ObservableValue>
                 {
@@ -76,9 +76,9 @@ namespace ViewModelsSamples.Bars.Race
                     Name = "Verstapen",
                     Stroke  = null,
                     MaxBarWidth = 50,
-                    DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
+                    DataLabelsPaint = new SolidColorPaintTask(new SKColor(40, 40, 40)),
                     DataLabelsPosition = DataLabelsPosition.End,
-                    DataLabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
+                    DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
                 new RowSeries<ObservableValue>
                 {
@@ -86,14 +86,14 @@ namespace ViewModelsSamples.Bars.Race
                     Name = "Hamilton",
                     Stroke  = null,
                     MaxBarWidth = 50,
-                    DataLabelsDrawableTask = new SolidColorPaintTask(new SKColor(40, 40, 40)),
+                    DataLabelsPaint = new SolidColorPaintTask(new SKColor(40, 40, 40)),
                     DataLabelsPosition = DataLabelsPosition.End,
-                    DataLabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
+                    DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
             };
         }
 
-        public List<ISeries> Series { get => series; set { series = value; OnPropertyChanged(nameof(Series)); } }
+        public List<ISeries> Series { get => _series; set { _series = value; OnPropertyChanged(nameof(Series)); } }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -102,7 +102,7 @@ namespace ViewModelsSamples.Bars.Race
             foreach (var item in Series)
             {
                 var i = ((ObservableValue[])item.Values)[0];
-                i.Value += r.Next(0, 30);
+                i.Value += _r.Next(0, 30);
             }
 
             Series = Series.OrderBy(x => ((ObservableValue[])x.Values)[0].Value).ToList();

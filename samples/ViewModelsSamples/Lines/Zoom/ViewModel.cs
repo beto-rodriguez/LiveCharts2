@@ -13,7 +13,7 @@ namespace ViewModelsSamples.Lines.Zoom
             var r = new Random();
             var t = 0;
 
-            for (int i = 0; i < 100; i++)
+            for (var i = 0; i < 100; i++)
             {
                 t += r.Next(-90, 100);
                 values[i] = t;
@@ -22,6 +22,6 @@ namespace ViewModelsSamples.Lines.Zoom
             SeriesCollection = new ISeries[] { new LineSeries<int> { Values = values } };
         }
 
-        public IEnumerable<ISeries> SeriesCollection { get; set; } 
+        public IEnumerable<ISeries> SeriesCollection { get; set; }
     }
 }

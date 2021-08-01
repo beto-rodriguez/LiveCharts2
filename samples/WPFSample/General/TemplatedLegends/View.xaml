@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="WPFSample.General.TemplatedLegends.View"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+             xmlns:vms="clr-namespace:ViewModelsSamples.General.TemplatedLegends;assembly=ViewModelsSamples">
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <lvc:CartesianChart Grid.Row="0" Series="{Binding Series}" LegendPosition="Right" >
+            <lvc:CartesianChart.LegendTemplate>
+                <DataTemplate>
+                    <ItemsControl ItemsSource="{Binding Series, RelativeSource={RelativeSource AncestorType=lvc:DefaultLegend}}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                    Orientation="{Binding Orientation, RelativeSource={RelativeSource AncestorType=lvc:DefaultLegend}}" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="15 4" Background="#F5F5DC">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock
+                                            Text="{Binding Name}"
+                                            VerticalAlignment="Center"/>
+                                        <lvc:MotionCanvas
+                                            Margin="8 0 0 0"
+                                            PaintTasks="{Binding CanvasSchedule.PaintSchedules}"
+                                            Width="{Binding CanvasSchedule.Width}"
+                                            Height="{Binding CanvasSchedule.Height}"
+                                            VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </DataTemplate>
+            </lvc:CartesianChart.LegendTemplate>
+        </lvc:CartesianChart>
+    </Grid>
+</UserControl>

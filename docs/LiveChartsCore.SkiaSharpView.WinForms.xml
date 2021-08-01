@@ -1,0 +1,323 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LiveChartsCore.SkiaSharpView.WinForms</name>
+    </assembly>
+    <members>
+        <member name="T:LiveChartsCore.SkiaSharpView.WinForms.CartesianChart">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.ICartesianChartView`1" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.CartesianChart.#ctor(LiveChartsCore.Kernel.IChartTooltip{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext},LiveChartsCore.Kernel.IChartLegend{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.WinForms.CartesianChart"/> class.
+            </summary>
+            <param name="tooltip">The default tool tip control.</param>
+            <param name="legend">The default legend control.</param>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.CartesianChart.Series">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.Series" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.CartesianChart.XAxes">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.XAxes" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.CartesianChart.YAxes">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.YAxes" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.CartesianChart.ZoomMode">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.ZoomMode" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.CartesianChart.ZoomingSpeed">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.ICartesianChartView`1.ZoomingSpeed" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.CartesianChart.InitializeCore">
+            <summary>
+            Initializes the core.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.CartesianChart.ScaleUIPoint(System.Drawing.PointF,System.Int32,System.Int32)">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.ICartesianChartView`1.ScaleUIPoint(System.Drawing.PointF,System.Int32,System.Int32)" />
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WinForms.Chart">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.IChartView" />
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinForms.Chart.core">
+            <summary>
+            The core
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinForms.Chart.legend">
+            <summary>
+            The legend
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinForms.Chart.tooltip">
+            <summary>
+            The tooltip
+            </summary>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinForms.Chart.motionCanvas">
+            <summary>
+            The motion canvas
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.Chart.#ctor(LiveChartsCore.Kernel.IChartTooltip{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext},LiveChartsCore.Kernel.IChartLegend{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.WinForms.Chart"/> class.
+            </summary>
+            <param name="tooltip">The default tool tip control.</param>
+            <param name="legend">The default legend.</param>
+            <exception cref="T:LiveChartsCore.SkiaSharpView.WinForms.MotionCanvas"></exception>
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WinForms.Chart.Measuring">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.Measuring" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WinForms.Chart.UpdateStarted">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateStarted" />
+        </member>
+        <member name="E:LiveChartsCore.SkiaSharpView.WinForms.Chart.UpdateFinished">
+            <inheritdoc cref="E:LiveChartsCore.Kernel.IChartView`1.UpdateFinished" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.Chart.Core">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.Core" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.Chart.CoreCanvas">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.CoreCanvas" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.Chart.DrawMargin">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.DrawMargin" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.Chart.AnimationsSpeed">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.AnimationsSpeed" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.Chart.EasingFunction">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.AnimationsSpeed" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.Chart.LegendPosition">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.LegendPosition" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.Chart.LegendOrientation">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.LegendOrientation" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.Chart.LegendFont">
+            <summary>
+            Gets or sets the default legend font.
+            </summary>
+            <value>
+            The legend font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.Chart.LegendBackColor">
+            <summary>
+            Gets or sets the default color of the legend back.
+            </summary>
+            <value>
+            The color of the legend back.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.Chart.Legend">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.Legend" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.Chart.TooltipPosition">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.LegendPosition" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.Chart.TooltipFindingStrategy">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView.TooltipFindingStrategy" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.Chart.TooltipFont">
+            <summary>
+            Gets or sets the default tool tip font.
+            </summary>
+            <value>
+            The tool tip font.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.Chart.TooltipBackColor">
+            <summary>
+            Gets or sets the color of the default tool tip back.
+            </summary>
+            <value>
+            The color of the tool tip back.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.Chart.Tooltip">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.Tooltip" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.Chart.PointStates">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.PointStates" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.Chart.AutoUpdateEnaled">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IChartView`1.AutoUpdateEnaled" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.Chart.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.TooltipPoint})">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IChartView`1.ShowTooltip(System.Collections.Generic.IEnumerable{LiveChartsCore.Kernel.TooltipPoint})"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.Chart.HideTooltip">
+            <inheritdoc cref="M:LiveChartsCore.Kernel.IChartView`1.HideTooltip"/>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.Chart.InitializeCore">
+            <summary>
+            Initializes the core.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.Chart.OnPropertyChanged">
+            <summary>
+            Called when a property changes.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.Chart.OnHandleDestroyed(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:HandleDestroyed" /> event.
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
+            <returns></returns>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WinForms.DefaultLegend">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.IChartLegend`1" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.DefaultLegend.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.WinForms.DefaultLegend"/> class.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.DefaultLegend.Orientation">
+            <summary>
+            Gets or sets the orientation.
+            </summary>
+            <value>
+            The orientation.
+            </value>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinForms.DefaultLegend.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.DefaultLegend.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.DefaultLegend.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WinForms.DefaultTooltip">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.IChartTooltip`1" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.DefaultTooltip.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.WinForms.DefaultTooltip"/> class.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.DefaultTooltip.Dispose(System.Boolean)">
+            <summary>
+            Disposes the specified disposing.
+            </summary>
+            <param name="disposing">if set to <c>true</c> [disposing].</param>
+            <returns></returns>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.DefaultTooltip.CreateParams">
+            <summary>
+            Gets the create parameters.
+            </summary>
+            <value>
+            The create parameters.
+            </value>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinForms.DefaultTooltip.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.DefaultTooltip.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WinForms.MotionCanvas">
+            <summary>
+            The motion canvas control for windows forms, <see cref="T:LiveChartsCore.Drawing.MotionCanvas`1"/>.
+            </summary>
+            <seealso cref="T:System.Windows.Forms.UserControl" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.MotionCanvas.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.WinForms.MotionCanvas"/> class.
+            </summary>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.MotionCanvas.PaintTasks">
+            <summary>
+            Gets or sets the paint tasks.
+            </summary>
+            <value>
+            The paint tasks.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.MotionCanvas.FramesPerSecond">
+            <summary>
+            Gets or sets the frames per second.
+            </summary>
+            <value>
+            The frames per second.
+            </value>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.MotionCanvas.CanvasCore">
+            <summary>
+            Gets the canvas core.
+            </summary>
+            <value>
+            The canvas core.
+            </value>
+        </member>
+        <member name="F:LiveChartsCore.SkiaSharpView.WinForms.MotionCanvas.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.MotionCanvas.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.MotionCanvas.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:LiveChartsCore.SkiaSharpView.WinForms.PieChart">
+            <inheritdoc cref="T:LiveChartsCore.Kernel.IPieChartView`1" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.PieChart.#ctor(LiveChartsCore.Kernel.IChartTooltip{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext},LiveChartsCore.Kernel.IChartLegend{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+            <summary>
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.WinForms.PieChart"/> class.
+            </summary>
+            <param name="tooltip">The default tool tip control.</param>
+            <param name="legend">The default legend.</param>
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.PieChart.Series">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.Series" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.PieChart.InitialRotation">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.InitialRotation" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.PieChart.MaxAngle">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.MaxAngle" />
+        </member>
+        <member name="P:LiveChartsCore.SkiaSharpView.WinForms.PieChart.Total">
+            <inheritdoc cref="P:LiveChartsCore.Kernel.IPieChartView`1.Total" />
+        </member>
+        <member name="M:LiveChartsCore.SkiaSharpView.WinForms.PieChart.InitializeCore">
+            <summary>
+            Initializes the core.
+            </summary>
+        </member>
+    </members>
+</doc>

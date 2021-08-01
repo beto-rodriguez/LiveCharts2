@@ -29,7 +29,7 @@ namespace LiveChartsCore.UnitTesting
             propertyChangedObserver.MyCollection = caseOneCollection;
 
             var o1 = new PropertyChangedObject();
-            
+
             caseOneCollection.Add(o1);
             o1.Value = 10;
 
@@ -55,7 +55,7 @@ namespace LiveChartsCore.UnitTesting
             o1.Value = 30;
 
             Assert.IsTrue(
-                propertyChangedObserver.CollectionChangedCount == collectionChanges && 
+                propertyChangedObserver.CollectionChangedCount == collectionChanges &&
                 propertyChangedObserver.PropertyChangedCount == propertyChanges);
 
             // CASE 3, INSTANCE CHANGED.
@@ -87,7 +87,7 @@ namespace LiveChartsCore.UnitTesting
                 propertyChangedObserver.PropertyChangedCount == propertyChanges);
 
             // CASE 4, IT MUST STOP LISTENING WHEN WE REMOVE THE OBJECT FROM THE COLLECTION 
-            caseThreeCollection.Remove(o4);
+            _ = caseThreeCollection.Remove(o4);
             collectionChanges++;
             o4.Value = 60;
             o4.Value = 20;

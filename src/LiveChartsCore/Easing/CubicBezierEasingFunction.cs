@@ -5,16 +5,28 @@ using System;
 
 namespace LiveChartsCore.Easing
 {
+    /// <summary>
+    /// Defines the CubicBezierEasingFunction.
+    /// </summary>
     public static class CubicBezierEasingFunction
     {
-        private static readonly float NEWTON_ITERATIONS = 4f;
-        private static readonly float NEWTON_MIN_SLOPE = 0.001f;
-        private static readonly float SUBDIVISION_PRECISION = 0.0000001f;
-        private static readonly float SUBDIVISION_MAX_ITERATIONS = 10f;
+        private static readonly float s_iterations = 4f;
+        private static readonly float s_minSlope = 0.001f;
+        private static readonly float s_presicion = 0.0000001f;
+        private static readonly float s_maxIterations = 10f;
 
-        private static readonly int kSplineTableSize = 11;
-        private static readonly float kSampleStepSize = 1.0f / (kSplineTableSize - 1.0f);
+        private static readonly int s_kSplineTableSize = 11;
+        private static readonly float s_kSampleStepSize = 1.0f / (s_kSplineTableSize - 1.0f);
 
+        /// <summary>
+        /// Builds a bezier easing function.
+        /// </summary>
+        /// <param name="mX1">The m x1.</param>
+        /// <param name="mY1">The m y1.</param>
+        /// <param name="mX2">The m x2.</param>
+        /// <param name="mY2">The m y2.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception">Bezier x values must be in [0, 1] range</exception>
         public static Func<float, float> BuildBezierEasingFunction(float mX1, float mY1, float mX2, float mY2)
         {
             if (!(0 <= mX1 && mX1 <= 1 && 0 <= mX2 && mX2 <= 1))
@@ -27,42 +39,33 @@ namespace LiveChartsCore.Easing
                 return LinearEasing;
             }
 
-            // Precompute samples table
-            var sampleValues = new float[kSplineTableSize];
-            for (var i = 0; i < kSplineTableSize; ++i)
+            // Pre compute samples table
+            var sampleValues = new float[s_kSplineTableSize];
+            for (var i = 0; i < s_kSplineTableSize; ++i)
             {
-                sampleValues[i] = CalcBezier(i * kSampleStepSize, mX1, mX2);
+                sampleValues[i] = CalcBezier(i * s_kSampleStepSize, mX1, mX2);
             }
 
             float getTForX(float aX)
             {
                 var intervalStart = 0.0f;
                 var currentSample = 1;
-                var lastSample = kSplineTableSize - 1;
+                var lastSample = s_kSplineTableSize - 1;
 
                 for (; currentSample != lastSample && sampleValues[currentSample] <= aX; ++currentSample)
                 {
-                    intervalStart += kSampleStepSize;
+                    intervalStart += s_kSampleStepSize;
                 }
                 --currentSample;
 
                 // Interpolate to provide an initial guess for t
                 var dist = (aX - sampleValues[currentSample]) / (sampleValues[currentSample + 1] - sampleValues[currentSample]);
-                var guessForT = intervalStart + dist * kSampleStepSize;
+                var guessForT = intervalStart + dist * s_kSampleStepSize;
 
                 var initialSlope = GetSlope(guessForT, mX1, mX2);
-                if (initialSlope >= NEWTON_MIN_SLOPE)
-                {
-                    return NewtonRaphsonIterate(aX, guessForT, mX1, mX2);
-                }
-                else if (initialSlope == 0.0f)
-                {
-                    return guessForT;
-                }
-                else
-                {
-                    return BinarySubdivide(aX, intervalStart, intervalStart + kSampleStepSize, mX1, mX2);
-                }
+                return initialSlope >= s_minSlope
+                    ? NewtonRaphsonIterate(aX, guessForT, mX1, mX2)
+                    : initialSlope == 0.0f ? guessForT : BinarySubdivide(aX, intervalStart, intervalStart + s_kSampleStepSize, mX1, mX2);
             }
 
             return (t) =>
@@ -101,13 +104,13 @@ namespace LiveChartsCore.Easing
                 {
                     aA = currentT;
                 }
-            } while (Math.Abs(currentX) > SUBDIVISION_PRECISION && ++i < SUBDIVISION_MAX_ITERATIONS);
+            } while (Math.Abs(currentX) > s_presicion && ++i < s_maxIterations);
             return currentT;
         }
 
         private static float NewtonRaphsonIterate(float aX, float aGuessT, float mX1, float mX2)
         {
-            for (var i = 0; i < NEWTON_ITERATIONS; ++i)
+            for (var i = 0; i < s_iterations; ++i)
             {
                 var currentSlope = GetSlope(aGuessT, mX1, mX2);
                 if (currentSlope == 0.0f)

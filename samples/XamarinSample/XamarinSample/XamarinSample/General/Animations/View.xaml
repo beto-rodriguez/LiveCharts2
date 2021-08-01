@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XamarinSample.General.Animations.View"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Xamarin.Forms;assembly=LiveChartsCore.SkiaSharpView.XamarinForms"
+             xmlns:vms="clr-namespace:ViewModelsSamples.General.Animations;assembly=ViewModelsSamples">
+    <ContentPage.BindingContext>
+        <vms:ViewModel/>
+    </ContentPage.BindingContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Picker Grid.Row="0"
+                ItemsSource="{Binding AvalaibaleCurves}"
+                SelectedItem="{Binding SelectedCurve}"
+                ItemDisplayBinding="{Binding Name}"/>
+        
+        <Picker Grid.Row="1"
+                ItemsSource="{Binding AvailableSpeeds}"
+                SelectedItem="{Binding SelectedSpeed}"
+                ItemDisplayBinding="{Binding Name}"/>
+
+        <lvc:CartesianChart Grid.Row="2" Series="{Binding Series}"
+                          TooltipPosition="Hidden"
+                          EasingFunction="{Binding ActualCurve}"
+                          AnimationsSpeed="{Binding ActualSpeed}"/>
+    </Grid>
+</ContentPage>
