@@ -1,8 +1,10 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.23">
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.22">
 
   <PropertyGroup>
-    <TargetFramework>Xamarin.Mac20</TargetFramework>
-    <RootNamespace>LiveChartsCore.SkiaSharp.Xamarin.Mac</RootNamespace>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <TargetFrameworks>Xamarin.Mac20</TargetFrameworks>
+    <RootNamespace>LiveChartsCore.SkiaSharpView.Xamarin.Mac</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,8 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
+      <!-- MSBuild complains if we don't add this: https://github.com/dotnet/standard/issues/542 -->
+    <Reference Include="netstandard" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\LiveChartsCore\LiveChartsCore.csproj" />
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
   </ItemGroup>
-
 </Project>
