@@ -299,7 +299,7 @@ namespace LiveChartsCore
             if (dataProvider is null) throw new Exception("A data provider is required");
 
             var baseSeriesBounds = dataProvider.GetFinancialBounds(chart, this, secondaryAxis, primaryAxis);
-            if (baseSeriesBounds.IsPrevious) return baseSeriesBounds;
+            if (baseSeriesBounds.HasData) return baseSeriesBounds;
             var baseBounds = baseSeriesBounds.Bounds;
 
             var tickPrimary = primaryAxis.GetTick(chart.ControlSize, baseBounds.VisiblePrimaryBounds);

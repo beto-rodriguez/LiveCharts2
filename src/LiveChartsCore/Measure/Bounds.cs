@@ -36,6 +36,11 @@ namespace LiveChartsCore.Measure
         }
 
         /// <summary>
+        /// Gets whether the bounds are empty.
+        /// </summary>
+        public bool IsEmpty { get; private set; } = true;
+
+        /// <summary>
         /// Gets or sets the maximum value in the data set.
         /// </summary>
         public double Max { get; set; } = float.MinValue;
@@ -72,6 +77,7 @@ namespace LiveChartsCore.Measure
         {
             if (Max <= value) Max = value;
             if (Min >= value) Min = value;
+            IsEmpty = false;
         }
 
         /// <summary>

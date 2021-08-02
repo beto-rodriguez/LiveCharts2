@@ -43,6 +43,39 @@ namespace LiveChartsCore.Kernel
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="DimensionalBounds"/> class.
+        /// </summary>
+        /// <param name="useInitial"></param>
+        internal DimensionalBounds(bool useInitial)
+        {
+            PrimaryBounds = new Bounds();
+            SecondaryBounds = new Bounds();
+            TertiaryBounds = new Bounds();
+            VisiblePrimaryBounds = new Bounds();
+            VisibleSecondaryBounds = new Bounds();
+            VisibleTertiaryBounds = new Bounds();
+
+            if (!useInitial) return;
+
+            VisiblePrimaryBounds.AppendValue(0);
+            VisiblePrimaryBounds.AppendValue(10);
+            PrimaryBounds.AppendValue(0);
+            PrimaryBounds.AppendValue(10);
+
+            VisibleSecondaryBounds.AppendValue(0);
+            VisibleSecondaryBounds.AppendValue(10);
+            SecondaryBounds.AppendValue(0);
+            SecondaryBounds.AppendValue(10);
+
+            VisibleTertiaryBounds.AppendValue(1);
+            TertiaryBounds.AppendValue(1);
+
+            IsEmpty = true;
+        }
+
+        internal bool IsEmpty { get; }
+
+        /// <summary>
         /// Gets or sets the primary bounds.
         /// </summary>
         public Bounds PrimaryBounds { get; set; }

@@ -50,21 +50,7 @@ namespace LiveChartsCore.Kernel.Data
             var t = typeof(TModel);
             _isValueType = t.IsValueType;
 
-            var bounds = new DimensionalBounds();
-
-            bounds.VisiblePrimaryBounds.AppendValue(0);
-            bounds.VisiblePrimaryBounds.AppendValue(10);
-            bounds.PrimaryBounds.AppendValue(0);
-            bounds.PrimaryBounds.AppendValue(10);
-
-            bounds.VisibleSecondaryBounds.AppendValue(0);
-            bounds.VisibleSecondaryBounds.AppendValue(10);
-            bounds.SecondaryBounds.AppendValue(0);
-            bounds.SecondaryBounds.AppendValue(10);
-
-            bounds.VisibleTertiaryBounds.AppendValue(1);
-            bounds.TertiaryBounds.AppendValue(1);
-
+            var bounds = new DimensionalBounds(true);
             _previousKnownBounds = bounds;
         }
 

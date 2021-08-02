@@ -238,7 +238,7 @@ namespace LiveChartsCore
             CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> secondaryAxis, IAxis<TDrawingContext> primaryAxis)
         {
             var baseSeriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
-            if (baseSeriesBounds.IsPrevious) return baseSeriesBounds;
+            if (baseSeriesBounds.HasData) return baseSeriesBounds;
             var baseBounds = baseSeriesBounds.Bounds;
 
             _weightBounds = baseBounds.TertiaryBounds;

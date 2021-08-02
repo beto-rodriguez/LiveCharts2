@@ -27,6 +27,8 @@ namespace LiveChartsCore.Kernel.Data
     /// </summary>
     public class SeriesBounds
     {
+        private readonly bool _isPrevious;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SeriesBounds"/> class.
         /// </summary>
@@ -35,7 +37,7 @@ namespace LiveChartsCore.Kernel.Data
         public SeriesBounds(DimensionalBounds bounds, bool isPrevious)
         {
             Bounds = bounds;
-            IsPrevious = IsPrevious;
+            _isPrevious = HasData;
         }
 
         /// <summary>
@@ -52,6 +54,6 @@ namespace LiveChartsCore.Kernel.Data
         /// <value>
         ///   <c>true</c> if this instance is previous; otherwise, <c>false</c>.
         /// </value>
-        public bool IsPrevious { get; }
+        public bool HasData => _isPrevious || Bounds.IsEmpty;
     }
 }

@@ -458,6 +458,8 @@ namespace LiveChartsCore
 
                 var seriesBounds = series.GetBounds(this, secondaryAxis, primaryAxis).Bounds;
 
+                if (seriesBounds.IsEmpty) continue;
+
                 secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.Max);
                 secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.Min);
                 secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.Max);
@@ -474,6 +476,55 @@ namespace LiveChartsCore
 
                 series.IsNotifyingChanges = true;
             }
+
+            #region empty bounds
+
+            // prevent the bounds are not empty...
+
+            foreach (var axis in XAxes)
+            {
+                axis.IsNotifyingChanges = false;
+                if (!axis.DataBounds.IsEmpty)
+                {
+                    axis.IsNotifyingChanges = true;
+                    continue;
+                }
+
+                var min = 0;
+                var max = 10d * axis.UnitWidth;
+
+                axis.DataBounds.AppendValue(max);
+                axis.DataBounds.AppendValue(min);
+                axis.VisibleDataBounds.AppendValue(max);
+                axis.VisibleDataBounds.AppendValue(min);
+
+                if (axis.DataBounds.MinDelta < max) axis.DataBounds.MinDelta = max;
+
+                axis.IsNotifyingChanges = true;
+            }
+            foreach (var axis in YAxes)
+            {
+                axis.IsNotifyingChanges = false;
+                if (!axis.DataBounds.IsEmpty)
+                {
+                    axis.IsNotifyingChanges = true;
+                    continue;
+                }
+
+                var min = 0;
+                var max = 10d * axis.UnitWidth;
+
+                axis.DataBounds.AppendValue(max);
+                axis.DataBounds.AppendValue(min);
+                axis.VisibleDataBounds.AppendValue(max);
+                axis.VisibleDataBounds.AppendValue(min);
+
+                if (axis.DataBounds.MinDelta < max) axis.DataBounds.MinDelta = max;
+
+                axis.IsNotifyingChanges = true;
+            }
+
+            #endregion
 
             if (legend is not null && SeriesMiniatureChanged(Series, LegendPosition))
             {
