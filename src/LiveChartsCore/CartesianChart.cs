@@ -473,7 +473,6 @@ namespace LiveChartsCore
                             axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + c;
                         }
 
-
                         var ns = axis.GetNameLabelSize(this);
                         var s = axis.GetPossibleSize(this);
                         if (axis.Position == AxisPosition.Start)
