@@ -546,6 +546,15 @@ namespace LiveChartsCore
                 {
                     if (!axis.IsVisible) continue;
 
+                    if (axis.DataBounds.Max == axis.DataBounds.Min)
+                    {
+                        var c = axis.DataBounds.Min * 0.3;
+                        axis.DataBounds.Min = axis.DataBounds.Min - c;
+                        axis.DataBounds.Max = axis.DataBounds.Max + c;
+                        axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - c;
+                        axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + c;
+                    }
+
                     var ns = axis.GetNameLabelSize(this);
                     var s = axis.GetPossibleSize(this);
                     if (axis.Position == AxisPosition.Start)
@@ -570,6 +579,15 @@ namespace LiveChartsCore
                 foreach (var axis in YAxes)
                 {
                     if (!axis.IsVisible) continue;
+
+                    if (axis.DataBounds.Max == axis.DataBounds.Min)
+                    {
+                        var c = axis.DataBounds.Min * 0.3;
+                        axis.DataBounds.Min = axis.DataBounds.Min - c;
+                        axis.DataBounds.Max = axis.DataBounds.Max + c;
+                        axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - c;
+                        axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + c;
+                    }
 
                     var ns = axis.GetNameLabelSize(this);
                     var s = axis.GetPossibleSize(this);
