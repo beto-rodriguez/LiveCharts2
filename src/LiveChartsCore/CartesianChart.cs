@@ -550,25 +550,97 @@ namespace LiveChartsCore
                     var s = axis.GetPossibleSize(this);
                     if (axis.Position == AxisPosition.Start)
                     {
+<<<<<<< HEAD
                         // X Bottom
                         axis.Yo = m.Bottom + s.Height * 0.5f + ns.Height;
                         bs += s.Height + ns.Height;
                         m.Bottom = bs;
                         if (s.Width * 0.5f > m.Left) m.Left = s.Width * 0.5f;
                         if (s.Width * 0.5f > m.Right) m.Right = s.Width * 0.5f;
+=======
+                        if (!axis.IsVisible) continue;
+
+                        // In axis.GetPossibleSize(), VisibleDataBound is used. So this block must be excuted before axis.GetPossibleSize().
+                        if (axis.DataBounds.Max == axis.DataBounds.Min)
+                        {
+                            var c = axis.DataBounds.Min * 0.3;
+                            axis.DataBounds.Min = axis.DataBounds.Min - c;
+                            axis.DataBounds.Max = axis.DataBounds.Max + c;
+                            axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - c;
+                            axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + c;
+                        }
+
+                        var ns = axis.GetNameLabelSize(this);
+                        var s = axis.GetPossibleSize(this);
+                        if (axis.Position == AxisPosition.Start)
+                        {
+                            // X Bottom
+                            axis.Yo = m.Bottom + s.Height * 0.5f + ns.Height;
+                            bs += s.Height + ns.Height;
+                            m.Bottom = bs;
+                            if (s.Width * 0.5f > m.Left) m.Left = s.Width * 0.5f;
+                            if (s.Width * 0.5f > m.Right) m.Right = s.Width * 0.5f;
+                        }
+                        else
+                        {
+                            // X Top
+                            axis.Yo = ts + s.Height * 0.5f + ns.Height;
+                            ts += s.Height + ns.Height;
+                            m.Top = ts;
+                            if (ls + s.Width * 0.5f > m.Left) m.Left = ls + s.Width * 0.5f;
+                            if (rs + s.Width * 0.5f > m.Right) m.Right = rs + s.Width * 0.5f;
+                        }
+>>>>>>> da58c6c22466b5771a6b0a95a072d4c0c7416fd5
                     }
                     else
                     {
+<<<<<<< HEAD
                         // X Top
                         axis.Yo = ts + s.Height * 0.5f + ns.Height;
                         ts += s.Height + ns.Height;
                         m.Top = ts;
                         if (ls + s.Width * 0.5f > m.Left) m.Left = ls + s.Width * 0.5f;
                         if (rs + s.Width * 0.5f > m.Right) m.Right = rs + s.Width * 0.5f;
+=======
+                        if (!axis.IsVisible) continue;
+
+                        // In axis.GetPossibleSize(), VisibleDataBound is used. So this block must be excuted before axis.GetPossibleSize().
+                        if (axis.DataBounds.Max == axis.DataBounds.Min)
+                        {
+                            var c = axis.DataBounds.Min * 0.3;
+                            axis.DataBounds.Min = axis.DataBounds.Min - c;
+                            axis.DataBounds.Max = axis.DataBounds.Max + c;
+                            axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - c;
+                            axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + c;
+                        }
+
+                        var ns = axis.GetNameLabelSize(this);
+                        var s = axis.GetPossibleSize(this);
+                        var w = s.Width > m.Left ? s.Width : m.Left;
+                        if (axis.Position == AxisPosition.Start)
+                        {
+                            // Y Left
+                            axis.Xo = ls + w * 0.5f + ns.Width;
+                            ls += w + ns.Width;
+                            m.Left = ls;
+                            if (s.Height * 0.5f > m.Top) { m.Top = s.Height * 0.5f; }
+                            if (s.Height * 0.5f > m.Bottom) { m.Bottom = s.Height * 0.5f; }
+                        }
+                        else
+                        {
+                            // Y Right
+                            axis.Xo = rs + w * 0.5f + ns.Width;
+                            rs += w + ns.Width;
+                            m.Right = rs;
+                            if (ts + s.Height * 0.5f > m.Top) m.Top = ts + s.Height * 0.5f;
+                            if (bs + s.Height * 0.5f > m.Bottom) m.Bottom = bs + s.Height * 0.5f;
+                        }
+>>>>>>> da58c6c22466b5771a6b0a95a072d4c0c7416fd5
                     }
                 }
                 foreach (var axis in YAxes)
                 {
+<<<<<<< HEAD
                     if (!axis.IsVisible) continue;
 
                     var ns = axis.GetNameLabelSize(this);
@@ -584,6 +656,10 @@ namespace LiveChartsCore
                         if (s.Height * 0.5f > m.Bottom) { m.Bottom = s.Height * 0.5f; }
                     }
                     else
+=======
+                    _ = _everMeasuredAxes.Add(axis);
+                    if (axis.IsVisible)
+>>>>>>> da58c6c22466b5771a6b0a95a072d4c0c7416fd5
                     {
                         // Y Right
                         axis.Xo = rs + w * 0.5f + ns.Width;
