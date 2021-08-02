@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
+using System;
 using System.Collections.Generic;
 
 namespace LiveChartsCore.Kernel
@@ -34,8 +35,8 @@ namespace LiveChartsCore.Kernel
         where TDrawingContext : DrawingContext
     {
         private readonly Dictionary<IChartSeries<TDrawingContext>, int> _stackPositions = new();
-        private readonly List<List<StackedValue>> _stack = new();
-        private readonly List<double> _totals = new();
+        private readonly List<Dictionary<double, StackedValue>> _stack = new();
+        private readonly Dictionary<double, double> _totals = new();
         private int _stackCount = 0;
         private int _knownMaxLenght = 0;
 
@@ -63,7 +64,7 @@ namespace LiveChartsCore.Kernel
         {
             if (!_stackPositions.TryGetValue(series, out var i))
             {
-                var n = new List<StackedValue>(_knownMaxLenght);
+                var n = new Dictionary<double, StackedValue>(_knownMaxLenght);
                 _stack.Add(n);
                 i = _stackCount++;
                 _stackPositions[series] = i;
@@ -80,21 +81,37 @@ namespace LiveChartsCore.Kernel
         /// <returns></returns>
         public double StackPoint(ChartPoint point, int seriesStackPosition)
         {
-            var index = unchecked((int)point.SecondaryValue);
-            var start = seriesStackPosition == 0 ? 0 : _stack[seriesStackPosition - 1][index].End;
-            var value = point.PrimaryValue;
+            var index = point.SecondaryValue;
 
-            var si = _stack[seriesStackPosition];
-            if (si.Count < point.SecondaryValue + 1)
+            double start;
+
+            if (seriesStackPosition == 0)
             {
-                si.Add(new StackedValue { Start = start, End = start + value });
-                _totals.Add(0);
-                _knownMaxLenght++;
+                start = 0;
             }
             else
             {
-                si[index] = new StackedValue { Start = start, End = start + value };
+                var c = _stack[seriesStackPosition - 1];
+                if (c.Count - 1 < index)
+                    throw new IndexOutOfRangeException(
+                        $"The {nameof(ISeries.Values)} property of all the stacked series of the same kind must have the same length. " +
+                        $"Use '0' or 'double.NaN' when you need to skip a point.");
+                start = c[index].End;
             }
+
+            var value = point.PrimaryValue;
+
+            var si = _stack[seriesStackPosition];
+
+            if (!si.TryGetValue(point.SecondaryValue, out var currentStack))
+            {
+                currentStack = new StackedValue { Start = start, End = start };
+                si.Add(index, currentStack);
+                if (!_totals.TryGetValue(index, out var _)) _totals.Add(index, 0);
+                _knownMaxLenght++;
+            }
+
+            currentStack.End += value;
 
             var total = _totals[index] + value;
             _totals[index] = total;
@@ -110,7 +127,7 @@ namespace LiveChartsCore.Kernel
         /// <returns></returns>
         public StackedValue GetStack(ChartPoint point, int seriesStackPosition)
         {
-            var index = unchecked((int)point.SecondaryValue);
+            var index = point.SecondaryValue;
             var p = _stack[seriesStackPosition][index];
 
             return new StackedValue
