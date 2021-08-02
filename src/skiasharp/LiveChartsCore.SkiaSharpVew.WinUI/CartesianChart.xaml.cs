@@ -835,8 +835,8 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             _canvas = canvas;
 
             _core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
-            //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
-            //tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
+            //_legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
+            //_tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
 
             if (SyncContext != null)
                 _canvas.CanvasCore.Sync = SyncContext;
