@@ -25,7 +25,7 @@ namespace LiveChartsCore.Kernel
     /// <summary>
     /// Defines the a stacked value.
     /// </summary>
-    public struct StackedValue
+    public class StackedValue
     {
         /// <summary>
         /// Gets or sets the start.
