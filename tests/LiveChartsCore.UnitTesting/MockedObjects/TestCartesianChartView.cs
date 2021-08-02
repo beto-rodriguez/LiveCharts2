@@ -96,12 +96,12 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
 
         public void InvokeOnUIThread(Action action)
         {
-            throw new NotImplementedException();
+            action();
         }
 
         public void SyncAction(Action action)
         {
-            throw new NotImplementedException();
+            action();
         }
     }
 }
