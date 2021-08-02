@@ -49,7 +49,6 @@ namespace UWPSample.General.ChartToImage
             using var image = cartesianChart.GetImage();
             using var data = image.Encode();
             var base64 = Convert.ToBase64String(data.AsSpan().ToArray());
-            image.Dispose();
 
             // or you could also use a chart in the user interface to create an image
             CreateImageFromCartesianControl();
