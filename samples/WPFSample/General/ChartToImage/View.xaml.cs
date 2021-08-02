@@ -47,7 +47,7 @@ namespace WPFSample.General.ChartToImage
             cartesianChart.SaveImage("CartesianImageFromMemory.png"); // <- path where the image will be generated
 
             // alternatively you can get the image and do different operations:
-            var image = cartesianChart.GetImage();
+            using var image = cartesianChart.GetImage();
             using var data = image.Encode();
             var base64 = Convert.ToBase64String(data.AsSpan());
             image.Dispose();
