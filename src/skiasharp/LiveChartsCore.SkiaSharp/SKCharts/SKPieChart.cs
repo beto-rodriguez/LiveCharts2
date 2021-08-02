@@ -37,7 +37,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
     /// <summary>
     /// In-memory chart that is able to generate a chart images.
     /// </summary>
-    public class SKPieChart : IPieChartView<SkiaSharpDrawingContext>, IImageChart
+    public class SKPieChart : IPieChartView<SkiaSharpDrawingContext>, ISkiaSharpChart
     {
         private Color _backColor;
 
@@ -203,7 +203,33 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
             }
         }
 
-        /// <inheritdoc cref="IImageChart.SaveImage(string, SKEncodedImageFormat, int)"/>
+        /// <inheritdoc cref="ISkiaSharpChart.GetImage"/>
+        public SKImage GetImage()
+        {
+            CoreCanvas.DisableAnimations = true;
+
+            using var surface = SKSurface.Create(new SKImageInfo(Width, Height));
+
+            var canvas = surface.Canvas;
+            using var clearColor = new SKPaint { Color = Background };
+            canvas.DrawRect(0, 0, Width, Height, clearColor);
+
+            Core.Update(new ChartUpdateParams { Throttling = false, IsAutomaticUpdate = false });
+
+            CoreCanvas.DrawFrame(
+                new SkiaSharpDrawingContext(
+                    CoreCanvas,
+                    new SKImageInfo(Height, Width),
+                    surface,
+                    canvas)
+                {
+                    ClearColor = Background
+                });
+
+            return surface.Snapshot();
+        }
+
+        /// <inheritdoc cref="ISkiaSharpChart.SaveImage(string, SKEncodedImageFormat, int)"/>
         public void SaveImage(string path, SKEncodedImageFormat format = SKEncodedImageFormat.Png, int quality = 80)
         {
             CoreCanvas.DisableAnimations = true;

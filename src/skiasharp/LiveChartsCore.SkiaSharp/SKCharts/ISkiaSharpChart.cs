@@ -27,8 +27,14 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
     /// <summary>
     /// A chart that is able to generate images.
     /// </summary>
-    public interface IImageChart
+    public interface ISkiaSharpChart
     {
+        /// <summary>
+        /// Gets the current <see cref="SKSurface"/>.
+        /// </summary>
+        /// <returns></returns>
+        SKImage GetImage();
+
         /// <summary>
         /// Saves the image.
         /// </summary>

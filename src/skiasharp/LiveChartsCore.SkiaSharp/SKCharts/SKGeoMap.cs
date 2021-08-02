@@ -34,7 +34,7 @@ using SkiaSharp;
 namespace LiveChartsCore.SkiaSharpView.SKCharts
 {
     /// <inheritdoc cref="IGeoMap"/>
-    public class SKGeoMap : IGeoMap, IImageChart
+    public class SKGeoMap : IGeoMap, ISkiaSharpChart
     {
         private readonly MotionCanvas<SkiaSharpDrawingContext> _motionCanvas = new();
         private static GeoJsonFile? s_map = null;
@@ -113,7 +113,32 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         /// <inheritdoc cref="IGeoMap.Values"/>
         public Dictionary<string, double> Values { get; set; } = new Dictionary<string, double>();
 
-        /// <inheritdoc cref="IImageChart.SaveImage(string, SKEncodedImageFormat, int)"/>
+        /// <inheritdoc cref="ISkiaSharpChart.GetImage"/>
+        public SKImage GetImage()
+        {
+            load();
+            _motionCanvas.DisableAnimations = true;
+
+            using var surface = SKSurface.Create(new SKImageInfo(Width, Height));
+
+            var canvas = surface.Canvas;
+            using var clearColor = new SKPaint { Color = Background };
+            canvas.DrawRect(0, 0, Width, Height, clearColor);
+
+            _motionCanvas.DrawFrame(
+                new SkiaSharpDrawingContext(
+                    _motionCanvas,
+                    new SKImageInfo(Height, Width),
+                    surface,
+                    canvas)
+                {
+                    ClearColor = Background
+                });
+
+            return surface.Snapshot();
+        }
+
+        /// <inheritdoc cref="ISkiaSharpChart.SaveImage(string, SKEncodedImageFormat, int)"/>
         public void SaveImage(string path, SKEncodedImageFormat format = SKEncodedImageFormat.Png, int quality = 80)
         {
             load();

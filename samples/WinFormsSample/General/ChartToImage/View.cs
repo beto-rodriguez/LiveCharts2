@@ -1,5 +1,6 @@
 ﻿using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.SkiaSharpView.WinForms;
+using System;
 using System.Windows.Forms;
 using ViewModelsSamples.General.ChartToImage;
 
@@ -22,7 +23,7 @@ namespace WinFormsSample.General.ChartToImage
             // Adding a cartesian chart to the UI...
             _cartesian = new CartesianChart
             {
-                Series = viewModel.CaterianSeries,
+                Series = viewModel.CatesianSeries,
 
                 // out of livecharts properties...
                 Location = new System.Drawing.Point(0, 0),
@@ -57,17 +58,30 @@ namespace WinFormsSample.General.ChartToImage
 
             // CARTESIAN CHART IMAGE
 
-            // you can create a image of a chart from memory using the
-            // SKCartesianChart, SKPieChart or SKGeoMap controls.
+            // you can create an image of a chart from memory using the
+            // SKCartesianChart, SKPieChart or SKGeoMap classes.
 
             // in the case of this sample
-            // the image was generated at the root folder ( samples/AvaloniaSample/bin/Debug/{targetFramework}/ )
-            new SKCartesianChart
+            // the image was generated at the root folder
+            var cartesianChart = new SKCartesianChart
             {
                 Width = 900,
                 Height = 600,
-                Series = viewModel.CaterianSeries
-            }.SaveImage("CartesianImageFromMemory.png"); // <- path where the image will be generated
+                Series = viewModel.CatesianSeries
+            };
+
+            // notice classes that implement ISkiaSharpChart (SKCartesianChart, SKPieChart and SKGeoMap classes)
+            // do not require a UI you can use this objects installing only the
+            // LiveChartsCore.SkiaSharpView package.
+
+            // alternatively you can get the surface and do different operations:
+            var image = cartesianChart.GetImage();
+            using var data = image.Encode();
+            var base64 = Convert.ToBase64String(data.AsSpan());
+            image.Dispose();
+
+            // you can save the image to png (by default), or use the second argument to specify another format.
+            cartesianChart.SaveImage("CartesianImageFromMemory.png"); // <- path where the image will be generated
 
             // or you could also use a chart in the user interface to create an image
             CreateImageFromCartesianControl();
