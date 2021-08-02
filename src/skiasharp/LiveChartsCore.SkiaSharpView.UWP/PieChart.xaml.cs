@@ -26,7 +26,6 @@ using System.ComponentModel;
 using System;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using Windows.System;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -84,7 +83,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                         seriesObserver.Dispose((IEnumerable<ISeries>)args.OldValue);
                         seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
                         if (chart._core == null) return;
-                        _ = Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => chart._core.Update());
+                        chart._core.Update();
                     }));
 
         /// <summary>
@@ -702,14 +701,12 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             PointerMoved += OnPointerMoved;
             PointerExited += OnPointerExited;
 
-            //_ = DispatcherQueue.TryEnqueue(() => _core.Update());
             _core.Update();
         }
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (_core == null) throw new Exception("Core not found!");
-            //_ = DispatcherQueue.TryEnqueue(() => _core.Update());
             _core.Update();
         }
 
@@ -745,7 +742,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             var chart = (PieChart)o;
             if (chart._core == null) return;
 
-            _ = Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => chart._core.Update());
+            chart._core.Update();
         }
     }
 }
