@@ -96,6 +96,9 @@
     <Compile Update="General\ChartToImage\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="General\MultiThreading\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="General\Sections\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

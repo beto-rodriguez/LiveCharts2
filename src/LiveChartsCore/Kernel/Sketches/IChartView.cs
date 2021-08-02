@@ -117,11 +117,30 @@ namespace LiveChartsCore.Kernel.Sketches
         TooltipPosition TooltipPosition { get; set; }
 
         /// <summary>
+        /// Gets or sets the Synchronization Context, use this property to
+        /// use an external object to handle multi threading synchronization.
+        /// </summary>
+        object SyncContext { get; set; }
+
+        /// <summary>
         /// Sets the tooltip style.
         /// </summary>
         /// <param name="background">The background.</param>
         /// <param name="textColor">Color of the text.</param>
         void SetTooltipStyle(Color background, Color textColor);
+
+        /// <summary>
+        /// Invokes an action in the UI thread.
+        /// </summary>
+        /// <param name="action"></param>
+        void InvokeOnUIThread(Action action);
+
+        /// <summary>
+        /// Ensures that the given action is synced as the chart data is
+        /// changing from multiple threads.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        void SyncAction(Action action);
     }
 
     /// <summary>

@@ -20,43 +20,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using SkiaSharp;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing
+namespace LiveChartsCore.Threading
 {
     /// <summary>
-    /// Defines an avalonia-skiasharp drawing context.
+    /// 
     /// </summary>
-    /// <seealso cref="SkiaSharpDrawingContext" />
-    public class AvaloniaDrawingContext : SkiaSharpDrawingContext
+    public static class ThreadingExtensions
     {
+        private static readonly object s_globalLocker = new();
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="AvaloniaDrawingContext"/> class.
+        /// Returns a locked an <see cref="IEnumerable{T}"/> instance.
         /// </summary>
-        /// <param name="motionCanvas">The motion canvas.</param>
-        /// <param name="info">The information.</param>
-        /// <param name="surface">The surface.</param>
-        /// <param name="canvas">The canvas.</param>
-        public AvaloniaDrawingContext(MotionCanvas<SkiaSharpDrawingContext> motionCanvas, SKImageInfo info, SKSurface surface, SKCanvas canvas)
-            : base(motionCanvas, info, surface, canvas, true)
+        /// <typeparam name="T"></typeparam>
+        /// <param name="enumerable"></param>
+        /// <param name="locker"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> Lock<T>(this IEnumerable<T> enumerable, object? locker = null)
         {
+            if (locker == null)
+            {
+                locker = enumerable is not ICollection collection
+                    // notice if you pass an iterator it will be locked using this static variable.
+                    // it might cause deadlocks
+                    ? s_globalLocker
+                    : collection.SyncRoot;
+            }
 
-        }
+            //lock (locker)
+            //{
+            var enumerator = enumerable.GetEnumerator();
 
-        /// <summary>
-        /// Gets or sets the color of the back.
-        /// </summary>
-        /// <value>
-        /// The color of the back.
-        /// </value>
-        public SKColor BackColor { get; set; } = new SKColor(255, 255, 255, 255);
+            while (enumerator.MoveNext())
+            {
+                yield return enumerator.Current;
+            }
 
-        /// <summary>
-        /// Clears the canvas.
-        /// </summary>
-        public override void ClearCanvas()
-        {
+            enumerator.Dispose();
+            //}
         }
     }
 }

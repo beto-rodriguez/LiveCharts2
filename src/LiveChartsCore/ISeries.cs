@@ -121,24 +121,18 @@ namespace LiveChartsCore
         /// </value>
         bool IsNotifyingChanges { get; set; }
 
-        ///// <summary>
-        ///// Gets or sets the tool tip label formatter, this function will build the label when a point in this series 
-        ///// is shown inside a tool tip.
-        ///// </summary>
-        ///// <value>
-        ///// The tool tip label formatter.
-        ///// </value>
-        //Func<object, string> TooltipLabelFormatter { get; set; }
+        /// <summary>
+        /// Gets the tooltip text for a give chart point.
+        /// </summary>
+        /// <param name="point">The chart point.</param>
+        /// <returns></returns>
         string GetTooltipText(ChartPoint point);
 
-        ///// <summary>
-        ///// Gets or sets the data label formatter, this function will build the label when a point in this series 
-        ///// is shown as data label.
-        ///// </summary>
-        ///// <value>
-        ///// The data label formatter.
-        ///// </value>
-        //Func<ChartPoint, string> DataLabelsFormatter { get; set; }
+        /// <summary>
+        /// Gets the data label content for a given chart point.
+        /// </summary>
+        /// <param name="point">The chart point.</param>
+        /// <returns></returns>
         string GetDataLabelText(ChartPoint point);
 
         /// <summary>

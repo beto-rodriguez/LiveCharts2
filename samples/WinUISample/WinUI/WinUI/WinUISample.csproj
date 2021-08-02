@@ -33,6 +33,7 @@
     <None Remove="Design\RadialGradients\View.xaml" />
     <None Remove="Design\LinearGradients\View.xaml" />
     <None Remove="Financial\BasicCandlesticks\View.xaml" />
+    <None Remove="General\MultiThreading\View.xaml" />
     <None Remove="General\Visibility\View.xaml" />
     <None Remove="General\UserDefinedTypes\View.xaml" />
     <None Remove="General\Tooltips\View.xaml" />

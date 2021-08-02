@@ -88,6 +88,9 @@
     <Compile Update="General\ChartToImage\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="General\MultiThreading\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="General\Sections\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -290,6 +293,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="General\ChartToImage\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="General\MultiThreading\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

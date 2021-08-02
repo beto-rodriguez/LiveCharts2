@@ -39,7 +39,13 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
         /// <param name="info">The information.</param>
         /// <param name="surface">The surface.</param>
         /// <param name="canvas">The canvas.</param>
-        public SkiaSharpDrawingContext(MotionCanvas<SkiaSharpDrawingContext> motionCanvas, SKImageInfo info, SKSurface surface, SKCanvas canvas)
+        /// <param name="lockOnDraw">Locks the canvas while drawing it (workaround for avalonia).</param>
+        public SkiaSharpDrawingContext(
+            MotionCanvas<SkiaSharpDrawingContext> motionCanvas,
+            SKImageInfo info,
+            SKSurface surface,
+            SKCanvas canvas,
+            bool lockOnDraw = false) : base(lockOnDraw)
         {
             MotionCanvas = motionCanvas;
             Info = info;

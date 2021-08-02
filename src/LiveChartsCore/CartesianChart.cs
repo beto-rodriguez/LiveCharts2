@@ -28,7 +28,10 @@ using System.Drawing;
 using System.Linq;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Kernel.Sketches;
+using System.Threading;
+#if DEBUG
 using System.Diagnostics;
+#endif
 
 namespace LiveChartsCore
 {
@@ -55,11 +58,13 @@ namespace LiveChartsCore
         /// <param name="view">The view.</param>
         /// <param name="defaultPlatformConfig">The default platform configuration.</param>
         /// <param name="canvas">The canvas.</param>
+        /// <param name="lockOnMeasure">Indicates if the thread should lock the measure operation</param>
         public CartesianChart(
             ICartesianChartView<TDrawingContext> view,
             Action<LiveChartsSettings> defaultPlatformConfig,
-            MotionCanvas<TDrawingContext> canvas)
-            : base(canvas, defaultPlatformConfig)
+            MotionCanvas<TDrawingContext> canvas,
+            bool lockOnMeasure = false)
+            : base(canvas, defaultPlatformConfig, lockOnMeasure)
         {
             _chartView = view;
 
@@ -186,14 +191,17 @@ namespace LiveChartsCore
                 otherSeries.Add(item);
             }
 
-            return Enumerable.Concat(
-                barLikeSeries.SelectMany(series => series.FindPointsNearTo(this, pointerPosition, actualStrategy))
-                    .GroupBy(tp => tp.Point.Context.Index)
-                    .Select(gtp => new { group = gtp, minD = gtp.Min(tp => tp.PointerDistance) })
-                    .OrderBy(mgtp => mgtp.minD)
-                    .Select(a => a.group)
-                    .FirstOrDefault() ?? Enumerable.Empty<TooltipPoint>(),
-                otherSeries.SelectMany(series => series.FindPointsNearTo(this, pointerPosition, actualStrategy)));
+            return
+                Enumerable.Concat(
+                    barLikeSeries
+                        .SelectMany(series => series.FindPointsNearTo(this, pointerPosition, actualStrategy))
+                        .GroupBy(tp => tp.Point.Context.Index)
+                        .Select(gtp => new { group = gtp, minD = gtp.Min(tp => tp.PointerDistance) })
+                        .OrderBy(mgtp => mgtp.minD)
+                        .Select(a => a.group)
+                        .FirstOrDefault() ?? Enumerable.Empty<TooltipPoint>(),
+                    otherSeries.SelectMany(series => series.FindPointsNearTo(this, pointerPosition, actualStrategy)))
+                .ToArray();
         }
 
         /// <summary>
@@ -364,265 +372,270 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected override void Measure()
         {
-            lock (canvas.Sync)
-            {
 #if DEBUG
-                Trace.WriteLine("=== CHART MEASURED ===");
+            if (LiveCharts.EnableLogging)
+            {
+                Trace.WriteLine(
+                    $"[Cartesian chart measured]".PadRight(60) +
+                    $"tread: {Thread.CurrentThread.ManagedThreadId}");
+            }
 #endif
+            InvokeOnMeasuring();
 
-                InvokeOnMeasuring();
+            if (LockOnMeasure) Monitor.Enter(canvas.Sync);
 
-                if (preserveFirstDraw)
-                {
-                    IsFirstDraw = true;
-                    preserveFirstDraw = false;
-                }
+            if (preserveFirstDraw)
+            {
+                IsFirstDraw = true;
+                preserveFirstDraw = false;
+            }
 
-                MeasureWork = new object();
+            MeasureWork = new object();
 
-                #region copy the current data in the view
+            #region copy the current data in the view
 
-                viewDrawMargin = _chartView.DrawMargin;
-                controlSize = _chartView.ControlSize;
+            viewDrawMargin = _chartView.DrawMargin;
+            controlSize = _chartView.ControlSize;
 
-                YAxes = _chartView.YAxes.Cast<IAxis<TDrawingContext>>().Select(x => x).ToArray();
-                XAxes = _chartView.XAxes.Cast<IAxis<TDrawingContext>>().Select(x => x).ToArray();
+            YAxes = _chartView.YAxes.Cast<IAxis<TDrawingContext>>().Select(x => x).ToArray();
+            XAxes = _chartView.XAxes.Cast<IAxis<TDrawingContext>>().Select(x => x).ToArray();
 
-                _zoomingSpeed = _chartView.ZoomingSpeed;
-                _zoomMode = _chartView.ZoomMode;
+            _zoomingSpeed = _chartView.ZoomingSpeed;
+            _zoomMode = _chartView.ZoomMode;
 
-                var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-                if (theme.CurrentColors is null || theme.CurrentColors.Length == 0)
-                    throw new Exception("Default colors are not valid");
-                var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
+            var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
+            if (theme.CurrentColors is null || theme.CurrentColors.Length == 0)
+                throw new Exception("Default colors are not valid");
+            var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
 
-                legendPosition = _chartView.LegendPosition;
-                legendOrientation = _chartView.LegendOrientation;
-                legend = _chartView.Legend;
+            legendPosition = _chartView.LegendPosition;
+            legendOrientation = _chartView.LegendOrientation;
+            legend = _chartView.Legend;
 
-                tooltipPosition = _chartView.TooltipPosition;
-                tooltipFindingStrategy = _chartView.TooltipFindingStrategy;
-                tooltip = _chartView.Tooltip;
+            tooltipPosition = _chartView.TooltipPosition;
+            tooltipFindingStrategy = _chartView.TooltipFindingStrategy;
+            tooltip = _chartView.Tooltip;
 
-                animationsSpeed = _chartView.AnimationsSpeed;
-                easingFunction = _chartView.EasingFunction;
+            animationsSpeed = _chartView.AnimationsSpeed;
+            easingFunction = _chartView.EasingFunction;
 
-                Series = _chartView.Series
-                    .Where(x => x.IsVisible)
-                    .Cast<ICartesianSeries<TDrawingContext>>()
-                    .ToArray();
+            Series = _chartView.Series
+                .Where(x => x.IsVisible)
+                .Cast<ICartesianSeries<TDrawingContext>>()
+                .ToArray();
 
-                Sections = _chartView.Sections?.ToArray() ?? new Section<TDrawingContext>[0];
+            Sections = _chartView.Sections?.ToArray() ?? new Section<TDrawingContext>[0];
 
-                #endregion
+            #endregion
 
-                seriesContext = new SeriesContext<TDrawingContext>(Series);
+            seriesContext = new SeriesContext<TDrawingContext>(Series);
 
-                // restart axes bounds and meta data
+            // restart axes bounds and meta data
+            foreach (var axis in XAxes)
+            {
+                axis.IsNotifyingChanges = false;
+                axis.Initialize(AxisOrientation.X);
+                theme.ResolveAxisDefaults(axis, forceApply);
+                axis.IsNotifyingChanges = true;
+            }
+            foreach (var axis in YAxes)
+            {
+                axis.IsNotifyingChanges = false;
+                axis.Initialize(AxisOrientation.Y);
+                theme.ResolveAxisDefaults(axis, forceApply);
+                axis.IsNotifyingChanges = true;
+            }
+
+            // get seriesBounds
+            foreach (var series in Series)
+            {
+                series.IsNotifyingChanges = false;
+                if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
+                theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
+
+                var secondaryAxis = XAxes[series.ScalesXAt];
+                var primaryAxis = YAxes[series.ScalesYAt];
+
+                var seriesBounds = series.GetBounds(this, secondaryAxis, primaryAxis).Bounds;
+
+                secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.Max);
+                secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.Min);
+                secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.Max);
+                secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.Min);
+                primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.Max);
+                primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.Min);
+                primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.Max);
+                primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.Min);
+
+                if (primaryAxis.DataBounds.MinDelta < seriesBounds.MinDeltaPrimary)
+                    primaryAxis.DataBounds.MinDelta = seriesBounds.MinDeltaPrimary;
+                if (secondaryAxis.DataBounds.MinDelta < seriesBounds.MinDeltaSecondary)
+                    secondaryAxis.DataBounds.MinDelta = seriesBounds.MinDeltaSecondary;
+
+                series.IsNotifyingChanges = true;
+            }
+
+            if (legend is not null && SeriesMiniatureChanged(Series, LegendPosition))
+            {
+                legend.Draw(this);
+                Update();
+                previousLegendPosition = legendPosition;
+                previousSeries = Series;
+                preserveFirstDraw = IsFirstDraw;
+            }
+
+            // calculate draw margin
+            if (viewDrawMargin is null)
+            {
+                var m = viewDrawMargin ?? new Margin();
+                float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
+                SetDrawMargin(controlSize, m);
+
                 foreach (var axis in XAxes)
                 {
-                    axis.IsNotifyingChanges = false;
-                    axis.Initialize(AxisOrientation.X);
-                    theme.ResolveAxisDefaults(axis, forceApply);
-                    axis.IsNotifyingChanges = true;
+                    if (!axis.IsVisible) continue;
+
+                    var ns = axis.GetNameLabelSize(this);
+                    var s = axis.GetPossibleSize(this);
+                    if (axis.Position == AxisPosition.Start)
+                    {
+                        // X Bottom
+                        axis.Yo = m.Bottom + s.Height * 0.5f + ns.Height;
+                        bs += s.Height + ns.Height;
+                        m.Bottom = bs;
+                        if (s.Width * 0.5f > m.Left) m.Left = s.Width * 0.5f;
+                        if (s.Width * 0.5f > m.Right) m.Right = s.Width * 0.5f;
+                    }
+                    else
+                    {
+                        // X Top
+                        axis.Yo = ts + s.Height * 0.5f + ns.Height;
+                        ts += s.Height + ns.Height;
+                        m.Top = ts;
+                        if (ls + s.Width * 0.5f > m.Left) m.Left = ls + s.Width * 0.5f;
+                        if (rs + s.Width * 0.5f > m.Right) m.Right = rs + s.Width * 0.5f;
+                    }
                 }
                 foreach (var axis in YAxes)
                 {
-                    axis.IsNotifyingChanges = false;
-                    axis.Initialize(AxisOrientation.Y);
-                    theme.ResolveAxisDefaults(axis, forceApply);
-                    axis.IsNotifyingChanges = true;
-                }
+                    if (!axis.IsVisible) continue;
 
-                // get seriesBounds
-                foreach (var series in Series)
-                {
-                    series.IsNotifyingChanges = false;
-                    if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
-                    theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
-
-                    var secondaryAxis = XAxes[series.ScalesXAt];
-                    var primaryAxis = YAxes[series.ScalesYAt];
-
-                    var seriesBounds = series.GetBounds(this, secondaryAxis, primaryAxis).Bounds;
-
-                    secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.Max);
-                    secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.Min);
-                    secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.Max);
-                    secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.Min);
-                    primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.Max);
-                    primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.Min);
-                    primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.Max);
-                    primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.Min);
-
-                    if (primaryAxis.DataBounds.MinDelta < seriesBounds.MinDeltaPrimary)
-                        primaryAxis.DataBounds.MinDelta = seriesBounds.MinDeltaPrimary;
-                    if (secondaryAxis.DataBounds.MinDelta < seriesBounds.MinDeltaSecondary)
-                        secondaryAxis.DataBounds.MinDelta = seriesBounds.MinDeltaSecondary;
-
-                    series.IsNotifyingChanges = true;
-                }
-
-                if (legend is not null && SeriesMiniatureChanged(Series, LegendPosition))
-                {
-                    legend.Draw(this);
-                    Update();
-                    previousLegendPosition = legendPosition;
-                    previousSeries = Series;
-                    preserveFirstDraw = IsFirstDraw;
-                }
-
-                // calculate draw margin
-                if (viewDrawMargin is null)
-                {
-                    var m = viewDrawMargin ?? new Margin();
-                    float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
-                    SetDrawMargin(controlSize, m);
-
-                    foreach (var axis in XAxes)
+                    var ns = axis.GetNameLabelSize(this);
+                    var s = axis.GetPossibleSize(this);
+                    var w = s.Width > m.Left ? s.Width : m.Left;
+                    if (axis.Position == AxisPosition.Start)
                     {
-                        if (!axis.IsVisible) continue;
-
-                        var ns = axis.GetNameLabelSize(this);
-                        var s = axis.GetPossibleSize(this);
-                        if (axis.Position == AxisPosition.Start)
-                        {
-                            // X Bottom
-                            axis.Yo = m.Bottom + s.Height * 0.5f + ns.Height;
-                            bs += s.Height + ns.Height;
-                            m.Bottom = bs;
-                            if (s.Width * 0.5f > m.Left) m.Left = s.Width * 0.5f;
-                            if (s.Width * 0.5f > m.Right) m.Right = s.Width * 0.5f;
-                        }
-                        else
-                        {
-                            // X Top
-                            axis.Yo = ts + s.Height * 0.5f + ns.Height;
-                            ts += s.Height + ns.Height;
-                            m.Top = ts;
-                            if (ls + s.Width * 0.5f > m.Left) m.Left = ls + s.Width * 0.5f;
-                            if (rs + s.Width * 0.5f > m.Right) m.Right = rs + s.Width * 0.5f;
-                        }
+                        // Y Left
+                        axis.Xo = ls + w * 0.5f + ns.Width;
+                        ls += w + ns.Width;
+                        m.Left = ls;
+                        if (s.Height * 0.5f > m.Top) { m.Top = s.Height * 0.5f; }
+                        if (s.Height * 0.5f > m.Bottom) { m.Bottom = s.Height * 0.5f; }
                     }
-                    foreach (var axis in YAxes)
+                    else
                     {
-                        if (!axis.IsVisible) continue;
-
-                        var ns = axis.GetNameLabelSize(this);
-                        var s = axis.GetPossibleSize(this);
-                        var w = s.Width > m.Left ? s.Width : m.Left;
-                        if (axis.Position == AxisPosition.Start)
-                        {
-                            // Y Left
-                            axis.Xo = ls + w * 0.5f + ns.Width;
-                            ls += w + ns.Width;
-                            m.Left = ls;
-                            if (s.Height * 0.5f > m.Top) { m.Top = s.Height * 0.5f; }
-                            if (s.Height * 0.5f > m.Bottom) { m.Bottom = s.Height * 0.5f; }
-                        }
-                        else
-                        {
-                            // Y Right
-                            axis.Xo = rs + w * 0.5f + ns.Width;
-                            rs += w + ns.Width;
-                            m.Right = rs;
-                            if (ts + s.Height * 0.5f > m.Top) m.Top = ts + s.Height * 0.5f;
-                            if (bs + s.Height * 0.5f > m.Bottom) m.Bottom = bs + s.Height * 0.5f;
-                        }
+                        // Y Right
+                        axis.Xo = rs + w * 0.5f + ns.Width;
+                        rs += w + ns.Width;
+                        m.Right = rs;
+                        if (ts + s.Height * 0.5f > m.Top) m.Top = ts + s.Height * 0.5f;
+                        if (bs + s.Height * 0.5f > m.Bottom) m.Bottom = bs + s.Height * 0.5f;
                     }
-
-                    SetDrawMargin(controlSize, m);
                 }
 
-                // invalid dimensions, probably the chart is too small
-                // or it is initializing in the UI and has no dimensions yet
-                if (drawMarginSize.Width <= 0 || drawMarginSize.Height <= 0) return;
-
-                var totalAxes = XAxes.Concat(YAxes).ToArray();
-                var toDeleteAxes = new HashSet<IAxis<TDrawingContext>>(_everMeasuredAxes);
-                foreach (var axis in totalAxes)
-                {
-                    if (axis.DataBounds.Max == axis.DataBounds.Min)
-                    {
-                        var c = axis.DataBounds.Min * 0.3;
-                        axis.DataBounds.Min = axis.DataBounds.Min - c;
-                        axis.DataBounds.Max = axis.DataBounds.Max + c;
-                    }
-
-                    _ = _everMeasuredAxes.Add(axis);
-                    if (axis.IsVisible)
-                    {
-                        axis.Measure(this);
-                        _ = toDeleteAxes.Remove(axis);
-                    }
-
-                    axis.RemoveOldPaints(View);
-                }
-
-                var toDeleteSections = new HashSet<Section<TDrawingContext>>(_everMeasuredSections);
-                foreach (var section in Sections)
-                {
-                    section.Measure(this);
-                    section.RemoveOldPaints(View);
-                    _ = _everMeasuredSections.Add(section);
-                    _ = toDeleteSections.Remove(section);
-                }
-
-                var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
-                foreach (var series in Series)
-                {
-                    series.Measure(this);
-                    series.RemoveOldPaints(View);
-                    _ = _everMeasuredSeries.Add(series);
-                    _ = toDeleteSeries.Remove(series);
-                }
-
-                if (_previousDrawMarginFrame is not null && _chartView.DrawMarginFrame != _previousDrawMarginFrame)
-                {
-                    _previousDrawMarginFrame.RemoveFromUI(this);
-                    _previousDrawMarginFrame = null;
-                }
-                if (_chartView.DrawMarginFrame is not null)
-                {
-                    _chartView.DrawMarginFrame.Measure(this);
-                    _chartView.DrawMarginFrame.RemoveOldPaints(View);
-                    _previousDrawMarginFrame = _chartView.DrawMarginFrame;
-                }
-
-                foreach (var series in toDeleteSeries)
-                {
-                    series.SoftDelete(View);
-                    _ = _everMeasuredSeries.Remove(series);
-                }
-                foreach (var axis in toDeleteAxes)
-                {
-                    axis.RemoveFromUI(this);
-                    _ = _everMeasuredAxes.Remove(axis);
-                }
-                foreach (var section in toDeleteSections)
-                {
-                    section.RemoveFromUI(this);
-                    _ = _everMeasuredSections.Remove(section);
-                }
-
-                foreach (var axis in totalAxes)
-                {
-                    axis.IsNotifyingChanges = false;
-                    axis.PreviousDataBounds = axis.DataBounds;
-                    axis.PreviousVisibleDataBounds = axis.VisibleDataBounds;
-                    axis.PreviousMaxLimit = axis.MaxLimit;
-                    axis.PreviousMinLimit = axis.MinLimit;
-                    axis.IsNotifyingChanges = true;
-                }
-
-                IsZoomingOrPanning = false;
-                InvokeOnUpdateStarted();
-
-                IsFirstDraw = false;
-                ThemeId = LiveCharts.CurrentSettings.ThemeId;
-                previousSeries = Series;
-                previousLegendPosition = LegendPosition;
+                SetDrawMargin(controlSize, m);
             }
+
+            // invalid dimensions, probably the chart is too small
+            // or it is initializing in the UI and has no dimensions yet
+            if (drawMarginSize.Width <= 0 || drawMarginSize.Height <= 0) return;
+
+            var totalAxes = XAxes.Concat(YAxes).ToArray();
+            var toDeleteAxes = new HashSet<IAxis<TDrawingContext>>(_everMeasuredAxes);
+            foreach (var axis in totalAxes)
+            {
+                if (axis.DataBounds.Max == axis.DataBounds.Min)
+                {
+                    var c = axis.DataBounds.Min * 0.3;
+                    axis.DataBounds.Min = axis.DataBounds.Min - c;
+                    axis.DataBounds.Max = axis.DataBounds.Max + c;
+                }
+
+                _ = _everMeasuredAxes.Add(axis);
+                if (axis.IsVisible)
+                {
+                    axis.Measure(this);
+                    _ = toDeleteAxes.Remove(axis);
+                }
+
+                axis.RemoveOldPaints(View);
+            }
+
+            var toDeleteSections = new HashSet<Section<TDrawingContext>>(_everMeasuredSections);
+            foreach (var section in Sections)
+            {
+                section.Measure(this);
+                section.RemoveOldPaints(View);
+                _ = _everMeasuredSections.Add(section);
+                _ = toDeleteSections.Remove(section);
+            }
+
+            var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
+            foreach (var series in Series)
+            {
+                series.Measure(this);
+                series.RemoveOldPaints(View);
+                _ = _everMeasuredSeries.Add(series);
+                _ = toDeleteSeries.Remove(series);
+            }
+
+            if (_previousDrawMarginFrame is not null && _chartView.DrawMarginFrame != _previousDrawMarginFrame)
+            {
+                _previousDrawMarginFrame.RemoveFromUI(this);
+                _previousDrawMarginFrame = null;
+            }
+            if (_chartView.DrawMarginFrame is not null)
+            {
+                _chartView.DrawMarginFrame.Measure(this);
+                _chartView.DrawMarginFrame.RemoveOldPaints(View);
+                _previousDrawMarginFrame = _chartView.DrawMarginFrame;
+            }
+
+            foreach (var series in toDeleteSeries)
+            {
+                series.SoftDelete(View);
+                _ = _everMeasuredSeries.Remove(series);
+            }
+            foreach (var axis in toDeleteAxes)
+            {
+                axis.RemoveFromUI(this);
+                _ = _everMeasuredAxes.Remove(axis);
+            }
+            foreach (var section in toDeleteSections)
+            {
+                section.RemoveFromUI(this);
+                _ = _everMeasuredSections.Remove(section);
+            }
+
+            foreach (var axis in totalAxes)
+            {
+                axis.IsNotifyingChanges = false;
+                axis.PreviousDataBounds = axis.DataBounds;
+                axis.PreviousVisibleDataBounds = axis.VisibleDataBounds;
+                axis.PreviousMaxLimit = axis.MaxLimit;
+                axis.PreviousMinLimit = axis.MinLimit;
+                axis.IsNotifyingChanges = true;
+            }
+
+            IsZoomingOrPanning = false;
+            InvokeOnUpdateStarted();
+
+            IsFirstDraw = false;
+            ThemeId = LiveCharts.CurrentSettings.ThemeId;
+            previousSeries = Series;
+            previousLegendPosition = LegendPosition;
+
+            if (LockOnMeasure) Monitor.Exit(canvas.Sync);
 
             Canvas.Invalidate();
         }
@@ -639,7 +652,10 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected override void UpdateThrottlerUnlocked()
         {
-            Measure();
+            View.InvokeOnUIThread(() =>
+            {
+                Measure();
+            });
         }
     }
 }

@@ -116,6 +116,12 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
            AvaloniaProperty.Register<CartesianChart, Margin?>(nameof(DrawMargin), null, inherits: true);
 
         /// <summary>
+        /// The sync context property.
+        /// </summary>
+        public static readonly AvaloniaProperty<object> SyncContextProperty =
+           AvaloniaProperty.Register<CartesianChart, object>(nameof(SyncContext), new object(), inherits: true);
+
+        /// <summary>
         /// The series property
         /// </summary>
         public static readonly AvaloniaProperty<IEnumerable<ISeries>> SeriesProperty =
@@ -304,6 +310,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             Width = (float)Bounds.Width,
             Height = (float)Bounds.Height
         };
+
+        /// <inheritdoc cref="IChartView.SyncContext" />
+        public object SyncContext
+        {
+            get => GetValue(SyncContextProperty);
+            set => SetValue(SyncContextProperty, value);
+        }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => core is null ? throw new Exception("core not found") : core.Canvas;
@@ -603,6 +616,20 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             TooltipTextBrush = new SolidColorBrush(new A.Media.Color(textColor.A, textColor.R, textColor.G, textColor.B));
         }
 
+        void IChartView.InvokeOnUIThread(Action action)
+        {
+            _ = Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Normal);
+        }
+
+        /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
+        public void SyncAction(Action action)
+        {
+            lock (CoreCanvas.Sync)
+            {
+                action();
+            }
+        }
+
         /// <summary>
         /// Initializes the core.
         /// </summary>
@@ -610,7 +637,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         protected void InitializeCore()
         {
             var canvas = this.FindControl<MotionCanvas>("canvas");
-            core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            core = new PieChart<SkiaSharpDrawingContext>(
+                this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore, true);
 
             core.Measuring += OnCoreMeasuring;
             core.UpdateStarted += OnCoreUpdateStarted;
@@ -627,6 +655,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             base.OnPropertyChanged(change);
 
             if (core is null) return;
+
+            if (change.Property.Name == nameof(SyncContext))
+            {
+                CoreCanvas.Sync = change.NewValue;
+            }
 
             if (change.Property.Name == nameof(Series))
             {

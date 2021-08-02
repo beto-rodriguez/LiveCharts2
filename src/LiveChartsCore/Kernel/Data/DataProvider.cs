@@ -22,8 +22,10 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Threading;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LiveChartsCore.Kernel.Data
 {
@@ -76,12 +78,15 @@ namespace LiveChartsCore.Kernel.Data
         {
             if (series.Values is null) yield break;
 
+            var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
+
             var mapper = series.Mapping ?? LiveCharts.CurrentSettings.GetMap<TModel>();
             var index = 0;
 
+            var values = series.Values.Lock(canvas.Sync);
+
             if (_isValueType)
             {
-                var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
                 _ = _byChartbyValueVisualMap.TryGetValue(canvas.Sync, out var d);
                 if (d is null)
                 {
@@ -90,7 +95,7 @@ namespace LiveChartsCore.Kernel.Data
                 }
                 var byValueVisualMap = d;
 
-                foreach (var item in series.Values)
+                foreach (var item in values)
                 {
                     if (!byValueVisualMap.TryGetValue(index, out var cp))
                         byValueVisualMap[index] = cp = new ChartPoint(chart.View, series);
@@ -104,9 +109,9 @@ namespace LiveChartsCore.Kernel.Data
                 }
             }
             else
-                foreach (var item in series.Values)
+            {
+                foreach (var item in values)
                 {
-                    var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
                     _ = _byChartByReferenceVisualMap.TryGetValue(canvas.Sync, out var d);
                     if (d is null)
                     {
@@ -124,6 +129,7 @@ namespace LiveChartsCore.Kernel.Data
 
                     yield return cp;
                 }
+            }
         }
 
         /// <summary>

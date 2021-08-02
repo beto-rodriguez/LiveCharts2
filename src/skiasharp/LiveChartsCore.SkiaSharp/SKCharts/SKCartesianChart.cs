@@ -102,6 +102,9 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Core"/>
         public CartesianChart<SkiaSharpDrawingContext> Core { get; }
 
+        /// <inheritdoc cref="IChartView.SyncContext"/>
+        public object SyncContext { get => CoreCanvas.Sync; set => CoreCanvas.Sync = value; }
+
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.XAxes"/>
         public IEnumerable<IAxis> XAxes { get; set; } = new Axis[] { new Axis() };
 
@@ -205,6 +208,20 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         public void ShowTooltip(IEnumerable<TooltipPoint> points)
         {
             throw new NotImplementedException();
+        }
+
+        void IChartView.InvokeOnUIThread(Action action)
+        {
+            action();
+        }
+
+        /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
+        public void SyncAction(Action action)
+        {
+            lock (CoreCanvas.Sync)
+            {
+                action();
+            }
         }
 
         /// <inheritdoc cref="IImageChart.SaveImage(string, SKEncodedImageFormat, int)"/>

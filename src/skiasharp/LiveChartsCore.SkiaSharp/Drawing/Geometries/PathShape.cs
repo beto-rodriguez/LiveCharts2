@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Threading;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.Drawing;

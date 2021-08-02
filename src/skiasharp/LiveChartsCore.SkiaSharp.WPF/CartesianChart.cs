@@ -87,7 +87,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                         seriesObserver.Dispose((IEnumerable<ISeries>)args.OldValue);
                         seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
                         if (chart.core is null) return;
-                        Application.Current.Dispatcher.Invoke(() => chart.core.Update());
+                        chart.core.Update();
                     },
                     (DependencyObject o, object value) =>
                     {
@@ -107,7 +107,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                         observer.Dispose((IEnumerable<IAxis>)args.OldValue);
                         observer.Initialize((IEnumerable<IAxis>)args.NewValue);
                         if (chart.core is null) return;
-                        Application.Current.Dispatcher.Invoke(() => chart.core.Update());
+                        chart.core.Update();
                     },
                     (DependencyObject o, object value) =>
                     {
@@ -127,7 +127,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                         observer.Dispose((IEnumerable<IAxis>)args.OldValue);
                         observer.Initialize((IEnumerable<IAxis>)args.NewValue);
                         if (chart.core is null) return;
-                        Application.Current.Dispatcher.Invoke(() => chart.core.Update());
+                        chart.core.Update();
                     },
                     (DependencyObject o, object value) =>
                     {
@@ -147,7 +147,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                         observer.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)args.OldValue);
                         observer.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)args.NewValue);
                         if (chart.core is null) return;
-                        Application.Current.Dispatcher.Invoke(() => chart.core.Update());
+                        chart.core.Update();
                     },
                     (DependencyObject o, object value) =>
                     {
@@ -290,13 +290,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (core is null) return;
-            Application.Current.Dispatcher.Invoke(() => core.Update());
+            core.Update();
         }
 
         private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (core is null) return;
-            Application.Current.Dispatcher.Invoke(() => core.Update());
+            core.Update();
         }
 
         private void OnMouseWheel(object? sender, System.Windows.Input.MouseWheelEventArgs e)
