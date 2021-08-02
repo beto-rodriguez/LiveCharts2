@@ -718,11 +718,14 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             initializer.ApplyStyleToChart(this);
 
             var canvas = (MotionCanvas)FindName("motionCanvas");
-            this._canvas = canvas;
+            _canvas = canvas;
 
             _core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
             //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
             //tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
+
+            if (SyncContext != null)
+                _canvas.CanvasCore.Sync = SyncContext;
 
             if (_core == null) throw new Exception("Core not found!");
             _core.Update();

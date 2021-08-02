@@ -87,6 +87,20 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                     }));
 
         /// <summary>
+        /// The sync context property
+        /// </summary>
+        public static readonly DependencyProperty SyncContextProperty =
+            DependencyProperty.Register(
+                nameof(SyncContext), typeof(object), typeof(CartesianChart), new PropertyMetadata(null,
+                    (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                    {
+                        var chart = (PieChart)o;
+                        if (chart._canvas != null) chart.CoreCanvas.Sync = args.NewValue;
+                        if (chart._core == null) return;
+                        chart._core.Update();
+                    }));
+
+        /// <summary>
         /// The initial rotation property
         /// </summary>
         public static readonly DependencyProperty InitialRotationProperty =
@@ -313,12 +327,20 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             set => SetValue(BackgroundProperty, new SolidColorBrush(Windows.UI.Color.FromArgb(value.A, value.R, value.G, value.B)));
         }
 
+        /// <inheritdoc cref="IChartView.SyncContext" />
+        public object SyncContext
+        {
+            get => GetValue(SyncContextProperty);
+            set => SetValue(SyncContextProperty, value);
+        }
+
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
         public IEnumerable<ISeries> Series
         {
             get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
             set => SetValue(SeriesProperty, value);
         }
+
 
         /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />
         public double InitialRotation
@@ -673,6 +695,20 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             TooltipTextBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(textColor.A, textColor.R, textColor.G, textColor.B));
         }
 
+        void IChartView.InvokeOnUIThread(Action action)
+        {
+            _ = Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => action());
+        }
+
+        /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
+        public void SyncAction(Action action)
+        {
+            lock (CoreCanvas.Sync)
+            {
+                action();
+            }
+        }
+
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
@@ -689,6 +725,9 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             _core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
             //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
             //tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
+
+            if (SyncContext != null)
+                _canvas.CanvasCore.Sync = SyncContext;
 
             if (_core == null) throw new Exception("Core not found!");
             _core.Update();
