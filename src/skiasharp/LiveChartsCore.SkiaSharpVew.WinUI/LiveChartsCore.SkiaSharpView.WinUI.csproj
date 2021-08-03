@@ -7,8 +7,8 @@
     <RootNamespace>LiveChartsCore.SkiaSharpView.WinUI</RootNamespace>
     <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
-    <Version>2.0.0-beta.33</Version>
-    <PackageIcon>icon.png</PackageIcon>
+    <Version>2.0.0-beta.40</Version>
+    <!--<PackageIcon>icon.png</PackageIcon>-->
     <Description>Simple, flexible, interactive and powerful data visualization for WinUI 3.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>BetoRodriguez</Authors>
@@ -31,9 +31,9 @@
   </ItemGroup>
 
   <ItemGroup>
-      <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.0" />
-      <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.0" />
-      <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.0" />
+      <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.1" />
+      <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.1" />
+      <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.1" />
       <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.80.3" />
   </ItemGroup>
 
