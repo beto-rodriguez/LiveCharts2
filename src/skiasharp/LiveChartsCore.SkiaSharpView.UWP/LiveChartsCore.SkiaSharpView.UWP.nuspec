@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>LiveChartsCore.SkiaSharpView.UWP</id>
+    <version>2.0.0-beta.40</version>
+    <title>LiveChartsCore.SkiaSharpView.UWP</title>
+    <authors>BetoRodriguez</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/beto-rodriguez/LiveCharts2</projectUrl>
+    <!-- <iconUrl>http://icon_url_here_or_delete_this_line/</iconUrl> -->
+    <description>Simple, flexible, interactive and powerful data visualization for UWP.</description>
+    <releaseNotes>https://github.com/beto-rodriguez/LiveCharts2/releases</releaseNotes>
+    <copyright>BetoRodriguez</copyright>
+    <tags>livechart chart charting plot plotting data</tags>
+  </metadata>
+
+  <files>
+      <!-- WinMd and IntelliSense files -->
+      <file src="bin\Debug\Microsoft.UI.Xaml.Markup.winmd" target="lib\uap10.0"/>
+      <file src="bin\Debug\LiveChartsCore.SkiaSharpView.UWP.xml" target="lib\uap10.0"/>
+
+      <!-- XAML controls -->
+      <!-- no templated controls :( -->
+
+      <!-- WINMDs and resources -->
+      <file src="bin\ARM\Debug\Microsoft.UI.Xaml.Markup.winmd" target="runtimes\win10-arm"/>
+      <file src="bin\ARM\Debug\LiveChartsCore.SkiaSharpView.UWP.pri" target="runtimes\win10-arm"/>
+
+      <file src="bin\ARM64\Debug\Microsoft.UI.Xaml.Markup.winmd" target="runtimes\win10-arm64"/>
+      <file src="bin\ARM64\Debug\LiveChartsCore.SkiaSharpView.UWP.pri" target="runtimes\win10-arm64"/>
+
+      <file src="bin\x64\Debug\Microsoft.UI.Xaml.Markup.winmd" target="runtimes\win10-x64"/>
+      <file src="bin\x64\Debug\LiveChartsCore.SkiaSharpView.UWP.pri" target="runtimes\win10-x64"/>
+
+      <file src="bin\x86\Debug\Microsoft.UI.Xaml.Markup.winmd" target="runtimes\win10-x86"/>
+      <file src="bin\x86\Debug\LiveChartsCore.SkiaSharpView.UWP.pri" target="runtimes\win10-x86"/>
+    </files>
+</package>

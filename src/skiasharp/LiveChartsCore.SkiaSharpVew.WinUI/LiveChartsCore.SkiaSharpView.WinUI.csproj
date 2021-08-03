@@ -8,6 +8,7 @@
     <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
     <Version>2.0.0-beta.40</Version>
+    <!-- it seems that images are bugged for now. -->
     <!--<PackageIcon>icon.png</PackageIcon>-->
     <Description>Simple, flexible, interactive and powerful data visualization for WinUI 3.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -21,6 +22,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="CartesianChart.xaml" />
@@ -70,9 +73,8 @@
     </Page>
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Update="images\icon.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+  <!--<ItemGroup>
+    <None Include="images\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>-->
+
 </Project>
