@@ -4,7 +4,7 @@ LiveCharts2 (v2) is the evolution of [LiveCharts](https://github.com/Live-Charts
 
 ### Extremely flexible data visualization library
 
-The following image is a preview, `v2.0` is beta now, you can install it from nugget: https://github.com/beto-rodriguez/LiveCharts2/issues/35, it support WPF, WinForms, Avalonia, WinUI, UWP and Xamarin for now but MAUI will also be supported.
+The following image is a preview, `v2.0` is beta now, you can install it from NuGet: https://github.com/beto-rodriguez/LiveCharts2/issues/35, it support WPF, WinForms, Avalonia, WinUI, UWP and Xamarin for now but MAUI will also be supported.
 
 here is a preview (1.4MB gif, wait for it to load if you see a blank space bellow this text...):
 
@@ -16,7 +16,7 @@ V0 is built on top of WPF, this has many problems, WPF is not designed for the p
 
 ### How Flexible is v2?
 
-When we were on v0 and tried to take the library to UWP, we noticed it required a huge effort with the arquitecture the library had in v0.
+When we were on v0 and tried to take the library to UWP, we noticed it required a huge effort with the architecture the library had in v0.
 V2 is designed to work on multiple platforms, it requires minimal effort to take the library to a new platform.
 
 ### Then LiveCharts2 requires SkiaSharp?
