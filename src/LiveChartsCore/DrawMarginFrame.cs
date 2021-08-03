@@ -163,7 +163,7 @@ namespace LiveChartsCore
 
             if (BackImage is not null)
             {
-                BackImage.ZIndex = -4;
+                BackImage.ZIndex = -2.5;
                 _backImageGeometry ??= new TSizedGeometry();
 
                 _backImageGeometry.X = drawLocation.X;
