@@ -62,7 +62,8 @@ namespace LiveChartsCore.SkiaSharpView
                 {
                     if (paintTask.BackImageBitmap == null)
                     {
-                        var bitmap = new SKBitmap(new SKImageInfo(paintTask.BackImage.Width, paintTask.BackImage.Height, SKColorType.Rgba8888));
+                        var bitmap = new SKBitmap(new SKImageInfo(paintTask.BackImage.Width, paintTask.BackImage.Height, SKColorType.Rgba8888, SKAlphaType.Unpremul));
+
                         unsafe
                         {
                             fixed (byte* ptr = paintTask.BackImage.ImageBuffer)
@@ -164,8 +165,9 @@ namespace LiveChartsCore.SkiaSharpView
                                 var yScale = (cropTop - cropBottom) / (topLimit - bottomLimit);
                                 var resizeTargetWidth = (xScale != 1) ? width * xScale : width;
                                 var resizeTargetHeight = (yScale != 1) ? height * yScale : height;
-                                var croppedBitmapResized = croppedBitmap.Resize(new SKImageInfo((int)resizeTargetWidth, (int)resizeTargetHeight, SKColorType.Rgba8888), SKFilterQuality.High);
-
+                                var croppedBitmapResized = new SKBitmap(new SKImageInfo((int)resizeTargetWidth, (int)resizeTargetHeight, SKColorType.Rgba8888));
+                                //var croppedBitmapResized = croppedBitmap.Resize(new SKImageInfo((int)resizeTargetWidth, (int)resizeTargetHeight, SKColorType.Rgba8888), SKFilterQuality.High);
+                                _ = croppedBitmap.ScalePixels(croppedBitmapResized, SKFilterQuality.High);
                                 //create blank image
                                 result = new SKBitmap(new SKImageInfo(width, height, SKColorType.Rgba8888));
                                 var canvas = new SKCanvas(result);
