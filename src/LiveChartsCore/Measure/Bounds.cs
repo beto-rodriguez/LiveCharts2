@@ -38,7 +38,7 @@ namespace LiveChartsCore.Measure
         /// <summary>
         /// Gets whether the bounds are empty.
         /// </summary>
-        public bool IsEmpty { get; private set; } = true;
+        public bool IsEmpty { get; internal set; } = true;
 
         /// <summary>
         /// Gets or sets the maximum value in the data set.

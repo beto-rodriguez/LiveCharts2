@@ -246,9 +246,9 @@ namespace LiveChartsCore
                             x0b = previousSecondaryScale.ToPixels(data.OriginalData.X0);
                             x1b = previousSecondaryScale.ToPixels(data.OriginalData.X1);
                             x2b = previousSecondaryScale.ToPixels(data.OriginalData.X2);
-                            y0b = previousPrimaryScale.ToPixels(data.OriginalData.Y0); //chart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y0) : pg - hgs;
-                            y1b = previousPrimaryScale.ToPixels(data.OriginalData.Y1); //chart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y1) : pg - hgs;
-                            y2b = previousPrimaryScale.ToPixels(data.OriginalData.Y2); //chart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y2) : pg - hgs;
+                            y0b = previousPrimaryScale.ToPixels(data.OriginalData.Y0);// cartesianChart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y0) : pg - hgs;
+                            y1b = previousPrimaryScale.ToPixels(data.OriginalData.Y1); //cartesianChart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y1) : pg - hgs;
+                            y2b = previousPrimaryScale.ToPixels(data.OriginalData.Y2); // cartesianChart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y2) : pg - hgs;
                         }
 
                         v.Geometry.X = xg;
@@ -732,12 +732,14 @@ namespace LiveChartsCore
         {
             var visual = (LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>?)point.Context.Visual;
             if (visual is null) return;
+            if (dataProvider is null) throw new Exception("Data provider not found");
 
             var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
             if (chartView.Core.IsZoomingOrPanning)
             {
                 visual.Geometry.CompleteAllTransitions();
                 visual.Geometry.RemoveOnCompleted = true;
+                dataProvider.DisposePoint(point);
                 return;
             }
 
@@ -753,7 +755,6 @@ namespace LiveChartsCore
             visual.Geometry.Width = 0;
             visual.Geometry.RemoveOnCompleted = true;
 
-            if (dataProvider is null) throw new Exception("Data provider not found");
             dataProvider.DisposePoint(point);
 
             var label = (TLabel?)point.Context.Label;

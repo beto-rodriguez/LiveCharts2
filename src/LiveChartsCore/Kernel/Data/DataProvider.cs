@@ -96,16 +96,16 @@ namespace LiveChartsCore.Kernel.Data
             }
             else
             {
+                _ = _byChartByReferenceVisualMap.TryGetValue(canvas.Sync, out var d);
+                if (d is null)
+                {
+                    d = new Dictionary<TModel, ChartPoint>();
+                    _byChartByReferenceVisualMap[canvas.Sync] = d;
+                }
+                var byReferenceVisualMap = d;
+
                 foreach (var item in values)
                 {
-                    _ = _byChartByReferenceVisualMap.TryGetValue(canvas.Sync, out var d);
-                    if (d is null)
-                    {
-                        d = new Dictionary<TModel, ChartPoint>();
-                        _byChartByReferenceVisualMap[canvas.Sync] = d;
-                    }
-                    var byReferenceVisualMap = d;
-
                     if (!byReferenceVisualMap.TryGetValue(item, out var cp))
                         byReferenceVisualMap[item] = cp = new ChartPoint(chart.View, series);
 
@@ -123,7 +123,7 @@ namespace LiveChartsCore.Kernel.Data
         /// </summary>
         /// <param name="point">The point.</param>
         /// <returns></returns>
-        public void DisposePoint(ChartPoint point)
+        public virtual void DisposePoint(ChartPoint point)
         {
             if (_isValueType)
             {
