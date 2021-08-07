@@ -183,7 +183,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             _closeTimer.Stop();
             _closeTimer.Start();
 
-            chart.Canvas.Invalidate();
+            chart.View.InvokeOnUIThread(() =>
+            {
+                chart.Canvas.Invalidate();
+            });
         }
 
         /// <summary>

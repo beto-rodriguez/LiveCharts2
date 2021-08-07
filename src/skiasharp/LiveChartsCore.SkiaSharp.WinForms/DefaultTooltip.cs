@@ -102,7 +102,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 _ = _activePoints.Remove(key);
             }
 
-            wfChart.CoreCanvas.Invalidate();
+            chart.View.InvokeOnUIThread(() =>
+            {
+                wfChart.CoreCanvas.Invalidate();
+            });
         }
 
         private SizeF DrawAndMesure(IEnumerable<TooltipPoint> tooltipPoints, Chart chart)

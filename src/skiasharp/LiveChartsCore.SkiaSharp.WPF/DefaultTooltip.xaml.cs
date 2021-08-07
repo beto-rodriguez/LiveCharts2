@@ -311,7 +311,10 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 _ = _activePoints.Remove(key);
             }
 
-            wpfChart.CoreCanvas.Invalidate();
+            chart.View.InvokeOnUIThread(() =>
+            {
+                wpfChart.CoreCanvas.Invalidate();
+            });
         }
 
         void IChartTooltip<SkiaSharpDrawingContext>.Hide()

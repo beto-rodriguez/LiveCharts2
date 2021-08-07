@@ -205,7 +205,10 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 _ = _activePoints.Remove(key);
             }
 
-            chart.Canvas.Invalidate();
+            chart.View.InvokeOnUIThread(() =>
+            {
+                chart.Canvas.Invalidate();
+            });
         }
 
         /// <summary>
