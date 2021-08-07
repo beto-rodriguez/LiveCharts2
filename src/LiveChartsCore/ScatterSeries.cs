@@ -325,12 +325,26 @@ namespace LiveChartsCore
         {
             var visual = (TVisual?)point.Context.Visual;
             if (visual is null) return;
+            if (dataProvider is null) throw new Exception("Data provider not found");
 
+            var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
+            if (chartView.Core.IsZoomingOrPanning)
+            {
+                visual.CompleteAllTransitions();
+                visual.RemoveOnCompleted = true;
+                dataProvider.DisposePoint(point);
+                return;
+            }
+
+            var x = secondaryScale.ToPixels(point.SecondaryValue);
+            var y = primaryScale.ToPixels(point.PrimaryValue);
+
+            visual.X = x;
+            visual.Y = y;
             visual.Height = 0;
             visual.Width = 0;
             visual.RemoveOnCompleted = true;
 
-            if (dataProvider is null) throw new Exception("Data provider not found");
             dataProvider.DisposePoint(point);
 
             var label = (TLabel?)point.Context.Label;

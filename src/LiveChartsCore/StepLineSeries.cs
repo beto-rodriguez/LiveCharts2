@@ -675,20 +675,19 @@ namespace LiveChartsCore
         {
             var visual = (StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPathArgs>?)point.Context.Visual;
             if (visual is null) return;
+            if (dataProvider is null) throw new Exception("Data provider not found");
 
             var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
             if (chartView.Core.IsZoomingOrPanning)
             {
                 visual.Geometry.CompleteAllTransitions();
                 visual.Geometry.RemoveOnCompleted = true;
+                dataProvider.DisposePoint(point);
                 return;
             }
 
-            var gs = _geometrySize;
-            var hgs = gs / 2f;
-
-            var x = secondaryScale.ToPixels(point.SecondaryValue) - hgs;
-            var y = primaryScale.ToPixels(point.PrimaryValue) - hgs;
+            var x = secondaryScale.ToPixels(point.SecondaryValue);
+            var y = primaryScale.ToPixels(point.PrimaryValue);
 
             visual.Geometry.X = x;
             visual.Geometry.Y = y;
@@ -696,7 +695,6 @@ namespace LiveChartsCore
             visual.Geometry.Width = 0;
             visual.Geometry.RemoveOnCompleted = true;
 
-            if (dataProvider is null) throw new Exception("Data provider not found");
             dataProvider.DisposePoint(point);
 
             var label = (TLabel?)point.Context.Label;

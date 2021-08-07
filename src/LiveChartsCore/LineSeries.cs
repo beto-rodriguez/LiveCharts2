@@ -743,11 +743,8 @@ namespace LiveChartsCore
                 return;
             }
 
-            var gs = _geometrySize;
-            var hgs = gs / 2f;
-
-            var x = secondaryScale.ToPixels(point.SecondaryValue) - hgs;
-            var y = primaryScale.ToPixels(point.PrimaryValue) - hgs;
+            var x = secondaryScale.ToPixels(point.SecondaryValue);
+            var y = primaryScale.ToPixels(point.PrimaryValue);
 
             visual.Geometry.X = x;
             visual.Geometry.Y = y;
