@@ -170,7 +170,7 @@ namespace LiveChartsCore
 
     /// <summary>
     /// Defines a visual section in a chart.
-    /// </summary>
+    /// </summary>s
     /// <typeparam name="TSizedGeometry">The type of the sized geometry.</typeparam>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="ChartElement{TDrawingContext}" />

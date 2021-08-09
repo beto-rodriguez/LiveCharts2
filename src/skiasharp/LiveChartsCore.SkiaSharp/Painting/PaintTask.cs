@@ -70,7 +70,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             Color = color;
         }
 
-        double IPaintTask<SkiaSharpDrawingContext>.ZIndex { get; set; }
+        /// <inheritdoc cref="IPaintTask{TDrawingContext}.ZIndex"/>
+        public double ZIndex { get; set; }
 
         /// <inheritdoc cref="IPaintTask{TDrawingContext}.StrokeThickness" />
         public float StrokeThickness { get => strokeWidthTransition.GetMovement(this); set => strokeWidthTransition.SetMovement(value, this); }
