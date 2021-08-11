@@ -31,7 +31,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     public class SVGPathGeometry : SizedGeometry
     {
         private string _svg = string.Empty;
-        private SKPath? _svgPath;
+        internal SKPath? _svgPath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SVGPathGeometry"/> class.
