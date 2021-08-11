@@ -131,12 +131,14 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             SKPaint? originalStroke = null;
             if (context.PaintTask.IsStroke && Stroke is not null)
             {
+                Stroke.IsStroke = true;
                 originalStroke = context.Paint;
                 Stroke.InitializeTask(context);
             }
             SKPaint? originalFill = null;
             if (!context.PaintTask.IsStroke && Fill is not null)
             {
+                Fill.IsStroke = false;
                 originalFill = context.Paint;
                 Fill.InitializeTask(context);
             }

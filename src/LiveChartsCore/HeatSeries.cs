@@ -394,35 +394,5 @@ namespace LiveChartsCore
         {
             return new[] { _paintTaks };
         }
-
-        /// <summary>
-        /// Deletes the series from the user interface.
-        /// </summary>
-        /// <param name="chart"></param>
-        /// <inheritdoc cref="M:LiveChartsCore.ISeries.Delete(LiveChartsCore.Kernel.IChartView)" />
-        public override void SoftDelete(IChartView chart)
-        {
-            var core = ((ICartesianChartView<TDrawingContext>)chart).Core;
-
-            var secondaryAxis = core.XAxes[ScalesXAt];
-            var primaryAxis = core.YAxes[ScalesYAt];
-
-            var secondaryScale = new Scaler(core.DrawMarginLocation, core.DrawMarginSize, secondaryAxis);
-            var primaryScale = new Scaler(core.DrawMarginLocation, core.DrawMarginSize, primaryAxis);
-
-            var deleted = new List<ChartPoint>();
-            foreach (var point in everFetched)
-            {
-                if (point.Context.Chart != chart) continue;
-
-                SoftDeletePoint(point, primaryScale, secondaryScale);
-                deleted.Add(point);
-            }
-
-            if (_paintTaks is not null) core.Canvas.RemovePaintTask(_paintTaks);
-            if (DataLabelsPaint is not null) core.Canvas.RemovePaintTask(DataLabelsPaint);
-
-            foreach (var item in deleted) _ = everFetched.Remove(item);
-        }
     }
 }

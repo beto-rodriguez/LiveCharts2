@@ -122,6 +122,11 @@ namespace LiveChartsCore
         bool IsNotifyingChanges { get; set; }
 
         /// <summary>
+        /// Occurs when the series <see cref="IsVisible"/> property changes.
+        /// </summary>
+        event Action<ISeries> VisibilityChanged;
+
+        /// <summary>
         /// Gets the tooltip text for a give chart point.
         /// </summary>
         /// <param name="point">The chart point.</param>

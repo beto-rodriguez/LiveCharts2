@@ -27,6 +27,7 @@ using LiveChartsCore.Measure;
 using System.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Kernel.Data;
+using System.Collections.Generic;
 
 namespace LiveChartsCore
 {
@@ -72,6 +73,42 @@ namespace LiveChartsCore
             return dataProvider is null
                 ? throw new Exception("A data provider is required")
                 : dataProvider.GetCartesianBounds(chart, this, x, y);
+        }
+
+        /// <summary>
+        /// Deletes the series from the user interface.
+        /// </summary>
+        /// <param name="chart"></param>
+        /// <inheritdoc cref="M:LiveChartsCore.ISeries.Delete(LiveChartsCore.Kernel.IChartView)" />
+        public override void SoftDelete(IChartView chart)
+        {
+            var core = ((ICartesianChartView<TDrawingContext>)chart).Core;
+
+            var secondaryAxis = core.XAxes[ScalesXAt];
+            var primaryAxis = core.YAxes[ScalesYAt];
+
+            var secondaryScale = new Scaler(core.DrawMarginLocation, core.DrawMarginSize, secondaryAxis);
+            var primaryScale = new Scaler(core.DrawMarginLocation, core.DrawMarginSize, primaryAxis);
+
+            var deleted = new List<ChartPoint>();
+            foreach (var point in everFetched)
+            {
+                if (point.Context.Chart != chart) continue;
+
+                SoftDeletePoint(point, primaryScale, secondaryScale);
+                deleted.Add(point);
+            }
+
+            foreach (var pt in GetPaintTasks())
+            {
+                if (pt is not null) core.Canvas.RemovePaintTask(pt);
+            }
+
+            foreach (var item in deleted) _ = everFetched.Remove(item);
+
+            ((ISeries)this).IsNotifyingChanges = false;
+            IsVisible = false;
+            ((ISeries)this).IsNotifyingChanges = false;
         }
 
         /// <summary>

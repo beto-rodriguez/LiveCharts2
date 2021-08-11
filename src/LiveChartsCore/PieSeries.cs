@@ -619,6 +619,7 @@ namespace LiveChartsCore
         /// <inheritdoc cref="M:LiveChartsCore.ISeries.Delete(LiveChartsCore.Kernel.IChartView)" />
         public override void SoftDelete(IChartView chart)
         {
+            var core = ((IPieChartView<TDrawingContext>)chart).Core;
             var u = new Scaler();
 
             var toDelete = new List<ChartPoint>();
@@ -629,7 +630,16 @@ namespace LiveChartsCore
                 toDelete.Add(point);
             }
 
+            foreach (var pt in GetPaintTasks())
+            {
+                if (pt is not null) core.Canvas.RemovePaintTask(pt);
+            }
+
             foreach (var item in toDelete) _ = everFetched.Remove(item);
+
+            ((ISeries)this).IsNotifyingChanges = false;
+            IsVisible = false;
+            ((ISeries)this).IsNotifyingChanges = false;
         }
     }
 }
