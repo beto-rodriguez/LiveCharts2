@@ -58,6 +58,11 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// </value>
         public string SVG { get => _svg; set { _svg = value; OnSVGPropertyChanged(); } }
 
+        /// <summary>
+        /// Gets or sets whether the path should be fitted to the size of the geometry.
+        /// </summary>
+        public bool FitToSize { get; set; } = false;
+
         /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
@@ -70,10 +75,26 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             var canvas = context.Canvas;
             _ = _svgPath.GetTightBounds(out var bounds);
 
-            canvas.Translate(X + Width / 2, Y + Height / 2);
-            canvas.Scale(Width / (bounds.Width + paint.StrokeWidth),
-                         Height / (bounds.Height + paint.StrokeWidth));
-            canvas.Translate(-bounds.MidX, -bounds.MidY);
+            if (FitToSize)
+            {
+                canvas.Translate(X + Width / 2f, Y + Height / 2f);
+                canvas.Scale(
+                    Width / (bounds.Width + paint.StrokeWidth),
+                    Height / (bounds.Height + paint.StrokeWidth));
+                canvas.Translate(-bounds.MidX, -bounds.MidY);
+            }
+            else
+            {
+                var minB = bounds.Width < bounds.Height ? bounds.Width : bounds.Height;
+                var min = Width < Height ? Width : Height;
+                var max = Width < Height ? Height : Width;
+
+                canvas.Translate(X + Width / 2f + (max - Width) / 2f, Y + Height / 2f + (max - Height) / 2f);
+                canvas.Scale(
+                    min / (minB + paint.StrokeWidth),
+                    min / (minB + paint.StrokeWidth));
+                canvas.Translate(-bounds.MidX, -bounds.MidY);
+            }
 
             canvas.DrawPath(_svgPath, paint);
 

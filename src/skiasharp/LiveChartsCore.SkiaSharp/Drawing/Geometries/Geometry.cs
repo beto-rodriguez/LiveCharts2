@@ -113,6 +113,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             {
                 _ = context.Canvas.Save();
 
+                var m = Measure(context.PaintTask);
+
                 if (hasRotation)
                 {
                     var p = GetPosition(context, context.Paint);
@@ -124,7 +126,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
                 if (_hasTransform || hasCustomTransform)
                 {
                     var p = GetPosition(context, context.Paint);
-                    var m = Measure(context.PaintTask);
                     var transform = GetTransform(context);
                     context.Canvas.Translate(p.X + m.Width * 0.5f, p.Y + m.Height * 0.5f);
                     context.Canvas.Concat(ref transform);
