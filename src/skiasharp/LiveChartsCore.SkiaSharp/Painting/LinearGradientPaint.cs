@@ -130,14 +130,14 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             };
         }
 
-        /// <inheritdoc cref="IPaint{TDrawingContext}.SetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
-        public override void SetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
+        /// <inheritdoc cref="IPaint{TDrawingContext}.ApplyOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
+        public override void ApplyOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry)
         {
             throw new System.NotImplementedException();
         }
 
-        /// <inheritdoc cref="IPaint{TDrawingContext}.ResetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
-        public override void ResetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
+        /// <inheritdoc cref="IPaint{TDrawingContext}.RestoreOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
+        public override void RestoreOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry)
         {
             throw new System.NotImplementedException();
         }

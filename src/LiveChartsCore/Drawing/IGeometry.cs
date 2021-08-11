@@ -27,17 +27,9 @@ namespace LiveChartsCore.Drawing
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="IDrawable{TDrawingContext}" />
-    public interface IGeometry<TDrawingContext> : IDrawable<TDrawingContext>
+    public interface IGeometry<TDrawingContext> : IDrawable<TDrawingContext>, IPaintable<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        /// <summary>
-        /// Gets or sets the opacity.
-        /// </summary>
-        /// <value>
-        /// The opacity.
-        /// </value>
-        float Opacity { get; set; }
-
         /// <summary>
         /// Gets or sets the rotation in degrees.
         /// </summary>
@@ -68,5 +60,27 @@ namespace LiveChartsCore.Drawing
         /// <param name="drawableTask">The drawable task.</param>
         /// <returns></returns>
         System.Drawing.SizeF Measure(IPaint<TDrawingContext> drawableTask);
+    }
+
+    /// <summary>
+    /// Defines a paintable object, an object that has can have its own paint definition.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="IDrawable{TDrawingContext}" />
+    public interface IPaintable<TDrawingContext> : IDrawable<TDrawingContext>
+        where TDrawingContext : DrawingContext
+    {
+        /// <summary>
+        /// Gets or sets the paint.
+        /// </summary>
+        IPaint<TDrawingContext>? Paint { get; set; }
+
+        /// <summary>
+        /// Gets or sets the opacity.
+        /// </summary>
+        /// <value>
+        /// The opacity.
+        /// </value>
+        float Opacity { get; set; }
     }
 }

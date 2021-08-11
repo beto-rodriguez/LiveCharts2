@@ -124,8 +124,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             drawingContext.PaintTask = this;
         }
 
-        /// <inheritdoc cref="IPaint{TDrawingContext}.SetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
-        public override void SetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
+        /// <inheritdoc cref="IPaint{TDrawingContext}.ApplyOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
+        public override void ApplyOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry)
         {
             if (context.PaintTask is null || context.Paint is null) return;
 
@@ -134,11 +134,10 @@ namespace LiveChartsCore.SkiaSharpView.Painting
                 new SKColor(baseColor.Red, baseColor.Green, baseColor.Blue, unchecked((byte)(255 * geometry.Opacity)));
         }
 
-        /// <inheritdoc cref="IPaint{TDrawingContext}.ResetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
-        public override void ResetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
+        /// <inheritdoc cref="IPaint{TDrawingContext}.RestoreOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
+        public override void RestoreOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry)
         {
             if (context.PaintTask is null || context.Paint is null) return;
-            if (ImageFilter is not null) ImageFilter.Dispose();
 
             var baseColor = context.PaintTask.Color;
             context.Paint.Color = baseColor;
@@ -150,6 +149,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         public override void Dispose()
         {
             if (PathEffect is not null) PathEffect.Dispose();
+            if (ImageFilter is not null) ImageFilter.Dispose();
 
             if (_drawingContext is not null && GetClipRectangle(_drawingContext.MotionCanvas) != RectangleF.Empty)
             {

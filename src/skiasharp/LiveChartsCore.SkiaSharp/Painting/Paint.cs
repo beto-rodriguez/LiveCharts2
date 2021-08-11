@@ -220,11 +220,11 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <inheritdoc cref="IPaint{TDrawingContext}.CloneTask" />
         public abstract IPaint<SkiaSharpDrawingContext> CloneTask();
 
-        /// <inheritdoc cref="IPaint{TDrawingContext}.SetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
-        public abstract void SetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry);
+        /// <inheritdoc cref="IPaint{TDrawingContext}.ApplyOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
+        public abstract void ApplyOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry);
 
-        /// <inheritdoc cref="IPaint{TDrawingContext}.SetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
-        public abstract void ResetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry);
+        /// <inheritdoc cref="IPaint{TDrawingContext}.ApplyOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
+        public abstract void RestoreOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry);
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -241,6 +241,5 @@ namespace LiveChartsCore.SkiaSharpView.Painting
                 ? geometries
                 : null;
         }
-
     }
 }

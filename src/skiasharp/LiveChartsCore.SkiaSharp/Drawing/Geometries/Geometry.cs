@@ -86,11 +86,14 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// </value>
         public SKMatrix Transform { get => _transform; set { _transform = value; _hasTransform = !value.IsIdentity; } }
 
-        /// <inheritdoc cref="IGeometry{TDrawingContext}.Opacity" />
-        public float Opacity { get => opacityProperty.GetMovement(this); set => opacityProperty.SetMovement(value, this); }
-
         /// <inheritdoc cref="IGeometry{TDrawingContext}.Rotation" />
         public float Rotation { get => rotationProperty.GetMovement(this); set => rotationProperty.SetMovement(value, this); }
+
+        /// <inheritdoc cref="IPaintable{TDrawingContext}.Opacity" />
+        public float Opacity { get => opacityProperty.GetMovement(this); set => opacityProperty.SetMovement(value, this); }
+
+        /// <inheritdoc cref="IPaintable{TDrawingContext}.Paint" />
+        public IPaint<SkiaSharpDrawingContext>? Paint { get; set; }
 
         /// <inheritdoc cref="IVisualChartPoint{TDrawingContext}.HighlightableGeometry" />
         public IDrawable<SkiaSharpDrawingContext> HighlightableGeometry => GetHighlitableGeometry();
@@ -122,9 +125,22 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
                 }
             }
 
-            BeforeDraw(context);
+            SKPaint? originalPaint = null;
+            if (Paint is not null)
+            {
+                originalPaint = context.Paint;
+                Paint.InitializeTask(context);
+            }
+
+            if (Opacity != 1) context.PaintTask.ApplyOpacityMask(context, this);
             OnDraw(context, context.Paint);
-            AfterDraw(context);
+            if (Opacity != 1) context.PaintTask.RestoreOpacityMask(context, this);
+
+            if (Paint is not null)
+            {
+                Paint.Dispose();
+                if (originalPaint != null) context.Paint = originalPaint;
+            }
 
             if (_hasTransform || hasRotation || hasCustomTransform) context.Canvas.Restore();
         }
@@ -165,26 +181,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             }
 
             return measure;
-        }
-
-        /// <summary>
-        /// Called before the draw.
-        /// </summary>
-        protected virtual void BeforeDraw(SkiaSharpDrawingContext context)
-        {
-            if (Opacity == 1) return;
-
-            context.PaintTask.SetOpacity(context, this);
-        }
-
-        /// <summary>
-        /// Called after the draw.
-        /// </summary>
-        protected virtual void AfterDraw(SkiaSharpDrawingContext context)
-        {
-            if (Opacity == 1) return;
-
-            context.PaintTask.ResetOpacity(context, this);
         }
 
         /// <summary>

@@ -136,14 +136,14 @@ namespace LiveChartsCore.Drawing
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="geometry">The geometry.</param>
-        void SetOpacity(TDrawingContext context, IGeometry<TDrawingContext> geometry);
+        void ApplyOpacityMask(TDrawingContext context, IPaintable<TDrawingContext> geometry);
 
         /// <summary>
         /// Resets the opacity.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="geometry">The geometry.</param>
-        void ResetOpacity(TDrawingContext context, IGeometry<TDrawingContext> geometry);
+        void RestoreOpacityMask(TDrawingContext context, IPaintable<TDrawingContext> geometry);
 
         /// <summary>
         /// Clones the task.

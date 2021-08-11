@@ -57,5 +57,13 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             : base(gradientStops, center, radius, colorPos, tileMode)
         {
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RadialGradientPaint"/> class.
+        /// </summary>
+        /// <param name="centerColor">Color of the center.</param>
+        /// <param name="outerColor">Color of the outer.</param>
+        public RadialGradientPaintTask(SKColor centerColor, SKColor outerColor)
+            : this(new[] { centerColor, outerColor }) { }
     }
 }

@@ -223,13 +223,13 @@ namespace LiveChartsCore.Kernel.Drawing
         {
         }
 
-        /// <inheritdoc cref="IPaint{TDrawingContext}.SetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
-        public void SetOpacity(TDrawingContext context, IGeometry<TDrawingContext> geometry)
+        /// <inheritdoc cref="IPaint{TDrawingContext}.ApplyOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
+        public void ApplyOpacityMask(TDrawingContext context, IPaintable<TDrawingContext> geometry)
         {
         }
 
-        /// <inheritdoc cref="IPaint{TDrawingContext}.ResetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
-        public void ResetOpacity(TDrawingContext context, IGeometry<TDrawingContext> geometry)
+        /// <inheritdoc cref="IPaint{TDrawingContext}.RestoreOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
+        public void RestoreOpacityMask(TDrawingContext context, IPaintable<TDrawingContext> geometry)
         {
         }
 
