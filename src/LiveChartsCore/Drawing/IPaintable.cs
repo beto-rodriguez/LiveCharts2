@@ -23,42 +23,29 @@
 namespace LiveChartsCore.Drawing
 {
     /// <summary>
-    /// Defines a geometry in the user interface.
+    /// Defines a paintable object, an object that has can have its own paint definition.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="IDrawable{TDrawingContext}" />
-    public interface IGeometry<TDrawingContext> : IDrawable<TDrawingContext>, IPaintable<TDrawingContext>
+    public interface IPaintable<TDrawingContext> : IDrawable<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Gets or sets the rotation in degrees.
+        /// Gets or sets the stroke paint.
         /// </summary>
-        /// <value>
-        /// The rotation.
-        /// </value>
-        float Rotation { get; set; }
+        IPaint<TDrawingContext>? Stroke { get; set; }
 
         /// <summary>
-        /// Gets or sets the x.
+        /// Gets or sets the fill paint.
         /// </summary>
-        /// <value>
-        /// The x.
-        /// </value>
-        float X { get; set; }
+        IPaint<TDrawingContext>? Fill { get; set; }
 
         /// <summary>
-        /// Gets or sets the y.
+        /// Gets or sets the opacity.
         /// </summary>
         /// <value>
-        /// The y.
+        /// The opacity.
         /// </value>
-        float Y { get; set; }
-
-        /// <summary>
-        /// Measures the specified drawable task.
-        /// </summary>
-        /// <param name="drawableTask">The drawable task.</param>
-        /// <returns></returns>
-        System.Drawing.SizeF Measure(IPaint<TDrawingContext> drawableTask);
+        float Opacity { get; set; }
     }
 }

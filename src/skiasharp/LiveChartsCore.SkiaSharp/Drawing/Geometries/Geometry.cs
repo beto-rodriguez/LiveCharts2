@@ -92,8 +92,11 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="IPaintable{TDrawingContext}.Opacity" />
         public float Opacity { get => opacityProperty.GetMovement(this); set => opacityProperty.SetMovement(value, this); }
 
-        /// <inheritdoc cref="IPaintable{TDrawingContext}.Paint" />
-        public IPaint<SkiaSharpDrawingContext>? Paint { get; set; }
+        /// <inheritdoc cref="IPaintable{TDrawingContext}.Stroke" />
+        public IPaint<SkiaSharpDrawingContext>? Stroke { get; set; }
+
+        /// <inheritdoc cref="IPaintable{TDrawingContext}.Fill" />
+        public IPaint<SkiaSharpDrawingContext>? Fill { get; set; }
 
         /// <inheritdoc cref="IVisualChartPoint{TDrawingContext}.HighlightableGeometry" />
         public IDrawable<SkiaSharpDrawingContext> HighlightableGeometry => GetHighlitableGeometry();
@@ -125,21 +128,32 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
                 }
             }
 
-            SKPaint? originalPaint = null;
-            if (Paint is not null)
+            SKPaint? originalStroke = null;
+            if (context.PaintTask.IsStroke && Stroke is not null)
             {
-                originalPaint = context.Paint;
-                Paint.InitializeTask(context);
+                originalStroke = context.Paint;
+                Stroke.InitializeTask(context);
+            }
+            SKPaint? originalFill = null;
+            if (!context.PaintTask.IsStroke && Fill is not null)
+            {
+                originalFill = context.Paint;
+                Fill.InitializeTask(context);
             }
 
             if (Opacity != 1) context.PaintTask.ApplyOpacityMask(context, this);
             OnDraw(context, context.Paint);
             if (Opacity != 1) context.PaintTask.RestoreOpacityMask(context, this);
 
-            if (Paint is not null)
+            if (context.PaintTask.IsStroke && Stroke is not null)
             {
-                Paint.Dispose();
-                if (originalPaint != null) context.Paint = originalPaint;
+                Stroke.Dispose();
+                if (originalStroke != null) context.Paint = originalStroke;
+            }
+            if (!context.PaintTask.IsStroke && Fill is not null)
+            {
+                Fill.Dispose();
+                if (originalFill != null) context.Paint = originalFill;
             }
 
             if (_hasTransform || hasRotation || hasCustomTransform) context.Canvas.Restore();
