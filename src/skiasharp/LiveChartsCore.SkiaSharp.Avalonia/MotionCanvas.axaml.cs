@@ -122,7 +122,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             if (change.Property.Name == nameof(PaintTasks))
             {
-                var tasks = new HashSet<IPaintTask<SkiaSharpDrawingContext>>();
+                var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>>();
 
                 foreach (var item in PaintTasks)
                 {

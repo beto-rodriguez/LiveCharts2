@@ -168,7 +168,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
 
         private void load()
         {
-            var paint = new SolidColorPaintTask();
+            var paint = new SolidColorPaint();
 
             var thickness = (float)StrokeThickness;
             var stroke = Color.FromArgb(255, StrokeColor.R, StrokeColor.G, StrokeColor.B);
@@ -186,7 +186,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
             var projector = Maps.BuildProjector(Projection, new float[] { Width, Height });
             var shapes = worldMap.AsHeatMapShapes(Values, hm, _heatStops, stroke, fill, thickness, projector);
             paint.SetGeometries(_motionCanvas, new HashSet<IDrawable<SkiaSharpDrawingContext>>(shapes));
-            var tasks = new HashSet<IPaintTask<SkiaSharpDrawingContext>> { paint };
+            var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>> { paint };
             _motionCanvas.SetPaintTasks(tasks);
         }
     }

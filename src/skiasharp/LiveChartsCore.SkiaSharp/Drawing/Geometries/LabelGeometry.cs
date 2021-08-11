@@ -75,8 +75,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             context.Canvas.DrawText(Text ?? "", GetPosition(context, paint), paint);
         }
 
-        /// <inheritdoc cref="Geometry.OnMeasure(PaintTask)" />
-        protected override SizeF OnMeasure(PaintTask drawable)
+        /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
+        protected override SizeF OnMeasure(Paint drawable)
         {
             var p = new SKPaint
             {

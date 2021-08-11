@@ -37,8 +37,8 @@ namespace LiveChartsCore.SkiaSharpView
     /// </summary>
     public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     {
-        private readonly Dictionary<ISeries, Tuple<ObservableValue, string?, IPaintTask<SkiaSharpDrawingContext>?, IPaintTask<SkiaSharpDrawingContext>?>> _keyValuePairs = new();
-        private readonly List<Tuple<ObservableValue, string?, IPaintTask<SkiaSharpDrawingContext>?, IPaintTask<SkiaSharpDrawingContext>?>> _tuples = new();
+        private readonly Dictionary<ISeries, Tuple<ObservableValue, string?, IPaint<SkiaSharpDrawingContext>?, IPaint<SkiaSharpDrawingContext>?>> _keyValuePairs = new();
+        private readonly List<Tuple<ObservableValue, string?, IPaint<SkiaSharpDrawingContext>?, IPaint<SkiaSharpDrawingContext>?>> _tuples = new();
         private List<PieSeries<ObservableValue>>? _builtSeries;
 
         private RadialAlignment? _radialAlign = null;
@@ -48,7 +48,7 @@ namespace LiveChartsCore.SkiaSharpView
         private double? _backgroundOffsetRadius = null;
         private double? _backgroundCornerRadius = null;
         private double? _cornerRadius = null;
-        private IPaintTask<SkiaSharpDrawingContext> _background = LiveChartsSkiaSharp.DefaultPaintTask;
+        private IPaint<SkiaSharpDrawingContext> _background = LiveChartsSkiaSharp.DefaultPaintTask;
         private double? _labelsSize = null;
         private PolarLabelsPosition? _labelsPosition = null;
         private double? _backgroundMaxRadialColumnWidth = null;
@@ -141,7 +141,7 @@ namespace LiveChartsCore.SkiaSharpView
         /// <value>
         /// The background.
         /// </value>
-        public IPaintTask<SkiaSharpDrawingContext> Background { get => _background; set { _background = value; OnPopertyChanged(); } }
+        public IPaint<SkiaSharpDrawingContext> Background { get => _background; set { _background = value; OnPopertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the size of the labels, setting this property to null will let the theme decide the value, default is null.
@@ -178,13 +178,13 @@ namespace LiveChartsCore.SkiaSharpView
         public GaugeBuilder AddValue(
             ObservableValue value,
             string? seriesName,
-            IPaintTask<SkiaSharpDrawingContext>? seriesDrawableTask,
-            IPaintTask<SkiaSharpDrawingContext>? labelsDrawableTask = null)
+            IPaint<SkiaSharpDrawingContext>? seriesDrawableTask,
+            IPaint<SkiaSharpDrawingContext>? labelsDrawableTask = null)
         {
-            labelsDrawableTask ??= new SolidColorPaintTask(new SKColor(35, 35, 35));
+            labelsDrawableTask ??= new SolidColorPaint(new SKColor(35, 35, 35));
 
             _tuples.Add(
-                new Tuple<ObservableValue, string?, IPaintTask<SkiaSharpDrawingContext>?, IPaintTask<SkiaSharpDrawingContext>?>(
+                new Tuple<ObservableValue, string?, IPaint<SkiaSharpDrawingContext>?, IPaint<SkiaSharpDrawingContext>?>(
                     value, seriesName, seriesDrawableTask, labelsDrawableTask));
 
             return this;
@@ -202,7 +202,7 @@ namespace LiveChartsCore.SkiaSharpView
         {
             labelsColor ??= new SKColor(35, 35, 35);
 
-            return AddValue(value, seriesName, new SolidColorPaintTask(seriesColor), new SolidColorPaintTask(labelsColor.Value));
+            return AddValue(value, seriesName, new SolidColorPaint(seriesColor), new SolidColorPaint(labelsColor.Value));
         }
 
         /// <summary>

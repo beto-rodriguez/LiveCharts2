@@ -20,28 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Drawing;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing;
+using System;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Painting
 {
-    /// <summary>
-    /// Defines a set of geometries that will be painted using a radial gradient shader.
-    /// </summary>
-    /// <seealso cref="PaintTask" />
-    public class RadialGradientPaintTask : PaintTask
+    /// <inheritdoc cref="RadialGradientPaintTask"/>
+    [Obsolete("Renamed to RadialGradientPaint")]
+    public class RadialGradientPaintTask : RadialGradientPaint
     {
-        private SkiaSharpDrawingContext? _drawingContext;
-        private readonly SKColor[] _gradientStops;
-        private readonly SKPoint _center;
-        private readonly float _radius;
-        private readonly float[]? _colorPos;
-        private readonly SKShaderTileMode _tileMode;
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="RadialGradientPaintTask"/> class.
+        /// Initializes a new instance of the <see cref="RadialGradientPaint"/> class.
         /// </summary>
         /// <param name="gradientStops">The gradient stops.</param>
         /// <param name="center">
@@ -65,128 +54,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             float radius = 0.5f,
             float[]? colorPos = null,
             SKShaderTileMode tileMode = SKShaderTileMode.Repeat)
+            : base(gradientStops, center, radius, colorPos, tileMode)
         {
-            _gradientStops = gradientStops;
-            if (center is null) _center = new SKPoint(0.5f, 0.5f);
-            _radius = radius;
-            _colorPos = colorPos;
-            _tileMode = tileMode;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RadialGradientPaintTask"/> class.
-        /// </summary>
-        /// <param name="centerColor">Color of the center.</param>
-        /// <param name="outerColor">Color of the outer.</param>
-        public RadialGradientPaintTask(SKColor centerColor, SKColor outerColor)
-            : this(new[] { centerColor, outerColor }) { }
-
-        /// <inheritdoc cref="IPaintTask{TDrawingContext}.CloneTask" />
-        public override IPaintTask<SkiaSharpDrawingContext> CloneTask()
-        {
-            return new RadialGradientPaintTask(_gradientStops, _center, _radius, _colorPos, _tileMode)
-            {
-                Style = Style,
-                IsStroke = IsStroke,
-                IsFill = IsFill,
-                Color = Color,
-                IsAntialias = IsAntialias,
-                StrokeThickness = StrokeThickness,
-                StrokeCap = StrokeCap,
-                StrokeJoin = StrokeJoin,
-                StrokeMiter = StrokeMiter,
-                PathEffect = PathEffect?.Clone(),
-                ImageFilter = ImageFilter?.Clone()
-            };
-        }
-
-        /// <inheritdoc cref="IPaintTask{TDrawingContext}.InitializeTask(TDrawingContext)" />
-        public override void InitializeTask(SkiaSharpDrawingContext drawingContext)
-        {
-            skiaPaint ??= new SKPaint();
-
-            var size = GetDrawRectangleSize(drawingContext);
-            var center = new SKPoint(size.Location.X + _center.X * size.Width, size.Location.Y + _center.Y * size.Height);
-            var r = size.Location.X + size.Width > size.Location.Y + size.Height
-                ? size.Location.Y + size.Height
-                : size.Location.X + size.Width;
-            r *= _radius;
-
-            skiaPaint.Shader = SKShader.CreateRadialGradient(
-                    center,
-                    r,
-                    _gradientStops,
-                    _colorPos,
-                    _tileMode);
-
-            skiaPaint.IsAntialias = IsAntialias;
-            skiaPaint.IsStroke = true;
-            skiaPaint.StrokeWidth = StrokeThickness;
-            skiaPaint.StrokeCap = StrokeCap;
-            skiaPaint.StrokeJoin = StrokeJoin;
-            skiaPaint.StrokeMiter = StrokeMiter;
-            skiaPaint.Style = IsStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
-
-            if (PathEffect is not null)
-            {
-                PathEffect.CreateEffect(drawingContext);
-                skiaPaint.PathEffect = PathEffect.SKPathEffect;
-            }
-
-            if (ImageFilter is not null)
-            {
-                ImageFilter.CreateFilter(drawingContext);
-                skiaPaint.ImageFilter = ImageFilter.SKImageFilter;
-            }
-
-            var clip = GetClipRectangle(drawingContext.MotionCanvas);
-            if (clip != RectangleF.Empty)
-            {
-                _ = drawingContext.Canvas.Save();
-                drawingContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
-                _drawingContext = drawingContext;
-            }
-
-            drawingContext.Paint = skiaPaint;
-            drawingContext.PaintTask = this;
-        }
-
-        /// <inheritdoc cref="IPaintTask{TDrawingContext}.ResetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
-        public override void ResetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IPaintTask{TDrawingContext}.SetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
-        public override void SetOpacity(SkiaSharpDrawingContext context, IGeometry<SkiaSharpDrawingContext> geometry)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public override void Dispose()
-        {
-            if (PathEffect is not null) PathEffect.Dispose();
-            if (ImageFilter is not null) ImageFilter.Dispose();
-
-            if (_drawingContext is not null && GetClipRectangle(_drawingContext.MotionCanvas) != RectangleF.Empty)
-            {
-                _drawingContext.Canvas.Restore();
-                _drawingContext = null;
-            }
-
-            base.Dispose();
-        }
-
-        private SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext)
-        {
-            var clip = GetClipRectangle(drawingContext.MotionCanvas);
-
-            return clip == RectangleF.Empty
-                ? new SKRect(0, 0, drawingContext.Info.Width, drawingContext.Info.Width)
-                : new SKRect(clip.X, clip.Y, clip.Width, clip.Height);
         }
     }
 }

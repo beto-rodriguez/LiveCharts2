@@ -100,7 +100,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         {
             var canvas = motionCanvas1;
 
-            var paint = new SolidColorPaintTask();
+            var paint = new SolidColorPaint();
 
             var thickness = (float)StrokeThickness;
             var stroke = Color.FromArgb(255, StrokeColor.R, StrokeColor.G, StrokeColor.B);

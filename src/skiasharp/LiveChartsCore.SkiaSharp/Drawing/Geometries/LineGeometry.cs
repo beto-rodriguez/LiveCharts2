@@ -56,8 +56,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             context.Canvas.DrawLine(X, Y, X1, Y1, paint);
         }
 
-        /// <inheritdoc cref="Geometry.OnMeasure(PaintTask)" />
-        protected override SizeF OnMeasure(PaintTask drawable)
+        /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
+        protected override SizeF OnMeasure(Paint drawable)
         {
             return new SizeF(Math.Abs(X1 - X), Math.Abs(Y1 - Y));
         }

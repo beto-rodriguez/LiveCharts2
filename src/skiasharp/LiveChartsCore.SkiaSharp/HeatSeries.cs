@@ -88,9 +88,9 @@ namespace LiveChartsCore.SkiaSharpView
         }
 
         /// <inheritdoc cref="HeatSeries{TModel, TVisual, TLabel, TDrawingContext}.GetSolidColorPaintTask"/>
-        protected override IPaintTask<SkiaSharpDrawingContext> GetSolidColorPaintTask()
+        protected override IPaint<SkiaSharpDrawingContext> GetSolidColorPaintTask()
         {
-            return new SolidColorPaintTask();
+            return new SolidColorPaint();
         }
     }
 }

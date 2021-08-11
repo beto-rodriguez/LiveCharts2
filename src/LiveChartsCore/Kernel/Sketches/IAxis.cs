@@ -287,7 +287,7 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <value>
         /// The text paint.
         /// </value>
-        IPaintTask<TDrawingContext>? NamePaint { get; set; }
+        IPaint<TDrawingContext>? NamePaint { get; set; }
 
         /// <summary>
         /// Gets or sets the text brush.
@@ -296,7 +296,7 @@ namespace LiveChartsCore.Kernel.Sketches
         /// The text brush.
         /// </value>
         [Obsolete("Renamed to TextPaint")]
-        IPaintTask<TDrawingContext>? TextBrush { get; set; }
+        IPaint<TDrawingContext>? TextBrush { get; set; }
 
         /// <summary>
         /// Gets or sets the text paint.
@@ -304,7 +304,7 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <value>
         /// The text paint.
         /// </value>
-        IPaintTask<TDrawingContext>? LabelsPaint { get; set; }
+        IPaint<TDrawingContext>? LabelsPaint { get; set; }
 
         /// <summary>
         /// Gets or sets the separators brush.
@@ -313,7 +313,7 @@ namespace LiveChartsCore.Kernel.Sketches
         /// The separators brush.
         /// </value>
         [Obsolete("Renamed to SeparatorsPaint")]
-        IPaintTask<TDrawingContext>? SeparatorsBrush { get; set; }
+        IPaint<TDrawingContext>? SeparatorsBrush { get; set; }
 
         /// <summary>
         /// Gets or sets the separators paint.
@@ -321,7 +321,7 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <value>
         /// The separators paint.
         /// </value>
-        IPaintTask<TDrawingContext>? SeparatorsPaint { get; set; }
+        IPaint<TDrawingContext>? SeparatorsPaint { get; set; }
 
         /// <summary>
         /// Gets the size of the possible.

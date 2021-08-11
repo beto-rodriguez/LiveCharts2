@@ -126,7 +126,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         {
             var motionCanvas = (MotionCanvas)sender;
 
-            var tasks = new HashSet<IPaintTask<SkiaSharpDrawingContext>>();
+            var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>>();
 
             foreach (var item in motionCanvas.PaintTasks)
             {

@@ -46,7 +46,7 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <value>
         /// The stroke.
         /// </value>
-        IPaintTask<TDrawingContext>? UpStroke { get; set; }
+        IPaint<TDrawingContext>? UpStroke { get; set; }
 
         /// <summary>
         /// Gets or sets the up stroke, the stroke when the trend goes down.
@@ -54,7 +54,7 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <value>
         /// The stroke.
         /// </value>
-        IPaintTask<TDrawingContext>? DownStroke { get; set; }
+        IPaint<TDrawingContext>? DownStroke { get; set; }
 
         /// <summary>
         /// Gets or sets the up fill, the fill when the trend goes up.
@@ -62,7 +62,7 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <value>
         /// The fill.
         /// </value>
-        IPaintTask<TDrawingContext>? UpFill { get; set; }
+        IPaint<TDrawingContext>? UpFill { get; set; }
 
         /// <summary>
         /// Gets or sets the up fill, the fill when the trend goes down.
@@ -70,6 +70,6 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <value>
         /// The fill.
         /// </value>
-        IPaintTask<TDrawingContext>? DownFill { get; set; }
+        IPaint<TDrawingContext>? DownFill { get; set; }
     }
 }

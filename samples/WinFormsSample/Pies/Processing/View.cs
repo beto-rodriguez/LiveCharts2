@@ -61,7 +61,7 @@ namespace WinFormsSample.Pies.Processing
 
         private static Color GetForeColor(PieSeries<ObservableValue> pieSeries)
         {
-            return pieSeries.Fill is not SolidColorPaintTask solidColorBrush
+            return pieSeries.Fill is not SolidColorPaint solidColorBrush
                 ? new Color()
                 : Color.FromArgb(
                     solidColorBrush.Color.Alpha,

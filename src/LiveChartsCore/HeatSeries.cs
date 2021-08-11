@@ -45,7 +45,7 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
-        private IPaintTask<TDrawingContext>? _paintTaks;
+        private IPaint<TDrawingContext>? _paintTaks;
         private Bounds _weightBounds = new();
         private int _heatKnownLength = 0;
         private List<Tuple<double, Color>> _heatStops = new();
@@ -341,7 +341,7 @@ namespace LiveChartsCore
         /// returns a new solid color paint task.
         /// </summary>
         /// <returns></returns>
-        protected abstract IPaintTask<TDrawingContext> GetSolidColorPaintTask();
+        protected abstract IPaint<TDrawingContext> GetSolidColorPaintTask();
 
         /// <summary>
         /// Called when the paint context changes.
@@ -390,7 +390,7 @@ namespace LiveChartsCore
         }
 
         /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
-        protected override IPaintTask<TDrawingContext>?[] GetPaintTasks()
+        protected override IPaint<TDrawingContext>?[] GetPaintTasks()
         {
             return new[] { _paintTaks };
         }

@@ -23,7 +23,7 @@ namespace WinUISample.Pies.Processing
             if (value is not IEnumerable enumerable) return null;
 
             var enumerator = enumerable.GetEnumerator();
-            return enumerator.MoveNext() && enumerator.Current is SolidColorPaintTask solidPaintTask
+            return enumerator.MoveNext() && enumerator.Current is SolidColorPaint solidPaintTask
                 ? new SolidColorBrush(Color.FromArgb(
                     solidPaintTask.Color.Alpha,
                     solidPaintTask.Color.Red,

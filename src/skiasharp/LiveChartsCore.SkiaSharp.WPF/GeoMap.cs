@@ -196,7 +196,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     $"{nameof(MotionCanvas)} not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
                     $"If you override the template please add an {nameof(MotionCanvas)} to the template and name it 'canvas'");
 
-            var paint = new SolidColorPaintTask();
+            var paint = new SolidColorPaint();
 
             var thickness = (float)StrokeThickness;
             var stroke = System.Drawing.Color.FromArgb(255, StrokeColor.R, StrokeColor.G, StrokeColor.B);

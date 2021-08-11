@@ -33,8 +33,8 @@ namespace LiveChartsCore.Kernel.Drawing
     /// Defines a default paint task.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IPaintTask{TDrawingContext}" />
-    public class DefaultPaintTask<TDrawingContext> : IPaintTask<TDrawingContext>
+    /// <seealso cref="IPaint{TDrawingContext}" />
+    public class DefaultPaintTask<TDrawingContext> : IPaint<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
@@ -115,7 +115,7 @@ namespace LiveChartsCore.Kernel.Drawing
         /// Clones the task.
         /// </summary>
         /// <returns></returns>
-        public IPaintTask<TDrawingContext> CloneTask()
+        public IPaint<TDrawingContext> CloneTask()
         {
             return this;
         }
@@ -223,23 +223,23 @@ namespace LiveChartsCore.Kernel.Drawing
         {
         }
 
-        /// <inheritdoc cref="IPaintTask{TDrawingContext}.SetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
+        /// <inheritdoc cref="IPaint{TDrawingContext}.SetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
         public void SetOpacity(TDrawingContext context, IGeometry<TDrawingContext> geometry)
         {
         }
 
-        /// <inheritdoc cref="IPaintTask{TDrawingContext}.ResetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
+        /// <inheritdoc cref="IPaint{TDrawingContext}.ResetOpacity(TDrawingContext, IGeometry{TDrawingContext})" />
         public void ResetOpacity(TDrawingContext context, IGeometry<TDrawingContext> geometry)
         {
         }
 
-        /// <inheritdoc cref="IPaintTask{TDrawingContext}.GetClipRectangle(MotionCanvas{TDrawingContext})" />
+        /// <inheritdoc cref="IPaint{TDrawingContext}.GetClipRectangle(MotionCanvas{TDrawingContext})" />
         public RectangleF GetClipRectangle(MotionCanvas<TDrawingContext> canvas)
         {
             return RectangleF.Empty;
         }
 
-        /// <inheritdoc cref="IPaintTask{TDrawingContext}.SetClipRectangle(MotionCanvas{TDrawingContext}, RectangleF)" />
+        /// <inheritdoc cref="IPaint{TDrawingContext}.SetClipRectangle(MotionCanvas{TDrawingContext}, RectangleF)" />
         public void SetClipRectangle(MotionCanvas<TDrawingContext> canvas, RectangleF value)
         {
         }

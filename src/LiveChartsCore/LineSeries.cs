@@ -51,8 +51,8 @@ namespace LiveChartsCore
         private float _lineSmoothness = 0.65f;
         private float _geometrySize = 14f;
         private bool _enableNullSplitting = true;
-        private IPaintTask<TDrawingContext>? _geometryFill;
-        private IPaintTask<TDrawingContext>? _geometryStroke;
+        private IPaint<TDrawingContext>? _geometryFill;
+        private IPaint<TDrawingContext>? _geometryStroke;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs}"/> class.
@@ -88,14 +88,14 @@ namespace LiveChartsCore
         public bool EnableNullSplitting { get => _enableNullSplitting; set { _enableNullSplitting = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometryFill"/>
-        public IPaintTask<TDrawingContext>? GeometryFill
+        public IPaint<TDrawingContext>? GeometryFill
         {
             get => _geometryFill;
             set => SetPaintProperty(ref _geometryFill, value);
         }
 
         /// <inheritdoc cref="ILineSeries{TDrawingContext}.GeometryStroke"/>
-        public IPaintTask<TDrawingContext>? GeometryStroke
+        public IPaint<TDrawingContext>? GeometryStroke
         {
             get => _geometryStroke;
             set => SetPaintProperty(ref _geometryStroke, value, true);
@@ -789,7 +789,7 @@ namespace LiveChartsCore
         /// Gets the paint tasks.
         /// </summary>
         /// <returns></returns>
-        protected override IPaintTask<TDrawingContext>?[] GetPaintTasks()
+        protected override IPaint<TDrawingContext>?[] GetPaintTasks()
         {
             return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint };
         }

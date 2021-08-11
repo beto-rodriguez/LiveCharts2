@@ -181,7 +181,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             var canvas = this.FindControl<MotionCanvas>("canvas");
 
-            var paint = new SolidColorPaintTask();
+            var paint = new SolidColorPaint();
 
             var thickness = (float)StrokeThickness;
             var stroke = System.Drawing.Color.FromArgb(255, StrokeColor.R, StrokeColor.G, StrokeColor.B);

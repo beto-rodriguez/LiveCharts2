@@ -67,13 +67,13 @@ namespace LiveChartsCore
         private Padding _padding = Padding.Default;
         private double? _minLimit = null;
         private double? _maxLimit = null;
-        private IPaintTask<TDrawingContext>? _namePaint;
+        private IPaint<TDrawingContext>? _namePaint;
         private double _nameTextSize = 20;
         private Padding _namePadding = new(5);
-        private IPaintTask<TDrawingContext>? _labelsPaint;
+        private IPaint<TDrawingContext>? _labelsPaint;
         private double _unitWidth = 1;
         private double _textSize = 16;
-        private IPaintTask<TDrawingContext>? _separatorsPaint;
+        private IPaint<TDrawingContext>? _separatorsPaint;
         private bool _showSeparatorLines = true;
         private bool _isVisible = true;
         private bool _isInverted;
@@ -149,21 +149,21 @@ namespace LiveChartsCore
         public bool IsInverted { get => _isInverted; set { _isInverted = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IAxis{TDrawingContext}.NamePaint"/>
-        public IPaintTask<TDrawingContext>? NamePaint
+        public IPaint<TDrawingContext>? NamePaint
         {
             get => _namePaint;
             set => SetPaintProperty(ref _namePaint, value);
         }
 
         /// <inheritdoc cref="IAxis{TDrawingContext}.LabelsPaint"/>
-        public IPaintTask<TDrawingContext>? LabelsPaint
+        public IPaint<TDrawingContext>? LabelsPaint
         {
             get => _labelsPaint;
             set => SetPaintProperty(ref _labelsPaint, value);
         }
 
         /// <inheritdoc cref="IAxis{TDrawingContext}.SeparatorsPaint"/>
-        public IPaintTask<TDrawingContext>? SeparatorsPaint
+        public IPaint<TDrawingContext>? SeparatorsPaint
         {
             get => _separatorsPaint;
             set => SetPaintProperty(ref _separatorsPaint, value);
@@ -171,11 +171,11 @@ namespace LiveChartsCore
 
         /// <inheritdoc cref="IAxis{TDrawingContext}.TextBrush"/>
         [Obsolete("Renamed to LabelsPaint")]
-        public IPaintTask<TDrawingContext>? TextBrush { get => LabelsPaint; set => LabelsPaint = value; }
+        public IPaint<TDrawingContext>? TextBrush { get => LabelsPaint; set => LabelsPaint = value; }
 
         /// <inheritdoc cref="IAxis{TDrawingContext}.SeparatorsBrush"/>
         [Obsolete("Renamed to SeparatorsPaint")]
-        public IPaintTask<TDrawingContext>? SeparatorsBrush { get => SeparatorsPaint; set => SeparatorsPaint = value; }
+        public IPaint<TDrawingContext>? SeparatorsBrush { get => SeparatorsPaint; set => SeparatorsPaint = value; }
 
         /// <inheritdoc cref="IAxis.AnimationsSpeed"/>
         public TimeSpan? AnimationsSpeed { get; set; }
@@ -680,7 +680,7 @@ namespace LiveChartsCore
         /// Gets the paint tasks.
         /// </summary>
         /// <returns></returns>
-        protected override IPaintTask<TDrawingContext>?[] GetPaintTasks()
+        protected override IPaint<TDrawingContext>?[] GetPaintTasks()
         {
             return new[] { _separatorsPaint, _labelsPaint, _namePaint };
         }

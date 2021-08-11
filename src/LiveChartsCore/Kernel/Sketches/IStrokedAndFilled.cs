@@ -37,7 +37,7 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <value>
         /// The fill.
         /// </value>
-        IPaintTask<TDrawingContext>? Fill { get; set; }
+        IPaint<TDrawingContext>? Fill { get; set; }
 
         /// <summary>
         /// Gets or sets the stroke.
@@ -45,6 +45,6 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <value>
         /// The stroke.
         /// </value>
-        IPaintTask<TDrawingContext>? Stroke { get; set; }
+        IPaint<TDrawingContext>? Stroke { get; set; }
     }
 }

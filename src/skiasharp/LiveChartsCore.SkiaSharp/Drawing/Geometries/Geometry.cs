@@ -141,9 +141,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// </summary>
         /// <param name="drawableTask">The drawable task.</param>
         /// <returns>the size of the geometry.</returns>
-        public SizeF Measure(IPaintTask<SkiaSharpDrawingContext> drawableTask)
+        public SizeF Measure(IPaint<SkiaSharpDrawingContext> drawableTask)
         {
-            var measure = OnMeasure((PaintTask)drawableTask);
+            var measure = OnMeasure((Paint)drawableTask);
 
             var r = Rotation;
             if (Math.Abs(r) > 0)
@@ -192,7 +192,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// </summary>
         /// <param name="paintTaks">The paint task.</param>
         /// <returns>the size of the geometry</returns>
-        protected abstract SizeF OnMeasure(PaintTask paintTaks);
+        protected abstract SizeF OnMeasure(Paint paintTaks);
 
         /// <summary>
         /// Gets the actual transform.

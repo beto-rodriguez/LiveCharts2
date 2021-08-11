@@ -33,7 +33,7 @@ namespace LiveChartsCore.Kernel
     public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        private readonly List<IPaintTask<TDrawingContext>> _deletingTasks = new();
+        private readonly List<IPaint<TDrawingContext>> _deletingTasks = new();
 
         /// <inheritdoc cref="IChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})" />
         public abstract void Measure(Chart<TDrawingContext> chart);
@@ -72,8 +72,8 @@ namespace LiveChartsCore.Kernel
         /// <param name="propertyName">Name of the property.</param>
         /// <returns></returns>
         protected virtual void SetPaintProperty(
-            ref IPaintTask<TDrawingContext>? reference,
-            IPaintTask<TDrawingContext>? value,
+            ref IPaint<TDrawingContext>? reference,
+            IPaint<TDrawingContext>? value,
             bool isStroke = false,
             [CallerMemberName] string? propertyName = null)
         {
@@ -90,10 +90,10 @@ namespace LiveChartsCore.Kernel
         }
 
         /// <summary>
-        /// Schedules the delete for thew given <see cref="IPaintTask{TDrawingContext}"/> instance.
+        /// Schedules the delete for thew given <see cref="IPaint{TDrawingContext}"/> instance.
         /// </summary>
         /// <returns></returns>
-        protected void ScheduleDeleteFor(IPaintTask<TDrawingContext> paintTask)
+        protected void ScheduleDeleteFor(IPaint<TDrawingContext> paintTask)
         {
             _deletingTasks.Add(paintTask);
         }
@@ -108,6 +108,6 @@ namespace LiveChartsCore.Kernel
         /// Gets the paint tasks.
         /// </summary>
         /// <returns></returns>
-        protected abstract IPaintTask<TDrawingContext>?[] GetPaintTasks();
+        protected abstract IPaint<TDrawingContext>?[] GetPaintTasks();
     }
 }

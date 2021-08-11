@@ -67,6 +67,6 @@ namespace LiveChartsCore.Drawing
         /// </summary>
         /// <param name="drawableTask">The drawable task.</param>
         /// <returns></returns>
-        System.Drawing.SizeF Measure(IPaintTask<TDrawingContext> drawableTask);
+        System.Drawing.SizeF Measure(IPaint<TDrawingContext> drawableTask);
     }
 }

@@ -101,13 +101,13 @@ namespace LiveChartsCore.SkiaSharpView
                                    // new SKColor(255, 255, 255, 180) as the fill (defaultHoverColor).
                                    var defaultHoverColor = Color.FromArgb(180, 255, 255, 255).AsSKColor();
                                    chart.PointStates = new PointStatesDictionary<SkiaSharpDrawingContext>()
-                                        .WithState(LiveCharts.BarSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
-                                        .WithState(LiveCharts.LineSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
-                                        .WithState(LiveCharts.StepLineSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
-                                        .WithState(LiveCharts.PieSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
-                                        .WithState(LiveCharts.ScatterSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
-                                        .WithState(LiveCharts.StackedBarSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
-                                        .WithState(LiveCharts.HeatSeriesHoverState, null, new SolidColorPaintTask(defaultHoverColor), true);
+                                        .WithState(LiveCharts.BarSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
+                                        .WithState(LiveCharts.LineSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
+                                        .WithState(LiveCharts.StepLineSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
+                                        .WithState(LiveCharts.PieSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
+                                        .WithState(LiveCharts.ScatterSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
+                                        .WithState(LiveCharts.StackedBarSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
+                                        .WithState(LiveCharts.HeatSeriesHoverState, null, new SolidColorPaint(defaultHoverColor), true);
                                })
                                .HasRuleForAxes(axis =>
                                {
@@ -129,7 +129,7 @@ namespace LiveChartsCore.SkiaSharpView
                                    // at this point ForAnySeries() was already called
                                    // we are configuring the missing properties
                                    lineSeries.GeometrySize = 18;
-                                   lineSeries.GeometryFill = new SolidColorPaintTask(Color.FromArgb(255, 250, 250, 250).AsSKColor());
+                                   lineSeries.GeometryFill = new SolidColorPaint(Color.FromArgb(255, 250, 250, 250).AsSKColor());
                                    lineSeries.GeometryStroke = DefaultPaintTask;
                                })
                                .HasRuleForStepLineSeries(steplineSeries =>
@@ -137,7 +137,7 @@ namespace LiveChartsCore.SkiaSharpView
                                    // at this point ForAnySeries() was already called
                                    // we are configuring the missing properties
                                    steplineSeries.GeometrySize = 18;
-                                   steplineSeries.GeometryFill = new SolidColorPaintTask(Color.FromArgb(255, 250, 250, 250).AsSKColor());
+                                   steplineSeries.GeometryFill = new SolidColorPaint(Color.FromArgb(255, 250, 250, 250).AsSKColor());
                                    steplineSeries.GeometryStroke = DefaultPaintTask;
                                })
                                .HasRuleForStackedLineSeries(stackedLine =>
@@ -229,19 +229,19 @@ namespace LiveChartsCore.SkiaSharpView
                                    chart.PointStates =
                                        new PointStatesDictionary<SkiaSharpDrawingContext>()
                                            .WithState(
-                                               LiveCharts.BarSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
+                                               LiveCharts.BarSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
                                            .WithState(
-                                               LiveCharts.StepLineSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
+                                               LiveCharts.StepLineSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
                                            .WithState(
-                                               LiveCharts.LineSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
+                                               LiveCharts.LineSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
                                            .WithState(
-                                               LiveCharts.PieSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
+                                               LiveCharts.PieSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
                                            .WithState(
-                                               LiveCharts.ScatterSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
+                                               LiveCharts.ScatterSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
                                            .WithState(
-                                               LiveCharts.StackedBarSeriesHoverKey, null, new SolidColorPaintTask(defaultHoverColor), true)
+                                               LiveCharts.StackedBarSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
                                            .WithState(
-                                                LiveCharts.HeatSeriesHoverState, null, new SolidColorPaintTask(defaultHoverColor), true);
+                                                LiveCharts.HeatSeriesHoverState, null, new SolidColorPaint(defaultHoverColor), true);
                                })
                                .HasRuleForAxes(axis =>
                                {
@@ -261,7 +261,7 @@ namespace LiveChartsCore.SkiaSharpView
                                .HasRuleForLineSeries(lineSeries =>
                                {
                                    lineSeries.GeometrySize = 18;
-                                   lineSeries.GeometryFill = new SolidColorPaintTask(Color.FromArgb(255, 40, 40, 40).AsSKColor());
+                                   lineSeries.GeometryFill = new SolidColorPaint(Color.FromArgb(255, 40, 40, 40).AsSKColor());
                                    lineSeries.GeometryStroke = DefaultPaintTask;
                                })
                                .HasRuleForStepLineSeries(steplineSeries =>
@@ -269,7 +269,7 @@ namespace LiveChartsCore.SkiaSharpView
                                    // at this point ForAnySeries() was already called
                                    // we are configuring the missing properties
                                    steplineSeries.GeometrySize = 18;
-                                   steplineSeries.GeometryFill = new SolidColorPaintTask(Color.FromArgb(255, 40, 40, 40).AsSKColor());
+                                   steplineSeries.GeometryFill = new SolidColorPaint(Color.FromArgb(255, 40, 40, 40).AsSKColor());
                                    steplineSeries.GeometryStroke = DefaultPaintTask;
                                })
                                .HasRuleForStackedLineSeries(stackedLine =>
@@ -353,14 +353,14 @@ namespace LiveChartsCore.SkiaSharpView
 
                         if (series.DataLabelsPaint == DefaultPaintTask)
                         {
-                            series.DataLabelsPaint = new SolidColorPaintTask(new SKColor(40, 40, 40));
+                            series.DataLabelsPaint = new SolidColorPaint(new SKColor(40, 40, 40));
                         }
 
                         if ((series.SeriesProperties & SeriesProperties.GaugeFill) != 0)
                         {
                             var gaugeSeries = (IPieSeries<SkiaSharpDrawingContext>)series;
                             if (gaugeSeries.Stroke == DefaultPaintTask) gaugeSeries.Stroke = null;
-                            if (gaugeSeries.Fill == DefaultPaintTask) gaugeSeries.Fill = new SolidColorPaintTask(new SKColor(0, 0, 0, 15));
+                            if (gaugeSeries.Fill == DefaultPaintTask) gaugeSeries.Fill = new SolidColorPaint(new SKColor(0, 0, 0, 15));
                             return;
                         }
 
@@ -372,8 +372,8 @@ namespace LiveChartsCore.SkiaSharpView
                         {
                             var sf = (IStrokedAndFilled<SkiaSharpDrawingContext>)series;
 
-                            if (sf.Fill == DefaultPaintTask) sf.Fill = new SolidColorPaintTask(color.AsSKColor());
-                            if (sf.Stroke == DefaultPaintTask) sf.Stroke = new SolidColorPaintTask(color.AsSKColor(), 3);
+                            if (sf.Fill == DefaultPaintTask) sf.Fill = new SolidColorPaint(color.AsSKColor());
+                            if (sf.Stroke == DefaultPaintTask) sf.Stroke = new SolidColorPaint(color.AsSKColor(), 3);
 
                             return;
                         }
@@ -388,10 +388,10 @@ namespace LiveChartsCore.SkiaSharpView
                                 if ((series.SeriesProperties & mask1) == mask1 || (series.SeriesProperties & mask2) == mask2)
                                     opacity = 1;
 
-                                strokedAndFilled.Fill = new SolidColorPaintTask(color.AsSKColor((byte)(opacity * 255)));
+                                strokedAndFilled.Fill = new SolidColorPaint(color.AsSKColor((byte)(opacity * 255)));
                             }
                             if (strokedAndFilled.Stroke == DefaultPaintTask)
-                                strokedAndFilled.Stroke = new SolidColorPaintTask(color.AsSKColor(), 5);
+                                strokedAndFilled.Stroke = new SolidColorPaint(color.AsSKColor(), 5);
                         }
 
                         if ((series.SeriesProperties & SeriesProperties.Line) == SeriesProperties.Line)
@@ -399,10 +399,10 @@ namespace LiveChartsCore.SkiaSharpView
                             var lineSeries = (ILineSeries<SkiaSharpDrawingContext>)series;
 
                             if (lineSeries.GeometryFill == DefaultPaintTask)
-                                lineSeries.GeometryFill = new SolidColorPaintTask(color.AsSKColor());
+                                lineSeries.GeometryFill = new SolidColorPaint(color.AsSKColor());
                             if (lineSeries.GeometryStroke == DefaultPaintTask)
                                 lineSeries.GeometryStroke =
-                                    new SolidColorPaintTask(color.AsSKColor(), lineSeries.Stroke?.StrokeThickness ?? 5);
+                                    new SolidColorPaint(color.AsSKColor(), lineSeries.Stroke?.StrokeThickness ?? 5);
                         }
 
                         if ((series.SeriesProperties & SeriesProperties.StepLine) == SeriesProperties.StepLine)
@@ -410,10 +410,10 @@ namespace LiveChartsCore.SkiaSharpView
                             var steplineSeries = (IStepLineSeries<SkiaSharpDrawingContext>)series;
 
                             if (steplineSeries.GeometryFill == DefaultPaintTask)
-                                steplineSeries.GeometryFill = new SolidColorPaintTask(color.AsSKColor());
+                                steplineSeries.GeometryFill = new SolidColorPaint(color.AsSKColor());
                             if (steplineSeries.GeometryStroke == DefaultPaintTask)
                                 steplineSeries.GeometryStroke =
-                                    new SolidColorPaintTask(color.AsSKColor(), steplineSeries.Stroke?.StrokeThickness ?? 5);
+                                    new SolidColorPaint(color.AsSKColor(), steplineSeries.Stroke?.StrokeThickness ?? 5);
                         }
 
                         if ((series.SeriesProperties & SeriesProperties.Financial) == SeriesProperties.Financial)
@@ -421,13 +421,13 @@ namespace LiveChartsCore.SkiaSharpView
                             var financialSeries = (IFinancialSeries<SkiaSharpDrawingContext>)series;
 
                             if (financialSeries.UpFill == DefaultPaintTask)
-                                financialSeries.UpFill = new SolidColorPaintTask(new SKColor(139, 195, 74, 255));
+                                financialSeries.UpFill = new SolidColorPaint(new SKColor(139, 195, 74, 255));
                             if (financialSeries.UpStroke == DefaultPaintTask)
-                                financialSeries.UpStroke = new SolidColorPaintTask(new SKColor(139, 195, 74, 255), 3);
+                                financialSeries.UpStroke = new SolidColorPaint(new SKColor(139, 195, 74, 255), 3);
                             if (financialSeries.DownFill == DefaultPaintTask)
-                                financialSeries.DownFill = new SolidColorPaintTask(new SKColor(239, 83, 80, 255));
+                                financialSeries.DownFill = new SolidColorPaint(new SKColor(239, 83, 80, 255));
                             if (financialSeries.DownStroke == DefaultPaintTask)
-                                financialSeries.DownStroke = new SolidColorPaintTask(new SKColor(239, 83, 80, 255), 3);
+                                financialSeries.DownStroke = new SolidColorPaint(new SKColor(239, 83, 80, 255), 3);
                         }
                     })
                 .WithAxisDefaultsResolver(
@@ -443,15 +443,15 @@ namespace LiveChartsCore.SkiaSharpView
                         }
 
                         if (axis.NamePaint == DefaultPaintTask)
-                            axis.NamePaint = new SolidColorPaintTask(new SKColor(35, 35, 35));
+                            axis.NamePaint = new SolidColorPaint(new SKColor(35, 35, 35));
 
                         if (axis.SeparatorsPaint == DefaultPaintTask)
                             axis.SeparatorsPaint = axis.Orientation == AxisOrientation.X
                                 ? null
-                                : new SolidColorPaintTask(new SKColor(235, 235, 235));
+                                : new SolidColorPaint(new SKColor(235, 235, 235));
 
                         if (axis.LabelsPaint == DefaultPaintTask)
-                            axis.LabelsPaint = new SolidColorPaintTask(new SKColor(90, 90, 90));
+                            axis.LabelsPaint = new SolidColorPaint(new SKColor(90, 90, 90));
 
                         if (axis.Padding == Padding.Default)
                             axis.Padding = new Padding { Bottom = 8, Left = 8, Right = 8, Top = 8 };
@@ -481,14 +481,14 @@ namespace LiveChartsCore.SkiaSharpView
 
                         if (series.DataLabelsPaint == DefaultPaintTask)
                         {
-                            series.DataLabelsPaint = new SolidColorPaintTask(new SKColor(230, 230, 230));
+                            series.DataLabelsPaint = new SolidColorPaint(new SKColor(230, 230, 230));
                         }
 
                         if ((series.SeriesProperties & SeriesProperties.GaugeFill) != 0)
                         {
                             var gaugeSeries = (IPieSeries<SkiaSharpDrawingContext>)series;
                             if (gaugeSeries.Stroke == DefaultPaintTask) gaugeSeries.Stroke = null;
-                            if (gaugeSeries.Fill == DefaultPaintTask) gaugeSeries.Fill = new SolidColorPaintTask(new SKColor(255, 255, 255, 15));
+                            if (gaugeSeries.Fill == DefaultPaintTask) gaugeSeries.Fill = new SolidColorPaint(new SKColor(255, 255, 255, 15));
                             return;
                         }
 
@@ -499,8 +499,8 @@ namespace LiveChartsCore.SkiaSharpView
                             (series.SeriesProperties & SeriesProperties.Bar) == SeriesProperties.Bar)
                         {
                             var sf = (IStrokedAndFilled<SkiaSharpDrawingContext>)series;
-                            if (sf.Fill == DefaultPaintTask) sf.Fill = new SolidColorPaintTask(color.AsSKColor());
-                            if (sf.Stroke == DefaultPaintTask) sf.Stroke = new SolidColorPaintTask(color.AsSKColor(), 3);
+                            if (sf.Fill == DefaultPaintTask) sf.Fill = new SolidColorPaint(color.AsSKColor());
+                            if (sf.Stroke == DefaultPaintTask) sf.Stroke = new SolidColorPaint(color.AsSKColor(), 3);
 
                             return;
                         }
@@ -515,10 +515,10 @@ namespace LiveChartsCore.SkiaSharpView
                                 if ((series.SeriesProperties & mask1) == mask1 || (series.SeriesProperties & mask2) == mask2)
                                     opacity = 1;
 
-                                strokedAndFilled.Fill = new SolidColorPaintTask(color.AsSKColor((byte)(opacity * 255)));
+                                strokedAndFilled.Fill = new SolidColorPaint(color.AsSKColor((byte)(opacity * 255)));
                             }
                             if (strokedAndFilled.Stroke == DefaultPaintTask)
-                                strokedAndFilled.Stroke = new SolidColorPaintTask(color.AsSKColor(), 5);
+                                strokedAndFilled.Stroke = new SolidColorPaint(color.AsSKColor(), 5);
                         }
 
                         if ((series.SeriesProperties & SeriesProperties.Line) == SeriesProperties.Line)
@@ -526,10 +526,10 @@ namespace LiveChartsCore.SkiaSharpView
                             var lineSeries = (ILineSeries<SkiaSharpDrawingContext>)series;
 
                             if (lineSeries.GeometryFill == DefaultPaintTask)
-                                lineSeries.GeometryFill = new SolidColorPaintTask(color.AsSKColor());
+                                lineSeries.GeometryFill = new SolidColorPaint(color.AsSKColor());
                             if (lineSeries.GeometryStroke == DefaultPaintTask)
                                 lineSeries.GeometryStroke =
-                                    new SolidColorPaintTask(color.AsSKColor(), lineSeries.Stroke?.StrokeThickness ?? 5);
+                                    new SolidColorPaint(color.AsSKColor(), lineSeries.Stroke?.StrokeThickness ?? 5);
                         }
 
                         if ((series.SeriesProperties & SeriesProperties.StepLine) == SeriesProperties.StepLine)
@@ -537,10 +537,10 @@ namespace LiveChartsCore.SkiaSharpView
                             var steplineSeries = (IStepLineSeries<SkiaSharpDrawingContext>)series;
 
                             if (steplineSeries.GeometryFill == DefaultPaintTask)
-                                steplineSeries.GeometryFill = new SolidColorPaintTask(color.AsSKColor());
+                                steplineSeries.GeometryFill = new SolidColorPaint(color.AsSKColor());
                             if (steplineSeries.GeometryStroke == DefaultPaintTask)
                                 steplineSeries.GeometryStroke =
-                                    new SolidColorPaintTask(color.AsSKColor(), steplineSeries.Stroke?.StrokeThickness ?? 5);
+                                    new SolidColorPaint(color.AsSKColor(), steplineSeries.Stroke?.StrokeThickness ?? 5);
                         }
 
                         if ((series.SeriesProperties & SeriesProperties.Financial) == SeriesProperties.Financial)
@@ -548,13 +548,13 @@ namespace LiveChartsCore.SkiaSharpView
                             var financialSeries = (IFinancialSeries<SkiaSharpDrawingContext>)series;
 
                             if (financialSeries.UpFill == DefaultPaintTask)
-                                financialSeries.UpFill = new SolidColorPaintTask(new SKColor(139, 195, 74, 255));
+                                financialSeries.UpFill = new SolidColorPaint(new SKColor(139, 195, 74, 255));
                             if (financialSeries.UpStroke == DefaultPaintTask)
-                                financialSeries.UpStroke = new SolidColorPaintTask(new SKColor(139, 195, 74, 255), 3);
+                                financialSeries.UpStroke = new SolidColorPaint(new SKColor(139, 195, 74, 255), 3);
                             if (financialSeries.DownFill == DefaultPaintTask)
-                                financialSeries.DownFill = new SolidColorPaintTask(new SKColor(239, 83, 80, 255));
+                                financialSeries.DownFill = new SolidColorPaint(new SKColor(239, 83, 80, 255));
                             if (financialSeries.DownStroke == DefaultPaintTask)
-                                financialSeries.DownStroke = new SolidColorPaintTask(new SKColor(239, 83, 80, 255), 3);
+                                financialSeries.DownStroke = new SolidColorPaint(new SKColor(239, 83, 80, 255), 3);
                         }
                     })
                 .WithAxisDefaultsResolver(
@@ -570,15 +570,15 @@ namespace LiveChartsCore.SkiaSharpView
                         }
 
                         if (axis.NamePaint == DefaultPaintTask)
-                            axis.NamePaint = new SolidColorPaintTask(new SKColor(235, 235, 235));
+                            axis.NamePaint = new SolidColorPaint(new SKColor(235, 235, 235));
 
                         if (axis.SeparatorsPaint == DefaultPaintTask)
                             axis.SeparatorsPaint = axis.Orientation == AxisOrientation.X
                                 ? null
-                                : new SolidColorPaintTask(new SKColor(90, 90, 90));
+                                : new SolidColorPaint(new SKColor(90, 90, 90));
 
                         if (axis.LabelsPaint == DefaultPaintTask)
-                            axis.LabelsPaint = new SolidColorPaintTask(new SKColor(200, 200, 200));
+                            axis.LabelsPaint = new SolidColorPaint(new SKColor(200, 200, 200));
 
                         if (axis.Padding == Padding.Default)
                             axis.Padding = new Padding { Bottom = 8, Left = 8, Right = 8, Top = 8 };

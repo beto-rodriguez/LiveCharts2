@@ -26,7 +26,7 @@ using System.Collections.Generic;
 namespace LiveChartsCore.Kernel
 {
     /// <summary>
-    /// Defines a schedule to be drawn by an <see cref="IPaintTask{TDrawingContext}"/> instance.
+    /// Defines a schedule to be drawn by an <see cref="IPaint{TDrawingContext}"/> instance.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     public class PaintSchedule<TDrawingContext>
@@ -37,7 +37,7 @@ namespace LiveChartsCore.Kernel
         /// </summary>
         /// <param name="task">The task.</param>
         /// <param name="geometries">The geometries.</param>
-        public PaintSchedule(IPaintTask<TDrawingContext> task, HashSet<IDrawable<TDrawingContext>> geometries)
+        public PaintSchedule(IPaint<TDrawingContext> task, HashSet<IDrawable<TDrawingContext>> geometries)
         {
             PaintTask = task;
             Geometries = geometries;
@@ -48,7 +48,7 @@ namespace LiveChartsCore.Kernel
         /// </summary>
         /// <param name="task">The task.</param>
         /// <param name="geometries">The geometries.</param>
-        public PaintSchedule(IPaintTask<TDrawingContext> task, params IDrawable<TDrawingContext>[] geometries)
+        public PaintSchedule(IPaint<TDrawingContext> task, params IDrawable<TDrawingContext>[] geometries)
         {
             PaintTask = task;
             Geometries = new HashSet<IDrawable<TDrawingContext>>(geometries);
@@ -60,7 +60,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The drawable task.
         /// </value>
-        public IPaintTask<TDrawingContext> PaintTask { get; set; }
+        public IPaint<TDrawingContext> PaintTask { get; set; }
 
         /// <summary>
         /// Gets or sets the geometries.

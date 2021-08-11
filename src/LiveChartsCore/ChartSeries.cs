@@ -49,7 +49,7 @@ namespace LiveChartsCore
         protected CanvasSchedule<TDrawingContext> canvaSchedule = new();
 
         private double _legendShapeSize = 15;
-        private IPaintTask<TDrawingContext>? _dataLabelsPaint;
+        private IPaint<TDrawingContext>? _dataLabelsPaint;
         private double _dataLabelsSize = 16;
         private Padding _dataLabelsPadding = new() { Left = 6, Top = 8, Right = 6, Bottom = 8 };
 
@@ -60,7 +60,7 @@ namespace LiveChartsCore
         protected ChartSeries(SeriesProperties properties) : base(properties) { }
 
         /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsPaint"/>
-        public IPaintTask<TDrawingContext>? DataLabelsPaint
+        public IPaint<TDrawingContext>? DataLabelsPaint
         {
             get => _dataLabelsPaint;
             set => SetPaintProperty(ref _dataLabelsPaint, value);
@@ -73,7 +73,7 @@ namespace LiveChartsCore
         /// The data labels drawable task.
         /// </value>
         [Obsolete("Renamed to DataLabelsPaint")]
-        public IPaintTask<TDrawingContext>? DataLabelsDrawableTask { get => DataLabelsPaint; set => DataLabelsPaint = value; }
+        public IPaint<TDrawingContext>? DataLabelsDrawableTask { get => DataLabelsPaint; set => DataLabelsPaint = value; }
 
         /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsSize"/>
         public double DataLabelsSize { get => _dataLabelsSize; set { _dataLabelsSize = value; OnPropertyChanged(); } }

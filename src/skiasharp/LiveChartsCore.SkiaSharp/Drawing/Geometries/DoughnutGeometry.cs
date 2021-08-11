@@ -95,8 +95,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 
         internal static Action<DoughnutGeometry, SkiaSharpDrawingContext, SKPaint>? AlternativeDraw { get; set; }
 
-        /// <inheritdoc cref="Geometry.OnMeasure(PaintTask)" />
-        protected override SizeF OnMeasure(PaintTask paint)
+        /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
+        protected override SizeF OnMeasure(Paint paint)
         {
             return new SizeF(Width, Height);
         }

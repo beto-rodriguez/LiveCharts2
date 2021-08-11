@@ -137,7 +137,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             var motionCanvas = (MotionCanvas)bindable;
 
-            var tasks = new HashSet<IPaintTask<SkiaSharpDrawingContext>>();
+            var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>>();
 
             foreach (var item in motionCanvas.PaintTasks)
             {

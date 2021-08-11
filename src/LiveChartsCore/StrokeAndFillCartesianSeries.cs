@@ -41,8 +41,8 @@ namespace LiveChartsCore
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
-        private IPaintTask<TDrawingContext>? _stroke = null;
-        private IPaintTask<TDrawingContext>? _fill = null;
+        private IPaint<TDrawingContext>? _stroke = null;
+        private IPaint<TDrawingContext>? _fill = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StrokeAndFillCartesianSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -59,7 +59,7 @@ namespace LiveChartsCore
         /// <value>
         /// The stroke.
         /// </value>
-        public IPaintTask<TDrawingContext>? Stroke
+        public IPaint<TDrawingContext>? Stroke
         {
             get => _stroke;
             set => SetPaintProperty(ref _stroke, value, true);
@@ -71,7 +71,7 @@ namespace LiveChartsCore
         /// <value>
         /// The fill.
         /// </value>
-        public IPaintTask<TDrawingContext>? Fill
+        public IPaint<TDrawingContext>? Fill
         {
             get => _fill;
             set => SetPaintProperty(ref _fill, value);
@@ -124,7 +124,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        protected override IPaintTask<TDrawingContext>?[] GetPaintTasks()
+        protected override IPaint<TDrawingContext>?[] GetPaintTasks()
         {
             return new[] { _stroke, _fill, DataLabelsPaint };
         }

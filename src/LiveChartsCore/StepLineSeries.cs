@@ -58,8 +58,8 @@ namespace LiveChartsCore
         private readonly Dictionary<object, List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>> _fillPathHelperDictionary = new();
         private readonly Dictionary<object, List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>> _strokePathHelperDictionary = new();
         private float _geometrySize = 14f;
-        private IPaintTask<TDrawingContext>? _geometryFill;
-        private IPaintTask<TDrawingContext>? _geometryStroke;
+        private IPaint<TDrawingContext>? _geometryFill;
+        private IPaint<TDrawingContext>? _geometryStroke;
         private bool _enableNullSplitting = true;
 
         /// <summary>
@@ -82,14 +82,14 @@ namespace LiveChartsCore
         public double GeometrySize { get => _geometrySize; set { _geometrySize = (float)value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IStepLineSeries{TDrawingContext}.GeometryFill"/>
-        public IPaintTask<TDrawingContext>? GeometryFill
+        public IPaint<TDrawingContext>? GeometryFill
         {
             get => _geometryFill;
             set => SetPaintProperty(ref _geometryFill, value);
         }
 
         /// <inheritdoc cref="IStepLineSeries{TDrawingContext}.GeometrySize"/>
-        public IPaintTask<TDrawingContext>? GeometryStroke
+        public IPaint<TDrawingContext>? GeometryStroke
         {
             get => _geometryStroke;
             set => SetPaintProperty(ref _geometryStroke, value, true);
@@ -732,7 +732,7 @@ namespace LiveChartsCore
         /// Gets the paint tasks.
         /// </summary>
         /// <returns></returns>
-        protected override IPaintTask<TDrawingContext>?[] GetPaintTasks()
+        protected override IPaint<TDrawingContext>?[] GetPaintTasks()
         {
             return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint };
         }

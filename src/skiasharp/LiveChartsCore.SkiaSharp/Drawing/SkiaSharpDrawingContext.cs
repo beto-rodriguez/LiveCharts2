@@ -91,7 +91,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
         /// <value>
         /// The paint task.
         /// </value>
-        public PaintTask PaintTask { get; set; }
+        public Paint PaintTask { get; set; }
 
         /// <summary>
         /// Gets or sets the paint.

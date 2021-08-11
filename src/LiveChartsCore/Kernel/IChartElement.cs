@@ -38,7 +38,7 @@ namespace LiveChartsCore.Kernel
         void Measure(Chart<TDrawingContext> chart);
 
         /// <summary>
-        /// Deletes the <see cref="IPaintTask{TDrawingContext}"/> instances that changed from the user interface.
+        /// Deletes the <see cref="IPaint{TDrawingContext}"/> instances that changed from the user interface.
         /// </summary>
         /// <param name="chart">The chart.</param>
         void RemoveOldPaints(IChartView<TDrawingContext> chart);

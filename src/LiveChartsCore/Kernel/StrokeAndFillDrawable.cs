@@ -37,7 +37,7 @@ namespace LiveChartsCore.Kernel
         /// <param name="stroke">The stroke.</param>
         /// <param name="fill">The fill.</param>
         /// <param name="isHoverState">is hover state?.</param>
-        public StrokeAndFillDrawable(IPaintTask<TDrawingContext>? stroke, IPaintTask<TDrawingContext>? fill, bool isHoverState = false)
+        public StrokeAndFillDrawable(IPaint<TDrawingContext>? stroke, IPaint<TDrawingContext>? fill, bool isHoverState = false)
         {
             Stroke = stroke;
             if (stroke is not null)
@@ -62,7 +62,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The stroke.
         /// </value>
-        public IPaintTask<TDrawingContext>? Stroke { get; }
+        public IPaint<TDrawingContext>? Stroke { get; }
 
         /// <summary>
         /// Gets the fill.
@@ -70,7 +70,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The fill.
         /// </value>
-        public IPaintTask<TDrawingContext>? Fill { get; }
+        public IPaint<TDrawingContext>? Fill { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is hover state.

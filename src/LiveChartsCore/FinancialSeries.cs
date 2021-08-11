@@ -47,10 +47,10 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
-        private IPaintTask<TDrawingContext>? _upStroke = null;
-        private IPaintTask<TDrawingContext>? _upFill = null;
-        private IPaintTask<TDrawingContext>? _downStroke = null;
-        private IPaintTask<TDrawingContext>? _downFill = null;
+        private IPaint<TDrawingContext>? _upStroke = null;
+        private IPaint<TDrawingContext>? _upFill = null;
+        private IPaint<TDrawingContext>? _downStroke = null;
+        private IPaint<TDrawingContext>? _downFill = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FinancialSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -68,28 +68,28 @@ namespace LiveChartsCore
         public double MaxBarWidth { get; set; } = 25;
 
         /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.UpStroke"/>
-        public IPaintTask<TDrawingContext>? UpStroke
+        public IPaint<TDrawingContext>? UpStroke
         {
             get => _upStroke;
             set => SetPaintProperty(ref _upStroke, value, true);
         }
 
         /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.UpFill"/>
-        public IPaintTask<TDrawingContext>? UpFill
+        public IPaint<TDrawingContext>? UpFill
         {
             get => _upFill;
             set => SetPaintProperty(ref _upFill, value);
         }
 
         /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.DownStroke"/>
-        public IPaintTask<TDrawingContext>? DownStroke
+        public IPaint<TDrawingContext>? DownStroke
         {
             get => _downStroke;
             set => SetPaintProperty(ref _downStroke, value, true);
         }
 
         /// <inheritdoc cref="IFinancialSeries{TDrawingContext}.DownFill"/>
-        public IPaintTask<TDrawingContext>? DownFill
+        public IPaint<TDrawingContext>? DownFill
         {
             get => _downFill;
             set => SetPaintProperty(ref _downFill, value);
@@ -411,7 +411,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        protected override IPaintTask<TDrawingContext>?[] GetPaintTasks()
+        protected override IPaint<TDrawingContext>?[] GetPaintTasks()
         {
             return new[] { _upFill, _upStroke, _downFill, _downStroke, DataLabelsPaint };
         }

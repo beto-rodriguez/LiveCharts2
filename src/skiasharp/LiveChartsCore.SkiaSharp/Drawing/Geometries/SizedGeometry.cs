@@ -72,8 +72,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             }
         }
 
-        /// <inheritdoc cref="Geometry.OnMeasure(PaintTask)" />
-        protected override SizeF OnMeasure(PaintTask paint)
+        /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
+        protected override SizeF OnMeasure(Paint paint)
         {
             return new SizeF(Width, Height);
         }

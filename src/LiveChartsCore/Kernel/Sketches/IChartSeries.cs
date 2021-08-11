@@ -39,7 +39,7 @@ namespace LiveChartsCore.Kernel.Sketches
         /// Gets or sets the data labels  drawable task.
         /// </summary>
         [Obsolete("Renamed to DataLabelsPaint")]
-        IPaintTask<TDrawingContext>? DataLabelsDrawableTask { get; set; }
+        IPaint<TDrawingContext>? DataLabelsDrawableTask { get; set; }
 
         /// <summary>
         /// Gets or sets the data labels paint.
@@ -47,7 +47,7 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <value>
         /// The data labels paint.
         /// </value>
-        IPaintTask<TDrawingContext>? DataLabelsPaint { get; set; }
+        IPaint<TDrawingContext>? DataLabelsPaint { get; set; }
 
         /// <summary>
         /// Gets or sets the size of the data labels.
