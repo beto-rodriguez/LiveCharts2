@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Drawing;
+
 namespace LiveChartsCore.Drawing
 {
     /// <summary>
@@ -31,12 +33,36 @@ namespace LiveChartsCore.Drawing
         where TDrawingContext : DrawingContext
     {
         /// <summary>
+        /// Gets or sets the translate transform.
+        /// </summary>
+        /// <value>
+        /// The translate in coordinates.
+        /// </value>
+        PointF TranslateTransform { get; set; }
+
+        /// <summary>
         /// Gets or sets the rotation in degrees.
         /// </summary>
         /// <value>
-        /// The rotation.
+        /// The rotation in degrees.
         /// </value>
-        float Rotation { get; set; }
+        float RotationTransform { get; set; }
+
+        /// <summary>
+        /// Gets or sets the scale transform.
+        /// </summary>
+        /// <value>
+        /// The scale see https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/transforms/scale.
+        /// </value>
+        PointF ScaleTransform { get; set; }
+
+        /// <summary>
+        /// Gets or sets the skew transform.
+        /// </summary>
+        /// <value>
+        /// The skew see https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/transforms/skew.
+        /// </value>
+        PointF SkewTransform { get; set; }
 
         /// <summary>
         /// Gets or sets the x.
@@ -59,6 +85,6 @@ namespace LiveChartsCore.Drawing
         /// </summary>
         /// <param name="drawableTask">The drawable task.</param>
         /// <returns></returns>
-        System.Drawing.SizeF Measure(IPaint<TDrawingContext> drawableTask);
+        SizeF Measure(IPaint<TDrawingContext> drawableTask);
     }
 }

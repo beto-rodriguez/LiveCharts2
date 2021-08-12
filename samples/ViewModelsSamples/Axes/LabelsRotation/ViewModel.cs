@@ -1,5 +1,7 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -34,7 +36,9 @@ namespace ViewModelsSamples.Axes.LabelsRotation
                     MinStep = 1,
 
                     // labels rotations is in degrees (0 - 360)
-                    LabelsRotation = 0
+                    LabelsRotation = 0,
+
+                    SeparatorsPaint = new SolidColorPaint(SKColors.LightGray, 2)
                 }
             };
 
@@ -42,7 +46,7 @@ namespace ViewModelsSamples.Axes.LabelsRotation
             {
                 new Axis
                 {
-                    LabelsRotation = 10,
+                    LabelsRotation = 88,
 
                     // Now the Y axis we will display it as currency
                     // LiveCharts provides some common formatters
@@ -55,6 +59,8 @@ namespace ViewModelsSamples.Axes.LabelsRotation
 
                     // But the one that LiveCharts provides creates shorter labels when
                     // the amount is in millions or trillions
+
+                    SeparatorsPaint = new SolidColorPaint(SKColors.LightGray, 2)
                 }
             };
         }

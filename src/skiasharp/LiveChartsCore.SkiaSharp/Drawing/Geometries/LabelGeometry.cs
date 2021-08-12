@@ -25,6 +25,7 @@ using LiveChartsCore.Drawing.Common;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
+using System;
 using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
@@ -40,7 +41,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         public LabelGeometry()
             : base(true)
         {
-            _textSizeProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize)));
+            _textSizeProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize), 11));
+            TransformOrigin = new PointF(0f, 1f);
         }
 
         /// <summary>
@@ -71,6 +73,52 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
+            var pos = GetPosition(context, paint);
+            using (var pa = new SKPaint())
+            {
+                pa.Color = new SKColor(0, 0, 0, 50);
+                context.Canvas.DrawRect(pos.X - 5, pos.Y - 5, 10, 10, pa);
+            }
+
+            var size = new SKRect();
+            context.Paint.TextSize = TextSize;
+            _ = context.Paint.MeasureText(Text, ref size);
+            const double toRadians = Math.PI / 180d;
+
+            var p = Padding;
+            float w = 0.5f, h = 0.5f;
+
+            switch (VerticalAlign)
+            {
+                case Align.Start: h = 1f * size.Height + p.Top; break;
+                case Align.Middle: h = 0.5f * (size.Height + p.Top - p.Bottom); break;
+                case Align.End: h = 0f * size.Height - p.Bottom; break;
+                default:
+                    break;
+            }
+            switch (HorizontalAlign)
+            {
+                case Align.Start: w = 0f * size.Width - p.Left; break;
+                case Align.Middle: w = 0.5f * (size.Width - p.Left + p.Right); break;
+                case Align.End: w = 1 * size.Width + p.Right; break;
+                default:
+                    break;
+            }
+
+            var rotation = RotationTransform;
+            rotation = (float)(rotation * toRadians);
+
+            //var w = size.Width * dx - p.Left;
+            //var h = size.Height * dy;
+
+            var xp = -Math.Cos(rotation) * w + -Math.Sin(rotation) * h;
+            var yp = -Math.Sin(rotation) * w + Math.Cos(rotation) * h;
+
+            // translate the label to the upper-left corner
+            // just for consistency with the rest of the shapes in the library (and Skia??),
+            // and also translate according to the vertical an horizontal alignment properties
+            context.Canvas.Translate((float)xp, (float)yp);
+
             paint.TextSize = TextSize;
             context.Canvas.DrawText(Text ?? "", GetPosition(context, paint), paint);
         }
@@ -93,43 +141,52 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             return new SizeF(bounds.Size.Width + Padding.Left + Padding.Right, bounds.Size.Height + Padding.Top + Padding.Bottom);
         }
 
-        /// <inheritdoc cref="Geometry.GetPosition(SkiaSharpDrawingContext, SKPaint)" />
         protected override SKPoint GetPosition(SkiaSharpDrawingContext context, SKPaint paint)
         {
             return new SKPoint(X, Y);
         }
 
-        /// <inheritdoc cref="Geometry.GetTransform(SkiaSharpDrawingContext)" />
-        protected override SKMatrix GetTransform(SkiaSharpDrawingContext context)
+        /// <inheritdoc cref="Geometry.ApplyCustomGeometryTransform(SkiaSharpDrawingContext)" />
+        protected override void ApplyCustomGeometryTransform(SkiaSharpDrawingContext context)
         {
-            var size = OnMeasure(context.PaintTask);
-            float dx = 0f, dy = 0f;
+            var size = new SKRect();
+            context.Paint.TextSize = TextSize;
+            _ = context.Paint.MeasureText(Text, ref size);
+            const double toRadians = Math.PI / 180d;
+
+            var p = Padding;
+            float w = 0.5f, h = 0.5f;
 
             switch (VerticalAlign)
             {
-                case Align.Start: dy = size.Height; break;
-                case Align.Middle: dy = size.Height * 0.5f; break;
-                case Align.End: dy = 0f; break;
+                case Align.Start: h = 1f * size.Height + p.Top; break;
+                case Align.Middle: h = 0.5f * (size.Height + p.Top - p.Bottom); break;
+                case Align.End: h = 0f * size.Height - p.Bottom; break;
                 default:
                     break;
             }
             switch (HorizontalAlign)
             {
-                case Align.Start: dx = 0; break;
-                case Align.Middle: dx = -size.Width * 0.5f; break;
-                case Align.End: dx = -size.Width; break;
+                case Align.Start: w = 0f * size.Width - p.Left; break;
+                case Align.Middle: w = 0.5f * (size.Width - p.Left + p.Right); break;
+                case Align.End: w = 1 * size.Width + p.Right; break;
                 default:
                     break;
             }
 
-            var result = new SKMatrix();
+            var rotation = RotationTransform;
+            rotation = (float)(rotation * toRadians);
 
-            var locationTransform = SKMatrix.CreateTranslation(dx + Padding.Left, dy - Padding.Top);
-            var geometryTransform = Transform;
+            //var w = size.Width * dx - p.Left;
+            //var h = size.Height * dy;
 
-            SKMatrix.Concat(ref result, ref locationTransform, ref geometryTransform);
+            var xp = -Math.Cos(rotation) * w + -Math.Sin(rotation) * h;
+            var yp = -Math.Sin(rotation) * w + Math.Cos(rotation) * h;
 
-            return result;
+            // translate the label to the upper-left corner
+            // just for consistency with the rest of the shapes in the library (and Skia??),
+            // and also translate according to the vertical an horizontal alignment properties
+            context.Canvas.Translate((float)xp, (float)yp);
         }
     }
 }

@@ -299,7 +299,7 @@ namespace LiveChartsCore
                 }
                 else
                 {
-                    _nameGeometry.Rotation = -90;
+                    _nameGeometry.RotationTransform = -90;
                     var nameSize = _nameGeometry.Measure(NamePaint);
                     _nameGeometry.X = Position == AxisPosition.Start ? xoo - nameSize.Width - Padding.Bottom : xoo + nameSize.Width + Padding.Bottom;
                     _nameGeometry.Y = (lyi + lyj) * 0.5f;
@@ -333,7 +333,7 @@ namespace LiveChartsCore
                     {
                         var textGeometry = new TTextGeometry { TextSize = size };
                         visualSeparator.Text = textGeometry;
-                        if (hasRotation) textGeometry.Rotation = r;
+                        if (hasRotation) textGeometry.RotationTransform = r;
 
                         _ = textGeometry
                             .TransitionateProperties(
@@ -436,7 +436,7 @@ namespace LiveChartsCore
                     visualSeparator.Text.Padding = _padding;
                     visualSeparator.Text.X = x;
                     visualSeparator.Text.Y = y;
-                    if (hasRotation) visualSeparator.Text.Rotation = r;
+                    if (hasRotation) visualSeparator.Text.RotationTransform = r;
 
                     visualSeparator.Text.Opacity = 1;
 
@@ -487,7 +487,7 @@ namespace LiveChartsCore
             {
                 Text = Name ?? string.Empty,
                 TextSize = (float)NameTextSize,
-                Rotation = Orientation == AxisOrientation.X ? 0 : -90,
+                RotationTransform = Orientation == AxisOrientation.X ? 0 : -90,
                 Padding = Padding
             };
 
@@ -528,7 +528,7 @@ namespace LiveChartsCore
                 {
                     Text = labeler(i),
                     TextSize = ts,
-                    Rotation = r,
+                    RotationTransform = r,
                     Padding = _padding
                 };
                 var m = textGeometry.Measure(LabelsPaint); // TextBrush.MeasureText(labeler(i, axisTick));

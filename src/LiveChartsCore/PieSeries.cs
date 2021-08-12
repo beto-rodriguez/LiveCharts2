@@ -355,7 +355,7 @@ namespace LiveChartsCore
                         if (a > 180) c = -90;
 
                         label.HorizontalAlign = a > 180 ? Align.End : Align.Start;
-                        label.Rotation = (float)(a - c);
+                        label.RotationTransform = (float)(a - c);
                     }
 
                     if (DataLabelsPosition == PolarLabelsPosition.End)
@@ -368,7 +368,7 @@ namespace LiveChartsCore
                         if (a > 180) c = -90;
 
                         label.HorizontalAlign = a > 180 ? Align.Start : Align.End;
-                        label.Rotation = (float)(a - c);
+                        label.RotationTransform = (float)(a - c);
                     }
 
                     var labelPosition = GetLabelPolarPosition(

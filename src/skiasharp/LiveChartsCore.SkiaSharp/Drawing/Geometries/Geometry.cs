@@ -22,6 +22,7 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
+using LiveChartsCore.SkiaSharpView.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System;
@@ -32,51 +33,105 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     /// <inheritdoc cref="IGeometry{TDrawingContext}" />
     public abstract class Geometry : Drawable, IGeometry<SkiaSharpDrawingContext>, IVisualChartPoint<SkiaSharpDrawingContext>
     {
+        private readonly bool _hasGeometryTransform = false;
+        private readonly FloatMotionProperty _opacityProperty;
+        private readonly FloatMotionProperty _xProperty;
+        private readonly FloatMotionProperty _yProperty;
+        private readonly FloatMotionProperty _rotationProperty;
+        private readonly PointFMotionProperty _transformOriginProperty;
+        private readonly PointFMotionProperty _scaleProperty;
+        private readonly PointFMotionProperty _skewProperty;
+        private readonly PointFMotionProperty _translateProperty;
+        private readonly SKMatrixMotionProperty _transformProperty;
         private bool _hasTransform = false;
-        private SKMatrix _transform = SKMatrix.Identity;
-
-        /// <summary>
-        /// The opacity property
-        /// </summary>
-        protected FloatMotionProperty opacityProperty;
-
-        /// <summary>
-        /// The x
-        /// </summary>
-        protected FloatMotionProperty xProperty;
-
-        /// <summary>
-        /// The y
-        /// </summary>
-        protected FloatMotionProperty yProperty;
-
-        /// <summary>
-        /// The rotation
-        /// </summary>
-        protected FloatMotionProperty rotationProperty;
-
-        /// <summary>
-        /// The has custom transform
-        /// </summary>
-        protected bool hasCustomTransform = false;
+        private bool _hasRotation = false;
+        private bool _hasScale = false;
+        private bool _hasSkew = false;
+        private bool _hasTranslate = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Geometry"/> class.
         /// </summary>
-        protected Geometry(bool hasCustomTransform = false)
+        protected Geometry(bool hasGeometryTransform = false)
         {
-            xProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0));
-            yProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0));
-            rotationProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Rotation), 0));
-            opacityProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Opacity), 1));
-            this.hasCustomTransform = hasCustomTransform;
+            _hasGeometryTransform = hasGeometryTransform;
+            _xProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0));
+            _yProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0));
+            _opacityProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Opacity), 1));
+            _transformOriginProperty = RegisterMotionProperty(
+                new PointFMotionProperty(nameof(TransformOrigin), new PointF(0.5f, 0.5f)));
+            _translateProperty = RegisterMotionProperty(
+                new PointFMotionProperty(nameof(TranslateTransform), new PointF(0, 0)));
+            _rotationProperty = RegisterMotionProperty(
+                new FloatMotionProperty(nameof(RotationTransform), 0));
+            _scaleProperty = RegisterMotionProperty(
+                new PointFMotionProperty(nameof(ScaleTransform), new PointF(1, 1)));
+            _skewProperty = RegisterMotionProperty(
+                new PointFMotionProperty(nameof(SkewTransform), new PointF(1, 1)));
+            _transformProperty = RegisterMotionProperty(
+                new SKMatrixMotionProperty(nameof(Transform), SKMatrix.Identity));
         }
 
+        private bool HasTransform => _hasGeometryTransform || _hasTranslate || _hasRotation || _hasScale || _hasSkew || _hasTransform;
+
         /// <inheritdoc cref="IGeometry{TDrawingContext}.X" />
-        public float X { get => xProperty.GetMovement(this); set => xProperty.SetMovement(value, this); }
+        public float X { get => _xProperty.GetMovement(this); set => _xProperty.SetMovement(value, this); }
 
         /// <inheritdoc cref="IGeometry{TDrawingContext}.Y" />
-        public float Y { get => yProperty.GetMovement(this); set => yProperty.SetMovement(value, this); }
+        public float Y { get => _yProperty.GetMovement(this); set => _yProperty.SetMovement(value, this); }
+
+        /// <summary>
+        /// Gets or sets the transform origin.
+        /// </summary>
+        public PointF TransformOrigin
+        {
+            get => _transformOriginProperty.GetMovement(this);
+            set => _transformOriginProperty.SetMovement(value, this);
+        }
+
+        /// <inheritdoc cref="IGeometry{TDrawingContext}.TranslateTransform" />
+        public PointF TranslateTransform
+        {
+            get => _translateProperty.GetMovement(this);
+            set
+            {
+                _translateProperty.SetMovement(value, this);
+                _hasTranslate = value.X != 0 || value.Y != 0;
+            }
+        }
+
+        /// <inheritdoc cref="IGeometry{TDrawingContext}.RotationTransform" />
+        public float RotationTransform
+        {
+            get => _rotationProperty.GetMovement(this);
+            set
+            {
+                _rotationProperty.SetMovement(value, this);
+                _hasRotation = value != 0;
+            }
+        }
+
+        /// <inheritdoc cref="IGeometry{TDrawingContext}.ScaleTransform" />
+        public PointF ScaleTransform
+        {
+            get => _scaleProperty.GetMovement(this);
+            set
+            {
+                _scaleProperty.SetMovement(value, this);
+                _hasScale = value.X != 1 || value.Y != 1;
+            }
+        }
+
+        /// <inheritdoc cref="IGeometry{TDrawingContext}.SkewTransform" />
+        public PointF SkewTransform
+        {
+            get => _skewProperty.GetMovement(this);
+            set
+            {
+                _skewProperty.SetMovement(value, this);
+                _hasSkew = value.X != 0 || value.Y != 0;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the matrix transform.
@@ -84,13 +139,18 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <value>
         /// The transform.
         /// </value>
-        public SKMatrix Transform { get => _transform; set { _transform = value; _hasTransform = !value.IsIdentity; } }
-
-        /// <inheritdoc cref="IGeometry{TDrawingContext}.Rotation" />
-        public float Rotation { get => rotationProperty.GetMovement(this); set => rotationProperty.SetMovement(value, this); }
+        public SKMatrix Transform
+        {
+            get => _transformProperty.GetMovement(this);
+            set
+            {
+                _transformProperty.SetMovement(value, this);
+                _hasTransform = !value.IsIdentity;
+            }
+        }
 
         /// <inheritdoc cref="IPaintable{TDrawingContext}.Opacity" />
-        public float Opacity { get => opacityProperty.GetMovement(this); set => opacityProperty.SetMovement(value, this); }
+        public float Opacity { get => _opacityProperty.GetMovement(this); set => _opacityProperty.SetMovement(value, this); }
 
         /// <inheritdoc cref="IPaintable{TDrawingContext}.Stroke" />
         public IPaint<SkiaSharpDrawingContext>? Stroke { get; set; }
@@ -107,29 +167,55 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <param name="context">The context.</param>
         public override void Draw(SkiaSharpDrawingContext context)
         {
-            var hasRotation = Rotation != 0;
-
-            if (_hasTransform || hasRotation || hasCustomTransform)
+            if (HasTransform)
             {
                 _ = context.Canvas.Save();
 
-                var m = Measure(context.PaintTask);
+                var m = OnMeasure(context.PaintTask);
+                var o = TransformOrigin;
+                var p = GetPosition(context, context.Paint);
 
-                if (hasRotation)
+                var xo = m.Width * o.X;
+                var yo = m.Height * o.Y;
+
+                if (_hasGeometryTransform)
                 {
-                    var p = GetPosition(context, context.Paint);
-                    context.Canvas.Translate(p.X, p.Y);
-                    context.Canvas.RotateDegrees(Rotation);
-                    context.Canvas.Translate(-p.X, -p.Y);
+                    //ApplyCustomGeometryTransform(context);
                 }
 
-                if (_hasTransform || hasCustomTransform)
+                if (_hasRotation)
                 {
-                    var p = GetPosition(context, context.Paint);
-                    var transform = GetTransform(context);
-                    context.Canvas.Translate(p.X + m.Width * 0.5f, p.Y + m.Height * 0.5f);
+                    context.Canvas.Translate(p.X + xo, p.Y + yo);
+                    context.Canvas.RotateDegrees(RotationTransform);
+                    context.Canvas.Translate(-p.X - xo, -p.Y - yo);
+                }
+
+                if (_hasTranslate)
+                {
+                    var translate = TranslateTransform;
+                    context.Canvas.Translate(translate.X, translate.Y);
+                }
+
+                if (_hasScale)
+                {
+                    var scale = ScaleTransform;
+                    context.Canvas.Translate(p.X + xo, p.Y + yo);
+                    context.Canvas.Scale(scale.X, scale.Y);
+                    context.Canvas.Translate(-p.X - xo, -p.Y - yo);
+                }
+
+                if (_hasSkew)
+                {
+                    var skew = SkewTransform;
+                    context.Canvas.Translate(p.X + xo, p.Y + yo);
+                    context.Canvas.Skew(skew.X, skew.Y);
+                    context.Canvas.Translate(-p.X - xo, -p.Y - yo);
+                }
+
+                if (_hasTransform)
+                {
+                    var transform = Transform;
                     context.Canvas.Concat(ref transform);
-                    context.Canvas.Translate(-p.X - m.Width * 0.5f, -p.Y - m.Height * 0.5f);
                 }
             }
 
@@ -163,7 +249,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
                 if (originalFill != null) context.Paint = originalFill;
             }
 
-            if (_hasTransform || hasRotation || hasCustomTransform) context.Canvas.Restore();
+            if (HasTransform) context.Canvas.Restore();
         }
 
         /// <summary>
@@ -182,7 +268,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         {
             var measure = OnMeasure((Paint)drawableTask);
 
-            var r = Rotation;
+            var r = RotationTransform;
             if (Math.Abs(r) > 0)
             {
                 const double toRadias = Math.PI / 180;
@@ -212,15 +298,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         protected abstract SizeF OnMeasure(Paint paintTaks);
 
         /// <summary>
-        /// Gets the actual transform.
-        /// </summary>
-        /// <returns></returns>
-        protected virtual SKMatrix GetTransform(SkiaSharpDrawingContext context)
-        {
-            return Transform;
-        }
-
-        /// <summary>
         /// Gets the position of the geometry from the top left corner of the view.
         /// </summary>
         /// <param name="context">The context.</param>
@@ -239,5 +316,11 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         {
             return this;
         }
+
+        /// <summary>
+        /// Applies the geometry transform.
+        /// </summary>
+        /// <param name="context"></param>
+        protected virtual void ApplyCustomGeometryTransform(SkiaSharpDrawingContext context) { }
     }
 }

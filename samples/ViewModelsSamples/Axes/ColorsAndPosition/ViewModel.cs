@@ -36,7 +36,7 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
             {
                 new Axis
                 {
-                    Name = "X axis",
+                    //Name = "X axis",
                     TextSize = 20,
 
                     // LabelsPaint = null will not draw the axis labels.
@@ -45,7 +45,9 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
                     // SeparatorsPaint = null will not draw the separator lines
                     SeparatorsPaint = new SolidColorPaintTask { Color = SKColors.LightBlue, StrokeThickness = 3 },
 
-                    Position = _selectedPosition
+                    Position = _selectedPosition,
+                    LabelsRotation = 15,
+                    Labeler = v => $"this is number {v}"
                 }
             };
 
@@ -53,11 +55,13 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
             {
                 new Axis
                 {
-                    Name = "Y axis",
+                    //Name = "Y axis",
                     TextSize = 20,
                     LabelsPaint = new SolidColorPaintTask { Color = SKColors.Red },
                     SeparatorsPaint = new SolidColorPaintTask { Color = SKColors.LightPink, StrokeThickness = 3 },
-                    Position = _selectedPosition
+                    Position = _selectedPosition,
+                    LabelsRotation = 15,
+                    Labeler = v => $"this is number {v}"
                 }
             };
         }
