@@ -46,7 +46,7 @@ namespace ViewModelsSamples.Axes.LabelsRotation
             {
                 new Axis
                 {
-                    LabelsRotation = 88,
+                    LabelsRotation = 15,
 
                     // Now the Y axis we will display it as currency
                     // LiveCharts provides some common formatters

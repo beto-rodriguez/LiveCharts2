@@ -180,7 +180,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 
                 if (_hasGeometryTransform)
                 {
-                    //ApplyCustomGeometryTransform(context);
+                    ApplyCustomGeometryTransform(context);
                 }
 
                 if (_hasRotation)

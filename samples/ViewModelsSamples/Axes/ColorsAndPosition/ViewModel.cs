@@ -45,9 +45,7 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
                     // SeparatorsPaint = null will not draw the separator lines
                     SeparatorsPaint = new SolidColorPaintTask { Color = SKColors.LightBlue, StrokeThickness = 3 },
 
-                    Position = _selectedPosition,
-                    LabelsRotation = 15,
-                    Labeler = v => $"this is number {v}"
+                    Position = _selectedPosition
                 }
             };
 
@@ -59,9 +57,7 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
                     TextSize = 20,
                     LabelsPaint = new SolidColorPaintTask { Color = SKColors.Red },
                     SeparatorsPaint = new SolidColorPaintTask { Color = SKColors.LightPink, StrokeThickness = 3 },
-                    Position = _selectedPosition,
-                    LabelsRotation = 15,
-                    Labeler = v => $"this is number {v}"
+                    Position = _selectedPosition
                 }
             };
         }

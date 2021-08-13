@@ -42,7 +42,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             : base(true)
         {
             _textSizeProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize), 11));
-            TransformOrigin = new PointF(0f, 1f);
+            TransformOrigin = new PointF(0f, 0f);
         }
 
         /// <summary>
@@ -73,52 +73,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
-            var pos = GetPosition(context, paint);
-            using (var pa = new SKPaint())
-            {
-                pa.Color = new SKColor(0, 0, 0, 50);
-                context.Canvas.DrawRect(pos.X - 5, pos.Y - 5, 10, 10, pa);
-            }
-
-            var size = new SKRect();
-            context.Paint.TextSize = TextSize;
-            _ = context.Paint.MeasureText(Text, ref size);
-            const double toRadians = Math.PI / 180d;
-
-            var p = Padding;
-            float w = 0.5f, h = 0.5f;
-
-            switch (VerticalAlign)
-            {
-                case Align.Start: h = 1f * size.Height + p.Top; break;
-                case Align.Middle: h = 0.5f * (size.Height + p.Top - p.Bottom); break;
-                case Align.End: h = 0f * size.Height - p.Bottom; break;
-                default:
-                    break;
-            }
-            switch (HorizontalAlign)
-            {
-                case Align.Start: w = 0f * size.Width - p.Left; break;
-                case Align.Middle: w = 0.5f * (size.Width - p.Left + p.Right); break;
-                case Align.End: w = 1 * size.Width + p.Right; break;
-                default:
-                    break;
-            }
-
-            var rotation = RotationTransform;
-            rotation = (float)(rotation * toRadians);
-
-            //var w = size.Width * dx - p.Left;
-            //var h = size.Height * dy;
-
-            var xp = -Math.Cos(rotation) * w + -Math.Sin(rotation) * h;
-            var yp = -Math.Sin(rotation) * w + Math.Cos(rotation) * h;
-
-            // translate the label to the upper-left corner
-            // just for consistency with the rest of the shapes in the library (and Skia??),
-            // and also translate according to the vertical an horizontal alignment properties
-            context.Canvas.Translate((float)xp, (float)yp);
-
             paint.TextSize = TextSize;
             context.Canvas.DrawText(Text ?? "", GetPosition(context, paint), paint);
         }
@@ -150,7 +104,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         protected override void ApplyCustomGeometryTransform(SkiaSharpDrawingContext context)
         {
             var size = new SKRect();
-            context.Paint.TextSize = TextSize;
             _ = context.Paint.MeasureText(Text, ref size);
             const double toRadians = Math.PI / 180d;
 
@@ -176,9 +129,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 
             var rotation = RotationTransform;
             rotation = (float)(rotation * toRadians);
-
-            //var w = size.Width * dx - p.Left;
-            //var h = size.Height * dy;
 
             var xp = -Math.Cos(rotation) * w + -Math.Sin(rotation) * h;
             var yp = -Math.Sin(rotation) * w + Math.Cos(rotation) * h;
