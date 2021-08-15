@@ -128,8 +128,6 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
                 key.RemoveFromHoverState();
                 _ = _activePoints.Remove(key);
             }
-
-            //winuiChart.CoreCanvas.Invalidate();
         }
 
         void IChartTooltip<SkiaSharpDrawingContext>.Hide()

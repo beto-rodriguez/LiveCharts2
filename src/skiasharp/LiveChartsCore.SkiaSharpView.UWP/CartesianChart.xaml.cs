@@ -25,12 +25,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -480,7 +483,6 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             set => SetValue(ZoomingSpeedProperty, value);
         }
 
-
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy" />
         public TooltipFindingStrategy TooltipFindingStrategy
         {
@@ -810,7 +812,11 @@ namespace LiveChartsCore.SkiaSharpView.UWP
 
         void IChartView.InvokeOnUIThread(Action action)
         {
-            _ = Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => action());
+            CoreApplication.MainView.CoreWindow.Dispatcher
+                .RunAsync(CoreDispatcherPriority.Normal, () => action())
+                .AsTask()
+                .GetAwaiter()
+                .GetResult();
         }
 
         /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
@@ -836,10 +842,6 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             _canvas = canvas;
 
             _core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
-            //_motionCanvas = FindName("motionCanvas") as MotionCanvas;
-            //_grid = FindName("grid") as Grid;
-            //_legend = FindName("legend") as IChartLegend<SkiaSharpDrawingContext>;
-            //_tooltip = FindName("tooltip") as IChartTooltip<SkiaSharpDrawingContext>;
 
             if (SyncContext != null)
                 _canvas.CanvasCore.Sync = SyncContext;

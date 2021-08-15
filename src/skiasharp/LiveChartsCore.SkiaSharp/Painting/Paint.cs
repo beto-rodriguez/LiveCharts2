@@ -175,7 +175,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         public void SetGeometries(MotionCanvas<SkiaSharpDrawingContext> canvas, HashSet<IDrawable<SkiaSharpDrawingContext>> geometries)
         {
             _geometriesByCanvas[canvas.Sync] = geometries;
-            Invalidate();
+            SetInvalidState();
         }
 
         /// <inheritdoc cref="IPaint{TDrawingContext}.AddGeometryToPaintTask(MotionCanvas{TDrawingContext}, IDrawable{TDrawingContext})" />
@@ -188,21 +188,21 @@ namespace LiveChartsCore.SkiaSharpView.Painting
                 _geometriesByCanvas[canvas.Sync] = g;
             }
             _ = g.Add(geometry);
-            Invalidate();
+            SetInvalidState();
         }
 
         /// <inheritdoc cref="IPaint{TDrawingContext}.RemoveGeometryFromPainTask(MotionCanvas{TDrawingContext}, IDrawable{TDrawingContext})" />
         public void RemoveGeometryFromPainTask(MotionCanvas<SkiaSharpDrawingContext> canvas, IDrawable<SkiaSharpDrawingContext> geometry)
         {
             _ = GetGeometriesByCanvas(canvas)?.Remove(geometry);
-            Invalidate();
+            SetInvalidState();
         }
 
         /// <inheritdoc cref="IPaint{TDrawingContext}.ClearGeometriesFromPaintTask(MotionCanvas{TDrawingContext})"/>
         public void ClearGeometriesFromPaintTask(MotionCanvas<SkiaSharpDrawingContext> canvas)
         {
             GetGeometriesByCanvas(canvas)?.Clear();
-            Invalidate();
+            SetInvalidState();
         }
 
         /// <inheritdoc cref="IPaint{TDrawingContext}.GetClipRectangle(MotionCanvas{TDrawingContext})" />

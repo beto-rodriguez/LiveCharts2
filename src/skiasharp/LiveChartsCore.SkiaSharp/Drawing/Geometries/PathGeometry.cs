@@ -23,7 +23,6 @@
 using LiveChartsCore.Drawing;
 using SkiaSharp;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
@@ -34,11 +33,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// The commands
         /// </summary>
         protected readonly HashSet<IPathCommand<SKPath>> _commands = new();
-
-        /// <summary>
-        /// The drawing commands
-        /// </summary>
-        protected IPathCommand<SKPath>[]? _drawingCommands = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PathGeometry"/> class.
@@ -53,14 +47,12 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         {
             if (_commands.Count == 0) return;
 
-            var toExecute = _drawingCommands ??= _commands.ToArray();
-
             var toRemoveSegments = new List<IPathCommand<SKPath>>();
 
             using var path = new SKPath();
             var isValid = true;
 
-            foreach (var segment in toExecute)
+            foreach (var segment in _commands)
             {
                 segment.IsValid = true;
                 segment.Execute(path, GetCurrentTime(), this);
@@ -79,15 +71,14 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 
             context.Canvas.DrawPath(path, context.Paint);
 
-            if (!isValid) Invalidate();
+            if (!isValid) SetInvalidState();
         }
 
         /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.AddCommand(IPathCommand{TPathArgs})" />
         public void AddCommand(IPathCommand<SKPath> segment)
         {
             _ = _commands.Add(segment);
-            _drawingCommands = null;
-            Invalidate();
+            SetInvalidState();
         }
 
         /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.ContainsCommand(IPathCommand{TPathArgs})" />
@@ -100,8 +91,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         public void RemoveCommand(IPathCommand<SKPath> segment)
         {
             _ = _commands.Remove(segment);
-            _drawingCommands = null;
-            Invalidate();
+            SetInvalidState();
         }
 
         /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.ClearCommands" />
@@ -113,9 +103,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="IAnimatable.CompleteAllTransitions" />
         public override void CompleteAllTransitions()
         {
-            var toExecute = _drawingCommands ??= _commands.ToArray();
-
-            foreach (var segment in toExecute)
+            foreach (var segment in _commands)
             {
                 segment.CompleteAllTransitions();
             }

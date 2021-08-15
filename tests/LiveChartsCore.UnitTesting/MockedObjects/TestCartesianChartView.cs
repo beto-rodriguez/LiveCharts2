@@ -8,6 +8,7 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 
 namespace LiveChartsCore.UnitTesting.MockedObjects
 {

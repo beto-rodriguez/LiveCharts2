@@ -14,10 +14,11 @@ namespace LiveChartsCore.UnitTesting
         {
             var runs = 0;
 
-            Action action = () =>
-            {
-                runs++;
-            };
+            Func<Task> action =
+                () => Task.Run(() =>
+                {
+                    runs++;
+                });
 
             var throttler = new ActionThrottler(action, TimeSpan.FromMilliseconds(50));
 
@@ -38,10 +39,11 @@ namespace LiveChartsCore.UnitTesting
         {
             var runs = 0;
 
-            Action action = () =>
-            {
-                runs++;
-            };
+            Func<Task> action =
+                () => Task.Run(() =>
+                {
+                    runs++;
+                });
 
             var throttler = new ActionThrottler(action, TimeSpan.FromMilliseconds(50));
 

@@ -129,7 +129,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         #endregion
 
-        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+        async void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var avaloniaChart = (IAvaloniaChart)chart.View;
 
@@ -204,11 +204,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 key.RemoveFromHoverState();
                 _ = _activePoints.Remove(key);
             }
-
-            chart.View.InvokeOnUIThread(() =>
-            {
-                chart.Canvas.Invalidate();
-            });
         }
 
         /// <summary>

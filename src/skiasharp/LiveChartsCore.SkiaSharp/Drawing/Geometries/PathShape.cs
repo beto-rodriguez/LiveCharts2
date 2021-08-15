@@ -22,11 +22,9 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
-using LiveChartsCore.Threading;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
@@ -91,14 +89,12 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         {
             if (_commands.Count == 0) return;
 
-            var toExecute = _drawingCommands ??= _commands.ToArray();
-
             var toRemoveSegments = new List<IPathCommand<SKPath>>();
 
             using var path = new SKPath();
             var isValid = true;
 
-            foreach (var segment in toExecute)
+            foreach (var segment in _commands)
             {
                 segment.IsValid = true;
                 segment.Execute(path, GetCurrentTime(), this);
@@ -125,7 +121,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             context.Paint.Style = SKPaintStyle.Stroke;
             context.Canvas.DrawPath(path, context.Paint);
 
-            if (!isValid) Invalidate();
+            if (!isValid) SetInvalidState();
         }
     }
 }

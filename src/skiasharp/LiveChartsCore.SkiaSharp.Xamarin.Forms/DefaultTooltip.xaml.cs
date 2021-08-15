@@ -109,7 +109,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// </value>
         public Color TooltipBackgroundColor { get; set; }
 
-        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+        async void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var mobileChart = (IMobileChart)chart.View;
 
@@ -182,11 +182,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
             _closeTimer.Stop();
             _closeTimer.Start();
-
-            chart.View.InvokeOnUIThread(() =>
-            {
-                chart.Canvas.Invalidate();
-            });
         }
 
         /// <summary>

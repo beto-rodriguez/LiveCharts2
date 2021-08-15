@@ -30,6 +30,7 @@ namespace UWPSample
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            DebugSettings.EnableFrameRateCounter = true;
         }
 
         /// <summary>

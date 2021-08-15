@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms
@@ -300,7 +301,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         void IChartView.InvokeOnUIThread(Action action)
         {
-            _ = BeginInvoke(action);
+            _ = BeginInvoke(action).AsyncWaitHandle.WaitOne();
         }
 
         /// <inheritdoc cref="IChartView.SyncAction(Action)"/>

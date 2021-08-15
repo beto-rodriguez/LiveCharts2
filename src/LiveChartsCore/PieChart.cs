@@ -169,8 +169,6 @@ namespace LiveChartsCore
 
             InvokeOnMeasuring();
 
-            if (LockOnMeasure) Monitor.Enter(canvas.Sync);
-
             if (preserveFirstDraw)
             {
                 IsFirstDraw = true;
@@ -264,18 +262,7 @@ namespace LiveChartsCore
             previousSeries = Series;
             previousLegendPosition = LegendPosition;
 
-            if (LockOnMeasure) Monitor.Exit(canvas.Sync);
-
             Canvas.Invalidate();
-        }
-
-        /// <summary>
-        /// Called when the updated the throttler is unlocked.
-        /// </summary>
-        /// <returns></returns>
-        protected override void UpdateThrottlerUnlocked()
-        {
-            Measure();
         }
     }
 }

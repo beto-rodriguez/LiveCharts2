@@ -46,7 +46,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             ShowInTaskbar = false;
         }
 
-        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+        async void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var wfChart = (Chart)chart.View;
 
@@ -101,11 +101,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 key.RemoveFromHoverState();
                 _ = _activePoints.Remove(key);
             }
-
-            chart.View.InvokeOnUIThread(() =>
-            {
-                wfChart.CoreCanvas.Invalidate();
-            });
         }
 
         private SizeF DrawAndMesure(IEnumerable<TooltipPoint> tooltipPoints, Chart chart)

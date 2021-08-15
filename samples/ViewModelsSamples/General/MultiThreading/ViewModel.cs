@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
@@ -34,14 +32,12 @@ namespace ViewModelsSamples.General.MultiThreading
                 }
             };
 
-            // it is a bad practice to use strings
-            // this is only for debugging porpoises
-            Sync = "dumb locker"; //new object();
+            Sync = new object();
 
-            _delay = 100; // add a new point every ms
+            _delay = 1; // add a new point every ms
 
             // create 10 parallel tasks that will add a point every [_delay] milliseconds
-            for (var i = 0; i < 5; i++)
+            for (var i = 0; i < 10; i++)
             {
                 _ = Task.Run(ReadData);
             }
@@ -57,8 +53,8 @@ namespace ViewModelsSamples.General.MultiThreading
 
             while (true)
             {
-                Trace.WriteLine(
-                   $"Thread id: {Thread.CurrentThread.ManagedThreadId}");
+                //Trace.WriteLine(
+                //   $"Thread id: {Thread.CurrentThread.ManagedThreadId}");
 
                 await Task.Delay(_delay);
                 lock (Sync)

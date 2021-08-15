@@ -40,6 +40,7 @@ using A = Avalonia;
 using Avalonia.Input;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
+using System.Threading.Tasks;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia
 {
@@ -93,12 +94,12 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                (object? sender, NotifyCollectionChangedEventArgs e) =>
                {
                    if (core is null) return;
-                   _ = Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
+                   core.Update();
                },
                (object? sender, PropertyChangedEventArgs e) =>
                {
                    if (core is null) return;
-                   _ = Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
+                   core.Update();
                });
 
             Series = new ObservableCollection<ISeries>();
@@ -618,7 +619,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         void IChartView.InvokeOnUIThread(Action action)
         {
-            _ = Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Normal);
+            Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Normal).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
@@ -646,7 +647,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
             legend = this.FindControl<DefaultLegend>("legend");
             tooltip = this.FindControl<DefaultTooltip>("tooltip");
-            _ = Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
+            core.Update();
         }
 
         /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})" />
@@ -677,7 +678,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 canvas.BackColor = new SkiaSharp.SKColor(color.R, color.G, color.B, color.A);
             }
 
-            _ = Dispatcher.UIThread.InvokeAsync(() => core.Update(), DispatcherPriority.Background);
+            core.Update();
         }
 
         private void InitializeComponent()
@@ -708,7 +709,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         private void CartesianChart_PointerLeave(object? sender, PointerEventArgs e)
         {
-            _ = Dispatcher.UIThread.InvokeAsync(HideTooltip, DispatcherPriority.Background);
+            //_ = Dispatcher.UIThread.InvokeAsync(HideTooltip, DispatcherPriority.Background);
             core?.InvokePointerLeft();
         }
     }

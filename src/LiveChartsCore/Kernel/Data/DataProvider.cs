@@ -22,10 +22,8 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.Threading;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace LiveChartsCore.Kernel.Data
 {
@@ -69,8 +67,6 @@ namespace LiveChartsCore.Kernel.Data
             var mapper = series.Mapping ?? LiveCharts.CurrentSettings.GetMap<TModel>();
             var index = 0;
 
-            var values = series.Values.Lock(canvas.Sync);
-
             if (_isValueType)
             {
                 _ = _byChartbyValueVisualMap.TryGetValue(canvas.Sync, out var d);
@@ -81,7 +77,7 @@ namespace LiveChartsCore.Kernel.Data
                 }
                 var byValueVisualMap = d;
 
-                foreach (var item in values)
+                foreach (var item in series.Values)
                 {
                     if (!byValueVisualMap.TryGetValue(index, out var cp))
                         byValueVisualMap[index] = cp = new ChartPoint(chart.View, series);
@@ -104,7 +100,7 @@ namespace LiveChartsCore.Kernel.Data
                 }
                 var byReferenceVisualMap = d;
 
-                foreach (var item in values)
+                foreach (var item in series.Values)
                 {
                     if (!byReferenceVisualMap.TryGetValue(item, out var cp))
                         byReferenceVisualMap[item] = cp = new ChartPoint(chart.View, series);

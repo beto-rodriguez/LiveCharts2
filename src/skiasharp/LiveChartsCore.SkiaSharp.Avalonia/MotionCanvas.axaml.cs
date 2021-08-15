@@ -182,24 +182,35 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 if (context is not ISkiaDrawingContextImpl skiaContext)
                     throw new Exception("SkiaSharp is not supported.");
 
+
+#if DEBUG
+                //if (LiveCharts.EnableLogging)
+                //{
+                    Trace.WriteLine(
+                    $"[rendering] ".PadRight(60) +
+                    $"tread: {Thread.CurrentThread.ManagedThreadId}");
+                //}
+#endif
+
                 // why isn't the render method called on the UI thread always?
                 // as a workaround we lock the canvas to draw the frame.
                 lock (_motionCanvas.Sync)
                 {
-#if DEBUG
-                    if (LiveCharts.EnableLogging)
-                    {
-                        Trace.WriteLine(
-                            $"[avalonia motion canvas renderer] ".PadRight(60) +
-                            $"tread: {Thread.CurrentThread.ManagedThreadId}");
-                    }
-#endif
+                    //Dispatcher.UIThread.InvokeAsync(() =>
+                    //{
+                    Trace.WriteLine(
+                    $"[on ui] ".PadRight(60) +
+                    $"tread: {Thread.CurrentThread.ManagedThreadId}");
+
                     _motionCanvas.DrawFrame(
                        new AvaloniaDrawingContext(
                            _motionCanvas, new SKImageInfo((int)Bounds.Width, (int)Bounds.Height), skiaContext.SkSurface, skiaContext.SkCanvas)
                        {
                            BackColor = _backColor
                        });
+                    //})
+                    //.GetAwaiter()
+                    //.GetResult();
                 }
 
                 if (_motionCanvas.IsValid) return;

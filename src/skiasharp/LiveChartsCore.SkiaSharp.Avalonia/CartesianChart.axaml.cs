@@ -691,7 +691,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         void IChartView.InvokeOnUIThread(Action action)
         {
-            _ = Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Normal);
+            Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Normal).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
@@ -803,7 +803,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         private void CartesianChart_PointerPressed(object? sender, PointerPressedEventArgs e)
         {
-            // only IClassicDesktopStyleApplicationLifetime supported for now.
             if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
             var p = e.GetPosition(this);
             foreach (var w in desktop.Windows) w.PointerReleased += Window_PointerReleased;

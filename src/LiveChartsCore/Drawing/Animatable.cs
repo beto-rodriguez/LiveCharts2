@@ -82,7 +82,7 @@ namespace LiveChartsCore.Drawing.Common
         /// Invalidates this animatable.
         /// </summary>
         /// <returns></returns>
-        public void Invalidate()
+        public void SetInvalidState()
         {
             _isCompleted = false;
         }

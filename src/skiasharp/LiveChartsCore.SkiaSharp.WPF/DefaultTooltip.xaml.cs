@@ -247,7 +247,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         #endregion
 
-        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+        async void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var wpfChart = (Chart)chart.View;
             var template = wpfChart.TooltipTemplate ?? _defaultTempalte;
@@ -310,11 +310,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 key.RemoveFromHoverState();
                 _ = _activePoints.Remove(key);
             }
-
-            chart.View.InvokeOnUIThread(() =>
-            {
-                wpfChart.CoreCanvas.Invalidate();
-            });
         }
 
         void IChartTooltip<SkiaSharpDrawingContext>.Hide()

@@ -35,6 +35,9 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Drawing;
 using Windows.UI.Xaml.Input;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 
 namespace LiveChartsCore.SkiaSharpView.UWP
 {
@@ -55,13 +58,11 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                 (object? sender, NotifyCollectionChangedEventArgs e) =>
                 {
                     if (_core == null) return;
-                    //_ = DispatcherQueue.TryEnqueue(() => _core.Update());
                     _core.Update();
                 },
                 (object? sender, PropertyChangedEventArgs e) =>
                 {
                     if (_core == null) return;
-                    //_ = DispatcherQueue.TryEnqueue(() => _core.Update());
                     _core.Update();
                 });
 
@@ -91,7 +92,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty SyncContextProperty =
             DependencyProperty.Register(
-                nameof(SyncContext), typeof(object), typeof(CartesianChart), new PropertyMetadata(null,
+                nameof(SyncContext), typeof(object), typeof(PieChart), new PropertyMetadata(null,
                     (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                     {
                         var chart = (PieChart)o;
@@ -697,7 +698,11 @@ namespace LiveChartsCore.SkiaSharpView.UWP
 
         void IChartView.InvokeOnUIThread(Action action)
         {
-            _ = Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => action());
+            CoreApplication.MainView.CoreWindow.Dispatcher
+                .RunAsync(CoreDispatcherPriority.Normal, () => action())
+                .AsTask()
+                .GetAwaiter()
+                .GetResult();
         }
 
         /// <inheritdoc cref="IChartView.SyncAction(Action)"/>

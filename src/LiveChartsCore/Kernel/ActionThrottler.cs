@@ -31,7 +31,7 @@ namespace LiveChartsCore.Kernel
     public class ActionThrottler
     {
         private readonly object _sync = new();
-        private readonly Action _action;
+        private readonly Func<Task> _action;
         private bool _isWaiting = false;
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace LiveChartsCore.Kernel
         /// </summary>
         /// <param name="targetAction">The target action to throttle.</param>
         /// <param name="time">The throttling time.</param>
-        public ActionThrottler(Action targetAction, TimeSpan time)
+        public ActionThrottler(Func<Task> targetAction, TimeSpan time)
         {
             _action = targetAction;
             ThrottlerTimeSpan = time;
@@ -84,13 +84,12 @@ namespace LiveChartsCore.Kernel
             // notice it is important that the unlock comes before invoking the Action
             // this way we can call the throttler again from the Action
             // otherwise calling the throttler from the Action will be ignored always.
-
             lock (_sync)
             {
                 _isWaiting = false;
             }
 
-            _action.Invoke();
+            await _action();
         }
 
         /// <summary>
@@ -99,7 +98,7 @@ namespace LiveChartsCore.Kernel
         /// <returns></returns>
         public void ForceCall()
         {
-            _action.Invoke();
+            _action().GetAwaiter().GetResult();
         }
     }
 }

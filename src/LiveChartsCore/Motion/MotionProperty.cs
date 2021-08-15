@@ -105,7 +105,7 @@ namespace LiveChartsCore.Motion
                 IsCompleted = false;
                 _requiresToInitialize = true;
             }
-            animatable.Invalidate();
+            animatable.SetInvalidState();
         }
 
         /// <summary>

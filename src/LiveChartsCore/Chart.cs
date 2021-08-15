@@ -31,6 +31,7 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace LiveChartsCore
 {
@@ -43,10 +44,6 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
     {
         #region fields
-
-#if DEBUG
-        internal ActionThrottler UpdateThrottlerInspector => updateThrottler;
-#endif
 
         /// <summary>
         /// The series context
@@ -173,65 +170,6 @@ namespace LiveChartsCore
             _tooltipThrottler = new ActionThrottler(TooltipThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
             _panningThrottler = new ActionThrottler(PanningThrottlerUnlocked, TimeSpan.FromMilliseconds(30));
             LockOnMeasure = true;//lockOnMeasure;
-        }
-
-        private void TooltipThrottlerUnlocked()
-        {
-            if (tooltip is null || TooltipPosition == TooltipPosition.Hidden || !_isPointerIn) return;
-
-            View.InvokeOnUIThread(() =>
-            {
-#if DEBUG
-                if (LiveCharts.EnableLogging)
-                {
-                    Trace.WriteLine(
-                        $"[tooltip view thread]".PadRight(60) +
-                        $"tread: {Thread.CurrentThread.ManagedThreadId}");
-                }
-#endif
-
-                var points = FindPointsNearTo(_pointerPosition).ToArray();
-                tooltip.Show(points, this);
-            });
-        }
-
-        private void PanningThrottlerUnlocked()
-        {
-            if (this is not CartesianChart<TDrawingContext> cartesianChart) return;
-
-            cartesianChart.Pan(
-                new PointF(
-                (float)(_pointerPanningPosition.X - _pointerPreviousPanningPosition.X),
-                (float)(_pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y)));
-
-            _pointerPreviousPanningPosition = new PointF(_pointerPanningPosition.X, _pointerPanningPosition.Y);
-        }
-
-        private void Chart_PointerDown(PointF pointerPosition)
-        {
-            _isPanning = true;
-            _pointerPreviousPanningPosition = pointerPosition;
-        }
-
-        private void Chart_PointerMove(PointF pointerPosition)
-        {
-            _pointerPosition = pointerPosition;
-            _isPointerIn = true;
-            if (tooltip is not null && TooltipPosition != TooltipPosition.Hidden) _tooltipThrottler.Call();
-            if (!_isPanning) return;
-            _pointerPanningPosition = pointerPosition;
-            _panningThrottler.Call();
-        }
-
-        private void Chart_PointerLeft()
-        {
-            _isPointerIn = false;
-        }
-
-        private void Chart_PointerUp(PointF pointerPosition)
-        {
-            if (!_isPanning) return;
-            _isPanning = false;
         }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
@@ -411,7 +349,11 @@ namespace LiveChartsCore
         /// <value>
         /// The updater throttler.
         /// </value>
-        public TimeSpan UpdaterThrottler { get => updateThrottler.ThrottlerTimeSpan; set => updateThrottler.ThrottlerTimeSpan = value; }
+        public TimeSpan UpdaterThrottler
+        {
+            get => updateThrottler.ThrottlerTimeSpan;
+            set => updateThrottler.ThrottlerTimeSpan = value;
+        }
 
         object IChart.Canvas => Canvas;
 
@@ -447,22 +389,11 @@ namespace LiveChartsCore
             PointerLeft?.Invoke();
         }
 
-        internal void InvokePanGestrue(PanGestureEventArgs eventArgs)
-        {
-            PanGesture?.Invoke(eventArgs);
-        }
-
         /// <summary>
         /// Measures this chart.
         /// </summary>
         /// <returns></returns>
         protected abstract void Measure();
-
-        /// <summary>
-        /// Called when the updated the throttler is unlocked.
-        /// </summary>
-        /// <returns></returns>
-        protected abstract void UpdateThrottlerUnlocked();
 
         /// <summary>
         /// Sets the draw margin.
@@ -508,6 +439,11 @@ namespace LiveChartsCore
             UpdateFinished?.Invoke(View);
         }
 
+        internal void InvokePanGestrue(PanGestureEventArgs eventArgs)
+        {
+            PanGesture?.Invoke(eventArgs);
+        }
+
         /// <summary>
         /// SDetermines whether the series miniature changed or not.
         /// </summary>
@@ -534,9 +470,101 @@ namespace LiveChartsCore
             return false;
         }
 
+        /// <summary>
+        /// Called when the updated the throttler is unlocked.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual Task UpdateThrottlerUnlocked()
+        {
+            return Task.Run(() =>
+            {
+                View.InvokeOnUIThread(() =>
+                {
+                    lock (Canvas.Sync)
+                    {
+                        Measure();
+                    }
+                });
+            });
+        }
+
+        private Task TooltipThrottlerUnlocked()
+        {
+            return Task.Run(() =>
+                 View.InvokeOnUIThread(() =>
+                 {
+                     lock (canvas.Sync)
+                     {
+#if DEBUG
+                         if (LiveCharts.EnableLogging)
+                         {
+                             Trace.WriteLine(
+                                 $"[tooltip view thread]".PadRight(60) +
+                                 $"tread: {Thread.CurrentThread.ManagedThreadId}");
+                         }
+#endif
+                         if (tooltip is null || TooltipPosition == TooltipPosition.Hidden || !_isPointerIn) return;
+
+                         lock (canvas.Sync)
+                         {
+                             var points = FindPointsNearTo(_pointerPosition).ToArray();
+                             tooltip.Show(points, this);
+                         }
+
+                         canvas.Invalidate();
+                     }
+                 }));
+        }
+
+        private Task PanningThrottlerUnlocked()
+        {
+            return Task.Run(() =>
+                View.InvokeOnUIThread(() =>
+                {
+                    if (this is not CartesianChart<TDrawingContext> cartesianChart) return;
+
+                    lock (canvas.Sync)
+                    {
+                        cartesianChart.Pan(
+                        new PointF(
+                        (float)(_pointerPanningPosition.X - _pointerPreviousPanningPosition.X),
+                        (float)(_pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y)));
+
+                        _pointerPreviousPanningPosition = new PointF(_pointerPanningPosition.X, _pointerPanningPosition.Y);
+                    }
+                }));
+        }
+
         private void OnCanvasValidated(MotionCanvas<TDrawingContext> chart)
         {
             InvokeOnUpdateFinished();
+        }
+
+        private void Chart_PointerDown(PointF pointerPosition)
+        {
+            _isPanning = true;
+            _pointerPreviousPanningPosition = pointerPosition;
+        }
+
+        private void Chart_PointerMove(PointF pointerPosition)
+        {
+            _pointerPosition = pointerPosition;
+            _isPointerIn = true;
+            if (tooltip is not null && TooltipPosition != TooltipPosition.Hidden) _tooltipThrottler.Call();
+            if (!_isPanning) return;
+            _pointerPanningPosition = pointerPosition;
+            _panningThrottler.Call();
+        }
+
+        private void Chart_PointerLeft()
+        {
+            _isPointerIn = false;
+        }
+
+        private void Chart_PointerUp(PointF pointerPosition)
+        {
+            if (!_isPanning) return;
+            _isPanning = false;
         }
     }
 }
