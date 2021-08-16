@@ -63,7 +63,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             _translateProperty = RegisterMotionProperty(
                 new PointFMotionProperty(nameof(TranslateTransform), new PointF(0, 0)));
             _rotationProperty = RegisterMotionProperty(
-                new FloatMotionProperty(nameof(RotationTransform), 0));
+                new FloatMotionProperty(nameof(RotateTransform), 0));
             _scaleProperty = RegisterMotionProperty(
                 new PointFMotionProperty(nameof(ScaleTransform), new PointF(1, 1)));
             _skewProperty = RegisterMotionProperty(
@@ -100,8 +100,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             }
         }
 
-        /// <inheritdoc cref="IGeometry{TDrawingContext}.RotationTransform" />
-        public float RotationTransform
+        /// <inheritdoc cref="IGeometry{TDrawingContext}.RotateTransform" />
+        public float RotateTransform
         {
             get => _rotationProperty.GetMovement(this);
             set
@@ -186,7 +186,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
                 if (_hasRotation)
                 {
                     context.Canvas.Translate(p.X + xo, p.Y + yo);
-                    context.Canvas.RotateDegrees(RotationTransform);
+                    context.Canvas.RotateDegrees(RotateTransform);
                     context.Canvas.Translate(-p.X - xo, -p.Y - yo);
                 }
 
@@ -268,7 +268,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         {
             var measure = OnMeasure((Paint)drawableTask);
 
-            var r = RotationTransform;
+            var r = RotateTransform;
             if (Math.Abs(r) > 0)
             {
                 const double toRadias = Math.PI / 180;

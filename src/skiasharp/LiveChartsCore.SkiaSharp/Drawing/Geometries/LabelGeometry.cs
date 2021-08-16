@@ -127,7 +127,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
                     break;
             }
 
-            var rotation = RotationTransform;
+            var rotation = RotateTransform;
             rotation = (float)(rotation * toRadians);
 
             var xp = -Math.Cos(rotation) * w + -Math.Sin(rotation) * h;

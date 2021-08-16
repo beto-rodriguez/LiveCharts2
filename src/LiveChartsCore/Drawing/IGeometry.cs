@@ -41,18 +41,18 @@ namespace LiveChartsCore.Drawing
         PointF TranslateTransform { get; set; }
 
         /// <summary>
-        /// Gets or sets the rotation in degrees.
+        /// Gets or sets the rotation transform in degrees.
         /// </summary>
         /// <value>
         /// The rotation in degrees.
         /// </value>
-        float RotationTransform { get; set; }
+        float RotateTransform { get; set; }
 
         /// <summary>
         /// Gets or sets the scale transform.
         /// </summary>
         /// <value>
-        /// The scale see https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/transforms/scale.
+        /// The scale to use on the X and Y axis.
         /// </value>
         PointF ScaleTransform { get; set; }
 
@@ -60,7 +60,8 @@ namespace LiveChartsCore.Drawing
         /// Gets or sets the skew transform.
         /// </summary>
         /// <value>
-        /// The skew see https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/transforms/skew.
+        /// The skew factor to use in the X and Y axis, both axes go from 0 to 1, where 0 is nothing and 1
+        /// the length of the shape in the specified axis.
         /// </value>
         PointF SkewTransform { get; set; }
 
