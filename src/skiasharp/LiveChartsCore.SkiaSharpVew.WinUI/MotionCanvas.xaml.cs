@@ -78,7 +78,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// <value>
         /// The frames per second.
         /// </value>
-        public double FramesPerSecond { get; set; } = 20;
+        public double FramesPerSecond { get; set; } = 60;
 
         /// <summary>
         /// Gets the canvas core.
