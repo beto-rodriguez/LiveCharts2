@@ -52,6 +52,9 @@
     <Compile Update="Bars\AutoUpdate\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Bars\Spacing\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Bars\Race\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -245,6 +248,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Bars\AutoUpdate\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Bars\Spacing\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

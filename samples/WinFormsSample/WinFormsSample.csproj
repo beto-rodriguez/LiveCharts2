@@ -41,6 +41,9 @@
     <Compile Update="Bars\AutoUpdate\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Bars\Spacing\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Bars\Race\View.cs">
       <SubType>UserControl</SubType>
     </Compile>

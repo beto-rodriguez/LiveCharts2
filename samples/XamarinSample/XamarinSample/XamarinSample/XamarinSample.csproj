@@ -54,6 +54,9 @@
     <Compile Update="Bars\AutoUpdate\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Bars\Spacing\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Bars\Race\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

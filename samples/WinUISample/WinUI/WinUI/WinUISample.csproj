@@ -20,6 +20,7 @@
     <None Remove="Axes\LabelsFormat\View.xaml" />
     <None Remove="Axes\DateTimeScaled\View.xaml" />
     <None Remove="Axes\ColorsAndPosition\View.xaml" />
+    <None Remove="Bars\Spacing\View.xaml" />
     <None Remove="Bars\Custom\View.xaml" />
     <None Remove="Bars\WithBackground\View.xaml" />
     <None Remove="Bars\States\View.xaml" />
