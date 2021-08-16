@@ -102,6 +102,11 @@ namespace LiveChartsCore.Kernel.Drawing
         public bool IsPaused { get; set; }
 
         /// <summary>
+        /// Gets or sets the font family.
+        /// </summary>
+        public string? FontFamily { get; set; }
+
+        /// <summary>
         /// Adds the geometry to paint task.
         /// </summary>
         /// <param name="canvas">The canvas.</param>

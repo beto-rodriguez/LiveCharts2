@@ -125,6 +125,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
                 StrokeCap = StrokeCap,
                 StrokeJoin = StrokeJoin,
                 StrokeMiter = StrokeMiter,
+                FontFamily = FontFamily,
                 PathEffect = PathEffect?.Clone(),
                 ImageFilter = ImageFilter?.Clone()
             };
@@ -172,6 +173,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             skiaPaint.StrokeJoin = StrokeJoin;
             skiaPaint.StrokeMiter = StrokeMiter;
             skiaPaint.Style = IsStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
+            if (FontFamily != null) skiaPaint.Typeface = SKTypeface.FromFamilyName(FontFamily);
 
             if (PathEffect is not null)
             {
@@ -202,6 +204,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// </summary>
         public override void Dispose()
         {
+            if (FontFamily != null && skiaPaint != null) skiaPaint.Typeface.Dispose();
             if (PathEffect is not null) PathEffect.Dispose();
             if (ImageFilter is not null) ImageFilter.Dispose();
 

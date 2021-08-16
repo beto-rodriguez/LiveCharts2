@@ -50,6 +50,11 @@ namespace LiveChartsCore.Drawing
         bool IsFill { get; set; }
 
         /// <summary>
+        /// Gets or sets the font family.
+        /// </summary>
+        string? FontFamily { get; set; }
+
+        /// <summary>
         /// Gets or sets the index of the z.
         /// </summary>
         /// <value>

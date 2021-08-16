@@ -1,5 +1,7 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -21,7 +23,15 @@ namespace ViewModelsSamples.Axes.LabelsFormat
             {
                 new Axis
                 {
-                    Name = "Worked days",
+                    Name = "Worked days 你好",
+
+                    // In this case we use Microsoft YaHei font
+                    // to support Chinese characters
+                    NamePaint = new SolidColorPaint
+                    {
+                        Color = SKColors.Red,
+                        FontFamily = "Microsoft YaHei"
+                    },
 
                     // Use the Label property to indicate the format of the labels in the axis
                     // The Labeler takes the value of the label as parameter and must return it as string

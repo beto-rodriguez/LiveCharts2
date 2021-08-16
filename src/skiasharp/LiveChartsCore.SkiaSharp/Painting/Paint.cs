@@ -89,6 +89,9 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// <inheritdoc cref="IPaint{TDrawingContext}.IsFill" />
         public bool IsFill { get; set; }
 
+        /// <inheritdoc cref="IPaint{TDrawingContext}.FontFamily" />
+        public string? FontFamily { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether this instance is antialias.
         /// </summary>
