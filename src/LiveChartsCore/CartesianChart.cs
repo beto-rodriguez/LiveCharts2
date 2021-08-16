@@ -160,7 +160,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="pointerPosition">The pointer position.</param>
         /// <returns></returns>
-        public override IEnumerable<TooltipPoint> FindPointsNearTo(PointF pointerPosition)
+        public override TooltipPoint[] FindPointsNearTo(PointF pointerPosition)
         {
             var actualStrategy = TooltipFindingStrategy;
             if (actualStrategy == TooltipFindingStrategy.Automatic)

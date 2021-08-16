@@ -367,7 +367,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="pointerPosition">The pointer position.</param>
         /// <returns></returns>
-        public abstract IEnumerable<TooltipPoint> FindPointsNearTo(PointF pointerPosition);
+        public abstract TooltipPoint[] FindPointsNearTo(PointF pointerPosition);
 
         internal void InvokePointerDown(PointF point)
         {
@@ -505,13 +505,10 @@ namespace LiveChartsCore
 #endif
                          if (tooltip is null || TooltipPosition == TooltipPosition.Hidden || !_isPointerIn) return;
 
-                         lock (canvas.Sync)
-                         {
-                             var points = FindPointsNearTo(_pointerPosition).ToArray();
-                             tooltip.Show(points, this);
-                         }
+                         var points = FindPointsNearTo(_pointerPosition).ToArray();
+                         tooltip.Show(points, this);
 
-                         canvas.Invalidate();
+                         //canvas.Invalidate();
                      }
                  }));
         }

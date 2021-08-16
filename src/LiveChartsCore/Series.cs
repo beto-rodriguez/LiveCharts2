@@ -234,16 +234,18 @@ namespace LiveChartsCore
             return Fetch(chart);
         }
 
-        IEnumerable<TooltipPoint> ISeries.FindPointsNearTo(IChart chart, PointF pointerPosition, TooltipFindingStrategy automaticStategy)
+        TooltipPoint[] ISeries.FindPointsNearTo(IChart chart, PointF pointerPosition, TooltipFindingStrategy automaticStategy)
         {
             return this switch
             {
-                IPieSeries<TDrawingContext> pieSeries when pieSeries.IsFillSeries => Enumerable.Empty<TooltipPoint>(),
+                IPieSeries<TDrawingContext> pieSeries when pieSeries.IsFillSeries => new TooltipPoint[0],
                 IBarSeries<TDrawingContext> barSeries => FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy),
                 _ => FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy)
                     .GroupBy(g => g.PointerDistance)
                     .OrderBy(g => g.Key)
-                    .DefaultIfEmpty(Enumerable.Empty<TooltipPoint>()).First(),
+                    .DefaultIfEmpty(Enumerable.Empty<TooltipPoint>())
+                    .First()
+                    .ToArray(),
             };
         }
 
@@ -419,10 +421,10 @@ namespace LiveChartsCore
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private IEnumerable<TooltipPoint> FilterTooltipPoints(
+        private TooltipPoint[] FilterTooltipPoints(
             IEnumerable<ChartPoint>? points, IChart chart, PointF pointerPosition, TooltipFindingStrategy automaticStategy)
         {
-            if (points is null) return Enumerable.Empty<TooltipPoint>();
+            if (points is null) return new TooltipPoint[0];
             var tolerance = float.MaxValue;
 
             if (this is ICartesianSeries<TDrawingContext> cartesianSeries)
@@ -464,7 +466,9 @@ namespace LiveChartsCore
             var lowestD = distancesT.FirstOrDefault()?.PointerDistance;
             var secondLowestD = distancesT.FirstOrDefault(dtp => dtp.PointerDistance > lowestD)?.PointerDistance;
 
-            return distancesT.TakeWhile(dtp => dtp.PointerDistance == lowestD || dtp.PointerDistance == secondLowestD);
+            return distancesT
+                .TakeWhile(dtp => dtp.PointerDistance == lowestD || dtp.PointerDistance == secondLowestD)
+                .ToArray();
         }
 
         private void NotifySubscribers()

@@ -37,7 +37,7 @@ namespace ViewModelsSamples.General.MultiThreading
             _delay = 1; // add a new point every ms
 
             // create 10 parallel tasks that will add a point every [_delay] milliseconds
-            for (var i = 0; i < 10; i++)
+            for (var i = 0; i < 1; i++)
             {
                 _ = Task.Run(ReadData);
             }
