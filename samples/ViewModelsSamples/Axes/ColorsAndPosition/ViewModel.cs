@@ -36,7 +36,7 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
             {
                 new Axis
                 {
-                    Name = "X axis",
+                    //Name = "X axis",
                     TextSize = 20,
 
                     // LabelsPaint = null will not draw the axis labels.
@@ -53,7 +53,7 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
             {
                 new Axis
                 {
-                    Name = "Y axis",
+                    //Name = "Y axis",
                     TextSize = 20,
                     LabelsPaint = new SolidColorPaintTask { Color = SKColors.Red },
                     SeparatorsPaint = new SolidColorPaintTask { Color = SKColors.LightPink, StrokeThickness = 3 },

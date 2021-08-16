@@ -199,7 +199,9 @@ namespace LiveChartsCore
             {
                 _isVisible = value;
                 if (!_isVisible) RestartAnimations();
+                if (value && !((ISeries)this).IsNotifyingChanges) ((ISeries)this).IsNotifyingChanges = true;
                 OnPropertyChanged();
+                VisibilityChanged?.Invoke(this);
             }
         }
 
@@ -214,6 +216,9 @@ namespace LiveChartsCore
 
         /// <inheritdoc cref="ISeries.IsNotifyingChanges"/>
         bool ISeries.IsNotifyingChanges { get; set; }
+
+        /// <inheritdoc cref="ISeries.VisibilityChanged"/>
+        public event Action<ISeries> VisibilityChanged;
 
         /// <inheritdoc />
         public virtual int GetStackGroup()
