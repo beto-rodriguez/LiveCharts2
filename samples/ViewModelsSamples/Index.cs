@@ -30,6 +30,7 @@
             "Bars/AutoUpdate",
             "Bars/Custom",
             "Bars/WithBackground",
+            "Bars/Spacing",
             "Bars/DelayedAnimation",
             "Bars/Race",
             "Bars/RowsWithLabels",

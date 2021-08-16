@@ -359,7 +359,7 @@ namespace LiveChartsCore
 
                 var gp = (float)barSeries.GroupPadding;
 
-                if (uw - gp < 1) gp = 0;
+                if (uw - gp < 1) gp -= uw - gp;
 
                 uw -= gp;
                 uwm = 0.5f * uw;

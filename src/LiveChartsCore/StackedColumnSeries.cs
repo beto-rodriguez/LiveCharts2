@@ -72,7 +72,9 @@ namespace LiveChartsCore
 
             var uw = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
 
-            uw -= (float)GroupPadding;
+            var gp = (float)GroupPadding;
+            if (uw - gp < 1) gp -= uw - gp;
+            uw -= gp;
 
             var uwm = 0.5f * uw;
             var p = primaryScale.ToPixels(pivot);

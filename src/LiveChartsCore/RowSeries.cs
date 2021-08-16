@@ -75,7 +75,9 @@ namespace LiveChartsCore
             var uw = secondaryScale.MeasureInPixels(primaryAxis.UnitWidth); //secondaryScale.ToPixels(0f) - secondaryScale.ToPixels(primaryAxis.UnitWidth);
             var uwm = 0.5f * uw;
 
-            uw -= (float)GroupPadding;
+            var gp = (float)GroupPadding;
+            if (uw - gp < 1) gp -= uw - gp;
+            uw -= gp;
             //puw -= (float)GroupPadding;
 
             var sw = Stroke?.StrokeThickness ?? 0;
