@@ -9,7 +9,7 @@
     mc:Ignorable="d">
 
     <ToolTipService.ToolTip>
-        <local:DefaultTooltip x:Name="tooltip" BorderThickness="0" BorderBrush="Blue">
+        <local:DefaultTooltip x:Name="tooltip" BorderThickness="0">
             <ItemsControl ItemsSource="{Binding Points, ElementName=tooltip}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>

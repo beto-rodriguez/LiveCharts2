@@ -65,8 +65,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private Font _tooltipFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
         private Color _tooltipBackColor = Color.FromArgb(255, 250, 250, 250);
         private Font _legendFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
-        private Color _legendBackColor = Color.FromArgb(255, 250, 250, 250);
-        private Color _legendTextColor = Color.FromArgb(255, 250, 250, 250);
+        private Color _legendBackColor = Color.FromArgb(255, 255, 255, 255);
+        private Color _legendTextColor = Color.FromArgb(255, 35, 35, 35);
         private Color _tooltipTextColor;
 
         /// <summary>

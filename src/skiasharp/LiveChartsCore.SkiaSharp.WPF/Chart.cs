@@ -232,7 +232,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         public static readonly DependencyProperty LegendBackgroundProperty =
            DependencyProperty.Register(
                nameof(LegendBackground), typeof(SolidColorBrush), typeof(Chart),
-               new PropertyMetadata(new SolidColorBrush(System.Windows.Media.Color.FromRgb(35, 35, 35)), OnDependencyPropertyChanged));
+               new PropertyMetadata(new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 255, 255)), OnDependencyPropertyChanged));
 
         /// <summary>
         /// The legend font size property

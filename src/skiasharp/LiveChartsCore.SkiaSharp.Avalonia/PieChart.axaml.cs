@@ -271,7 +271,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </summary>
         public static readonly AvaloniaProperty<IBrush> LegendBackgroundProperty =
             AvaloniaProperty.Register<CartesianChart, IBrush>(nameof(LegendBackground),
-                new SolidColorBrush(new A.Media.Color(255, 250, 250, 250)), inherits: true);
+                new SolidColorBrush(new A.Media.Color(255, 255, 255, 255)), inherits: true);
 
         #endregion
 

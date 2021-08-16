@@ -37,6 +37,8 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         public DefaultLegend()
         {
             InitializeComponent();
+
+            DataContext = this;
         }
 
         /// <summary>

@@ -36,7 +36,6 @@ using Xamarin.Forms;
 using c = Xamarin.Forms.Color;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
-using System.Threading.Tasks;
 
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 {
@@ -271,7 +270,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         public static readonly BindableProperty LegendBackgroundProperty =
             BindableProperty.Create(
                 nameof(LegendTextBrush), typeof(c), typeof(CartesianChart),
-                new c(250 / 255d, 250 / 255d, 250 / 255d), propertyChanged: OnBindablePropertyChanged);
+                new c(255 / 255d, 255 / 255d, 255 / 255d), propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>
         /// The legend font attributes property

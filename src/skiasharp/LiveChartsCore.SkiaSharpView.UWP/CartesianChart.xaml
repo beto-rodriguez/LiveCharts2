@@ -10,7 +10,7 @@
     d:DesignWidth="400">
 
     <ToolTipService.ToolTip>
-        <local:DefaultTooltip x:Name="tooltip">
+        <local:DefaultTooltip x:Name="tooltip" BorderThickness="0">
             <ItemsControl ItemsSource="{Binding Points, ElementName=tooltip}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
