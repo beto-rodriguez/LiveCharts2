@@ -544,52 +544,63 @@ namespace LiveChartsCore
             if (_geometryStroke is not null)
             {
                 var strokeClone = _geometryStroke.CloneTask();
+                var st = _geometryStroke.StrokeThickness;
+                if (st > MaxSeriesStroke)
+                {
+                    st = MaxSeriesStroke;
+                    strokeClone.StrokeThickness = MaxSeriesStroke;
+                }
+
                 var visual = new TVisual
                 {
-                    X = _geometryStroke.StrokeThickness,
-                    Y = _geometryStroke.StrokeThickness,
+                    X = st + MaxSeriesStroke - st,
+                    Y = st + MaxSeriesStroke - st,
                     Height = lss,
                     Width = lss
                 };
-                sh = _geometryStroke.StrokeThickness;
+                sh = st;
                 strokeClone.ZIndex = 1;
-                w += 2 * _geometryStroke.StrokeThickness;
                 context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
             }
             else if (Stroke is not null)
             {
                 var strokeClone = Stroke.CloneTask();
+                var st = strokeClone.StrokeThickness;
+                if (st > MaxSeriesStroke)
+                {
+                    st = MaxSeriesStroke;
+                    strokeClone.StrokeThickness = MaxSeriesStroke;
+                }
+
                 var visual = new TVisual
                 {
-                    X = strokeClone.StrokeThickness,
-                    Y = strokeClone.StrokeThickness,
+                    X = st + MaxSeriesStroke - st,
+                    Y = st + MaxSeriesStroke - st,
                     Height = lss,
                     Width = lss
                 };
-                sh = strokeClone.StrokeThickness;
+                sh = st;
                 strokeClone.ZIndex = 1;
-                w += 2 * strokeClone.StrokeThickness;
                 context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
             }
 
             if (_geometryFill is not null)
             {
                 var fillClone = _geometryFill.CloneTask();
-                var visual = new TVisual { X = sh, Y = sh, Height = lss, Width = lss };
+                var visual = new TVisual { X = sh + MaxSeriesStroke - sh, Y = sh + MaxSeriesStroke - sh, Height = lss, Width = lss };
                 context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(fillClone, visual));
             }
             else if (Fill is not null)
             {
                 var fillClone = Fill.CloneTask();
-                var visual = new TVisual { X = sh, Y = sh, Height = lss, Width = lss };
+                var visual = new TVisual { X = sh + MaxSeriesStroke - sh, Y = sh + MaxSeriesStroke - sh, Height = lss, Width = lss };
                 context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(fillClone, visual));
             }
 
-            context.Width = w;
-            context.Height = w;
+            context.Width = w + MaxSeriesStroke * 2;
+            context.Height = w + MaxSeriesStroke * 2;
 
-            canvaSchedule = context;
-            OnPropertyChanged(nameof(CanvasSchedule));
+            CanvasSchedule = context;
         }
 
         private IEnumerable<BezierData> GetSpline(

@@ -49,6 +49,13 @@ namespace LiveChartsCore
         private Bounds _weightBounds = new();
         private int _heatKnownLength = 0;
         private List<Tuple<double, Color>> _heatStops = new();
+        private Color[] _heatMap = new[]
+        {
+            Color.FromArgb(255, 87, 103, 222), // cold (min value)
+            Color.FromArgb(255, 95, 207, 249) // hot (max value)
+        };
+        private double[]? _colorStops;
+        private Padding _pointPadding = new(4);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HeatSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -64,17 +71,13 @@ namespace LiveChartsCore
         }
 
         /// <inheritdoc cref="IHeatSeries{TDrawingContext}.HeatMap"/>
-        public Color[] HeatMap { get; set; } = new[]
-        {
-            Color.FromArgb(255, 87, 103, 222), // cold (min value)
-            Color.FromArgb(255, 95, 207, 249) // hot (max value)
-        };
+        public Color[] HeatMap { get => _heatMap; set { _heatMap = value; OnPropertyChanged(); OnSeriesMiniatureChanged(); } }
 
         /// <inheritdoc cref="IHeatSeries{TDrawingContext}.ColorStops"/>
-        public double[]? ColorStops { get; set; }
+        public double[]? ColorStops { get => _colorStops; set { _colorStops = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IHeatSeries{TDrawingContext}.PointPadding"/>
-        public Padding PointPadding { get; set; } = new Padding(4);
+        public Padding PointPadding { get => _pointPadding; set { _pointPadding = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
         public override void Measure(Chart<TDrawingContext> chart)
@@ -350,36 +353,30 @@ namespace LiveChartsCore
         {
             var context = new CanvasSchedule<TDrawingContext>();
             var w = LegendShapeSize;
-            var sh = 0f;
-            //if (Stroke is not null)
-            //{
-            //    var strokeClone = Stroke.CloneTask();
-            //    var visual = new TVisual
-            //    {
-            //        X = strokeClone.StrokeThickness,
-            //        Y = strokeClone.StrokeThickness,
-            //        Height = (float)LegendShapeSize,
-            //        Width = (float)LegendShapeSize
-            //    };
-            //    sh = strokeClone.StrokeThickness;
-            //    strokeClone.ZIndex = 1;
-            //    w += 2 * strokeClone.StrokeThickness;
-            //    context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
-            //}
 
-            //if (Fill is not null)
-            //{
-            //    var fillClone = Fill.CloneTask();
-            //    var visual = new TVisual { X = sh, Y = sh, Height = (float)LegendShapeSize, Width = (float)LegendShapeSize };
-            //    context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(fillClone, visual));
-            //}
+            var strokeClone = GetSolidColorPaintTask();
+            var st = strokeClone.StrokeThickness;
+            if (st > MaxSeriesStroke)
+            {
+                st = MaxSeriesStroke;
+                strokeClone.StrokeThickness = MaxSeriesStroke;
+            }
 
-            context.Width = w;
-            context.Height = w;
+            var visual = new TVisual
+            {
+                X = st + MaxSeriesStroke - st,
+                Y = st + MaxSeriesStroke - st,
+                Height = (float)LegendShapeSize,
+                Width = (float)LegendShapeSize,
+                Color = HeatMap[0] // ToDo <- draw the gradient?
+            };
+            strokeClone.ZIndex = 1;
+            context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
 
-            canvaSchedule = context;
+            context.Width = w + MaxSeriesStroke * 2;
+            context.Height = w + MaxSeriesStroke * 2;
 
-            OnPropertyChanged(nameof(CanvasSchedule));
+            CanvasSchedule = context;
         }
 
         /// <inheritdoc cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>

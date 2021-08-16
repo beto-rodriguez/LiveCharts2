@@ -430,13 +430,21 @@ namespace LiveChartsCore
 
             var w = LegendShapeSize;
             var sh = 0f;
+
             if (Stroke is not null)
             {
                 var strokeClone = Stroke.CloneTask();
+                var st = Stroke.StrokeThickness;
+                if (st > MaxSeriesStroke)
+                {
+                    st = MaxSeriesStroke;
+                    strokeClone.StrokeThickness = MaxSeriesStroke;
+                }
+
                 var visual = new TVisual
                 {
-                    X = 0,
-                    Y = 0,
+                    X = 0 + MaxSeriesStroke - st,
+                    Y = 0 + MaxSeriesStroke - st,
                     Height = (float)LegendShapeSize,
                     Width = (float)LegendShapeSize,
                     CenterX = (float)LegendShapeSize * 0.5f,
@@ -444,9 +452,8 @@ namespace LiveChartsCore
                     StartAngle = 0,
                     SweepAngle = 359.9999f
                 };
-                sh = strokeClone.StrokeThickness;
+                sh = st;
                 strokeClone.ZIndex = 1;
-                w += 2 * strokeClone.StrokeThickness;
                 context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
             }
 
@@ -455,8 +462,8 @@ namespace LiveChartsCore
                 var fillClone = Fill.CloneTask();
                 var visual = new TVisual
                 {
-                    X = sh,
-                    Y = sh,
+                    X = sh + MaxSeriesStroke - sh,
+                    Y = sh + MaxSeriesStroke - sh,
                     Height = (float)LegendShapeSize,
                     Width = (float)LegendShapeSize,
                     CenterX = (float)LegendShapeSize * 0.5f,
@@ -467,11 +474,10 @@ namespace LiveChartsCore
                 context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(fillClone, visual));
             }
 
-            context.Width = w;
-            context.Height = w;
+            context.Width = w + MaxSeriesStroke * 2;
+            context.Height = w + MaxSeriesStroke * 2;
 
-            canvaSchedule = context;
-            OnPropertyChanged(nameof(CanvasSchedule));
+            CanvasSchedule = context;
         }
 
         /// <summary>

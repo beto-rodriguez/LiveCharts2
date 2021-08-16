@@ -43,15 +43,11 @@ namespace LiveChartsCore
         where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
-        /// <summary>
-        /// The paint context.
-        /// </summary>
-        protected CanvasSchedule<TDrawingContext> canvaSchedule = new();
-
         private double _legendShapeSize = 15;
         private IPaint<TDrawingContext>? _dataLabelsPaint;
         private double _dataLabelsSize = 16;
         private Padding _dataLabelsPadding = new() { Left = 6, Top = 8, Right = 6, Bottom = 8 };
+        private CanvasSchedule<TDrawingContext> _canvasSchedule = new CanvasSchedule<TDrawingContext>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -82,7 +78,11 @@ namespace LiveChartsCore
         public Padding DataLabelsPadding { get => _dataLabelsPadding; set { _dataLabelsPadding = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IChartSeries{TDrawingContext}.CanvasSchedule"/>
-        public CanvasSchedule<TDrawingContext> CanvasSchedule => canvaSchedule;
+        public CanvasSchedule<TDrawingContext> CanvasSchedule
+        {
+            get => _canvasSchedule;
+            protected set { _canvasSchedule = value; OnPropertyChanged(); }
+        }
 
         /// <summary>
         /// Gets or sets the size of the legend shape.

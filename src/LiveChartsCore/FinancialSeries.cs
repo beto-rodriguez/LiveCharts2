@@ -443,36 +443,41 @@ namespace LiveChartsCore
         {
             var context = new CanvasSchedule<TDrawingContext>();
             var w = LegendShapeSize;
-            var sh = 0f;
-            //if (Stroke is not null)
-            //{
-            //    var strokeClone = Stroke.CloneTask();
-            //    var visual = new TVisual
-            //    {
-            //        X = strokeClone.StrokeThickness,
-            //        Y = strokeClone.StrokeThickness,
-            //        Height = (float)LegendShapeSize,
-            //        Width = (float)LegendShapeSize
-            //    };
-            //    sh = strokeClone.StrokeThickness;
-            //    strokeClone.ZIndex = 1;
-            //    w += 2 * strokeClone.StrokeThickness;
-            //    context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
-            //}
+
+            if (_upStroke is not null)
+            {
+                var strokeClone = _upStroke.CloneTask();
+                var st = _upStroke.StrokeThickness;
+                if (st > MaxSeriesStroke)
+                {
+                    st = MaxSeriesStroke;
+                    strokeClone.StrokeThickness = MaxSeriesStroke;
+                }
+
+                var visual = new TVisual
+                {
+                    X = st + MaxSeriesStroke - st,
+                    Y = st + MaxSeriesStroke - st,
+                    Open = 5,
+                    Close = (float)LegendShapeSize - 5,
+                    Low = (float)LegendShapeSize,
+                    Width = (float)LegendShapeSize
+                };
+                strokeClone.ZIndex = 1;
+                context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
+            }
 
             //if (Fill is not null)
             //{
             //    var fillClone = Fill.CloneTask();
-            //    var visual = new TVisual { X = sh, Y = sh, Height = (float)LegendShapeSize, Width = (float)LegendShapeSize };
+            //    var visual = new TVisual { X = sh + o, Y = sh + o, Height = (float)LegendShapeSize, Width = (float)LegendShapeSize };
             //    context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(fillClone, visual));
             //}
 
-            context.Width = w;
-            context.Height = w;
+            context.Width = w + MaxSeriesStroke * 2;
+            context.Height = w + MaxSeriesStroke *2;
 
-            canvaSchedule = context;
-
-            OnPropertyChanged(nameof(CanvasSchedule));
+            CanvasSchedule = context;
         }
     }
 }

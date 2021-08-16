@@ -72,6 +72,11 @@ namespace LiveChartsCore
         protected DataProvider<TModel, TDrawingContext>? dataProvider;
 
         /// <summary>
+        /// The max series stroke.
+        /// </summary>
+        protected const float MaxSeriesStroke = 5f;
+
+        /// <summary>
         /// The ever fetched
         /// </summary>
         protected readonly HashSet<ChartPoint> everFetched = new();
