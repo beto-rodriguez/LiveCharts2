@@ -34,10 +34,11 @@ namespace ViewModelsSamples.General.MultiThreading
 
             Sync = new object();
 
-            _delay = 1; // add a new point every ms
+            _delay = 1;
+            var readTasks = 1;
 
-            // create 10 parallel tasks that will add a point every [_delay] milliseconds
-            for (var i = 0; i < 1; i++)
+            // create {readTasks} parallel tasks that will add a point every {_delay} milliseconds
+            for (var i = 0; i < readTasks; i++)
             {
                 _ = Task.Run(ReadData);
             }

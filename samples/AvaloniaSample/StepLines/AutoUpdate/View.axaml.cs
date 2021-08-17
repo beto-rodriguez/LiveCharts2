@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using System.Threading.Tasks;
-using ViewModelsSamples.Lines.AutoUpdate;
+using ViewModelsSamples.StepLines.AutoUpdate;
 
 namespace AvaloniaSample.StepLines.AutoUpdate
 {
