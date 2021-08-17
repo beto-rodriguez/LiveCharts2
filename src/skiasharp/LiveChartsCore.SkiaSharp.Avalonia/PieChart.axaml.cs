@@ -40,7 +40,6 @@ using A = Avalonia;
 using Avalonia.Input;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
-using System.Threading.Tasks;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia
 {
@@ -619,7 +618,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         void IChartView.InvokeOnUIThread(Action action)
         {
-            Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Normal).GetAwaiter().GetResult();
+            _ = Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Normal);//.GetAwaiter().GetResult();
         }
 
         /// <inheritdoc cref="IChartView.SyncAction(Action)"/>

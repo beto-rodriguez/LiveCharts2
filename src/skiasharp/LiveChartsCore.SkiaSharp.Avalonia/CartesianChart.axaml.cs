@@ -691,7 +691,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         void IChartView.InvokeOnUIThread(Action action)
         {
-            Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Normal).GetAwaiter().GetResult();
+            _ = Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Normal);//.GetAwaiter().GetResult();
         }
 
         /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
