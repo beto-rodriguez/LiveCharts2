@@ -83,21 +83,11 @@ namespace LiveChartsCore.Kernel
         {
             var index = point.SecondaryValue;
 
-            double start;
-
-            if (seriesStackPosition == 0)
-            {
-                start = 0;
-            }
-            else
-            {
-                var c = _stack[seriesStackPosition - 1];
-                if (c.Count - 1 < index)
-                    throw new IndexOutOfRangeException(
-                        $"The {nameof(ISeries.Values)} property of all the stacked series of the same kind must have the same length. " +
-                        $"Use '0' or 'double.NaN' when you need to skip a point.");
-                start = c[index].End;
-            }
+            var start = seriesStackPosition == 0
+                ? 0
+                : _stack[seriesStackPosition - 1].TryGetValue(index, out var activeStack)
+                    ? activeStack.End
+                    : 0;
 
             var value = point.PrimaryValue;
 
