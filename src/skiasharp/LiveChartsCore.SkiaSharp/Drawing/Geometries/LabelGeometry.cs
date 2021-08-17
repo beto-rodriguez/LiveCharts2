@@ -74,7 +74,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
             paint.TextSize = TextSize;
-            context.Canvas.DrawText(Text ?? "", GetPosition(context, paint), paint);
+            context.Canvas.DrawText(Text ?? "", new SKPoint(X, Y), paint);
         }
 
         /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
@@ -93,11 +93,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 
             _ = p.MeasureText(Text, ref bounds);
             return new SizeF(bounds.Size.Width + Padding.Left + Padding.Right, bounds.Size.Height + Padding.Top + Padding.Bottom);
-        }
-
-        protected override SKPoint GetPosition(SkiaSharpDrawingContext context, SKPaint paint)
-        {
-            return new SKPoint(X, Y);
         }
 
         /// <inheritdoc cref="Geometry.ApplyCustomGeometryTransform(SkiaSharpDrawingContext)" />

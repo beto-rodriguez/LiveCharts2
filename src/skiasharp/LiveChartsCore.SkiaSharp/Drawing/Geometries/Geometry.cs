@@ -173,7 +173,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 
                 var m = OnMeasure(context.PaintTask);
                 var o = TransformOrigin;
-                var p = GetPosition(context, context.Paint);
+                var p = new SKPoint(X, Y);
 
                 var xo = m.Width * o.X;
                 var yo = m.Height * o.Y;
@@ -296,17 +296,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <param name="paintTaks">The paint task.</param>
         /// <returns>the size of the geometry</returns>
         protected abstract SizeF OnMeasure(Paint paintTaks);
-
-        /// <summary>
-        /// Gets the position of the geometry from the top left corner of the view.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="paint">The paint.</param>
-        /// <returns>the position.</returns>
-        protected virtual SKPoint GetPosition(SkiaSharpDrawingContext context, SKPaint paint)
-        {
-            return new SKPoint(X, Y);
-        }
 
         /// <summary>
         /// Gets the highlitable geometry.
