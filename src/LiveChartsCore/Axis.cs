@@ -77,6 +77,7 @@ namespace LiveChartsCore
         private bool _showSeparatorLines = true;
         private bool _isVisible = true;
         private bool _isInverted;
+        private bool _forceStepToMin;
 
         #endregion
 
@@ -117,6 +118,9 @@ namespace LiveChartsCore
 
         /// <inheritdoc cref="IAxis.MinStep"/>
         public double MinStep { get => _minStep; set { _minStep = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IAxis.ForceStepToMin"/>
+        public bool ForceStepToMin { get => _forceStepToMin; set { _forceStepToMin = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IAxis.MinLimit"/>
         public double? MinLimit { get => _minLimit; set { _minLimit = value; OnPropertyChanged(); } }
@@ -223,6 +227,7 @@ namespace LiveChartsCore
 
             var s = axisTick.Value;
             if (s < _minStep) s = _minStep;
+            if (_forceStepToMin) s = _minStep;
 
             if (NamePaint is not null)
             {

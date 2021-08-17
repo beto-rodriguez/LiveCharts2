@@ -127,13 +127,21 @@ namespace LiveChartsCore.Kernel.Sketches
 
         /// <summary>
         /// Gets or sets the minimum step, the step defines the interval between every separator in the axis,
-        /// LiveCharts will calculate it automatically based on the chart data and the chart size size, if the calculated step is less than the <see cref="MinStep"/> 
-        /// then <see cref="MinStep"/> will be used as the axis step, default is 0.
+        /// LiveCharts will calculate it automatically based on the chart data and the chart size size, if the calculated step is
+        /// less than the <see cref="MinStep"/> then <see cref="MinStep"/> will be used as the axis step, default is 0.
         /// </summary>
         /// <value>
         /// The step.
         /// </value>
         double MinStep { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether the axis should use the <see cref="MinStep"/> as the actual step of the axis, if true, the library
+        /// will not calculate the step of the axis automatically, instead it will use the value in the <see cref="MinStep"/> property.
+        /// Be careful when setting this property to true, it might cause performance issues if the step is too small for the current
+        /// data in the chart. Default value is false.
+        /// </summary>
+        bool ForceStepToMin { get; set; }
 
         /// <summary>
         /// Gets or sets the unit with, it means the width of every point (if the series requires it) in the chart values scale, this value
