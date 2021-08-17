@@ -326,23 +326,27 @@ namespace LiveChartsCore
                     {
                         SecondaryBounds = new Bounds
                         {
-                            Max = baseBounds.SecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth + ts,
-                            Min = baseBounds.SecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth - ts
+                            Max = baseBounds.SecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth,
+                            Min = baseBounds.SecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth,
+                            PaddingMax = ts,
+                            PaddingMin = ts
                         },
                         PrimaryBounds = new Bounds
                         {
-                            Max = baseBounds.PrimaryBounds.Max + tp,
-                            Min = baseBounds.PrimaryBounds.Min - tp
+                            Max = baseBounds.PrimaryBounds.Max,
+                            Min = baseBounds.PrimaryBounds.Min,
+                            PaddingMax = tp,
+                            PaddingMin = tp
                         },
                         VisibleSecondaryBounds = new Bounds
                         {
-                            Max = baseBounds.VisibleSecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth + ts,
-                            Min = baseBounds.VisibleSecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth - ts
+                            Max = baseBounds.VisibleSecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth,
+                            Min = baseBounds.VisibleSecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth
                         },
                         VisiblePrimaryBounds = new Bounds
                         {
-                            Max = baseBounds.VisiblePrimaryBounds.Max + tp,
-                            Min = baseBounds.VisiblePrimaryBounds.Min - tp
+                            Max = baseBounds.VisiblePrimaryBounds.Max,
+                            Min = baseBounds.VisiblePrimaryBounds.Min
                         },
                         MinDeltaPrimary = baseBounds.MinDeltaPrimary,
                         MinDeltaSecondary = baseBounds.MinDeltaSecondary

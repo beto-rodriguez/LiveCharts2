@@ -462,10 +462,13 @@ namespace LiveChartsCore
 
                 secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.Max);
                 secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.Min);
+
                 secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.Max);
                 secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.Min);
+
                 primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.Max);
                 primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.Min);
+
                 primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.Max);
                 primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.Min);
 
@@ -473,6 +476,20 @@ namespace LiveChartsCore
                     primaryAxis.DataBounds.MinDelta = seriesBounds.MinDeltaPrimary;
                 if (secondaryAxis.DataBounds.MinDelta < seriesBounds.MinDeltaSecondary)
                     secondaryAxis.DataBounds.MinDelta = seriesBounds.MinDeltaSecondary;
+
+                if (primaryAxis.DataBounds.RequestedGeometrySize < seriesBounds.PrimaryBounds.RequestedGeometrySize)
+                    primaryAxis.DataBounds.RequestedGeometrySize = seriesBounds.PrimaryBounds.RequestedGeometrySize;
+                if (secondaryAxis.DataBounds.RequestedGeometrySize < seriesBounds.SecondaryBounds.RequestedGeometrySize)
+                    secondaryAxis.DataBounds.RequestedGeometrySize = seriesBounds.SecondaryBounds.RequestedGeometrySize;
+
+                if (primaryAxis.DataBounds.PaddingMin < seriesBounds.PrimaryBounds.PaddingMin)
+                    primaryAxis.DataBounds.PaddingMin = seriesBounds.PrimaryBounds.PaddingMin;
+                if (secondaryAxis.DataBounds.PaddingMin < seriesBounds.SecondaryBounds.PaddingMin)
+                    secondaryAxis.DataBounds.PaddingMin = seriesBounds.SecondaryBounds.PaddingMin;
+                if (primaryAxis.DataBounds.PaddingMax < seriesBounds.PrimaryBounds.PaddingMax)
+                    primaryAxis.DataBounds.PaddingMax = seriesBounds.PrimaryBounds.PaddingMax;
+                if (secondaryAxis.DataBounds.PaddingMax < seriesBounds.SecondaryBounds.PaddingMax)
+                    secondaryAxis.DataBounds.PaddingMax = seriesBounds.SecondaryBounds.PaddingMax;
 
                 series.IsNotifyingChanges = true;
             }
@@ -628,6 +645,32 @@ namespace LiveChartsCore
                     var c = axis.DataBounds.Min * 0.3;
                     axis.DataBounds.Min = axis.DataBounds.Min - c;
                     axis.DataBounds.Max = axis.DataBounds.Max + c;
+                }
+
+                // apply padding
+                if (axis.MinLimit is null)
+                {
+                    var s = new Scaler(DrawMarginLocation, DrawMarginSize, axis);
+                    // correction by geometry size
+                    var p = Math.Abs(s.ToChartValues(axis.DataBounds.RequestedGeometrySize) - s.ToChartValues(0));
+                    if (axis.DataBounds.PaddingMin > p) p = axis.DataBounds.PaddingMin;
+                    axis.IsNotifyingChanges = false;
+                    axis.DataBounds.Min = axis.DataBounds.Min - p;
+                    axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - p;
+                    axis.IsNotifyingChanges = true;
+                }
+
+                // apply padding
+                if (axis.MaxLimit is null)
+                {
+                    var s = new Scaler(DrawMarginLocation, DrawMarginSize, axis);
+                    // correction by geometry size
+                    var p = Math.Abs(s.ToChartValues(axis.DataBounds.RequestedGeometrySize) - s.ToChartValues(0));
+                    if (axis.DataBounds.PaddingMax > p) p = axis.DataBounds.PaddingMax;
+                    axis.IsNotifyingChanges = false;
+                    axis.DataBounds.Max = axis.DataBounds.Max + p;
+                    axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + p;
+                    axis.IsNotifyingChanges = true;
                 }
 
                 _ = _everMeasuredAxes.Add(axis);

@@ -51,6 +51,21 @@ namespace LiveChartsCore.Measure
         public double Min { get; set; } = float.MaxValue;
 
         /// <summary>
+        /// Gets the padding, the distance from the edge to the first point in the series.
+        /// </summary>
+        public double PaddingMax { get; internal set; } = 0;
+
+        /// <summary>
+        /// Gets the padding, the distance from the edge to the last point in the series.
+        /// </summary>
+        public double PaddingMin { get; internal set; } = 0;
+
+        /// <summary>
+        /// Gets the requested geometry size.
+        /// </summary>
+        public double RequestedGeometrySize { get; internal set; } = 0;
+
+        /// <summary>
         /// Gets the delta, the absolute range in the axis.
         /// </summary>
         /// <value>

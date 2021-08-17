@@ -254,13 +254,17 @@ namespace LiveChartsCore
                     {
                         SecondaryBounds = new Bounds
                         {
-                            Max = baseBounds.SecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth + ts,
-                            Min = baseBounds.SecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth - ts
+                            Max = baseBounds.SecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth,
+                            Min = baseBounds.SecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth,
+                            PaddingMax = ts,
+                            PaddingMin = ts
                         },
                         PrimaryBounds = new Bounds
                         {
                             Max = baseBounds.PrimaryBounds.Max + tp,
-                            Min = baseBounds.PrimaryBounds.Min < 0 ? baseBounds.PrimaryBounds.Min - tp : 0
+                            Min = baseBounds.PrimaryBounds.Min < 0 ? baseBounds.PrimaryBounds.Min : 0,
+                            PaddingMax = tp,
+                            PaddingMin = baseBounds.PrimaryBounds.Min < 0 ? tp : 0,
                         },
                         VisibleSecondaryBounds = new Bounds
                         {
