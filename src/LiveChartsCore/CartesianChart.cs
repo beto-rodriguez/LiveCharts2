@@ -446,6 +446,7 @@ namespace LiveChartsCore
             }
 
             // get seriesBounds
+            SetDrawMargin(controlSize, new Margin());
             foreach (var series in Series)
             {
                 series.IsNotifyingChanges = false;

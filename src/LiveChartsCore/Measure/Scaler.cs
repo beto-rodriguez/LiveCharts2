@@ -41,9 +41,10 @@ namespace LiveChartsCore.Measure
         /// <param name="drawMarginSize">Size of the draw margin.</param>
         /// <param name="axis">The axis.</param>
         /// <param name="usePreviousScale">Indicates if the scaler should be built based on the previous known data.</param>
+        /// <param name="bounds">Indicates the bounds to use.</param>
         /// <exception cref="Exception">The axis is not ready to be scaled.</exception>
         public Scaler(
-            PointF drawMagrinLocation, SizeF drawMarginSize, IAxis axis, bool usePreviousScale = false)
+            PointF drawMagrinLocation, SizeF drawMarginSize, IAxis axis, bool usePreviousScale = false, Bounds? bounds = null)
         {
             if (axis.Orientation == AxisOrientation.Unknown) throw new Exception("The axis is not ready to be scaled.");
 
@@ -53,6 +54,12 @@ namespace LiveChartsCore.Measure
             var actualVisibleBounds = usePreviousScale ? axis.PreviousVisibleDataBounds : axis.VisibleDataBounds;
             var maxLimit = usePreviousScale ? axis.PreviousMaxLimit : axis.MaxLimit;
             var minLimit = usePreviousScale ? axis.PreviousMinLimit : axis.MinLimit;
+
+            if (bounds != null)
+            {
+                actualBounds = bounds;
+                actualVisibleBounds = bounds;
+            }
 
             if (actualBounds is null || actualVisibleBounds is null) throw new Exception("bounds not found");
 

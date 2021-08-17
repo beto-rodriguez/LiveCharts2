@@ -462,6 +462,22 @@ namespace LiveChartsCore
                 tp = 0.1 * mp * DataPadding.Y;
             }
 
+            // the best we can do at this point without affecting performance is to estimate the possible final size of
+            // the draw margin.
+            var drawMarginLocation = new PointF(chart.DrawMarginLocation.X * 0.1f, chart.DrawMarginLocation.Y * 0.1f);
+            var drawMarginSize = new SizeF(chart.DrawMarginSize.Width * 0.9f, chart.DrawMarginSize.Height * 0.9f);
+
+            var st = Stroke?.StrokeThickness ?? 0;
+            var ss = new Scaler(
+                drawMarginLocation, drawMarginSize, secondaryAxis, false, baseSeriesBounds.Bounds.SecondaryBounds);
+            var sgr = ss.ToChartValues(GeometrySize + st) - ss.ToChartValues(0);
+            if (sgr > ts) ts = sgr;
+
+            var ps = new Scaler(
+                drawMarginLocation, drawMarginSize, primaryAxis, false, baseSeriesBounds.Bounds.PrimaryBounds);
+            var pgr = ps.ToChartValues(0) - ps.ToChartValues(GeometrySize + st);
+            if (pgr > tp) tp = pgr;
+
             return
                 new SeriesBounds(
                     new DimensionalBounds
