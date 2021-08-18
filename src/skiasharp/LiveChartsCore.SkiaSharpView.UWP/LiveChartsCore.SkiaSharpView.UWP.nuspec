@@ -14,7 +14,7 @@
     <copyright>BetoRodriguez</copyright>
     <tags>livechart chart charting plot plotting data</tags>
     <dependencies>
-    <dependency id="LiveChartsCore.SkiaSharpView" version="2.0.0-beta.50" />
+    <dependency id="LiveChartsCore.SkiaSharpView" version="2.0.0-beta.40" />
 </dependencies>
   </metadata>
 

@@ -508,7 +508,7 @@ namespace LiveChartsCore
                          var points = FindPointsNearTo(_pointerPosition).ToArray();
                          tooltip.Show(points, this);
 
-                         //canvas.Invalidate();
+                         canvas.Invalidate();
                      }
                  }));
         }
