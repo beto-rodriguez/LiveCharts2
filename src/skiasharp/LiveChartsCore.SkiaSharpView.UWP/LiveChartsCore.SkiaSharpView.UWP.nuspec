@@ -13,6 +13,9 @@
     <releaseNotes>https://github.com/beto-rodriguez/LiveCharts2/releases</releaseNotes>
     <copyright>BetoRodriguez</copyright>
     <tags>livechart chart charting plot plotting data</tags>
+    <dependencies>
+    <dependency id="LiveChartsCore.SkiaSharpView" version="2.0.0-beta.50" />
+</dependencies>
   </metadata>
 
   <files>
