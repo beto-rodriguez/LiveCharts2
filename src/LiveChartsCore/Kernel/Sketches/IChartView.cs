@@ -151,22 +151,20 @@ namespace LiveChartsCore.Kernel.Sketches
     public interface IChartView<TDrawingContext> : IChartView
         where TDrawingContext : DrawingContext
     {
-        // events... UWP do not support custom event handlers.
+        /// <summary>
+        /// Occurs before the chart is measured, this is the first step before the chart updates.
+        /// </summary>
+        event ChartEventHandler<TDrawingContext>? Measuring;
 
-        ///// <summary>
-        ///// Occurs before the chart is measured, this is the first step before the chart updates.
-        ///// </summary>
-        //event ChartEventHandler<TDrawingContext>? Measuring;
+        /// <summary>
+        /// Occurs when the chart started an update, just when the drawing loop started.
+        /// </summary>
+        event ChartEventHandler<TDrawingContext>? UpdateStarted;
 
-        ///// <summary>
-        ///// Occurs when the chart started an update, just when the drawing loop started.
-        ///// </summary>
-        //event ChartEventHandler<TDrawingContext>? UpdateStarted;
-
-        ///// <summary>
-        ///// Occurs when a chart update finished, just when the drawing loop finished.
-        ///// </summary>
-        //event ChartEventHandler<TDrawingContext>? UpdateFinished;
+        /// <summary>
+        /// Occurs when a chart update finished, just when the drawing loop finished.
+        /// </summary>
+        event ChartEventHandler<TDrawingContext>? UpdateFinished;
 
         /// <summary>
         /// Gets or sets a value indicating whether the automatic updates are enabled.
