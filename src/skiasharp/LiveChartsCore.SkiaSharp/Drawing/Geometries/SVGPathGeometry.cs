@@ -68,10 +68,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         {
             if (_svgPath is null)
                 throw new System.NullReferenceException(
-                    $"{nameof(SVG)} property is null and there is not a defined path to draw.");
-
-            using var tp = new SKPaint { Color = SKColors.LightGray };
-            context.Canvas.DrawRect(X, Y, Width, Height, tp);
+                    $"{nameof(SVG)} property is null and there is not a defined path to draw."); 
 
             _ = context.Canvas.Save();
 
