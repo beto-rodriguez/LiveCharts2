@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
@@ -7,7 +7,7 @@
     <RootNamespace>LiveChartsCore.SkiaSharpView.WinUI</RootNamespace>
     <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
-    <Version>2.0.0-beta.40</Version>
+    <Version>2.0.0-beta.50</Version>
     <!-- it seems that images are bugged for now. -->
     <!--<PackageIcon>icon.png</PackageIcon>-->
     <Description>Simple, flexible, interactive and powerful data visualization for WinUI 3.</Description>

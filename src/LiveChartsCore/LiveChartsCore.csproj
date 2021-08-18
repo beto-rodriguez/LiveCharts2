@@ -6,7 +6,7 @@
     <TargetFrameworks>net462;netstandard2.0;netcoreapp2.0;</TargetFrameworks>
     <AssemblyName>LiveChartsCore</AssemblyName>
     <RootNamespace>LiveChartsCore</RootNamespace>
-    <Version>2.0.0-beta.40</Version>
+    <Version>2.0.0-beta.50</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for .Net, this is the core package probably you need another package also unless you are building your own backed.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
