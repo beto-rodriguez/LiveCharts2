@@ -70,6 +70,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
                 throw new System.NullReferenceException(
                     $"{nameof(SVG)} property is null and there is not a defined path to draw.");
 
+            using var tp = new SKPaint { Color = SKColors.LightGray };
+            context.Canvas.DrawRect(X, Y, Width, Height, tp);
+
             _ = context.Canvas.Save();
 
             var canvas = context.Canvas;
@@ -77,6 +80,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 
             if (FitToSize)
             {
+                // fit to both axis
                 canvas.Translate(X + Width / 2f, Y + Height / 2f);
                 canvas.Scale(
                     Width / (bounds.Width + paint.StrokeWidth),
@@ -85,18 +89,19 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             }
             else
             {
-                var minB = bounds.Width < bounds.Height ? bounds.Width : bounds.Height;
-                var min = Width < Height ? Width : Height;
-                var max = Width < Height ? Height : Width;
+                // fit to the max dimension
+                // preserve the corresponding scale in the min axis.
+                var maxB = bounds.Width < bounds.Height ? bounds.Height : bounds.Width;
 
-                canvas.Translate(X + Width / 2f + (max - Width) / 2f, Y + Height / 2f + (max - Height) / 2f);
+                canvas.Translate(X + Width / 2f, Y + Height / 2f);
                 canvas.Scale(
-                    min / (minB + paint.StrokeWidth),
-                    min / (minB + paint.StrokeWidth));
+                    Width / (maxB + paint.StrokeWidth),
+                    Height / (maxB + paint.StrokeWidth));
                 canvas.Translate(-bounds.MidX, -bounds.MidY);
             }
 
             canvas.DrawPath(_svgPath, paint);
+
 
             context.Canvas.Restore();
         }
