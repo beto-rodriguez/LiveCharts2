@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>LiveChartsCore.SkiaSharpView.UWP</id>
-    <version>2.0.0-beta.40</version>
+    <version>2.0.0-beta.52</version>
     <title>LiveChartsCore.SkiaSharpView.UWP</title>
     <authors>BetoRodriguez</authors>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -29,14 +29,18 @@
       <!-- WINMDs and resources -->
       <file src="bin\ARM\Debug\Microsoft.UI.Xaml.Markup.winmd" target="runtimes\win10-arm"/>
       <file src="bin\ARM\Debug\LiveChartsCore.SkiaSharpView.UWP.pri" target="runtimes\win10-arm"/>
+      <file src="bin\ARM\Debug\LiveChartsCore.SkiaSharpView.UWP.dll" target="runtimes\win10-arm"/>
 
       <file src="bin\ARM64\Debug\Microsoft.UI.Xaml.Markup.winmd" target="runtimes\win10-arm64"/>
       <file src="bin\ARM64\Debug\LiveChartsCore.SkiaSharpView.UWP.pri" target="runtimes\win10-arm64"/>
+      <file src="bin\ARM64\Debug\LiveChartsCore.SkiaSharpView.UWP.dll" target="runtimes\win10-arm64"/>
 
       <file src="bin\x64\Debug\Microsoft.UI.Xaml.Markup.winmd" target="runtimes\win10-x64"/>
       <file src="bin\x64\Debug\LiveChartsCore.SkiaSharpView.UWP.pri" target="runtimes\win10-x64"/>
+      <file src="bin\x64\Debug\LiveChartsCore.SkiaSharpView.UWP.dll" target="runtimes\win10-x64"/>
 
       <file src="bin\x86\Debug\Microsoft.UI.Xaml.Markup.winmd" target="runtimes\win10-x86"/>
       <file src="bin\x86\Debug\LiveChartsCore.SkiaSharpView.UWP.pri" target="runtimes\win10-x86"/>
+      <file src="bin\x86\Debug\LiveChartsCore.SkiaSharpView.UWP.dll" target="runtimes\win10-x86"/>
     </files>
 </package>

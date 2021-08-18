@@ -68,7 +68,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         {
             if (_svgPath is null)
                 throw new System.NullReferenceException(
-                    $"{nameof(SVG)} property is null and there is not a defined path to draw."); 
+                    $"{nameof(SVG)} property is null and there is not a defined path to draw.");
 
             _ = context.Canvas.Save();
 
@@ -98,7 +98,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             }
 
             canvas.DrawPath(_svgPath, paint);
-
 
             context.Canvas.Restore();
         }
