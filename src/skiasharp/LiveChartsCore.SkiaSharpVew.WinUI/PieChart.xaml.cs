@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
@@ -35,8 +34,6 @@ using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
 using Windows.UI.Text;
 
 namespace LiveChartsCore.SkiaSharpView.WinUI
@@ -314,6 +311,9 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         Grid IWinUIChart.LayoutGrid => grid;
         FrameworkElement IWinUIChart.Canvas => motionCanvas;
         FrameworkElement IWinUIChart.Legend => legend;
+
+        /// <inheritdoc cref="IChartView.DesignerMode" />
+        public bool DesignerMode => Windows.ApplicationModel.DesignMode.DesignModeEnabled;
 
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");

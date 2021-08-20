@@ -30,7 +30,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms
@@ -136,6 +135,9 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         #region properties
 
+        /// <inheritdoc cref="IChartView.DesignerMode" />
+        public bool DesignerMode => LicenseManager.UsageMode == LicenseUsageMode.Designtime;
+
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
 
@@ -214,6 +216,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
 
         /// <inheritdoc cref="IChartView.LegendPosition" />
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public TooltipPosition TooltipPosition { get => _tooltipPosition; set { _tooltipPosition = value; OnPropertyChanged(); } }
 
         /// <summary>

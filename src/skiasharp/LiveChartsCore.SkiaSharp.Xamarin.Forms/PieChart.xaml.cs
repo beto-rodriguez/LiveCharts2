@@ -32,7 +32,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
-using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -302,6 +301,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         #endregion
 
         #region properties
+
+        /// <inheritdoc cref="IChartView.DesignerMode" />
+        public bool DesignerMode => DesignMode.IsDesignModeEnabled;
 
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => core ?? throw new Exception("Core not set yet.");

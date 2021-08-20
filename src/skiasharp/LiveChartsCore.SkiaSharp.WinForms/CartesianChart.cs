@@ -160,6 +160,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         public double ZoomingSpeed { get; set; } = LiveCharts.CurrentSettings.DefaultZoomSpeed;
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy" />
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public TooltipFindingStrategy TooltipFindingStrategy { get => _tooltipFindingStrategy; set { _tooltipFindingStrategy = value; OnPropertyChanged(); } }
 
         /// <summary>

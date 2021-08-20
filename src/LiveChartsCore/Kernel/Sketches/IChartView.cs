@@ -26,7 +26,6 @@ using LiveChartsCore.Measure;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Threading.Tasks;
 
 namespace LiveChartsCore.Kernel.Sketches
 {
@@ -42,6 +41,11 @@ namespace LiveChartsCore.Kernel.Sketches
         /// The core.
         /// </value>
         IChart CoreChart { get; }
+
+        /// <summary>
+        /// Gets whether the control is in designer mode.
+        /// </summary>
+        bool DesignerMode { get; }
 
         /// <summary>
         /// Sets the back color of the control.

@@ -323,6 +323,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         #region properties
 
+        /// <inheritdoc cref="IChartView.DesignerMode" />
+        public bool DesignerMode => Design.IsDesignMode;
+
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
 

@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
@@ -75,6 +74,10 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
             DrawMarginFrame = view.DrawMarginFrame;
             PointStates = view.PointStates;
         }
+
+
+        /// <inheritdoc cref="IChartView.DesignerMode" />
+        public bool DesignerMode => false;
 
         /// <summary>
         /// Gets or sets the background.

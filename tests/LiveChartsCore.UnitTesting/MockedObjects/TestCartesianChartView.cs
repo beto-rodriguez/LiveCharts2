@@ -28,6 +28,8 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
                 this, LiveChartsSkiaSharp.DefaultPlatformBuilder, CoreCanvas);
         }
 
+        public bool DesignerMode => false;
+
         IChart IChartView.CoreChart => Core;
 
         public CartesianChart<SkiaSharpDrawingContext> Core { get; }

@@ -35,7 +35,6 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Drawing;
 using Windows.UI.Xaml.Input;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 
@@ -313,6 +312,9 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         Grid IUwpChart.LayoutGrid => grid;
         FrameworkElement IUwpChart.Canvas => motionCanvas;
         FrameworkElement IUwpChart.Legend => legend;
+
+        /// <inheritdoc cref="IChartView.DesignerMode" />
+        public bool DesignerMode => Windows.ApplicationModel.DesignMode.DesignModeEnabled;
 
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");

@@ -377,6 +377,9 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         FrameworkElement IWinUIChart.Canvas => motionCanvas;
         FrameworkElement IWinUIChart.Legend => legend;
 
+        /// <inheritdoc cref="IChartView.DesignerMode" />
+        public bool DesignerMode => Windows.ApplicationModel.DesignMode.DesignModeEnabled;
+
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
 

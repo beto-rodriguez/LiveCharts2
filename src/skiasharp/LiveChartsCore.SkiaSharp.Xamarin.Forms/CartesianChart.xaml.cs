@@ -358,6 +358,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         #region properties
 
+        /// <inheritdoc cref="IChartView.DesignerMode" />
+        public bool DesignerMode => DesignMode.IsDesignModeEnabled;
+
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
 

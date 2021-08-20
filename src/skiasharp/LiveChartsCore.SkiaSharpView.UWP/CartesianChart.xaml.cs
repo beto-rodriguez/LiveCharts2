@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
@@ -380,6 +379,9 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         Grid IUwpChart.LayoutGrid => grid;
         FrameworkElement IUwpChart.Canvas => motionCanvas;
         FrameworkElement IUwpChart.Legend => legend;
+
+        /// <inheritdoc cref="IChartView.DesignerMode" />
+        public bool DesignerMode => Windows.ApplicationModel.DesignMode.DesignModeEnabled;
 
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");

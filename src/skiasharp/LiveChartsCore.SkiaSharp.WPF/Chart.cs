@@ -35,7 +35,7 @@ using FontFamily = System.Windows.Media.FontFamily;
 using FontStyle = System.Windows.FontStyle;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace LiveChartsCore.SkiaSharpView.WPF
 {
@@ -288,6 +288,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         #endregion
 
         #region properties
+
+        /// <inheritdoc cref="IChartView.DesignerMode" />
+        public bool DesignerMode => DesignerProperties.GetIsInDesignMode(this);
 
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
