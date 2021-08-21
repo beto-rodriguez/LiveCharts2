@@ -1,4 +1,4 @@
-using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -31,7 +31,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Mac
         private IEnumerable<IAxis> _yAxis = new List<IAxis>() { new Axis() };
 
         private CGRect _actualBounds;
-        private nfloat _currentScaleFactor = 1;
         private LegendPosition _legendPosition = LiveCharts.CurrentSettings.DefaultLegendPosition;
         private LegendOrientation _legendOrientation = LiveCharts.CurrentSettings.DefaultLegendOrientation;
         private TooltipPosition _tooltipPosition = LiveCharts.CurrentSettings.DefaultTooltipPosition;
@@ -242,8 +241,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Mac
 
         public SizeF ControlSize => new()
         {
-            Height = (float)(_actualBounds.Height * _currentScaleFactor),
-            Width = (float)(_actualBounds.Width * _currentScaleFactor)
+            Height = (float)_actualBounds.Height,
+            Width = (float)_actualBounds.Width
         };
 
         protected Chart<SkiaSharpDrawingContext>? Core { get; set; }
@@ -251,8 +250,11 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Mac
         public override void ViewDidMoveToWindow()
         {
             base.ViewDidMoveToWindow();
-            Window.DidResize -= OnWindowResized;
-            Window.DidResize += OnWindowResized;
+            if (Window is not null)
+            {
+                Window.DidResize -= OnWindowResized;
+                Window.DidResize += OnWindowResized;
+            }
         }
 
         public override void DidAddSubview(NSView? subview)
@@ -263,7 +265,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Mac
             {
                 _motionCanvas = c;
                 _actualBounds = Bounds;
-                _currentScaleFactor = NSScreen.MainScreen.BackingScaleFactor;
 
                 if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 

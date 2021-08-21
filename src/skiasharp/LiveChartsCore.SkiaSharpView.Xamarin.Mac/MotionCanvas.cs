@@ -67,6 +67,12 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Mac
 
         private void CanvasView_PaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
+            var canvas = e.Surface.Canvas;
+            if (Window is not null)
+            {
+                canvas.Scale((float)Window.Screen.BackingScaleFactor);
+            }
+
             CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
         }
 
