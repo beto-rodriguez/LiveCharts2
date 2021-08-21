@@ -44,6 +44,7 @@ namespace LiveChartsCore
         private readonly HashSet<ISeries> _everMeasuredSeries = new();
         private readonly IPieChartView<TDrawingContext> _chartView;
         private int _nextSeries = 0;
+        private IEnumerable<ISeries>? _designerSeries = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PieChart{TDrawingContext}"/> class.
@@ -139,8 +140,6 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IChart.Update(ChartUpdateParams?)" />
         public override void Update(ChartUpdateParams? chartUpdateParams = null)
         {
-            if (View.DesignerMode) return;
-
             chartUpdateParams ??= new ChartUpdateParams();
 
             if (chartUpdateParams.IsAutomaticUpdate && !View.AutoUpdateEnabled) return;
@@ -182,8 +181,11 @@ namespace LiveChartsCore
             viewDrawMargin = _chartView.DrawMargin;
             controlSize = _chartView.ControlSize;
 
-            Series = _chartView.Series
-                .Where(x => x.IsVisible)
+            var actualSeries = View.DesignerMode
+                ? _designerSeries ??= LiveCharts.CurrentSettings.DesignerSeriesGenerator(DesignerKind.Cartesian)
+                : _chartView.Series.Where(x => x.IsVisible);
+
+            Series = actualSeries
                 .Cast<IPieSeries<TDrawingContext>>()
                 .ToArray();
 

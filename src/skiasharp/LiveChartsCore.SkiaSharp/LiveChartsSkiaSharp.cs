@@ -69,7 +69,24 @@ namespace LiveChartsCore.SkiaSharpView
         {
             return settings
                 .HasDataFactory(new DataFactory<SkiaSharpDrawingContext>())
-                .HasAxisProvider(() => new Axis());
+                .HasAxisProvider(() => new Axis())
+                .HasDesigerSeriesProvider(kind =>
+                {
+                    var r = new Random();
+
+                    var v1 = new int[] { r.Next(0, 10), r.Next(0, 10), r.Next(0, 10), r.Next(0, 10) };
+                    var v2 = new int[] { r.Next(0, 10), r.Next(0, 10), r.Next(0, 10), r.Next(0, 10) };
+
+                    if (kind == DesignerKind.Pie) return new ISeries[] { new PieSeries<int> { Values = v1 }, new PieSeries<int> { Values = v2 } };
+
+                    var seed = r.NextDouble();
+
+                    return seed > 0.33
+                        ? (new ISeries[] { new LineSeries<int> { Values = v1 }, new LineSeries<int> { Values = v2 } })
+                        : (seed > 0.66
+                            ? new ISeries[] { new ColumnSeries<int> { Values = v1 }, new ColumnSeries<int> { Values = v2 } }
+                            : new ISeries[] { new ScatterSeries<int> { Values = v1 }, new ScatterSeries<int> { Values = v2 } });
+                });
         }
 
         /// <summary>

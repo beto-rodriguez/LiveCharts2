@@ -30,6 +30,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms
 {
@@ -61,8 +62,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         public CartesianChart(IChartTooltip<SkiaSharpDrawingContext>? tooltip = null, IChartLegend<SkiaSharpDrawingContext>? legend = null)
             : base(tooltip, legend)
         {
-            var s = PointStates;
-
             _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
@@ -93,7 +92,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 _seriesObserver.Dispose(_series);
                 _seriesObserver.Initialize(value);
                 _series = value;
-                core?.Update();
+                OnPropertyChanged();
             }
         }
 
@@ -107,7 +106,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 _xObserver.Dispose(_xAxes);
                 _xObserver.Initialize(value);
                 _xAxes = value;
-                core?.Update();
+                OnPropertyChanged();
             }
         }
 
@@ -121,7 +120,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 _yObserver.Dispose(_yAxes);
                 _yObserver.Initialize(value);
                 _yAxes = value;
-                core?.Update();
+                OnPropertyChanged();
             }
         }
 
@@ -135,7 +134,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 _sectionsObserverer.Dispose(_sections);
                 _sectionsObserverer.Initialize(value);
                 _sections = value;
-                core?.Update();
+                OnPropertyChanged();
             }
         }
 
@@ -147,7 +146,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             set
             {
                 _drawMarginFrame = value;
-                core?.Update();
+                OnPropertyChanged();
             }
         }
 
@@ -169,6 +168,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         protected override void InitializeCore()
         {
             core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore);
+            if (DesignerMode) return;
             core.Update();
         }
 
@@ -182,17 +182,15 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (core is null) return;
-            core.Update();
+            OnPropertyChanged();
         }
 
         private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (core is null) return;
-            core.Update();
+            OnPropertyChanged();
         }
 
-        private void OnMouseWheel(object? sender, System.Windows.Forms.MouseEventArgs e)
+        private void OnMouseWheel(object? sender, MouseEventArgs e)
         {
             if (core is null) throw new Exception("core not found");
             var c = (CartesianChart<SkiaSharpDrawingContext>)core;
@@ -201,12 +199,12 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             Capture = true;
         }
 
-        private void OnMouseDown(object? sender, System.Windows.Forms.MouseEventArgs e)
+        private void OnMouseDown(object? sender, MouseEventArgs e)
         {
             core?.InvokePointerDown(new PointF(e.Location.X, e.Location.Y));
         }
 
-        private void OnMouseUp(object? sender, System.Windows.Forms.MouseEventArgs e)
+        private void OnMouseUp(object? sender, MouseEventArgs e)
         {
             core?.InvokePointerUp(new PointF(e.Location.X, e.Location.Y));
         }

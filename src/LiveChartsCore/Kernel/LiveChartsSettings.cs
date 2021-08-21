@@ -121,6 +121,12 @@ namespace LiveChartsCore.Kernel
             () => throw new NotImplementedException($"{nameof(AxisProvider)} is not defined yet.");
 
         /// <summary>
+        /// Gets the designer series.
+        /// </summary>
+        internal Func<DesignerKind, IEnumerable<ISeries>> DesignerSeriesGenerator { get; set; } =
+            x => throw new NotImplementedException($"{nameof(DefaultAnimationsSpeed)} is not defined yet.");
+
+        /// <summary>
         /// Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a<see cref="ChartPoint"/> instance,
         /// then the <see cref="ChartPoint"/> will be drawn as a point in our chart.
         /// </summary>
@@ -154,6 +160,12 @@ namespace LiveChartsCore.Kernel
         internal LiveChartsSettings HasAxisProvider(Func<IAxis> provider)
         {
             AxisProvider = provider;
+            return this;
+        }
+
+        internal LiveChartsSettings HasDesigerSeriesProvider(Func<DesignerKind, IEnumerable<ISeries>> provider)
+        {
+            DesignerSeriesGenerator = provider;
             return this;
         }
 

@@ -29,7 +29,6 @@ using System.Linq;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Kernel.Sketches;
 using System.Threading;
-using System.Threading.Tasks;
 #if DEBUG
 using System.Diagnostics;
 #endif
@@ -52,6 +51,7 @@ namespace LiveChartsCore
         private double _zoomingSpeed = 0;
         private ZoomAndPanMode _zoomMode;
         private DrawMarginFrame<TDrawingContext>? _previousDrawMarginFrame;
+        private IEnumerable<ISeries>? _designerSeries = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CartesianChart{TDrawingContext}"/> class.
@@ -144,8 +144,6 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IChart.Update(ChartUpdateParams?)" />
         public override void Update(ChartUpdateParams? chartUpdateParams = null)
         {
-            if (View.DesignerMode) return;
-
             chartUpdateParams ??= new ChartUpdateParams();
             if (chartUpdateParams.IsAutomaticUpdate && !View.AutoUpdateEnabled) return;
             if (!chartUpdateParams.Throttling)
@@ -420,8 +418,11 @@ namespace LiveChartsCore
             animationsSpeed = _chartView.AnimationsSpeed;
             easingFunction = _chartView.EasingFunction;
 
-            Series = _chartView.Series
-                .Where(x => x.IsVisible)
+            var actualSeries = View.DesignerMode
+                ? _designerSeries ??= LiveCharts.CurrentSettings.DesignerSeriesGenerator(DesignerKind.Cartesian)
+                : _chartView.Series.Where(x => x.IsVisible);
+
+            Series = actualSeries
                 .Cast<ICartesianSeries<TDrawingContext>>()
                 .ToArray();
 

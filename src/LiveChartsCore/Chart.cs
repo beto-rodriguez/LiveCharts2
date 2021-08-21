@@ -476,16 +476,18 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected virtual Task UpdateThrottlerUnlocked()
         {
-            return Task.Run(() =>
-            {
-                View.InvokeOnUIThread(() =>
+            return View.DesignerMode
+                ? Task.CompletedTask
+                : Task.Run(() =>
                 {
-                    lock (Canvas.Sync)
+                    View.InvokeOnUIThread(() =>
                     {
-                        Measure();
-                    }
+                        lock (Canvas.Sync)
+                        {
+                            Measure();
+                        }
+                    });
                 });
-            });
         }
 
         private Task TooltipThrottlerUnlocked()

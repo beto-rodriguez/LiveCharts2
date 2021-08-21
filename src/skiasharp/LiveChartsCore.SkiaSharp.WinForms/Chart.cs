@@ -328,7 +328,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <returns></returns>
         protected void OnPropertyChanged()
         {
-            if (core is null) return;
+            if (core is null || DesignerMode) return;
             core.Update();
         }
 

@@ -51,6 +51,14 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public PieChart()
         {
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+
+            var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
+            var initializer = stylesBuilder.GetVisualsInitializer();
+            if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
+                throw new Exception("Default colors are not valid");
+            initializer.ApplyStyleToChart(this);
+
             InitializeComponent();
 
             _seriesObserver = new CollectionDeepObserver<ISeries>(
@@ -718,20 +726,10 @@ namespace LiveChartsCore.SkiaSharpView.UWP
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-
-            var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-            var initializer = stylesBuilder.GetVisualsInitializer();
-            if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
-                throw new Exception("Default colors are not valid");
-            initializer.ApplyStyleToChart(this);
-
             var canvas = (MotionCanvas)FindName("motionCanvas");
             _canvas = canvas;
 
             _core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
-            //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
-            //tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
 
             if (SyncContext != null)
                 _canvas.CanvasCore.Sync = SyncContext;
