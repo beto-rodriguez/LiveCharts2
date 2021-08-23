@@ -121,6 +121,15 @@ namespace LiveChartsCore.Kernel
             () => throw new NotImplementedException($"{nameof(AxisProvider)} is not defined yet.");
 
         /// <summary>
+        /// Gets the polar axis provider.
+        /// </summary>
+        /// <value>
+        /// The axis provider.
+        /// </value>
+        internal Func<IPolarAxis> PolarAxisProvider { get; set; } =
+            () => throw new NotImplementedException($"{nameof(AxisProvider)} is not defined yet.");
+
+        /// <summary>
         /// Gets the designer series.
         /// </summary>
         internal Func<DesignerKind, IEnumerable<ISeries>> DesignerSeriesGenerator { get; set; } =

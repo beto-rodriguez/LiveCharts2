@@ -45,8 +45,8 @@ using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia
 {
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}" />
-    public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingContext>, IAvaloniaChart
+    /// <inheritdoc cref="IPolarChartView{TDrawingContext}" />
+    public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>, IAvaloniaChart
     {
         #region fields
 
@@ -67,17 +67,16 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         private MotionCanvas? _avaloniaCanvas;
         private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-        private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
-        private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
-        private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+        private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
+        private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
 
         #endregion
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CartesianChart"/> class.
+        /// Initializes a new instance of the <see cref="PolarChart"/> class.
         /// </summary>
         /// <exception cref="Exception">Default colors are not valid</exception>
-        public CartesianChart()
+        public PolarChart()
         {
             InitializeComponent();
 
@@ -96,214 +95,178 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             InitializeCore();
 
             _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
-                OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _angleObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _radiusObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-            XAxes = new List<ICartesianAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
-            YAxes = new List<ICartesianAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
+            AngleAxes = new List<IPolarAxis>() { LiveCharts.CurrentSettings.PolarAxisProvider() };
+            RadiusAxes = new List<IPolarAxis>() { LiveCharts.CurrentSettings.PolarAxisProvider() };
             Series = new ObservableCollection<ISeries>();
 
-            PointerWheelChanged += CartesianChart_PointerWheelChanged;
-            PointerPressed += CartesianChart_PointerPressed;
-            PointerMoved += CartesianChart_PointerMoved;
+            PointerWheelChanged += PolarChart_PointerWheelChanged;
+            PointerPressed += PolarChart_PointerPressed;
+            PointerMoved += PolarChart_PointerMoved;
 
-            PointerLeave += CartesianChart_PointerLeave;
+            PointerLeave += PolarChart_PointerLeave;
         }
 
         #region avalonia/dependency properties
 
         /// <summary>
-        /// The draw margin property
-        /// </summary>
-        public static readonly AvaloniaProperty<Margin?> DrawMarginProperty =
-           AvaloniaProperty.Register<CartesianChart, Margin?>(nameof(DrawMargin), null, inherits: true);
-
-        /// <summary>
         /// The sync context property.
         /// </summary>
         public static readonly AvaloniaProperty<object> SyncContextProperty =
-           AvaloniaProperty.Register<CartesianChart, object>(nameof(SyncContext), new object(), inherits: true);
+           AvaloniaProperty.Register<PolarChart, object>(nameof(SyncContext), new object(), inherits: true);
 
         /// <summary>
         /// The series property
         /// </summary>
         public static readonly AvaloniaProperty<IEnumerable<ISeries>> SeriesProperty =
-           AvaloniaProperty.Register<CartesianChart, IEnumerable<ISeries>>(nameof(Series), Enumerable.Empty<ISeries>(), inherits: true);
+           AvaloniaProperty.Register<PolarChart, IEnumerable<ISeries>>(nameof(Series), Enumerable.Empty<ISeries>(), inherits: true);
 
         /// <summary>
         /// The x axes property
         /// </summary>
-        public static readonly AvaloniaProperty<IEnumerable<ICartesianAxis>> XAxesProperty =
-            AvaloniaProperty.Register<CartesianChart, IEnumerable<ICartesianAxis>>(nameof(XAxes), Enumerable.Empty<ICartesianAxis>(), inherits: true);
+        public static readonly AvaloniaProperty<IEnumerable<IPolarAxis>> AngleAxesProperty =
+            AvaloniaProperty.Register<PolarChart, IEnumerable<IPolarAxis>>(nameof(AngleAxes), Enumerable.Empty<IPolarAxis>(), inherits: true);
 
         /// <summary>
         /// The y axes property
         /// </summary>
-        public static readonly AvaloniaProperty<IEnumerable<ICartesianAxis>> YAxesProperty =
-            AvaloniaProperty.Register<CartesianChart, IEnumerable<ICartesianAxis>>(nameof(YAxes), Enumerable.Empty<ICartesianAxis>(), inherits: true);
-
-        /// <summary>
-        /// The sections property
-        /// </summary>
-        public static readonly AvaloniaProperty<IEnumerable<Section<SkiaSharpDrawingContext>>> SectionsProperty =
-            AvaloniaProperty.Register<CartesianChart, IEnumerable<Section<SkiaSharpDrawingContext>>>(
-                nameof(Sections), Enumerable.Empty<Section<SkiaSharpDrawingContext>>(), inherits: true);
-
-        /// <summary>
-        /// The draw margin frame property
-        /// </summary>
-        public static readonly AvaloniaProperty<DrawMarginFrame<SkiaSharpDrawingContext>?> DrawMarginFrameProperty =
-            AvaloniaProperty.Register<CartesianChart, DrawMarginFrame<SkiaSharpDrawingContext>?>(
-                nameof(DrawMarginFrame), null, inherits: true);
-
-        /// <summary>
-        /// The zoom mode property
-        /// </summary>
-        public static readonly AvaloniaProperty<ZoomAndPanMode> ZoomModeProperty =
-            AvaloniaProperty.Register<CartesianChart, ZoomAndPanMode>(
-                nameof(ZoomMode), LiveCharts.CurrentSettings.DefaultZoomMode, inherits: true);
-
-        /// <summary>
-        /// The zooming speed property
-        /// </summary>
-        public static readonly AvaloniaProperty<double> ZoomingSpeedProperty =
-            AvaloniaProperty.Register<CartesianChart, double>(
-                nameof(ZoomingSpeed), LiveCharts.CurrentSettings.DefaultZoomSpeed, inherits: true);
+        public static readonly AvaloniaProperty<IEnumerable<IPolarAxis>> RadiusAxesProperty =
+            AvaloniaProperty.Register<PolarChart, IEnumerable<IPolarAxis>>(nameof(RadiusAxes), Enumerable.Empty<IPolarAxis>(), inherits: true);
 
         /// <summary>
         /// The animations speed property
         /// </summary>
         public static readonly AvaloniaProperty<TimeSpan> AnimationsSpeedProperty =
-            AvaloniaProperty.Register<CartesianChart, TimeSpan>(
+            AvaloniaProperty.Register<PolarChart, TimeSpan>(
                 nameof(AnimationsSpeed), LiveCharts.CurrentSettings.DefaultAnimationsSpeed, inherits: true);
 
         /// <summary>
         /// The easing function property
         /// </summary>
         public static readonly AvaloniaProperty<Func<float, float>> EasingFunctionProperty =
-            AvaloniaProperty.Register<CartesianChart, Func<float, float>>(
+            AvaloniaProperty.Register<PolarChart, Func<float, float>>(
                 nameof(AnimationsSpeed), LiveCharts.CurrentSettings.DefaultEasingFunction, inherits: true);
 
         /// <summary>
         /// The tool tip template property
         /// </summary>
         public static readonly AvaloniaProperty<DataTemplate?> TooltipTemplateProperty =
-            AvaloniaProperty.Register<CartesianChart, DataTemplate?>(nameof(TooltipTemplate), null, inherits: true);
+            AvaloniaProperty.Register<PolarChart, DataTemplate?>(nameof(TooltipTemplate), null, inherits: true);
 
         /// <summary>
         /// The tool tip position property
         /// </summary>
         public static readonly AvaloniaProperty<TooltipPosition> TooltipPositionProperty =
-            AvaloniaProperty.Register<CartesianChart, TooltipPosition>(
+            AvaloniaProperty.Register<PolarChart, TooltipPosition>(
                 nameof(TooltipPosition), LiveCharts.CurrentSettings.DefaultTooltipPosition, inherits: true);
 
         /// <summary>
         /// The tool tip finding strategy property
         /// </summary>
         public static readonly AvaloniaProperty<TooltipFindingStrategy> TooltipFindingStrategyProperty =
-            AvaloniaProperty.Register<CartesianChart, TooltipFindingStrategy>(
+            AvaloniaProperty.Register<PolarChart, TooltipFindingStrategy>(
                 nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, inherits: true);
 
         /// <summary>
         /// The tool tip font family property
         /// </summary>
         public static readonly AvaloniaProperty<A.Media.FontFamily> TooltipFontFamilyProperty =
-            AvaloniaProperty.Register<CartesianChart, A.Media.FontFamily>(
+            AvaloniaProperty.Register<PolarChart, A.Media.FontFamily>(
                 nameof(TooltipFontFamily), new A.Media.FontFamily("Arial"), inherits: true);
 
         /// <summary>
         /// The tool tip font size property
         /// </summary>
         public static readonly AvaloniaProperty<double> TooltipFontSizeProperty =
-            AvaloniaProperty.Register<CartesianChart, double>(nameof(TooltipFontSize), 13d, inherits: true);
+            AvaloniaProperty.Register<PolarChart, double>(nameof(TooltipFontSize), 13d, inherits: true);
 
         /// <summary>
         /// The tool tip font weight property
         /// </summary>
         public static readonly AvaloniaProperty<FontWeight> TooltipFontWeightProperty =
-            AvaloniaProperty.Register<CartesianChart, FontWeight>(nameof(TooltipFontWeight), FontWeight.Normal, inherits: true);
+            AvaloniaProperty.Register<PolarChart, FontWeight>(nameof(TooltipFontWeight), FontWeight.Normal, inherits: true);
 
         /// <summary>
         /// The tool tip font style property
         /// </summary>
         public static readonly AvaloniaProperty<A.Media.FontStyle> TooltipFontStyleProperty =
-            AvaloniaProperty.Register<CartesianChart, A.Media.FontStyle>(
+            AvaloniaProperty.Register<PolarChart, A.Media.FontStyle>(
                 nameof(TooltipFontStyle), A.Media.FontStyle.Normal, inherits: true);
 
         /// <summary>
         /// The tool tip text brush property
         /// </summary>
         public static readonly AvaloniaProperty<SolidColorBrush> TooltipTextBrushProperty =
-            AvaloniaProperty.Register<CartesianChart, SolidColorBrush>(
+            AvaloniaProperty.Register<PolarChart, SolidColorBrush>(
                 nameof(TooltipTextBrush), new SolidColorBrush(new A.Media.Color(255, 35, 35, 35)), inherits: true);
 
         /// <summary>
         /// The tool tip background property
         /// </summary>
         public static readonly AvaloniaProperty<IBrush> TooltipBackgroundProperty =
-            AvaloniaProperty.Register<CartesianChart, IBrush>(nameof(TooltipBackground),
+            AvaloniaProperty.Register<PolarChart, IBrush>(nameof(TooltipBackground),
                 new SolidColorBrush(new A.Media.Color(255, 250, 250, 250)), inherits: true);
 
         /// <summary>
         /// The legend position property
         /// </summary>
         public static readonly AvaloniaProperty<LegendPosition> LegendPositionProperty =
-            AvaloniaProperty.Register<CartesianChart, LegendPosition>(
+            AvaloniaProperty.Register<PolarChart, LegendPosition>(
                 nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultLegendPosition, inherits: true);
 
         /// <summary>
         /// The legend orientation property
         /// </summary>
         public static readonly AvaloniaProperty<LegendOrientation> LegendOrientationProperty =
-            AvaloniaProperty.Register<CartesianChart, LegendOrientation>(
+            AvaloniaProperty.Register<PolarChart, LegendOrientation>(
                 nameof(LegendOrientation), LiveCharts.CurrentSettings.DefaultLegendOrientation, inherits: true);
 
         /// <summary>
         /// The legend template property
         /// </summary>
         public static readonly AvaloniaProperty<DataTemplate?> LegendTemplateProperty =
-            AvaloniaProperty.Register<CartesianChart, DataTemplate?>(nameof(LegendTemplate), null, inherits: true);
+            AvaloniaProperty.Register<PolarChart, DataTemplate?>(nameof(LegendTemplate), null, inherits: true);
 
         /// <summary>
         /// The legend font family property
         /// </summary>
         public static readonly AvaloniaProperty<A.Media.FontFamily> LegendFontFamilyProperty =
-           AvaloniaProperty.Register<CartesianChart, A.Media.FontFamily>(
+           AvaloniaProperty.Register<PolarChart, A.Media.FontFamily>(
                nameof(LegendFontFamily), new A.Media.FontFamily("Arial"), inherits: true);
 
         /// <summary>
         /// The legend font size property
         /// </summary>
         public static readonly AvaloniaProperty<double> LegendFontSizeProperty =
-            AvaloniaProperty.Register<CartesianChart, double>(nameof(LegendFontSize), 13d, inherits: true);
+            AvaloniaProperty.Register<PolarChart, double>(nameof(LegendFontSize), 13d, inherits: true);
 
         /// <summary>
         /// The legend font weight property
         /// </summary>
         public static readonly AvaloniaProperty<FontWeight> LegendFontWeightProperty =
-            AvaloniaProperty.Register<CartesianChart, FontWeight>(nameof(LegendFontWeight), FontWeight.Normal, inherits: true);
+            AvaloniaProperty.Register<PolarChart, FontWeight>(nameof(LegendFontWeight), FontWeight.Normal, inherits: true);
 
         /// <summary>
         /// The legend font style property
         /// </summary>
         public static readonly AvaloniaProperty<A.Media.FontStyle> LegendFontStyleProperty =
-            AvaloniaProperty.Register<CartesianChart, A.Media.FontStyle>(
+            AvaloniaProperty.Register<PolarChart, A.Media.FontStyle>(
                 nameof(LegendFontStyle), A.Media.FontStyle.Normal, inherits: true);
 
         /// <summary>
         /// The legend text brush property
         /// </summary>
         public static readonly AvaloniaProperty<SolidColorBrush> LegendTextBrushProperty =
-            AvaloniaProperty.Register<CartesianChart, SolidColorBrush>(
+            AvaloniaProperty.Register<PolarChart, SolidColorBrush>(
                 nameof(LegendTextBrush), new SolidColorBrush(new A.Media.Color(255, 35, 35, 35)), inherits: true);
 
         /// <summary>
         /// The legend background property
         /// </summary>
         public static readonly AvaloniaProperty<IBrush> LegendBackgroundProperty =
-            AvaloniaProperty.Register<CartesianChart, IBrush>(nameof(LegendBackground),
+            AvaloniaProperty.Register<PolarChart, IBrush>(nameof(LegendBackground),
                 new SolidColorBrush(new A.Media.Color(255, 255, 255, 255)), inherits: true);
 
         #endregion
@@ -332,8 +295,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => core is null ? throw new Exception("core not found") : core.Canvas;
 
-        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core =>
-            core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
+        PolarChart<SkiaSharpDrawingContext> IPolarChartView<SkiaSharpDrawingContext>.Core =>
+            core is null ? throw new Exception("core not found") : (PolarChart<SkiaSharpDrawingContext>)core;
 
         System.Drawing.Color IChartView.BackColor
         {
@@ -357,11 +320,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             };
 
         /// <inheritdoc cref="IChartView.DrawMargin" />
-        public Margin? DrawMargin
-        {
-            get => (Margin?)GetValue(DrawMarginProperty);
-            set => SetValue(DrawMarginProperty, value);
-        }
+        public Margin? DrawMargin { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <inheritdoc cref="IChartView.SyncContext" />
         public object SyncContext
@@ -370,53 +329,25 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             set => SetValue(SyncContextProperty, value);
         }
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series" />
         public IEnumerable<ISeries> Series
         {
             get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
             set => SetValue(SeriesProperty, value);
         }
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.XAxes" />
-        public IEnumerable<ICartesianAxis> XAxes
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.AngleAxes" />
+        public IEnumerable<IPolarAxis> AngleAxes
         {
-            get => (IEnumerable<ICartesianAxis>)GetValue(XAxesProperty);
-            set => SetValue(XAxesProperty, value);
+            get => (IEnumerable<IPolarAxis>)GetValue(AngleAxesProperty);
+            set => SetValue(AngleAxesProperty, value);
         }
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.YAxes" />
-        public IEnumerable<ICartesianAxis> YAxes
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.RadiusAxes" />
+        public IEnumerable<IPolarAxis> RadiusAxes
         {
-            get => (IEnumerable<ICartesianAxis>)GetValue(YAxesProperty);
-            set => SetValue(YAxesProperty, value);
-        }
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections" />
-        public IEnumerable<Section<SkiaSharpDrawingContext>> Sections
-        {
-            get => (IEnumerable<Section<SkiaSharpDrawingContext>>)GetValue(SectionsProperty);
-            set => SetValue(SectionsProperty, value);
-        }
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
-        public DrawMarginFrame<SkiaSharpDrawingContext>? DrawMarginFrame
-        {
-            get => (DrawMarginFrame<SkiaSharpDrawingContext>)GetValue(DrawMarginFrameProperty);
-            set => SetValue(DrawMarginFrameProperty, value);
-        }
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomMode" />
-        public ZoomAndPanMode ZoomMode
-        {
-            get => (ZoomAndPanMode)GetValue(ZoomModeProperty);
-            set => SetValue(ZoomModeProperty, value);
-        }
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomingSpeed" />
-        public double ZoomingSpeed
-        {
-            get => (double)GetValue(ZoomingSpeedProperty);
-            set => SetValue(ZoomingSpeedProperty, value);
+            get => (IEnumerable<IPolarAxis>)GetValue(RadiusAxesProperty);
+            set => SetValue(RadiusAxesProperty, value);
         }
 
         /// <inheritdoc cref="IChartView.AnimationsSpeed" />
@@ -438,13 +369,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             get => (TooltipPosition)GetValue(TooltipPositionProperty);
             set => SetValue(TooltipPositionProperty, value);
-        }
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy" />
-        public TooltipFindingStrategy TooltipFindingStrategy
-        {
-            get => (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty);
-            set => SetValue(TooltipFindingStrategyProperty, value);
         }
 
         /// <summary>
@@ -654,12 +578,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         #endregion
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(PointF, int, int)" />
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleUIPoint(PointF, int, int)" />
         public double[] ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
-            if (core is null) throw new Exception("core not found");
-            var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
-            return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
+            return new double[0];
+            //if (core is null) throw new Exception("core not found");
+            //var coreChart = (PolarChart<SkiaSharpDrawingContext>)core;
+            //return coreChart.SeriesContext (point, xAxisIndex, yAxisIndex);
         }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
@@ -714,7 +639,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             var canvas = this.FindControl<MotionCanvas>("canvas");
             _avaloniaCanvas = canvas;
-            core = new CartesianChart<SkiaSharpDrawingContext>(
+            core = new PolarChart<SkiaSharpDrawingContext>(
                 this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore, true);
 
             core.Measuring += OnCoreMeasuring;
@@ -745,22 +670,16 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 _seriesObserver.Initialize((IEnumerable<ISeries>)change.NewValue.Value);
             }
 
-            if (change.Property.Name == nameof(XAxes))
+            if (change.Property.Name == nameof(AngleAxes))
             {
-                _xObserver.Dispose((IEnumerable<ICartesianAxis>)change.OldValue.Value);
-                _xObserver.Initialize((IEnumerable<ICartesianAxis>)change.NewValue.Value);
+                _angleObserver.Dispose((IEnumerable<IPolarAxis>)change.OldValue.Value);
+                _angleObserver.Initialize((IEnumerable<IPolarAxis>)change.NewValue.Value);
             }
 
-            if (change.Property.Name == nameof(YAxes))
+            if (change.Property.Name == nameof(RadiusAxes))
             {
-                _yObserver.Dispose((IEnumerable<ICartesianAxis>)change.OldValue.Value);
-                _yObserver.Initialize((IEnumerable<ICartesianAxis>)change.NewValue.Value);
-            }
-
-            if (change.Property.Name == nameof(Sections))
-            {
-                _sectionsObserver.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)change.OldValue.Value);
-                _sectionsObserver.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)change.NewValue.Value);
+                _radiusObserver.Dispose((IEnumerable<IPolarAxis>)change.OldValue.Value);
+                _radiusObserver.Initialize((IEnumerable<IPolarAxis>)change.NewValue.Value);
             }
 
             if (change.Property.Name == nameof(Background))
@@ -794,17 +713,17 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             core.Update();
         }
 
-        private void CartesianChart_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
+        private void PolarChart_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
         {
-            if (core is null) return;
+            //if (core is null) return;
 
-            var c = (CartesianChart<SkiaSharpDrawingContext>)core;
-            var p = e.GetPosition(this);
+            //var c = (PolarChart<SkiaSharpDrawingContext>)core;
+            //var p = e.GetPosition(this);
 
-            c.Zoom(new PointF((float)p.X, (float)p.Y), e.Delta.Y > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+            //c.Zoom(new PointF((float)p.X, (float)p.Y), e.Delta.Y > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
         }
 
-        private void CartesianChart_PointerPressed(object? sender, PointerPressedEventArgs e)
+        private void PolarChart_PointerPressed(object? sender, PointerPressedEventArgs e)
         {
             if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
             var p = e.GetPosition(this);
@@ -812,7 +731,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             core?.InvokePointerDown(new PointF((float)p.X, (float)p.Y));
         }
 
-        private void CartesianChart_PointerMoved(object? sender, PointerEventArgs e)
+        private void PolarChart_PointerMoved(object? sender, PointerEventArgs e)
         {
             var p = e.GetPosition(this);
             core?.InvokePointerMove(new PointF((float)p.X, (float)p.Y));
@@ -841,7 +760,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             Measuring?.Invoke(this);
         }
 
-        private void CartesianChart_PointerLeave(object? sender, PointerEventArgs e)
+        private void PolarChart_PointerLeave(object? sender, PointerEventArgs e)
         {
             _ = Dispatcher.UIThread.InvokeAsync(HideTooltip, DispatcherPriority.Background);
             core?.InvokePointerLeft();
