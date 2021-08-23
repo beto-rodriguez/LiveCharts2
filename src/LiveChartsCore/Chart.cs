@@ -46,95 +46,10 @@ namespace LiveChartsCore
         #region fields
 
         /// <summary>
-        /// The series context
-        /// </summary>
-        protected SeriesContext<TDrawingContext> seriesContext = new(Enumerable.Empty<IChartSeries<TDrawingContext>>());
-
-        /// <summary>
-        /// The canvas
-        /// </summary>
-        protected readonly MotionCanvas<TDrawingContext> canvas;
-
-        /// <summary>
-        /// The update throttler
-        /// </summary>
-        protected readonly ActionThrottler updateThrottler;
-
-        /// <summary>
-        /// The control size
-        /// </summary>
-        protected SizeF controlSize = new();
-
-        /// <summary>
-        /// The view draw margin
-        /// </summary>
-        protected Margin? viewDrawMargin = null;
-
-        /// <summary>
-        /// The legend position
-        /// </summary>
-        protected LegendPosition legendPosition;
-
-        /// <summary>
-        /// The legend orientation
-        /// </summary>
-        protected LegendOrientation legendOrientation;
-
-        /// <summary>
-        /// The legend
-        /// </summary>
-        protected IChartLegend<TDrawingContext>? legend;
-
-        /// <summary>
-        /// The tool tip position
-        /// </summary>
-        protected TooltipPosition tooltipPosition;
-
-        /// <summary>
-        /// The tool tip finding strategy
-        /// </summary>
-        protected TooltipFindingStrategy tooltipFindingStrategy;
-
-        /// <summary>
-        /// The tool tip
-        /// </summary>
-        protected IChartTooltip<TDrawingContext>? tooltip;
-
-        /// <summary>
-        /// The animations speed
-        /// </summary>
-        protected TimeSpan animationsSpeed;
-
-        /// <summary>
-        /// The easing function
-        /// </summary>
-        protected Func<float, float>? easingFunction;
-
-        /// <summary>
-        /// The draw margin size
-        /// </summary>
-        protected SizeF drawMarginSize;
-
-        /// <summary>
-        /// The draw margin location
-        /// </summary>
-        protected PointF drawMarginLocation;
-
-        /// <summary>
-        /// The previous series
-        /// </summary>
-        protected IReadOnlyList<IChartSeries<TDrawingContext>> previousSeries = new IChartSeries<TDrawingContext>[0];
-
-        /// <summary>
-        /// The previous legend position
-        /// </summary>
-        protected LegendPosition previousLegendPosition = LegendPosition.Hidden;
-
-        /// <summary>
         /// The preserve first draw
         /// </summary>
         protected bool preserveFirstDraw = false;
-
+        private readonly ActionThrottler _updateThrottler;
         private readonly ActionThrottler _tooltipThrottler;
         private readonly ActionThrottler _panningThrottler;
         private PointF _pointerPosition = new(-10, -10);
@@ -156,11 +71,11 @@ namespace LiveChartsCore
             Action<LiveChartsSettings> defaultPlatformConfig,
             bool lockOnMeasure = false)
         {
-            this.canvas = canvas;
+            Canvas = canvas;
             canvas.Validated += OnCanvasValidated;
-            easingFunction = EasingFunctions.QuadraticOut;
+            EasingFunction = EasingFunctions.QuadraticOut;
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(defaultPlatformConfig);
-            updateThrottler = new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
+            _updateThrottler = new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
 
             PointerDown += Chart_PointerDown;
             PointerMove += Chart_PointerMove;
@@ -189,7 +104,7 @@ namespace LiveChartsCore
 
         internal event Action PointerLeft;
 
-        internal event Action<PanGestureEventArgs> PanGesture;
+        internal event Action<PanGestureEventArgs>? PanGesture;
 
         #region properties
 
@@ -223,20 +138,12 @@ namespace LiveChartsCore
         public bool IsFirstDraw { get; set; } = true;
 
         /// <summary>
-        /// Gets the series context.
-        /// </summary>
-        /// <value>
-        /// The series context.
-        /// </value>
-        public SeriesContext<TDrawingContext> SeriesContext => seriesContext;
-
-        /// <summary>
         /// Gets the canvas.
         /// </summary>
         /// <value>
         /// The canvas.
         /// </value>
-        public MotionCanvas<TDrawingContext> Canvas => canvas;
+        public MotionCanvas<TDrawingContext> Canvas { get; private set; }
 
         /// <summary>
         /// Gets the drawable series.
@@ -244,7 +151,7 @@ namespace LiveChartsCore
         /// <value>
         /// The drawable series.
         /// </value>
-        public abstract IEnumerable<IChartSeries<TDrawingContext>> DrawableSeries { get; }
+        public abstract IEnumerable<IChartSeries<TDrawingContext>> ChartSeries { get; }
 
         /// <summary>
         /// Gets the view.
@@ -253,7 +160,13 @@ namespace LiveChartsCore
         /// The view.
         /// </value>
         public abstract IChartView<TDrawingContext> View { get; }
+
         IChartView IChart.View => View;
+
+        /// <summary>
+        /// The series context
+        /// </summary>
+        public SeriesContext<TDrawingContext> SeriesContext { get; protected set; } = new(Enumerable.Empty<IChartSeries<TDrawingContext>>());
 
         /// <summary>
         /// Gets the size of the control.
@@ -261,7 +174,7 @@ namespace LiveChartsCore
         /// <value>
         /// The size of the control.
         /// </value>
-        public SizeF ControlSize => controlSize;
+        public SizeF ControlSize { get; protected set; } = new Size();
 
         /// <summary>
         /// Gets the draw margin location.
@@ -269,7 +182,7 @@ namespace LiveChartsCore
         /// <value>
         /// The draw margin location.
         /// </value>
-        public PointF DrawMarginLocation => drawMarginLocation;
+        public PointF DrawMarginLocation { get; protected set; } = new PointF();
 
         /// <summary>
         /// Gets the size of the draw margin.
@@ -277,7 +190,7 @@ namespace LiveChartsCore
         /// <value>
         /// The size of the draw margin.
         /// </value>
-        public SizeF DrawMarginSize => drawMarginSize;
+        public SizeF DrawMarginSize { get; protected set; } = new SizeF();
 
         /// <summary>
         /// Gets the legend position.
@@ -285,7 +198,7 @@ namespace LiveChartsCore
         /// <value>
         /// The legend position.
         /// </value>
-        public LegendPosition LegendPosition => legendPosition;
+        public LegendPosition LegendPosition { get; protected set; }
 
         /// <summary>
         /// Gets the legend orientation.
@@ -293,7 +206,7 @@ namespace LiveChartsCore
         /// <value>
         /// The legend orientation.
         /// </value>
-        public LegendOrientation LegendOrientation => legendOrientation;
+        public LegendOrientation LegendOrientation { get; protected set; }
 
         /// <summary>
         /// Gets the legend.
@@ -301,7 +214,7 @@ namespace LiveChartsCore
         /// <value>
         /// The legend.
         /// </value>
-        public IChartLegend<TDrawingContext>? Legend => legend;
+        public IChartLegend<TDrawingContext>? Legend { get; protected set; }
 
         /// <summary>
         /// Gets the tooltip position.
@@ -309,7 +222,7 @@ namespace LiveChartsCore
         /// <value>
         /// The tooltip position.
         /// </value>
-        public TooltipPosition TooltipPosition => tooltipPosition;
+        public TooltipPosition TooltipPosition { get; protected set; }
 
         /// <summary>
         /// Gets the tooltip finding strategy.
@@ -317,7 +230,7 @@ namespace LiveChartsCore
         /// <value>
         /// The tooltip finding strategy.
         /// </value>
-        public TooltipFindingStrategy TooltipFindingStrategy => tooltipFindingStrategy;
+        public TooltipFindingStrategy TooltipFindingStrategy { get; protected set; }
 
         /// <summary>
         /// Gets the tooltip.
@@ -325,7 +238,7 @@ namespace LiveChartsCore
         /// <value>
         /// The tooltip.
         /// </value>
-        public IChartTooltip<TDrawingContext>? Tooltip => tooltip;
+        public IChartTooltip<TDrawingContext>? Tooltip { get; protected set; }
 
         /// <summary>
         /// Gets the animations speed.
@@ -333,7 +246,7 @@ namespace LiveChartsCore
         /// <value>
         /// The animations speed.
         /// </value>
-        public TimeSpan AnimationsSpeed => animationsSpeed;
+        public TimeSpan AnimationsSpeed { get; protected set; }
 
         /// <summary>
         /// Gets the easing function.
@@ -341,7 +254,7 @@ namespace LiveChartsCore
         /// <value>
         /// The easing function.
         /// </value>
-        public Func<float, float>? EasingFunction => easingFunction;
+        public Func<float, float>? EasingFunction { get; protected set; }
 
         /// <summary>
         /// Gets or sets the updater throttler.
@@ -351,16 +264,39 @@ namespace LiveChartsCore
         /// </value>
         public TimeSpan UpdaterThrottler
         {
-            get => updateThrottler.ThrottlerTimeSpan;
-            set => updateThrottler.ThrottlerTimeSpan = value;
+            get => _updateThrottler.ThrottlerTimeSpan;
+            set => _updateThrottler.ThrottlerTimeSpan = value;
         }
+
+        /// <summary>
+        /// Gets the previous legend position.
+        /// </summary>
+        public LegendPosition PreviousLegendPosition { get; protected set; }
+
+        /// <summary>
+        /// Gets the previous series.
+        /// </summary>
+        public IReadOnlyList<IChartSeries<TDrawingContext>> PreviousSeries { get; protected set; } = new IChartSeries<TDrawingContext>[0];
 
         object IChart.Canvas => Canvas;
 
         #endregion region
 
         /// <inheritdoc cref="IChart.Update(ChartUpdateParams?)" />
-        public abstract void Update(ChartUpdateParams? chartUpdateParams = null);
+        public virtual void Update(ChartUpdateParams? chartUpdateParams = null)
+        {
+            chartUpdateParams ??= new ChartUpdateParams();
+
+            if (chartUpdateParams.IsAutomaticUpdate && !View.AutoUpdateEnabled) return;
+
+            if (!chartUpdateParams.Throttling)
+            {
+                _updateThrottler.ForceCall();
+                return;
+            }
+
+            _updateThrottler.Call();
+        }
 
         /// <summary>
         /// Finds the points near to the specified point.
@@ -403,13 +339,13 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected void SetDrawMargin(SizeF controlSize, Margin margin)
         {
-            drawMarginSize = new SizeF
+            DrawMarginSize = new SizeF
             {
                 Width = controlSize.Width - margin.Left - margin.Right,
                 Height = controlSize.Height - margin.Top - margin.Bottom
             };
 
-            drawMarginLocation = new PointF(margin.Left, margin.Top);
+            DrawMarginLocation = new PointF(margin.Left, margin.Top);
         }
 
         /// <summary>
@@ -450,17 +386,17 @@ namespace LiveChartsCore
         /// <param name="newSeries">The new series.</param>
         /// <param name="position">The legend position.</param>
         /// <returns></returns>
-        protected bool SeriesMiniatureChanged(IReadOnlyList<IChartSeries<TDrawingContext>> newSeries, LegendPosition position)
+        protected virtual bool SeriesMiniatureChanged(IReadOnlyList<IChartSeries<TDrawingContext>> newSeries, LegendPosition position)
         {
-            if (position == LegendPosition.Hidden && previousLegendPosition == LegendPosition.Hidden) return false;
-            if (position != previousLegendPosition) return true;
-            if (previousSeries.Count != newSeries.Count) return true;
+            if (position == LegendPosition.Hidden && PreviousLegendPosition == LegendPosition.Hidden) return false;
+            if (position != PreviousLegendPosition) return true;
+            if (PreviousSeries.Count != newSeries.Count) return true;
 
             for (var i = 0; i < newSeries.Count; i++)
             {
-                if (i + 1 > previousSeries.Count) return true;
+                if (i + 1 > PreviousSeries.Count) return true;
 
-                var a = previousSeries[i];
+                var a = PreviousSeries[i];
                 var b = newSeries[i];
 
                 if (!a.MiniatureEquals(b)) return true;
@@ -495,7 +431,7 @@ namespace LiveChartsCore
             return Task.Run(() =>
                  View.InvokeOnUIThread(() =>
                  {
-                     lock (canvas.Sync)
+                     lock (Canvas.Sync)
                      {
 #if DEBUG
                          if (LiveCharts.EnableLogging)
@@ -505,12 +441,12 @@ namespace LiveChartsCore
                                  $"tread: {Thread.CurrentThread.ManagedThreadId}");
                          }
 #endif
-                         if (tooltip is null || TooltipPosition == TooltipPosition.Hidden || !_isPointerIn) return;
+                         if (Tooltip is null || TooltipPosition == TooltipPosition.Hidden || !_isPointerIn) return;
 
                          var points = FindPointsNearTo(_pointerPosition).ToArray();
-                         tooltip.Show(points, this);
+                         Tooltip.Show(points, this);
 
-                         canvas.Invalidate();
+                         Canvas.Invalidate();
                      }
                  }));
         }
@@ -522,7 +458,7 @@ namespace LiveChartsCore
                 {
                     if (this is not CartesianChart<TDrawingContext> cartesianChart) return;
 
-                    lock (canvas.Sync)
+                    lock (Canvas.Sync)
                     {
                         cartesianChart.Pan(
                         new PointF(
@@ -549,7 +485,7 @@ namespace LiveChartsCore
         {
             _pointerPosition = pointerPosition;
             _isPointerIn = true;
-            if (tooltip is not null && TooltipPosition != TooltipPosition.Hidden) _tooltipThrottler.Call();
+            if (Tooltip is not null && TooltipPosition != TooltipPosition.Hidden) _tooltipThrottler.Call();
             if (!_isPanning) return;
             _pointerPanningPosition = pointerPosition;
             _panningThrottler.Call();

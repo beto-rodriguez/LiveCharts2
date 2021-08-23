@@ -112,7 +112,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
         {
             var mobileChart = (IMobileChart)chart.View;
-            var series = chart.DrawableSeries;
+            var series = chart.ChartSeries;
             var legendOrientation = chart.LegendOrientation;
             var legendPosition = chart.LegendPosition;
             Series = series;

@@ -20,46 +20,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
-using System;
 using System.Collections.Generic;
+using LiveChartsCore.Kernel.Sketches;
+using System;
+using LiveChartsCore.Kernel;
 using System.Drawing;
 using System.Linq;
-using LiveChartsCore.Measure;
-using LiveChartsCore.Kernel.Sketches;
-using System.Threading;
 using System.Diagnostics;
+using System.Threading;
 
 namespace LiveChartsCore
 {
     /// <summary>
-    /// Defines a Cartesian chart.
+    /// Defines a Polar chart.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="Chart{TDrawingContext}" />
-    public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
+    public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         internal readonly HashSet<ISeries> _everMeasuredSeries = new();
         internal readonly HashSet<IAxis<TDrawingContext>> _everMeasuredAxes = new();
         internal readonly HashSet<Section<TDrawingContext>> _everMeasuredSections = new();
-        private readonly ICartesianChartView<TDrawingContext> _chartView;
-        private int _nextSeries = 0;
-        private double _zoomingSpeed = 0;
-        private ZoomAndPanMode _zoomMode;
-        private DrawMarginFrame<TDrawingContext>? _previousDrawMarginFrame;
+        private readonly IPolarChartView<TDrawingContext> _chartView;
         private IEnumerable<ISeries>? _designerSeries = null;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CartesianChart{TDrawingContext}"/> class.
+        /// Initializes a new instance of the <see cref="PolarChart{TDrawingContext}"/> class.
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="defaultPlatformConfig">The default platform configuration.</param>
         /// <param name="canvas">The canvas.</param>
         /// <param name="lockOnMeasure">Indicates if the thread should lock the measure operation</param>
-        public CartesianChart(
-            ICartesianChartView<TDrawingContext> view,
+        public PolarChart(
+            IPolarChartView<TDrawingContext> view,
             Action<LiveChartsSettings> defaultPlatformConfig,
             MotionCanvas<TDrawingContext> canvas,
             bool lockOnMeasure = false)
@@ -84,20 +79,20 @@ namespace LiveChartsCore
         }
 
         /// <summary>
-        /// Gets the x axes.
+        /// Gets the angle axes.
         /// </summary>
         /// <value>
         /// The x axes.
         /// </value>
-        public IAxis<TDrawingContext>[] XAxes { get; private set; } = new IAxis<TDrawingContext>[0];
+        public IPolarAxis<TDrawingContext>[] AngleAxes { get; private set; } = new IPolarAxis<TDrawingContext>[0];
 
         /// <summary>
-        /// Gets the y axes.
+        /// Gets the radius axes.
         /// </summary>
         /// <value>
         /// The y axes.
         /// </value>
-        public IAxis<TDrawingContext>[] YAxes { get; private set; } = new IAxis<TDrawingContext>[0];
+        public IPolarAxis<TDrawingContext>[] RadiusAxes { get; private set; } = new IPolarAxis<TDrawingContext>[0];
 
         /// <summary>
         /// Gets the series.
@@ -105,15 +100,7 @@ namespace LiveChartsCore
         /// <value>
         /// The series.
         /// </value>
-        public ICartesianSeries<TDrawingContext>[] Series { get; private set; } = new ICartesianSeries<TDrawingContext>[0];
-
-        /// <summary>
-        /// Gets the sections.
-        /// </summary>
-        /// <value>
-        /// The sections.
-        /// </value>
-        public Section<TDrawingContext>[] Sections { get; private set; } = new Section<TDrawingContext>[0];
+        public IPolarSeries<TDrawingContext>[] Series { get; private set; } = new IPolarSeries<TDrawingContext>[0];
 
         /// <summary>
         /// Gets the drawable series.
@@ -124,14 +111,6 @@ namespace LiveChartsCore
         public override IEnumerable<IChartSeries<TDrawingContext>> ChartSeries => Series;
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is zooming or panning.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is zooming or panning; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsZoomingOrPanning { get; private set; }
-
-        /// <summary>
         /// Gets the view.
         /// </summary>
         /// <value>
@@ -140,215 +119,15 @@ namespace LiveChartsCore
         public override IChartView<TDrawingContext> View => _chartView;
 
         /// <summary>
-        /// Finds the points near to the specified location.
+        /// Finds the points near to the specified point.
         /// </summary>
         /// <param name="pointerPosition">The pointer position.</param>
         /// <returns></returns>
         public override TooltipPoint[] FindPointsNearTo(PointF pointerPosition)
         {
-            var actualStrategy = TooltipFindingStrategy;
-            if (actualStrategy == TooltipFindingStrategy.Automatic)
-            {
-                var areAllX = true;
-                var areAllY = true;
-
-                foreach (var series in Series)
-                {
-                    areAllX = areAllX && (series.SeriesProperties & SeriesProperties.PrefersXStrategyTooltips) != 0;
-                    areAllY = areAllY && (series.SeriesProperties & SeriesProperties.PrefersYStrategyTooltips) != 0;
-                }
-
-                actualStrategy = areAllX
-                    ? TooltipFindingStrategy.CompareOnlyX
-                    : (areAllY ? TooltipFindingStrategy.CompareOnlyY : TooltipFindingStrategy.CompareAll);
-            }
-
-            var barLikeSeries = new List<ISeries>();
-            var otherSeries = new List<ISeries>();
-
-            foreach (var item in _chartView.Series)
-            {
-                if (item.IsBarSeries() || item.IsFinancialSeries())
-                {
-                    barLikeSeries.Add(item);
-                    continue;
-                }
-                otherSeries.Add(item);
-            }
-
-            return
-                Enumerable.Concat(
-                    barLikeSeries
-                        .SelectMany(series => series.FindPointsNearTo(this, pointerPosition, actualStrategy))
-                        .GroupBy(tp => tp.Point.Context.Index)
-                        .Select(gtp => new { group = gtp, minD = gtp.Min(tp => tp.PointerDistance) })
-                        .OrderBy(mgtp => mgtp.minD)
-                        .Select(a => a.group)
-                        .FirstOrDefault() ?? Enumerable.Empty<TooltipPoint>(),
-                    otherSeries.SelectMany(series => series.FindPointsNearTo(this, pointerPosition, actualStrategy)))
+            return _chartView.Series.SelectMany(
+                series => series.FindPointsNearTo(this, pointerPosition, LiveChartsCore.Measure.TooltipFindingStrategy.CompareAll))
                 .ToArray();
-        }
-
-        /// <summary>
-        /// Scales the specified point to the UI.
-        /// </summary>
-        /// <param name="point">The point.</param>
-        /// <param name="xAxisIndex">Index of the x axis.</param>
-        /// <param name="yAxisIndex">Index of the y axis.</param>
-        /// <returns></returns>
-        public double[] ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
-        {
-            var xAxis = XAxes[xAxisIndex];
-            var yAxis = YAxes[yAxisIndex];
-
-            var xScaler = new Scaler(DrawMarginLocation, DrawMarginSize, xAxis);
-            var yScaler = new Scaler(DrawMarginLocation, DrawMarginSize, yAxis);
-
-            return new double[] { xScaler.ToChartValues(point.X), yScaler.ToChartValues(point.Y) };
-        }
-
-        /// <summary>
-        /// Zooms to the specified pivot.
-        /// </summary>
-        /// <param name="pivot">The pivot.</param>
-        /// <param name="direction">The direction.</param>
-        /// <returns></returns>
-        public void Zoom(PointF pivot, ZoomDirection direction)
-        {
-            if (YAxes is null || XAxes is null) return;
-
-            var speed = _zoomingSpeed < 0.1 ? 0.1 : (_zoomingSpeed > 0.95 ? 0.95 : _zoomingSpeed);
-            var m = direction == ZoomDirection.ZoomIn ? speed : 1 / speed;
-
-            if ((_zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X)
-            {
-                for (var index = 0; index < XAxes.Length; index++)
-                {
-                    var xi = XAxes[index];
-                    var px = new Scaler(DrawMarginLocation, DrawMarginSize, xi).ToChartValues(pivot.X);
-
-                    var max = xi.MaxLimit is null ? xi.DataBounds.Max : xi.MaxLimit.Value;
-                    var min = xi.MinLimit is null ? xi.DataBounds.Min : xi.MinLimit.Value;
-
-                    var l = max - min;
-
-                    var rMin = (px - min) / l;
-                    var rMax = 1 - rMin;
-
-                    var target = l * m;
-                    var mint = px - target * rMin;
-                    var maxt = px + target * rMax;
-
-                    if (maxt - mint < xi.DataBounds.MinDelta * 5) return;
-
-                    if (maxt > xi.DataBounds.Max) maxt = xi.DataBounds.Max;
-                    if (mint < xi.DataBounds.Min) mint = xi.DataBounds.Min;
-
-                    xi.MaxLimit = maxt;
-                    xi.MinLimit = mint;
-                }
-            }
-
-            if ((_zoomMode & ZoomAndPanMode.Y) == ZoomAndPanMode.Y)
-            {
-                for (var index = 0; index < YAxes.Length; index++)
-                {
-                    var yi = YAxes[index];
-                    var px = new Scaler(DrawMarginLocation, DrawMarginSize, yi).ToChartValues(pivot.Y);
-
-                    var max = yi.MaxLimit is null ? yi.DataBounds.Max : yi.MaxLimit.Value;
-                    var min = yi.MinLimit is null ? yi.DataBounds.Min : yi.MinLimit.Value;
-
-                    var l = max - min;
-
-                    var rMin = (px - min) / l;
-                    var rMax = 1 - rMin;
-
-                    var target = l * m;
-                    var mint = px - target * rMin;
-                    var maxt = px + target * rMax;
-
-                    if (maxt - mint < yi.DataBounds.MinDelta * 5) return;
-
-                    if (maxt > yi.DataBounds.Max) maxt = yi.DataBounds.Max;
-                    if (mint < yi.DataBounds.Min) mint = yi.DataBounds.Min;
-
-                    yi.MaxLimit = maxt;
-                    yi.MinLimit = mint;
-                }
-            }
-
-            IsZoomingOrPanning = true;
-        }
-
-        /// <summary>
-        /// Pans with the specified delta.
-        /// </summary>
-        /// <param name="delta">The delta.</param>
-        /// <returns></returns>
-        public void Pan(PointF delta)
-        {
-            if ((_zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X)
-            {
-                for (var index = 0; index < XAxes.Length; index++)
-                {
-                    var xi = XAxes[index];
-                    var scale = new Scaler(DrawMarginLocation, DrawMarginSize, xi);
-                    var dx = scale.ToChartValues(-delta.X) - scale.ToChartValues(0);
-
-                    var max = xi.MaxLimit is null ? xi.DataBounds.Max : xi.MaxLimit.Value;
-                    var min = xi.MinLimit is null ? xi.DataBounds.Min : xi.MinLimit.Value;
-
-                    if (max + dx > xi.DataBounds.Max)
-                    {
-                        xi.MaxLimit = xi.DataBounds.Max;
-                        xi.MinLimit = xi.DataBounds.Max - (max - min);
-                        continue;
-                    }
-
-                    if (min + dx < xi.DataBounds.Min)
-                    {
-                        xi.MinLimit = xi.DataBounds.Min;
-                        xi.MaxLimit = xi.DataBounds.Min + max - min;
-                        continue;
-                    }
-
-                    xi.MaxLimit = max + dx;
-                    xi.MinLimit = min + dx;
-                }
-            }
-
-            if ((_zoomMode & ZoomAndPanMode.Y) == ZoomAndPanMode.Y)
-            {
-                for (var index = 0; index < YAxes.Length; index++)
-                {
-                    var yi = YAxes[index];
-                    var scale = new Scaler(DrawMarginLocation, DrawMarginSize, yi);
-                    var dy = -(scale.ToChartValues(delta.Y) - scale.ToChartValues(0));
-
-                    var max = yi.MaxLimit is null ? yi.DataBounds.Max : yi.MaxLimit.Value;
-                    var min = yi.MinLimit is null ? yi.DataBounds.Min : yi.MinLimit.Value;
-
-                    if (max + dy > yi.DataBounds.Max)
-                    {
-                        yi.MaxLimit = yi.DataBounds.Max;
-                        yi.MinLimit = yi.DataBounds.Max - (max - min);
-                        continue;
-                    }
-
-                    if (min + dy < yi.DataBounds.Min)
-                    {
-                        yi.MinLimit = yi.DataBounds.Min;
-                        yi.MaxLimit = yi.DataBounds.Min + max - min;
-                        continue;
-                    }
-
-                    yi.MaxLimit = max + dy;
-                    yi.MinLimit = min + dy;
-                }
-            }
-
-            IsZoomingOrPanning = true;
         }
 
         /// <summary>
@@ -380,11 +159,8 @@ namespace LiveChartsCore
             var viewDrawMargin = _chartView.DrawMargin;
             ControlSize = _chartView.ControlSize;
 
-            YAxes = _chartView.YAxes.Cast<IAxis<TDrawingContext>>().Select(x => x).ToArray();
-            XAxes = _chartView.XAxes.Cast<IAxis<TDrawingContext>>().Select(x => x).ToArray();
-
-            _zoomingSpeed = _chartView.ZoomingSpeed;
-            _zoomMode = _chartView.ZoomMode;
+            AngleAxes = _chartView.AngleAxes.Cast<IPolarAxis<TDrawingContext>>().Select(x => x).ToArray();
+            RadiusAxes = _chartView.RadiusAxes.Cast<IPolarAxis<TDrawingContext>>().Select(x => x).ToArray();
 
             var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
             if (theme.CurrentColors is null || theme.CurrentColors.Length == 0)
@@ -396,7 +172,6 @@ namespace LiveChartsCore
             Legend = _chartView.Legend;
 
             TooltipPosition = _chartView.TooltipPosition;
-            TooltipFindingStrategy = _chartView.TooltipFindingStrategy;
             Tooltip = _chartView.Tooltip;
 
             AnimationsSpeed = _chartView.AnimationsSpeed;
@@ -407,10 +182,8 @@ namespace LiveChartsCore
                 : _chartView.Series.Where(x => x.IsVisible);
 
             Series = actualSeries
-                .Cast<ICartesianSeries<TDrawingContext>>()
+                .Cast<IPolarSeries<TDrawingContext>>()
                 .ToArray();
-
-            Sections = _chartView.Sections?.ToArray() ?? new Section<TDrawingContext>[0];
 
             #endregion
 

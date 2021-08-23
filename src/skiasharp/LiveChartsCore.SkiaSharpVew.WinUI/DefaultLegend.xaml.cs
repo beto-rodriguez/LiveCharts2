@@ -86,7 +86,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         {
             var winuiChart = (IWinUIChart)chart.View;
 
-            var series = chart.DrawableSeries;
+            var series = chart.ChartSeries;
             var legendOrientation = chart.LegendOrientation;
             var legendPosition = chart.LegendPosition;
             //var template = wpfChart.LegendTemplate ?? _defaultTempalte;

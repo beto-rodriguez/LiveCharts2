@@ -20,13 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+using LiveChartsCore.Drawing;
+
+namespace LiveChartsCore.Kernel.Helpers
 {
     /// <summary>
-    /// Defines an axis visual separator.
+    /// Defines an polar axis visual separator.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public class AxisVisualSeprator<TDrawingContext>
+    public class PolarAxisVisualSeparator<TDrawingContext> : IVisualSeparator<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
@@ -46,11 +48,16 @@ namespace LiveChartsCore.Drawing
         public ILabelGeometry<TDrawingContext>? Text { get; set; }
 
         /// <summary>
-        /// Gets or sets the line.
+        /// Gets or sets the circle.
         /// </summary>
         /// <value>
         /// The line.
         /// </value>
-        public ILineGeometry<TDrawingContext>? Line { get; set; }
+        public ISizedGeometry<TDrawingContext>? Circle { get; set; }
+
+        /// <summary>
+        /// Gets the geometry.
+        /// </summary>
+        public IGeometry<TDrawingContext>? Geometry => Circle;
     }
 }

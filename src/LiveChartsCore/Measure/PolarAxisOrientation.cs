@@ -20,30 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Measure
 {
     /// <summary>
-    /// Defines a context that is able to draw 2D shapes in the user interface.
+    /// Defines the polar axis orientation.
     /// </summary>
-    public abstract class DrawingContext
+    public enum PolarAxisOrientation
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DrawingContext"/> class.
+        /// The unknown orientation.
         /// </summary>
-        public DrawingContext(bool lockOnDraw = false)
-        {
-            LockOnDraw = lockOnDraw;
-        }
+        Unknown,
 
         /// <summary>
-        /// Gets or sets a property indicating whether the canvas should be locked while the
-        /// charts is being drawn.
+        /// The angle orientation.
         /// </summary>
-        public bool LockOnDraw { get; }
+        Angle,
 
         /// <summary>
-        /// Clears the canvas.
+        /// The radius orientation.
         /// </summary>
-        public abstract void ClearCanvas();
+        Radius
     }
 }

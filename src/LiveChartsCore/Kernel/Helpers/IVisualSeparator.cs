@@ -20,30 +20,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+using LiveChartsCore.Drawing;
+
+namespace LiveChartsCore.Kernel.Helpers
 {
     /// <summary>
-    /// Defines a context that is able to draw 2D shapes in the user interface.
+    /// Defines a visual separator.
     /// </summary>
-    public abstract class DrawingContext
+    /// <typeparam name="TDrawingContext"></typeparam>
+    public interface IVisualSeparator<TDrawingContext>
+        where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DrawingContext"/> class.
+        /// Gets or sets the value.
         /// </summary>
-        public DrawingContext(bool lockOnDraw = false)
-        {
-            LockOnDraw = lockOnDraw;
-        }
+        /// <value>
+        /// The value.
+        /// </value>
+        public double Value { get; set; }
 
         /// <summary>
-        /// Gets or sets a property indicating whether the canvas should be locked while the
-        /// charts is being drawn.
+        /// Gets or sets the text.
         /// </summary>
-        public bool LockOnDraw { get; }
+        /// <value>
+        /// The text.
+        /// </value>
+        public ILabelGeometry<TDrawingContext>? Text { get; set; }
 
         /// <summary>
-        /// Clears the canvas.
+        /// Gets the geometry.
         /// </summary>
-        public abstract void ClearCanvas();
+        /// <value>
+        /// The line.
+        /// </value>
+        public IGeometry<TDrawingContext>? Geometry { get; }
     }
 }
+

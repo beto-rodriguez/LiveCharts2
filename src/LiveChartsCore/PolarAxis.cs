@@ -22,16 +22,16 @@
 
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Drawing.Common;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using LiveChartsCore.Measure;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using LiveChartsCore.Kernel.Sketches;
+using System.Collections.Generic;
+using LiveChartsCore.Measure;
+using System;
+using LiveChartsCore.Drawing.Common;
+using System.Runtime.CompilerServices;
+using System.Drawing;
 using LiveChartsCore.Kernel.Helpers;
+using System.Linq;
 
 namespace LiveChartsCore
 {
@@ -40,28 +40,28 @@ namespace LiveChartsCore
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <typeparam name="TTextGeometry">The type of the text geometry.</typeparam>
-    /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
+    /// <typeparam name="TCircleGeometry">The type of the circle geometry.</typeparam>
+    /// /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
     /// <seealso cref="IAxis{TDrawingContext}" />
     /// <seealso cref="INotifyPropertyChanged" />
-    public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry> : ChartElement<TDrawingContext>, IAxis<TDrawingContext>
+    public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, TCircleGeometry> : ChartElement<TDrawingContext>, IPolarAxis<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TTextGeometry : ILabelGeometry<TDrawingContext>, new()
         where TLineGeometry : ILineGeometry<TDrawingContext>, new()
+        where TCircleGeometry : ISizedGeometry<TDrawingContext>, new()
     {
         #region fields
 
         /// <summary>
         /// The active separators
         /// </summary>
-        protected readonly Dictionary<IChart, Dictionary<double, AxisVisualSeprator<TDrawingContext>>> activeSeparators = new();
+        protected readonly Dictionary<IChart, Dictionary<double, IVisualSeparator<TDrawingContext>>> activeSeparators = new();
 
-        internal AxisOrientation _orientation;
+        internal PolarAxisOrientation _orientation;
         private double _minStep = 0;
         private Bounds? _dataBounds = null;
         private Bounds? _visibleDataBounds = null;
         private double _labelsRotation;
-        // xo (x origin) and yo (y origin) are the distance to the center of the axis to the control bounds
-        internal float _xo = 0f, _yo = 0f;
         private TTextGeometry? _nameGeometry;
         private AxisPosition _position = AxisPosition.Start;
         private Func<double, string> _labeler = Labelers.Default;
@@ -84,9 +84,6 @@ namespace LiveChartsCore
 
         #region properties
 
-        float IAxis.Xo { get => _xo; set => _xo = value; }
-        float IAxis.Yo { get => _yo; set => _yo = value; }
-
         Bounds? IPlane.PreviousDataBounds { get; set; }
 
         Bounds? IPlane.PreviousVisibleDataBounds { get; set; }
@@ -108,11 +105,8 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IPlane.NamePadding"/>
         public Padding NamePadding { get => _namePadding; set { _namePadding = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis.Orientation"/>
-        public AxisOrientation Orientation => _orientation;
-
-        /// <inheritdoc cref="IAxis.Padding"/>
-        public Padding Padding { get => _padding; set { _padding = value; OnPropertyChanged(); } }
+        /// <inheritdoc cref="IPolarAxis.Orientation"/>
+        public PolarAxisOrientation Orientation => _orientation;
 
         /// <inheritdoc cref="IPlane.Labeler"/>
         public Func<double, string> Labeler { get => _labeler; set { _labeler = value; OnPropertyChanged(); } }
@@ -131,9 +125,6 @@ namespace LiveChartsCore
 
         /// <inheritdoc cref="IPlane.UnitWidth"/>
         public double UnitWidth { get => _unitWidth; set { _unitWidth = value; OnPropertyChanged(); } }
-
-        /// <inheritdoc cref="IAxis.Position"/>
-        public AxisPosition Position { get => _position; set { _position = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IPlane.LabelsRotation"/>
         public double LabelsRotation { get => _labelsRotation; set { _labelsRotation = value; OnPropertyChanged(); } }
@@ -174,14 +165,6 @@ namespace LiveChartsCore
             set => SetPaintProperty(ref _separatorsPaint, value);
         }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.TextBrush"/>
-        [Obsolete("Renamed to LabelsPaint")]
-        public IPaint<TDrawingContext>? TextBrush { get => LabelsPaint; set => LabelsPaint = value; }
-
-        /// <inheritdoc cref="IAxis{TDrawingContext}.SeparatorsBrush"/>
-        [Obsolete("Renamed to SeparatorsPaint")]
-        public IPaint<TDrawingContext>? SeparatorsBrush { get => SeparatorsPaint; set => SeparatorsPaint = value; }
-
         /// <inheritdoc cref="IPlane.AnimationsSpeed"/>
         public TimeSpan? AnimationsSpeed { get; set; }
 
@@ -193,8 +176,8 @@ namespace LiveChartsCore
 
         #endregion
 
-        /// <inheritdoc cref="IAxis.Initialized"/>
-        public event Action<IAxis>? Initialized;
+        /// <inheritdoc cref="IPolarAxis.Initialized"/>
+        public event Action<IPolarAxis>? Initialized;
 
         /// <summary>
         /// Occurs when a property value changes.
@@ -205,18 +188,14 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
         public override void Measure(Chart<TDrawingContext> chart)
         {
-            var cartesianChart = (CartesianChart<TDrawingContext>)chart;
+            var polarChart = (PolarChart<TDrawingContext>)chart;
 
             if (_dataBounds is null) throw new Exception("DataBounds not found");
 
-            var controlSize = cartesianChart.ControlSize;
-            var drawLocation = cartesianChart.DrawMarginLocation;
-            var drawMarginSize = cartesianChart.DrawMarginSize;
+            var controlSize = polarChart.ControlSize;
+            var drawLocation = polarChart.DrawMarginLocation;
+            var drawMarginSize = polarChart.DrawMarginSize;
 
-            var scale = new Scaler(drawLocation, drawMarginSize, this);
-            var previousSacale = ((IAxis)this).PreviousDataBounds is null
-                ? null
-                : new Scaler(drawLocation, drawMarginSize, this, true);
             var axisTick = this.GetTick(drawMarginSize);
 
             var labeler = Labeler;
@@ -233,39 +212,24 @@ namespace LiveChartsCore
             if (NamePaint is not null)
             {
                 NamePaint.ZIndex = -1;
-                cartesianChart.Canvas.AddDrawableTask(NamePaint);
+                polarChart.Canvas.AddDrawableTask(NamePaint);
             }
             if (LabelsPaint is not null)
             {
                 LabelsPaint.ZIndex = -1;
-                cartesianChart.Canvas.AddDrawableTask(LabelsPaint);
+                polarChart.Canvas.AddDrawableTask(LabelsPaint);
             }
             if (SeparatorsPaint is not null)
             {
                 SeparatorsPaint.ZIndex = -1;
-                SeparatorsPaint.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
-                cartesianChart.Canvas.AddDrawableTask(SeparatorsPaint);
+                SeparatorsPaint.SetClipRectangle(polarChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                polarChart.Canvas.AddDrawableTask(SeparatorsPaint);
             }
 
-            var lyi = drawLocation.Y;
-            var lyj = drawLocation.Y + drawMarginSize.Height;
-            var lxi = drawLocation.X;
-            var lxj = drawLocation.X + drawMarginSize.Width;
+            var a = _orientation == PolarAxisOrientation.Angle ? this : polarChart.AngleAxes[0];
+            var b = _orientation == PolarAxisOrientation.Angle ? this : polarChart.RadiusAxes[0];
 
-            float xoo = 0f, yoo = 0f;
-
-            if (_orientation == AxisOrientation.X)
-            {
-                yoo = _position == AxisPosition.Start
-                     ? controlSize.Height - _yo
-                     : _yo;
-            }
-            else
-            {
-                xoo = _position == AxisPosition.Start
-                    ? _xo
-                    : controlSize.Width - _xo;
-            }
+            var scaler = new PolarScaler(polarChart.DrawMarginLocation, polarChart.DrawMarginSize, a, b, 0);
 
             var size = (float)TextSize;
             var r = (float)_labelsRotation;
@@ -275,65 +239,57 @@ namespace LiveChartsCore
             var min = MinLimit is null ? (_visibleDataBounds ?? _dataBounds).Min : MinLimit.Value;
 
             var start = Math.Truncate(min / s) * s;
-            if (!activeSeparators.TryGetValue(cartesianChart, out var separators))
+
+            if (!activeSeparators.TryGetValue(polarChart, out var separators))
             {
-                separators = new Dictionary<double, AxisVisualSeprator<TDrawingContext>>();
-                activeSeparators[cartesianChart] = separators;
+                separators = new Dictionary<double, IVisualSeparator<TDrawingContext>>();
+                activeSeparators[polarChart] = separators;
             }
 
-            if (Name is not null && NamePaint is not null)
-            {
-                if (_nameGeometry is null)
-                {
-                    _nameGeometry = new TTextGeometry
-                    {
-                        TextSize = size,
-                        HorizontalAlign = Align.Middle,
-                        VerticalAlign = Align.Middle
-                    };
-                }
+            //if (Name is not null && NamePaint is not null)
+            //{
+            //    if (_nameGeometry is null)
+            //    {
+            //        _nameGeometry = new TTextGeometry
+            //        {
+            //            TextSize = size,
+            //            HorizontalAlign = Align.Middle,
+            //            VerticalAlign = Align.Middle
+            //        };
+            //    }
 
-                _nameGeometry.Padding = NamePadding;
-                _nameGeometry.Text = Name;
-                _nameGeometry.TextSize = (float)NameTextSize;
+            //    _nameGeometry.Padding = NamePadding;
+            //    _nameGeometry.Text = Name;
+            //    _nameGeometry.TextSize = (float)NameTextSize;
 
-                if (_orientation == AxisOrientation.X)
-                {
-                    var nameSize = _nameGeometry.Measure(NamePaint);
-                    _nameGeometry.X = (lxi + lxj) * 0.5f;
-                    _nameGeometry.Y = Position == AxisPosition.Start ? yoo + nameSize.Height : yoo - nameSize.Height;
-                }
-                else
-                {
-                    _nameGeometry.RotateTransform = -90;
-                    var nameSize = _nameGeometry.Measure(NamePaint);
-                    _nameGeometry.X = Position == AxisPosition.Start ? xoo - nameSize.Width - Padding.Bottom : xoo + nameSize.Width + Padding.Bottom;
-                    _nameGeometry.Y = (lyi + lyj) * 0.5f;
-                }
-            }
+            //    if (_orientation == AxisOrientation.X)
+            //    {
+            //        var nameSize = _nameGeometry.Measure(NamePaint);
+            //        _nameGeometry.X = (lxi + lxj) * 0.5f;
+            //        _nameGeometry.Y = Position == AxisPosition.Start ? yoo + nameSize.Height : yoo - nameSize.Height;
+            //    }
+            //    else
+            //    {
+            //        _nameGeometry.RotateTransform = -90;
+            //        var nameSize = _nameGeometry.Measure(NamePaint);
+            //        _nameGeometry.X = Position == AxisPosition.Start ? xoo - nameSize.Width - Padding.Bottom : xoo + nameSize.Width + Padding.Bottom;
+            //        _nameGeometry.Y = (lyi + lyj) * 0.5f;
+            //    }
+            //}
 
-            var measured = new HashSet<AxisVisualSeprator<TDrawingContext>>();
+            var measured = new HashSet<IVisualSeparator<TDrawingContext>>();
 
             for (var i = start; i <= max; i += s)
             {
                 if (i < min) continue;
 
                 var label = labeler(i);
-                float x, y;
-                if (_orientation == AxisOrientation.X)
-                {
-                    x = scale.ToPixels(i);
-                    y = yoo;
-                }
-                else
-                {
-                    x = xoo;
-                    y = scale.ToPixels(i);
-                }
 
                 if (!separators.TryGetValue(i, out var visualSeparator))
                 {
-                    visualSeparator = new AxisVisualSeprator<TDrawingContext>() { Value = i };
+                    visualSeparator = _orientation == PolarAxisOrientation.Angle
+                        ? new AxisVisualSeprator<TDrawingContext>() { Value = i }
+                        : new PolarAxisVisualSeparator<TDrawingContext>() { Value = i };
 
                     if (LabelsPaint is not null)
                     {
@@ -348,81 +304,50 @@ namespace LiveChartsCore
                                 nameof(textGeometry.Opacity))
                             .WithAnimation(animation =>
                                 animation
-                                    .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                                    .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
+                                    .WithDuration(AnimationsSpeed ?? polarChart.AnimationsSpeed)
+                                    .WithEasingFunction(EasingFunction ?? polarChart.EasingFunction));
 
                         textGeometry.Opacity = 0;
-
-                        if (previousSacale is not null)
-                        {
-                            float xi, yi;
-
-                            if (_orientation == AxisOrientation.X)
-                            {
-                                xi = previousSacale.ToPixels(i);
-                                yi = yoo;
-                            }
-                            else
-                            {
-                                xi = xoo;
-                                yi = previousSacale.ToPixels(i);
-                            }
-
-                            textGeometry.X = xi;
-                            textGeometry.Y = yi;
-                            textGeometry.CompleteAllTransitions();
-                        }
                     }
 
                     if (SeparatorsPaint is not null && ShowSeparatorLines)
                     {
-                        var lineGeometry = new TLineGeometry();
-
-                        visualSeparator.Line = lineGeometry;
-
-                        _ = lineGeometry
-                            .TransitionateProperties(
-                                nameof(lineGeometry.X), nameof(lineGeometry.X1),
-                                nameof(lineGeometry.Y), nameof(lineGeometry.Y1),
-                                nameof(lineGeometry.Opacity))
-                            .WithAnimation(animation =>
-                                animation
-                                    .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                                    .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
-
-                        lineGeometry.Opacity = 0;
-
-                        if (previousSacale is not null)
+                        if (visualSeparator is PolarAxisVisualSeparator<TDrawingContext> polarSeparator)
                         {
-                            float xi, yi;
+                            var circleGeometry = new TCircleGeometry();
 
-                            if (_orientation == AxisOrientation.X)
-                            {
-                                xi = previousSacale.ToPixels(i);
-                                yi = yoo;
-                            }
-                            else
-                            {
-                                xi = xoo;
-                                yi = previousSacale.ToPixels(i);
-                            }
+                            polarSeparator.Circle = circleGeometry;
 
-                            if (_orientation == AxisOrientation.X)
-                            {
-                                lineGeometry.X = xi;
-                                lineGeometry.X1 = xi;
-                                lineGeometry.Y = lyi;
-                                lineGeometry.Y1 = lyj;
-                            }
-                            else
-                            {
-                                lineGeometry.X = lxi;
-                                lineGeometry.X1 = lxj;
-                                lineGeometry.Y = yi;
-                                lineGeometry.Y1 = yi;
-                            }
+                            _ = circleGeometry
+                                .TransitionateProperties(
+                                    nameof(circleGeometry.X), nameof(circleGeometry.Y),
+                                    nameof(circleGeometry.Width), nameof(circleGeometry.Height),
+                                    nameof(circleGeometry.Opacity))
+                                .WithAnimation(animation =>
+                                    animation
+                                        .WithDuration(AnimationsSpeed ?? polarChart.AnimationsSpeed)
+                                        .WithEasingFunction(EasingFunction ?? polarChart.EasingFunction));
 
-                            lineGeometry.CompleteAllTransitions();
+                            circleGeometry.Opacity = 0;
+                        }
+
+                        if (visualSeparator is AxisVisualSeprator<TDrawingContext> linearSeparator)
+                        {
+                            var lineGeometry = new TLineGeometry();
+
+                            linearSeparator.Line = lineGeometry;
+
+                            _ = lineGeometry
+                                .TransitionateProperties(
+                                    nameof(lineGeometry.X), nameof(lineGeometry.X1),
+                                    nameof(lineGeometry.Y), nameof(lineGeometry.Y1),
+                                    nameof(lineGeometry.Opacity))
+                                .WithAnimation(animation =>
+                                    animation
+                                        .WithDuration(AnimationsSpeed ?? polarChart.AnimationsSpeed)
+                                        .WithEasingFunction(EasingFunction ?? polarChart.EasingFunction));
+
+                            lineGeometry.Opacity = 0;
                         }
                     }
 
@@ -430,18 +355,22 @@ namespace LiveChartsCore
                 }
 
                 if (NamePaint is not null && _nameGeometry is not null)
-                    NamePaint.AddGeometryToPaintTask(cartesianChart.Canvas, _nameGeometry);
+                    NamePaint.AddGeometryToPaintTask(polarChart.Canvas, _nameGeometry);
                 if (LabelsPaint is not null && visualSeparator.Text is not null)
-                    LabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Text);
-                if (SeparatorsPaint is not null && ShowSeparatorLines && visualSeparator.Line is not null)
-                    SeparatorsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Line);
+                    LabelsPaint.AddGeometryToPaintTask(polarChart.Canvas, visualSeparator.Text);
+                if (SeparatorsPaint is not null && ShowSeparatorLines && visualSeparator.Geometry is not null)
+                    SeparatorsPaint.AddGeometryToPaintTask(polarChart.Canvas, visualSeparator.Geometry);
+
+                var location = _orientation == PolarAxisOrientation.Angle
+                        ? scaler.ToPixels(visualSeparator.Value, scaler.MaxRadius)
+                        : scaler.ToPixels(0, visualSeparator.Value);
 
                 if (visualSeparator.Text is not null)
                 {
                     visualSeparator.Text.Text = label;
                     visualSeparator.Text.Padding = _padding;
-                    visualSeparator.Text.X = x;
-                    visualSeparator.Text.Y = y;
+                    visualSeparator.Text.X = location.X;
+                    visualSeparator.Text.Y = location.Y;
                     if (hasRotation) visualSeparator.Text.RotateTransform = r;
 
                     visualSeparator.Text.Opacity = 1;
@@ -449,36 +378,40 @@ namespace LiveChartsCore
                     if (((IAxis)this).PreviousDataBounds is null) visualSeparator.Text.CompleteAllTransitions();
                 }
 
-                if (visualSeparator.Line is not null)
+                if (visualSeparator.Geometry is not null)
                 {
-                    if (_orientation == AxisOrientation.X)
+                    if (visualSeparator is AxisVisualSeprator<TDrawingContext> lineSepartator && lineSepartator.Line is not null)
                     {
-                        visualSeparator.Line.X = x;
-                        visualSeparator.Line.X1 = x;
-                        visualSeparator.Line.Y = lyi;
-                        visualSeparator.Line.Y1 = lyj;
-                    }
-                    else
-                    {
-                        visualSeparator.Line.X = lxi;
-                        visualSeparator.Line.X1 = lxj;
-                        visualSeparator.Line.Y = y;
-                        visualSeparator.Line.Y1 = y;
+                        lineSepartator.Line.X = scaler.CenterX;
+                        lineSepartator.Line.X1 = location.X;
+                        lineSepartator.Line.Y = scaler.CenterY;
+                        lineSepartator.Line.Y1 = location.Y;
+
+                        if (((IAxis)this).PreviousDataBounds is null) lineSepartator.Line.CompleteAllTransitions();
                     }
 
-                    visualSeparator.Line.Opacity = 1;
+                    if (visualSeparator is PolarAxisVisualSeparator<TDrawingContext> polarSeparator && polarSeparator.Circle is not null)
+                    {
+                        var radius = Math.Abs(location.Y - scaler.CenterY);
+                        polarSeparator.Circle.X = scaler.CenterX - radius;
+                        polarSeparator.Circle.Y = scaler.CenterY - radius;
+                        polarSeparator.Circle.Width = radius * 2;
+                        polarSeparator.Circle.Height = radius * 2;
 
-                    if (((IAxis)this).PreviousDataBounds is null) visualSeparator.Line.CompleteAllTransitions();
+                        if (((IAxis)this).PreviousDataBounds is null) polarSeparator.Circle.CompleteAllTransitions();
+                    }
+
+                    visualSeparator.Geometry.Opacity = 1;
                 }
 
-                if (visualSeparator.Text is not null || visualSeparator.Line is not null) _ = measured.Add(visualSeparator);
+                if (visualSeparator.Text is not null || visualSeparator.Geometry is not null) _ = measured.Add(visualSeparator);
             }
 
             foreach (var separator in separators.ToArray())
             {
                 if (measured.Contains(separator.Value)) continue;
 
-                SoftDeleteSeparator(cartesianChart, separator.Value, scale);
+                SoftDeleteSeparator(polarChart, separator.Value, scaler);
                 _ = separators.Remove(separator.Key);
             }
         }
@@ -492,8 +425,8 @@ namespace LiveChartsCore
             {
                 Text = Name ?? string.Empty,
                 TextSize = (float)NameTextSize,
-                RotateTransform = Orientation == AxisOrientation.X ? 0 : -90,
-                Padding = Padding
+                //RotateTransform = Orientation == AxisOrientation.X ? 0 : -90,
+                //Padding = Padding
             };
 
             return textGeometry.Measure(NamePaint);
@@ -544,8 +477,8 @@ namespace LiveChartsCore
             return new SizeF(w, h);
         }
 
-        /// <inheritdoc cref="IAxis.Initialize(AxisOrientation)"/>
-        void IAxis.Initialize(AxisOrientation orientation)
+        /// <inheritdoc cref="IPolarAxis.Initialize(PolarAxisOrientation)"/>
+        void IPolarAxis.Initialize(PolarAxisOrientation orientation)
         {
             _orientation = orientation;
             _dataBounds = new Bounds();
@@ -598,74 +531,42 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="chart">The chart.</param>
         /// <param name="separator">The separator.</param>
-        /// <param name="scaler">The scaler.</param>
+        /// <param name="scaler">The scale.</param>
         /// <returns></returns>
         protected virtual void SoftDeleteSeparator(
             Chart<TDrawingContext> chart,
-            AxisVisualSeprator<TDrawingContext> separator,
-            Scaler scaler)
+            IVisualSeparator<TDrawingContext> separator,
+            PolarScaler scaler)
         {
-            var controlSize = chart.ControlSize;
-            var drawLocation = chart.DrawMarginLocation;
-            var drawMarginSize = chart.DrawMarginSize;
+            if (separator.Geometry is null) return;
 
-            var lyi = drawLocation.Y;
-            var lyj = drawLocation.Y + drawMarginSize.Height;
-            var lxi = drawLocation.X;
-            var lxj = drawLocation.X + drawMarginSize.Width;
+            var location = _orientation == PolarAxisOrientation.Angle
+                ? scaler.ToPixels(separator.Value, scaler.MaxRadius)
+                : scaler.ToPixels(0, separator.Value);
 
-            float xoo = 0f, yoo = 0f;
-
-            if (_orientation == AxisOrientation.X)
+            if (separator is AxisVisualSeprator<TDrawingContext> lineSeparator)
             {
-                yoo = _position == AxisPosition.Start
-                     ? controlSize.Height - _yo
-                     : _yo;
-            }
-            else
-            {
-                xoo = _position == AxisPosition.Start
-                    ? _xo
-                    : controlSize.Width - _xo;
+                lineSeparator.Line!.X = scaler.CenterX;
+                lineSeparator.Line.Y = scaler.CenterY;
+                lineSeparator.Line.X1 = location.X;
+                lineSeparator.Line.Y1 = location.Y;
             }
 
-            float x, y;
-            if (_orientation == AxisOrientation.X)
+            if (separator is PolarAxisVisualSeparator<TDrawingContext> polarSeparator)
             {
-                x = scaler.ToPixels(separator.Value);
-                y = yoo;
-            }
-            else
-            {
-                x = xoo;
-                y = scaler.ToPixels(separator.Value);
+                polarSeparator.Circle!.X = scaler.CenterX;
+                polarSeparator.Circle.Y = scaler.CenterY;
+                polarSeparator.Circle.Width = 0;
+                polarSeparator.Circle.Height = 0;
             }
 
-            if (separator.Line is not null)
-            {
-                if (_orientation == AxisOrientation.X)
-                {
-                    separator.Line.X = x;
-                    separator.Line.X1 = x;
-                    separator.Line.Y = lyi;
-                    separator.Line.Y1 = lyj;
-                }
-                else
-                {
-                    separator.Line.X = lxi;
-                    separator.Line.X1 = lxj;
-                    separator.Line.Y = y;
-                    separator.Line.Y1 = y;
-                }
-
-                separator.Line.Opacity = 0;
-                separator.Line.RemoveOnCompleted = true;
-            }
+            separator.Geometry.Opacity = 0;
+            separator.Geometry.RemoveOnCompleted = true;
 
             if (separator.Text is not null)
             {
-                separator.Text.X = x;
-                separator.Text.Y = y;
+                separator.Text.X = 0;
+                separator.Text.Y = 0;
                 separator.Text.Opacity = 0;
                 separator.Text.RemoveOnCompleted = true;
             }

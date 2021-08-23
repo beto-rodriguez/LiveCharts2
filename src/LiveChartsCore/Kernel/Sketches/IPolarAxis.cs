@@ -20,19 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
 using System;
 using System.Drawing;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
-using LiveChartsCore.Drawing.Common;
-using System.ComponentModel;
 
 namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
-    /// Defines an Axis in a Cartesian chart. 
+    /// Defines a polar axis.
     /// </summary>
-    public interface IAxis : IPlane, INotifyPropertyChanged
+    public interface IPolarAxis : IPlane
     {
         /// <summary>
         /// Gets the orientation.
@@ -40,50 +38,18 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <value>
         /// The orientation.
         /// </value>
-        AxisOrientation Orientation { get; }
-
-        /// <summary>
-        /// Gets or sets the padding.
-        /// </summary>
-        /// <value>
-        /// The padding.
-        /// </value>
-        Padding Padding { get; set; }
-
-        /// <summary>
-        /// Gets or sets the xo, a reference used internally to calculate the axis position.
-        /// </summary>
-        /// <value>
-        /// The xo.
-        /// </value>
-        float Xo { get; set; }
-
-        /// <summary>
-        /// Gets or sets the yo, a reference used internally to calculate the axis position..
-        /// </summary>
-        /// <value>
-        /// The yo.
-        /// </value>
-        float Yo { get; set; }
-
-        /// <summary>
-        /// Gets or sets the axis position.
-        /// </summary>
-        /// <value>
-        /// The position.
-        /// </value>
-        AxisPosition Position { get; set; }
+        PolarAxisOrientation Orientation { get; }
 
         /// <summary>
         /// Initializes the axis for the specified orientation.
         /// </summary>
         /// <param name="orientation">The orientation.</param>
-        void Initialize(AxisOrientation orientation);
+        void Initialize(PolarAxisOrientation orientation);
 
         /// <summary>
         /// Occurs when the axis is initialized.
         /// </summary>
-        event Action<IAxis>? Initialized;
+        event Action<IPolarAxis>? Initialized;
     }
 
     /// <summary>
@@ -91,7 +57,7 @@ namespace LiveChartsCore.Kernel.Sketches
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="IDisposable" />
-    public interface IAxis<TDrawingContext> : IAxis, IChartElement<TDrawingContext>
+    public interface IPolarAxis<TDrawingContext> : IPolarAxis, IChartElement<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
@@ -103,30 +69,12 @@ namespace LiveChartsCore.Kernel.Sketches
         IPaint<TDrawingContext>? NamePaint { get; set; }
 
         /// <summary>
-        /// Gets or sets the text brush.
-        /// </summary>
-        /// <value>
-        /// The text brush.
-        /// </value>
-        [Obsolete("Renamed to TextPaint")]
-        IPaint<TDrawingContext>? TextBrush { get; set; }
-
-        /// <summary>
         /// Gets or sets the text paint.
         /// </summary>
         /// <value>
         /// The text paint.
         /// </value>
         IPaint<TDrawingContext>? LabelsPaint { get; set; }
-
-        /// <summary>
-        /// Gets or sets the separators brush.
-        /// </summary>
-        /// <value>
-        /// The separators brush.
-        /// </value>
-        [Obsolete("Renamed to SeparatorsPaint")]
-        IPaint<TDrawingContext>? SeparatorsBrush { get; set; }
 
         /// <summary>
         /// Gets or sets the separators paint.

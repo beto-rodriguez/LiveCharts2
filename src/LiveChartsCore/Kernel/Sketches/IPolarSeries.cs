@@ -20,30 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+using LiveChartsCore.Drawing;
+
+namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
-    /// Defines a context that is able to draw 2D shapes in the user interface.
+    /// Defines a polar series.
     /// </summary>
-    public abstract class DrawingContext
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="IChartSeries{TDrawingContext}" />
+    public interface IPolarSeries<TDrawingContext> : IChartSeries<TDrawingContext>
+        where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DrawingContext"/> class.
+        /// Gets or sets the axis index where the series is scaled in the angle plane, the index must exist 
+        /// in the <see cref="IPolarSeries{TDrawingContext}.ScalesAngleAt"/> collection.
         /// </summary>
-        public DrawingContext(bool lockOnDraw = false)
-        {
-            LockOnDraw = lockOnDraw;
-        }
+        /// <value>
+        /// The index of the axis.
+        /// </value>
+        int ScalesAngleAt { get; set; }
 
         /// <summary>
-        /// Gets or sets a property indicating whether the canvas should be locked while the
-        /// charts is being drawn.
+        /// Gets or sets the axis index where the series is scaled in the radius plane, the index must exist 
+        /// in the <see cref="IPolarSeries{TDrawingContext}.ScalesRadiusAt"/> collection.
         /// </summary>
-        public bool LockOnDraw { get; }
-
-        /// <summary>
-        /// Clears the canvas.
-        /// </summary>
-        public abstract void ClearCanvas();
+        /// <value>
+        /// The index of the axis.
+        /// </value>
+        int ScalesRadiusAt { get; set; }
     }
 }
