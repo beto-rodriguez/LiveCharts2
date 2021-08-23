@@ -42,9 +42,7 @@ namespace LiveChartsCore
     /// <typeparam name="TTextGeometry">The type of the text geometry.</typeparam>
     /// <typeparam name="TCircleGeometry">The type of the circle geometry.</typeparam>
     /// /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
-    /// <seealso cref="IAxis{TDrawingContext}" />
-    /// <seealso cref="INotifyPropertyChanged" />
-    public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, TCircleGeometry> : ChartElement<TDrawingContext>, IPolarAxis<TDrawingContext>
+    public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, TCircleGeometry> : ChartElement<TDrawingContext>, IPolarAxis, IPlane<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TTextGeometry : ILabelGeometry<TDrawingContext>, new()
         where TLineGeometry : ILineGeometry<TDrawingContext>, new()
@@ -144,21 +142,21 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IPlane.IsInverted"/>
         public bool IsInverted { get => _isInverted; set { _isInverted = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.NamePaint"/>
+        /// <inheritdoc cref="IPlane{TDrawingContext}.NamePaint"/>
         public IPaint<TDrawingContext>? NamePaint
         {
             get => _namePaint;
             set => SetPaintProperty(ref _namePaint, value);
         }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.LabelsPaint"/>
+        /// <inheritdoc cref="IPlane{TDrawingContext}.LabelsPaint"/>
         public IPaint<TDrawingContext>? LabelsPaint
         {
             get => _labelsPaint;
             set => SetPaintProperty(ref _labelsPaint, value);
         }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.SeparatorsPaint"/>
+        /// <inheritdoc cref="IPlane{TDrawingContext}.SeparatorsPaint"/>
         public IPaint<TDrawingContext>? SeparatorsPaint
         {
             get => _separatorsPaint;
@@ -375,7 +373,7 @@ namespace LiveChartsCore
 
                     visualSeparator.Text.Opacity = 1;
 
-                    if (((IAxis)this).PreviousDataBounds is null) visualSeparator.Text.CompleteAllTransitions();
+                    if (((ICartesianAxis)this).PreviousDataBounds is null) visualSeparator.Text.CompleteAllTransitions();
                 }
 
                 if (visualSeparator.Geometry is not null)
@@ -387,7 +385,7 @@ namespace LiveChartsCore
                         lineSepartator.Line.Y = scaler.CenterY;
                         lineSepartator.Line.Y1 = location.Y;
 
-                        if (((IAxis)this).PreviousDataBounds is null) lineSepartator.Line.CompleteAllTransitions();
+                        if (((ICartesianAxis)this).PreviousDataBounds is null) lineSepartator.Line.CompleteAllTransitions();
                     }
 
                     if (visualSeparator is PolarAxisVisualSeparator<TDrawingContext> polarSeparator && polarSeparator.Circle is not null)
@@ -398,7 +396,7 @@ namespace LiveChartsCore
                         polarSeparator.Circle.Width = radius * 2;
                         polarSeparator.Circle.Height = radius * 2;
 
-                        if (((IAxis)this).PreviousDataBounds is null) polarSeparator.Circle.CompleteAllTransitions();
+                        if (((ICartesianAxis)this).PreviousDataBounds is null) polarSeparator.Circle.CompleteAllTransitions();
                     }
 
                     visualSeparator.Geometry.Opacity = 1;
@@ -416,8 +414,8 @@ namespace LiveChartsCore
             }
         }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.GetNameLabelSize(CartesianChart{TDrawingContext})"/>
-        public SizeF GetNameLabelSize(CartesianChart<TDrawingContext> chart)
+        /// <inheritdoc cref="IPlane{TDrawingContext}.GetNameLabelSize(Chart{TDrawingContext})"/>
+        public SizeF GetNameLabelSize(Chart<TDrawingContext> chart)
         {
             if (NamePaint is null || string.IsNullOrWhiteSpace(Name)) return new SizeF(0, 0);
 
@@ -432,8 +430,8 @@ namespace LiveChartsCore
             return textGeometry.Measure(NamePaint);
         }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.GetPossibleSize(CartesianChart{TDrawingContext})"/>
-        public virtual SizeF GetPossibleSize(CartesianChart<TDrawingContext> chart)
+        /// <inheritdoc cref="IPlane{TDrawingContext}.GetPossibleSize(Chart{TDrawingContext})"/>
+        public virtual SizeF GetPossibleSize(Chart<TDrawingContext> chart)
         {
             if (_dataBounds is null) throw new Exception("DataBounds not found");
             if (LabelsPaint is null) return new SizeF(0f, 0f);
@@ -522,7 +520,7 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
-            if (!((IAxis)this).IsNotifyingChanges) return;
+            if (!((ICartesianAxis)this).IsNotifyingChanges) return;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 

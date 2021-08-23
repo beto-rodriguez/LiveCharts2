@@ -42,7 +42,7 @@ namespace LiveChartsCore
         where TDrawingContext : DrawingContext
     {
         internal readonly HashSet<ISeries> _everMeasuredSeries = new();
-        internal readonly HashSet<IAxis<TDrawingContext>> _everMeasuredAxes = new();
+        internal readonly HashSet<IPlane<TDrawingContext>> _everMeasuredAxes = new();
         internal readonly HashSet<Section<TDrawingContext>> _everMeasuredSections = new();
         private readonly ICartesianChartView<TDrawingContext> _chartView;
         private int _nextSeries = 0;
@@ -89,7 +89,7 @@ namespace LiveChartsCore
         /// <value>
         /// The x axes.
         /// </value>
-        public IAxis<TDrawingContext>[] XAxes { get; private set; } = new IAxis<TDrawingContext>[0];
+        public ICartesianAxis[] XAxes { get; private set; } = new ICartesianAxis[0];
 
         /// <summary>
         /// Gets the y axes.
@@ -97,7 +97,7 @@ namespace LiveChartsCore
         /// <value>
         /// The y axes.
         /// </value>
-        public IAxis<TDrawingContext>[] YAxes { get; private set; } = new IAxis<TDrawingContext>[0];
+        public ICartesianAxis[] YAxes { get; private set; } = new ICartesianAxis[0];
 
         /// <summary>
         /// Gets the series.
@@ -380,8 +380,8 @@ namespace LiveChartsCore
             var viewDrawMargin = _chartView.DrawMargin;
             ControlSize = _chartView.ControlSize;
 
-            YAxes = _chartView.YAxes.Cast<IAxis<TDrawingContext>>().Select(x => x).ToArray();
-            XAxes = _chartView.XAxes.Cast<IAxis<TDrawingContext>>().Select(x => x).ToArray();
+            YAxes = _chartView.YAxes.Cast<ICartesianAxis>().Select(x => x).ToArray();
+            XAxes = _chartView.XAxes.Cast<ICartesianAxis>().Select(x => x).ToArray();
 
             _zoomingSpeed = _chartView.ZoomingSpeed;
             _zoomMode = _chartView.ZoomMode;
@@ -421,14 +421,14 @@ namespace LiveChartsCore
             {
                 axis.IsNotifyingChanges = false;
                 axis.Initialize(AxisOrientation.X);
-                theme.ResolveAxisDefaults(axis, forceApply);
+                theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
                 axis.IsNotifyingChanges = true;
             }
             foreach (var axis in YAxes)
             {
                 axis.IsNotifyingChanges = false;
                 axis.Initialize(AxisOrientation.Y);
-                theme.ResolveAxisDefaults(axis, forceApply);
+                theme.ResolveAxisDefaults((IPlane<TDrawingContext>)axis, forceApply);
                 axis.IsNotifyingChanges = true;
             }
 
@@ -559,8 +559,9 @@ namespace LiveChartsCore
                         axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + c;
                     }
 
-                    var ns = axis.GetNameLabelSize(this);
-                    var s = axis.GetPossibleSize(this);
+                    var drawablePlane = (IPlane<TDrawingContext>)axis;
+                    var ns = drawablePlane.GetNameLabelSize(this);
+                    var s = drawablePlane.GetPossibleSize(this);
                     if (axis.Position == AxisPosition.Start)
                     {
                         // X Bottom
@@ -593,8 +594,9 @@ namespace LiveChartsCore
                         axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + c;
                     }
 
-                    var ns = axis.GetNameLabelSize(this);
-                    var s = axis.GetPossibleSize(this);
+                    var drawablePlane = (IPlane<TDrawingContext>)axis;
+                    var ns = drawablePlane.GetNameLabelSize(this);
+                    var s = drawablePlane.GetPossibleSize(this);
                     var w = s.Width > m.Left ? s.Width : m.Left;
                     if (axis.Position == AxisPosition.Start)
                     {
@@ -624,7 +626,7 @@ namespace LiveChartsCore
             if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
 
             var totalAxes = XAxes.Concat(YAxes).ToArray();
-            var toDeleteAxes = new HashSet<IAxis<TDrawingContext>>(_everMeasuredAxes);
+            var toDeleteAxes = new HashSet<IPlane<TDrawingContext>>(_everMeasuredAxes);
             foreach (var axis in totalAxes)
             {
                 if (axis.DataBounds.Max == axis.DataBounds.Min)
@@ -660,14 +662,15 @@ namespace LiveChartsCore
                     axis.IsNotifyingChanges = true;
                 }
 
-                _ = _everMeasuredAxes.Add(axis);
-                if (axis.IsVisible)
+                var drawablePlane = (IPlane<TDrawingContext>)axis;
+                _ = _everMeasuredAxes.Add(drawablePlane);
+                if (drawablePlane.IsVisible)
                 {
-                    axis.Measure(this);
-                    _ = toDeleteAxes.Remove(axis);
+                    drawablePlane.Measure(this);
+                    _ = toDeleteAxes.Remove(drawablePlane);
                 }
 
-                axis.RemoveOldPaints(View);
+                drawablePlane.RemoveOldPaints(View);
             }
 
             var toDeleteSections = new HashSet<Section<TDrawingContext>>(_everMeasuredSections);

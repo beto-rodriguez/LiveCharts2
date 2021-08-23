@@ -21,8 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Drawing;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.Kernel.Sketches
@@ -50,52 +48,5 @@ namespace LiveChartsCore.Kernel.Sketches
         /// Occurs when the axis is initialized.
         /// </summary>
         event Action<IPolarAxis>? Initialized;
-    }
-
-    /// <summary>
-    /// Defines an Axis in a Cartesian chart.
-    /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IDisposable" />
-    public interface IPolarAxis<TDrawingContext> : IPolarAxis, IChartElement<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets or sets the name paint.
-        /// </summary>
-        /// <value>
-        /// The text paint.
-        /// </value>
-        IPaint<TDrawingContext>? NamePaint { get; set; }
-
-        /// <summary>
-        /// Gets or sets the text paint.
-        /// </summary>
-        /// <value>
-        /// The text paint.
-        /// </value>
-        IPaint<TDrawingContext>? LabelsPaint { get; set; }
-
-        /// <summary>
-        /// Gets or sets the separators paint.
-        /// </summary>
-        /// <value>
-        /// The separators paint.
-        /// </value>
-        IPaint<TDrawingContext>? SeparatorsPaint { get; set; }
-
-        /// <summary>
-        /// Gets the size of the possible.
-        /// </summary>
-        /// <param name="chart">The chart.</param>
-        /// <returns></returns>
-        SizeF GetPossibleSize(CartesianChart<TDrawingContext> chart);
-
-        /// <summary>
-        /// Gets the size of the axis name label.
-        /// </summary>
-        /// <param name="chart"></param>
-        /// <returns></returns>
-        SizeF GetNameLabelSize(CartesianChart<TDrawingContext> chart);
     }
 }

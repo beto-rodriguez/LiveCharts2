@@ -24,6 +24,8 @@ using System;
 using LiveChartsCore.Measure;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing.Common;
+using LiveChartsCore.Drawing;
+using System.Drawing;
 
 namespace LiveChartsCore.Kernel.Sketches
 {
@@ -225,5 +227,52 @@ namespace LiveChartsCore.Kernel.Sketches
         /// Gets or sets a value indicating whether the separator lines are visible.
         /// </summary>
         bool ShowSeparatorLines { get; set; }
+    }
+
+    /// <summary>
+    /// Defines an Axis in a Cartesian chart.
+    /// </summary>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <seealso cref="IDisposable" />
+    public interface IPlane<TDrawingContext> : IPlane, IChartElement<TDrawingContext>
+        where TDrawingContext : DrawingContext
+    {
+        /// <summary>
+        /// Gets or sets the name paint.
+        /// </summary>
+        /// <value>
+        /// The text paint.
+        /// </value>
+        IPaint<TDrawingContext>? NamePaint { get; set; }
+
+        /// <summary>
+        /// Gets or sets the text paint.
+        /// </summary>
+        /// <value>
+        /// The text paint.
+        /// </value>
+        IPaint<TDrawingContext>? LabelsPaint { get; set; }
+
+        /// <summary>
+        /// Gets or sets the separators paint.
+        /// </summary>
+        /// <value>
+        /// The separators paint.
+        /// </value>
+        IPaint<TDrawingContext>? SeparatorsPaint { get; set; }
+
+        /// <summary>
+        /// Gets the size of the possible.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
+        /// <returns></returns>
+        SizeF GetPossibleSize(Chart<TDrawingContext> chart);
+
+        /// <summary>
+        /// Gets the size of the axis name label.
+        /// </summary>
+        /// <param name="chart">the chart.</param>
+        /// <returns></returns>
+        SizeF GetNameLabelSize(Chart<TDrawingContext> chart);
     }
 }

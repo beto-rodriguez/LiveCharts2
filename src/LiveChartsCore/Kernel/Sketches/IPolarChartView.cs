@@ -56,7 +56,7 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <value>
         /// The y axes.
         /// </value>
-        IEnumerable<IAxis> RadiusAxes { get; set; }
+        IEnumerable<ICartesianAxis> RadiusAxes { get; set; }
 
         ///// <summary>
         ///// Gets or sets the sections.

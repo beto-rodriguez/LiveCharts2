@@ -50,8 +50,8 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         private Chart<SkiaSharpDrawingContext>? _core;
         private MotionCanvas? _canvas;
         private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-        private readonly CollectionDeepObserver<IAxis> _xObserver;
-        private readonly CollectionDeepObserver<IAxis> _yObserver;
+        private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
+        private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
         private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
 
         #endregion
@@ -72,15 +72,15 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             InitializeComponent();
 
             _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            _xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            _yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
                 OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
             Loaded += OnLoaded;
 
-            SetValue(XAxesProperty, new ObservableCollection<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() });
-            SetValue(YAxesProperty, new ObservableCollection<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() });
+            SetValue(XAxesProperty, new ObservableCollection<ICartesianAxis>() { LiveCharts.CurrentSettings.AxisProvider() });
+            SetValue(YAxesProperty, new ObservableCollection<ICartesianAxis>() { LiveCharts.CurrentSettings.AxisProvider() });
             SetValue(SeriesProperty, new ObservableCollection<ISeries>());
             SetValue(SectionsProperty, new ObservableCollection<Section<SkiaSharpDrawingContext>>());
         }
@@ -108,13 +108,13 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty XAxesProperty =
             DependencyProperty.Register(
-                nameof(XAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new PropertyMetadata(null,
+                nameof(XAxes), typeof(IEnumerable<ICartesianAxis>), typeof(CartesianChart), new PropertyMetadata(null,
                     (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                     {
                         var chart = (CartesianChart)o;
                         var observer = chart._xObserver;
-                        observer.Dispose((IEnumerable<IAxis>)args.OldValue);
-                        observer.Initialize((IEnumerable<IAxis>)args.NewValue);
+                        observer.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
+                        observer.Initialize((IEnumerable<ICartesianAxis>)args.NewValue);
                         if (chart._core == null) return;
                         chart._core.Update();
                     }));
@@ -124,13 +124,13 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty YAxesProperty =
             DependencyProperty.Register(
-                nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new PropertyMetadata(null,
+                nameof(YAxes), typeof(IEnumerable<ICartesianAxis>), typeof(CartesianChart), new PropertyMetadata(null,
                     (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                     {
                         var chart = (CartesianChart)o;
                         var observer = chart._yObserver;
-                        observer.Dispose((IEnumerable<IAxis>)args.OldValue);
-                        observer.Initialize((IEnumerable<IAxis>)args.NewValue);
+                        observer.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
+                        observer.Initialize((IEnumerable<ICartesianAxis>)args.NewValue);
                         if (chart._core == null) return;
                         chart._core.Update();
                     }));
@@ -440,16 +440,16 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         }
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.XAxes" />
-        public IEnumerable<IAxis> XAxes
+        public IEnumerable<ICartesianAxis> XAxes
         {
-            get => (IEnumerable<IAxis>)GetValue(XAxesProperty);
+            get => (IEnumerable<ICartesianAxis>)GetValue(XAxesProperty);
             set => SetValue(XAxesProperty, value);
         }
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.YAxes" />
-        public IEnumerable<IAxis> YAxes
+        public IEnumerable<ICartesianAxis> YAxes
         {
-            get => (IEnumerable<IAxis>)GetValue(YAxesProperty);
+            get => (IEnumerable<ICartesianAxis>)GetValue(YAxesProperty);
             set => SetValue(YAxesProperty, value);
         }
 

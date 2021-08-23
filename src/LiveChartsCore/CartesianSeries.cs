@@ -66,9 +66,9 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.DataLabelsPosition"/>
         public DataLabelsPosition DataLabelsPosition { get => _labelsPosition; set { _labelsPosition = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
+        /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis{TDrawingContext}, ICartesianAxis{TDrawingContext})"/>
         public virtual SeriesBounds GetBounds(
-            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y)
+            CartesianChart<TDrawingContext> chart, ICartesianAxis<TDrawingContext> x, ICartesianAxis<TDrawingContext> y)
         {
             return dataProvider is null
                 ? throw new Exception("A data provider is required")

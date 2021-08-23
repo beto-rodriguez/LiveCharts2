@@ -107,12 +107,10 @@ namespace LiveChartsCore.Kernel
         /// <summary>
         /// Gets the tick.
         /// </summary>
-        /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
         /// <param name="axis">The axis.</param>
         /// <param name="controlSize">Size of the control.</param>
         /// <returns></returns>
-        public static AxisTick GetTick<TDrawingContext>(this IAxis<TDrawingContext> axis, SizeF controlSize)
-            where TDrawingContext : DrawingContext
+        public static AxisTick GetTick(this ICartesianAxis axis, SizeF controlSize)
         {
             return GetTick(axis, controlSize, axis.VisibleDataBounds);
         }
@@ -120,12 +118,10 @@ namespace LiveChartsCore.Kernel
         /// <summary>
         /// Gets the tick.
         /// </summary>
-        /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
         /// <param name="axis">The axis.</param>
         /// <param name="controlSize">Size of the control.</param>
         /// <returns></returns>
-        public static AxisTick GetTick<TDrawingContext>(this IPolarAxis<TDrawingContext> axis, SizeF controlSize)
-            where TDrawingContext : DrawingContext
+        public static AxisTick GetTick(this IPolarAxis axis, SizeF controlSize)
         {
             return GetTick(axis, controlSize, axis.VisibleDataBounds);
         }
@@ -133,13 +129,11 @@ namespace LiveChartsCore.Kernel
         /// <summary>
         /// Gets the tick.
         /// </summary>
-        /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
         /// <param name="axis">The axis.</param>
         /// <param name="controlSize">Size of the control.</param>
         /// <param name="bounds">The bounds.</param>
         /// <returns></returns>
-        public static AxisTick GetTick<TDrawingContext>(this IAxis<TDrawingContext> axis, SizeF controlSize, Bounds bounds)
-           where TDrawingContext : DrawingContext
+        public static AxisTick GetTick(this ICartesianAxis axis, SizeF controlSize, Bounds bounds)
         {
             var max = axis.MaxLimit is null ? bounds.Max : axis.MaxLimit.Value;
             var min = axis.MinLimit is null ? bounds.Min : axis.MinLimit.Value;
@@ -160,13 +154,11 @@ namespace LiveChartsCore.Kernel
         /// <summary>
         /// Gets the tick.
         /// </summary>
-        /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
         /// <param name="axis">The axis.</param>
         /// <param name="controlSize">Size of the control.</param>
         /// <param name="bounds">The bounds.</param>
         /// <returns></returns> 
-        public static AxisTick GetTick<TDrawingContext>(this IPolarAxis<TDrawingContext> axis, SizeF controlSize, Bounds bounds)
-           where TDrawingContext : DrawingContext
+        public static AxisTick GetTick(this IPolarAxis axis, SizeF controlSize, Bounds bounds)
         {
             var max = axis.MaxLimit is null ? bounds.Max : axis.MaxLimit.Value;
             var min = axis.MinLimit is null ? bounds.Min : axis.MinLimit.Value;

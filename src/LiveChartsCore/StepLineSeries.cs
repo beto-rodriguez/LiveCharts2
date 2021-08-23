@@ -436,9 +436,9 @@ namespace LiveChartsCore
             }
         }
 
-        /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
+        /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis{TDrawingContext}, ICartesianAxis{TDrawingContext})"/>
         public override SeriesBounds GetBounds(
-            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> secondaryAxis, IAxis<TDrawingContext> primaryAxis)
+            CartesianChart<TDrawingContext> chart, ICartesianAxis<TDrawingContext> secondaryAxis, ICartesianAxis<TDrawingContext> primaryAxis)
         {
             var baseSeriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
             if (baseSeriesBounds.HasData) return baseSeriesBounds;

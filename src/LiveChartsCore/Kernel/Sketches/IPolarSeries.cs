@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Data;
 
 namespace LiveChartsCore.Kernel.Sketches
 {
@@ -49,5 +50,14 @@ namespace LiveChartsCore.Kernel.Sketches
         /// The index of the axis.
         /// </value>
         int ScalesRadiusAt { get; set; }
+
+        /// <summary>
+        /// Gets the series bounds.
+        /// </summary>
+        /// <param name="chart">The chart.</param>
+        /// <param name="angleAxis">The angle axis.</param>
+        /// <param name="radiusAxis">The radius axis.</param>
+        /// <returns>the series bounds</returns>
+        SeriesBounds GetBounds(PolarChart<TDrawingContext> chart, IPolarAxis angleAxis, IPolarAxis radiusAxis);
     }
 }

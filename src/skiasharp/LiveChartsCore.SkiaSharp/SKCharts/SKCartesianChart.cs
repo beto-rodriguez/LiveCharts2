@@ -110,10 +110,10 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         public object SyncContext { get => CoreCanvas.Sync; set => CoreCanvas.Sync = value; }
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.XAxes"/>
-        public IEnumerable<IAxis> XAxes { get; set; } = new Axis[] { new Axis() };
+        public IEnumerable<ICartesianAxis> XAxes { get; set; } = new Axis[] { new Axis() };
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.YAxes"/>
-        public IEnumerable<IAxis> YAxes { get; set; } = new Axis[] { new Axis() };
+        public IEnumerable<ICartesianAxis> YAxes { get; set; } = new Axis[] { new Axis() };
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections"/>
         public IEnumerable<Section<SkiaSharpDrawingContext>> Sections { get; set; } = new RectangularSection[0];

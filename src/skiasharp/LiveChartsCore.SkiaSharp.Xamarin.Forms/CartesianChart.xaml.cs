@@ -51,8 +51,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         protected Chart<SkiaSharpDrawingContext>? core;
 
         private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-        private readonly CollectionDeepObserver<IAxis> _xObserver;
-        private readonly CollectionDeepObserver<IAxis> _yObserver;
+        private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
+        private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
         private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserverer;
         private Grid? _grid;
 
@@ -78,13 +78,13 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             SizeChanged += OnSizeChanged;
 
             _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            _xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            _yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _sectionsObserverer = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
                 OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-            XAxes = new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
-            YAxes = new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
+            XAxes = new List<ICartesianAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
+            YAxes = new List<ICartesianAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
             Series = new ObservableCollection<ISeries>();
 
             canvas.SkCanvasView.EnableTouchEvents = true;
@@ -133,13 +133,13 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// </summary>
         public static readonly BindableProperty XAxesProperty =
             BindableProperty.Create(
-                nameof(XAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>() { new Axis() },
+                nameof(XAxes), typeof(IEnumerable<ICartesianAxis>), typeof(CartesianChart), new List<ICartesianAxis>() { new Axis() },
                 BindingMode.Default, null, (BindableObject o, object oldValue, object newValue) =>
                 {
                     var chart = (CartesianChart)o;
                     var observer = chart._xObserver;
-                    observer.Dispose((IEnumerable<IAxis>)oldValue);
-                    observer.Initialize((IEnumerable<IAxis>)newValue);
+                    observer.Dispose((IEnumerable<ICartesianAxis>)oldValue);
+                    observer.Initialize((IEnumerable<ICartesianAxis>)newValue);
                     if (chart.core is null) return;
                     chart.core.Update();
                 });
@@ -149,13 +149,13 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// </summary>
         public static readonly BindableProperty YAxesProperty =
             BindableProperty.Create(
-                nameof(YAxes), typeof(IEnumerable<IAxis>), typeof(CartesianChart), new List<IAxis>() { new Axis() },
+                nameof(YAxes), typeof(IEnumerable<ICartesianAxis>), typeof(CartesianChart), new List<ICartesianAxis>() { new Axis() },
                 BindingMode.Default, null, (BindableObject o, object oldValue, object newValue) =>
                 {
                     var chart = (CartesianChart)o;
                     var observer = chart._yObserver;
-                    observer.Dispose((IEnumerable<IAxis>)oldValue);
-                    observer.Initialize((IEnumerable<IAxis>)newValue);
+                    observer.Dispose((IEnumerable<ICartesianAxis>)oldValue);
+                    observer.Initialize((IEnumerable<ICartesianAxis>)newValue);
                     if (chart.core is null) return;
                     chart.core.Update();
                 });
@@ -412,16 +412,16 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         }
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.XAxes" />
-        public IEnumerable<IAxis> XAxes
+        public IEnumerable<ICartesianAxis> XAxes
         {
-            get => (IEnumerable<IAxis>)GetValue(XAxesProperty);
+            get => (IEnumerable<ICartesianAxis>)GetValue(XAxesProperty);
             set => SetValue(XAxesProperty, value);
         }
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.YAxes" />
-        public IEnumerable<IAxis> YAxes
+        public IEnumerable<ICartesianAxis> YAxes
         {
-            get => (IEnumerable<IAxis>)GetValue(YAxesProperty);
+            get => (IEnumerable<ICartesianAxis>)GetValue(YAxesProperty);
             set => SetValue(YAxesProperty, value);
         }
 

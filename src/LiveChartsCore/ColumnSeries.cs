@@ -235,9 +235,9 @@ namespace LiveChartsCore
             }
         }
 
-        /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, IAxis{TDrawingContext}, IAxis{TDrawingContext})"/>
+        /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis{TDrawingContext}, ICartesianAxis{TDrawingContext})"/>
         public override SeriesBounds GetBounds(
-            CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> secondaryAxis, IAxis<TDrawingContext> primaryAxis)
+            CartesianChart<TDrawingContext> chart, ICartesianAxis<TDrawingContext> secondaryAxis, ICartesianAxis<TDrawingContext> primaryAxis)
         {
             var baseSeriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
 
@@ -354,7 +354,7 @@ namespace LiveChartsCore
                 Scaler scaler,
                 CartesianChart<TDrawingContext> cartesianChart,
                 IBarSeries<TDrawingContext> barSeries,
-                IAxis axis,
+                ICartesianAxis axis,
                 float p)
             {
                 this.p = p;

@@ -151,8 +151,8 @@ namespace LiveChartsCore.Kernel.Data
         public virtual SeriesBounds GetCartesianBounds(
             CartesianChart<TDrawingContext> chart,
             IChartSeries<TDrawingContext> series,
-            IAxis<TDrawingContext> x,
-            IAxis<TDrawingContext> y)
+            ICartesianAxis<TDrawingContext> x,
+            ICartesianAxis<TDrawingContext> y)
         {
             var stack = chart.SeriesContext.GetStackPosition(series, series.GetStackGroup());
 
@@ -214,8 +214,8 @@ namespace LiveChartsCore.Kernel.Data
         public virtual SeriesBounds GetFinancialBounds(
             CartesianChart<TDrawingContext> chart,
             IChartSeries<TDrawingContext> series,
-            IAxis<TDrawingContext> x,
-            IAxis<TDrawingContext> y)
+            ICartesianAxis<TDrawingContext> x,
+            ICartesianAxis<TDrawingContext> y)
         {
             var xMin = x.MinLimit ?? double.MinValue;
             var xMax = x.MaxLimit ?? double.MaxValue;

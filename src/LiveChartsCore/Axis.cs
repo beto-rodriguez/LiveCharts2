@@ -41,9 +41,7 @@ namespace LiveChartsCore
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <typeparam name="TTextGeometry">The type of the text geometry.</typeparam>
     /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
-    /// <seealso cref="IAxis{TDrawingContext}" />
-    /// <seealso cref="INotifyPropertyChanged" />
-    public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry> : ChartElement<TDrawingContext>, IAxis<TDrawingContext>
+    public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry> : ChartElement<TDrawingContext>, ICartesianAxis, IPlane<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TTextGeometry : ILabelGeometry<TDrawingContext>, new()
         where TLineGeometry : ILineGeometry<TDrawingContext>, new()
@@ -84,8 +82,8 @@ namespace LiveChartsCore
 
         #region properties
 
-        float IAxis.Xo { get => _xo; set => _xo = value; }
-        float IAxis.Yo { get => _yo; set => _yo = value; }
+        float ICartesianAxis.Xo { get => _xo; set => _xo = value; }
+        float ICartesianAxis.Yo { get => _yo; set => _yo = value; }
 
         Bounds? IPlane.PreviousDataBounds { get; set; }
 
@@ -108,10 +106,10 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IPlane.NamePadding"/>
         public Padding NamePadding { get => _namePadding; set { _namePadding = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis.Orientation"/>
+        /// <inheritdoc cref="ICartesianAxis.Orientation"/>
         public AxisOrientation Orientation => _orientation;
 
-        /// <inheritdoc cref="IAxis.Padding"/>
+        /// <inheritdoc cref="ICartesianAxis.Padding"/>
         public Padding Padding { get => _padding; set { _padding = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IPlane.Labeler"/>
@@ -132,7 +130,7 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IPlane.UnitWidth"/>
         public double UnitWidth { get => _unitWidth; set { _unitWidth = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis.Position"/>
+        /// <inheritdoc cref="ICartesianAxis.Position"/>
         public AxisPosition Position { get => _position; set { _position = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IPlane.LabelsRotation"/>
@@ -153,32 +151,36 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IPlane.IsInverted"/>
         public bool IsInverted { get => _isInverted; set { _isInverted = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.NamePaint"/>
+        /// <inheritdoc cref="IPlane{TDrawingContext}.NamePaint"/>
         public IPaint<TDrawingContext>? NamePaint
         {
             get => _namePaint;
             set => SetPaintProperty(ref _namePaint, value);
         }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.LabelsPaint"/>
+        /// <inheritdoc cref="IPlane{TDrawingContext}.LabelsPaint"/>
         public IPaint<TDrawingContext>? LabelsPaint
         {
             get => _labelsPaint;
             set => SetPaintProperty(ref _labelsPaint, value);
         }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.SeparatorsPaint"/>
+        /// <inheritdoc cref="IPlane{TDrawingContext}.SeparatorsPaint"/>
         public IPaint<TDrawingContext>? SeparatorsPaint
         {
             get => _separatorsPaint;
             set => SetPaintProperty(ref _separatorsPaint, value);
         }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.TextBrush"/>
+        /// <summary>
+        /// 
+        /// </summary>
         [Obsolete("Renamed to LabelsPaint")]
         public IPaint<TDrawingContext>? TextBrush { get => LabelsPaint; set => LabelsPaint = value; }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.SeparatorsBrush"/>
+        /// <summary>
+        /// 
+        /// </summary>
         [Obsolete("Renamed to SeparatorsPaint")]
         public IPaint<TDrawingContext>? SeparatorsBrush { get => SeparatorsPaint; set => SeparatorsPaint = value; }
 
@@ -193,8 +195,8 @@ namespace LiveChartsCore
 
         #endregion
 
-        /// <inheritdoc cref="IAxis.Initialized"/>
-        public event Action<IAxis>? Initialized;
+        /// <inheritdoc cref="ICartesianAxis.Initialized"/>
+        public event Action<ICartesianAxis>? Initialized;
 
         /// <summary>
         /// Occurs when a property value changes.
@@ -214,10 +216,10 @@ namespace LiveChartsCore
             var drawMarginSize = cartesianChart.DrawMarginSize;
 
             var scale = new Scaler(drawLocation, drawMarginSize, this);
-            var previousSacale = ((IAxis)this).PreviousDataBounds is null
+            var previousSacale = ((ICartesianAxis)this).PreviousDataBounds is null
                 ? null
                 : new Scaler(drawLocation, drawMarginSize, this, true);
-            var axisTick = this.GetTick(drawMarginSize);
+            var axisTick = ((ICartesianAxis)this).GetTick(drawMarginSize);
 
             var labeler = Labeler;
             if (Labels is not null)
@@ -446,7 +448,7 @@ namespace LiveChartsCore
 
                     visualSeparator.Text.Opacity = 1;
 
-                    if (((IAxis)this).PreviousDataBounds is null) visualSeparator.Text.CompleteAllTransitions();
+                    if (((ICartesianAxis)this).PreviousDataBounds is null) visualSeparator.Text.CompleteAllTransitions();
                 }
 
                 if (visualSeparator.Line is not null)
@@ -468,7 +470,7 @@ namespace LiveChartsCore
 
                     visualSeparator.Line.Opacity = 1;
 
-                    if (((IAxis)this).PreviousDataBounds is null) visualSeparator.Line.CompleteAllTransitions();
+                    if (((ICartesianAxis)this).PreviousDataBounds is null) visualSeparator.Line.CompleteAllTransitions();
                 }
 
                 if (visualSeparator.Text is not null || visualSeparator.Line is not null) _ = measured.Add(visualSeparator);
@@ -483,8 +485,8 @@ namespace LiveChartsCore
             }
         }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.GetNameLabelSize(CartesianChart{TDrawingContext})"/>
-        public SizeF GetNameLabelSize(CartesianChart<TDrawingContext> chart)
+        /// <inheritdoc cref="IPlane{TDrawingContext}.GetNameLabelSize(Chart{TDrawingContext})"/>
+        public SizeF GetNameLabelSize(Chart<TDrawingContext> chart)
         {
             if (NamePaint is null || string.IsNullOrWhiteSpace(Name)) return new SizeF(0, 0);
 
@@ -499,8 +501,8 @@ namespace LiveChartsCore
             return textGeometry.Measure(NamePaint);
         }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.GetPossibleSize(CartesianChart{TDrawingContext})"/>
-        public virtual SizeF GetPossibleSize(CartesianChart<TDrawingContext> chart)
+        /// <inheritdoc cref="IPlane{TDrawingContext}.GetPossibleSize(Chart{TDrawingContext})"/>
+        public virtual SizeF GetPossibleSize(Chart<TDrawingContext> chart)
         {
             if (_dataBounds is null) throw new Exception("DataBounds not found");
             if (LabelsPaint is null) return new SizeF(0f, 0f);
@@ -544,8 +546,8 @@ namespace LiveChartsCore
             return new SizeF(w, h);
         }
 
-        /// <inheritdoc cref="IAxis.Initialize(AxisOrientation)"/>
-        void IAxis.Initialize(AxisOrientation orientation)
+        /// <inheritdoc cref="ICartesianAxis.Initialize(AxisOrientation)"/>
+        void ICartesianAxis.Initialize(AxisOrientation orientation)
         {
             _orientation = orientation;
             _dataBounds = new Bounds();
@@ -589,7 +591,7 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
-            if (!((IAxis)this).IsNotifyingChanges) return;
+            if (!((ICartesianAxis)this).IsNotifyingChanges) return;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 

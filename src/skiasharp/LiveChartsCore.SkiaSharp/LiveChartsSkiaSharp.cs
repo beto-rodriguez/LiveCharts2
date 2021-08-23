@@ -448,7 +448,7 @@ namespace LiveChartsCore.SkiaSharpView
                         }
                     })
                 .WithAxisDefaultsResolver(
-                    (IAxis<SkiaSharpDrawingContext> axis, bool forceApply) =>
+                    (ICartesianAxis<SkiaSharpDrawingContext> axis, bool forceApply) =>
                     {
                         if (forceApply)
                         {
@@ -575,7 +575,7 @@ namespace LiveChartsCore.SkiaSharpView
                         }
                     })
                 .WithAxisDefaultsResolver(
-                    (IAxis<SkiaSharpDrawingContext> axis, bool forceApply) =>
+                    (ICartesianAxis<SkiaSharpDrawingContext> axis, bool forceApply) =>
                     {
                         if (forceApply)
                         {
