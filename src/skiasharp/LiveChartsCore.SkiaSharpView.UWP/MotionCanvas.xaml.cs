@@ -32,6 +32,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace LiveChartsCore.SkiaSharpView.UWP
 {
+    /// <inheritdoc cref="MotionCanvas{TDrawingContext}"/>
     public sealed partial class MotionCanvas : UserControl
     {
         private SKXamlCanvas? _skiaElement;

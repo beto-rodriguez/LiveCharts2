@@ -31,6 +31,7 @@
     <None Remove="DefaultTooltip.xaml" />
     <None Remove="MotionCanvas.xaml" />
     <None Remove="PieChart.xaml" />
+    <None Remove="PolarChart.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,6 +47,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="PolarChart.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
     <Page Update="DefaultLegend.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

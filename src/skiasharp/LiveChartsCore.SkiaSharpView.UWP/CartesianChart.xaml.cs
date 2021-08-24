@@ -43,6 +43,7 @@ using Windows.UI.Xaml.Media;
 
 namespace LiveChartsCore.SkiaSharpView.UWP
 {
+    /// <inheritdoc cref="CartesianChart{TDrawingContext}"/>
     public sealed partial class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingContext>, IUwpChart
     {
         #region fields

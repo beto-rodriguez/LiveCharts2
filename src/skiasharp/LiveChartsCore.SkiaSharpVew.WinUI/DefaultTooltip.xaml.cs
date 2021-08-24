@@ -92,7 +92,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
 
             Measure(new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity));
 
-            if (chart is CartesianChart<SkiaSharpDrawingContext>)
+            if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetCartesianTooltipLocation(
                     chart.TooltipPosition, new System.Drawing.SizeF((float)DesiredSize.Width, (float)DesiredSize.Height), chart.ControlSize);

@@ -29,6 +29,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace LiveChartsCore.SkiaSharpView.UWP
 {
+    /// <inheritdoc cref="IChartLegend{TDrawingContext}"/>
     public sealed partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
     {
         /// <summary>

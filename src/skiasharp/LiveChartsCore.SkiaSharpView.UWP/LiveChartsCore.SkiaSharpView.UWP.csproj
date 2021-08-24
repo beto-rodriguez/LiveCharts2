@@ -131,6 +131,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="PolarChart.xaml.cs">
+      <DependentUpon>PolarChart.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CartesianChart.xaml.cs">
       <DependentUpon>CartesianChart.xaml</DependentUpon>
     </Compile>
@@ -169,6 +172,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="PolarChart.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="CartesianChart.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

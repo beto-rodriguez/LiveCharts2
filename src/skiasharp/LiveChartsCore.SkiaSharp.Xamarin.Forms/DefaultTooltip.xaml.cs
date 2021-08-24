@@ -132,7 +132,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 Height = Height * DeviceDisplay.MainDisplayInfo.Density
             };
 
-            if (chart is CartesianChart<SkiaSharpDrawingContext>)
+            if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetCartesianTooltipLocation(
                     chart.TooltipPosition, new System.Drawing.SizeF((float)size.Width, (float)size.Height), chart.ControlSize);

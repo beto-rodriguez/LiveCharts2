@@ -132,6 +132,9 @@
     <Compile Update="Maps\World\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Polar\Basic\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Scatter\Bubbles\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

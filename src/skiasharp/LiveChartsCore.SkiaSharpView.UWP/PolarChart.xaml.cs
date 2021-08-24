@@ -20,37 +20,47 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using LiveChartsCore.Kernel;
-using LiveChartsCore.Measure;
-using LiveChartsCore.Kernel.Events;
-using LiveChartsCore.Drawing;
 using Windows.UI.Xaml.Input;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
+using Windows.UI.Xaml.Media;
+
+// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace LiveChartsCore.SkiaSharpView.UWP
 {
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}"/>
-    public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IUwpChart
+    /// <inheritdoc cref="IPolarChartView{TDrawingContext}"/>
+    public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>, IUwpChart
     {
+        #region fields
+
         private Chart<SkiaSharpDrawingContext>? _core;
         private MotionCanvas? _canvas;
         private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+        private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
+        private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
+        private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+
+        #endregion
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CartesianChart"/> class.
+        /// Initializes a new instance of the <see cref="PolarChart"/> class.
         /// </summary>
-        public PieChart()
+        public PolarChart()
         {
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
@@ -62,19 +72,17 @@ namespace LiveChartsCore.SkiaSharpView.UWP
 
             InitializeComponent();
 
-            _seriesObserver = new CollectionDeepObserver<ISeries>(
-                (object? sender, NotifyCollectionChangedEventArgs e) =>
-                {
-                    if (_core == null) return;
-                    _core.Update();
-                },
-                (object? sender, PropertyChangedEventArgs e) =>
-                {
-                    if (_core == null) return;
-                    _core.Update();
-                });
+            _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _angleObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _radiusObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
+                OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
             Loaded += OnLoaded;
+
+            SetValue(AngleAxesProperty, new ObservableCollection<IPolarAxis>() { LiveCharts.CurrentSettings.PolarAxisProvider() });
+            SetValue(RadiusAxesProperty, new ObservableCollection<IPolarAxis>() { LiveCharts.CurrentSettings.PolarAxisProvider() });
+            SetValue(SeriesProperty, new ObservableCollection<ISeries>());
         }
 
         #region dependency properties
@@ -84,13 +92,45 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty SeriesProperty =
             DependencyProperty.Register(
-                nameof(Series), typeof(IEnumerable<ISeries>), typeof(PieChart), new PropertyMetadata(null,
+                nameof(Series), typeof(IEnumerable<ISeries>), typeof(PolarChart), new PropertyMetadata(null,
                     (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                     {
-                        var chart = (PieChart)o;
+                        var chart = (PolarChart)o;
                         var seriesObserver = chart._seriesObserver;
                         seriesObserver.Dispose((IEnumerable<ISeries>)args.OldValue);
                         seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
+                        if (chart._core == null) return;
+                        chart._core.Update();
+                    }));
+
+        /// <summary>
+        /// The x axes property
+        /// </summary>
+        public static readonly DependencyProperty AngleAxesProperty =
+            DependencyProperty.Register(
+                nameof(AngleAxes), typeof(IEnumerable<IPolarAxis>), typeof(PolarChart), new PropertyMetadata(null,
+                    (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                    {
+                        var chart = (PolarChart)o;
+                        var observer = chart._angleObserver;
+                        observer.Dispose((IEnumerable<IPolarAxis>)args.OldValue);
+                        observer.Initialize((IEnumerable<IPolarAxis>)args.NewValue);
+                        if (chart._core == null) return;
+                        chart._core.Update();
+                    }));
+
+        /// <summary>
+        /// The y axes property
+        /// </summary>
+        public static readonly DependencyProperty RadiusAxesProperty =
+            DependencyProperty.Register(
+                nameof(RadiusAxes), typeof(IEnumerable<IPolarAxis>), typeof(PolarChart), new PropertyMetadata(null,
+                    (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                    {
+                        var chart = (PolarChart)o;
+                        var observer = chart._radiusObserver;
+                        observer.Dispose((IEnumerable<IPolarAxis>)args.OldValue);
+                        observer.Initialize((IEnumerable<IPolarAxis>)args.NewValue);
                         if (chart._core == null) return;
                         chart._core.Update();
                     }));
@@ -100,49 +140,29 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty SyncContextProperty =
             DependencyProperty.Register(
-                nameof(SyncContext), typeof(object), typeof(PieChart), new PropertyMetadata(null,
+                nameof(SyncContext), typeof(object), typeof(PolarChart), new PropertyMetadata(null,
                     (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                     {
-                        var chart = (PieChart)o;
+                        var chart = (PolarChart)o;
                         if (chart._canvas != null) chart.CoreCanvas.Sync = args.NewValue;
                         if (chart._core == null) return;
                         chart._core.Update();
                     }));
 
         /// <summary>
-        /// The initial rotation property
+        /// The tool tip finding strategy property
         /// </summary>
-        public static readonly DependencyProperty InitialRotationProperty =
+        public static readonly DependencyProperty TooltipFindingStrategyProperty =
             DependencyProperty.Register(
-                nameof(InitialRotation), typeof(double), typeof(PieChart), new PropertyMetadata(0d, OnDependencyPropertyChanged));
-
-        /// <summary>
-        /// The maximum angle property
-        /// </summary>
-        public static readonly DependencyProperty MaxAngleProperty =
-            DependencyProperty.Register(
-                nameof(MaxAngle), typeof(double), typeof(PieChart), new PropertyMetadata(360d, OnDependencyPropertyChanged));
-
-        /// <summary>
-        /// The total property
-        /// </summary>
-        public static readonly DependencyProperty TotalProperty =
-            DependencyProperty.Register(
-                nameof(Total), typeof(double?), typeof(PieChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
-
-        /// <summary>
-        /// The draw margin property
-        /// </summary>
-        public static readonly DependencyProperty DrawMarginProperty =
-           DependencyProperty.Register(
-               nameof(DrawMargin), typeof(Margin), typeof(PieChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
+                nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(PolarChart),
+                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, OnDependencyPropertyChanged));
 
         /// <summary>
         /// The animations speed property
         /// </summary>
         public static readonly DependencyProperty AnimationsSpeedProperty =
             DependencyProperty.Register(
-                nameof(AnimationsSpeed), typeof(TimeSpan), typeof(PieChart),
+                nameof(AnimationsSpeed), typeof(TimeSpan), typeof(PolarChart),
                 new PropertyMetadata(LiveCharts.CurrentSettings.DefaultAnimationsSpeed, OnDependencyPropertyChanged));
 
         /// <summary>
@@ -150,7 +170,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty EasingFunctionProperty =
             DependencyProperty.Register(
-                nameof(EasingFunction), typeof(Func<float, float>), typeof(PieChart),
+                nameof(EasingFunction), typeof(Func<float, float>), typeof(PolarChart),
                 new PropertyMetadata(LiveCharts.CurrentSettings.DefaultEasingFunction, OnDependencyPropertyChanged));
 
         /// <summary>
@@ -158,7 +178,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty LegendPositionProperty =
             DependencyProperty.Register(
-                nameof(LegendPosition), typeof(LegendPosition), typeof(PieChart),
+                nameof(LegendPosition), typeof(LegendPosition), typeof(PolarChart),
                 new PropertyMetadata(LiveCharts.CurrentSettings.DefaultLegendPosition, OnDependencyPropertyChanged));
 
         /// <summary>
@@ -166,7 +186,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty LegendOrientationProperty =
             DependencyProperty.Register(
-                nameof(LegendOrientation), typeof(LegendOrientation), typeof(PieChart),
+                nameof(LegendOrientation), typeof(LegendOrientation), typeof(PolarChart),
                 new PropertyMetadata(LiveCharts.CurrentSettings.DefaultLegendOrientation, OnDependencyPropertyChanged));
 
         /// <summary>
@@ -174,7 +194,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty TooltipPositionProperty =
            DependencyProperty.Register(
-               nameof(TooltipPosition), typeof(TooltipPosition), typeof(PieChart),
+               nameof(TooltipPosition), typeof(TooltipPosition), typeof(PolarChart),
                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipPosition, OnDependencyPropertyChanged));
 
         /// <summary>
@@ -182,7 +202,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty TooltipBackgroundProperty =
            DependencyProperty.Register(
-               nameof(TooltipBackground), typeof(SolidColorBrush), typeof(PieChart),
+               nameof(TooltipBackground), typeof(SolidColorBrush), typeof(PolarChart),
                new PropertyMetadata(new SolidColorBrush(Windows.UI.Color.FromArgb(255, 250, 250, 250)), OnDependencyPropertyChanged));
 
         /// <summary>
@@ -190,7 +210,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty TooltipFontFamilyProperty =
            DependencyProperty.Register(
-               nameof(TooltipFontFamily), typeof(FontFamily), typeof(PieChart),
+               nameof(TooltipFontFamily), typeof(FontFamily), typeof(PolarChart),
                new PropertyMetadata(new FontFamily("Trebuchet MS"), OnDependencyPropertyChanged));
 
         /// <summary>
@@ -198,7 +218,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty TooltipTextBrushProperty =
            DependencyProperty.Register(
-               nameof(TooltipTextBrush), typeof(Brush), typeof(PieChart),
+               nameof(TooltipTextBrush), typeof(Brush), typeof(PolarChart),
                new PropertyMetadata(new SolidColorBrush(Windows.UI.Color.FromArgb(255, 35, 35, 35)), OnDependencyPropertyChanged));
 
         /// <summary>
@@ -206,14 +226,14 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty TooltipFontSizeProperty =
            DependencyProperty.Register(
-               nameof(TooltipFontSize), typeof(double), typeof(PieChart), new PropertyMetadata(13d, OnDependencyPropertyChanged));
+               nameof(TooltipFontSize), typeof(double), typeof(PolarChart), new PropertyMetadata(13d, OnDependencyPropertyChanged));
 
         /// <summary>
         /// The tool tip font weight property
         /// </summary>
         public static readonly DependencyProperty TooltipFontWeightProperty =
            DependencyProperty.Register(
-               nameof(TooltipFontWeight), typeof(FontWeight), typeof(PieChart),
+               nameof(TooltipFontWeight), typeof(FontWeight), typeof(PolarChart),
                new PropertyMetadata(FontWeights.Normal, OnDependencyPropertyChanged));
 
         /// <summary>
@@ -221,7 +241,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty TooltipFontStretchProperty =
            DependencyProperty.Register(
-               nameof(TooltipFontStretch), typeof(FontStretch), typeof(PieChart),
+               nameof(TooltipFontStretch), typeof(FontStretch), typeof(PolarChart),
                new PropertyMetadata(FontStretch.Normal, OnDependencyPropertyChanged));
 
         /// <summary>
@@ -229,7 +249,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty TooltipFontStyleProperty =
            DependencyProperty.Register(
-               nameof(TooltipFontStyle), typeof(FontStyle), typeof(PieChart),
+               nameof(TooltipFontStyle), typeof(FontStyle), typeof(PolarChart),
                new PropertyMetadata(FontStyle.Normal, OnDependencyPropertyChanged));
 
         /// <summary>
@@ -237,14 +257,14 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty TooltipTemplateProperty =
             DependencyProperty.Register(
-                nameof(TooltipTemplate), typeof(DataTemplate), typeof(PieChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
+                nameof(TooltipTemplate), typeof(DataTemplate), typeof(PolarChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
 
         /// <summary>
         /// The legend font family property
         /// </summary>
         public static readonly DependencyProperty LegendFontFamilyProperty =
            DependencyProperty.Register(
-               nameof(LegendFontFamily), typeof(FontFamily), typeof(PieChart),
+               nameof(LegendFontFamily), typeof(FontFamily), typeof(PolarChart),
                new PropertyMetadata(new FontFamily("Trebuchet MS"), OnDependencyPropertyChanged));
 
         /// <summary>
@@ -252,7 +272,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty LegendTextBrushProperty =
            DependencyProperty.Register(
-               nameof(LegendTextBrush), typeof(Brush), typeof(PieChart),
+               nameof(LegendTextBrush), typeof(Brush), typeof(PolarChart),
                new PropertyMetadata(new SolidColorBrush(Windows.UI.Color.FromArgb(255, 35, 35, 35)), OnDependencyPropertyChanged));
 
         /// <summary>
@@ -260,7 +280,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty LegendBackgroundProperty =
            DependencyProperty.Register(
-               nameof(LegendBackground), typeof(Brush), typeof(PieChart),
+               nameof(LegendBackground), typeof(Brush), typeof(PolarChart),
                new PropertyMetadata(new SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 255, 255)), OnDependencyPropertyChanged));
 
         /// <summary>
@@ -268,14 +288,14 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty LegendFontSizeProperty =
            DependencyProperty.Register(
-               nameof(LegendFontSize), typeof(double), typeof(PieChart), new PropertyMetadata(13d, OnDependencyPropertyChanged));
+               nameof(LegendFontSize), typeof(double), typeof(PolarChart), new PropertyMetadata(13d, OnDependencyPropertyChanged));
 
         /// <summary>
         /// The legend font weight property
         /// </summary>
         public static readonly DependencyProperty LegendFontWeightProperty =
            DependencyProperty.Register(
-               nameof(LegendFontWeight), typeof(FontWeight), typeof(PieChart),
+               nameof(LegendFontWeight), typeof(FontWeight), typeof(PolarChart),
                new PropertyMetadata(FontWeights.Normal, OnDependencyPropertyChanged));
 
         /// <summary>
@@ -283,7 +303,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty LegendFontStretchProperty =
            DependencyProperty.Register(
-               nameof(LegendFontStretch), typeof(FontStretch), typeof(PieChart),
+               nameof(LegendFontStretch), typeof(FontStretch), typeof(PolarChart),
                new PropertyMetadata(FontStretch.Normal, OnDependencyPropertyChanged));
 
         /// <summary>
@@ -291,7 +311,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty LegendFontStyleProperty =
            DependencyProperty.Register(
-               nameof(LegendFontStyle), typeof(FontStyle), typeof(PieChart),
+               nameof(LegendFontStyle), typeof(FontStyle), typeof(PolarChart),
                new PropertyMetadata(FontStyle.Normal, OnDependencyPropertyChanged));
 
         /// <summary>
@@ -299,7 +319,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty LegendTemplateProperty =
             DependencyProperty.Register(
-                nameof(LegendTemplate), typeof(DataTemplate), typeof(PieChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
+                nameof(LegendTemplate), typeof(DataTemplate), typeof(PolarChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
 
         #endregion
 
@@ -328,8 +348,12 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
 
-        PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core
-            => _core == null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)_core;
+        /// <inheritdoc cref="IChartView.SyncContext" />
+        public object SyncContext
+        {
+            get => GetValue(SyncContextProperty);
+            set => SetValue(SyncContextProperty, value);
+        }
 
         System.Drawing.Color IChartView.BackColor
         {
@@ -339,61 +363,49 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             set => SetValue(BackgroundProperty, new SolidColorBrush(Windows.UI.Color.FromArgb(value.A, value.R, value.G, value.B)));
         }
 
-        /// <inheritdoc cref="IChartView.SyncContext" />
-        public object SyncContext
+        /// <inheritdoc cref="IChartView.DrawMargin" />
+        public Margin? DrawMargin
         {
-            get => GetValue(SyncContextProperty);
-            set => SetValue(SyncContextProperty, value);
+            get => null;
+            set => throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
+        Margin? IChartView.DrawMargin
+        {
+            get => DrawMargin;
+            set => throw new NotImplementedException();
+        }
+
+        System.Drawing.SizeF IChartView.ControlSize => _canvas == null
+            ? throw new Exception("Canvas not found")
+            : (new() { Width = (float)_canvas.ActualWidth, Height = (float)_canvas.ActualHeight });
+
+        /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
+        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => _canvas == null ? throw new Exception("Canvas not found") : _canvas.CanvasCore;
+
+        PolarChart<SkiaSharpDrawingContext> IPolarChartView<SkiaSharpDrawingContext>.Core =>
+            _core == null ? throw new Exception("core not found") : (PolarChart<SkiaSharpDrawingContext>)_core;
+
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series" />
         public IEnumerable<ISeries> Series
         {
             get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
             set => SetValue(SeriesProperty, value);
         }
 
-
-        /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />
-        public double InitialRotation
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.AngleAxes" />
+        public IEnumerable<IPolarAxis> AngleAxes
         {
-            get => (double)GetValue(InitialRotationProperty);
-            set => SetValue(InitialRotationProperty, value);
+            get => (IEnumerable<IPolarAxis>)GetValue(AngleAxesProperty);
+            set => SetValue(AngleAxesProperty, value);
         }
 
-        /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxAngle" />
-        public double MaxAngle
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.RadiusAxes" />
+        public IEnumerable<IPolarAxis> RadiusAxes
         {
-            get => (double)GetValue(MaxAngleProperty);
-            set => SetValue(MaxAngleProperty, value);
+            get => (IEnumerable<IPolarAxis>)GetValue(RadiusAxesProperty);
+            set => SetValue(RadiusAxesProperty, value);
         }
-
-        /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total" />
-        public double? Total
-        {
-            get => (double?)GetValue(TotalProperty);
-            set => SetValue(TotalProperty, value);
-        }
-
-        /// <inheritdoc cref="IChartView.DrawMargin" />
-        public Margin? DrawMargin
-        {
-            get => (Margin)GetValue(DrawMarginProperty);
-            set => SetValue(DrawMarginProperty, value);
-        }
-
-        Margin? IChartView.DrawMargin
-        {
-            get => DrawMargin;
-            set => SetValue(DrawMarginProperty, value);
-        }
-
-        System.Drawing.SizeF IChartView.ControlSize => _canvas == null
-                    ? throw new Exception("Canvas not found")
-                    : (new() { Width = (float)_canvas.ActualWidth, Height = (float)_canvas.ActualHeight });
-
-        /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
-        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => _canvas == null ? throw new Exception("Canvas not found") : _canvas.CanvasCore;
 
         /// <inheritdoc cref="IChartView.AnimationsSpeed" />
         public TimeSpan AnimationsSpeed
@@ -677,6 +689,15 @@ namespace LiveChartsCore.SkiaSharpView.UWP
 
         #endregion
 
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleUIPoint(System.Drawing.PointF, int, int)" />
+        public double[] ScaleUIPoint(System.Drawing.PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
+        {
+            return new double[0];
+            // if (_core == null) throw new Exception("core not found");
+            //var cartesianCore = (PolarChart<SkiaSharpDrawingContext>)_core;
+            //return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
+        }
+
         /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
         public void ShowTooltip(IEnumerable<TooltipPoint> points)
         {
@@ -730,22 +751,35 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             var canvas = (MotionCanvas)FindName("motionCanvas");
             _canvas = canvas;
 
-            _core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            _core = new PolarChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
 
             if (SyncContext != null)
                 _canvas.CanvasCore.Sync = SyncContext;
 
             if (_core == null) throw new Exception("Core not found!");
-            _core.Update();
-
             _core.Measuring += OnCoreMeasuring;
             _core.UpdateStarted += OnCoreUpdateStarted;
             _core.UpdateFinished += OnCoreUpdateFinished;
 
+            PointerWheelChanged += OnWheelChanged;
+            PointerPressed += OnPointerPressed;
+            PointerReleased += OnPointerReleased;
             SizeChanged += OnSizeChanged;
             PointerMoved += OnPointerMoved;
             PointerExited += OnPointerExited;
 
+            _core.Update();
+        }
+
+        private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (_core == null) return;
+            _core.Update();
+        }
+
+        private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (_core == null) return;
             _core.Update();
         }
 
@@ -782,9 +816,35 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             _core?.InvokePointerLeft();
         }
 
+        private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            var p = e.GetCurrentPoint(this);
+            _core?.InvokePointerUp(new System.Drawing.PointF((float)p.Position.X, (float)p.Position.Y));
+            ReleasePointerCapture(e.Pointer);
+        }
+
+        private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            _ = CapturePointer(e.Pointer);
+            var p = e.GetCurrentPoint(this);
+            _core?.InvokePointerDown(new System.Drawing.PointF((float)p.Position.X, (float)p.Position.Y));
+        }
+
+        private void OnWheelChanged(object sender, PointerRoutedEventArgs e)
+        {
+            //if (_core == null) throw new Exception("core not found");
+            //var c = (PolarChart<SkiaSharpDrawingContext>)_core;
+            //var p = e.GetCurrentPoint(this);
+
+            //c.Zoom(
+            //    new System.Drawing.PointF(
+            //        (float)p.Position.X, (float)p.Position.Y),
+            //        p.Properties.MouseWheelDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+        }
+
         private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
         {
-            var chart = (PieChart)o;
+            var chart = (PolarChart)o;
             if (chart._core == null) return;
 
             chart._core.Update();
