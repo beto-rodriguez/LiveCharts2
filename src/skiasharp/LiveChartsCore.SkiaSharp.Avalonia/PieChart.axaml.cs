@@ -32,11 +32,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Drawing;
 using System.Collections.ObjectModel;
 using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
-using A = Avalonia;
 using Avalonia.Input;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
@@ -175,9 +173,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <summary>
         /// The tool tip font family property
         /// </summary>
-        public static readonly AvaloniaProperty<A.Media.FontFamily> TooltipFontFamilyProperty =
-            AvaloniaProperty.Register<CartesianChart, A.Media.FontFamily>(
-                nameof(TooltipFontFamily), new A.Media.FontFamily("Arial"), inherits: true);
+        public static readonly AvaloniaProperty<FontFamily> TooltipFontFamilyProperty =
+            AvaloniaProperty.Register<CartesianChart, FontFamily>(
+                nameof(TooltipFontFamily), new FontFamily("Arial"), inherits: true);
 
         /// <summary>
         /// The tool tip font size property
@@ -194,23 +192,23 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <summary>
         /// The tool tip font style property
         /// </summary>
-        public static readonly AvaloniaProperty<A.Media.FontStyle> TooltipFontStyleProperty =
-            AvaloniaProperty.Register<CartesianChart, A.Media.FontStyle>(
-                nameof(TooltipFontStyle), A.Media.FontStyle.Normal, inherits: true);
+        public static readonly AvaloniaProperty<FontStyle> TooltipFontStyleProperty =
+            AvaloniaProperty.Register<CartesianChart, FontStyle>(
+                nameof(TooltipFontStyle), FontStyle.Normal, inherits: true);
 
         /// <summary>
         /// The tool tip text brush property
         /// </summary>
         public static readonly AvaloniaProperty<SolidColorBrush> TooltipTextBrushProperty =
             AvaloniaProperty.Register<CartesianChart, SolidColorBrush>(
-                nameof(TooltipTextBrush), new SolidColorBrush(new A.Media.Color(255, 35, 35, 35)), inherits: true);
+                nameof(TooltipTextBrush), new SolidColorBrush(new Color(255, 35, 35, 35)), inherits: true);
 
         /// <summary>
         /// The tool tip background property
         /// </summary>
         public static readonly AvaloniaProperty<IBrush> TooltipBackgroundProperty =
             AvaloniaProperty.Register<CartesianChart, IBrush>(nameof(TooltipBackground),
-                new SolidColorBrush(new A.Media.Color(255, 250, 250, 250)), inherits: true);
+                new SolidColorBrush(new Color(255, 250, 250, 250)), inherits: true);
 
         /// <summary>
         /// The legend position property
@@ -235,9 +233,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <summary>
         /// The legend font family property
         /// </summary>
-        public static readonly AvaloniaProperty<A.Media.FontFamily> LegendFontFamilyProperty =
-           AvaloniaProperty.Register<CartesianChart, A.Media.FontFamily>(
-               nameof(LegendFontFamily), new A.Media.FontFamily("Arial"), inherits: true);
+        public static readonly AvaloniaProperty<FontFamily> LegendFontFamilyProperty =
+           AvaloniaProperty.Register<CartesianChart, FontFamily>(
+               nameof(LegendFontFamily), new FontFamily("Arial"), inherits: true);
 
         /// <summary>
         /// The legend font size property
@@ -254,23 +252,23 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <summary>
         /// The legend font style property
         /// </summary>
-        public static readonly AvaloniaProperty<A.Media.FontStyle> LegendFontStyleProperty =
-            AvaloniaProperty.Register<CartesianChart, A.Media.FontStyle>(
-                nameof(LegendFontStyle), A.Media.FontStyle.Normal, inherits: true);
+        public static readonly AvaloniaProperty<FontStyle> LegendFontStyleProperty =
+            AvaloniaProperty.Register<CartesianChart, FontStyle>(
+                nameof(LegendFontStyle), FontStyle.Normal, inherits: true);
 
         /// <summary>
         /// The legend text brush property
         /// </summary>
         public static readonly AvaloniaProperty<SolidColorBrush> LegendTextBrushProperty =
             AvaloniaProperty.Register<CartesianChart, SolidColorBrush>(
-                nameof(LegendTextBrush), new SolidColorBrush(new A.Media.Color(255, 35, 35, 35)), inherits: true);
+                nameof(LegendTextBrush), new SolidColorBrush(new Color(255, 35, 35, 35)), inherits: true);
 
         /// <summary>
         /// The legend background property
         /// </summary>
         public static readonly AvaloniaProperty<IBrush> LegendBackgroundProperty =
             AvaloniaProperty.Register<CartesianChart, IBrush>(nameof(LegendBackground),
-                new SolidColorBrush(new A.Media.Color(255, 255, 255, 255)), inherits: true);
+                new SolidColorBrush(new Color(255, 255, 255, 255)), inherits: true);
 
         #endregion
 
@@ -295,20 +293,20 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
 
-        System.Drawing.Color IChartView.BackColor
+        LvcColor IChartView.BackColor
         {
             get => Background is not ISolidColorBrush b
-                    ? new System.Drawing.Color()
-                    : System.Drawing.Color.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
+                    ? new LvcColor()
+                    : LvcColor.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
             set
             {
-                Background = new SolidColorBrush(new A.Media.Color(value.R, value.G, value.B, value.A));
+                Background = new SolidColorBrush(new Color(value.R, value.G, value.B, value.A));
                 var canvas = this.FindControl<MotionCanvas>("canvas");
                 canvas.BackColor = new SkiaSharp.SKColor(value.R, value.G, value.B, value.A);
             }
         }
 
-        SizeF IChartView.ControlSize => new()
+        LvcSize IChartView.ControlSize => new()
         {
             Width = (float)Bounds.Width,
             Height = (float)Bounds.Height
@@ -400,9 +398,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <value>
         /// The tool tip font family.
         /// </value>
-        public A.Media.FontFamily TooltipFontFamily
+        public FontFamily TooltipFontFamily
         {
-            get => (A.Media.FontFamily)GetValue(TooltipFontFamilyProperty);
+            get => (FontFamily)GetValue(TooltipFontFamilyProperty);
             set => SetValue(TooltipFontFamilyProperty, value);
         }
 
@@ -436,9 +434,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <value>
         /// The tool tip font style.
         /// </value>
-        public A.Media.FontStyle TooltipFontStyle
+        public FontStyle TooltipFontStyle
         {
-            get => (A.Media.FontStyle)GetValue(TooltipFontStyleProperty);
+            get => (FontStyle)GetValue(TooltipFontStyleProperty);
             set => SetValue(TooltipFontStyleProperty, value);
         }
 
@@ -501,9 +499,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <value>
         /// The legend font family.
         /// </value>
-        public A.Media.FontFamily LegendFontFamily
+        public FontFamily LegendFontFamily
         {
-            get => (A.Media.FontFamily)GetValue(LegendFontFamilyProperty);
+            get => (FontFamily)GetValue(LegendFontFamilyProperty);
             set => SetValue(LegendFontFamilyProperty, value);
         }
 
@@ -537,9 +535,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <value>
         /// The legend font style.
         /// </value>
-        public A.Media.FontStyle LegendFontStyle
+        public FontStyle LegendFontStyle
         {
-            get => (A.Media.FontStyle)GetValue(LegendFontStyleProperty);
+            get => (FontStyle)GetValue(LegendFontStyleProperty);
             set => SetValue(LegendFontStyleProperty, value);
         }
 
@@ -612,11 +610,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             tooltip.Hide();
         }
 
-        /// <inheritdoc cref="IChartView.SetTooltipStyle(System.Drawing.Color, System.Drawing.Color)"/>
-        public void SetTooltipStyle(System.Drawing.Color background, System.Drawing.Color textColor)
+        /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
+        public void SetTooltipStyle(LvcColor background, LvcColor textColor)
         {
-            TooltipBackground = new SolidColorBrush(new A.Media.Color(background.A, background.R, background.G, background.B));
-            TooltipTextBrush = new SolidColorBrush(new A.Media.Color(textColor.A, textColor.R, textColor.G, textColor.B));
+            TooltipBackground = new SolidColorBrush(new Color(background.A, background.R, background.G, background.B));
+            TooltipTextBrush = new SolidColorBrush(new Color(textColor.A, textColor.R, textColor.G, textColor.B));
         }
 
         void IChartView.InvokeOnUIThread(Action action)
@@ -675,8 +673,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             {
                 var canvas = this.FindControl<MotionCanvas>("canvas");
                 var color = Background is not ISolidColorBrush b
-                    ? new System.Drawing.Color()
-                    : System.Drawing.Color.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
+                    ? new LvcColor()
+                    : LvcColor.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
                 canvas.BackColor = new SkiaSharp.SKColor(color.R, color.G, color.B, color.A);
             }
 
@@ -691,7 +689,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         private void CartesianChart_PointerMoved(object? sender, PointerEventArgs e)
         {
             var p = e.GetPosition(this);
-            core?.InvokePointerMove(new PointF((float)p.X, (float)p.Y));
+            core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
         }
 
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)

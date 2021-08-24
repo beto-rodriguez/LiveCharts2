@@ -714,8 +714,8 @@
             The canvas core.
             </value>
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Avalonia.MotionCanvas.Render(Avalonia.Media.DrawingContext)">
-            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Avalonia.MotionCanvas.Render(Avalonia.Media.DrawingContext)" />
+        <member name="M:LiveChartsCore.SkiaSharpView.Avalonia.MotionCanvas.Render(AvaloniDrawingContext)">
+            <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Avalonia.MotionCanvas.Render(AvaloniDrawingContext)" />
         </member>
         <member name="M:LiveChartsCore.SkiaSharpView.Avalonia.MotionCanvas.OnPropertyChanged``1(Avalonia.AvaloniaPropertyChangedEventArgs{``0})">
             <inheritdoc cref="M:LiveChartsCore.SkiaSharpView.Avalonia.MotionCanvas.OnPropertyChanged``1(Avalonia.AvaloniaPropertyChangedEventArgs{``0})" />

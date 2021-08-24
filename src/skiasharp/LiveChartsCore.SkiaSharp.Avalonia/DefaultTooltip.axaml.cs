@@ -26,6 +26,7 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -146,17 +147,17 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 return;
             }
 
-            System.Drawing.PointF? location = null;
+            LvcPoint? location = null;
 
             if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetCartesianTooltipLocation(
-                    chart.TooltipPosition, new System.Drawing.SizeF((float)Bounds.Width, (float)Bounds.Height), chart.ControlSize);
+                    chart.TooltipPosition, new LvcSize((float)Bounds.Width, (float)Bounds.Height), chart.ControlSize);
             }
             if (chart is PieChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetPieTooltipLocation(
-                    chart.TooltipPosition, new System.Drawing.SizeF((float)Bounds.Width, (float)Bounds.Height));
+                    chart.TooltipPosition, new LvcSize((float)Bounds.Width, (float)Bounds.Height));
             }
 
             if (location is null) throw new Exception("location not found");

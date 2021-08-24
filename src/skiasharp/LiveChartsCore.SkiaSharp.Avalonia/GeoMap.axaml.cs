@@ -40,7 +40,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
     {
         private static GeoJsonFile? s_map = null;
         private int _heatKnownLength = 0;
-        private List<Tuple<double, System.Drawing.Color>> _heatStops = new();
+        private List<Tuple<double, LvcColor>> _heatStops = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeoMap"/> class.
@@ -111,9 +111,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             set => SetValue(HeatMapProperty, value);
         }
 
-        System.Drawing.Color[] IGeoMap.HeatMap
+        LvcColor[] IGeoMap.HeatMap
         {
-            get => HeatMap.Select(x => System.Drawing.Color.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
+            get => HeatMap.Select(x => LvcColor.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
             set => HeatMap = value.Select(x => new Color(x.A, x.R, x.G, x.B)).ToArray();
         }
 
@@ -131,9 +131,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             set => SetValue(StrokeColorProperty, value);
         }
 
-        System.Drawing.Color IGeoMap.StrokeColor
+        LvcColor IGeoMap.StrokeColor
         {
-            get => System.Drawing.Color.FromArgb(StrokeColor.A, StrokeColor.R, StrokeColor.G, StrokeColor.B);
+            get => LvcColor.FromArgb(StrokeColor.A, StrokeColor.R, StrokeColor.G, StrokeColor.B);
             set => StrokeColor = new Color(value.A, value.R, value.G, value.B);
         }
 
@@ -151,9 +151,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             set => SetValue(FillColorProperty, value);
         }
 
-        System.Drawing.Color IGeoMap.FillColor
+        LvcColor IGeoMap.FillColor
         {
-            get => System.Drawing.Color.FromArgb(FillColor.A, FillColor.R, FillColor.G, FillColor.B);
+            get => LvcColor.FromArgb(FillColor.A, FillColor.R, FillColor.G, FillColor.B);
             set => FillColor = new Color(value.A, value.R, value.G, value.B);
         }
 
@@ -184,10 +184,10 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             var paint = new SolidColorPaint();
 
             var thickness = (float)StrokeThickness;
-            var stroke = System.Drawing.Color.FromArgb(255, StrokeColor.R, StrokeColor.G, StrokeColor.B);
-            var fill = System.Drawing.Color.FromArgb(255, FillColor.R, FillColor.G, FillColor.B);
+            var stroke = LvcColor.FromArgb(255, StrokeColor.R, StrokeColor.G, StrokeColor.B);
+            var fill = LvcColor.FromArgb(255, FillColor.R, FillColor.G, FillColor.B);
 
-            var hm = HeatMap.Select(x => System.Drawing.Color.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
+            var hm = HeatMap.Select(x => LvcColor.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
 
             if (_heatKnownLength != HeatMap.Length)
             {
