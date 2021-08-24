@@ -49,7 +49,7 @@ namespace LiveChartsCore.UnitTesting
             var geometries = canvas.CountGeometries();
 
             // on changing the fill task, the previous instance should be removed.
-            series.Fill = new SolidColorPaintTask();
+            series.Fill = new SolidColorPaint();
 
             chart.Core.Update(new ChartUpdateParams { Throttling = false });
             DrawChart();
@@ -95,7 +95,7 @@ namespace LiveChartsCore.UnitTesting
             var drawables = canvas.DrawablesCount;
             var geometries = canvas.CountGeometries();
 
-            series.Stroke = new SolidColorPaintTask();
+            series.Stroke = new SolidColorPaint();
 
             chart.Core.Update(new ChartUpdateParams { Throttling = false });
             DrawChart();
@@ -141,8 +141,8 @@ namespace LiveChartsCore.UnitTesting
             var drawables = canvas.DrawablesCount;
             var geometries = canvas.CountGeometries();
 
-            series.GeometryFill = new SolidColorPaintTask();
-            series.GeometryStroke = new SolidColorPaintTask();
+            series.GeometryFill = new SolidColorPaint();
+            series.GeometryStroke = new SolidColorPaint();
 
             chart.Core.Update(new ChartUpdateParams { Throttling = false });
             DrawChart();
@@ -284,7 +284,7 @@ namespace LiveChartsCore.UnitTesting
             var drawables = canvas.DrawablesCount;
             var geometries = canvas.CountGeometries();
 
-            axis.LabelsPaint = new SolidColorPaintTask();
+            axis.LabelsPaint = new SolidColorPaint();
 
             chart.Core.Update(new ChartUpdateParams { Throttling = false });
             DrawChart();
@@ -330,7 +330,7 @@ namespace LiveChartsCore.UnitTesting
             var drawables = canvas.DrawablesCount;
             var geometries = canvas.CountGeometries();
 
-            axis.SeparatorsPaint = new SolidColorPaintTask();
+            axis.SeparatorsPaint = new SolidColorPaint();
 
             chart.Core.Update(new ChartUpdateParams { Throttling = false });
             DrawChart();
@@ -389,7 +389,7 @@ namespace LiveChartsCore.UnitTesting
         {
             var section = new RectangularSection
             {
-                Fill = new SolidColorPaintTask()
+                Fill = new SolidColorPaint()
             };
 
             var chart = new TestCartesianChartView
@@ -424,7 +424,7 @@ namespace LiveChartsCore.UnitTesting
             var drawables = canvas.DrawablesCount;
             var geometries = canvas.CountGeometries();
 
-            section.Fill = new SolidColorPaintTask();
+            section.Fill = new SolidColorPaint();
 
             chart.Core.Update(new ChartUpdateParams { Throttling = false });
             DrawChart();

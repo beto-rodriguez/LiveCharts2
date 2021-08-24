@@ -16,7 +16,7 @@ namespace ViewModelsSamples.Pies.Gauges
             Series1 = new GaugeBuilder()
             {
                 LabelsSize = 80,
-                Background = new RadialGradientPaintTask(new SKColor(167, 192, 205, 0), new SKColor(167, 192, 205))
+                Background = new RadialGradientPaint(new SKColor(167, 192, 205, 0), new SKColor(167, 192, 205))
             }
             .AddValue(new ObservableValue(30))
             .BuildSeries();
@@ -26,7 +26,7 @@ namespace ViewModelsSamples.Pies.Gauges
             Series2 = new GaugeBuilder()
             {
                 LabelsSize = 80,
-                Background = new RadialGradientPaintTask(new SKColor(167, 192, 205, 0), new SKColor(167, 192, 205))
+                Background = new RadialGradientPaint(new SKColor(167, 192, 205, 0), new SKColor(167, 192, 205))
             }
             .AddValue(new ObservableValue(30))
             .BuildSeries();
@@ -62,9 +62,9 @@ namespace ViewModelsSamples.Pies.Gauges
                 LabelsSize = 50,
                 InnerRadius = 50,
                 BackgroundInnerRadius = 50,
-                Background = new SolidColorPaintTask(new SKColor(100, 181, 246))
+                Background = new SolidColorPaint(new SKColor(100, 181, 246))
             }
-            .AddValue(new ObservableValue(30), null, new SolidColorPaintTask(new SKColor(21, 101, 192)))
+            .AddValue(new ObservableValue(30), null, new SolidColorPaint(new SKColor(21, 101, 192)))
             .BuildSeries();
 
             GaugeTotal7 = 100;
@@ -74,9 +74,9 @@ namespace ViewModelsSamples.Pies.Gauges
                 LabelsSize = 50,
                 InnerRadius = 75,
                 BackgroundInnerRadius = 50,
-                Background = new SolidColorPaintTask(new SKColor(100, 181, 246, 90))
+                Background = new SolidColorPaint(new SKColor(100, 181, 246, 90))
             }
-            .AddValue(new ObservableValue(30), null, new SolidColorPaintTask(new SKColor(21, 101, 192)))
+            .AddValue(new ObservableValue(30), null, new SolidColorPaint(new SKColor(21, 101, 192)))
             .BuildSeries();
 
             GaugeTotal8 = 100;
@@ -87,9 +87,9 @@ namespace ViewModelsSamples.Pies.Gauges
                 LabelsSize = 50,
                 InnerRadius = 75,
                 BackgroundInnerRadius = 50,
-                Background = new SolidColorPaintTask(new SKColor(100, 181, 246, 90))
+                Background = new SolidColorPaint(new SKColor(100, 181, 246, 90))
             }
-            .AddValue(new ObservableValue(30), null, new SolidColorPaintTask(new SKColor(21, 101, 192)))
+            .AddValue(new ObservableValue(30), null, new SolidColorPaint(new SKColor(21, 101, 192)))
             .BuildSeries();
 
             GaugeTotal9 = 100;
@@ -100,9 +100,9 @@ namespace ViewModelsSamples.Pies.Gauges
                 LabelsSize = 50,
                 InnerRadius = 75,
                 BackgroundInnerRadius = 50,
-                Background = new SolidColorPaintTask(new SKColor(100, 181, 246, 90))
+                Background = new SolidColorPaint(new SKColor(100, 181, 246, 90))
             }
-            .AddValue(new ObservableValue(30), null, new SolidColorPaintTask(new SKColor(21, 101, 192)))
+            .AddValue(new ObservableValue(30), null, new SolidColorPaint(new SKColor(21, 101, 192)))
             .BuildSeries();
 
             GaugeTotal10 = 100;
@@ -113,9 +113,9 @@ namespace ViewModelsSamples.Pies.Gauges
                 LabelsSize = 30,
                 InnerRadius = 75,
                 BackgroundInnerRadius = 50,
-                Background = new LinearGradientPaintTask(new SKColor(250, 243, 224), new SKColor(182, 137, 115))
+                Background = new LinearGradientPaint(new SKColor(250, 243, 224), new SKColor(182, 137, 115))
             }
-            .AddValue(new ObservableValue(30), null, new SolidColorPaintTask(new SKColor(30, 33, 45)), new SolidColorPaintTask(new SKColor(30, 33, 45)))
+            .AddValue(new ObservableValue(30), null, new SolidColorPaint(new SKColor(30, 33, 45)), new SolidColorPaint(new SKColor(30, 33, 45)))
             .BuildSeries();
 
             GaugeTotal11 = 100;

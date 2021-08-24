@@ -26,7 +26,7 @@ namespace ViewModelsSamples.Bars.States
                     32  // hot!
                 },
                 Stroke = null,
-                Fill = new SolidColorPaintTask(SKColors.CornflowerBlue)
+                Fill = new SolidColorPaint(SKColors.CornflowerBlue)
             };
 
             var isStateDefined = false;
@@ -38,7 +38,7 @@ namespace ViewModelsSamples.Bars.States
                 {
                     var skiaChart = (IChartView<SkiaSharpDrawingContext>)point.Context.Chart;
                     skiaChart.PointStates["hotDay"] =
-                        new StrokeAndFillDrawable<SkiaSharpDrawingContext>(null, new SolidColorPaintTask(SKColors.OrangeRed));
+                        new StrokeAndFillDrawable<SkiaSharpDrawingContext>(null, new SolidColorPaint(SKColors.OrangeRed));
                     isStateDefined = true;
                 }
 

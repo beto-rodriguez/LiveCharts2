@@ -69,7 +69,7 @@ namespace ViewModelsSamples.StepLines.Properties
         {
             var nextColorIndex = currentColor++ % colors.Length;
             var color = colors[nextColorIndex];
-            lineSeries.Stroke = new SolidColorPaintTask(new SKColor(color.R, color.G, color.B)) { StrokeThickness = 3 };
+            lineSeries.Stroke = new SolidColorPaint(new SKColor(color.R, color.G, color.B)) { StrokeThickness = 3 };
         }
 
         public void NewFill()
@@ -77,7 +77,7 @@ namespace ViewModelsSamples.StepLines.Properties
             var nextColorIndex = currentColor++ % colors.Length;
             var color = colors[nextColorIndex];
 
-            lineSeries.Fill = new SolidColorPaintTask(new SKColor(color.R, color.G, color.B, 90));
+            lineSeries.Fill = new SolidColorPaint(new SKColor(color.R, color.G, color.B, 90));
         }
 
         public void NewGeometryFill()
@@ -85,7 +85,7 @@ namespace ViewModelsSamples.StepLines.Properties
             var nextColorIndex = currentColor++ % colors.Length;
             var color = colors[nextColorIndex];
 
-            lineSeries.GeometryFill = new SolidColorPaintTask(new SKColor(color.R, color.G, color.B));
+            lineSeries.GeometryFill = new SolidColorPaint(new SKColor(color.R, color.G, color.B));
         }
 
         public void NewGeometryStroke()
@@ -93,7 +93,7 @@ namespace ViewModelsSamples.StepLines.Properties
             var nextColorIndex = currentColor++ % colors.Length;
             var color = colors[nextColorIndex];
 
-            lineSeries.GeometryStroke = new SolidColorPaintTask(new SKColor(color.R, color.G, color.B)) { StrokeThickness = 3 };
+            lineSeries.GeometryStroke = new SolidColorPaint(new SKColor(color.R, color.G, color.B)) { StrokeThickness = 3 };
         }
 
         public void IncreaseGeometrySize()

@@ -29,7 +29,7 @@ namespace ViewModelsSamples.Design.StrokeDashArray
                     Values = new [] { 4, 2, 8, 5, 3 },
                     LineSmoothness = 1,
                     GeometrySize = 22,
-                    Stroke = new SolidColorPaintTask
+                    Stroke = new SolidColorPaint
                     {
                         Color = SKColors.CornflowerBlue,
                         StrokeCap = SKStrokeCap.Round,

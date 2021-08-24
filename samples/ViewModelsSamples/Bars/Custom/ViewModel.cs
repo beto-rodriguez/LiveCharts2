@@ -16,7 +16,7 @@ namespace ViewModelsSamples.Bars.Custom
             new ColumnSeries<double, LiveChartsCore.SkiaSharpView.Drawing.Geometries.OvalGeometry>
             {
                 Values = new List<double> { 4, 2, 0, 5, 2, 6 },
-                Fill = new SolidColorPaintTask(SKColors.CornflowerBlue)
+                Fill = new SolidColorPaint(SKColors.CornflowerBlue)
             },
 
             // you can also define your own geometry using SVG
@@ -24,7 +24,7 @@ namespace ViewModelsSamples.Bars.Custom
             {
                 Values = new List<double> { 3, 2, 3, 4, 5, 3 },
                 Stroke = null,
-                Fill = new SolidColorPaintTask(SKColors.Coral, 5)
+                Fill = new SolidColorPaint(SKColors.Coral, 5)
             }
         };
     }

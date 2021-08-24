@@ -17,7 +17,7 @@ namespace ViewModelsSamples.General.Sections
                     // creates a section from 3 to 4 in the X axis
                     Xi = 3,
                     Xj = 4,
-                    Fill = new SolidColorPaintTask(new SKColor(255, 205, 210))
+                    Fill = new SolidColorPaint(new SKColor(255, 205, 210))
                 },
 
                 new RectangularSection
@@ -28,14 +28,14 @@ namespace ViewModelsSamples.General.Sections
                     Xj = 6,
                     Yi = 2,
                     Yj = 8,
-                    Fill = new SolidColorPaintTask(new SKColor(187, 222, 251))
+                    Fill = new SolidColorPaint(new SKColor(187, 222, 251))
                 },
 
                  new RectangularSection
                 {
                     // creates a section from 8 to the end in the X axis
                     Xi = 8,
-                    Fill = new SolidColorPaintTask(new SKColor(249, 251, 231))
+                    Fill = new SolidColorPaint(new SKColor(249, 251, 231))
                 }
             };
 

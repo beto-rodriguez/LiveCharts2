@@ -30,7 +30,7 @@ namespace ViewModelsSamples.Pies.Gauge
             {
                 InnerRadius = _innerRadius,
                 OffsetRadius = _offsetRadius,
-                Background = new SolidColorPaintTask(new SKColor(0, 0, 0, 10)),
+                Background = new SolidColorPaint(new SKColor(0, 0, 0, 10)),
                 BackgroundInnerRadius = _backgroundInnerRadius,
                 BackgroundOffsetRadius = _backgroundOffsetRadius,
                 LabelFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}",

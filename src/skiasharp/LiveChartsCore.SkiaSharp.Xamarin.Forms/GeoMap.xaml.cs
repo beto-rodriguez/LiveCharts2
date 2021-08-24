@@ -188,14 +188,14 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             set => SetValue(ValuesProperty, value);
         }
 
-        private void GeoMap_SizeChanged(object sender, System.EventArgs e)
+        private void GeoMap_SizeChanged(object sender, EventArgs e)
         {
             load();
         }
 
         private void load()
         {
-            var paint = new SolidColorPaintTask();
+            var paint = new SolidColorPaint();
 
             var thickness = (float)StrokeThickness;
             var stroke = LvcColor.FromArgb(255, (byte)(StrokeColor.R * 255), (byte)(StrokeColor.G * 255), (byte)(StrokeColor.B * 255));

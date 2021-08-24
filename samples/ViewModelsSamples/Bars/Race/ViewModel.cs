@@ -26,7 +26,7 @@ namespace ViewModelsSamples.Bars.Race
                     Name = "Tsunoda",
                     Stroke  = null,
                     MaxBarWidth = 50,
-                    DataLabelsPaint = new SolidColorPaintTask(new SKColor(40, 40, 40)),
+                    DataLabelsPaint = new SolidColorPaint(new SKColor(40, 40, 40)),
                     DataLabelsPosition = DataLabelsPosition.End,
                     DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
@@ -36,7 +36,7 @@ namespace ViewModelsSamples.Bars.Race
                     Name = "Sainz",
                     Stroke  = null,
                     MaxBarWidth = 50,
-                    DataLabelsPaint = new SolidColorPaintTask(new SKColor(40, 40, 40)),
+                    DataLabelsPaint = new SolidColorPaint(new SKColor(40, 40, 40)),
                     DataLabelsPosition = DataLabelsPosition.End,
                     DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
@@ -46,7 +46,7 @@ namespace ViewModelsSamples.Bars.Race
                     Name = "Riccardo",
                     Stroke  = null,
                     MaxBarWidth = 52,
-                    DataLabelsPaint = new SolidColorPaintTask(new SKColor(40, 40, 40)),
+                    DataLabelsPaint = new SolidColorPaint(new SKColor(40, 40, 40)),
                     DataLabelsPosition = DataLabelsPosition.End,
                     DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
@@ -56,7 +56,7 @@ namespace ViewModelsSamples.Bars.Race
                     Name = "Bottas",
                     Stroke  = null,
                     MaxBarWidth = 50,
-                    DataLabelsPaint = new SolidColorPaintTask(new SKColor(40, 40, 40)),
+                    DataLabelsPaint = new SolidColorPaint(new SKColor(40, 40, 40)),
                     DataLabelsPosition = DataLabelsPosition.End,
                     DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
@@ -66,7 +66,7 @@ namespace ViewModelsSamples.Bars.Race
                     Name = "Perez",
                     Stroke  = null,
                     MaxBarWidth = 50,
-                    DataLabelsPaint = new SolidColorPaintTask(new SKColor(40, 40, 40)),
+                    DataLabelsPaint = new SolidColorPaint(new SKColor(40, 40, 40)),
                     DataLabelsPosition = DataLabelsPosition.End,
                     DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
@@ -76,7 +76,7 @@ namespace ViewModelsSamples.Bars.Race
                     Name = "Verstapen",
                     Stroke  = null,
                     MaxBarWidth = 50,
-                    DataLabelsPaint = new SolidColorPaintTask(new SKColor(40, 40, 40)),
+                    DataLabelsPaint = new SolidColorPaint(new SKColor(40, 40, 40)),
                     DataLabelsPosition = DataLabelsPosition.End,
                     DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
@@ -86,7 +86,7 @@ namespace ViewModelsSamples.Bars.Race
                     Name = "Hamilton",
                     Stroke  = null,
                     MaxBarWidth = 50,
-                    DataLabelsPaint = new SolidColorPaintTask(new SKColor(40, 40, 40)),
+                    DataLabelsPaint = new SolidColorPaint(new SKColor(40, 40, 40)),
                     DataLabelsPosition = DataLabelsPosition.End,
                     DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },

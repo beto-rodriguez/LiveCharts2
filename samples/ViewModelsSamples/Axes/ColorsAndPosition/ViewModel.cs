@@ -25,7 +25,7 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
                 {
                     Values = new ObservableCollection<double> { 2, 5, 4, -2, 4, -3, 5 },
                     Stroke = null,
-                    Fill = new SolidColorPaintTask { Color = SKColors.DarkOliveGreen }
+                    Fill = new SolidColorPaint { Color = SKColors.DarkOliveGreen }
                 }
             };
 
@@ -40,10 +40,10 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
                     TextSize = 20,
 
                     // LabelsPaint = null will not draw the axis labels.
-                    LabelsPaint = new SolidColorPaintTask{ Color = SKColors.CornflowerBlue },
+                    LabelsPaint = new SolidColorPaint{ Color = SKColors.CornflowerBlue },
 
                     // SeparatorsPaint = null will not draw the separator lines
-                    SeparatorsPaint = new SolidColorPaintTask { Color = SKColors.LightBlue, StrokeThickness = 3 },
+                    SeparatorsPaint = new SolidColorPaint { Color = SKColors.LightBlue, StrokeThickness = 3 },
 
                     Position = _selectedPosition
                 }
@@ -55,8 +55,8 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
                 {
                     //Name = "Y axis",
                     TextSize = 20,
-                    LabelsPaint = new SolidColorPaintTask { Color = SKColors.Red },
-                    SeparatorsPaint = new SolidColorPaintTask { Color = SKColors.LightPink, StrokeThickness = 3 },
+                    LabelsPaint = new SolidColorPaint { Color = SKColors.Red },
+                    SeparatorsPaint = new SolidColorPaint { Color = SKColors.LightPink, StrokeThickness = 3 },
                     Position = _selectedPosition
                 }
             };
@@ -71,8 +71,8 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
         public void SetNewColor()
         {
             var nextColor = _colors[_selectedColor++ % _colors.Length];
-            XAxes[0].LabelsPaint = new SolidColorPaintTask(new SKColor(nextColor.R, nextColor.G, nextColor.B));
-            XAxes[0].SeparatorsPaint = new SolidColorPaintTask(new SKColor(nextColor.R, nextColor.G, nextColor.B), 3);
+            XAxes[0].LabelsPaint = new SolidColorPaint(new SKColor(nextColor.R, nextColor.G, nextColor.B));
+            XAxes[0].SeparatorsPaint = new SolidColorPaint(new SKColor(nextColor.R, nextColor.G, nextColor.B), 3);
         }
 
         public void TogglePosition()

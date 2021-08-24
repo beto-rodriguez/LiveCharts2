@@ -26,10 +26,10 @@ namespace ViewModelsSamples.Lines.Custom
             {
                 Values = new List<double> { -2, 2, 1, 3, -1, 4, 3 },
 
-                Stroke = new SolidColorPaintTask(SKColors.DarkOliveGreen, 3),
+                Stroke = new SolidColorPaint(SKColors.DarkOliveGreen, 3),
                 Fill = null,
                 GeometryStroke = null,
-                GeometryFill = new SolidColorPaintTask(SKColors.DarkOliveGreen),
+                GeometryFill = new SolidColorPaint(SKColors.DarkOliveGreen),
                 GeometrySize = 40
             }
         };

@@ -21,7 +21,7 @@ namespace ViewModelsSamples.Design.LinearGradients
 
                 // you can add as many colors as you require to build the gradient
                 // by default all the distance between each color is equal
-                // use the colorPos parameter in the constructor of the LinearGradientPaintTask class
+                // use the colorPos parameter in the constructor of the LinearGradientPaint class
                 // to specify the distance between each color
             };
 
@@ -33,10 +33,10 @@ namespace ViewModelsSamples.Design.LinearGradients
                     Stroke = null,
 
                     // this is an easy way to set a linear gradient:
-                    // Fill = new LinearGradientPaintTask(new SKColor(255, 140, 148), new SKColor(220, 237, 194))
+                    // Fill = new LinearGradientPaint(new SKColor(255, 140, 148), new SKColor(220, 237, 194))
 
                     // but you can customize the gradient
-                    Fill = new LinearGradientPaintTask(
+                    Fill = new LinearGradientPaint(
                         // the gradient will use the following colors array
                         new [] { new SKColor(255, 140, 148), new SKColor(220, 237, 194) },
 
@@ -62,8 +62,8 @@ namespace ViewModelsSamples.Design.LinearGradients
                 {
                     Values = new []{ 4, 2, 8, 5, 3 },
                     GeometrySize = 22,
-                    Stroke = new LinearGradientPaintTask(colors) { StrokeThickness = 10 },
-                    GeometryStroke = new LinearGradientPaintTask(colors) { StrokeThickness = 10 },
+                    Stroke = new LinearGradientPaint(colors) { StrokeThickness = 10 },
+                    GeometryStroke = new LinearGradientPaint(colors) { StrokeThickness = 10 },
                     Fill = null
                 }
             };
