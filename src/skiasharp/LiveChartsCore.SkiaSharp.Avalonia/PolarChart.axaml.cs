@@ -684,8 +684,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             {
                 var canvas = this.FindControl<MotionCanvas>("canvas");
                 var color = Background is not ISolidColorBrush b
-                    ? new System.Drawing.Color()
-                    : System.Drawing.Color.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
+                    ? new LvcColor()
+                    : LvcColor.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
                 canvas.BackColor = new SkiaSharp.SKColor(color.R, color.G, color.B, color.A);
             }
 
