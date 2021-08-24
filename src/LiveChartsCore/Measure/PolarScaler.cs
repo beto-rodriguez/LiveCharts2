@@ -22,6 +22,7 @@
 
 using System;
 using System.Drawing;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Measure
@@ -107,6 +108,27 @@ namespace LiveChartsCore.Measure
         /// Gets the min angle.
         /// </summary>
         public double MaxAngle { get; private set; }
+
+        /// <summary>
+        /// Converts to pixels.
+        /// </summary>
+        /// <param name="polarPoint">The polar point.</param>
+        /// <returns></returns>
+        public PointF ToPixels(ChartPoint polarPoint)
+        {
+            var angle = polarPoint.PrimaryValue;
+            var radius = polarPoint.SecondaryValue;
+            var r = _innerRadius + _scalableRadius * radius / _deltaRadius;
+            var a = 360 * angle / _deltaAngleVal;
+            a *= ToRadians;
+
+            unchecked
+            {
+                return new PointF(
+                    CenterX + (float)(Math.Cos(a) * r),
+                    CenterY + (float)(Math.Sin(a) * r));
+            }
+        }
 
         /// <summary>
         /// Converts to pixels.

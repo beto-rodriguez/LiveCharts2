@@ -216,9 +216,9 @@ namespace LiveChartsCore
             }
         }
 
-        /// <inheritdoc cref="GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis{TDrawingContext}, ICartesianAxis{TDrawingContext})"/>
+        /// <inheritdoc cref="GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis, ICartesianAxis)"/>
         public override SeriesBounds GetBounds(
-            CartesianChart<TDrawingContext> chart, ICartesianAxis<TDrawingContext> secondaryAxis, ICartesianAxis<TDrawingContext> primaryAxis)
+            CartesianChart<TDrawingContext> chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
         {
             var baseSeriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
 

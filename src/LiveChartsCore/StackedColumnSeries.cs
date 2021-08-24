@@ -235,7 +235,7 @@ namespace LiveChartsCore
         /// <param name="primaryAxis">The primary axis.</param>
         /// <returns></returns>
         public override SeriesBounds GetBounds(
-            CartesianChart<TDrawingContext> chart, ICartesianAxis<TDrawingContext> secondaryAxis, ICartesianAxis<TDrawingContext> primaryAxis)
+            CartesianChart<TDrawingContext> chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
         {
             var baseSeriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
 

@@ -292,9 +292,9 @@ namespace LiveChartsCore
             }
         }
 
-        /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis{TDrawingContext}, ICartesianAxis{TDrawingContext})"/>
+        /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis, ICartesianAxis)"/>
         public override SeriesBounds GetBounds(
-            CartesianChart<TDrawingContext> chart, ICartesianAxis<TDrawingContext> secondaryAxis, ICartesianAxis<TDrawingContext> primaryAxis)
+            CartesianChart<TDrawingContext> chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
         {
             if (dataProvider is null) throw new Exception("A data provider is required");
 

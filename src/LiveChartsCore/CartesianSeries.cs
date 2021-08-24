@@ -66,9 +66,9 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.DataLabelsPosition"/>
         public DataLabelsPosition DataLabelsPosition { get => _labelsPosition; set { _labelsPosition = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis{TDrawingContext}, ICartesianAxis{TDrawingContext})"/>
+        /// <inheritdoc cref="ICartesianSeries{TDrawingContext}.GetBounds(CartesianChart{TDrawingContext}, ICartesianAxis, ICartesianAxis)"/>
         public virtual SeriesBounds GetBounds(
-            CartesianChart<TDrawingContext> chart, ICartesianAxis<TDrawingContext> x, ICartesianAxis<TDrawingContext> y)
+            CartesianChart<TDrawingContext> chart, ICartesianAxis x, ICartesianAxis y)
         {
             return dataProvider is null
                 ? throw new Exception("A data provider is required")
@@ -110,6 +110,15 @@ namespace LiveChartsCore
             IsVisible = false;
             ((ISeries)this).IsNotifyingChanges = false;
         }
+
+        /// <summary>
+        /// Softs the delete point.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <param name="primaryScale">The primary scale.</param>
+        /// <param name="secondaryScale">The secondary scale.</param>
+        /// <returns></returns>
+        protected abstract void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale);
 
         /// <summary>
         /// Gets the label position.
