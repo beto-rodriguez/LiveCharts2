@@ -41,7 +41,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     {
         private static GeoJsonFile? s_map = null;
         private int _heatKnownLength = 0;
-        private List<Tuple<double, System.Drawing.Color>> _heatStops = new();
+        private List<Tuple<double, LvcColor>> _heatStops = new();
 
         static GeoMap()
         {
@@ -93,7 +93,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </summary>
         public static readonly DependencyProperty StrokeColorProperty =
             DependencyProperty.Register(
-                nameof(StrokeColor), typeof(System.Windows.Media.Color), typeof(GeoMap), new PropertyMetadata(System.Windows.Media.Color.FromRgb(224, 224, 224)));
+                nameof(StrokeColor), typeof(System.Windows.Media.Color), typeof(GeoMap),
+                new PropertyMetadata(System.Windows.Media.Color.FromRgb(224, 224, 224)));
 
         /// <summary>
         /// The stroke thickness property
@@ -106,7 +107,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </summary>
         public static readonly DependencyProperty FillColorProperty =
             DependencyProperty.Register(
-                nameof(FillColor), typeof(System.Windows.Media.Color), typeof(GeoMap), new PropertyMetadata(System.Windows.Media.Color.FromRgb(250, 250, 250)));
+                nameof(FillColor), typeof(System.Windows.Media.Color), typeof(GeoMap),
+                new PropertyMetadata(System.Windows.Media.Color.FromRgb(250, 250, 250)));
 
         /// <summary>
         /// Gets or sets the projection.
@@ -126,9 +128,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set => SetValue(HeatMapProperty, value);
         }
 
-        System.Drawing.Color[] IGeoMap.HeatMap
+        LvcColor[] IGeoMap.HeatMap
         {
-            get => HeatMap.Select(x => System.Drawing.Color.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
+            get => HeatMap.Select(x => LvcColor.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
             set => HeatMap = value.Select(x => System.Windows.Media.Color.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
         }
 
@@ -150,9 +152,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set => SetValue(StrokeColorProperty, value);
         }
 
-        System.Drawing.Color IGeoMap.StrokeColor
+        LvcColor IGeoMap.StrokeColor
         {
-            get => System.Drawing.Color.FromArgb(StrokeColor.A, StrokeColor.R, StrokeColor.G, StrokeColor.B);
+            get => LvcColor.FromArgb(StrokeColor.A, StrokeColor.R, StrokeColor.G, StrokeColor.B);
             set => StrokeColor = System.Windows.Media.Color.FromArgb(value.A, value.R, value.G, value.B);
         }
 
@@ -174,9 +176,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set => SetValue(FillColorProperty, value);
         }
 
-        System.Drawing.Color IGeoMap.FillColor
+        LvcColor IGeoMap.FillColor
         {
-            get => System.Drawing.Color.FromArgb(FillColor.A, FillColor.R, FillColor.G, FillColor.B);
+            get => LvcColor.FromArgb(FillColor.A, FillColor.R, FillColor.G, FillColor.B);
             set => FillColor = System.Windows.Media.Color.FromArgb(value.A, value.R, value.G, value.B);
         }
 
@@ -199,10 +201,10 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             var paint = new SolidColorPaint();
 
             var thickness = (float)StrokeThickness;
-            var stroke = System.Drawing.Color.FromArgb(255, StrokeColor.R, StrokeColor.G, StrokeColor.B);
-            var fill = System.Drawing.Color.FromArgb(255, FillColor.R, FillColor.G, FillColor.B);
+            var stroke = LvcColor.FromArgb(255, StrokeColor.R, StrokeColor.G, StrokeColor.B);
+            var fill = LvcColor.FromArgb(255, FillColor.R, FillColor.G, FillColor.B);
 
-            var hm = HeatMap.Select(x => System.Drawing.Color.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
+            var hm = HeatMap.Select(x => LvcColor.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
 
             if (_heatKnownLength != HeatMap.Length)
             {

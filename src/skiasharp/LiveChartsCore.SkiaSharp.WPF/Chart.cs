@@ -25,14 +25,10 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
-using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Collections.Generic;
-using Brush = System.Windows.Media.Brush;
-using FontFamily = System.Windows.Media.FontFamily;
-using FontStyle = System.Windows.FontStyle;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using System.ComponentModel;
@@ -295,12 +291,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
 
-        System.Drawing.Color IChartView.BackColor
+        LvcColor IChartView.BackColor
         {
             get => Background is not SolidColorBrush b
-                    ? new System.Drawing.Color()
-                    : System.Drawing.Color.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
-            set => SetValueOrCurrentValue(BackgroundProperty, new SolidColorBrush(System.Windows.Media.Color.FromArgb(value.A, value.R, value.G, value.B)));
+                ? new LvcColor()
+                : LvcColor.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
+            set => SetValueOrCurrentValue(BackgroundProperty, new SolidColorBrush(Color.FromArgb(value.A, value.R, value.G, value.B)));
         }
 
         /// <inheritdoc cref="IChartView.SyncContext" />
@@ -323,9 +319,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set => SetValueOrCurrentValue(DrawMarginProperty, value);
         }
 
-        SizeF IChartView.ControlSize => canvas is null
-                    ? throw new Exception("Canvas not found")
-                    : (new() { Width = (float)canvas.ActualWidth, Height = (float)canvas.ActualHeight });
+        LvcSize IChartView.ControlSize => canvas is null
+            ? throw new Exception("Canvas not found")
+            : (new() { Width = (float)canvas.ActualWidth, Height = (float)canvas.ActualHeight });
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas is null ? throw new Exception("Canvas not found") : canvas.CanvasCore;
@@ -658,11 +654,11 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             tooltip.Hide();
         }
 
-        /// <inheritdoc cref="IChartView.SetTooltipStyle(System.Drawing.Color, System.Drawing.Color)"/>
-        public void SetTooltipStyle(System.Drawing.Color background, System.Drawing.Color textColor)
+        /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
+        public void SetTooltipStyle(LvcColor background, LvcColor textColor)
         {
-            TooltipBackground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(background.A, background.R, background.G, background.B));
-            TooltipTextBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(textColor.A, textColor.R, textColor.G, textColor.B));
+            TooltipBackground = new SolidColorBrush(Color.FromArgb(background.A, background.R, background.G, background.B));
+            TooltipTextBrush = new SolidColorBrush(Color.FromArgb(textColor.A, textColor.R, textColor.G, textColor.B));
         }
 
         void IChartView.InvokeOnUIThread(Action action)
@@ -707,7 +703,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             var p = e.GetPosition(this);
-            core?.InvokePointerMove(new PointF((float)p.X, (float)p.Y));
+            core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
         }
 
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
