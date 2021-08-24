@@ -38,10 +38,11 @@ namespace LiveChartsCore
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="Series{TModel, TVisual, TLabel, TDrawingContext}" />
     /// <seealso cref="IChartSeries{TDrawingContext}" />
-    public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext> : Series<TModel, TVisual, TLabel, TDrawingContext>, IChartSeries<TDrawingContext>
-        where TDrawingContext : DrawingContext
-        where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
+        : Series<TModel, TVisual, TLabel, TDrawingContext>, IChartSeries<TDrawingContext>
+            where TDrawingContext : DrawingContext
+            where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         private double _legendShapeSize = 15;
         private IPaint<TDrawingContext>? _dataLabelsPaint;

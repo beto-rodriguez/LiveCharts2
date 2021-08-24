@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 using System;
-using System.Drawing;
 
 namespace LiveChartsCore.Kernel.Drawing
 {
@@ -82,8 +82,8 @@ namespace LiveChartsCore.Kernel.Drawing
             return this;
         }
 
-        /// <inheritdoc cref="GetDistanceToPoint(PointF, TooltipFindingStrategy)"/>
-        public override float GetDistanceToPoint(PointF point, TooltipFindingStrategy strategy)
+        /// <inheritdoc cref="GetDistanceToPoint(LvcPoint, TooltipFindingStrategy)"/>
+        public override float GetDistanceToPoint(LvcPoint point, TooltipFindingStrategy strategy)
         {
             var dx = point.X - (X + Width * 0.5f);
             var dy = point.Y - (Y + Height * 0.5f);

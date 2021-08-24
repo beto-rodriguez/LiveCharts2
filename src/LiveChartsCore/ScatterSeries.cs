@@ -25,7 +25,6 @@ using LiveChartsCore.Drawing;
 using System;
 using LiveChartsCore.Measure;
 using System.Collections.Generic;
-using System.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Data;
@@ -41,10 +40,11 @@ namespace LiveChartsCore
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
     /// <seealso cref="IScatterSeries{TDrawingContext}" />
-    public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext> : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IScatterSeries<TDrawingContext>
-        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-        where TDrawingContext : DrawingContext
+    public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
+        : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IScatterSeries<TDrawingContext>
+            where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+            where TDrawingContext : DrawingContext
     {
         private Bounds _weightBounds = new();
 
@@ -54,7 +54,7 @@ namespace LiveChartsCore
         public ScatterSeries()
             : base(SeriesProperties.Scatter | SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips)
         {
-            DataPadding = new PointF(1, 1);
+            DataPadding = new LvcPoint(1, 1);
 
             HoverState = LiveCharts.ScatterSeriesHoverKey;
 
@@ -94,19 +94,19 @@ namespace LiveChartsCore
             if (Fill is not null)
             {
                 Fill.ZIndex = actualZIndex + 0.1;
-                Fill.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                Fill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(Fill);
             }
             if (Stroke is not null)
             {
                 Stroke.ZIndex = actualZIndex + 0.2;
-                Stroke.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(Stroke);
             }
             if (DataLabelsPaint is not null)
             {
                 DataLabelsPaint.ZIndex = actualZIndex + 0.3;
-                DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
             }
 

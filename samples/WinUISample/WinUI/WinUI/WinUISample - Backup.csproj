@@ -46,6 +46,7 @@
     <None Remove="General\ChartToImage\View.xaml" />
     <None Remove="General\Animations\View.xaml" />
     <None Remove="Heat\Basic\View.xaml" />
+    <None Remove="Polar\Basic\View.xaml" />
     <None Remove="StepLines\Area\View.xaml" />
     <None Remove="StepLines\AutoUpdate\View.xaml" />
     <None Remove="StepLines\Basic\View.xaml" />
@@ -255,7 +256,7 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Polar\Basic\View.xaml">
-      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Scatter\AutoUpdate - Copy\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>

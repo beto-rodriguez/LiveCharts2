@@ -20,20 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Drawing;
+using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Motion
 {
     /// <summary>
-    /// Defines the <see cref="PointF"/> motion property class.
+    /// Defines the <see cref="LvcPoint"/> motion property class.
     /// </summary>
-    public class PointFMotionProperty : MotionProperty<PointF>
+    public class LvPointMotionProperty : MotionProperty<LvcPoint>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PointFMotionProperty"/> class.
+        /// Initializes a new instance of the <see cref="LvPointMotionProperty"/> class.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
-        public PointFMotionProperty(string propertyName)
+        public LvPointMotionProperty(string propertyName)
             : base(propertyName)
         {
 
@@ -44,7 +44,7 @@ namespace LiveChartsCore.Motion
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="value">The value.</param>
-        public PointFMotionProperty(string propertyName, PointF value)
+        public LvPointMotionProperty(string propertyName, LvcPoint value)
             : base(propertyName)
         {
             fromValue = value;
@@ -52,9 +52,9 @@ namespace LiveChartsCore.Motion
         }
 
         /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
-        protected override PointF OnGetMovement(float progress)
+        protected override LvcPoint OnGetMovement(float progress)
         {
-            return new PointF(
+            return new LvcPoint(
                 fromValue.X + progress * (toValue.X - fromValue.X),
                 fromValue.Y + progress * (toValue.Y - fromValue.Y));
         }

@@ -23,7 +23,6 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using System;
-using System.Drawing;
 
 namespace LiveChartsCore.Themes
 {
@@ -42,7 +41,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The current colors.
         /// </value>
-        public Color[]? CurrentColors { get; private set; }
+        public LvcColor[]? CurrentColors { get; private set; }
 
         /// <summary>
         /// Gets the style.
@@ -62,7 +61,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The series default resolver.
         /// </value>
-        public Action<Color[], IChartSeries<TDrawingContext>, bool>? SeriesDefaultsResolver { get; set; }
+        public Action<LvcColor[], IChartSeries<TDrawingContext>, bool>? SeriesDefaultsResolver { get; set; }
 
         /// <summary>
         /// Gets or sets the plane default resolver.
@@ -77,7 +76,7 @@ namespace LiveChartsCore.Themes
         /// </summary>
         /// <param name="colors">The colors.</param>
         /// <returns>The current theme instance</returns>
-        public Theme<TDrawingContext> WithColors(params Color[] colors)
+        public Theme<TDrawingContext> WithColors(params LvcColor[] colors)
         {
             CurrentColors = colors;
             return this;
@@ -99,7 +98,7 @@ namespace LiveChartsCore.Themes
         /// </summary>
         /// <param name="resolver">The resolver.</param>
         /// <returns></returns>
-        public Theme<TDrawingContext> WithSeriesDefaultsResolver(Action<Color[], IChartSeries<TDrawingContext>, bool> resolver)
+        public Theme<TDrawingContext> WithSeriesDefaultsResolver(Action<LvcColor[], IChartSeries<TDrawingContext>, bool> resolver)
         {
             SeriesDefaultsResolver = resolver;
             return this;
@@ -133,7 +132,7 @@ namespace LiveChartsCore.Themes
         /// <param name="colors">The colors.</param>
         /// <param name="series">The series.</param>
         /// <param name="forceApply">Forces the apply of the theme.</param>
-        public virtual void ResolveSeriesDefaults(Color[] colors, IChartSeries<TDrawingContext> series, bool forceApply)
+        public virtual void ResolveSeriesDefaults(LvcColor[] colors, IChartSeries<TDrawingContext> series, bool forceApply)
         {
             SeriesDefaultsResolver?.Invoke(colors, series, forceApply);
         }

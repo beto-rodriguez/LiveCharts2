@@ -25,7 +25,6 @@ using LiveChartsCore.Measure;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing.Common;
 using LiveChartsCore.Drawing;
-using System.Drawing;
 
 namespace LiveChartsCore.Kernel.Sketches
 {
@@ -266,13 +265,13 @@ namespace LiveChartsCore.Kernel.Sketches
         /// </summary>
         /// <param name="chart">The chart.</param>
         /// <returns></returns>
-        SizeF GetPossibleSize(Chart<TDrawingContext> chart);
+        LvcSize GetPossibleSize(Chart<TDrawingContext> chart);
 
         /// <summary>
         /// Gets the size of the axis name label.
         /// </summary>
         /// <param name="chart">the chart.</param>
         /// <returns></returns>
-        SizeF GetNameLabelSize(Chart<TDrawingContext> chart);
+        LvcSize GetNameLabelSize(Chart<TDrawingContext> chart);
     }
 }

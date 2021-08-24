@@ -39,13 +39,13 @@ namespace LiveChartsCore
     /// <seealso cref="LineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs}" />
     public class StackedStepAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TStepLineSegment, TMoveToCommand, TPathArgs>
         : StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TStepLineSegment, TMoveToCommand, TPathArgs>
-        where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
-        where TLineSegment : ILinePathSegment<TPathArgs>, new()
-        where TStepLineSegment : IStepLineSegment<TPathArgs>, new()
-        where TMoveToCommand : IMoveToPathCommand<TPathArgs>, new()
-        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-        where TDrawingContext : DrawingContext
+            where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
+            where TLineSegment : ILinePathSegment<TPathArgs>, new()
+            where TStepLineSegment : IStepLineSegment<TPathArgs>, new()
+            where TMoveToCommand : IMoveToPathCommand<TPathArgs>, new()
+            where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+            where TDrawingContext : DrawingContext
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StackedAreaSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs}"/> class.

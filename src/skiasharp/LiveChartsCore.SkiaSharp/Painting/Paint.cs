@@ -39,7 +39,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
     {
         private readonly FloatMotionProperty _strokeMiterTransition;
         private readonly Dictionary<object, HashSet<IDrawable<SkiaSharpDrawingContext>>> _geometriesByCanvas = new();
-        private readonly Dictionary<object, RectangleF> _clipRectangles = new();
+        private readonly Dictionary<object, LvcRectangle> _clipRectangles = new();
 
         /// <summary>
         /// The skia paint
@@ -209,13 +209,13 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         }
 
         /// <inheritdoc cref="IPaint{TDrawingContext}.GetClipRectangle(MotionCanvas{TDrawingContext})" />
-        public RectangleF GetClipRectangle(MotionCanvas<SkiaSharpDrawingContext> canvas)
+        public LvcRectangle GetClipRectangle(MotionCanvas<SkiaSharpDrawingContext> canvas)
         {
-            return _clipRectangles.TryGetValue(canvas.Sync, out var clip) ? clip : RectangleF.Empty;
+            return _clipRectangles.TryGetValue(canvas.Sync, out var clip) ? clip : LvcRectangle.Empty;
         }
 
-        /// <inheritdoc cref="IPaint{TDrawingContext}.SetClipRectangle(MotionCanvas{TDrawingContext}, RectangleF)" />
-        public void SetClipRectangle(MotionCanvas<SkiaSharpDrawingContext> canvas, RectangleF value)
+        /// <inheritdoc cref="IPaint{TDrawingContext}.SetClipRectangle(MotionCanvas{TDrawingContext}, LvcRectangle)" />
+        public void SetClipRectangle(MotionCanvas<SkiaSharpDrawingContext> canvas, LvcRectangle value)
         {
             _clipRectangles[canvas.Sync] = value;
         }

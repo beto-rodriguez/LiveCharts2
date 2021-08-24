@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using LiveChartsCore.Kernel.Sketches;
 using System;
 using LiveChartsCore.Kernel;
-using System.Drawing;
 using System.Linq;
 using System.Diagnostics;
 using System.Threading;
@@ -125,7 +124,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="pointerPosition">The pointer position.</param>
         /// <returns></returns>
-        public override TooltipPoint[] FindPointsNearTo(PointF pointerPosition)
+        public override TooltipPoint[] FindPointsNearTo(LvcPoint pointerPosition)
         {
             return _chartView.Series.SelectMany(
                 series => series.FindPointsNearTo(this, pointerPosition, TooltipFindingStrategy.CompareAll))

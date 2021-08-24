@@ -36,10 +36,11 @@ namespace LiveChartsCore
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
     /// <seealso cref="IBarSeries{TDrawingContext}" />
-    public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext> : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IBarSeries<TDrawingContext>
-        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
-        where TDrawingContext : DrawingContext
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    public abstract class BarSeries<TModel, TVisual, TLabel, TDrawingContext>
+        : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IBarSeries<TDrawingContext>
+            where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+            where TDrawingContext : DrawingContext
+            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BarSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.

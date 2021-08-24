@@ -28,7 +28,6 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace LiveChartsCore
 {
@@ -54,7 +53,7 @@ namespace LiveChartsCore
                   SeriesProperties.Bar | SeriesProperties.PrimaryAxisVerticalOrientation |
                   SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
         {
-            DataPadding = new PointF(0, 1);
+            DataPadding = new LvcPoint(0, 1);
             _isRounded = typeof(IRoundedRectangleChartPoint<TDrawingContext>).IsAssignableFrom(typeof(TVisual));
         }
 
@@ -86,19 +85,19 @@ namespace LiveChartsCore
             if (Fill is not null)
             {
                 Fill.ZIndex = actualZIndex + 0.1;
-                Fill.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                Fill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(Fill);
             }
             if (Stroke is not null)
             {
                 Stroke.ZIndex = actualZIndex + 0.2;
-                Stroke.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(Stroke);
             }
             if (DataLabelsPaint is not null)
             {
                 DataLabelsPaint.ZIndex = actualZIndex + 0.3;
-                DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
             }
 

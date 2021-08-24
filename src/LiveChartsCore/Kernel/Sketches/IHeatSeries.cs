@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Drawing;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
 
@@ -40,7 +39,7 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <value>
         /// The heat map.
         /// </value>
-        Color[] HeatMap { get; set; }
+        LvcColor[] HeatMap { get; set; }
 
         /// <summary>
         /// Gets or sets the color stops.

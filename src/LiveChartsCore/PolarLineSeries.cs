@@ -26,7 +26,6 @@ using LiveChartsCore.Measure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Drawing;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Kernel.Data;
@@ -38,13 +37,13 @@ namespace LiveChartsCore
     /// </summary>
     public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>
         : ChartSeries<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>, ILineSeries<TDrawingContext>, IPolarSeries<TDrawingContext>
-        where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
-        where TLineSegment : ILinePathSegment<TPathArgs>, new()
-        where TBezierSegment : IBezierSegment<TPathArgs>, new()
-        where TMoveToCommand : IMoveToPathCommand<TPathArgs>, new()
-        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-        where TDrawingContext : DrawingContext
+            where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
+            where TLineSegment : ILinePathSegment<TPathArgs>, new()
+            where TBezierSegment : IBezierSegment<TPathArgs>, new()
+            where TMoveToCommand : IMoveToPathCommand<TPathArgs>, new()
+            where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+            where TDrawingContext : DrawingContext
     {
         private readonly Dictionary<object, List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>> _fillPathHelperDictionary = new();
         private readonly Dictionary<object, List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>> _strokePathHelperDictionary = new();
@@ -67,7 +66,7 @@ namespace LiveChartsCore
                   SeriesProperties.Line | SeriesProperties.PrimaryAxisVerticalOrientation |
                   (isStacked ? SeriesProperties.Stacked : 0) | SeriesProperties.Sketch | SeriesProperties.PrefersXStrategyTooltips)
         {
-            DataPadding = new PointF(0.5f, 1f);
+            DataPadding = new LvcPoint(0.5f, 1f);
             HoverState = LiveCharts.LineSeriesHoverKey;
         }
 
@@ -223,7 +222,7 @@ namespace LiveChartsCore
                     Fill.AddGeometryToPaintTask(polarChart.Canvas, fillPathHelper.Path);
                     polarChart.Canvas.AddDrawableTask(Fill);
                     Fill.ZIndex = actualZIndex + 0.1;
-                    Fill.SetClipRectangle(polarChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                    Fill.SetClipRectangle(polarChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 }
                 if (Stroke is not null)
                 {
@@ -231,7 +230,7 @@ namespace LiveChartsCore
                     Stroke.AddGeometryToPaintTask(polarChart.Canvas, strokePathHelper.Path);
                     polarChart.Canvas.AddDrawableTask(Stroke);
                     Stroke.ZIndex = actualZIndex + 0.2;
-                    Stroke.SetClipRectangle(polarChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                    Stroke.SetClipRectangle(polarChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 }
 
                 foreach (var data in GetSpline(segment, scaler, stacker))
@@ -400,13 +399,13 @@ namespace LiveChartsCore
                 if (GeometryFill is not null)
                 {
                     polarChart.Canvas.AddDrawableTask(GeometryFill);
-                    GeometryFill.SetClipRectangle(polarChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                    GeometryFill.SetClipRectangle(polarChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                     GeometryFill.ZIndex = actualZIndex + 0.3;
                 }
                 if (GeometryStroke is not null)
                 {
                     polarChart.Canvas.AddDrawableTask(GeometryStroke);
-                    GeometryStroke.SetClipRectangle(polarChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                    GeometryStroke.SetClipRectangle(polarChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                     GeometryStroke.ZIndex = actualZIndex + 0.4;
                 }
                 segmentI++;
@@ -428,7 +427,7 @@ namespace LiveChartsCore
             if (DataLabelsPaint is not null)
             {
                 polarChart.Canvas.AddDrawableTask(DataLabelsPaint);
-                DataLabelsPaint.SetClipRectangle(polarChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                DataLabelsPaint.SetClipRectangle(polarChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 DataLabelsPaint.ZIndex = actualZIndex + 0.5;
             }
 
@@ -526,12 +525,12 @@ namespace LiveChartsCore
         /// <param name="seriesProperties">The series properties.</param>
         /// <param name="isGreaterThanPivot">if set to <c>true</c> [is greater than pivot].</param>
         /// <returns></returns>
-        protected virtual PointF GetLabelPosition(
+        protected virtual LvcPoint GetLabelPosition(
             float x,
             float y,
             float width,
             float height,
-            SizeF labelSize,
+            LvcSize labelSize,
             DataLabelsPosition position,
             SeriesProperties seriesProperties,
             bool isGreaterThanPivot)
@@ -541,27 +540,27 @@ namespace LiveChartsCore
 
             return position switch
             {
-                DataLabelsPosition.Middle => new PointF(middleX, middleY),
-                DataLabelsPosition.Top => new PointF(middleX, y - labelSize.Height * 0.5f),
-                DataLabelsPosition.Bottom => new PointF(middleX, y + height + labelSize.Height * 0.5f),
-                DataLabelsPosition.Left => new PointF(x - labelSize.Width * 0.5f, middleY),
-                DataLabelsPosition.Right => new PointF(x + width + labelSize.Width * 0.5f, middleY),
+                DataLabelsPosition.Middle => new LvcPoint(middleX, middleY),
+                DataLabelsPosition.Top => new LvcPoint(middleX, y - labelSize.Height * 0.5f),
+                DataLabelsPosition.Bottom => new LvcPoint(middleX, y + height + labelSize.Height * 0.5f),
+                DataLabelsPosition.Left => new LvcPoint(x - labelSize.Width * 0.5f, middleY),
+                DataLabelsPosition.Right => new LvcPoint(x + width + labelSize.Width * 0.5f, middleY),
                 DataLabelsPosition.End =>
                 (seriesProperties & SeriesProperties.PrimaryAxisHorizontalOrientation) == SeriesProperties.PrimaryAxisHorizontalOrientation
                     ? (isGreaterThanPivot
-                        ? new PointF(x + width + labelSize.Width * 0.5f, middleY)
-                        : new PointF(x - labelSize.Width * 0.5f, middleY))
+                        ? new LvcPoint(x + width + labelSize.Width * 0.5f, middleY)
+                        : new LvcPoint(x - labelSize.Width * 0.5f, middleY))
                     : (isGreaterThanPivot
-                        ? new PointF(middleX, y - labelSize.Height * 0.5f)
-                        : new PointF(middleX, y + height + labelSize.Height * 0.5f)),
+                        ? new LvcPoint(middleX, y - labelSize.Height * 0.5f)
+                        : new LvcPoint(middleX, y + height + labelSize.Height * 0.5f)),
                 DataLabelsPosition.Start =>
                      (seriesProperties & SeriesProperties.PrimaryAxisHorizontalOrientation) == SeriesProperties.PrimaryAxisHorizontalOrientation
                         ? (isGreaterThanPivot
-                            ? new PointF(x - labelSize.Width * 0.5f, middleY)
-                            : new PointF(x + width + labelSize.Width * 0.5f, middleY))
+                            ? new LvcPoint(x - labelSize.Width * 0.5f, middleY)
+                            : new LvcPoint(x + width + labelSize.Width * 0.5f, middleY))
                         : (isGreaterThanPivot
-                            ? new PointF(middleX, y + height + labelSize.Height * 0.5f)
-                            : new PointF(middleX, y - labelSize.Height * 0.5f)),
+                            ? new LvcPoint(middleX, y + height + labelSize.Height * 0.5f)
+                            : new LvcPoint(middleX, y - labelSize.Height * 0.5f)),
                 _ => throw new Exception("Position not supported"),
             };
         }

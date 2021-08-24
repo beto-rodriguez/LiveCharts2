@@ -29,7 +29,6 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace LiveChartsCore
 {
@@ -40,19 +39,20 @@ namespace LiveChartsCore
     /// <typeparam name="TVisual"></typeparam>
     /// <typeparam name="TLabel"></typeparam>
     /// <typeparam name="TDrawingContext"></typeparam>
-    public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext> : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IHeatSeries<TDrawingContext>
-        where TVisual : class, ISolidColorChartPoint<TDrawingContext>, new()
-        where TDrawingContext : DrawingContext
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
+        : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IHeatSeries<TDrawingContext>
+            where TVisual : class, ISolidColorChartPoint<TDrawingContext>, new()
+            where TDrawingContext : DrawingContext
+            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         private IPaint<TDrawingContext>? _paintTaks;
         private Bounds _weightBounds = new();
         private int _heatKnownLength = 0;
-        private List<Tuple<double, Color>> _heatStops = new();
-        private Color[] _heatMap = new[]
+        private List<Tuple<double, LvcColor>> _heatStops = new();
+        private LvcColor[] _heatMap = new[]
         {
-            Color.FromArgb(255, 87, 103, 222), // cold (min value)
-            Color.FromArgb(255, 95, 207, 249) // hot (max value)
+            LvcColor.FromArgb(255, 87, 103, 222), // cold (min value)
+            LvcColor.FromArgb(255, 95, 207, 249) // hot (max value)
         };
         private double[]? _colorStops;
         private Padding _pointPadding = new(4);
@@ -66,12 +66,12 @@ namespace LiveChartsCore
                  SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips)
         {
             HoverState = LiveCharts.HeatSeriesHoverState;
-            DataPadding = new PointF(0, 0);
+            DataPadding = new LvcPoint(0, 0);
             TooltipLabelFormatter = (point) => $"{Name}: {point.TertiaryValue:N}";
         }
 
         /// <inheritdoc cref="IHeatSeries{TDrawingContext}.HeatMap"/>
-        public Color[] HeatMap { get => _heatMap; set { _heatMap = value; OnPropertyChanged(); OnSeriesMiniatureChanged(); } }
+        public LvcColor[] HeatMap { get => _heatMap; set { _heatMap = value; OnPropertyChanged(); OnSeriesMiniatureChanged(); } }
 
         /// <inheritdoc cref="IHeatSeries{TDrawingContext}.ColorStops"/>
         public double[]? ColorStops { get => _colorStops; set { _colorStops = value; OnPropertyChanged(); } }
@@ -104,13 +104,13 @@ namespace LiveChartsCore
             if (_paintTaks is not null)
             {
                 _paintTaks.ZIndex = actualZIndex + 0.2;
-                _paintTaks.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                _paintTaks.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(_paintTaks);
             }
             if (DataLabelsPaint is not null)
             {
                 DataLabelsPaint.ZIndex = actualZIndex + 0.3;
-                DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
             }
 
@@ -143,7 +143,7 @@ namespace LiveChartsCore
                         visual.Width = uws;
                         visual.Height = uwp;
                         visual.RemoveOnCompleted = true;
-                        visual.Color = Color.FromArgb(0, visual.Color);
+                        visual.Color = LvcColor.FromArgb(0, visual.Color);
                         point.Context.Visual = null;
                     }
                     continue;
@@ -171,7 +171,7 @@ namespace LiveChartsCore
                         Y = yi + p.Top,
                         Width = uws - p.Left - p.Right,
                         Height = uwp - p.Top - p.Bottom,
-                        Color = Color.FromArgb(0, baseColor.R, baseColor.G, baseColor.B)
+                        Color = LvcColor.FromArgb(0, baseColor.R, baseColor.G, baseColor.B)
                     };
 
                     visual = r;
@@ -188,7 +188,7 @@ namespace LiveChartsCore
                 visual.Y = primary - uwp * 0.5f + p.Top;
                 visual.Width = uws - p.Left - p.Right;
                 visual.Height = uwp - p.Top - p.Bottom;
-                visual.Color = Color.FromArgb(baseColor.A, baseColor.R, baseColor.G, baseColor.B);
+                visual.Color = LvcColor.FromArgb(baseColor.A, baseColor.R, baseColor.G, baseColor.B);
                 visual.RemoveOnCompleted = false;
 
                 var ha = new RectangleHoverArea().SetDimensions(secondary - uws * 0.5f, primary - uwp * 0.5f, uws, uwp);
@@ -318,7 +318,7 @@ namespace LiveChartsCore
                         .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
         }
 
-        /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SoftDeletePoint(ChartPoint, Scaler, Scaler)"/>
+        /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeletePoint(ChartPoint, Scaler, Scaler)"/>
         protected override void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
         {
             var visual = (TVisual?)point.Context.Visual;
@@ -334,7 +334,7 @@ namespace LiveChartsCore
                 return;
             }
 
-            visual.Color = Color.FromArgb(255, visual.Color);
+            visual.Color = LvcColor.FromArgb(255, visual.Color);
             visual.RemoveOnCompleted = true;
 
             var label = (TLabel?)point.Context.Label;

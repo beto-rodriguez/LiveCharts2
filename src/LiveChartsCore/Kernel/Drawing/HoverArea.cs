@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
-using System.Drawing;
 
 namespace LiveChartsCore.Kernel.Drawing
 {
@@ -38,7 +38,7 @@ namespace LiveChartsCore.Kernel.Drawing
         /// <returns>
         ///   <c>true</c> if [is trigger by] [the specified point]; otherwise, <c>false</c>.
         /// </returns>
-        public abstract float GetDistanceToPoint(PointF point, TooltipFindingStrategy strategy);
+        public abstract float GetDistanceToPoint(LvcPoint point, TooltipFindingStrategy strategy);
 
         /// <summary>
         /// Suggests the tooltip placement.

@@ -24,7 +24,6 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using System;
 using LiveChartsCore.Measure;
-using System.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Kernel.Data;
 using System.Collections.Generic;
@@ -132,12 +131,12 @@ namespace LiveChartsCore
         /// <param name="seriesProperties">The series properties.</param>
         /// <param name="isGreaterThanPivot">if set to <c>true</c> [is greater than pivot].</param>
         /// <returns></returns>
-        protected virtual PointF GetLabelPosition(
+        protected virtual LvcPoint GetLabelPosition(
             float x,
             float y,
             float width,
             float height,
-            SizeF labelSize,
+            LvcSize labelSize,
             DataLabelsPosition position,
             SeriesProperties seriesProperties,
             bool isGreaterThanPivot)
@@ -147,27 +146,27 @@ namespace LiveChartsCore
 
             return position switch
             {
-                DataLabelsPosition.Middle => new PointF(middleX, middleY),
-                DataLabelsPosition.Top => new PointF(middleX, y - labelSize.Height * 0.5f),
-                DataLabelsPosition.Bottom => new PointF(middleX, y + height + labelSize.Height * 0.5f),
-                DataLabelsPosition.Left => new PointF(x - labelSize.Width * 0.5f, middleY),
-                DataLabelsPosition.Right => new PointF(x + width + labelSize.Width * 0.5f, middleY),
+                DataLabelsPosition.Middle => new LvcPoint(middleX, middleY),
+                DataLabelsPosition.Top => new LvcPoint(middleX, y - labelSize.Height * 0.5f),
+                DataLabelsPosition.Bottom => new LvcPoint(middleX, y + height + labelSize.Height * 0.5f),
+                DataLabelsPosition.Left => new LvcPoint(x - labelSize.Width * 0.5f, middleY),
+                DataLabelsPosition.Right => new LvcPoint(x + width + labelSize.Width * 0.5f, middleY),
                 DataLabelsPosition.End =>
                 (seriesProperties & SeriesProperties.PrimaryAxisHorizontalOrientation) == SeriesProperties.PrimaryAxisHorizontalOrientation
                     ? (isGreaterThanPivot
-                        ? new PointF(x + width + labelSize.Width * 0.5f, middleY)
-                        : new PointF(x - labelSize.Width * 0.5f, middleY))
+                        ? new LvcPoint(x + width + labelSize.Width * 0.5f, middleY)
+                        : new LvcPoint(x - labelSize.Width * 0.5f, middleY))
                     : (isGreaterThanPivot
-                        ? new PointF(middleX, y - labelSize.Height * 0.5f)
-                        : new PointF(middleX, y + height + labelSize.Height * 0.5f)),
+                        ? new LvcPoint(middleX, y - labelSize.Height * 0.5f)
+                        : new LvcPoint(middleX, y + height + labelSize.Height * 0.5f)),
                 DataLabelsPosition.Start =>
                      (seriesProperties & SeriesProperties.PrimaryAxisHorizontalOrientation) == SeriesProperties.PrimaryAxisHorizontalOrientation
                         ? (isGreaterThanPivot
-                            ? new PointF(x - labelSize.Width * 0.5f, middleY)
-                            : new PointF(x + width + labelSize.Width * 0.5f, middleY))
+                            ? new LvcPoint(x - labelSize.Width * 0.5f, middleY)
+                            : new LvcPoint(x + width + labelSize.Width * 0.5f, middleY))
                         : (isGreaterThanPivot
-                            ? new PointF(middleX, y + height + labelSize.Height * 0.5f)
-                            : new PointF(middleX, y - labelSize.Height * 0.5f)),
+                            ? new LvcPoint(middleX, y + height + labelSize.Height * 0.5f)
+                            : new LvcPoint(middleX, y - labelSize.Height * 0.5f)),
                 _ => throw new Exception("Position not supported"),
             };
         }

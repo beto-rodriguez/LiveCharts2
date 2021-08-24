@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace LiveChartsCore
 {
@@ -43,7 +43,7 @@ namespace LiveChartsCore
         /// or
         /// At least 2 colors are required in a heat map.
         /// </exception>
-        public static List<Tuple<double, Color>> BuildColorStops(Color[] heatMap, double[]? colorStops)
+        public static List<Tuple<double, LvcColor>> BuildColorStops(LvcColor[] heatMap, double[]? colorStops)
         {
             if (heatMap.Length < 2) throw new Exception("At least 2 colors are required in a heat map.");
 
@@ -62,10 +62,10 @@ namespace LiveChartsCore
             if (colorStops.Length != heatMap.Length)
                 throw new Exception($"ColorStops and HeatMap must have the same length.");
 
-            var heatStops = new List<Tuple<double, Color>>();
+            var heatStops = new List<Tuple<double, LvcColor>>();
             for (var i = 0; i < colorStops.Length; i++)
             {
-                heatStops.Add(new Tuple<double, Color>(colorStops[i], heatMap[i]));
+                heatStops.Add(new Tuple<double, LvcColor>(colorStops[i], heatMap[i]));
             }
 
             return heatStops;
@@ -79,7 +79,7 @@ namespace LiveChartsCore
         /// <param name="heatMap">The heat map.</param>
         /// <param name="heatStops">The heat stops.</param>
         /// <returns></returns>
-        public static Color InterpolateColor(float weight, Bounds weightBounds, Color[] heatMap, List<Tuple<double, Color>> heatStops)
+        public static LvcColor InterpolateColor(float weight, Bounds weightBounds, LvcColor[] heatMap, List<Tuple<double, LvcColor>> heatStops)
         {
             var p = (weight - weightBounds.Min) / (weightBounds.Max - weightBounds.Min);
             if (p < 0) p = 0;
@@ -99,11 +99,11 @@ namespace LiveChartsCore
 
                 var px = (p - previous.Item1) / (next.Item1 - previous.Item1);
 
-                return Color.FromArgb(
-                    (int)(previous.Item2.A + px * (next.Item2.A - previous.Item2.A)),
-                    (int)(previous.Item2.R + px * (next.Item2.R - previous.Item2.R)),
-                    (int)(previous.Item2.G + px * (next.Item2.G - previous.Item2.G)),
-                    (int)(previous.Item2.B + px * (next.Item2.B - previous.Item2.B)));
+                return LvcColor.FromArgb(
+                    (byte)(previous.Item2.A + px * (next.Item2.A - previous.Item2.A)),
+                    (byte)(previous.Item2.R + px * (next.Item2.R - previous.Item2.R)),
+                    (byte)(previous.Item2.G + px * (next.Item2.G - previous.Item2.G)),
+                    (byte)(previous.Item2.B + px * (next.Item2.B - previous.Item2.B)));
             }
 
             return heatMap[heatMap.Length - 1];

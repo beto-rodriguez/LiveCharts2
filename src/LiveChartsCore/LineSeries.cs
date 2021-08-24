@@ -26,7 +26,6 @@ using LiveChartsCore.Measure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Drawing;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Kernel.Data;
@@ -38,13 +37,13 @@ namespace LiveChartsCore
     /// </summary>
     public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>
         : StrokeAndFillCartesianSeries<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>, ILineSeries<TDrawingContext>
-        where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
-        where TLineSegment : ILinePathSegment<TPathArgs>, new()
-        where TBezierSegment : IBezierSegment<TPathArgs>, new()
-        where TMoveToCommand : IMoveToPathCommand<TPathArgs>, new()
-        where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-        where TDrawingContext : DrawingContext
+            where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
+            where TLineSegment : ILinePathSegment<TPathArgs>, new()
+            where TBezierSegment : IBezierSegment<TPathArgs>, new()
+            where TMoveToCommand : IMoveToPathCommand<TPathArgs>, new()
+            where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+            where TDrawingContext : DrawingContext
     {
         private readonly Dictionary<object, List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>> _fillPathHelperDictionary = new();
         private readonly Dictionary<object, List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>> _strokePathHelperDictionary = new();
@@ -63,7 +62,7 @@ namespace LiveChartsCore
                   SeriesProperties.Line | SeriesProperties.PrimaryAxisVerticalOrientation |
                   (isStacked ? SeriesProperties.Stacked : 0) | SeriesProperties.Sketch | SeriesProperties.PrefersXStrategyTooltips)
         {
-            DataPadding = new PointF(0.5f, 1f);
+            DataPadding = new LvcPoint(0.5f, 1f);
             HoverState = LiveCharts.LineSeriesHoverKey;
         }
 
@@ -194,7 +193,7 @@ namespace LiveChartsCore
                     Fill.AddGeometryToPaintTask(cartesianChart.Canvas, fillPathHelper.Path);
                     cartesianChart.Canvas.AddDrawableTask(Fill);
                     Fill.ZIndex = actualZIndex + 0.1;
-                    Fill.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                    Fill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 }
                 if (Stroke is not null)
                 {
@@ -202,7 +201,7 @@ namespace LiveChartsCore
                     Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, strokePathHelper.Path);
                     cartesianChart.Canvas.AddDrawableTask(Stroke);
                     Stroke.ZIndex = actualZIndex + 0.2;
-                    Stroke.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                    Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 }
 
                 foreach (var data in GetSpline(segment, secondaryScale, primaryScale, stacker))
@@ -410,13 +409,13 @@ namespace LiveChartsCore
                 if (GeometryFill is not null)
                 {
                     cartesianChart.Canvas.AddDrawableTask(GeometryFill);
-                    GeometryFill.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                    GeometryFill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                     GeometryFill.ZIndex = actualZIndex + 0.3;
                 }
                 if (GeometryStroke is not null)
                 {
                     cartesianChart.Canvas.AddDrawableTask(GeometryStroke);
-                    GeometryStroke.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                    GeometryStroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                     GeometryStroke.ZIndex = actualZIndex + 0.4;
                 }
                 segmentI++;
@@ -438,7 +437,7 @@ namespace LiveChartsCore
             if (DataLabelsPaint is not null)
             {
                 cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
-                DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 DataLabelsPaint.ZIndex = actualZIndex + 0.5;
             }
 

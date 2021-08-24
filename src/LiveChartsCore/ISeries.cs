@@ -20,13 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace LiveChartsCore
 {
@@ -79,7 +79,7 @@ namespace LiveChartsCore
         /// <value>
         /// The data padding.
         /// </value>
-        PointF DataPadding { get; set; }
+        LvcPoint DataPadding { get; set; }
 
         /// <summary>
         /// Gets or sets the z index position.
@@ -155,7 +155,7 @@ namespace LiveChartsCore
         /// <param name="pointerPosition">the pointer position</param>
         /// <param name="automaticStategy">the already resolved strategy when strategy is set to automatic.</param>
         /// <returns></returns>
-        TooltipPoint[] FindPointsNearTo(IChart chart, PointF pointerPosition, TooltipFindingStrategy automaticStategy);
+        TooltipPoint[] FindPointsNearTo(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy automaticStategy);
 
         /// <summary>
         /// Marks a given point as a given state.
@@ -169,7 +169,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="chartPoint"></param>
         /// <param name="state"></param>
-        void RemovePointFromState(ChartPoint chartPoint, string state);
+        void RemoveLvPointromState(ChartPoint chartPoint, string state);
 
         /// <summary>
         /// Clears the visuals in the cache and re-starts animations.

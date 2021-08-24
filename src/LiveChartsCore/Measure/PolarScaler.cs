@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 using System;
-using System.Drawing;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 
@@ -47,8 +47,8 @@ namespace LiveChartsCore.Measure
         /// <param name="usePreviousScale">Indicates if the scaler should be built based on the previous known data.</param>
         /// <exception cref="Exception">The axis is not ready to be scaled.</exception>
         public PolarScaler(
-            PointF drawMagrinLocation,
-            SizeF drawMarginSize,
+            LvcPoint drawMagrinLocation,
+            LvcSize drawMarginSize,
             IPolarAxis angleAxis,
             IPolarAxis radiusAxis,
             float innerRadius,
@@ -114,7 +114,7 @@ namespace LiveChartsCore.Measure
         /// </summary>
         /// <param name="polarPoint">The polar point.</param>
         /// <returns></returns>
-        public PointF ToPixels(ChartPoint polarPoint)
+        public LvcPoint ToPixels(ChartPoint polarPoint)
         {
             return ToPixels(polarPoint.SecondaryValue, polarPoint.PrimaryValue);
         }
@@ -125,7 +125,7 @@ namespace LiveChartsCore.Measure
         /// <param name="angle">The angle in chart values scale.</param>
         /// <param name="radius">The radius.</param>
         /// <returns></returns>
-        public PointF ToPixels(double angle, double radius)
+        public LvcPoint ToPixels(double angle, double radius)
         {
             var p = (radius - MinRadius) / _deltaRadius;
             var r = _innerRadius + _scalableRadius * p;
@@ -134,7 +134,7 @@ namespace LiveChartsCore.Measure
 
             unchecked
             {
-                return new PointF(
+                return new LvcPoint(
                     CenterX + (float)(Math.Cos(a) * r),
                     CenterY + (float)(Math.Sin(a) * r));
             }

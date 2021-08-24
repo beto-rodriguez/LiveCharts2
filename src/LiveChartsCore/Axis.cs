@@ -25,7 +25,6 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using LiveChartsCore.Measure;
 using System.ComponentModel;
@@ -41,10 +40,11 @@ namespace LiveChartsCore
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <typeparam name="TTextGeometry">The type of the text geometry.</typeparam>
     /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
-    public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry> : ChartElement<TDrawingContext>, ICartesianAxis, IPlane<TDrawingContext>
-        where TDrawingContext : DrawingContext
-        where TTextGeometry : ILabelGeometry<TDrawingContext>, new()
-        where TLineGeometry : ILineGeometry<TDrawingContext>, new()
+    public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
+        : ChartElement<TDrawingContext>, ICartesianAxis, IPlane<TDrawingContext>
+            where TDrawingContext : DrawingContext
+            where TTextGeometry : ILabelGeometry<TDrawingContext>, new()
+            where TLineGeometry : ILineGeometry<TDrawingContext>, new()
     {
         #region fields
 
@@ -245,7 +245,7 @@ namespace LiveChartsCore
             if (SeparatorsPaint is not null)
             {
                 SeparatorsPaint.ZIndex = -1;
-                SeparatorsPaint.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                SeparatorsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(SeparatorsPaint);
             }
 
@@ -486,9 +486,9 @@ namespace LiveChartsCore
         }
 
         /// <inheritdoc cref="IPlane{TDrawingContext}.GetNameLabelSize(Chart{TDrawingContext})"/>
-        public SizeF GetNameLabelSize(Chart<TDrawingContext> chart)
+        public LvcSize GetNameLabelSize(Chart<TDrawingContext> chart)
         {
-            if (NamePaint is null || string.IsNullOrWhiteSpace(Name)) return new SizeF(0, 0);
+            if (NamePaint is null || string.IsNullOrWhiteSpace(Name)) return new LvcSize(0, 0);
 
             var textGeometry = new TTextGeometry
             {
@@ -502,10 +502,10 @@ namespace LiveChartsCore
         }
 
         /// <inheritdoc cref="IPlane{TDrawingContext}.GetPossibleSize(Chart{TDrawingContext})"/>
-        public virtual SizeF GetPossibleSize(Chart<TDrawingContext> chart)
+        public virtual LvcSize GetPossibleSize(Chart<TDrawingContext> chart)
         {
             if (_dataBounds is null) throw new Exception("DataBounds not found");
-            if (LabelsPaint is null) return new SizeF(0f, 0f);
+            if (LabelsPaint is null) return new LvcSize(0f, 0f);
 
             var ts = (float)TextSize;
             var labeler = Labeler;
@@ -543,7 +543,7 @@ namespace LiveChartsCore
                 if (m.Height > h) h = m.Height;
             }
 
-            return new SizeF(w, h);
+            return new LvcSize(w, h);
         }
 
         /// <inheritdoc cref="ICartesianAxis.Initialize(AxisOrientation)"/>

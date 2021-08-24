@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
-using System.Drawing;
+using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Geo
 {
@@ -38,7 +38,7 @@ namespace LiveChartsCore.Geo
         /// <summary>
         /// Gets or sets the heat map.
         /// </summary>
-        Color[] HeatMap { get; set; }
+        LvcColor[] HeatMap { get; set; }
 
         /// <summary>
         /// Gets or sets the color stops.
@@ -48,7 +48,7 @@ namespace LiveChartsCore.Geo
         /// <summary>
         /// Gets or sets the color stops.
         /// </summary>
-        Color StrokeColor { get; set; }
+        LvcColor StrokeColor { get; set; }
 
         /// <summary>
         /// Gets or sets the color stops.
@@ -58,7 +58,7 @@ namespace LiveChartsCore.Geo
         /// <summary>
         /// Gets or sets the color stops.
         /// </summary>
-        Color FillColor { get; set; }
+        LvcColor FillColor { get; set; }
 
         /// <summary>
         /// Gets or sets the values.

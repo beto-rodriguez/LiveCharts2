@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Drawing;
-
 namespace LiveChartsCore.Drawing
 {
     /// <summary>
@@ -33,6 +31,6 @@ namespace LiveChartsCore.Drawing
         /// <summary>
         /// Gets or sets the color.
         /// </summary>
-        Color Color { get; set; }
+        LvcColor Color { get; set; }
     }
 }

@@ -24,7 +24,6 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Drawing;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Kernel.Sketches;
@@ -144,7 +143,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="pointerPosition">The pointer position.</param>
         /// <returns></returns>
-        public override TooltipPoint[] FindPointsNearTo(PointF pointerPosition)
+        public override TooltipPoint[] FindPointsNearTo(LvcPoint pointerPosition)
         {
             var actualStrategy = TooltipFindingStrategy;
             if (actualStrategy == TooltipFindingStrategy.Automatic)
@@ -196,7 +195,7 @@ namespace LiveChartsCore
         /// <param name="xAxisIndex">Index of the x axis.</param>
         /// <param name="yAxisIndex">Index of the y axis.</param>
         /// <returns></returns>
-        public double[] ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
+        public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
             var xAxis = XAxes[xAxisIndex];
             var yAxis = YAxes[yAxisIndex];
@@ -213,7 +212,7 @@ namespace LiveChartsCore
         /// <param name="pivot">The pivot.</param>
         /// <param name="direction">The direction.</param>
         /// <returns></returns>
-        public void Zoom(PointF pivot, ZoomDirection direction)
+        public void Zoom(LvcPoint pivot, ZoomDirection direction)
         {
             if (YAxes is null || XAxes is null) return;
 
@@ -286,7 +285,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="delta">The delta.</param>
         /// <returns></returns>
-        public void Pan(PointF delta)
+        public void Pan(LvcPoint delta)
         {
             if ((_zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X)
             {

@@ -23,7 +23,6 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace LiveChartsCore.Kernel.Sketches
 {
@@ -115,6 +114,6 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <param name="xAxisIndex">Index of the x axis.</param>
         /// <param name="yAxisIndex">Index of the y axis.</param>
         /// <returns></returns>
-        double[] ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0);
+        double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0);
     }
 }
