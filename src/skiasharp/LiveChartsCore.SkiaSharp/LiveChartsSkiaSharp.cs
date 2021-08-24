@@ -70,6 +70,7 @@ namespace LiveChartsCore.SkiaSharpView
             return settings
                 .HasDataFactory(new DataFactory<SkiaSharpDrawingContext>())
                 .HasAxisProvider(() => new Axis())
+                .HasPolarAxisProvider(() => new PolarAxis())
                 .HasDesigerSeriesProvider(kind =>
                 {
                     var r = new Random();
@@ -448,7 +449,7 @@ namespace LiveChartsCore.SkiaSharpView
                         }
                     })
                 .WithAxisDefaultsResolver(
-                    (IAxis<SkiaSharpDrawingContext> axis, bool forceApply) =>
+                    (IPlane<SkiaSharpDrawingContext> plane, bool forceApply) =>
                     {
                         if (forceApply)
                         {
@@ -456,22 +457,30 @@ namespace LiveChartsCore.SkiaSharpView
                             var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
                             var initializer = stylesBuilder.GetVisualsInitializer();
 
-                            initializer.ApplyStyleToAxis(axis);
+                            initializer.ApplyStyleToAxis(plane);
                         }
 
-                        if (axis.NamePaint == DefaultPaintTask)
-                            axis.NamePaint = new SolidColorPaint(new SKColor(35, 35, 35));
+                        if (plane.NamePaint == DefaultPaintTask)
+                            plane.NamePaint = new SolidColorPaint(new SKColor(35, 35, 35));
 
-                        if (axis.SeparatorsPaint == DefaultPaintTask)
-                            axis.SeparatorsPaint = axis.Orientation == AxisOrientation.X
-                                ? null
-                                : new SolidColorPaint(new SKColor(235, 235, 235));
+                        if (plane.LabelsPaint == DefaultPaintTask)
+                            plane.LabelsPaint = new SolidColorPaint(new SKColor(90, 90, 90));
 
-                        if (axis.LabelsPaint == DefaultPaintTask)
-                            axis.LabelsPaint = new SolidColorPaint(new SKColor(90, 90, 90));
+                        if (plane is ICartesianAxis cartesian)
+                        {
+                            if (plane.SeparatorsPaint == DefaultPaintTask)
+                                plane.SeparatorsPaint = cartesian.Orientation == AxisOrientation.X
+                                    ? null
+                                    : new SolidColorPaint(new SKColor(235, 235, 235));
 
-                        if (axis.Padding == Padding.Default)
-                            axis.Padding = new Padding { Bottom = 8, Left = 8, Right = 8, Top = 8 };
+                            if (cartesian.Padding == Padding.Default)
+                                cartesian.Padding = new Padding { Bottom = 8, Left = 8, Right = 8, Top = 8 };
+                        }
+                        else
+                        {
+                            if (plane.SeparatorsPaint == DefaultPaintTask)
+                                plane.SeparatorsPaint = new SolidColorPaint(new SKColor(235, 235, 235));
+                        }
                     });
         }
 
@@ -574,8 +583,7 @@ namespace LiveChartsCore.SkiaSharpView
                                 financialSeries.DownStroke = new SolidColorPaint(new SKColor(239, 83, 80, 255), 3);
                         }
                     })
-                .WithAxisDefaultsResolver(
-                    (IAxis<SkiaSharpDrawingContext> axis, bool forceApply) =>
+                .WithAxisDefaultsResolver((IPlane<SkiaSharpDrawingContext> plane, bool forceApply) =>
                     {
                         if (forceApply)
                         {
@@ -583,22 +591,29 @@ namespace LiveChartsCore.SkiaSharpView
                             var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
                             var initializer = stylesBuilder.GetVisualsInitializer();
 
-                            initializer.ApplyStyleToAxis(axis);
+                            initializer.ApplyStyleToAxis(plane);
                         }
 
-                        if (axis.NamePaint == DefaultPaintTask)
-                            axis.NamePaint = new SolidColorPaint(new SKColor(235, 235, 235));
+                        if (plane.NamePaint == DefaultPaintTask)
+                            plane.NamePaint = new SolidColorPaint(new SKColor(235, 235, 235));
 
-                        if (axis.SeparatorsPaint == DefaultPaintTask)
-                            axis.SeparatorsPaint = axis.Orientation == AxisOrientation.X
+                        if (plane.LabelsPaint == DefaultPaintTask)
+                            plane.LabelsPaint = new SolidColorPaint(new SKColor(200, 200, 200));
+
+                        if (plane is ICartesianAxis cartesian)
+                        {
+                            plane.SeparatorsPaint = cartesian.Orientation == AxisOrientation.X
                                 ? null
                                 : new SolidColorPaint(new SKColor(90, 90, 90));
 
-                        if (axis.LabelsPaint == DefaultPaintTask)
-                            axis.LabelsPaint = new SolidColorPaint(new SKColor(200, 200, 200));
-
-                        if (axis.Padding == Padding.Default)
-                            axis.Padding = new Padding { Bottom = 8, Left = 8, Right = 8, Top = 8 };
+                            if (cartesian.Padding == Padding.Default)
+                                cartesian.Padding = new Padding { Bottom = 8, Left = 8, Right = 8, Top = 8 };
+                        }
+                        else
+                        {
+                            if (plane.SeparatorsPaint == DefaultPaintTask)
+                                plane.SeparatorsPaint = new SolidColorPaint(new SKColor(90, 90, 90));
+                        }
                     });
         }
 

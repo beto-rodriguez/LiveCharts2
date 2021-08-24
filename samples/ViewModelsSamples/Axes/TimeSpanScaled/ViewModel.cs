@@ -55,6 +55,6 @@ namespace ViewModelsSamples.Axes.TimeSpanScaled
 
         public IEnumerable<ISeries> Series { get; set; }
 
-        public IEnumerable<IAxis> XAxes { get; set; }
+        public IEnumerable<ICartesianAxis> XAxes { get; set; }
     }
 }

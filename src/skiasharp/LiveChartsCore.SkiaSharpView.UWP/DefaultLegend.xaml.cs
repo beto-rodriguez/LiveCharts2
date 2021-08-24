@@ -29,6 +29,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace LiveChartsCore.SkiaSharpView.UWP
 {
+    /// <inheritdoc cref="IChartLegend{TDrawingContext}"/>
     public sealed partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
     {
         /// <summary>
@@ -84,7 +85,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         {
             var winuiChart = (IUwpChart)chart.View;
 
-            var series = chart.DrawableSeries;
+            var series = chart.ChartSeries;
             var legendOrientation = chart.LegendOrientation;
             var legendPosition = chart.LegendPosition;
             //var template = wpfChart.LegendTemplate ?? _defaultTempalte;

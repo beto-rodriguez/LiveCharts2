@@ -28,6 +28,9 @@
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="PolarChart.axaml.cs">
+      <DependentUpon>PolarChart.axaml</DependentUpon>
+    </Compile>
     <Compile Update="PieChart.axaml.cs">
       <DependentUpon>PieChart.axaml</DependentUpon>
     </Compile>

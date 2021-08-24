@@ -48,7 +48,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The axis builder.
         /// </value>
-        public List<Action<IAxis<TDrawingContext>>> AxisBuilder { get; set; } = new List<Action<IAxis<TDrawingContext>>>();
+        public List<Action<IPlane<TDrawingContext>>> AxisBuilder { get; set; } = new List<Action<IPlane<TDrawingContext>>>();
 
         /// <summary>
         /// Gets or sets the draw margin frame builder.
@@ -215,7 +215,7 @@ namespace LiveChartsCore.Themes
         /// Constructs an axis.
         /// </summary>
         /// <param name="axis">The axis.</param>
-        public void ApplyStyleToAxis(IAxis<TDrawingContext> axis)
+        public void ApplyStyleToAxis(IPlane<TDrawingContext> axis)
         {
             foreach (var rule in AxisBuilder) rule(axis);
         }

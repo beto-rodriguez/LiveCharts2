@@ -67,6 +67,6 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <returns>the series bounds</returns>
-        SeriesBounds GetBounds(CartesianChart<TDrawingContext> chart, IAxis<TDrawingContext> x, IAxis<TDrawingContext> y);
+        SeriesBounds GetBounds(CartesianChart<TDrawingContext> chart, ICartesianAxis x, ICartesianAxis y);
     }
 }

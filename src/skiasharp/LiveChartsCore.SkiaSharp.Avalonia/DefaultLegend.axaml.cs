@@ -123,7 +123,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
         {
-            var series = chart.DrawableSeries;
+            var series = chart.ChartSeries;
             var legendOrientation = chart.LegendOrientation;
             var legendPosition = chart.LegendPosition;
             Series = series;

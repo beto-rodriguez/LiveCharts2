@@ -92,7 +92,7 @@ namespace LiveChartsCore
         /// <value>
         /// The drawable series.
         /// </value>
-        public override IEnumerable<IChartSeries<TDrawingContext>> DrawableSeries => Series;
+        public override IEnumerable<IChartSeries<TDrawingContext>> ChartSeries => Series;
 
         /// <summary>
         /// Gets the view.
@@ -137,22 +137,6 @@ namespace LiveChartsCore
                 series => series.FindPointsNearTo(this, pointerPosition, TooltipFindingStrategy.CompareAll)).ToArray();
         }
 
-        /// <inheritdoc cref="IChart.Update(ChartUpdateParams?)" />
-        public override void Update(ChartUpdateParams? chartUpdateParams = null)
-        {
-            chartUpdateParams ??= new ChartUpdateParams();
-
-            if (chartUpdateParams.IsAutomaticUpdate && !View.AutoUpdateEnabled) return;
-
-            if (!chartUpdateParams.Throttling)
-            {
-                updateThrottler.ForceCall();
-                return;
-            }
-
-            updateThrottler.Call();
-        }
-
         /// <summary>
         /// Measures this chart.
         /// </summary>
@@ -178,8 +162,8 @@ namespace LiveChartsCore
 
             MeasureWork = new object();
 
-            viewDrawMargin = _chartView.DrawMargin;
-            controlSize = _chartView.ControlSize;
+            var viewDrawMargin = _chartView.DrawMargin;
+            ControlSize = _chartView.ControlSize;
 
             var actualSeries = View.DesignerMode
                 ? _designerSeries ??= LiveCharts.CurrentSettings.DesignerSeriesGenerator(DesignerKind.Cartesian)
@@ -189,17 +173,17 @@ namespace LiveChartsCore
                 .Cast<IPieSeries<TDrawingContext>>()
                 .ToArray();
 
-            legendPosition = _chartView.LegendPosition;
-            legendOrientation = _chartView.LegendOrientation;
-            legend = _chartView.Legend;
+            LegendPosition = _chartView.LegendPosition;
+            LegendOrientation = _chartView.LegendOrientation;
+            Legend = _chartView.Legend;
 
-            tooltipPosition = _chartView.TooltipPosition;
-            tooltip = _chartView.Tooltip;
+            TooltipPosition = _chartView.TooltipPosition;
+            Tooltip = _chartView.Tooltip;
 
-            animationsSpeed = _chartView.AnimationsSpeed;
-            easingFunction = _chartView.EasingFunction;
+            AnimationsSpeed = _chartView.AnimationsSpeed;
+            EasingFunction = _chartView.EasingFunction;
 
-            seriesContext = new SeriesContext<TDrawingContext>(Series);
+            SeriesContext = new SeriesContext<TDrawingContext>(Series);
 
             var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
             if (theme.CurrentColors is null || theme.CurrentColors.Length == 0)
@@ -228,9 +212,9 @@ namespace LiveChartsCore
                 series.IsNotifyingChanges = true;
             }
 
-            if (legend is not null && SeriesMiniatureChanged(Series, LegendPosition))
+            if (Legend is not null && SeriesMiniatureChanged(Series, LegendPosition))
             {
-                legend.Draw(this);
+                Legend.Draw(this);
                 Update();
                 preserveFirstDraw = IsFirstDraw;
             }
@@ -238,12 +222,12 @@ namespace LiveChartsCore
             if (viewDrawMargin is null)
             {
                 var m = viewDrawMargin ?? new Margin();
-                SetDrawMargin(controlSize, m);
+                SetDrawMargin(ControlSize, m);
             }
 
             // invalid dimensions, probably the chart is too small
             // or it is initializing in the UI and has no dimensions yet
-            if (drawMarginSize.Width <= 0 || drawMarginSize.Height <= 0) return;
+            if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
 
             var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
             foreach (var series in Series)
@@ -263,8 +247,8 @@ namespace LiveChartsCore
             InvokeOnUpdateStarted();
             IsFirstDraw = false;
             ThemeId = LiveCharts.CurrentSettings.ThemeId;
-            previousSeries = Series;
-            previousLegendPosition = LegendPosition;
+            PreviousSeries = Series;
+            PreviousLegendPosition = LegendPosition;
 
             Canvas.Invalidate();
         }

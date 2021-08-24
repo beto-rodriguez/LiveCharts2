@@ -20,20 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
 using System;
-using System.Drawing;
 using LiveChartsCore.Measure;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing.Common;
-using System.ComponentModel;
+using LiveChartsCore.Drawing;
+using System.Drawing;
 
 namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
-    /// Defines an Axis in a Cartesian chart. 
+    /// Defines a plane for a dimension.
     /// </summary>
-    public interface IAxis : INotifyPropertyChanged
+    public interface IPlane
     {
         /// <summary>
         /// Gets or sets the axis name.
@@ -84,38 +83,6 @@ namespace LiveChartsCore.Kernel.Sketches
         /// The data bounds.
         /// </value>
         Bounds VisibleDataBounds { get; }
-
-        /// <summary>
-        /// Gets the orientation.
-        /// </summary>
-        /// <value>
-        /// The orientation.
-        /// </value>
-        AxisOrientation Orientation { get; }
-
-        /// <summary>
-        /// Gets or sets the padding.
-        /// </summary>
-        /// <value>
-        /// The padding.
-        /// </value>
-        Padding Padding { get; set; }
-
-        /// <summary>
-        /// Gets or sets the xo, a reference used internally to calculate the axis position.
-        /// </summary>
-        /// <value>
-        /// The xo.
-        /// </value>
-        float Xo { get; set; }
-
-        /// <summary>
-        /// Gets or sets the yo, a reference used internally to calculate the axis position..
-        /// </summary>
-        /// <value>
-        /// The yo.
-        /// </value>
-        float Yo { get; set; }
 
         /// <summary>
         /// Gets or sets the labeler, a function that receives a number and return the label content as string.
@@ -171,22 +138,6 @@ namespace LiveChartsCore.Kernel.Sketches
         double? MaxLimit { get; set; }
 
         /// <summary>
-        /// Gets or sets the previous maximum limit.
-        /// </summary>
-        /// <value>
-        /// The previous maximum limit.
-        /// </value>
-        double? PreviousMaxLimit { get; set; }
-
-        /// <summary>
-        /// Gets or sets the previous minimum limit.
-        /// </summary>
-        /// <value>
-        /// The previous minimum limit.
-        /// </value>
-        double? PreviousMinLimit { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether this instance is visible.
         /// </summary>
         /// <value>
@@ -203,12 +154,20 @@ namespace LiveChartsCore.Kernel.Sketches
         bool IsInverted { get; set; }
 
         /// <summary>
-        /// Gets or sets the axis position.
+        /// Gets or sets the previous maximum limit.
         /// </summary>
         /// <value>
-        /// The position.
+        /// The previous maximum limit.
         /// </value>
-        AxisPosition Position { get; set; }
+        double? PreviousMaxLimit { get; set; }
+
+        /// <summary>
+        /// Gets or sets the previous minimum limit.
+        /// </summary>
+        /// <value>
+        /// The previous minimum limit.
+        /// </value>
+        double? PreviousMinLimit { get; set; }
 
         /// <summary>
         /// Gets or sets the labels rotation in degrees.
@@ -268,17 +227,6 @@ namespace LiveChartsCore.Kernel.Sketches
         /// Gets or sets a value indicating whether the separator lines are visible.
         /// </summary>
         bool ShowSeparatorLines { get; set; }
-
-        /// <summary>
-        /// Initializes the axis for the specified orientation.
-        /// </summary>
-        /// <param name="orientation">The orientation.</param>
-        void Initialize(AxisOrientation orientation);
-
-        /// <summary>
-        /// Occurs when the axis is initialized.
-        /// </summary>
-        event Action<IAxis>? Initialized;
     }
 
     /// <summary>
@@ -286,7 +234,7 @@ namespace LiveChartsCore.Kernel.Sketches
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="IDisposable" />
-    public interface IAxis<TDrawingContext> : IAxis, IChartElement<TDrawingContext>
+    public interface IPlane<TDrawingContext> : IPlane, IChartElement<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
@@ -298,30 +246,12 @@ namespace LiveChartsCore.Kernel.Sketches
         IPaint<TDrawingContext>? NamePaint { get; set; }
 
         /// <summary>
-        /// Gets or sets the text brush.
-        /// </summary>
-        /// <value>
-        /// The text brush.
-        /// </value>
-        [Obsolete("Renamed to TextPaint")]
-        IPaint<TDrawingContext>? TextBrush { get; set; }
-
-        /// <summary>
         /// Gets or sets the text paint.
         /// </summary>
         /// <value>
         /// The text paint.
         /// </value>
         IPaint<TDrawingContext>? LabelsPaint { get; set; }
-
-        /// <summary>
-        /// Gets or sets the separators brush.
-        /// </summary>
-        /// <value>
-        /// The separators brush.
-        /// </value>
-        [Obsolete("Renamed to SeparatorsPaint")]
-        IPaint<TDrawingContext>? SeparatorsBrush { get; set; }
 
         /// <summary>
         /// Gets or sets the separators paint.
@@ -336,13 +266,13 @@ namespace LiveChartsCore.Kernel.Sketches
         /// </summary>
         /// <param name="chart">The chart.</param>
         /// <returns></returns>
-        SizeF GetPossibleSize(CartesianChart<TDrawingContext> chart);
+        SizeF GetPossibleSize(Chart<TDrawingContext> chart);
 
         /// <summary>
         /// Gets the size of the axis name label.
         /// </summary>
-        /// <param name="chart"></param>
+        /// <param name="chart">the chart.</param>
         /// <returns></returns>
-        SizeF GetNameLabelSize(CartesianChart<TDrawingContext> chart);
+        SizeF GetNameLabelSize(Chart<TDrawingContext> chart);
     }
 }

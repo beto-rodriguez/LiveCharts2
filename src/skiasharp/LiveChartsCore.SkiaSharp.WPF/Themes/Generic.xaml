@@ -23,6 +23,10 @@
         <Setter Property="Template" Value="{StaticResource DefaultChartTempalte}" />
     </Style>
 
+    <Style TargetType="{x:Type local:PolarChart}">
+        <Setter Property="Template" Value="{StaticResource DefaultChartTempalte}" />
+    </Style>
+
     <Style TargetType="{x:Type local:GeoMap}">
         <Setter Property="Template">
             <Setter.Value>

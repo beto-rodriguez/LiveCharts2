@@ -117,8 +117,17 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The axis provider.
         /// </value>
-        internal Func<IAxis> AxisProvider { get; set; } =
+        internal Func<ICartesianAxis> AxisProvider { get; set; } =
             () => throw new NotImplementedException($"{nameof(AxisProvider)} is not defined yet.");
+
+        /// <summary>
+        /// Gets the polar axis provider.
+        /// </summary>
+        /// <value>
+        /// The axis provider.
+        /// </value>
+        internal Func<IPolarAxis> PolarAxisProvider { get; set; } =
+            () => throw new NotImplementedException($"{nameof(PolarAxisProvider)} is not defined yet.");
 
         /// <summary>
         /// Gets the designer series.
@@ -157,9 +166,15 @@ namespace LiveChartsCore.Kernel
             return this;
         }
 
-        internal LiveChartsSettings HasAxisProvider(Func<IAxis> provider)
+        internal LiveChartsSettings HasAxisProvider(Func<ICartesianAxis> provider)
         {
             AxisProvider = provider;
+            return this;
+        }
+
+        internal LiveChartsSettings HasPolarAxisProvider(Func<IPolarAxis> provider)
+        {
+            PolarAxisProvider = provider;
             return this;
         }
 

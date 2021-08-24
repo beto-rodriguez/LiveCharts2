@@ -83,6 +83,6 @@ namespace ViewModelsSamples.Axes.Multiple
 
         public IEnumerable<ISeries> Series { get; set; }
 
-        public IEnumerable<IAxis> YAxes { get; set; }
+        public IEnumerable<ICartesianAxis> YAxes { get; set; }
     }
 }

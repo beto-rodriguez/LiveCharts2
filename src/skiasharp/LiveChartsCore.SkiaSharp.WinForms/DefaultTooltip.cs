@@ -66,7 +66,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             var size = DrawAndMesure(tooltipPoints, wfChart);
             PointF? location = null;
 
-            if (chart is CartesianChart<SkiaSharpDrawingContext>)
+            if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetCartesianTooltipLocation(
                     chart.TooltipPosition, new SizeF((float)size.Width, (float)size.Height), chart.ControlSize);

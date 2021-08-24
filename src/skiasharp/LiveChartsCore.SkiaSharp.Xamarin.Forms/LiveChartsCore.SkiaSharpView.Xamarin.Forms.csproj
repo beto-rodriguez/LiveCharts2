@@ -32,6 +32,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="PolarChart.xaml.cs">
+      <DependentUpon>PolarChart.xaml</DependentUpon>
+    </Compile>
     <Compile Update="MotionCanvas.xaml.cs">
       <DependentUpon>MotionCanvas.xaml</DependentUpon>
     </Compile>

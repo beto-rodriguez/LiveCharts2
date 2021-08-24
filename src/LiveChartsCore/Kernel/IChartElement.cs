@@ -32,7 +32,7 @@ namespace LiveChartsCore.Kernel
         where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// / Measures and schedule the draw of the element in the user interface.
+        /// Measures and schedule the draw of the element in the user interface.
         /// </summary>
         /// <param name="chart">The chart.</param>
         void Measure(Chart<TDrawingContext> chart);

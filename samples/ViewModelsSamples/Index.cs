@@ -59,6 +59,8 @@
 
             "Heat/Basic",
 
+            "Polar/Basic",
+
             "Axes/ColorsAndPosition",
             "Axes/LabelsFormat",
             "Axes/NamedLabels",

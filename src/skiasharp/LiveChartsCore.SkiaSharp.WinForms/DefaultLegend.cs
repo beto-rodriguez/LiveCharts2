@@ -30,7 +30,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         {
             var wfChart = (Chart)chart.View;
 
-            var series = chart.DrawableSeries;
+            var series = chart.ChartSeries;
             var legendOrientation = chart.LegendOrientation;
             var legendPosition = chart.LegendPosition;
 

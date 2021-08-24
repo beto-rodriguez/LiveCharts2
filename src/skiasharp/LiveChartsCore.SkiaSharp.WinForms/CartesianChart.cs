@@ -39,12 +39,12 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext>
     {
         private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-        private readonly CollectionDeepObserver<IAxis> _xObserver;
-        private readonly CollectionDeepObserver<IAxis> _yObserver;
+        private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
+        private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
         private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserverer;
         private IEnumerable<ISeries> _series = new List<ISeries>();
-        private IEnumerable<IAxis> _xAxes = new List<Axis> { new Axis() };
-        private IEnumerable<IAxis> _yAxes = new List<Axis> { new Axis() };
+        private IEnumerable<ICartesianAxis> _xAxes = new List<Axis> { new Axis() };
+        private IEnumerable<ICartesianAxis> _yAxes = new List<Axis> { new Axis() };
         private IEnumerable<Section<SkiaSharpDrawingContext>> _sections = new List<Section<SkiaSharpDrawingContext>> ();
         private DrawMarginFrame<SkiaSharpDrawingContext>? _drawMarginFrame;
         private TooltipFindingStrategy _tooltipFindingStrategy = LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy;
@@ -63,13 +63,13 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             : base(tooltip, legend)
         {
             _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            _xObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            _yObserver = new CollectionDeepObserver<IAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+            _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _sectionsObserverer = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
                 OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-            XAxes = new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
-            YAxes = new List<IAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
+            XAxes = new List<ICartesianAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
+            YAxes = new List<ICartesianAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
             Series = new ObservableCollection<ISeries>();
 
             var c = Controls[0].Controls[0];
@@ -98,7 +98,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.XAxes" />
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<IAxis> XAxes
+        public IEnumerable<ICartesianAxis> XAxes
         {
             get => _xAxes;
             set
@@ -112,7 +112,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.YAxes" />
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<IAxis> YAxes
+        public IEnumerable<ICartesianAxis> YAxes
         {
             get => _yAxes;
             set

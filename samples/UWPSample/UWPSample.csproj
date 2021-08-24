@@ -280,6 +280,9 @@
     <Compile Include="Pies\Pushout\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Polar\Basic\View.xaml.cs">
+      <DependentUpon>View.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scatter\AutoUpdate\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
@@ -553,6 +556,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pies\Pushout\View.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Polar\Basic\View.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

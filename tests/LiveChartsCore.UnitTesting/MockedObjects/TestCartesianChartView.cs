@@ -34,9 +34,9 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
 
         public CartesianChart<SkiaSharpDrawingContext> Core { get; }
 
-        public IEnumerable<IAxis> XAxes { get; set; }
+        public IEnumerable<ICartesianAxis> XAxes { get; set; }
 
-        public IEnumerable<IAxis> YAxes { get; set; }
+        public IEnumerable<ICartesianAxis> YAxes { get; set; }
 
         public IEnumerable<ISeries> Series { get; set; }
 

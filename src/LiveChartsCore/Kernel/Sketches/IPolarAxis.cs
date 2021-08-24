@@ -20,37 +20,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+using System;
+using LiveChartsCore.Measure;
+
+namespace LiveChartsCore.Kernel.Sketches
 {
     /// <summary>
-    /// Defines an axis visual separator.
+    /// Defines a polar axis.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public class AxisVisualSeprator<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public interface IPolarAxis : IPlane
     {
         /// <summary>
-        /// Gets or sets the value.
+        /// Gets the orientation.
         /// </summary>
         /// <value>
-        /// The value.
+        /// The orientation.
         /// </value>
-        public double Value { get; set; }
+        PolarAxisOrientation Orientation { get; }
 
         /// <summary>
-        /// Gets or sets the text.
+        /// Initializes the axis for the specified orientation.
         /// </summary>
-        /// <value>
-        /// The text.
-        /// </value>
-        public ILabelGeometry<TDrawingContext>? Text { get; set; }
+        /// <param name="orientation">The orientation.</param>
+        void Initialize(PolarAxisOrientation orientation);
 
         /// <summary>
-        /// Gets or sets the line.
+        /// Occurs when the axis is initialized.
         /// </summary>
-        /// <value>
-        /// The line.
-        /// </value>
-        public ILineGeometry<TDrawingContext>? Line { get; set; }
+        event Action<IPolarAxis>? Initialized;
     }
 }

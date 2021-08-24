@@ -33,6 +33,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace LiveChartsCore.SkiaSharpView.UWP
 {
+    /// <inheritdoc cref="IChartTooltip{TDrawingContext}"/>
     public sealed partial class DefaultTooltip : ToolTip, IChartTooltip<SkiaSharpDrawingContext>
     {
         private readonly Dictionary<ChartPoint, object> _activePoints = new();
@@ -90,7 +91,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
 
             Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
-            if (chart is CartesianChart<SkiaSharpDrawingContext>)
+            if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetCartesianTooltipLocation(
                     chart.TooltipPosition, new System.Drawing.SizeF((float)DesiredSize.Width, (float)DesiredSize.Height), chart.ControlSize);

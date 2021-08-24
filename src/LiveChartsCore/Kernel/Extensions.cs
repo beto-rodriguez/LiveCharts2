@@ -107,12 +107,10 @@ namespace LiveChartsCore.Kernel
         /// <summary>
         /// Gets the tick.
         /// </summary>
-        /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
         /// <param name="axis">The axis.</param>
         /// <param name="controlSize">Size of the control.</param>
         /// <returns></returns>
-        public static AxisTick GetTick<TDrawingContext>(this IAxis<TDrawingContext> axis, SizeF controlSize)
-            where TDrawingContext : DrawingContext
+        public static AxisTick GetTick(this ICartesianAxis axis, SizeF controlSize)
         {
             return GetTick(axis, controlSize, axis.VisibleDataBounds);
         }
@@ -120,19 +118,53 @@ namespace LiveChartsCore.Kernel
         /// <summary>
         /// Gets the tick.
         /// </summary>
-        /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+        /// <param name="axis">The axis.</param>
+        /// <param name="controlSize">Size of the control.</param>
+        /// <returns></returns>
+        public static AxisTick GetTick(this IPolarAxis axis, SizeF controlSize)
+        {
+            return GetTick(axis, controlSize, axis.VisibleDataBounds);
+        }
+
+        /// <summary>
+        /// Gets the tick.
+        /// </summary>
         /// <param name="axis">The axis.</param>
         /// <param name="controlSize">Size of the control.</param>
         /// <param name="bounds">The bounds.</param>
         /// <returns></returns>
-        public static AxisTick GetTick<TDrawingContext>(this IAxis<TDrawingContext> axis, SizeF controlSize, Bounds bounds)
-           where TDrawingContext : DrawingContext
+        public static AxisTick GetTick(this ICartesianAxis axis, SizeF controlSize, Bounds bounds)
         {
             var max = axis.MaxLimit is null ? bounds.Max : axis.MaxLimit.Value;
             var min = axis.MinLimit is null ? bounds.Min : axis.MinLimit.Value;
 
             var range = max - min;
             var separations = axis.Orientation == AxisOrientation.Y
+                ? Math.Round(controlSize.Height / (12 * Cf), 0)
+                : Math.Round(controlSize.Width / (20 * Cf), 0);
+            var minimum = range / separations;
+
+            var magnitude = Math.Pow(10, Math.Floor(Math.Log(minimum) / Math.Log(10)));
+
+            var residual = minimum / magnitude;
+            var tick = residual > 5 ? 10 * magnitude : residual > 2 ? 5 * magnitude : residual > 1 ? 2 * magnitude : magnitude;
+            return new AxisTick { Value = tick, Magnitude = magnitude };
+        }
+
+        /// <summary>
+        /// Gets the tick.
+        /// </summary>
+        /// <param name="axis">The axis.</param>
+        /// <param name="controlSize">Size of the control.</param>
+        /// <param name="bounds">The bounds.</param>
+        /// <returns></returns> 
+        public static AxisTick GetTick(this IPolarAxis axis, SizeF controlSize, Bounds bounds)
+        {
+            var max = axis.MaxLimit is null ? bounds.Max : axis.MaxLimit.Value;
+            var min = axis.MinLimit is null ? bounds.Min : axis.MinLimit.Value;
+
+            var range = max - min;
+            var separations = axis.Orientation == PolarAxisOrientation.Angle
                 ? Math.Round(controlSize.Height / (12 * Cf), 0)
                 : Math.Round(controlSize.Width / (20 * Cf), 0);
             var minimum = range / separations;

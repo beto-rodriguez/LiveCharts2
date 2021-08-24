@@ -351,15 +351,6 @@ namespace LiveChartsCore
         public abstract void SoftDelete(IChartView chart);
 
         /// <summary>
-        /// Softs the delete point.
-        /// </summary>
-        /// <param name="point">The point.</param>
-        /// <param name="primaryScale">The primary scale.</param>
-        /// <param name="secondaryScale">The secondary scale.</param>
-        /// <returns></returns>
-        protected abstract void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale);
-
-        /// <summary>
         /// Called when a point was measured.
         /// </summary>
         /// <param name="chartPoint">The chart point.</param>

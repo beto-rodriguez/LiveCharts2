@@ -65,12 +65,12 @@ namespace LiveChartsCore.Themes
         public Action<Color[], IChartSeries<TDrawingContext>, bool>? SeriesDefaultsResolver { get; set; }
 
         /// <summary>
-        /// Gets or sets the axis default resolver.
+        /// Gets or sets the plane default resolver.
         /// </summary>
         /// <value>
         /// The axis default resolver.
         /// </value>
-        public Action<IAxis<TDrawingContext>, bool>? AxisDefaultResolver { get; set; }
+        public Action<IPlane<TDrawingContext>, bool>? AxisDefaultResolver { get; set; }
 
         /// <summary>
         /// Uses the colors.
@@ -106,11 +106,11 @@ namespace LiveChartsCore.Themes
         }
 
         /// <summary>
-        /// Sets the axis defaults resolver.
+        /// Sets the plane defaults resolver.
         /// </summary>
         /// <param name="resolver">The resolver.</param>
         /// <returns></returns>
-        public Theme<TDrawingContext> WithAxisDefaultsResolver(Action<IAxis<TDrawingContext>, bool> resolver)
+        public Theme<TDrawingContext> WithAxisDefaultsResolver(Action<IPlane<TDrawingContext>, bool> resolver)
         {
             AxisDefaultResolver = resolver;
             return this;
@@ -139,13 +139,13 @@ namespace LiveChartsCore.Themes
         }
 
         /// <summary>
-        /// Resolves the axis defaults.
+        /// Resolves the plane defaults.
         /// </summary>
-        /// <param name="axis">The axis.</param>
+        /// <param name="plane">The plane.</param>
         /// /// <param name="forceApply">Forces the apply of the theme.</param>
-        public virtual void ResolveAxisDefaults(IAxis<TDrawingContext> axis, bool forceApply)
+        public virtual void ResolveAxisDefaults(IPlane<TDrawingContext> plane, bool forceApply)
         {
-            AxisDefaultResolver?.Invoke(axis, forceApply);
+            AxisDefaultResolver?.Invoke(plane, forceApply);
         }
     }
 }

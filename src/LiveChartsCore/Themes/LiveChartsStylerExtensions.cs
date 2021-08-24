@@ -56,7 +56,7 @@ namespace LiveChartsCore.Themes
         /// <returns></returns>
         public static VisualsStyle<TDrawingContext> HasRuleForAxes<TDrawingContext>(
             this VisualsStyle<TDrawingContext> styler,
-            Action<IAxis<TDrawingContext>> predicate)
+            Action<IPlane<TDrawingContext>> predicate)
             where TDrawingContext : DrawingContext
         {
             styler.AxisBuilder.Add(predicate);

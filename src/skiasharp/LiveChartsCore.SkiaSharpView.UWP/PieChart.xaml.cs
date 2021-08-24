@@ -40,6 +40,7 @@ using Windows.UI.Core;
 
 namespace LiveChartsCore.SkiaSharpView.UWP
 {
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}"/>
     public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IUwpChart
     {
         private Chart<SkiaSharpDrawingContext>? _core;

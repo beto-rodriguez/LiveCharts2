@@ -47,7 +47,7 @@ namespace LiveChartsCore
         private IPaint<TDrawingContext>? _dataLabelsPaint;
         private double _dataLabelsSize = 16;
         private Padding _dataLabelsPadding = new() { Left = 6, Top = 8, Right = 6, Bottom = 8 };
-        private CanvasSchedule<TDrawingContext> _canvasSchedule = new CanvasSchedule<TDrawingContext>();
+        private CanvasSchedule<TDrawingContext> _canvasSchedule = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.

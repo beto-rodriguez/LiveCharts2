@@ -22,7 +22,7 @@ namespace WinFormsSample.General.TemplatedLegends
         {
             var wfChart = (Chart)chart.View;
 
-            var series = chart.DrawableSeries;
+            var series = chart.ChartSeries;
             var legendOrientation = chart.LegendOrientation;
 
             Visible = true;

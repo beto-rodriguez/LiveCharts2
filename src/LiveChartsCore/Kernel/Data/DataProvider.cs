@@ -145,21 +145,21 @@ namespace LiveChartsCore.Kernel.Data
         /// </summary>
         /// <param name="chart">The chart.</param>
         /// <param name="series">The series.</param>
-        /// <param name="x">The x.</param>
-        /// <param name="y">The y.</param>
+        /// <param name="plane1">The x.</param>
+        /// <param name="plane2">The y.</param>
         /// <returns></returns>
         public virtual SeriesBounds GetCartesianBounds(
-            CartesianChart<TDrawingContext> chart,
+            Chart<TDrawingContext> chart,
             IChartSeries<TDrawingContext> series,
-            IAxis<TDrawingContext> x,
-            IAxis<TDrawingContext> y)
+            IPlane plane1,
+            IPlane plane2)
         {
             var stack = chart.SeriesContext.GetStackPosition(series, series.GetStackGroup());
 
-            var xMin = x.MinLimit ?? double.MinValue;
-            var xMax = x.MaxLimit ?? double.MaxValue;
-            var yMin = y.MinLimit ?? double.MinValue;
-            var yMax = y.MaxLimit ?? double.MaxValue;
+            var xMin = plane1.MinLimit ?? double.MinValue;
+            var xMax = plane1.MaxLimit ?? double.MaxValue;
+            var yMin = plane2.MinLimit ?? double.MinValue;
+            var yMax = plane2.MaxLimit ?? double.MaxValue;
 
             var hasData = false;
 
@@ -214,8 +214,8 @@ namespace LiveChartsCore.Kernel.Data
         public virtual SeriesBounds GetFinancialBounds(
             CartesianChart<TDrawingContext> chart,
             IChartSeries<TDrawingContext> series,
-            IAxis<TDrawingContext> x,
-            IAxis<TDrawingContext> y)
+            ICartesianAxis x,
+            ICartesianAxis y)
         {
             var xMin = x.MinLimit ?? double.MinValue;
             var xMax = x.MaxLimit ?? double.MaxValue;

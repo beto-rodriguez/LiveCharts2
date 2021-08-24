@@ -31,6 +31,7 @@ using LiveChartsCore.Measure;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Kernel.Helpers;
 
 namespace LiveChartsCore
 {
@@ -40,9 +41,7 @@ namespace LiveChartsCore
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <typeparam name="TTextGeometry">The type of the text geometry.</typeparam>
     /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
-    /// <seealso cref="IAxis{TDrawingContext}" />
-    /// <seealso cref="INotifyPropertyChanged" />
-    public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry> : ChartElement<TDrawingContext>, IAxis<TDrawingContext>
+    public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry> : ChartElement<TDrawingContext>, ICartesianAxis, IPlane<TDrawingContext>
         where TDrawingContext : DrawingContext
         where TTextGeometry : ILabelGeometry<TDrawingContext>, new()
         where TLineGeometry : ILineGeometry<TDrawingContext>, new()
@@ -83,117 +82,121 @@ namespace LiveChartsCore
 
         #region properties
 
-        float IAxis.Xo { get => _xo; set => _xo = value; }
-        float IAxis.Yo { get => _yo; set => _yo = value; }
+        float ICartesianAxis.Xo { get => _xo; set => _xo = value; }
+        float ICartesianAxis.Yo { get => _yo; set => _yo = value; }
 
-        Bounds? IAxis.PreviousDataBounds { get; set; }
+        Bounds? IPlane.PreviousDataBounds { get; set; }
 
-        Bounds? IAxis.PreviousVisibleDataBounds { get; set; }
+        Bounds? IPlane.PreviousVisibleDataBounds { get; set; }
 
-        double? IAxis.PreviousMaxLimit { get; set; }
+        double? IPlane.PreviousMaxLimit { get; set; }
 
-        double? IAxis.PreviousMinLimit { get; set; }
+        double? IPlane.PreviousMinLimit { get; set; }
 
-        Bounds IAxis.DataBounds => _dataBounds ?? throw new Exception("bounds not found");
+        Bounds IPlane.DataBounds => _dataBounds ?? throw new Exception("bounds not found");
 
-        Bounds IAxis.VisibleDataBounds => _visibleDataBounds ?? throw new Exception("bounds not found");
+        Bounds IPlane.VisibleDataBounds => _visibleDataBounds ?? throw new Exception("bounds not found");
 
-        /// <inheritdoc cref="IAxis.Name"/>
+        /// <inheritdoc cref="IPlane.Name"/>
         public string? Name { get; set; } = null;
 
-        /// <inheritdoc cref="IAxis.NameTextSize"/>
+        /// <inheritdoc cref="IPlane.NameTextSize"/>
         public double NameTextSize { get => _nameTextSize; set { _nameTextSize = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis.NamePadding"/>
+        /// <inheritdoc cref="IPlane.NamePadding"/>
         public Padding NamePadding { get => _namePadding; set { _namePadding = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis.Orientation"/>
+        /// <inheritdoc cref="ICartesianAxis.Orientation"/>
         public AxisOrientation Orientation => _orientation;
 
-        /// <inheritdoc cref="IAxis.Padding"/>
+        /// <inheritdoc cref="ICartesianAxis.Padding"/>
         public Padding Padding { get => _padding; set { _padding = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis.Labeler"/>
+        /// <inheritdoc cref="IPlane.Labeler"/>
         public Func<double, string> Labeler { get => _labeler; set { _labeler = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis.MinStep"/>
+        /// <inheritdoc cref="IPlane.MinStep"/>
         public double MinStep { get => _minStep; set { _minStep = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis.ForceStepToMin"/>
+        /// <inheritdoc cref="IPlane.ForceStepToMin"/>
         public bool ForceStepToMin { get => _forceStepToMin; set { _forceStepToMin = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis.MinLimit"/>
+        /// <inheritdoc cref="IPlane.MinLimit"/>
         public double? MinLimit { get => _minLimit; set { _minLimit = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis.MaxLimit"/>
+        /// <inheritdoc cref="IPlane.MaxLimit"/>
         public double? MaxLimit { get => _maxLimit; set { _maxLimit = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis.UnitWidth"/>
+        /// <inheritdoc cref="IPlane.UnitWidth"/>
         public double UnitWidth { get => _unitWidth; set { _unitWidth = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis.Position"/>
+        /// <inheritdoc cref="ICartesianAxis.Position"/>
         public AxisPosition Position { get => _position; set { _position = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis.LabelsRotation"/>
+        /// <inheritdoc cref="IPlane.LabelsRotation"/>
         public double LabelsRotation { get => _labelsRotation; set { _labelsRotation = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis.TextSize"/>
+        /// <inheritdoc cref="IPlane.TextSize"/>
         public double TextSize { get => _textSize; set { _textSize = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis.Labels"/>
+        /// <inheritdoc cref="IPlane.Labels"/>
         public IList<string>? Labels { get; set; }
 
-        /// <inheritdoc cref="IAxis.ShowSeparatorLines"/>
+        /// <inheritdoc cref="IPlane.ShowSeparatorLines"/>
         public bool ShowSeparatorLines { get => _showSeparatorLines; set { _showSeparatorLines = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis.IsVisible"/>
+        /// <inheritdoc cref="IPlane.IsVisible"/>
         public bool IsVisible { get => _isVisible; set { _isVisible = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis.IsInverted"/>
+        /// <inheritdoc cref="IPlane.IsInverted"/>
         public bool IsInverted { get => _isInverted; set { _isInverted = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.NamePaint"/>
+        /// <inheritdoc cref="IPlane{TDrawingContext}.NamePaint"/>
         public IPaint<TDrawingContext>? NamePaint
         {
             get => _namePaint;
             set => SetPaintProperty(ref _namePaint, value);
         }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.LabelsPaint"/>
+        /// <inheritdoc cref="IPlane{TDrawingContext}.LabelsPaint"/>
         public IPaint<TDrawingContext>? LabelsPaint
         {
             get => _labelsPaint;
             set => SetPaintProperty(ref _labelsPaint, value);
         }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.SeparatorsPaint"/>
+        /// <inheritdoc cref="IPlane{TDrawingContext}.SeparatorsPaint"/>
         public IPaint<TDrawingContext>? SeparatorsPaint
         {
             get => _separatorsPaint;
             set => SetPaintProperty(ref _separatorsPaint, value);
         }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.TextBrush"/>
+        /// <summary>
+        /// 
+        /// </summary>
         [Obsolete("Renamed to LabelsPaint")]
         public IPaint<TDrawingContext>? TextBrush { get => LabelsPaint; set => LabelsPaint = value; }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.SeparatorsBrush"/>
+        /// <summary>
+        /// 
+        /// </summary>
         [Obsolete("Renamed to SeparatorsPaint")]
         public IPaint<TDrawingContext>? SeparatorsBrush { get => SeparatorsPaint; set => SeparatorsPaint = value; }
 
-        /// <inheritdoc cref="IAxis.AnimationsSpeed"/>
+        /// <inheritdoc cref="IPlane.AnimationsSpeed"/>
         public TimeSpan? AnimationsSpeed { get; set; }
 
-        /// <inheritdoc cref="IAxis.EasingFunction"/>
+        /// <inheritdoc cref="IPlane.EasingFunction"/>
         public Func<float, float>? EasingFunction { get; set; }
 
-        /// <inheritdoc cref="IAxis.IsNotifyingChanges"/>
-        bool IAxis.IsNotifyingChanges { get; set; }
+        /// <inheritdoc cref="IPlane.IsNotifyingChanges"/>
+        bool IPlane.IsNotifyingChanges { get; set; }
 
         #endregion
 
-        /// <inheritdoc cref="IAxis.Initialized"/>
-        public event Action<IAxis>? Initialized;
+        /// <inheritdoc cref="ICartesianAxis.Initialized"/>
+        public event Action<ICartesianAxis>? Initialized;
 
         /// <summary>
         /// Occurs when a property value changes.
@@ -213,10 +216,10 @@ namespace LiveChartsCore
             var drawMarginSize = cartesianChart.DrawMarginSize;
 
             var scale = new Scaler(drawLocation, drawMarginSize, this);
-            var previousSacale = ((IAxis)this).PreviousDataBounds is null
+            var previousSacale = ((ICartesianAxis)this).PreviousDataBounds is null
                 ? null
                 : new Scaler(drawLocation, drawMarginSize, this, true);
-            var axisTick = this.GetTick(drawMarginSize);
+            var axisTick = ((ICartesianAxis)this).GetTick(drawMarginSize);
 
             var labeler = Labeler;
             if (Labels is not null)
@@ -445,7 +448,7 @@ namespace LiveChartsCore
 
                     visualSeparator.Text.Opacity = 1;
 
-                    if (((IAxis)this).PreviousDataBounds is null) visualSeparator.Text.CompleteAllTransitions();
+                    if (((ICartesianAxis)this).PreviousDataBounds is null) visualSeparator.Text.CompleteAllTransitions();
                 }
 
                 if (visualSeparator.Line is not null)
@@ -467,7 +470,7 @@ namespace LiveChartsCore
 
                     visualSeparator.Line.Opacity = 1;
 
-                    if (((IAxis)this).PreviousDataBounds is null) visualSeparator.Line.CompleteAllTransitions();
+                    if (((ICartesianAxis)this).PreviousDataBounds is null) visualSeparator.Line.CompleteAllTransitions();
                 }
 
                 if (visualSeparator.Text is not null || visualSeparator.Line is not null) _ = measured.Add(visualSeparator);
@@ -477,14 +480,13 @@ namespace LiveChartsCore
             {
                 if (measured.Contains(separator.Value)) continue;
 
-
                 SoftDeleteSeparator(cartesianChart, separator.Value, scale);
                 _ = separators.Remove(separator.Key);
             }
         }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.GetNameLabelSize(CartesianChart{TDrawingContext})"/>
-        public SizeF GetNameLabelSize(CartesianChart<TDrawingContext> chart)
+        /// <inheritdoc cref="IPlane{TDrawingContext}.GetNameLabelSize(Chart{TDrawingContext})"/>
+        public SizeF GetNameLabelSize(Chart<TDrawingContext> chart)
         {
             if (NamePaint is null || string.IsNullOrWhiteSpace(Name)) return new SizeF(0, 0);
 
@@ -499,8 +501,8 @@ namespace LiveChartsCore
             return textGeometry.Measure(NamePaint);
         }
 
-        /// <inheritdoc cref="IAxis{TDrawingContext}.GetPossibleSize(CartesianChart{TDrawingContext})"/>
-        public virtual SizeF GetPossibleSize(CartesianChart<TDrawingContext> chart)
+        /// <inheritdoc cref="IPlane{TDrawingContext}.GetPossibleSize(Chart{TDrawingContext})"/>
+        public virtual SizeF GetPossibleSize(Chart<TDrawingContext> chart)
         {
             if (_dataBounds is null) throw new Exception("DataBounds not found");
             if (LabelsPaint is null) return new SizeF(0f, 0f);
@@ -544,8 +546,8 @@ namespace LiveChartsCore
             return new SizeF(w, h);
         }
 
-        /// <inheritdoc cref="IAxis.Initialize(AxisOrientation)"/>
-        void IAxis.Initialize(AxisOrientation orientation)
+        /// <inheritdoc cref="ICartesianAxis.Initialize(AxisOrientation)"/>
+        void ICartesianAxis.Initialize(AxisOrientation orientation)
         {
             _orientation = orientation;
             _dataBounds = new Bounds();
@@ -589,7 +591,7 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
-            if (!((IAxis)this).IsNotifyingChanges) return;
+            if (!((ICartesianAxis)this).IsNotifyingChanges) return;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
@@ -598,12 +600,12 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="chart">The chart.</param>
         /// <param name="separator">The separator.</param>
-        /// <param name="scale">The scale.</param>
+        /// <param name="scaler">The scaler.</param>
         /// <returns></returns>
         protected virtual void SoftDeleteSeparator(
             Chart<TDrawingContext> chart,
             AxisVisualSeprator<TDrawingContext> separator,
-            Scaler scale)
+            Scaler scaler)
         {
             var controlSize = chart.ControlSize;
             var drawLocation = chart.DrawMarginLocation;
@@ -632,13 +634,13 @@ namespace LiveChartsCore
             float x, y;
             if (_orientation == AxisOrientation.X)
             {
-                x = scale.ToPixels(separator.Value);
+                x = scaler.ToPixels(separator.Value);
                 y = yoo;
             }
             else
             {
                 x = xoo;
-                y = scale.ToPixels(separator.Value);
+                y = scaler.ToPixels(separator.Value);
             }
 
             if (separator.Line is not null)
