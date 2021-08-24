@@ -1,4 +1,5 @@
 ﻿using LiveChartsCore;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -38,17 +39,17 @@ namespace WinFormsSample.General.TemplatedTooltips
             if (activePoints.Count > 0 && tooltipPoints.All(x => activePoints.ContainsKey(x.Point))) return;
 
             var size = DrawAndMesure(tooltipPoints, wfChart);
-            PointF? location = null;
+            LvcPoint? location = null;
 
             if (chart is CartesianChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetCartesianTooltipLocation(
-                    chart.TooltipPosition, new SizeF((float)size.Width, (float)size.Height), chart.ControlSize);
+                    chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height), chart.ControlSize);
             }
             if (chart is PieChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetPieTooltipLocation(
-                    chart.TooltipPosition, new SizeF((float)size.Width, (float)size.Height));
+                    chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height));
             }
 
             BackColor = Color.FromArgb(255, 30, 30, 30);
