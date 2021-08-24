@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
-using System.Drawing;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
+using SkiaSharp;
 
 namespace ViewModelsSamples.Heat.Basic
 {
@@ -14,9 +14,9 @@ namespace ViewModelsSamples.Heat.Basic
             {
                 HeatMap = new[]
                 {
-                    Color.FromArgb(255, 255, 241, 118), // the first element is the "coldest"
-                    Color.DarkSlateGray,
-                    Color.Blue // the last element is the "hottest"
+                    new SKColor(255, 241, 118).AsLvcColor(), // the first element is the "coldest"
+                    SKColors.DarkSlateGray.AsLvcColor(),
+                    SKColors.Blue.AsLvcColor() // the last element is the "hottest"
                 },
                 Values = new ObservableCollection<WeightedPoint>
                 {

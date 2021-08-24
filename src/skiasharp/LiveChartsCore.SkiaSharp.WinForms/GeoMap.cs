@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
@@ -40,7 +41,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     {
         private static GeoJsonFile? s_map = null;
         private int _heatKnownLength = 0;
-        private List<Tuple<double, Color>> _heatStops = new();
+        private List<Tuple<double, LvcColor>> _heatStops = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeoMap"/> class.
@@ -66,6 +67,12 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             Color.FromArgb(255, 2, 136, 209) // hot (max value)
         };
 
+        LvcColor[] IGeoMap.HeatMap
+        {
+            get => HeatMap.Select(x => new LvcColor(x.R, x.G, x.B, x.A)).ToArray();
+            set => HeatMap = value.Select(x => Color.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
+        }
+
         /// <summary>
         /// Gets or sets the color stops.
         /// </summary>
@@ -76,6 +83,12 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// </summary>
         public Color StrokeColor { get; set; } = Color.FromArgb(255, 224, 224, 224);
 
+        LvcColor IGeoMap.StrokeColor
+        {
+            get => new(StrokeColor.R, StrokeColor.G, StrokeColor.B, StrokeColor.A);
+            set => StrokeColor = Color.FromArgb(value.A, value.R, value.G, value.B);
+        }
+
         /// <summary>
         /// Gets or sets the color stops.
         /// </summary>
@@ -85,6 +98,12 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// Gets or sets the color stops.
         /// </summary>
         public Color FillColor { get; set; } = Color.FromArgb(255, 250, 250, 250);
+
+        LvcColor IGeoMap.FillColor
+        {
+            get => new(FillColor.R, FillColor.G, FillColor.B, FillColor.A);
+            set => FillColor = Color.FromArgb(value.A, value.R, value.G, value.B);
+        }
 
         /// <summary>
         /// Gets or sets the values.
@@ -103,18 +122,18 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             var paint = new SolidColorPaint();
 
             var thickness = (float)StrokeThickness;
-            var stroke = Color.FromArgb(255, StrokeColor.R, StrokeColor.G, StrokeColor.B);
-            var fill = Color.FromArgb(255, FillColor.R, FillColor.G, FillColor.B);
+
+            var igeo = (IGeoMap)this;
 
             if (_heatKnownLength != HeatMap.Length)
             {
-                _heatStops = HeatFunctions.BuildColorStops(HeatMap, ColorStops);
+                _heatStops = HeatFunctions.BuildColorStops(igeo.HeatMap, ColorStops);
                 _heatKnownLength = HeatMap.Length;
             }
 
             var worldMap = s_map ??= Maps.GetWorldMap();
             var projector = Maps.BuildProjector(Projection, new float[] { Width, Height });
-            var shapes = worldMap.AsHeatMapShapes(Values, HeatMap, _heatStops, stroke, fill, thickness, projector);
+            var shapes = worldMap.AsHeatMapShapes(Values, igeo.HeatMap, _heatStops, igeo.StrokeColor, igeo.FillColor, thickness, projector);
 
             canvas.PaintTasks = new List<PaintSchedule<SkiaSharpDrawingContext>>
             {

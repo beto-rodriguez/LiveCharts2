@@ -1,4 +1,5 @@
 ﻿using LiveChartsCore;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -6,7 +7,6 @@ using LiveChartsCore.Themes;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.Windows.Input;
 
 namespace ViewModelsSamples.Axes.ColorsAndPosition
@@ -15,7 +15,7 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition
     {
         private AxisPosition _selectedPosition;
         private int _selectedColor = 0;
-        private readonly Color[] _colors = ColorPalletes.FluentDesign;
+        private readonly LvcColor[] _colors = ColorPalletes.FluentDesign;
 
         public ViewModel()
         {

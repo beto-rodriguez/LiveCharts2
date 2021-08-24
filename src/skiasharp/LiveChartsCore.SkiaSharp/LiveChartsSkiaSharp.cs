@@ -638,5 +638,15 @@ namespace LiveChartsCore.SkiaSharpView
         {
             return LvcColor.FromArgb(opacity, color);
         }
+
+        /// <summary>
+        /// Converts a <see cref="SKColor"/> to a <see cref="LvcColor"/> intance.
+        /// </summary>
+        /// <param name="color">The color</param>
+        /// <returns></returns>
+        public static LvcColor AsLvcColor(this SKColor color)
+        {
+            return new LvcColor(color.Red, color.Green, color.Blue, color.Alpha);
+        }
     }
 }

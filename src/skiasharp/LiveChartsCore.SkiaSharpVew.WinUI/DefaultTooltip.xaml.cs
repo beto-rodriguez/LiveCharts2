@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -85,7 +86,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
 
             if (_activePoints.Count > 0 && tooltipPoints.All(x => _activePoints.ContainsKey(x.Point))) return;
 
-            System.Drawing.PointF? location = null;
+            LvcPoint? location = null;
 
             IsOpen = true;
             Points = tooltipPoints;
@@ -95,12 +96,12 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetCartesianTooltipLocation(
-                    chart.TooltipPosition, new System.Drawing.SizeF((float)DesiredSize.Width, (float)DesiredSize.Height), chart.ControlSize);
+                    chart.TooltipPosition, new LvcSize((float)DesiredSize.Width, (float)DesiredSize.Height), chart.ControlSize);
             }
             if (chart is PieChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetPieTooltipLocation(
-                    chart.TooltipPosition, new System.Drawing.SizeF((float)DesiredSize.Width, (float)DesiredSize.Height));
+                    chart.TooltipPosition, new LvcSize((float)DesiredSize.Width, (float)DesiredSize.Height));
             }
 
             if (location is null) throw new Exception("location not supported");

@@ -325,11 +325,11 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
 
-        System.Drawing.Color IChartView.BackColor
+        LvcColor IChartView.BackColor
         {
             get => Background is not SolidColorBrush b
-                    ? new System.Drawing.Color()
-                    : System.Drawing.Color.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
+                    ? new LvcColor()
+                    : LvcColor.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
             set => SetValue(BackgroundProperty, new SolidColorBrush(Windows.UI.Color.FromArgb(value.A, value.R, value.G, value.B)));
         }
 
@@ -346,7 +346,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             set => throw new NotImplementedException();
         }
 
-        System.Drawing.SizeF IChartView.ControlSize => _canvas == null
+        LvcSize IChartView.ControlSize => _canvas == null
             ? throw new Exception("Canvas not found")
             : (new() { Width = (float)_canvas.ActualWidth, Height = (float)_canvas.ActualHeight });
 
@@ -666,8 +666,8 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
 
         #endregion
 
-        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleUIPoint(System.Drawing.PointF, int, int)" />
-        public double[] ScaleUIPoint(System.Drawing.PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
+        public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
             return new double[0];
             //if (_core == null) throw new Exception("core not found");
@@ -698,8 +698,8 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
         }
 
-        /// <inheritdoc cref="IChartView.SetTooltipStyle(System.Drawing.Color, System.Drawing.Color)"/>
-        public void SetTooltipStyle(System.Drawing.Color background, System.Drawing.Color textColor)
+        /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
+        public void SetTooltipStyle(LvcColor background, LvcColor textColor)
         {
             TooltipBackground = new SolidColorBrush(Windows.UI.Color.FromArgb(background.A, background.R, background.G, background.B));
             TooltipTextBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(textColor.A, textColor.R, textColor.G, textColor.B));
@@ -777,7 +777,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         private void OnPointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             var p = e.GetCurrentPoint(this);
-            _core?.InvokePointerMove(new System.Drawing.PointF((float)p.Position.X, (float)p.Position.Y));
+            _core?.InvokePointerMove(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
         }
 
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
@@ -804,7 +804,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         private void OnPointerReleased(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             var p = e.GetCurrentPoint(this);
-            _core?.InvokePointerUp(new System.Drawing.PointF((float)p.Position.X, (float)p.Position.Y));
+            _core?.InvokePointerUp(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
             ReleasePointerCapture(e.Pointer);
         }
 
@@ -812,7 +812,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         {
             _ = CapturePointer(e.Pointer);
             var p = e.GetCurrentPoint(this);
-            _core?.InvokePointerDown(new System.Drawing.PointF((float)p.Position.X, (float)p.Position.Y));
+            _core?.InvokePointerDown(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
         }
 
         private void OnWheelChanged(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
@@ -822,7 +822,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             //var p = e.GetCurrentPoint(this);
 
             //c.Zoom(
-            //    new System.Drawing.PointF(
+            //    new LvcPoint(
             //        (float)p.Position.X, (float)p.Position.Y),
             //        p.Properties.MouseWheelDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
         }

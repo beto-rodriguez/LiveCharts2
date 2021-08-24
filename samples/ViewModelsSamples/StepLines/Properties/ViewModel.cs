@@ -1,4 +1,5 @@
 ﻿using LiveChartsCore;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.Themes;
@@ -6,7 +7,6 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
@@ -14,7 +14,7 @@ namespace ViewModelsSamples.StepLines.Properties
 {
     public class ViewModel : INotifyPropertyChanged
     {
-        private readonly Color[] colors = ColorPalletes.FluentDesign;
+        private readonly LvcColor[] colors = ColorPalletes.FluentDesign;
         private readonly Random random = new Random();
         private StepLineSeries<double> lineSeries;
         private int currentColor = 0;
