@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Drawing;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;

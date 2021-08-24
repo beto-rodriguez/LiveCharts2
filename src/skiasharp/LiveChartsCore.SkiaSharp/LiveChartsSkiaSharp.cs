@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Data;
@@ -31,7 +32,6 @@ using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.Themes;
 using SkiaSharp;
 using System;
-using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView
 {
@@ -117,7 +117,7 @@ namespace LiveChartsCore.SkiaSharpView
                                    // over a point, for example, the first .WithState() defines that every time a point is marked
                                    // with the LiveCharts.BarSeriesHoverKey key, the library will draw a null stroke and
                                    // new SKColor(255, 255, 255, 180) as the fill (defaultHoverColor).
-                                   var defaultHoverColor = Color.FromArgb(180, 255, 255, 255).AsSKColor();
+                                   var defaultHoverColor = LvcColor.FromArgb(180, 255, 255, 255).AsSKColor();
                                    chart.PointStates = new PointStatesDictionary<SkiaSharpDrawingContext>()
                                         .WithState(LiveCharts.BarSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
                                         .WithState(LiveCharts.LineSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
@@ -147,7 +147,7 @@ namespace LiveChartsCore.SkiaSharpView
                                    // at this point ForAnySeries() was already called
                                    // we are configuring the missing properties
                                    lineSeries.GeometrySize = 18;
-                                   lineSeries.GeometryFill = new SolidColorPaint(Color.FromArgb(255, 250, 250, 250).AsSKColor());
+                                   lineSeries.GeometryFill = new SolidColorPaint(LvcColor.FromArgb(255, 250, 250, 250).AsSKColor());
                                    lineSeries.GeometryStroke = DefaultPaintTask;
                                })
                                .HasRuleForStepLineSeries(steplineSeries =>
@@ -155,7 +155,7 @@ namespace LiveChartsCore.SkiaSharpView
                                    // at this point ForAnySeries() was already called
                                    // we are configuring the missing properties
                                    steplineSeries.GeometrySize = 18;
-                                   steplineSeries.GeometryFill = new SolidColorPaint(Color.FromArgb(255, 250, 250, 250).AsSKColor());
+                                   steplineSeries.GeometryFill = new SolidColorPaint(LvcColor.FromArgb(255, 250, 250, 250).AsSKColor());
                                    steplineSeries.GeometryStroke = DefaultPaintTask;
                                })
                                .HasRuleForStackedLineSeries(stackedLine =>
@@ -243,7 +243,7 @@ namespace LiveChartsCore.SkiaSharpView
                                    // over a point, for example, the first .WithState() defines that every time a point is marked
                                    // with the LiveCharts.BarSeriesHoverKey key, the library will draw a null stroke and
                                    // new SKColor(255, 255, 255, 180) as the fill (defaultHoverColor).
-                                   var defaultHoverColor = Color.FromArgb(40, 255, 255, 255).AsSKColor();
+                                   var defaultHoverColor = LvcColor.FromArgb(40, 255, 255, 255).AsSKColor();
                                    chart.PointStates =
                                        new PointStatesDictionary<SkiaSharpDrawingContext>()
                                            .WithState(
@@ -279,7 +279,7 @@ namespace LiveChartsCore.SkiaSharpView
                                .HasRuleForLineSeries(lineSeries =>
                                {
                                    lineSeries.GeometrySize = 18;
-                                   lineSeries.GeometryFill = new SolidColorPaint(Color.FromArgb(255, 40, 40, 40).AsSKColor());
+                                   lineSeries.GeometryFill = new SolidColorPaint(LvcColor.FromArgb(255, 40, 40, 40).AsSKColor());
                                    lineSeries.GeometryStroke = DefaultPaintTask;
                                })
                                .HasRuleForStepLineSeries(steplineSeries =>
@@ -287,7 +287,7 @@ namespace LiveChartsCore.SkiaSharpView
                                    // at this point ForAnySeries() was already called
                                    // we are configuring the missing properties
                                    steplineSeries.GeometrySize = 18;
-                                   steplineSeries.GeometryFill = new SolidColorPaint(Color.FromArgb(255, 40, 40, 40).AsSKColor());
+                                   steplineSeries.GeometryFill = new SolidColorPaint(LvcColor.FromArgb(255, 40, 40, 40).AsSKColor());
                                    steplineSeries.GeometryStroke = DefaultPaintTask;
                                })
                                .HasRuleForStackedLineSeries(stackedLine =>
@@ -358,7 +358,7 @@ namespace LiveChartsCore.SkiaSharpView
         {
             return theme
                 .WithSeriesDefaultsResolver(
-                    (Color[] colors, IChartSeries<SkiaSharpDrawingContext> series, bool forceApply) =>
+                    (LvcColor[] colors, IChartSeries<SkiaSharpDrawingContext> series, bool forceApply) =>
                     {
                         if (forceApply)
                         {
@@ -494,7 +494,7 @@ namespace LiveChartsCore.SkiaSharpView
         {
             return theme
                 .WithSeriesDefaultsResolver(
-                    (Color[] colors, IChartSeries<SkiaSharpDrawingContext> series, bool forceApply) =>
+                    (LvcColor[] colors, IChartSeries<SkiaSharpDrawingContext> series, bool forceApply) =>
                     {
                         if (forceApply)
                         {
@@ -618,12 +618,12 @@ namespace LiveChartsCore.SkiaSharpView
         }
 
         /// <summary>
-        /// Converts a <see cref="Color"/> to a <see cref="SKColor"/> instance.
+        /// Converts a <see cref="LvcColor"/> to a <see cref="SKColor"/> instance.
         /// </summary>
         /// <param name="color">The color.</param>
         /// <param name="alphaOverrides">The alpha overrides.</param>
         /// <returns></returns>
-        public static SKColor AsSKColor(this Color color, byte? alphaOverrides = null)
+        public static SKColor AsSKColor(this LvcColor color, byte? alphaOverrides = null)
         {
             return new SKColor(color.R, color.G, color.B, alphaOverrides ?? color.A);
         }
@@ -634,9 +634,9 @@ namespace LiveChartsCore.SkiaSharpView
         /// <param name="color">The color.</param>
         /// <param name="opacity">The opacity from 0 to 255.</param>
         /// <returns></returns>
-        public static Color WithOpacity(this Color color, byte opacity)
+        public static LvcColor WithOpacity(this LvcColor color, byte opacity)
         {
-            return Color.FromArgb(opacity, color.R, color.G, color.B);
+            return LvcColor.FromArgb(opacity, color);
         }
     }
 }

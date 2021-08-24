@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Drawing;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using SkiaSharp;
@@ -44,7 +43,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         }
 
         /// <inheritdoc cref="ISolidColorGeometry{TDrawingContext}.Color" />
-        public Color Color
+        public LvcColor Color
         {
             get => _colorProperty.GetMovement(this);
             set => _colorProperty.SetMovement(value, this);

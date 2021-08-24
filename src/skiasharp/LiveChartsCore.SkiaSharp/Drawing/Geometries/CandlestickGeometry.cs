@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Drawing;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -91,7 +90,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         }
 
         /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
-        protected override SizeF OnMeasure(Paint paintTaks)
+        protected override LvcSize OnMeasure(Paint paintTaks)
         {
             return new(Width, Math.Abs(Low - Y));
         }
