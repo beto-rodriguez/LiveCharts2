@@ -172,6 +172,12 @@ namespace LiveChartsCore.Kernel
             return this;
         }
 
+        internal LiveChartsSettings HasPolarAxisProvider(Func<IPolarAxis> provider)
+        {
+            PolarAxisProvider = provider;
+            return this;
+        }
+
         internal LiveChartsSettings HasDesigerSeriesProvider(Func<DesignerKind, IEnumerable<ISeries>> provider)
         {
             DesignerSeriesGenerator = provider;

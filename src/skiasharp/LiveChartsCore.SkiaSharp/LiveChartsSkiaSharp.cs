@@ -70,6 +70,7 @@ namespace LiveChartsCore.SkiaSharpView
             return settings
                 .HasDataFactory(new DataFactory<SkiaSharpDrawingContext>())
                 .HasAxisProvider(() => new Axis())
+                .HasPolarAxisProvider(() => new PolarAxis())
                 .HasDesigerSeriesProvider(kind =>
                 {
                     var r = new Random();
