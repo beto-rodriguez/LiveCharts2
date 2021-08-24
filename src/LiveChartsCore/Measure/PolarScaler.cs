@@ -41,8 +41,8 @@ namespace LiveChartsCore.Measure
         /// </summary>
         /// <param name="drawMagrinLocation">The draw margin location.</param>
         /// <param name="drawMarginSize">Size of the draw margin.</param>
-        /// <param name="angleAxis">The angle axis.</param>
         /// <param name="radiusAxis">The radius axis.</param>
+        /// <param name="angleAxis">The angle axis.</param>
         /// <param name="innerRadius">The inner radius.</param>
         /// <param name="usePreviousScale">Indicates if the scaler should be built based on the previous known data.</param>
         /// <exception cref="Exception">The axis is not ready to be scaled.</exception>
@@ -72,7 +72,7 @@ namespace LiveChartsCore.Measure
 
             var minDimension = drawMarginSize.Width < drawMarginSize.Height ? drawMarginSize.Width : drawMarginSize.Height;
             _innerRadius = innerRadius;
-            _scalableRadius = minDimension - _innerRadius;
+            _scalableRadius = minDimension * 0.5 - _innerRadius;
 
             MinAngle = actualAngleBounds.Min;
             MaxAngle = actualAngleBounds.Max;
@@ -116,18 +116,7 @@ namespace LiveChartsCore.Measure
         /// <returns></returns>
         public PointF ToPixels(ChartPoint polarPoint)
         {
-            var angle = polarPoint.PrimaryValue;
-            var radius = polarPoint.SecondaryValue;
-            var r = _innerRadius + _scalableRadius * radius / _deltaRadius;
-            var a = 360 * angle / _deltaAngleVal;
-            a *= ToRadians;
-
-            unchecked
-            {
-                return new PointF(
-                    CenterX + (float)(Math.Cos(a) * r),
-                    CenterY + (float)(Math.Sin(a) * r));
-            }
+            return ToPixels(polarPoint.SecondaryValue, polarPoint.PrimaryValue);
         }
 
         /// <summary>
@@ -138,7 +127,8 @@ namespace LiveChartsCore.Measure
         /// <returns></returns>
         public PointF ToPixels(double angle, double radius)
         {
-            var r = _innerRadius + _scalableRadius * radius / _deltaRadius;
+            var p = (radius - MinRadius) / _deltaRadius;
+            var r = _innerRadius + _scalableRadius * p;
             var a = 360 * angle / _deltaAngleVal;
             a *= ToRadians;
 

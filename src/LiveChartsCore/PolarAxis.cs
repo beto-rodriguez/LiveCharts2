@@ -160,7 +160,7 @@ namespace LiveChartsCore
         public IPaint<TDrawingContext>? SeparatorsPaint
         {
             get => _separatorsPaint;
-            set => SetPaintProperty(ref _separatorsPaint, value);
+            set => SetPaintProperty(ref _separatorsPaint, value, true);
         }
 
         /// <inheritdoc cref="IPlane.AnimationsSpeed"/>
@@ -224,8 +224,18 @@ namespace LiveChartsCore
                 polarChart.Canvas.AddDrawableTask(SeparatorsPaint);
             }
 
-            var a = _orientation == PolarAxisOrientation.Angle ? this : polarChart.AngleAxes[0];
-            var b = _orientation == PolarAxisOrientation.Angle ? this : polarChart.RadiusAxes[0];
+            IPolarAxis a, b;
+
+            if (_orientation == PolarAxisOrientation.Angle)
+            {
+                a = this;
+                b = polarChart.RadiusAxes[0];
+            }
+            else
+            {
+                a = polarChart.AngleAxes[0];
+                b = this;
+            }
 
             var scaler = new PolarScaler(polarChart.DrawMarginLocation, polarChart.DrawMarginSize, a, b, 0);
 
@@ -277,6 +287,11 @@ namespace LiveChartsCore
 
             var measured = new HashSet<IVisualSeparator<TDrawingContext>>();
 
+            if (Orientation != PolarAxisOrientation.Angle)
+            {
+                var lnkmjvfds = 1;
+            }
+
             for (var i = start; i <= max; i += s)
             {
                 if (i < min) continue;
@@ -287,7 +302,7 @@ namespace LiveChartsCore
                 {
                     visualSeparator = _orientation == PolarAxisOrientation.Angle
                         ? new AxisVisualSeprator<TDrawingContext>() { Value = i }
-                        : new PolarAxisVisualSeparator<TDrawingContext>() { Value = i };
+                        : new RadialAxisVisualSeparator<TDrawingContext>() { Value = i };
 
                     if (LabelsPaint is not null)
                     {
@@ -310,25 +325,6 @@ namespace LiveChartsCore
 
                     if (SeparatorsPaint is not null && ShowSeparatorLines)
                     {
-                        if (visualSeparator is PolarAxisVisualSeparator<TDrawingContext> polarSeparator)
-                        {
-                            var circleGeometry = new TCircleGeometry();
-
-                            polarSeparator.Circle = circleGeometry;
-
-                            _ = circleGeometry
-                                .TransitionateProperties(
-                                    nameof(circleGeometry.X), nameof(circleGeometry.Y),
-                                    nameof(circleGeometry.Width), nameof(circleGeometry.Height),
-                                    nameof(circleGeometry.Opacity))
-                                .WithAnimation(animation =>
-                                    animation
-                                        .WithDuration(AnimationsSpeed ?? polarChart.AnimationsSpeed)
-                                        .WithEasingFunction(EasingFunction ?? polarChart.EasingFunction));
-
-                            circleGeometry.Opacity = 0;
-                        }
-
                         if (visualSeparator is AxisVisualSeprator<TDrawingContext> linearSeparator)
                         {
                             var lineGeometry = new TLineGeometry();
@@ -346,6 +342,25 @@ namespace LiveChartsCore
                                         .WithEasingFunction(EasingFunction ?? polarChart.EasingFunction));
 
                             lineGeometry.Opacity = 0;
+                        }
+
+                        if (visualSeparator is RadialAxisVisualSeparator<TDrawingContext> polarSeparator)
+                        {
+                            var circleGeometry = new TCircleGeometry();
+
+                            polarSeparator.Circle = circleGeometry;
+
+                            _ = circleGeometry
+                                .TransitionateProperties(
+                                    nameof(circleGeometry.X), nameof(circleGeometry.Y),
+                                    nameof(circleGeometry.Width), nameof(circleGeometry.Height),
+                                    nameof(circleGeometry.Opacity))
+                                .WithAnimation(animation =>
+                                    animation
+                                        .WithDuration(AnimationsSpeed ?? polarChart.AnimationsSpeed)
+                                        .WithEasingFunction(EasingFunction ?? polarChart.EasingFunction));
+
+                            circleGeometry.Opacity = 0;
                         }
                     }
 
@@ -388,9 +403,9 @@ namespace LiveChartsCore
                         if (((IPolarAxis)this).PreviousDataBounds is null) lineSepartator.Line.CompleteAllTransitions();
                     }
 
-                    if (visualSeparator is PolarAxisVisualSeparator<TDrawingContext> polarSeparator && polarSeparator.Circle is not null)
+                    if (visualSeparator is RadialAxisVisualSeparator<TDrawingContext> polarSeparator && polarSeparator.Circle is not null)
                     {
-                        var radius = Math.Abs(location.Y - scaler.CenterY);
+                        var radius = Math.Abs(location.X - scaler.CenterX);
                         polarSeparator.Circle.X = scaler.CenterX - radius;
                         polarSeparator.Circle.Y = scaler.CenterY - radius;
                         polarSeparator.Circle.Width = radius * 2;
@@ -550,7 +565,7 @@ namespace LiveChartsCore
                 lineSeparator.Line.Y1 = location.Y;
             }
 
-            if (separator is PolarAxisVisualSeparator<TDrawingContext> polarSeparator)
+            if (separator is RadialAxisVisualSeparator<TDrawingContext> polarSeparator)
             {
                 polarSeparator.Circle!.X = scaler.CenterX;
                 polarSeparator.Circle.Y = scaler.CenterY;

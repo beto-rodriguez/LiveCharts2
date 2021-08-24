@@ -11,7 +11,7 @@ namespace ViewModelsSamples.Polar.Basic
         {
             new PolarLineSeries<double>
             {
-                Values = new ObservableCollection<double> { 2, 5, 4, 2, 4, 3, 5 }
+                Values = new ObservableCollection<double> { 20, 50, 40, 20 }
             }
         };
     }
