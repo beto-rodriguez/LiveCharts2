@@ -101,7 +101,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// </value>
         public StackOrientation LegendOrientation { get; set; }
 
-        // <summary>
+        /// <summary>
         /// Gets or sets the color of the tool tip background.
         /// </summary>
         /// <value>

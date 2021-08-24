@@ -223,7 +223,7 @@ namespace LiveChartsCore
         bool ISeries.IsNotifyingChanges { get; set; }
 
         /// <inheritdoc cref="ISeries.VisibilityChanged"/>
-        public event Action<ISeries> VisibilityChanged;
+        public event Action<ISeries>? VisibilityChanged;
 
         /// <inheritdoc />
         public virtual int GetStackGroup()

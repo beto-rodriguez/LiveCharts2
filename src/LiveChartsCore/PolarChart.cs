@@ -317,7 +317,7 @@ namespace LiveChartsCore
             if (viewDrawMargin is null)
             {
                 var m = viewDrawMargin ?? new Margin();
-                float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
+                //float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
                 SetDrawMargin(ControlSize, m);
 
                 foreach (var axis in AngleAxes)

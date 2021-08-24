@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -30,6 +31,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// <summary>
     /// Defines a heat series in the user interface.
     /// </summary>
+    /// <typeparam name="TModel">
     /// The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
     /// to use a custom type, you must register the type globally 
     /// (<see cref="LiveChartsSettings.HasMap{TModel}(System.Action{TModel, ChartPoint})"/>)
@@ -44,6 +46,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// <summary>
     /// Defines a heat series in the user interface.
     /// </summary>
+    /// <typeparam name="TModel">
     /// The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
     /// to use a custom type, you must register the type globally 
     /// (<see cref="LiveChartsSettings.HasMap{TModel}(System.Action{TModel, ChartPoint})"/>)
@@ -62,6 +65,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// <summary>
     /// Defines a heat series in the user interface.
     /// </summary>
+    /// <typeparam name="TModel">
     /// The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
     /// to use a custom type, you must register the type globally 
     /// (<see cref="LiveChartsSettings.HasMap{TModel}(System.Action{TModel, ChartPoint})"/>)

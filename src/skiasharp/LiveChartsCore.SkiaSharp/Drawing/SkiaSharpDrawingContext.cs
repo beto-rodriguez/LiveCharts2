@@ -40,7 +40,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
         /// <param name="surface">The surface.</param>
         /// <param name="canvas">The canvas.</param>
         /// <param name="lockOnDraw">Locks the canvas while drawing it (workaround for avalonia).</param>
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public SkiaSharpDrawingContext(
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
             MotionCanvas<SkiaSharpDrawingContext> motionCanvas,
             SKImageInfo info,
             SKSurface surface,

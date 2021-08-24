@@ -130,7 +130,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         #endregion
 
-        async void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var avaloniaChart = (IAvaloniaChart)chart.View;
 

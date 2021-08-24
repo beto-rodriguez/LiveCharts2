@@ -27,7 +27,7 @@ namespace AvaloniaSample
         private void LoadContent(string view)
         {
             var content = this.FindControl<ContentControl>("content");
-            content.Content = Activator.CreateInstance(null, $"AvaloniaSample.{view}.View")?.Unwrap();
+            content.Content = Activator.CreateInstance(null!, $"AvaloniaSample.{view}.View")?.Unwrap();
             if (content.Content is not Home.View homeView) return;
             if (DataContext is not MainWindowViewModel dc) throw new Exception();
             homeView.MainWindowVM = dc;

@@ -324,8 +324,8 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         LvcColor IChartView.BackColor
         {
             get => Background is not SolidColorBrush b
-                    ? new LvcColor()
-                    : LvcColor.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
+                ? new LvcColor()
+                : LvcColor.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
             set => SetValue(BackgroundProperty, new SolidColorBrush(Windows.UI.Color.FromArgb(value.A, value.R, value.G, value.B)));
         }
 
@@ -457,7 +457,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// </value>
         public DataTemplate? TooltipTemplate
         {
-            get => (DataTemplate?)GetValue(TooltipTemplateProperty);
+            get => (DataTemplate)GetValue(TooltipTemplateProperty);
             set => SetValue(TooltipTemplateProperty, value);
         }
 
@@ -556,7 +556,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// </value>
         public DataTemplate? LegendTemplate
         {
-            get => (DataTemplate?)GetValue(LegendTemplateProperty);
+            get => (DataTemplate)GetValue(LegendTemplateProperty);
             set => SetValue(LegendTemplateProperty, value);
         }
 

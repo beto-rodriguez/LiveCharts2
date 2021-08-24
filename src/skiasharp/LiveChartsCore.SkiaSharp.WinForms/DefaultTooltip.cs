@@ -47,7 +47,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             ShowInTaskbar = false;
         }
 
-        async void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var wfChart = (Chart)chart.View;
 

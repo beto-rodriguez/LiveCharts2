@@ -77,7 +77,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <value>
         /// The text brush.
         /// </value>
-        public IBrush TextBrush { get; set; } = new SolidColorBrush(Color.FromRgb(35, 35, 35));
+        public IBrush? TextBrush { get; set; } = new SolidColorBrush(Color.FromRgb(35, 35, 35));
 
         /// <summary>
         /// Gets or sets the background.
@@ -85,6 +85,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <value>
         /// The background.
         /// </value>
-        public IBrush Background { get; set; } = new SolidColorBrush(Color.FromRgb(250, 250, 250));
+        public IBrush? Background { get; set; } = new SolidColorBrush(Color.FromRgb(250, 250, 250));
     }
 }

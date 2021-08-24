@@ -375,7 +375,7 @@ namespace LiveChartsCore
                         .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
         }
 
-        /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SoftDeletePoint(ChartPoint, Scaler, Scaler)"/>
+        /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeletePoint(ChartPoint, Scaler, Scaler)"/>
         protected override void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
         {
             var visual = (TVisual?)point.Context.Visual;
@@ -479,7 +479,7 @@ namespace LiveChartsCore
             //}
 
             context.Width = w + MaxSeriesStroke * 2;
-            context.Height = w + MaxSeriesStroke *2;
+            context.Height = w + MaxSeriesStroke * 2;
 
             CanvasSchedule = context;
         }

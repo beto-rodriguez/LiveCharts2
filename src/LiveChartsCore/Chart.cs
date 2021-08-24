@@ -461,37 +461,37 @@ namespace LiveChartsCore
                     {
                         cartesianChart.Pan(
 
-/* Unmerged change from project 'LiveChartsCore (netcoreapp2.0)'
-Before:
-                        new LvPoint(
-After:
-                        new Drawing.LvPoint(
-*/
+                        /* Unmerged change from project 'LiveChartsCore (netcoreapp2.0)'
+                        Before:
+                                                new LvPoint(
+                        After:
+                                                new Drawing.LvPoint(
+                        */
 
-/* Unmerged change from project 'LiveChartsCore (netstandard2.0)'
-Before:
-                        new LvPoint(
-After:
-                        new Drawing.LvPoint(
-*/
+                        /* Unmerged change from project 'LiveChartsCore (netstandard2.0)'
+                        Before:
+                                                new LvPoint(
+                        After:
+                                                new Drawing.LvPoint(
+                        */
                         (LvcPoint)new LvcPoint(
                         (float)(_pointerPanningPosition.X - _pointerPreviousPanningPosition.X),
                         (float)(_pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y)));
 
 
-/* Unmerged change from project 'LiveChartsCore (netcoreapp2.0)'
-Before:
-                        _pointerPreviousPanningPosition = new LvPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
-After:
-                        _pointerPreviousPanningPosition = new Drawing.LvPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
-*/
+                        /* Unmerged change from project 'LiveChartsCore (netcoreapp2.0)'
+                        Before:
+                                                _pointerPreviousPanningPosition = new LvPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
+                        After:
+                                                _pointerPreviousPanningPosition = new Drawing.LvPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
+                        */
 
-/* Unmerged change from project 'LiveChartsCore (netstandard2.0)'
-Before:
-                        _pointerPreviousPanningPosition = new LvPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
-After:
-                        _pointerPreviousPanningPosition = new Drawing.LvPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
-*/
+                        /* Unmerged change from project 'LiveChartsCore (netstandard2.0)'
+                        Before:
+                                                _pointerPreviousPanningPosition = new LvPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
+                        After:
+                                                _pointerPreviousPanningPosition = new Drawing.LvPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
+                        */
                         _pointerPreviousPanningPosition = new LvcPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
                     }
                 }))));

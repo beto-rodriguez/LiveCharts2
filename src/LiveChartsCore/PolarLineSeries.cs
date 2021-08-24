@@ -752,7 +752,7 @@ namespace LiveChartsCore
 
                 var s0 = scaler.ToPixels(x0, y0);
                 var s1 = scaler.ToPixels(c2X, c2Y);
-                var s2 = scaler.ToPixels(next.SecondaryValue, next.PrimaryValue); 
+                var s2 = scaler.ToPixels(next.SecondaryValue, next.PrimaryValue);
 
                 yield return new BezierData(points[i])
                 {

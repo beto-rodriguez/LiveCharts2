@@ -435,7 +435,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         }
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
-        public DrawMarginFrame<SkiaSharpDrawingContext> DrawMarginFrame
+        public DrawMarginFrame<SkiaSharpDrawingContext>? DrawMarginFrame
         {
             get => (DrawMarginFrame<SkiaSharpDrawingContext>)GetValue(DrawMarginFrameProperty);
             set => SetValue(DrawMarginFrameProperty, value);

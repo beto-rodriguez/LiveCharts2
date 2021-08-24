@@ -45,7 +45,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private IEnumerable<ISeries> _series = new List<ISeries>();
         private IEnumerable<ICartesianAxis> _xAxes = new List<Axis> { new Axis() };
         private IEnumerable<ICartesianAxis> _yAxes = new List<Axis> { new Axis() };
-        private IEnumerable<Section<SkiaSharpDrawingContext>> _sections = new List<Section<SkiaSharpDrawingContext>> ();
+        private IEnumerable<Section<SkiaSharpDrawingContext>> _sections = new List<Section<SkiaSharpDrawingContext>>();
         private DrawMarginFrame<SkiaSharpDrawingContext>? _drawMarginFrame;
         private TooltipFindingStrategy _tooltipFindingStrategy = LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy;
 

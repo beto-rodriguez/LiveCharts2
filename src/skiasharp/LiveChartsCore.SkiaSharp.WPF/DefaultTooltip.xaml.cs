@@ -248,7 +248,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         #endregion
 
-        async void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var wpfChart = (Chart)chart.View;
             var template = wpfChart.TooltipTemplate ?? _defaultTempalte;

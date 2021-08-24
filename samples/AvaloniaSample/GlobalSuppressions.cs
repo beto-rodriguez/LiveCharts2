@@ -6,3 +6,4 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Style", "IDE0058:Expression value is never used", Justification = "<Pending>", Scope = "member", Target = "~M:AvaloniaSample.MainWindowViewModel.SetDark")]
+[assembly: SuppressMessage("Style", "IDE0073:The file header is missing or not located at the top of the file", Justification = "<Pending>")]

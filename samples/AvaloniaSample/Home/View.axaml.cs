@@ -8,19 +8,18 @@ namespace AvaloniaSample.Home
         public View()
         {
             InitializeComponent();
-            var a = new Button();
         }
 
-        public MainWindowViewModel MainWindowVM { get; set; }
+        public MainWindowViewModel? MainWindowVM { get; set; }
 
         private void SetDark(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            MainWindowVM.SetDark();
+            MainWindowVM?.SetDark();
         }
 
         private void SetLight(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            MainWindowVM.SetLight();
+            MainWindowVM?.SetLight();
         }
 
         private void InitializeComponent()

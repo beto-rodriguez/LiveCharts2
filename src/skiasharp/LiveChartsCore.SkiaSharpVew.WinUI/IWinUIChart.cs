@@ -65,7 +65,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// <value>
         /// The tool tip template.
         /// </value>
-        DataTemplate TooltipTemplate { get; set; }
+        DataTemplate? TooltipTemplate { get; set; }
 
         /// <summary>
         /// Gets or sets the tool tip font family.
@@ -185,6 +185,6 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// <value>
         /// The legend template.
         /// </value>
-        DataTemplate LegendTemplate { get; set; }
+        DataTemplate? LegendTemplate { get; set; }
     }
 }

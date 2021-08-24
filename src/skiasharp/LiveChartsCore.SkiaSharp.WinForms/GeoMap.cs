@@ -110,7 +110,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// </summary>
         public Dictionary<string, double> Values { get; set; } = new Dictionary<string, double>();
 
-        private void GeoMap_Resize(object sender, EventArgs e)
+        private void GeoMap_Resize(object? sender, EventArgs e)
         {
             load();
         }

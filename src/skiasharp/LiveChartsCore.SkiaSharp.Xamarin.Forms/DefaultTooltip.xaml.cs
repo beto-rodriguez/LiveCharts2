@@ -38,7 +38,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawingContext>
     {
-        private Chart<SkiaSharpDrawingContext> _chart;
+        private Chart<SkiaSharpDrawingContext>? _chart;
         private readonly DataTemplate _defaultTemplate;
         private readonly Dictionary<ChartPoint, object> _activePoints = new();
         private readonly Timer _closeTimer = new();
@@ -110,7 +110,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// </value>
         public Color TooltipBackgroundColor { get; set; }
 
-        async void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var mobileChart = (IMobileChart)chart.View;
 
@@ -217,7 +217,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                         -1, -1,
                         AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
 
-                foreach (var state in _chart.View.PointStates.GetStates())
+                foreach (var state in _chart!.View.PointStates.GetStates())
                 {
                     if (!state.IsHoverState) continue;
                     if (state.Fill is not null) state.Fill.ClearGeometriesFromPaintTask(_chart.Canvas);

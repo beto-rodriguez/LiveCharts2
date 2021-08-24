@@ -43,8 +43,8 @@ namespace LiveChartsCore.SkiaSharpView.UWP
     /// <inheritdoc cref="IPieChartView{TDrawingContext}"/>
     public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IUwpChart
     {
-        private Chart<SkiaSharpDrawingContext>? _core;
-        private MotionCanvas? _canvas;
+        private Chart<SkiaSharpDrawingContext> _core;
+        private MotionCanvas _canvas;
         private readonly CollectionDeepObserver<ISeries> _seriesObserver;
 
         /// <summary>
@@ -63,12 +63,12 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             InitializeComponent();
 
             _seriesObserver = new CollectionDeepObserver<ISeries>(
-                (object? sender, NotifyCollectionChangedEventArgs e) =>
+                (object sender, NotifyCollectionChangedEventArgs e) =>
                 {
                     if (_core == null) return;
                     _core.Update();
                 },
-                (object? sender, PropertyChangedEventArgs e) =>
+                (object sender, PropertyChangedEventArgs e) =>
                 {
                     if (_core == null) return;
                     _core.Update();
@@ -306,13 +306,13 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         #region events
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
-        public event ChartEventHandler<SkiaSharpDrawingContext>? Measuring;
+        public event ChartEventHandler<SkiaSharpDrawingContext> Measuring;
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateStarted" />
-        public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateStarted;
+        public event ChartEventHandler<SkiaSharpDrawingContext> UpdateStarted;
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
-        public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateFinished;
+        public event ChartEventHandler<SkiaSharpDrawingContext> UpdateFinished;
 
         #endregion
 
@@ -376,13 +376,13 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         }
 
         /// <inheritdoc cref="IChartView.DrawMargin" />
-        public Margin? DrawMargin
+        public Margin DrawMargin
         {
             get => (Margin)GetValue(DrawMarginProperty);
             set => SetValue(DrawMarginProperty, value);
         }
 
-        Margin? IChartView.DrawMargin
+        Margin IChartView.DrawMargin
         {
             get => DrawMargin;
             set => SetValue(DrawMarginProperty, value);
@@ -415,7 +415,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             set => SetValue(EasingFunctionProperty, value);
         }
 
-        Func<float, float>? IChartView.EasingFunction
+        Func<float, float> IChartView.EasingFunction
         {
             get => EasingFunction;
             set => SetValue(EasingFunctionProperty, value);
@@ -466,9 +466,9 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// <value>
         /// The tool tip template.
         /// </value>
-        public DataTemplate? TooltipTemplate
+        public DataTemplate TooltipTemplate
         {
-            get => (DataTemplate?)GetValue(TooltipTemplateProperty);
+            get => (DataTemplate)GetValue(TooltipTemplateProperty);
             set => SetValue(TooltipTemplateProperty, value);
         }
 
@@ -557,7 +557,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
-        public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
+        public IChartTooltip<SkiaSharpDrawingContext> Tooltip => tooltip;
 
         /// <summary>
         /// Gets or sets the legend template.
@@ -565,9 +565,9 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// <value>
         /// The legend template.
         /// </value>
-        public DataTemplate? LegendTemplate
+        public DataTemplate LegendTemplate
         {
-            get => (DataTemplate?)GetValue(LegendTemplateProperty);
+            get => (DataTemplate)GetValue(LegendTemplateProperty);
             set => SetValue(LegendTemplateProperty, value);
         }
 
@@ -656,7 +656,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
-        public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
+        public IChartLegend<SkiaSharpDrawingContext> Legend => legend;
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.PointStates" />
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();

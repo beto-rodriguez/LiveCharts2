@@ -6,8 +6,6 @@ namespace WinFormsSample.Bars.Basic
 {
     public partial class View : UserControl
     {
-        private readonly CartesianChart cartesianChart;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="View"/> class.
         /// </summary>

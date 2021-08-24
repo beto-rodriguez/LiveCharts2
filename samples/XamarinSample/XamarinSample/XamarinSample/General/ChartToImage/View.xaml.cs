@@ -75,7 +75,7 @@ namespace XamarinSample.General.ChartToImage
 
         private void CreateImageFromCartesianControl()
         {
-            var chartControl =  (CartesianChart)FindByName("cartesianChart");
+            var chartControl = (CartesianChart)FindByName("cartesianChart");
             var skChart = new SKCartesianChart(chartControl) { Width = 900, Height = 600, };
             skChart.SaveImage(
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CartesianImageFromControl.png"));

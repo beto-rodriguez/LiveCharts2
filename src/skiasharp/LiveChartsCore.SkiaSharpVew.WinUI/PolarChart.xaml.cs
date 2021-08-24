@@ -328,8 +328,8 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         LvcColor IChartView.BackColor
         {
             get => Background is not SolidColorBrush b
-                    ? new LvcColor()
-                    : LvcColor.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
+                ? new LvcColor()
+                : LvcColor.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
             set => SetValue(BackgroundProperty, new SolidColorBrush(Windows.UI.Color.FromArgb(value.A, value.R, value.G, value.B)));
         }
 

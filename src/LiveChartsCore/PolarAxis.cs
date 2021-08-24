@@ -60,10 +60,10 @@ namespace LiveChartsCore
         private Bounds? _dataBounds = null;
         private Bounds? _visibleDataBounds = null;
         private double _labelsRotation;
-        private TTextGeometry? _nameGeometry;
-        private AxisPosition _position = AxisPosition.Start;
+        //private TTextGeometry? _nameGeometry;
+        //private AxisPosition _position = AxisPosition.Start;
         private Func<double, string> _labeler = Labelers.Default;
-        private Padding _padding = Padding.Default;
+        //private Padding _padding = Padding.Default;
         private double? _minLimit = null;
         private double? _maxLimit = null;
         private IPaint<TDrawingContext>? _namePaint;
@@ -287,11 +287,6 @@ namespace LiveChartsCore
 
             var measured = new HashSet<IVisualSeparator<TDrawingContext>>();
 
-            if (Orientation != PolarAxisOrientation.Angle)
-            {
-                var lnkmjvfds = 1;
-            }
-
             for (var i = start; i <= max; i += s)
             {
                 if (i < min) continue;
@@ -367,8 +362,8 @@ namespace LiveChartsCore
                     separators.Add(i, visualSeparator);
                 }
 
-                if (NamePaint is not null && _nameGeometry is not null)
-                    NamePaint.AddGeometryToPaintTask(polarChart.Canvas, _nameGeometry);
+                //if (NamePaint is not null && _nameGeometry is not null)
+                //    NamePaint.AddGeometryToPaintTask(polarChart.Canvas, _nameGeometry);
                 if (LabelsPaint is not null && visualSeparator.Text is not null)
                     LabelsPaint.AddGeometryToPaintTask(polarChart.Canvas, visualSeparator.Text);
                 if (SeparatorsPaint is not null && ShowSeparatorLines && visualSeparator.Geometry is not null)
@@ -381,7 +376,7 @@ namespace LiveChartsCore
                 if (visualSeparator.Text is not null)
                 {
                     visualSeparator.Text.Text = label;
-                    visualSeparator.Text.Padding = _padding;
+                    //visualSeparator.Text.Padding = _padding;
                     visualSeparator.Text.X = location.X;
                     visualSeparator.Text.Y = location.Y;
                     if (hasRotation) visualSeparator.Text.RotateTransform = r;
@@ -480,7 +475,7 @@ namespace LiveChartsCore
                     Text = labeler(i),
                     TextSize = ts,
                     RotateTransform = r,
-                    Padding = _padding
+                    //Padding = _padding
                 };
                 var m = textGeometry.Measure(LabelsPaint); // TextBrush.MeasureText(labeler(i, axisTick));
                 if (m.Width > w) w = m.Width;

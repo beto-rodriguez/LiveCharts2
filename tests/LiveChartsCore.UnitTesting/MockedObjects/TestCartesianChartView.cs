@@ -8,7 +8,6 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Threading.Tasks;
 
 namespace LiveChartsCore.UnitTesting.MockedObjects
 {
@@ -52,7 +51,7 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
 
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; }
 
-        public SizeF ControlSize => new(100, 100);
+        public LvcSize ControlSize => new(100, 100);
 
         public Margin DrawMargin { get; set; }
 
@@ -68,7 +67,7 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
 
         public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
-        public Color BackColor { get; set; }
+        public LvcColor BackColor { get; set; }
         public bool AutoUpdateEnabled { get; set; } = true;
         public TimeSpan UpdaterThrottler { get; set; }
         public DrawMarginFrame<SkiaSharpDrawingContext> DrawMarginFrame { get; set; }
@@ -88,14 +87,14 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
 
         public void HideTooltip() { }
 
-        public double[] ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
+        public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
             return new double[2];
         }
 
         public void ShowTooltip(IEnumerable<TooltipPoint> points) { }
 
-        public void SetTooltipStyle(Color background, Color textColor) { }
+        public void SetTooltipStyle(LvcColor background, LvcColor textColor) { }
 
         public void InvokeOnUIThread(Action action)
         {
