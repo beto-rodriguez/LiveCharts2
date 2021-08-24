@@ -26,7 +26,6 @@ using LiveChartsCore.SkiaSharpView.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System;
-using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
@@ -38,10 +37,10 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         private readonly FloatMotionProperty _xProperty;
         private readonly FloatMotionProperty _yProperty;
         private readonly FloatMotionProperty _rotationProperty;
-        private readonly PointFMotionProperty _transformOriginProperty;
-        private readonly PointFMotionProperty _scaleProperty;
-        private readonly PointFMotionProperty _skewProperty;
-        private readonly PointFMotionProperty _translateProperty;
+        private readonly PointMotionProperty _transformOriginProperty;
+        private readonly PointMotionProperty _scaleProperty;
+        private readonly PointMotionProperty _skewProperty;
+        private readonly PointMotionProperty _translateProperty;
         private readonly SKMatrixMotionProperty _transformProperty;
         private bool _hasTransform = false;
         private bool _hasRotation = false;
@@ -59,15 +58,15 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             _yProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0));
             _opacityProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Opacity), 1));
             _transformOriginProperty = RegisterMotionProperty(
-                new PointFMotionProperty(nameof(TransformOrigin), new PointF(0.5f, 0.5f)));
+                new PointMotionProperty(nameof(TransformOrigin), new LvcPoint(0.5f, 0.5f)));
             _translateProperty = RegisterMotionProperty(
-                new PointFMotionProperty(nameof(TranslateTransform), new PointF(0, 0)));
+                new PointMotionProperty(nameof(TranslateTransform), new LvcPoint(0, 0)));
             _rotationProperty = RegisterMotionProperty(
                 new FloatMotionProperty(nameof(RotateTransform), 0));
             _scaleProperty = RegisterMotionProperty(
-                new PointFMotionProperty(nameof(ScaleTransform), new PointF(1, 1)));
+                new PointMotionProperty(nameof(ScaleTransform), new LvcPoint(1, 1)));
             _skewProperty = RegisterMotionProperty(
-                new PointFMotionProperty(nameof(SkewTransform), new PointF(1, 1)));
+                new PointMotionProperty(nameof(SkewTransform), new LvcPoint(1, 1)));
             _transformProperty = RegisterMotionProperty(
                 new SKMatrixMotionProperty(nameof(Transform), SKMatrix.Identity));
         }
@@ -83,14 +82,14 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <summary>
         /// Gets or sets the transform origin.
         /// </summary>
-        public PointF TransformOrigin
+        public LvcPoint TransformOrigin
         {
             get => _transformOriginProperty.GetMovement(this);
             set => _transformOriginProperty.SetMovement(value, this);
         }
 
         /// <inheritdoc cref="IGeometry{TDrawingContext}.TranslateTransform" />
-        public PointF TranslateTransform
+        public LvcPoint TranslateTransform
         {
             get => _translateProperty.GetMovement(this);
             set
@@ -112,7 +111,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         }
 
         /// <inheritdoc cref="IGeometry{TDrawingContext}.ScaleTransform" />
-        public PointF ScaleTransform
+        public LvcPoint ScaleTransform
         {
             get => _scaleProperty.GetMovement(this);
             set
@@ -123,7 +122,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         }
 
         /// <inheritdoc cref="IGeometry{TDrawingContext}.SkewTransform" />
-        public PointF SkewTransform
+        public LvcPoint SkewTransform
         {
             get => _skewProperty.GetMovement(this);
             set
@@ -264,7 +263,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// </summary>
         /// <param name="drawableTask">The drawable task.</param>
         /// <returns>the size of the geometry.</returns>
-        public SizeF Measure(IPaint<SkiaSharpDrawingContext> drawableTask)
+        public LvcSize Measure(IPaint<SkiaSharpDrawingContext> drawableTask)
         {
             var measure = OnMeasure((Paint)drawableTask);
 
@@ -284,7 +283,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
                 var w = (float)(Math.Cos(rRadians) * measure.Width + Math.Sin(rRadians) * measure.Height);
                 var h = (float)(Math.Sin(rRadians) * measure.Width + Math.Cos(rRadians) * measure.Height);
 
-                measure = new SizeF(w, h);
+                measure = new LvcSize(w, h);
             }
 
             return measure;
@@ -295,7 +294,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// </summary>
         /// <param name="paintTaks">The paint task.</param>
         /// <returns>the size of the geometry</returns>
-        protected abstract SizeF OnMeasure(Paint paintTaks);
+        protected abstract LvcSize OnMeasure(Paint paintTaks);
 
         /// <summary>
         /// Gets the highlitable geometry.

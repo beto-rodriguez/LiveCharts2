@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Drawing;
-
 namespace LiveChartsCore.Drawing
 {
     /// <summary>
@@ -38,7 +36,7 @@ namespace LiveChartsCore.Drawing
         /// <value>
         /// The translate in coordinates.
         /// </value>
-        PointF TranslateTransform { get; set; }
+        LvcPoint TranslateTransform { get; set; }
 
         /// <summary>
         /// Gets or sets the rotation transform in degrees.
@@ -54,7 +52,7 @@ namespace LiveChartsCore.Drawing
         /// <value>
         /// The scale to use on the X and Y axis.
         /// </value>
-        PointF ScaleTransform { get; set; }
+        LvcPoint ScaleTransform { get; set; }
 
         /// <summary>
         /// Gets or sets the skew transform.
@@ -63,7 +61,7 @@ namespace LiveChartsCore.Drawing
         /// The skew factor to use in the X and Y axis, both axes go from 0 to 1, where 0 is nothing and 1
         /// the length of the shape in the specified axis.
         /// </value>
-        PointF SkewTransform { get; set; }
+        LvcPoint SkewTransform { get; set; }
 
         /// <summary>
         /// Gets or sets the x.
@@ -86,6 +84,6 @@ namespace LiveChartsCore.Drawing
         /// </summary>
         /// <param name="drawableTask">The drawable task.</param>
         /// <returns></returns>
-        SizeF Measure(IPaint<TDrawingContext> drawableTask);
+        LvcSize Measure(IPaint<TDrawingContext> drawableTask);
     }
 }

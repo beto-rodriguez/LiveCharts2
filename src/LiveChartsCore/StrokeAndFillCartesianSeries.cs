@@ -34,10 +34,11 @@ namespace LiveChartsCore
     /// <typeparam name="TVisual">The type of the visual.</typeparam>
     /// <typeparam name="TLabel">The type of the label.</typeparam>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext> : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
-        where TDrawingContext : DrawingContext
-        where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
+        : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>
+            where TDrawingContext : DrawingContext
+            where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         private IPaint<TDrawingContext>? _stroke = null;
         private IPaint<TDrawingContext>? _fill = null;

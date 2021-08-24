@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Data;
@@ -42,10 +41,11 @@ namespace LiveChartsCore
     /// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
     /// <seealso cref="ICartesianSeries{TDrawingContext}" />
     /// <seealso cref="IHeatSeries{TDrawingContext}" />
-    public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext> : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IFinancialSeries<TDrawingContext>
-        where TVisual : class, IFinancialVisualChartPoint<TDrawingContext>, new()
-        where TDrawingContext : DrawingContext
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext>
+        : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IFinancialSeries<TDrawingContext>
+            where TVisual : class, IFinancialVisualChartPoint<TDrawingContext>, new()
+            where TDrawingContext : DrawingContext
+            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         private IPaint<TDrawingContext>? _upStroke = null;
         private IPaint<TDrawingContext>? _upFill = null;
@@ -127,31 +127,31 @@ namespace LiveChartsCore
             if (UpFill is not null)
             {
                 UpFill.ZIndex = actualZIndex + 0.1;
-                UpFill.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                UpFill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(UpFill);
             }
             if (DownFill is not null)
             {
                 DownFill.ZIndex = actualZIndex + 0.1;
-                DownFill.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                DownFill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(DownFill);
             }
             if (UpStroke is not null)
             {
                 UpStroke.ZIndex = actualZIndex + 0.2;
-                UpStroke.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                UpStroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(UpStroke);
             }
             if (DownStroke is not null)
             {
                 DownStroke.ZIndex = actualZIndex + 0.2;
-                DownStroke.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                DownStroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(DownStroke);
             }
             if (DataLabelsPaint is not null)
             {
                 DataLabelsPaint.ZIndex = actualZIndex + 0.3;
-                DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
             }
 

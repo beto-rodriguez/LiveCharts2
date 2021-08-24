@@ -38,9 +38,9 @@ namespace LiveChartsCore
     /// <seealso cref="IStackedBarSeries{TDrawingContext}" />
     public abstract class StackedBarSeries<TModel, TVisual, TLabel, TDrawingContext>
         : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IStackedBarSeries<TDrawingContext>
-        where TVisual : class, IRoundedRectangleChartPoint<TDrawingContext>, new()
-        where TDrawingContext : DrawingContext
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+            where TVisual : class, IRoundedRectangleChartPoint<TDrawingContext>, new()
+            where TDrawingContext : DrawingContext
+            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         /// <summary>
         /// The stack group

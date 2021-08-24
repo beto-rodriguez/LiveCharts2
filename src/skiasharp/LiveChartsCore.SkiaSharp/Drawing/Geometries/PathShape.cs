@@ -24,7 +24,6 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using SkiaSharp;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
@@ -43,9 +42,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// </summary>
         public PathShape() : base()
         {
-            _strokeProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(StrokeColor), Color.FromArgb(0, 255, 255, 255)));
+            _strokeProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(StrokeColor), LvcColor.FromArgb(0, 255, 255, 255)));
             _stProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness)));
-            _fillProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(StrokeColor), Color.FromArgb(0, 255, 255, 255)));
+            _fillProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(StrokeColor), LvcColor.FromArgb(0, 255, 255, 255)));
         }
 
         /// <summary>
@@ -54,7 +53,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <value>
         /// The color of the stroke.
         /// </value>
-        public Color StrokeColor
+        public LvcColor StrokeColor
         {
             get => _strokeProperty.GetMovement(this);
             set => _strokeProperty.SetMovement(value, this);
@@ -78,7 +77,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <value>
         /// The color of the fill.
         /// </value>
-        public Color FillColor
+        public LvcColor FillColor
         {
             get => _fillProperty.GetMovement(this);
             set => _fillProperty.SetMovement(value, this);

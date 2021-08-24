@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Drawing;
+using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Themes
 {
@@ -35,7 +35,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The fluent design.
         /// </value>
-        public static Color[] FluentDesign => new Color[]
+        public static LvcColor[] FluentDesign => new LvcColor[]
         {
             RGB(116,77,169),
             RGB(231,72,86),
@@ -54,7 +54,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The material design500.
         /// </value>
-        public static Color[] MaterialDesign500 => new Color[]
+        public static LvcColor[] MaterialDesign500 => new LvcColor[]
         {
             RGB(33,150,243),    // blue
             RGB(244,67,54),     // red
@@ -73,7 +73,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The material design200.
         /// </value>
-        public static Color[] MaterialDesign200 => new Color[]
+        public static LvcColor[] MaterialDesign200 => new LvcColor[]
         {
             RGB(144,202,249),   // blue
             RGB(239,154,154),   // red
@@ -92,7 +92,7 @@ namespace LiveChartsCore.Themes
         /// <value>
         /// The material design800.
         /// </value>
-        public static Color[] MaterialDesign800 => new Color[]
+        public static LvcColor[] MaterialDesign800 => new LvcColor[]
         {
             RGB(21,101,192),    // blue
             RGB(198,40,40),     // red
@@ -105,9 +105,9 @@ namespace LiveChartsCore.Themes
             RGB(55,71,79),      // blue gray
         };
 
-        private static Color RGB(byte r, byte g, byte b)
+        private static LvcColor RGB(byte r, byte g, byte b)
         {
-            return Color.FromArgb(255, r, g, b);
+            return LvcColor.FromArgb(255, r, g, b);
         }
     }
 }

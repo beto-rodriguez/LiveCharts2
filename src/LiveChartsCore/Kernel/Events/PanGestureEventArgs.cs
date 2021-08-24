@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Drawing;
+using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Kernel.Events
 {
@@ -32,7 +32,7 @@ namespace LiveChartsCore.Kernel.Events
         /// <summary>
         /// Initializes a new instance of the <see cref="PanGestureEventArgs"/> class.
         /// </summary>
-        public PanGestureEventArgs(PointF delta)
+        public PanGestureEventArgs(LvcPoint delta)
         {
             Delta = delta;
             Handled = false;
@@ -44,7 +44,7 @@ namespace LiveChartsCore.Kernel.Events
         /// <value>
         /// The delta.
         /// </value>
-        public PointF Delta { get; set; }
+        public LvcPoint Delta { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="PanGestureEventArgs"/> is handled.

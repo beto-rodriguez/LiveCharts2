@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 using System;
-using System.Drawing;
 
 namespace LiveChartsCore.Kernel.Drawing
 {
@@ -85,8 +85,8 @@ namespace LiveChartsCore.Kernel.Drawing
             return this;
         }
 
-        /// <inheritdoc cref="GetDistanceToPoint(PointF, TooltipFindingStrategy)"/>
-        public override float GetDistanceToPoint(PointF point, TooltipFindingStrategy strategy)
+        /// <inheritdoc cref="GetDistanceToPoint(LvcPoint, TooltipFindingStrategy)"/>
+        public override float GetDistanceToPoint(LvcPoint point, TooltipFindingStrategy strategy)
         {
             var startAngle = StartAngle % 360;
             // -0.01 is a work around to avoid the case where the last slice (360) would be converted to 0 also
@@ -96,7 +96,7 @@ namespace LiveChartsCore.Kernel.Drawing
             var dy = CenterY - point.Y;
             var beta = Math.Atan(dy / dx) * (180 / Math.PI);
 
-            if (dx > 0 && dy < 0 || dx > 0 && dy > 0) beta += 180;
+            if ((dx > 0 && dy < 0) || (dx > 0 && dy > 0)) beta += 180;
             if (dx < 0 && dy > 0) beta += 360;
 
             var r = Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2));

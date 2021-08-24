@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 using System;
-using System.Drawing;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Measure
@@ -44,7 +44,7 @@ namespace LiveChartsCore.Measure
         /// <param name="bounds">Indicates the bounds to use.</param>
         /// <exception cref="Exception">The axis is not ready to be scaled.</exception>
         public Scaler(
-            PointF drawMagrinLocation, SizeF drawMarginSize, ICartesianAxis axis, bool usePreviousScale = false, Bounds? bounds = null)
+            LvcPoint drawMagrinLocation, LvcSize drawMarginSize, ICartesianAxis axis, bool usePreviousScale = false, Bounds? bounds = null)
         {
             if (axis.Orientation == AxisOrientation.Unknown) throw new Exception("The axis is not ready to be scaled.");
 

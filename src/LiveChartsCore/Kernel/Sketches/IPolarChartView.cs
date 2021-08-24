@@ -22,7 +22,6 @@
 
 using LiveChartsCore.Drawing;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace LiveChartsCore.Kernel.Sketches
 {
@@ -97,6 +96,6 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <param name="angleAxisIndex">Index of the angle axis.</param>
         /// <param name="radiusAxisIndex">Index of the radius axis.</param>
         /// <returns></returns>
-        double[] ScaleUIPoint(PointF point, int angleAxisIndex = 0, int radiusAxisIndex = 0);
+        double[] ScaleUIPoint(LvcPoint point, int angleAxisIndex = 0, int radiusAxisIndex = 0);
     }
 }

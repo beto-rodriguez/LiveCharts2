@@ -20,14 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Drawing;
+using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Motion
 {
     /// <summary>
     /// Defines the color motion property class.
     /// </summary>
-    public class ColorMotionProperty : MotionProperty<Color>
+    public class ColorMotionProperty : MotionProperty<LvcColor>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ColorMotionProperty"/> class.
@@ -36,8 +36,8 @@ namespace LiveChartsCore.Motion
         public ColorMotionProperty(string propertyName)
             : base(propertyName)
         {
-            fromValue = Color.FromArgb(0, 0, 0, 0);
-            toValue = Color.FromArgb(0, 0, 0, 0);
+            fromValue = LvcColor.FromArgb(0, 0, 0, 0);
+            toValue = LvcColor.FromArgb(0, 0, 0, 0);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace LiveChartsCore.Motion
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="value">The value.</param>
-        public ColorMotionProperty(string propertyName, Color value)
+        public ColorMotionProperty(string propertyName, LvcColor value)
             : base(propertyName)
         {
             fromValue = value;
@@ -53,13 +53,13 @@ namespace LiveChartsCore.Motion
         }
 
         /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
-        protected override Color OnGetMovement(float progress)
+        protected override LvcColor OnGetMovement(float progress)
         {
-            return Color.FromArgb(
-                (int)(fromValue.A + progress * (toValue.A - fromValue.A)),
-                (int)(fromValue.R + progress * (toValue.R - fromValue.R)),
-                (int)(fromValue.G + progress * (toValue.G - fromValue.G)),
-                (int)(fromValue.B + progress * (toValue.B - fromValue.B)));
+            return LvcColor.FromArgb(
+                (byte)(fromValue.A + progress * (toValue.A - fromValue.A)),
+                (byte)(fromValue.R + progress * (toValue.R - fromValue.R)),
+                (byte)(fromValue.G + progress * (toValue.G - fromValue.G)),
+                (byte)(fromValue.B + progress * (toValue.B - fromValue.B)));
         }
     }
 }

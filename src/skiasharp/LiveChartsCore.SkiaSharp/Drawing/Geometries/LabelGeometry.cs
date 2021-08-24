@@ -26,7 +26,6 @@ using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System;
-using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
@@ -42,7 +41,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             : base(true)
         {
             _textSizeProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize), 11));
-            TransformOrigin = new PointF(0f, 0f);
+            TransformOrigin = new LvcPoint(0f, 0f);
         }
 
         /// <summary>
@@ -78,7 +77,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         }
 
         /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
-        protected override SizeF OnMeasure(Paint drawable)
+        protected override LvcSize OnMeasure(Paint drawable)
         {
             var p = new SKPaint
             {
@@ -92,7 +91,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             var bounds = new SKRect();
 
             _ = p.MeasureText(Text, ref bounds);
-            return new SizeF(bounds.Size.Width + Padding.Left + Padding.Right, bounds.Size.Height + Padding.Top + Padding.Bottom);
+            return new LvcSize(bounds.Size.Width + Padding.Left + Padding.Right, bounds.Size.Height + Padding.Top + Padding.Bottom);
         }
 
         /// <inheritdoc cref="Geometry.ApplyCustomGeometryTransform(SkiaSharpDrawingContext)" />

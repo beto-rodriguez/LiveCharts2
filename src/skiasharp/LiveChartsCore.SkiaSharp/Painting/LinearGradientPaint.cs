@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Drawing;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
@@ -188,7 +187,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             }
 
             var clip = GetClipRectangle(drawingContext.MotionCanvas);
-            if (clip != RectangleF.Empty)
+            if (clip != LvcRectangle.Empty)
             {
                 _ = drawingContext.Canvas.Save();
                 drawingContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
@@ -208,7 +207,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             if (PathEffect is not null) PathEffect.Dispose();
             if (ImageFilter is not null) ImageFilter.Dispose();
 
-            if (_drawingContext is not null && GetClipRectangle(_drawingContext.MotionCanvas) != RectangleF.Empty)
+            if (_drawingContext is not null && GetClipRectangle(_drawingContext.MotionCanvas) != LvcRectangle.Empty)
             {
                 _drawingContext.Canvas.Restore();
                 _drawingContext = null;
@@ -221,7 +220,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         {
             var clip = GetClipRectangle(drawingContext.MotionCanvas);
 
-            return clip == RectangleF.Empty
+            return clip == LvcRectangle.Empty
                 ? new SKRect(0, 0, drawingContext.Info.Width, drawingContext.Info.Width)
                 : new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height);
         }

@@ -25,7 +25,6 @@ using LiveChartsCore.Drawing;
 using System;
 using System.Collections.Generic;
 using LiveChartsCore.Measure;
-using System.Drawing;
 using System.Linq;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Kernel.Drawing;
@@ -35,9 +34,9 @@ namespace LiveChartsCore
     /// <inheritdoc cref="IPieSeries{TDrawingContext}" />
     public abstract class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
         : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>, IPieSeries<TDrawingContext>
-        where TDrawingContext : DrawingContext
-        where TVisual : class, IDoughnutVisualChartPoint<TDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+            where TDrawingContext : DrawingContext
+            where TVisual : class, IDoughnutVisualChartPoint<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         private IPaint<TDrawingContext>? _stroke = null;
         private IPaint<TDrawingContext>? _fill = null;
@@ -154,19 +153,19 @@ namespace LiveChartsCore
             if (Fill is not null)
             {
                 Fill.ZIndex = actualZIndex + 0.1;
-                Fill.SetClipRectangle(pieChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                Fill.SetClipRectangle(pieChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 pieChart.Canvas.AddDrawableTask(Fill);
             }
             if (Stroke is not null)
             {
                 Stroke.ZIndex = actualZIndex + 0.2;
-                Stroke.SetClipRectangle(pieChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                Stroke.SetClipRectangle(pieChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 pieChart.Canvas.AddDrawableTask(Stroke);
             }
             if (DataLabelsPaint is not null)
             {
                 DataLabelsPaint.ZIndex = 1000 + actualZIndex + 0.3;
-                DataLabelsPaint.SetClipRectangle(pieChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                DataLabelsPaint.SetClipRectangle(pieChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 pieChart.Canvas.AddDrawableTask(DataLabelsPaint);
             }
 
@@ -580,13 +579,13 @@ namespace LiveChartsCore
         /// <param name="labelSize">Size of the label.</param>
         /// <param name="position">The position.</param>
         /// <returns></returns>
-        protected virtual PointF GetLabelPolarPosition(
+        protected virtual LvcPoint GetLabelPolarPosition(
             float centerX,
             float centerY,
             float radius,
             float startAngle,
             float sweepAngle,
-            SizeF labelSize,
+            LvcSize labelSize,
             PolarLabelsPosition position)
         {
             const float toRadians = (float)(Math.PI / 180);
@@ -604,7 +603,7 @@ namespace LiveChartsCore
                     angle = startAngle + sweepAngle * 0.5f;
                     break;
                 case PolarLabelsPosition.ChartCenter:
-                    return new PointF(centerX, centerY);
+                    return new LvcPoint(centerX, centerY);
                 default:
                     break;
             }
@@ -613,7 +612,7 @@ namespace LiveChartsCore
             if (angle < 0) angle += 360;
             angle *= toRadians;
 
-            return new PointF(
+            return new LvcPoint(
                  (float)(centerX + Math.Cos(angle) * radius),
                  (float)(centerY + Math.Sin(angle) * radius));
         }

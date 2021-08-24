@@ -142,19 +142,19 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        Color IChartView.BackColor
+        LvcColor IChartView.BackColor
         {
-            get => BackColor;
-            set => BackColor = value;
+            get => new(BackColor.R, BackColor.G, BackColor.B, BackColor.A);
+            set => BackColor = Color.FromArgb(value.A, value.R, value.G, value.B);
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        SizeF IChartView.ControlSize =>
-                // return the full control size as a workaround when the legend is not set.
-                // for some reason WinForms has not loaded the correct size at this point when the control loads.
-                LegendPosition == LegendPosition.Hidden
-                    ? new SizeF() { Width = ClientSize.Width, Height = ClientSize.Height }
-                    : new SizeF() { Width = motionCanvas.Width, Height = motionCanvas.Height };
+        LvcSize IChartView.ControlSize =>
+            // return the full control size as a workaround when the legend is not set.
+            // for some reason WinForms has not loaded the correct size at this point when the control loads.
+            LegendPosition == LegendPosition.Hidden
+                ? new LvcSize() { Width = ClientSize.Width, Height = ClientSize.Height }
+                : new LvcSize() { Width = motionCanvas.Width, Height = motionCanvas.Height };
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -295,11 +295,11 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             tooltip.Hide();
         }
 
-        /// <inheritdoc cref="IChartView.SetTooltipStyle(Color, Color)"/>
-        public void SetTooltipStyle(Color background, Color textColor)
+        /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
+        public void SetTooltipStyle(LvcColor background, LvcColor textColor)
         {
-            TooltipBackColor = background;
-            TooltipTextColor = textColor;
+            TooltipBackColor = Color.FromArgb(background.A, background.R, background.G, background.B);
+            TooltipTextColor = Color.FromArgb(textColor.A, textColor.R, textColor.G, textColor.B);
         }
 
         void IChartView.InvokeOnUIThread(Action action)
@@ -351,7 +351,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         private void OnMouseMove(object? sender, MouseEventArgs e)
         {
-            core?.InvokePointerMove(new PointF(e.Location.X, e.Location.Y));
+            core?.InvokePointerMove(new LvcPoint(e.Location.X, e.Location.Y));
         }
 
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)

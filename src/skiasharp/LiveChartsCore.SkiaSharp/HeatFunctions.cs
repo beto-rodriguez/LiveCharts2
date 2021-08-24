@@ -22,7 +22,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -50,9 +50,9 @@ namespace LiveChartsCore.SkiaSharpView
         public static IEnumerable<PathShape> AsHeatMapShapes(
             this GeoJsonFile geoJson,
             Dictionary<string, double> values,
-            Color[] heatMap, List<Tuple<double, Color>> heatStops,
-            Color stroke,
-            Color fill,
+            LvcColor[] heatMap, List<Tuple<double, LvcColor>> heatStops,
+            LvcColor stroke,
+            LvcColor fill,
             float thickness,
             MapProjector projector)
         {
@@ -69,7 +69,7 @@ namespace LiveChartsCore.SkiaSharpView
             foreach (var feature in geoJson.Features ?? new GeoJsonFeature[0])
             {
                 var name = feature.Properties is not null ? feature.Properties["shortName"] : "";
-                Color? baseColor = values.TryGetValue(name, out var weight)
+                LvcColor? baseColor = values.TryGetValue(name, out var weight)
                     ? HeatFunctions.InterpolateColor((float)weight, weightBounds, heatMap, heatStops)
                     : null;
 

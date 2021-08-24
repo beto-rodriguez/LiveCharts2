@@ -26,7 +26,6 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace LiveChartsCore.Kernel
 {
@@ -45,8 +44,8 @@ namespace LiveChartsCore.Kernel
         /// <param name="tooltipSize"></param>
         /// <param name="chartSize"></param>
         /// <returns></returns>
-        public static PointF? GetCartesianTooltipLocation(
-            this IEnumerable<TooltipPoint> foundPoints, TooltipPosition position, SizeF tooltipSize, SizeF chartSize)
+        public static LvcPoint? GetCartesianTooltipLocation(
+            this IEnumerable<TooltipPoint> foundPoints, TooltipPosition position, LvcSize tooltipSize, LvcSize chartSize)
         {
             var count = 0f;
 
@@ -70,13 +69,13 @@ namespace LiveChartsCore.Kernel
 
             return position switch
             {
-                TooltipPosition.Top => new PointF(avrgX, placementContext.MostTop - tooltipSize.Height),
-                TooltipPosition.Bottom => new PointF(avrgX, placementContext.MostBottom),
-                TooltipPosition.Left => new PointF(placementContext.MostLeft - tooltipSize.Width, avrgY),
-                TooltipPosition.Right => new PointF(placementContext.MostRight, avrgY),
-                TooltipPosition.Center => new PointF(avrgX, avrgY),
-                TooltipPosition.Hidden => new PointF(),
-                _ => new PointF(),
+                TooltipPosition.Top => new LvcPoint(avrgX, placementContext.MostTop - tooltipSize.Height),
+                TooltipPosition.Bottom => new LvcPoint(avrgX, placementContext.MostBottom),
+                TooltipPosition.Left => new LvcPoint(placementContext.MostLeft - tooltipSize.Width, avrgY),
+                TooltipPosition.Right => new LvcPoint(placementContext.MostRight, avrgY),
+                TooltipPosition.Center => new LvcPoint(avrgX, avrgY),
+                TooltipPosition.Hidden => new LvcPoint(),
+                _ => new LvcPoint(),
             };
         }
 
@@ -87,8 +86,8 @@ namespace LiveChartsCore.Kernel
         /// <param name="position">The position.</param>
         /// <param name="tooltipSize">Size of the tooltip.</param>
         /// <returns></returns>
-        public static PointF? GetPieTooltipLocation(
-            this IEnumerable<TooltipPoint> foundPoints, TooltipPosition position, SizeF tooltipSize)
+        public static LvcPoint? GetPieTooltipLocation(
+            this IEnumerable<TooltipPoint> foundPoints, TooltipPosition position, LvcSize tooltipSize)
         {
             var placementContext = new TooltipPlacementContext();
             var found = false;
@@ -101,7 +100,7 @@ namespace LiveChartsCore.Kernel
                 break; // we only care about the first one.
             }
 
-            return found ? new PointF(placementContext.PieX, placementContext.PieY) : null;
+            return found ? new LvcPoint(placementContext.PieX, placementContext.PieY) : null;
         }
 
         /// <summary>
@@ -110,7 +109,7 @@ namespace LiveChartsCore.Kernel
         /// <param name="axis">The axis.</param>
         /// <param name="controlSize">Size of the control.</param>
         /// <returns></returns>
-        public static AxisTick GetTick(this ICartesianAxis axis, SizeF controlSize)
+        public static AxisTick GetTick(this ICartesianAxis axis, LvcSize controlSize)
         {
             return GetTick(axis, controlSize, axis.VisibleDataBounds);
         }
@@ -121,7 +120,7 @@ namespace LiveChartsCore.Kernel
         /// <param name="axis">The axis.</param>
         /// <param name="controlSize">Size of the control.</param>
         /// <returns></returns>
-        public static AxisTick GetTick(this IPolarAxis axis, SizeF controlSize)
+        public static AxisTick GetTick(this IPolarAxis axis, LvcSize controlSize)
         {
             return GetTick(axis, controlSize, axis.VisibleDataBounds);
         }
@@ -133,7 +132,7 @@ namespace LiveChartsCore.Kernel
         /// <param name="controlSize">Size of the control.</param>
         /// <param name="bounds">The bounds.</param>
         /// <returns></returns>
-        public static AxisTick GetTick(this ICartesianAxis axis, SizeF controlSize, Bounds bounds)
+        public static AxisTick GetTick(this ICartesianAxis axis, LvcSize controlSize, Bounds bounds)
         {
             var max = axis.MaxLimit is null ? bounds.Max : axis.MaxLimit.Value;
             var min = axis.MinLimit is null ? bounds.Min : axis.MinLimit.Value;
@@ -158,7 +157,7 @@ namespace LiveChartsCore.Kernel
         /// <param name="controlSize">Size of the control.</param>
         /// <param name="bounds">The bounds.</param>
         /// <returns></returns> 
-        public static AxisTick GetTick(this IPolarAxis axis, SizeF controlSize, Bounds bounds)
+        public static AxisTick GetTick(this IPolarAxis axis, LvcSize controlSize, Bounds bounds)
         {
             var max = axis.MaxLimit is null ? bounds.Max : axis.MaxLimit.Value;
             var min = axis.MinLimit is null ? bounds.Min : axis.MinLimit.Value;
@@ -289,7 +288,7 @@ namespace LiveChartsCore.Kernel
         /// <param name="state">The state.</param>
         public static void RemoveFromState(this ChartPoint chartPoint, string state)
         {
-            chartPoint.Context.Series.RemovePointFromState(chartPoint, state);
+            chartPoint.Context.Series.RemoveLvPointromState(chartPoint, state);
         }
 
         /// <summary>
@@ -307,7 +306,7 @@ namespace LiveChartsCore.Kernel
         /// <param name="chartPoint">The chart point.</param>
         public static void RemoveFromHoverState(this ChartPoint chartPoint)
         {
-            chartPoint.Context.Series.RemovePointFromState(chartPoint, chartPoint.Context.Series.HoverState);
+            chartPoint.Context.Series.RemoveLvPointromState(chartPoint, chartPoint.Context.Series.HoverState);
         }
     }
 }

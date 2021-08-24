@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -263,17 +264,17 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 return;
             }
 
-            System.Drawing.PointF? location = null;
+            LvcPoint? location = null;
 
             if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetCartesianTooltipLocation(
-                    chart.TooltipPosition, new System.Drawing.SizeF((float)border.ActualWidth, (float)border.ActualHeight), chart.ControlSize);
+                    chart.TooltipPosition, new LvcSize((float)border.ActualWidth, (float)border.ActualHeight), chart.ControlSize);
             }
             if (chart is PieChart<SkiaSharpDrawingContext>)
             {
                 location = tooltipPoints.GetPieTooltipLocation(
-                    chart.TooltipPosition, new System.Drawing.SizeF((float)border.ActualWidth, (float)border.ActualHeight));
+                    chart.TooltipPosition, new LvcSize((float)border.ActualWidth, (float)border.ActualHeight));
             }
 
             if (location is null) throw new Exception("location not supported");

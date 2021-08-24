@@ -25,7 +25,6 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
@@ -52,9 +51,9 @@ namespace LiveChartsCore
         private readonly ActionThrottler _updateThrottler;
         private readonly ActionThrottler _tooltipThrottler;
         private readonly ActionThrottler _panningThrottler;
-        private PointF _pointerPosition = new(-10, -10);
-        private PointF _pointerPanningPosition = new(-10, -10);
-        private PointF _pointerPreviousPanningPosition = new(-10, -10);
+        private LvcPoint _pointerPosition = new(-10, -10);
+        private LvcPoint _pointerPanningPosition = new(-10, -10);
+        private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
         private bool _isPanning = false;
         private bool _isPointerIn = false;
 
@@ -96,11 +95,11 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
         public event ChartEventHandler<TDrawingContext>? UpdateFinished;
 
-        internal event Action<PointF> PointerDown;
+        internal event Action<LvcPoint> PointerDown;
 
-        internal event Action<PointF> PointerMove;
+        internal event Action<LvcPoint> PointerMove;
 
-        internal event Action<PointF> PointerUp;
+        internal event Action<LvcPoint> PointerUp;
 
         internal event Action PointerLeft;
 
@@ -174,7 +173,7 @@ namespace LiveChartsCore
         /// <value>
         /// The size of the control.
         /// </value>
-        public SizeF ControlSize { get; protected set; } = new Size();
+        public LvcSize ControlSize { get; protected set; } = new LvcSize();
 
         /// <summary>
         /// Gets the draw margin location.
@@ -182,7 +181,7 @@ namespace LiveChartsCore
         /// <value>
         /// The draw margin location.
         /// </value>
-        public PointF DrawMarginLocation { get; protected set; } = new PointF();
+        public LvcPoint DrawMarginLocation { get; protected set; } = new LvcPoint();
 
         /// <summary>
         /// Gets the size of the draw margin.
@@ -190,7 +189,7 @@ namespace LiveChartsCore
         /// <value>
         /// The size of the draw margin.
         /// </value>
-        public SizeF DrawMarginSize { get; protected set; } = new SizeF();
+        public LvcSize DrawMarginSize { get; protected set; } = new LvcSize();
 
         /// <summary>
         /// Gets the legend position.
@@ -303,19 +302,19 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="pointerPosition">The pointer position.</param>
         /// <returns></returns>
-        public abstract TooltipPoint[] FindPointsNearTo(PointF pointerPosition);
+        public abstract TooltipPoint[] FindPointsNearTo(LvcPoint pointerPosition);
 
-        internal void InvokePointerDown(PointF point)
+        internal void InvokePointerDown(LvcPoint point)
         {
             PointerDown?.Invoke(point);
         }
 
-        internal void InvokePointerMove(PointF point)
+        internal void InvokePointerMove(LvcPoint point)
         {
             PointerMove?.Invoke(point);
         }
 
-        internal void InvokePointerUp(PointF point)
+        internal void InvokePointerUp(LvcPoint point)
         {
             PointerUp?.Invoke(point);
         }
@@ -337,15 +336,15 @@ namespace LiveChartsCore
         /// <param name="controlSize">Size of the control.</param>
         /// <param name="margin">The margin.</param>
         /// <returns></returns>
-        protected void SetDrawMargin(SizeF controlSize, Margin margin)
+        protected void SetDrawMargin(LvcSize controlSize, Margin margin)
         {
-            DrawMarginSize = new SizeF
+            DrawMarginSize = new LvcSize
             {
                 Width = controlSize.Width - margin.Left - margin.Right,
                 Height = controlSize.Height - margin.Top - margin.Bottom
             };
 
-            DrawMarginLocation = new PointF(margin.Left, margin.Top);
+            DrawMarginLocation = new LvcPoint(margin.Left, margin.Top);
         }
 
         /// <summary>
@@ -453,21 +452,49 @@ namespace LiveChartsCore
 
         private Task PanningThrottlerUnlocked()
         {
-            return Task.Run(() =>
-                View.InvokeOnUIThread(() =>
+            return Task.Run((Action)(() =>
+                View.InvokeOnUIThread((Action)(() =>
                 {
                     if (this is not CartesianChart<TDrawingContext> cartesianChart) return;
 
                     lock (Canvas.Sync)
                     {
                         cartesianChart.Pan(
-                        new PointF(
+
+/* Unmerged change from project 'LiveChartsCore (netcoreapp2.0)'
+Before:
+                        new LvPoint(
+After:
+                        new Drawing.LvPoint(
+*/
+
+/* Unmerged change from project 'LiveChartsCore (netstandard2.0)'
+Before:
+                        new LvPoint(
+After:
+                        new Drawing.LvPoint(
+*/
+                        (LvcPoint)new LvcPoint(
                         (float)(_pointerPanningPosition.X - _pointerPreviousPanningPosition.X),
                         (float)(_pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y)));
 
-                        _pointerPreviousPanningPosition = new PointF(_pointerPanningPosition.X, _pointerPanningPosition.Y);
+
+/* Unmerged change from project 'LiveChartsCore (netcoreapp2.0)'
+Before:
+                        _pointerPreviousPanningPosition = new LvPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
+After:
+                        _pointerPreviousPanningPosition = new Drawing.LvPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
+*/
+
+/* Unmerged change from project 'LiveChartsCore (netstandard2.0)'
+Before:
+                        _pointerPreviousPanningPosition = new LvPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
+After:
+                        _pointerPreviousPanningPosition = new Drawing.LvPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
+*/
+                        _pointerPreviousPanningPosition = new LvcPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
                     }
-                }));
+                }))));
         }
 
         private void OnCanvasValidated(MotionCanvas<TDrawingContext> chart)
@@ -475,13 +502,13 @@ namespace LiveChartsCore
             InvokeOnUpdateFinished();
         }
 
-        private void Chart_PointerDown(PointF pointerPosition)
+        private void Chart_PointerDown(LvcPoint pointerPosition)
         {
             _isPanning = true;
             _pointerPreviousPanningPosition = pointerPosition;
         }
 
-        private void Chart_PointerMove(PointF pointerPosition)
+        private void Chart_PointerMove(LvcPoint pointerPosition)
         {
             _pointerPosition = pointerPosition;
             _isPointerIn = true;
@@ -496,7 +523,7 @@ namespace LiveChartsCore
             _isPointerIn = false;
         }
 
-        private void Chart_PointerUp(PointF pointerPosition)
+        private void Chart_PointerUp(LvcPoint pointerPosition)
         {
             if (!_isPanning) return;
             _isPanning = false;

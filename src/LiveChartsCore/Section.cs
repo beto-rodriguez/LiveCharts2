@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System.ComponentModel;
-using System.Drawing;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -244,7 +243,7 @@ namespace LiveChartsCore
                 _fillSizedGeometry.Width = xj - xi;
                 _fillSizedGeometry.Height = yj - yi;
 
-                Fill.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                Fill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 Fill.AddGeometryToPaintTask(chart.Canvas, _fillSizedGeometry);
                 chart.Canvas.AddDrawableTask(Fill);
             }
@@ -282,7 +281,7 @@ namespace LiveChartsCore
                 _strokeSizedGeometry.Width = xj - xi;
                 _strokeSizedGeometry.Height = yj - yi;
 
-                Stroke.SetClipRectangle(cartesianChart.Canvas, new RectangleF(drawLocation, drawMarginSize));
+                Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 Stroke.AddGeometryToPaintTask(chart.Canvas, _strokeSizedGeometry);
                 chart.Canvas.AddDrawableTask(Stroke);
             }

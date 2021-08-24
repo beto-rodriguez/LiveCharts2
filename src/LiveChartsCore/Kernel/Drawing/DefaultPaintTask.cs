@@ -24,7 +24,6 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 namespace LiveChartsCore.Kernel.Drawing
@@ -239,13 +238,13 @@ namespace LiveChartsCore.Kernel.Drawing
         }
 
         /// <inheritdoc cref="IPaint{TDrawingContext}.GetClipRectangle(MotionCanvas{TDrawingContext})" />
-        public RectangleF GetClipRectangle(MotionCanvas<TDrawingContext> canvas)
+        public LvcRectangle GetClipRectangle(MotionCanvas<TDrawingContext> canvas)
         {
-            return RectangleF.Empty;
+            return LvcRectangle.Empty;
         }
 
-        /// <inheritdoc cref="IPaint{TDrawingContext}.SetClipRectangle(MotionCanvas{TDrawingContext}, RectangleF)" />
-        public void SetClipRectangle(MotionCanvas<TDrawingContext> canvas, RectangleF value)
+        /// <inheritdoc cref="IPaint{TDrawingContext}.SetClipRectangle(MotionCanvas{TDrawingContext}, LvcRectangle)" />
+        public void SetClipRectangle(MotionCanvas<TDrawingContext> canvas, LvcRectangle value)
         {
         }
     }

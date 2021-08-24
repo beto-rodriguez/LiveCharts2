@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -29,7 +30,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms
@@ -172,8 +172,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             core.Update();
         }
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(PointF, int, int)" />
-        public double[] ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
+        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
+        public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
             if (core is null) throw new Exception("core not found");
             var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
@@ -195,18 +195,18 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             if (core is null) throw new Exception("core not found");
             var c = (CartesianChart<SkiaSharpDrawingContext>)core;
             var p = e.Location;
-            c.Zoom(new PointF(p.X, p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+            c.Zoom(new LvcPoint(p.X, p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
             Capture = true;
         }
 
         private void OnMouseDown(object? sender, MouseEventArgs e)
         {
-            core?.InvokePointerDown(new PointF(e.Location.X, e.Location.Y));
+            core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y));
         }
 
         private void OnMouseUp(object? sender, MouseEventArgs e)
         {
-            core?.InvokePointerUp(new PointF(e.Location.X, e.Location.Y));
+            core?.InvokePointerUp(new LvcPoint(e.Location.X, e.Location.Y));
         }
     }
 }

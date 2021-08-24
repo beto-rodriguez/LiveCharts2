@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using LiveChartsCore.Drawing;
@@ -39,7 +38,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         private readonly MotionCanvas<SkiaSharpDrawingContext> _motionCanvas = new();
         private static GeoJsonFile? s_map = null;
         private int _heatKnownLength = 0;
-        private List<Tuple<double, Color>> _heatStops = new();
+        private List<Tuple<double, LvcColor>> _heatStops = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SKGeoMap"/> class.
@@ -92,23 +91,23 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         public Projection Projection { get; set; }
 
         /// <inheritdoc cref="IGeoMap.HeatMap"/>
-        public Color[] HeatMap { get; set; } = new[]
+        public LvcColor[] HeatMap { get; set; } = new[]
         {
-            Color.FromArgb(255, 179, 229, 252), // cold (min value)
-            Color.FromArgb(255, 2, 136, 209) // hot (max value)
+            LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
+            LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
         };
 
         /// <inheritdoc cref="IGeoMap.ColorStops"/>
         public double[]? ColorStops { get; set; }
 
         /// <inheritdoc cref="IGeoMap.StrokeColor"/>
-        public Color StrokeColor { get; set; } = Color.FromArgb(255, 224, 224, 224);
+        public LvcColor StrokeColor { get; set; } = LvcColor.FromArgb(255, 224, 224, 224);
 
         /// <inheritdoc cref="IGeoMap.StrokeThickness"/>
         public double StrokeThickness { get; set; } = 1;
 
         /// <inheritdoc cref="IGeoMap.FillColor"/>
-        public Color FillColor { get; set; } = Color.FromArgb(255, 250, 250, 250);
+        public LvcColor FillColor { get; set; } = LvcColor.FromArgb(255, 250, 250, 250);
 
         /// <inheritdoc cref="IGeoMap.Values"/>
         public Dictionary<string, double> Values { get; set; } = new Dictionary<string, double>();
@@ -171,10 +170,10 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
             var paint = new SolidColorPaint();
 
             var thickness = (float)StrokeThickness;
-            var stroke = Color.FromArgb(255, StrokeColor.R, StrokeColor.G, StrokeColor.B);
-            var fill = Color.FromArgb(255, FillColor.R, FillColor.G, FillColor.B);
+            var stroke = LvcColor.FromArgb(255, StrokeColor.R, StrokeColor.G, StrokeColor.B);
+            var fill = LvcColor.FromArgb(255, FillColor.R, FillColor.G, FillColor.B);
 
-            var hm = HeatMap.Select(x => Color.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
+            var hm = HeatMap.Select(x => LvcColor.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
 
             if (_heatKnownLength != HeatMap.Length)
             {

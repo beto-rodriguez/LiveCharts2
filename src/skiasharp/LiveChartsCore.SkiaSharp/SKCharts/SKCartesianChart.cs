@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -40,7 +39,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
     /// </summary>
     public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, ISkiaSharpChart
     {
-        private Color _backColor;
+        private LvcColor _backColor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SKCartesianChart"/> class.
@@ -151,7 +150,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         /// <inheritdoc cref="IChartView.CoreChart"/>
         public IChart CoreChart => Core;
 
-        Color IChartView.BackColor
+        LvcColor IChartView.BackColor
         {
             get => _backColor;
             set
@@ -161,7 +160,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
             }
         }
 
-        SizeF IChartView.ControlSize => new(Width, Height);
+        LvcSize IChartView.ControlSize => new(Width, Height);
 
         /// <inheritdoc cref="IChartView.DrawMargin"/>
         public Margin? DrawMargin { get; set; }
@@ -199,14 +198,14 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(PointF, int, int)"/>
-        public double[] ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
+        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)"/>
+        public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IChartView.SetTooltipStyle(Color, Color)"/>
-        public void SetTooltipStyle(Color background, Color textColor) { }
+        /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
+        public void SetTooltipStyle(LvcColor background, LvcColor textColor) { }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
         public void ShowTooltip(IEnumerable<TooltipPoint> points)

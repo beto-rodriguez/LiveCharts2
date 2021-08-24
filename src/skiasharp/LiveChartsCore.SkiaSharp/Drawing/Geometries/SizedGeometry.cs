@@ -23,7 +23,6 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
-using System.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
@@ -73,9 +72,9 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         }
 
         /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
-        protected override SizeF OnMeasure(Paint paint)
+        protected override LvcSize OnMeasure(Paint paint)
         {
-            return new SizeF(Width, Height);
+            return new LvcSize(Width, Height);
         }
     }
 }

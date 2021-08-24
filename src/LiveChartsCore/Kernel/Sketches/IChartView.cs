@@ -25,7 +25,6 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Measure;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace LiveChartsCore.Kernel.Sketches
 {
@@ -53,7 +52,7 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <value>
         /// The color of the back.
         /// </value>
-        Color BackColor { get; set; }
+        LvcColor BackColor { get; set; }
 
         /// <summary>
         /// Gets the size of the control.
@@ -61,7 +60,7 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <value>
         /// The size of the control.
         /// </value>
-        SizeF ControlSize { get; }
+        LvcSize ControlSize { get; }
 
         /// <summary>
         /// Gets or sets the draw margin, if this property is null, the library will calculate a margin, this margin is the distance 
@@ -132,7 +131,7 @@ namespace LiveChartsCore.Kernel.Sketches
         /// </summary>
         /// <param name="background">The background.</param>
         /// <param name="textColor">Color of the text.</param>
-        void SetTooltipStyle(Color background, Color textColor);
+        void SetTooltipStyle(LvcColor background, LvcColor textColor);
 
         /// <summary>
         /// Invokes an action in the UI thread.

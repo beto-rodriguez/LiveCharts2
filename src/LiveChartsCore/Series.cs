@@ -25,7 +25,6 @@ using LiveChartsCore.Drawing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using LiveChartsCore.Measure;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -46,10 +45,11 @@ namespace LiveChartsCore
     /// <seealso cref="ISeries{TModel}" />
     /// <seealso cref="IDisposable" />
     /// <seealso cref="INotifyPropertyChanged" />
-    public abstract class Series<TModel, TVisual, TLabel, TDrawingContext> : ChartElement<TDrawingContext>, ISeries, ISeries<TModel>, INotifyPropertyChanged
-        where TDrawingContext : DrawingContext
-        where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
-        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
+        : ChartElement<TDrawingContext>, ISeries, ISeries<TModel>, INotifyPropertyChanged
+            where TDrawingContext : DrawingContext
+            where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
         /// <summary>
         /// The subscribed to
@@ -88,7 +88,7 @@ namespace LiveChartsCore
         private Func<TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>, string> _tooltipLabelFormatter = (point) => $"{point.Context.Series.Name} {point.PrimaryValue}";
         private Func<TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>, string> _dataLabelsFormatter = (point) => $"{point.PrimaryValue}";
         private bool _isVisible = true;
-        private PointF _dataPadding = new(0.5f, 0.5f);
+        private LvcPoint _dataPadding = new(0.5f, 0.5f);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -211,7 +211,7 @@ namespace LiveChartsCore
         }
 
         /// <inheritdoc cref="ISeries.DataPadding" />
-        public PointF DataPadding { get => _dataPadding; set { _dataPadding = value; OnPropertyChanged(); } }
+        public LvcPoint DataPadding { get => _dataPadding; set { _dataPadding = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="ISeries.AnimationsSpeed" />
         public TimeSpan? AnimationsSpeed { get; set; }
@@ -244,7 +244,7 @@ namespace LiveChartsCore
             return Fetch(chart);
         }
 
-        TooltipPoint[] ISeries.FindPointsNearTo(IChart chart, PointF pointerPosition, TooltipFindingStrategy automaticStategy)
+        TooltipPoint[] ISeries.FindPointsNearTo(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy automaticStategy)
         {
             return this switch
             {
@@ -290,20 +290,20 @@ namespace LiveChartsCore
             {
                 s.Fill.SetClipRectangle(
                     core.Canvas,
-                    new RectangleF(core.DrawMarginLocation, core.DrawMarginSize));
+                    new LvcRectangle(core.DrawMarginLocation, core.DrawMarginSize));
                 s.Fill.AddGeometryToPaintTask(chart.CoreCanvas, highlitable);
             }
             if (s.Stroke is not null)
             {
                 s.Stroke.SetClipRectangle(
                     core.Canvas,
-                    new RectangleF(core.DrawMarginLocation, core.DrawMarginSize));
+                    new LvcRectangle(core.DrawMarginLocation, core.DrawMarginSize));
                 s.Stroke.AddGeometryToPaintTask(chart.CoreCanvas, highlitable);
             }
         }
 
-        /// <inheritdoc cref="ISeries.RemovePointFromState(ChartPoint, string)" />
-        public virtual void RemovePointFromState(ChartPoint chartPoint, string state)
+        /// <inheritdoc cref="ISeries.RemoveLvPointromState(ChartPoint, string)" />
+        public virtual void RemoveLvPointromState(ChartPoint chartPoint, string state)
         {
             var chart = (IChartView<TDrawingContext>)chartPoint.Context.Chart;
             var s = chart.PointStates[state];
@@ -423,7 +423,7 @@ namespace LiveChartsCore
         }
 
         private TooltipPoint[] FilterTooltipPoints(
-            IEnumerable<ChartPoint>? points, IChart chart, PointF pointerPosition, TooltipFindingStrategy automaticStategy)
+            IEnumerable<ChartPoint>? points, IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy automaticStategy)
         {
             if (points is null) return new TooltipPoint[0];
             var tolerance = float.MaxValue;

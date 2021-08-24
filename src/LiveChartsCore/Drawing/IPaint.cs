@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace LiveChartsCore.Drawing
 {
@@ -85,7 +84,7 @@ namespace LiveChartsCore.Drawing
         /// <param name="canvas">The canvas.</param>
         /// The clip rectangle.
         /// </returns>
-        RectangleF GetClipRectangle(MotionCanvas<TDrawingContext> canvas);
+        LvcRectangle GetClipRectangle(MotionCanvas<TDrawingContext> canvas);
 
         /// <summary>
         /// Gets or sets the clip rectangle.
@@ -94,7 +93,7 @@ namespace LiveChartsCore.Drawing
         /// <param name="value">
         /// The clip rectangle.
         /// </param>
-        void SetClipRectangle(MotionCanvas<TDrawingContext> canvas, RectangleF value);
+        void SetClipRectangle(MotionCanvas<TDrawingContext> canvas, LvcRectangle value);
 
         /// <summary>
         /// Initializes the task.

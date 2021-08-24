@@ -29,7 +29,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Drawing;
 using Xamarin.Essentials;
 using Xamarin.Forms.Xaml;
 using Xamarin.Forms;
@@ -113,7 +112,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 });
 
         /// <summary>
-        /// The series property
+        /// The series property.
         /// </summary>
         public static readonly BindableProperty SeriesProperty =
             BindableProperty.Create(
@@ -145,7 +144,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 });
 
         /// <summary>
-        /// The y axes property
+        /// The y axes property.
         /// </summary>
         public static readonly BindableProperty YAxesProperty =
             BindableProperty.Create(
@@ -160,6 +159,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     chart.core.Update();
                 });
 
+        /// <summary>
+        /// The sections property.
+        /// </summary>
         public static readonly BindableProperty SectionsProperty =
             BindableProperty.Create(
                 nameof(Sections), typeof(IEnumerable<Section<SkiaSharpDrawingContext>>), typeof(CartesianChart), new List<Section<SkiaSharpDrawingContext>>(),
@@ -174,7 +176,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 });
 
         /// <summary>
-        /// The draw margin frame property
+        /// The draw margin frame property.
         /// </summary>
         public static readonly BindableProperty DrawMarginFrameProperty =
             BindableProperty.Create(
@@ -182,14 +184,14 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 BindingMode.Default, null, OnBindablePropertyChanged);
 
         /// <summary>
-        /// The draw margin property
+        /// The draw margin property.
         /// </summary>
         public static readonly BindableProperty DrawMarginProperty =
             BindableProperty.Create(
                 nameof(DrawMargin), typeof(Margin), typeof(CartesianChart), null, BindingMode.Default, null, OnBindablePropertyChanged);
 
         /// <summary>
-        /// The zoom mode property
+        /// The zoom mode property.
         /// </summary>
         public static readonly BindableProperty ZoomModeProperty =
             BindableProperty.Create(
@@ -197,7 +199,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 LiveCharts.CurrentSettings.DefaultZoomMode, BindingMode.Default, null);
 
         /// <summary>
-        /// The zooming speed property
+        /// The zooming speed property.
         /// </summary>
         public static readonly BindableProperty ZoomingSpeedProperty =
             BindableProperty.Create(
@@ -205,14 +207,14 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 LiveCharts.CurrentSettings.DefaultZoomSpeed, BindingMode.Default, null);
 
         /// <summary>
-        /// The animations speed property
+        /// The animations speed property.
         /// </summary>
         public static readonly BindableProperty AnimationsSpeedProperty =
            BindableProperty.Create(
                nameof(AnimationsSpeed), typeof(TimeSpan), typeof(CartesianChart), LiveCharts.CurrentSettings.DefaultAnimationsSpeed);
 
         /// <summary>
-        /// The easing function property
+        /// The easing function property.
         /// </summary>
         public static readonly BindableProperty EasingFunctionProperty =
             BindableProperty.Create(
@@ -220,7 +222,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 LiveCharts.CurrentSettings.DefaultEasingFunction);
 
         /// <summary>
-        /// The legend position property
+        /// The legend position property.
         /// </summary>
         public static readonly BindableProperty LegendPositionProperty =
             BindableProperty.Create(
@@ -228,7 +230,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 LiveCharts.CurrentSettings.DefaultLegendPosition, propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>
-        /// The legend orientation property
+        /// The legend orientation property.
         /// </summary>
         public static readonly BindableProperty LegendOrientationProperty =
             BindableProperty.Create(
@@ -236,28 +238,28 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 LiveCharts.CurrentSettings.DefaultLegendOrientation, propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>
-        /// The legend template property
+        /// The legend template property.
         /// </summary>
         public static readonly BindableProperty LegendTemplateProperty =
             BindableProperty.Create(
                 nameof(LegendTemplate), typeof(DataTemplate), typeof(CartesianChart), null, propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>
-        /// The legend font family property
+        /// The legend font family property.
         /// </summary>
         public static readonly BindableProperty LegendFontFamilyProperty =
             BindableProperty.Create(
                 nameof(LegendFontFamily), typeof(string), typeof(CartesianChart), null, propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>
-        /// The legend font size property
+        /// The legend font size property.
         /// </summary>
         public static readonly BindableProperty LegendFontSizeProperty =
             BindableProperty.Create(
                 nameof(LegendFontSize), typeof(double), typeof(CartesianChart), 13d, propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>
-        /// The legend text color property
+        /// The legend text color property.
         /// </summary>
         public static readonly BindableProperty LegendTextBrushProperty =
             BindableProperty.Create(
@@ -265,7 +267,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 new c(35 / 255d, 35 / 255d, 35 / 255d), propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>
-        /// The legend background property
+        /// The legend background property.
         /// </summary>
         public static readonly BindableProperty LegendBackgroundProperty =
             BindableProperty.Create(
@@ -273,7 +275,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 new c(255 / 255d, 255 / 255d, 255 / 255d), propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>
-        /// The legend font attributes property
+        /// The legend font attributes property.
         /// </summary>
         public static readonly BindableProperty LegendFontAttributesProperty =
             BindableProperty.Create(
@@ -281,7 +283,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 FontAttributes.None, propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>
-        /// The tool tip position property
+        /// The tool tip position property.
         /// </summary>
         public static readonly BindableProperty TooltipPositionProperty =
            BindableProperty.Create(
@@ -289,7 +291,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                LiveCharts.CurrentSettings.DefaultTooltipPosition, propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>
-        /// The too ltip finding strategy property
+        /// The tool tip finding strategy property.
         /// </summary>
         public static readonly BindableProperty TooltipFindingStrategyProperty =
             BindableProperty.Create(
@@ -297,28 +299,28 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy);
 
         /// <summary>
-        /// The tool tip template property
+        /// The tool tip template property.
         /// </summary>
         public static readonly BindableProperty TooltipTemplateProperty =
             BindableProperty.Create(
                 nameof(TooltipTemplate), typeof(DataTemplate), typeof(CartesianChart), null, propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>
-        /// The tool tip font family property
+        /// The tool tip font family property.
         /// </summary>
         public static readonly BindableProperty TooltipFontFamilyProperty =
             BindableProperty.Create(
                 nameof(TooltipFontFamily), typeof(string), typeof(CartesianChart), null, propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>
-        /// The tool tip font size property
+        /// The tool tip font size property.
         /// </summary>
         public static readonly BindableProperty TooltipFontSizeProperty =
             BindableProperty.Create(
                 nameof(TooltipFontSize), typeof(double), typeof(CartesianChart), 13d, propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>
-        /// The tool tip text color property
+        /// The tool tip text color property.
         /// </summary>
         public static readonly BindableProperty TooltipTextBrushProperty =
             BindableProperty.Create(
@@ -326,7 +328,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 new c(35 / 255d, 35 / 255d, 35 / 255d), propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>
-        /// The tool tip background property
+        /// The tool tip background property.
         /// </summary>
         public static readonly BindableProperty TooltipBackgroundProperty =
             BindableProperty.Create(
@@ -364,18 +366,18 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
 
-        System.Drawing.Color IChartView.BackColor
+        LvcColor IChartView.BackColor
         {
             get => Background is not SolidColorBrush b
-                    ? new System.Drawing.Color()
-                    : System.Drawing.Color.FromArgb(
-                        (int)(b.Color.R * 255), (int)(b.Color.G * 255), (int)(b.Color.B * 255), (int)(b.Color.A * 255));
+                ? new LvcColor()
+                : LvcColor.FromArgb(
+                    (byte)(b.Color.R * 255), (byte)(b.Color.G * 255), (byte)(b.Color.B * 255), (byte)(b.Color.A * 255));
             set => Background = new SolidColorBrush(new c(value.R / 255, value.G / 255, value.B / 255, value.A / 255));
         }
 
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
 
-        SizeF IChartView.ControlSize => new()
+        LvcSize IChartView.ControlSize => new()
         {
             Width = (float)(canvas.Width * DeviceDisplay.MainDisplayInfo.Density),
             Height = (float)(canvas.Height * DeviceDisplay.MainDisplayInfo.Density)
@@ -664,8 +666,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         #endregion
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(PointF, int, int)" />
-        public double[] ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
+        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
+        public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
             if (core is null) throw new Exception("core not found");
             var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
@@ -688,11 +690,11 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
         }
 
-        /// <inheritdoc cref="IChartView.SetTooltipStyle(System.Drawing.Color, System.Drawing.Color)"/>
-        public void SetTooltipStyle(System.Drawing.Color background, System.Drawing.Color textColor)
+        /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
+        public void SetTooltipStyle(LvcColor background, LvcColor textColor)
         {
-            TooltipBackground = background;
-            TooltipTextBrush = textColor;
+            TooltipBackground = new c(background.R, background.G, background.B, background.A);
+            TooltipTextBrush = new c(textColor.R, textColor.G, textColor.B, textColor.A);
         }
 
         void IChartView.InvokeOnUIThread(Action action)
@@ -757,7 +759,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             if (e.StatusType != GestureStatus.Running) return;
 
             var c = (CartesianChart<SkiaSharpDrawingContext>)core;
-            var delta = new PointF((float)e.TotalX, (float)e.TotalY);
+            var delta = new LvcPoint((float)e.TotalX, (float)e.TotalY);
             var args = new PanGestureEventArgs(delta);
             c.InvokePanGestrue(args);
             if (!args.Handled) c.Pan(delta);
@@ -772,7 +774,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             var s = c.ControlSize;
 
             c.Zoom(
-                new PointF((float)(p.X * s.Width), (float)(p.Y * s.Height)),
+                new LvcPoint((float)(p.X * s.Width), (float)(p.Y * s.Height)),
                 e.Scale > 1 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
         }
 
@@ -780,7 +782,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             if (core is null) return;
             if (TooltipPosition == TooltipPosition.Hidden) return;
-            var location = new PointF(e.Location.X, e.Location.Y);
+            var location = new LvcPoint(e.Location.X, e.Location.Y);
             core.InvokePointerDown(location);
             ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindPointsNearTo(location), core);
         }

@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -28,7 +29,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms
@@ -126,8 +126,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             core.Update();
         }
 
-        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleUIPoint(PointF, int, int)" />
-        public double[] ScaleUIPoint(PointF point, int xAxisIndex = 0, int yAxisIndex = 0)
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
+        public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
             return new double[0];
             //if (core is null) throw new Exception("core not found");
@@ -156,12 +156,12 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         private void OnMouseDown(object? sender, MouseEventArgs e)
         {
-            core?.InvokePointerDown(new PointF(e.Location.X, e.Location.Y));
+            core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y));
         }
 
         private void OnMouseUp(object? sender, MouseEventArgs e)
         {
-            core?.InvokePointerUp(new PointF(e.Location.X, e.Location.Y));
+            core?.InvokePointerUp(new LvcPoint(e.Location.X, e.Location.Y));
         }
     }
 }

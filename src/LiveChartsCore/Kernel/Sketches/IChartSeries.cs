@@ -23,7 +23,6 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
 using LiveChartsCore.Kernel.Drawing;
-using System;
 
 namespace LiveChartsCore.Kernel.Sketches
 {
@@ -35,12 +34,6 @@ namespace LiveChartsCore.Kernel.Sketches
     public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawingContext>
          where TDrawingContext : DrawingContext
     {
-        /// <summary>
-        /// Gets or sets the data labels  drawable task.
-        /// </summary>
-        [Obsolete("Renamed to DataLabelsPaint")]
-        IPaint<TDrawingContext>? DataLabelsDrawableTask { get; set; }
-
         /// <summary>
         /// Gets or sets the data labels paint.
         /// </summary>
