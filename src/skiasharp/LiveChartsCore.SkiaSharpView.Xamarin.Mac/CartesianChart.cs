@@ -30,7 +30,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Mac
         private IEnumerable<IAxis> _xAxis = new List<IAxis>() { new Axis() };
         private IEnumerable<IAxis> _yAxis = new List<IAxis>() { new Axis() };
 
-        private CGRect _actualBounds;
         private LegendPosition _legendPosition = LiveCharts.CurrentSettings.DefaultLegendPosition;
         private LegendOrientation _legendOrientation = LiveCharts.CurrentSettings.DefaultLegendOrientation;
         private TooltipPosition _tooltipPosition = LiveCharts.CurrentSettings.DefaultTooltipPosition;
@@ -241,8 +240,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Mac
 
         public SizeF ControlSize => new()
         {
-            Height = (float)_actualBounds.Height,
-            Width = (float)_actualBounds.Width
+            Height = (float)Bounds.Height,
+            Width = (float)Bounds.Width
         };
 
         protected Chart<SkiaSharpDrawingContext>? Core { get; set; }
@@ -264,7 +263,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Mac
             if (subview is MotionCanvas c)
             {
                 _motionCanvas = c;
-                _actualBounds = Bounds;
 
                 if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
@@ -324,7 +322,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Mac
 
         private void OnWindowResized(object sender, EventArgs e)
         {
-            _actualBounds = Bounds;
             Core?.Update(s_updateParams);
         }
 
