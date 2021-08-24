@@ -80,7 +80,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// The type of the data label of every point.
     /// </typeparam>
     public class PolarLineSeries<TModel, TVisual, TLabel>
-        : LineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, PathGeometry, LineSegment, CubicBezierSegment, MoveToPathCommand, SKPath>
+        : PolarLineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, PathGeometry, LineSegment, CubicBezierSegment, MoveToPathCommand, SKPath>
         where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
         where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
     {

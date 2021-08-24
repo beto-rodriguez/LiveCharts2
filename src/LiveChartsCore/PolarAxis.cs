@@ -373,7 +373,7 @@ namespace LiveChartsCore
 
                     visualSeparator.Text.Opacity = 1;
 
-                    if (((ICartesianAxis)this).PreviousDataBounds is null) visualSeparator.Text.CompleteAllTransitions();
+                    if (((IPolarAxis)this).PreviousDataBounds is null) visualSeparator.Text.CompleteAllTransitions();
                 }
 
                 if (visualSeparator.Geometry is not null)
@@ -385,7 +385,7 @@ namespace LiveChartsCore
                         lineSepartator.Line.Y = scaler.CenterY;
                         lineSepartator.Line.Y1 = location.Y;
 
-                        if (((ICartesianAxis)this).PreviousDataBounds is null) lineSepartator.Line.CompleteAllTransitions();
+                        if (((IPolarAxis)this).PreviousDataBounds is null) lineSepartator.Line.CompleteAllTransitions();
                     }
 
                     if (visualSeparator is PolarAxisVisualSeparator<TDrawingContext> polarSeparator && polarSeparator.Circle is not null)
@@ -396,7 +396,7 @@ namespace LiveChartsCore
                         polarSeparator.Circle.Width = radius * 2;
                         polarSeparator.Circle.Height = radius * 2;
 
-                        if (((ICartesianAxis)this).PreviousDataBounds is null) polarSeparator.Circle.CompleteAllTransitions();
+                        if (((IPolarAxis)this).PreviousDataBounds is null) polarSeparator.Circle.CompleteAllTransitions();
                     }
 
                     visualSeparator.Geometry.Opacity = 1;
@@ -520,7 +520,7 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
-            if (!((ICartesianAxis)this).IsNotifyingChanges) return;
+            if (!((IPolarAxis)this).IsNotifyingChanges) return;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 

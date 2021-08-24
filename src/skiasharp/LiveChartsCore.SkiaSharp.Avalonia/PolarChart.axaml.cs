@@ -320,7 +320,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             };
 
         /// <inheritdoc cref="IChartView.DrawMargin" />
-        public Margin? DrawMargin { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Margin? DrawMargin { get => null; set => throw new NotImplementedException(); }
 
         /// <inheritdoc cref="IChartView.SyncContext" />
         public object SyncContext
