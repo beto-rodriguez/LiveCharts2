@@ -42,7 +42,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
     {
         private static GeoJsonFile? s_map = null;
         private int _heatKnownLength = 0;
-        private List<Tuple<double, System.Drawing.Color>> _heatStops = new();
+        private List<Tuple<double, LvcColor>> _heatStops = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeoMap"/> class.
@@ -125,9 +125,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             set => SetValue(HeatMapProperty, value);
         }
 
-        System.Drawing.Color[] IGeoMap.HeatMap
+        LvcColor[] IGeoMap.HeatMap
         {
-            get => HeatMap.Select(x => System.Drawing.Color.FromArgb((int)(x.A * 255), (int)(x.R * 255), (int)(x.G * 255), (int)(x.B * 255))).ToArray();
+            get => HeatMap.Select(x => LvcColor.FromArgb((byte)(x.A * 255), (byte)(x.R * 255), (byte)(x.G * 255), (byte)(x.B * 255))).ToArray();
             set => HeatMap = value.Select(x => new Color(x.R / 255d, x.G / 255d, x.B / 255d, x.A / 255d)).ToArray();
         }
 
@@ -149,9 +149,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             set => SetValue(StrokeColorProperty, value);
         }
 
-        System.Drawing.Color IGeoMap.StrokeColor
+        LvcColor IGeoMap.StrokeColor
         {
-            get => System.Drawing.Color.FromArgb((int)(StrokeColor.A * 255), (int)(StrokeColor.R * 255), (int)(StrokeColor.G * 255), (int)(StrokeColor.B * 255));
+            get => LvcColor.FromArgb((byte)(StrokeColor.A * 255), (byte)(StrokeColor.R * 255), (byte)(StrokeColor.G * 255), (byte)(StrokeColor.B * 255));
             set => StrokeColor = new Color(value.R / 255d, value.G / 255d, value.B / 255d, value.A / 255d);
         }
 
@@ -173,9 +173,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             set => SetValue(FillColorProperty, value);
         }
 
-        System.Drawing.Color IGeoMap.FillColor
+        LvcColor IGeoMap.FillColor
         {
-            get => System.Drawing.Color.FromArgb((int)(FillColor.A * 255), (int)(FillColor.R * 255), (int)(FillColor.G * 255), (int)(FillColor.B * 255));
+            get => LvcColor.FromArgb((byte)(FillColor.A * 255), (byte)(FillColor.R * 255), (byte)(FillColor.G * 255), (byte)(FillColor.B * 255));
             set => FillColor = new Color(value.R / 255d, value.G / 255d, value.B / 255d, value.A / 255d);
         }
 
@@ -198,10 +198,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             var paint = new SolidColorPaintTask();
 
             var thickness = (float)StrokeThickness;
-            var stroke = System.Drawing.Color.FromArgb(255, (byte)(StrokeColor.R * 255), (byte)(StrokeColor.G * 255), (byte)(StrokeColor.B * 255));
-            var fill = System.Drawing.Color.FromArgb(255, (byte)(FillColor.R * 255), (byte)(FillColor.G * 255), (byte)(FillColor.B * 255));
+            var stroke = LvcColor.FromArgb(255, (byte)(StrokeColor.R * 255), (byte)(StrokeColor.G * 255), (byte)(StrokeColor.B * 255));
+            var fill = LvcColor.FromArgb(255, (byte)(FillColor.R * 255), (byte)(FillColor.G * 255), (byte)(FillColor.B * 255));
 
-            var hm = HeatMap.Select(x => System.Drawing.Color.FromArgb((byte)(255 * x.A), (byte)(255 * x.R), (byte)(255 * x.G), (byte)(255 * x.B))).ToArray();
+            var hm = HeatMap.Select(x => LvcColor.FromArgb((byte)(255 * x.A), (byte)(255 * x.R), (byte)(255 * x.G), (byte)(255 * x.B))).ToArray();
 
             if (_heatKnownLength != HeatMap.Length)
             {

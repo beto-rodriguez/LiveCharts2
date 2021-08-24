@@ -31,7 +31,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Drawing;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -308,12 +307,12 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
 
-        System.Drawing.Color IChartView.BackColor
+        LvcColor IChartView.BackColor
         {
             get => Background is not SolidColorBrush b
-                    ? new System.Drawing.Color()
-                    : System.Drawing.Color.FromArgb(
-                        (int)(b.Color.A * 255), (int)(b.Color.R * 255), (int)(b.Color.G * 255), (int)(b.Color.B * 255));
+                ? new LvcColor()
+                : LvcColor.FromArgb(
+                    (byte)(b.Color.A * 255), (byte)(b.Color.R * 255), (byte)(b.Color.G * 255), (byte)(b.Color.B * 255));
             set => Background = new SolidColorBrush(new c(value.R / 255, value.G / 255, value.B / 255, value.A / 255));
         }
 
@@ -327,7 +326,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             set => SetValue(SyncContextProperty, value);
         }
 
-        SizeF IChartView.ControlSize => new()
+        LvcSize IChartView.ControlSize => new()
         {
             Width = (float)(canvas.Width * DeviceDisplay.MainDisplayInfo.Density),
             Height = (float)(canvas.Height * DeviceDisplay.MainDisplayInfo.Density)
@@ -597,11 +596,11 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
         }
 
-        /// <inheritdoc cref="IChartView.SetTooltipStyle(System.Drawing.Color, System.Drawing.Color)"/>
-        public void SetTooltipStyle(System.Drawing.Color background, System.Drawing.Color textColor)
+        /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
+        public void SetTooltipStyle(LvcColor background, LvcColor textColor)
         {
-            TooltipBackground = background;
-            TooltipTextBrush = textColor;
+            TooltipBackground = new c(background.R, background.G, background.B, background.A);
+            TooltipTextBrush = new c(textColor.R, textColor.G, textColor.B, textColor.A);
         }
 
         void IChartView.InvokeOnUIThread(Action action)
@@ -652,7 +651,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             if (core is null) return;
             if (TooltipPosition == TooltipPosition.Hidden) return;
-            var location = new PointF(e.Location.X, e.Location.Y);
+            var location = new LvcPoint(e.Location.X, e.Location.Y);
             core.InvokePointerDown(location);
             ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindPointsNearTo(location), core);
         }
