@@ -242,10 +242,10 @@ namespace LiveChartsCore
                         s = stacker.GetStack(data.TargetPoint).Start;
                     }
 
-                    var cp = scaler.ToPixels(data.TargetPoint.PrimaryValue, data.TargetPoint.PrimaryValue + s);
+                    var cp = scaler.ToPixels(data.TargetPoint.SecondaryValue, data.TargetPoint.PrimaryValue + s);
 
-                    var x = cp.X; // secondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
-                    var y = cp.Y; // primaryScale.ToPixels(data.TargetPoint.PrimaryValue + s);
+                    var x = cp.X;
+                    var y = cp.Y;
 
                     var visual = (LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>?)data.TargetPoint.Context.Visual;
 
@@ -298,52 +298,52 @@ namespace LiveChartsCore
 
                     if (Fill is not null)
                     {
-                        //if (data.IsFirst)
-                        //{
-                        //    if (wasFillInitialized)
-                        //    {
-                        //        fillPathHelper.StartPoint.X = scaler.CenterX;
-                        //        fillPathHelper.StartPoint.Y = scaler.CenterY;
+                        if (data.IsFirst)
+                        {
+                            if (wasFillInitialized)
+                            {
+                                fillPathHelper.StartPoint.X = scaler.CenterX;
+                                fillPathHelper.StartPoint.Y = scaler.CenterY;
 
-                        //        fillPathHelper.StartSegment.X = scaler.CenterX;
-                        //        fillPathHelper.StartSegment.Y = scaler.CenterY;
+                                fillPathHelper.StartSegment.X = scaler.CenterX;
+                                fillPathHelper.StartSegment.Y = scaler.CenterY;
 
-                        //        fillPathHelper.StartPoint.CompleteTransitions(
-                        //            nameof(fillPathHelper.StartPoint.Y), nameof(fillPathHelper.StartPoint.X));
-                        //        fillPathHelper.StartSegment.CompleteTransitions(
-                        //            nameof(fillPathHelper.StartSegment.Y), nameof(fillPathHelper.StartSegment.X));
-                        //    }
+                                fillPathHelper.StartPoint.CompleteTransitions(
+                                    nameof(fillPathHelper.StartPoint.Y), nameof(fillPathHelper.StartPoint.X));
+                                fillPathHelper.StartSegment.CompleteTransitions(
+                                    nameof(fillPathHelper.StartSegment.Y), nameof(fillPathHelper.StartSegment.X));
+                            }
 
-                        //    fillPathHelper.StartPoint.X = scaler.CenterX;
-                        //    fillPathHelper.StartPoint.Y = scaler.CenterY;
-                        //    fillPathHelper.Path.AddCommand(fillPathHelper.StartPoint);
+                            fillPathHelper.StartPoint.X = scaler.CenterX;
+                            fillPathHelper.StartPoint.Y = scaler.CenterY;
+                            fillPathHelper.Path.AddCommand(fillPathHelper.StartPoint);
 
-                        //    fillPathHelper.StartSegment.X = (float)data.X0;
-                        //    fillPathHelper.StartSegment.Y = (float)data.Y0;
-                        //    fillPathHelper.Path.AddCommand(fillPathHelper.StartSegment);
-                        //}
+                            fillPathHelper.StartSegment.X = (float)data.X0;
+                            fillPathHelper.StartSegment.Y = (float)data.Y0;
+                            fillPathHelper.Path.AddCommand(fillPathHelper.StartSegment);
+                        }
 
                         fillPathHelper.Path.AddCommand(visual.Bezier);
 
-                        //if (data.IsLast)
-                        //{
-                        //    fillPathHelper.EndSegment.X = (float)data.X2;
-                        //    fillPathHelper.EndSegment.Y = p;
-                        //    fillPathHelper.Path.AddCommand(fillPathHelper.EndSegment);
+                        if (data.IsLast)
+                        {
+                            fillPathHelper.EndSegment.X = (float)data.X2;
+                            fillPathHelper.EndSegment.Y = scaler.CenterY;
+                            fillPathHelper.Path.AddCommand(fillPathHelper.EndSegment);
 
-                        //    if (wasFillInitialized)
-                        //        fillPathHelper.EndSegment.CompleteTransitions(
-                        //            nameof(fillPathHelper.EndSegment.Y), nameof(fillPathHelper.EndSegment.X));
-                        //}
+                            if (wasFillInitialized)
+                                fillPathHelper.EndSegment.CompleteTransitions(
+                                    nameof(fillPathHelper.EndSegment.Y), nameof(fillPathHelper.EndSegment.X));
+                        }
                     }
                     if (Stroke is not null)
                     {
-                        //if (data.IsFirst)
-                        //{
-                        //    strokePathHelper.StartPoint.X = (float)data.X0;
-                        //    strokePathHelper.StartPoint.Y = (float)data.Y0;
-                        //    strokePathHelper.Path.AddCommand(strokePathHelper.StartPoint);
-                        //}
+                        if (data.IsFirst)
+                        {
+                            strokePathHelper.StartPoint.X = (float)data.X0;
+                            strokePathHelper.StartPoint.Y = (float)data.Y0;
+                            strokePathHelper.Path.AddCommand(strokePathHelper.StartPoint);
+                        }
 
                         strokePathHelper.Path.AddCommand(visual.Bezier);
                     }
@@ -751,20 +751,20 @@ namespace LiveChartsCore
                     y0 = c1Y;
                 }
 
-                var p0 = scaler.ToPixels(x0, y0);
-                var p1 = scaler.ToPixels(c2Y, c2X);
-                var p2 = scaler.ToPixels(next.PrimaryValue + nys, next.SecondaryValue);
+                var s0 = scaler.ToPixels(x0, y0);
+                var s1 = scaler.ToPixels(c2X, c2Y);
+                var s2 = scaler.ToPixels(next.SecondaryValue, next.PrimaryValue); 
 
                 yield return new BezierData(points[i])
                 {
                     IsFirst = i == 0,
                     IsLast = i == points.Length - 1,
-                    X0 = p0.X,
-                    Y0 = p0.Y,
-                    X1 = p1.X,
-                    Y1 = p1.Y,
-                    X2 = p2.X,
-                    Y2 = p2.Y,
+                    X0 = s0.X,
+                    Y0 = s0.Y,
+                    X1 = s1.X,
+                    Y1 = s1.Y,
+                    X2 = s2.X,
+                    Y2 = s2.Y,
                     OriginalData = new BezierData(points[i])
                     {
                         X0 = x0,
@@ -908,7 +908,7 @@ namespace LiveChartsCore
                 {
                     if (point.Context.Visual is LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs> visual)
                     {
-                        var s = scaler.ToPixels(point.PrimaryValue, point.SecondaryValue);
+                        var s = scaler.ToPixels(point);
                         var x = s.X;
                         var y = s.Y;
                         var gs = _geometrySize;
