@@ -27,7 +27,7 @@ namespace ViewModelsSamples.Lines.Area
         public DrawMarginFrame DrawMarginFrame => new DrawMarginFrame
         {
             Fill = new SolidColorPaint(new SKColor(220, 220, 220)),
-            Stroke = new SolidColorPaint(new SKColor(180, 180, 180), 2)
+            Stroke = new SolidColorPaint(new SKColor(180, 180, 180), 1)
         };
     }
 }

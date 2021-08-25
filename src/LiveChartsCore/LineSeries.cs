@@ -476,7 +476,7 @@ namespace LiveChartsCore
                 tp = 0.1 * mp * DataPadding.Y;
             }
 
-            var rgs = GeometrySize * 0.5f + (Stroke?.StrokeThickness ?? 0);
+            var rgs = (GeometrySize + (GeometryStroke?.StrokeThickness ?? 0)) * 0.5f;
 
             return
                 new SeriesBounds(

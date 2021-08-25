@@ -141,6 +141,9 @@
     <Compile Update="Lines\AutoUpdate\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Lines\Padding\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Lines\Zoom\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

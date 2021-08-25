@@ -14,6 +14,7 @@
             "Lines/Properties",
             "Lines/Area",
             "Lines/Custom",
+            "Lines/Padding",
             "Lines/Zoom",
 
             "StepLines/Basic",

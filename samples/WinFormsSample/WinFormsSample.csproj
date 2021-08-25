@@ -119,6 +119,9 @@
     <Compile Update="Heat\Basic\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Lines\Padding\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Maps\World\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
