@@ -10,7 +10,7 @@ here is a preview (1.4MB gif, wait for it to load if you see a blank space bello
 
 ![lv2](https://user-images.githubusercontent.com/10853349/124399763-41873900-dce3-11eb-937a-947d66d42597.gif)
 
-### Install and try it fromNuGet
+### Install and try it from NuGet
 
 In Visual Studio go to the `Solution Explorer` then right click on `Dependencies` then `Manage NuGet Packages`, enable the "Include prerelease" checkbox and in the browse tab search for the view of your target platform:
 
