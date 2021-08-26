@@ -18,7 +18,7 @@ LiveChartsCore.SkiaSharpView.WPF<br/>
 LiveChartsCore.SkiaSharpView.WinForms<br/>
 LiveChartsCore.SkiaSharpView.Avalonia<br/>
 LiveChartsCore.SkiaSharpView.XamarinForms<br/>
-LiveChartsCore.SkiaSharpView.UWP (see #145)<br/>
+LiveChartsCore.SkiaSharpView.UWP (see [#145](https://github.com/beto-rodriguez/LiveCharts2/issues/145))<br/>
 LiveChartsCore.SkiaSharpView.WinUI<br/>
 
 You can also use LiveCharts 2 on a console app or on the server side installing only the core packages, and using the `ISkiaSharpChart` objects (see [this sample](https://github.com/beto-rodriguez/LiveCharts2/blob/master/samples/WPFSample/General/ChartToImage/View.xaml.cs#L28)).
