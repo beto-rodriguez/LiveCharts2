@@ -25,6 +25,10 @@ You can also use LiveCharts 2 on a console app or on the server side installing 
 
 LiveChartsCore.SkiaSharpView
 
+### Samples
+
+The new web site will be publish soon with a collection of samples using `v2`, at this moment you can browse the [samples folder](https://github.com/beto-rodriguez/LiveCharts2/tree/master/samples) in this repo.
+
 ### The Errors of v0
 
 V0 is built on top of WPF, this has many problems, WPF is not designed for the purposes of the library, it is always tricky to find a solution for the problems of the library.
