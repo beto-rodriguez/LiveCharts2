@@ -11,6 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LiveCharts2", "LiveCharts2"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView.Maui", "..\..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Maui\LiveChartsCore.SkiaSharpView.Maui.csproj", "{ED507BFF-CD9B-40B9-A2D5-F038166122F0}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView", "..\..\..\src\skiasharp\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj", "{32A0BA77-E99F-4313-8D89-B8E4D850156F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore", "..\..\..\src\LiveChartsCore\LiveChartsCore.csproj", "{31D4A74A-A629-4BBC-B578-96466DA2D88F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,12 +37,22 @@ Global
 		{ED507BFF-CD9B-40B9-A2D5-F038166122F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED507BFF-CD9B-40B9-A2D5-F038166122F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED507BFF-CD9B-40B9-A2D5-F038166122F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32A0BA77-E99F-4313-8D89-B8E4D850156F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32A0BA77-E99F-4313-8D89-B8E4D850156F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32A0BA77-E99F-4313-8D89-B8E4D850156F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32A0BA77-E99F-4313-8D89-B8E4D850156F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31D4A74A-A629-4BBC-B578-96466DA2D88F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31D4A74A-A629-4BBC-B578-96466DA2D88F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31D4A74A-A629-4BBC-B578-96466DA2D88F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31D4A74A-A629-4BBC-B578-96466DA2D88F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{ED507BFF-CD9B-40B9-A2D5-F038166122F0} = {00B084B9-FC80-4EE4-B6B9-16B193E34FDC}
+		{32A0BA77-E99F-4313-8D89-B8E4D850156F} = {00B084B9-FC80-4EE4-B6B9-16B193E34FDC}
+		{31D4A74A-A629-4BBC-B578-96466DA2D88F} = {00B084B9-FC80-4EE4-B6B9-16B193E34FDC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}
