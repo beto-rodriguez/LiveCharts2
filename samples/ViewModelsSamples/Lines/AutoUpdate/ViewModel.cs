@@ -73,6 +73,7 @@ namespace ViewModelsSamples.Lines.AutoUpdate
 
         public void RemoveFirstItem()
         {
+            if (_observableValues.Count == 0) return;
             _observableValues.RemoveAt(0);
         }
 
