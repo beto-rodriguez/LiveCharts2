@@ -142,6 +142,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui
             }
 
             motionCanvas.CanvasCore.SetPaintTasks(tasks);
+            //motionCanvas.Invalidate();
         }
     }
 }

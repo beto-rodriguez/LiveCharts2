@@ -11,17 +11,26 @@ namespace MauiSample
 		{
 			InitializeComponent();
 
-            Series = new ISeries[]
+            Values = new Dictionary<string, double>
             {
-                new PolarLineSeries<int>
-                {
-                    Values = new int[] { 15,14,13,12,11,10,9,8,7,6,5 }
-                }
+                ["mex"] = 10,
+                ["usa"] = 15,
+                ["can"] = 8,
+                ["ind"] = 12,
+                ["deu"] = 13,
+                ["chn"] = 14,
+                ["rus"] = 11,
+                ["fra"] = 8,
+                ["esp"] = 7,
+                ["kor"] = 10,
+                ["zaf"] = 12,
+                ["bra"] = 13,
+                ["are"] = 13
             };
 
             BindingContext = this;
 		}
 
-        public ISeries[] Series { get; set; }
+        public Dictionary<string, double> Values { get; set; }
     }
 }

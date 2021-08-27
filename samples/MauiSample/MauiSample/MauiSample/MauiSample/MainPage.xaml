@@ -4,6 +4,6 @@
              x:Class="MauiSample.MainPage"
              BackgroundColor="{DynamicResource PageBackgroundColor}">
 
-    <lvc:PolarChart Series="{Binding Series}"></lvc:PolarChart>
+    <lvc:GeoMap Values="{Binding Values}"></lvc:GeoMap>
 
 </ContentPage>

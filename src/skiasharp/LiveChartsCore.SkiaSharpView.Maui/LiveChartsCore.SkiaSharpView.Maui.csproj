@@ -22,6 +22,9 @@
 	  <MauiXaml Update="CartesianChart.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="GeoMap.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="PieChart.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
