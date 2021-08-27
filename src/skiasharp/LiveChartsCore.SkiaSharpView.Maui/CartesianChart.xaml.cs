@@ -81,7 +81,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui
             Series = new ObservableCollection<ISeries>();
 
             canvas.SkCanvasView.EnableTouchEvents = true;
-            canvas.SkCanvasView.Touch += SkCanvasView_Touch; ;
+            canvas.SkCanvasView.Touch += SkCanvasView_Touch;
 
             if (_core is null) throw new Exception("Core not found!");
             _core.Measuring += OnCoreMeasuring;

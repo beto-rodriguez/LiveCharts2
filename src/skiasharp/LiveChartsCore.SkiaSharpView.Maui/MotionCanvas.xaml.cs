@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Diagnostics;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -48,6 +49,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui
                     $"If you override the template please add an {nameof(SKCanvasView)} to the template and name it 'skiaElement'");
 
             skiaElement.PaintSurface += SkiaElement_PaintSurface;
+            CanvasCore.Invalidated += OnCanvasCoreInvalidated;
         }
 
         /// <summary>
@@ -105,6 +107,11 @@ namespace LiveChartsCore.SkiaSharpView.Maui
         private void SkiaElement_PaintSurface(object? sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
         {
             CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
+        }
+
+        private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
+        {
+            Invalidate();
         }
 
         private async void RunDrawingLoop()
