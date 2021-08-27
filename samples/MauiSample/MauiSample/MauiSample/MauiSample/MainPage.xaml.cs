@@ -13,9 +13,21 @@ namespace MauiSample
 
             Series = new ISeries[]
             {
-                new LineSeries<int>
+                new PieSeries<int>
                 {
-                    Values = new int[] { 4, 2, 6, 2, 5 }
+                    Values = new int[] { 4 }
+                },
+                new PieSeries<int>
+                {
+                    Values = new int[] { 4 }
+                },
+                new PieSeries<int>
+                {
+                    Values = new int[] { 4 }
+                },
+                new PieSeries<int>
+                {
+                    Values = new int[] { 4 }
                 }
             };
 
