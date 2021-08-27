@@ -11,7 +11,7 @@ namespace MauiSample
 		{
 			InitializeComponent();
 
-			MainPage = new MainPage();
+			MainPage = new AppShell();
 		}
 	}
 }

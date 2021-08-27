@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MauiSample.Axes.Multiple.View"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             xmlns:vms="clr-namespace:ViewModelsSamples.Axes.Multiple;assembly=ViewModelsSamples"
+             >
+    <ContentPage.BindingContext>
+        <vms:ViewModel/>
+    </ContentPage.BindingContext>
+	<ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <lvc:CartesianChart
+                Series="{Binding Series}"
+                YAxes="{Binding YAxes}"
+                LegendPosition="Bottom"
+                LegendFontFamily="Courier New"
+                LegendFontSize="25"
+                LegendTextBrush="#505050"
+                LegendBackground="#fafafa">
+            </lvc:CartesianChart>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

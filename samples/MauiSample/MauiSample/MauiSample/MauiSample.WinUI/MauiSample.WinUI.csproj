@@ -42,6 +42,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Maui\LiveChartsCore.SkiaSharpView.Maui.csproj" />
+	  <ProjectReference Include="..\..\..\..\ViewModelsSamples\ViewModelsSamples.csproj" />
 	</ItemGroup>
 
 </Project>
