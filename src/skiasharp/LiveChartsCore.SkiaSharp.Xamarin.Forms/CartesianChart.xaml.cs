@@ -44,11 +44,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
     {
         #region fields
 
-        /// <summary>
-        /// The core
-        /// </summary>
-        protected Chart<SkiaSharpDrawingContext>? core;
-
+        private Chart<SkiaSharpDrawingContext>? _core;
         private readonly CollectionDeepObserver<ISeries> _seriesObserver;
         private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
         private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
@@ -89,10 +85,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             canvas.SkCanvasView.EnableTouchEvents = true;
             canvas.SkCanvasView.Touch += OnSkCanvasTouched;
 
-            if (core is null) throw new Exception("Core not found!");
-            core.Measuring += OnCoreMeasuring;
-            core.UpdateStarted += OnCoreUpdateStarted;
-            core.UpdateFinished += OnCoreUpdateFinished;
+            if (_core is null) throw new Exception("Core not found!");
+            _core.Measuring += OnCoreMeasuring;
+            _core.UpdateStarted += OnCoreUpdateStarted;
+            _core.UpdateFinished += OnCoreUpdateFinished;
         }
 
         #region bindable properties 
@@ -107,8 +103,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 {
                     var chart = (CartesianChart)o;
                     chart.CoreCanvas.Sync = newValue;
-                    if (chart.core is null) return;
-                    chart.core.Update();
+                    if (chart._core is null) return;
+                    chart._core.Update();
                 });
 
         /// <summary>
@@ -123,8 +119,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     var seriesObserver = chart._seriesObserver;
                     seriesObserver.Dispose((IEnumerable<ISeries>)oldValue);
                     seriesObserver.Initialize((IEnumerable<ISeries>)newValue);
-                    if (chart.core is null) return;
-                    chart.core.Update();
+                    if (chart._core is null) return;
+                    chart._core.Update();
                 });
 
         /// <summary>
@@ -139,8 +135,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     var observer = chart._xObserver;
                     observer.Dispose((IEnumerable<ICartesianAxis>)oldValue);
                     observer.Initialize((IEnumerable<ICartesianAxis>)newValue);
-                    if (chart.core is null) return;
-                    chart.core.Update();
+                    if (chart._core is null) return;
+                    chart._core.Update();
                 });
 
         /// <summary>
@@ -155,8 +151,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     var observer = chart._yObserver;
                     observer.Dispose((IEnumerable<ICartesianAxis>)oldValue);
                     observer.Initialize((IEnumerable<ICartesianAxis>)newValue);
-                    if (chart.core is null) return;
-                    chart.core.Update();
+                    if (chart._core is null) return;
+                    chart._core.Update();
                 });
 
         /// <summary>
@@ -171,8 +167,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     var observer = chart._sectionsObserverer;
                     observer.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)oldValue);
                     observer.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)newValue);
-                    if (chart.core is null) return;
-                    chart.core.Update();
+                    if (chart._core is null) return;
+                    chart._core.Update();
                 });
 
         /// <summary>
@@ -364,7 +360,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         public bool DesignerMode => DesignMode.IsDesignModeEnabled;
 
         /// <inheritdoc cref="IChartView.CoreChart" />
-        public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
+        public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
 
         LvcColor IChartView.BackColor
         {
@@ -375,7 +371,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             set => Background = new SolidColorBrush(new c(value.R / 255, value.G / 255, value.B / 255, value.A / 255));
         }
 
-        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
+        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => _core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)_core;
 
         LvcSize IChartView.ControlSize => new()
         {
@@ -656,11 +652,11 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <inheritdoc cref="IChartView.UpdaterThrottler" />
         public TimeSpan UpdaterThrottler
         {
-            get => core?.UpdaterThrottler ?? throw new Exception("core not set yet.");
+            get => _core?.UpdaterThrottler ?? throw new Exception("core not set yet.");
             set
             {
-                if (core is null) throw new Exception("core not set yet.");
-                core.UpdaterThrottler = value;
+                if (_core is null) throw new Exception("core not set yet.");
+                _core.UpdaterThrottler = value;
             }
         }
 
@@ -669,23 +665,23 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
         public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
-            if (core is null) throw new Exception("core not found");
-            var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
+            if (_core is null) throw new Exception("core not found");
+            var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)_core;
             return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
         }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
         public void ShowTooltip(IEnumerable<TooltipPoint> points)
         {
-            if (tooltip is null || core is null) return;
+            if (tooltip is null || _core is null) return;
 
-            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(points, core);
+            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(points, _core);
         }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
         public void HideTooltip()
         {
-            if (tooltip is null || core is null) return;
+            if (tooltip is null || _core is null) return;
 
             ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
         }
@@ -717,8 +713,8 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <returns></returns>
         protected void InitializeCore()
         {
-            core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
-            core.Update();
+            _core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            _core.Update();
         }
 
         /// <summary>
@@ -731,34 +727,34 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         protected static void OnBindablePropertyChanged(BindableObject o, object oldValue, object newValue)
         {
             var chart = (CartesianChart)o;
-            if (chart.core is null) return;
-            chart.core.Update();
+            if (chart._core is null) return;
+            chart._core.Update();
         }
 
         private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (core is null) return;
-            core.Update();
+            if (_core is null) return;
+            _core.Update();
         }
 
         private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (core is null) return;
-            core.Update();
+            if (_core is null) return;
+            _core.Update();
         }
 
         private void OnSizeChanged(object? sender, EventArgs e)
         {
-            if (core is null) return;
-            core.Update();
+            if (_core is null) return;
+            _core.Update();
         }
 
         private void PanGestureRecognizer_PanUpdated(object? sender, PanUpdatedEventArgs e)
         {
-            if (core is null) return;
+            if (_core is null) return;
             if (e.StatusType != GestureStatus.Running) return;
 
-            var c = (CartesianChart<SkiaSharpDrawingContext>)core;
+            var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
             var delta = new LvcPoint((float)e.TotalX, (float)e.TotalY);
             var args = new PanGestureEventArgs(delta);
             c.InvokePanGestrue(args);
@@ -767,9 +763,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         private void PinchGestureRecognizer_PinchUpdated(object? sender, PinchGestureUpdatedEventArgs e)
         {
-            if (e.Status != GestureStatus.Running || Math.Abs(e.Scale - 1) < 0.05 || core is null) return;
+            if (e.Status != GestureStatus.Running || Math.Abs(e.Scale - 1) < 0.05 || _core is null) return;
 
-            var c = (CartesianChart<SkiaSharpDrawingContext>)core;
+            var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
             var p = e.ScaleOrigin;
             var s = c.ControlSize;
 
@@ -780,11 +776,11 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         private void OnSkCanvasTouched(object? sender, SkiaSharp.Views.Forms.SKTouchEventArgs e)
         {
-            if (core is null) return;
+            if (_core is null) return;
             if (TooltipPosition == TooltipPosition.Hidden) return;
             var location = new LvcPoint(e.Location.X, e.Location.Y);
-            core.InvokePointerDown(location);
-            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindPointsNearTo(location), core);
+            _core.InvokePointerDown(location);
+            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(_core.FindPointsNearTo(location), _core);
         }
 
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)

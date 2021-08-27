@@ -34,7 +34,7 @@ using Xamarin.Forms.Xaml;
 namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 {
     /// <summary>
-    /// The motion canvas control fro Xamarin, <see cref="MotionCanvas{TDrawingContext}"/>.
+    /// The motion canvas control for Xamarin, <see cref="MotionCanvas{TDrawingContext}"/>.
     /// </summary>
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MotionCanvas : ContentView

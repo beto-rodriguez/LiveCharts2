@@ -48,9 +48,6 @@ namespace LiveChartsCore.SkiaSharpView.Maui
                     $"If you override the template please add an {nameof(SKCanvasView)} to the template and name it 'skiaElement'");
 
             skiaElement.PaintSurface += SkiaElement_PaintSurface;
-
-            //skiaElement.PaintSurface += OnCanvasViewPaintSurface;
-            //CanvasCore.Invalidated += OnCanvasCoreInvalidated;
         }
 
         /// <summary>

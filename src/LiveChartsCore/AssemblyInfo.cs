@@ -30,3 +30,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.WPF")]
 [assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.XamarinForms")]
 [assembly: InternalsVisibleTo("LiveChartsBackersPackage")]
+[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Maui")]
