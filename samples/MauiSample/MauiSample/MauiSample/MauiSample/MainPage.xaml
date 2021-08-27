@@ -4,6 +4,6 @@
              x:Class="MauiSample.MainPage"
              BackgroundColor="{DynamicResource PageBackgroundColor}">
 
-    <lvc:PieChart Series="{Binding Series}"></lvc:PieChart>
+    <lvc:PolarChart Series="{Binding Series}"></lvc:PolarChart>
 
 </ContentPage>
