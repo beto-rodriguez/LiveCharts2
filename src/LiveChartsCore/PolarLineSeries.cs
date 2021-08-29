@@ -278,8 +278,6 @@ namespace LiveChartsCore
                         v.Bezier.Y2 = y2b;
 
                         data.TargetPoint.Context.Visual = v;
-                        v.Geometry.CompleteAllTransitions();
-                        v.Bezier.CompleteAllTransitions();
                         OnPointCreated(data.TargetPoint);
                     }
 
@@ -794,7 +792,8 @@ namespace LiveChartsCore
                 .WithAnimation(animation =>
                     animation
                         .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
+                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
+                .CompleteCurrentTransitions();
 
             _ = visual.Bezier
                 .TransitionateProperties(
@@ -807,7 +806,8 @@ namespace LiveChartsCore
                 .WithAnimation(animation =>
                     animation
                         .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
+                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
+                .CompleteCurrentTransitions();
         }
 
         /// <summary>

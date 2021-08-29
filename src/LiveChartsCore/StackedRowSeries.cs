@@ -155,7 +155,6 @@ namespace LiveChartsCore
 
                     visual = r;
                     point.Context.Visual = visual;
-                    r.CompleteAllTransitions();
                     OnPointCreated(point);
 
                     _ = everFetched.Add(point);
@@ -305,7 +304,8 @@ namespace LiveChartsCore
                 .WithAnimation(animation =>
                     animation
                         .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
+                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
+                .CompleteCurrentTransitions();
 
             _ = visual
                 .TransitionateProperties(
@@ -314,7 +314,8 @@ namespace LiveChartsCore
                 .WithAnimation(animation =>
                     animation
                         .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
+                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
+                .CompleteCurrentTransitions();
         }
 
         /// <summary>
