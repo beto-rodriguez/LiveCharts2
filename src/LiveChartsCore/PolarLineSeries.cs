@@ -278,9 +278,9 @@ namespace LiveChartsCore
                         v.Bezier.Y2 = y2b;
 
                         data.TargetPoint.Context.Visual = v;
-                        OnPointCreated(data.TargetPoint);
                         v.Geometry.CompleteAllTransitions();
                         v.Bezier.CompleteAllTransitions();
+                        OnPointCreated(data.TargetPoint);
                     }
 
                     _ = everFetched.Add(data.TargetPoint);

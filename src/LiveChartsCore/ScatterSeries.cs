@@ -158,8 +158,8 @@ namespace LiveChartsCore
 
                     visual = r;
                     point.Context.Visual = visual;
-                    OnPointCreated(point);
                     r.CompleteAllTransitions();
+                    OnPointCreated(point);
 
                     _ = everFetched.Add(point);
                 }

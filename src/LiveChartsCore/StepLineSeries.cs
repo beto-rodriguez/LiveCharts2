@@ -252,9 +252,9 @@ namespace LiveChartsCore
                         v.StepSegment.Y1 = y1b;
 
                         data.TargetPoint.Context.Visual = v;
-                        OnPointCreated(data.TargetPoint);
                         v.Geometry.CompleteAllTransitions();
                         v.StepSegment.CompleteAllTransitions();
+                        OnPointCreated(data.TargetPoint);
                     }
 
                     _ = everFetched.Add(data.TargetPoint);
