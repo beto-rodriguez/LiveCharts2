@@ -33,7 +33,7 @@
     <Compile Update="Axes\LabelsRotation\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Axes\ColorsAndPositions\View.xaml.cs">
+    <Compile Update="Axes\ColorsAndPosition\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Axes\DateTimeScaled\View.xaml.cs">
@@ -90,7 +90,7 @@
     <Compile Update="Design\LinearGradients\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Financial\Basic\View.xaml.cs">
+    <Compile Update="Financial\BasicCandlesticks\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="General\Animations\View.xaml.cs">
