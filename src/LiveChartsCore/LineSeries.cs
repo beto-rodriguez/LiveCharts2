@@ -264,8 +264,6 @@ namespace LiveChartsCore
 
                         data.TargetPoint.Context.Visual = v;
                         OnPointCreated(data.TargetPoint);
-                        v.Geometry.CompleteAllTransitions();
-                        v.Bezier.CompleteAllTransitions();
                     }
 
                     _ = everFetched.Add(data.TargetPoint);
@@ -729,7 +727,8 @@ namespace LiveChartsCore
                 .WithAnimation(animation =>
                     animation
                         .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
+                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
+                .CompleteCurrentTransitions();
 
             _ = visual.Bezier
                 .TransitionateProperties(
@@ -742,7 +741,8 @@ namespace LiveChartsCore
                 .WithAnimation(animation =>
                     animation
                         .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
+                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
+                .CompleteCurrentTransitions();
         }
 
         /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeletePoint(ChartPoint, Scaler, Scaler)"/>

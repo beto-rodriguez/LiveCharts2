@@ -281,7 +281,6 @@ namespace LiveChartsCore
                     visual = p;
                     point.Context.Visual = visual;
                     OnPointCreated(point);
-                    p.CompleteAllTransitions();
 
                     _ = everFetched.Add(point);
                 }
@@ -539,7 +538,8 @@ namespace LiveChartsCore
                 .WithAnimation(animation =>
                     animation
                         .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
+                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
+                .CompleteCurrentTransitions();
         }
 
         /// <summary>
