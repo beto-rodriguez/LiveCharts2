@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Globalization;
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
@@ -26,15 +25,13 @@ namespace AvaloniaSample.Pies.Processing
     {
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is not IEnumerable enumerable) return null;
-
-            var enumerator = enumerable.GetEnumerator();
-            return enumerator.MoveNext() && enumerator.Current is SolidColorPaint solidPaintTask
-                ? new SolidColorBrush(new Color(
-                    solidPaintTask.Color.Alpha,
-                    solidPaintTask.Color.Red,
-                    solidPaintTask.Color.Green,
-                    solidPaintTask.Color.Blue))
+            return value is SolidColorPaint solidColor
+                ? new SolidColorBrush(
+                    Color.FromArgb(
+                        solidColor.Color.Alpha,
+                        solidColor.Color.Red,
+                        solidColor.Color.Green,
+                        solidColor.Color.Blue))
                 : null;
         }
 

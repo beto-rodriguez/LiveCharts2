@@ -27,13 +27,13 @@
                         <TextBlock Text="{Binding Values[0].Value}"
                                    FontSize="25"
                                    VerticalAlignment="Center"
-                                   Foreground="{Binding DefaultPaintContext.PaintTasks, Converter={StaticResource toBrush}}"
+                                   Foreground="{Binding Fill, Converter={StaticResource toBrush}}"
                                    FontWeight="SemiBold" />
                         <TextBlock Margin="3 0"
                                    Text="{Binding Name}"
                                    FontSize="14"
                                    VerticalAlignment="Center"
-                                   Foreground="{Binding DefaultPaintContext.PaintTasks, Converter={StaticResource toBrush}}"/>
+                                   Foreground="{Binding Fill, Converter={StaticResource toBrush}}"/>
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

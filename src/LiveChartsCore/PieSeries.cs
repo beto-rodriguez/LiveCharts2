@@ -502,7 +502,7 @@ namespace LiveChartsCore
         protected override void OnPaintChanged(string? propertyName)
         {
             OnSeriesMiniatureChanged();
-            OnPropertyChanged();
+            OnPropertyChanged(propertyName);
         }
 
         /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>

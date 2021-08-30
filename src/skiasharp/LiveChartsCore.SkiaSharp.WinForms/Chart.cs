@@ -304,6 +304,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         void IChartView.InvokeOnUIThread(Action action)
         {
+            if (!IsHandleCreated) return;
             _ = BeginInvoke(action).AsyncWaitHandle.WaitOne();
         }
 

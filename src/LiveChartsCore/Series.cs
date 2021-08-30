@@ -417,9 +417,9 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             if (!((ISeries)this).IsNotifyingChanges) return;
             NotifySubscribers();
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private TooltipPoint[] FilterTooltipPoints(

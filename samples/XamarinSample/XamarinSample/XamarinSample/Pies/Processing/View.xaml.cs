@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Globalization;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Xamarin.Forms;
@@ -20,15 +19,12 @@ namespace XamarinSample.Pies.Processing
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is not IEnumerable enumerable) return null;
-
-            var enumerator = enumerable.GetEnumerator();
-            return enumerator.MoveNext() && enumerator.Current is SolidColorPaint solidPaintTask
+            return value is SolidColorPaint solidColor
                 ? Color.FromRgba(
-                    solidPaintTask.Color.Red,
-                    solidPaintTask.Color.Green,
-                    solidPaintTask.Color.Blue,
-                    solidPaintTask.Color.Alpha)
+                        solidColor.Color.Red,
+                        solidColor.Color.Green,
+                        solidColor.Color.Blue,
+                        solidColor.Color.Alpha)
                 : null;
         }
 
