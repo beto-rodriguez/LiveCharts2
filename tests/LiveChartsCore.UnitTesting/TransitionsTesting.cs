@@ -125,5 +125,44 @@ namespace LiveChartsCore.UnitTesting
             DrawFrame(time);
             Assert.IsTrue(p.IsCompleted);
         }
+
+        [TestMethod]
+        public void KeyFramesTest()
+        {
+            var f = EasingFunctions.BuildFunctionUsingKeyFrames(
+                new[]
+                {
+                    new KeyFrame { Time = 0, Value = 0, EasingFunction = EasingFunctions.Lineal },
+                    new KeyFrame { Time = 0.5f, Value = 1, EasingFunction = EasingFunctions.Lineal },
+                    new KeyFrame { Time = 1, Value = 0, EasingFunction = EasingFunctions.Lineal },
+                });
+
+            var r = new[] { 0, 0.2f, 0.4f, 0.6f, 0.8f, 1, 0.8f, 0.6f, 0.4f, 0.2f, 0 };
+            var i = 0;
+
+            for (float t = 0; t <= 1; t += 0.1f)
+            {
+                var p = f(t);
+                Assert.IsTrue(Math.Abs(p - r[i++]) < 0.000001);
+            }
+
+            f = EasingFunctions.BuildFunctionUsingKeyFrames(
+                new[]
+                {
+                    new KeyFrame { Time = 0, Value = 0, EasingFunction = EasingFunctions.Lineal },
+                    new KeyFrame { Time = 0.30f, Value = 0, EasingFunction = EasingFunctions.Lineal },
+                    new KeyFrame { Time = 0.80f, Value = 1, EasingFunction = EasingFunctions.Lineal },
+                    new KeyFrame { Time = 1, Value = 1, EasingFunction = EasingFunctions.Lineal },
+                });
+
+            r = new[] { 0, 0, 0, 0, 0.2f, 0.4f, 0.6f, 0.8f, 1, 1 };
+            i = 0;
+
+            for (float t = 0; t <= 1; t += 0.1f)
+            {
+                var p = f(t);
+                Assert.IsTrue(Math.Abs(p - r[i++]) < 0.000001);
+            }
+        }
     }
 }

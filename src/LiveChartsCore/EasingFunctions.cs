@@ -321,10 +321,12 @@ namespace LiveChartsCore
                         next = keyFrames[i + 1];
                     }
 
-                    var d = next.Time - current.Time;
-                    var p = (t - current.Time) / d;
+                    var dt = next.Time - current.Time;
+                    var dv = next.Value - current.Value;
 
-                    return current.Value + next.EasingFunction(p) * (current.Value > next.Value ? -1 : 1);
+                    var p = (t - current.Time) / dt;
+
+                    return current.Value + next.EasingFunction(p) * dv;
                 };
             };
 
