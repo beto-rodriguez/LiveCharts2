@@ -7,7 +7,6 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace LiveChartsCore.UnitTesting.MockedObjects
 {
@@ -28,6 +27,8 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
         }
 
         public bool DesignerMode => false;
+
+        public bool IsInVisualTree => true;
 
         IChart IChartView.CoreChart => Core;
 
