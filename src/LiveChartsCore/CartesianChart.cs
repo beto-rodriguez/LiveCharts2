@@ -62,7 +62,7 @@ namespace LiveChartsCore
             Action<LiveChartsSettings> defaultPlatformConfig,
             MotionCanvas<TDrawingContext> canvas,
             bool lockOnMeasure = false)
-            : base(canvas, defaultPlatformConfig, lockOnMeasure)
+            : base(canvas, defaultPlatformConfig, view, lockOnMeasure)
         {
             _chartView = view;
 

@@ -64,17 +64,22 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="canvas">The canvas.</param>
         /// <param name="defaultPlatformConfig">The default platform configuration.</param>
+        /// <param name="view">The chart view.</param>
         /// <param name="lockOnMeasure">Indicates if the thread should lock the measure operation</param>
         protected Chart(
             MotionCanvas<TDrawingContext> canvas,
             Action<LiveChartsSettings> defaultPlatformConfig,
+            IChartView view,
             bool lockOnMeasure = false)
         {
             Canvas = canvas;
             canvas.Validated += OnCanvasValidated;
             EasingFunction = EasingFunctions.QuadraticOut;
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(defaultPlatformConfig);
-            _updateThrottler = new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
+
+            _updateThrottler = view.DesignerMode
+                    ? new ActionThrottler(() => Task.CompletedTask, TimeSpan.FromMilliseconds(50))
+                    : new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
 
             PointerDown += Chart_PointerDown;
             PointerMove += Chart_PointerMove;
@@ -416,18 +421,16 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected virtual Task UpdateThrottlerUnlocked()
         {
-            return View.DesignerMode
-                ? Task.CompletedTask
-                : Task.Run(() =>
+            return Task.Run(() =>
+            {
+                View.InvokeOnUIThread(() =>
                 {
-                    View.InvokeOnUIThread(() =>
+                    lock (Canvas.Sync)
                     {
-                        lock (Canvas.Sync)
-                        {
-                            Measure();
-                        }
-                    });
+                        Measure();
+                    }
                 });
+            });
         }
 
         private Task TooltipThrottlerUnlocked()
@@ -457,49 +460,20 @@ namespace LiveChartsCore
 
         private Task PanningThrottlerUnlocked()
         {
-            return Task.Run((Action)(() =>
-                View.InvokeOnUIThread((Action)(() =>
+            return Task.Run(() =>
+                View.InvokeOnUIThread(() =>
                 {
                     if (this is not CartesianChart<TDrawingContext> cartesianChart) return;
 
                     lock (Canvas.Sync)
                     {
                         cartesianChart.Pan(
-
-                        /* Unmerged change from project 'LiveChartsCore (netcoreapp2.0)'
-                        Before:
-                                                new LvPoint(
-                        After:
-                                                new Drawing.LvPoint(
-                        */
-
-                        /* Unmerged change from project 'LiveChartsCore (netstandard2.0)'
-                        Before:
-                                                new LvPoint(
-                        After:
-                                                new Drawing.LvPoint(
-                        */
-                        (LvcPoint)new LvcPoint(
-                        (float)(_pointerPanningPosition.X - _pointerPreviousPanningPosition.X),
-                        (float)(_pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y)));
-
-
-                        /* Unmerged change from project 'LiveChartsCore (netcoreapp2.0)'
-                        Before:
-                                                _pointerPreviousPanningPosition = new LvPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
-                        After:
-                                                _pointerPreviousPanningPosition = new Drawing.LvPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
-                        */
-
-                        /* Unmerged change from project 'LiveChartsCore (netstandard2.0)'
-                        Before:
-                                                _pointerPreviousPanningPosition = new LvPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
-                        After:
-                                                _pointerPreviousPanningPosition = new Drawing.LvPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
-                        */
+                        new LvcPoint(
+                            (float)(_pointerPanningPosition.X - _pointerPreviousPanningPosition.X),
+                            (float)(_pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y)));
                         _pointerPreviousPanningPosition = new LvcPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
                     }
-                }))));
+                }));
         }
 
         private void OnCanvasValidated(MotionCanvas<TDrawingContext> chart)
