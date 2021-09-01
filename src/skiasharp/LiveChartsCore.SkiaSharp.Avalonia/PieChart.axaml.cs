@@ -103,6 +103,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             PointerLeave += CartesianChart_PointerLeave;
 
             PointerMoved += CartesianChart_PointerMoved;
+            DetachedFromVisualTree += PieChart_DetachedFromVisualTree;
         }
 
         #region avalonia/dependency properties
@@ -288,7 +289,10 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         #region properties
 
         /// <inheritdoc cref="IChartView.DesignerMode" />
-        public bool DesignerMode => Design.IsDesignMode;
+        bool IChartView.DesignerMode => Design.IsDesignMode;
+
+        /// <inheritdoc cref="IChartView.IsInVisualTree" />
+        bool IChartView.IsInVisualTree => Parent is not null;
 
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
@@ -709,8 +713,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         private void CartesianChart_PointerLeave(object? sender, PointerEventArgs e)
         {
-            //_ = Dispatcher.UIThread.InvokeAsync(HideTooltip, DispatcherPriority.Background);
+            _ = Dispatcher.UIThread.InvokeAsync(HideTooltip, DispatcherPriority.Background);
             core?.InvokePointerLeft();
+        }
+
+        private void PieChart_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+        {
+            core?.Unload();
         }
     }
 }

@@ -105,6 +105,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             PointerMoved += PolarChart_PointerMoved;
 
             PointerLeave += PolarChart_PointerLeave;
+            DetachedFromVisualTree += PolarChart_DetachedFromVisualTree;
         }
 
         #region avalonia/dependency properties
@@ -285,7 +286,10 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         #region properties
 
         /// <inheritdoc cref="IChartView.DesignerMode" />
-        public bool DesignerMode => Design.IsDesignMode;
+        bool IChartView.DesignerMode => Design.IsDesignMode;
+
+        /// <inheritdoc cref="IChartView.IsInVisualTree" />
+        bool IChartView.IsInVisualTree => Parent is not null;
 
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
@@ -762,6 +766,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             _ = Dispatcher.UIThread.InvokeAsync(HideTooltip, DispatcherPriority.Background);
             core?.InvokePointerLeft();
+        }
+
+        private void PolarChart_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+        {
+            core?.Unload();
         }
     }
 }

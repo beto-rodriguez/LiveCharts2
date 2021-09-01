@@ -386,7 +386,7 @@ namespace LiveChartsCore
             foreach (var point in toDeletePoints)
             {
                 if (point.Context.Chart != pieChart.View) continue;
-                SoftDeletePoint(point, u, u);
+                SoftDeleteOrDisposePoint(point, u, u);
                 _ = everFetched.Remove(point);
             }
         }
@@ -394,9 +394,9 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IPieSeries{TDrawingContext}.GetBounds(PieChart{TDrawingContext})"/>
         public DimensionalBounds GetBounds(PieChart<TDrawingContext> chart)
         {
-            return dataProvider is null
+            return DataProvider is null
                 ? throw new Exception("Data provider not found")
-                : dataProvider.GetPieBounds(chart, this).Bounds;
+                : DataProvider.GetPieBounds(chart, this).Bounds;
         }
 
         /// <summary>
@@ -548,18 +548,18 @@ namespace LiveChartsCore
         /// <param name="point">The point.</param>
         /// <param name="primaryScale">The primary scale.</param>
         /// <param name="secondaryScale">The secondary scale.</param>
-        protected virtual void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
+        protected virtual void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
         {
             var visual = (TVisual?)point.Context.Visual;
             if (visual is null) return;
+            if (DataProvider is null) throw new Exception("Data provider not found");
 
             visual.StartAngle += visual.SweepAngle;
             visual.SweepAngle = 0;
             visual.CornerRadius = 0;
             visual.RemoveOnCompleted = true;
 
-            if (dataProvider is null) throw new Exception("Data provider not found");
-            dataProvider.DisposePoint(point);
+            DataProvider.DisposePoint(point);
 
             var label = (TLabel?)point.Context.Label;
             if (label is null) return;
@@ -622,7 +622,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="chart"></param>
         /// <inheritdoc cref="M:LiveChartsCore.ISeries.Delete(LiveChartsCore.Kernel.IChartView)" />
-        public override void SoftDelete(IChartView chart)
+        public override void SoftDeleteOrDispose(IChartView chart)
         {
             var core = ((IPieChartView<TDrawingContext>)chart).Core;
             var u = new Scaler();
@@ -631,7 +631,7 @@ namespace LiveChartsCore
             foreach (var point in everFetched)
             {
                 if (point.Context.Chart != chart) continue;
-                SoftDeletePoint(point, u, u);
+                SoftDeleteOrDisposePoint(point, u, u);
                 toDelete.Add(point);
             }
 
@@ -642,6 +642,8 @@ namespace LiveChartsCore
 
             foreach (var item in toDelete) _ = everFetched.Remove(item);
 
+            // the following code is useful to ???
+            if (!chart.IsInVisualTree) return;
             ((ISeries)this).IsNotifyingChanges = false;
             IsVisible = false;
             ((ISeries)this).IsNotifyingChanges = false;

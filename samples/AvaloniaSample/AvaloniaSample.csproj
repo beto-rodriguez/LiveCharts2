@@ -96,7 +96,10 @@
     <Compile Update="General\MultiThreading\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="General\TwoChartsOneSeries\View.axaml.cs">
+    <Compile Update="VisualTest\ReattachVisual\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="VisualTest\TwoChartsOneSeries\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="General\ChartToImage\View.axaml.cs">

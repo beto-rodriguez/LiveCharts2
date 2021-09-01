@@ -2,7 +2,7 @@
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
-namespace ViewModelsSamples.General.TwoChartsOneSeries
+namespace ViewModelsSamples.VisualTest.TwoChartsOneSeries
 {
     public class ViewModel
     {

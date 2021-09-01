@@ -212,6 +212,12 @@
     <Compile Update="StackedBars\Basic\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="VisualTest\ReattachVisual\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="VisualTest\TwoChartsOneSeries\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
   </ItemGroup>
 
 </Project>

@@ -141,6 +141,24 @@ namespace LiveChartsCore.Kernel.Data
         }
 
         /// <summary>
+        /// Disposes the data provider from the fiven chart.
+        /// </summary>
+        /// <param name="chart"></param>
+        public virtual void Dispose(IChart chart)
+        {
+            if (_isValueType)
+            {
+                var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
+                _ = _byChartbyValueVisualMap.Remove(canvas.Sync);
+            }
+            else
+            {
+                var canvas = (MotionCanvas<TDrawingContext>)chart.Canvas;
+                _ = _byChartByReferenceVisualMap.Remove(canvas.Sync);
+            }
+        }
+
+        /// <summary>
         /// Gets the Cartesian bounds.
         /// </summary>
         /// <param name="chart">The chart.</param>

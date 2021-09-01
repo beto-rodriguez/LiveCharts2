@@ -75,6 +75,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                 });
 
             Loaded += OnLoaded;
+            Unloaded += OnUnloaded;
         }
 
         #region dependency properties
@@ -323,7 +324,10 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         FrameworkElement IUwpChart.Legend => legend;
 
         /// <inheritdoc cref="IChartView.DesignerMode" />
-        public bool DesignerMode => Windows.ApplicationModel.DesignMode.DesignModeEnabled;
+        bool IChartView.DesignerMode => Windows.ApplicationModel.DesignMode.DesignModeEnabled;
+
+        /// <inheritdoc cref="IChartView.IsInVisualTree" />
+        bool IChartView.IsInVisualTree => Parent is not null;
 
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
@@ -730,21 +734,24 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             var canvas = (MotionCanvas)FindName("motionCanvas");
             _canvas = canvas;
 
-            _core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            if (_core is null)
+            {
+                _core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
 
-            if (SyncContext != null)
-                _canvas.CanvasCore.Sync = SyncContext;
+                if (SyncContext != null)
+                    _canvas.CanvasCore.Sync = SyncContext;
 
-            if (_core == null) throw new Exception("Core not found!");
-            _core.Update();
+                if (_core == null) throw new Exception("Core not found!");
+                _core.Update();
 
-            _core.Measuring += OnCoreMeasuring;
-            _core.UpdateStarted += OnCoreUpdateStarted;
-            _core.UpdateFinished += OnCoreUpdateFinished;
+                _core.Measuring += OnCoreMeasuring;
+                _core.UpdateStarted += OnCoreUpdateStarted;
+                _core.UpdateFinished += OnCoreUpdateFinished;
 
-            SizeChanged += OnSizeChanged;
-            PointerMoved += OnPointerMoved;
-            PointerExited += OnPointerExited;
+                SizeChanged += OnSizeChanged;
+                PointerMoved += OnPointerMoved;
+                PointerExited += OnPointerExited;
+            }
 
             _core.Update();
         }
@@ -780,6 +787,11 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         {
             HideTooltip();
             _core?.InvokePointerLeft();
+        }
+
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            _core?.Unload();
         }
 
         private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)

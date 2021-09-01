@@ -228,7 +228,7 @@ namespace LiveChartsCore
             foreach (var point in toDeletePoints)
             {
                 if (point.Context.Chart != cartesianChart.View) continue;
-                SoftDeletePoint(point, primaryScale, secondaryScale);
+                SoftDeleteOrDisposePoint(point, primaryScale, secondaryScale);
                 _ = everFetched.Remove(point);
             }
         }
@@ -314,19 +314,19 @@ namespace LiveChartsCore
                 .CompleteCurrentTransitions();
         }
 
-        /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeletePoint(ChartPoint, Scaler, Scaler)"/>
-        protected override void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
+        /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
+        protected override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
         {
             var visual = (TVisual?)point.Context.Visual;
             if (visual is null) return;
-            if (dataProvider is null) throw new Exception("Data provider not found");
+            if (DataProvider is null) throw new Exception("Data provider not found");
 
             var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
             if (chartView.Core.IsZoomingOrPanning)
             {
                 visual.CompleteAllTransitions();
                 visual.RemoveOnCompleted = true;
-                dataProvider.DisposePoint(point);
+                DataProvider.DisposePoint(point);
                 return;
             }
 
@@ -338,7 +338,7 @@ namespace LiveChartsCore
             visual.Height = 0;
             visual.RemoveOnCompleted = true;
 
-            dataProvider.DisposePoint(point);
+            DataProvider.DisposePoint(point);
 
             var label = (TLabel?)point.Context.Label;
             if (label is null) return;

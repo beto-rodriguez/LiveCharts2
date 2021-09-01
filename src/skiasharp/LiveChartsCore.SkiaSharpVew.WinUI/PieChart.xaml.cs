@@ -65,6 +65,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
                 });
 
             Loaded += OnLoaded;
+            Unloaded += OnUnloaded;
         }
 
         #region dependency properties
@@ -313,7 +314,10 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         FrameworkElement IWinUIChart.Legend => legend;
 
         /// <inheritdoc cref="IChartView.DesignerMode" />
-        public bool DesignerMode => Windows.ApplicationModel.DesignMode.DesignModeEnabled;
+        bool IChartView.DesignerMode => Windows.ApplicationModel.DesignMode.DesignModeEnabled;
+
+        /// <inheritdoc cref="IChartView.IsInVisualTree" />
+        bool IChartView.IsInVisualTree => Parent is not null;
 
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
@@ -725,23 +729,26 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             var canvas = (MotionCanvas)FindName("motionCanvas");
             _canvas = canvas;
 
-            _core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
-            //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
-            //tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
+            if (_core is null)
+            {
+                _core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+                //legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
+                //tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
 
-            if (SyncContext != null)
-                _canvas.CanvasCore.Sync = SyncContext;
+                if (SyncContext != null)
+                    _canvas.CanvasCore.Sync = SyncContext;
 
-            if (_core == null) throw new Exception("Core not found!");
-            _core.Update();
+                if (_core == null) throw new Exception("Core not found!");
+                _core.Update();
 
-            _core.Measuring += OnCoreMeasuring;
-            _core.UpdateStarted += OnCoreUpdateStarted;
-            _core.UpdateFinished += OnCoreUpdateFinished;
+                _core.Measuring += OnCoreMeasuring;
+                _core.UpdateStarted += OnCoreUpdateStarted;
+                _core.UpdateFinished += OnCoreUpdateFinished;
 
-            SizeChanged += OnSizeChanged;
-            PointerMoved += OnPointerMoved;
-            PointerExited += OnPointerExited;
+                SizeChanged += OnSizeChanged;
+                PointerMoved += OnPointerMoved;
+                PointerExited += OnPointerExited;
+            }
 
             _core.Update();
         }
@@ -777,6 +784,11 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         {
             HideTooltip();
             _core?.InvokePointerLeft();
+        }
+
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            _core?.Unload();
         }
 
         private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)

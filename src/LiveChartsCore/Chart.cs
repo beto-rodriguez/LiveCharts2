@@ -304,6 +304,11 @@ namespace LiveChartsCore
         /// <returns></returns>
         public abstract TooltipPoint[] FindPointsNearTo(LvcPoint pointerPosition);
 
+        /// <summary>
+        /// Unloads the control resources.
+        /// </summary>
+        public abstract void Unload();
+
         internal void InvokePointerDown(LvcPoint point)
         {
             PointerDown?.Invoke(point);

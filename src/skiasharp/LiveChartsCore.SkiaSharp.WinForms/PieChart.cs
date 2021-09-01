@@ -96,7 +96,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         protected override void InitializeCore()
         {
             core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore);
-            if (DesignerMode) return;
+            if (((IChartView)this).DesignerMode) return;
             core.Update();
         }
     }

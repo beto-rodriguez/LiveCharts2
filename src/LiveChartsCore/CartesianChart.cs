@@ -172,6 +172,7 @@ namespace LiveChartsCore
                     barLikeSeries.Add(item);
                     continue;
                 }
+
                 otherSeries.Add(item);
             }
 
@@ -364,6 +365,7 @@ namespace LiveChartsCore
                     $"tread: {Thread.CurrentThread.ManagedThreadId}");
             }
 #endif
+            if (!_chartView.IsInVisualTree) return;
             InvokeOnMeasuring();
 
             if (preserveFirstDraw)
@@ -704,7 +706,7 @@ namespace LiveChartsCore
 
             foreach (var series in toDeleteSeries)
             {
-                series.SoftDelete(View);
+                series.SoftDeleteOrDispose(View);
                 _ = _everMeasuredSeries.Remove(series);
             }
             foreach (var axis in toDeleteAxes)
@@ -737,6 +739,18 @@ namespace LiveChartsCore
             PreviousLegendPosition = LegendPosition;
 
             Canvas.Invalidate();
+        }
+
+        /// <inheritdoc cref="Chart{TDrawingContext}.Unload"/>
+        public override void Unload()
+        {
+            foreach (var item in _everMeasuredAxes) item.RemoveFromUI(this);
+            _everMeasuredAxes.Clear();
+            foreach (var item in _everMeasuredSections) item.RemoveFromUI(this);
+            _everMeasuredSections.Clear();
+            foreach (var item in _everMeasuredSeries) ((ChartElement<TDrawingContext>)item).RemoveFromUI(this);
+            _everMeasuredSeries.Clear();
+            IsFirstDraw = true;
         }
     }
 }

@@ -78,6 +78,8 @@
     <None Remove="StackedArea\Basic\View.xaml" />
     <None Remove="StackedBars\Groups\View.xaml" />
     <None Remove="StackedBars\Basic\View.xaml" />
+    <None Remove="VisualTest\TwoChartOneSeries\View.xaml" />
+    <None Remove="VisualTest\ReattachVisual\View.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -291,6 +293,12 @@
     <Page Update="StackedBars\Basic\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Update="VisualTest\Basic\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="VisualTest\ReattachVisual - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
   </ItemGroup>
 </Project>

@@ -179,7 +179,7 @@ namespace LiveChartsCore
         /// <summary>
         /// Deletes the series from the user interface.
         /// </summary>
-        void SoftDelete(IChartView chart);
+        void SoftDeleteOrDispose(IChartView chart);
     }
 
     /// <summary>

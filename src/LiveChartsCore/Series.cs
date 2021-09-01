@@ -67,11 +67,6 @@ namespace LiveChartsCore
         protected float pivot = 0f;
 
         /// <summary>
-        /// The data provider
-        /// </summary>
-        protected DataProvider<TModel, TDrawingContext>? dataProvider;
-
-        /// <summary>
         /// The max series stroke.
         /// </summary>
         protected const float MaxSeriesStroke = 5f;
@@ -79,7 +74,7 @@ namespace LiveChartsCore
         /// <summary>
         /// The ever fetched
         /// </summary>
-        protected readonly HashSet<ChartPoint> everFetched = new();
+        protected HashSet<ChartPoint> everFetched = new();
         private readonly CollectionDeepObserver<TModel> _observer;
         private IEnumerable<TModel>? _values;
         private string? _name;
@@ -89,6 +84,7 @@ namespace LiveChartsCore
         private Func<TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>, string> _dataLabelsFormatter = (point) => $"{point.PrimaryValue}";
         private bool _isVisible = true;
         private LvcPoint _dataPadding = new(0.5f, 0.5f);
+        private DataProvider<TModel, TDrawingContext>? _dataProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -222,6 +218,23 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ISeries.IsNotifyingChanges"/>
         bool ISeries.IsNotifyingChanges { get; set; }
 
+        /// <summary>
+        /// Gets or sets the data provider.
+        /// </summary>
+        protected DataProvider<TModel, TDrawingContext> DataProvider
+        {
+            get
+            {
+                if (_dataProvider is null)
+                {
+                    var factory = LiveCharts.CurrentSettings.GetFactory<TDrawingContext>();
+                    _dataProvider = factory.GetProvider<TModel>();
+                }
+
+                return _dataProvider;
+            }
+        }
+
         /// <inheritdoc cref="ISeries.VisibilityChanged"/>
         public event Action<ISeries>? VisibilityChanged;
 
@@ -234,9 +247,9 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ISeries.Fetch(IChart)"/>
         protected IEnumerable<ChartPoint> Fetch(IChart chart)
         {
-            if (dataProvider is null) throw new Exception("Data provider not found");
+            if (DataProvider is null) throw new Exception("Data provider not found");
             _ = subscribedTo.Add(chart);
-            return dataProvider.Fetch(this, chart);
+            return DataProvider.Fetch(this, chart);
         }
 
         IEnumerable<ChartPoint> ISeries.Fetch(IChart chart)
@@ -331,8 +344,8 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ISeries.RestartAnimations"/>
         public void RestartAnimations()
         {
-            if (dataProvider is null) throw new Exception("Data provider not found");
-            dataProvider.RestartVisuals();
+            if (DataProvider is null) throw new Exception("Data provider not found");
+            DataProvider.RestartVisuals();
         }
 
         /// <inheritdoc cref="ISeries.GetTooltipText(ChartPoint)"/>
@@ -347,8 +360,8 @@ namespace LiveChartsCore
             return DataLabelsFormatter(new TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>(point));
         }
 
-        /// <inheritdoc cref="ISeries.SoftDelete"/>
-        public abstract void SoftDelete(IChartView chart);
+        /// <inheritdoc cref="ISeries.SoftDeleteOrDispose"/>
+        public abstract void SoftDeleteOrDispose(IChartView chart);
 
         /// <summary>
         /// Called when a point was measured.
@@ -420,6 +433,15 @@ namespace LiveChartsCore
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             if (!((ISeries)this).IsNotifyingChanges) return;
             NotifySubscribers();
+        }
+
+        /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
+        public override void RemoveFromUI(Chart<TDrawingContext> chart)
+        {
+            base.RemoveFromUI(chart);
+            DataProvider?.Dispose(chart);
+            _dataProvider = null;
+            everFetched = new();
         }
 
         private TooltipPoint[] FilterTooltipPoints(

@@ -1,8 +1,8 @@
-<UserControl x:Class="AvaloniaSample.General.TwoChartsOneSeries.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.General.TwoChartsOneSeries">
+﻿<UserControl x:Class="WPFSample.VisualTest.TwoChartsOneSeries.View"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+             xmlns:vms="clr-namespace:ViewModelsSamples.VisualTest.TwoChartsOneSeries;assembly=ViewModelsSamples">
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
@@ -11,12 +11,13 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
+
         <lvc:CartesianChart
             Grid.Row="0"
             Series="{Binding Series}"
             ZoomMode="X">
         </lvc:CartesianChart>
+
         <lvc:CartesianChart
             Grid.Row="1"
             Series="{Binding Series}"
