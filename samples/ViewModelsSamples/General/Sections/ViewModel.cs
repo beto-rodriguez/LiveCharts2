@@ -4,6 +4,7 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace ViewModelsSamples.General.Sections
 {
@@ -71,5 +72,7 @@ namespace ViewModelsSamples.General.Sections
                 }
             }
         };
+
+        public ICommand ToggleFirstCommand => new Command(o => Sections[0].IsVisible = !Sections[0].IsVisible);
     }
 }
