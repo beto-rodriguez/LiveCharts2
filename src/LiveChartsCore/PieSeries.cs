@@ -425,7 +425,6 @@ namespace LiveChartsCore
         protected override void OnSeriesMiniatureChanged()
         {
             var context = new CanvasSchedule<TDrawingContext>();
-
             var w = LegendShapeSize;
             var sh = 0f;
 
@@ -441,8 +440,8 @@ namespace LiveChartsCore
 
                 var visual = new TVisual
                 {
-                    X = 0 + MaxSeriesStroke - st,
-                    Y = 0 + MaxSeriesStroke - st,
+                    X = st + MaxSeriesStroke - st,
+                    Y = st + MaxSeriesStroke - st,
                     Height = (float)LegendShapeSize,
                     Width = (float)LegendShapeSize,
                     CenterX = (float)LegendShapeSize * 0.5f,
