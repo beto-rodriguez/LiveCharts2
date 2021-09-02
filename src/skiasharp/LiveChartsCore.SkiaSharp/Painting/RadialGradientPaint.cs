@@ -126,7 +126,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
             skiaPaint.StrokeJoin = StrokeJoin;
             skiaPaint.StrokeMiter = StrokeMiter;
             skiaPaint.Style = IsStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
-            if (FontFamily != null) skiaPaint.Typeface = SKTypeface.FromFamilyName(FontFamily);
+            if (FontFamily != null) skiaPaint.Typeface = GetTypeFaceFromFontFamily();
 
             if (PathEffect is not null)
             {

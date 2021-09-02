@@ -23,14 +23,15 @@ namespace ViewModelsSamples.Axes.LabelsFormat
             {
                 new Axis
                 {
-                    Name = "Worked days 你好",
+                    Name = "أهلا", // sample strings => "こんにちは" "你好" "أهلا"
 
-                    // In this case we use Microsoft YaHei font
-                    // to support Chinese characters
                     NamePaint = new SolidColorPaint
                     {
                         Color = SKColors.Red,
-                        FontFamily = "Microsoft YaHei"
+                        FontFamily = LiveChartsSkiaSharp.MatchChar('أ'), // Arab 
+                        //FontFamily = LiveChartsSkiaSharp.MatchChar('あ'), // Japanease 
+                        //FontFamily = LiveChartsSkiaSharp.MatchChar('你') // Chinese 汉语 sample
+                        //FontFamily = "Times New Roman"
                     },
 
                     // Use the Label property to indicate the format of the labels in the axis
