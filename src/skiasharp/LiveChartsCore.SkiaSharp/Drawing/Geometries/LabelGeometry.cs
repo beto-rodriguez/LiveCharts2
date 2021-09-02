@@ -72,7 +72,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
-            paint.TextSize = TextSize;
             context.Canvas.DrawText(Text ?? "", new SKPoint(X, Y), paint);
         }
 
@@ -98,6 +97,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         protected override void ApplyCustomGeometryTransform(SkiaSharpDrawingContext context)
         {
             var size = new SKRect();
+            context.Paint.TextSize = TextSize;
             _ = context.Paint.MeasureText(Text, ref size);
             const double toRadians = Math.PI / 180d;
 
