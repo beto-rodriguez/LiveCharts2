@@ -251,7 +251,8 @@ namespace LiveChartsCore.SkiaSharpView
                     Name = item.Item2,
                     DataLabelsPaint = item.Item4,
                     DataLabelsFormatter = LabelFormatter,
-                    Fill = item.Item3
+                    Fill = item.Item3,
+                    HoverPushout = 0
                 };
                 ApplyStyles(sf);
                 series.Add(sf);
