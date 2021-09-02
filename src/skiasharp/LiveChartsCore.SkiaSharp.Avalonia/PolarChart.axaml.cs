@@ -49,11 +49,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         #region fields
 
         /// <summary>
-        /// The core
-        /// </summary>
-        protected Chart<SkiaSharpDrawingContext>? core;
-
-        /// <summary>
         /// The legend
         /// </summary>
         protected IChartLegend<SkiaSharpDrawingContext>? legend;
@@ -64,6 +59,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         protected IChartTooltip<SkiaSharpDrawingContext>? tooltip;
 
         private MotionCanvas? _avaloniaCanvas;
+        private Chart<SkiaSharpDrawingContext>? _core;
         private readonly CollectionDeepObserver<ISeries> _seriesObserver;
         private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
         private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
@@ -292,13 +288,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         bool IChartView.IsInVisualTree => Parent is not null;
 
         /// <inheritdoc cref="IChartView.CoreChart" />
-        public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
+        public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
-        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => core is null ? throw new Exception("core not found") : core.Canvas;
+        public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => _core is null ? throw new Exception("core not found") : _core.Canvas;
 
         PolarChart<SkiaSharpDrawingContext> IPolarChartView<SkiaSharpDrawingContext>.Core =>
-            core is null ? throw new Exception("core not found") : (PolarChart<SkiaSharpDrawingContext>)core;
+            _core is null ? throw new Exception("core not found") : (PolarChart<SkiaSharpDrawingContext>)_core;
 
         LvcColor IChartView.BackColor
         {
@@ -570,11 +566,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <inheritdoc cref="IChartView.UpdaterThrottler" />
         public TimeSpan UpdaterThrottler
         {
-            get => core?.UpdaterThrottler ?? throw new Exception("core not set yet.");
+            get => _core?.UpdaterThrottler ?? throw new Exception("core not set yet.");
             set
             {
-                if (core is null) throw new Exception("core not set yet.");
-                core.UpdaterThrottler = value;
+                if (_core is null) throw new Exception("core not set yet.");
+                _core.UpdaterThrottler = value;
             }
         }
 
@@ -592,21 +588,21 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
         public void ShowTooltip(IEnumerable<TooltipPoint> points)
         {
-            if (tooltip is null || core is null) return;
+            if (tooltip is null || _core is null) return;
 
-            tooltip.Show(points, core);
+            tooltip.Show(points, _core);
         }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
         public void HideTooltip()
         {
-            if (tooltip is null || core is null) return;
+            if (tooltip is null || _core is null) return;
 
             foreach (var state in PointStates.GetStates())
             {
                 if (!state.IsHoverState) continue;
-                if (state.Fill is not null) state.Fill.ClearGeometriesFromPaintTask(core.Canvas);
-                if (state.Stroke is not null) state.Stroke.ClearGeometriesFromPaintTask(core.Canvas);
+                if (state.Fill is not null) state.Fill.ClearGeometriesFromPaintTask(_core.Canvas);
+                if (state.Stroke is not null) state.Stroke.ClearGeometriesFromPaintTask(_core.Canvas);
             }
 
             tooltip.Hide();
@@ -641,17 +637,17 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             var canvas = this.FindControl<MotionCanvas>("canvas");
             _avaloniaCanvas = canvas;
-            core = new PolarChart<SkiaSharpDrawingContext>(
+            _core = new PolarChart<SkiaSharpDrawingContext>(
                 this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore, true);
 
-            core.Measuring += OnCoreMeasuring;
-            core.UpdateStarted += OnCoreUpdateStarted;
-            core.UpdateFinished += OnCoreUpdateFinished;
+            _core.Measuring += OnCoreMeasuring;
+            _core.UpdateStarted += OnCoreUpdateStarted;
+            _core.UpdateFinished += OnCoreUpdateFinished;
 
             legend = this.FindControl<DefaultLegend>("legend");
             tooltip = this.FindControl<DefaultTooltip>("tooltip");
 
-            core.Update();
+            _core.Update();
         }
 
         /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})" />
@@ -659,7 +655,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             base.OnPropertyChanged(change);
 
-            if (core is null || change.Property.Name == nameof(IsPointerOver)) return;
+            if (_core is null || change.Property.Name == nameof(IsPointerOver)) return;
 
             if (change.Property.Name == nameof(SyncContext))
             {
@@ -693,7 +689,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 canvas.BackColor = new SkiaSharp.SKColor(color.R, color.G, color.B, color.A);
             }
 
-            core.Update();
+            _core.Update();
         }
 
         private void InitializeComponent()
@@ -703,16 +699,16 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (core is null) return;
+            if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
 
-            core.Update();
+            _core.Update();
         }
 
         private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (core is null) return;
+            if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
 
-            core.Update();
+            _core.Update();
         }
 
         private void PolarChart_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
@@ -730,13 +726,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
             var p = e.GetPosition(this);
             foreach (var w in desktop.Windows) w.PointerReleased += Window_PointerReleased;
-            core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y));
+            _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y));
         }
 
         private void PolarChart_PointerMoved(object? sender, PointerEventArgs e)
         {
             var p = e.GetPosition(this);
-            core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
+            _core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
         }
 
         private void Window_PointerReleased(object? sender, PointerReleasedEventArgs e)
@@ -744,7 +740,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
             foreach (var w in desktop.Windows) w.PointerReleased -= Window_PointerReleased;
             var p = e.GetPosition(this);
-            core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y));
+            _core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y));
         }
 
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
@@ -765,12 +761,12 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         private void PolarChart_PointerLeave(object? sender, PointerEventArgs e)
         {
             _ = Dispatcher.UIThread.InvokeAsync(HideTooltip, DispatcherPriority.Background);
-            core?.InvokePointerLeft();
+            _core?.InvokePointerLeft();
         }
 
         private void PolarChart_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
         {
-            core?.Unload();
+            _core?.Unload();
         }
     }
 }

@@ -33,7 +33,7 @@ namespace LiveChartsCore
     /// <summary>
     /// Defines a chart series.
     /// </summary>
-    public interface ISeries
+    public interface ISeries : IStopNPC
     {
         /// <summary>
         /// Gets or sets a series unique identifier, the library handles this id automatically.
@@ -111,15 +111,6 @@ namespace LiveChartsCore
         /// The easing function.
         /// </value>
         Func<float, float>? EasingFunction { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is notifying changes, this property is used internally to turn off
-        /// notifications while the theme is being applied, this property is not designed to be used by the user.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is notifying changes; otherwise, <c>false</c>.
-        /// </value>
-        bool IsNotifyingChanges { get; set; }
 
         /// <summary>
         /// Occurs when the series <see cref="IsVisible"/> property changes.

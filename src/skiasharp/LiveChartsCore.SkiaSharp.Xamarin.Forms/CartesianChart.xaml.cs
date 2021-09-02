@@ -748,13 +748,13 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (core is null) return;
+            if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
             core.Update();
         }
 
         private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (core is null) return;
+            if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
             core.Update();
         }
 

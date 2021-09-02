@@ -215,8 +215,8 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ISeries.EasingFunction" />
         public Func<float, float>? EasingFunction { get; set; }
 
-        /// <inheritdoc cref="ISeries.IsNotifyingChanges"/>
-        bool ISeries.IsNotifyingChanges { get; set; }
+        /// <inheritdoc cref="IStopNPC.IsNotifyingChanges"/>
+        bool IStopNPC.IsNotifyingChanges { get; set; }
 
         /// <summary>
         /// Gets or sets the data provider.

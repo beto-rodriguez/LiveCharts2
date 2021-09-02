@@ -765,13 +765,13 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
 
         private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (_core == null) return;
+            if (_core == null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
             _core.Update();
         }
 
         private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (_core == null) return;
+            if (_core == null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
             _core.Update();
         }
 

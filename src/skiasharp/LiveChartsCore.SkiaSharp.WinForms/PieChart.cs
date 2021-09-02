@@ -55,10 +55,12 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             _seriesObserver = new CollectionDeepObserver<ISeries>(
                (object? sender, NotifyCollectionChangedEventArgs e) =>
                {
+                   if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
                    OnPropertyChanged();
                },
                (object? sender, PropertyChangedEventArgs e) =>
                {
+                   if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
                    OnPropertyChanged();
                },
                true);
