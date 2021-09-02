@@ -135,7 +135,8 @@ namespace LiveChartsCore.SkiaSharpView
                                 (rightLimit == map.RightBottomMapping.X) &&
                                 (bottomLimit == map.RightBottomMapping.Y))
                             {
-                                result = paintTask.BackImageBitmap.Resize(new SKImageInfo(width, height, SKColorType.Rgba8888), SKFilterQuality.High);
+                                result = new SKBitmap(new SKImageInfo(width, height, SKColorType.Rgba8888));
+                                _ = paintTask.BackImageBitmap.ScalePixels(result, SKFilterQuality.High);
                             }
                             else
                             {
@@ -155,7 +156,7 @@ namespace LiveChartsCore.SkiaSharpView
                                 var cropBottomPixel = (int)((paintTask.BackImageBitmap.Width - 1) * ((map.LefTopMapping.Y - cropBottom) / backImageMappingWidth));
                                 var roi = new SKRectI(cropLeftPixel, cropTopPixel, cropRightPixel, cropBottomPixel);
 
-                                var croppedBitmap = new SKBitmap(new SKImageInfo(cropRightPixel - cropLeftPixel + 1, cropBottomPixel - cropTopPixel + 1, SKColorType.Rgba8888));
+                                using var croppedBitmap = new SKBitmap(new SKImageInfo(cropRightPixel - cropLeftPixel + 1, cropBottomPixel - cropTopPixel + 1, SKColorType.Rgba8888));
                                 if (paintTask.BackImageBitmap.ExtractSubset(croppedBitmap, roi) == false)
                                 {
                                     System.Diagnostics.Debug.Assert(false);
@@ -170,9 +171,8 @@ namespace LiveChartsCore.SkiaSharpView
                                 _ = croppedBitmap.ScalePixels(croppedBitmapResized, SKFilterQuality.High);
                                 //create blank image
                                 result = new SKBitmap(new SKImageInfo(width, height, SKColorType.Rgba8888));
-                                var canvas = new SKCanvas(result);
+                                using var canvas = new SKCanvas(result);
                                 canvas.Clear(new SKColor(0, 0, 0, 0));
-
                                 //mapping cropped image to blank image.
                                 var offsetY = (topLimit - cropTop) / (topLimit - bottomLimit) * height;
                                 var offsetX = (cropLeft - leftLimit) / (rightLimit - leftLimit) * width;
@@ -192,40 +192,53 @@ namespace LiveChartsCore.SkiaSharpView
                         if (srcAspectRatio == targetAspectRatio)
                         {
                             //Only resize
-                            result = paintTask.BackImageBitmap.Resize(new SKImageInfo(width, height, SKColorType.Rgba8888), SKFilterQuality.High);
+                            result = new SKBitmap(new SKImageInfo(width, height, SKColorType.Rgba8888));
+                            _ = paintTask.BackImageBitmap.ScalePixels(result, SKFilterQuality.High);
+                            //result = paintTask.BackImageBitmap.Resize(new SKImageInfo(width, height, SKColorType.Rgba8888), SKFilterQuality.High);
                         }
                         else
                         {
                             //adjust aspect ratio
                             result = new SKBitmap(new SKImageInfo(width, height, SKColorType.Rgba8888));
-                            var canvas = new SKCanvas(result);
+                            using var canvas = new SKCanvas(result);
                             canvas.Clear(new SKColor(0, 0, 0, 0));
                             if (srcAspectRatio > targetAspectRatio)
                             {
                                 var resizedHeight = (int)(width / srcAspectRatio);
-                                var resizedSrc = paintTask.BackImageBitmap.Resize(new SKImageInfo(width, resizedHeight, SKColorType.Rgba8888), SKFilterQuality.High);
-                                var offsetX = 0f;
-                                var offsetY = (height - resizedHeight) / 2f;
-                                //Draw blank area on vertical spaces.
-                                canvas.DrawBitmap(resizedSrc, offsetX, offsetY);
+                                using var resizedSrc = new SKBitmap(new SKImageInfo(width, resizedHeight, SKColorType.Rgba8888));
+                                if (paintTask.BackImageBitmap.ScalePixels(result, SKFilterQuality.High))
+                                {
+                                    //var resizedSrc = paintTask.BackImageBitmap.Resize(new SKImageInfo(width, resizedHeight, SKColorType.Rgba8888), SKFilterQuality.High);
+                                    var offsetX = 0f;
+                                    var offsetY = (height - resizedHeight) / 2f;
+                                    //Draw blank area on vertical spaces.
+                                    canvas.DrawBitmap(resizedSrc, offsetX, offsetY);
+                                }
                             }
                             else
                             {
                                 //Draw blank area on horizontal spaces.
                                 var resizedWidth = (int)(height * srcAspectRatio);
-                                var resizedSrc = paintTask.BackImageBitmap.Resize(new SKImageInfo(resizedWidth, height, SKColorType.Rgba8888), SKFilterQuality.High);
-                                var offsetX = (width - resizedWidth) / 2f;
-                                var offsetY = 0f;
-                                //Draw blank area on vertical spaces.
-                                canvas.DrawBitmap(resizedSrc, offsetX, offsetY);
+                                using var resizedSrc = new SKBitmap(new SKImageInfo(resizedWidth, height, SKColorType.Rgba8888));
+                                //var resizedSrc = paintTask.BackImageBitmap.Resize(new SKImageInfo(resizedWidth, height, SKColorType.Rgba8888), SKFilterQuality.High);
+                                if (paintTask.BackImageBitmap.ScalePixels(result, SKFilterQuality.High))
+                                {
+                                    var offsetX = (width - resizedWidth) / 2f;
+                                    var offsetY = 0f;
+                                    //Draw blank area on vertical spaces.
+                                    canvas.DrawBitmap(resizedSrc, offsetX, offsetY);
+                                }
                             }
                         }
                         #endregion
                     }
                     else
                     {
-                        result = paintTask.BackImageBitmap.Resize(new SKImageInfo(width, height, SKColorType.Rgba8888), SKFilterQuality.High);
+                        result = new SKBitmap(new SKImageInfo(width, height, SKColorType.Rgba8888));
+                        _ = paintTask.BackImageBitmap.ScalePixels(result, SKFilterQuality.High);
+                        //result = paintTask.BackImageBitmap.Resize(new SKImageInfo(width, height, SKColorType.Rgba8888), SKFilterQuality.High);
                     }
+                    paintTask.BackImageBitmapForRendering?.Dispose();
                     paintTask.BackImageBitmapForRendering = result;
                 }
             }

@@ -26,6 +26,12 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="images\**" />
+    <EmbeddedResource Remove="images\**" />
+    <None Remove="images\**" />
+    <Page Remove="images\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="CartesianChart.xaml" />
     <None Remove="DefaultLegend.xaml" />
     <None Remove="DefaultTooltip.xaml" />
