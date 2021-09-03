@@ -68,14 +68,14 @@ namespace LiveChartsCore.SkiaSharpView.Maui
             SizeChanged += OnSizeChanged;
 
             _seriesObserver = new CollectionDeepObserver<ISeries>(
-               (object sender, NotifyCollectionChangedEventArgs e) =>
+               (object? sender, NotifyCollectionChangedEventArgs e) =>
                {
-                   if (_core is null) return;
+                   if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
                    _core.Update();
                },
-               (object sender, PropertyChangedEventArgs e) =>
+               (object? sender, PropertyChangedEventArgs e) =>
                {
-                   if (_core is null) return;
+                   if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
                    _core.Update();
                });
 
@@ -297,7 +297,10 @@ namespace LiveChartsCore.SkiaSharpView.Maui
         #region properties
 
         /// <inheritdoc cref="IChartView.DesignerMode" />
-        public bool DesignerMode => DesignMode.IsDesignModeEnabled;
+        bool IChartView.DesignerMode => DesignMode.IsDesignModeEnabled;
+
+        /// <inheritdoc cref="IChartView.IsInVisualTree" />
+        bool IChartView.IsInVisualTree => Parent is not null;
 
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
