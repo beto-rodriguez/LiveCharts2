@@ -655,20 +655,20 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         protected override void OnParentSet()
         {
             base.OnParentSet();
-            if (Parent == null) core?.Unload();
-            else core?.Update();
+            if (Parent == null) _core?.Unload();
+            else _core?.Update();
         }
 
         private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-            core.Update();
+            if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+            _core.Update();
         }
 
         private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-            core.Update();
+            if (_core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+            _core.Update();
         }
 
         private void OnSizeChanged(object? sender, EventArgs e)
