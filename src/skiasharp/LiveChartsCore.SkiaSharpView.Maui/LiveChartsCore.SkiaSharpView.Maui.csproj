@@ -8,6 +8,15 @@
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
 		<RootNamespace>LiveChartsCore.SkiaSharpView.Maui</RootNamespace>
+    <Version>2.0.0-beta.70</Version>
+    <!-- it seems that images are bugged for now. -->
+    <!--<PackageIcon>icon.png</PackageIcon>-->
+    <Description>Simple, flexible, interactive and powerful data visualization for Maui.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Authors>BetoRodriguez</Authors>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <RepositoryUrl>https://github.com/beto-rodriguez/LiveCharts2</RepositoryUrl>
 	</PropertyGroup>
 
 	<ItemGroup>
