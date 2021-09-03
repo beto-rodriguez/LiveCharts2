@@ -648,5 +648,20 @@ namespace LiveChartsCore.SkiaSharpView
         {
             return new LvcColor(color.Red, color.Green, color.Blue, color.Alpha);
         }
+
+        /// <summary>
+        /// Gets the <see cref="SkiaFontMatchChar"/> key.
+        /// </summary>
+        public const string SkiaFontMatchChar = "matchChar";
+
+        /// <summary>
+        /// Matches
+        /// </summary>
+        /// <param name="char"></param>
+        /// <returns></returns>
+        public static string MatchChar(char @char)
+        {
+            return $"{SkiaFontMatchChar}|{@char}";
+        }
     }
 }

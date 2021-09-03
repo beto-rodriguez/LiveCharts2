@@ -69,17 +69,17 @@ namespace LiveChartsCore
         public virtual SeriesBounds GetBounds(
             CartesianChart<TDrawingContext> chart, ICartesianAxis x, ICartesianAxis y)
         {
-            return dataProvider is null
+            return DataProvider is null
                 ? throw new Exception("A data provider is required")
-                : dataProvider.GetCartesianBounds(chart, this, x, y);
+                : DataProvider.GetCartesianBounds(chart, this, x, y);
         }
 
         /// <summary>
         /// Deletes the series from the user interface.
         /// </summary>
         /// <param name="chart"></param>
-        /// <inheritdoc cref="M:LiveChartsCore.ISeries.Delete(LiveChartsCore.Kernel.IChartView)" />
-        public override void SoftDelete(IChartView chart)
+        /// <inheritdoc cref="ISeries.SoftDeleteOrDispose(IChartView)" />
+        public override void SoftDeleteOrDispose(IChartView chart)
         {
             var core = ((ICartesianChartView<TDrawingContext>)chart).Core;
 
@@ -94,7 +94,7 @@ namespace LiveChartsCore
             {
                 if (point.Context.Chart != chart) continue;
 
-                SoftDeletePoint(point, primaryScale, secondaryScale);
+                SoftDeleteOrDisposePoint(point, primaryScale, secondaryScale);
                 deleted.Add(point);
             }
 
@@ -117,7 +117,7 @@ namespace LiveChartsCore
         /// <param name="primaryScale">The primary scale.</param>
         /// <param name="secondaryScale">The secondary scale.</param>
         /// <returns></returns>
-        protected abstract void SoftDeletePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale);
+        protected abstract void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale);
 
         /// <summary>
         /// Gets the label position.

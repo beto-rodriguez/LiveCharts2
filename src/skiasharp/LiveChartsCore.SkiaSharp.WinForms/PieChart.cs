@@ -55,10 +55,12 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             _seriesObserver = new CollectionDeepObserver<ISeries>(
                (object? sender, NotifyCollectionChangedEventArgs e) =>
                {
+                   if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
                    OnPropertyChanged();
                },
                (object? sender, PropertyChangedEventArgs e) =>
                {
+                   if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
                    OnPropertyChanged();
                },
                true);
@@ -96,7 +98,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         protected override void InitializeCore()
         {
             core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore);
-            if (DesignerMode) return;
+            if (((IChartView)this).DesignerMode) return;
             core.Update();
         }
     }

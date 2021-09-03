@@ -31,7 +31,7 @@ namespace LiveChartsCore.Kernel.Sketches
     /// <summary>
     /// Defines a plane for a dimension.
     /// </summary>
-    public interface IPlane
+    public interface IPlane : IStopNPC
     {
         /// <summary>
         /// Gets or sets the axis name.
@@ -212,15 +212,6 @@ namespace LiveChartsCore.Kernel.Sketches
         /// The easing function.
         /// </value>
         Func<float, float>? EasingFunction { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is notifying changes, this property is used internally to turn off
-        /// notifications while the theme is being applied, this property is not designed to be used by the user.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is notifying changes; otherwise, <c>false</c>.
-        /// </value>
-        bool IsNotifyingChanges { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the separator lines are visible.

@@ -37,7 +37,6 @@ namespace WinFormsSample.Axes.Shared
                 Dock = DockStyle.Fill
             };
 
-
             var splitContainer = new SplitContainer
             {
                 Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,

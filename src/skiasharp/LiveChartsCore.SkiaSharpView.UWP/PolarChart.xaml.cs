@@ -79,6 +79,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                 OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
             Loaded += OnLoaded;
+            Unloaded += OnUnloaded;
 
             SetValue(AngleAxesProperty, new ObservableCollection<IPolarAxis>() { LiveCharts.CurrentSettings.PolarAxisProvider() });
             SetValue(RadiusAxesProperty, new ObservableCollection<IPolarAxis>() { LiveCharts.CurrentSettings.PolarAxisProvider() });
@@ -343,7 +344,10 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         FrameworkElement IUwpChart.Legend => legend;
 
         /// <inheritdoc cref="IChartView.DesignerMode" />
-        public bool DesignerMode => Windows.ApplicationModel.DesignMode.DesignModeEnabled;
+        bool IChartView.DesignerMode => Windows.ApplicationModel.DesignMode.DesignModeEnabled;
+
+        /// <inheritdoc cref="IChartView.IsInVisualTree" />
+        bool IChartView.IsInVisualTree => Parent is not null;
 
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
@@ -751,35 +755,38 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             var canvas = (MotionCanvas)FindName("motionCanvas");
             _canvas = canvas;
 
-            _core = new PolarChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            if (_core is null)
+            {
+                _core = new PolarChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
 
-            if (SyncContext != null)
-                _canvas.CanvasCore.Sync = SyncContext;
+                if (SyncContext != null)
+                    _canvas.CanvasCore.Sync = SyncContext;
 
-            if (_core == null) throw new Exception("Core not found!");
-            _core.Measuring += OnCoreMeasuring;
-            _core.UpdateStarted += OnCoreUpdateStarted;
-            _core.UpdateFinished += OnCoreUpdateFinished;
+                if (_core == null) throw new Exception("Core not found!");
+                _core.Measuring += OnCoreMeasuring;
+                _core.UpdateStarted += OnCoreUpdateStarted;
+                _core.UpdateFinished += OnCoreUpdateFinished;
 
-            PointerWheelChanged += OnWheelChanged;
-            PointerPressed += OnPointerPressed;
-            PointerReleased += OnPointerReleased;
-            SizeChanged += OnSizeChanged;
-            PointerMoved += OnPointerMoved;
-            PointerExited += OnPointerExited;
+                PointerWheelChanged += OnWheelChanged;
+                PointerPressed += OnPointerPressed;
+                PointerReleased += OnPointerReleased;
+                SizeChanged += OnSizeChanged;
+                PointerMoved += OnPointerMoved;
+                PointerExited += OnPointerExited;
+            }
 
             _core.Update();
         }
 
         private void OnDeepCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (_core == null) return;
+            if (_core == null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
             _core.Update();
         }
 
         private void OnDeepCollectionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (_core == null) return;
+            if (_core == null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
             _core.Update();
         }
 
@@ -840,6 +847,11 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             //    new System.Drawing.PointF(
             //        (float)p.Position.X, (float)p.Position.Y),
             //        p.Properties.MouseWheelDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+        }
+
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            _core?.Unload();
         }
 
         private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)

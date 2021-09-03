@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using ViewModelsSamples.Lines.Padding;
 
-namespace WinFormsSample.Lines.PAdding
+namespace WinFormsSample.Lines.Padding
 {
     public partial class View : UserControl
     {

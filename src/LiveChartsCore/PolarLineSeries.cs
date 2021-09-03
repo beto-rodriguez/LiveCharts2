@@ -279,8 +279,6 @@ namespace LiveChartsCore
 
                         data.TargetPoint.Context.Visual = v;
                         OnPointCreated(data.TargetPoint);
-                        v.Geometry.CompleteAllTransitions();
-                        v.Bezier.CompleteAllTransitions();
                     }
 
                     _ = everFetched.Add(data.TargetPoint);
@@ -434,7 +432,7 @@ namespace LiveChartsCore
             foreach (var point in toDeletePoints)
             {
                 if (point.Context.Chart != polarChart.View) continue;
-                SoftDeletePoint(point, scaler);
+                SoftDeleteOrDisposePoint(point, scaler);
                 _ = everFetched.Remove(point);
             }
         }
@@ -443,9 +441,9 @@ namespace LiveChartsCore
         public virtual SeriesBounds GetBounds(
             PolarChart<TDrawingContext> chart, IPolarAxis angleAxis, IPolarAxis radiusAxis)
         {
-            var baseSeriesBounds = dataProvider is null
+            var baseSeriesBounds = DataProvider is null
                 ? throw new Exception("A data provider is required")
-                : dataProvider.GetCartesianBounds(chart, this, angleAxis, radiusAxis);
+                : DataProvider.GetCartesianBounds(chart, this, angleAxis, radiusAxis);
 
             if (baseSeriesBounds.HasData) return baseSeriesBounds;
             var baseBounds = baseSeriesBounds.Bounds;
@@ -794,7 +792,8 @@ namespace LiveChartsCore
                 .WithAnimation(animation =>
                     animation
                         .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
+                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
+                .CompleteCurrentTransitions();
 
             _ = visual.Bezier
                 .TransitionateProperties(
@@ -807,7 +806,8 @@ namespace LiveChartsCore
                 .WithAnimation(animation =>
                     animation
                         .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
-                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction));
+                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
+                .CompleteCurrentTransitions();
         }
 
         /// <summary>
@@ -815,11 +815,11 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="point">The point.</param>
         /// <param name="scaler">The scaler.</param>
-        protected virtual void SoftDeletePoint(ChartPoint point, PolarScaler scaler)
+        protected virtual void SoftDeleteOrDisposePoint(ChartPoint point, PolarScaler scaler)
         {
             var visual = (LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>?)point.Context.Visual;
             if (visual is null) return;
-            if (dataProvider is null) throw new Exception("Data provider not found");
+            if (DataProvider is null) throw new Exception("Data provider not found");
 
             var p = scaler.ToPixels(point);
             var x = p.X;
@@ -831,7 +831,7 @@ namespace LiveChartsCore
             visual.Geometry.Width = 0;
             visual.Geometry.RemoveOnCompleted = true;
 
-            dataProvider.DisposePoint(point);
+            DataProvider.DisposePoint(point);
 
             var label = (TLabel?)point.Context.Label;
             if (label is null) return;
@@ -840,10 +840,11 @@ namespace LiveChartsCore
             label.RemoveOnCompleted = true;
         }
 
-        /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SoftDelete(IChartView)"/>
-        public override void SoftDelete(IChartView chart)
+        /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDispose(IChartView)"/>
+        public override void SoftDeleteOrDispose(IChartView chart)
         {
             var core = ((IPolarChartView<TDrawingContext>)chart).Core;
+
             var scale = new PolarScaler(core.DrawMarginLocation, core.DrawMarginSize, core.AngleAxes[ScalesAngleAt], core.RadiusAxes[ScalesRadiusAt], 0);
 
             var deleted = new List<ChartPoint>();
@@ -851,7 +852,7 @@ namespace LiveChartsCore
             {
                 if (point.Context.Chart != chart) continue;
 
-                SoftDeletePoint(point, scale);
+                SoftDeleteOrDisposePoint(point, scale);
                 deleted.Add(point);
             }
 
@@ -862,11 +863,7 @@ namespace LiveChartsCore
 
             foreach (var item in deleted) _ = everFetched.Remove(item);
 
-            ((ISeries)this).IsNotifyingChanges = false;
-            IsVisible = false;
-            ((ISeries)this).IsNotifyingChanges = false;
-
-            var canvas = ((ICartesianChartView<TDrawingContext>)chart).CoreCanvas;
+            var canvas = ((IPolarChartView<TDrawingContext>)chart).CoreCanvas;
 
             if (Fill is not null)
             {
@@ -884,6 +881,12 @@ namespace LiveChartsCore
 
             if (GeometryFill is not null) canvas.RemovePaintTask(GeometryFill);
             if (GeometryStroke is not null) canvas.RemovePaintTask(GeometryStroke);
+
+            // the following code is useful to ???
+            if (!chart.IsInVisualTree) return;
+            ((ISeries)this).IsNotifyingChanges = false;
+            IsVisible = false;
+            ((ISeries)this).IsNotifyingChanges = false;
         }
 
         /// <summary>

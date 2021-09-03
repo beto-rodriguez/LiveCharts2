@@ -211,6 +211,12 @@
     <Compile Update="StepLines\Zoom\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="VisualTest\TwoChartsOneSeries\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="VisualTest\ReattachVisual\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -469,6 +475,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="StepLines\Zoom\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="VisualTest\TwoChartsOneSeries\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="VisualTest\ReattachVisual\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

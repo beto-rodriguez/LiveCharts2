@@ -32,7 +32,6 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using Avalonia.Threading;
 using LiveChartsCore.Kernel;
 using System.Diagnostics;
 using System.Threading;

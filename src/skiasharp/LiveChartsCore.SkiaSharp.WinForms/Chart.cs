@@ -136,7 +136,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         #region properties
 
         /// <inheritdoc cref="IChartView.DesignerMode" />
-        public bool DesignerMode => LicenseManager.UsageMode == LicenseUsageMode.Designtime;
+        bool IChartView.DesignerMode => LicenseManager.UsageMode == LicenseUsageMode.Designtime;
+
+        /// <inheritdoc cref="IChartView.IsInVisualTree" />
+        bool IChartView.IsInVisualTree => Parent is not null;
 
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
@@ -304,6 +307,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         void IChartView.InvokeOnUIThread(Action action)
         {
+            if (!IsHandleCreated) return;
             _ = BeginInvoke(action).AsyncWaitHandle.WaitOne();
         }
 
@@ -328,7 +332,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// <returns></returns>
         protected void OnPropertyChanged()
         {
-            if (core is null || DesignerMode) return;
+            if (core is null || ((IChartView)this).DesignerMode) return;
             core.Update();
         }
 
@@ -341,6 +345,15 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         {
             if (tooltip is IDisposable disposableTooltip) disposableTooltip.Dispose();
             base.OnHandleDestroyed(e);
+        }
+
+        /// <inheritdoc cref="ContainerControl.OnParentChanged(EventArgs)"/>
+        protected override void OnParentChanged(EventArgs e)
+        {
+            base.OnParentChanged(e);
+
+            if (Parent is null) core?.Unload();
+            else core?.Update();
         }
 
         private void OnResized(object? sender, EventArgs e)

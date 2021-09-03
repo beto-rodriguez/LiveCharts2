@@ -57,7 +57,7 @@ namespace LiveChartsCore
             Action<LiveChartsSettings> defaultPlatformConfig,
             MotionCanvas<TDrawingContext> canvas,
             bool lockOnMeasure = false)
-            : base(canvas, defaultPlatformConfig, lockOnMeasure)
+            : base(canvas, defaultPlatformConfig, view, lockOnMeasure)
         {
             _chartView = view;
 
@@ -150,6 +150,7 @@ namespace LiveChartsCore
                     $"tread: {Thread.CurrentThread.ManagedThreadId}");
             }
 #endif
+            if (!_chartView.IsInVisualTree) return;
 
             InvokeOnMeasuring();
 
@@ -239,7 +240,7 @@ namespace LiveChartsCore
 
             foreach (var series in toDeleteSeries)
             {
-                series.SoftDelete(View);
+                series.SoftDeleteOrDispose(View);
                 _ = _everMeasuredSeries.Remove(series);
             }
 
@@ -250,6 +251,14 @@ namespace LiveChartsCore
             PreviousLegendPosition = LegendPosition;
 
             Canvas.Invalidate();
+        }
+
+        /// <inheritdoc cref="Chart{TDrawingContext}.Unload"/>
+        public override void Unload()
+        {
+            foreach (var item in _everMeasuredSeries) ((ChartElement<TDrawingContext>)item).RemoveFromUI(this);
+            _everMeasuredSeries.Clear();
+            IsFirstDraw = true;
         }
     }
 }

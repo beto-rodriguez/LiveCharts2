@@ -32,14 +32,14 @@
                             FontSize="35"
                             HorizontalOptions="Center"
                             VerticalOptions="Center"
-                            TextColor="{Binding DefaultPaintContext.PaintTasks, Converter={StaticResource toBrush}}"
+                            TextColor="{Binding Fill, Converter={StaticResource toBrush}}"
                             FontAttributes="Bold" />
                         <Label Margin="8, 0, 8, 0"
                             Text="{Binding Name}"
                             FontSize="18"
                             HorizontalOptions="Center"
                             VerticalOptions="Center"
-                            TextColor="{Binding DefaultPaintContext.PaintTasks, Converter={StaticResource toBrush}}"/>
+                            TextColor="{Binding Fill, Converter={StaticResource toBrush}}"/>
                     </StackLayout>
                 </DataTemplate>
             </BindableLayout.ItemTemplate>

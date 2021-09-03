@@ -20,8 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Easing;
 using System;
+using System.Collections.Generic;
 
 namespace LiveChartsCore
 {
@@ -285,6 +287,48 @@ namespace LiveChartsCore
         /// The sin in out.
         /// </value>
         public static Func<float, float> SinInOut => t => unchecked((float)(1 - Math.Cos(Math.PI * t))) / 2f;
+
+        /// <summary>
+        /// Gets a fuction based on the given <see cref="KeyFrame"/> collection.
+        /// </summary>
+        public static Func<KeyFrame[], Func<float, float>> BuildFunctionUsingKeyFrames =>
+            keyFrames =>
+            {
+                if (keyFrames.Length < 2) throw new Exception("At least 2 key frames are required.");
+                if (keyFrames[keyFrames.Length - 1].Time < 1)
+                {
+                    var newKeyFrames = new List<KeyFrame>(keyFrames)
+                    {
+                        new KeyFrame
+                        {
+                            Time = 1,
+                            Value = keyFrames[keyFrames.Length - 1].Value
+                        }
+                    };
+                    keyFrames = newKeyFrames.ToArray();
+                }
+
+                return t =>
+                {
+                    var i = 0;
+                    var current = keyFrames[i];
+                    var next = keyFrames[i + 1];
+
+                    while (next.Time < t && i < keyFrames.Length - 2)
+                    {
+                        i++;
+                        current = keyFrames[i];
+                        next = keyFrames[i + 1];
+                    }
+
+                    var dt = next.Time - current.Time;
+                    var dv = next.Value - current.Value;
+
+                    var p = (t - current.Time) / dt;
+
+                    return current.Value + next.EasingFunction(p) * dv;
+                };
+            };
 
         /// <summary>
         /// Gets the build custom back in.

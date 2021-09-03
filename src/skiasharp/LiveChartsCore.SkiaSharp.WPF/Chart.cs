@@ -79,6 +79,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             SizeChanged += OnSizeChanged;
             MouseMove += OnMouseMove;
             MouseLeave += OnMouseLeave;
+            Unloaded += Chart_Unloaded;
         }
 
         #region dependency properties
@@ -286,7 +287,10 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         #region properties
 
         /// <inheritdoc cref="IChartView.DesignerMode" />
-        public bool DesignerMode => DesignerProperties.GetIsInDesignMode(this);
+        bool IChartView.DesignerMode => DesignerProperties.GetIsInDesignMode(this);
+
+        /// <inheritdoc cref="IChartView.IsInVisualTree" />
+        bool IChartView.IsInVisualTree => Parent is not null;
 
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
@@ -739,6 +743,11 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         {
             HideTooltip();
             core?.InvokePointerLeft();
+        }
+
+        private void Chart_Unloaded(object sender, RoutedEventArgs e)
+        {
+            core?.Unload();
         }
     }
 }

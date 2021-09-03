@@ -46,6 +46,7 @@ namespace LiveChartsCore
         private int _scalesXAt;
         private int _scalesYAt;
         private int? _zIndex;
+        private bool _isVisible = true;
 
         /// <summary>
         /// Gets or sets the stroke.
@@ -70,6 +71,11 @@ namespace LiveChartsCore
             get => _fill;
             set => SetPaintProperty(ref _fill, value);
         }
+
+        /// <summary>
+        /// Gets or sets whether the section is visible or not.
+        /// </summary>
+        public bool IsVisible { get => _isVisible; set { _isVisible = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the xi, the value where the section starts at the X axis,

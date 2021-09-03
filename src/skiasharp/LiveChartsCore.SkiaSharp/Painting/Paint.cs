@@ -39,6 +39,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         private readonly FloatMotionProperty _strokeMiterTransition;
         private readonly Dictionary<object, HashSet<IDrawable<SkiaSharpDrawingContext>>> _geometriesByCanvas = new();
         private readonly Dictionary<object, LvcRectangle> _clipRectangles = new();
+        private char? _matchesChar = null;
 
         /// <summary>
         /// The skia paint
@@ -49,6 +50,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// The stroke width transition
         /// </summary>
         protected FloatMotionProperty strokeWidthTransition;
+        private string? _fontFamily;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Paint"/> class.
@@ -89,7 +91,16 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         public bool IsFill { get; set; }
 
         /// <inheritdoc cref="IPaint{TDrawingContext}.FontFamily" />
-        public string? FontFamily { get; set; }
+        public string? FontFamily
+        {
+            get => _fontFamily;
+            set
+            {
+                _fontFamily = value;
+                if (!(_fontFamily?.Contains(LiveChartsSkiaSharp.SkiaFontMatchChar) ?? false)) return;
+                _matchesChar = Convert.ToChar(_fontFamily.Split('|')[1]);
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is antialias.
@@ -235,6 +246,17 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         {
             skiaPaint?.Dispose();
             skiaPaint = null;
+        }
+
+        /// <summary>
+        /// Gets a <see cref="SKTypeface"/> from the <see cref="FontFamily"/> property.
+        /// </summary>
+        /// <returns></returns>
+        protected SKTypeface GetTypeFaceFromFontFamily()
+        {
+            return _matchesChar is not null
+                ? SKFontManager.Default.MatchCharacter(_matchesChar.Value)
+                : SKTypeface.FromFamilyName(_fontFamily);
         }
 
         private HashSet<IDrawable<SkiaSharpDrawingContext>>? GetGeometriesByCanvas(MotionCanvas<SkiaSharpDrawingContext> canvas)

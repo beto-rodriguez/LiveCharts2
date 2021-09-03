@@ -41,11 +41,12 @@ namespace ViewModelsSamples.Pies.Processing
                 }
             };
 
+            // the ValueSeries property is a workaround for WPF only.
             ValueSeries = new ValueSeries[]
             {
-                new ValueSeries{ Value = _processing, Series = Series[0] },
-                new ValueSeries{ Value = _failed, Series = Series[1] },
-                new ValueSeries{ Value = _completed, Series = Series[2] }
+                new ValueSeries { Value = _processing, Series = Series[0] },
+                new ValueSeries { Value = _failed, Series = Series[1] },
+                new ValueSeries { Value = _completed, Series = Series[2] }
             };
 
             Value = _processing;
@@ -93,9 +94,9 @@ namespace ViewModelsSamples.Pies.Processing
                 //Value = new ObservableValue(_processing.Value ?? 0);
                 ValueSeries = new ValueSeries[]
                 {
-                    new ValueSeries{ Value = _processing, Series = Series[0] },
-                    new ValueSeries{ Value = _failed, Series = Series[1] },
-                    new ValueSeries{ Value = _completed, Series = Series[2] }
+                    new ValueSeries { Value = _processing, Series = Series[0] },
+                    new ValueSeries { Value = _failed, Series = Series[1] },
+                    new ValueSeries { Value = _completed, Series = Series[2] }
                 };
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ValueSeries)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));

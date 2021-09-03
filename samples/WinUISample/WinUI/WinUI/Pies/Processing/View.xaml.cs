@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
@@ -20,15 +19,13 @@ namespace WinUISample.Pies.Processing
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value is not IEnumerable enumerable) return null;
-
-            var enumerator = enumerable.GetEnumerator();
-            return enumerator.MoveNext() && enumerator.Current is SolidColorPaint solidPaintTask
-                ? new SolidColorBrush(Color.FromArgb(
-                    solidPaintTask.Color.Alpha,
-                    solidPaintTask.Color.Red,
-                    solidPaintTask.Color.Green,
-                    solidPaintTask.Color.Blue))
+            return value is SolidColorPaint solidColor
+                ? new SolidColorBrush(
+                    Color.FromArgb(
+                        solidColor.Color.Alpha,
+                        solidColor.Color.Red,
+                        solidColor.Color.Green,
+                        solidColor.Color.Blue))
                 : null;
         }
 

@@ -88,7 +88,10 @@ namespace LiveChartsCore.Kernel.Drawing
             var dx = point.X - (X + Width * 0.5f);
             var dy = point.Y - (Y + Height * 0.5f);
 
+            // compiler bug?
+#pragma warning disable IDE0072 // Add missing cases
             return strategy switch
+#pragma warning restore IDE0072 // Add missing cases
             {
                 TooltipFindingStrategy.CompareAll => (float)Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2)),
                 TooltipFindingStrategy.CompareOnlyX => Math.Abs(dx),

@@ -80,10 +80,12 @@
             "General/Visibility",
             "General/TemplatedTooltips",
             "General/TemplatedLegends",
-            //"General/TwoChartsOneSeries",
             "General/UserDefinedTypes",
             "General/NullPoints",
             "General/MultiThreading",
+
+            "VisualTest/TwoChartsOneSeries",
+            "VisualTest/ReattachVisual",
 
             "Maps/World"
         };

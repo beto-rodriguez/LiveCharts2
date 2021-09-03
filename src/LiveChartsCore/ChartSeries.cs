@@ -112,9 +112,6 @@ namespace LiveChartsCore
                 throw new Exception("Default colors are not valid");
 
             initializer.ApplyStyleToSeries(this);
-
-            var factory = LiveCharts.CurrentSettings.GetFactory<TDrawingContext>();
-            dataProvider = factory.GetProvider<TModel>();
         }
 
         /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>

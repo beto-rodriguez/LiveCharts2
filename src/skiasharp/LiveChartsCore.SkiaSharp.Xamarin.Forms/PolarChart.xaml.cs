@@ -307,7 +307,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         #region properties
 
         /// <inheritdoc cref="IChartView.DesignerMode" />
-        public bool DesignerMode => DesignMode.IsDesignModeEnabled;
+        bool IChartView.DesignerMode => DesignMode.IsDesignModeEnabled;
+
+        /// <inheritdoc cref="IChartView.IsInVisualTree" />
+        bool IChartView.IsInVisualTree => Parent is not null;
 
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
@@ -648,16 +651,24 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             chart._core.Update();
         }
 
+        /// <inheritdoc cref="NavigableElement.OnParentSet"/>
+        protected override void OnParentSet()
+        {
+            base.OnParentSet();
+            if (Parent == null) core?.Unload();
+            else core?.Update();
+        }
+
         private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (_core is null) return;
-            _core.Update();
+            if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+            core.Update();
         }
 
         private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (_core is null) return;
-            _core.Update();
+            if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+            core.Update();
         }
 
         private void OnSizeChanged(object? sender, EventArgs e)

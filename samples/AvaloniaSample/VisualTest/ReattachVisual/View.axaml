@@ -1,0 +1,49 @@
+<UserControl x:Class="AvaloniaSample.VisualTest.ReattachVisual.View"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:vms="using:ViewModelsSamples.VisualTest.ReattachVisual">
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" x:Name="parent">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <lvc:CartesianChart
+                x:Name="chart"
+                Grid.Column="0"
+                Series="{Binding Series}"
+                Sections="{Binding Sections}"
+                ZoomMode="X">
+            </lvc:CartesianChart>
+
+            <lvc:PieChart
+                x:Name="pieChart"
+                Grid.Column="1"
+                Series="{Binding PieSeries}">
+            </lvc:PieChart>
+
+            <lvc:PolarChart
+                x:Name="polarChart"
+                Grid.Column="2"
+                Series="{Binding PolarSeries}">
+            </lvc:PolarChart>            
+        </Grid>
+
+        <Button
+            Grid.Row="1"
+            Content="Toggle attach"
+            Click="OnToggleAttach">
+        </Button>
+    </Grid>
+</UserControl>

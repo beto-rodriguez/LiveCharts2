@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace AvaloniaSample.General.TwoChartsOneSeries
+namespace AvaloniaSample.VisualTest.TwoChartsOneSeries
 {
     public class View : UserControl
     {

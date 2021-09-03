@@ -329,6 +329,12 @@
     <Compile Include="StepLines\Zoom\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VisualTest\TwoChartsOneSeries\View.xaml.cs">
+      <DependentUpon>View.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="VisualTest\ReattachVisual\View.xaml.cs">
+      <DependentUpon>View.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -623,6 +629,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="StepLines\Zoom\View.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="VisualTest\TwoChartsOneSeries\View.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="VisualTest\ReattachVisual\View.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
