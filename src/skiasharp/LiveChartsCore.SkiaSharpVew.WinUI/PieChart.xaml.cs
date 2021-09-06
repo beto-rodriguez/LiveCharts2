@@ -747,6 +747,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
                 PointerExited += OnPointerExited;
             }
 
+            _core.Load();
             _core.Update();
         }
 
