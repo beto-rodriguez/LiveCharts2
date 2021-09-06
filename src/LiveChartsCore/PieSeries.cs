@@ -641,8 +641,6 @@ namespace LiveChartsCore
 
             foreach (var item in toDelete) _ = everFetched.Remove(item);
 
-            // the following code is useful to ???
-            if (!chart.IsInVisualTree) return;
             ((ISeries)this).IsNotifyingChanges = false;
             IsVisible = false;
             ((ISeries)this).IsNotifyingChanges = false;
