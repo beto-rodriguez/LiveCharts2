@@ -88,6 +88,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
             InitializeCore();
 
+            AttachedToVisualTree += OnAttachedToVisualTree;
+
             _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _angleObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _radiusObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
@@ -759,6 +761,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             _ = Dispatcher.UIThread.InvokeAsync(HideTooltip, DispatcherPriority.Background);
             _core?.InvokePointerLeft();
+        }
+
+        private void OnAttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+        {
+            _core?.Load();
         }
 
         private void PolarChart_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)

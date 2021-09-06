@@ -83,6 +83,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
             InitializeCore();
 
+            AttachedToVisualTree += OnAttachedToVisualTree;
+
             _seriesObserver = new CollectionDeepObserver<ISeries>(
                (object? sender, NotifyCollectionChangedEventArgs e) =>
                {
@@ -708,6 +710,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             _ = Dispatcher.UIThread.InvokeAsync(HideTooltip, DispatcherPriority.Background);
             _core?.InvokePointerLeft();
+        }
+
+        private void OnAttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+        {
+            _core?.Load();
         }
 
         private void PieChart_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)

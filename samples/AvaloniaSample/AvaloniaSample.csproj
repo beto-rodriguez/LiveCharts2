@@ -96,6 +96,12 @@
     <Compile Update="General\MultiThreading\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="VisualTest\Tabs\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="VisualTest\DataTemplate\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="VisualTest\ReattachVisual\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

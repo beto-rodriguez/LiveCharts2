@@ -8,10 +8,10 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <TabControl>
-            <TabItem Header="hola">
+            <TabItem Header="tab 1">
                 <bars:View></bars:View>
             </TabItem>
-            <TabItem Header="que hace">
+            <TabItem Header="tab 2">
                 <lines:View></lines:View>
             </TabItem>
         </TabControl>
