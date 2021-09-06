@@ -5,8 +5,6 @@ namespace AvaloniaSample.VisualTest.Tabs
 {
     public class View : UserControl
     {
-        private bool _isInVisualTree = true;
-
         public View()
         {
             InitializeComponent();
