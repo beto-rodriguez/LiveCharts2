@@ -301,12 +301,14 @@
     </Page>
     <Page Update="VisualTest\DataTemplate\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="VisualTest\ReattachVisual - Copy\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="VisualTest\Tabs\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
 </Project>
