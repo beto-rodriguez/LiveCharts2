@@ -27,6 +27,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp.Views.UWP;
+using Windows.Graphics.Display;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -95,6 +96,8 @@ namespace LiveChartsCore.SkiaSharpView.UWP
 
         private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
         {
+            var scaleFactor = DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
+            args.Surface.Canvas.Scale((float)scaleFactor, (float)scaleFactor);
             CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
         }
 
