@@ -151,6 +151,10 @@ namespace LiveChartsCore
             }
 #endif
 
+            if (!IsLoaded) return; // <- prevents a visual glitch where the visual call the measure method
+                                   // while they are not visible, the problem is when the control is visible again
+                                   // the animations are not as expected because previously it ran in an invalid case.
+
             InvokeOnMeasuring();
 
             if (preserveFirstDraw)
@@ -255,6 +259,8 @@ namespace LiveChartsCore
         /// <inheritdoc cref="Chart{TDrawingContext}.Unload"/>
         public override void Unload()
         {
+            base.Unload();
+
             foreach (var item in _everMeasuredSeries) ((ChartElement<TDrawingContext>)item).RemoveFromUI(this);
             _everMeasuredSeries.Clear();
             IsFirstDraw = true;

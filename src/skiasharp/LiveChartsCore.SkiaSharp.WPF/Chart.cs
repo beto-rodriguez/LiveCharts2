@@ -80,6 +80,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             MouseMove += OnMouseMove;
             MouseLeave += OnMouseLeave;
             Unloaded += Chart_Unloaded;
+
+            Loaded += Chart_Loaded;
         }
 
         #region dependency properties
@@ -740,6 +742,11 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         {
             HideTooltip();
             core?.InvokePointerLeft();
+        }
+
+        private void Chart_Loaded(object sender, RoutedEventArgs e)
+        {
+            core?.Load();
         }
 
         private void Chart_Unloaded(object sender, RoutedEventArgs e)

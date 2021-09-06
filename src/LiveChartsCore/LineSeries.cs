@@ -849,5 +849,14 @@ namespace LiveChartsCore
 
             if (l.Count > 0) yield return l.ToArray();
         }
+
+        /// <inheritdoc/>
+        public override void RemoveFromUI(Chart<TDrawingContext> chart)
+        {
+            base.RemoveFromUI(chart);
+
+            _ = _fillPathHelperDictionary.Remove(chart.Canvas.Sync);
+            _ = _strokePathHelperDictionary.Remove(chart.Canvas.Sync);
+        }
     }
 }
