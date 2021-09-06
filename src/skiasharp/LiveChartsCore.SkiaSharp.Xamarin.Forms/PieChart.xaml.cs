@@ -304,9 +304,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <inheritdoc cref="IChartView.DesignerMode" />
         bool IChartView.DesignerMode => DesignMode.IsDesignModeEnabled;
 
-        /// <inheritdoc cref="IChartView.IsInVisualTree" />
-        bool IChartView.IsInVisualTree => Parent is not null;
-
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
 
@@ -649,7 +646,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             base.OnParentSet();
             if (Parent == null) core?.Unload();
-            else core?.Update();
+            else core?.Load();
         }
 
         private void OnSizeChanged(object sender, EventArgs e)

@@ -75,9 +75,6 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         /// <inheritdoc cref="IChartView.DesignerMode" />
         public bool DesignerMode => false;
 
-        /// <inheritdoc cref="IChartView.IsInVisualTree" />
-        public bool IsInVisualTree => true;
-
         /// <summary>
         /// Gets or sets the background.
         /// </summary>

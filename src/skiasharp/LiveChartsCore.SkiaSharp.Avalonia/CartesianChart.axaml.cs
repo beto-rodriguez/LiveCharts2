@@ -89,6 +89,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
             InitializeCore();
 
+            AttachedToVisualTree += CartesianChart_AttachedToVisualTree;
+
             _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
@@ -320,9 +322,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         /// <inheritdoc cref="IChartView.DesignerMode" />
         bool IChartView.DesignerMode => Design.IsDesignMode;
-
-        /// <inheritdoc cref="IChartView.IsInVisualTree" />
-        bool IChartView.IsInVisualTree => Parent is not null;
 
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
@@ -843,6 +842,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             _ = Dispatcher.UIThread.InvokeAsync(HideTooltip, DispatcherPriority.Background);
             _core?.InvokePointerLeft();
+        }
+
+        private void CartesianChart_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+        {
+            _core?.Load();
         }
 
         private void CartesianChart_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)

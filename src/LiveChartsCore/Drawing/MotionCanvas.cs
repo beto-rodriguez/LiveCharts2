@@ -167,6 +167,15 @@ namespace LiveChartsCore.Drawing
         }
 
         /// <summary>
+        /// Clears the canvas and tasks.
+        /// </summary>
+        public void Clear()
+        {
+            _paintTasks.Clear();
+            Invalidate();
+        }
+
+        /// <summary>
         /// Adds a drawable task.
         /// </summary>
         /// <param name="task">The task.</param>

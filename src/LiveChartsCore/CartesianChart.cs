@@ -365,8 +365,11 @@ namespace LiveChartsCore
                     $"tread: {Thread.CurrentThread.ManagedThreadId}");
             }
 #endif
-            Trace.WriteLine("========CHART MEASURED=====");
-            if (!_chartView.IsInVisualTree) return;
+
+            if (!IsLoaded) return; // <- prevents a visual glitch where the visual call the measure method
+                                   // while they are not visible, the problem is when the control is visible again
+                                   // the animations are not as expected because previously it ran in an invalid case.
+
             InvokeOnMeasuring();
 
             if (preserveFirstDraw)
@@ -406,7 +409,7 @@ namespace LiveChartsCore
 
             var actualSeries = View.DesignerMode
                 ? _designerSeries ??= LiveCharts.CurrentSettings.DesignerSeriesGenerator(DesignerKind.Cartesian)
-                : _chartView.Series.Where(x => x.IsVisible);
+                : (_chartView.Series ?? Enumerable.Empty<ISeries>()).Where(x => x.IsVisible);
 
             Series = actualSeries
                 .Cast<ICartesianSeries<TDrawingContext>>()
@@ -745,12 +748,17 @@ namespace LiveChartsCore
         /// <inheritdoc cref="Chart{TDrawingContext}.Unload"/>
         public override void Unload()
         {
+            base.Unload();
+
             foreach (var item in _everMeasuredAxes) item.RemoveFromUI(this);
             _everMeasuredAxes.Clear();
             foreach (var item in _everMeasuredSections) item.RemoveFromUI(this);
             _everMeasuredSections.Clear();
             foreach (var item in _everMeasuredSeries) ((ChartElement<TDrawingContext>)item).RemoveFromUI(this);
             _everMeasuredSeries.Clear();
+
+            _chartView.CoreCanvas.Clear();
+
             IsFirstDraw = true;
         }
     }

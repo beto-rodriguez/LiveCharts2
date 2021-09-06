@@ -581,6 +581,7 @@ namespace LiveChartsCore
         public override void RemoveFromUI(Chart<TDrawingContext> chart)
         {
             base.RemoveFromUI(chart);
+            ((IPlane)this).PreviousDataBounds = null;
             _ = activeSeparators.Remove(chart);
         }
 

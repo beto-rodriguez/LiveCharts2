@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XamarinSample.VisualTest.Tabs.View"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Xamarin.Forms;assembly=LiveChartsCore.SkiaSharpView.XamarinForms"
+             xmlns:vms="clr-namespace:ViewModelsSamples.VisualTest.Tabs;assembly=ViewModelsSamples">
+
+    <ContentPage.BindingContext>
+        <vms:ViewModel></vms:ViewModel>
+    </ContentPage.BindingContext>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <xct:TabView
+            TabStripPlacement="Bottom"
+            TabStripBackgroundColor="Blue"
+            TabStripHeight="60"
+            TabIndicatorColor="Yellow"
+            TabContentBackgroundColor="Yellow">
+
+            <xct:TabViewItem
+                    Text="Tab 1"
+                    TextColor="Black"
+                    FontSize="12">
+                <lvc:CartesianChart Series="{Binding LineSeries}"></lvc:CartesianChart>
+            </xct:TabViewItem>
+
+            <xct:TabViewItem
+                    Text="Tab 2"
+                    TextColor="Black"
+                    FontSize="12">
+                <lvc:CartesianChart Series="{Binding ColumnSeries}"></lvc:CartesianChart>
+            </xct:TabViewItem>
+
+        </xct:TabView>
+
+    </Grid>
+</ContentPage>

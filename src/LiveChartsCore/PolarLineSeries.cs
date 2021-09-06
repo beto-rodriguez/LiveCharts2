@@ -882,8 +882,6 @@ namespace LiveChartsCore
             if (GeometryFill is not null) canvas.RemovePaintTask(GeometryFill);
             if (GeometryStroke is not null) canvas.RemovePaintTask(GeometryStroke);
 
-            // the following code is useful to ???
-            if (!chart.IsInVisualTree) return;
             ((ISeries)this).IsNotifyingChanges = false;
             IsVisible = false;
             ((ISeries)this).IsNotifyingChanges = false;
