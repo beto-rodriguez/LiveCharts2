@@ -657,7 +657,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             base.OnParentSet();
             if (Parent == null) core?.Unload();
-            else core?.Update();
+            else core?.Load();
         }
 
         private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
