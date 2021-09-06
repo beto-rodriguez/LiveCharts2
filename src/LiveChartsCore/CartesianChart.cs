@@ -409,7 +409,7 @@ namespace LiveChartsCore
 
             var actualSeries = View.DesignerMode
                 ? _designerSeries ??= LiveCharts.CurrentSettings.DesignerSeriesGenerator(DesignerKind.Cartesian)
-                : _chartView.Series.Where(x => x.IsVisible);
+                : (_chartView.Series ?? Enumerable.Empty<ISeries>()).Where(x => x.IsVisible);
 
             Series = actualSeries
                 .Cast<ICartesianSeries<TDrawingContext>>()

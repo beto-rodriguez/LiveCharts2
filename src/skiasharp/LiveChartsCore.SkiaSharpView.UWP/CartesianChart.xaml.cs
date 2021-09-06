@@ -865,6 +865,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                 PointerExited += OnPointerExited;
             }
 
+            _core.Load();
             _core.Update();
         }
 
