@@ -99,6 +99,8 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
 
         private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
         {
+            var scaleFactor = XamlRoot.RasterizationScale;
+            args.Surface.Canvas.Scale((float)scaleFactor, (float)scaleFactor);
             CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
         }
 
