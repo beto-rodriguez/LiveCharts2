@@ -365,8 +365,6 @@ namespace LiveChartsCore
                     $"tread: {Thread.CurrentThread.ManagedThreadId}");
             }
 #endif
-            Trace.WriteLine("========CHART MEASURED=====");
-            if (!_chartView.IsInVisualTree) return;
             InvokeOnMeasuring();
 
             if (preserveFirstDraw)

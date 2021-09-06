@@ -150,7 +150,6 @@ namespace LiveChartsCore
                     $"tread: {Thread.CurrentThread.ManagedThreadId}");
             }
 #endif
-            if (!_chartView.IsInVisualTree) return;
 
             InvokeOnMeasuring();
 

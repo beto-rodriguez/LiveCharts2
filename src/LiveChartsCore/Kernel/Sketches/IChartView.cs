@@ -47,11 +47,6 @@ namespace LiveChartsCore.Kernel.Sketches
         bool DesignerMode { get; }
 
         /// <summary>
-        /// Gets wheter the control is in the visual tree.
-        /// </summary>
-        bool IsInVisualTree { get; }
-
-        /// <summary>
         /// Sets the back color of the control.
         /// </summary>
         /// <value>
