@@ -35,7 +35,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
     /// <inheritdoc cref="MotionCanvas{TDrawingContext}"/>
     public sealed partial class MotionCanvas : UserControl
     {
-        private SKXamlCanvas? _skiaElement;
+        private readonly SKXamlCanvas _skiaElement;
         private bool _isDrawingLoopRunning;
 
         /// <summary>
@@ -46,6 +46,10 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             InitializeComponent();
             Loaded += OnLoaded;
             Unloaded += OnUnloaded;
+
+            var canvas = (SKXamlCanvas)FindName("canvas");
+            _skiaElement = canvas;
+            _skiaElement.PaintSurface += OnPaintSurface;
         }
 
         /// <summary>
@@ -87,14 +91,12 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             CanvasCore.Invalidated += OnCanvasCoreInvalidated;
-
-            var canvas = (SKXamlCanvas)FindName("canvas");
-            _skiaElement = canvas;
-            _skiaElement.PaintSurface += OnPaintSurface;
         }
 
-        private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
+        private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs args)
         {
+            var scaleFactor = XamlRoot.RasterizationScale;
+            args.Surface.Canvas.Scale((float)scaleFactor, (float)scaleFactor);
             CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
         }
 

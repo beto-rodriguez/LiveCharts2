@@ -118,6 +118,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             c.MouseLeave += Chart_MouseLeave;
 
             var s = PointStates;
+            Load += Chart_Load;
         }
 
         #region events
@@ -137,9 +138,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
         /// <inheritdoc cref="IChartView.DesignerMode" />
         bool IChartView.DesignerMode => LicenseManager.UsageMode == LicenseUsageMode.Designtime;
-
-        /// <inheritdoc cref="IChartView.IsInVisualTree" />
-        bool IChartView.IsInVisualTree => Parent is not null;
 
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
@@ -353,7 +351,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             base.OnParentChanged(e);
 
             if (Parent is null) core?.Unload();
-            else core?.Update();
+            else core?.Load();
         }
 
         private void OnResized(object? sender, EventArgs e)
@@ -386,6 +384,11 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         {
             HideTooltip();
             core?.InvokePointerLeft();
+        }
+
+        private void Chart_Load(object sender, EventArgs e)
+        {
+            core?.Load();
         }
     }
 }

@@ -1,0 +1,22 @@
+<UserControl x:Class="AvaloniaSample.VisualTest.Tabs.View"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:bars="using:AvaloniaSample.Bars.Basic"
+             xmlns:lines="using:AvaloniaSample.Lines.Basic">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TabControl>
+            <TabItem Header="tab 1">
+                <bars:View></bars:View>
+            </TabItem>
+            <TabItem Header="tab 2">
+                <lines:View></lines:View>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

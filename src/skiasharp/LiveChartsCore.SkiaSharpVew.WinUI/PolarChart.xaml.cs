@@ -323,9 +323,6 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// <inheritdoc cref="IChartView.DesignerMode" />
         bool IChartView.DesignerMode => Windows.ApplicationModel.DesignMode.DesignModeEnabled;
 
-        /// <inheritdoc cref="IChartView.IsInVisualTree" />
-        bool IChartView.IsInVisualTree => Parent is not null;
-
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
 
@@ -760,6 +757,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
                 PointerExited += OnPointerExited;
             }
 
+            _core.Load();
             _core.Update();
         }
 

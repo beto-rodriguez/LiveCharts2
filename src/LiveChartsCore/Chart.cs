@@ -134,12 +134,17 @@ namespace LiveChartsCore
         public object ThemeId { get; protected set; } = new object();
 
         /// <summary>
+        /// Gets whether the control is loaded.
+        /// </summary>
+        public bool IsLoaded { get; protected set; } = false;
+
+        /// <summary>
         /// Gets or sets a value indicating whether this it is the first draw of this instance.
         /// </summary>
         /// <value>
         ///   <c>true</c> if this it is the first draw; otherwise, <c>false</c>.
         /// </value>
-        public bool IsFirstDraw { get; set; } = true;
+        public bool IsFirstDraw { get; protected set; } = true;
 
         /// <summary>
         /// Gets the canvas.
@@ -310,9 +315,22 @@ namespace LiveChartsCore
         public abstract TooltipPoint[] FindPointsNearTo(LvcPoint pointerPosition);
 
         /// <summary>
-        /// Unloads the control resources.
+        /// Loads the control resources.
         /// </summary>
-        public abstract void Unload();
+        public virtual void Load()
+        {
+            IsLoaded = true;
+            IsFirstDraw = true;
+            Update();
+        }
+
+        /// <summary>
+        /// Unloads the control.
+        /// </summary>
+        public virtual void Unload()
+        {
+            IsLoaded = false;
+        }
 
         internal void InvokePointerDown(LvcPoint point)
         {

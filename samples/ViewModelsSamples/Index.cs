@@ -86,6 +86,8 @@
 
             "VisualTest/TwoChartsOneSeries",
             "VisualTest/ReattachVisual",
+            "VisualTest/DataTemplate",
+            "VisualTest/Tabs",
 
             "Maps/World"
         };
