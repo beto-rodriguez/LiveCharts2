@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MauiSample.VisualTest.TwoChartsOneSeries.View"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             xmlns:vms="clr-namespace:ViewModelsSamples.VisualTest.TwoChartsOneSeries;assembly=ViewModelsSamples"
+             >
+    <ContentPage.BindingContext>
+        <vms:ViewModel/>
+    </ContentPage.BindingContext>
+	<ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <lvc:CartesianChart
+                Grid.Row="0"
+                Series="{Binding Series}"
+                ZoomMode="X">
+            </lvc:CartesianChart>
+
+            <lvc:CartesianChart
+                Grid.Row="1"
+                Series="{Binding Series}"
+                ZoomMode="X">
+            </lvc:CartesianChart>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
