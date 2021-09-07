@@ -75,7 +75,10 @@ namespace ViewModelsSamples.Axes.DateTimeScaled
 
                     // in this case we want our columns with a width of 1 day, we can get that number
                     // using the following syntax
-                    UnitWidth = TimeSpan.FromDays(1).Ticks
+                    UnitWidth = TimeSpan.FromDays(1).Ticks,
+
+                    // The MinStep property forces the separator to be greater than 1 day.
+                    MinStep = TimeSpan.FromDays(1).Ticks
 
                     // if the difference between our points is in hours then we would:
                     // UnitWidth = TimeSpan.FromHours(1).Ticks,
