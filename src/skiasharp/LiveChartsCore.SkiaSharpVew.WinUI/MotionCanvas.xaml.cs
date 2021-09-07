@@ -39,7 +39,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
     /// <seealso cref="Microsoft.UI.Xaml.Markup.IComponentConnector" />
     public sealed partial class MotionCanvas : UserControl
     {
-        private SKXamlCanvas? _skiaElement;
+        private readonly SKXamlCanvas? _skiaElement;
         private bool _isDrawingLoopRunning;
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             InitializeComponent();
             Loaded += OnLoaded;
             Unloaded += OnUnloaded;
-            
+
             var canvas = (SKXamlCanvas)FindName("canvas");
             _skiaElement = canvas;
             _skiaElement.PaintSurface += OnPaintSurface;
