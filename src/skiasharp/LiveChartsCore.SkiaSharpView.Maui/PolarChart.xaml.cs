@@ -20,21 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
 using Microsoft.Maui.Essentials;
@@ -308,9 +302,6 @@ namespace LiveChartsCore.SkiaSharpView.Maui
 
         /// <inheritdoc cref="IChartView.DesignerMode" />
         bool IChartView.DesignerMode => DesignMode.IsDesignModeEnabled;
-
-        /// <inheritdoc cref="IChartView.IsInVisualTree" />
-        bool IChartView.IsInVisualTree => Parent is not null;
 
         /// <inheritdoc cref="IChartView.CoreChart" />
         public IChart CoreChart => _core ?? throw new Exception("Core not set yet.");
@@ -634,6 +625,15 @@ namespace LiveChartsCore.SkiaSharpView.Maui
         {
             _core = new PolarChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
             _core.Update();
+        }
+
+        /// <inheritdoc cref="NavigableElement.OnParentSet"/>
+        protected override void OnParentSet()
+        {
+            base.OnParentSet();
+
+            if (Parent == null) _core?.Unload();
+            else _core?.Load();
         }
 
         /// <summary>
