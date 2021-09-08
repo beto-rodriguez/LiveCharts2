@@ -254,10 +254,6 @@ namespace LiveChartsCore
 
                         visual = v;
 
-                        var pg = scaler.CenterY;
-                        var xg = x - hgs;
-                        var yg = scaler.CenterY - hgs;
-
                         var x0b = scaler.CenterX - hgs;
                         var x1b = scaler.CenterX - hgs;
                         var x2b = scaler.CenterX - hgs;
@@ -265,8 +261,8 @@ namespace LiveChartsCore
                         var y1b = scaler.CenterY - hgs;
                         var y2b = scaler.CenterY - hgs;
 
-                        v.Geometry.X = xg;
-                        v.Geometry.Y = yg;
+                        v.Geometry.X = scaler.CenterX;
+                        v.Geometry.Y = scaler.CenterY;
                         v.Geometry.Width = gs;
                         v.Geometry.Height = gs;
 
@@ -337,8 +333,18 @@ namespace LiveChartsCore
                     {
                         if (data.IsFirst)
                         {
+                            if (wasStrokeInitialized)
+                            {
+                                strokePathHelper.StartPoint.X = scaler.CenterX;
+                                strokePathHelper.StartPoint.Y = scaler.CenterY;
+
+                                strokePathHelper.StartPoint.CompleteTransitions(
+                                   nameof(strokePathHelper.StartPoint.Y), nameof(strokePathHelper.StartPoint.X));
+                            }
+
                             strokePathHelper.StartPoint.X = (float)data.X0;
                             strokePathHelper.StartPoint.Y = (float)data.Y0;
+
                             strokePathHelper.Path.AddCommand(strokePathHelper.StartPoint);
                         }
 
