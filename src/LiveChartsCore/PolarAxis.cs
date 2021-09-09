@@ -62,7 +62,6 @@ namespace LiveChartsCore
         private double _labelsRotation;
         //private TTextGeometry? _nameGeometry;
         private Func<double, string> _labeler = Labelers.Default;
-        //private Padding _padding = Padding.Default;
         private double? _minLimit = null;
         private double? _maxLimit = null;
         private IPaint<TDrawingContext>? _namePaint;
@@ -76,6 +75,7 @@ namespace LiveChartsCore
         private bool _isVisible = true;
         private bool _isInverted;
         private bool _forceStepToMin;
+        private Padding _labelsPadding = new(5); // <- ToDo: Expose this
 
         #endregion
 
@@ -377,7 +377,7 @@ namespace LiveChartsCore
                 if (visualSeparator.Text is not null)
                 {
                     visualSeparator.Text.Text = label;
-                    //visualSeparator.Text.Padding = new Padding(5);//_padding;
+                    visualSeparator.Text.Padding = _labelsPadding;//_padding;
 
                     var actualRotation = r + (_orientation == PolarAxisOrientation.Angle ? scaler.GetAngle(i) - 90 : 0);
 
@@ -450,7 +450,7 @@ namespace LiveChartsCore
                 Text = Name ?? string.Empty,
                 TextSize = (float)NameTextSize,
                 //RotateTransform = Orientation == AxisOrientation.X ? 0 : -90,
-                //Padding = Padding
+                Padding = _labelsPadding
             };
 
             return textGeometry.Measure(NamePaint);
@@ -504,7 +504,7 @@ namespace LiveChartsCore
                     Text = labeler(i),
                     TextSize = ts,
                     RotateTransform = r + (_orientation == PolarAxisOrientation.Angle ? scaler.GetAngle(i) - 90 : 0),
-                    //Padding = _padding
+                    Padding = _labelsPadding
                 };
                 var m = textGeometry.Measure(LabelsPaint); // TextBrush.MeasureText(labeler(i, axisTick));
 
