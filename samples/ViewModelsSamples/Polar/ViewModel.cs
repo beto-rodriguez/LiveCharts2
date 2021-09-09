@@ -15,7 +15,8 @@ namespace ViewModelsSamples.Polar.Basic
         {
             new PolarLineSeries<double>
             {
-                Values = new ObservableCollection<double> { 1500, 1400, 1300, 1200, 1100, 1000, 900, 800, 700, 600, 500, 400, 300, 200, 100 }
+                Values = new ObservableCollection<double> { 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 },
+                IsClosed = false
             }
         };
 

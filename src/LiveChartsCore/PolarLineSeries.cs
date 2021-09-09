@@ -36,7 +36,7 @@ namespace LiveChartsCore
     /// Defines the data to plot as a line.
     /// </summary>
     public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>
-        : ChartSeries<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>, ILineSeries<TDrawingContext>, IPolarSeries<TDrawingContext>
+        : ChartSeries<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>, IPolarLineSeries<TDrawingContext>, IPolarSeries<TDrawingContext>
             where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
             where TLineSegment : ILinePathSegment<TPathArgs>, new()
             where TBezierSegment : IBezierSegment<TPathArgs>, new()
@@ -56,6 +56,7 @@ namespace LiveChartsCore
         private IPaint<TDrawingContext>? _fill = null;
         private int _scalesAngleAt;
         private int _scalesRadiusAt;
+        private bool _isClosed = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs}"/> class.
@@ -133,6 +134,9 @@ namespace LiveChartsCore
             get => _geometryStroke;
             set => SetPaintProperty(ref _geometryStroke, value, true);
         }
+
+        /// <inheritdoc cref="IPolarLineSeries{TDrawingContext}.IsClosed"/>
+        public bool IsClosed { get => _isClosed; set { _isClosed = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
         public override void Measure(Chart<TDrawingContext> chart)
@@ -232,6 +236,7 @@ namespace LiveChartsCore
                     polarChart.Canvas.AddDrawableTask(Stroke);
                     Stroke.ZIndex = actualZIndex + 0.2;
                     Stroke.SetClipRectangle(polarChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+                    strokePathHelper.Path.IsClosed = IsClosed;
                 }
 
                 foreach (var data in GetSpline(segment, scaler, stacker))
