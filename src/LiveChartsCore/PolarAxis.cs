@@ -75,7 +75,7 @@ namespace LiveChartsCore
         private bool _isVisible = true;
         private bool _isInverted;
         private bool _forceStepToMin;
-        private Padding _labelsPadding = new(5); // <- ToDo: Expose this
+        private Padding _labelsPadding = new(3); // <- ToDo: Expose this
 
         #endregion
 

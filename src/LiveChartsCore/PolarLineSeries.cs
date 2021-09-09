@@ -66,7 +66,7 @@ namespace LiveChartsCore
                   SeriesProperties.Line | SeriesProperties.PrimaryAxisVerticalOrientation |
                   (isStacked ? SeriesProperties.Stacked : 0) | SeriesProperties.Sketch | SeriesProperties.PrefersXStrategyTooltips)
         {
-            DataPadding = new LvcPoint(0.5f, 1f);
+            DataPadding = new LvcPoint(0f, 1.5f);
             HoverState = LiveCharts.LineSeriesHoverKey;
         }
 
