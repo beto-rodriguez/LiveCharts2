@@ -89,7 +89,15 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         #region dependency properties
 
         /// <summary>
-        /// The series property
+        /// The inner radius property.
+        /// </summary>
+        public static readonly DependencyProperty InnerRadiusProperty =
+            DependencyProperty.Register(
+                nameof(InnerRadius), typeof(double), typeof(PolarChart),
+                new PropertyMetadata(0d, OnDependencyPropertyChanged));
+
+        /// <summary>
+        /// The series property.
         /// </summary>
         public static readonly DependencyProperty SeriesProperty =
             DependencyProperty.Register(
@@ -105,7 +113,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                     }));
 
         /// <summary>
-        /// The x axes property
+        /// The x axes property.
         /// </summary>
         public static readonly DependencyProperty AngleAxesProperty =
             DependencyProperty.Register(
@@ -121,7 +129,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                     }));
 
         /// <summary>
-        /// The y axes property
+        /// The y axes property.
         /// </summary>
         public static readonly DependencyProperty RadiusAxesProperty =
             DependencyProperty.Register(
@@ -137,7 +145,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                     }));
 
         /// <summary>
-        /// The sync context property
+        /// The sync context property.
         /// </summary>
         public static readonly DependencyProperty SyncContextProperty =
             DependencyProperty.Register(
@@ -151,7 +159,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                     }));
 
         /// <summary>
-        /// The tool tip finding strategy property
+        /// The tool tip finding strategy property.
         /// </summary>
         public static readonly DependencyProperty TooltipFindingStrategyProperty =
             DependencyProperty.Register(
@@ -159,7 +167,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                 new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The animations speed property
+        /// The animations speed property.
         /// </summary>
         public static readonly DependencyProperty AnimationsSpeedProperty =
             DependencyProperty.Register(
@@ -167,7 +175,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                 new PropertyMetadata(LiveCharts.CurrentSettings.DefaultAnimationsSpeed, OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The easing function property
+        /// The easing function property.
         /// </summary>
         public static readonly DependencyProperty EasingFunctionProperty =
             DependencyProperty.Register(
@@ -175,7 +183,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                 new PropertyMetadata(LiveCharts.CurrentSettings.DefaultEasingFunction, OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The legend position property
+        /// The legend position property.
         /// </summary>
         public static readonly DependencyProperty LegendPositionProperty =
             DependencyProperty.Register(
@@ -183,7 +191,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                 new PropertyMetadata(LiveCharts.CurrentSettings.DefaultLegendPosition, OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The legend orientation property
+        /// The legend orientation property.
         /// </summary>
         public static readonly DependencyProperty LegendOrientationProperty =
             DependencyProperty.Register(
@@ -191,7 +199,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                 new PropertyMetadata(LiveCharts.CurrentSettings.DefaultLegendOrientation, OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The tool tip position property
+        /// The tool tip position property.
         /// </summary>
         public static readonly DependencyProperty TooltipPositionProperty =
            DependencyProperty.Register(
@@ -199,7 +207,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipPosition, OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The tool tip background property
+        /// The tool tip background property.
         /// </summary>
         public static readonly DependencyProperty TooltipBackgroundProperty =
            DependencyProperty.Register(
@@ -207,7 +215,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                new PropertyMetadata(new SolidColorBrush(Windows.UI.Color.FromArgb(255, 250, 250, 250)), OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The tool tip font family property
+        /// The tool tip font family property.
         /// </summary>
         public static readonly DependencyProperty TooltipFontFamilyProperty =
            DependencyProperty.Register(
@@ -215,7 +223,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                new PropertyMetadata(new FontFamily("Trebuchet MS"), OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The tool tip text color property
+        /// The tool tip text color property.
         /// </summary>
         public static readonly DependencyProperty TooltipTextBrushProperty =
            DependencyProperty.Register(
@@ -223,14 +231,14 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                new PropertyMetadata(new SolidColorBrush(Windows.UI.Color.FromArgb(255, 35, 35, 35)), OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The tool tip font size property
+        /// The tool tip font size property.
         /// </summary>
         public static readonly DependencyProperty TooltipFontSizeProperty =
            DependencyProperty.Register(
                nameof(TooltipFontSize), typeof(double), typeof(PolarChart), new PropertyMetadata(13d, OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The tool tip font weight property
+        /// The tool tip font weight property.
         /// </summary>
         public static readonly DependencyProperty TooltipFontWeightProperty =
            DependencyProperty.Register(
@@ -238,7 +246,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                new PropertyMetadata(FontWeights.Normal, OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The tool tip font stretch property
+        /// The tool tip font stretch property.
         /// </summary>
         public static readonly DependencyProperty TooltipFontStretchProperty =
            DependencyProperty.Register(
@@ -246,7 +254,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                new PropertyMetadata(FontStretch.Normal, OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The tool tip font style property
+        /// The tool tip font style property.
         /// </summary>
         public static readonly DependencyProperty TooltipFontStyleProperty =
            DependencyProperty.Register(
@@ -254,14 +262,14 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                new PropertyMetadata(FontStyle.Normal, OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The tool tip template property
+        /// The tool tip template property.
         /// </summary>
         public static readonly DependencyProperty TooltipTemplateProperty =
             DependencyProperty.Register(
                 nameof(TooltipTemplate), typeof(DataTemplate), typeof(PolarChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The legend font family property
+        /// The legend font family property.
         /// </summary>
         public static readonly DependencyProperty LegendFontFamilyProperty =
            DependencyProperty.Register(
@@ -269,7 +277,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                new PropertyMetadata(new FontFamily("Trebuchet MS"), OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The legend text color property
+        /// The legend text color property.
         /// </summary>
         public static readonly DependencyProperty LegendTextBrushProperty =
            DependencyProperty.Register(
@@ -277,7 +285,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                new PropertyMetadata(new SolidColorBrush(Windows.UI.Color.FromArgb(255, 35, 35, 35)), OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The legend background property
+        /// The legend background property.
         /// </summary>
         public static readonly DependencyProperty LegendBackgroundProperty =
            DependencyProperty.Register(
@@ -285,14 +293,14 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                new PropertyMetadata(new SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 255, 255)), OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The legend font size property
+        /// The legend font size property.
         /// </summary>
         public static readonly DependencyProperty LegendFontSizeProperty =
            DependencyProperty.Register(
                nameof(LegendFontSize), typeof(double), typeof(PolarChart), new PropertyMetadata(13d, OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The legend font weight property
+        /// The legend font weight property.
         /// </summary>
         public static readonly DependencyProperty LegendFontWeightProperty =
            DependencyProperty.Register(
@@ -300,7 +308,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                new PropertyMetadata(FontWeights.Normal, OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The legend font stretch property
+        /// The legend font stretch property.
         /// </summary>
         public static readonly DependencyProperty LegendFontStretchProperty =
            DependencyProperty.Register(
@@ -308,7 +316,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                new PropertyMetadata(FontStretch.Normal, OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The legend font style property
+        /// The legend font style property.
         /// </summary>
         public static readonly DependencyProperty LegendFontStyleProperty =
            DependencyProperty.Register(
@@ -316,7 +324,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                new PropertyMetadata(FontStyle.Normal, OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The legend template property
+        /// The legend template property.
         /// </summary>
         public static readonly DependencyProperty LegendTemplateProperty =
             DependencyProperty.Register(
@@ -386,6 +394,13 @@ namespace LiveChartsCore.SkiaSharpView.UWP
 
         PolarChart<SkiaSharpDrawingContext> IPolarChartView<SkiaSharpDrawingContext>.Core =>
             _core == null ? throw new Exception("core not found") : (PolarChart<SkiaSharpDrawingContext>)_core;
+
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InnerRadius" />
+        public double InnerRadius
+        {
+            get => (double)GetValue(InnerRadiusProperty);
+            set => SetValue(InnerRadiusProperty, value);
+        }
 
         /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series" />
         public IEnumerable<ISeries> Series

@@ -71,7 +71,7 @@ namespace LiveChartsCore.Measure
             _deltaRadius = MaxRadius - MinRadius;
 
             var minDimension = drawMarginSize.Width < drawMarginSize.Height ? drawMarginSize.Width : drawMarginSize.Height;
-            _innerRadiusOffset = 50; // innerRadius;
+            _innerRadiusOffset = innerRadius; // innerRadius;
             _outerRadiusOffset = 0;//drawMagrinLocation.X; // We should also check for the top, right and bottom bounds.
             _scalableRadius = minDimension * 0.5 - _innerRadiusOffset - _outerRadiusOffset;
 

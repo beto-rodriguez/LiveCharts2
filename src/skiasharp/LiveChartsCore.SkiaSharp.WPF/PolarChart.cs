@@ -73,7 +73,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         #region dependency properties
 
         /// <summary>
-        /// The series property
+        /// The inner radius property.
+        /// </summary>
+        public static readonly DependencyProperty InnerRadiusProperty =
+            DependencyProperty.Register(nameof(InnerRadius), typeof(double), typeof(PolarChart), new PropertyMetadata(0d));
+
+        /// <summary>
+        /// The series property.
         /// </summary>
         public static readonly DependencyProperty SeriesProperty =
             DependencyProperty.Register(
@@ -93,7 +99,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     }));
 
         /// <summary>
-        /// The x axes property
+        /// The x axes property.
         /// </summary>
         public static readonly DependencyProperty AngleAxesProperty =
             DependencyProperty.Register(
@@ -138,6 +144,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         PolarChart<SkiaSharpDrawingContext> IPolarChartView<SkiaSharpDrawingContext>.Core =>
             core is null ? throw new Exception("core not found") : (PolarChart<SkiaSharpDrawingContext>)core;
+
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InnerRadius" />
+        public double InnerRadius
+        {
+            get => (double)GetValue(InnerRadiusProperty);
+            set => SetValue(InnerRadiusProperty, value);
+        }
 
         /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series" />
         public IEnumerable<ISeries> Series

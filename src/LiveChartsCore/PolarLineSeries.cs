@@ -144,7 +144,7 @@ namespace LiveChartsCore
             var drawLocation = polarChart.DrawMarginLocation;
             var drawMarginSize = polarChart.DrawMarginSize;
 
-            var scaler = new PolarScaler(drawLocation, drawMarginSize, angleAxis, radiusAxis, 0);
+            var scaler = new PolarScaler(drawLocation, drawMarginSize, angleAxis, radiusAxis, polarChart.InnerRadius);
 
             var gs = _geometrySize;
             var hgs = gs / 2f;
@@ -851,7 +851,8 @@ namespace LiveChartsCore
         {
             var core = ((IPolarChartView<TDrawingContext>)chart).Core;
 
-            var scale = new PolarScaler(core.DrawMarginLocation, core.DrawMarginSize, core.AngleAxes[ScalesAngleAt], core.RadiusAxes[ScalesRadiusAt], 0);
+            var scale = new PolarScaler(
+                core.DrawMarginLocation, core.DrawMarginSize, core.AngleAxes[ScalesAngleAt], core.RadiusAxes[ScalesRadiusAt], core.InnerRadius);
 
             var deleted = new List<ChartPoint>();
             foreach (var point in everFetched)

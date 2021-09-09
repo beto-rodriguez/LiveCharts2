@@ -42,18 +42,26 @@ namespace LiveChartsCore.Kernel.Sketches
         PolarChart<TDrawingContext> Core { get; }
 
         /// <summary>
-        /// Gets or sets the x axes.
+        /// Gets or sets the inner radius.
         /// </summary>
         /// <value>
-        /// The x axes.
+        /// The inner radius.
+        /// </value>
+        double InnerRadius { get; set; }
+
+        /// <summary>
+        /// Gets or sets the angle axes.
+        /// </summary>
+        /// <value>
+        /// The angle axes.
         /// </value>
         IEnumerable<IPolarAxis> AngleAxes { get; set; }
 
         /// <summary>
-        /// Gets or sets the y axes.
+        /// Gets or sets the radius axes.
         /// </summary>
         /// <value>
-        /// The y axes.
+        /// The radius axes.
         /// </value>
         IEnumerable<IPolarAxis> RadiusAxes { get; set; }
 

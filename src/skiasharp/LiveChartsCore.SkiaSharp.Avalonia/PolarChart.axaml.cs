@@ -115,119 +115,125 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
            AvaloniaProperty.Register<PolarChart, object>(nameof(SyncContext), new object(), inherits: true);
 
         /// <summary>
-        /// The series property
+        /// The series property.
         /// </summary>
         public static readonly AvaloniaProperty<IEnumerable<ISeries>> SeriesProperty =
            AvaloniaProperty.Register<PolarChart, IEnumerable<ISeries>>(nameof(Series), Enumerable.Empty<ISeries>(), inherits: true);
 
         /// <summary>
-        /// The x axes property
+        /// The inner radius property.
+        /// </summary>
+        public static readonly AvaloniaProperty<double> InnerRadiusProperty =
+            AvaloniaProperty.Register<PolarChart, double>(nameof(InnerRadius), 0d, inherits: true);
+
+        /// <summary>
+        /// The x axes property.
         /// </summary>
         public static readonly AvaloniaProperty<IEnumerable<IPolarAxis>> AngleAxesProperty =
             AvaloniaProperty.Register<PolarChart, IEnumerable<IPolarAxis>>(nameof(AngleAxes), Enumerable.Empty<IPolarAxis>(), inherits: true);
 
         /// <summary>
-        /// The y axes property
+        /// The y axes property.
         /// </summary>
         public static readonly AvaloniaProperty<IEnumerable<IPolarAxis>> RadiusAxesProperty =
             AvaloniaProperty.Register<PolarChart, IEnumerable<IPolarAxis>>(nameof(RadiusAxes), Enumerable.Empty<IPolarAxis>(), inherits: true);
 
         /// <summary>
-        /// The animations speed property
+        /// The animations speed property.
         /// </summary>
         public static readonly AvaloniaProperty<TimeSpan> AnimationsSpeedProperty =
             AvaloniaProperty.Register<PolarChart, TimeSpan>(
                 nameof(AnimationsSpeed), LiveCharts.CurrentSettings.DefaultAnimationsSpeed, inherits: true);
 
         /// <summary>
-        /// The easing function property
+        /// The easing function property.
         /// </summary>
         public static readonly AvaloniaProperty<Func<float, float>> EasingFunctionProperty =
             AvaloniaProperty.Register<PolarChart, Func<float, float>>(
                 nameof(AnimationsSpeed), LiveCharts.CurrentSettings.DefaultEasingFunction, inherits: true);
 
         /// <summary>
-        /// The tool tip template property
+        /// The tool tip template property.
         /// </summary>
         public static readonly AvaloniaProperty<DataTemplate?> TooltipTemplateProperty =
             AvaloniaProperty.Register<PolarChart, DataTemplate?>(nameof(TooltipTemplate), null, inherits: true);
 
         /// <summary>
-        /// The tool tip position property
+        /// The tool tip position property.
         /// </summary>
         public static readonly AvaloniaProperty<TooltipPosition> TooltipPositionProperty =
             AvaloniaProperty.Register<PolarChart, TooltipPosition>(
                 nameof(TooltipPosition), LiveCharts.CurrentSettings.DefaultTooltipPosition, inherits: true);
 
         /// <summary>
-        /// The tool tip finding strategy property
+        /// The tool tip finding strategy property.
         /// </summary>
         public static readonly AvaloniaProperty<TooltipFindingStrategy> TooltipFindingStrategyProperty =
             AvaloniaProperty.Register<PolarChart, TooltipFindingStrategy>(
                 nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, inherits: true);
 
         /// <summary>
-        /// The tool tip font family property
+        /// The tool tip font family property.
         /// </summary>
         public static readonly AvaloniaProperty<FontFamily> TooltipFontFamilyProperty =
             AvaloniaProperty.Register<PolarChart, FontFamily>(
                 nameof(TooltipFontFamily), new FontFamily("Arial"), inherits: true);
 
         /// <summary>
-        /// The tool tip font size property
+        /// The tool tip font size property.
         /// </summary>
         public static readonly AvaloniaProperty<double> TooltipFontSizeProperty =
             AvaloniaProperty.Register<PolarChart, double>(nameof(TooltipFontSize), 13d, inherits: true);
 
         /// <summary>
-        /// The tool tip font weight property
+        /// The tool tip font weight property.
         /// </summary>
         public static readonly AvaloniaProperty<FontWeight> TooltipFontWeightProperty =
             AvaloniaProperty.Register<PolarChart, FontWeight>(nameof(TooltipFontWeight), FontWeight.Normal, inherits: true);
 
         /// <summary>
-        /// The tool tip font style property
+        /// The tool tip font style property.
         /// </summary>
         public static readonly AvaloniaProperty<FontStyle> TooltipFontStyleProperty =
             AvaloniaProperty.Register<PolarChart, FontStyle>(
                 nameof(TooltipFontStyle), FontStyle.Normal, inherits: true);
 
         /// <summary>
-        /// The tool tip text brush property
+        /// The tool tip text brush property.
         /// </summary>
         public static readonly AvaloniaProperty<SolidColorBrush> TooltipTextBrushProperty =
             AvaloniaProperty.Register<PolarChart, SolidColorBrush>(
                 nameof(TooltipTextBrush), new SolidColorBrush(new Color(255, 35, 35, 35)), inherits: true);
 
         /// <summary>
-        /// The tool tip background property
+        /// The tool tip background property.
         /// </summary>
         public static readonly AvaloniaProperty<IBrush> TooltipBackgroundProperty =
             AvaloniaProperty.Register<PolarChart, IBrush>(nameof(TooltipBackground),
                 new SolidColorBrush(new Color(255, 250, 250, 250)), inherits: true);
 
         /// <summary>
-        /// The legend position property
+        /// The legend position property.
         /// </summary>
         public static readonly AvaloniaProperty<LegendPosition> LegendPositionProperty =
             AvaloniaProperty.Register<PolarChart, LegendPosition>(
                 nameof(LegendPosition), LiveCharts.CurrentSettings.DefaultLegendPosition, inherits: true);
 
         /// <summary>
-        /// The legend orientation property
+        /// The legend orientation property.
         /// </summary>
         public static readonly AvaloniaProperty<LegendOrientation> LegendOrientationProperty =
             AvaloniaProperty.Register<PolarChart, LegendOrientation>(
                 nameof(LegendOrientation), LiveCharts.CurrentSettings.DefaultLegendOrientation, inherits: true);
 
         /// <summary>
-        /// The legend template property
+        /// The legend template property.
         /// </summary>
         public static readonly AvaloniaProperty<DataTemplate?> LegendTemplateProperty =
             AvaloniaProperty.Register<PolarChart, DataTemplate?>(nameof(LegendTemplate), null, inherits: true);
 
         /// <summary>
-        /// The legend font family property
+        /// The legend font family property.
         /// </summary>
         public static readonly AvaloniaProperty<FontFamily> LegendFontFamilyProperty =
            AvaloniaProperty.Register<PolarChart, FontFamily>(
@@ -240,27 +246,27 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             AvaloniaProperty.Register<PolarChart, double>(nameof(LegendFontSize), 13d, inherits: true);
 
         /// <summary>
-        /// The legend font weight property
+        /// The legend font weight property.
         /// </summary>
         public static readonly AvaloniaProperty<FontWeight> LegendFontWeightProperty =
             AvaloniaProperty.Register<PolarChart, FontWeight>(nameof(LegendFontWeight), FontWeight.Normal, inherits: true);
 
         /// <summary>
-        /// The legend font style property
+        /// The legend font style property.
         /// </summary>
         public static readonly AvaloniaProperty<FontStyle> LegendFontStyleProperty =
             AvaloniaProperty.Register<PolarChart, FontStyle>(
                 nameof(LegendFontStyle), FontStyle.Normal, inherits: true);
 
         /// <summary>
-        /// The legend text brush property
+        /// The legend text brush property.
         /// </summary>
         public static readonly AvaloniaProperty<SolidColorBrush> LegendTextBrushProperty =
             AvaloniaProperty.Register<PolarChart, SolidColorBrush>(
                 nameof(LegendTextBrush), new SolidColorBrush(new Color(255, 35, 35, 35)), inherits: true);
 
         /// <summary>
-        /// The legend background property
+        /// The legend background property.
         /// </summary>
         public static readonly AvaloniaProperty<IBrush> LegendBackgroundProperty =
             AvaloniaProperty.Register<PolarChart, IBrush>(nameof(LegendBackground),
@@ -324,6 +330,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             get => GetValue(SyncContextProperty);
             set => SetValue(SyncContextProperty, value);
+        }
+
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InnerRadius" />
+        public double InnerRadius
+        {
+            get => (double)GetValue(InnerRadiusProperty);
+            set => SetValue(InnerRadiusProperty, value);
         }
 
         /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series" />

@@ -238,7 +238,7 @@ namespace LiveChartsCore
                 b = this;
             }
 
-            var scaler = new PolarScaler(polarChart.DrawMarginLocation, polarChart.DrawMarginSize, a, b, 0);
+            var scaler = new PolarScaler(polarChart.DrawMarginLocation, polarChart.DrawMarginSize, a, b, polarChart.InnerRadius);
 
             var size = (float)TextSize;
             var r = (float)_labelsRotation;
@@ -477,7 +477,7 @@ namespace LiveChartsCore
                 a = polarChart.AngleAxes[0];
                 b = this;
             }
-            var scaler = new PolarScaler(polarChart.DrawMarginLocation, polarChart.DrawMarginSize, a, b, 0);
+            var scaler = new PolarScaler(polarChart.DrawMarginLocation, polarChart.DrawMarginSize, a, b, polarChart.InnerRadius);
 
             if (Labels is not null)
             {

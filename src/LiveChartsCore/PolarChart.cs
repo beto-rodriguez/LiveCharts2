@@ -104,6 +104,14 @@ namespace LiveChartsCore
         public IPolarSeries<TDrawingContext>[] Series { get; private set; } = new IPolarSeries<TDrawingContext>[0];
 
         /// <summary>
+        /// Gets the Inner radius.
+        /// </summary>
+        /// /// <value>
+        /// The inner radius.
+        /// </value>
+        public float InnerRadius { get; private set; }
+
+        /// <summary>
         /// Gets the drawable series.
         /// </summary>
         /// <value>
@@ -181,6 +189,8 @@ namespace LiveChartsCore
 
             AnimationsSpeed = _chartView.AnimationsSpeed;
             EasingFunction = _chartView.EasingFunction;
+
+            InnerRadius = (float)_chartView.InnerRadius;
 
             var actualSeries = View.DesignerMode
                 ? _designerSeries ??= LiveCharts.CurrentSettings.DesignerSeriesGenerator(DesignerKind.Cartesian)

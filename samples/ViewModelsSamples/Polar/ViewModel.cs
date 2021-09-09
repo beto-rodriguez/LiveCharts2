@@ -31,7 +31,7 @@ namespace ViewModelsSamples.Polar.Basic
             {
                 new PolarAxis
                 {
-                    LabelsRotation = 90,
+                    //LabelsRotation = 90,
                     Labeler = v => (v * 1000).ToString("N2")
                 }
             };
