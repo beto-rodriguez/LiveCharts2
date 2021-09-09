@@ -321,7 +321,7 @@ namespace LiveChartsCore
 
                         if (data.IsLast)
                         {
-                            fillPathHelper.EndSegment.X = (float)data.X2;
+                            fillPathHelper.EndSegment.X = scaler.CenterX;
                             fillPathHelper.EndSegment.Y = scaler.CenterY;
                             fillPathHelper.Path.AddCommand(fillPathHelper.EndSegment);
 
@@ -854,7 +854,7 @@ namespace LiveChartsCore
 
             var scale = new PolarScaler(
                 core.DrawMarginLocation, core.DrawMarginSize, core.AngleAxes[ScalesAngleAt], core.RadiusAxes[ScalesRadiusAt],
-                core.InnerRadius, core.InitialRotation);
+                core.InnerRadius, core.InnerRadius);
 
             var deleted = new List<ChartPoint>();
             foreach (var point in everFetched)
