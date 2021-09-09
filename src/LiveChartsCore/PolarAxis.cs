@@ -61,7 +61,6 @@ namespace LiveChartsCore
         private Bounds? _visibleDataBounds = null;
         private double _labelsRotation;
         //private TTextGeometry? _nameGeometry;
-        //private AxisPosition _position = AxisPosition.Start;
         private Func<double, string> _labeler = Labelers.Default;
         //private Padding _padding = Padding.Default;
         private double? _minLimit = null;
@@ -81,6 +80,8 @@ namespace LiveChartsCore
         #endregion
 
         #region properties
+
+        float IPolarAxis.Ro { get; set; }
 
         Bounds? IPlane.PreviousDataBounds { get; set; }
 
@@ -214,7 +215,7 @@ namespace LiveChartsCore
             }
             if (LabelsPaint is not null)
             {
-                LabelsPaint.ZIndex = -1;
+                LabelsPaint.ZIndex = -0.9;
                 polarChart.Canvas.AddDrawableTask(LabelsPaint);
             }
             if (SeparatorsPaint is not null)
@@ -364,10 +365,10 @@ namespace LiveChartsCore
 
                 //if (NamePaint is not null && _nameGeometry is not null)
                 //    NamePaint.AddGeometryToPaintTask(polarChart.Canvas, _nameGeometry);
-                if (LabelsPaint is not null && visualSeparator.Text is not null)
-                    LabelsPaint.AddGeometryToPaintTask(polarChart.Canvas, visualSeparator.Text);
                 if (SeparatorsPaint is not null && ShowSeparatorLines && visualSeparator.Geometry is not null)
                     SeparatorsPaint.AddGeometryToPaintTask(polarChart.Canvas, visualSeparator.Geometry);
+                if (LabelsPaint is not null && visualSeparator.Text is not null)
+                    LabelsPaint.AddGeometryToPaintTask(polarChart.Canvas, visualSeparator.Text);
 
                 var location = _orientation == PolarAxisOrientation.Angle
                         ? scaler.ToPixels(visualSeparator.Value, scaler.MaxRadius)
@@ -376,10 +377,25 @@ namespace LiveChartsCore
                 if (visualSeparator.Text is not null)
                 {
                     visualSeparator.Text.Text = label;
-                    //visualSeparator.Text.Padding = _padding;
-                    visualSeparator.Text.X = location.X;
-                    visualSeparator.Text.Y = location.Y;
-                    if (hasRotation) visualSeparator.Text.RotateTransform = r;
+                    //visualSeparator.Text.Padding = new Padding(5);//_padding;
+
+                    var actualRotation = r + (_orientation == PolarAxisOrientation.Angle ? scaler.GetAngle(i) - 90 : 0);
+
+                    float roOffsetX = 0f, roOffsetY = 0f;
+
+                    if (_orientation == PolarAxisOrientation.Angle)
+                    {
+                        //var ro = ((IPolarAxis)this).Ro;
+                        //location = scaler.ToPixelsOuter(visualSeparator.Value, scaler.MaxRadius + ro);
+                    }
+
+                    visualSeparator.Text.X = location.X + roOffsetX;
+                    visualSeparator.Text.Y = location.Y + roOffsetY;
+                    visualSeparator.Text.Background = new LvcColor(255, 255, 255);
+                    //visualSeparator.Text.HorizontalAlign = Align.Start;
+
+                    //if (hasRotation)
+                    visualSeparator.Text.RotateTransform = actualRotation;
 
                     visualSeparator.Text.Opacity = 1;
 
@@ -448,6 +464,20 @@ namespace LiveChartsCore
 
             var ts = (float)TextSize;
             var labeler = Labeler;
+            var polarChart = (PolarChart<TDrawingContext>)chart;
+            IPolarAxis a, b;
+
+            if (_orientation == PolarAxisOrientation.Angle)
+            {
+                a = this;
+                b = polarChart.RadiusAxes[0];
+            }
+            else
+            {
+                a = polarChart.AngleAxes[0];
+                b = this;
+            }
+            var scaler = new PolarScaler(polarChart.DrawMarginLocation, polarChart.DrawMarginSize, a, b, 0);
 
             if (Labels is not null)
             {
@@ -464,8 +494,7 @@ namespace LiveChartsCore
 
             var start = Math.Truncate(min / s) * s;
 
-            var w = 0f;
-            var h = 0f;
+            var totalH = 0f;
             var r = (float)LabelsRotation;
 
             for (var i = start; i <= max; i += s)
@@ -474,15 +503,16 @@ namespace LiveChartsCore
                 {
                     Text = labeler(i),
                     TextSize = ts,
-                    RotateTransform = r,
+                    RotateTransform = r + (_orientation == PolarAxisOrientation.Angle ? scaler.GetAngle(i) - 90 : 0),
                     //Padding = _padding
                 };
                 var m = textGeometry.Measure(LabelsPaint); // TextBrush.MeasureText(labeler(i, axisTick));
-                if (m.Width > w) w = m.Width;
-                if (m.Height > h) h = m.Height;
+
+                var h = (float)Math.Sqrt(Math.Pow(m.Width * 0.5, 2) + Math.Pow(m.Height * 0.5, 2));
+                if (h > totalH) totalH = h;
             }
 
-            return new LvcSize(w, h);
+            return new LvcSize(0, totalH);
         }
 
         /// <inheritdoc cref="IPolarAxis.Initialize(PolarAxisOrientation)"/>

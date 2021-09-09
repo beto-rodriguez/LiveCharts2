@@ -239,7 +239,7 @@ namespace LiveChartsCore
             }
             if (LabelsPaint is not null)
             {
-                LabelsPaint.ZIndex = -1;
+                LabelsPaint.ZIndex = -0.9;
                 cartesianChart.Canvas.AddDrawableTask(LabelsPaint);
             }
             if (SeparatorsPaint is not null)
@@ -433,10 +433,10 @@ namespace LiveChartsCore
 
                 if (NamePaint is not null && _nameGeometry is not null)
                     NamePaint.AddGeometryToPaintTask(cartesianChart.Canvas, _nameGeometry);
-                if (LabelsPaint is not null && visualSeparator.Text is not null)
-                    LabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Text);
                 if (SeparatorsPaint is not null && ShowSeparatorLines && visualSeparator.Line is not null)
                     SeparatorsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Line);
+                if (LabelsPaint is not null && visualSeparator.Text is not null)
+                    LabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Text);
 
                 if (visualSeparator.Text is not null)
                 {

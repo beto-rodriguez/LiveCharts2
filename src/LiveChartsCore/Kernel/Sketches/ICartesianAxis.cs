@@ -57,7 +57,7 @@ namespace LiveChartsCore.Kernel.Sketches
         float Xo { get; set; }
 
         /// <summary>
-        /// Gets or sets the yo, a reference used internally to calculate the axis position..
+        /// Gets or sets the yo, a reference used internally to calculate the axis position.
         /// </summary>
         /// <value>
         /// The yo.

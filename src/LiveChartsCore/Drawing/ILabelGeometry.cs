@@ -71,5 +71,10 @@ namespace LiveChartsCore.Drawing
         /// The size of the text.
         /// </value>
         float TextSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets the background color.
+        /// </summary>
+        LvcColor Background { get; set; }
     }
 }

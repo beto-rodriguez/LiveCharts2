@@ -10,6 +10,10 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <lvc:PolarChart Series="{Binding Series}"></lvc:PolarChart>
+        <lvc:PolarChart
+            Series="{Binding Series}"
+            RadiusAxes="{Binding RadialAxes}"
+            AngleAxes="{Binding AngleAxes}">
+        </lvc:PolarChart>
     </Grid>
 </UserControl>

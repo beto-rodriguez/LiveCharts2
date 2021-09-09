@@ -321,7 +321,7 @@ namespace LiveChartsCore
             if (viewDrawMargin is null)
             {
                 var m = viewDrawMargin ?? new Margin();
-                //float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
+                var r = 0f;
                 SetDrawMargin(ControlSize, m);
 
                 foreach (var axis in AngleAxes)
@@ -341,24 +341,14 @@ namespace LiveChartsCore
                     var ns = drawablePlane.GetNameLabelSize(this);
                     var s = drawablePlane.GetPossibleSize(this);
 
-                    //if (axis.Position == AxisPosition.Start)
-                    //{
-                    //    // X Bottom
-                    //    axis.Yo = m.Bottom + s.Height * 0.5f + ns.Height;
-                    //    bs += s.Height + ns.Height;
-                    //    m.Bottom = bs;
-                    //    if (s.Width * 0.5f > m.Left) m.Left = s.Width * 0.5f;
-                    //    if (s.Width * 0.5f > m.Right) m.Right = s.Width * 0.5f;
-                    //}
-                    //else
-                    //{
-                    //    // X Top
-                    //    axis.Yo = ts + s.Height * 0.5f + ns.Height;
-                    //    ts += s.Height + ns.Height;
-                    //    m.Top = ts;
-                    //    if (ls + s.Width * 0.5f > m.Left) m.Left = ls + s.Width * 0.5f;
-                    //    if (rs + s.Width * 0.5f > m.Right) m.Right = rs + s.Width * 0.5f;
-                    //}
+                    var radius = s.Height; // <- this type needs to be changed... it is not the height it is the radius.
+
+                    axis.Ro = m.Top + radius;
+
+                    m.Top += radius;
+                    m.Bottom += radius;
+                    m.Left += radius;
+                    m.Right += radius;
                 }
                 foreach (var axis in RadiusAxes)
                 {
@@ -376,7 +366,16 @@ namespace LiveChartsCore
                     var drawablePlane = (IPlane<TDrawingContext>)axis;
                     var ns = drawablePlane.GetNameLabelSize(this);
                     var s = drawablePlane.GetPossibleSize(this);
-                    var w = s.Width > m.Left ? s.Width : m.Left;
+
+                    //var radius = s.Height; // <- this type needs to be changed... it is not the height it is the radius.
+
+                    //axis.Ro = m.Top + radius * 0.5f;
+
+                    //m.Top += radius;
+                    //m.Bottom += radius;
+                    //m.Left += radius;
+                    //m.Right += radius;
+
                     //if (axis.Position == AxisPosition.Start)
                     //{
                     //    // Y Left

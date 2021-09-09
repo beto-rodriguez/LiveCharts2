@@ -33,6 +33,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     {
         private readonly FloatMotionProperty _textSizeProperty;
+        private readonly ColorMotionProperty _backgroundProperty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LabelGeometry"/> class.
@@ -41,6 +42,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             : base(true)
         {
             _textSizeProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize), 11));
+            _backgroundProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(Background), LvcColor.Empty));
             TransformOrigin = new LvcPoint(0f, 0f);
         }
 
@@ -66,12 +68,24 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.TextSize" />
         public float TextSize { get => _textSizeProperty.GetMovement(this); set => _textSizeProperty.SetMovement(value, this); }
 
+        /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.Background" />
+        public LvcColor Background { get => _backgroundProperty.GetMovement(this); set => _backgroundProperty.SetMovement(value, this); }
+
         /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.Padding" />
         public Padding Padding { get; set; } = new Padding();
 
         /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
         {
+            var bg = Background;
+            if (bg != LvcColor.Empty)
+            {
+                var m = OnMeasure(context.PaintTask);
+                using (var bgPaint = new SKPaint { Color = new SKColor(bg.R, bg.G, bg.B, bg.A) })
+                {
+                    context.Canvas.DrawRect(X, Y - m.Height, m.Width, m.Height, bgPaint);
+                }
+            }
             context.Canvas.DrawText(Text ?? "", new SKPoint(X, Y), paint);
         }
 

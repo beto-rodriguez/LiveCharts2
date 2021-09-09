@@ -33,7 +33,7 @@ namespace LiveChartsCore.Measure
     public class PolarScaler
     {
         private const double ToRadians = Math.PI / 180d;
-        private readonly double _deltaRadius, _innerRadius, _scalableRadius;
+        private readonly double _deltaRadius, _innerRadiusOffset, _outerRadiusOffset, _scalableRadius;
         private readonly double _deltaAngleVal;
 
         /// <summary>
@@ -71,8 +71,9 @@ namespace LiveChartsCore.Measure
             _deltaRadius = MaxRadius - MinRadius;
 
             var minDimension = drawMarginSize.Width < drawMarginSize.Height ? drawMarginSize.Width : drawMarginSize.Height;
-            _innerRadius = 50; //innerRadius;
-            _scalableRadius = minDimension * 0.5 - _innerRadius;
+            _innerRadiusOffset = 50; // innerRadius;
+            _outerRadiusOffset = 0;//drawMagrinLocation.X; // We should also check for the top, right and bottom bounds.
+            _scalableRadius = minDimension * 0.5 - _innerRadiusOffset - _outerRadiusOffset;
 
             MinAngle = actualAngleBounds.Min;
             MaxAngle = actualAngleBounds.Max;
@@ -128,7 +129,38 @@ namespace LiveChartsCore.Measure
         public LvcPoint ToPixels(double angle, double radius)
         {
             var p = (radius - MinRadius) / _deltaRadius;
-            var r = _innerRadius + _scalableRadius * p;
+            var r = _innerRadiusOffset + _scalableRadius * p;
+            var a = 360 * angle / _deltaAngleVal;
+            a *= ToRadians;
+
+            unchecked
+            {
+                return new LvcPoint(
+                    CenterX + (float)(Math.Cos(a) * r),
+                    CenterY + (float)(Math.Sin(a) * r));
+            }
+        }
+
+        /// <summary>
+        /// Converts to degrees the given angle in chart values.
+        /// </summary>
+        /// <param name="angle">The angle in chart values.</param>
+        /// <returns></returns>
+        public float GetAngle(double angle)
+        {
+            return unchecked((float)(360 * angle / _deltaAngleVal));
+        }
+
+        /// <summary>
+        /// Converts to pixels .
+        /// </summary>
+        /// <param name="angle">The angle in chart values scale.</param>
+        /// <param name="radius">The radius.</param>
+        /// <returns></returns>
+        internal LvcPoint ToPixelsOuter(double angle, double radius)
+        {
+            var p = (radius - MinRadius) / _deltaRadius;
+            var r = _innerRadiusOffset + (_scalableRadius + _outerRadiusOffset) * p;
             var a = 360 * angle / _deltaAngleVal;
             a *= ToRadians;
 

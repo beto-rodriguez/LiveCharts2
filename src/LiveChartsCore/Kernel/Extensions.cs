@@ -162,10 +162,12 @@ namespace LiveChartsCore.Kernel
             var max = axis.MaxLimit is null ? bounds.Max : axis.MaxLimit.Value;
             var min = axis.MinLimit is null ? bounds.Min : axis.MinLimit.Value;
 
+            var minD = controlSize.Width < controlSize.Height ? controlSize.Width : controlSize.Height;
+
             var range = max - min;
             var separations = axis.Orientation == PolarAxisOrientation.Angle
-                ? Math.Round(controlSize.Height / (12 * Cf), 0)
-                : Math.Round(controlSize.Width / (20 * Cf), 0);
+                ? Math.Round(minD / (20 * Cf), 0)
+                : Math.Round(minD / (20 * Cf), 0);
             var minimum = range / separations;
 
             var magnitude = Math.Pow(10, Math.Floor(Math.Log(minimum) / Math.Log(10)));

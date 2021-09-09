@@ -39,6 +39,14 @@ namespace LiveChartsCore.Kernel.Sketches
         PolarAxisOrientation Orientation { get; }
 
         /// <summary>
+        /// Gets or sets the ro, a reference used internally to calculate the axis position.
+        /// </summary>
+        /// <value>
+        /// The ro.
+        /// </value>
+        float Ro { get; set; }
+
+        /// <summary>
         /// Initializes the axis for the specified orientation.
         /// </summary>
         /// <param name="orientation">The orientation.</param>

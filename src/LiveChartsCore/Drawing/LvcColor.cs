@@ -40,6 +40,7 @@ namespace LiveChartsCore.Drawing
             G = green;
             B = blue;
             A = alpha;
+            IsEmpty = false;
         }
 
         /// <summary>
@@ -49,6 +50,20 @@ namespace LiveChartsCore.Drawing
         /// <param name="green">The green component from 0 to 255.</param>
         /// <param name="blue">The blue component from 0 to 255.</param>
         public LvcColor(byte red, byte green, byte blue) : this(red, green, blue, 255) { }
+
+        private LvcColor(bool isEmpty)
+        {
+            R = 255;
+            G = 255;
+            B = 255;
+            A = 0;
+            IsEmpty = isEmpty;
+        }
+
+        /// <summary>
+        /// Gets an empty color.
+        /// </summary>
+        public static LvcColor Empty => new(true);
 
         /// <summary>
         /// Gets or sets the red component.
@@ -70,14 +85,19 @@ namespace LiveChartsCore.Drawing
         /// </summary>
         public byte A { get; set; }
 
+        /// <summary>
+        /// Gets or sets whether this color is empty.
+        /// </summary>
+        private bool IsEmpty { get; set; }
+
         /// <inheritdoc cref="object.Equals(object?)"/>
         public override bool Equals(object? obj)
         {
             return obj is LvcColor color &&
-                   R == color.R &&
-                   G == color.G &&
-                   B == color.B &&
-                   A == color.A;
+                   (
+                    (IsEmpty && color.IsEmpty) ||
+                    (R == color.R && G == color.G && B == color.B && A == color.A)
+                   );
         }
 
         /// <inheritdoc cref="object.GetHashCode()"/>
