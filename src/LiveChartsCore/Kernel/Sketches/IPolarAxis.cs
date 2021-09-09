@@ -47,6 +47,12 @@ namespace LiveChartsCore.Kernel.Sketches
         float Ro { get; set; }
 
         /// <summary>
+        /// Gets the angle in degrees where the labels are drawn, default is 0, notice this property has no effect
+        /// when the axis has <see cref="PolarAxisOrientation.Angle"/> orientation.
+        /// </summary>
+        double LabelsAngle { get; set; }
+
+        /// <summary>
         /// Initializes the axis for the specified orientation.
         /// </summary>
         /// <param name="orientation">The orientation.</param>

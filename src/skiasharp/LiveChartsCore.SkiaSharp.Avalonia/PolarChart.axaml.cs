@@ -127,6 +127,12 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             AvaloniaProperty.Register<PolarChart, double>(nameof(InnerRadius), 0d, inherits: true);
 
         /// <summary>
+        /// The initial rotation property.
+        /// </summary>
+        public static readonly AvaloniaProperty<double> InitialRotationProperty =
+            AvaloniaProperty.Register<PolarChart, double>(nameof(InitialRotation), 0d, inherits: true);
+
+        /// <summary>
         /// The x axes property.
         /// </summary>
         public static readonly AvaloniaProperty<IEnumerable<IPolarAxis>> AngleAxesProperty =
@@ -337,6 +343,12 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             get => (double)GetValue(InnerRadiusProperty);
             set => SetValue(InnerRadiusProperty, value);
+        }
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InitialRotation" />
+        public double InitialRotation
+        {
+            get => (double)GetValue(InitialRotationProperty);
+            set => SetValue(InitialRotationProperty, value);
         }
 
         /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series" />

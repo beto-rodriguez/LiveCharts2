@@ -166,7 +166,7 @@ namespace LiveChartsCore.Kernel
 
             var range = max - min;
             var separations = axis.Orientation == PolarAxisOrientation.Angle
-                ? Math.Round(minD / (20 * Cf), 0)
+                ? Math.Round(minD / (10 * Cf), 0)
                 : Math.Round(minD / (20 * Cf), 0);
             var minimum = range / separations;
 

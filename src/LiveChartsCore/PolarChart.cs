@@ -112,6 +112,14 @@ namespace LiveChartsCore
         public float InnerRadius { get; private set; }
 
         /// <summary>
+        /// Gets the Initial rotation.
+        /// </summary>
+        /// /// <value>
+        /// The inner radius.
+        /// </value>
+        public float InitialRotation { get; private set; }
+
+        /// <summary>
         /// Gets the drawable series.
         /// </summary>
         /// <value>
@@ -191,6 +199,7 @@ namespace LiveChartsCore
             EasingFunction = _chartView.EasingFunction;
 
             InnerRadius = (float)_chartView.InnerRadius;
+            InitialRotation = (float)_chartView.InitialRotation;
 
             var actualSeries = View.DesignerMode
                 ? _designerSeries ??= LiveCharts.CurrentSettings.DesignerSeriesGenerator(DesignerKind.Cartesian)

@@ -112,7 +112,15 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// The Inner radius property.
         /// </summary>
         public static readonly BindableProperty InnerRadiusProperty =
-           BindableProperty.Create(nameof(InnerRadius), typeof(double), typeof(PolarChart), 0d);
+           BindableProperty.Create(nameof(InnerRadius), typeof(double), typeof(PolarChart), 0d,
+               propertyChanged: OnBindablePropertyChanged);
+
+        /// <summary>
+        /// The Initial rotation property.
+        /// </summary>
+        public static readonly BindableProperty InitialRotationProperty =
+           BindableProperty.Create(nameof(InitialRotation), typeof(double), typeof(PolarChart), 0d,
+               propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>
         /// The series property.
@@ -368,6 +376,13 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             get => (double)GetValue(InnerRadiusProperty);
             set => SetValue(InnerRadiusProperty, value);
+        }
+
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InitialRotation" />
+        public double InitialRotation
+        {
+            get => (double)GetValue(InitialRotationProperty);
+            set => SetValue(InitialRotationProperty, value);
         }
 
         /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series" />

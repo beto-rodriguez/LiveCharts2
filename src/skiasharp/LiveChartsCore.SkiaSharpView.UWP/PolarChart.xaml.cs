@@ -93,8 +93,14 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty InnerRadiusProperty =
             DependencyProperty.Register(
-                nameof(InnerRadius), typeof(double), typeof(PolarChart),
-                new PropertyMetadata(0d, OnDependencyPropertyChanged));
+                nameof(InnerRadius), typeof(double), typeof(PolarChart), new PropertyMetadata(0d, OnDependencyPropertyChanged));
+
+        /// <summary>
+        /// The initial rotation property.
+        /// </summary>
+        public static readonly DependencyProperty InitialRotationProperty =
+            DependencyProperty.Register(
+                nameof(InitialRotation), typeof(double), typeof(PolarChart), new PropertyMetadata(0d, OnDependencyPropertyChanged));
 
         /// <summary>
         /// The series property.
@@ -400,6 +406,13 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         {
             get => (double)GetValue(InnerRadiusProperty);
             set => SetValue(InnerRadiusProperty, value);
+        }
+
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InitialRotation" />
+        public double InitialRotation
+        {
+            get => (double)GetValue(InitialRotationProperty);
+            set => SetValue(InitialRotationProperty, value);
         }
 
         /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series" />

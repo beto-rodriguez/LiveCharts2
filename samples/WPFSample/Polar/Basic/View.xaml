@@ -8,12 +8,22 @@
     </UserControl.DataContext>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <TextBlock>Rotation</TextBlock>
+            <TextBlock Width="100" Margin="10 0" Text="{Binding SliderValue}"></TextBlock>
+            <Slider Width="300" Minimum="-360" Maximum="720" IsSnapToTickEnabled="True" TickFrequency="5" Value="{Binding SliderValue, Mode=TwoWay}" />
+        </StackPanel>
+
         <lvc:PolarChart
+            Grid.Row="1"
             Series="{Binding Series}"
             RadiusAxes="{Binding RadialAxes}"
-            AngleAxes="{Binding AngleAxes}">
+            AngleAxes="{Binding AngleAxes}"
+            InitialRotation="{Binding SliderValue}">
         </lvc:PolarChart>
     </Grid>
 </UserControl>

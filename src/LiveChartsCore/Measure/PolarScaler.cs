@@ -33,7 +33,7 @@ namespace LiveChartsCore.Measure
     public class PolarScaler
     {
         private const double ToRadians = Math.PI / 180d;
-        private readonly double _deltaRadius, _innerRadiusOffset, _outerRadiusOffset, _scalableRadius;
+        private readonly double _deltaRadius, _innerRadiusOffset, _outerRadiusOffset, _scalableRadius, _initialRotation;
         private readonly double _deltaAngleVal;
 
         /// <summary>
@@ -44,6 +44,7 @@ namespace LiveChartsCore.Measure
         /// <param name="radiusAxis">The radius axis.</param>
         /// <param name="angleAxis">The angle axis.</param>
         /// <param name="innerRadius">The inner radius.</param>
+        /// /// <param name="initialRotation">The initial rotation.</param>
         /// <param name="usePreviousScale">Indicates if the scaler should be built based on the previous known data.</param>
         /// <exception cref="Exception">The axis is not ready to be scaled.</exception>
         public PolarScaler(
@@ -52,6 +53,7 @@ namespace LiveChartsCore.Measure
             IPolarAxis angleAxis,
             IPolarAxis radiusAxis,
             float innerRadius,
+            float initialRotation,
             bool usePreviousScale = false)
         {
             var actualAngleBounds = usePreviousScale ? angleAxis.PreviousDataBounds : angleAxis.DataBounds;
@@ -78,6 +80,8 @@ namespace LiveChartsCore.Measure
             MinAngle = actualAngleBounds.Min;
             MaxAngle = actualAngleBounds.Max;
             _deltaAngleVal = MaxAngle - MinAngle;
+
+            _initialRotation = initialRotation;
         }
 
         /// <summary>
@@ -131,7 +135,29 @@ namespace LiveChartsCore.Measure
             var p = (radius - MinRadius) / _deltaRadius;
             var r = _innerRadiusOffset + _scalableRadius * p;
             var a = 360 * angle / _deltaAngleVal;
+
+            a += _initialRotation;
             a *= ToRadians;
+
+            unchecked
+            {
+                return new LvcPoint(
+                    CenterX + (float)(Math.Cos(a) * r),
+                    CenterY + (float)(Math.Sin(a) * r));
+            }
+        }
+
+        /// <summary>
+        /// Converts to pixels.
+        /// </summary>
+        /// <param name="angle">The angle in degrees.</param>
+        /// <param name="radius">The radius.</param>
+        /// <returns></returns>
+        public LvcPoint ToPixelsWithAngleInDegrees(double angle, double radius)
+        {
+            var p = (radius - MinRadius) / _deltaRadius;
+            var r = _innerRadiusOffset + _scalableRadius * p;
+            var a = angle * ToRadians;
 
             unchecked
             {
@@ -148,28 +174,7 @@ namespace LiveChartsCore.Measure
         /// <returns></returns>
         public float GetAngle(double angle)
         {
-            return unchecked((float)(360 * angle / _deltaAngleVal));
-        }
-
-        /// <summary>
-        /// Converts to pixels .
-        /// </summary>
-        /// <param name="angle">The angle in chart values scale.</param>
-        /// <param name="radius">The radius.</param>
-        /// <returns></returns>
-        internal LvcPoint ToPixelsOuter(double angle, double radius)
-        {
-            var p = (radius - MinRadius) / _deltaRadius;
-            var r = _innerRadiusOffset + (_scalableRadius + _outerRadiusOffset) * p;
-            var a = 360 * angle / _deltaAngleVal;
-            a *= ToRadians;
-
-            unchecked
-            {
-                return new LvcPoint(
-                    CenterX + (float)(Math.Cos(a) * r),
-                    CenterY + (float)(Math.Sin(a) * r));
-            }
+            return unchecked((float)(_initialRotation + 360 * angle / _deltaAngleVal));
         }
     }
 }

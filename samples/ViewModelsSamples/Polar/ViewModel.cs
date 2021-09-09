@@ -3,11 +3,14 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace ViewModelsSamples.Polar.Basic
 {
-    public class ViewModel
+    public class ViewModel : INotifyPropertyChanged
     {
+        private double _sliderValue = 15;
+
         public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
         {
             new PolarLineSeries<double>
@@ -21,7 +24,8 @@ namespace ViewModelsSamples.Polar.Basic
             {
                 new PolarAxis
                 {
-                    LabelsRotation = 45,
+                    LabelsRotation = 0,
+                    LabelsAngle = -60,
                     Labeler = v => (v * 10).ToString("N2")
                 }
             };
@@ -35,5 +39,17 @@ namespace ViewModelsSamples.Polar.Basic
                     Labeler = v => (v * 1000).ToString("N2")
                 }
             };
+
+        public double SliderValue
+        {
+            get => _sliderValue;
+            set
+            {
+                _sliderValue = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SliderValue)));
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

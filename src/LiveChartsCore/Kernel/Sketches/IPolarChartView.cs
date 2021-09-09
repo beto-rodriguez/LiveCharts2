@@ -42,12 +42,20 @@ namespace LiveChartsCore.Kernel.Sketches
         PolarChart<TDrawingContext> Core { get; }
 
         /// <summary>
-        /// Gets or sets the inner radius.
+        /// Gets or sets the inner radius, default is 0.
         /// </summary>
         /// <value>
         /// The inner radius.
         /// </value>
         double InnerRadius { get; set; }
+
+        /// <summary>
+        /// Gets or sets the initial rotation, default is 0.
+        /// </summary>
+        /// <value>
+        /// The inner radius.
+        /// </value>
+        double InitialRotation { get; set; }
 
         /// <summary>
         /// Gets or sets the angle axes.
