@@ -104,9 +104,17 @@ namespace LiveChartsCore
         public IPolarSeries<TDrawingContext>[] Series { get; private set; } = new IPolarSeries<TDrawingContext>[0];
 
         /// <summary>
+        /// Gets the total circumference angle.
+        /// </summary>
+        /// <value>
+        /// The total angle.
+        /// </value>
+        public float TotalAnge { get; private set; }
+
+        /// <summary>
         /// Gets the Inner radius.
         /// </summary>
-        /// /// <value>
+        /// <value>
         /// The inner radius.
         /// </value>
         public float InnerRadius { get; private set; }
@@ -198,6 +206,7 @@ namespace LiveChartsCore
             AnimationsSpeed = _chartView.AnimationsSpeed;
             EasingFunction = _chartView.EasingFunction;
 
+            TotalAnge = (float)_chartView.TotalAngle;
             InnerRadius = (float)_chartView.InnerRadius;
             InitialRotation = (float)_chartView.InitialRotation;
 

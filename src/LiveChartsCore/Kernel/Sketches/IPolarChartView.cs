@@ -42,6 +42,14 @@ namespace LiveChartsCore.Kernel.Sketches
         PolarChart<TDrawingContext> Core { get; }
 
         /// <summary>
+        /// Gets or sets the total circumference angle in degrees, default is 360.
+        /// </summary>
+        /// <value>
+        /// The inner radius.
+        /// </value>
+        double TotalAngle { get; set; }
+
+        /// <summary>
         /// Gets or sets the inner radius, default is 0.
         /// </summary>
         /// <value>

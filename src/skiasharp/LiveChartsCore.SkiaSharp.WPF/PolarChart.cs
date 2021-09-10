@@ -73,6 +73,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         #region dependency properties
 
         /// <summary>
+        /// The total angle property.
+        /// </summary>
+        public static readonly DependencyProperty TotalAngleProperty =
+            DependencyProperty.Register(nameof(TotalAngle), typeof(double), typeof(PolarChart),
+                new PropertyMetadata(0d, OnDependencyPropertyChanged));
+
+        /// <summary>
         /// The inner radius property.
         /// </summary>
         public static readonly DependencyProperty InnerRadiusProperty =
@@ -152,6 +159,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         PolarChart<SkiaSharpDrawingContext> IPolarChartView<SkiaSharpDrawingContext>.Core =>
             core is null ? throw new Exception("core not found") : (PolarChart<SkiaSharpDrawingContext>)core;
+
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.TotalAngle" />
+        public double TotalAngle
+        {
+            get => (double)GetValue(TotalAngleProperty);
+            set => SetValue(TotalAngleProperty, value);
+        }
 
         /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InnerRadius" />
         public double InnerRadius

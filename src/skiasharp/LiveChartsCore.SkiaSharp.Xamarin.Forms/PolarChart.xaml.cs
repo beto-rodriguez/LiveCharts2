@@ -109,6 +109,13 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 });
 
         /// <summary>
+        /// The total angle property.
+        /// </summary>
+        public static readonly BindableProperty TotalAngleProperty =
+           BindableProperty.Create(nameof(TotalAngle), typeof(double), typeof(PolarChart), 0d,
+               propertyChanged: OnBindablePropertyChanged);
+
+        /// <summary>
         /// The Inner radius property.
         /// </summary>
         public static readonly BindableProperty InnerRadiusProperty =
@@ -369,6 +376,13 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             get => null;
             set => throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.TotalAngle" />
+        public double TotalAngle
+        {
+            get => (double)GetValue(TotalAngleProperty);
+            set => SetValue(TotalAngleProperty, value);
         }
 
         /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InnerRadius" />

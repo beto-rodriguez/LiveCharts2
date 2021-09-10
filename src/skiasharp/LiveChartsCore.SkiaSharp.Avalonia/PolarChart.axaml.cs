@@ -121,6 +121,12 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
            AvaloniaProperty.Register<PolarChart, IEnumerable<ISeries>>(nameof(Series), Enumerable.Empty<ISeries>(), inherits: true);
 
         /// <summary>
+        /// The total angle property.
+        /// </summary>
+        public static readonly AvaloniaProperty<double> TotalAngleProperty =
+            AvaloniaProperty.Register<PolarChart, double>(nameof(TotalAngle), 0d, inherits: true);
+
+        /// <summary>
         /// The inner radius property.
         /// </summary>
         public static readonly AvaloniaProperty<double> InnerRadiusProperty =
@@ -338,12 +344,20 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             set => SetValue(SyncContextProperty, value);
         }
 
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.TotalAngle" />
+        public double TotalAngle
+        {
+            get => (double)GetValue(TotalAngleProperty);
+            set => SetValue(TotalAngleProperty, value);
+        }
+
         /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InnerRadius" />
         public double InnerRadius
         {
             get => (double)GetValue(InnerRadiusProperty);
             set => SetValue(InnerRadiusProperty, value);
         }
+
         /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InitialRotation" />
         public double InitialRotation
         {

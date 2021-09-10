@@ -9,7 +9,8 @@ namespace ViewModelsSamples.Polar.Basic
 {
     public class ViewModel : INotifyPropertyChanged
     {
-        private double _sliderValue = 15;
+        private double _initialRotation = 15;
+        private double _innerRadius = 50;
 
         public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
         {
@@ -41,13 +42,23 @@ namespace ViewModelsSamples.Polar.Basic
                 }
             };
 
-        public double SliderValue
+        public double InitialRotation
         {
-            get => _sliderValue;
+            get => _initialRotation;
             set
             {
-                _sliderValue = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SliderValue)));
+                _initialRotation = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InitialRotation)));
+            }
+        }
+
+        public double InnerRadius
+        {
+            get => _innerRadius;
+            set
+            {
+                _innerRadius = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InnerRadius)));
             }
         }
 
