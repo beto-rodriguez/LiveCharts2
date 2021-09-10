@@ -42,7 +42,7 @@ namespace LiveChartsCore
     /// <typeparam name="TCircleGeometry">The type of the circle geometry.</typeparam>
     /// /// <typeparam name="TLineGeometry">The type of the line geometry.</typeparam>
     public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, TCircleGeometry>
-        : ChartElement<TDrawingContext>, IPolarAxis, IPlane<TDrawingContext>
+        : ChartElement<TDrawingContext>, IPolarAxis, IPlane<TDrawingContext>, INotifyPropertyChanged
             where TDrawingContext : DrawingContext
             where TTextGeometry : ILabelGeometry<TDrawingContext>, new()
             where TLineGeometry : ILineGeometry<TDrawingContext>, new()
@@ -243,7 +243,8 @@ namespace LiveChartsCore
             }
 
             var scaler = new PolarScaler(
-                polarChart.DrawMarginLocation, polarChart.DrawMarginSize, a, b, polarChart.InnerRadius, polarChart.InitialRotation);
+                polarChart.DrawMarginLocation, polarChart.DrawMarginSize, a, b,
+                polarChart.InnerRadius, polarChart.InitialRotation, polarChart.TotalAnge);
 
             var size = (float)TextSize;
             var r = (float)_labelsRotation;
@@ -495,7 +496,8 @@ namespace LiveChartsCore
                 b = this;
             }
             var scaler = new PolarScaler(
-                polarChart.DrawMarginLocation, polarChart.DrawMarginSize, a, b, polarChart.InnerRadius, polarChart.InitialRotation);
+                polarChart.DrawMarginLocation, polarChart.DrawMarginSize, a, b,
+                polarChart.InnerRadius, polarChart.InitialRotation, polarChart.TotalAnge);
 
             if (Labels is not null)
             {

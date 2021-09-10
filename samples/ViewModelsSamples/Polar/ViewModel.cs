@@ -11,6 +11,8 @@ namespace ViewModelsSamples.Polar.Basic
     {
         private double _initialRotation = 15;
         private double _innerRadius = 50;
+        private double _totalAngle = 360;
+        private double _labelsAngle = -60;
 
         public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
         {
@@ -21,8 +23,8 @@ namespace ViewModelsSamples.Polar.Basic
             }
         };
 
-        public IEnumerable<IPolarAxis> RadialAxes { get; set; }
-            = new IPolarAxis[]
+        public PolarAxis[] RadialAxes { get; set; }
+            = new PolarAxis[]
             {
                 new PolarAxis
                 {
@@ -32,8 +34,8 @@ namespace ViewModelsSamples.Polar.Basic
                 }
             };
 
-        public IEnumerable<IPolarAxis> AngleAxes { get; set; }
-            = new IPolarAxis[]
+        public PolarAxis[] AngleAxes { get; set; }
+            = new PolarAxis[]
             {
                 new PolarAxis
                 {
@@ -59,6 +61,27 @@ namespace ViewModelsSamples.Polar.Basic
             {
                 _innerRadius = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InnerRadius)));
+            }
+        }
+
+        public double TotalAngle
+        {
+            get => _totalAngle;
+            set
+            {
+                _totalAngle = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalAngle)));
+            }
+        }
+
+        public double LabelsAngle
+        {
+            get => _labelsAngle;
+            set
+            {
+                _labelsAngle = value;
+                RadialAxes[0].LabelsAngle = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LabelsAngle)));
             }
         }
 

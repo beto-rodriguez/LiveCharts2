@@ -93,7 +93,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty TotalAngleProperty =
             DependencyProperty.Register(
-                nameof(TotalAngle), typeof(double), typeof(PolarChart), new PropertyMetadata(0d, OnDependencyPropertyChanged));
+                nameof(TotalAngle), typeof(double), typeof(PolarChart), new PropertyMetadata(360d, OnDependencyPropertyChanged));
 
         /// <summary>
         /// The inner radius property.

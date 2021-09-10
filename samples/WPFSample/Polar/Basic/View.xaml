@@ -10,6 +10,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -35,13 +37,36 @@
                     Value="{Binding InnerRadius, Mode=TwoWay}" />
         </StackPanel>
 
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
+            <TextBlock>Total Angle</TextBlock>
+            <TextBlock Width="100" Margin="10 0" Text="{Binding TotalAngle}"></TextBlock>
+            <Slider Width="300"
+                    Minimum="30"
+                    Maximum="360"
+                    IsSnapToTickEnabled="True"
+                    TickFrequency="5"
+                    Value="{Binding TotalAngle, Mode=TwoWay}" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal">
+            <TextBlock>Radial axis labels angle</TextBlock>
+            <TextBlock Width="100" Margin="10 0" Text="{Binding LabelsAngle}"></TextBlock>
+            <Slider Width="300"
+                    Minimum="0"
+                    Maximum="150"
+                    IsSnapToTickEnabled="True"
+                    TickFrequency="5"
+                    Value="{Binding LabelsAngle, Mode=TwoWay}" />
+        </StackPanel>
+
         <lvc:PolarChart
-            Grid.Row="2"
+            Grid.Row="4"
             Series="{Binding Series}"
             RadiusAxes="{Binding RadialAxes}"
             AngleAxes="{Binding AngleAxes}"
             InitialRotation="{Binding InitialRotation}"
-            InnerRadius="{Binding InnerRadius}">
+            InnerRadius="{Binding InnerRadius}"
+            TotalAngle="{Binding TotalAngle}">
         </lvc:PolarChart>
     </Grid>
 </UserControl>

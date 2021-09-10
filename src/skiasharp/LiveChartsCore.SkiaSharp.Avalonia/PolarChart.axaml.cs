@@ -124,7 +124,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// The total angle property.
         /// </summary>
         public static readonly AvaloniaProperty<double> TotalAngleProperty =
-            AvaloniaProperty.Register<PolarChart, double>(nameof(TotalAngle), 0d, inherits: true);
+            AvaloniaProperty.Register<PolarChart, double>(nameof(TotalAngle), 360d, inherits: true);
 
         /// <summary>
         /// The inner radius property.

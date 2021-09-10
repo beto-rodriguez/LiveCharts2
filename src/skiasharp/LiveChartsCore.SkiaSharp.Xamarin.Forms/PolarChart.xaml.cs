@@ -112,7 +112,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// The total angle property.
         /// </summary>
         public static readonly BindableProperty TotalAngleProperty =
-           BindableProperty.Create(nameof(TotalAngle), typeof(double), typeof(PolarChart), 0d,
+           BindableProperty.Create(nameof(TotalAngle), typeof(double), typeof(PolarChart), 360d,
                propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>

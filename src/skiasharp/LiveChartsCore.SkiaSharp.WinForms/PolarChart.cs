@@ -36,7 +36,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}" />
     public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     {
-        private double _totalAngle;
+        private double _totalAngle = 360;
         private double _innerRadius;
         private double _initialRotation;
         private readonly CollectionDeepObserver<ISeries> _seriesObserver;
