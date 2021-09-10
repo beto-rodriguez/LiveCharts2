@@ -42,6 +42,12 @@ namespace LiveChartsCore
             where TDrawingContext : DrawingContext
             where TLabel : class, ILabelGeometry<TDrawingContext>, new()
     {
+        private double _groupPadding = 10;
+        private double _maxBarWidth = 50;
+        private bool _ignoresBarPosition = false;
+        private double _rx;
+        private double _ry;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BarSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
@@ -53,19 +59,19 @@ namespace LiveChartsCore
         }
 
         /// <inheritdoc cref="IBarSeries{TDrawingContext}.GroupPadding"/>
-        public double GroupPadding { get; set; } = 10;
+        public double GroupPadding { get => _groupPadding; set { _groupPadding = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IBarSeries{TDrawingContext}.MaxBarWidth"/>
-        public double MaxBarWidth { get; set; } = 50;
+        public double MaxBarWidth { get => _maxBarWidth; set { _maxBarWidth = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IBarSeries{TDrawingContext}.IgnoresBarPosition"/>
-        public bool IgnoresBarPosition { get; set; } = false;
+        public bool IgnoresBarPosition { get => _ignoresBarPosition; set { _ignoresBarPosition = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IBarSeries{TDrawingContext}.Rx"/>
-        public double Rx { get; set; }
+        public double Rx { get => _rx; set { _rx = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IBarSeries{TDrawingContext}.Ry"/>
-        public double Ry { get; set; }
+        public double Ry { get => _ry; set { _ry = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Called when the paint context changes.
