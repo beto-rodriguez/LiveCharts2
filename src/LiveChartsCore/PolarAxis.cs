@@ -305,6 +305,10 @@ namespace LiveChartsCore
                         ? new AxisVisualSeprator<TDrawingContext>() { Value = i }
                         : new RadialAxisVisualSeparator<TDrawingContext>() { Value = i };
 
+                    var l = _orientation == PolarAxisOrientation.Angle
+                        ? scaler.ToPixels(visualSeparator.Value, scaler.MaxRadius)
+                        : scaler.ToPixelsWithAngleInDegrees((float)LabelsAngle, visualSeparator.Value);
+
                     if (LabelsPaint is not null)
                     {
                         var textGeometry = new TTextGeometry { TextSize = size };
@@ -322,7 +326,10 @@ namespace LiveChartsCore
                                     .WithDuration(AnimationsSpeed ?? polarChart.AnimationsSpeed)
                                     .WithEasingFunction(EasingFunction ?? polarChart.EasingFunction));
 
+                        textGeometry.X = l.X;
+                        textGeometry.Y = l.Y;
                         textGeometry.Opacity = 0;
+                        textGeometry.CompleteAllTransitions();
                     }
 
                     if (SeparatorsPaint is not null && ShowSeparatorLines)
@@ -344,6 +351,7 @@ namespace LiveChartsCore
                                         .WithEasingFunction(EasingFunction ?? polarChart.EasingFunction));
 
                             lineGeometry.Opacity = 0;
+                            lineGeometry.CompleteAllTransitions();
                         }
 
                         if (visualSeparator is RadialAxisVisualSeparator<TDrawingContext> polarSeparator)
@@ -362,7 +370,14 @@ namespace LiveChartsCore
                                         .WithDuration(AnimationsSpeed ?? polarChart.AnimationsSpeed)
                                         .WithEasingFunction(EasingFunction ?? polarChart.EasingFunction));
 
+                            var h = Math.Sqrt(Math.Pow(l.X - scaler.CenterX, 2) + Math.Pow(l.Y - scaler.CenterY, 2));
+                            var radius = (float)h;
+                            polarSeparator.Circle.X = scaler.CenterX - radius;
+                            polarSeparator.Circle.Y = scaler.CenterY - radius;
+                            polarSeparator.Circle.Width = radius * 2;
+                            polarSeparator.Circle.Height = radius * 2;
                             circleGeometry.Opacity = 0;
+                            circleGeometry.CompleteAllTransitions();
                         }
                     }
 
@@ -532,7 +547,6 @@ namespace LiveChartsCore
         /// <returns></returns>
         public virtual void Delete(Chart<TDrawingContext> chart)
         {
-
             if (_labelsPaint is not null)
             {
                 chart.Canvas.RemovePaintTask(_labelsPaint);
@@ -605,8 +619,8 @@ namespace LiveChartsCore
 
             if (separator.Text is not null)
             {
-                separator.Text.X = 0;
-                separator.Text.Y = 0;
+                //separator.Text.X = 0;
+                //separator.Text.Y = 0;
                 separator.Text.Opacity = 0;
                 separator.Text.RemoveOnCompleted = true;
             }
