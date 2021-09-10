@@ -74,6 +74,7 @@ namespace LiveChartsCore.Measure
 
             var minDimension = drawMarginSize.Width < drawMarginSize.Height ? drawMarginSize.Width : drawMarginSize.Height;
             _innerRadiusOffset = innerRadius; // innerRadius;
+            InnerRadius = innerRadius;
             _outerRadiusOffset = 0;//drawMagrinLocation.X; // We should also check for the top, right and bottom bounds.
             _scalableRadius = minDimension * 0.5 - _innerRadiusOffset - _outerRadiusOffset;
 
@@ -93,6 +94,11 @@ namespace LiveChartsCore.Measure
         /// Gets the center in the Y axis.
         /// </summary>
         public float CenterY { get; private set; }
+
+        /// <summary>
+        /// Gets the inner radius.
+        /// </summary>
+        public double InnerRadius { get; private set; }
 
         /// <summary>
         /// Gets the max radius.

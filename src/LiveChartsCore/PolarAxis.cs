@@ -399,9 +399,11 @@ namespace LiveChartsCore
                 {
                     if (visualSeparator is AxisVisualSeprator<TDrawingContext> lineSepartator && lineSepartator.Line is not null)
                     {
-                        lineSepartator.Line.X = scaler.CenterX;
+                        var innerPos = scaler.ToPixels(visualSeparator.Value, scaler.MinRadius);
+
+                        lineSepartator.Line.X = innerPos.X;
                         lineSepartator.Line.X1 = location.X;
-                        lineSepartator.Line.Y = scaler.CenterY;
+                        lineSepartator.Line.Y = innerPos.Y;
                         lineSepartator.Line.Y1 = location.Y;
 
                         if (((IPolarAxis)this).PreviousDataBounds is null) lineSepartator.Line.CompleteAllTransitions();
