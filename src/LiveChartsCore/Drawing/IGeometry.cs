@@ -31,6 +31,11 @@ namespace LiveChartsCore.Drawing
         where TDrawingContext : DrawingContext
     {
         /// <summary>
+        /// Gets or sets the transform origin.
+        /// </summary>
+        LvcPoint TransformOrigin { get; set; }
+
+        /// <summary>
         /// Gets or sets the translate transform.
         /// </summary>
         /// <value>

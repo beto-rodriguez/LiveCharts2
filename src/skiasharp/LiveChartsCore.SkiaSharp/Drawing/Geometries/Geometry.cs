@@ -79,9 +79,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="IGeometry{TDrawingContext}.Y" />
         public float Y { get => _yProperty.GetMovement(this); set => _yProperty.SetMovement(value, this); }
 
-        /// <summary>
-        /// Gets or sets the transform origin.
-        /// </summary>
+        /// <inheritdoc cref="IGeometry{TDrawingContext}.TransformOrigin" />
         public LvcPoint TransformOrigin
         {
             get => _transformOriginProperty.GetMovement(this);
