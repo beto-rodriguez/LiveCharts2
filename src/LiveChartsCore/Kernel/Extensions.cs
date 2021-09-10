@@ -118,11 +118,12 @@ namespace LiveChartsCore.Kernel
         /// Gets the tick.
         /// </summary>
         /// <param name="axis">The axis.</param>
-        /// <param name="controlSize">Size of the control.</param>
+        /// <param name="chart">The chart.</param>
         /// <returns></returns>
-        public static AxisTick GetTick(this IPolarAxis axis, LvcSize controlSize)
+        public static AxisTick GetTick<TDrawingContext>(this IPolarAxis axis, PolarChart<TDrawingContext> chart)
+            where TDrawingContext : DrawingContext
         {
-            return GetTick(axis, controlSize, axis.VisibleDataBounds);
+            return GetTick(axis, chart, axis.VisibleDataBounds);
         }
 
         /// <summary>
@@ -154,20 +155,23 @@ namespace LiveChartsCore.Kernel
         /// Gets the tick.
         /// </summary>
         /// <param name="axis">The axis.</param>
-        /// <param name="controlSize">Size of the control.</param>
+        /// <param name="chart">The chart.</param>
         /// <param name="bounds">The bounds.</param>
         /// <returns></returns> 
-        public static AxisTick GetTick(this IPolarAxis axis, LvcSize controlSize, Bounds bounds)
+        public static AxisTick GetTick<TDrawingContext>(this IPolarAxis axis, PolarChart<TDrawingContext> chart, Bounds bounds)
+            where TDrawingContext : DrawingContext
         {
             var max = axis.MaxLimit is null ? bounds.Max : axis.MaxLimit.Value;
             var min = axis.MinLimit is null ? bounds.Min : axis.MinLimit.Value;
 
+            var controlSize = chart.ControlSize;
             var minD = controlSize.Width < controlSize.Height ? controlSize.Width : controlSize.Height;
+            var radius = minD - chart.InnerRadius;
 
             var range = max - min;
             var separations = axis.Orientation == PolarAxisOrientation.Angle
                 ? Math.Round(minD / (10 * Cf), 0)
-                : Math.Round(minD / (20 * Cf), 0);
+                : Math.Round(radius / (30 * Cf), 0);
             var minimum = range / separations;
 
             var magnitude = Math.Pow(10, Math.Floor(Math.Log(minimum) / Math.Log(10)));

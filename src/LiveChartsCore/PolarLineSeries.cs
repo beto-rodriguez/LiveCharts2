@@ -460,8 +460,8 @@ namespace LiveChartsCore
             if (baseSeriesBounds.HasData) return baseSeriesBounds;
             var baseBounds = baseSeriesBounds.Bounds;
 
-            var tickPrimary = radiusAxis.GetTick(chart.ControlSize, baseBounds.VisiblePrimaryBounds);
-            var tickSecondary = angleAxis.GetTick(chart.ControlSize, baseBounds.VisibleSecondaryBounds);
+            var tickPrimary = radiusAxis.GetTick(chart, baseBounds.VisiblePrimaryBounds);
+            var tickSecondary = angleAxis.GetTick(chart, baseBounds.VisibleSecondaryBounds);
 
             var ts = tickSecondary.Value * DataPadding.X;
             var tp = tickPrimary.Value * DataPadding.Y;

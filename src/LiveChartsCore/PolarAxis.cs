@@ -199,7 +199,7 @@ namespace LiveChartsCore
             var drawLocation = polarChart.DrawMarginLocation;
             var drawMarginSize = polarChart.DrawMarginSize;
 
-            var axisTick = this.GetTick(drawMarginSize);
+            var axisTick = this.GetTick(polarChart);
 
             var labeler = Labeler;
             if (Labels is not null)
@@ -486,7 +486,7 @@ namespace LiveChartsCore
                 _minStep = 1;
             }
 
-            var axisTick = this.GetTick(chart.DrawMarginSize);
+            var axisTick = this.GetTick(polarChart);
             var s = axisTick.Value;
             if (s < _minStep) s = _minStep;
 
