@@ -859,7 +859,7 @@ namespace LiveChartsCore
 
             var scale = new PolarScaler(
                 core.DrawMarginLocation, core.DrawMarginSize, core.AngleAxes[ScalesAngleAt], core.RadiusAxes[ScalesRadiusAt],
-                core.InnerRadius, core.InnerRadius);
+                core.InnerRadius, core.InitialRotation);
 
             var deleted = new List<ChartPoint>();
             foreach (var point in everFetched)
