@@ -59,7 +59,7 @@ namespace LiveChartsCore
         private bool _isClosed = true;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs}"/> class.
+        /// Initializes a new instance of the <see cref="PolarLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs}"/> class.
         /// </summary>
         /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
         public PolarLineSeries(bool isStacked = false)
