@@ -76,7 +76,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// The fit to bounds property.
         /// </summary>
         public static readonly DependencyProperty FitToBoundsProperty =
-            DependencyProperty.Register(nameof(FitToBounds), typeof(double), typeof(PolarChart),
+            DependencyProperty.Register(nameof(FitToBounds), typeof(bool), typeof(PolarChart),
                 new PropertyMetadata(false, OnDependencyPropertyChanged));
 
         /// <summary>

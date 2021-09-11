@@ -78,7 +78,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// </summary>
         public static readonly DependencyProperty FitToBoundsProperty =
             DependencyProperty.Register(
-                nameof(FitToBounds), typeof(double), typeof(PolarChart),
+                nameof(FitToBounds), typeof(bool), typeof(PolarChart),
                 new PropertyMetadata(false, OnDependencyPropertyChanged));
 
         /// <summary>

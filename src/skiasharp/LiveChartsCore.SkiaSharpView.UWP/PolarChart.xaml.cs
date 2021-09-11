@@ -93,7 +93,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty FitToBoundsProperty =
             DependencyProperty.Register(
-                nameof(FitToBounds), typeof(double), typeof(PolarChart), new PropertyMetadata(false, OnDependencyPropertyChanged));
+                nameof(FitToBounds), typeof(bool), typeof(PolarChart), new PropertyMetadata(false, OnDependencyPropertyChanged));
 
         /// <summary>
         /// The inner radius property.

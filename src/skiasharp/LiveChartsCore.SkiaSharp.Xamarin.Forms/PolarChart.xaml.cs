@@ -112,7 +112,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// The fit to bounds property.
         /// </summary>
         public static readonly BindableProperty FitToBoundsProperty =
-           BindableProperty.Create(nameof(FitToBounds), typeof(double), typeof(PolarChart), false,
+           BindableProperty.Create(nameof(FitToBounds), typeof(bool), typeof(PolarChart), false,
                propertyChanged: OnBindablePropertyChanged);
 
         /// <summary>

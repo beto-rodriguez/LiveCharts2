@@ -8,6 +8,7 @@ namespace ViewModelsSamples.Polar.Basic
 {
     public class ViewModel : INotifyPropertyChanged
     {
+        private bool _fitToBounds = false;
         private double _initialRotation = 15;
         private double _innerRadius = 50;
         private double _totalAngle = 360;
@@ -42,6 +43,16 @@ namespace ViewModelsSamples.Polar.Basic
                     Labeler = v => (v * 1000).ToString("N2")
                 }
             };
+
+        public bool FitToBounds
+        {
+            get => _fitToBounds;
+            set
+            {
+                _fitToBounds = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FitToBounds)));
+            }
+        }
 
         public double InitialRotation
         {
