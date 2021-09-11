@@ -234,17 +234,17 @@ namespace LiveChartsCore
 
             if (NamePaint is not null)
             {
-                NamePaint.ZIndex = -1;
+                if (NamePaint.ZIndex == 0) NamePaint.ZIndex = -1;
                 cartesianChart.Canvas.AddDrawableTask(NamePaint);
             }
             if (LabelsPaint is not null)
             {
-                LabelsPaint.ZIndex = -0.9;
+                if (LabelsPaint.ZIndex == 0) LabelsPaint.ZIndex = -0.9;
                 cartesianChart.Canvas.AddDrawableTask(LabelsPaint);
             }
             if (SeparatorsPaint is not null)
             {
-                SeparatorsPaint.ZIndex = -1;
+                if (SeparatorsPaint.ZIndex == 0) SeparatorsPaint.ZIndex = -1;
                 SeparatorsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 cartesianChart.Canvas.AddDrawableTask(SeparatorsPaint);
             }

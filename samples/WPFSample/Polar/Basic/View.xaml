@@ -65,7 +65,7 @@
             <CheckBox IsChecked="{Binding FitToBounds, Mode=TwoWay}"></CheckBox>
         </StackPanel>
 
-        <Border Grid.Row="5" BorderThickness="2" BorderBrush="WhiteSmoke" Width="500" Height="500">
+        <Border Grid.Row="5" BorderThickness="2" BorderBrush="WhiteSmoke" Margin="20">
             <lvc:PolarChart
                 Series="{Binding Series}"
                 RadiusAxes="{Binding RadialAxes}"
