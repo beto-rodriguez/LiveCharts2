@@ -42,6 +42,12 @@ namespace LiveChartsCore.Kernel.Sketches
         PolarChart<TDrawingContext> Core { get; }
 
         /// <summary>
+        /// Gets whether the chart scales to try to fit the plot to the series bounds, it calculates a new center of the radial chart,
+        /// default is false.
+        /// </summary>
+        bool FitToBounds { get; set; }
+
+        /// <summary>
         /// Gets or sets the total circumference angle in degrees, default is 360.
         /// </summary>
         /// <value>

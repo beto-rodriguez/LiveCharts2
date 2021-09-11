@@ -36,6 +36,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}" />
     public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     {
+        private bool _fitToBounds = false;
         private double _totalAngle = 360;
         private double _innerRadius;
         private double _initialRotation;
@@ -75,6 +76,18 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         }
 
         PolarChart<SkiaSharpDrawingContext> IPolarChartView<SkiaSharpDrawingContext>.Core => core is null ? throw new Exception("core not found") : (PolarChart<SkiaSharpDrawingContext>)core;
+
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.FitToBounds" />
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public bool FitToBounds
+        {
+            get => _fitToBounds;
+            set
+            {
+                _fitToBounds = value;
+                OnPropertyChanged();
+            }
+        }
 
         /// <inheritdoc cref="IPolarChartView{TDrawingContext}.TotalAngle" />
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

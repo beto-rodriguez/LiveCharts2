@@ -109,6 +109,13 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 });
 
         /// <summary>
+        /// The fit to bounds property.
+        /// </summary>
+        public static readonly BindableProperty FitToBoundsProperty =
+           BindableProperty.Create(nameof(FitToBounds), typeof(double), typeof(PolarChart), false,
+               propertyChanged: OnBindablePropertyChanged);
+
+        /// <summary>
         /// The total angle property.
         /// </summary>
         public static readonly BindableProperty TotalAngleProperty =
@@ -376,6 +383,13 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             get => null;
             set => throw new NotImplementedException();
+        }
+
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.FitToBounds" />
+        public bool FitToBounds
+        {
+            get => (bool)GetValue(FitToBoundsProperty);
+            set => SetValue(FitToBoundsProperty, value);
         }
 
         /// <inheritdoc cref="IPolarChartView{TDrawingContext}.TotalAngle" />

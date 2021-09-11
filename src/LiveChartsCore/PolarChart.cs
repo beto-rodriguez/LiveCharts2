@@ -104,6 +104,11 @@ namespace LiveChartsCore
         public IPolarSeries<TDrawingContext>[] Series { get; private set; } = new IPolarSeries<TDrawingContext>[0];
 
         /// <summary>
+        /// Gets whether the series fit to bounds or not.
+        /// </summary>
+        public bool FitToBounds { get; private set; }
+
+        /// <summary>
         /// Gets the total circumference angle.
         /// </summary>
         /// <value>
@@ -206,6 +211,7 @@ namespace LiveChartsCore
             AnimationsSpeed = _chartView.AnimationsSpeed;
             EasingFunction = _chartView.EasingFunction;
 
+            FitToBounds = _chartView.FitToBounds;
             TotalAnge = (float)_chartView.TotalAngle;
             InnerRadius = (float)_chartView.InnerRadius;
             InitialRotation = (float)_chartView.InitialRotation;
@@ -346,7 +352,73 @@ namespace LiveChartsCore
             }
 
             // calculate draw margin
-            if (viewDrawMargin is null)
+
+            if (FitToBounds)
+            {
+                float mt = 0, mb = 0, ml = 0, mr = 0;
+
+                foreach (var series in Series)
+                {
+                    var scaler = new PolarScaler(
+                        DrawMarginLocation, DrawMarginSize, AngleAxes[series.ScalesAngleAt], RadiusAxes[series.ScalesRadiusAt],
+                        InnerRadius, InitialRotation, TotalAnge);
+
+                    foreach (var point in series.Fetch(this))
+                    {
+                        var p = scaler.ToPixels(point);
+
+                        var dx = p.X - scaler.CenterX;
+                        var dy = p.Y - scaler.CenterY;
+
+                        if (dx > 0)
+                        {
+                            if (dx > mr)
+                                mr = dx;
+                        }
+                        else
+                        {
+                            dx *= -1;
+                            if (dx > ml)
+                                ml = dx;
+                        }
+
+                        if (dy > 0)
+                        {
+                            if (dy > mb)
+                                mb = dy;
+                        }
+                        else
+                        {
+                            dy *= -1;
+                            if (dy > mt)
+                                mt = dy;
+                        }
+                    }
+                }
+
+                var cs = ControlSize;
+                var cx = cs.Width * 0.5f;
+                var cy = cs.Height * 0.5f;
+
+                var dl = cx - ml;
+                var dr = cx - mr;
+                var dt = cy - mt;
+                var db = cy - mb;
+
+                // so the idea is...
+
+                // we know the distance of the most left point to the left border (dl)
+                // the most right point to the right border (dr)
+                // the most bottom point to the bottom border (db)
+                // the most top point to the top border (dt)
+
+                // then to "easily" fit the plot to the data bounds, we create a negative margin for our draw margin
+                // then the scaler will luckily handle it.
+
+                var fitMargin = new Margin(-dl, -dt, -dr, -db);
+                SetDrawMargin(ControlSize, fitMargin);
+            }
+            else if (viewDrawMargin is null)
             {
                 var m = viewDrawMargin ?? new Margin();
                 var r = 0f;

@@ -121,6 +121,12 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
            AvaloniaProperty.Register<PolarChart, IEnumerable<ISeries>>(nameof(Series), Enumerable.Empty<ISeries>(), inherits: true);
 
         /// <summary>
+        /// The fit to bounds property.
+        /// </summary>
+        public static readonly AvaloniaProperty<bool> FitToBoundsProperty =
+            AvaloniaProperty.Register<PolarChart, bool>(nameof(FitToBounds), false, inherits: true);
+
+        /// <summary>
         /// The total angle property.
         /// </summary>
         public static readonly AvaloniaProperty<double> TotalAngleProperty =
@@ -342,6 +348,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             get => GetValue(SyncContextProperty);
             set => SetValue(SyncContextProperty, value);
+        }
+
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.FitToBounds" />
+        public bool FitToBounds
+        {
+            get => (bool)GetValue(FitToBoundsProperty);
+            set => SetValue(FitToBoundsProperty, value);
         }
 
         /// <inheritdoc cref="IPolarChartView{TDrawingContext}.TotalAngle" />

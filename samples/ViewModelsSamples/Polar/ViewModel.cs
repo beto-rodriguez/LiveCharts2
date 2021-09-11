@@ -1,5 +1,4 @@
 ﻿using LiveChartsCore;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,7 +17,7 @@ namespace ViewModelsSamples.Polar.Basic
         {
             new PolarLineSeries<double>
             {
-                Values = new ObservableCollection<double> { 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 },
+                Values = new ObservableCollection<double> { 15, 14, 13, 0, 0, 0, 0, 0, 0, 0, 5, 4, 3, 2, 1 },
                 IsClosed = false
             }
         };
