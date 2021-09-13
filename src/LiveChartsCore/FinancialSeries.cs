@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Data;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -51,6 +50,7 @@ namespace LiveChartsCore
         private IPaint<TDrawingContext>? _upFill = null;
         private IPaint<TDrawingContext>? _downStroke = null;
         private IPaint<TDrawingContext>? _downFill = null;
+        private IPaint<TDrawingContext>? _hover;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FinancialSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -60,7 +60,6 @@ namespace LiveChartsCore
                  SeriesProperties.Financial | SeriesProperties.PrimaryAxisVerticalOrientation |
                  SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
         {
-            HoverState = LiveCharts.BarSeriesHoverKey;
             TooltipLabelFormatter = p => $"{Name}, H: {p.PrimaryValue:N2}, O: {p.TertiaryValue:N2}, C: {p.QuaternaryValue:N2}, L: {p.QuinaryValue:N2}";
         }
 
@@ -295,9 +294,9 @@ namespace LiveChartsCore
         public override SeriesBounds GetBounds(
             CartesianChart<TDrawingContext> chart, ICartesianAxis secondaryAxis, ICartesianAxis primaryAxis)
         {
-            if (DataProvider is null) throw new Exception("A data provider is required");
+            if (DataFactory is null) throw new Exception("A data provider is required");
 
-            var baseSeriesBounds = DataProvider.GetFinancialBounds(chart, this, secondaryAxis, primaryAxis);
+            var baseSeriesBounds = DataFactory.GetFinancialBounds(chart, this, secondaryAxis, primaryAxis);
             if (baseSeriesBounds.HasData) return baseSeriesBounds;
             var baseBounds = baseSeriesBounds.Bounds;
 
@@ -380,14 +379,14 @@ namespace LiveChartsCore
         {
             var visual = (TVisual?)point.Context.Visual;
             if (visual is null) return;
-            if (DataProvider is null) throw new Exception("Data provider not found");
+            if (DataFactory is null) throw new Exception("Data provider not found");
 
             var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
             if (chartView.Core.IsZoomingOrPanning)
             {
                 visual.CompleteAllTransitions();
                 visual.RemoveOnCompleted = true;
-                DataProvider.DisposePoint(point);
+                DataFactory.DisposePoint(point);
                 return;
             }
 
@@ -401,7 +400,7 @@ namespace LiveChartsCore
             visual.Low = p;
             visual.RemoveOnCompleted = true;
 
-            DataProvider.DisposePoint(point);
+            DataFactory.DisposePoint(point);
 
             var label = (TLabel?)point.Context.Label;
             if (label is null) return;
@@ -417,7 +416,7 @@ namespace LiveChartsCore
         /// <exception cref="NotImplementedException"></exception>
         protected override IPaint<TDrawingContext>?[] GetPaintTasks()
         {
-            return new[] { _upFill, _upStroke, _downFill, _downStroke, DataLabelsPaint };
+            return new[] { _upFill, _upStroke, _downFill, _downStroke, DataLabelsPaint, hoverPaint };
         }
 
         /// <summary>

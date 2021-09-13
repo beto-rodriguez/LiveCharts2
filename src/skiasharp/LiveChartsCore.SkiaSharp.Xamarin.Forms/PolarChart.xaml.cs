@@ -79,8 +79,14 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             _angleObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _radiusObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-            AngleAxes = new List<IPolarAxis>() { LiveCharts.CurrentSettings.PolarAxisProvider() };
-            RadiusAxes = new List<IPolarAxis>() { LiveCharts.CurrentSettings.PolarAxisProvider() };
+            AngleAxes = new List<IPolarAxis>()
+            {
+                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+            };
+            RadiusAxes = new List<IPolarAxis>()
+            {
+                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+            };
             Series = new ObservableCollection<ISeries>();
 
             canvas.SkCanvasView.EnableTouchEvents = true;
@@ -660,6 +666,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             if (tooltip is null || core is null) return;
 
+            core.ClearTooltipData();
             ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
         }
 

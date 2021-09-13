@@ -27,7 +27,6 @@ using LiveChartsCore.Measure;
 using System.Collections.Generic;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Kernel.Drawing;
-using LiveChartsCore.Kernel.Data;
 
 namespace LiveChartsCore
 {
@@ -321,14 +320,14 @@ namespace LiveChartsCore
         {
             var visual = (TVisual?)point.Context.Visual;
             if (visual is null) return;
-            if (DataProvider is null) throw new Exception("Data provider not found");
+            if (DataFactory is null) throw new Exception("Data provider not found");
 
             var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
             if (chartView.Core.IsZoomingOrPanning)
             {
                 visual.CompleteAllTransitions();
                 visual.RemoveOnCompleted = true;
-                DataProvider.DisposePoint(point);
+                DataFactory.DisposePoint(point);
                 return;
             }
 
@@ -340,7 +339,7 @@ namespace LiveChartsCore
             visual.Width = 0;
             visual.RemoveOnCompleted = true;
 
-            DataProvider.DisposePoint(point);
+            DataFactory.DisposePoint(point);
 
             var label = (TLabel?)point.Context.Label;
             if (label is null) return;

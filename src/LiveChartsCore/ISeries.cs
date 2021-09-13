@@ -41,11 +41,6 @@ namespace LiveChartsCore
         int SeriesId { get; set; }
 
         /// <summary>
-        /// Gets or sets the state where the visual is moved to when the mouse moves over a <see cref="ChartPoint"/>.
-        /// </summary>
-        string HoverState { get; set; }
-
-        /// <summary>
         /// Gets the properties of the series.
         /// </summary>
         SeriesProperties SeriesProperties { get; }
@@ -149,18 +144,16 @@ namespace LiveChartsCore
         TooltipPoint[] FindPointsNearTo(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy automaticStategy);
 
         /// <summary>
-        /// Marks a given point as a given state.
+        /// 
         /// </summary>
-        /// <param name="chartPoint"></param>
-        /// <param name="state"></param>
-        void AddPointToState(ChartPoint chartPoint, string state);
+        /// <param name="point"></param>
+        void OnPointerEnter(ChartPoint point);
 
         /// <summary>
-        /// Removes a given point from the given state.
+        /// 
         /// </summary>
-        /// <param name="chartPoint"></param>
-        /// <param name="state"></param>
-        void RemoveLvPointromState(ChartPoint chartPoint, string state);
+        /// <param name="point"></param>
+        void OnPointerLeft(ChartPoint point);
 
         /// <summary>
         /// Clears the visuals in the cache and re-starts animations.

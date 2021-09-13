@@ -202,14 +202,6 @@ namespace LiveChartsCore.Kernel.Sketches
         IChartTooltip<TDrawingContext>? Tooltip { get; }
 
         /// <summary>
-        /// Gets or sets the point states.
-        /// </summary>
-        /// <value>
-        /// The point states.
-        /// </value>
-        PointStatesDictionary<TDrawingContext> PointStates { get; set; }
-
-        /// <summary>
         /// Shows the tool tip based on the given points.
         /// </summary>
         /// <param name="points">The points.</param>

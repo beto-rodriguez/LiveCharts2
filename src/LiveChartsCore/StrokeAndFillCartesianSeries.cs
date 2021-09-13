@@ -94,7 +94,7 @@ namespace LiveChartsCore
         /// <exception cref="NotImplementedException"></exception>
         protected override IPaint<TDrawingContext>?[] GetPaintTasks()
         {
-            return new[] { _stroke, _fill, DataLabelsPaint };
+            return new[] { _stroke, _fill, hoverPaint, DataLabelsPaint };
         }
 
         /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>

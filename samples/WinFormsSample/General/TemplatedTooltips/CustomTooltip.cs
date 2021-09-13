@@ -7,15 +7,12 @@ using LiveChartsCore.SkiaSharpView.WinForms;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace WinFormsSample.General.TemplatedTooltips
 {
     public partial class CustomTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>, IDisposable
     {
-        private readonly Dictionary<ChartPoint, object> activePoints = new();
-
         public CustomTooltip()
         {
             InitializeComponent();
@@ -24,19 +21,6 @@ namespace WinFormsSample.General.TemplatedTooltips
         public void Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var wfChart = (Chart)chart.View;
-
-            if (!tooltipPoints.Any())
-            {
-                foreach (var key in activePoints.Keys.ToArray())
-                {
-                    key.RemoveFromHoverState();
-                    _ = activePoints.Remove(key);
-                }
-
-                return;
-            }
-
-            if (activePoints.Count > 0 && tooltipPoints.All(x => activePoints.ContainsKey(x.Point))) return;
 
             var size = DrawAndMesure(tooltipPoints, wfChart);
             LvcPoint? location = null;
@@ -61,20 +45,6 @@ namespace WinFormsSample.General.TemplatedTooltips
             var y = l.Y + (int)location.Value.Y;
             Location = new Point(x, y);
             Show();
-
-            var o = new object();
-            foreach (var tooltipPoint in tooltipPoints)
-            {
-                tooltipPoint.Point.AddToHoverState();
-                activePoints[tooltipPoint.Point] = o;
-            }
-
-            foreach (var key in activePoints.Keys.ToArray())
-            {
-                if (activePoints[key] == o) continue;
-                key.RemoveFromHoverState();
-                _ = activePoints.Remove(key);
-            }
 
             wfChart.CoreCanvas.Invalidate();
         }

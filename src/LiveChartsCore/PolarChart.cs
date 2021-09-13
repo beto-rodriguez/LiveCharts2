@@ -45,7 +45,6 @@ namespace LiveChartsCore
         internal readonly HashSet<Section<TDrawingContext>> _everMeasuredSections = new();
         private readonly IPolarChartView<TDrawingContext> _chartView;
         private int _nextSeries = 0;
-        private IEnumerable<ISeries>? _designerSeries = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PolarChart{TDrawingContext}"/> class.
@@ -62,21 +61,6 @@ namespace LiveChartsCore
             : base(canvas, defaultPlatformConfig, view, lockOnMeasure)
         {
             _chartView = view;
-
-            view.PointStates.Chart = this;
-            foreach (var item in view.PointStates.GetStates())
-            {
-                if (item.Fill is not null)
-                {
-                    item.Fill.ZIndex += 1000000;
-                    canvas.AddDrawableTask(item.Fill);
-                }
-                if (item.Stroke is not null)
-                {
-                    item.Stroke.ZIndex += 1000000;
-                    canvas.AddDrawableTask(item.Stroke);
-                }
-            }
         }
 
         /// <summary>
@@ -216,9 +200,7 @@ namespace LiveChartsCore
             InnerRadius = (float)_chartView.InnerRadius;
             InitialRotation = (float)_chartView.InitialRotation;
 
-            var actualSeries = View.DesignerMode
-                ? _designerSeries ??= LiveCharts.CurrentSettings.DesignerSeriesGenerator(DesignerKind.Cartesian)
-                : _chartView.Series.Where(x => x.IsVisible);
+            var actualSeries = (_chartView.Series ?? Enumerable.Empty<ISeries>()).Where(x => x.IsVisible);
 
             Series = actualSeries
                 .Cast<IPolarSeries<TDrawingContext>>()

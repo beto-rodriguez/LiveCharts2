@@ -654,6 +654,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 if (state.Stroke is not null) state.Stroke.ClearGeometriesFromPaintTask(core.Canvas);
             }
 
+            core.ClearTooltipData();
             tooltip.Hide();
         }
 

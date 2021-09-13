@@ -20,7 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Kernel.Data
+using LiveChartsCore.Kernel;
+
+namespace LiveChartsCore.Measure
 {
     /// <summary>
     /// Defines the series bounds class, it contains the data bounds in a series.

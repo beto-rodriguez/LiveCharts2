@@ -38,8 +38,6 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
     /// </summary>
     public sealed partial class DefaultTooltip : ToolTip, IChartTooltip<SkiaSharpDrawingContext>
     {
-        private readonly Dictionary<ChartPoint, object> _activePoints = new();
-
         /// <summary>
         /// 
         /// </summary>
@@ -71,20 +69,6 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var winuiChart = (IWinUIChart)chart.View;
-            //var template = wpfChart.TooltipTemplate ?? _defaultTempalte;
-            //if (Template != template) Template = template;
-
-            if (!tooltipPoints.Any())
-            {
-                foreach (var key in _activePoints.Keys.ToArray())
-                {
-                    key.RemoveFromHoverState();
-                    _ = _activePoints.Remove(key);
-                }
-                return;
-            }
-
-            if (_activePoints.Count > 0 && tooltipPoints.All(x => _activePoints.ContainsKey(x.Point))) return;
 
             LvcPoint? location = null;
 
@@ -115,20 +99,6 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             FontWeight = winuiChart.TooltipFontWeight;
             FontStyle = winuiChart.TooltipFontStyle;
             FontStretch = winuiChart.TooltipFontStretch;
-
-            var o = new object();
-            foreach (var tooltipPoint in tooltipPoints)
-            {
-                tooltipPoint.Point.AddToHoverState();
-                _activePoints[tooltipPoint.Point] = o;
-            }
-
-            foreach (var key in _activePoints.Keys.ToArray())
-            {
-                if (_activePoints[key] == o) continue;
-                key.RemoveFromHoverState();
-                _ = _activePoints.Remove(key);
-            }
         }
 
         void IChartTooltip<SkiaSharpDrawingContext>.Hide()

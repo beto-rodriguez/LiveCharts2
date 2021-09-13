@@ -28,7 +28,6 @@ using System.Collections.Generic;
 using System.Linq;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.Kernel.Data;
 
 namespace LiveChartsCore
 {
@@ -68,7 +67,6 @@ namespace LiveChartsCore
                   (isStacked ? SeriesProperties.Stacked : 0) | SeriesProperties.Sketch | SeriesProperties.PrefersXStrategyTooltips)
         {
             DataPadding = new LvcPoint(0f, 1.5f);
-            HoverState = LiveCharts.LineSeriesHoverKey;
         }
 
         /// <summary>
@@ -454,9 +452,9 @@ namespace LiveChartsCore
         public virtual SeriesBounds GetBounds(
             PolarChart<TDrawingContext> chart, IPolarAxis angleAxis, IPolarAxis radiusAxis)
         {
-            var baseSeriesBounds = DataProvider is null
+            var baseSeriesBounds = DataFactory is null
                 ? throw new Exception("A data provider is required")
-                : DataProvider.GetCartesianBounds(chart, this, angleAxis, radiusAxis);
+                : DataFactory.GetCartesianBounds(chart, this, angleAxis, radiusAxis);
 
             if (baseSeriesBounds.HasData) return baseSeriesBounds;
             var baseBounds = baseSeriesBounds.Bounds;
@@ -832,7 +830,7 @@ namespace LiveChartsCore
         {
             var visual = (LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>?)point.Context.Visual;
             if (visual is null) return;
-            if (DataProvider is null) throw new Exception("Data provider not found");
+            if (DataFactory is null) throw new Exception("Data provider not found");
 
             var p = scaler.ToPixels(point);
             var x = p.X;
@@ -844,7 +842,7 @@ namespace LiveChartsCore
             visual.Geometry.Width = 0;
             visual.Geometry.RemoveOnCompleted = true;
 
-            DataProvider.DisposePoint(point);
+            DataFactory.DisposePoint(point);
 
             var label = (TLabel?)point.Context.Label;
             if (label is null) return;
@@ -908,7 +906,7 @@ namespace LiveChartsCore
         /// <returns></returns>
         protected override IPaint<TDrawingContext>?[] GetPaintTasks()
         {
-            return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint };
+            return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint, hoverPaint };
         }
 
         private IEnumerable<ChartPoint[]> SplitEachNull(

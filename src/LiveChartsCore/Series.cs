@@ -29,8 +29,8 @@ using LiveChartsCore.Measure;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Linq;
-using LiveChartsCore.Kernel.Data;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Kernel.Providers;
 
 namespace LiveChartsCore
 {
@@ -75,6 +75,12 @@ namespace LiveChartsCore
         /// The ever fetched
         /// </summary>
         protected HashSet<ChartPoint> everFetched = new();
+
+        /// <summary>
+        /// The hover paint.
+        /// </summary>
+        protected IPaint<TDrawingContext>? hoverPaint;
+
         private readonly CollectionDeepObserver<TModel> _observer;
         private IEnumerable<TModel>? _values;
         private string? _name;
@@ -84,7 +90,7 @@ namespace LiveChartsCore
         private Func<TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>, string> _dataLabelsFormatter = (point) => $"{point.PrimaryValue}";
         private bool _isVisible = true;
         private LvcPoint _dataPadding = new(0.5f, 0.5f);
-        private DataProvider<TModel, TDrawingContext>? _dataProvider;
+        private DataFactory<TModel, TDrawingContext>? _dataFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -133,9 +139,6 @@ namespace LiveChartsCore
         /// <inheritdoc />
         int ISeries.SeriesId { get; set; } = -1;
 
-        /// <inheritdoc />
-        public string HoverState { get; set; } = "Unknown";
-
         /// <summary>
         /// Occurs when an instance of <see cref="ChartPoint"/> is measured.
         /// </summary>
@@ -147,21 +150,19 @@ namespace LiveChartsCore
         public event Action<TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>>? PointCreated;
 
         /// <summary>
+        /// Occurs when the pointer is over a chart point.
+        /// </summary>
+        public event Action<TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>>? PointHovered;
+
+        /// <summary>
+        /// Occurs when the pointer left a chart point.
+        /// </summary>
+        public event Action<TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>>? PointHoverLost;
+
+        /// <summary>
         /// Occurs when a property changes.
         /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
-
-        /// <summary>
-        /// Gets or sets a delegate that will be called every time a <see cref="ChartPoint"/> instance
-        /// is added to a state.
-        /// </summary>
-        public Action<TVisual, IChartView<TDrawingContext>>? OnPointAddedToState { get; set; }
-
-        /// <summary>
-        /// Gets or sets a delegate that will be called every time a <see cref="ChartPoint"/> instance
-        /// is removed from a state.
-        /// </summary>
-        public Action<TVisual, IChartView<TDrawingContext>>? OnPointRemovedFromState { get; set; }
 
         /// <inheritdoc cref="ISeries.ZIndex" />
         public int ZIndex { get => _zIndex; set { _zIndex = value; OnPropertyChanged(); } }
@@ -219,19 +220,19 @@ namespace LiveChartsCore
         bool IStopNPC.IsNotifyingChanges { get; set; }
 
         /// <summary>
-        /// Gets or sets the data provider.
+        /// Gets or sets the data factory.
         /// </summary>
-        protected DataProvider<TModel, TDrawingContext> DataProvider
+        protected DataFactory<TModel, TDrawingContext> DataFactory
         {
             get
             {
-                if (_dataProvider is null)
+                if (_dataFactory is null)
                 {
-                    var factory = LiveCharts.CurrentSettings.GetFactory<TDrawingContext>();
-                    _dataProvider = factory.GetProvider<TModel>();
+                    var factory = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>();
+                    _dataFactory = factory.GetDefaultDataFactory<TModel>();
                 }
 
-                return _dataProvider;
+                return _dataFactory;
             }
         }
 
@@ -247,9 +248,8 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ISeries.Fetch(IChart)"/>
         protected IEnumerable<ChartPoint> Fetch(IChart chart)
         {
-            if (DataProvider is null) throw new Exception("Data provider not found");
             _ = subscribedTo.Add(chart);
-            return DataProvider.Fetch(this, chart);
+            return DataFactory.Fetch(this, chart);
         }
 
         IEnumerable<ChartPoint> ISeries.Fetch(IChart chart)
@@ -272,80 +272,21 @@ namespace LiveChartsCore
             };
         }
 
-        /// <inheritdoc cref="ISeries.AddPointToState(ChartPoint, string)" />
-        public void AddPointToState(ChartPoint chartPoint, string state)
+        void ISeries.OnPointerEnter(ChartPoint point)
         {
-            var chart = (IChartView<TDrawingContext>)chartPoint.Context.Chart;
-            if (chart.PointStates is null ||
-                (chart.TooltipPosition == TooltipPosition.Hidden && state == HoverState)) return;
-
-            var s = chart.PointStates[state];
-
-            if (s is null)
-                throw new Exception($"The state '{state}' was not found");
-
-            if (chartPoint.Context.Visual is null) return;
-
-            var visual = (TVisual)chartPoint.Context.Visual;
-            var highlitable = visual.HighlightableGeometry;
-
-            if (highlitable is null)
-                throw new Exception(
-                    $"The {nameof(ChartPoint)}.{nameof(ChartPoint.Context)}.{nameof(ChartPoint.Context.Visual)}" +
-                    $".{nameof(IVisualChartPoint<TDrawingContext>.HighlightableGeometry)} property is null, " +
-                    $"this is probably due the point was not measured yet.");
-
-            OnAddedToState(visual, chart);
-
-            var core = (Chart<TDrawingContext>)chartPoint.Context.Chart.CoreChart;
-
-            if (s.Fill is not null)
-            {
-                s.Fill.SetClipRectangle(
-                    core.Canvas,
-                    new LvcRectangle(core.DrawMarginLocation, core.DrawMarginSize));
-                s.Fill.AddGeometryToPaintTask(chart.CoreCanvas, highlitable);
-            }
-            if (s.Stroke is not null)
-            {
-                s.Stroke.SetClipRectangle(
-                    core.Canvas,
-                    new LvcRectangle(core.DrawMarginLocation, core.DrawMarginSize));
-                s.Stroke.AddGeometryToPaintTask(chart.CoreCanvas, highlitable);
-            }
+            WhenPointerEnters(point);
         }
 
-        /// <inheritdoc cref="ISeries.RemoveLvPointromState(ChartPoint, string)" />
-        public virtual void RemoveLvPointromState(ChartPoint chartPoint, string state)
+        void ISeries.OnPointerLeft(ChartPoint point)
         {
-            var chart = (IChartView<TDrawingContext>)chartPoint.Context.Chart;
-            var s = chart.PointStates[state];
-
-            if (s is null)
-                throw new Exception($"The state '{state}' was not found");
-
-            if (chartPoint.Context.Visual is null) return;
-
-            var visual = (TVisual)chartPoint.Context.Visual;
-            var highlitable = visual.HighlightableGeometry;
-
-            if (highlitable is null)
-                throw new Exception(
-                    $"The {nameof(ChartPoint)}.{nameof(ChartPoint.Context)}.{nameof(ChartPoint.Context.Visual)}" +
-                    $".{nameof(IVisualChartPoint<TDrawingContext>.HighlightableGeometry)} property is null, " +
-                    $"this is probably due the point was not measured yet.");
-
-            OnRemovedFromState(visual, chart);
-
-            if (s.Fill is not null) s.Fill.RemoveGeometryFromPainTask(chart.CoreCanvas, highlitable);
-            if (s.Stroke is not null) s.Stroke.RemoveGeometryFromPainTask(chart.CoreCanvas, highlitable);
+            WhenPointerLeaves(point);
         }
 
         /// <inheritdoc cref="ISeries.RestartAnimations"/>
         public void RestartAnimations()
         {
-            if (DataProvider is null) throw new Exception("Data provider not found");
-            DataProvider.RestartVisuals();
+            if (DataFactory is null) throw new Exception("Data provider not found");
+            DataFactory.RestartVisuals();
         }
 
         /// <inheritdoc cref="ISeries.GetTooltipText(ChartPoint)"/>
@@ -390,40 +331,6 @@ namespace LiveChartsCore
         protected abstract void SetDefaultPointTransitions(ChartPoint chartPoint);
 
         /// <summary>
-        /// Called when a point was added to a sate.
-        /// </summary>
-        /// <param name="visual">The visual.</param>
-        /// <param name="chart">The chart.</param>
-        protected void OnAddedToState(TVisual visual, IChartView<TDrawingContext> chart)
-        {
-            (OnPointAddedToState ?? DefaultOnPointAddedToSate)(visual, chart);
-        }
-
-        /// <summary>
-        /// Called when a point was removed from a state.
-        /// </summary>
-        /// <param name="visual">The visual.</param>
-        /// <param name="chart">The chart.</param>
-        protected void OnRemovedFromState(TVisual visual, IChartView<TDrawingContext> chart)
-        {
-            (OnPointRemovedFromState ?? DefaultOnRemovedFromState)(visual, chart);
-        }
-
-        /// <summary>
-        /// Defines the default behavior when a point is added to a state.
-        /// </summary>
-        /// <param name="visual">The visual.</param>
-        /// <param name="chart">The chart.</param>
-        protected virtual void DefaultOnPointAddedToSate(TVisual visual, IChartView<TDrawingContext> chart) { }
-
-        /// <summary>
-        /// Defines the default behavior when a point is removed from a state.
-        /// </summary>
-        /// <param name="visual">The visual.</param>
-        /// <param name="chart">The chart.</param>
-        protected virtual void DefaultOnRemovedFromState(TVisual visual, IChartView<TDrawingContext> chart) { }
-
-        /// <summary>
         /// Called when a property changed.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
@@ -435,12 +342,54 @@ namespace LiveChartsCore
             NotifySubscribers();
         }
 
+        /// <summary>
+        /// Called when the pointer enters a point.
+        /// </summary>
+        /// /// <param name="point">The chart point.</param>
+        protected virtual void WhenPointerEnters(ChartPoint point)
+        {
+            var chart = (IChartView<TDrawingContext>)point.Context.Chart;
+
+            if (hoverPaint is null)
+            {
+                hoverPaint = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>()
+                    .GetSolidColorPaint(new LvcColor(255, 255, 255, 180));
+                hoverPaint.ZIndex = int.MaxValue;
+                chart.CoreCanvas.AddDrawableTask(hoverPaint);
+            }
+
+            var visual = (TVisual?)point.Context.Visual;
+            if (visual is null || visual.HighlightableGeometry is null) return;
+
+            hoverPaint.AddGeometryToPaintTask(chart.CoreCanvas, visual.HighlightableGeometry);
+
+            PointHovered?.Invoke(new TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>(point));
+        }
+
+        /// <summary>
+        /// Called when the pointer leaves a point.
+        /// </summary>
+        /// /// <param name="point">The chart point.</param>
+        protected virtual void WhenPointerLeaves(ChartPoint point)
+        {
+            if (hoverPaint is null) return;
+
+            var visual = (TVisual?)point.Context.Visual;
+            if (visual is null || visual.HighlightableGeometry is null) return;
+
+            hoverPaint.RemoveGeometryFromPainTask(
+                (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas,
+                visual.HighlightableGeometry);
+
+            PointHoverLost?.Invoke(new TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>(point));
+        }
+
         /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
         public override void RemoveFromUI(Chart<TDrawingContext> chart)
         {
             base.RemoveFromUI(chart);
-            DataProvider?.Dispose(chart);
-            _dataProvider = null;
+            DataFactory?.Dispose(chart);
+            _dataFactory = null;
             everFetched = new();
         }
 

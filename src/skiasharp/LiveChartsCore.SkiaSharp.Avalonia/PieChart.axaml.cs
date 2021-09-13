@@ -1,4 +1,4 @@
-// The MIT License(MIT)
+// e MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -606,6 +606,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 if (state.Stroke is not null) state.Stroke.ClearGeometriesFromPaintTask(_core.Canvas);
             }
 
+            _core.ClearTooltipData();
             tooltip.Hide();
         }
 

@@ -25,7 +25,6 @@ using LiveChartsCore.Drawing;
 using System;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.Kernel.Data;
 using System.Collections.Generic;
 
 namespace LiveChartsCore
@@ -69,9 +68,9 @@ namespace LiveChartsCore
         public virtual SeriesBounds GetBounds(
             CartesianChart<TDrawingContext> chart, ICartesianAxis x, ICartesianAxis y)
         {
-            return DataProvider is null
+            return DataFactory is null
                 ? throw new Exception("A data provider is required")
-                : DataProvider.GetCartesianBounds(chart, this, x, y);
+                : DataFactory.GetCartesianBounds(chart, this, x, y);
         }
 
         /// <summary>

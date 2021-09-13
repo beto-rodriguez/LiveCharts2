@@ -48,7 +48,6 @@ namespace LiveChartsCore
         private double _zoomingSpeed = 0;
         private ZoomAndPanMode _zoomMode;
         private DrawMarginFrame<TDrawingContext>? _previousDrawMarginFrame;
-        private IEnumerable<ISeries>? _designerSeries = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CartesianChart{TDrawingContext}"/> class.
@@ -65,21 +64,6 @@ namespace LiveChartsCore
             : base(canvas, defaultPlatformConfig, view, lockOnMeasure)
         {
             _chartView = view;
-
-            view.PointStates.Chart = this;
-            foreach (var item in view.PointStates.GetStates())
-            {
-                if (item.Fill is not null)
-                {
-                    item.Fill.ZIndex += 1000000;
-                    canvas.AddDrawableTask(item.Fill);
-                }
-                if (item.Stroke is not null)
-                {
-                    item.Stroke.ZIndex += 1000000;
-                    canvas.AddDrawableTask(item.Stroke);
-                }
-            }
         }
 
         /// <summary>
@@ -407,9 +391,7 @@ namespace LiveChartsCore
             AnimationsSpeed = _chartView.AnimationsSpeed;
             EasingFunction = _chartView.EasingFunction;
 
-            var actualSeries = View.DesignerMode
-                ? _designerSeries ??= LiveCharts.CurrentSettings.DesignerSeriesGenerator(DesignerKind.Cartesian)
-                : (_chartView.Series ?? Enumerable.Empty<ISeries>()).Where(x => x.IsVisible);
+            var actualSeries = (_chartView.Series ?? Enumerable.Empty<ISeries>()).Where(x => x.IsVisible);
 
             Series = actualSeries
                 .Cast<ICartesianSeries<TDrawingContext>>()

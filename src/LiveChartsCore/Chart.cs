@@ -56,6 +56,7 @@ namespace LiveChartsCore
         private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
         private bool _isPanning = false;
         private bool _isPointerIn = false;
+        private readonly Dictionary<ChartPoint, object> _activePoints = new();
 
         #endregion
 
@@ -332,6 +333,17 @@ namespace LiveChartsCore
             IsLoaded = false;
         }
 
+        internal void ClearTooltipData()
+        {
+            foreach (var point in _activePoints.Keys.ToArray())
+            {
+                point.Context.Series.OnPointerLeft(point);
+                _ = _activePoints.Remove(point);
+            }
+
+            Canvas.Invalidate();
+        }
+
         internal void InvokePointerDown(LvcPoint point)
         {
             PointerDown?.Invoke(point);
@@ -468,7 +480,35 @@ namespace LiveChartsCore
 #endif
                          if (Tooltip is null || TooltipPosition == TooltipPosition.Hidden || !_isPointerIn) return;
 
+                         // TODO:
+                         // all this needs a performance review...
+                         // it should not be crital, should not be even close to be the 'bottle neck' in a case where
+                         // we face perfomance issues.
+
                          var points = FindPointsNearTo(_pointerPosition).ToArray();
+
+                         if (!points.Any())
+                         {
+                             ClearTooltipData();
+                             return;
+                         }
+
+                         if (_activePoints.Count > 0 && points.All(x => _activePoints.ContainsKey(x.Point))) return;
+
+                         var o = new object();
+                         foreach (var tooltipPoint in points)
+                         {
+                             tooltipPoint.Point.Context.Series.OnPointerEnter(tooltipPoint.Point);
+                             _activePoints[tooltipPoint.Point] = o;
+                         }
+
+                         foreach (var point in _activePoints.Keys.ToArray())
+                         {
+                             if (_activePoints[point] == o) continue;
+                             point.Context.Series.OnPointerLeft(point);
+                             _ = _activePoints.Remove(point);
+                         }
+
                          Tooltip.Show(points, this);
 
                          Canvas.Invalidate();

@@ -22,17 +22,18 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
 using System;
 using System.Collections.Generic;
 
-namespace LiveChartsCore.Kernel.Data
+namespace LiveChartsCore.Kernel.Providers
 {
     /// <summary>
     /// Defines a data provider.
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
     /// <typeparam name="TDrawingContext"></typeparam>
-    public class DataProvider<TModel, TDrawingContext>
+    public class DataFactory<TModel, TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         private readonly Dictionary<object, Dictionary<int, ChartPoint>> _byChartbyValueVisualMap = new();
@@ -41,9 +42,9 @@ namespace LiveChartsCore.Kernel.Data
         private DimensionalBounds _previousKnownBounds;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DataProvider{TModel, TDrawingContext}"/> class.
+        /// Initializes a new instance of the <see cref="DataFactory{TModel, TDrawingContext}"/> class.
         /// </summary>
-        public DataProvider()
+        public DataFactory()
         {
             var t = typeof(TModel);
             _isValueType = t.IsValueType;
@@ -141,7 +142,7 @@ namespace LiveChartsCore.Kernel.Data
         }
 
         /// <summary>
-        /// Disposes the data provider from the fiven chart.
+        /// Disposes the data provider from the given chart.
         /// </summary>
         /// <param name="chart"></param>
         public virtual void Dispose(IChart chart)

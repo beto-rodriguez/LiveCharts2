@@ -90,11 +90,5 @@ namespace LiveChartsCore.SkiaSharpView
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
             InitializeSeries();
         }
-
-        /// <inheritdoc cref="HeatSeries{TModel, TVisual, TLabel, TDrawingContext}.GetSolidColorPaintTask"/>
-        protected override IPaint<SkiaSharpDrawingContext> GetSolidColorPaintTask()
-        {
-            return new SolidColorPaint();
-        }
     }
 }

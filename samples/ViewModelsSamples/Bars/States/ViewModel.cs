@@ -37,13 +37,13 @@ namespace ViewModelsSamples.Bars.States
                 if (!isStateDefined)
                 {
                     var skiaChart = (IChartView<SkiaSharpDrawingContext>)point.Context.Chart;
-                    skiaChart.PointStates["hotDay"] =
-                        new StrokeAndFillDrawable<SkiaSharpDrawingContext>(null, new SolidColorPaint(SKColors.OrangeRed));
+                    //skiaChart.PointStates["hotDay"] =
+                    //    new StrokeAndFillDrawable<SkiaSharpDrawingContext>(null, new SolidColorPaint(SKColors.OrangeRed));
                     isStateDefined = true;
                 }
 
-                if (point.PrimaryValue > 30) point.AddToState("hotDay");
-                else point.RemoveFromState("hotDay");
+                //if (point.PrimaryValue > 30) point.AddToState("hotDay");
+                //else point.RemoveFromState("hotDay");
             };
 
             Series = new List<ISeries> { columnSeries };

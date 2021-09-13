@@ -61,8 +61,14 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
                 OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-            SetCurrentValue(AngleAxesProperty, new ObservableCollection<IPolarAxis>() { LiveCharts.CurrentSettings.PolarAxisProvider() });
-            SetCurrentValue(RadiusAxesProperty, new ObservableCollection<IPolarAxis>() { LiveCharts.CurrentSettings.PolarAxisProvider() });
+            SetCurrentValue(AngleAxesProperty, new ObservableCollection<IPolarAxis>()
+            {
+                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+            });
+            SetCurrentValue(RadiusAxesProperty, new ObservableCollection<IPolarAxis>()
+            {
+                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+            });
             SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
 
             MouseWheel += OnMouseWheel;
@@ -137,7 +143,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     },
                     (DependencyObject o, object value) =>
                     {
-                        return value is IEnumerable<IPolarAxis> ? value : new List<IPolarAxis>() { LiveCharts.CurrentSettings.PolarAxisProvider() };
+                        return value is IEnumerable<IPolarAxis>
+                            ? value
+                            : new List<IPolarAxis>()
+                            {
+                                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                            };
                     }));
 
         /// <summary>
@@ -157,7 +168,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     },
                     (DependencyObject o, object value) =>
                     {
-                        return value is IEnumerable<IPolarAxis> ? value : new List<IPolarAxis>() { LiveCharts.CurrentSettings.PolarAxisProvider() };
+                        return value is IEnumerable<IPolarAxis>
+                            ? value
+                            : new List<IPolarAxis>()
+                            {
+                                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+                            };
                     }));
 
         #endregion

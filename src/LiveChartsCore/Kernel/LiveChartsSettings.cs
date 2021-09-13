@@ -26,7 +26,7 @@ using System;
 using System.Collections.Generic;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Themes;
-using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Kernel.Providers;
 
 namespace LiveChartsCore.Kernel
 {
@@ -35,7 +35,7 @@ namespace LiveChartsCore.Kernel
     /// </summary>
     public class LiveChartsSettings
     {
-        private object? _currentFactory;
+        private object? _currentProvider;
         private readonly Dictionary<Type, object> _mappers = new();
         private readonly Dictionary<Type, object> _seriesStyleBuilder = new();
 
@@ -112,30 +112,6 @@ namespace LiveChartsCore.Kernel
         public object ThemeId { get; private set; } = new object();
 
         /// <summary>
-        /// Gets the axis provider.
-        /// </summary>
-        /// <value>
-        /// The axis provider.
-        /// </value>
-        internal Func<ICartesianAxis> AxisProvider { get; set; } =
-            () => throw new NotImplementedException($"{nameof(AxisProvider)} is not defined yet.");
-
-        /// <summary>
-        /// Gets the polar axis provider.
-        /// </summary>
-        /// <value>
-        /// The axis provider.
-        /// </value>
-        internal Func<IPolarAxis> PolarAxisProvider { get; set; } =
-            () => throw new NotImplementedException($"{nameof(PolarAxisProvider)} is not defined yet.");
-
-        /// <summary>
-        /// Gets the designer series.
-        /// </summary>
-        internal Func<DesignerKind, IEnumerable<ISeries>> DesignerSeriesGenerator { get; set; } =
-            x => throw new NotImplementedException($"{nameof(DefaultAnimationsSpeed)} is not defined yet.");
-
-        /// <summary>
         /// Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a<see cref="ChartPoint"/> instance,
         /// then the <see cref="ChartPoint"/> will be drawn as a point in our chart.
         /// </summary>
@@ -159,37 +135,20 @@ namespace LiveChartsCore.Kernel
                 : (Action<TModel, ChartPoint>)mapper;
         }
 
-        internal LiveChartsSettings HasDataFactory<TDrawingContext>(IDataFactoryProvider<TDrawingContext> factory)
+        internal LiveChartsSettings HasProvider<TDrawingContext>(ChartProvider<TDrawingContext> factory)
             where TDrawingContext : DrawingContext
         {
-            _currentFactory = factory;
+            _currentProvider = factory;
             return this;
         }
 
-        internal LiveChartsSettings HasAxisProvider(Func<ICartesianAxis> provider)
-        {
-            AxisProvider = provider;
-            return this;
-        }
-
-        internal LiveChartsSettings HasPolarAxisProvider(Func<IPolarAxis> provider)
-        {
-            PolarAxisProvider = provider;
-            return this;
-        }
-
-        internal LiveChartsSettings HasDesigerSeriesProvider(Func<DesignerKind, IEnumerable<ISeries>> provider)
-        {
-            DesignerSeriesGenerator = provider;
-            return this;
-        }
-
-        internal IDataFactoryProvider<TDrawingContext> GetFactory<TDrawingContext>()
+        internal ChartProvider<TDrawingContext> GetProvider<TDrawingContext>()
             where TDrawingContext : DrawingContext
         {
-            return _currentFactory is null
-                ? throw new NotImplementedException($"There is no a {nameof(IDataFactoryProvider<TDrawingContext>)} registered")
-                : (IDataFactoryProvider<TDrawingContext>)_currentFactory;
+            return _currentProvider is null
+                ? throw new NotImplementedException(
+                    $"There is no a {nameof(ChartProvider<TDrawingContext>)} registered.")
+                : (ChartProvider<TDrawingContext>)_currentProvider;
         }
 
         /// <summary>

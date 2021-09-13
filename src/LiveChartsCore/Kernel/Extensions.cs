@@ -276,43 +276,5 @@ namespace LiveChartsCore.Kernel
         {
             return (series.SeriesProperties & SeriesProperties.Financial) != 0;
         }
-
-        /// <summary>
-        /// Adds a point to the specified state.
-        /// </summary>
-        /// <param name="chartPoint">The chart point.</param>
-        /// <param name="state">The state.</param>
-        public static void AddToState(this ChartPoint chartPoint, string state)
-        {
-            chartPoint.Context.Series.AddPointToState(chartPoint, state);
-        }
-
-        /// <summary>
-        /// Removes a point from the specified state.
-        /// </summary>
-        /// <param name="chartPoint">The chart point.</param>
-        /// <param name="state">The state.</param>
-        public static void RemoveFromState(this ChartPoint chartPoint, string state)
-        {
-            chartPoint.Context.Series.RemoveLvPointromState(chartPoint, state);
-        }
-
-        /// <summary>
-        /// Adds a point to the hover state.
-        /// </summary>
-        /// <param name="chartPoint">The chart point.</param>
-        public static void AddToHoverState(this ChartPoint chartPoint)
-        {
-            chartPoint.Context.Series.AddPointToState(chartPoint, chartPoint.Context.Series.HoverState);
-        }
-
-        /// <summary>
-        /// Removes a point from the hover state.
-        /// </summary>
-        /// <param name="chartPoint">The chart point.</param>
-        public static void RemoveFromHoverState(this ChartPoint chartPoint)
-        {
-            chartPoint.Context.Series.RemoveLvPointromState(chartPoint, chartPoint.Context.Series.HoverState);
-        }
     }
 }

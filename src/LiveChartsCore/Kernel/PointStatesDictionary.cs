@@ -27,6 +27,8 @@ using System.Linq;
 
 namespace LiveChartsCore.Kernel
 {
+
+
     /// <summary>
     /// Defines the points states dictionary class.
     /// </summary>

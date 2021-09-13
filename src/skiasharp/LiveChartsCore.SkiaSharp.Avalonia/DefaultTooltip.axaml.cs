@@ -42,7 +42,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
     public class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext>
     {
         private readonly DataTemplate _defaultTemplate;
-        private readonly Dictionary<ChartPoint, object> _activePoints = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
@@ -137,16 +136,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             var template = avaloniaChart.TooltipTemplate ?? _defaultTemplate;
             if (TooltipTemplate != template) TooltipTemplate = template;
 
-            if (!tooltipPoints.Any())
-            {
-                foreach (var key in _activePoints.Keys.ToArray())
-                {
-                    key.RemoveFromHoverState();
-                    _ = _activePoints.Remove(key);
-                }
-                return;
-            }
-
             LvcPoint? location = null;
 
             if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
@@ -191,20 +180,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
             Canvas.SetTop(this, y);
             Canvas.SetLeft(this, x);
-
-            var o = new object();
-            foreach (var tooltipPoint in tooltipPoints)
-            {
-                tooltipPoint.Point.AddToHoverState();
-                _activePoints[tooltipPoint.Point] = o;
-            }
-
-            foreach (var key in _activePoints.Keys.ToArray())
-            {
-                if (_activePoints[key] == o) continue;
-                key.RemoveFromHoverState();
-                _ = _activePoints.Remove(key);
-            }
         }
 
         /// <summary>

@@ -54,60 +54,12 @@ namespace LiveChartsCore
         public static LiveChartsSettings CurrentSettings { get; } = new();
 
         /// <summary>
-        /// Gets the bar series hover key.
+        /// Gets the hover key.
         /// </summary>
         /// <value>
         /// The bar series hover key.
         /// </value>
-        public static string BarSeriesHoverKey => nameof(BarSeriesHoverKey);
-
-        /// <summary>
-        /// Gets the heat bar series hover key.
-        /// </summary>
-        /// <value>
-        /// The bar series hover key.
-        /// </value>
-        public static string HeatSeriesHoverState => nameof(HeatSeriesHoverState);
-
-        /// <summary>
-        /// Gets the stepline series hover key.
-        /// </summary>
-        /// <value>
-        /// The stepline series hover key.
-        /// </value>
-        public static string StepLineSeriesHoverKey => nameof(StepLineSeriesHoverKey);
-
-        /// <summary>
-        /// Gets the line series hover key.
-        /// </summary>
-        /// <value>
-        /// The line series hover key.
-        /// </value>
-        public static string LineSeriesHoverKey => nameof(LineSeriesHoverKey);
-
-        /// <summary>
-        /// Gets the pie series hover key.
-        /// </summary>
-        /// <value>
-        /// The pie series hover key.
-        /// </value>
-        public static string PieSeriesHoverKey => nameof(PieSeriesHoverKey);
-
-        /// <summary>
-        /// Gets the scatter series hover key.
-        /// </summary>
-        /// <value>
-        /// The scatter series hover key.
-        /// </value>
-        public static string ScatterSeriesHoverKey => nameof(ScatterSeriesHoverKey);
-
-        /// <summary>
-        /// Gets the stacked bar series hover key.
-        /// </summary>
-        /// <value>
-        /// The stacked bar series hover key.
-        /// </value>
-        public static string StackedBarSeriesHoverKey => nameof(StackedBarSeriesHoverKey);
+        public static string HoverKey => nameof(HoverKey);
 
         /// <summary>
         /// The disable animations

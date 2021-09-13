@@ -97,8 +97,14 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
                 OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-            XAxes = new List<ICartesianAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
-            YAxes = new List<ICartesianAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
+            XAxes = new List<ICartesianAxis>()
+            {
+                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+            };
+            YAxes = new List<ICartesianAxis>()
+            {
+                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+            };
             Series = new ObservableCollection<ISeries>();
 
             PointerWheelChanged += CartesianChart_PointerWheelChanged;
@@ -679,6 +685,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 if (state.Stroke is not null) state.Stroke.ClearGeometriesFromPaintTask(_core.Canvas);
             }
 
+            _core.ClearTooltipData();
             tooltip.Hide();
         }
 

@@ -68,8 +68,14 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             _sectionsObserverer = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
                 OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-            XAxes = new List<ICartesianAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
-            YAxes = new List<ICartesianAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
+            XAxes = new List<ICartesianAxis>()
+            {
+                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+            };
+            YAxes = new List<ICartesianAxis>()
+            {
+                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+            };
             Series = new ObservableCollection<ISeries>();
 
             var c = Controls[0].Controls[0];

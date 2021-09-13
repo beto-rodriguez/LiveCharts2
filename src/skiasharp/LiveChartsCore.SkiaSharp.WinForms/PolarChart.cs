@@ -64,8 +64,14 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             _angleObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _radiusObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-            AngleAxes = new List<IPolarAxis>() { LiveCharts.CurrentSettings.PolarAxisProvider() };
-            RadiusAxes = new List<IPolarAxis>() { LiveCharts.CurrentSettings.PolarAxisProvider() };
+            AngleAxes = new List<IPolarAxis>()
+            {
+                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+            };
+            RadiusAxes = new List<IPolarAxis>()
+            {
+                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+            };
             Series = new ObservableCollection<ISeries>();
 
             var c = Controls[0].Controls[0];

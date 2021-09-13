@@ -66,8 +66,14 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             Loaded += OnLoaded;
             Unloaded += OnUnloaded;
 
-            SetValue(AngleAxesProperty, new ObservableCollection<IPolarAxis>() { LiveCharts.CurrentSettings.PolarAxisProvider() });
-            SetValue(RadiusAxesProperty, new ObservableCollection<IPolarAxis>() { LiveCharts.CurrentSettings.PolarAxisProvider() });
+            SetValue(AngleAxesProperty, new ObservableCollection<IPolarAxis>()
+            {
+                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+            });
+            SetValue(RadiusAxesProperty, new ObservableCollection<IPolarAxis>()
+            {
+                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+            });
             SetValue(SeriesProperty, new ObservableCollection<ISeries>());
         }
 
@@ -756,6 +762,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
                 if (state.Stroke != null) state.Stroke.ClearGeometriesFromPaintTask(_core.Canvas);
             }
 
+            _core.ClearTooltipData();
             ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
         }
 

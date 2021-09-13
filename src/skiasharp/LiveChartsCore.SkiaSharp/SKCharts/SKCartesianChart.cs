@@ -71,7 +71,6 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
             Series = view.Series;
             Sections = view.Sections;
             DrawMarginFrame = view.DrawMarginFrame;
-            PointStates = view.PointStates;
         }
 
 

@@ -82,8 +82,14 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             _sectionsObserverer = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
                 OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-            XAxes = new List<ICartesianAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
-            YAxes = new List<ICartesianAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
+            XAxes = new List<ICartesianAxis>()
+            {
+                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+            };
+            YAxes = new List<ICartesianAxis>()
+            {
+                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+            };
             Series = new ObservableCollection<ISeries>();
 
             canvas.SkCanvasView.EnableTouchEvents = true;
@@ -687,6 +693,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             if (tooltip is null || core is null) return;
 
+            core.ClearTooltipData();
             ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
         }
 

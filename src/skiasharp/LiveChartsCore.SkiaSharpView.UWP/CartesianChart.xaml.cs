@@ -81,8 +81,14 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             Loaded += OnLoaded;
             Unloaded += OnUnloaded;
 
-            SetValue(XAxesProperty, new ObservableCollection<ICartesianAxis>() { LiveCharts.CurrentSettings.AxisProvider() });
-            SetValue(YAxesProperty, new ObservableCollection<ICartesianAxis>() { LiveCharts.CurrentSettings.AxisProvider() });
+            SetValue(XAxesProperty, new ObservableCollection<ICartesianAxis>()
+            {
+                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+            });
+            SetValue(YAxesProperty, new ObservableCollection<ICartesianAxis>()
+            {
+                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+            });
             SetValue(SeriesProperty, new ObservableCollection<ISeries>());
             SetValue(SectionsProperty, new ObservableCollection<Section<SkiaSharpDrawingContext>>());
         }
@@ -812,6 +818,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                 if (state.Stroke != null) state.Stroke.ClearGeometriesFromPaintTask(_core.Canvas);
             }
 
+            _core.ClearTooltipData();
             ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
         }
 

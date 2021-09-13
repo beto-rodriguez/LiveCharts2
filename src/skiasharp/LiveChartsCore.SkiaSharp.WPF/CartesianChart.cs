@@ -62,8 +62,14 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
                 OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-            SetCurrentValue(XAxesProperty, new ObservableCollection<ICartesianAxis>() { LiveCharts.CurrentSettings.AxisProvider() });
-            SetCurrentValue(YAxesProperty, new ObservableCollection<ICartesianAxis>() { LiveCharts.CurrentSettings.AxisProvider() });
+            SetCurrentValue(XAxesProperty, new ObservableCollection<ICartesianAxis>()
+            {
+               LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+            });
+            SetCurrentValue(YAxesProperty, new ObservableCollection<ICartesianAxis>()
+            {
+                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+            });
             SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
             SetCurrentValue(SectionsProperty, new ObservableCollection<Section<SkiaSharpDrawingContext>>());
 
@@ -111,7 +117,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     },
                     (DependencyObject o, object value) =>
                     {
-                        return value is IEnumerable<ICartesianAxis> ? value : new List<ICartesianAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
+                        return value is IEnumerable<ICartesianAxis>
+                            ? value
+                            : new List<ICartesianAxis>()
+                            {
+                                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                            };
                     }));
 
         /// <summary>
@@ -131,7 +142,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     },
                     (DependencyObject o, object value) =>
                     {
-                        return value is IEnumerable<ICartesianAxis> ? value : new List<ICartesianAxis>() { LiveCharts.CurrentSettings.AxisProvider() };
+                        return value is IEnumerable<ICartesianAxis>
+                            ? value
+                            : new List<ICartesianAxis>()
+                            {
+                                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                            };
                     }));
 
         /// <summary>

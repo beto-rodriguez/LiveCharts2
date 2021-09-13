@@ -21,25 +21,43 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.Kernel.Data
+namespace LiveChartsCore.Kernel.Providers
 {
     /// <summary>
-    /// Defines the data factory class.
+    /// Defines the chart provider class.
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IDataFactoryProvider{TDrawingContext}" />
-    public class DataFactory<TDrawingContext> : IDataFactoryProvider<TDrawingContext>
+    public abstract class ChartProvider<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Gets the provider.
+        /// Gets a new instance of the default data factory.
         /// </summary>
         /// <typeparam name="TModel">The type of the model.</typeparam>
         /// <returns></returns>
-        public DataProvider<TModel, TDrawingContext> GetProvider<TModel>()
+        public virtual DataFactory<TModel, TDrawingContext> GetDefaultDataFactory<TModel>()
         {
             return new();
         }
+
+        /// <summary>
+        /// Gets a new instance of the default cartesian axis.
+        /// </summary>
+        /// <returns></returns>
+        public abstract ICartesianAxis GetDefaultCartesianAxis();
+
+        /// <summary>
+        /// Gets a new instance of the default polar axis.
+        /// </summary>
+        /// <returns></returns>
+        public abstract IPolarAxis GetDefaultPolarAxis();
+
+        /// <summary>
+        /// Gets a new paint of the given color.
+        /// </summary>
+        /// <returns></returns>
+        public abstract IPaint<TDrawingContext> GetSolidColorPaint(LvcColor color = new LvcColor());
     }
 }

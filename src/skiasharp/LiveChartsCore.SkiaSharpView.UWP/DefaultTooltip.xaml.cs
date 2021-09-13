@@ -22,8 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -37,8 +35,6 @@ namespace LiveChartsCore.SkiaSharpView.UWP
     /// <inheritdoc cref="IChartTooltip{TDrawingContext}"/>
     public sealed partial class DefaultTooltip : ToolTip, IChartTooltip<SkiaSharpDrawingContext>
     {
-        private readonly Dictionary<ChartPoint, object> _activePoints = new();
-
         /// <summary>
         /// 
         /// </summary>
@@ -70,20 +66,6 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var winuiChart = (IUwpChart)chart.View;
-            //var template = wpfChart.TooltipTemplate ?? _defaultTempalte;
-            //if (Template != template) Template = template;
-
-            if (!tooltipPoints.Any())
-            {
-                foreach (var key in _activePoints.Keys.ToArray())
-                {
-                    key.RemoveFromHoverState();
-                    _ = _activePoints.Remove(key);
-                }
-                return;
-            }
-
-            if (_activePoints.Count > 0 && tooltipPoints.All(x => _activePoints.ContainsKey(x.Point))) return;
 
             LvcPoint? location = null;
 
@@ -117,20 +99,6 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             FontWeight = winuiChart.TooltipFontWeight;
             FontStyle = winuiChart.TooltipFontStyle;
             FontStretch = winuiChart.TooltipFontStretch;
-
-            var o = new object();
-            foreach (var tooltipPoint in tooltipPoints)
-            {
-                tooltipPoint.Point.AddToHoverState();
-                _activePoints[tooltipPoint.Point] = o;
-            }
-
-            foreach (var key in _activePoints.Keys.ToArray())
-            {
-                if (_activePoints[key] == o) continue;
-                key.RemoveFromHoverState();
-                _ = _activePoints.Remove(key);
-            }
         }
 
         void IChartTooltip<SkiaSharpDrawingContext>.Hide()

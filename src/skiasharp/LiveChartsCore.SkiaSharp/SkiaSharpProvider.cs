@@ -21,22 +21,33 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel.Data;
+using LiveChartsCore.Kernel.Providers;
+using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.SkiaSharpView
 {
-    /// <summary>
-    /// Defines adata factory provider.
-    /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public interface IDataFactoryProvider<TDrawingContext>
-         where TDrawingContext : DrawingContext
+    /// <inheritdoc cref="ChartProvider{TDrawingContext}"/>
+    public class SkiaSharpProvider : ChartProvider<SkiaSharpDrawingContext>
     {
-        /// <summary>
-        /// Gets the provider.
-        /// </summary>
-        /// <typeparam name="TModel">The type of the model.</typeparam>
-        /// <returns></returns>
-        public DataProvider<TModel, TDrawingContext> GetProvider<TModel>();
+        /// <inheritdoc cref="ChartProvider{TDrawingContext}.GetDefaultCartesianAxis"/>
+        public override ICartesianAxis GetDefaultCartesianAxis()
+        {
+            return new Axis();
+        }
+
+        /// <inheritdoc cref="ChartProvider{TDrawingContext}.GetDefaultPolarAxis"/>
+        public override IPolarAxis GetDefaultPolarAxis()
+        {
+            return new PolarAxis();
+        }
+
+        /// <inheritdoc cref="ChartProvider{TDrawingContext}.GetSolidColorPaint(LvcColor)"/>
+        public override IPaint<SkiaSharpDrawingContext> GetSolidColorPaint(LvcColor color)
+        {
+            return new SolidColorPaint(new SKColor(color.R, color.G, color.B, color.A));
+        }
     }
 }

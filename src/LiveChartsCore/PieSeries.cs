@@ -60,7 +60,7 @@ namespace LiveChartsCore
             : base(SeriesProperties.PieSeries | SeriesProperties.Stacked |
                   (isGauge ? SeriesProperties.Gauge : 0) | (isGaugeFill ? SeriesProperties.GaugeFill : 0) | SeriesProperties.Solid)
         {
-            HoverState = LiveCharts.PieSeriesHoverKey;
+
         }
 
         /// <summary>
@@ -394,29 +394,9 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IPieSeries{TDrawingContext}.GetBounds(PieChart{TDrawingContext})"/>
         public DimensionalBounds GetBounds(PieChart<TDrawingContext> chart)
         {
-            return DataProvider is null
+            return DataFactory is null
                 ? throw new Exception("Data provider not found")
-                : DataProvider.GetPieBounds(chart, this).Bounds;
-        }
-
-        /// <summary>
-        /// Defines the default behavior when a point is added to a state.
-        /// </summary>
-        /// <param name="visual">The visual.</param>
-        /// <param name="chart">The chart.</param>
-        protected override void DefaultOnPointAddedToSate(TVisual visual, IChartView<TDrawingContext> chart)
-        {
-            visual.PushOut = (float)HoverPushout;
-        }
-
-        /// <summary>
-        /// Defines the default behavior when a point is removed from a state.
-        /// </summary>
-        /// <param name="visual">The visual.</param>
-        /// <param name="chart">The chart.</param>
-        protected override void DefaultOnRemovedFromState(TVisual visual, IChartView<TDrawingContext> chart)
-        {
-            visual.PushOut = (float)Pushout;
+                : DataFactory.GetPieBounds(chart, this).Bounds;
         }
 
         /// <summary>
@@ -490,7 +470,27 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
         protected override IPaint<TDrawingContext>?[] GetPaintTasks()
         {
-            return new[] { _fill, _stroke, DataLabelsPaint };
+            return new[] { _fill, _stroke, DataLabelsPaint, hoverPaint };
+        }
+
+        /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.WhenPointerEnters(ChartPoint)"/>
+        protected override void WhenPointerEnters(ChartPoint point)
+        {
+            base.WhenPointerEnters(point);
+
+            var visual = (TVisual?)point.Context.Visual;
+            if (visual is null || visual.HighlightableGeometry is null) return;
+            visual.PushOut = (float)HoverPushout;
+        }
+
+        /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.WhenPointerLeaves(ChartPoint)"/>
+        protected override void WhenPointerLeaves(ChartPoint point)
+        {
+            base.WhenPointerLeaves(point);
+
+            var visual = (TVisual?)point.Context.Visual;
+            if (visual is null || visual.HighlightableGeometry is null) return;
+            visual.PushOut = (float)Pushout;
         }
 
         /// <summary>
@@ -551,14 +551,14 @@ namespace LiveChartsCore
         {
             var visual = (TVisual?)point.Context.Visual;
             if (visual is null) return;
-            if (DataProvider is null) throw new Exception("Data provider not found");
+            if (DataFactory is null) throw new Exception("Data provider not found");
 
             visual.StartAngle += visual.SweepAngle;
             visual.SweepAngle = 0;
             visual.CornerRadius = 0;
             visual.RemoveOnCompleted = true;
 
-            DataProvider.DisposePoint(point);
+            DataFactory.DisposePoint(point);
 
             var label = (TLabel?)point.Context.Label;
             if (label is null) return;

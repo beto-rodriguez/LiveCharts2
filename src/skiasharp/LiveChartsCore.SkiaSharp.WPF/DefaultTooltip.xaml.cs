@@ -26,7 +26,6 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
@@ -38,7 +37,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     public partial class DefaultTooltip : Popup, IChartTooltip<SkiaSharpDrawingContext>
     {
         private readonly DataTemplate _defaultTempalte;
-        private readonly Dictionary<ChartPoint, object> _activePoints = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
@@ -254,16 +252,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             var template = wpfChart.TooltipTemplate ?? _defaultTempalte;
             if (Template != template) Template = template;
 
-            if (!tooltipPoints.Any())
-            {
-                foreach (var key in _activePoints.Keys.ToArray())
-                {
-                    key.RemoveFromHoverState();
-                    _ = _activePoints.Remove(key);
-                }
-                return;
-            }
-
             LvcPoint? location = null;
 
             if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
@@ -297,20 +285,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             FontWeight = wpfChart.TooltipFontWeight;
             FontStyle = wpfChart.TooltipFontStyle;
             FontStretch = wpfChart.TooltipFontStretch;
-
-            var o = new object();
-            foreach (var tooltipPoint in tooltipPoints)
-            {
-                tooltipPoint.Point.AddToHoverState();
-                _activePoints[tooltipPoint.Point] = o;
-            }
-
-            foreach (var key in _activePoints.Keys.ToArray())
-            {
-                if (_activePoints[key] == o) continue;
-                key.RemoveFromHoverState();
-                _ = _activePoints.Remove(key);
-            }
         }
 
         void IChartTooltip<SkiaSharpDrawingContext>.Hide()

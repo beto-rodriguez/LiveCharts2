@@ -23,7 +23,6 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Data;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -65,7 +64,6 @@ namespace LiveChartsCore
                  SeriesProperties.Heat | SeriesProperties.PrimaryAxisVerticalOrientation |
                  SeriesProperties.Solid | SeriesProperties.PrefersXYStrategyTooltips)
         {
-            HoverState = LiveCharts.HeatSeriesHoverState;
             DataPadding = new LvcPoint(0, 0);
             TooltipLabelFormatter = (point) => $"{Name}: {point.TertiaryValue:N}";
         }
@@ -82,7 +80,7 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
         public override void Measure(Chart<TDrawingContext> chart)
         {
-            _paintTaks ??= GetSolidColorPaintTask();
+            _paintTaks ??= LiveCharts.CurrentSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
 
             var cartesianChart = (CartesianChart<TDrawingContext>)chart;
             var primaryAxis = cartesianChart.YAxes[ScalesYAt];
@@ -323,14 +321,14 @@ namespace LiveChartsCore
         {
             var visual = (TVisual?)point.Context.Visual;
             if (visual is null) return;
-            if (DataProvider is null) throw new Exception("Data provider not found");
+            if (DataFactory is null) throw new Exception("Data provider not found");
 
             var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
             if (chartView.Core.IsZoomingOrPanning)
             {
                 visual.CompleteAllTransitions();
                 visual.RemoveOnCompleted = true;
-                DataProvider.DisposePoint(point);
+                DataFactory.DisposePoint(point);
                 return;
             }
 
@@ -345,12 +343,6 @@ namespace LiveChartsCore
         }
 
         /// <summary>
-        /// returns a new solid color paint task.
-        /// </summary>
-        /// <returns></returns>
-        protected abstract IPaint<TDrawingContext> GetSolidColorPaintTask();
-
-        /// <summary>
         /// Called when the paint context changes.
         /// </summary>
         protected override void OnSeriesMiniatureChanged()
@@ -358,7 +350,7 @@ namespace LiveChartsCore
             var context = new CanvasSchedule<TDrawingContext>();
             var w = LegendShapeSize;
 
-            var strokeClone = GetSolidColorPaintTask();
+            var strokeClone = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
             var st = strokeClone.StrokeThickness;
             if (st > MaxSeriesStroke)
             {
@@ -393,7 +385,7 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ChartElement{TDrawingContext}.GetPaintTasks"/>
         protected override IPaint<TDrawingContext>?[] GetPaintTasks()
         {
-            return new[] { _paintTaks };
+            return new[] { _paintTaks, hoverPaint };
         }
     }
 }

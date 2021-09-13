@@ -55,7 +55,7 @@ namespace LiveChartsCore
         protected BarSeries(SeriesProperties properties)
             : base(properties)
         {
-            HoverState = LiveCharts.BarSeriesHoverKey;
+
         }
 
         /// <inheritdoc cref="IBarSeries{TDrawingContext}.GroupPadding"/>

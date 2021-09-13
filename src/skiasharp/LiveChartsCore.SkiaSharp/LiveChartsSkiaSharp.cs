@@ -23,7 +23,6 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Common;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Data;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -61,33 +60,13 @@ namespace LiveChartsCore.SkiaSharpView
                 .AddLightTheme();
 
         /// <summary>
-        /// Adds SkiaSharp as the UI provider for LiveCharts.
+        /// Adds SkiaSharp as the backend provider for LiveCharts.
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         public static LiveChartsSettings AddSkiaSharp(this LiveChartsSettings settings)
         {
-            return settings
-                .HasDataFactory(new DataFactory<SkiaSharpDrawingContext>())
-                .HasAxisProvider(() => new Axis())
-                .HasPolarAxisProvider(() => new PolarAxis())
-                .HasDesigerSeriesProvider(kind =>
-                {
-                    var r = new Random();
-
-                    var v1 = new int[] { r.Next(0, 10), r.Next(0, 10), r.Next(0, 10), r.Next(0, 10) };
-                    var v2 = new int[] { r.Next(0, 10), r.Next(0, 10), r.Next(0, 10), r.Next(0, 10) };
-
-                    if (kind == DesignerKind.Pie) return new ISeries[] { new PieSeries<int> { Values = v1 }, new PieSeries<int> { Values = v2 } };
-
-                    var seed = r.NextDouble();
-
-                    return seed > 0.33
-                        ? (new ISeries[] { new LineSeries<int> { Values = v1 }, new LineSeries<int> { Values = v2 } })
-                        : (seed > 0.66
-                            ? new ISeries[] { new ColumnSeries<int> { Values = v1 }, new ColumnSeries<int> { Values = v2 } }
-                            : new ISeries[] { new ScatterSeries<int> { Values = v1 }, new ScatterSeries<int> { Values = v2 } });
-                });
+            return settings.HasProvider(new SkiaSharpProvider());
         }
 
         /// <summary>
@@ -108,24 +87,8 @@ namespace LiveChartsCore.SkiaSharpView
                            style
                                .HasRuleForCharts(chart =>
                                {
-                                   //chart.BackColor = Color.FromArgb(255, 255, 255, 255);
-                                   chart.AnimationsSpeed = TimeSpan.FromMilliseconds(700);
+                                   chart.AnimationsSpeed = TimeSpan.FromMilliseconds(800);
                                    chart.EasingFunction = EasingFunctions.ExponentialOut;
-
-                                   // The point states dictionary defines the fill and stroke to use for a point marked with the
-                                   // state key, LiveCharts uses this dictionary to highlight a chart point when the mouse is
-                                   // over a point, for example, the first .WithState() defines that every time a point is marked
-                                   // with the LiveCharts.BarSeriesHoverKey key, the library will draw a null stroke and
-                                   // new SKColor(255, 255, 255, 180) as the fill (defaultHoverColor).
-                                   var defaultHoverColor = LvcColor.FromArgb(180, 255, 255, 255).AsSKColor();
-                                   chart.PointStates = new PointStatesDictionary<SkiaSharpDrawingContext>()
-                                        .WithState(LiveCharts.BarSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
-                                        .WithState(LiveCharts.LineSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
-                                        .WithState(LiveCharts.StepLineSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
-                                        .WithState(LiveCharts.PieSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
-                                        .WithState(LiveCharts.ScatterSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
-                                        .WithState(LiveCharts.StackedBarSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
-                                        .WithState(LiveCharts.HeatSeriesHoverState, null, new SolidColorPaint(defaultHoverColor), true);
                                })
                                .HasRuleForAxes(axis =>
                                {
@@ -234,32 +197,8 @@ namespace LiveChartsCore.SkiaSharpView
                            style
                                .HasRuleForCharts(chart =>
                                {
-                                   //chart.BackColor = Color.FromArgb(255, 40, 40, 40);
-                                   chart.AnimationsSpeed = TimeSpan.FromMilliseconds(700);
+                                   chart.AnimationsSpeed = TimeSpan.FromMilliseconds(800);
                                    chart.EasingFunction = EasingFunctions.ExponentialOut;
-
-                                   // The point states dictionary defines the fill and stroke to use for a point marked with the
-                                   // state key, LiveCharts uses this dictionary to highlight a chart point when the mouse is
-                                   // over a point, for example, the first .WithState() defines that every time a point is marked
-                                   // with the LiveCharts.BarSeriesHoverKey key, the library will draw a null stroke and
-                                   // new SKColor(255, 255, 255, 180) as the fill (defaultHoverColor).
-                                   var defaultHoverColor = LvcColor.FromArgb(40, 255, 255, 255).AsSKColor();
-                                   chart.PointStates =
-                                       new PointStatesDictionary<SkiaSharpDrawingContext>()
-                                           .WithState(
-                                               LiveCharts.BarSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
-                                           .WithState(
-                                               LiveCharts.StepLineSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
-                                           .WithState(
-                                               LiveCharts.LineSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
-                                           .WithState(
-                                               LiveCharts.PieSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
-                                           .WithState(
-                                               LiveCharts.ScatterSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
-                                           .WithState(
-                                               LiveCharts.StackedBarSeriesHoverKey, null, new SolidColorPaint(defaultHoverColor), true)
-                                           .WithState(
-                                                LiveCharts.HeatSeriesHoverState, null, new SolidColorPaint(defaultHoverColor), true);
                                })
                                .HasRuleForAxes(axis =>
                                {

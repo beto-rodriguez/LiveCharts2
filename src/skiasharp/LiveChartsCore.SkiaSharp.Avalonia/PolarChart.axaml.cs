@@ -94,8 +94,14 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             _angleObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _radiusObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-            AngleAxes = new List<IPolarAxis>() { LiveCharts.CurrentSettings.PolarAxisProvider() };
-            RadiusAxes = new List<IPolarAxis>() { LiveCharts.CurrentSettings.PolarAxisProvider() };
+            AngleAxes = new List<IPolarAxis>()
+            {
+                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+            };
+            RadiusAxes = new List<IPolarAxis>()
+            {
+                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
+            };
             Series = new ObservableCollection<ISeries>();
 
             PointerWheelChanged += PolarChart_PointerWheelChanged;
@@ -656,6 +662,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 if (state.Stroke is not null) state.Stroke.ClearGeometriesFromPaintTask(_core.Canvas);
             }
 
+            _core.ClearTooltipData();
             tooltip.Hide();
         }
 

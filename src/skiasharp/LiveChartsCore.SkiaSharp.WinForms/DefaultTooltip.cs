@@ -35,7 +35,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     /// <inheritdoc cref="IChartTooltip{TDrawingContext}" />
     public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>, IDisposable
     {
-        private readonly Dictionary<ChartPoint, object> _activePoints = new();
         private const int CS_DROPSHADOW = 0x00020000;
 
         /// <summary>
@@ -50,19 +49,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var wfChart = (Chart)chart.View;
-
-            if (!tooltipPoints.Any())
-            {
-                foreach (var key in _activePoints.Keys.ToArray())
-                {
-                    key.RemoveFromHoverState();
-                    _ = _activePoints.Remove(key);
-                }
-
-                return;
-            }
-
-            if (_activePoints.Count > 0 && tooltipPoints.All(x => _activePoints.ContainsKey(x.Point))) return;
 
             var size = DrawAndMesure(tooltipPoints, wfChart);
             LvcPoint? location = null;
@@ -88,20 +74,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             var y = l.Y + (int)location.Value.Y;
             Location = new Point(x, y);
             Show();
-
-            var o = new object();
-            foreach (var tooltipPoint in tooltipPoints)
-            {
-                tooltipPoint.Point.AddToHoverState();
-                _activePoints[tooltipPoint.Point] = o;
-            }
-
-            foreach (var key in _activePoints.Keys.ToArray())
-            {
-                if (_activePoints[key] == o) continue;
-                key.RemoveFromHoverState();
-                _ = _activePoints.Remove(key);
-            }
         }
 
         private SizeF DrawAndMesure(IEnumerable<TooltipPoint> tooltipPoints, Chart chart)

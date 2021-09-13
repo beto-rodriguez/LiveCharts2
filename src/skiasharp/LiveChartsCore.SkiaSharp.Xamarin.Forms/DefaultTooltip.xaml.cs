@@ -40,7 +40,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
     {
         private Chart<SkiaSharpDrawingContext>? _chart;
         private readonly DataTemplate _defaultTemplate;
-        private readonly Dictionary<ChartPoint, object> _activePoints = new();
         private readonly Timer _closeTimer = new();
 
         /// <summary>
@@ -114,16 +113,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             var mobileChart = (IMobileChart)chart.View;
 
-            if (!tooltipPoints.Any())
-            {
-                foreach (var key in _activePoints.Keys.ToArray())
-                {
-                    key.RemoveFromHoverState();
-                    _ = _activePoints.Remove(key);
-                }
-                return;
-            }
-
             Points = tooltipPoints;
 
             LvcPoint? location = null;
@@ -167,20 +156,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     location.Value.Y / chartSize.Height,
                     AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
 
-            var o = new object();
-            foreach (var tooltipPoint in tooltipPoints)
-            {
-                tooltipPoint.Point.AddToHoverState();
-                _activePoints[tooltipPoint.Point] = o;
-            }
-
-            foreach (var key in _activePoints.Keys.ToArray())
-            {
-                if (_activePoints[key] == o) continue;
-                key.RemoveFromHoverState();
-                _ = _activePoints.Remove(key);
-            }
-
             _closeTimer.Stop();
             _closeTimer.Start();
         }
@@ -217,14 +192,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                         -1, -1,
                         AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
 
-                foreach (var state in _chart!.View.PointStates.GetStates())
-                {
-                    if (!state.IsHoverState) continue;
-                    if (state.Fill is not null) state.Fill.ClearGeometriesFromPaintTask(_chart.Canvas);
-                    if (state.Stroke is not null) state.Stroke.ClearGeometriesFromPaintTask(_chart.Canvas);
-                }
-
-                _chart.Update();
+                _chart?.Update();
             });
         }
 
