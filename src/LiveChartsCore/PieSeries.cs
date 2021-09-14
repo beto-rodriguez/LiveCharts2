@@ -165,7 +165,7 @@ namespace LiveChartsCore
             if (DataLabelsPaint is not null)
             {
                 DataLabelsPaint.ZIndex = 1000 + actualZIndex + 0.3;
-                DataLabelsPaint.SetClipRectangle(pieChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+                //DataLabelsPaint.SetClipRectangle(pieChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 pieChart.Canvas.AddDrawableTask(DataLabelsPaint);
             }
 

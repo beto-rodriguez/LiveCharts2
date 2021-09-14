@@ -433,7 +433,7 @@ namespace LiveChartsCore
             if (DataLabelsPaint is not null)
             {
                 cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
-                DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+                //DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
                 DataLabelsPaint.ZIndex = actualZIndex + 0.5;
             }
 
