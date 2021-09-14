@@ -51,6 +51,14 @@ namespace LiveChartsCore.Kernel.Sketches
         double DataLabelsSize { get; set; }
 
         /// <summary>
+        /// Gets or sets the data labels rotation in degrees.
+        /// </summary>
+        /// <value>
+        /// The rotation of the data labels in degrees.
+        /// </value>
+        double DataLabelsRotation { get; set; }
+
+        /// <summary>
         /// Gets or sets the data labels padding.
         /// </summary>
         /// <value>

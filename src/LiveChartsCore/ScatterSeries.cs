@@ -173,14 +173,13 @@ namespace LiveChartsCore
 
                 point.Context.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs, y - hgs, gs + 2 * sw, gs + 2 * sw);
 
-                OnPointMeasured(point);
                 _ = toDeletePoints.Remove(point);
 
                 if (DataLabelsPaint is not null)
                 {
                     if (point.Context.Label is not TLabel label)
                     {
-                        var l = new TLabel { X = x - hgs, Y = y - hgs };
+                        var l = new TLabel { X = x - hgs, Y = y - hgs, RotateTransform = (float)DataLabelsRotation };
 
                         _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
                             .WithAnimation(animation =>
@@ -202,6 +201,8 @@ namespace LiveChartsCore
                     label.X = labelPosition.X;
                     label.Y = labelPosition.Y;
                 }
+
+                OnPointMeasured(point);
             }
 
             foreach (var point in toDeletePoints)

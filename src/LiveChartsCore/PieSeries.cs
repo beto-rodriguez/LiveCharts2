@@ -315,7 +315,6 @@ namespace LiveChartsCore
                 point.Context.HoverArea = new SemicircleHoverArea()
                     .SetDimensions(cx, cy, (float)(start + initialRotation), (float)(start + initialRotation + end), md * 0.5f);
 
-                OnPointMeasured(point);
                 _ = toDeletePoints.Remove(point);
 
                 if (DataLabelsPaint is not null && point.PrimaryValue > 0)
@@ -324,7 +323,7 @@ namespace LiveChartsCore
 
                     if (label is null)
                     {
-                        var l = new TLabel { X = cx, Y = cy };
+                        var l = new TLabel { X = cx, Y = cy, RotateTransform = (float)DataLabelsRotation };
 
                         _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
                             .WithAnimation(animation =>
@@ -377,6 +376,8 @@ namespace LiveChartsCore
                     label.X = labelPosition.X;
                     label.Y = labelPosition.Y;
                 }
+
+                OnPointMeasured(point);
 
                 stackedInnerRadius = (w + relativeOuterRadius * 2) * 0.5f;
                 i++;

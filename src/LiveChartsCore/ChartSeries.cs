@@ -47,6 +47,7 @@ namespace LiveChartsCore
         private double _legendShapeSize = 15;
         private IPaint<TDrawingContext>? _dataLabelsPaint;
         private double _dataLabelsSize = 16;
+        private double _dataLabelsRotation = 0;
         private Padding _dataLabelsPadding = new() { Left = 6, Top = 8, Right = 6, Bottom = 8 };
         private CanvasSchedule<TDrawingContext> _canvasSchedule = new();
 
@@ -74,6 +75,9 @@ namespace LiveChartsCore
 
         /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsSize"/>
         public double DataLabelsSize { get => _dataLabelsSize; set { _dataLabelsSize = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsRotation"/>
+        public double DataLabelsRotation { get => _dataLabelsRotation; set { _dataLabelsRotation = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IChartSeries{TDrawingContext}.DataLabelsPadding"/>
         public Padding DataLabelsPadding { get => _dataLabelsPadding; set { _dataLabelsPadding = value; OnPropertyChanged(); } }
