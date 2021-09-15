@@ -104,12 +104,12 @@ namespace LiveChartsCore.Measure
         public double InnerRadius { get; private set; }
 
         /// <summary>
-        /// Gets the max radius.
+        /// Gets the max radius in chart values scale.
         /// </summary>
         public double MaxRadius { get; private set; }
 
         /// <summary>
-        /// Gets the min radius.
+        /// Gets the min radius in chart values scale.
         /// </summary>
         public double MinRadius { get; private set; }
 

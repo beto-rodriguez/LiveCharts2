@@ -1,5 +1,8 @@
 ﻿using LiveChartsCore;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -18,7 +21,13 @@ namespace ViewModelsSamples.Polar.Basic
         {
             new PolarLineSeries<double>
             {
-                Values = new ObservableCollection<double> { 15, 14, 13, 0, 0, 0, 0, 0, 0, 0, 5, 4, 3, 2, 1 },
+                Values = new ObservableCollection<double> { 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 },
+                DataLabelsPaint = new SolidColorPaint(new SKColor(30, 30, 30)),
+                //GeometryFill = null,
+                //GeometryStroke = null,
+                GeometrySize = 30,
+                DataLabelsSize = 15,
+                DataLabelsPosition = PolarLabelsPosition.Start,
                 IsClosed = false
             }
         };

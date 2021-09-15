@@ -56,6 +56,7 @@ namespace LiveChartsCore
         private int _scalesAngleAt;
         private int _scalesRadiusAt;
         private bool _isClosed = true;
+        private PolarLabelsPosition _labelsPosition;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PolarLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs}"/> class.
@@ -135,6 +136,9 @@ namespace LiveChartsCore
 
         /// <inheritdoc cref="IPolarLineSeries{TDrawingContext}.IsClosed"/>
         public bool IsClosed { get => _isClosed; set { _isClosed = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IPolarLineSeries{TDrawingContext}.DataLabelsPosition"/>
+        public PolarLabelsPosition DataLabelsPosition { get => _labelsPosition; set { _labelsPosition = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
         public override void Measure(Chart<TDrawingContext> chart)
@@ -396,9 +400,13 @@ namespace LiveChartsCore
                             new TypedChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>(data.TargetPoint));
                         label.TextSize = dls;
                         label.Padding = DataLabelsPadding;
-                        var labelPosition = GetLabelPosition(
-                            x - hgs, y - hgs, gs, gs, label.Measure(DataLabelsPaint), DataLabelsPosition.Top,
-                            SeriesProperties, data.TargetPoint.PrimaryValue > Pivot);
+
+                        var r = Math.Sqrt(Math.Pow(cp.X - scaler.CenterX, 2) + Math.Pow(cp.Y - scaler.CenterY, 2));
+
+                        var labelPosition = GetLabelPolarPosition(
+                            scaler.CenterX, scaler.CenterY, (float)r, scaler.GetAngle(data.TargetPoint.SecondaryValue),
+                            label.Measure(DataLabelsPaint), (float)GeometrySize, DataLabelsPosition);
+
                         label.X = labelPosition.X;
                         label.Y = labelPosition.Y;
                     }
@@ -521,58 +529,6 @@ namespace LiveChartsCore
         {
             return series is StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext> sfSeries &&
                 Name == series.Name && Fill == sfSeries.Fill && Stroke == sfSeries.Stroke;
-        }
-
-        /// <summary>
-        /// Gets the label position.
-        /// </summary>
-        /// <param name="x">The x.</param>
-        /// <param name="y">The y.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <param name="labelSize">Size of the label.</param>
-        /// <param name="position">The position.</param>
-        /// <param name="seriesProperties">The series properties.</param>
-        /// <param name="isGreaterThanPivot">if set to <c>true</c> [is greater than pivot].</param>
-        /// <returns></returns>
-        protected virtual LvcPoint GetLabelPosition(
-            float x,
-            float y,
-            float width,
-            float height,
-            LvcSize labelSize,
-            DataLabelsPosition position,
-            SeriesProperties seriesProperties,
-            bool isGreaterThanPivot)
-        {
-            var middleX = (x + x + width) * 0.5f;
-            var middleY = (y + y + height) * 0.5f;
-
-            return position switch
-            {
-                DataLabelsPosition.Middle => new LvcPoint(middleX, middleY),
-                DataLabelsPosition.Top => new LvcPoint(middleX, y - labelSize.Height * 0.5f),
-                DataLabelsPosition.Bottom => new LvcPoint(middleX, y + height + labelSize.Height * 0.5f),
-                DataLabelsPosition.Left => new LvcPoint(x - labelSize.Width * 0.5f, middleY),
-                DataLabelsPosition.Right => new LvcPoint(x + width + labelSize.Width * 0.5f, middleY),
-                DataLabelsPosition.End =>
-                (seriesProperties & SeriesProperties.PrimaryAxisHorizontalOrientation) == SeriesProperties.PrimaryAxisHorizontalOrientation
-                    ? (isGreaterThanPivot
-                        ? new LvcPoint(x + width + labelSize.Width * 0.5f, middleY)
-                        : new LvcPoint(x - labelSize.Width * 0.5f, middleY))
-                    : (isGreaterThanPivot
-                        ? new LvcPoint(middleX, y - labelSize.Height * 0.5f)
-                        : new LvcPoint(middleX, y + height + labelSize.Height * 0.5f)),
-                DataLabelsPosition.Start =>
-                     (seriesProperties & SeriesProperties.PrimaryAxisHorizontalOrientation) == SeriesProperties.PrimaryAxisHorizontalOrientation
-                        ? (isGreaterThanPivot
-                            ? new LvcPoint(x - labelSize.Width * 0.5f, middleY)
-                            : new LvcPoint(x + width + labelSize.Width * 0.5f, middleY))
-                        : (isGreaterThanPivot
-                            ? new LvcPoint(middleX, y + height + labelSize.Height * 0.5f)
-                            : new LvcPoint(middleX, y - labelSize.Height * 0.5f)),
-                _ => throw new Exception("Position not supported"),
-            };
         }
 
         /// <summary>
@@ -908,6 +864,61 @@ namespace LiveChartsCore
         protected override IPaint<TDrawingContext>?[] GetPaintTasks()
         {
             return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint, hoverPaint };
+        }
+
+        /// <summary>
+        /// Gets the label polar position.
+        /// </summary>
+        /// <param name="centerX">The center x.</param>
+        /// <param name="centerY">The center y.</param>
+        /// <param name="radius">The radius.</param>
+        /// <param name="angle">The start angle.</param>
+        /// <param name="labelSize">Size of the label.</param>
+        /// <param name="geometrySize">The geometry size.</param>
+        /// <param name="position">The position.</param>
+        /// <returns></returns>
+        protected virtual LvcPoint GetLabelPolarPosition(
+            float centerX,
+            float centerY,
+            float radius,
+            float angle,
+            LvcSize labelSize,
+            float geometrySize,
+            PolarLabelsPosition position)
+        {
+            const float toRadians = (float)(Math.PI / 180);
+            float actualAngle = 0;
+
+            switch (position)
+            {
+                case PolarLabelsPosition.End:
+                    actualAngle = angle;
+                    radius += (float)Math.Sqrt(
+                        Math.Pow(labelSize.Width + geometrySize * 0.5f, 2) +
+                        Math.Pow(labelSize.Height + geometrySize * 0.5f, 2)) * 0.5f;
+                    break;
+                case PolarLabelsPosition.Start:
+                    actualAngle = angle;
+                    radius -= (float)Math.Sqrt(
+                        Math.Pow(labelSize.Width + geometrySize * 0.5f, 2) +
+                        Math.Pow(labelSize.Height + geometrySize * 0.5f, 2)) * 0.5f;
+                    break;
+                case PolarLabelsPosition.Middle:
+                    actualAngle = angle;
+                    break;
+                case PolarLabelsPosition.ChartCenter:
+                    return new LvcPoint(centerX, centerY);
+                default:
+                    break;
+            }
+
+            actualAngle %= 360;
+            if (actualAngle < 0) actualAngle += 360;
+            actualAngle *= toRadians;
+
+            return new LvcPoint(
+                 (float)(centerX + Math.Cos(actualAngle) * radius),
+                 (float)(centerY + Math.Sin(actualAngle) * radius));
         }
 
         private IEnumerable<ChartPoint[]> SplitEachNull(

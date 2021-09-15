@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.Kernel.Sketches
 {
@@ -39,5 +40,13 @@ namespace LiveChartsCore.Kernel.Sketches
         /// The value.
         /// </value>
         bool IsClosed { get; set; }
+
+        /// <summary>
+        /// Gets or sets the data labels position.
+        /// </summary>
+        /// <value>
+        /// The data labels position.
+        /// </value>
+        PolarLabelsPosition DataLabelsPosition { get; set; }
     }
 }
