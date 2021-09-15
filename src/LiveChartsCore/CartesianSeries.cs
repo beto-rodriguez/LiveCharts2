@@ -129,6 +129,8 @@ namespace LiveChartsCore
         /// <param name="position">The position.</param>
         /// <param name="seriesProperties">The series properties.</param>
         /// <param name="isGreaterThanPivot">if set to <c>true</c> [is greater than pivot].</param>
+        /// <param name="drawMarginLocation">The draw margin location.</param>
+        /// <param name="drawMarginSize">the draw margin size</param>
         /// <returns></returns>
         protected virtual LvcPoint GetLabelPosition(
             float x,
@@ -138,26 +140,50 @@ namespace LiveChartsCore
             LvcSize labelSize,
             DataLabelsPosition position,
             SeriesProperties seriesProperties,
-            bool isGreaterThanPivot)
+            bool isGreaterThanPivot,
+            LvcPoint drawMarginLocation,
+            LvcSize drawMarginSize)
         {
+            if ((seriesProperties & SeriesProperties.Bar) == SeriesProperties.Bar)
+            {
+                var oy = y + height;
+                if (y < drawMarginLocation.Y) y = drawMarginLocation.Y;
+                var maxHeight = isGreaterThanPivot
+                    ? drawMarginLocation.Y + drawMarginSize.Height - y
+                    : oy - y;
+                if (height > maxHeight) height = maxHeight;
+
+                var ox = x + width;
+                if (x < drawMarginLocation.X) x = drawMarginLocation.X;
+                var maxWidth = isGreaterThanPivot
+                    ? drawMarginLocation.X + drawMarginSize.Width - x
+                    : ox - x;
+                if (width > maxWidth) width = maxWidth;
+            }
+
             var middleX = (x + x + width) * 0.5f;
             var middleY = (y + y + height) * 0.5f;
 
             return position switch
             {
-                DataLabelsPosition.Middle => new LvcPoint(middleX, middleY),
-                DataLabelsPosition.Top => new LvcPoint(middleX, y - labelSize.Height * 0.5f),
-                DataLabelsPosition.Bottom => new LvcPoint(middleX, y + height + labelSize.Height * 0.5f),
-                DataLabelsPosition.Left => new LvcPoint(x - labelSize.Width * 0.5f, middleY),
-                DataLabelsPosition.Right => new LvcPoint(x + width + labelSize.Width * 0.5f, middleY),
+                DataLabelsPosition.Middle
+                    => new LvcPoint(middleX, middleY),
+                DataLabelsPosition.Top
+                    => new LvcPoint(middleX, y - labelSize.Height * 0.5f),
+                DataLabelsPosition.Bottom
+                    => new LvcPoint(middleX, y + height + labelSize.Height * 0.5f),
+                DataLabelsPosition.Left
+                    => new LvcPoint(x - labelSize.Width * 0.5f, middleY),
+                DataLabelsPosition.Right
+                    => new LvcPoint(x + width + labelSize.Width * 0.5f, middleY),
                 DataLabelsPosition.End =>
-                (seriesProperties & SeriesProperties.PrimaryAxisHorizontalOrientation) == SeriesProperties.PrimaryAxisHorizontalOrientation
-                    ? (isGreaterThanPivot
-                        ? new LvcPoint(x + width + labelSize.Width * 0.5f, middleY)
-                        : new LvcPoint(x - labelSize.Width * 0.5f, middleY))
-                    : (isGreaterThanPivot
-                        ? new LvcPoint(middleX, y - labelSize.Height * 0.5f)
-                        : new LvcPoint(middleX, y + height + labelSize.Height * 0.5f)),
+                    (seriesProperties & SeriesProperties.PrimaryAxisHorizontalOrientation) == SeriesProperties.PrimaryAxisHorizontalOrientation
+                        ? (isGreaterThanPivot
+                            ? new LvcPoint(x + width + labelSize.Width * 0.5f, middleY)
+                            : new LvcPoint(x - labelSize.Width * 0.5f, middleY))
+                        : (isGreaterThanPivot
+                            ? new LvcPoint(middleX, y - labelSize.Height * 0.5f)
+                            : new LvcPoint(middleX, y + height + labelSize.Height * 0.5f)),
                 DataLabelsPosition.Start =>
                      (seriesProperties & SeriesProperties.PrimaryAxisHorizontalOrientation) == SeriesProperties.PrimaryAxisHorizontalOrientation
                         ? (isGreaterThanPivot

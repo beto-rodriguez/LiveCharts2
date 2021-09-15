@@ -217,7 +217,7 @@ namespace LiveChartsCore
                     label.Padding = DataLabelsPadding;
                     var labelPosition = GetLabelPosition(
                         x, cy, helper.uw, b, label.Measure(DataLabelsPaint),
-                        DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot);
+                        DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot, drawLocation, drawMarginSize);
                     label.X = labelPosition.X;
                     label.Y = labelPosition.Y;
                 }

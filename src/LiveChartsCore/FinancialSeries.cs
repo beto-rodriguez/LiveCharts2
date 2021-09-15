@@ -274,8 +274,8 @@ namespace LiveChartsCore
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
                     var labelPosition = GetLabelPosition(
-                        x, high, uw, Math.Abs(low - high),
-                        label.Measure(DataLabelsPaint), DataLabelsPosition, SeriesProperties, point.PrimaryValue > Pivot);
+                        x, high, uw, Math.Abs(low - high), label.Measure(DataLabelsPaint), DataLabelsPosition,
+                        SeriesProperties, point.PrimaryValue > Pivot, drawLocation, drawMarginSize);
                     label.X = labelPosition.X;
                     label.Y = labelPosition.Y;
                 }
