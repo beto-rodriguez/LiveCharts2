@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Diagnostics;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -137,7 +138,7 @@ namespace LiveChartsCore.Measure
         /// Converts to pixels.
         /// </summary>
         /// <param name="angle">The angle in chart values scale.</param>
-        /// <param name="radius">The radius.</param>
+        /// <param name="radius">The radius in chart values.</param>
         /// <returns></returns>
         public LvcPoint ToPixels(double angle, double radius)
         {
@@ -153,6 +154,37 @@ namespace LiveChartsCore.Measure
                 return new LvcPoint(
                     CenterX + (float)(Math.Cos(a) * r),
                     CenterY + (float)(Math.Sin(a) * r));
+            }
+        }
+
+        /// <summary>
+        /// Converts to chart values.
+        /// </summary>
+        /// <param name="x">The x coordinate in pixels.</param>
+        /// <param name="y">The y coordinate in pixels.</param>
+        /// <returns></returns>
+        public LvcPoint ToChartValues(double x, double y)
+        {
+            var dx = x - CenterX;
+            var dy = y - CenterY;
+            var hyp = Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2)) - _innerRadiusOffset;
+
+            var r = hyp / _scalableRadius;
+
+            var a = Math.Atan(dy / dx) * (1 / ToRadians);
+
+            if (dx < 0 && dy > 0) a = 180 + a;
+            if (dx < 0 && dy <= 0) a = 180 + a;
+            if (dx > 0 && dy <= 0) a = 360 + a;
+
+            a -= _initialRotation;
+            if (a < 0) a = 360 - a;
+
+            unchecked
+            {
+                return new LvcPoint(
+                (float)(MinAngle + _deltaAngleVal * a / _circumference),
+                (float)(MinRadius + r * (MaxRadius - MinRadius)));
             }
         }
 

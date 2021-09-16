@@ -396,6 +396,30 @@ namespace LiveChartsCore
                         ? scaler.ToPixels(visualSeparator.Value, scaler.MaxRadius)
                         : scaler.ToPixelsWithAngleInDegrees((float)LabelsAngle, visualSeparator.Value);
 
+                if (visualSeparator.Text is not null)
+                {
+                    var labelSize = LabelsPaint is null ? new LvcSize() : visualSeparator.Text.Measure(LabelsPaint);
+
+
+                    visualSeparator.Text.Text = label;
+                    visualSeparator.Text.Padding = _labelsPadding;//_padding;
+
+                    var actualRotation = r;//+ (_orientation == PolarAxisOrientation.Angle ? scaler.GetAngle(i) - 90 : 0);
+
+                    visualSeparator.Text.X = location.X;
+                    visualSeparator.Text.Y = location.Y;
+                    visualSeparator.Text.Background = new LvcColor(255, 255, 255); // <- ToDo: theme it!
+
+                    if (_orientation == PolarAxisOrientation.Angle && ((actualRotation + 90) % 360) > 180)
+                        actualRotation += 180;
+
+                    visualSeparator.Text.RotateTransform = actualRotation;
+
+                    visualSeparator.Text.Opacity = 1;
+
+                    if (((IPolarAxis)this).PreviousDataBounds is null) visualSeparator.Text.CompleteAllTransitions();
+                }
+
                 if (visualSeparator.Geometry is not null)
                 {
                     if (visualSeparator is AxisVisualSeprator<TDrawingContext> lineSepartator && lineSepartator.Line is not null)
@@ -423,27 +447,6 @@ namespace LiveChartsCore
                     }
 
                     visualSeparator.Geometry.Opacity = 1;
-                }
-
-                if (visualSeparator.Text is not null)
-                {
-                    visualSeparator.Text.Text = label;
-                    visualSeparator.Text.Padding = _labelsPadding;//_padding;
-
-                    var actualRotation = r + (_orientation == PolarAxisOrientation.Angle ? scaler.GetAngle(i) - 90 : 0);
-
-                    visualSeparator.Text.X = location.X;
-                    visualSeparator.Text.Y = location.Y;
-                    visualSeparator.Text.Background = new LvcColor(255, 255, 255); // <- ToDo: theme it!
-
-                    if (_orientation == PolarAxisOrientation.Angle && ((actualRotation + 90) % 360) > 180)
-                        actualRotation += 180;
-
-                    visualSeparator.Text.RotateTransform = actualRotation;
-
-                    visualSeparator.Text.Opacity = 1;
-
-                    if (((IPolarAxis)this).PreviousDataBounds is null) visualSeparator.Text.CompleteAllTransitions();
                 }
 
                 if (visualSeparator.Text is not null || visualSeparator.Geometry is not null) _ = measured.Add(visualSeparator);

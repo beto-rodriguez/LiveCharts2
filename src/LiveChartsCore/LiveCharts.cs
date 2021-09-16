@@ -62,6 +62,16 @@ namespace LiveChartsCore
         public static string HoverKey => nameof(HoverKey);
 
         /// <summary>
+        /// Gets a constant that indicates that a rotation angle follows the tangent line, this property is only useful in polar series.
+        /// </summary>
+        public static int TangentAngle => 1 << 25;
+
+        /// <summary>
+        /// Gets a constant that indicates that a rotation angle follows the cotangent line, this property is only useful in polar series.
+        /// </summary>
+        public static int CotangentAngle => 1 << 26;
+
+        /// <summary>
         /// The disable animations
         /// </summary>
         public static TimeSpan DisableAnimations = TimeSpan.FromMilliseconds(1);

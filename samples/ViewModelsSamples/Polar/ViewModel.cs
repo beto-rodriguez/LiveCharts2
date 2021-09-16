@@ -27,7 +27,7 @@ namespace ViewModelsSamples.Polar.Basic
                 //GeometryStroke = null,
                 GeometrySize = 30,
                 DataLabelsSize = 15,
-                DataLabelsPosition = PolarLabelsPosition.Start,
+                DataLabelsPosition = PolarLabelsPosition.Middle,
                 IsClosed = false
             }
         };
