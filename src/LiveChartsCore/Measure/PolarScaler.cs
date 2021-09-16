@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Diagnostics;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -187,6 +186,8 @@ namespace LiveChartsCore.Measure
                 (float)(MinRadius + r * (MaxRadius - MinRadius)));
             }
         }
+
+
 
         /// <summary>
         /// Converts to pixels.

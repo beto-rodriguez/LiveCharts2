@@ -28,6 +28,7 @@ namespace ViewModelsSamples.Polar.Basic
                 GeometrySize = 30,
                 DataLabelsSize = 15,
                 DataLabelsPosition = PolarLabelsPosition.Middle,
+                DataLabelsRotation = LiveCharts.CotangentAngle,
                 IsClosed = false
             }
         };
@@ -37,7 +38,6 @@ namespace ViewModelsSamples.Polar.Basic
             {
                 new PolarAxis
                 {
-                    LabelsRotation = 0,
                     LabelsAngle = -60,
                     Labeler = v => (v * 10).ToString("N2")
                 }
@@ -49,6 +49,7 @@ namespace ViewModelsSamples.Polar.Basic
                 new PolarAxis
                 {
                     //LabelsRotation = 90,
+                    LabelsRotation = LiveCharts.TangentAngle,
                     Labeler = v => (v * 1000).ToString("N2")
                 }
             };

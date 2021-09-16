@@ -203,6 +203,22 @@ namespace LiveChartsCore
             foreach (var item in strokePathHelperContainer) item.Path.ClearCommands();
             foreach (var item in fillPathHelperContainer) item.Path.ClearCommands();
 
+            var r = (float)DataLabelsRotation;
+            var isTangent = false;
+            var isCotangent = false;
+
+            if (((int)r & LiveCharts.TangentAngle) != 0)
+            {
+                r -= LiveCharts.TangentAngle;
+                isTangent = true;
+            }
+
+            if (((int)r & LiveCharts.CotangentAngle) != 0)
+            {
+                r -= LiveCharts.CotangentAngle;
+                isCotangent = true;
+            }
+
             foreach (var segment in segments)
             {
                 var wasFillInitialized = false;
@@ -380,9 +396,16 @@ namespace LiveChartsCore
                     {
                         var label = (TLabel?)data.TargetPoint.Context.Label;
 
+                        var actualRotation = r +
+                            (isTangent ? scaler.GetAngle(data.TargetPoint.SecondaryValue) - 90 : 0) +
+                            (isCotangent ? scaler.GetAngle(data.TargetPoint.SecondaryValue) : 0);
+
+                        if ((isTangent || isCotangent) && ((actualRotation + 90) % 360) > 180)
+                            actualRotation += 180;
+
                         if (label is null)
                         {
-                            var l = new TLabel { X = x - hgs, Y = scaler.CenterY - hgs, RotateTransform = (float)DataLabelsRotation };
+                            var l = new TLabel { X = x - hgs, Y = scaler.CenterY - hgs, RotateTransform = (float)actualRotation };
 
                             _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
                                 .WithAnimation(animation =>
@@ -401,10 +424,10 @@ namespace LiveChartsCore
                         label.TextSize = dls;
                         label.Padding = DataLabelsPadding;
 
-                        var r = Math.Sqrt(Math.Pow(cp.X - scaler.CenterX, 2) + Math.Pow(cp.Y - scaler.CenterY, 2));
+                        var rad = Math.Sqrt(Math.Pow(cp.X - scaler.CenterX, 2) + Math.Pow(cp.Y - scaler.CenterY, 2));
 
                         var labelPosition = GetLabelPolarPosition(
-                            scaler.CenterX, scaler.CenterY, (float)r, scaler.GetAngle(data.TargetPoint.SecondaryValue),
+                            scaler.CenterX, scaler.CenterY, (float)rad, scaler.GetAngle(data.TargetPoint.SecondaryValue),
                             label.Measure(DataLabelsPaint), (float)GeometrySize, DataLabelsPosition);
 
                         label.X = labelPosition.X;

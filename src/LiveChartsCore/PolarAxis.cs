@@ -247,7 +247,23 @@ namespace LiveChartsCore
                 polarChart.InnerRadius, polarChart.InitialRotation, polarChart.TotalAnge);
 
             var size = (float)TextSize;
+
             var r = (float)_labelsRotation;
+            var isTangent = false;
+            var isCotangent = false;
+
+            if (((int)r & LiveCharts.TangentAngle) != 0)
+            {
+                r -= LiveCharts.TangentAngle;
+                isTangent = true;
+            }
+
+            if (((int)r & LiveCharts.CotangentAngle) != 0)
+            {
+                r -= LiveCharts.CotangentAngle;
+                isCotangent = true;
+            }
+
             var hasRotation = Math.Abs(r) > 0.01f;
 
             var max = MaxLimit is null ? (_visibleDataBounds ?? _dataBounds).Max : MaxLimit.Value;
@@ -398,13 +414,10 @@ namespace LiveChartsCore
 
                 if (visualSeparator.Text is not null)
                 {
-                    var labelSize = LabelsPaint is null ? new LvcSize() : visualSeparator.Text.Measure(LabelsPaint);
-
-
                     visualSeparator.Text.Text = label;
                     visualSeparator.Text.Padding = _labelsPadding;//_padding;
 
-                    var actualRotation = r;//+ (_orientation == PolarAxisOrientation.Angle ? scaler.GetAngle(i) - 90 : 0);
+                    var actualRotation = r + (isTangent ? scaler.GetAngle(i) - 90 : 0) + (isCotangent ? scaler.GetAngle(i) : 0);
 
                     visualSeparator.Text.X = location.X;
                     visualSeparator.Text.Y = location.Y;
@@ -416,6 +429,20 @@ namespace LiveChartsCore
                     visualSeparator.Text.RotateTransform = actualRotation;
 
                     visualSeparator.Text.Opacity = 1;
+
+                    //var unitRadius = scaler.ToPixels(0, 1).Y - scaler.ToPixels(0, 0).Y; // [ pixels / chart value ]
+
+                    //var labelSize = LabelsPaint is null ? new LvcSize() : visualSeparator.Text.Measure(LabelsPaint);
+                    //var hyp = Math.Sqrt(Math.Pow(labelSize.Width * 0.5, 2) + Math.Pow(labelSize.Height * 0.5f, 2));
+
+                    //var tl = _orientation == PolarAxisOrientation.Angle
+                    //    ? scaler.ToPixels(visualSeparator.Value, scaler.MaxRadius + (hyp / unitRadius))
+                    //    : scaler.ToPixelsWithAngleInDegrees((float)LabelsAngle, visualSeparator.Value);
+
+                    visualSeparator.Text.X = location.X;
+                    visualSeparator.Text.Y = location.Y;
+
+                    if (((IPolarAxis)this).PreviousDataBounds is null) visualSeparator.Text.CompleteAllTransitions();
 
                     if (((IPolarAxis)this).PreviousDataBounds is null) visualSeparator.Text.CompleteAllTransitions();
                 }
