@@ -79,6 +79,7 @@ namespace LiveChartsCore
         private Padding _labelsPadding = new(3);
         private Align _labelsVerticalAlign = Align.Middle;
         private Align _labelsHorizontalAlign = Align.Middle;
+        private LvcColor _labelsBackground = new(255, 255, 255);
 
         #endregion
 
@@ -148,6 +149,9 @@ namespace LiveChartsCore
 
         /// <inheritdoc cref="IPolarAxis.LabelsHorizontalAlignment"/>
         public Align LabelsHorizontalAlignment { get => _labelsHorizontalAlign; set { _labelsHorizontalAlign = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IPolarAxis.LabelsBackground"/>
+        public LvcColor LabelsBackground { get => _labelsBackground; set { _labelsBackground = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IPlane.ShowSeparatorLines"/>
         public bool ShowSeparatorLines { get => _showSeparatorLines; set { _showSeparatorLines = value; OnPropertyChanged(); } }
@@ -437,7 +441,7 @@ namespace LiveChartsCore
 
                     visualSeparator.Label.X = location.X;
                     visualSeparator.Label.Y = location.Y;
-                    visualSeparator.Label.Background = new LvcColor(255, 255, 255); // <- ToDo: theme it!
+                    visualSeparator.Label.Background = _labelsBackground;
 
                     if (_orientation == PolarAxisOrientation.Angle && ((actualRotation + 90) % 360) > 180)
                         actualRotation += 180;
