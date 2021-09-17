@@ -427,7 +427,6 @@ namespace LiveChartsCore
                         actualRotation += 180;
 
                     visualSeparator.Text.RotateTransform = actualRotation;
-
                     visualSeparator.Text.Opacity = 1;
 
                     //var unitRadius = scaler.ToPixels(0, 1).Y - scaler.ToPixels(0, 0).Y; // [ pixels / chart value ]

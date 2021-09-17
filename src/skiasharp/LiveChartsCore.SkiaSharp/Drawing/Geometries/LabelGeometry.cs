@@ -83,7 +83,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
                 var m = OnMeasure(context.PaintTask);
                 using (var bgPaint = new SKPaint { Color = new SKColor(bg.R, bg.G, bg.B, bg.A) })
                 {
-                    context.Canvas.DrawRect(X, Y - m.Height, m.Width, m.Height, bgPaint);
+                    var p = Padding;
+                    context.Canvas.DrawRect(X - p.Left, Y - m.Height + p.Top, m.Width, m.Height, bgPaint);
                 }
             }
             context.Canvas.DrawText(Text ?? "", new SKPoint(X, Y), paint);
