@@ -167,10 +167,11 @@ namespace LiveChartsCore.Kernel
             var controlSize = chart.ControlSize;
             var minD = controlSize.Width < controlSize.Height ? controlSize.Width : controlSize.Height;
             var radius = minD - chart.InnerRadius;
+            var c = minD * chart.TotalAnge / 360;
 
             var range = max - min;
             var separations = axis.Orientation == PolarAxisOrientation.Angle
-                ? Math.Round(minD / (10 * Cf), 0)
+                ? Math.Round(c / (10 * Cf), 0)
                 : Math.Round(radius / (30 * Cf), 0);
             var minimum = range / separations;
 
