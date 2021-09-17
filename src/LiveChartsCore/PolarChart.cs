@@ -403,7 +403,6 @@ namespace LiveChartsCore
             else if (viewDrawMargin is null)
             {
                 var m = viewDrawMargin ?? new Margin();
-                var r = 0f;
                 SetDrawMargin(ControlSize, m);
 
                 foreach (var axis in AngleAxes)
@@ -466,8 +465,8 @@ namespace LiveChartsCore
                     axis.DataBounds.Max = axis.DataBounds.Max + c;
                 }
 
-                if (axis.Orientation == PolarAxisOrientation.Radius)
-                {
+                //if (axis.Orientation == PolarAxisOrientation.Radius)
+                //{
                     // only the radial axes have a padding.
                     // angle axes are ignored.
 
@@ -496,7 +495,7 @@ namespace LiveChartsCore
                         axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + p;
                         axis.IsNotifyingChanges = true;
                     }
-                }
+                //}
 
                 var drawablePlane = (IPlane<TDrawingContext>)axis;
                 _ = _everMeasuredAxes.Add(drawablePlane);

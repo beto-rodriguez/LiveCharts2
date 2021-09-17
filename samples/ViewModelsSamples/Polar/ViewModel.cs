@@ -29,7 +29,7 @@ namespace ViewModelsSamples.Polar.Basic
                 DataLabelsSize = 15,
                 DataLabelsPosition = PolarLabelsPosition.Middle,
                 DataLabelsRotation = LiveCharts.CotangentAngle,
-                IsClosed = false
+                IsClosed = true
             }
         };
 

@@ -67,7 +67,7 @@ namespace LiveChartsCore
                   SeriesProperties.Line | SeriesProperties.PrimaryAxisVerticalOrientation |
                   (isStacked ? SeriesProperties.Stacked : 0) | SeriesProperties.Sketch | SeriesProperties.PrefersXStrategyTooltips)
         {
-            DataPadding = new LvcPoint(0f, 1.5f);
+            DataPadding = new LvcPoint(1f, 1.5f);
         }
 
         /// <summary>
@@ -332,13 +332,13 @@ namespace LiveChartsCore
                                     nameof(fillPathHelper.StartSegment.Y), nameof(fillPathHelper.StartSegment.X));
                             }
 
-                            fillPathHelper.StartPoint.X = scaler.CenterX;
-                            fillPathHelper.StartPoint.Y = scaler.CenterY;
+                            fillPathHelper.StartPoint.X = IsClosed ? (float)data.X0 : scaler.CenterX;
+                            fillPathHelper.StartPoint.Y = IsClosed ? (float)data.Y0 : scaler.CenterY;
                             fillPathHelper.Path.AddCommand(fillPathHelper.StartPoint);
 
                             fillPathHelper.StartSegment.X = (float)data.X0;
                             fillPathHelper.StartSegment.Y = (float)data.Y0;
-                            fillPathHelper.Path.AddCommand(fillPathHelper.StartSegment);
+                            if (!IsClosed) fillPathHelper.Path.AddCommand(fillPathHelper.StartSegment);
                         }
 
                         fillPathHelper.Path.AddCommand(visual.Bezier);
@@ -347,7 +347,7 @@ namespace LiveChartsCore
                         {
                             fillPathHelper.EndSegment.X = scaler.CenterX;
                             fillPathHelper.EndSegment.Y = scaler.CenterY;
-                            fillPathHelper.Path.AddCommand(fillPathHelper.EndSegment);
+                            if (!IsClosed) fillPathHelper.Path.AddCommand(fillPathHelper.EndSegment);
 
                             if (wasFillInitialized)
                                 fillPathHelper.EndSegment.CompleteTransitions(
@@ -520,7 +520,7 @@ namespace LiveChartsCore
                             Max = baseBounds.SecondaryBounds.Max,
                             Min = baseBounds.SecondaryBounds.Min,
                             PaddingMax = ts,
-                            PaddingMin = ts,
+                            PaddingMin = 0,
                             RequestedGeometrySize = rgs
                         },
                         PrimaryBounds = new Bounds

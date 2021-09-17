@@ -325,6 +325,9 @@ namespace LiveChartsCore
             {
                 if (i < min) continue;
 
+                if (_orientation == PolarAxisOrientation.Angle && Math.Abs(scaler.GetAngle(i) - b.LabelsAngle) < 10)
+                    continue;
+
                 var label = labeler(i);
 
                 if (!separators.TryGetValue(i, out var visualSeparator))
