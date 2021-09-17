@@ -21,6 +21,8 @@
 // SOFTWARE.
 
 using System;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Common;
 using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.Kernel.Sketches
@@ -51,6 +53,21 @@ namespace LiveChartsCore.Kernel.Sketches
         /// when the axis has <see cref="PolarAxisOrientation.Angle"/> orientation.
         /// </summary>
         double LabelsAngle { get; set; }
+
+        /// <summary>
+        /// Gets or sets the labels vertical alignment.
+        /// </summary>
+        Align LabelsVerticalAlignment { get; set; }
+
+        /// <summary>
+        /// Gets or sets the labels horizontal alignment.
+        /// </summary>
+        Align LabelsHorizontalAlignment { get; set; }
+
+        /// <summary>
+        /// Gets or sets the labels padding.
+        /// </summary>
+        Padding LabelsPadding { get; set; }
 
         /// <summary>
         /// Initializes the axis for the specified orientation.

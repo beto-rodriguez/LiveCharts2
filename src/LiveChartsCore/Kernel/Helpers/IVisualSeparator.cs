@@ -45,7 +45,7 @@ namespace LiveChartsCore.Kernel.Helpers
         /// <value>
         /// The text.
         /// </value>
-        public ILabelGeometry<TDrawingContext>? Text { get; set; }
+        public ILabelGeometry<TDrawingContext>? Label { get; set; }
 
         /// <summary>
         /// Gets the geometry.

@@ -340,7 +340,7 @@ namespace LiveChartsCore
                     if (LabelsPaint is not null)
                     {
                         var textGeometry = new TTextGeometry { TextSize = size };
-                        visualSeparator.Text = textGeometry;
+                        visualSeparator.Label = textGeometry;
                         if (hasRotation) textGeometry.RotateTransform = r;
 
                         _ = textGeometry
@@ -435,20 +435,20 @@ namespace LiveChartsCore
                     NamePaint.AddGeometryToPaintTask(cartesianChart.Canvas, _nameGeometry);
                 if (SeparatorsPaint is not null && ShowSeparatorLines && visualSeparator.Line is not null)
                     SeparatorsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Line);
-                if (LabelsPaint is not null && visualSeparator.Text is not null)
-                    LabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Text);
+                if (LabelsPaint is not null && visualSeparator.Label is not null)
+                    LabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visualSeparator.Label);
 
-                if (visualSeparator.Text is not null)
+                if (visualSeparator.Label is not null)
                 {
-                    visualSeparator.Text.Text = label;
-                    visualSeparator.Text.Padding = _padding;
-                    visualSeparator.Text.X = x;
-                    visualSeparator.Text.Y = y;
-                    if (hasRotation) visualSeparator.Text.RotateTransform = r;
+                    visualSeparator.Label.Text = label;
+                    visualSeparator.Label.Padding = _padding;
+                    visualSeparator.Label.X = x;
+                    visualSeparator.Label.Y = y;
+                    if (hasRotation) visualSeparator.Label.RotateTransform = r;
 
-                    visualSeparator.Text.Opacity = 1;
+                    visualSeparator.Label.Opacity = 1;
 
-                    if (((ICartesianAxis)this).PreviousDataBounds is null) visualSeparator.Text.CompleteAllTransitions();
+                    if (((ICartesianAxis)this).PreviousDataBounds is null) visualSeparator.Label.CompleteAllTransitions();
                 }
 
                 if (visualSeparator.Line is not null)
@@ -473,7 +473,7 @@ namespace LiveChartsCore
                     if (((ICartesianAxis)this).PreviousDataBounds is null) visualSeparator.Line.CompleteAllTransitions();
                 }
 
-                if (visualSeparator.Text is not null || visualSeparator.Line is not null) _ = measured.Add(visualSeparator);
+                if (visualSeparator.Label is not null || visualSeparator.Line is not null) _ = measured.Add(visualSeparator);
             }
 
             foreach (var separator in separators.ToArray())
@@ -665,12 +665,12 @@ namespace LiveChartsCore
                 separator.Line.RemoveOnCompleted = true;
             }
 
-            if (separator.Text is not null)
+            if (separator.Label is not null)
             {
-                separator.Text.X = x;
-                separator.Text.Y = y;
-                separator.Text.Opacity = 0;
-                separator.Text.RemoveOnCompleted = true;
+                separator.Label.X = x;
+                separator.Label.Y = y;
+                separator.Label.Opacity = 0;
+                separator.Label.RemoveOnCompleted = true;
             }
         }
 

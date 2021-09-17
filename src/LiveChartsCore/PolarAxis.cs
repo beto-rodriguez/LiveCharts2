@@ -76,7 +76,9 @@ namespace LiveChartsCore
         private bool _isInverted;
         private bool _forceStepToMin;
         private double _labelsAngle;
-        private readonly Padding _labelsPadding = new(3); // <- ToDo: Expose this
+        private Padding _labelsPadding = new(3);
+        private Align _labelsVerticalAlign = Align.Middle;
+        private Align _labelsHorizontalAlign = Align.Middle;
 
         #endregion
 
@@ -137,6 +139,15 @@ namespace LiveChartsCore
 
         /// <inheritdoc cref="IPlane.Labels"/>
         public IList<string>? Labels { get; set; }
+
+        /// <inheritdoc cref="IPolarAxis.LabelsPadding"/>
+        public Padding LabelsPadding { get => _labelsPadding; set { _labelsPadding = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IPolarAxis.LabelsVerticalAlignment"/>
+        public Align LabelsVerticalAlignment { get => _labelsVerticalAlign; set { _labelsVerticalAlign = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IPolarAxis.LabelsHorizontalAlignment"/>
+        public Align LabelsHorizontalAlignment { get => _labelsHorizontalAlign; set { _labelsHorizontalAlign = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IPlane.ShowSeparatorLines"/>
         public bool ShowSeparatorLines { get => _showSeparatorLines; set { _showSeparatorLines = value; OnPropertyChanged(); } }
@@ -329,7 +340,7 @@ namespace LiveChartsCore
                     if (LabelsPaint is not null)
                     {
                         var textGeometry = new TTextGeometry { TextSize = size };
-                        visualSeparator.Text = textGeometry;
+                        visualSeparator.Label = textGeometry;
                         if (hasRotation) textGeometry.RotateTransform = r;
 
                         _ = textGeometry
@@ -405,29 +416,31 @@ namespace LiveChartsCore
                 //    NamePaint.AddGeometryToPaintTask(polarChart.Canvas, _nameGeometry);
                 if (SeparatorsPaint is not null && ShowSeparatorLines && visualSeparator.Geometry is not null)
                     SeparatorsPaint.AddGeometryToPaintTask(polarChart.Canvas, visualSeparator.Geometry);
-                if (LabelsPaint is not null && visualSeparator.Text is not null)
-                    LabelsPaint.AddGeometryToPaintTask(polarChart.Canvas, visualSeparator.Text);
+                if (LabelsPaint is not null && visualSeparator.Label is not null)
+                    LabelsPaint.AddGeometryToPaintTask(polarChart.Canvas, visualSeparator.Label);
 
                 var location = _orientation == PolarAxisOrientation.Angle
                         ? scaler.ToPixels(visualSeparator.Value, scaler.MaxRadius)
                         : scaler.ToPixelsWithAngleInDegrees((float)LabelsAngle, visualSeparator.Value);
 
-                if (visualSeparator.Text is not null)
+                if (visualSeparator.Label is not null)
                 {
-                    visualSeparator.Text.Text = label;
-                    visualSeparator.Text.Padding = _labelsPadding;//_padding;
+                    visualSeparator.Label.Text = label;
+                    visualSeparator.Label.Padding = _labelsPadding;
+                    visualSeparator.Label.HorizontalAlign = _labelsHorizontalAlign;
+                    visualSeparator.Label.VerticalAlign = _labelsVerticalAlign;
 
                     var actualRotation = r + (isTangent ? scaler.GetAngle(i) - 90 : 0) + (isCotangent ? scaler.GetAngle(i) : 0);
 
-                    visualSeparator.Text.X = location.X;
-                    visualSeparator.Text.Y = location.Y;
-                    visualSeparator.Text.Background = new LvcColor(255, 255, 255); // <- ToDo: theme it!
+                    visualSeparator.Label.X = location.X;
+                    visualSeparator.Label.Y = location.Y;
+                    visualSeparator.Label.Background = new LvcColor(255, 255, 255); // <- ToDo: theme it!
 
                     if (_orientation == PolarAxisOrientation.Angle && ((actualRotation + 90) % 360) > 180)
                         actualRotation += 180;
 
-                    visualSeparator.Text.RotateTransform = actualRotation;
-                    visualSeparator.Text.Opacity = 1;
+                    visualSeparator.Label.RotateTransform = actualRotation;
+                    visualSeparator.Label.Opacity = 1;
 
                     //var unitRadius = scaler.ToPixels(0, 1).Y - scaler.ToPixels(0, 0).Y; // [ pixels / chart value ]
 
@@ -438,12 +451,12 @@ namespace LiveChartsCore
                     //    ? scaler.ToPixels(visualSeparator.Value, scaler.MaxRadius + (hyp / unitRadius))
                     //    : scaler.ToPixelsWithAngleInDegrees((float)LabelsAngle, visualSeparator.Value);
 
-                    visualSeparator.Text.X = location.X;
-                    visualSeparator.Text.Y = location.Y;
+                    visualSeparator.Label.X = location.X;
+                    visualSeparator.Label.Y = location.Y;
 
-                    if (((IPolarAxis)this).PreviousDataBounds is null) visualSeparator.Text.CompleteAllTransitions();
+                    if (((IPolarAxis)this).PreviousDataBounds is null) visualSeparator.Label.CompleteAllTransitions();
 
-                    if (((IPolarAxis)this).PreviousDataBounds is null) visualSeparator.Text.CompleteAllTransitions();
+                    if (((IPolarAxis)this).PreviousDataBounds is null) visualSeparator.Label.CompleteAllTransitions();
                 }
 
                 if (visualSeparator.Geometry is not null)
@@ -475,7 +488,7 @@ namespace LiveChartsCore
                     visualSeparator.Geometry.Opacity = 1;
                 }
 
-                if (visualSeparator.Text is not null || visualSeparator.Geometry is not null) _ = measured.Add(visualSeparator);
+                if (visualSeparator.Label is not null || visualSeparator.Geometry is not null) _ = measured.Add(visualSeparator);
             }
 
             foreach (var separator in separators.ToArray())
@@ -650,12 +663,12 @@ namespace LiveChartsCore
             separator.Geometry.Opacity = 0;
             separator.Geometry.RemoveOnCompleted = true;
 
-            if (separator.Text is not null)
+            if (separator.Label is not null)
             {
                 //separator.Text.X = 0;
                 //separator.Text.Y = 0;
-                separator.Text.Opacity = 0;
-                separator.Text.RemoveOnCompleted = true;
+                separator.Label.Opacity = 0;
+                separator.Label.RemoveOnCompleted = true;
             }
         }
 
