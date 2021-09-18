@@ -137,7 +137,7 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IPolarLineSeries{TDrawingContext}.IsClosed"/>
         public bool IsClosed { get => _isClosed; set { _isClosed = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IPolarLineSeries{TDrawingContext}.DataLabelsPosition"/>
+        /// <inheritdoc cref="IPolarSeries{TDrawingContext}.DataLabelsPosition"/>
         public PolarLabelsPosition DataLabelsPosition { get => _labelsPosition; set { _labelsPosition = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
@@ -423,6 +423,7 @@ namespace LiveChartsCore
                             new TypedChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>(data.TargetPoint));
                         label.TextSize = dls;
                         label.Padding = DataLabelsPadding;
+                        label.RotateTransform = actualRotation;
 
                         var rad = Math.Sqrt(Math.Pow(cp.X - scaler.CenterX, 2) + Math.Pow(cp.Y - scaler.CenterY, 2));
 
