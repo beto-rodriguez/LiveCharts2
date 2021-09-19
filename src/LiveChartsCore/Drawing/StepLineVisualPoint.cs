@@ -70,7 +70,7 @@ namespace LiveChartsCore.Drawing
         /// <summary>
         /// Gets the main <see cref="T:LiveChartsCore.Drawing.IDrawable`1" />.
         /// </summary>
-        public IDrawable<TDrawingContext>? HighlightableGeometry => Geometry?.HighlightableGeometry;
+        public IGeometry<TDrawingContext>? HighlightableGeometry => Geometry?.HighlightableGeometry;
 
         ISizedGeometry<TDrawingContext> IStepLineVisualChartPoint<TDrawingContext>.Geometry => Geometry;
         IAnimatableStepLineSegment IStepLineVisualChartPoint<TDrawingContext>.StepLine => StepSegment;

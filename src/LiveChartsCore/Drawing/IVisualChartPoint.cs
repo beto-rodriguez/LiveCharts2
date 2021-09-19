@@ -31,6 +31,6 @@ namespace LiveChartsCore.Drawing
         /// <summary>
         /// Gets the drawable to style when a chart points requires to highlight it.
         /// </summary>
-        IDrawable<TDrawingContext>? HighlightableGeometry { get; }
+        IGeometry<TDrawingContext>? HighlightableGeometry { get; }
     }
 }
