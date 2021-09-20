@@ -51,6 +51,14 @@ namespace LiveChartsCore.Kernel.Sketches
         /// </value>
         int ScalesRadiusAt { get; set; }
 
+        // <summary>
+        /// Gets or sets the data labels position.
+        /// </summary>
+        /// <value>
+        /// The data labels position.
+        /// </value>
+        PolarLabelsPosition DataLabelsPosition { get; set; }
+
         /// <summary>
         /// Gets the series bounds.
         /// </summary>

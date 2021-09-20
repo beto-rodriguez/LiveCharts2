@@ -156,7 +156,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         public IPaint<SkiaSharpDrawingContext>? Fill { get; set; }
 
         /// <inheritdoc cref="IVisualChartPoint{TDrawingContext}.HighlightableGeometry" />
-        public IDrawable<SkiaSharpDrawingContext> HighlightableGeometry => GetHighlitableGeometry();
+        public IGeometry<SkiaSharpDrawingContext> HighlightableGeometry => GetHighlitableGeometry();
 
         /// <summary>
         /// Draws the geometry in the user interface.

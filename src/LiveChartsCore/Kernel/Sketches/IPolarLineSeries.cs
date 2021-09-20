@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.Kernel.Sketches
 {
@@ -30,7 +29,7 @@ namespace LiveChartsCore.Kernel.Sketches
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="IChartSeries{TDrawingContext}" />
-    public interface IPolarLineSeries<TDrawingContext> : ILineSeries<TDrawingContext>
+    public interface IPolarLineSeries<TDrawingContext> : ILineSeries<TDrawingContext>, IPolarSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
@@ -40,13 +39,5 @@ namespace LiveChartsCore.Kernel.Sketches
         /// The value.
         /// </value>
         bool IsClosed { get; set; }
-
-        /// <summary>
-        /// Gets or sets the data labels position.
-        /// </summary>
-        /// <value>
-        /// The data labels position.
-        /// </value>
-        PolarLabelsPosition DataLabelsPosition { get; set; }
     }
 }

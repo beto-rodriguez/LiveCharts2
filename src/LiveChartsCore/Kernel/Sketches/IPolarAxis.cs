@@ -70,6 +70,11 @@ namespace LiveChartsCore.Kernel.Sketches
         Padding LabelsPadding { get; set; }
 
         /// <summary>
+        /// Gets or sets the labels background.
+        /// </summary>
+        LvcColor LabelsBackground { get; set; }
+
+        /// <summary>
         /// Initializes the axis for the specified orientation.
         /// </summary>
         /// <param name="orientation">The orientation.</param>
