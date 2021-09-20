@@ -12,7 +12,7 @@
         <vms:ViewModel/>
     </UserControl.DataContext>
     <Grid>
-        <!--<lvc:GeoMap Values="{Binding Values}"></lvc:GeoMap>-->
+        <lvc:GeoMap Values="{Binding Values}"></lvc:GeoMap>
     </Grid>
 
 </UserControl>

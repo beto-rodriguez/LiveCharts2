@@ -465,37 +465,31 @@ namespace LiveChartsCore
                     axis.DataBounds.Max = axis.DataBounds.Max + c;
                 }
 
-                //if (axis.Orientation == PolarAxisOrientation.Radius)
-                //{
-                    // only the radial axes have a padding.
-                    // angle axes are ignored.
+                // apply padding
+                if (axis.MinLimit is null)
+                {
+                    var s = 0d;//new Scaler(DrawMarginLocation, DrawMarginSize, axis);
+                    // correction by geometry size
+                    var p = 0d;//Math.Abs(s.ToChartValues(axis.DataBounds.RequestedGeometrySize) - s.ToChartValues(0));
+                    if (axis.DataBounds.PaddingMin > p) p = axis.DataBounds.PaddingMin;
+                    axis.IsNotifyingChanges = false;
+                    axis.DataBounds.Min = axis.DataBounds.Min - p;
+                    axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - p;
+                    axis.IsNotifyingChanges = true;
+                }
 
-                    // apply padding
-                    if (axis.MinLimit is null)
-                    {
-                        var s = 0d;//new Scaler(DrawMarginLocation, DrawMarginSize, axis);
-                        // correction by geometry size
-                        var p = 0d;//Math.Abs(s.ToChartValues(axis.DataBounds.RequestedGeometrySize) - s.ToChartValues(0));
-                        if (axis.DataBounds.PaddingMin > p) p = axis.DataBounds.PaddingMin;
-                        axis.IsNotifyingChanges = false;
-                        axis.DataBounds.Min = axis.DataBounds.Min - p;
-                        axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - p;
-                        axis.IsNotifyingChanges = true;
-                    }
-
-                    // apply padding
-                    if (axis.MaxLimit is null)
-                    {
-                        var s = 0d; //new Scaler(DrawMarginLocation, DrawMarginSize, axis);
-                        // correction by geometry size
-                        var p = 0d; // Math.Abs(s.ToChartValues(axis.DataBounds.RequestedGeometrySize) - s.ToChartValues(0));
-                        if (axis.DataBounds.PaddingMax > p) p = axis.DataBounds.PaddingMax;
-                        axis.IsNotifyingChanges = false;
-                        axis.DataBounds.Max = axis.DataBounds.Max + p;
-                        axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + p;
-                        axis.IsNotifyingChanges = true;
-                    }
-                //}
+                // apply padding
+                if (axis.MaxLimit is null)
+                {
+                    var s = 0d; //new Scaler(DrawMarginLocation, DrawMarginSize, axis);
+                    // correction by geometry size
+                    var p = 0d; // Math.Abs(s.ToChartValues(axis.DataBounds.RequestedGeometrySize) - s.ToChartValues(0));
+                    if (axis.DataBounds.PaddingMax > p) p = axis.DataBounds.PaddingMax;
+                    axis.IsNotifyingChanges = false;
+                    axis.DataBounds.Max = axis.DataBounds.Max + p;
+                    axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + p;
+                    axis.IsNotifyingChanges = true;
+                }
 
                 var drawablePlane = (IPlane<TDrawingContext>)axis;
                 _ = _everMeasuredAxes.Add(drawablePlane);

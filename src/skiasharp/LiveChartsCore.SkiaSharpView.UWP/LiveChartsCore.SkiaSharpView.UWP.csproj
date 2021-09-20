@@ -131,6 +131,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="GeoMap.xaml.cs">
+      <DependentUpon>GeoMap.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PolarChart.xaml.cs">
       <DependentUpon>PolarChart.xaml</DependentUpon>
     </Compile>
@@ -172,6 +175,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="GeoMap.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="PolarChart.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

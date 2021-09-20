@@ -37,7 +37,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     /// The geo map control.
     /// </summary>
     /// <seealso cref="UserControl" />
-    public partial class GeoMap : UserControl, IGeoMap
+    public partial class GeoMap : UserControl, IGeoMap<SkiaSharpDrawingContext>
     {
         private static GeoJsonFile? s_map = null;
         private int _heatKnownLength = 0;
@@ -53,6 +53,12 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             Resize += GeoMap_Resize;
         }
 
+        /// <inheritdoc cref="IGeoMap{TDrawingContext}.Measured"/>
+        public event Action<IGeoMap<SkiaSharpDrawingContext>> Measured;
+
+        /// <inheritdoc cref="IGeoMap{TDrawingContext}.Canvas"/>
+        public MotionCanvas<SkiaSharpDrawingContext> Canvas => motionCanvas1.CanvasCore;
+
         /// <summary>
         /// Gets or sets the projection.
         /// </summary>
@@ -67,7 +73,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             Color.FromArgb(255, 2, 136, 209) // hot (max value)
         };
 
-        LvcColor[] IGeoMap.HeatMap
+        LvcColor[] IGeoMap<SkiaSharpDrawingContext>.HeatMap
         {
             get => HeatMap.Select(x => new LvcColor(x.R, x.G, x.B, x.A)).ToArray();
             set => HeatMap = value.Select(x => Color.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
@@ -83,7 +89,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// </summary>
         public Color StrokeColor { get; set; } = Color.FromArgb(255, 224, 224, 224);
 
-        LvcColor IGeoMap.StrokeColor
+        LvcColor IGeoMap<SkiaSharpDrawingContext>.StrokeColor
         {
             get => new(StrokeColor.R, StrokeColor.G, StrokeColor.B, StrokeColor.A);
             set => StrokeColor = Color.FromArgb(value.A, value.R, value.G, value.B);
@@ -99,7 +105,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// </summary>
         public Color FillColor { get; set; } = Color.FromArgb(255, 250, 250, 250);
 
-        LvcColor IGeoMap.FillColor
+        LvcColor IGeoMap<SkiaSharpDrawingContext>.FillColor
         {
             get => new(FillColor.R, FillColor.G, FillColor.B, FillColor.A);
             set => FillColor = Color.FromArgb(value.A, value.R, value.G, value.B);
@@ -123,7 +129,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
             var thickness = (float)StrokeThickness;
 
-            var igeo = (IGeoMap)this;
+            var igeo = (IGeoMap<SkiaSharpDrawingContext>)this;
 
             if (_heatKnownLength != HeatMap.Length)
             {
@@ -141,6 +147,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                     paint,
                     new HashSet<IDrawable<SkiaSharpDrawingContext>>(shapes))
             };
+
+            Measured?.Invoke(this);
         }
     }
 }

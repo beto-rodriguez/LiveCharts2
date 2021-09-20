@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 
@@ -28,8 +29,14 @@ namespace LiveChartsCore.Geo
     /// <summary>
     /// Defines a geographic map.
     /// </summary>
-    public interface IGeoMap
+    public interface IGeoMap<TDrawingContext>
+        where TDrawingContext : DrawingContext
     {
+        /// <summary>
+        /// Gets the motion canvas.
+        /// </summary>
+        MotionCanvas<TDrawingContext> Canvas { get; }
+
         /// <summary>
         /// Gets or sets the projection.
         /// </summary>
@@ -64,5 +71,10 @@ namespace LiveChartsCore.Geo
         /// Gets or sets the values.
         /// </summary>
         Dictionary<string, double> Values { get; set; }
+
+        /// <summary>
+        /// Called when the chart is measured.
+        /// </summary>
+        event Action<IGeoMap<TDrawingContext>> Measured;
     }
 }

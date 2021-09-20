@@ -37,7 +37,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     /// Defines a geographic map.
     /// </summary>
     /// <seealso cref="Control" />
-    public class GeoMap : Control, IGeoMap
+    public class GeoMap : Control, IGeoMap<SkiaSharpDrawingContext>
     {
         private static GeoJsonFile? s_map = null;
         private int _heatKnownLength = 0;
@@ -110,6 +110,17 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 nameof(FillColor), typeof(System.Windows.Media.Color), typeof(GeoMap),
                 new PropertyMetadata(System.Windows.Media.Color.FromRgb(250, 250, 250)));
 
+        /// <inheritdoc cref="IGeoMap{TDrawingContext}.Measured"/>
+        public event Action<IGeoMap<SkiaSharpDrawingContext>> Measured;
+
+        /// <inheritdoc cref="IGeoMap{TDrawingContext}.Canvas"/>
+        public MotionCanvas<SkiaSharpDrawingContext> Canvas =>
+            Template.FindName("canvas", this) is not MotionCanvas canvas
+            ? throw new Exception(
+                $"{nameof(MotionCanvas)} not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
+                $"If you override the template please add an {nameof(MotionCanvas)} to the template and name it 'canvas'")
+            : canvas.CanvasCore;
+
         /// <summary>
         /// Gets or sets the projection.
         /// </summary>
@@ -128,7 +139,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set => SetValue(HeatMapProperty, value);
         }
 
-        LvcColor[] IGeoMap.HeatMap
+        LvcColor[] IGeoMap<SkiaSharpDrawingContext>.HeatMap
         {
             get => HeatMap.Select(x => LvcColor.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
             set => HeatMap = value.Select(x => System.Windows.Media.Color.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
@@ -152,7 +163,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set => SetValue(StrokeColorProperty, value);
         }
 
-        LvcColor IGeoMap.StrokeColor
+        LvcColor IGeoMap<SkiaSharpDrawingContext>.StrokeColor
         {
             get => LvcColor.FromArgb(StrokeColor.A, StrokeColor.R, StrokeColor.G, StrokeColor.B);
             set => StrokeColor = System.Windows.Media.Color.FromArgb(value.A, value.R, value.G, value.B);
@@ -176,7 +187,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set => SetValue(FillColorProperty, value);
         }
 
-        LvcColor IGeoMap.FillColor
+        LvcColor IGeoMap<SkiaSharpDrawingContext>.FillColor
         {
             get => LvcColor.FromArgb(FillColor.A, FillColor.R, FillColor.G, FillColor.B);
             set => FillColor = System.Windows.Media.Color.FromArgb(value.A, value.R, value.G, value.B);
@@ -222,6 +233,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     paint,
                     new HashSet<IDrawable<SkiaSharpDrawingContext>>(shapes))
             };
+
+            Measured?.Invoke(this);
         }
     }
 }
