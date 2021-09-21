@@ -23,73 +23,53 @@
 using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.Geo
 {
     /// <summary>
-    /// Defines a geographic map.
+    /// Defines the map shape context class.
     /// </summary>
-    public interface IGeoMap<TDrawingContext>
+    public class MapShapeContext<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Gets or sets the active map.
+        /// Initializes a new instance of the <see cref="MapShapeContext{TDrawingContext}"/> class.
         /// </summary>
-        GeoJsonFile ActiveMap { get; set; }
+        /// <param name="chart">The chart.</param>
+        /// <param name="paint">The paint.</param>
+        /// <param name="heatStops">The heat stops.</param>
+        /// <param name="boundsDictionary">The bounds.</param>
+        public MapShapeContext(
+            IGeoMap<TDrawingContext> chart,
+            IPaint<TDrawingContext> paint,
+            List<Tuple<double, LvcColor>> heatStops,
+            Dictionary<int, Bounds> boundsDictionary)
+        {
+            Chart = chart;
+            DefaultPaint = paint;
+            HeatStops = heatStops;
+            BoundsDictionary = boundsDictionary;
+        }
 
         /// <summary>
-        /// Gets the motion canvas.
+        /// Gets the chart.
         /// </summary>
-        MotionCanvas<TDrawingContext> Canvas { get; }
+        public IGeoMap<TDrawingContext> Chart { get; }
 
         /// <summary>
-        /// Gets the control width.
+        /// Gets the default paint.
         /// </summary>
-        float Width { get; }
+        public IPaint<TDrawingContext> DefaultPaint { get; }
 
         /// <summary>
-        /// Gets the control height.
+        /// Gets the heat stops.
         /// </summary>
-        float Height { get; }
+        public List<Tuple<double, LvcColor>> HeatStops { get; }
 
         /// <summary>
-        /// Gets or sets the projection.
+        /// Gets the bounds dictionary.
         /// </summary>
-        Projection Projection { get; set; }
-
-        /// <summary>
-        /// Gets or sets the heat map.
-        /// </summary>
-        LvcColor[] HeatMap { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color stops.
-        /// </summary>
-        double[]? ColorStops { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color stops.
-        /// </summary>
-        LvcColor StrokeColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color stops.
-        /// </summary>
-        double StrokeThickness { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color stops.
-        /// </summary>
-        LvcColor FillColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the values.
-        /// </summary>
-        Dictionary<string, double> Values { get; set; }
-
-        /// <summary>
-        /// Called when the chart is measured.
-        /// </summary>
-        event Action<IGeoMap<TDrawingContext>> Measured;
+        public Dictionary<int, Bounds> BoundsDictionary { get; }
     }
 }

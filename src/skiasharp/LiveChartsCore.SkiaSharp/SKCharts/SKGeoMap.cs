@@ -89,6 +89,13 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         /// </value>
         public int Width { get; set; } = 900;
 
+        /// <inheritdoc cref="IGeoMap{TDrawingContext}.ActiveMap"/>
+        public GeoJsonFile ActiveMap { get => s_map ??= Maps.GetWorldMap(); set => throw new NotImplementedException(); }
+
+        float IGeoMap<SkiaSharpDrawingContext>.Width => Width;
+
+        float IGeoMap<SkiaSharpDrawingContext>.Height => Height;
+
         /// <inheritdoc cref="IGeoMap{TDrawingContext}.Canvas"/>
         public MotionCanvas<SkiaSharpDrawingContext> Canvas { get; } = new();
 
@@ -188,7 +195,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
 
             var worldMap = s_map ??= Maps.GetWorldMap();
             var projector = Maps.BuildProjector(Projection, new float[] { Width, Height });
-            var shapes = worldMap.AsHeatMapShapes(Values, hm, _heatStops, stroke, fill, thickness, projector);
+            var shapes = worldMap.AsMapShapes(hm, _heatStops, stroke, fill, thickness, projector);
             paint.SetGeometries(Canvas, new HashSet<IDrawable<SkiaSharpDrawingContext>>(shapes));
             var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>> { paint };
             Canvas.SetPaintTasks(tasks);

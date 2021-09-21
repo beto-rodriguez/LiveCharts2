@@ -22,13 +22,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 
 namespace LiveChartsCore.SkiaSharpView.WPF
@@ -42,6 +47,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         private static GeoJsonFile? s_map = null;
         private int _heatKnownLength = 0;
         private List<Tuple<double, LvcColor>> _heatStops = new();
+        private readonly CollectionDeepObserver<MapShape<SkiaSharpDrawingContext>> _shapesObserver;
 
         static GeoMap()
         {
@@ -53,9 +59,15 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </summary>
         public GeoMap()
         {
+            _shapesObserver = new CollectionDeepObserver<MapShape<SkiaSharpDrawingContext>>(
+                (object? sender, NotifyCollectionChangedEventArgs e) => Measure(),
+                (object? sender, PropertyChangedEventArgs e) => Measure());
             SetCurrentValue(ValuesProperty, new Dictionary<string, double>());
+            SetCurrentValue(ShapesProperty, Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>());
             SizeChanged += GeoMap_SizeChanged;
         }
+
+        #region dependency props
 
         /// <summary>
         /// The projection property
@@ -89,6 +101,20 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             DependencyProperty.Register(nameof(Values), typeof(Dictionary<string, double>), typeof(GeoMap), new PropertyMetadata(null));
 
         /// <summary>
+        /// The values property
+        /// </summary>
+        public static readonly DependencyProperty ShapesProperty =
+            DependencyProperty.Register(nameof(Shapes), typeof(IEnumerable<MapShape<SkiaSharpDrawingContext>>),
+                typeof(GeoMap), new PropertyMetadata(null, (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                {
+                    var chart = (GeoMap)o;
+                    var seriesObserver = chart._shapesObserver;
+                    seriesObserver.Dispose((IEnumerable<MapShape<SkiaSharpDrawingContext>>)args.OldValue);
+                    seriesObserver.Initialize((IEnumerable<MapShape<SkiaSharpDrawingContext>>)args.NewValue);
+                    chart.Measure();
+                }));
+
+        /// <summary>
         /// The stroke color property
         /// </summary>
         public static readonly DependencyProperty StrokeColorProperty =
@@ -110,6 +136,10 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 nameof(FillColor), typeof(System.Windows.Media.Color), typeof(GeoMap),
                 new PropertyMetadata(System.Windows.Media.Color.FromRgb(250, 250, 250)));
 
+        #endregion
+
+        #region props
+
         /// <inheritdoc cref="IGeoMap{TDrawingContext}.Measured"/>
         public event Action<IGeoMap<SkiaSharpDrawingContext>> Measured;
 
@@ -120,6 +150,15 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 $"{nameof(MotionCanvas)} not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
                 $"If you override the template please add an {nameof(MotionCanvas)} to the template and name it 'canvas'")
             : canvas.CanvasCore;
+
+        /// <inheritdoc cref="IGeoMap{TDrawingContext}.ActiveMap"/>
+        public GeoJsonFile ActiveMap { get => s_map ??= Maps.GetWorldMap(); set => throw new NotImplementedException(); }
+
+        /// <inheritdoc cref="IGeoMap{TDrawingContext}.Width"/>
+        float IGeoMap<SkiaSharpDrawingContext>.Width => (float)ActualWidth;
+
+        /// <inheritdoc cref="IGeoMap{TDrawingContext}.Height"/>
+        float IGeoMap<SkiaSharpDrawingContext>.Height => (float)ActualHeight;
 
         /// <summary>
         /// Gets or sets the projection.
@@ -202,20 +241,53 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             set => SetValue(ValuesProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the shapes.
+        /// </summary>
+        public IEnumerable<MapShape<SkiaSharpDrawingContext>> Shapes
+        {
+            get => (IEnumerable<MapShape<SkiaSharpDrawingContext>>)GetValue(ShapesProperty);
+            set => SetValue(ShapesProperty, value);
+        }
+
+        #endregion
+
         private void GeoMap_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            Measure();
+        }
+
+        private readonly SolidColorPaint _defaultPaint = new();
+
+        private void Measure()
+        {
+            if (Template is null) return;
+
             if (Template.FindName("canvas", this) is not MotionCanvas canvas)
                 throw new Exception(
                     $"{nameof(MotionCanvas)} not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
                     $"If you override the template please add an {nameof(MotionCanvas)} to the template and name it 'canvas'");
 
-            var paint = new SolidColorPaint();
+            var bounds = new Dictionary<int, Bounds>();
+            foreach (var shape in Shapes)
+            {
+                if (shape is not IWeigthedMapShape wShape) continue;
 
+                if (!bounds.TryGetValue(wShape.WeigthedAt, out var weightBounds))
+                {
+                    weightBounds = new Bounds();
+                    bounds.Add(wShape.WeigthedAt, weightBounds);
+                }
+                weightBounds.AppendValue(wShape.Value);
+            }
+
+            var paint = _defaultPaint;
+
+            var igeo = (IGeoMap<SkiaSharpDrawingContext>)this;
             var thickness = (float)StrokeThickness;
-            var stroke = LvcColor.FromArgb(255, StrokeColor.R, StrokeColor.G, StrokeColor.B);
-            var fill = LvcColor.FromArgb(255, FillColor.R, FillColor.G, FillColor.B);
-
-            var hm = HeatMap.Select(x => LvcColor.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
+            var stroke = igeo.StrokeColor;
+            var fill = igeo.FillColor;
+            var hm = igeo.HeatMap;
 
             if (_heatKnownLength != HeatMap.Length)
             {
@@ -223,16 +295,20 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 _heatKnownLength = HeatMap.Length;
             }
 
-            var worldMap = s_map ??= Maps.GetWorldMap();
+            var map = ActiveMap;
             var projector = Maps.BuildProjector(Projection, new[] { (float)ActualWidth, (float)ActualHeight });
-            var shapes = worldMap.AsHeatMapShapes(Values, hm, _heatStops, stroke, fill, thickness, projector);
+            var shapes = map.AsMapShapes(hm, _heatStops, stroke, fill, thickness, projector);
 
-            canvas.PaintTasks = new List<PaintSchedule<SkiaSharpDrawingContext>>
+            foreach (var shape in shapes)
+                paint.AddGeometryToPaintTask(canvas.CanvasCore, shape);
+            canvas.CanvasCore.AddDrawableTask(paint);
+
+            var context = new MapShapeContext<SkiaSharpDrawingContext>(this, paint, _heatStops, bounds);
+
+            foreach (var shape in Shapes)
             {
-                 new PaintSchedule<SkiaSharpDrawingContext>(
-                    paint,
-                    new HashSet<IDrawable<SkiaSharpDrawingContext>>(shapes))
-            };
+                shape.Measure(context);
+            }
 
             Measured?.Invoke(this);
         }
