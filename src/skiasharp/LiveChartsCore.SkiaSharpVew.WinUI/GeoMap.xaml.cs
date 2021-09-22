@@ -36,8 +36,6 @@ using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using SkiaSharp;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
 
 namespace LiveChartsCore.SkiaSharpView.WinUI
 {
