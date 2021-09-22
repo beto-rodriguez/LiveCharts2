@@ -1,18 +1,20 @@
-﻿using System.Collections.Generic;
-using LiveChartsCore.Geo;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Maps.World
 {
     public class ViewModel
     {
-        // every country has a unique identifier
-        // check the "shortName" property in the following
-        // json file to assign a value to a country in the heat map
-        // https://github.com/beto-rodriguez/LiveCharts2/blob/master/docs/_assets/word-map-index.json
+        public ViewModel()
+        {
+            // every country has a unique identifier
+            // check the "shortName" property in the following
+            // json file to assign a value to a country in the heat map
+            // https://github.com/beto-rodriguez/LiveCharts2/blob/master/docs/_assets/word-map-index.json
 
-        public IEnumerable<IMapShape> Shapes { get; set; }
-            = new HeatLand[]
+            Shapes = new HeatLand[]
             {
                 new HeatLand { Name = "mex", Value = 10 },
                 new HeatLand { Name = "usa", Value = 15 },
@@ -28,5 +30,26 @@ namespace ViewModelsSamples.Maps.World
                 new HeatLand { Name = "bra", Value = 13 },
                 new HeatLand { Name = "are", Value = 13 }
             };
+
+            DoRandomChanges();
+        }
+
+        public HeatLand[] Shapes { get; set; }
+
+        private Random _r = new Random();
+
+        private async void DoRandomChanges()
+        {
+            await Task.Delay(1000);
+
+            while (true)
+            {
+                foreach (var shape in Shapes)
+                {
+                    shape.Value = _r.Next(0, 20);
+                }
+                await Task.Delay(500);
+            }
+        }
     }
 }

@@ -51,7 +51,7 @@ namespace LiveChartsCore.Drawing
         /// <param name="blue">The blue component from 0 to 255.</param>
         public LvcColor(byte red, byte green, byte blue) : this(red, green, blue, 255) { }
 
-        private LvcColor(bool isEmpty)
+        internal LvcColor(bool isEmpty)
         {
             R = 255;
             G = 255;
@@ -94,10 +94,7 @@ namespace LiveChartsCore.Drawing
         public override bool Equals(object? obj)
         {
             return obj is LvcColor color &&
-                   (
-                    (IsEmpty && color.IsEmpty) ||
-                    (R == color.R && G == color.G && B == color.B && A == color.A)
-                   );
+                R == color.R && G == color.G && B == color.B && A == color.A && IsEmpty == color.IsEmpty;
         }
 
         /// <inheritdoc cref="object.GetHashCode()"/>

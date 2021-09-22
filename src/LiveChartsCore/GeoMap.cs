@@ -52,6 +52,7 @@ namespace LiveChartsCore
         private IPaint<TDrawingContext>? _previousFill;
         private int _heatKnownLength = 0;
         private List<Tuple<double, LvcColor>> _heatStops = new();
+        private readonly Dictionary<string, LvcColor> _previousColors = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeoMap{TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs}"/> class.
@@ -184,9 +185,9 @@ namespace LiveChartsCore
                 }
             }
 
+            // ToDo: we should improve the way the library tracks the previous color, should we?
             var context = new MapShapeContext<TDrawingContext>(_chartView, _heatPaint, _heatStops, bounds);
 
-            _heatPaint.ClearGeometriesFromPaintTask(_chartView.Canvas);
             foreach (var shape in _chartView.Shapes)
             {
                 shape.Measure(context);

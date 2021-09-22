@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
@@ -39,22 +38,39 @@ namespace LiveChartsCore.SkiaSharpView
         /// </summary>
         /// <param name="feature">The feature.</param>
         /// <param name="projector">The projector.</param>
-        /// <param name="predicate">The predicate, the action to apply to the built paths.</param>
         /// <returns></returns>
-        public static IEnumerable<PathShape> AsPathShape(
+        public static IEnumerable<HeatPathShape> AsPathShape(
             this GeoJsonFeature feature,
-            MapProjector projector,
-            Action<PathShape>? predicate = null)
+            MapProjector projector)
         {
-            var paths = new List<PathShape>();
+            var d = new double[0][][][];
+
+            foreach (var geometry in feature.Geometry?.Coordinates ?? d)
+            {
+                for (var i = 0; i < geometry.Length; i++)
+                {
+                    yield return new HeatPathShape { IsClosed = true };
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns an <see cref="IEnumerable{PathShape}"/> that defines the feature.
+        /// </summary>
+        /// <param name="feature">The feature.</param>
+        /// <param name="projector">The projector.</param>
+        /// <returns></returns>
+        public static IEnumerable<PathCommand> GetPathCommands(
+            this GeoJsonFeature feature,
+            MapProjector projector)
+        {
             var d = new double[0][][][];
 
             foreach (var geometry in feature.Geometry?.Coordinates ?? d)
             {
                 foreach (var segment in geometry)
                 {
-                    var path = new PathShape { IsClosed = true };
-                    if (predicate is not null) predicate(path);
+                    var path = new HeatPathShape { IsClosed = true };
 
                     var isFirst = true;
                     foreach (var point in segment)
@@ -64,55 +80,14 @@ namespace LiveChartsCore.SkiaSharpView
                         if (isFirst)
                         {
                             isFirst = false;
-                            path.AddCommand(new MoveToPathCommand { X = p[0], Y = p[1] });
+                            yield return new MoveToPathCommand { X = p[0], Y = p[1] };
                             continue;
                         }
 
-                        path.AddCommand(new LineSegment { X = p[0], Y = p[1] });
+                        yield return new LineSegment { X = p[0], Y = p[1] };
                     }
-
-                    paths.Add(path);
                 }
             }
-
-            return paths;
-        }
-
-        /// <summary>
-        /// Returns a geoJson map into a heat map.
-        /// </summary>
-        /// <param name="geoJson">The geoJson.</param>
-        /// <param name="values">The values.</param>
-        /// <param name="heatMap">The heat map.</param>
-        /// <param name="heatStops">The heat stops.</param>
-        /// <param name="stroke">The stroke.</param>
-        /// <param name="fill">The fill.</param>
-        /// <param name="thickness">The thickness.</param>
-        /// <param name="projector">The projector.</param>
-        /// <returns></returns>
-        public static IEnumerable<PathShape> AsMapShapes(
-            this GeoJsonFile geoJson,
-            LvcColor stroke,
-            LvcColor fill,
-            float thickness,
-            MapProjector projector)
-        {
-            var paths = new List<PathShape>();
-
-            LvcColor? baseColor = null;
-
-            foreach (var feature in geoJson.Features ?? new GeoJsonFeature[0])
-            {
-                paths.AddRange(
-                    feature.AsPathShape(projector, p =>
-                    {
-                        p.StrokeColor = stroke;
-                        p.FillColor = baseColor ?? fill;
-                        p.StrokeThickness = thickness;
-                    }));
-            }
-
-            return paths;
         }
     }
 }

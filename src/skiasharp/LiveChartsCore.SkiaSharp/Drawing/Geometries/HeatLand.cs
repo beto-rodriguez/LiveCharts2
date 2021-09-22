@@ -20,8 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
+using LiveChartsCore.Kernel;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
@@ -31,6 +36,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     public class HeatLand : MapShape<SkiaSharpDrawingContext>, IWeigthedMapShape
     {
         private double _value;
+        private Tuple<HeatPathShape, IEnumerable<PathCommand>>[] _paths;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HeatLand"/> class.
@@ -70,15 +76,85 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         public override void Measure(MapShapeContext<SkiaSharpDrawingContext> context)
         {
             var projector = Maps.BuildProjector(context.Chart.MapProjection, new[] { context.Chart.Width, context.Chart.Height });
-            var paths = context.Chart.ActiveMap.FindFeature(Name).AsPathShape(projector);
-            foreach (var path in paths) context.HeatPaint.AddGeometryToPaintTask(context.Chart.Canvas, path);
 
-            var color = HeatFunctions.InterpolateColor(
+            var heat = HeatFunctions.InterpolateColor(
                 (float)Value, context.BoundsDictionary[WeigthedAt], context.Chart.HeatMap, context.HeatStops);
 
-            foreach (var path in paths)
+            if (_paths is null)
             {
-                path.FillColor = color;
+                _paths = GetPathCommands(context.Chart.ActiveMap.FindFeature(Name), projector).ToArray();
+
+                foreach (var path in _paths)
+                {
+                    path.Item1.FillColor = new LvcColor(heat.R, heat.G, heat.B, 0);
+
+                    _ = path.Item1
+                        .TransitionateProperties(nameof(HeatPathShape.FillColor))
+                        .WithAnimation(animation =>
+                            animation
+                                .WithDuration(TimeSpan.FromMilliseconds(800))
+                                .WithEasingFunction(EasingFunctions.Lineal))
+                        .CompleteCurrentTransitions();
+
+                    context.HeatPaint.AddGeometryToPaintTask(context.Chart.Canvas, path.Item1);
+                }
+            }
+            else
+            {
+                _paths = GetPathCommands(context.Chart.ActiveMap.FindFeature(Name), projector).ToArray();
+            }
+
+            foreach (var path in _paths)
+            {
+                path.Item1.ClearCommands();
+
+                foreach (var command in path.Item2)
+                {
+                    path.Item1.AddCommand(command);
+                }
+
+                path.Item1.FillColor = heat;
+            }
+        }
+
+        private IEnumerable<Tuple<HeatPathShape, IEnumerable<PathCommand>>> GetPathCommands(
+            GeoJsonFeature feature,
+            MapProjector projector)
+        {
+            var d = new double[0][][][];
+
+            var i = 0;
+            foreach (var geometry in feature.Geometry?.Coordinates ?? d)
+            {
+                foreach (var segment in geometry)
+                {
+                    var path = _paths is not null && i <= _paths.Length - 1
+                        ? _paths[i].Item1
+                        : new HeatPathShape { IsClosed = true };
+
+                    yield return new Tuple<HeatPathShape, IEnumerable<PathCommand>>(
+                        path, EnumerateCommands(segment, projector));
+
+                    i++;
+                }
+            }
+        }
+
+        private IEnumerable<PathCommand> EnumerateCommands(double[][] segment, MapProjector projector)
+        {
+            var isFirst = true;
+            foreach (var point in segment)
+            {
+                var p = projector.ToMap(point);
+
+                if (isFirst)
+                {
+                    isFirst = false;
+                    yield return new MoveToPathCommand { X = p[0], Y = p[1] };
+                    continue;
+                }
+
+                yield return new LineSegment { X = p[0], Y = p[1] };
             }
         }
     }
