@@ -1,11 +1,13 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Maps.World
 {
-    public class ViewModel
+    public class ViewModel : INotifyPropertyChanged
     {
         public ViewModel()
         {
@@ -21,6 +23,7 @@ namespace ViewModelsSamples.Maps.World
                 new HeatLand { Name = "can", Value = 8 },
                 new HeatLand { Name = "ind", Value = 12 },
                 new HeatLand { Name = "deu", Value = 13 },
+                new HeatLand { Name= "jpn", Value = 15 },
                 new HeatLand { Name = "chn", Value = 14 },
                 new HeatLand { Name = "rus", Value = 11 },
                 new HeatLand { Name = "fra", Value = 8 },
@@ -34,13 +37,23 @@ namespace ViewModelsSamples.Maps.World
             DoRandomChanges();
         }
 
-        public HeatLand[] Shapes { get; set; }
+        public HeatLand[] Shapes { get => _shapes; set { _shapes = value; OnPropertyChanged(); } }
 
         private Random _r = new Random();
+        private HeatLand[] _shapes;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         private async void DoRandomChanges()
         {
             await Task.Delay(1000);
+
+            Shapes = Shapes.Where(x => x.Name != "rus").ToArray();
 
             while (true)
             {

@@ -44,6 +44,7 @@ namespace LiveChartsCore
         where TMoveToCommand : IMoveToPathCommand<TPathArgs>, new()
         where TDrawingContext : DrawingContext
     {
+        internal readonly HashSet<IMapElement> _everMeasuredShapes = new();
         private readonly IGeoMapView<TDrawingContext> _chartView;
         private readonly ActionThrottler _updateThrottler;
         private readonly IPaint<TDrawingContext> _heatPaint;
@@ -185,12 +186,20 @@ namespace LiveChartsCore
                 }
             }
 
-            // ToDo: we should improve the way the library tracks the previous color, should we?
+            var toDeleteShapes = new HashSet<IMapElement>(_everMeasuredShapes);
             var context = new MapShapeContext<TDrawingContext>(_chartView, _heatPaint, _heatStops, bounds);
 
             foreach (var shape in _chartView.Shapes)
             {
+                _ = _everMeasuredShapes.Add(shape);
                 shape.Measure(context);
+                _ = toDeleteShapes.Remove(shape);
+            }
+
+            foreach (var shape in toDeleteShapes)
+            {
+                shape.RemoveFromUI(context);
+                _ = _everMeasuredShapes.Remove(shape);
             }
 
             _chartView.Canvas.Invalidate();

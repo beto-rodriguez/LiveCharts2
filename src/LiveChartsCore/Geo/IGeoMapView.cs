@@ -85,7 +85,7 @@ namespace LiveChartsCore.Geo
         /// <summary>
         /// Gets or sets the shapes to draw in the map.
         /// </summary>
-        IEnumerable<IMapShape> Shapes { get; set; }
+        IEnumerable<IMapElement> Shapes { get; set; }
 
         /// <summary>
         /// Gets whether the control is in designer mode.

@@ -44,7 +44,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     /// <seealso cref="Control" />
     public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
     {
-        private readonly CollectionDeepObserver<IMapShape> _shapesObserver;
+        private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
         private readonly GeoMap<SkiaSharpDrawingContext, HeatPathShape, LineSegment, MoveToPathCommand, SKPath> _core;
 
         static GeoMap()
@@ -59,7 +59,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         {
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
             _core = new GeoMap<SkiaSharpDrawingContext, HeatPathShape, LineSegment, MoveToPathCommand, SKPath>(this);
-            _shapesObserver = new CollectionDeepObserver<IMapShape>(
+            _shapesObserver = new CollectionDeepObserver<IMapElement>(
                 (object? sender, NotifyCollectionChangedEventArgs e) => Measure(),
                 (object? sender, PropertyChangedEventArgs e) => Measure());
             SetCurrentValue(ShapesProperty, Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>());
@@ -115,7 +115,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// The values property
         /// </summary>
         public static readonly DependencyProperty ShapesProperty =
-            DependencyProperty.Register(nameof(Shapes), typeof(IEnumerable<IMapShape>),
+            DependencyProperty.Register(nameof(Shapes), typeof(IEnumerable<IMapElement>),
                 typeof(GeoMap), new PropertyMetadata(null, (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                 {
                     var chart = (GeoMap)o;
@@ -226,9 +226,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         }
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
-        public IEnumerable<IMapShape> Shapes
+        public IEnumerable<IMapElement> Shapes
         {
-            get => (IEnumerable<IMapShape>)GetValue(ShapesProperty);
+            get => (IEnumerable<IMapElement>)GetValue(ShapesProperty);
             set => SetValue(ShapesProperty, value);
         }
 

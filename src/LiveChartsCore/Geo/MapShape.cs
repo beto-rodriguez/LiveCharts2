@@ -29,20 +29,26 @@ namespace LiveChartsCore.Geo
     /// <summary>
     /// Defines a shape in a map.
     /// </summary>
-    public abstract class MapShape<TDrawingContext> : IMapShape, INotifyPropertyChanged
+    public abstract class MapShape<TDrawingContext> : IMapElement, INotifyPropertyChanged
         where TDrawingContext : DrawingContext
     {
         /// <inheritdoc cref="INotifyPropertyChanged.PropertyChanged"/>
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        /// <summary>
-        /// Measures the shape in the specified map.
-        /// </summary>
+        /// <inheritdoc cref="IMapElement.Measure(object)"/>
         public abstract void Measure(MapShapeContext<TDrawingContext> context);
 
-        void IMapShape.Measure(object context)
+        /// <inheritdoc cref="IMapElement.RemoveFromUI(object)"/>
+        public abstract void RemoveFromUI(MapShapeContext<TDrawingContext> context);
+
+        void IMapElement.Measure(object context)
         {
             Measure((MapShapeContext<TDrawingContext>)context);
+        }
+
+        void IMapElement.RemoveFromUI(object context)
+        {
+            RemoveFromUI((MapShapeContext<TDrawingContext>)context);
         }
 
         /// <summary>

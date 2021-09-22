@@ -127,7 +127,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         public IPaint<SkiaSharpDrawingContext>? Fill { get; set; } = new SolidColorPaint(new SKColor(255, 250, 250, 250));
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
-        public IEnumerable<IMapShape> Shapes { get; set; } = Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>();
+        public IEnumerable<IMapElement> Shapes { get; set; } = Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>();
 
         /// <inheritdoc cref="ISkiaSharpChart.GetImage"/>
         public SKImage GetImage()

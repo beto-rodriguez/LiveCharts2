@@ -27,11 +27,16 @@ namespace LiveChartsCore.Geo
     /// <summary>
     /// Defines a shape in a map.
     /// </summary>
-    public interface IMapShape : INotifyPropertyChanged
+    public interface IMapElement : INotifyPropertyChanged
     {
         /// <summary>
-        /// Measures the shape in the specified map.
+        /// Measures the element with the given context.
         /// </summary>
         void Measure(object context);
+
+        /// <summary>
+        /// Removes the element with the given context.
+        /// </summary>
+        void RemoveFromUI(object context);
     }
 }

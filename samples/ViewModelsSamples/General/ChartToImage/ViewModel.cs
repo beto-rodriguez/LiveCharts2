@@ -21,7 +21,7 @@ namespace ViewModelsSamples.General.ChartToImage
             new PieSeries<int> { Values = new int[] { 4 } }
         };
 
-        public IEnumerable<IMapShape> MapShapes { get; set; }
+        public IEnumerable<IMapElement> MapShapes { get; set; }
             = new HeatLand[]
             {
                 new HeatLand { Name = "mex", Value = 10 },

@@ -114,6 +114,17 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             }
         }
 
+        /// <inheritdoc cref="RemoveFromUI(MapShapeContext{SkiaSharpDrawingContext})"/>
+        public override void RemoveFromUI(MapShapeContext<SkiaSharpDrawingContext> context)
+        {
+            if (_paths is null) return;
+
+            foreach (var path in _paths)
+                context.HeatPaint.RemoveGeometryFromPainTask(context.Chart.Canvas, path.Item1);
+
+            _paths = null;
+        }
+
         private IEnumerable<Tuple<HeatPathShape, IEnumerable<PathCommand>>> GetPathCommands(
             GeoJsonFeature feature,
             MapProjector projector)
