@@ -55,9 +55,7 @@ namespace LiveChartsCore.Motion
         /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
         protected override LvcColor OnGetMovement(float progress)
         {
-            return fromValue == LvcColor.Empty || toValue == LvcColor.Empty
-                ? new LvcColor(true)
-                : LvcColor.FromArgb(
+            return LvcColor.FromArgb(
                     (byte)(fromValue.A + progress * (toValue.A - fromValue.A)),
                     (byte)(fromValue.R + progress * (toValue.R - fromValue.R)),
                     (byte)(fromValue.G + progress * (toValue.G - fromValue.G)),

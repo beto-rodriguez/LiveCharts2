@@ -36,7 +36,8 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     public class HeatLand : MapShape<SkiaSharpDrawingContext>, IWeigthedMapShape
     {
         private double _value;
-        private Tuple<HeatPathShape, IEnumerable<PathCommand>>[] _paths;
+        private Tuple<HeatPathShape, IEnumerable<PathCommand>>[]? _paths;
+        private int _weigthedAt;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HeatLand"/> class.
@@ -58,18 +59,14 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        public int WeigthedAt { get; set; }
-
-        /// <summary>
         /// Gets or sets the land name.
         /// </summary>
         public string Name { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
+        /// <inheritdoc cref="IWeigthedMapShape.WeigthedAt"/>
+        public int WeigthedAt { get => _weigthedAt; set { _weigthedAt = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IWeigthedMapShape.Value"/>
         public double Value { get => _value; set { _value = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="Measure(MapShapeContext{SkiaSharpDrawingContext})"/>
