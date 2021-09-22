@@ -20,61 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Geo
 {
     /// <summary>
-    /// Defines a geographic map.
+    /// Defines a heat land shape.
     /// </summary>
-    public interface IGeoMap<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public interface IHeatLandShape
     {
         /// <summary>
-        /// Gets the motion canvas.
+        /// Gets or sets the color of the stroke.
         /// </summary>
-        MotionCanvas<TDrawingContext> Canvas { get; }
-
-        /// <summary>
-        /// Gets or sets the projection.
-        /// </summary>
-        Projection Projection { get; set; }
-
-        /// <summary>
-        /// Gets or sets the heat map.
-        /// </summary>
-        LvcColor[] HeatMap { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color stops.
-        /// </summary>
-        double[]? ColorStops { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color stops.
-        /// </summary>
+        /// <value>
+        /// The color of the stroke.
+        /// </value>
         LvcColor StrokeColor { get; set; }
 
         /// <summary>
-        /// Gets or sets the color stops.
+        /// Gets or sets the stroke thickness.
         /// </summary>
-        double StrokeThickness { get; set; }
+        /// <value>
+        /// The stroke thickness.
+        /// </value>
+        float StrokeThickness { get; set; }
 
         /// <summary>
-        /// Gets or sets the color stops.
+        /// Gets or sets the color of the fill.
         /// </summary>
+        /// <value>
+        /// The color of the fill.
+        /// </value>
         LvcColor FillColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the values.
-        /// </summary>
-        Dictionary<string, double> Values { get; set; }
-
-        /// <summary>
-        /// Called when the chart is measured.
-        /// </summary>
-        event Action<IGeoMap<TDrawingContext>> Measured;
     }
 }

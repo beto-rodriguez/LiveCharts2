@@ -66,7 +66,19 @@ namespace XamarinSample
 
             var item = _routesSamples[e.Target.Location.OriginalString];
             var t = Type.GetType($"XamarinSample.{item.Replace('/', '.')}.View");
-            var i = Activator.CreateInstance(t);
+
+            object i;
+
+            try
+            {
+                i = Activator.CreateInstance(t);
+            }
+            catch (Exception ex)
+            {
+                var a = 1;
+                throw;
+            }
+
             var c = next.Items[0].Items[0];
             c.Content = i;
         }

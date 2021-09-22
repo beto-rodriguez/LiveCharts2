@@ -20,44 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel.Sketches;
-
-namespace LiveChartsCore.Kernel.Providers
+namespace LiveChartsCore.Geo
 {
     /// <summary>
-    /// Defines the chart provider class.
+    /// Defines a weighted map shape.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public abstract class ChartProvider<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public interface IWeigthedMapShape
     {
         /// <summary>
-        /// Gets a new instance of the default data factory.
+        /// Gets or sets an index that specifies the weighted group, all the shapes that share the same index will create an weighted plane.
         /// </summary>
-        /// <typeparam name="TModel">The type of the model.</typeparam>
-        /// <returns></returns>
-        public virtual DataFactory<TModel, TDrawingContext> GetDefaultDataFactory<TModel>()
-        {
-            return new();
-        }
+        int WeigthedAt { get; set; }
 
         /// <summary>
-        /// Gets a new instance of the default Cartesian axis.
+        /// Gets or sets the value.
         /// </summary>
-        /// <returns></returns>
-        public abstract ICartesianAxis GetDefaultCartesianAxis();
-
-        /// <summary>
-        /// Gets a new instance of the default polar axis.
-        /// </summary>
-        /// <returns></returns>
-        public abstract IPolarAxis GetDefaultPolarAxis();
-
-        /// <summary>
-        /// Gets a new paint of the given color.
-        /// </summary>
-        /// <returns></returns>
-        public abstract IPaint<TDrawingContext> GetSolidColorPaint(LvcColor color = new LvcColor());
+        double Value { get; set; }
     }
 }

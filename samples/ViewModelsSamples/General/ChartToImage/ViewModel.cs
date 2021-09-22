@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using LiveChartsCore;
+using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.General.ChartToImage
 {
@@ -19,21 +21,22 @@ namespace ViewModelsSamples.General.ChartToImage
             new PieSeries<int> { Values = new int[] { 4 } }
         };
 
-        public Dictionary<string, double> MapValues { get; set; } = new Dictionary<string, double>
-        {
-            ["mex"] = 10,
-            ["usa"] = 15,
-            ["can"] = 8,
-            ["ind"] = 12,
-            ["deu"] = 13,
-            ["chn"] = 14,
-            ["rus"] = 11,
-            ["fra"] = 8,
-            ["esp"] = 7,
-            ["kor"] = 10,
-            ["zaf"] = 12,
-            ["bra"] = 13,
-            ["are"] = 13
-        };
+        public IEnumerable<IMapElement> MapShapes { get; set; }
+            = new HeatLand[]
+            {
+                new HeatLand { Name = "mex", Value = 10 },
+                new HeatLand { Name = "usa", Value = 15 },
+                new HeatLand { Name = "can", Value = 8 },
+                new HeatLand { Name = "ind", Value = 12 },
+                new HeatLand { Name = "deu", Value = 13 },
+                new HeatLand { Name = "chn", Value = 14 },
+                new HeatLand { Name = "rus", Value = 11 },
+                new HeatLand { Name = "fra", Value = 8 },
+                new HeatLand { Name = "esp", Value = 7 },
+                new HeatLand { Name = "kor", Value = 10 },
+                new HeatLand { Name = "zaf", Value = 12 },
+                new HeatLand { Name = "bra", Value = 13 },
+                new HeatLand { Name = "are", Value = 13 }
+            };
     }
 }

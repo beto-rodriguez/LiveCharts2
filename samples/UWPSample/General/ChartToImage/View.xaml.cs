@@ -71,7 +71,7 @@ namespace UWPSample.General.ChartToImage
             {
                 Width = 900,
                 Height = 600,
-                Values = _vm.MapValues
+                Shapes = _vm.MapShapes
             }.SaveImage("MapImageFromMemory.png");
 
             // or create it from a control in the UI

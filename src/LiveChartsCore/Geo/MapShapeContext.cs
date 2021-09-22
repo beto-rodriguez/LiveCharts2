@@ -20,44 +20,56 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.Kernel.Providers
+namespace LiveChartsCore.Geo
 {
     /// <summary>
-    /// Defines the chart provider class.
+    /// Defines the map shape context class.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public abstract class ChartProvider<TDrawingContext>
+    public class MapShapeContext<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Gets a new instance of the default data factory.
+        /// Initializes a new instance of the <see cref="MapShapeContext{TDrawingContext}"/> class.
         /// </summary>
-        /// <typeparam name="TModel">The type of the model.</typeparam>
-        /// <returns></returns>
-        public virtual DataFactory<TModel, TDrawingContext> GetDefaultDataFactory<TModel>()
+        /// <param name="chart">The chart.</param>
+        /// <param name="heatPaint">The heat paint.</param>
+        /// <param name="heatStops">The heat stops.</param>
+        /// <param name="boundsDictionary">The bounds.</param>
+        public MapShapeContext(
+            IGeoMapView<TDrawingContext> chart,
+            IPaint<TDrawingContext> heatPaint,
+            List<Tuple<double, LvcColor>> heatStops,
+            Dictionary<int, Bounds> boundsDictionary)
         {
-            return new();
+            Chart = chart;
+            HeatPaint = heatPaint;
+            HeatStops = heatStops;
+            BoundsDictionary = boundsDictionary;
         }
 
         /// <summary>
-        /// Gets a new instance of the default Cartesian axis.
+        /// Gets the chart.
         /// </summary>
-        /// <returns></returns>
-        public abstract ICartesianAxis GetDefaultCartesianAxis();
+        public IGeoMapView<TDrawingContext> Chart { get; }
 
         /// <summary>
-        /// Gets a new instance of the default polar axis.
+        /// Gets the heat paint.
         /// </summary>
-        /// <returns></returns>
-        public abstract IPolarAxis GetDefaultPolarAxis();
+        public IPaint<TDrawingContext> HeatPaint { get; }
 
         /// <summary>
-        /// Gets a new paint of the given color.
+        /// Gets the heat stops.
         /// </summary>
-        /// <returns></returns>
-        public abstract IPaint<TDrawingContext> GetSolidColorPaint(LvcColor color = new LvcColor());
+        public List<Tuple<double, LvcColor>> HeatStops { get; }
+
+        /// <summary>
+        /// Gets the bounds dictionary.
+        /// </summary>
+        public Dictionary<int, Bounds> BoundsDictionary { get; }
     }
 }

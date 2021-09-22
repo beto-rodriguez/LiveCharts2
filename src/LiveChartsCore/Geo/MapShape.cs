@@ -20,44 +20,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.Kernel.Providers
+namespace LiveChartsCore.Geo
 {
     /// <summary>
-    /// Defines the chart provider class.
+    /// Defines a shape in a map.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public abstract class ChartProvider<TDrawingContext>
+    public abstract class MapShape<TDrawingContext> : IMapElement, INotifyPropertyChanged
         where TDrawingContext : DrawingContext
     {
-        /// <summary>
-        /// Gets a new instance of the default data factory.
-        /// </summary>
-        /// <typeparam name="TModel">The type of the model.</typeparam>
-        /// <returns></returns>
-        public virtual DataFactory<TModel, TDrawingContext> GetDefaultDataFactory<TModel>()
+        /// <inheritdoc cref="INotifyPropertyChanged.PropertyChanged"/>
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        /// <inheritdoc cref="IMapElement.Measure(object)"/>
+        public abstract void Measure(MapShapeContext<TDrawingContext> context);
+
+        /// <inheritdoc cref="IMapElement.RemoveFromUI(object)"/>
+        public abstract void RemoveFromUI(MapShapeContext<TDrawingContext> context);
+
+        void IMapElement.Measure(object context)
         {
-            return new();
+            Measure((MapShapeContext<TDrawingContext>)context);
+        }
+
+        void IMapElement.RemoveFromUI(object context)
+        {
+            RemoveFromUI((MapShapeContext<TDrawingContext>)context);
         }
 
         /// <summary>
-        /// Gets a new instance of the default Cartesian axis.
+        /// Called when a property changes.
         /// </summary>
-        /// <returns></returns>
-        public abstract ICartesianAxis GetDefaultCartesianAxis();
-
-        /// <summary>
-        /// Gets a new instance of the default polar axis.
-        /// </summary>
-        /// <returns></returns>
-        public abstract IPolarAxis GetDefaultPolarAxis();
-
-        /// <summary>
-        /// Gets a new paint of the given color.
-        /// </summary>
-        /// <returns></returns>
-        public abstract IPaint<TDrawingContext> GetSolidColorPaint(LvcColor color = new LvcColor());
+        /// <param name="propertyName"></param>
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

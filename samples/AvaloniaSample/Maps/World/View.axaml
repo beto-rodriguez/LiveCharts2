@@ -11,5 +11,5 @@
         <vms:ViewModel/>
     </UserControl.DataContext>
 
-    <lvc:GeoMap Values="{Binding Values}"></lvc:GeoMap>
+    <lvc:GeoMap Shapes="{Binding Shapes}"></lvc:GeoMap>
 </UserControl>

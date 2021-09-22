@@ -87,7 +87,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         #region dependency properties
 
         /// <summary>
-        /// The draw margin property
+        /// The sync context property.
         /// </summary>
         public static readonly DependencyProperty SyncContextProperty =
            DependencyProperty.Register(

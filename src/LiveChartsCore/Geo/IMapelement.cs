@@ -20,44 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel.Sketches;
+using System.ComponentModel;
 
-namespace LiveChartsCore.Kernel.Providers
+namespace LiveChartsCore.Geo
 {
     /// <summary>
-    /// Defines the chart provider class.
+    /// Defines a shape in a map.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public abstract class ChartProvider<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public interface IMapElement : INotifyPropertyChanged
     {
         /// <summary>
-        /// Gets a new instance of the default data factory.
+        /// Measures the element with the given context.
         /// </summary>
-        /// <typeparam name="TModel">The type of the model.</typeparam>
-        /// <returns></returns>
-        public virtual DataFactory<TModel, TDrawingContext> GetDefaultDataFactory<TModel>()
-        {
-            return new();
-        }
+        void Measure(object context);
 
         /// <summary>
-        /// Gets a new instance of the default Cartesian axis.
+        /// Removes the element with the given context.
         /// </summary>
-        /// <returns></returns>
-        public abstract ICartesianAxis GetDefaultCartesianAxis();
-
-        /// <summary>
-        /// Gets a new instance of the default polar axis.
-        /// </summary>
-        /// <returns></returns>
-        public abstract IPolarAxis GetDefaultPolarAxis();
-
-        /// <summary>
-        /// Gets a new paint of the given color.
-        /// </summary>
-        /// <returns></returns>
-        public abstract IPaint<TDrawingContext> GetSolidColorPaint(LvcColor color = new LvcColor());
+        void RemoveFromUI(object context);
     }
 }

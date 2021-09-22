@@ -65,7 +65,7 @@ namespace XamarinSample.General.ChartToImage
             {
                 Width = 900,
                 Height = 600,
-                Values = vm.MapValues
+                Shapes = vm.MapShapes
             }.SaveImage(
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MapImageFromMemory.png"));
 

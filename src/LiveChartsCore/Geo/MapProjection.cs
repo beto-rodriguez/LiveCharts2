@@ -25,7 +25,7 @@ namespace LiveChartsCore.Geo
     /// <summary>
     /// Map projections.
     /// </summary>
-    public enum Projection
+    public enum MapProjection
     {
         /// <summary>
         /// The default projection, it only translates longitude and latitude coordinates to

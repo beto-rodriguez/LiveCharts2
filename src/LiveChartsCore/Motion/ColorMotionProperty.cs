@@ -56,10 +56,10 @@ namespace LiveChartsCore.Motion
         protected override LvcColor OnGetMovement(float progress)
         {
             return LvcColor.FromArgb(
-                (byte)(fromValue.A + progress * (toValue.A - fromValue.A)),
-                (byte)(fromValue.R + progress * (toValue.R - fromValue.R)),
-                (byte)(fromValue.G + progress * (toValue.G - fromValue.G)),
-                (byte)(fromValue.B + progress * (toValue.B - fromValue.B)));
+                    (byte)(fromValue.A + progress * (toValue.A - fromValue.A)),
+                    (byte)(fromValue.R + progress * (toValue.R - fromValue.R)),
+                    (byte)(fromValue.G + progress * (toValue.G - fromValue.G)),
+                    (byte)(fromValue.B + progress * (toValue.B - fromValue.B)));
         }
     }
 }

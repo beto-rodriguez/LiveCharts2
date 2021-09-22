@@ -31,44 +31,17 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     /// Defines a path geometry with a specified color.
     /// </summary>
     /// <seealso cref="PathGeometry" />
-    public class PathShape : PathGeometry
+    public class HeatPathShape : PathGeometry
     {
-        private readonly ColorMotionProperty _strokeProperty;
         private readonly ColorMotionProperty _fillProperty;
-        private readonly FloatMotionProperty _stProperty;
+        private bool _hasColor = false;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PathShape"/> class.
+        /// Initializes a new instance of the <see cref="HeatPathShape"/> class.
         /// </summary>
-        public PathShape() : base()
+        public HeatPathShape() : base()
         {
-            _strokeProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(StrokeColor), LvcColor.FromArgb(0, 255, 255, 255)));
-            _stProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness)));
-            _fillProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(StrokeColor), LvcColor.FromArgb(0, 255, 255, 255)));
-        }
-
-        /// <summary>
-        /// Gets or sets the color of the stroke.
-        /// </summary>
-        /// <value>
-        /// The color of the stroke.
-        /// </value>
-        public LvcColor StrokeColor
-        {
-            get => _strokeProperty.GetMovement(this);
-            set => _strokeProperty.SetMovement(value, this);
-        }
-
-        /// <summary>
-        /// Gets or sets the stroke thickness.
-        /// </summary>
-        /// <value>
-        /// The stroke thickness.
-        /// </value>
-        public float StrokeThickness
-        {
-            get => _stProperty.GetMovement(this);
-            set => _stProperty.SetMovement(value, this);
+            _fillProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(FillColor), new LvcColor(255, 255, 255, 0)));
         }
 
         /// <summary>
@@ -80,7 +53,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         public LvcColor FillColor
         {
             get => _fillProperty.GetMovement(this);
-            set => _fillProperty.SetMovement(value, this);
+            set { _fillProperty.SetMovement(value, this); _hasColor = true; }
         }
 
         /// <inheritdoc cref="Draw(SkiaSharpDrawingContext)"/>
@@ -108,19 +81,40 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
                 isValid = false;
             }
 
-            if (IsClosed) path.Close();
+            if (IsClosed)
+                path.Close();
 
-            context.Paint.Color = FillColor.AsSKColor();
-            context.Paint.StrokeWidth = 0;
-            context.Paint.Style = SKPaintStyle.Fill;
+            var originalColor = context.Paint.Color;
+            var originalStyle = context.Paint.Style;
+
+            if (_hasColor)
+            {
+                context.Paint.Color = FillColor.AsSKColor();
+                context.Paint.Style = SKPaintStyle.Fill;
+            }
+
             context.Canvas.DrawPath(path, context.Paint);
 
-            context.Paint.Color = StrokeColor.AsSKColor();
-            context.Paint.StrokeWidth = StrokeThickness;
-            context.Paint.Style = SKPaintStyle.Stroke;
-            context.Canvas.DrawPath(path, context.Paint);
+            if (_hasColor)
+            {
+                context.Paint.Color = originalColor;
+                context.Paint.Style = originalStyle;
+            }
 
             if (!isValid) SetInvalidState();
+        }
+
+        /// <inheritdoc cref="IAnimatable.CompleteAllTransitions" />
+        public override void CompleteAllTransitions()
+        {
+            // for performance reasons segments animations are disabled
+            // it should not be required by a heat shape, it is normally used in maps, lanes are not animated.
+            //foreach (var segment in _commands)
+            //{
+            //    segment.CompleteAllTransitions();
+            //}
+
+            base.CompleteAllTransitions();
         }
     }
 }
