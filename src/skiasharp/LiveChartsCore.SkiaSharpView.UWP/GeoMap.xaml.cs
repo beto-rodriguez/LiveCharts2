@@ -205,7 +205,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         }
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
-        public IPaint<SkiaSharpDrawingContext>? Fill
+        public IPaint<SkiaSharpDrawingContext> Fill
         {
             get => (IPaint<SkiaSharpDrawingContext>)GetValue(FillProperty);
             set
