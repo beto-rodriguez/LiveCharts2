@@ -27,6 +27,8 @@ using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
@@ -35,19 +37,21 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
     /// <inheritdoc cref="IGeoMapView{SkiaSharpDrawingContext}"/>
     public class SKGeoMap : IGeoMapView<SkiaSharpDrawingContext>, ISkiaSharpChart
     {
+        private readonly GeoMap<SkiaSharpDrawingContext, PathGeometry, LineSegment, MoveToPathCommand, SKPath> _core;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SKGeoMap"/> class.
         /// </summary>
         public SKGeoMap()
         {
-
+            _core = new GeoMap<SkiaSharpDrawingContext, PathGeometry, LineSegment, MoveToPathCommand, SKPath>(this);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SKGeoMap"/> class.
         /// </summary>
         /// <param name="mapView">The map view.</param>
-        public SKGeoMap(IGeoMapView<SkiaSharpDrawingContext> mapView)
+        public SKGeoMap(IGeoMapView<SkiaSharpDrawingContext> mapView) : this()
         {
             MapProjection = mapView.MapProjection;
             HeatMap = mapView.HeatMap;
@@ -185,28 +189,8 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
 
         private void load()
         {
-            //var paint = new SolidColorPaint();
-
-            //var thickness = (float)StrokeThickness;
-            //var stroke = LvcColor.FromArgb(255, StrokeColor.R, StrokeColor.G, StrokeColor.B);
-            //var fill = LvcColor.FromArgb(255, FillColor.R, FillColor.G, FillColor.B);
-
-            //var hm = HeatMap.Select(x => LvcColor.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
-
-            //if (_heatKnownLength != HeatMap.Length)
-            //{
-            //    _heatStops = HeatFunctions.BuildColorStops(hm, ColorStops);
-            //    _heatKnownLength = HeatMap.Length;
-            //}
-
-            //var worldMap = s_map ??= Maps.GetWorldMap();
-            //var projector = Maps.BuildProjector(Projection, new float[] { Width, Height });
-            //var shapes = worldMap.AsMapShapes(hm, _heatStops, stroke, fill, thickness, projector);
-            //paint.SetGeometries(Canvas, new HashSet<IDrawable<SkiaSharpDrawingContext>>(shapes));
-            //var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>> { paint };
-            //Canvas.SetPaintTasks(tasks);
-
-            //Measured?.Invoke(this);
+            _core.Update(new Kernel.ChartUpdateParams { Throttling = false, IsAutomaticUpdate = false });
+            Measured?.Invoke(this);
         }
     }
 }
