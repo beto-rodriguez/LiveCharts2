@@ -61,7 +61,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             _core = new GeoMap<SkiaSharpDrawingContext, HeatPathShape, LineSegment, MoveToPathCommand, SKPath>(this);
             _shapesObserver = new CollectionDeepObserver<IMapElement>(
                 (object? sender, NotifyCollectionChangedEventArgs e) => Measure(),
-                (object? sender, PropertyChangedEventArgs e) => Measure());
+                (object? sender, PropertyChangedEventArgs e) => Measure(),
+                true);
             SetCurrentValue(ShapesProperty, Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>());
             SetCurrentValue(ActiveMapProperty, Maps.GetWorldMap());
             SetCurrentValue(SyncContextProperty, new object());
@@ -85,7 +86,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                nameof(SyncContext), typeof(object), typeof(GeoMap), new PropertyMetadata(null, OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The projection property
+        /// The map projection property
         /// </summary>
         public static readonly DependencyProperty MapProjectionProperty =
             DependencyProperty.Register(nameof(MapProjection), typeof(MapProjection), typeof(GeoMap),
@@ -126,7 +127,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 }));
 
         /// <summary>
-        /// The stroke color property
+        /// The stroke property
         /// </summary>
         public static readonly DependencyProperty StrokeProperty =
             DependencyProperty.Register(
@@ -134,7 +135,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 new PropertyMetadata(new SolidColorPaint(new SKColor(224, 224, 224)) { IsStroke = true }, OnDependencyPropertyChanged));
 
         /// <summary>
-        /// The fill color property
+        /// The fill property
         /// </summary>
         public static readonly DependencyProperty FillProperty =
             DependencyProperty.Register(
@@ -147,9 +148,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.AutoUpdateEnabled" />
         public bool AutoUpdateEnabled { get; set; } = true;
-
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Measured"/>
-        public event Action<IGeoMapView<SkiaSharpDrawingContext>>? Measured;
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.DesignerMode" />
         bool IGeoMapView<SkiaSharpDrawingContext>.DesignerMode => DesignerProperties.GetIsInDesignMode(this);
@@ -251,7 +249,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             if (Template is null) return;
 
             _core.Update();
-            Measured?.Invoke(this);
         }
 
         private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)

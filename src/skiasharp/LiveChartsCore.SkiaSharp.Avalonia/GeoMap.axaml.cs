@@ -22,25 +22,29 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Avalonia.Media;
+using Avalonia.Threading;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
 using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia
 {
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}"/>
     public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     {
-        private static GeoJsonFile? s_map = null;
-        private int _heatKnownLength = 0;
-        private List<Tuple<double, LvcColor>> _heatStops = new();
+        private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
+        private readonly GeoMap<SkiaSharpDrawingContext, HeatPathShape, LineSegment, MoveToPathCommand, SKPath> _core;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeoMap"/> class.
@@ -48,23 +52,47 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         public GeoMap()
         {
             InitializeComponent();
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+            _core = new GeoMap<SkiaSharpDrawingContext, HeatPathShape, LineSegment, MoveToPathCommand, SKPath>(this);
+            _shapesObserver = new CollectionDeepObserver<IMapElement>(
+                (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
+                (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
+                true);
+
+            //Shapes = Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>();
+            ActiveMap = Maps.GetWorldMap();
+            SyncContext = new object();
         }
+
+        #region dependency props
+
+        /// <summary>
+        /// The active map property.
+        /// </summary>
+        public static readonly AvaloniaProperty<GeoJsonFile> ActiveMapProperty =
+           AvaloniaProperty.Register<CartesianChart, GeoJsonFile>(nameof(ActiveMap), null, inherits: true);
+
+        /// <summary>
+        /// The active map property.
+        /// </summary>
+        public static readonly AvaloniaProperty<object> SyncContextProperty =
+           AvaloniaProperty.Register<CartesianChart, object>(nameof(SyncContext), null, inherits: true);
 
         /// <summary>
         /// The projection property.
         /// </summary>
-        public static readonly AvaloniaProperty<MapProjection> ProjectionProperty =
-           AvaloniaProperty.Register<CartesianChart, MapProjection>(nameof(Projection), MapProjection.Default, inherits: true);
+        public static readonly AvaloniaProperty<MapProjection> MapProjectionProperty =
+           AvaloniaProperty.Register<CartesianChart, MapProjection>(nameof(MapProjection), MapProjection.Default, inherits: true);
 
         /// <summary>
         /// The heat map property.
         /// </summary>
-        public static readonly AvaloniaProperty<Color[]> HeatMapProperty =
-          AvaloniaProperty.Register<CartesianChart, Color[]>(nameof(HeatMap),
+        public static readonly AvaloniaProperty<LvcColor[]> HeatMapProperty =
+          AvaloniaProperty.Register<CartesianChart, LvcColor[]>(nameof(HeatMap),
               new[]
               {
-                  Color.FromArgb(255, 179, 229, 252), // cold (min value)
-                  Color.FromArgb(255, 2, 136, 209) // hot (max value)
+                  LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
+                  LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
               }, inherits: true);
 
         /// <summary>
@@ -74,31 +102,42 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
           AvaloniaProperty.Register<CartesianChart, double[]?>(nameof(ColorStops), null, inherits: true);
 
         /// <summary>
-        /// The values property.
+        /// The shapes property.
         /// </summary>
-        public static readonly AvaloniaProperty<Dictionary<string, double>> ValuesProperty =
-          AvaloniaProperty.Register<CartesianChart, Dictionary<string, double>>(nameof(ValuesProperty), new Dictionary<string, double>(), inherits: true);
+        public static readonly AvaloniaProperty<IEnumerable<IMapElement>> ShapesProperty =
+          AvaloniaProperty.Register<CartesianChart, IEnumerable<IMapElement>>(nameof(Shapes),
+              Enumerable.Empty<IMapElement>(), inherits: true);
 
         /// <summary>
-        /// The stroke color property.
+        /// The stroke property.
         /// </summary>
-        public static readonly AvaloniaProperty<Color> StrokeColorProperty =
-          AvaloniaProperty.Register<CartesianChart, Color>(nameof(StrokeColor), Color.FromArgb(255, 224, 224, 224), inherits: true);
-
-        /// <summary>
-        /// The stroke thickness property.
-        /// </summary>
-        public static readonly AvaloniaProperty<double> StrokeThicknessProperty =
-          AvaloniaProperty.Register<CartesianChart, double>(nameof(StrokeThickness), 1d, inherits: true);
+        public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>> StrokeProperty =
+          AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>>(nameof(Stroke),
+              new SolidColorPaint(new SKColor(255, 224, 224, 224)) { IsStroke = true }, inherits: true);
 
         /// <summary>
         /// The fill color property.
         /// </summary>
-        public static readonly AvaloniaProperty<Color> FillColorProperty =
-          AvaloniaProperty.Register<CartesianChart, Color>(nameof(FillColor), Color.FromArgb(255, 250, 250, 250), inherits: true);
+        public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>> FillProperty =
+          AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>>(nameof(Fill),
+               new SolidColorPaint(new SKColor(255, 250, 250, 250)) { IsFill = true }, inherits: true);
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Measured"/>
-        public event Action<IGeoMapView<SkiaSharpDrawingContext>> Measured;
+        #endregion
+
+        #region props
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.AutoUpdateEnabled" />
+        public bool AutoUpdateEnabled { get; set; } = true;
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.DesignerMode" />
+        bool IGeoMapView<SkiaSharpDrawingContext>.DesignerMode => Design.IsDesignMode;
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.SyncContext" />
+        public object SyncContext
+        {
+            get => GetValue(SyncContextProperty);
+            set => SetValue(SyncContextProperty, value);
+        }
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
         public MotionCanvas<SkiaSharpDrawingContext> Canvas
@@ -110,24 +149,31 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             }
         }
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Projection"/>
-        public MapProjection Projection
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
+        public GeoJsonFile ActiveMap
         {
-            get => (MapProjection)GetValue(ProjectionProperty);
-            set => SetValue(ProjectionProperty, value);
+            get => (GeoJsonFile)GetValue(ActiveMapProperty);
+            set => SetValue(ActiveMapProperty, value);
+        }
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Width"/>
+        float IGeoMapView<SkiaSharpDrawingContext>.Width => (float)Bounds.Width;
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Height"/>
+        float IGeoMapView<SkiaSharpDrawingContext>.Height => (float)Bounds.Height;
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
+        public MapProjection MapProjection
+        {
+            get => (MapProjection)GetValue(MapProjectionProperty);
+            set => SetValue(MapProjectionProperty, value);
         }
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.HeatMap"/>
-        public Color[] HeatMap
+        public LvcColor[] HeatMap
         {
-            get => (Color[])GetValue(HeatMapProperty);
+            get => (LvcColor[])GetValue(HeatMapProperty);
             set => SetValue(HeatMapProperty, value);
-        }
-
-        LvcColor[] IGeoMapView<SkiaSharpDrawingContext>.HeatMap
-        {
-            get => HeatMap.Select(x => LvcColor.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
-            set => HeatMap = value.Select(x => new Color(x.A, x.R, x.G, x.B)).ToArray();
         }
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ColorStops"/>
@@ -137,44 +183,40 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             set => SetValue(ColorStopsProperty, value);
         }
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.StrokeColor"/>
-        public Color StrokeColor
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
+        public IPaint<SkiaSharpDrawingContext>? Stroke
         {
-            get => (Color)GetValue(StrokeColorProperty);
-            set => SetValue(StrokeColorProperty, value);
+            get => (IPaint<SkiaSharpDrawingContext>)GetValue(StrokeProperty);
+            set
+            {
+                if (value is not null) value.IsStroke = true;
+                SetValue(StrokeProperty, value);
+            }
         }
 
-        LvcColor IGeoMapView<SkiaSharpDrawingContext>.StrokeColor
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
+        public IPaint<SkiaSharpDrawingContext>? Fill
         {
-            get => LvcColor.FromArgb(StrokeColor.A, StrokeColor.R, StrokeColor.G, StrokeColor.B);
-            set => StrokeColor = new Color(value.A, value.R, value.G, value.B);
+            get => (IPaint<SkiaSharpDrawingContext>)GetValue(FillProperty);
+            set
+            {
+                if (value is not null) value.IsFill = true;
+                SetValue(FillProperty, value);
+            }
         }
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.StrokeThickness"/>
-        public double StrokeThickness
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
+        public IEnumerable<IMapElement> Shapes
         {
-            get => (double)GetValue(StrokeThicknessProperty);
-            set => SetValue(StrokeThicknessProperty, value);
+            get => (IEnumerable<IMapElement>)GetValue(ShapesProperty);
+            set => SetValue(ShapesProperty, value);
         }
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.FillColor"/>
-        public Color FillColor
-        {
-            get => (Color)GetValue(FillColorProperty);
-            set => SetValue(FillColorProperty, value);
-        }
+        #endregion
 
-        LvcColor IGeoMapView<SkiaSharpDrawingContext>.FillColor
+        void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
         {
-            get => LvcColor.FromArgb(FillColor.A, FillColor.R, FillColor.G, FillColor.B);
-            set => FillColor = new Color(value.A, value.R, value.G, value.B);
-        }
-
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Values"/>
-        public Dictionary<string, double> Values
-        {
-            get => (Dictionary<string, double>)GetValue(ValuesProperty);
-            set => SetValue(ValuesProperty, value);
+            _ = Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Normal);//.GetAwaiter().GetResult();
         }
 
         /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})"/>
@@ -182,44 +224,18 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             base.OnPropertyChanged(change);
 
-            if (change.Property.Name == nameof(Bounds)) load();
+            if (change.Property.Name == nameof(Shapes))
+            {
+                _shapesObserver.Dispose((IEnumerable<IMapElement>)change.OldValue.Value);
+                _shapesObserver.Initialize((IEnumerable<IMapElement>)change.NewValue.Value);
+            }
+
+            _core?.Update();
         }
 
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
-        }
-
-        private void load()
-        {
-            var canvas = this.FindControl<MotionCanvas>("canvas");
-
-            var paint = new SolidColorPaint();
-
-            var thickness = (float)StrokeThickness;
-            var stroke = LvcColor.FromArgb(255, StrokeColor.R, StrokeColor.G, StrokeColor.B);
-            var fill = LvcColor.FromArgb(255, FillColor.R, FillColor.G, FillColor.B);
-
-            var hm = HeatMap.Select(x => LvcColor.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
-
-            if (_heatKnownLength != HeatMap.Length)
-            {
-                _heatStops = HeatFunctions.BuildColorStops(hm, ColorStops);
-                _heatKnownLength = HeatMap.Length;
-            }
-
-            var worldMap = s_map ??= Maps.GetWorldMap();
-            var projector = Maps.BuildProjector(Projection, new[] { (float)Bounds.Width, (float)Bounds.Height });
-            var shapes = worldMap.AsHeatMapShapes(Values, hm, _heatStops, stroke, fill, thickness, projector);
-
-            canvas.PaintTasks = new List<PaintSchedule<SkiaSharpDrawingContext>>
-            {
-                 new PaintSchedule<SkiaSharpDrawingContext>(
-                    paint,
-                    new HashSet<IDrawable<SkiaSharpDrawingContext>>(shapes))
-            };
-
-            Measured?.Invoke(this);
         }
     }
 }

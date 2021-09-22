@@ -99,11 +99,6 @@ namespace LiveChartsCore.Geo
         object SyncContext { get; set; }
 
         /// <summary>
-        /// Called when the chart is measured.
-        /// </summary>
-        event Action<IGeoMapView<TDrawingContext>> Measured;
-
-        /// <summary>
         /// Invokes an action in the UI thread.
         /// </summary>
         /// <param name="action"></param>

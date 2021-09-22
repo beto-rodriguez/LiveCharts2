@@ -13,7 +13,7 @@
       
     <lvc:CartesianChart Grid.Row="0" x:Name="cartesianChart" Series="{Binding CatesianSeries}"></lvc:CartesianChart>
     <lvc:PieChart Grid.Row="1" x:Name="pieChart" Series="{Binding PieSeries}"></lvc:PieChart>
-    <lvc:GeoMap Grid.Row="2" x:Name="geoChart" Values="{Binding MapValues}"></lvc:GeoMap>
+    <lvc:GeoMap Grid.Row="2" x:Name="geoChart" Shapes="{Binding MapShapes}"></lvc:GeoMap>
   
   </Grid>
 </UserControl>

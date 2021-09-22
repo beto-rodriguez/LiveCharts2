@@ -65,7 +65,7 @@ namespace AvaloniaSample.General.ChartToImage
             {
                 Width = 900,
                 Height = 600,
-                Values = vm.MapValues
+                Shapes = vm.MapShapes
             }.SaveImage("MapImageFromMemory.png");
 
             // or create it from a control in the UI
