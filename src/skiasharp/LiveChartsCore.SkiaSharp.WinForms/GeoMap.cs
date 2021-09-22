@@ -22,14 +22,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
 using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms
 {
@@ -39,9 +43,19 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     /// <seealso cref="UserControl" />
     public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     {
-        private static GeoJsonFile? s_map = null;
-        private int _heatKnownLength = 0;
-        private List<Tuple<double, LvcColor>> _heatStops = new();
+        private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
+        private readonly GeoMap<SkiaSharpDrawingContext, HeatPathShape, LineSegment, MoveToPathCommand, SKPath> _core;
+        private IEnumerable<IMapElement> _shapes = Enumerable.Empty<IMapElement>();
+        private GeoJsonFile _activeMap = Maps.GetWorldMap();
+        private MapProjection _mapProjection = MapProjection.Default;
+        private LvcColor[] _heatMap = new[]
+                {
+            LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
+            LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
+        };
+        private double[]? _colorStops = null;
+        private IPaint<SkiaSharpDrawingContext>? _stroke = new SolidColorPaint(new SKColor(255, 224, 224, 224)) { IsStroke = true };
+        private IPaint<SkiaSharpDrawingContext>? _fill = new SolidColorPaint(new SKColor(255, 250, 250, 250)) { IsFill = true };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeoMap"/> class.
@@ -49,106 +63,108 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         public GeoMap()
         {
             InitializeComponent();
-
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+            _core = new GeoMap<SkiaSharpDrawingContext, HeatPathShape, LineSegment, MoveToPathCommand, SKPath>(this);
+            _shapesObserver = new CollectionDeepObserver<IMapElement>(
+                (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
+                (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
+                true);
             Resize += GeoMap_Resize;
         }
-
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Measured"/>
-        public event Action<IGeoMapView<SkiaSharpDrawingContext>> Measured;
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
         public MotionCanvas<SkiaSharpDrawingContext> Canvas => motionCanvas1.CanvasCore;
 
-        /// <summary>
-        /// Gets or sets the projection.
-        /// </summary>
-        public MapProjection Projection { get; set; } = MapProjection.Default;
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.AutoUpdateEnabled" />
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public bool AutoUpdateEnabled { get; set; } = true;
 
-        /// <summary>
-        /// Gets or sets the heat map.
-        /// </summary>
-        public Color[] HeatMap { get; set; } = new[]
-        {
-            Color.FromArgb(255, 179, 229, 252), // cold (min value)
-            Color.FromArgb(255, 2, 136, 209) // hot (max value)
-        };
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.DesignerMode" />
+        bool IGeoMapView<SkiaSharpDrawingContext>.DesignerMode => LicenseManager.UsageMode == LicenseUsageMode.Designtime;
 
-        LvcColor[] IGeoMapView<SkiaSharpDrawingContext>.HeatMap
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.SyncContext" />
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public object SyncContext { get; set; } = new object();
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public GeoJsonFile ActiveMap { get => _activeMap; set { _activeMap = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Width"/>
+        float IGeoMapView<SkiaSharpDrawingContext>.Width => ClientSize.Width;
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Height"/>
+        float IGeoMapView<SkiaSharpDrawingContext>.Height => ClientSize.Height;
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public MapProjection MapProjection { get => _mapProjection; set { _mapProjection = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.HeatMap"/>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public LvcColor[] HeatMap { get => _heatMap; set { _heatMap = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ColorStops"/>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public double[]? ColorStops { get => _colorStops; set { _colorStops = value; OnPropertyChanged(); } }
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public IPaint<SkiaSharpDrawingContext>? Stroke
         {
-            get => HeatMap.Select(x => new LvcColor(x.R, x.G, x.B, x.A)).ToArray();
-            set => HeatMap = value.Select(x => Color.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
+            get => _stroke;
+            set
+            {
+                if (value is not null) value.IsStroke = true;
+                _stroke = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public IPaint<SkiaSharpDrawingContext>? Fill
+        {
+            get => _fill;
+            set
+            {
+                if (value is not null) value.IsFill = true;
+                _fill = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public IEnumerable<IMapElement> Shapes
+        {
+            get => _shapes;
+            set
+            {
+                _shapesObserver.Dispose(_shapes);
+                _shapesObserver.Initialize(value);
+                _shapes = value;
+                OnPropertyChanged();
+            }
+        }
+
+        void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
+        {
+            if (!IsHandleCreated) return;
+            _ = BeginInvoke(action).AsyncWaitHandle.WaitOne();
         }
 
         /// <summary>
-        /// Gets or sets the color stops.
+        /// Called when a property changes.
         /// </summary>
-        public double[]? ColorStops { get; set; } = null;
-
-        /// <summary>
-        /// Gets or sets the color stops.
-        /// </summary>
-        public Color StrokeColor { get; set; } = Color.FromArgb(255, 224, 224, 224);
-
-        LvcColor IGeoMapView<SkiaSharpDrawingContext>.StrokeColor
+        protected void OnPropertyChanged()
         {
-            get => new(StrokeColor.R, StrokeColor.G, StrokeColor.B, StrokeColor.A);
-            set => StrokeColor = Color.FromArgb(value.A, value.R, value.G, value.B);
+            _core?.Update();
         }
-
-        /// <summary>
-        /// Gets or sets the color stops.
-        /// </summary>
-        public double StrokeThickness { get; set; } = 1d;
-
-        /// <summary>
-        /// Gets or sets the color stops.
-        /// </summary>
-        public Color FillColor { get; set; } = Color.FromArgb(255, 250, 250, 250);
-
-        LvcColor IGeoMapView<SkiaSharpDrawingContext>.FillColor
-        {
-            get => new(FillColor.R, FillColor.G, FillColor.B, FillColor.A);
-            set => FillColor = Color.FromArgb(value.A, value.R, value.G, value.B);
-        }
-
-        /// <summary>
-        /// Gets or sets the values.
-        /// </summary>
-        public Dictionary<string, double> Values { get; set; } = new Dictionary<string, double>();
 
         private void GeoMap_Resize(object? sender, EventArgs e)
         {
-            load();
-        }
-
-        private void load()
-        {
-            var canvas = motionCanvas1;
-
-            var paint = new SolidColorPaint();
-
-            var thickness = (float)StrokeThickness;
-
-            var igeo = (IGeoMapView<SkiaSharpDrawingContext>)this;
-
-            if (_heatKnownLength != HeatMap.Length)
-            {
-                _heatStops = HeatFunctions.BuildColorStops(igeo.HeatMap, ColorStops);
-                _heatKnownLength = HeatMap.Length;
-            }
-
-            var worldMap = s_map ??= Maps.GetWorldMap();
-            var projector = Maps.BuildProjector(Projection, new float[] { Width, Height });
-            var shapes = worldMap.AsHeatMapShapes(Values, igeo.HeatMap, _heatStops, igeo.StrokeColor, igeo.FillColor, thickness, projector);
-
-            canvas.PaintTasks = new List<PaintSchedule<SkiaSharpDrawingContext>>
-            {
-                 new PaintSchedule<SkiaSharpDrawingContext>(
-                    paint,
-                    new HashSet<IDrawable<SkiaSharpDrawingContext>>(shapes))
-            };
-
-            Measured?.Invoke(this);
+            _core?.Update();
         }
     }
 }

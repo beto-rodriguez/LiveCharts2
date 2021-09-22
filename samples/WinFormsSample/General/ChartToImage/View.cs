@@ -47,7 +47,7 @@ namespace WinFormsSample.General.ChartToImage
             // Adding a map chart to the UI...
             _map = new GeoMap
             {
-                Values = viewModel.MapValues,
+                Shapes = viewModel.MapShapes,
 
                 // out of livecharts properties...
                 Location = new System.Drawing.Point(0, 400),
@@ -103,7 +103,7 @@ namespace WinFormsSample.General.ChartToImage
             {
                 Width = 900,
                 Height = 600,
-                Values = viewModel.MapValues
+                Shapes = viewModel.MapShapes
             }.SaveImage("MapImageFromMemory.png");
 
             // or create it from a control in the UI

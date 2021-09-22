@@ -15,7 +15,7 @@ namespace WinFormsSample.Maps.World
 
             var chart = new GeoMap
             {
-                Values = viewModel.Values,
+                Shapes = viewModel.Shapes,
 
                 // out of livecharts properties...
                 Location = new System.Drawing.Point(0, 0),
