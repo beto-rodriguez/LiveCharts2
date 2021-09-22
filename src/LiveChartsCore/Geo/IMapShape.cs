@@ -21,37 +21,17 @@
 // SOFTWARE.
 
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Geo
 {
     /// <summary>
     /// Defines a shape in a map.
     /// </summary>
-    public abstract class MapShape<TDrawingContext> : IMapShape, INotifyPropertyChanged
-        where TDrawingContext : DrawingContext
+    public interface IMapShape : INotifyPropertyChanged
     {
-        /// <inheritdoc cref="INotifyPropertyChanged.PropertyChanged"/>
-        public event PropertyChangedEventHandler? PropertyChanged;
-
         /// <summary>
         /// Measures the shape in the specified map.
         /// </summary>
-        public abstract void Measure(MapShapeContext<TDrawingContext> context);
-
-        void IMapShape.Measure(object context)
-        {
-            Measure((MapShapeContext<TDrawingContext>)context);
-        }
-
-        /// <summary>
-        /// Called when a property changes.
-        /// </summary>
-        /// <param name="propertyName"></param>
-        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        void Measure(object context);
     }
 }

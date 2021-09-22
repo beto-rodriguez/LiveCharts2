@@ -2,7 +2,6 @@
 using LiveChartsCore;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.General.ChartToImage
@@ -22,7 +21,7 @@ namespace ViewModelsSamples.General.ChartToImage
             new PieSeries<int> { Values = new int[] { 4 } }
         };
 
-        public IEnumerable<MapShape<SkiaSharpDrawingContext>> MapShapes { get; set; }
+        public IEnumerable<IMapShape> MapShapes { get; set; }
             = new HeatLand[]
             {
                 new HeatLand { Name = "mex", Value = 10 },

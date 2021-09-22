@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using LiveChartsCore.Geo;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Maps.World
@@ -12,7 +11,7 @@ namespace ViewModelsSamples.Maps.World
         // json file to assign a value to a country in the heat map
         // https://github.com/beto-rodriguez/LiveCharts2/blob/master/docs/_assets/word-map-index.json
 
-        public IEnumerable<MapShape<SkiaSharpDrawingContext>> Shapes { get; set; }
+        public IEnumerable<IMapShape> Shapes { get; set; }
             = new HeatLand[]
             {
                 new HeatLand { Name = "mex", Value = 10 },
