@@ -60,8 +60,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
             _core = new GeoMap<SkiaSharpDrawingContext, HeatPathShape, LineSegment, MoveToPathCommand, SKPath>(this);
             _shapesObserver = new CollectionDeepObserver<IMapElement>(
-                (object? sender, NotifyCollectionChangedEventArgs e) => Measure(),
-                (object? sender, PropertyChangedEventArgs e) => Measure(),
+                (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
+                (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
                 true);
             SetCurrentValue(ShapesProperty, Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>());
             SetCurrentValue(ActiveMapProperty, Maps.GetWorldMap());
@@ -239,15 +239,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         private void GeoMap_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            _core.Update();
-        }
-
-        private readonly SolidColorPaint _defaultPaint = new();
-
-        private void Measure()
-        {
-            if (Template is null) return;
-
             _core.Update();
         }
 
