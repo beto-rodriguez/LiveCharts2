@@ -37,17 +37,17 @@ namespace LiveChartsCore.Geo
         /// Initializes a new instance of the <see cref="MapShapeContext{TDrawingContext}"/> class.
         /// </summary>
         /// <param name="chart">The chart.</param>
-        /// <param name="paint">The paint.</param>
+        /// <param name="heatPaint">The heat paint.</param>
         /// <param name="heatStops">The heat stops.</param>
         /// <param name="boundsDictionary">The bounds.</param>
         public MapShapeContext(
-            IGeoMap<TDrawingContext> chart,
-            IPaint<TDrawingContext> paint,
+            IGeoMapView<TDrawingContext> chart,
+            IPaint<TDrawingContext> heatPaint,
             List<Tuple<double, LvcColor>> heatStops,
             Dictionary<int, Bounds> boundsDictionary)
         {
             Chart = chart;
-            DefaultPaint = paint;
+            HeatPaint = heatPaint;
             HeatStops = heatStops;
             BoundsDictionary = boundsDictionary;
         }
@@ -55,12 +55,12 @@ namespace LiveChartsCore.Geo
         /// <summary>
         /// Gets the chart.
         /// </summary>
-        public IGeoMap<TDrawingContext> Chart { get; }
+        public IGeoMapView<TDrawingContext> Chart { get; }
 
         /// <summary>
-        /// Gets the default paint.
+        /// Gets the heat paint.
         /// </summary>
-        public IPaint<TDrawingContext> DefaultPaint { get; }
+        public IPaint<TDrawingContext> HeatPaint { get; }
 
         /// <summary>
         /// Gets the heat stops.

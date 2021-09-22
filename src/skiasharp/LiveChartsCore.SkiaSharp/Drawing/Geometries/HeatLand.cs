@@ -30,7 +30,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     /// </summary>
     public class HeatLand : MapShape<SkiaSharpDrawingContext>, IWeigthedMapShape
     {
-        private IEnumerable<PathShape>? _paths;
         private double _value;
 
         /// <summary>
@@ -70,17 +69,14 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="Measure(MapShapeContext{SkiaSharpDrawingContext})"/>
         public override void Measure(MapShapeContext<SkiaSharpDrawingContext> context)
         {
-            if (_paths is null)
-            {
-                var projector = Maps.BuildProjector(context.Chart.Projection, new[] { context.Chart.Width, context.Chart.Height });
-                _paths = context.Chart.ActiveMap.FindFeature(Name).AsPathShape(projector);
-                foreach (var path in _paths) context.DefaultPaint.AddGeometryToPaintTask(context.Chart.Canvas, path);
-            }
+            var projector = Maps.BuildProjector(context.Chart.MapProjection, new[] { context.Chart.Width, context.Chart.Height });
+            var paths = context.Chart.ActiveMap.FindFeature(Name).AsPathShape(projector);
+            foreach (var path in paths) context.HeatPaint.AddGeometryToPaintTask(context.Chart.Canvas, path);
 
             var color = HeatFunctions.InterpolateColor(
                 (float)Value, context.BoundsDictionary[WeigthedAt], context.Chart.HeatMap, context.HeatStops);
 
-            foreach (var path in _paths)
+            foreach (var path in paths)
             {
                 path.FillColor = color;
             }

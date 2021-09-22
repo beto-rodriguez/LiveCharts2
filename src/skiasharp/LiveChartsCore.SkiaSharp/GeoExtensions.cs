@@ -92,19 +92,12 @@ namespace LiveChartsCore.SkiaSharpView
         /// <returns></returns>
         public static IEnumerable<PathShape> AsMapShapes(
             this GeoJsonFile geoJson,
-            LvcColor[] heatMap, List<Tuple<double, LvcColor>> heatStops,
             LvcColor stroke,
             LvcColor fill,
             float thickness,
             MapProjector projector)
         {
             var paths = new List<PathShape>();
-
-            //var name = feature.Properties is not null ? feature.Properties["shortName"] : "";
-
-            //LvcColor? baseColor = values.TryGetValue(name, out var weight)
-            //    ? HeatFunctions.InterpolateColor((float)weight, weightBounds, heatMap, heatStops)
-            //    : null;
 
             LvcColor? baseColor = null;
 

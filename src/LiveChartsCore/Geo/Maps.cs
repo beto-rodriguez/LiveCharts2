@@ -53,10 +53,10 @@ namespace LiveChartsCore.Geo
         /// <param name="projection">The projection.</param>
         /// <param name="mapSize">Size of the map.</param>
         /// <returns></returns>
-        public static MapProjector BuildProjector(Projection projection, float[] mapSize)
+        public static MapProjector BuildProjector(MapProjection projection, float[] mapSize)
         {
             var mapRatio =
-                projection == Projection.Default
+                projection == MapProjection.Default
                 ? ControlCoordinatesProjector.PreferredRatio
                 : MercatorProjector.PreferredRatio;
 
@@ -78,7 +78,7 @@ namespace LiveChartsCore.Geo
             }
 
             return
-                projection == Projection.Default
+                projection == MapProjection.Default
                 ? new ControlCoordinatesProjector(mapSize[0], mapSize[1], ox, oy)
                 : new MercatorProjector(mapSize[0], mapSize[1], ox, oy);
         }

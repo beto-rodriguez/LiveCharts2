@@ -10,6 +10,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <lvc:GeoMap Values="{Binding Values}" Shapes="{Binding Shapes}"></lvc:GeoMap>
+        <lvc:GeoMap Shapes="{Binding Shapes}"></lvc:GeoMap>
     </Grid>
 </UserControl>

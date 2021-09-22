@@ -35,8 +35,8 @@ using LiveChartsCore.SkiaSharpView.Painting;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia
 {
-    /// <inheritdoc cref="IGeoMap{TDrawingContext}"/>
-    public partial class GeoMap : UserControl, IGeoMap<SkiaSharpDrawingContext>
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}"/>
+    public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     {
         private static GeoJsonFile? s_map = null;
         private int _heatKnownLength = 0;
@@ -53,8 +53,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <summary>
         /// The projection property.
         /// </summary>
-        public static readonly AvaloniaProperty<Projection> ProjectionProperty =
-           AvaloniaProperty.Register<CartesianChart, Projection>(nameof(Projection), Projection.Default, inherits: true);
+        public static readonly AvaloniaProperty<MapProjection> ProjectionProperty =
+           AvaloniaProperty.Register<CartesianChart, MapProjection>(nameof(Projection), MapProjection.Default, inherits: true);
 
         /// <summary>
         /// The heat map property.
@@ -97,10 +97,10 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         public static readonly AvaloniaProperty<Color> FillColorProperty =
           AvaloniaProperty.Register<CartesianChart, Color>(nameof(FillColor), Color.FromArgb(255, 250, 250, 250), inherits: true);
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.Measured"/>
-        public event Action<IGeoMap<SkiaSharpDrawingContext>> Measured;
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Measured"/>
+        public event Action<IGeoMapView<SkiaSharpDrawingContext>> Measured;
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.Canvas"/>
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
         public MotionCanvas<SkiaSharpDrawingContext> Canvas
         {
             get
@@ -110,67 +110,67 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             }
         }
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.Projection"/>
-        public Projection Projection
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Projection"/>
+        public MapProjection Projection
         {
-            get => (Projection)GetValue(ProjectionProperty);
+            get => (MapProjection)GetValue(ProjectionProperty);
             set => SetValue(ProjectionProperty, value);
         }
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.HeatMap"/>
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.HeatMap"/>
         public Color[] HeatMap
         {
             get => (Color[])GetValue(HeatMapProperty);
             set => SetValue(HeatMapProperty, value);
         }
 
-        LvcColor[] IGeoMap<SkiaSharpDrawingContext>.HeatMap
+        LvcColor[] IGeoMapView<SkiaSharpDrawingContext>.HeatMap
         {
             get => HeatMap.Select(x => LvcColor.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
             set => HeatMap = value.Select(x => new Color(x.A, x.R, x.G, x.B)).ToArray();
         }
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.ColorStops"/>
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ColorStops"/>
         public double[]? ColorStops
         {
             get => (double[])GetValue(ColorStopsProperty);
             set => SetValue(ColorStopsProperty, value);
         }
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.StrokeColor"/>
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.StrokeColor"/>
         public Color StrokeColor
         {
             get => (Color)GetValue(StrokeColorProperty);
             set => SetValue(StrokeColorProperty, value);
         }
 
-        LvcColor IGeoMap<SkiaSharpDrawingContext>.StrokeColor
+        LvcColor IGeoMapView<SkiaSharpDrawingContext>.StrokeColor
         {
             get => LvcColor.FromArgb(StrokeColor.A, StrokeColor.R, StrokeColor.G, StrokeColor.B);
             set => StrokeColor = new Color(value.A, value.R, value.G, value.B);
         }
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.StrokeThickness"/>
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.StrokeThickness"/>
         public double StrokeThickness
         {
             get => (double)GetValue(StrokeThicknessProperty);
             set => SetValue(StrokeThicknessProperty, value);
         }
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.FillColor"/>
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.FillColor"/>
         public Color FillColor
         {
             get => (Color)GetValue(FillColorProperty);
             set => SetValue(FillColorProperty, value);
         }
 
-        LvcColor IGeoMap<SkiaSharpDrawingContext>.FillColor
+        LvcColor IGeoMapView<SkiaSharpDrawingContext>.FillColor
         {
             get => LvcColor.FromArgb(FillColor.A, FillColor.R, FillColor.G, FillColor.B);
             set => FillColor = new Color(value.A, value.R, value.G, value.B);
         }
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.Values"/>
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Values"/>
         public Dictionary<string, double> Values
         {
             get => (Dictionary<string, double>)GetValue(ValuesProperty);

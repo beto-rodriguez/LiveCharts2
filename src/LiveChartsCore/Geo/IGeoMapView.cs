@@ -29,7 +29,7 @@ namespace LiveChartsCore.Geo
     /// <summary>
     /// Defines a geographic map.
     /// </summary>
-    public interface IGeoMap<TDrawingContext>
+    public interface IGeoMapView<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
@@ -53,9 +53,14 @@ namespace LiveChartsCore.Geo
         float Height { get; }
 
         /// <summary>
+        /// Gets or sets whether the chart auto-updates are enabled.
+        /// </summary>
+        bool AutoUpdateEnabled { get; set; }
+
+        /// <summary>
         /// Gets or sets the projection.
         /// </summary>
-        Projection Projection { get; set; }
+        MapProjection MapProjection { get; set; }
 
         /// <summary>
         /// Gets or sets the heat map.
@@ -68,28 +73,40 @@ namespace LiveChartsCore.Geo
         double[]? ColorStops { get; set; }
 
         /// <summary>
-        /// Gets or sets the color stops.
+        /// Gets or sets the stroke.
         /// </summary>
-        LvcColor StrokeColor { get; set; }
+        IPaint<TDrawingContext>? Stroke { get; set; }
 
         /// <summary>
-        /// Gets or sets the color stops.
+        /// Gets or sets the fill.
         /// </summary>
-        double StrokeThickness { get; set; }
+        IPaint<TDrawingContext>? Fill { get; set; }
 
         /// <summary>
-        /// Gets or sets the color stops.
+        /// Gets or sets the shapes to draw in the map.
         /// </summary>
-        LvcColor FillColor { get; set; }
+        IEnumerable<MapShape<TDrawingContext>> Shapes { get; set; }
 
         /// <summary>
-        /// Gets or sets the values.
+        /// Gets whether the control is in designer mode.
         /// </summary>
-        Dictionary<string, double> Values { get; set; }
+        bool DesignerMode { get; }
+
+        /// <summary>
+        /// Gets or sets the Synchronization Context, use this property to
+        /// use an external object to handle multi threading synchronization.
+        /// </summary>
+        object SyncContext { get; set; }
 
         /// <summary>
         /// Called when the chart is measured.
         /// </summary>
-        event Action<IGeoMap<TDrawingContext>> Measured;
+        event Action<IGeoMapView<TDrawingContext>> Measured;
+
+        /// <summary>
+        /// Invokes an action in the UI thread.
+        /// </summary>
+        /// <param name="action"></param>
+        void InvokeOnUIThread(Action action);
     }
 }

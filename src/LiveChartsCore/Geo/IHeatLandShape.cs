@@ -21,43 +21,36 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.Kernel.Providers
+namespace LiveChartsCore.Geo
 {
     /// <summary>
-    /// Defines the chart provider class.
+    /// Defines a heat land shape.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public abstract class ChartProvider<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public interface IHeatLandShape
     {
         /// <summary>
-        /// Gets a new instance of the default data factory.
+        /// Gets or sets the color of the stroke.
         /// </summary>
-        /// <typeparam name="TModel">The type of the model.</typeparam>
-        /// <returns></returns>
-        public virtual DataFactory<TModel, TDrawingContext> GetDefaultDataFactory<TModel>()
-        {
-            return new();
-        }
+        /// <value>
+        /// The color of the stroke.
+        /// </value>
+        LvcColor StrokeColor { get; set; }
 
         /// <summary>
-        /// Gets a new instance of the default Cartesian axis.
+        /// Gets or sets the stroke thickness.
         /// </summary>
-        /// <returns></returns>
-        public abstract ICartesianAxis GetDefaultCartesianAxis();
+        /// <value>
+        /// The stroke thickness.
+        /// </value>
+        float StrokeThickness { get; set; }
 
         /// <summary>
-        /// Gets a new instance of the default polar axis.
+        /// Gets or sets the color of the fill.
         /// </summary>
-        /// <returns></returns>
-        public abstract IPolarAxis GetDefaultPolarAxis();
-
-        /// <summary>
-        /// Gets a new paint of the given color.
-        /// </summary>
-        /// <returns></returns>
-        public abstract IPaint<TDrawingContext> GetSolidColorPaint(LvcColor color = new LvcColor());
+        /// <value>
+        /// The color of the fill.
+        /// </value>
+        LvcColor FillColor { get; set; }
     }
 }

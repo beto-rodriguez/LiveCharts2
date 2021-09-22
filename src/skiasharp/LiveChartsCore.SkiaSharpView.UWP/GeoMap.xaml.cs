@@ -37,7 +37,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
     /// <summary>
     /// Defines a geographic map.
     /// </summary>
-    public sealed partial class GeoMap : UserControl, IGeoMap<SkiaSharpDrawingContext>
+    public sealed partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     {
         private static GeoJsonFile? s_map = null;
         private int _heatKnownLength = 0;
@@ -54,7 +54,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// The projection property
         /// </summary>
         public static readonly DependencyProperty MapProjectionProperty =
-            DependencyProperty.Register(nameof(Projection), typeof(Projection), typeof(GeoMap), new PropertyMetadata(Projection.Default));
+            DependencyProperty.Register(nameof(Projection), typeof(MapProjection), typeof(GeoMap), new PropertyMetadata(MapProjection.Default));
 
         /// <summary>
         /// The heat map property
@@ -103,18 +103,18 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                 nameof(FillColor), typeof(Color), typeof(GeoMap),
                 new PropertyMetadata(Color.FromArgb(255, 250, 250, 250)));
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.Measured"/>
-        public event Action<IGeoMap<SkiaSharpDrawingContext>> Measured;
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Measured"/>
+        public event Action<IGeoMapView<SkiaSharpDrawingContext>> Measured;
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.Canvas"/>
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
         public MotionCanvas<SkiaSharpDrawingContext> Canvas => canvas.CanvasCore;
 
         /// <summary>
         /// Gets or sets the projection.
         /// </summary>
-        public new Projection Projection // <- hide the base property?? maybe we need to re name our property to MapProjection
+        public new MapProjection Projection // <- hide the base property?? maybe we need to re name our property to MapProjection
         {
-            get => (Projection)GetValue(MapProjectionProperty);
+            get => (MapProjection)GetValue(MapProjectionProperty);
             set => SetValue(MapProjectionProperty, value);
         }
 
@@ -127,7 +127,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             set => SetValue(HeatMapProperty, value);
         }
 
-        LvcColor[] IGeoMap<SkiaSharpDrawingContext>.HeatMap
+        LvcColor[] IGeoMapView<SkiaSharpDrawingContext>.HeatMap
         {
             get => HeatMap.Select(x => LvcColor.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
             set => HeatMap = value.Select(x => Color.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
@@ -151,7 +151,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             set => SetValue(StrokeColorProperty, value);
         }
 
-        LvcColor IGeoMap<SkiaSharpDrawingContext>.StrokeColor
+        LvcColor IGeoMapView<SkiaSharpDrawingContext>.StrokeColor
         {
             get => LvcColor.FromArgb(StrokeColor.A, StrokeColor.R, StrokeColor.G, StrokeColor.B);
             set => StrokeColor = Color.FromArgb(value.A, value.R, value.G, value.B);
@@ -175,7 +175,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             set => SetValue(FillColorProperty, value);
         }
 
-        LvcColor IGeoMap<SkiaSharpDrawingContext>.FillColor
+        LvcColor IGeoMapView<SkiaSharpDrawingContext>.FillColor
         {
             get => LvcColor.FromArgb(FillColor.A, FillColor.R, FillColor.G, FillColor.B);
             set => FillColor = Color.FromArgb(value.A, value.R, value.G, value.B);

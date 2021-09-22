@@ -38,7 +38,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
     /// Defines a geographic map.
     /// </summary>
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class GeoMap : ContentView, IGeoMap<SkiaSharpDrawingContext>
+    public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
     {
         private static GeoJsonFile? s_map = null;
         private int _heatKnownLength = 0;
@@ -58,7 +58,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// </summary>
         public static readonly BindableProperty ProjectionProperty =
             BindableProperty.Create(
-                nameof(Projection), typeof(Projection), typeof(GeoMap), Projection.Default, BindingMode.Default, null);
+                nameof(Projection), typeof(MapProjection), typeof(GeoMap), MapProjection.Default, BindingMode.Default, null);
 
         /// <summary>
         /// The heat map property
@@ -107,18 +107,18 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
            BindableProperty.Create(
                nameof(Values), typeof(Dictionary<string, double>), typeof(GeoMap), new Dictionary<string, double>(), BindingMode.Default, null);
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.Measured"/>
-        public event Action<IGeoMap<SkiaSharpDrawingContext>> Measured;
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Measured"/>
+        public event Action<IGeoMapView<SkiaSharpDrawingContext>> Measured;
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.Canvas"/>
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
         public MotionCanvas<SkiaSharpDrawingContext> Canvas => canvas.CanvasCore;
 
         /// <summary>
         /// Gets or sets the projection.
         /// </summary>
-        public Projection Projection
+        public MapProjection Projection
         {
-            get => (Projection)GetValue(ProjectionProperty);
+            get => (MapProjection)GetValue(ProjectionProperty);
             set => SetValue(ProjectionProperty, value);
         }
 
@@ -131,7 +131,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             set => SetValue(HeatMapProperty, value);
         }
 
-        LvcColor[] IGeoMap<SkiaSharpDrawingContext>.HeatMap
+        LvcColor[] IGeoMapView<SkiaSharpDrawingContext>.HeatMap
         {
             get => HeatMap.Select(x => LvcColor.FromArgb((byte)(x.A * 255), (byte)(x.R * 255), (byte)(x.G * 255), (byte)(x.B * 255))).ToArray();
             set => HeatMap = value.Select(x => new Color(x.R / 255d, x.G / 255d, x.B / 255d, x.A / 255d)).ToArray();
@@ -155,7 +155,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             set => SetValue(StrokeColorProperty, value);
         }
 
-        LvcColor IGeoMap<SkiaSharpDrawingContext>.StrokeColor
+        LvcColor IGeoMapView<SkiaSharpDrawingContext>.StrokeColor
         {
             get => LvcColor.FromArgb((byte)(StrokeColor.A * 255), (byte)(StrokeColor.R * 255), (byte)(StrokeColor.G * 255), (byte)(StrokeColor.B * 255));
             set => StrokeColor = new Color(value.R / 255d, value.G / 255d, value.B / 255d, value.A / 255d);
@@ -179,7 +179,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             set => SetValue(FillColorProperty, value);
         }
 
-        LvcColor IGeoMap<SkiaSharpDrawingContext>.FillColor
+        LvcColor IGeoMapView<SkiaSharpDrawingContext>.FillColor
         {
             get => LvcColor.FromArgb((byte)(FillColor.A * 255), (byte)(FillColor.R * 255), (byte)(FillColor.G * 255), (byte)(FillColor.B * 255));
             set => FillColor = new Color(value.R / 255d, value.G / 255d, value.B / 255d, value.A / 255d);

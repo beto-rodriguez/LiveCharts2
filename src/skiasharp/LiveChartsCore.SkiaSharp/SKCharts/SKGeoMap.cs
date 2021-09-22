@@ -32,13 +32,9 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts
 {
-    /// <inheritdoc cref="IGeoMap"/>
-    public class SKGeoMap : IGeoMap<SkiaSharpDrawingContext>, ISkiaSharpChart
+    /// <inheritdoc cref="IGeoMapView{SkiaSharpDrawingContext}"/>
+    public class SKGeoMap : IGeoMapView<SkiaSharpDrawingContext>, ISkiaSharpChart
     {
-        private static GeoJsonFile? s_map = null;
-        private int _heatKnownLength = 0;
-        private List<Tuple<double, LvcColor>> _heatStops = new();
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SKGeoMap"/> class.
         /// </summary>
@@ -51,19 +47,18 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         /// Initializes a new instance of the <see cref="SKGeoMap"/> class.
         /// </summary>
         /// <param name="mapView">The map view.</param>
-        public SKGeoMap(IGeoMap<SkiaSharpDrawingContext> mapView)
+        public SKGeoMap(IGeoMapView<SkiaSharpDrawingContext> mapView)
         {
-            Projection = mapView.Projection;
+            MapProjection = mapView.MapProjection;
             HeatMap = mapView.HeatMap;
             ColorStops = mapView.ColorStops;
-            StrokeColor = mapView.StrokeColor;
-            StrokeThickness = mapView.StrokeThickness;
-            FillColor = mapView.FillColor;
-            Values = mapView.Values;
+            Stroke = mapView.Stroke;
+            Fill = mapView.Fill;
+            Shapes = mapView.Shapes;
         }
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.Measured"/>
-        public event Action<IGeoMap<SkiaSharpDrawingContext>> Measured;
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Measured"/>
+        public event Action<IGeoMapView<SkiaSharpDrawingContext>>? Measured;
 
         /// <summary>
         /// Gets or sets the background.
@@ -89,40 +84,46 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         /// </value>
         public int Width { get; set; } = 900;
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.ActiveMap"/>
-        public GeoJsonFile ActiveMap { get => s_map ??= Maps.GetWorldMap(); set => throw new NotImplementedException(); }
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.AutoUpdateEnabled" />
+        public bool AutoUpdateEnabled { get; set; } = true;
 
-        float IGeoMap<SkiaSharpDrawingContext>.Width => Width;
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.SyncContext" />
+        public object SyncContext { get; set; } = new object();
 
-        float IGeoMap<SkiaSharpDrawingContext>.Height => Height;
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.DesignerMode" />
+        public bool DesignerMode { get; set; } = false;
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.Canvas"/>
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
+        public GeoJsonFile ActiveMap { get; set; } = Maps.GetWorldMap();
+
+        float IGeoMapView<SkiaSharpDrawingContext>.Width => Width;
+
+        float IGeoMapView<SkiaSharpDrawingContext>.Height => Height;
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
         public MotionCanvas<SkiaSharpDrawingContext> Canvas { get; } = new();
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.Projection"/>
-        public Projection Projection { get; set; }
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
+        public MapProjection MapProjection { get; set; }
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.HeatMap"/>
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.HeatMap"/>
         public LvcColor[] HeatMap { get; set; } = new[]
         {
             LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
             LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
         };
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.ColorStops"/>
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ColorStops"/>
         public double[]? ColorStops { get; set; }
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.StrokeColor"/>
-        public LvcColor StrokeColor { get; set; } = LvcColor.FromArgb(255, 224, 224, 224);
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
+        public IPaint<SkiaSharpDrawingContext>? Stroke { get; set; } = new SolidColorPaint(new SKColor(255, 224, 224, 224));
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.StrokeThickness"/>
-        public double StrokeThickness { get; set; } = 1;
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
+        public IPaint<SkiaSharpDrawingContext>? Fill { get; set; } = new SolidColorPaint(new SKColor(255, 250, 250, 250));
 
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.FillColor"/>
-        public LvcColor FillColor { get; set; } = LvcColor.FromArgb(255, 250, 250, 250);
-
-        /// <inheritdoc cref="IGeoMap{TDrawingContext}.Values"/>
-        public Dictionary<string, double> Values { get; set; } = new Dictionary<string, double>();
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
+        public IEnumerable<MapShape<SkiaSharpDrawingContext>> Shapes { get; set; } = Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>();
 
         /// <inheritdoc cref="ISkiaSharpChart.GetImage"/>
         public SKImage GetImage()
@@ -177,30 +178,35 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
             data.SaveTo(stream);
         }
 
+        void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
+        {
+            action();
+        }
+
         private void load()
         {
-            var paint = new SolidColorPaint();
+            //var paint = new SolidColorPaint();
 
-            var thickness = (float)StrokeThickness;
-            var stroke = LvcColor.FromArgb(255, StrokeColor.R, StrokeColor.G, StrokeColor.B);
-            var fill = LvcColor.FromArgb(255, FillColor.R, FillColor.G, FillColor.B);
+            //var thickness = (float)StrokeThickness;
+            //var stroke = LvcColor.FromArgb(255, StrokeColor.R, StrokeColor.G, StrokeColor.B);
+            //var fill = LvcColor.FromArgb(255, FillColor.R, FillColor.G, FillColor.B);
 
-            var hm = HeatMap.Select(x => LvcColor.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
+            //var hm = HeatMap.Select(x => LvcColor.FromArgb(x.A, x.R, x.G, x.B)).ToArray();
 
-            if (_heatKnownLength != HeatMap.Length)
-            {
-                _heatStops = HeatFunctions.BuildColorStops(hm, ColorStops);
-                _heatKnownLength = HeatMap.Length;
-            }
+            //if (_heatKnownLength != HeatMap.Length)
+            //{
+            //    _heatStops = HeatFunctions.BuildColorStops(hm, ColorStops);
+            //    _heatKnownLength = HeatMap.Length;
+            //}
 
-            var worldMap = s_map ??= Maps.GetWorldMap();
-            var projector = Maps.BuildProjector(Projection, new float[] { Width, Height });
-            var shapes = worldMap.AsMapShapes(hm, _heatStops, stroke, fill, thickness, projector);
-            paint.SetGeometries(Canvas, new HashSet<IDrawable<SkiaSharpDrawingContext>>(shapes));
-            var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>> { paint };
-            Canvas.SetPaintTasks(tasks);
+            //var worldMap = s_map ??= Maps.GetWorldMap();
+            //var projector = Maps.BuildProjector(Projection, new float[] { Width, Height });
+            //var shapes = worldMap.AsMapShapes(hm, _heatStops, stroke, fill, thickness, projector);
+            //paint.SetGeometries(Canvas, new HashSet<IDrawable<SkiaSharpDrawingContext>>(shapes));
+            //var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>> { paint };
+            //Canvas.SetPaintTasks(tasks);
 
-            Measured?.Invoke(this);
+            //Measured?.Invoke(this);
         }
     }
 }
