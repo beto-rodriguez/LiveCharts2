@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel.Providers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -32,6 +33,12 @@ namespace LiveChartsCore.SkiaSharpView
     /// <inheritdoc cref="ChartProvider{TDrawingContext}"/>
     public class SkiaSharpProvider : ChartProvider<SkiaSharpDrawingContext>
     {
+        /// <inheritdoc cref="ChartProvider{TDrawingContext}.GetDefaultMapFactory"/>
+        public override IMapFactory<SkiaSharpDrawingContext> GetDefaultMapFactory()
+        {
+            return new MapFactory();
+        }
+
         /// <inheritdoc cref="ChartProvider{TDrawingContext}.GetDefaultCartesianAxis"/>
         public override ICartesianAxis GetDefaultCartesianAxis()
         {

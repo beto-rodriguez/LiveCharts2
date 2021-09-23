@@ -27,8 +27,6 @@ using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
@@ -37,14 +35,14 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
     /// <inheritdoc cref="IGeoMapView{SkiaSharpDrawingContext}"/>
     public class SKGeoMap : IGeoMapView<SkiaSharpDrawingContext>, ISkiaSharpChart
     {
-        private readonly GeoMap<SkiaSharpDrawingContext, PathGeometry, LineSegment, MoveToPathCommand, SKPath> _core;
+        private readonly GeoMap<SkiaSharpDrawingContext> _core;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SKGeoMap"/> class.
         /// </summary>
         public SKGeoMap()
         {
-            _core = new GeoMap<SkiaSharpDrawingContext, PathGeometry, LineSegment, MoveToPathCommand, SKPath>(this);
+            _core = new GeoMap<SkiaSharpDrawingContext>(this);
         }
 
         /// <summary>
@@ -60,9 +58,6 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
             Fill = mapView.Fill;
             Shapes = mapView.Shapes;
         }
-
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Measured"/>
-        public event Action<IGeoMapView<SkiaSharpDrawingContext>>? Measured;
 
         /// <summary>
         /// Gets or sets the background.
@@ -190,7 +185,6 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         private void load()
         {
             _core.Update(new Kernel.ChartUpdateParams { Throttling = false, IsAutomaticUpdate = false });
-            Measured?.Invoke(this);
         }
     }
 }

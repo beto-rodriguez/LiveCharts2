@@ -34,17 +34,11 @@ namespace LiveChartsCore
     /// Defines a geo map chart.
     /// </summary>
     /// <typeparam name="TDrawingContext"></typeparam>
-    /// <typeparam name="TPathGeometry"></typeparam>
-    /// <typeparam name="TLineSegment"></typeparam>
-    /// <typeparam name="TMoveToCommand"></typeparam>
-    /// <typeparam name="TPathArgs"></typeparam>
-    public class GeoMap<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>
-        where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
-        where TLineSegment : ILinePathSegment<TPathArgs>, new()
-        where TMoveToCommand : IMoveToPathCommand<TPathArgs>, new()
+    public class GeoMap<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
-        internal readonly HashSet<IMapElement> _everMeasuredShapes = new();
+        private readonly IMapFactory<TDrawingContext> _mapFactory;
+        private readonly HashSet<IMapElement> _everMeasuredShapes = new();
         private readonly IGeoMapView<TDrawingContext> _chartView;
         private readonly ActionThrottler _updateThrottler;
         private readonly IPaint<TDrawingContext> _heatPaint;
@@ -53,10 +47,9 @@ namespace LiveChartsCore
         private IPaint<TDrawingContext>? _previousFill;
         private int _heatKnownLength = 0;
         private List<Tuple<double, LvcColor>> _heatStops = new();
-        private readonly Dictionary<string, LvcColor> _previousColors = new();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GeoMap{TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs}"/> class.
+        /// Initializes a new instance of the <see cref="GeoMap{TDrawingContext}"/> class.
         /// </summary>
         /// <param name="mapView"></param>
         public GeoMap(IGeoMapView<TDrawingContext> mapView)
@@ -66,6 +59,7 @@ namespace LiveChartsCore
                     ? new ActionThrottler(() => Task.CompletedTask, TimeSpan.FromMilliseconds(50))
                     : new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
             _heatPaint = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
+            _mapFactory = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>().GetDefaultMapFactory();
         }
 
         /// <summary>
@@ -142,7 +136,7 @@ namespace LiveChartsCore
             _heatPaint.ZIndex = i + 1;
 
             var bounds = new Dictionary<int, Bounds>();
-            foreach (var shape in _chartView.Shapes)
+            foreach (var shape in _mapFactory.FetchMapElements(_chartView))
             {
                 if (shape is not IWeigthedMapShape wShape) continue;
 
@@ -172,9 +166,9 @@ namespace LiveChartsCore
             if (_chartView.Fill is not null)
                 _chartView.Fill.ClearGeometriesFromPaintTask(_chartView.Canvas);
 
-            foreach (var feature in map.Features ?? new GeoJsonFeature[0])
+            foreach (var feature in _mapFactory.FetchFeatures(map, projector))
             {
-                var pathShapes = AsPathShape(feature, projector);
+                var pathShapes = _mapFactory.ConvertToPathShape(feature, projector);
 
                 foreach (var shapeGeometry in pathShapes)
                 {
@@ -189,7 +183,7 @@ namespace LiveChartsCore
             var toDeleteShapes = new HashSet<IMapElement>(_everMeasuredShapes);
             var context = new MapShapeContext<TDrawingContext>(_chartView, _heatPaint, _heatStops, bounds);
 
-            foreach (var shape in _chartView.Shapes)
+            foreach (var shape in _mapFactory.FetchMapElements(_chartView))
             {
                 _ = _everMeasuredShapes.Add(shape);
                 shape.Measure(context);
@@ -203,41 +197,6 @@ namespace LiveChartsCore
             }
 
             _chartView.Canvas.Invalidate();
-        }
-
-        private static IEnumerable<TPathGeometry> AsPathShape(
-            GeoJsonFeature feature,
-            MapProjector projector)
-        {
-            var paths = new List<TPathGeometry>();
-            var d = new double[0][][][];
-
-            foreach (var geometry in feature.Geometry?.Coordinates ?? d)
-            {
-                foreach (var segment in geometry)
-                {
-                    var path = new TPathGeometry { IsClosed = true };
-
-                    var isFirst = true;
-                    foreach (var point in segment)
-                    {
-                        var p = projector.ToMap(point);
-
-                        if (isFirst)
-                        {
-                            isFirst = false;
-                            path.AddCommand(new TMoveToCommand { X = p[0], Y = p[1] });
-                            continue;
-                        }
-
-                        path.AddCommand(new TLineSegment { X = p[0], Y = p[1] });
-                    }
-
-                    paths.Add(path);
-                }
-            }
-
-            return paths;
         }
     }
 }

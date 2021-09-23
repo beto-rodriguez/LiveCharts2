@@ -20,51 +20,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Geo;
-using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.Kernel.Providers
+namespace LiveChartsCore.Geo
 {
     /// <summary>
-    /// Defines the chart provider class.
+    /// Defines a map factory.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public abstract class ChartProvider<TDrawingContext>
+    public interface IMapFactory<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Gets a new instance of the default data factory.
+        /// Fetches the map features.
         /// </summary>
-        /// <typeparam name="TModel">The type of the model.</typeparam>
-        /// <returns></returns>
-        public virtual DataFactory<TModel, TDrawingContext> GetDefaultDataFactory<TModel>()
-        {
-            return new();
-        }
+        /// <param name="mapFile">The map file.</param>
+        /// <param name="projector">The current projector.</param>
+        IEnumerable<GeoJsonFeature> FetchFeatures(GeoJsonFile mapFile, MapProjector projector);
 
         /// <summary>
-        /// Gets a new instance of the default map factory.
+        /// Fetches the map elements.
         /// </summary>
-        /// <returns></returns>
-        public abstract IMapFactory<TDrawingContext> GetDefaultMapFactory();
+        /// <param name="mapView">The map view.</param>
+        IEnumerable<IMapElement> FetchMapElements(IGeoMapView<TDrawingContext> mapView);
 
         /// <summary>
-        /// Gets a new instance of the default Cartesian axis.
+        /// Converts the given feature into a path geometry.
         /// </summary>
-        /// <returns></returns>
-        public abstract ICartesianAxis GetDefaultCartesianAxis();
-
-        /// <summary>
-        /// Gets a new instance of the default polar axis.
-        /// </summary>
-        /// <returns></returns>
-        public abstract IPolarAxis GetDefaultPolarAxis();
-
-        /// <summary>
-        /// Gets a new paint of the given color.
-        /// </summary>
-        /// <returns></returns>
-        public abstract IPaint<TDrawingContext> GetSolidColorPaint(LvcColor color = new LvcColor());
+        /// <param name="feature">The feature.</param>
+        /// <param name="projector">The current projector.</param>
+        IEnumerable<IDrawable<TDrawingContext>> ConvertToPathShape(GeoJsonFeature feature, MapProjector projector);
     }
 }

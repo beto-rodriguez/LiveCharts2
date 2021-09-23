@@ -31,8 +31,6 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
@@ -45,7 +43,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
     {
         private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
-        private readonly GeoMap<SkiaSharpDrawingContext, HeatPathShape, LineSegment, MoveToPathCommand, SKPath> _core;
+        private readonly GeoMap<SkiaSharpDrawingContext> _core;
 
         static GeoMap()
         {
@@ -58,7 +56,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         public GeoMap()
         {
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-            _core = new GeoMap<SkiaSharpDrawingContext, HeatPathShape, LineSegment, MoveToPathCommand, SKPath>(this);
+            _core = new GeoMap<SkiaSharpDrawingContext>(this);
             _shapesObserver = new CollectionDeepObserver<IMapElement>(
                 (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
                 (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
