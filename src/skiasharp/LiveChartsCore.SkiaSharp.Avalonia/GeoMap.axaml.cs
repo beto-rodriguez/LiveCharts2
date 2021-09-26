@@ -27,11 +27,14 @@ using System.ComponentModel;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -56,6 +59,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
                 (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
                 true);
+
+            PointerWheelChanged += OnPointerWheelChanged;
+            PointerPressed += OnPointerPressed;
+            PointerMoved += OnPointerMoved;
+            PointerLeave += OnPointerLeave;
 
             //Shapes = Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>();
             ActiveMap = Maps.GetWorldMap();
@@ -229,6 +237,42 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             }
 
             _core?.Update();
+        }
+
+        private void OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
+        {
+            if (_core is null) return;
+
+            var p = e.GetPosition(this);
+
+            _core.Zoom(new LvcPoint((float)p.X, (float)p.Y), e.Delta.Y > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+        }
+
+        private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+            var p = e.GetPosition(this);
+            foreach (var w in desktop.Windows) w.PointerReleased += OnWindowPointerReleased;
+            _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y));
+        }
+
+        private void OnPointerMoved(object? sender, PointerEventArgs e)
+        {
+            var p = e.GetPosition(this);
+            _core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
+        }
+
+        private void OnWindowPointerReleased(object? sender, PointerReleasedEventArgs e)
+        {
+            if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+            foreach (var w in desktop.Windows) w.PointerReleased -= OnWindowPointerReleased;
+            var p = e.GetPosition(this);
+            _core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y));
+        }
+
+        private void OnPointerLeave(object? sender, PointerEventArgs e)
+        {
+            _core?.InvokePointerLeft();
         }
 
         private void InitializeComponent()

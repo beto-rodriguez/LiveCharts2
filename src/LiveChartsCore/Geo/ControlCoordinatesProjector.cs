@@ -46,6 +46,8 @@ namespace LiveChartsCore.Geo
             _h = mapHeight;
             _ox = offsetX;
             _oy = offsetY;
+            MapWidth = mapWidth;
+            MapHeight = mapHeight;
         }
 
         /// <summary>

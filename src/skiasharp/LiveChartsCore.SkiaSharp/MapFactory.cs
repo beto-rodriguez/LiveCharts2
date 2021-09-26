@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
@@ -34,33 +35,23 @@ namespace LiveChartsCore.SkiaSharpView
     /// </summary>
     public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
     {
-        /// <summary>
-        /// Fetches the map features.
-        /// </summary>
-        /// <param name="mapFile">The map file.</param>
-        /// <param name="projector">The current projector.</param>
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.FetchFeatures(GeoJsonFile, MapProjector)"/>
         public IEnumerable<GeoJsonFeature> FetchFeatures(GeoJsonFile mapFile, MapProjector projector)
         {
             foreach (var feature in mapFile.Features ?? new GeoJsonFeature[0])
                 yield return feature;
         }
 
-        /// <summary>
-        /// Fetches the map elements.
-        /// </summary>
-        /// <param name="mapView">The map view.</param>
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.FetchFeatures(GeoJsonFile, MapProjector)"/>
         public IEnumerable<IMapElement> FetchMapElements(IGeoMapView<SkiaSharpDrawingContext> mapView)
         {
             foreach (var shape in mapView.Shapes)
                 yield return shape;
         }
 
-        /// <summary>
-        /// Converts the given feature into a path geometry.
-        /// </summary>
-        /// <param name="feature">The feature.</param>
-        /// <param name="projector">The current projector.</param>
-        public IEnumerable<IDrawable<SkiaSharpDrawingContext>> ConvertToPathShape(GeoJsonFeature feature, MapProjector projector)
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.FetchFeatures(GeoJsonFile, MapProjector)"/>
+        public IEnumerable<IDrawable<SkiaSharpDrawingContext>> ConvertToPathShape(
+            GeoJsonFile mapFile, GeoJsonFeature feature, MapProjector projector)
         {
             var paths = new List<HeatPathShape>();
             var d = new double[0][][][];
@@ -91,6 +82,18 @@ namespace LiveChartsCore.SkiaSharpView
             }
 
             return paths;
+        }
+
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.FetchFeatures(GeoJsonFile, MapProjector)"/>
+        public void Zoom(LvcPoint pivot, ZoomDirection direction)
+        {
+            // not implemented yet.
+        }
+
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.FetchFeatures(GeoJsonFile, MapProjector)"/>
+        public void Pan(LvcPoint delta)
+        {
+            // not implemented yet.
         }
     }
 }

@@ -361,11 +361,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             core.Update();
         }
 
-        private void OnMouseMove(object? sender, MouseEventArgs e)
-        {
-            core?.InvokePointerMove(new LvcPoint(e.Location.X, e.Location.Y));
-        }
-
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
         {
             UpdateFinished?.Invoke(this);
@@ -379,6 +374,11 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
         {
             Measuring?.Invoke(this);
+        }
+
+        private void OnMouseMove(object? sender, MouseEventArgs e)
+        {
+            core?.InvokePointerMove(new LvcPoint(e.Location.X, e.Location.Y));
         }
 
         private void Chart_MouseLeave(object? sender, EventArgs e)

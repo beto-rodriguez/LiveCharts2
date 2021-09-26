@@ -28,6 +28,16 @@ namespace LiveChartsCore.Geo
     public abstract class MapProjector
     {
         /// <summary>
+        /// Gets the map width.
+        /// </summary>
+        public float MapWidth { get; protected set; }
+
+        /// <summary>
+        /// Gets the map height.
+        /// </summary>
+        public float MapHeight { get; protected set; }
+
+        /// <summary>
         /// Projects the given point.
         /// </summary>
         /// <param name="point">The point.</param>

@@ -27,6 +27,7 @@ using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using System.Threading.Tasks;
 using System;
+using LiveChartsCore.Kernel.Events;
 
 namespace LiveChartsCore
 {
@@ -41,12 +42,18 @@ namespace LiveChartsCore
         private readonly HashSet<IMapElement> _everMeasuredShapes = new();
         private readonly IGeoMapView<TDrawingContext> _chartView;
         private readonly ActionThrottler _updateThrottler;
+        private readonly ActionThrottler _panningThrottler;
         private readonly IPaint<TDrawingContext> _heatPaint;
         private bool _isHeatInCanvas = false;
         private IPaint<TDrawingContext>? _previousStroke;
         private IPaint<TDrawingContext>? _previousFill;
         private int _heatKnownLength = 0;
         private List<Tuple<double, LvcColor>> _heatStops = new();
+        private LvcPoint _pointerPosition = new(-10, -10);
+        private LvcPoint _pointerPanningPosition = new(-10, -10);
+        private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
+        private bool _isPanning = false;
+        private bool _isPointerIn = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeoMap{TDrawingContext}"/> class.
@@ -60,6 +67,31 @@ namespace LiveChartsCore
                     : new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
             _heatPaint = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
             _mapFactory = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>().GetDefaultMapFactory();
+
+            PointerDown += Chart_PointerDown;
+            PointerMove += Chart_PointerMove;
+            PointerUp += Chart_PointerUp;
+            PointerLeft += Chart_PointerLeft;
+
+            _panningThrottler = new ActionThrottler(PanningThrottlerUnlocked, TimeSpan.FromMilliseconds(30));
+        }
+
+        internal event Action<LvcPoint> PointerDown;
+        internal event Action<LvcPoint> PointerMove;
+        internal event Action<LvcPoint> PointerUp;
+        internal event Action PointerLeft;
+        internal event Action<PanGestureEventArgs>? PanGesture;
+
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.Zoom(LvcPoint, ZoomDirection)"/>
+        public virtual void Zoom(LvcPoint pivot, ZoomDirection direction)
+        {
+            _mapFactory.Zoom(pivot, direction);
+        }
+
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.Pan(LvcPoint)"/>
+        public virtual void Pan(LvcPoint delta)
+        {
+            _mapFactory.Pan(delta);
         }
 
         /// <summary>
@@ -79,6 +111,31 @@ namespace LiveChartsCore
             }
 
             _updateThrottler.Call();
+        }
+
+        internal void InvokePointerDown(LvcPoint point)
+        {
+            PointerDown?.Invoke(point);
+        }
+
+        internal void InvokePointerMove(LvcPoint point)
+        {
+            PointerMove?.Invoke(point);
+        }
+
+        internal void InvokePointerUp(LvcPoint point)
+        {
+            PointerUp?.Invoke(point);
+        }
+
+        internal void InvokePointerLeft()
+        {
+            PointerLeft?.Invoke();
+        }
+
+        internal void InvokePanGestrue(PanGestureEventArgs eventArgs)
+        {
+            PanGesture?.Invoke(eventArgs);
         }
 
         /// <summary>
@@ -168,7 +225,7 @@ namespace LiveChartsCore
 
             foreach (var feature in _mapFactory.FetchFeatures(map, projector))
             {
-                var pathShapes = _mapFactory.ConvertToPathShape(feature, projector);
+                var pathShapes = _mapFactory.ConvertToPathShape(map, feature, projector);
 
                 foreach (var shapeGeometry in pathShapes)
                 {
@@ -186,7 +243,7 @@ namespace LiveChartsCore
             foreach (var shape in _mapFactory.FetchMapElements(_chartView))
             {
                 _ = _everMeasuredShapes.Add(shape);
-                shape.Measure(context);
+                //shape.Measure(context);
                 _ = toDeleteShapes.Remove(shape);
             }
 
@@ -197,6 +254,50 @@ namespace LiveChartsCore
             }
 
             _chartView.Canvas.Invalidate();
+        }
+
+        private Task PanningThrottlerUnlocked()
+        {
+            return Task.Run(() =>
+                _chartView.InvokeOnUIThread(() =>
+                {
+                    if (this is not CartesianChart<TDrawingContext> cartesianChart) return;
+
+                    lock (_chartView.Canvas.Sync)
+                    {
+                        cartesianChart.Pan(
+                        new LvcPoint(
+                            (float)(_pointerPanningPosition.X - _pointerPreviousPanningPosition.X),
+                            (float)(_pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y)));
+                        _pointerPreviousPanningPosition = new LvcPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
+                    }
+                }));
+        }
+
+        private void Chart_PointerDown(LvcPoint pointerPosition)
+        {
+            _isPanning = true;
+            _pointerPreviousPanningPosition = pointerPosition;
+        }
+
+        private void Chart_PointerMove(LvcPoint pointerPosition)
+        {
+            _pointerPosition = pointerPosition;
+            _isPointerIn = true;
+            if (!_isPanning) return;
+            _pointerPanningPosition = pointerPosition;
+            _panningThrottler.Call();
+        }
+
+        private void Chart_PointerLeft()
+        {
+            _isPointerIn = false;
+        }
+
+        private void Chart_PointerUp(LvcPoint pointerPosition)
+        {
+            if (!_isPanning) return;
+            _isPanning = false;
         }
     }
 }

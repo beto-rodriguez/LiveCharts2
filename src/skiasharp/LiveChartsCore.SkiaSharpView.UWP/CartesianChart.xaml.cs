@@ -864,12 +864,13 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                 _core.UpdateStarted += OnCoreUpdateStarted;
                 _core.UpdateFinished += OnCoreUpdateFinished;
 
-                PointerWheelChanged += OnWheelChanged;
                 PointerPressed += OnPointerPressed;
-                PointerReleased += OnPointerReleased;
-                SizeChanged += OnSizeChanged;
                 PointerMoved += OnPointerMoved;
+                PointerReleased += OnPointerReleased;
+                PointerWheelChanged += OnWheelChanged;
                 PointerExited += OnPointerExited;
+
+                SizeChanged += OnSizeChanged;
             }
 
             _core.Load();
@@ -894,12 +895,6 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             _core.Update();
         }
 
-        private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
-        {
-            var p = e.GetCurrentPoint(this);
-            _core?.InvokePointerMove(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
-        }
-
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
         {
             UpdateFinished?.Invoke(this);
@@ -915,10 +910,17 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             Measuring?.Invoke(this);
         }
 
-        private void OnPointerExited(object sender, PointerRoutedEventArgs e)
+        private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            HideTooltip();
-            _core?.InvokePointerLeft();
+            _ = CapturePointer(e.Pointer);
+            var p = e.GetCurrentPoint(this);
+            _core?.InvokePointerDown(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
+        }
+
+        private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            var p = e.GetCurrentPoint(this);
+            _core?.InvokePointerMove(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
         }
 
         private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
@@ -928,11 +930,10 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             ReleasePointerCapture(e.Pointer);
         }
 
-        private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        private void OnPointerExited(object sender, PointerRoutedEventArgs e)
         {
-            _ = CapturePointer(e.Pointer);
-            var p = e.GetCurrentPoint(this);
-            _core?.InvokePointerDown(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
+            HideTooltip();
+            _core?.InvokePointerLeft();
         }
 
         private void OnWheelChanged(object sender, PointerRoutedEventArgs e)

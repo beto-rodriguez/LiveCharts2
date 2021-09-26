@@ -364,6 +364,11 @@ namespace LiveChartsCore
             PointerLeft?.Invoke();
         }
 
+        internal void InvokePanGestrue(PanGestureEventArgs eventArgs)
+        {
+            PanGesture?.Invoke(eventArgs);
+        }
+
         /// <summary>
         /// Measures this chart.
         /// </summary>
@@ -412,11 +417,6 @@ namespace LiveChartsCore
         protected void InvokeOnUpdateFinished()
         {
             UpdateFinished?.Invoke(View);
-        }
-
-        internal void InvokePanGestrue(PanGestureEventArgs eventArgs)
-        {
-            PanGesture?.Invoke(eventArgs);
         }
 
         /// <summary>
@@ -537,7 +537,7 @@ namespace LiveChartsCore
         private void OnCanvasValidated(MotionCanvas<TDrawingContext> chart)
         {
             InvokeOnUpdateFinished();
-        }
+        } 
 
         private void Chart_PointerDown(LvcPoint pointerPosition)
         {

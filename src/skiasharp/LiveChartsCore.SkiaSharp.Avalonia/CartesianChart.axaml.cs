@@ -107,11 +107,12 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             };
             Series = new ObservableCollection<ISeries>();
 
-            PointerWheelChanged += CartesianChart_PointerWheelChanged;
             PointerPressed += CartesianChart_PointerPressed;
             PointerMoved += CartesianChart_PointerMoved;
-
+            // .. special case in avalonia for pointer released... he handle our own pointer capture.
+            PointerWheelChanged += CartesianChart_PointerWheelChanged;
             PointerLeave += CartesianChart_PointerLeave;
+
             DetachedFromVisualTree += CartesianChart_DetachedFromVisualTree;
         }
 
@@ -798,16 +799,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             _core.Update();
         }
 
-        private void CartesianChart_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
-        {
-            if (_core is null) return;
-
-            var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
-            var p = e.GetPosition(this);
-
-            c.Zoom(new LvcPoint((float)p.X, (float)p.Y), e.Delta.Y > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
-        }
-
         private void CartesianChart_PointerPressed(object? sender, PointerPressedEventArgs e)
         {
             if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
@@ -830,6 +821,22 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             _core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y));
         }
 
+        private void CartesianChart_PointerLeave(object? sender, PointerEventArgs e)
+        {
+            _ = Dispatcher.UIThread.InvokeAsync(HideTooltip, DispatcherPriority.Background);
+            _core?.InvokePointerLeft();
+        }
+
+        private void CartesianChart_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
+        {
+            if (_core is null) return;
+
+            var c = (CartesianChart<SkiaSharpDrawingContext>)_core;
+            var p = e.GetPosition(this);
+
+            c.Zoom(new LvcPoint((float)p.X, (float)p.Y), e.Delta.Y > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+        }
+
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
         {
             UpdateFinished?.Invoke(this);
@@ -843,12 +850,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
         {
             Measuring?.Invoke(this);
-        }
-
-        private void CartesianChart_PointerLeave(object? sender, PointerEventArgs e)
-        {
-            _ = Dispatcher.UIThread.InvokeAsync(HideTooltip, DispatcherPriority.Background);
-            _core?.InvokePointerLeft();
         }
 
         private void CartesianChart_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)

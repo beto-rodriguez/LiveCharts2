@@ -28,6 +28,7 @@ using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -35,6 +36,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace LiveChartsCore.SkiaSharpView.UWP
 {
@@ -54,6 +56,15 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             InitializeComponent();
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
             _core = new GeoMap<SkiaSharpDrawingContext>(this);
+
+            PointerPressed += OnPointerPressed;
+            PointerMoved += OnPointerMoved;
+            PointerReleased += OnPointerReleased;
+            PointerWheelChanged += OnWheelChanged;
+            PointerExited += OnPointerExited;
+
+            SizeChanged += GeoMap_SizeChanged;
+
             _shapesObserver = new CollectionDeepObserver<IMapElement>(
                 (object sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
                 (object sender, PropertyChangedEventArgs e) => _core.Update(),
@@ -61,7 +72,6 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             SetValue(ShapesProperty, Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>());
             SetValue(ActiveMapProperty, Maps.GetWorldMap());
             SetValue(SyncContextProperty, new object());
-            SizeChanged += GeoMap_SizeChanged; ;
         }
 
         #region dependency props
@@ -234,6 +244,42 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         private void GeoMap_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             _core.Update();
+        }
+
+        private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            _ = CapturePointer(e.Pointer);
+            var p = e.GetCurrentPoint(this);
+            _core?.InvokePointerDown(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
+        }
+
+        private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            var p = e.GetCurrentPoint(this);
+            _core?.InvokePointerMove(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
+        }
+
+        private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            var p = e.GetCurrentPoint(this);
+            _core?.InvokePointerUp(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
+            ReleasePointerCapture(e.Pointer);
+        }
+
+        private void OnPointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            _core?.InvokePointerLeft();
+        }
+
+        private void OnWheelChanged(object sender, PointerRoutedEventArgs e)
+        {
+            if (_core == null) throw new Exception("core not found");
+            var p = e.GetCurrentPoint(this);
+
+            _core.Zoom(
+                new LvcPoint(
+                    (float)p.Position.X, (float)p.Position.Y),
+                    p.Properties.MouseWheelDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
         }
 
         private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)

@@ -29,6 +29,7 @@ using System.Windows.Forms;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -67,6 +68,15 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
                 (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
                 true);
+
+            var c = Controls[0].Controls[0];
+
+            c.MouseDown += OnMouseDown;
+            c.MouseMove += OnMouseMove;
+            c.MouseUp += OnMouseUp;
+            c.MouseLeave += OnMouseLeave;
+            c.MouseWheel += OnMouseWheel;
+
             Resize += GeoMap_Resize;
         }
 
@@ -163,6 +173,33 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private void GeoMap_Resize(object? sender, EventArgs e)
         {
             _core?.Update();
+        }
+
+        private void OnMouseDown(object? sender, MouseEventArgs e)
+        {
+            _core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y));
+        }
+        private void OnMouseMove(object? sender, MouseEventArgs e)
+        {
+            _core?.InvokePointerMove(new LvcPoint(e.Location.X, e.Location.Y));
+        }
+
+        private void OnMouseUp(object? sender, MouseEventArgs e)
+        {
+            _core?.InvokePointerUp(new LvcPoint(e.Location.X, e.Location.Y));
+        }
+
+        private void OnMouseLeave(object? sender, EventArgs e)
+        {
+            _core?.InvokePointerLeft();
+        }
+
+        private void OnMouseWheel(object? sender, MouseEventArgs e)
+        {
+            if (_core is null) throw new Exception("core not found");
+            var p = e.Location;
+            _core.Zoom(new LvcPoint(p.X, p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+            Capture = true;
         }
     }
 }

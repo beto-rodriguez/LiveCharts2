@@ -315,14 +315,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             core.Update();
         }
 
-        private void OnMouseWheel(object? sender, System.Windows.Input.MouseWheelEventArgs e)
-        {
-            if (core is null) throw new Exception("core not found");
-            var c = (CartesianChart<SkiaSharpDrawingContext>)core;
-            var p = e.GetPosition(this);
-            c.Zoom(new LvcPoint((float)p.X, (float)p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
-        }
-
         private void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             _ = CaptureMouse();
@@ -335,6 +327,14 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             var p = e.GetPosition(this);
             core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y));
             ReleaseMouseCapture();
+        }
+
+        private void OnMouseWheel(object? sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            if (core is null) throw new Exception("core not found");
+            var c = (CartesianChart<SkiaSharpDrawingContext>)core;
+            var p = e.GetPosition(this);
+            c.Zoom(new LvcPoint((float)p.X, (float)p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
         }
     }
 }
