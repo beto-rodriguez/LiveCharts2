@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.Geo
 {
@@ -52,5 +53,18 @@ namespace LiveChartsCore.Geo
         /// <param name="projector">The current projector.</param>
         IEnumerable<IDrawable<TDrawingContext>> ConvertToPathShape(
             GeoJsonFile mapFile, GeoJsonFeature feature, MapProjector projector);
+
+        /// <summary>
+        /// Zooms the map.
+        /// </summary>
+        /// <param name="pivot">The pivot.</param>
+        /// <param name="direction">The direction.</param>
+        void Zoom(LvcPoint pivot, ZoomDirection direction);
+
+        /// <summary>
+        /// Pans the map.
+        /// </summary>
+        /// <param name="delta"></param>
+        void Pan(LvcPoint delta);
     }
 }

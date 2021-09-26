@@ -82,14 +82,16 @@ namespace LiveChartsCore
         internal event Action PointerLeft;
         internal event Action<PanGestureEventArgs>? PanGesture;
 
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.Zoom(LvcPoint, ZoomDirection)"/>
         public virtual void Zoom(LvcPoint pivot, ZoomDirection direction)
         {
-
+            _mapFactory.Zoom(pivot, direction);
         }
 
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.Pan(LvcPoint)"/>
         public virtual void Pan(LvcPoint delta)
         {
-
+            _mapFactory.Pan(delta);
         }
 
         /// <summary>
