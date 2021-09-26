@@ -5,6 +5,10 @@
              x:Class="LiveChartsCore.SkiaSharpView.Xamarin.Forms.GeoMap">
   <ContentView.Content>
         <lvc:MotionCanvas Grid.Column="0" x:Name="canvas" >
+            <lvc:MotionCanvas.GestureRecognizers >
+                <PinchGestureRecognizer PinchUpdated="PinchGestureRecognizer_PinchUpdated" />
+                <PanGestureRecognizer PanUpdated="PanGestureRecognizer_PanUpdated"/>
+            </lvc:MotionCanvas.GestureRecognizers>
         </lvc:MotionCanvas>
     </ContentView.Content>
 </ContentView>

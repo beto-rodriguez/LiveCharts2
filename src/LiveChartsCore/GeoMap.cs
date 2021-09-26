@@ -77,14 +77,20 @@ namespace LiveChartsCore
         }
 
         internal event Action<LvcPoint> PointerDown;
-
         internal event Action<LvcPoint> PointerMove;
-
         internal event Action<LvcPoint> PointerUp;
-
         internal event Action PointerLeft;
-
         internal event Action<PanGestureEventArgs>? PanGesture;
+
+        public virtual void Zoom(LvcPoint pivot, ZoomDirection direction)
+        {
+
+        }
+
+        public virtual void Pan(LvcPoint delta)
+        {
+
+        }
 
         /// <summary>
         /// Queues a measure request to update the chart.
@@ -103,6 +109,31 @@ namespace LiveChartsCore
             }
 
             _updateThrottler.Call();
+        }
+
+        internal void InvokePointerDown(LvcPoint point)
+        {
+            PointerDown?.Invoke(point);
+        }
+
+        internal void InvokePointerMove(LvcPoint point)
+        {
+            PointerMove?.Invoke(point);
+        }
+
+        internal void InvokePointerUp(LvcPoint point)
+        {
+            PointerUp?.Invoke(point);
+        }
+
+        internal void InvokePointerLeft()
+        {
+            PointerLeft?.Invoke();
+        }
+
+        internal void InvokePanGestrue(PanGestureEventArgs eventArgs)
+        {
+            PanGesture?.Invoke(eventArgs);
         }
 
         /// <summary>

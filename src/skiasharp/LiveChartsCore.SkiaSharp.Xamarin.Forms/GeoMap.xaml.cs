@@ -28,6 +28,8 @@ using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Events;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -54,6 +56,12 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             InitializeComponent();
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
             _core = new GeoMap<SkiaSharpDrawingContext>(this);
+
+            canvas.SkCanvasView.EnableTouchEvents = true;
+            canvas.SkCanvasView.Touch += OnSkCanvasTouched;
+
+            SizeChanged += GeoMap_SizeChanged;
+
             _shapesObserver = new CollectionDeepObserver<IMapElement>(
                 (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
                 (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
@@ -61,7 +69,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             SetValue(ShapesProperty, Enumerable.Empty<IMapElement>());
             SetValue(ActiveMapProperty, Maps.GetWorldMap());
             SetValue(SyncContextProperty, new object());
-            SizeChanged += GeoMap_SizeChanged;
         }
 
         #region dependency props
@@ -234,6 +241,38 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         private void GeoMap_SizeChanged(object sender, EventArgs e)
         {
             _core?.Update();
+        }
+
+        private void PanGestureRecognizer_PanUpdated(object? sender, PanUpdatedEventArgs e)
+        {
+            if (_core is null) return;
+            if (e.StatusType != GestureStatus.Running) return;
+
+            var delta = new LvcPoint((float)e.TotalX, (float)e.TotalY);
+            var args = new PanGestureEventArgs(delta);
+
+            _core.InvokePanGestrue(args);
+            if (!args.Handled) _core.Pan(delta);
+        }
+
+        private void PinchGestureRecognizer_PinchUpdated(object? sender, PinchGestureUpdatedEventArgs e)
+        {
+            if (e.Status != GestureStatus.Running || Math.Abs(e.Scale - 1) < 0.05 || _core is null) return;
+
+            var p = e.ScaleOrigin;
+            var w = ((IGeoMapView<SkiaSharpDrawingContext>)this).Width;
+            var h = ((IGeoMapView<SkiaSharpDrawingContext>)this).Width;
+
+            _core.Zoom(
+                new LvcPoint((float)(p.X * w), (float)(p.Y * h)),
+                e.Scale > 1 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+        }
+
+        private void OnSkCanvasTouched(object? sender, SkiaSharp.Views.Forms.SKTouchEventArgs e)
+        {
+            if (_core is null) return;
+            var location = new LvcPoint(e.Location.X, e.Location.Y);
+            _core.InvokePointerDown(location);
         }
 
         private static void OnBindablePropertyChanged(BindableObject o, object oldValue, object newValue)

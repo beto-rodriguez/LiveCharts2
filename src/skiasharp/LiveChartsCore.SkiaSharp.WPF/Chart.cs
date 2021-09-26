@@ -76,10 +76,11 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 throw new Exception("Default colors are not valid");
             initializer.ApplyStyleToChart(this);
 
-            SizeChanged += OnSizeChanged;
             MouseMove += OnMouseMove;
             MouseLeave += OnMouseLeave;
             Unloaded += Chart_Unloaded;
+
+            SizeChanged += OnSizeChanged;
 
             Loaded += Chart_Loaded;
         }
@@ -704,12 +705,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             core.Update();
         }
 
-        private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            var p = e.GetPosition(this);
-            core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
-        }
-
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
         {
             UpdateFinished?.Invoke(this);
@@ -737,6 +732,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 SetValue(dp, value);
             else
                 SetCurrentValue(dp, value);
+        }
+
+        private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            var p = e.GetPosition(this);
+            core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
         }
 
         private void OnMouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
