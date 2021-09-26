@@ -42,14 +42,14 @@ namespace LiveChartsCore.SkiaSharpView
                 yield return feature;
         }
 
-        /// <inheritdoc cref="IMapFactory{TDrawingContext}.FetchFeatures(GeoJsonFile, MapProjector)"/>
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.FetchMapElements(IGeoMapView{TDrawingContext})"/>
         public IEnumerable<IMapElement> FetchMapElements(IGeoMapView<SkiaSharpDrawingContext> mapView)
         {
             foreach (var shape in mapView.Shapes)
                 yield return shape;
         }
 
-        /// <inheritdoc cref="IMapFactory{TDrawingContext}.FetchFeatures(GeoJsonFile, MapProjector)"/>
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.ConvertToPathShape(GeoJsonFile, GeoJsonFeature, MapProjector)"/>
         public IEnumerable<IDrawable<SkiaSharpDrawingContext>> ConvertToPathShape(
             GeoJsonFile mapFile, GeoJsonFeature feature, MapProjector projector)
         {
@@ -84,13 +84,13 @@ namespace LiveChartsCore.SkiaSharpView
             return paths;
         }
 
-        /// <inheritdoc cref="IMapFactory{TDrawingContext}.FetchFeatures(GeoJsonFile, MapProjector)"/>
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.Zoom(LvcPoint, ZoomDirection)"/>
         public void Zoom(LvcPoint pivot, ZoomDirection direction)
         {
             // not implemented yet.
         }
 
-        /// <inheritdoc cref="IMapFactory{TDrawingContext}.FetchFeatures(GeoJsonFile, MapProjector)"/>
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.Pan(LvcPoint)"/>
         public void Pan(LvcPoint delta)
         {
             // not implemented yet.
