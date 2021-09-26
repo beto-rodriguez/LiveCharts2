@@ -58,9 +58,11 @@ namespace LiveChartsCore.SkiaSharpView
         /// <summary>
         /// Converts the given feature into a path geometry.
         /// </summary>
+        /// <param name="mapFile">The map file.</param>
         /// <param name="feature">The feature.</param>
         /// <param name="projector">The current projector.</param>
-        public IEnumerable<IDrawable<SkiaSharpDrawingContext>> ConvertToPathShape(GeoJsonFeature feature, MapProjector projector)
+        public IEnumerable<IDrawable<SkiaSharpDrawingContext>> ConvertToPathShape(
+            GeoJsonFile mapFile, GeoJsonFeature feature, MapProjector projector)
         {
             var paths = new List<HeatPathShape>();
             var d = new double[0][][][];

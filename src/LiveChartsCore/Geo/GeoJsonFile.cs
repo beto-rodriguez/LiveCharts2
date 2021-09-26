@@ -48,12 +48,14 @@ namespace LiveChartsCore.Geo
         public string? Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the properties.
+        /// Gets or sets the X bounds.
         /// </summary>
-        /// <value>
-        /// The properties.
-        /// </value>
-        public object? Properties { get; set; }
+        public double[] Max { get; set; } = new double[0];
+
+        /// <summary>
+        /// Gets or sets the Y bounds.
+        /// </summary>
+        public double[] Min { get; set; } = new double[0];
 
         /// <summary>
         /// Gets or sets the features.

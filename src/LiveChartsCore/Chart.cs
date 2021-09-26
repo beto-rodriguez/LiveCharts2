@@ -537,7 +537,7 @@ namespace LiveChartsCore
         private void OnCanvasValidated(MotionCanvas<TDrawingContext> chart)
         {
             InvokeOnUpdateFinished();
-        }
+        } 
 
         private void Chart_PointerDown(LvcPoint pointerPosition)
         {
