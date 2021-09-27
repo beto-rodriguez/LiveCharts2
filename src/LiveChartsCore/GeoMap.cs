@@ -192,8 +192,12 @@ namespace LiveChartsCore
             var i = Math.Max(_previousStroke?.ZIndex ?? 0, _previousFill?.ZIndex ?? 0);
             _heatPaint.ZIndex = i + 1;
 
+            var context = new MapContext<TDrawingContext>(
+                this, _chartView, _chartView.ActiveMap,
+                Maps.BuildProjector(_chartView.MapProjection, new[] { _chartView.Width, _chartView.Height }));
+
             var bounds = new Dictionary<int, Bounds>();
-            foreach (var shape in _mapFactory.FetchMapElements(_chartView))
+            foreach (var shape in _mapFactory.FetchMapElements(context))
             {
                 if (shape is not IWeigthedMapShape wShape) continue;
 
@@ -214,18 +218,15 @@ namespace LiveChartsCore
                 _heatKnownLength = _chartView.HeatMap.Length;
             }
 
-            var map = _chartView.ActiveMap;
-            var projector = Maps.BuildProjector(_chartView.MapProjection, new[] { _chartView.Width, _chartView.Height });
-
             if (_chartView.Stroke is not null)
                 _chartView.Stroke.ClearGeometriesFromPaintTask(_chartView.Canvas);
 
             if (_chartView.Fill is not null)
                 _chartView.Fill.ClearGeometriesFromPaintTask(_chartView.Canvas);
 
-            foreach (var feature in _mapFactory.FetchFeatures(map, projector))
+            foreach (var feature in _mapFactory.FetchFeatures(context))
             {
-                var pathShapes = _mapFactory.ConvertToPathShape(map, feature, projector);
+                var pathShapes = _mapFactory.ConvertToPathShape(feature, context);
 
                 foreach (var shapeGeometry in pathShapes)
                 {
@@ -238,12 +239,12 @@ namespace LiveChartsCore
             }
 
             var toDeleteShapes = new HashSet<IMapElement>(_everMeasuredShapes);
-            var context = new MapShapeContext<TDrawingContext>(_chartView, _heatPaint, _heatStops, bounds);
+            var shapeContext = new MapShapeContext<TDrawingContext>(_chartView, _heatPaint, _heatStops, bounds);
 
-            foreach (var shape in _mapFactory.FetchMapElements(_chartView))
+            foreach (var shape in _mapFactory.FetchMapElements(context))
             {
                 _ = _everMeasuredShapes.Add(shape);
-                //shape.Measure(context);
+                shape.Measure(shapeContext);
                 _ = toDeleteShapes.Remove(shape);
             }
 

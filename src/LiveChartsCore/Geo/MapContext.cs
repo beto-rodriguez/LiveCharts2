@@ -20,49 +20,50 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.Geo
 {
     /// <summary>
-    /// Defines a map factory.
+    /// Defines a map context.
     /// </summary>
-    public interface IMapFactory<TDrawingContext>
+    /// <typeparam name="TDrawingContext"></typeparam>
+    public class MapContext<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Fetches the map features.
+        /// Initializes a new instance of <see cref="MapContext{TDrawingContext}"/> class.
         /// </summary>
-        /// <param name="context">The map context.</param>
-        IEnumerable<GeoJsonFeature> FetchFeatures(MapContext<TDrawingContext> context);
+        public MapContext(
+            GeoMap<TDrawingContext> core,
+            IGeoMapView<TDrawingContext> view,
+            GeoJsonFile map,
+            MapProjector projector)
+        {
+            CoreMap = core;
+            MapFile = map;
+            Projector = projector;
+            View = view;
+        }
 
         /// <summary>
-        /// Fetches the map elements.
+        /// Gets the core map.
         /// </summary>
-        /// <param name="context">The map context.</param>
-        IEnumerable<IMapElement> FetchMapElements(MapContext<TDrawingContext> context);
+        public GeoMap<TDrawingContext> CoreMap { get; }
 
         /// <summary>
-        /// Converts the given feature into a path geometry.
+        /// Gets the map file.
         /// </summary>
-        /// <param name="feature">The feature.</param>
-        /// <param name="context">The map context.</param>
-        IEnumerable<IDrawable<TDrawingContext>> ConvertToPathShape(
-            GeoJsonFeature feature, MapContext<TDrawingContext> context);
+        public GeoJsonFile MapFile { get; }
 
         /// <summary>
-        /// Zooms the map.
+        /// Gets the map projector.
         /// </summary>
-        /// <param name="pivot">The pivot.</param>
-        /// <param name="direction">The direction.</param>
-        void Zoom(LvcPoint pivot, ZoomDirection direction);
+        public MapProjector Projector { get; }
 
         /// <summary>
-        /// Pans the map.
+        /// Gets the map view.
         /// </summary>
-        /// <param name="delta"></param>
-        void Pan(LvcPoint delta);
+        public IGeoMapView<TDrawingContext> View { get; }
     }
 }

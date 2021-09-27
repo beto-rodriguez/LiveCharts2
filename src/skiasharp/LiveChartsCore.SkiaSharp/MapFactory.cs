@@ -35,24 +35,26 @@ namespace LiveChartsCore.SkiaSharpView
     /// </summary>
     public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
     {
-        /// <inheritdoc cref="IMapFactory{TDrawingContext}.FetchFeatures(GeoJsonFile, MapProjector)"/>
-        public IEnumerable<GeoJsonFeature> FetchFeatures(GeoJsonFile mapFile, MapProjector projector)
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.FetchFeatures(MapContext{TDrawingContext})"/>
+        public IEnumerable<GeoJsonFeature> FetchFeatures(MapContext<SkiaSharpDrawingContext> context)
         {
-            foreach (var feature in mapFile.Features ?? new GeoJsonFeature[0])
+            foreach (var feature in context.MapFile.Features ?? new GeoJsonFeature[0])
                 yield return feature;
         }
 
-        /// <inheritdoc cref="IMapFactory{TDrawingContext}.FetchMapElements(IGeoMapView{TDrawingContext})"/>
-        public IEnumerable<IMapElement> FetchMapElements(IGeoMapView<SkiaSharpDrawingContext> mapView)
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.FetchMapElements(MapContext{TDrawingContext})"/>
+        public IEnumerable<IMapElement> FetchMapElements(MapContext<SkiaSharpDrawingContext> context)
         {
-            foreach (var shape in mapView.Shapes)
+            foreach (var shape in context.View.Shapes)
                 yield return shape;
         }
 
-        /// <inheritdoc cref="IMapFactory{TDrawingContext}.ConvertToPathShape(GeoJsonFile, GeoJsonFeature, MapProjector)"/>
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.ConvertToPathShape(GeoJsonFeature, MapContext{TDrawingContext})"/>
         public IEnumerable<IDrawable<SkiaSharpDrawingContext>> ConvertToPathShape(
-            GeoJsonFile mapFile, GeoJsonFeature feature, MapProjector projector)
+            GeoJsonFeature feature, MapContext<SkiaSharpDrawingContext> context)
         {
+            var projector = context.Projector;
+
             var paths = new List<HeatPathShape>();
             var d = new double[0][][][];
 
