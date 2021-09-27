@@ -1,0 +1,28 @@
+<Project Sdk="MSBuild.Sdk.Extras/3.0.23">
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <ResolveNuGetPackageAssets>false</ResolveNuGetPackageAssets>
+    <TargetFrameworks>xamarin.mac20</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <AssetTargetFallback>net6.0-macos</AssetTargetFallback>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>LiveChartsCore.SkiaSharpView.Xamarin.Mac</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- MSBuild complains if we don't add this: https://github.com/dotnet/standard/issues/542 -->
+    <Reference Include="netstandard" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SkiaSharp.Views" Version="2.88.0-preview.140" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\LiveChartsCore\LiveChartsCore.csproj" />
+    <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
+  </ItemGroup>
+</Project>
