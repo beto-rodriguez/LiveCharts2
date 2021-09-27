@@ -30,6 +30,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using Avalonia.Threading;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
@@ -59,6 +60,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
                 (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
                 true);
+
+            Background = new SolidColorBrush(new Color(0, 0, 0, 0));
 
             PointerWheelChanged += OnPointerWheelChanged;
             PointerPressed += OnPointerPressed;
@@ -119,14 +122,14 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </summary>
         public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>> StrokeProperty =
           AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>>(nameof(Stroke),
-              new SolidColorPaint(new SKColor(255, 224, 224, 224)) { IsStroke = true }, inherits: true);
+              new SolidColorPaint(new SKColor(0, 0, 0, 255), 2) { IsStroke = true }, inherits: true);
 
         /// <summary>
         /// The fill color property.
         /// </summary>
         public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>> FillProperty =
           AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>>(nameof(Fill),
-               new SolidColorPaint(new SKColor(255, 250, 250, 250)) { IsFill = true }, inherits: true);
+               new SolidColorPaint(new SKColor(250, 250, 250, 255)) { IsFill = true }, inherits: true);
 
         #endregion
 

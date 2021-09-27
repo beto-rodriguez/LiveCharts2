@@ -244,7 +244,7 @@ namespace LiveChartsCore
             foreach (var shape in _mapFactory.FetchMapElements(context))
             {
                 _ = _everMeasuredShapes.Add(shape);
-                shape.Measure(shapeContext);
+                //shape.Measure(shapeContext);
                 _ = toDeleteShapes.Remove(shape);
             }
 
@@ -262,14 +262,12 @@ namespace LiveChartsCore
             return Task.Run(() =>
                 _chartView.InvokeOnUIThread(() =>
                 {
-                    if (this is not CartesianChart<TDrawingContext> cartesianChart) return;
-
                     lock (_chartView.Canvas.Sync)
                     {
-                        cartesianChart.Pan(
-                        new LvcPoint(
-                            (float)(_pointerPanningPosition.X - _pointerPreviousPanningPosition.X),
-                            (float)(_pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y)));
+                        Pan(
+                            new LvcPoint(
+                                (float)(_pointerPanningPosition.X - _pointerPreviousPanningPosition.X),
+                                (float)(_pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y)));
                         _pointerPreviousPanningPosition = new LvcPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
                     }
                 }));
@@ -299,6 +297,7 @@ namespace LiveChartsCore
         {
             if (!_isPanning) return;
             _isPanning = false;
+            _panningThrottler.Call();
         }
     }
 }
