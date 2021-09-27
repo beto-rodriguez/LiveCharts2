@@ -88,6 +88,18 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 nameof(SyncContext), typeof(object), typeof(GeoMap), null, BindingMode.Default, null, OnBindablePropertyChanged);
 
         /// <summary>
+        /// The view command property
+        /// </summary>
+        public static readonly BindableProperty ViewCommandProperty =
+            BindableProperty.Create(
+                nameof(ViewCommand), typeof(object), typeof(GeoMap), null, BindingMode.Default, null,
+                (BindableObject o, object oldValue, object newValue) =>
+                {
+                    var chart = (GeoMap)o;
+                    chart._core.ViewTo(newValue);
+                });
+
+        /// <summary>
         /// The map projection property
         /// </summary>
         public static readonly BindableProperty MapProjectionProperty =
@@ -120,7 +132,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         public static readonly BindableProperty StrokeProperty =
             BindableProperty.Create(
                 nameof(Stroke), typeof(IPaint<SkiaSharpDrawingContext>), typeof(GeoMap),
-                  new SolidColorPaint(new SKColor(224, 224, 224, 255)) { IsStroke = true },
+                  new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true },
                   BindingMode.Default, null, OnBindablePropertyChanged);
 
 
@@ -130,7 +142,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         public static readonly BindableProperty FillProperty =
            BindableProperty.Create(
                nameof(Fill), typeof(IPaint<SkiaSharpDrawingContext>), typeof(GeoMap),
-                new SolidColorPaint(new SKColor(250, 250, 250, 255)) { IsFill = true },
+                new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true },
                 BindingMode.Default, null, OnBindablePropertyChanged);
 
         /// <summary>
@@ -163,6 +175,13 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             get => GetValue(SyncContextProperty);
             set => SetValue(SyncContextProperty, value);
+        }
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ViewCommand" />
+        public object? ViewCommand
+        {
+            get => GetValue(ViewCommandProperty);
+            set => SetValue(ViewCommandProperty, value);
         }
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
@@ -263,9 +282,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             var w = ((IGeoMapView<SkiaSharpDrawingContext>)this).Width;
             var h = ((IGeoMapView<SkiaSharpDrawingContext>)this).Width;
 
-            _core.Zoom(
-                new LvcPoint((float)(p.X * w), (float)(p.Y * h)),
-                e.Scale > 1 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+            _core.ViewTo(
+                new ZoomOnPointerView(
+                    new LvcPoint((float)(p.X * w), (float)(p.Y * h)),
+                    e.Scale > 1 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut));
         }
 
         private void OnSkCanvasTouched(object? sender, SkiaSharp.Views.Forms.SKTouchEventArgs e)

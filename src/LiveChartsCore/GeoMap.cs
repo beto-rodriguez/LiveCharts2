@@ -82,16 +82,16 @@ namespace LiveChartsCore
         internal event Action PointerLeft;
         internal event Action<PanGestureEventArgs>? PanGesture;
 
-        /// <inheritdoc cref="IMapFactory{TDrawingContext}.Zoom(LvcPoint, ZoomDirection)"/>
-        public virtual void Zoom(LvcPoint pivot, ZoomDirection direction)
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.ViewTo(GeoMap{TDrawingContext}, object)"/>
+        public virtual void ViewTo(object command)
         {
-            _mapFactory.Zoom(pivot, direction);
+            _mapFactory.ViewTo(this, command);
         }
 
-        /// <inheritdoc cref="IMapFactory{TDrawingContext}.Pan(LvcPoint)"/>
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.Pan(GeoMap{TDrawingContext}, LvcPoint)"/>
         public virtual void Pan(LvcPoint delta)
         {
-            _mapFactory.Pan(delta);
+            _mapFactory.Pan(this, delta);
         }
 
         /// <summary>
@@ -167,6 +167,20 @@ namespace LiveChartsCore
                 _isHeatInCanvas = true;
             }
 
+            if (_previousStroke != _chartView.Stroke)
+            {
+                if (_previousStroke is not null)
+                    _chartView.Canvas.RemovePaintTask(_previousStroke);
+
+                if (_chartView.Stroke is not null)
+                {
+                    if (_chartView.Stroke.ZIndex == 0) _chartView.Stroke.ZIndex = 2;
+                    _chartView.Canvas.AddDrawableTask(_chartView.Stroke);
+                }
+
+                _previousStroke = _chartView.Stroke;
+            }
+
             if (_previousFill != _chartView.Fill)
             {
                 if (_previousFill is not null)
@@ -178,18 +192,7 @@ namespace LiveChartsCore
                 _previousFill = _chartView.Fill;
             }
 
-            if (_previousStroke != _chartView.Stroke)
-            {
-                if (_previousStroke is not null)
-                    _chartView.Canvas.RemovePaintTask(_previousStroke);
-
-                if (_chartView.Stroke is not null)
-                    _chartView.Canvas.AddDrawableTask(_chartView.Stroke);
-
-                _previousStroke = _chartView.Stroke;
-            }
-
-            var i = Math.Max(_previousStroke?.ZIndex ?? 0, _previousFill?.ZIndex ?? 0);
+            var i = _previousFill?.ZIndex ?? 0;
             _heatPaint.ZIndex = i + 1;
 
             var context = new MapContext<TDrawingContext>(
@@ -244,7 +247,7 @@ namespace LiveChartsCore
             foreach (var shape in _mapFactory.FetchMapElements(context))
             {
                 _ = _everMeasuredShapes.Add(shape);
-                //shape.Measure(shapeContext);
+                shape.Measure(shapeContext);
                 _ = toDeleteShapes.Remove(shape);
             }
 

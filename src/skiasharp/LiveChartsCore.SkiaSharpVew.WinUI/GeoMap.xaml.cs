@@ -88,6 +88,18 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
                nameof(SyncContext), typeof(object), typeof(GeoMap), new PropertyMetadata(null, OnDependencyPropertyChanged));
 
         /// <summary>
+        /// The sync context property.
+        /// </summary>
+        public static readonly DependencyProperty ViewCommandProperty =
+           DependencyProperty.Register(
+               nameof(ViewCommand), typeof(object), typeof(GeoMap), new PropertyMetadata(null,
+                   (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                   {
+                       var chart = (GeoMap)o;
+                       chart._core.ViewTo(args.NewValue);
+                   }));
+
+        /// <summary>
         /// The map projection property
         /// </summary>
         public static readonly DependencyProperty MapProjectionProperty =
@@ -134,7 +146,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         public static readonly DependencyProperty StrokeProperty =
             DependencyProperty.Register(
                 nameof(Stroke), typeof(IPaint<SkiaSharpDrawingContext>), typeof(GeoMap),
-                new PropertyMetadata(new SolidColorPaint(new SKColor(224, 224, 224)) { IsStroke = true }, OnDependencyPropertyChanged));
+                new PropertyMetadata(new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true }, OnDependencyPropertyChanged));
 
         /// <summary>
         /// The fill property
@@ -142,7 +154,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         public static readonly DependencyProperty FillProperty =
             DependencyProperty.Register(
                 nameof(Fill), typeof(IPaint<SkiaSharpDrawingContext>), typeof(GeoMap),
-                new PropertyMetadata(new SolidColorPaint(new SKColor(250, 250, 250)) { IsFill = true }, OnDependencyPropertyChanged));
+                new PropertyMetadata(new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true }, OnDependencyPropertyChanged));
 
         #endregion
 
@@ -159,6 +171,13 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         {
             get => GetValue(SyncContextProperty);
             set => SetValue(SyncContextProperty, value);
+        }
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ViewCommand" />
+        public object? ViewCommand
+        {
+            get => GetValue(ViewCommandProperty);
+            set => SetValue(ViewCommandProperty, value);
         }
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
@@ -271,10 +290,10 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             if (_core == null) throw new Exception("core not found");
             var p = e.GetCurrentPoint(this);
 
-            _core.Zoom(
-                new LvcPoint(
-                    (float)p.Position.X, (float)p.Position.Y),
-                    p.Properties.MouseWheelDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+            _core.ViewTo(
+                new ZoomOnPointerView(
+                    new LvcPoint((float)p.Position.X, (float)p.Position.Y),
+                    p.Properties.MouseWheelDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut));
         }
 
         private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)

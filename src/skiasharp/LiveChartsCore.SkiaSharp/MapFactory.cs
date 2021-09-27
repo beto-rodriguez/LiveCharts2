@@ -23,7 +23,6 @@
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
-using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
@@ -86,14 +85,14 @@ namespace LiveChartsCore.SkiaSharpView
             return paths;
         }
 
-        /// <inheritdoc cref="IMapFactory{TDrawingContext}.Zoom(LvcPoint, ZoomDirection)"/>
-        public void Zoom(LvcPoint pivot, ZoomDirection direction)
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.ViewTo(GeoMap{TDrawingContext}, object)"/>
+        public void ViewTo(GeoMap<SkiaSharpDrawingContext> sender, object command)
         {
             // not implemented yet.
         }
 
-        /// <inheritdoc cref="IMapFactory{TDrawingContext}.Pan(LvcPoint)"/>
-        public void Pan(LvcPoint delta)
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.Pan(GeoMap{TDrawingContext}, LvcPoint)"/>
+        public void Pan(GeoMap<SkiaSharpDrawingContext> sender, LvcPoint delta)
         {
             // not implemented yet.
         }

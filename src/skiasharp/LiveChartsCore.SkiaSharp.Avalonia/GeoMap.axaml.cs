@@ -88,6 +88,12 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
            AvaloniaProperty.Register<CartesianChart, object>(nameof(SyncContext), null, inherits: true);
 
         /// <summary>
+        /// The active map property.
+        /// </summary>
+        public static readonly AvaloniaProperty<object> ViewCommandProperty =
+           AvaloniaProperty.Register<CartesianChart, object>(nameof(ViewCommand), null, inherits: true);
+
+        /// <summary>
         /// The projection property.
         /// </summary>
         public static readonly AvaloniaProperty<MapProjection> MapProjectionProperty =
@@ -122,14 +128,14 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </summary>
         public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>> StrokeProperty =
           AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>>(nameof(Stroke),
-              new SolidColorPaint(new SKColor(0, 0, 0, 255), 2) { IsStroke = true }, inherits: true);
+              new SolidColorPaint(new SKColor(255, 255, 255, 255), 1) { IsStroke = true }, inherits: true);
 
         /// <summary>
         /// The fill color property.
         /// </summary>
         public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>> FillProperty =
           AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>>(nameof(Fill),
-               new SolidColorPaint(new SKColor(250, 250, 250, 255)) { IsFill = true }, inherits: true);
+               new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true }, inherits: true);
 
         #endregion
 
@@ -146,6 +152,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         {
             get => GetValue(SyncContextProperty);
             set => SetValue(SyncContextProperty, value);
+        }
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ViewCommand" />
+        public object? ViewCommand
+        {
+            get => GetValue(ViewCommandProperty);
+            set => SetValue(ViewCommandProperty, value);
         }
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
@@ -239,6 +252,12 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 _shapesObserver.Initialize((IEnumerable<IMapElement>)change.NewValue.Value);
             }
 
+            if (change.Property.Name == nameof(ViewCommand))
+            {
+                _core.ViewTo(ViewCommand);
+                return;
+            }
+
             _core?.Update();
         }
 
@@ -248,7 +267,10 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
             var p = e.GetPosition(this);
 
-            _core.Zoom(new LvcPoint((float)p.X, (float)p.Y), e.Delta.Y > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+            _core.ViewTo(
+                new ZoomOnPointerView(
+                    new LvcPoint((float)p.X, (float)p.Y),
+                    e.Delta.Y > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut));
         }
 
         private void OnPointerPressed(object? sender, PointerPressedEventArgs e)

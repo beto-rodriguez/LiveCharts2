@@ -53,8 +53,9 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
         };
         private double[]? _colorStops = null;
-        private IPaint<SkiaSharpDrawingContext>? _stroke = new SolidColorPaint(new SKColor(255, 224, 224, 224)) { IsStroke = true };
-        private IPaint<SkiaSharpDrawingContext>? _fill = new SolidColorPaint(new SKColor(255, 250, 250, 250)) { IsFill = true };
+        private IPaint<SkiaSharpDrawingContext>? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
+        private IPaint<SkiaSharpDrawingContext>? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true };
+        private object? _viewCommand = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeoMap"/> class.
@@ -94,6 +95,17 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public object SyncContext { get; set; } = new object();
 
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ViewCommand" />
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public object? ViewCommand
+        {
+            get => _viewCommand;
+            set
+            {
+                _viewCommand = value;
+                if (value is not null) _core.ViewTo(value);
+            }
+        }
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public GeoJsonFile ActiveMap { get => _activeMap; set { _activeMap = value; OnPropertyChanged(); } }
@@ -198,7 +210,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         {
             if (_core is null) throw new Exception("core not found");
             var p = e.Location;
-            _core.Zoom(new LvcPoint(p.X, p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+            _core.ViewTo(
+                new ZoomOnPointerView(new LvcPoint(p.X, p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut));
             Capture = true;
         }
     }

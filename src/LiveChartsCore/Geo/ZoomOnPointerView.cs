@@ -20,49 +20,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.Geo
 {
     /// <summary>
-    /// Defines a map factory.
+    /// Defines the 
     /// </summary>
-    public interface IMapFactory<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public class ZoomOnPointerView
     {
         /// <summary>
-        /// Fetches the map features.
+        /// Initializes a new instance of the <see cref="ZoomOnPointerView"/> command.
         /// </summary>
-        /// <param name="context">The map context.</param>
-        IEnumerable<GeoJsonFeature> FetchFeatures(MapContext<TDrawingContext> context);
+        /// <param name="pivot">The pivot.</param>
+        /// <param name="direction">The direction.</param>
+        public ZoomOnPointerView(LvcPoint pivot, ZoomDirection direction)
+        {
+            Pivot = pivot;
+            Direction = direction;
+        }
 
         /// <summary>
-        /// Fetches the map elements.
+        /// Gets the pivot.
         /// </summary>
-        /// <param name="context">The map context.</param>
-        IEnumerable<IMapElement> FetchMapElements(MapContext<TDrawingContext> context);
+        public LvcPoint Pivot { get; }
 
         /// <summary>
-        /// Converts the given feature into a path geometry.
+        /// Gets the direction.
         /// </summary>
-        /// <param name="feature">The feature.</param>
-        /// <param name="context">The map context.</param>
-        IEnumerable<IDrawable<TDrawingContext>> ConvertToPathShape(
-            GeoJsonFeature feature, MapContext<TDrawingContext> context);
-
-        /// <summary>
-        /// Move the map to the specified view.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="command">The command.</param>
-        void ViewTo(GeoMap<TDrawingContext> sender, object command);
-
-        /// <summary>
-        /// Pans the map.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="delta">The delta.</param>
-        void Pan(GeoMap<TDrawingContext> sender, LvcPoint delta);
+        public ZoomDirection Direction { get; }
     }
 }

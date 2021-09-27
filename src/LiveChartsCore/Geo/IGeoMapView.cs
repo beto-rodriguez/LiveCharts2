@@ -99,6 +99,11 @@ namespace LiveChartsCore.Geo
         object SyncContext { get; set; }
 
         /// <summary>
+        /// Gets or sets the view command.
+        /// </summary>
+        object? ViewCommand { get; set; }
+
+        /// <summary>
         /// Invokes an action in the UI thread.
         /// </summary>
         /// <param name="action"></param>
