@@ -107,7 +107,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 
                 foreach (var command in path.Item2)
                 {
-                    path.Item1.AddCommand(command);
+                    path.Item1.AddLast(command);
                 }
 
                 path.Item1.FillColor = heat;

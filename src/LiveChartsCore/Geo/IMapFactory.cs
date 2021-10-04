@@ -32,24 +32,16 @@ namespace LiveChartsCore.Geo
         where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Fetches the map features.
+        /// Updates the lands.
         /// </summary>
-        /// <param name="context">The map context.</param>
-        IEnumerable<GeoJsonFeature> FetchFeatures(MapContext<TDrawingContext> context);
+        /// <param name="context"></param>
+        void UpdateLands(MapContext<TDrawingContext> context);
 
         /// <summary>
         /// Fetches the map elements.
         /// </summary>
         /// <param name="context">The map context.</param>
         IEnumerable<IMapElement> FetchMapElements(MapContext<TDrawingContext> context);
-
-        /// <summary>
-        /// Converts the given feature into a path geometry.
-        /// </summary>
-        /// <param name="feature">The feature.</param>
-        /// <param name="context">The map context.</param>
-        IEnumerable<IDrawable<TDrawingContext>> ConvertToPathShape(
-            GeoJsonFeature feature, MapContext<TDrawingContext> context);
 
         /// <summary>
         /// Move the map to the specified view.

@@ -334,20 +334,20 @@ namespace LiveChartsCore
 
                             fillPathHelper.StartPoint.X = IsClosed ? (float)data.X0 : scaler.CenterX;
                             fillPathHelper.StartPoint.Y = IsClosed ? (float)data.Y0 : scaler.CenterY;
-                            fillPathHelper.Path.AddCommand(fillPathHelper.StartPoint);
+                            fillPathHelper.Path.AddLast(fillPathHelper.StartPoint);
 
                             fillPathHelper.StartSegment.X = (float)data.X0;
                             fillPathHelper.StartSegment.Y = (float)data.Y0;
-                            if (!IsClosed) fillPathHelper.Path.AddCommand(fillPathHelper.StartSegment);
+                            if (!IsClosed) fillPathHelper.Path.AddLast(fillPathHelper.StartSegment);
                         }
 
-                        fillPathHelper.Path.AddCommand(visual.Bezier);
+                        fillPathHelper.Path.AddLast(visual.Bezier);
 
                         if (data.IsLast)
                         {
                             fillPathHelper.EndSegment.X = scaler.CenterX;
                             fillPathHelper.EndSegment.Y = scaler.CenterY;
-                            if (!IsClosed) fillPathHelper.Path.AddCommand(fillPathHelper.EndSegment);
+                            if (!IsClosed) fillPathHelper.Path.AddLast(fillPathHelper.EndSegment);
 
                             if (wasFillInitialized)
                                 fillPathHelper.EndSegment.CompleteTransitions(
@@ -370,10 +370,10 @@ namespace LiveChartsCore
                             strokePathHelper.StartPoint.X = (float)data.X0;
                             strokePathHelper.StartPoint.Y = (float)data.Y0;
 
-                            strokePathHelper.Path.AddCommand(strokePathHelper.StartPoint);
+                            strokePathHelper.Path.AddLast(strokePathHelper.StartPoint);
                         }
 
-                        strokePathHelper.Path.AddCommand(visual.Bezier);
+                        strokePathHelper.Path.AddLast(visual.Bezier);
                     }
 
                     visual.Geometry.X = x - hgs;

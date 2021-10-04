@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+using System.IO;
 
 namespace LiveChartsCore.Geo
 {
@@ -76,6 +77,15 @@ namespace LiveChartsCore.Geo
             return features[shortName];
         }
 
+        /// <summary>
+        /// Indexes the features.
+        /// </summary>
+        public void Index()
+        {
+            if (_indexedFeatures is not null) return;
+            _indexedFeatures = IndexFeatures();
+        }
+
         private Dictionary<string, GeoJsonFeature> IndexFeatures()
         {
             var index = new Dictionary<string, GeoJsonFeature>();
@@ -96,8 +106,9 @@ namespace LiveChartsCore.Geo
                             var y = point[1];
 
                             if (x > feature.MaxBounds[0]) feature.MaxBounds[0] = x;
-                            if (y > feature.MaxBounds[1]) feature.MaxBounds[1] = y;
                             if (x < feature.MinBounds[0]) feature.MinBounds[0] = x;
+
+                            if (y > feature.MaxBounds[1]) feature.MaxBounds[1] = y;
                             if (y < feature.MinBounds[1]) feature.MinBounds[1] = y;
                         }
                     }

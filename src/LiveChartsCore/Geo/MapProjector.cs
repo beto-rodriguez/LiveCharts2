@@ -38,6 +38,16 @@ namespace LiveChartsCore.Geo
         public float MapHeight { get; protected set; }
 
         /// <summary>
+        /// Gets the x offset width.
+        /// </summary>
+        public float XOffset { get; protected set; }
+
+        /// <summary>
+        /// Gets the y offset.
+        /// </summary>
+        public float YOffset { get; protected set; }
+
+        /// <summary>
         /// Projects the given point.
         /// </summary>
         /// <param name="point">The point.</param>

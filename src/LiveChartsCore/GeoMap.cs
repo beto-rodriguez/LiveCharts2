@@ -40,7 +40,6 @@ namespace LiveChartsCore
     {
         private readonly IMapFactory<TDrawingContext> _mapFactory;
         private readonly HashSet<IMapElement> _everMeasuredShapes = new();
-        private readonly IGeoMapView<TDrawingContext> _chartView;
         private readonly ActionThrottler _updateThrottler;
         private readonly ActionThrottler _panningThrottler;
         private readonly IPaint<TDrawingContext> _heatPaint;
@@ -61,10 +60,10 @@ namespace LiveChartsCore
         /// <param name="mapView"></param>
         public GeoMap(IGeoMapView<TDrawingContext> mapView)
         {
-            _chartView = mapView;
+            View = mapView;
             _updateThrottler = mapView.DesignerMode
                     ? new ActionThrottler(() => Task.CompletedTask, TimeSpan.FromMilliseconds(50))
-                    : new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
+                    : new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(100));
             _heatPaint = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
             _mapFactory = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>().GetDefaultMapFactory();
 
@@ -81,6 +80,11 @@ namespace LiveChartsCore
         internal event Action<LvcPoint> PointerUp;
         internal event Action PointerLeft;
         internal event Action<PanGestureEventArgs>? PanGesture;
+
+        /// <summary>
+        /// Gets the chart view.
+        /// </summary>
+        public IGeoMapView<TDrawingContext> View { get; private set; }
 
         /// <inheritdoc cref="IMapFactory{TDrawingContext}.ViewTo(GeoMap{TDrawingContext}, object)"/>
         public virtual void ViewTo(object command)
@@ -102,7 +106,7 @@ namespace LiveChartsCore
         {
             chartUpdateParams ??= new ChartUpdateParams();
 
-            if (chartUpdateParams.IsAutomaticUpdate && !_chartView.AutoUpdateEnabled) return;
+            if (chartUpdateParams.IsAutomaticUpdate && !View.AutoUpdateEnabled) return;
 
             if (!chartUpdateParams.Throttling)
             {
@@ -146,9 +150,9 @@ namespace LiveChartsCore
         {
             return Task.Run(() =>
             {
-                _chartView.InvokeOnUIThread(() =>
+                View.InvokeOnUIThread(() =>
                 {
-                    lock (_chartView.Canvas.Sync)
+                    lock (View.Canvas.Sync)
                     {
                         Measure();
                     }
@@ -163,41 +167,41 @@ namespace LiveChartsCore
         {
             if (!_isHeatInCanvas)
             {
-                _chartView.Canvas.AddDrawableTask(_heatPaint);
+                View.Canvas.AddDrawableTask(_heatPaint);
                 _isHeatInCanvas = true;
             }
 
-            if (_previousStroke != _chartView.Stroke)
+            if (_previousStroke != View.Stroke)
             {
                 if (_previousStroke is not null)
-                    _chartView.Canvas.RemovePaintTask(_previousStroke);
+                    View.Canvas.RemovePaintTask(_previousStroke);
 
-                if (_chartView.Stroke is not null)
+                if (View.Stroke is not null)
                 {
-                    if (_chartView.Stroke.ZIndex == 0) _chartView.Stroke.ZIndex = 2;
-                    _chartView.Canvas.AddDrawableTask(_chartView.Stroke);
+                    if (View.Stroke.ZIndex == 0) View.Stroke.ZIndex = 2;
+                    View.Canvas.AddDrawableTask(View.Stroke);
                 }
 
-                _previousStroke = _chartView.Stroke;
+                _previousStroke = View.Stroke;
             }
 
-            if (_previousFill != _chartView.Fill)
+            if (_previousFill != View.Fill)
             {
                 if (_previousFill is not null)
-                    _chartView.Canvas.RemovePaintTask(_previousFill);
+                    View.Canvas.RemovePaintTask(_previousFill);
 
-                if (_chartView.Fill is not null)
-                    _chartView.Canvas.AddDrawableTask(_chartView.Fill);
+                if (View.Fill is not null)
+                    View.Canvas.AddDrawableTask(View.Fill);
 
-                _previousFill = _chartView.Fill;
+                _previousFill = View.Fill;
             }
 
             var i = _previousFill?.ZIndex ?? 0;
             _heatPaint.ZIndex = i + 1;
 
             var context = new MapContext<TDrawingContext>(
-                this, _chartView, _chartView.ActiveMap,
-                Maps.BuildProjector(_chartView.MapProjection, new[] { _chartView.Width, _chartView.Height }));
+                this, View, View.ActiveMap,
+                Maps.BuildProjector(View.MapProjection, new[] { View.Width, View.Height }));
 
             var bounds = new Dictionary<int, Bounds>();
             foreach (var shape in _mapFactory.FetchMapElements(context))
@@ -213,41 +217,23 @@ namespace LiveChartsCore
                 weightBounds.AppendValue(wShape.Value);
             }
 
-            var hm = _chartView.HeatMap;
+            var hm = View.HeatMap;
 
-            if (_heatKnownLength != _chartView.HeatMap.Length)
+            if (_heatKnownLength != View.HeatMap.Length)
             {
-                _heatStops = HeatFunctions.BuildColorStops(hm, _chartView.ColorStops);
-                _heatKnownLength = _chartView.HeatMap.Length;
+                _heatStops = HeatFunctions.BuildColorStops(hm, View.ColorStops);
+                _heatKnownLength = View.HeatMap.Length;
             }
 
-            if (_chartView.Stroke is not null)
-                _chartView.Stroke.ClearGeometriesFromPaintTask(_chartView.Canvas);
-
-            if (_chartView.Fill is not null)
-                _chartView.Fill.ClearGeometriesFromPaintTask(_chartView.Canvas);
-
-            foreach (var feature in _mapFactory.FetchFeatures(context))
-            {
-                var pathShapes = _mapFactory.ConvertToPathShape(feature, context);
-
-                foreach (var shapeGeometry in pathShapes)
-                {
-                    if (_chartView.Stroke is not null)
-                        _chartView.Stroke.AddGeometryToPaintTask(_chartView.Canvas, shapeGeometry);
-
-                    if (_chartView.Fill is not null)
-                        _chartView.Fill.AddGeometryToPaintTask(_chartView.Canvas, shapeGeometry);
-                }
-            }
+            _mapFactory.UpdateLands(context);
 
             var toDeleteShapes = new HashSet<IMapElement>(_everMeasuredShapes);
-            var shapeContext = new MapShapeContext<TDrawingContext>(_chartView, _heatPaint, _heatStops, bounds);
+            var shapeContext = new MapShapeContext<TDrawingContext>(View, _heatPaint, _heatStops, bounds);
 
             foreach (var shape in _mapFactory.FetchMapElements(context))
             {
                 _ = _everMeasuredShapes.Add(shape);
-                shape.Measure(shapeContext);
+                //shape.Measure(shapeContext);
                 _ = toDeleteShapes.Remove(shape);
             }
 
@@ -257,15 +243,15 @@ namespace LiveChartsCore
                 _ = _everMeasuredShapes.Remove(shape);
             }
 
-            _chartView.Canvas.Invalidate();
+            View.Canvas.Invalidate();
         }
 
         private Task PanningThrottlerUnlocked()
         {
             return Task.Run(() =>
-                _chartView.InvokeOnUIThread(() =>
+                View.InvokeOnUIThread(() =>
                 {
-                    lock (_chartView.Canvas.Sync)
+                    lock (View.Canvas.Sync)
                     {
                         Pan(
                             new LvcPoint(

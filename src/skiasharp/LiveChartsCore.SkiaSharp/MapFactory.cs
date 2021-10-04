@@ -48,6 +48,12 @@ namespace LiveChartsCore.SkiaSharpView
                 yield return shape;
         }
 
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.UpdateLands(MapContext{TDrawingContext})"/>
+        public void UpdateLands(MapContext<SkiaSharpDrawingContext> context)
+        {
+            throw new System.NotImplementedException();
+        }
+
         /// <inheritdoc cref="IMapFactory{TDrawingContext}.ConvertToPathShape(GeoJsonFeature, MapContext{TDrawingContext})"/>
         public IEnumerable<IDrawable<SkiaSharpDrawingContext>> ConvertToPathShape(
             GeoJsonFeature feature, MapContext<SkiaSharpDrawingContext> context)
@@ -71,11 +77,11 @@ namespace LiveChartsCore.SkiaSharpView
                         if (isFirst)
                         {
                             isFirst = false;
-                            path.AddCommand(new MoveToPathCommand { X = p[0], Y = p[1] });
+                            path.AddLast(new MoveToPathCommand { X = p[0], Y = p[1] });
                             continue;
                         }
 
-                        path.AddCommand(new LineSegment { X = p[0], Y = p[1] });
+                        path.AddLast(new LineSegment { X = p[0], Y = p[1] });
                     }
 
                     paths.Add(path);
