@@ -37,7 +37,7 @@ namespace LiveChartsCore.Geo
         public MapContext(
             GeoMap<TDrawingContext> core,
             IGeoMapView<TDrawingContext> view,
-            GeoJsonFile map,
+            LiveChartsMap map,
             MapProjector projector)
         {
             CoreMap = core;
@@ -54,7 +54,7 @@ namespace LiveChartsCore.Geo
         /// <summary>
         /// Gets the map file.
         /// </summary>
-        public GeoJsonFile MapFile { get; }
+        public LiveChartsMap MapFile { get; }
 
         /// <summary>
         /// Gets the map projector.

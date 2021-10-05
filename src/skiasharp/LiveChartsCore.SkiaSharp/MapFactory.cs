@@ -24,8 +24,6 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
 
 namespace LiveChartsCore.SkiaSharpView
 {
@@ -34,13 +32,6 @@ namespace LiveChartsCore.SkiaSharpView
     /// </summary>
     public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
     {
-        /// <inheritdoc cref="IMapFactory{TDrawingContext}.FetchFeatures(MapContext{TDrawingContext})"/>
-        public IEnumerable<GeoJsonFeature> FetchFeatures(MapContext<SkiaSharpDrawingContext> context)
-        {
-            foreach (var feature in context.MapFile.Features ?? new GeoJsonFeature[0])
-                yield return feature;
-        }
-
         /// <inheritdoc cref="IMapFactory{TDrawingContext}.FetchMapElements(MapContext{TDrawingContext})"/>
         public IEnumerable<IMapElement> FetchMapElements(MapContext<SkiaSharpDrawingContext> context)
         {
@@ -52,43 +43,6 @@ namespace LiveChartsCore.SkiaSharpView
         public void UpdateLands(MapContext<SkiaSharpDrawingContext> context)
         {
             throw new System.NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IMapFactory{TDrawingContext}.ConvertToPathShape(GeoJsonFeature, MapContext{TDrawingContext})"/>
-        public IEnumerable<IDrawable<SkiaSharpDrawingContext>> ConvertToPathShape(
-            GeoJsonFeature feature, MapContext<SkiaSharpDrawingContext> context)
-        {
-            var projector = context.Projector;
-
-            var paths = new List<HeatPathShape>();
-            var d = new double[0][][][];
-
-            foreach (var geometry in feature.Geometry?.Coordinates ?? d)
-            {
-                foreach (var segment in geometry)
-                {
-                    var path = new HeatPathShape { IsClosed = true };
-
-                    var isFirst = true;
-                    foreach (var point in segment)
-                    {
-                        var p = projector.ToMap(point);
-
-                        if (isFirst)
-                        {
-                            isFirst = false;
-                            path.AddLast(new MoveToPathCommand { X = p[0], Y = p[1] });
-                            continue;
-                        }
-
-                        path.AddLast(new LineSegment { X = p[0], Y = p[1] });
-                    }
-
-                    paths.Add(path);
-                }
-            }
-
-            return paths;
         }
 
         /// <inheritdoc cref="IMapFactory{TDrawingContext}.ViewTo(GeoMap{TDrawingContext}, object)"/>

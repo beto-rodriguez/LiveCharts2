@@ -20,37 +20,53 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
-
 namespace LiveChartsCore.Geo
 {
     /// <summary>
-    /// Defines geo json features
+    /// Defines the data of a lane in a map.
     /// </summary>
-    public class GeoJsonFeature
+    public class LandDefinition
     {
         /// <summary>
-        /// Gets or sets the type.
+        /// Initializes a new instance of the <see cref="LandDefinition"/> class.
         /// </summary>
-        /// <value>
-        /// The type.
-        /// </value>
-        public string? Type { get; set; }
+        /// <param name="shortName">The short name.</param>
+        /// <param name="name">The name.</param>
+        public LandDefinition(string shortName, string name)
+        {
+            Name = name;
+            ShortName = shortName;
+        }
 
         /// <summary>
-        /// Gets or sets the properties.
+        /// Gets the short name.
         /// </summary>
-        /// <value>
-        /// The properties.
-        /// </value>
-        public Dictionary<string, string>? Properties { get; set; }
+        public string ShortName { get; }
 
         /// <summary>
-        /// Gets or sets the geometry.
+        /// Gets the name.
+        /// </summary>
+        public string Name { get; }
+
+        /// <summary>
+        /// Gets or sets the maximum bounds.
         /// </summary>
         /// <value>
-        /// The geometry.
+        /// The maximum bounds.
         /// </value>
-        public MultiPoligonGeometry? Geometry { get; set; }
+        public double[] MaxBounds { get; set; } = new double[] { double.MinValue, double.MinValue };
+
+        /// <summary>
+        /// Gets or sets the minimum bounds.
+        /// </summary>
+        /// <value>
+        /// The minimum bounds.
+        /// </value>
+        public double[] MinBounds { get; set; } = new double[] { double.MaxValue, double.MaxValue };
+
+        /// <summary>
+        /// Gets or sets the data.
+        /// </summary>
+        public LandData[] Data { get; set; } = new LandData[0];
     }
 }

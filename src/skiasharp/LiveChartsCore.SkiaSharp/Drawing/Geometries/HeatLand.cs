@@ -72,46 +72,46 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="Measure(MapShapeContext{SkiaSharpDrawingContext})"/>
         public override void Measure(MapShapeContext<SkiaSharpDrawingContext> context)
         {
-            var projector = Maps.BuildProjector(context.Chart.MapProjection, new[] { context.Chart.Width, context.Chart.Height });
+            //var projector = Maps.BuildProjector(context.Chart.MapProjection, new[] { context.Chart.Width, context.Chart.Height });
 
-            var heat = HeatFunctions.InterpolateColor(
-                (float)Value, context.BoundsDictionary[WeigthedAt], context.Chart.HeatMap, context.HeatStops);
+            //var heat = HeatFunctions.InterpolateColor(
+            //    (float)Value, context.BoundsDictionary[WeigthedAt], context.Chart.HeatMap, context.HeatStops);
 
-            if (_paths is null)
-            {
-                _paths = GetPathCommands(context.Chart.ActiveMap.FindFeature(Name), projector).ToArray();
+            //if (_paths is null)
+            //{
+            //    _paths = GetPathCommands(context.Chart.ActiveMap.FindFeature(Name), projector).ToArray();
 
-                foreach (var path in _paths)
-                {
-                    path.Item1.FillColor = new LvcColor(heat.R, heat.G, heat.B, 0);
+            //    foreach (var path in _paths)
+            //    {
+            //        path.Item1.FillColor = new LvcColor(heat.R, heat.G, heat.B, 0);
 
-                    _ = path.Item1
-                        .TransitionateProperties(nameof(HeatPathShape.FillColor))
-                        .WithAnimation(animation =>
-                            animation
-                                .WithDuration(TimeSpan.FromMilliseconds(800))
-                                .WithEasingFunction(EasingFunctions.Lineal))
-                        .CompleteCurrentTransitions();
+            //        _ = path.Item1
+            //            .TransitionateProperties(nameof(HeatPathShape.FillColor))
+            //            .WithAnimation(animation =>
+            //                animation
+            //                    .WithDuration(TimeSpan.FromMilliseconds(800))
+            //                    .WithEasingFunction(EasingFunctions.Lineal))
+            //            .CompleteCurrentTransitions();
 
-                    context.HeatPaint.AddGeometryToPaintTask(context.Chart.Canvas, path.Item1);
-                }
-            }
-            else
-            {
-                _paths = GetPathCommands(context.Chart.ActiveMap.FindFeature(Name), projector).ToArray();
-            }
+            //        context.HeatPaint.AddGeometryToPaintTask(context.Chart.Canvas, path.Item1);
+            //    }
+            //}
+            //else
+            //{
+            //    _paths = GetPathCommands(context.Chart.ActiveMap.FindFeature(Name), projector).ToArray();
+            //}
 
-            foreach (var path in _paths)
-            {
-                path.Item1.ClearCommands();
+            //foreach (var path in _paths)
+            //{
+            //    path.Item1.ClearCommands();
 
-                foreach (var command in path.Item2)
-                {
-                    path.Item1.AddLast(command);
-                }
+            //    foreach (var command in path.Item2)
+            //    {
+            //        path.Item1.AddLast(command);
+            //    }
 
-                path.Item1.FillColor = heat;
-            }
+            //    path.Item1.FillColor = heat;
+            //}
         }
 
         /// <inheritdoc cref="RemoveFromUI(MapShapeContext{SkiaSharpDrawingContext})"/>

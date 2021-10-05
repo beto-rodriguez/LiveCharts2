@@ -78,8 +78,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <summary>
         /// The active map property.
         /// </summary>
-        public static readonly AvaloniaProperty<GeoJsonFile> ActiveMapProperty =
-           AvaloniaProperty.Register<CartesianChart, GeoJsonFile>(nameof(ActiveMap), null, inherits: true);
+        public static readonly AvaloniaProperty<LiveChartsMap> ActiveMapProperty =
+           AvaloniaProperty.Register<CartesianChart, LiveChartsMap>(nameof(ActiveMap), null, inherits: true);
 
         /// <summary>
         /// The active map property.
@@ -172,9 +172,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         }
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
-        public GeoJsonFile ActiveMap
+        public LiveChartsMap ActiveMap
         {
-            get => (GeoJsonFile)GetValue(ActiveMapProperty);
+            get => (LiveChartsMap)GetValue(ActiveMapProperty);
             set => SetValue(ActiveMapProperty, value);
         }
 

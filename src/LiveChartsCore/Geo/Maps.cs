@@ -35,16 +35,43 @@ namespace LiveChartsCore.Geo
         /// <summary>
         /// Gets the world map.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The map.</returns>
         /// <exception cref="Exception">Map not found</exception>
-        public static GeoJsonFile GetWorldMap()
+        public static LiveChartsMap GetWorldMap()
         {
+            //using var sr = new StreamReader(@"C:\dev\LiveCharts2Maps\LiveCharts2Maps\bin\Debug\net5.0\out-world-states-10.geojson");
+            ////using var sr = new StreamReader(@"C:\dev\LiveCharts2Maps\LiveCharts2Maps\bin\Debug\net5.0\out-world-10.geojson");
+            //return JsonConvert.DeserializeObject<GeoJsonFile>(sr.ReadToEnd()) ?? throw new Exception("Map not found");
+
             var a = Assembly.GetExecutingAssembly();
-
             var map = "LiveChartsCore.Geo.world.geojson";
-
             using var reader = new StreamReader(a.GetManifestResourceStream(map));
-            return JsonConvert.DeserializeObject<GeoJsonFile>(reader.ReadToEnd()) ?? throw new Exception("Map not found");
+
+            return GetMapFromStreamReader(reader);
+        }
+
+        /// <summary>
+        /// Gets a map from a specified path.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns>The map.</returns>
+        public static LiveChartsMap GetMapFromPath(string path)
+        {
+            using var sr = new StreamReader(path);
+
+            return GetMapFromStreamReader(sr);
+        }
+
+        /// <summary>
+        /// Gets a map from a specified stream.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <returns>The map.</returns>
+        public static LiveChartsMap GetMapFromStreamReader(StreamReader stream)
+        {
+            var geoJson = JsonConvert.DeserializeObject<GeoJsonFile>(stream.ReadToEnd()) ?? throw new Exception("Map not found");
+
+            return new LiveChartsMap(geoJson);
         }
 
         /// <summary>

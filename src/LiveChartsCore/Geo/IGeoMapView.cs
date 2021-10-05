@@ -35,7 +35,7 @@ namespace LiveChartsCore.Geo
         /// <summary>
         /// Gets or sets the active map.
         /// </summary>
-        GeoJsonFile ActiveMap { get; set; }
+        LiveChartsMap ActiveMap { get; set; }
 
         /// <summary>
         /// Gets the motion canvas.

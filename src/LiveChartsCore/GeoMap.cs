@@ -53,6 +53,7 @@ namespace LiveChartsCore
         private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
         private bool _isPanning = false;
         private bool _isPointerIn = false;
+        private LiveChartsMap? _map;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeoMap{TDrawingContext}"/> class.
@@ -165,6 +166,18 @@ namespace LiveChartsCore
         /// </summary>
         private void Measure()
         {
+            if (_map is not null && _map != View.ActiveMap)
+            {
+                if (_previousStroke is not null) _previousStroke.ClearGeometriesFromPaintTask(View.Canvas);
+                if (_previousFill is not null) _previousFill.ClearGeometriesFromPaintTask(View.Canvas);
+
+                _previousFill = null;
+                _previousStroke = null;
+
+                View.Canvas.Clear();
+            }
+            _map = View.ActiveMap;
+
             if (!_isHeatInCanvas)
             {
                 View.Canvas.AddDrawableTask(_heatPaint);
