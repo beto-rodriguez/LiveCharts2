@@ -80,7 +80,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// The active map property
         /// </summary>
         public static readonly DependencyProperty ActiveMapProperty =
-            DependencyProperty.Register(nameof(ActiveMap), typeof(GeoJsonFile), typeof(GeoMap),
+            DependencyProperty.Register(nameof(ActiveMap), typeof(LiveChartsMap), typeof(GeoMap),
                 new PropertyMetadata(null, OnDependencyPropertyChanged));
 
         /// <summary>
@@ -187,9 +187,9 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         public MotionCanvas<SkiaSharpDrawingContext> Canvas => canvas.CanvasCore;
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
-        public GeoJsonFile ActiveMap
+        public LiveChartsMap ActiveMap
         {
-            get => (GeoJsonFile)GetValue(ActiveMapProperty);
+            get => (LiveChartsMap)GetValue(ActiveMapProperty);
             set => SetValue(ActiveMapProperty, value);
         }
 

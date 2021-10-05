@@ -39,10 +39,6 @@ namespace LiveChartsCore.Geo
         /// <exception cref="Exception">Map not found</exception>
         public static LiveChartsMap GetWorldMap()
         {
-            //using var sr = new StreamReader(@"C:\dev\LiveCharts2Maps\LiveCharts2Maps\bin\Debug\net5.0\out-world-states-10.geojson");
-            ////using var sr = new StreamReader(@"C:\dev\LiveCharts2Maps\LiveCharts2Maps\bin\Debug\net5.0\out-world-10.geojson");
-            //return JsonConvert.DeserializeObject<GeoJsonFile>(sr.ReadToEnd()) ?? throw new Exception("Map not found");
-
             var a = Assembly.GetExecutingAssembly();
             var map = "LiveChartsCore.Geo.world.geojson";
             using var reader = new StreamReader(a.GetManifestResourceStream(map));
