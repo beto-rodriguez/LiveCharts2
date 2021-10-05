@@ -69,7 +69,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             PointerLeave += OnPointerLeave;
 
             //Shapes = Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>();
-            ActiveMap = Maps.GetWorldMap();
+            ActiveMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
             SyncContext = new object();
         }
 
@@ -78,8 +78,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <summary>
         /// The active map property.
         /// </summary>
-        public static readonly AvaloniaProperty<LiveChartsMap> ActiveMapProperty =
-           AvaloniaProperty.Register<CartesianChart, LiveChartsMap>(nameof(ActiveMap), null, inherits: true);
+        public static readonly AvaloniaProperty<CoreMap<SkiaSharpDrawingContext>> ActiveMapProperty =
+           AvaloniaProperty.Register<CartesianChart, CoreMap<SkiaSharpDrawingContext>>(nameof(ActiveMap), null, inherits: true);
 
         /// <summary>
         /// The active map property.
@@ -172,9 +172,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         }
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
-        public LiveChartsMap ActiveMap
+        public CoreMap<SkiaSharpDrawingContext> ActiveMap
         {
-            get => (LiveChartsMap)GetValue(ActiveMapProperty);
+            get => (CoreMap<SkiaSharpDrawingContext>)GetValue(ActiveMapProperty);
             set => SetValue(ActiveMapProperty, value);
         }
 

@@ -23,6 +23,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using LiveChartsCore.Drawing;
 using Newtonsoft.Json;
 
 namespace LiveChartsCore.Geo
@@ -37,13 +38,14 @@ namespace LiveChartsCore.Geo
         /// </summary>
         /// <returns>The map.</returns>
         /// <exception cref="Exception">Map not found</exception>
-        public static LiveChartsMap GetWorldMap()
+        public static CoreMap<TDrawingContext> GetWorldMap<TDrawingContext>()
+            where TDrawingContext : DrawingContext
         {
             var a = Assembly.GetExecutingAssembly();
             var map = "LiveChartsCore.Geo.world.geojson";
             using var reader = new StreamReader(a.GetManifestResourceStream(map));
 
-            return GetMapFromStreamReader(reader);
+            return GetMapFromStreamReader<TDrawingContext>(reader);
         }
 
         /// <summary>
@@ -51,11 +53,12 @@ namespace LiveChartsCore.Geo
         /// </summary>
         /// <param name="path">The path.</param>
         /// <returns>The map.</returns>
-        public static LiveChartsMap GetMapFromPath(string path)
+        public static CoreMap<TDrawingContext> GetMapFromDirectory<TDrawingContext>(string path)
+            where TDrawingContext : DrawingContext
         {
             using var sr = new StreamReader(path);
 
-            return GetMapFromStreamReader(sr);
+            return GetMapFromStreamReader<TDrawingContext>(sr);
         }
 
         /// <summary>
@@ -63,11 +66,12 @@ namespace LiveChartsCore.Geo
         /// </summary>
         /// <param name="stream">The stream.</param>
         /// <returns>The map.</returns>
-        public static LiveChartsMap GetMapFromStreamReader(StreamReader stream)
+        public static CoreMap<TDrawingContext> GetMapFromStreamReader<TDrawingContext>(StreamReader stream)
+            where TDrawingContext : DrawingContext
         {
             var geoJson = JsonConvert.DeserializeObject<GeoJsonFile>(stream.ReadToEnd()) ?? throw new Exception("Map not found");
 
-            return new LiveChartsMap(geoJson);
+            return new CoreMap<TDrawingContext>(geoJson, "default");
         }
 
         /// <summary>

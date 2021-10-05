@@ -23,23 +23,28 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Geo
 {
     /// <summary>
-    /// Defines a geographic map for LiveCharts controls.
+    /// Defines a map layer.
     /// </summary>
-    public class LiveChartsMap
+    public class MapLayer<TDrawingContext>
+        where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LiveChartsMap"/> class.
+        /// Initializes a new <see cref="MapLayer{TDrawingContext}"/> from the given <see cref="GeoJsonFile"/>.
         /// </summary>
-        /// <param name="file">The geojson file.</param>
-        public LiveChartsMap(GeoJsonFile file)
+        /// <param name="file">The file.</param>
+        /// <param name="layerName">The layer name.</param>
+        public MapLayer(GeoJsonFile file, string layerName)
         {
+            Name = layerName;
+
             if (file.Features is null)
                 throw new Exception(
-                    $"The {nameof(GeoJsonFile.Features)} property is required to build a {nameof(LiveChartsMap)} instance. " +
+                    $"The {nameof(GeoJsonFile.Features)} property is required to build a {nameof(CoreMap<TDrawingContext>)} instance. " +
                     $"Ensure the property is not null.");
 
             var i = new Dictionary<string, LandDefinition>();
@@ -83,7 +88,17 @@ namespace LiveChartsCore.Geo
         /// <value>
         /// The name.
         /// </value>
-        public string? Name { get; set; }
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the stroke.
+        /// </summary>
+        public IPaint<TDrawingContext>? Stroke { get; set; }
+
+        /// <summary>
+        /// Gets or sets the fill.
+        /// </summary>
+        public IPaint<TDrawingContext>? Fill { get; set; }
 
         /// <summary>
         /// Gets or sets the X bounds.
@@ -99,15 +114,5 @@ namespace LiveChartsCore.Geo
         /// Gets the lands.
         /// </summary>
         public Dictionary<string, LandDefinition> Lands { get; private set; } = new Dictionary<string, LandDefinition>();
-
-        /// <summary>
-        /// Finds the feature by short name.
-        /// </summary>
-        /// <param name="shortName">The short name.</param>
-        /// <returns></returns>
-        public LandDefinition? FindFeature(string shortName)
-        {
-            return Lands.TryGetValue(shortName, out var land) ? land : null;
-        }
     }
 }

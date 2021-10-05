@@ -78,7 +78,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// </summary>
         public static readonly BindableProperty ActiveMapProperty =
             BindableProperty.Create(
-                nameof(ActiveMap), typeof(LiveChartsMap), typeof(GeoMap), null, BindingMode.Default, null, OnBindablePropertyChanged);
+                nameof(ActiveMap), typeof(CoreMap), typeof(GeoMap), null, BindingMode.Default, null, OnBindablePropertyChanged);
 
         /// <summary>
         /// The sync context property
@@ -188,9 +188,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         public MotionCanvas<SkiaSharpDrawingContext> Canvas => canvas.CanvasCore;
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
-        public LiveChartsMap ActiveMap
+        public CoreMap ActiveMap
         {
-            get => (LiveChartsMap)GetValue(ActiveMapProperty);
+            get => (CoreMap)GetValue(ActiveMapProperty);
             set => SetValue(ActiveMapProperty, value);
         }
 

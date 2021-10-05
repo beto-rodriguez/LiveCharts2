@@ -35,7 +35,7 @@ namespace LiveChartsCore.Geo
         /// <summary>
         /// Gets or sets the active map.
         /// </summary>
-        LiveChartsMap ActiveMap { get; set; }
+        CoreMap<TDrawingContext> ActiveMap { get; set; }
 
         /// <summary>
         /// Gets the motion canvas.

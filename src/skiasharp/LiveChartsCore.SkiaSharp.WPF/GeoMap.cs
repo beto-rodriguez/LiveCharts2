@@ -82,7 +82,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// The active map property
         /// </summary>
         public static readonly DependencyProperty ActiveMapProperty =
-            DependencyProperty.Register(nameof(ActiveMap), typeof(LiveChartsMap), typeof(GeoMap),
+            DependencyProperty.Register(nameof(ActiveMap), typeof(CoreMap), typeof(GeoMap),
                 new PropertyMetadata(null, OnDependencyPropertyChanged));
 
         /// <summary>
@@ -194,9 +194,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             : canvas.CanvasCore;
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
-        public LiveChartsMap ActiveMap
+        public CoreMap ActiveMap
         {
-            get => (LiveChartsMap)GetValue(ActiveMapProperty);
+            get => (CoreMap)GetValue(ActiveMapProperty);
             set => SetValue(ActiveMapProperty, value);
         }
 

@@ -53,7 +53,7 @@ namespace LiveChartsCore
         private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
         private bool _isPanning = false;
         private bool _isPointerIn = false;
-        private LiveChartsMap? _map;
+        private CoreMap<TDrawingContext>? _map;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeoMap{TDrawingContext}"/> class.
