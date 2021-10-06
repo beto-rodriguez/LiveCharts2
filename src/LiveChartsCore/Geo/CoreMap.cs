@@ -20,8 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
+using Newtonsoft.Json;
 
 namespace LiveChartsCore.Geo
 {
@@ -42,11 +46,21 @@ namespace LiveChartsCore.Geo
         /// <summary>
         /// Initializes a new instance of the <see cref="CoreMap{TDrawingContext}"/> class, with the given layer.
         /// </summary>
-        /// <param name="file">The geojson file for the default layer.</param>
+        /// <param name="path">The path to the GeoJson file for the layer.</param>
         /// <param name="layerName">The layer name.</param>
-        public CoreMap(GeoJsonFile file, string layerName)
+        public CoreMap(string path, string layerName) : this(new StreamReader(path), layerName)
         {
-            _ = AddLayer(file, layerName);
+            AddLayerFromDirectory(path, layerName);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CoreMap{TDrawingContext}"/> class, with the given layer.
+        /// </summary>
+        /// <param name="streamReader">The stream reader instance of the GeoJson file for the layer.</param>
+        /// <param name="layerName">The layer name.</param>
+        public CoreMap(StreamReader streamReader, string layerName)
+        {
+            AddLayerFromStreamReader(streamReader, layerName);
         }
 
         /// <summary>
@@ -66,14 +80,46 @@ namespace LiveChartsCore.Geo
         }
 
         /// <summary>
-        /// Adds a layer to the map.
+        /// Adds a layer to the map from a directory.
         /// </summary>
-        /// <param name="file">The GeoJson file of the layer.</param>
+        /// <param name="path">The path to the GeoJson file for the layer.</param>
         /// <param name="layerName">The layer name.</param>
-        public CoreMap<TDrawingContext> AddLayer(GeoJsonFile file, string layerName)
+        public void AddLayerFromDirectory(string path, string layerName)
         {
-            Layers.Add(layerName, new MapLayer<TDrawingContext>(file, layerName));
-            return this;
+            using var sr = new StreamReader(path);
+            AddLayerFromStreamReader(sr, layerName);
+        }
+
+        /// <summary>
+        /// Adds a layer to the map from a stream reader.
+        /// </summary>
+        /// <param name="streamReader">The path to the stream reader.</param>
+        /// <param name="layerName">The layer name.</param>
+        public void AddLayerFromStreamReader(StreamReader streamReader, string layerName)
+        {
+            var content = streamReader.ReadToEnd();
+            var geoJson = JsonConvert.DeserializeObject<GeoJsonFile>(content) ?? throw new Exception("Map not found");
+            Layers.Add(layerName, new MapLayer<TDrawingContext>(geoJson, layerName));
+        }
+
+        /// <summary>
+        /// Adds a layer to the map from a directory asynchronously.
+        /// </summary>
+        /// <param name="path">The path to the GeoJson file for the layer.</param>
+        /// <param name="layerName">The layer name.</param>
+        public Task AddLayerFromDirectoryAsync(string path, string layerName)
+        {
+            return Task.Run(() => AddLayerFromDirectory(path, layerName));
+        }
+
+        /// <summary>
+        /// Adds a layer to the map from a stream reader asynchronously.
+        /// </summary>
+        /// <param name="streamReader">The path to the stream reader.</param>
+        /// <param name="layerName">The layer name.</param>
+        public Task AddLayerFromStreamReaderAsync(StreamReader streamReader, string layerName)
+        {
+            return Task.Run(() => AddLayerFromStreamReader(streamReader, layerName));
         }
     }
 }

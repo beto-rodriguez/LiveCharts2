@@ -24,7 +24,6 @@ using System;
 using System.IO;
 using System.Reflection;
 using LiveChartsCore.Drawing;
-using Newtonsoft.Json;
 
 namespace LiveChartsCore.Geo
 {
@@ -69,9 +68,7 @@ namespace LiveChartsCore.Geo
         public static CoreMap<TDrawingContext> GetMapFromStreamReader<TDrawingContext>(StreamReader stream)
             where TDrawingContext : DrawingContext
         {
-            var geoJson = JsonConvert.DeserializeObject<GeoJsonFile>(stream.ReadToEnd()) ?? throw new Exception("Map not found");
-
-            return new CoreMap<TDrawingContext>(geoJson, "default");
+            return new CoreMap<TDrawingContext>(stream, "default");
         }
 
         /// <summary>

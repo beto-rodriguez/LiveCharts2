@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System.IO;
+using System.Threading.Tasks;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView.Drawing;
 
@@ -62,6 +63,18 @@ namespace LiveChartsCore.SkiaSharpView
         public static GeoMap GetMapFromStreamReader(StreamReader stream)
         {
             return new GeoMap(Maps.GetMapFromStreamReader<SkiaSharpDrawingContext>(stream));
+        }
+
+        /// <inheritdoc cref="Maps.GetMapFromDirectory{TDrawingContext}(string)"/>.
+        public static Task<GeoMap> GetMapFromDirectoryAsync(string path)
+        {
+            return Task.Run(() => new GeoMap(Maps.GetMapFromDirectory<SkiaSharpDrawingContext>(path)));
+        }
+
+        /// <inheritdoc cref="Maps.GetMapFromStreamReader{TDrawingContext}(StreamReader)"/>.
+        public static Task<GeoMap> GetMapFromStreamReaderAsync(StreamReader stream)
+        {
+            return Task.Run(() => new GeoMap(Maps.GetMapFromStreamReader<SkiaSharpDrawingContext>(stream)));
         }
     }
 }
