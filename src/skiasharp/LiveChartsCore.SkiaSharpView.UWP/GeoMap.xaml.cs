@@ -70,7 +70,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                 (object sender, PropertyChangedEventArgs e) => _core.Update(),
                 true);
             SetValue(ShapesProperty, Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>());
-            SetValue(ActiveMapProperty, Maps.GetWorldMap());
+            SetValue(ActiveMapProperty, Maps.GetWorldMap<SkiaSharpDrawingContext>());
             SetValue(SyncContextProperty, new object());
         }
 
@@ -80,7 +80,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// The active map property
         /// </summary>
         public static readonly DependencyProperty ActiveMapProperty =
-            DependencyProperty.Register(nameof(ActiveMap), typeof(LiveChartsMap), typeof(GeoMap),
+            DependencyProperty.Register(nameof(ActiveMap), typeof(CoreMap<SkiaSharpDrawingContext>), typeof(GeoMap),
                 new PropertyMetadata(null, OnDependencyPropertyChanged));
 
         /// <summary>
@@ -187,9 +187,9 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         public MotionCanvas<SkiaSharpDrawingContext> Canvas => canvas.CanvasCore;
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
-        public LiveChartsMap ActiveMap
+        public CoreMap<SkiaSharpDrawingContext> ActiveMap
         {
-            get => (LiveChartsMap)GetValue(ActiveMapProperty);
+            get => (CoreMap<SkiaSharpDrawingContext>)GetValue(ActiveMapProperty);
             set => SetValue(ActiveMapProperty, value);
         }
 
