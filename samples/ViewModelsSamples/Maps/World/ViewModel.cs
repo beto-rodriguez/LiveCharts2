@@ -40,16 +40,16 @@ namespace ViewModelsSamples.Maps.World
 
         private async void DoRandomChanges()
         {
-            await Task.Delay(1000);
+            //await Task.Delay(1000);
 
-            while (true)
-            {
-                foreach (var shape in Shapes)
-                {
-                    shape.Value = _r.Next(0, 20);
-                }
-                await Task.Delay(500);
-            }
+            //while (true)
+            //{
+            //    foreach (var shape in Shapes)
+            //    {
+            //        shape.Value = _r.Next(0, 20);
+            //    }
+            //    await Task.Delay(500);
+            //}
         }
     }
 }

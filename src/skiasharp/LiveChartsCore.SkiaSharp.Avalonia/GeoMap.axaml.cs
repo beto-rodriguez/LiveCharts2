@@ -128,14 +128,14 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </summary>
         public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>> StrokeProperty =
           AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>>(nameof(Stroke),
-              new SolidColorPaint(new SKColor(0, 0, 0, 255), 1) { IsStroke = true }, inherits: true);
+              new SolidColorPaint(new SKColor(230, 230, 230, 255), 1) { IsStroke = true }, inherits: true);
 
         /// <summary>
         /// The fill color property.
         /// </summary>
         public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>> FillProperty =
           AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>>(nameof(Fill),
-               new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true }, inherits: true);
+               new SolidColorPaint(new SKColor(245, 245, 245, 255)) { IsFill = true }, inherits: true);
 
         #endregion
 
