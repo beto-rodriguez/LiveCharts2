@@ -45,7 +45,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
         private readonly GeoMap<SkiaSharpDrawingContext> _core;
         private IEnumerable<IMapElement> _shapes = Enumerable.Empty<IMapElement>();
-        private CoreMap<SkiaSharpDrawingContext> _activeMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
+        private CoreMap<SkiaSharpDrawingContext> _activeMap;
         private MapProjection _mapProjection = MapProjection.Default;
         private LvcColor[] _heatMap = new[]
         {
@@ -64,6 +64,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         {
             InitializeComponent();
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+            _activeMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
+
             _core = new GeoMap<SkiaSharpDrawingContext>(this);
             _shapesObserver = new CollectionDeepObserver<IMapElement>(
                 (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),

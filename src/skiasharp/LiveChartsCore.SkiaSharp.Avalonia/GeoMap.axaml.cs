@@ -97,7 +97,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// The projection property.
         /// </summary>
         public static readonly AvaloniaProperty<MapProjection> MapProjectionProperty =
-           AvaloniaProperty.Register<CartesianChart, MapProjection>(nameof(MapProjection), MapProjection.Mercator, inherits: true);
+           AvaloniaProperty.Register<CartesianChart, MapProjection>(nameof(MapProjection), MapProjection.Default, inherits: true);
 
         /// <summary>
         /// The heat map property.
@@ -128,14 +128,14 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </summary>
         public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>> StrokeProperty =
           AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>>(nameof(Stroke),
-              new SolidColorPaint(new SKColor(230, 230, 230, 255), 1) { IsStroke = true }, inherits: true);
+              new SolidColorPaint(new SKColor(255, 255, 255, 255), 1) { IsStroke = true }, inherits: true);
 
         /// <summary>
         /// The fill color property.
         /// </summary>
         public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>> FillProperty =
           AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>>(nameof(Fill),
-               new SolidColorPaint(new SKColor(245, 245, 245, 255)) { IsFill = true }, inherits: true);
+               new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true }, inherits: true);
 
         #endregion
 
