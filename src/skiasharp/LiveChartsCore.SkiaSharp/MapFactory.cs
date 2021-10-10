@@ -26,6 +26,7 @@ using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
@@ -90,6 +91,13 @@ namespace LiveChartsCore.SkiaSharpView
                         if (landData.Shape is null)
                         {
                             landData.Shape = shape = new HeatPathShape { IsClosed = true };
+
+                            _ = shape
+                                .TransitionateProperties(nameof(HeatPathShape.FillColor))
+                                .WithAnimation(animation =>
+                                    animation
+                                        .WithDuration(TimeSpan.FromMilliseconds(800))
+                                        .WithEasingFunction(EasingFunctions.ExponentialOut));
                         }
                         else
                         {
