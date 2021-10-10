@@ -36,18 +36,74 @@ namespace LiveChartsCore.Geo
         /// <summary>
         /// Initializes a new <see cref="MapLayer{TDrawingContext}"/> from the given <see cref="GeoJsonFile"/>.
         /// </summary>
-        /// <param name="file">The file.</param>
         /// <param name="layerName">The layer name.</param>
-        public MapLayer(GeoJsonFile file, string layerName)
+        /// <param name="stroke">The stroke.</param>
+        /// <param name="fill">The fill.</param>
+        public MapLayer(string layerName, IPaint<TDrawingContext> stroke, IPaint<TDrawingContext> fill)
         {
             Name = layerName;
+            Stroke = stroke;
+            Fill = fill;
+        }
 
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the layer process index.
+        /// </summary>
+        public int ProcessIndex { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this layer is visible.
+        /// </summary>
+        public bool IsVisible { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets the stroke.
+        /// </summary>
+        public IPaint<TDrawingContext>? Stroke { get; set; } = (IPaint<TDrawingContext>)LiveCharts.DefaultPaint;
+
+        /// <summary>
+        /// Gets or sets the fill.
+        /// </summary>
+        public IPaint<TDrawingContext>? Fill { get; set; } = (IPaint<TDrawingContext>)LiveCharts.DefaultPaint;
+
+        /// <summary>
+        /// Gets or sets the X bounds.
+        /// </summary>
+        public double[] Max { get; set; } = new double[0];
+
+        /// <summary>
+        /// Gets or sets the Y bounds.
+        /// </summary>
+        public double[] Min { get; set; } = new double[0];
+
+        /// <summary>
+        /// Gets the lands.
+        /// </summary>
+        public Dictionary<string, LandDefinition> Lands { get; private set; } = new Dictionary<string, LandDefinition>();
+
+        /// <summary>
+        /// Gets or sets the land condition, it must return true if the land is required.
+        /// </summary>
+        public Func<LandDefinition, CoreMap<TDrawingContext>, bool>? AddLandWhen { get; set; }
+
+        /// <summary>
+        /// Adds a GeoJson file to the layer.
+        /// </summary>
+        /// <param name="file"></param>
+        public void AddFile(GeoJsonFile file)
+        {
             if (file.Features is null)
                 throw new Exception(
                     $"The {nameof(GeoJsonFile.Features)} property is required to build a {nameof(CoreMap<TDrawingContext>)} instance. " +
                     $"Ensure the property is not null.");
-
-            var i = new Dictionary<string, LandDefinition>();
 
             foreach (var feature in file.Features)
             {
@@ -55,7 +111,9 @@ namespace LiveChartsCore.Geo
 
                 var name = (feature.Properties?["name"] ?? "?").ToLowerInvariant();
                 var shortName = (feature.Properties?["shortName"] ?? "?").ToLowerInvariant();
-                var definition = new LandDefinition(shortName, name);
+                var setOf = (feature.Properties?["setOf"] ?? "?").ToLowerInvariant();
+
+                var definition = new LandDefinition(shortName, name, setOf);
 
                 var dataCollection = new List<LandData>();
 
@@ -76,43 +134,8 @@ namespace LiveChartsCore.Geo
                 }
 
                 definition.Data = dataCollection.OrderByDescending(x => x.BoundsHypotenuse).ToArray();
-                i.Add(shortName, definition);
+                Lands.Add(shortName, definition);
             }
-
-            Lands = i;
         }
-
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the stroke.
-        /// </summary>
-        public IPaint<TDrawingContext>? Stroke { get; set; }
-
-        /// <summary>
-        /// Gets or sets the fill.
-        /// </summary>
-        public IPaint<TDrawingContext>? Fill { get; set; }
-
-        /// <summary>
-        /// Gets or sets the X bounds.
-        /// </summary>
-        public double[] Max { get; set; } = new double[0];
-
-        /// <summary>
-        /// Gets or sets the Y bounds.
-        /// </summary>
-        public double[] Min { get; set; } = new double[0];
-
-        /// <summary>
-        /// Gets the lands.
-        /// </summary>
-        public Dictionary<string, LandDefinition> Lands { get; private set; } = new Dictionary<string, LandDefinition>();
     }
 }

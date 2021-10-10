@@ -22,7 +22,6 @@
 
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
 using SkiaSharp;
 using System.Collections.Generic;
 
@@ -74,11 +73,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
                 isValid = isValid && segment.IsValid;
 
                 if (segment.IsValid && segment.RemoveOnCompleted) toRemoveSegments.Add(segment);
-
-                //if (segment is LineSegment ls)
-                //{
-                //    context.Canvas.DrawText(ls.Id.ToString(), new SKPoint(ls.X, ls.Y), context.Paint);
-                //}
             }
 
             foreach (var segment in toRemoveSegments)
@@ -113,8 +107,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="IAnimatable.CompleteAllTransitions" />
         public override void CompleteAllTransitions()
         {
-            //for performance reasons segments animations are disabled
-            //it should not be required by a heat shape, it is normally used in maps, lanes are not animated.
             foreach (var segment in _commands)
             {
                 segment.CompleteAllTransitions();

@@ -81,5 +81,10 @@ namespace LiveChartsCore.Geo
         /// Gets or sets the land data.
         /// </summary>
         public LvcPointD[] Coordinates { get; }
+
+        /// <summary>
+        /// Gets or sets the shape.
+        /// </summary>
+        public object? Shape { get; set; }
     }
 }

@@ -48,9 +48,9 @@ namespace LiveChartsCore.Geo
         /// </summary>
         /// <param name="path">The path to the GeoJson file for the layer.</param>
         /// <param name="layerName">The layer name.</param>
-        public CoreMap(string path, string layerName) : this(new StreamReader(path), layerName)
+        public CoreMap(string path, string layerName = "default") : this(new StreamReader(path), layerName)
         {
-            AddLayerFromDirectory(path, layerName);
+            _ = AddLayerFromDirectory(path, layerName);
         }
 
         /// <summary>
@@ -58,9 +58,9 @@ namespace LiveChartsCore.Geo
         /// </summary>
         /// <param name="streamReader">The stream reader instance of the GeoJson file for the layer.</param>
         /// <param name="layerName">The layer name.</param>
-        public CoreMap(StreamReader streamReader, string layerName)
+        public CoreMap(StreamReader streamReader, string layerName = "default")
         {
-            AddLayerFromStreamReader(streamReader, layerName);
+            _ = AddLayerFromStreamReader(streamReader, layerName);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace LiveChartsCore.Geo
         /// <param name="shortName">The short name.</param>
         /// <param name="layerName">The layer name.</param>
         /// <returns>The land, null if not found.</returns>
-        public LandDefinition? FindLand(string layerName, string shortName)
+        public LandDefinition? FindLand(string shortName, string layerName = "default")
         {
             return Layers[layerName].Lands.TryGetValue(shortName, out var land) ? land : null;
         }
@@ -84,10 +84,26 @@ namespace LiveChartsCore.Geo
         /// </summary>
         /// <param name="path">The path to the GeoJson file for the layer.</param>
         /// <param name="layerName">The layer name.</param>
-        public void AddLayerFromDirectory(string path, string layerName)
+        /// <param name="stroke">The stroke.</param>
+        /// <param name="fill">The fill.</param>
+        /// <returns>The added layer.</returns>
+        public MapLayer<TDrawingContext> AddLayerFromDirectory(
+            string path, IPaint<TDrawingContext> stroke, IPaint<TDrawingContext> fill, string layerName = "default")
         {
             using var sr = new StreamReader(path);
-            AddLayerFromStreamReader(sr, layerName);
+            return AddLayerFromStreamReader(sr, stroke, fill, layerName);
+        }
+
+        /// <summary>
+        /// Adds a layer to the map from a directory.
+        /// </summary>
+        /// <param name="path">The path to the GeoJson file for the layer.</param>
+        /// <param name="layerName">The layer name.</param>
+        /// <returns>The added layer.</returns>
+        public MapLayer<TDrawingContext> AddLayerFromDirectory(string path, string layerName = "default")
+        {
+            var defaultPaint = (IPaint<TDrawingContext>)LiveCharts.DefaultPaint;
+            return AddLayerFromDirectory(path, defaultPaint, defaultPaint, layerName);
         }
 
         /// <summary>
@@ -95,11 +111,34 @@ namespace LiveChartsCore.Geo
         /// </summary>
         /// <param name="streamReader">The path to the stream reader.</param>
         /// <param name="layerName">The layer name.</param>
-        public void AddLayerFromStreamReader(StreamReader streamReader, string layerName)
+        /// <param name="stroke">The stroke.</param>
+        /// <param name="fill">The fill.</param>
+        /// <returns>The added layer.</returns>
+        public MapLayer<TDrawingContext> AddLayerFromStreamReader(
+            StreamReader streamReader, IPaint<TDrawingContext> stroke, IPaint<TDrawingContext> fill, string layerName = "default")
         {
-            var content = streamReader.ReadToEnd();
-            var geoJson = JsonConvert.DeserializeObject<GeoJsonFile>(content) ?? throw new Exception("Map not found");
-            Layers.Add(layerName, new MapLayer<TDrawingContext>(geoJson, layerName));
+            if (!Layers.TryGetValue(layerName, out var layer))
+            {
+                layer = new MapLayer<TDrawingContext>(layerName, stroke, fill);
+                Layers.Add(layerName, layer);
+            }
+
+            var geoJson = JsonConvert.DeserializeObject<GeoJsonFile>(streamReader.ReadToEnd()) ?? throw new Exception("Map not found");
+            layer.AddFile(geoJson);
+
+            return layer;
+        }
+
+        /// <summary>
+        /// Adds a layer to the map from a stream reader.
+        /// </summary>
+        /// <param name="streamReader">The path to the stream reader.</param>
+        /// <param name="layerName">The layer name.</param>
+        /// <returns>The added layer.</returns>
+        public MapLayer<TDrawingContext> AddLayerFromStreamReader(StreamReader streamReader, string layerName = "default")
+        {
+            var defaultPaint = (IPaint<TDrawingContext>)LiveCharts.DefaultPaint;
+            return AddLayerFromStreamReader(streamReader, defaultPaint, defaultPaint, layerName);
         }
 
         /// <summary>
@@ -107,9 +146,25 @@ namespace LiveChartsCore.Geo
         /// </summary>
         /// <param name="path">The path to the GeoJson file for the layer.</param>
         /// <param name="layerName">The layer name.</param>
-        public Task AddLayerFromDirectoryAsync(string path, string layerName)
+        /// <param name="stroke">The stroke.</param>
+        /// <param name="fill">The fill.</param>
+        /// <returns>The added layer as await-able task.</returns>
+        public Task<MapLayer<TDrawingContext>> AddLayerFromDirectoryAsync(
+            string path, IPaint<TDrawingContext> stroke, IPaint<TDrawingContext> fill, string layerName = "default")
         {
-            return Task.Run(() => AddLayerFromDirectory(path, layerName));
+            return Task.Run(() => AddLayerFromDirectory(path, stroke, fill, layerName));
+        }
+
+        /// <summary>
+        /// Adds a layer to the map from a directory asynchronously.
+        /// </summary>
+        /// <param name="path">The path to the GeoJson file for the layer.</param>
+        /// <param name="layerName">The layer name.</param>
+        /// <returns>The added layer as await-able task.</returns>
+        public Task<MapLayer<TDrawingContext>> AddLayerFromDirectoryAsync(string path, string layerName = "default")
+        {
+            var defaultPaint = (IPaint<TDrawingContext>)LiveCharts.DefaultPaint;
+            return Task.Run(() => AddLayerFromDirectory(path, defaultPaint, defaultPaint, layerName));
         }
 
         /// <summary>
@@ -117,9 +172,25 @@ namespace LiveChartsCore.Geo
         /// </summary>
         /// <param name="streamReader">The path to the stream reader.</param>
         /// <param name="layerName">The layer name.</param>
-        public Task AddLayerFromStreamReaderAsync(StreamReader streamReader, string layerName)
+        /// <param name="stroke">The stroke.</param>
+        /// <param name="fill">The fill.</param>
+        /// <returns>The added layer as await-able task.</returns>
+        public Task<MapLayer<TDrawingContext>> AddLayerFromStreamReaderAsync(
+            StreamReader streamReader, IPaint<TDrawingContext> stroke, IPaint<TDrawingContext> fill, string layerName = "default")
         {
-            return Task.Run(() => AddLayerFromStreamReader(streamReader, layerName));
+            return Task.Run(() => AddLayerFromStreamReader(streamReader, stroke, fill, layerName));
+        }
+
+        /// <summary>
+        /// Adds a layer to the map from a stream reader asynchronously.
+        /// </summary>
+        /// <param name="streamReader">The path to the stream reader.</param>
+        /// <param name="layerName">The layer name.</param>
+        /// <returns>The added layer as await-able task.</returns>
+        public Task<MapLayer<TDrawingContext>> AddLayerFromStreamReaderAsync(StreamReader streamReader, string layerName = "default")
+        {
+            var defaultPaint = (IPaint<TDrawingContext>)LiveCharts.DefaultPaint;
+            return Task.Run(() => AddLayerFromStreamReader(streamReader, defaultPaint, defaultPaint, layerName));
         }
     }
 }

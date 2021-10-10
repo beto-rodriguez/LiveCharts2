@@ -23,9 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
@@ -72,46 +70,20 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="Measure(MapShapeContext{SkiaSharpDrawingContext})"/>
         public override void Measure(MapShapeContext<SkiaSharpDrawingContext> context)
         {
-            //var projector = Maps.BuildProjector(context.Chart.MapProjection, new[] { context.Chart.Width, context.Chart.Height });
+            var projector = Maps.BuildProjector(context.Chart.MapProjection, new[] { context.Chart.Width, context.Chart.Height });
 
-            //var heat = HeatFunctions.InterpolateColor(
-            //    (float)Value, context.BoundsDictionary[WeigthedAt], context.Chart.HeatMap, context.HeatStops);
+            var heat = HeatFunctions.InterpolateColor(
+                (float)Value, context.BoundsDictionary[WeigthedAt], context.Chart.HeatMap, context.HeatStops);
 
-            //if (_paths is null)
-            //{
-            //    _paths = GetPathCommands(context.Chart.ActiveMap.FindFeature(Name), projector).ToArray();
+            var land = context.Chart.ActiveMap.FindLand(Name);
+            if (land is null) return;
 
-            //    foreach (var path in _paths)
-            //    {
-            //        path.Item1.FillColor = new LvcColor(heat.R, heat.G, heat.B, 0);
+            var shapesQuery = land.Data.Select(x => x.Shape).Where(x => x is not null).Cast<HeatPathShape>();
 
-            //        _ = path.Item1
-            //            .TransitionateProperties(nameof(HeatPathShape.FillColor))
-            //            .WithAnimation(animation =>
-            //                animation
-            //                    .WithDuration(TimeSpan.FromMilliseconds(800))
-            //                    .WithEasingFunction(EasingFunctions.Lineal))
-            //            .CompleteCurrentTransitions();
-
-            //        context.HeatPaint.AddGeometryToPaintTask(context.Chart.Canvas, path.Item1);
-            //    }
-            //}
-            //else
-            //{
-            //    _paths = GetPathCommands(context.Chart.ActiveMap.FindFeature(Name), projector).ToArray();
-            //}
-
-            //foreach (var path in _paths)
-            //{
-            //    path.Item1.ClearCommands();
-
-            //    foreach (var command in path.Item2)
-            //    {
-            //        path.Item1.AddLast(command);
-            //    }
-
-            //    path.Item1.FillColor = heat;
-            //}
+            foreach (var pathShape in shapesQuery)
+            {
+                pathShape.FillColor = heat;
+            }
         }
 
         /// <inheritdoc cref="RemoveFromUI(MapShapeContext{SkiaSharpDrawingContext})"/>
@@ -123,47 +95,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
                 context.HeatPaint.RemoveGeometryFromPainTask(context.Chart.Canvas, path.Item1);
 
             _paths = null;
-        }
-
-        private IEnumerable<Tuple<HeatPathShape, IEnumerable<PathCommand>>> GetPathCommands(
-            GeoJsonFeature feature,
-            MapProjector projector)
-        {
-            var d = new double[0][][][];
-
-            var i = 0;
-            foreach (var geometry in feature.Geometry?.Coordinates ?? d)
-            {
-                foreach (var segment in geometry)
-                {
-                    var path = _paths is not null && i <= _paths.Length - 1
-                        ? _paths[i].Item1
-                        : new HeatPathShape { IsClosed = true };
-
-                    yield return new Tuple<HeatPathShape, IEnumerable<PathCommand>>(
-                        path, EnumerateCommands(segment, projector));
-
-                    i++;
-                }
-            }
-        }
-
-        private IEnumerable<PathCommand> EnumerateCommands(double[][] segment, MapProjector projector)
-        {
-            var isFirst = true;
-            foreach (var point in segment)
-            {
-                var p = projector.ToMap(point);
-
-                if (isFirst)
-                {
-                    isFirst = false;
-                    yield return new MoveToPathCommand { X = p[0], Y = p[1] };
-                    continue;
-                }
-
-                yield return new LineSegment { X = p[0], Y = p[1] };
-            }
         }
     }
 }

@@ -39,8 +39,8 @@ namespace LiveChartsCore.SkiaSharpView
                 yield return shape;
         }
 
-        /// <inheritdoc cref="IMapFactory{TDrawingContext}.UpdateLands(MapContext{TDrawingContext})"/>
-        public void UpdateLands(MapContext<SkiaSharpDrawingContext> context)
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.GenerateLands(MapContext{TDrawingContext})"/>
+        public void GenerateLands(MapContext<SkiaSharpDrawingContext> context)
         {
             throw new System.NotImplementedException();
         }

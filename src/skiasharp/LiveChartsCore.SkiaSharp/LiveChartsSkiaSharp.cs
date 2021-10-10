@@ -45,6 +45,7 @@ namespace LiveChartsCore.SkiaSharpView
         /// <value>
         /// The default paint.
         /// </value>
+        // ToDo: is the DefaultPaintTask<T> type necessary??
         public static DefaultPaintTask<SkiaSharpDrawingContext> DefaultPaintTask { get; } = new DefaultPaintTask<SkiaSharpDrawingContext>();
 
         /// <summary>
@@ -66,6 +67,9 @@ namespace LiveChartsCore.SkiaSharpView
         /// <returns></returns>
         public static LiveChartsSettings AddSkiaSharp(this LiveChartsSettings settings)
         {
+            // ToDo: default paint needs to be simplified???
+            LiveCharts.DefaultPaint = DefaultPaintTask;
+
             return settings.HasProvider(new SkiaSharpProvider());
         }
 

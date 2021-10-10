@@ -238,7 +238,7 @@ namespace LiveChartsCore
                 _heatKnownLength = View.HeatMap.Length;
             }
 
-            _mapFactory.UpdateLands(context);
+            _mapFactory.GenerateLands(context);
 
             var toDeleteShapes = new HashSet<IMapElement>(_everMeasuredShapes);
             var shapeContext = new MapShapeContext<TDrawingContext>(View, _heatPaint, _heatStops, bounds);
@@ -246,7 +246,7 @@ namespace LiveChartsCore
             foreach (var shape in _mapFactory.FetchMapElements(context))
             {
                 _ = _everMeasuredShapes.Add(shape);
-                //shape.Measure(shapeContext);
+                shape.Measure(shapeContext);
                 _ = toDeleteShapes.Remove(shape);
             }
 
@@ -278,6 +278,7 @@ namespace LiveChartsCore
         private void Chart_PointerDown(LvcPoint pointerPosition)
         {
             _isPanning = true;
+            _pointerPosition = pointerPosition;
             _pointerPreviousPanningPosition = pointerPosition;
         }
 

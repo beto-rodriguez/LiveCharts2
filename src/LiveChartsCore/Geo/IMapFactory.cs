@@ -35,7 +35,7 @@ namespace LiveChartsCore.Geo
         /// Updates the lands.
         /// </summary>
         /// <param name="context"></param>
-        void UpdateLands(MapContext<TDrawingContext> context);
+        void GenerateLands(MapContext<TDrawingContext> context);
 
         /// <summary>
         /// Fetches the map elements.

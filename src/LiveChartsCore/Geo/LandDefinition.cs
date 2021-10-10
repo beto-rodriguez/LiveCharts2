@@ -32,10 +32,12 @@ namespace LiveChartsCore.Geo
         /// </summary>
         /// <param name="shortName">The short name.</param>
         /// <param name="name">The name.</param>
-        public LandDefinition(string shortName, string name)
+        /// <param name="setOf">The set of.</param>
+        public LandDefinition(string shortName, string name, string setOf)
         {
             Name = name;
             ShortName = shortName;
+            SetOf = setOf;
         }
 
         /// <summary>
@@ -47,6 +49,21 @@ namespace LiveChartsCore.Geo
         /// Gets the name.
         /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// Gets or sets the set of reference.
+        /// </summary>
+        public string SetOf { get; set; }
+
+        /// <summary>
+        /// Gets the HSize.
+        /// </summary>
+        public double HSize { get; internal set; }
+
+        /// <summary>
+        /// Gets the HCenter.
+        /// </summary>
+        public double HCenter { get; internal set; }
 
         /// <summary>
         /// Gets or sets the maximum bounds.

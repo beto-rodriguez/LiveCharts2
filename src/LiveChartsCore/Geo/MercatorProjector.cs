@@ -68,12 +68,18 @@ namespace LiveChartsCore.Geo
             var lat = point[1];
             var lon = point[0];
 
-            var x = (lon + 180) * (_w / 360d);
             var latRad = lat * Math.PI / 180d;
             var mercN = Math.Log(Math.Tan(Math.PI / 4d + latRad / 2d), Math.E);
             var y = _h / 2d - _h * mercN / (2 * Math.PI);
 
-            return new[] { (float)x + _ox, (float)y + _oy };
+            return new[]
+            {
+                // x' =
+                (float)((lon + 180) * (_w / 360d) + _ox),
+
+                // y' =
+                (float) y + _oy
+            };
         }
     }
 }
