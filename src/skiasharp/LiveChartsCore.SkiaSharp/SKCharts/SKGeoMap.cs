@@ -94,7 +94,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         public bool DesignerMode { get; set; } = false;
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
-        public GeoJsonFile ActiveMap { get; set; } = Maps.GetWorldMap();
+        public CoreMap<SkiaSharpDrawingContext> ActiveMap { get; set; } = Maps.GetWorldMap<SkiaSharpDrawingContext>();
 
         float IGeoMapView<SkiaSharpDrawingContext>.Width => Width;
 

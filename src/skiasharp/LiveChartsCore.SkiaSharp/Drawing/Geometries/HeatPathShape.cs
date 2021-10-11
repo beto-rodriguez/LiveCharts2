@@ -107,12 +107,10 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="IAnimatable.CompleteAllTransitions" />
         public override void CompleteAllTransitions()
         {
-            // for performance reasons segments animations are disabled
-            // it should not be required by a heat shape, it is normally used in maps, lanes are not animated.
-            //foreach (var segment in _commands)
-            //{
-            //    segment.CompleteAllTransitions();
-            //}
+            foreach (var segment in _commands)
+            {
+                segment.CompleteAllTransitions();
+            }
 
             base.CompleteAllTransitions();
         }

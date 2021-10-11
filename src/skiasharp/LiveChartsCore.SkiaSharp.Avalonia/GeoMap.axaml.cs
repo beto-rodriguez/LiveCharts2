@@ -69,7 +69,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             PointerLeave += OnPointerLeave;
 
             //Shapes = Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>();
-            ActiveMap = Maps.GetWorldMap();
+            ActiveMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
             SyncContext = new object();
         }
 
@@ -78,8 +78,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <summary>
         /// The active map property.
         /// </summary>
-        public static readonly AvaloniaProperty<GeoJsonFile> ActiveMapProperty =
-           AvaloniaProperty.Register<CartesianChart, GeoJsonFile>(nameof(ActiveMap), null, inherits: true);
+        public static readonly AvaloniaProperty<CoreMap<SkiaSharpDrawingContext>> ActiveMapProperty =
+           AvaloniaProperty.Register<CartesianChart, CoreMap<SkiaSharpDrawingContext>>(nameof(ActiveMap), null, inherits: true);
 
         /// <summary>
         /// The active map property.
@@ -172,9 +172,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         }
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
-        public GeoJsonFile ActiveMap
+        public CoreMap<SkiaSharpDrawingContext> ActiveMap
         {
-            get => (GeoJsonFile)GetValue(ActiveMapProperty);
+            get => (CoreMap<SkiaSharpDrawingContext>)GetValue(ActiveMapProperty);
             set => SetValue(ActiveMapProperty, value);
         }
 
@@ -245,6 +245,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
         {
             base.OnPropertyChanged(change);
+
+            if (change.Property.Name == nameof(IsPointerOver)) return;
 
             if (change.Property.Name == nameof(Shapes))
             {

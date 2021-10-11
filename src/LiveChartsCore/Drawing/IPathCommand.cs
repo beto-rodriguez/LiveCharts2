@@ -32,6 +32,11 @@ namespace LiveChartsCore.Drawing
     public interface IPathCommand<TPathContext> : IAnimatable
     {
         /// <summary>
+        /// Gets or sets the segment id.
+        /// </summary>
+        int Id { get; set; }
+
+        /// <summary>
         /// Executes the command in the path.
         /// </summary>
         /// <param name="path">The path.</param>

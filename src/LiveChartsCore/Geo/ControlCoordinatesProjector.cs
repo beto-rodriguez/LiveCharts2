@@ -46,6 +46,8 @@ namespace LiveChartsCore.Geo
             _h = mapHeight;
             _ox = offsetX;
             _oy = offsetY;
+            XOffset = _ox;
+            YOffset = _oy;
             MapWidth = mapWidth;
             MapHeight = mapHeight;
         }
@@ -61,22 +63,37 @@ namespace LiveChartsCore.Geo
         /// <inheritdoc cref="MapProjector.ToMap(double[])"/>
         public override float[] ToMap(double[] point)
         {
-            var x = point[0];
-            var y = point[1];
-
-            // to Cartesian
-            x += 180;
-            y = 90 - y;
-
-            // fit to map
-            x = x / 360d * _w;
-            y = y / 180d * _h;
-
+            // simplified formula
             return new[]
             {
-                (float)x + _ox,
-                (float)y + _oy
+                // x' =
+                (float)(_ox + (point[0] + 180) / 360d * _w),
+
+                // y' =
+                (float)(_oy + (90 - point[1]) / 180d * _h)
             };
+
+            // the following code explains the formula better:
+
+            //var x = point[0];
+            //var y = point[1];
+
+            // 1. to Cartesian coordinates
+
+            //x += 180;
+            //y = 90 - y;
+
+            // 2. fit to map size
+
+            //x = x / 360d * _w;
+            //y = y / 180d * _h;
+
+            // 3. add the offset
+            //return new[]
+            //{
+            //    (float)x + _ox,
+            //    (float)y + _oy
+            //};
         }
     }
 }

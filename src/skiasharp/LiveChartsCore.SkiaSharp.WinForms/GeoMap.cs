@@ -45,10 +45,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
         private readonly GeoMap<SkiaSharpDrawingContext> _core;
         private IEnumerable<IMapElement> _shapes = Enumerable.Empty<IMapElement>();
-        private GeoJsonFile _activeMap = Maps.GetWorldMap();
+        private CoreMap<SkiaSharpDrawingContext> _activeMap;
         private MapProjection _mapProjection = MapProjection.Default;
         private LvcColor[] _heatMap = new[]
-                {
+        {
             LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
             LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
         };
@@ -64,6 +64,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         {
             InitializeComponent();
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+            _activeMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
+
             _core = new GeoMap<SkiaSharpDrawingContext>(this);
             _shapesObserver = new CollectionDeepObserver<IMapElement>(
                 (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
@@ -108,7 +110,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         }
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public GeoJsonFile ActiveMap { get => _activeMap; set { _activeMap = value; OnPropertyChanged(); } }
+        public CoreMap<SkiaSharpDrawingContext> ActiveMap { get => _activeMap; set { _activeMap = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Width"/>
         float IGeoMapView<SkiaSharpDrawingContext>.Width => ClientSize.Width;

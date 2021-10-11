@@ -32,12 +32,21 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <summary>
         /// The commands
         /// </summary>
-        protected readonly HashSet<IPathCommand<SKPath>> _commands = new();
+        protected readonly LinkedList<IPathCommand<SKPath>> _commands = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PathGeometry"/> class.
         /// </summary>
         public PathGeometry() { }
+
+        /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.FirstCommand" />
+        public LinkedListNode<IPathCommand<SKPath>> FirstCommand => _commands.First;
+
+        /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.LastCommand" />
+        public LinkedListNode<IPathCommand<SKPath>> LastCommand => _commands.Last;
+
+        /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.CountCommands" />
+        public int CountCommands => _commands.Count;
 
         /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.IsClosed" />
         public bool IsClosed { get; set; }
@@ -75,11 +84,32 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             if (!isValid) SetInvalidState();
         }
 
-        /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.AddCommand(IPathCommand{TPathArgs})" />
-        public void AddCommand(IPathCommand<SKPath> segment)
+        /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.AddLast(IPathCommand{TPathArgs})" />
+        public LinkedListNode<IPathCommand<SKPath>> AddLast(IPathCommand<SKPath> command)
         {
-            _ = _commands.Add(segment);
             SetInvalidState();
+            return _commands.AddLast(command);
+        }
+
+        /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.AddFirst(IPathCommand{TPathArgs})" />
+        public LinkedListNode<IPathCommand<SKPath>> AddFirst(IPathCommand<SKPath> command)
+        {
+            SetInvalidState();
+            return _commands.AddFirst(command);
+        }
+
+        /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.AddAfter(LinkedListNode{IPathCommand{TPathArgs}}, IPathCommand{TPathArgs})" />
+        public LinkedListNode<IPathCommand<SKPath>> AddAfter(LinkedListNode<IPathCommand<SKPath>> node, IPathCommand<SKPath> command)
+        {
+            SetInvalidState();
+            return _commands.AddAfter(node, command);
+        }
+
+        /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.AddBefore(LinkedListNode{IPathCommand{TPathArgs}}, IPathCommand{TPathArgs})" />
+        public LinkedListNode<IPathCommand<SKPath>> AddBefore(LinkedListNode<IPathCommand<SKPath>> node, IPathCommand<SKPath> command)
+        {
+            SetInvalidState();
+            return _commands.AddBefore(node, command);
         }
 
         /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.ContainsCommand(IPathCommand{TPathArgs})" />
@@ -89,10 +119,17 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         }
 
         /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.RemoveCommand(IPathCommand{TPathArgs})" />
-        public void RemoveCommand(IPathCommand<SKPath> segment)
+        public bool RemoveCommand(IPathCommand<SKPath> command)
         {
-            _ = _commands.Remove(segment);
             SetInvalidState();
+            return _commands.Remove(command);
+        }
+
+        /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.RemoveCommand(LinkedListNode{IPathCommand{TPathArgs}})" />
+        public void RemoveCommand(LinkedListNode<IPathCommand<SKPath>> node)
+        {
+            SetInvalidState();
+            _commands.Remove(node);
         }
 
         /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.ClearCommands" />

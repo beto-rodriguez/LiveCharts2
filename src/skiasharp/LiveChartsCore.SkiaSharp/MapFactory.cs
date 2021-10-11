@@ -20,9 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
@@ -34,67 +38,133 @@ namespace LiveChartsCore.SkiaSharpView
     /// </summary>
     public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
     {
-        /// <inheritdoc cref="IMapFactory{TDrawingContext}.FetchFeatures(MapContext{TDrawingContext})"/>
-        public IEnumerable<GeoJsonFeature> FetchFeatures(MapContext<SkiaSharpDrawingContext> context)
-        {
-            foreach (var feature in context.MapFile.Features ?? new GeoJsonFeature[0])
-                yield return feature;
-        }
+        private readonly HashSet<HeatPathShape> _usedPathShapes = new();
+        private readonly HashSet<IPaint<SkiaSharpDrawingContext>> _usedPaints = new();
+        private readonly HashSet<string> _usedLayers = new();
 
         /// <inheritdoc cref="IMapFactory{TDrawingContext}.FetchMapElements(MapContext{TDrawingContext})"/>
         public IEnumerable<IMapElement> FetchMapElements(MapContext<SkiaSharpDrawingContext> context)
         {
-            foreach (var shape in context.View.Shapes)
-                yield return shape;
+            foreach (var shape in context.View.Shapes) yield return shape;
         }
 
-        /// <inheritdoc cref="IMapFactory{TDrawingContext}.ConvertToPathShape(GeoJsonFeature, MapContext{TDrawingContext})"/>
-        public IEnumerable<IDrawable<SkiaSharpDrawingContext>> ConvertToPathShape(
-            GeoJsonFeature feature, MapContext<SkiaSharpDrawingContext> context)
+        /// <inheritdoc cref="IMapFactory{TDrawingContext}.GenerateLands(MapContext{TDrawingContext})"/>
+        public void GenerateLands(MapContext<SkiaSharpDrawingContext> context)
         {
             var projector = context.Projector;
 
-            var paths = new List<HeatPathShape>();
-            var d = new double[0][][][];
+            var toRemoveLayers = new HashSet<string>(_usedLayers);
+            var toRemovePathShapes = new HashSet<HeatPathShape>(_usedPathShapes);
+            var toRemovePaints = new HashSet<IPaint<SkiaSharpDrawingContext>>(_usedPaints);
 
-            foreach (var geometry in feature.Geometry?.Coordinates ?? d)
+            var layersQuery = context.View.ActiveMap.Layers.Values
+                .Where(x => x.IsVisible)
+                .OrderByDescending(x => x.ProcessIndex);
+
+            foreach (var layer in layersQuery)
             {
-                foreach (var segment in geometry)
+                var stroke = layer.Stroke == LiveCharts.DefaultPaint ? context.View.Stroke : layer.Stroke;
+                var fill = layer.Fill == LiveCharts.DefaultPaint ? context.View.Fill : layer.Fill;
+
+                if (fill is not null)
                 {
-                    var path = new HeatPathShape { IsClosed = true };
+                    context.View.Canvas.AddDrawableTask(fill);
+                    _ = _usedPaints.Add(fill);
+                    _ = toRemovePaints.Remove(fill);
+                }
+                if (stroke is not null)
+                {
+                    context.View.Canvas.AddDrawableTask(stroke);
+                    _ = _usedPaints.Add(stroke);
+                    _ = toRemovePaints.Remove(stroke);
+                }
 
-                    var isFirst = true;
-                    foreach (var point in segment)
+                _ = _usedLayers.Add(layer.Name);
+                _ = toRemoveLayers.Remove(layer.Name);
+
+                foreach (var landDefinition in layer.Lands.Values)
+                {
+                    foreach (var landData in landDefinition.Data)
                     {
-                        var p = projector.ToMap(point);
+                        HeatPathShape shape;
 
-                        if (isFirst)
+                        if (landData.Shape is null)
                         {
-                            isFirst = false;
-                            path.AddCommand(new MoveToPathCommand { X = p[0], Y = p[1] });
-                            continue;
+                            landData.Shape = shape = new HeatPathShape { IsClosed = true };
+
+                            _ = shape
+                                .TransitionateProperties(nameof(HeatPathShape.FillColor))
+                                .WithAnimation(animation =>
+                                    animation
+                                        .WithDuration(TimeSpan.FromMilliseconds(800))
+                                        .WithEasingFunction(EasingFunctions.ExponentialOut));
+                        }
+                        else
+                        {
+                            shape = (HeatPathShape)landData.Shape;
                         }
 
-                        path.AddCommand(new LineSegment { X = p[0], Y = p[1] });
-                    }
+                        _ = _usedPathShapes.Add(shape);
+                        _ = toRemovePathShapes.Remove(shape);
 
-                    paths.Add(path);
+                        if (stroke is not null) stroke.AddGeometryToPaintTask(context.View.Canvas, shape);
+                        if (fill is not null) fill.AddGeometryToPaintTask(context.View.Canvas, shape);
+
+                        shape.ClearCommands();
+
+                        var isFirst = true;
+
+                        foreach (var point in landData.Coordinates)
+                        {
+                            var p = projector.ToMap(new double[] { point.X, point.Y });
+
+                            var x = p[0];
+                            var y = p[1];
+
+                            if (isFirst)
+                            {
+                                _ = shape.AddLast(new MoveToPathCommand { X = x, Y = y });
+                                isFirst = false;
+                                continue;
+                            }
+
+                            _ = shape.AddLast(new LineSegment { X = x, Y = y });
+                        }
+                    }
+                }
+
+                foreach (var shape in toRemovePathShapes)
+                {
+                    if (stroke is not null) stroke.RemoveGeometryFromPainTask(context.View.Canvas, shape);
+                    if (fill is not null) fill.RemoveGeometryFromPainTask(context.View.Canvas, shape);
+
+                    shape.ClearCommands();
+
+                    _ = _usedPathShapes.Remove(shape);
                 }
             }
 
-            return paths;
+            foreach (var paint in toRemovePaints)
+            {
+                if (paint == LiveCharts.DefaultPaint) continue;
+
+                _ = _usedPaints.Remove(paint);
+                context.View.Canvas.RemovePaintTask(paint);
+            }
+
+            foreach (var layerName in toRemoveLayers)
+            {
+                _ = context.MapFile.Layers.Remove(layerName);
+                _ = _usedLayers.Remove(layerName);
+            }
+
+            Trace.WriteLine(context.View.Canvas.CountGeometries());
         }
 
         /// <inheritdoc cref="IMapFactory{TDrawingContext}.ViewTo(GeoMap{TDrawingContext}, object)"/>
-        public void ViewTo(GeoMap<SkiaSharpDrawingContext> sender, object command)
-        {
-            // not implemented yet.
-        }
+        public void ViewTo(GeoMap<SkiaSharpDrawingContext> sender, object command) { }
 
         /// <inheritdoc cref="IMapFactory{TDrawingContext}.Pan(GeoMap{TDrawingContext}, LvcPoint)"/>
-        public void Pan(GeoMap<SkiaSharpDrawingContext> sender, LvcPoint delta)
-        {
-            // not implemented yet.
-        }
+        public void Pan(GeoMap<SkiaSharpDrawingContext> sender, LvcPoint delta) { }
     }
 }

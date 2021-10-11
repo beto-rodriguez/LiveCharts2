@@ -46,22 +46,6 @@ namespace LiveChartsCore.Geo
         public Dictionary<string, string>? Properties { get; set; }
 
         /// <summary>
-        /// Gets or sets the maximum bounds.
-        /// </summary>
-        /// <value>
-        /// The maximum bounds.
-        /// </value>
-        public double[] MaxBounds { get; set; } = new double[] { double.MinValue, double.MinValue };
-
-        /// <summary>
-        /// Gets or sets the minimum bounds.
-        /// </summary>
-        /// <value>
-        /// The minimum bounds.
-        /// </value>
-        public double[] MinBounds { get; set; } = new double[] { double.MaxValue, double.MaxValue };
-
-        /// <summary>
         /// Gets or sets the geometry.
         /// </summary>
         /// <value>

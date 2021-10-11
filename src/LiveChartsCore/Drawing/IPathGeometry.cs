@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
+
 namespace LiveChartsCore.Drawing
 {
     /// <summary>
@@ -40,10 +42,61 @@ namespace LiveChartsCore.Drawing
         bool IsClosed { get; set; }
 
         /// <summary>
-        /// Adds a path command.
+        /// Gets the first linked node.
+        /// </summary>
+        LinkedListNode<IPathCommand<TPathArgs>> FirstCommand { get; }
+
+        /// <summary>
+        /// Gets the last linked node.
+        /// </summary>
+        LinkedListNode<IPathCommand<TPathArgs>> LastCommand { get; }
+
+        /// <summary>
+        /// Gets current commands count.
+        /// </summary>
+        int CountCommands { get; }
+
+        /// <summary>
+        /// Adds a path command at the end.
         /// </summary>
         /// <param name="command">The command.</param>
-        void AddCommand(IPathCommand<TPathArgs> command);
+        /// <returns>The linked node.</returns>
+        LinkedListNode<IPathCommand<TPathArgs>> AddLast(IPathCommand<TPathArgs> command);
+
+        /// <summary>
+        /// Adds a path command at the beginning.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <returns>The linked node.</returns>
+        LinkedListNode<IPathCommand<TPathArgs>> AddFirst(IPathCommand<TPathArgs> command);
+
+        /// <summary>
+        /// Adds a command after the given liked node.
+        /// </summary>
+        /// <param name="node">The linked node.</param>
+        /// <param name="command"></param>
+        /// <returns>The linked node.</returns>
+        LinkedListNode<IPathCommand<TPathArgs>> AddAfter(LinkedListNode<IPathCommand<TPathArgs>> node, IPathCommand<TPathArgs> command);
+
+        /// <summary>
+        /// Adds a path command before the given linked node.
+        /// </summary>
+        /// <param name="node">The linked node.</param>
+        /// <param name="command"></param>
+        /// <returns>The linked node.</returns>
+        LinkedListNode<IPathCommand<TPathArgs>> AddBefore(LinkedListNode<IPathCommand<TPathArgs>> node, IPathCommand<TPathArgs> command);
+
+        /// <summary>
+        /// Removes a path command.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        bool RemoveCommand(IPathCommand<TPathArgs> command);
+
+        /// <summary>
+        /// Removes the specified node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        void RemoveCommand(LinkedListNode<IPathCommand<TPathArgs>> node);
 
         /// <summary>
         /// Determines whether the specified command is contained in the current path.
@@ -53,12 +106,6 @@ namespace LiveChartsCore.Drawing
         ///   <c>true</c> if the specified command contains command; otherwise, <c>false</c>.
         /// </returns>
         bool ContainsCommand(IPathCommand<TPathArgs> command);
-
-        /// <summary>
-        /// Removes a given command.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        void RemoveCommand(IPathCommand<TPathArgs> command);
 
         /// <summary>
         /// Clears the commands.

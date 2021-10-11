@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
-
 namespace LiveChartsCore.Geo
 {
     /// <summary>
@@ -29,8 +27,6 @@ namespace LiveChartsCore.Geo
     /// </summary>
     public class GeoJsonFile
     {
-        private Dictionary<string, GeoJsonFeature>? _indexedFeatures;
-
         /// <summary>
         /// Gets or sets the type.
         /// </summary>
@@ -40,73 +36,11 @@ namespace LiveChartsCore.Geo
         public string? Type { get; set; }
 
         /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        public string? Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the X bounds.
-        /// </summary>
-        public double[] Max { get; set; } = new double[0];
-
-        /// <summary>
-        /// Gets or sets the Y bounds.
-        /// </summary>
-        public double[] Min { get; set; } = new double[0];
-
-        /// <summary>
         /// Gets or sets the features.
         /// </summary>
         /// <value>
         /// The features.
         /// </value>
         public GeoJsonFeature[]? Features { get; set; }
-
-        /// <summary>
-        /// Finds the feature by short name.
-        /// </summary>
-        /// <param name="shortName">The short name.</param>
-        /// <returns></returns>
-        public GeoJsonFeature FindFeature(string shortName)
-        {
-            var features = _indexedFeatures ??= IndexFeatures();
-            return features[shortName];
-        }
-
-        private Dictionary<string, GeoJsonFeature> IndexFeatures()
-        {
-            var index = new Dictionary<string, GeoJsonFeature>();
-
-            if (Features is null) return index;
-
-            foreach (var feature in Features)
-            {
-                if (feature.Geometry is null || feature.Geometry.Coordinates is null) continue;
-
-                foreach (var geometry in feature.Geometry.Coordinates)
-                {
-                    foreach (var segment in geometry)
-                    {
-                        foreach (var point in segment)
-                        {
-                            var x = point[0];
-                            var y = point[1];
-
-                            if (x > feature.MaxBounds[0]) feature.MaxBounds[0] = x;
-                            if (y > feature.MaxBounds[1]) feature.MaxBounds[1] = y;
-                            if (x < feature.MinBounds[0]) feature.MinBounds[0] = x;
-                            if (y < feature.MinBounds[1]) feature.MinBounds[1] = y;
-                        }
-                    }
-                }
-
-                index.Add((feature.Properties?["shortName"] ?? "?").ToLowerInvariant(), feature);
-            }
-
-            return index;
-        }
     }
 }

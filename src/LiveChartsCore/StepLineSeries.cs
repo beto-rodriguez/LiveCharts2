@@ -283,20 +283,20 @@ namespace LiveChartsCore
 
                             fillPathHelper.StartPoint.X = (float)data.X0;
                             fillPathHelper.StartPoint.Y = p;
-                            fillPathHelper.Path.AddCommand(fillPathHelper.StartPoint);
+                            _ = fillPathHelper.Path.AddLast(fillPathHelper.StartPoint);
 
                             fillPathHelper.StartSegment.X = (float)data.X0;
                             fillPathHelper.StartSegment.Y = (float)data.Y0;
-                            fillPathHelper.Path.AddCommand(fillPathHelper.StartSegment);
+                            _ = fillPathHelper.Path.AddLast(fillPathHelper.StartSegment);
                         }
 
-                        fillPathHelper.Path.AddCommand(visual.StepSegment);
+                        _ = fillPathHelper.Path.AddLast(visual.StepSegment);
 
                         if (data.IsLast)
                         {
                             fillPathHelper.EndSegment.X = (float)data.X2;
                             fillPathHelper.EndSegment.Y = p;
-                            fillPathHelper.Path.AddCommand(fillPathHelper.EndSegment);
+                            _ = fillPathHelper.Path.AddLast(fillPathHelper.EndSegment);
 
                             if (wasFillInitialized)
                                 fillPathHelper.EndSegment.CompleteTransitions(
@@ -334,10 +334,10 @@ namespace LiveChartsCore
 
                             strokePathHelper.StartPoint.X = (float)data.X0;
                             strokePathHelper.StartPoint.Y = (float)data.Y0;
-                            strokePathHelper.Path.AddCommand(strokePathHelper.StartPoint);
+                            _ = strokePathHelper.Path.AddLast(strokePathHelper.StartPoint);
                         }
 
-                        strokePathHelper.Path.AddCommand(visual.StepSegment);
+                        _ = strokePathHelper.Path.AddLast(visual.StepSegment);
                     }
 
                     visual.Geometry.X = x - hgs;

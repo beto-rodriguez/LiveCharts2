@@ -54,6 +54,11 @@ namespace LiveChartsCore
         public static LiveChartsSettings CurrentSettings { get; } = new();
 
         /// <summary>
+        /// Gets the default paint.
+        /// </summary>
+        public static object DefaultPaint { get; internal set; } = new object();
+
+        /// <summary>
         /// Gets the hover key.
         /// </summary>
         /// <value>

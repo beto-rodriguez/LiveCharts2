@@ -72,7 +72,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
                 true);
             SetCurrentValue(ShapesProperty, Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>());
-            SetCurrentValue(ActiveMapProperty, Maps.GetWorldMap());
+            SetCurrentValue(ActiveMapProperty, Maps.GetWorldMap<SkiaSharpDrawingContext>());
             SetCurrentValue(SyncContextProperty, new object());
         }
 
@@ -82,7 +82,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// The active map property
         /// </summary>
         public static readonly DependencyProperty ActiveMapProperty =
-            DependencyProperty.Register(nameof(ActiveMap), typeof(GeoJsonFile), typeof(GeoMap),
+            DependencyProperty.Register(nameof(ActiveMap), typeof(CoreMap<SkiaSharpDrawingContext>), typeof(GeoMap),
                 new PropertyMetadata(null, OnDependencyPropertyChanged));
 
         /// <summary>
@@ -194,9 +194,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             : canvas.CanvasCore;
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
-        public GeoJsonFile ActiveMap
+        public CoreMap<SkiaSharpDrawingContext> ActiveMap
         {
-            get => (GeoJsonFile)GetValue(ActiveMapProperty);
+            get => (CoreMap<SkiaSharpDrawingContext>)GetValue(ActiveMapProperty);
             set => SetValue(ActiveMapProperty, value);
         }
 
