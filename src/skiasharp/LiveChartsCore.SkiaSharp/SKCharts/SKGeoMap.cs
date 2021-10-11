@@ -37,6 +37,8 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
     {
         private readonly GeoMap<SkiaSharpDrawingContext> _core;
         private object? _viewCommand;
+        private IPaint<SkiaSharpDrawingContext>? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
+        private IPaint<SkiaSharpDrawingContext>? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SKGeoMap"/> class.
@@ -117,10 +119,26 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         public double[]? ColorStops { get; set; }
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
-        public IPaint<SkiaSharpDrawingContext>? Stroke { get; set; } = new SolidColorPaint(new SKColor(255, 255, 255, 255));
+        public IPaint<SkiaSharpDrawingContext>? Stroke
+        {
+            get => _stroke;
+            set
+            {
+                if (value is not null) value.IsStroke = true;
+                _stroke = value;
+            }
+        }
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
-        public IPaint<SkiaSharpDrawingContext>? Fill { get; set; } = new SolidColorPaint(new SKColor(240, 240, 240, 255));
+        public IPaint<SkiaSharpDrawingContext>? Fill
+        {
+            get => _fill;
+            set
+            {
+                if (value is not null) value.IsStroke = false;
+                _fill = value;
+            }
+        }
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
         public IEnumerable<IMapElement> Shapes { get; set; } = Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>();

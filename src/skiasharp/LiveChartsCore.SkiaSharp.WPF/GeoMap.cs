@@ -44,7 +44,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
     {
         private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
-        private readonly GeoMap<SkiaSharpDrawingContext> _core;
+        private GeoMap<SkiaSharpDrawingContext>? _core;
 
         static GeoMap()
         {
@@ -57,7 +57,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         public GeoMap()
         {
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-            _core = new GeoMap<SkiaSharpDrawingContext>(this);
 
             MouseDown += OnMouseDown;
             MouseMove += OnMouseMove;
@@ -101,7 +100,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                    (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
                    {
                        var chart = (GeoMap)o;
-                       chart._core.ViewTo(args.NewValue);
+                       chart._core?.ViewTo(args.NewValue);
                    }));
 
         /// <summary>
@@ -142,7 +141,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                     var seriesObserver = chart._shapesObserver;
                     seriesObserver.Dispose((IEnumerable<MapShape<SkiaSharpDrawingContext>>)args.OldValue);
                     seriesObserver.Initialize((IEnumerable<MapShape<SkiaSharpDrawingContext>>)args.NewValue);
-                    chart._core.Update();
+                    chart._core?.Update();
                 }));
 
         /// <summary>
@@ -258,6 +257,14 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         #endregion
 
+        /// <inheritdoc/>
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            _core = new GeoMap<SkiaSharpDrawingContext>(this);
+        }
+
         void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
         {
             Application.Current.Dispatcher.Invoke(action);
@@ -265,7 +272,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         private void GeoMap_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            _core.Update();
+            _core?.Update();
         }
 
         private void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -306,7 +313,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
         {
             var chart = (GeoMap)o;
-            chart._core.Update();
+            chart._core?.Update();
         }
     }
 }
