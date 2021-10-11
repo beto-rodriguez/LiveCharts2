@@ -237,6 +237,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
             using var clearColor = new SKPaint { Color = Background };
             canvas.DrawRect(0, 0, Width, Height, clearColor);
 
+            Core.Load();
             Core.Update(new ChartUpdateParams { Throttling = false, IsAutomaticUpdate = false });
 
             CoreCanvas.DrawFrame(
@@ -255,27 +256,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         /// <inheritdoc cref="ISkiaSharpChart.SaveImage(string, SKEncodedImageFormat, int)"/>
         public void SaveImage(string path, SKEncodedImageFormat format = SKEncodedImageFormat.Png, int quality = 80)
         {
-            CoreCanvas.DisableAnimations = true;
-
-            using var surface = SKSurface.Create(new SKImageInfo(Width, Height));
-
-            var canvas = surface.Canvas;
-            using var clearColor = new SKPaint { Color = Background };
-            canvas.DrawRect(0, 0, Width, Height, clearColor);
-
-            Core.Update(new ChartUpdateParams { Throttling = false, IsAutomaticUpdate = false });
-
-            CoreCanvas.DrawFrame(
-                new SkiaSharpDrawingContext(
-                    CoreCanvas,
-                    new SKImageInfo(Height, Width),
-                    surface,
-                    canvas)
-                {
-                    ClearColor = Background
-                });
-
-            using var image = surface.Snapshot();
+            using var image = GetImage();
             using var data = image.Encode(format, quality);
             using var stream = File.OpenWrite(path);
             data.SaveTo(stream);
