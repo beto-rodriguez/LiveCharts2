@@ -67,7 +67,7 @@ namespace WPFSample.General.ChartToImage
             CreateImageFromPieControl();
 
 
-            // GEO MAP CHART
+            //GEO MAP CHART
             new SKGeoMap
             {
                 Width = 900,
