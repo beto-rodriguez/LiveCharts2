@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
@@ -25,6 +25,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
+  
   <ItemGroup>
     <None Remove="CartesianChart.xaml" />
     <None Remove="DefaultLegend.xaml" />
@@ -36,10 +37,11 @@
   </ItemGroup>
 
   <ItemGroup>
-      <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.2" />
-      <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.2" />
-      <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.2" />
-      <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.80.3" />
+      <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0-experimental1" />
+      <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="1.0.0-experimental1" />
+      <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.0.0-experimental1" />
+      <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="1.0.0-experimental1" />
+      <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.0-preview.150" />
   </ItemGroup>
 
   <ItemGroup>
@@ -87,5 +89,12 @@
   <!--<ItemGroup>
     <None Include="images\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>-->
+
+  <!-- Workaround for https://github.com/microsoft/WindowsAppSDK/issues/1217 -->
+  <Target Name="FixBinPlaceBootstrapDll" BeforeTargets="BinPlaceBootstrapDll" >
+    <PropertyGroup>
+      <_WindowsAppSDKFoundationPlatform>x86</_WindowsAppSDKFoundationPlatform>
+    </PropertyGroup>
+  </Target>
 
 </Project>

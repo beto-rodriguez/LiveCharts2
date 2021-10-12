@@ -66,11 +66,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.ProjectReunion" Version="[0.8.0]">
-      <IncludeAssets>build</IncludeAssets>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="[1.0.0-experimental1]">
+        <IncludeAssets>build</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="[0.8.0]">
-      <IncludeAssets>build</IncludeAssets>
+    <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="[1.0.0-experimental1]">
+        <IncludeAssets>build</IncludeAssets>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
