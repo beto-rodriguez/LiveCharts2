@@ -17,9 +17,9 @@
       <dependency id="Newtonsoft.Json" version="[13.0.1]" />
       <dependency id="SkiaSharp" version="[2.80.3]" />
       <dependency id="SkiaSharp.Views.Uno" version="[2.80.3]" />
-      <dependency id="LiveChartsCore.SkiaSharpView" version="2.0.0-beta.71" />
       <dependency id="LiveChartsCore" version="2.0.0-beta.71" />
-  </dependencies>
+      <dependency id="LiveChartsCore.SkiaSharpView" version="2.0.0-beta.71" />
+    </dependencies>
   </metadata>
 
   <files>
@@ -28,5 +28,5 @@
     <file src="bin\Debug\LiveChartsCore.SkiaSharpView.UWP.xml" target="lib\uap10.0"/>
     <file src="bin\Debug\LiveChartsCore.SkiaSharpView.UWP.pri" target="lib\uap10.0"/>
     <file src="bin\Debug\LiveChartsCore.SkiaSharpView.UWP\*.*" target="lib\uap10.0\LiveChartsCore.SkiaSharpView.UWP"/>
-    </files>
+  </files>
 </package>
