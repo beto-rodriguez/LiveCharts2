@@ -199,11 +199,12 @@ namespace LiveChartsCore
             get => _isVisible;
             set
             {
+                var changed = value != _isVisible;
                 _isVisible = value;
                 if (!_isVisible) RestartAnimations();
                 if (value && !((ISeries)this).IsNotifyingChanges) ((ISeries)this).IsNotifyingChanges = true;
                 OnPropertyChanged();
-                VisibilityChanged?.Invoke(this);
+                if (changed) OnVisibilityChanged();
             }
         }
 
@@ -335,11 +336,19 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <returns></returns>
-        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             if (!((ISeries)this).IsNotifyingChanges) return;
             NotifySubscribers();
+        }
+
+        /// <summary>
+        /// Called when the visibility changes.
+        /// </summary>
+        protected virtual void OnVisibilityChanged()
+        {
+            VisibilityChanged?.Invoke(this);
         }
 
         /// <summary>

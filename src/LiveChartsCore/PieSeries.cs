@@ -637,9 +637,7 @@ namespace LiveChartsCore
 
             foreach (var item in toDelete) _ = everFetched.Remove(item);
 
-            ((ISeries)this).IsNotifyingChanges = false;
-            IsVisible = false;
-            ((ISeries)this).IsNotifyingChanges = false;
+            OnVisibilityChanged();
         }
     }
 }
