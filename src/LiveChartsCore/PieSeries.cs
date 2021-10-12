@@ -636,6 +636,8 @@ namespace LiveChartsCore
             }
 
             foreach (var item in toDelete) _ = everFetched.Remove(item);
+
+            OnVisibilityChanged();
         }
     }
 }

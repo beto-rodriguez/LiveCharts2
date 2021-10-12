@@ -103,6 +103,8 @@ namespace LiveChartsCore
             }
 
             foreach (var item in deleted) _ = everFetched.Remove(item);
+
+            OnVisibilityChanged();
         }
 
         /// <summary>

@@ -875,6 +875,8 @@ namespace LiveChartsCore
 
             if (GeometryFill is not null) canvas.RemovePaintTask(GeometryFill);
             if (GeometryStroke is not null) canvas.RemovePaintTask(GeometryStroke);
+
+            OnVisibilityChanged();
         }
 
         /// <summary>
