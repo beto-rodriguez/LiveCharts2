@@ -336,7 +336,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <returns></returns>
-        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             if (!((ISeries)this).IsNotifyingChanges) return;
@@ -346,7 +346,7 @@ namespace LiveChartsCore
         /// <summary>
         /// Called when the visibility changes.
         /// </summary>
-        protected void OnVisibilityChanged()
+        protected virtual void OnVisibilityChanged()
         {
             VisibilityChanged?.Invoke(this);
         }
