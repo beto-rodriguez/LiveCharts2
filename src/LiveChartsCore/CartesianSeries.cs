@@ -103,10 +103,6 @@ namespace LiveChartsCore
             }
 
             foreach (var item in deleted) _ = everFetched.Remove(item);
-
-            ((ISeries)this).IsNotifyingChanges = false;
-            IsVisible = false;
-            ((ISeries)this).IsNotifyingChanges = false;
         }
 
         /// <summary>
