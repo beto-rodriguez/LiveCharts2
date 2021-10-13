@@ -4,7 +4,7 @@ LiveCharts2 (v2) is the evolution of [LiveCharts](https://github.com/Live-Charts
 
 ### Extremely flexible data visualization library
 
-The following image is a preview, `v2.0` is beta now, you can install it from NuGet: https://github.com/beto-rodriguez/LiveCharts2/issues/35, it support WPF, WinForms, Avalonia, WinUI, UWP and Xamarin for now but MAUI will also be supported.
+The following image is a preview, `v2.0` is beta now, you can install it from NuGet: https://github.com/beto-rodriguez/LiveCharts2/issues/35, it support WPF, WinForms, Avalonia, WinUI, UWP and Xamarin for now but MAUI ([#161](https://github.com/beto-rodriguez/LiveCharts2/pull/161)) and Blazor wasm ([#239](https://github.com/beto-rodriguez/LiveCharts2/pull/239)) will also be supported.
 
 here is a preview (1.4MB gif, wait for it to load if you see a blank space bellow this text...):
 
