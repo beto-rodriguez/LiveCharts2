@@ -76,6 +76,7 @@
 		core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
 
 	/// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
+	[Parameter]
 	public IEnumerable<ISeries> Series
 	{
 		get => _series;
@@ -89,6 +90,7 @@
 	}
 
 	/// <inheritdoc cref="ICartesianChartView{TDrawingContext}.XAxes" />
+	[Parameter]
 	public IEnumerable<ICartesianAxis> XAxes
 	{
 		get => _xAxes;
@@ -102,6 +104,7 @@
 	}
 
 	/// <inheritdoc cref="ICartesianChartView{TDrawingContext}.YAxes" />
+	[Parameter]
 	public IEnumerable<ICartesianAxis> YAxes
 	{
 		get => _yAxes;
@@ -115,6 +118,7 @@
 	}
 
 	/// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections" />
+	[Parameter]
 	public IEnumerable<Section<SkiaSharpDrawingContext>> Sections
 	{
 		get => _sections;
@@ -128,6 +132,7 @@
 	}
 
 	/// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
+	[Parameter]
 	public DrawMarginFrame<SkiaSharpDrawingContext>? DrawMarginFrame
 	{
 		get => _drawMarginFrame;
@@ -139,12 +144,15 @@
 	}
 
 	/// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomMode" />
+	[Parameter]
 	public ZoomAndPanMode ZoomMode { get; set; } = LiveCharts.CurrentSettings.DefaultZoomMode;
 
 	/// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomingSpeed" />
+	[Parameter]
 	public double ZoomingSpeed { get; set; } = LiveCharts.CurrentSettings.DefaultZoomSpeed;
 
 	/// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy" />
+	[Parameter]
 	public TooltipFindingStrategy TooltipFindingStrategy
 	{
 		get => _tooltipFindingStrategy;

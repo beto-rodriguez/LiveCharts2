@@ -113,18 +113,23 @@
 	public Margin? DrawMargin { get => _drawMargin; set { _drawMargin = value; OnPropertyChanged(); } }
 
 	/// <inheritdoc cref="IChartView.SyncContext" />
+	[Parameter]
 	public object SyncContext { get => CoreCanvas.Sync; set { CoreCanvas.Sync = value; OnPropertyChanged(); } }
 
 	/// <inheritdoc cref="IChartView.AnimationsSpeed" />
+	[Parameter]
 	public TimeSpan AnimationsSpeed { get; set; } = LiveCharts.CurrentSettings.DefaultAnimationsSpeed;
 
 	/// <inheritdoc cref="IChartView.AnimationsSpeed" />
+	[Parameter]
 	public Func<float, float>? EasingFunction { get; set; } = LiveCharts.CurrentSettings.DefaultEasingFunction;
 
 	/// <inheritdoc cref="IChartView.LegendPosition" />
+	[Parameter]
 	public LegendPosition LegendPosition { get => _legendPosition; set { _legendPosition = value; OnPropertyChanged(); } }
 
 	/// <inheritdoc cref="IChartView.LegendOrientation" />
+	[Parameter]
 	public LegendOrientation LegendOrientation { get => _legendOrientation; set { _legendOrientation = value; OnPropertyChanged(); } }
 
 	/// <summary>
@@ -133,6 +138,7 @@
 	/// <value>
 	/// The legend font.
 	/// </value>
+	//[Parameter]
 	//public Font LegendFont { get => _legendFont; set { _legendFont = value; OnPropertyChanged(); } }
 
 	/// <summary>
@@ -141,6 +147,7 @@
 	/// <value>
 	/// The color of the legend back.
 	/// </value>
+	//[Parameter]
 	//public Color LegendTextColor { get => _legendTextColor; set { _legendTextColor = value; OnPropertyChanged(); } }
 
 	/// <summary>
@@ -152,9 +159,11 @@
 	//public Color LegendBackColor { get => _legendBackColor; set { _legendBackColor = value; OnPropertyChanged(); } }
 
 	/// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
+	//[Parameter]
 	public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
 
 	/// <inheritdoc cref="IChartView.LegendPosition" />
+	[Parameter]
 	public TooltipPosition TooltipPosition { get => _tooltipPosition; set { _tooltipPosition = value; OnPropertyChanged(); } }
 
 	/// <summary>
@@ -163,6 +172,7 @@
 	/// <value>
 	/// The tool tip font.
 	/// </value>
+	//[Parameter]
 	//public Font TooltipFont { get => _tooltipFont; set { _tooltipFont = value; OnPropertyChanged(); } }
 
 	/// <summary>
@@ -171,6 +181,7 @@
 	/// <value>
 	/// The color of the tool tip text.
 	/// </value>
+	//[Parameter]
 	//public Color TooltipTextColor { get => _tooltipTextColor; set { _tooltipTextColor = value; OnPropertyChanged(); } }
 
 	/// <summary>
@@ -179,18 +190,22 @@
 	/// <value>
 	/// The color of the tool tip back.
 	/// </value>
+	//[Parameter]
 	//public Color TooltipBackColor { get => _tooltipBackColor; set { _tooltipBackColor = value; OnPropertyChanged(); } }
 
 	/// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
 	public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
 
 	/// <inheritdoc cref="IChartView{TDrawingContext}.PointStates" />
+	[Parameter]
 	public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
 
 	/// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
+	[Parameter]
 	public bool AutoUpdateEnabled { get; set; } = true;
 
 	/// <inheritdoc cref="IChartView.UpdaterThrottler" />
+	[Parameter]
 	public TimeSpan UpdaterThrottler
 	{
 		get => core?.UpdaterThrottler ?? throw new Exception("core not set yet.");
