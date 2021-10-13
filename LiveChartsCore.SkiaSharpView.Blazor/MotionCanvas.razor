@@ -1,0 +1,72 @@
+﻿@using LiveChartsCore.Drawing
+@using LiveChartsCore.Kernel
+@using LiveChartsCore.SkiaSharpView.Drawing
+@using SkiaSharp.Views.Blazor
+
+<div class="lvc-motion-canvas">
+	<SKGLView @ref="_canvas" OnPaintSurface="OnPaintSurface" IgnorePixelScaling="true" />
+</div>
+
+@code
+{
+	private SKGLView? _canvas;
+	private bool _isDrawingLoopRunning = false;
+	private List<PaintSchedule<SkiaSharpDrawingContext>> _paintTasksSchedule = new();
+
+	protected override void OnInitialized()
+	{
+		CanvasCore.Invalidated += CanvasCore_Invalidated;
+	}
+
+	public double FramesPerSecond { get; set; } = 60;
+
+	public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
+
+	public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
+	{
+		get => _paintTasksSchedule;
+		set
+		{
+			_paintTasksSchedule = value;
+			OnPaintTasksChanged();
+		}
+	}
+
+	void OnPaintSurface(SKPaintGLSurfaceEventArgs e)
+	{
+		CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
+	}
+
+	private void CanvasCore_Invalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
+	{
+		RunDrawingLoop();
+	}
+
+	private async void RunDrawingLoop()
+	{
+		if (_isDrawingLoopRunning) return;
+		_isDrawingLoopRunning = true;
+
+		var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
+		while (!CanvasCore.IsValid)
+		{
+			_canvas!.Invalidate();
+			await Task.Delay(ts);
+		}
+
+		_isDrawingLoopRunning = false;
+	}
+
+	private void OnPaintTasksChanged()
+	{
+		var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>>();
+
+		foreach (var item in _paintTasksSchedule)
+		{
+			item.PaintTask.SetGeometries(CanvasCore, item.Geometries);
+			_ = tasks.Add(item.PaintTask);
+		}
+
+		CanvasCore.SetPaintTasks(tasks);
+	}
+}
