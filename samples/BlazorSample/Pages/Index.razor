@@ -10,16 +10,14 @@ Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 
-<LiveChartsCore.SkiaSharpView.Blazor.PieChart
+<LiveChartsCore.SkiaSharpView.Blazor.PolarChart
 	Series="Series">
-</LiveChartsCore.SkiaSharpView.Blazor.PieChart>
+</LiveChartsCore.SkiaSharpView.Blazor.PolarChart>
 
 @code {
 	public ISeries[] Series { get; set; } =
 		new ISeries[]
 		{
-			new PieSeries<int> { Values = new int[] { 100 } },
-			new PieSeries<int> { Values = new int[] { 100 } },
-			new PieSeries<int> { Values = new int[] { 100 } }
+			new PolarLineSeries<int> { Values = new int[] { 100, 200, 300, 400, 500 } }
 		};
 }
