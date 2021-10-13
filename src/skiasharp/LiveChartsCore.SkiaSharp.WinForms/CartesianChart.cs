@@ -34,7 +34,6 @@ using System.Windows.Forms;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms
 {
-
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}" />
     public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext>
     {
@@ -88,7 +87,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
-
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IEnumerable<ISeries> Series
         {
