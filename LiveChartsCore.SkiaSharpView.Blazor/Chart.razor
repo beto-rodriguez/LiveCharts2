@@ -54,6 +54,8 @@
 
 	protected override void OnInitialized()
 	{
+		base.OnInitialized();
+
 		if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
 		var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
@@ -61,6 +63,11 @@
 		if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
 			throw new Exception("Default colors are not valid");
 		initializer.ApplyStyleToChart(this);
+	}
+
+	protected override void OnAfterRender(bool firstRender)
+	{
+		base.OnAfterRender(firstRender);
 
 		InitializeCore();
 		if (core is null) throw new Exception("Core not found!");

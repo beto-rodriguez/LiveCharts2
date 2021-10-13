@@ -34,35 +34,43 @@
 @inherits Chart
 @implements ICartesianChartView<SkiaSharpDrawingContext>
 
+@{
+	base.BuildRenderTree(__builder);
+}
+
 @code {
 	private CollectionDeepObserver<ISeries>? _seriesObserver;
 	private CollectionDeepObserver<ICartesianAxis>? _xObserver;
 	private CollectionDeepObserver<ICartesianAxis>? _yObserver;
 	private CollectionDeepObserver<Section<SkiaSharpDrawingContext>>? _sectionsObserverer;
-	private IEnumerable<ISeries> _series = new List<ISeries>();
-	private IEnumerable<ICartesianAxis> _xAxes = new List<Axis> { new Axis() };
-	private IEnumerable<ICartesianAxis> _yAxes = new List<Axis> { new Axis() };
+	private IEnumerable<ISeries> _series = new ObservableCollection<ISeries>();
+	private IEnumerable<ICartesianAxis>? _xAxes;
+	private IEnumerable<ICartesianAxis>? _yAxes;
 	private IEnumerable<Section<SkiaSharpDrawingContext>> _sections = new List<Section<SkiaSharpDrawingContext>>();
 	private DrawMarginFrame<SkiaSharpDrawingContext>? _drawMarginFrame;
 	private TooltipFindingStrategy _tooltipFindingStrategy = LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy;
 
 	protected override void OnInitialized()
 	{
+		base.OnInitialized();
+
 		_seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 		_xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 		_yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 		_sectionsObserverer = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
 			OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-		XAxes = new List<ICartesianAxis>()
-		{
-			LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
-		};
-		YAxes = new List<ICartesianAxis>()
-		{
-			LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
-		};
-		Series = new ObservableCollection<ISeries>();
+		if (_xAxes is null)
+			XAxes = new List<ICartesianAxis>()
+			{
+				LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+			};
+
+		if (_yAxes is null)
+			YAxes = new List<ICartesianAxis>()
+			{
+				LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+			};
 
 		// ToDo: pointer events
 		//var c = Controls[0].Controls[0];
@@ -93,7 +101,7 @@
 	[Parameter]
 	public IEnumerable<ICartesianAxis> XAxes
 	{
-		get => _xAxes;
+		get => _xAxes ?? throw new Exception($"{nameof(XAxes)} can not be null");
 		set
 		{
 			_xObserver?.Dispose(_xAxes);
@@ -107,7 +115,7 @@
 	[Parameter]
 	public IEnumerable<ICartesianAxis> YAxes
 	{
-		get => _yAxes;
+		get => _yAxes ?? throw new Exception($"{nameof(YAxes)} can not be null");
 		set
 		{
 			_yObserver?.Dispose(_yAxes);
