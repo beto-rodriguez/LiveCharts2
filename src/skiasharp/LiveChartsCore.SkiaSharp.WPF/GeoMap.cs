@@ -267,7 +267,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
         {
-            Application.Current.Dispatcher.Invoke(action);
+            Dispatcher.Invoke(action);
         }
 
         private void GeoMap_SizeChanged(object sender, SizeChangedEventArgs e)
