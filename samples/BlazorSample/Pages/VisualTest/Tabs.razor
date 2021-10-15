@@ -1,0 +1,34 @@
+﻿@page "/VisualTest/Tabs"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.VisualTest.ReattachVisual
+
+@if (IsVisible)
+{
+	<h1>Tab 1?</h1>
+	<div style="max-height: 400px">
+		<CartesianChart
+			Series="ViewModel.Series">
+		</CartesianChart>
+	</div>
+}
+else
+{
+	<h1>Tab 2?</h1>
+	<div style="max-height: 400px">
+		<PieChart
+			Series="ViewModel.PieSeries">
+		</PieChart>
+	</div>
+}
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+
+	public bool IsVisible{ get; set; }
+
+	public void Toggle()
+	{
+		IsVisible = !IsVisible;
+	}
+
+}

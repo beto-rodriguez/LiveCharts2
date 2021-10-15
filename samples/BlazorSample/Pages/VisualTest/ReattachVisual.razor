@@ -1,0 +1,35 @@
+﻿@page "/VisualTest/ReattachVisual"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.VisualTest.ReattachVisual
+
+@if (IsVisible)
+{
+	<div style="max-height: 400px">
+		<CartesianChart
+			Series="ViewModel.Series">
+		</CartesianChart>
+	</div>
+
+	<div style="max-height: 400px">
+		<PieChart
+			Series="ViewModel.PieSeries">
+		</PieChart>
+	</div>
+
+	<div style="max-height: 400px">
+		<PolarChart
+			Series="ViewModel.PolarSeries">
+		</PolarChart>
+	</div>
+}
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+
+	public bool IsVisible{ get; set; }
+
+	public void Toggle()
+	{
+		IsVisible = !IsVisible;
+	}
+}

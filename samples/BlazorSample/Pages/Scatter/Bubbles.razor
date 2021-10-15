@@ -1,0 +1,11 @@
+﻿@page "/Scatter/Bubbles"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Scatter.Bubbles
+
+<PieChart
+	Series="ViewModel.Series">
+</PieChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}

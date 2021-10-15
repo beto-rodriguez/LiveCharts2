@@ -68,7 +68,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BlazorWasm", "BlazorWasm", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveChartsCore.SkiaSharpView.Blazor", "LiveChartsCore.SkiaSharpView.Blazor\LiveChartsCore.SkiaSharpView.Blazor.csproj", "{3635E724-037D-45B5-8728-E93E02049F6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorSample", "samples\BlazorSample\BlazorSample.csproj", "{AC34AC1D-3283-4717-9F77-76AB92F42A2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorSample", "samples\BlazorSample\BlazorSample.csproj", "{AC34AC1D-3283-4717-9F77-76AB92F42A2C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

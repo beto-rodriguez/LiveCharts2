@@ -1,0 +1,16 @@
+﻿@page "/VisualTest/DataTemplate"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.VisualTest.DataTemplate
+
+@foreach(var seriesCollection in ViewModel.Models)
+{
+	<div style="max-height: 400px">
+		<CartesianChart
+			Series="seriesCollection">
+		</CartesianChart>
+	</div>
+}
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}

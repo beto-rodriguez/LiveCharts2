@@ -1,0 +1,12 @@
+﻿@page "/Financial/BasicCandlesticks"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Financial.BasicCandlesticks
+
+<CartesianChart
+	Series="ViewModel.Series"
+	XAxes="ViewModel.XAxes">
+</CartesianChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}

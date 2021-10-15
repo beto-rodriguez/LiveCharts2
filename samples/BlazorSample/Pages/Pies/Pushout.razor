@@ -1,0 +1,11 @@
+﻿@page "/Pies/Pushout"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Pies.Pushout
+
+<PieChart
+	Series="ViewModel.Series">
+</PieChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}

@@ -50,6 +50,11 @@
     color: white;
 }
 
+.scroll-y{
+    height: 100%;
+    overflow-y: auto;
+}
+
 @media (min-width: 641px) {
     .navbar-toggler {
         display: none;

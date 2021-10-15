@@ -1,0 +1,11 @@
+﻿@page "/Pies/Doughnut"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Pies.Doughnut
+
+<PieChart
+	Series="ViewModel.Series">
+</PieChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}

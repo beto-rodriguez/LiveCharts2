@@ -50,7 +50,7 @@ namespace ViewModelsSamples.StepLines.Properties
             lineSeries.Values = values;
         }
 
-        public List<ISeries> ChangeSeriesInstance()
+        public void ChangeSeriesInstance()
         {
             lineSeries = new StepLineSeries<double>
             {
@@ -61,8 +61,6 @@ namespace ViewModelsSamples.StepLines.Properties
             {
                 lineSeries
             };
-
-            return series;
         }
 
         public void NewStroke()

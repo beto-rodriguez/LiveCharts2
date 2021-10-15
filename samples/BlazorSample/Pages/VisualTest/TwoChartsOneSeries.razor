@@ -1,0 +1,19 @@
+﻿@page "/VisualTest/TwoChartsOneSeries"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.VisualTest.TwoChartsOneSeries
+
+<div style="max-height: 400px">
+	<CartesianChart
+		Series="ViewModel.Series">
+	</CartesianChart>
+</div>
+
+<div style="max-height: 400px">
+	<CartesianChart
+		Series="ViewModel.Series">
+	</CartesianChart>
+</div>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}

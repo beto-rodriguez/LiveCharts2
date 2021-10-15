@@ -1,0 +1,11 @@
+﻿@page "/Scatter/Basic"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Scatter.Basic
+
+<CartesianChart
+	Series="ViewModel.Series">
+</CartesianChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}
