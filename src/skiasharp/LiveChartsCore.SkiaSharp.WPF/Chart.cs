@@ -668,7 +668,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         void IChartView.InvokeOnUIThread(Action action)
         {
-            Application.Current.Dispatcher.Invoke(action);
+            Dispatcher.Invoke(action);
+            //Application.Current.Dispatcher.Invoke(action);
         }
 
         /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
