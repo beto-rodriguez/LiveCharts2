@@ -53,6 +53,7 @@
 	protected override void OnInitialized()
 	{
 		CanvasCore.Invalidated += CanvasCore_Invalidated;
+		CanvasCore.DisableAnimations = true;
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
