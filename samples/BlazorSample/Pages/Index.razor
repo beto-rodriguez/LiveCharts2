@@ -11,27 +11,14 @@ Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 
-<LiveChartsCore.SkiaSharpView.Blazor.GeoMap
-	Shapes="Shapes">
-</LiveChartsCore.SkiaSharpView.Blazor.GeoMap>
+<LiveChartsCore.SkiaSharpView.Blazor.CartesianChart
+	Series="Series">
+</LiveChartsCore.SkiaSharpView.Blazor.CartesianChart>
 
 @code {
-	public HeatLand[] Shapes { get; set; } =
-		new HeatLand[]
-        {
-            new HeatLand { Name = "mex", Value = 10 },
-            new HeatLand { Name = "usa", Value = 15 },
-            new HeatLand { Name = "can", Value = 8 },
-            new HeatLand { Name = "ind", Value = 12 },
-            new HeatLand { Name = "deu", Value = 13 },
-            new HeatLand { Name= "jpn", Value = 15 },
-            new HeatLand { Name = "chn", Value = 14 },
-            new HeatLand { Name = "rus", Value = 11 },
-            new HeatLand { Name = "fra", Value = 8 },
-            new HeatLand { Name = "esp", Value = 7 },
-            new HeatLand { Name = "kor", Value = 10 },
-            new HeatLand { Name = "zaf", Value = 12 },
-            new HeatLand { Name = "bra", Value = 13 },
-            new HeatLand { Name = "are", Value = 13 }
-        };
+	public ISeries[] Series { get; set; }
+		= new ISeries[]
+		{
+			new LineSeries<int> { Values = new int[] { 3,6,2,6 } }
+		};
 }

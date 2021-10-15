@@ -70,7 +70,7 @@
 		base.OnAfterRender(firstRender);
 
 		InitializeCore();
-		if (core is null) throw new Exception("Core not found!");
+		if (core is null || motionCanvas is null) throw new Exception("Core or MotionCanvas not found!");
 
 		core.Measuring += OnCoreMeasuring;
 		core.UpdateStarted += OnCoreUpdateStarted;
@@ -82,6 +82,7 @@
 		//c.MouseMove += OnMouseMove;
 
 		core?.Load();
+		motionCanvas.Resized += OnResized;
 	}
 
 	#region events
@@ -111,7 +112,9 @@
 		set; //=> BackColor = Color.FromArgb(value.A, value.R, value.G, value.B);
 	}
 
-	LvcSize IChartView.ControlSize => new LvcSize() { Width = 500, Height = 400 };
+	LvcSize IChartView.ControlSize => motionCanvas is null
+		? new LvcSize()
+		: new LvcSize() { Width = (float)motionCanvas.Width, Height = (float)motionCanvas.Height };
 
 	/// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
 	public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => motionCanvas?.CanvasCore ?? throw new Exception("canvas not found!");
@@ -252,7 +255,7 @@
 	/// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
 	public void SetTooltipStyle(LvcColor background, LvcColor textColor)
 	{
-	//TooltipBackColor = Color.FromArgb(background.A, background.R, background.G, background.B);
+		//TooltipBackColor = Color.FromArgb(background.A, background.R, background.G, background.B);
 		//TooltipTextColor = Color.FromArgb(textColor.A, textColor.R, textColor.G, textColor.B);
 	}
 
@@ -294,5 +297,10 @@
 	private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
 	{
 		Measuring?.Invoke(this);
+	}
+
+	private void OnResized(MotionCanvas motionCanvas)
+	{
+		core?.Update();
 	}
 }

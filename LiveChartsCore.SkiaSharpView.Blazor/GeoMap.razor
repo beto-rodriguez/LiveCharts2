@@ -82,6 +82,9 @@
 		//Resize += GeoMap_Resize;
 
 		_core.Update();
+
+		if (motionCanvas is null) throw new Exception("MotionCanvas not found");
+		motionCanvas.Resized += OnResized;
 	}
 
 	/// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
@@ -188,6 +191,11 @@
 	/// Called when a property changes.
 	/// </summary>
 	protected void OnPropertyChanged()
+	{
+		_core?.Update();
+	}
+
+	private void OnResized(MotionCanvas motionCanvas)
 	{
 		_core?.Update();
 	}

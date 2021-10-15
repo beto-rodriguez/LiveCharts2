@@ -1,44 +1,69 @@
 ﻿@*
-The MIT License(MIT)
+	The MIT License(MIT)
 
-Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
+	Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE.
 *@
 
 @using LiveChartsCore.Drawing
 @using LiveChartsCore.Kernel
+@using LiveChartsCore.SkiaSharpView.Blazor.JsInterop.Models
 @using LiveChartsCore.SkiaSharpView.Drawing
+@using Microsoft.JSInterop
 @using SkiaSharp.Views.Blazor
 
-<div class="lvc-motion-canvas">
+@inject IJSRuntime JS
+@implements IDisposable
+
+<div @ref="_wrapper" class="lvc-motion-canvas">
 	<SKGLView @ref="_canvas" OnPaintSurface="OnPaintSurface" IgnorePixelScaling="true" />
 </div>
 
 @code {
+	private DomJsInterop? _dom;
+	private ElementReference _wrapper;
+	private string _id = Guid.NewGuid().ToString();
+
 	private SKGLView? _canvas;
 	private bool _isDrawingLoopRunning = false;
 	private List<PaintSchedule<SkiaSharpDrawingContext>> _paintTasksSchedule = new();
 
+	public double Width { get; set; }
+	public double Height { get; set; }
+	public event Action<MotionCanvas>? Resized;
+
 	protected override void OnInitialized()
 	{
 		CanvasCore.Invalidated += CanvasCore_Invalidated;
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (_dom is null) _dom = new DomJsInterop(JS);
+
+		var wrapperBounds = await _dom.GetBoundingClientRect(_wrapper);
+
+		Width = wrapperBounds.Width;
+		Height = wrapperBounds.Height;
+
+		await _dom.OnResize(_wrapper, _id, OnWrapperResized);
 	}
 
 	public double FramesPerSecond { get; set; } = 60;
@@ -55,6 +80,14 @@ SOFTWARE.
 		}
 	}
 
+	private void OnWrapperResized(DOMRect newSize)
+	{
+		Width = newSize.Width;
+		Height = newSize.Height;
+
+		Resized?.Invoke(this);
+	}
+
 	private void OnPaintSurface(SKPaintGLSurfaceEventArgs e)
 	{
 		CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
@@ -65,8 +98,6 @@ SOFTWARE.
 		RunDrawingLoop();
 	}
 
-	private int frames = 0;
-
 	private async void RunDrawingLoop()
 	{
 		if (_isDrawingLoopRunning) return;
@@ -75,7 +106,6 @@ SOFTWARE.
 		var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
 		while (!CanvasCore.IsValid)
 		{
-			Console.WriteLine("frame " + frames++);
 			_canvas!.Invalidate();
 			await Task.Delay(ts);
 		}
@@ -94,5 +124,11 @@ SOFTWARE.
 		}
 
 		CanvasCore.SetPaintTasks(tasks);
+	}
+
+	void IDisposable.Dispose()
+	{
+		if (_dom is null) return;
+		_dom.RemoveOnResizeListener(_id);
 	}
 }
