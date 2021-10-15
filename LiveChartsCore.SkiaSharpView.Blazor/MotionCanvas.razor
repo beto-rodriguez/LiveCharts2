@@ -39,6 +39,7 @@
 @code {
 	private DomJsInterop? _dom;
 	private ElementReference _wrapper;
+	private bool _disposing = false;
 	private string _id = Guid.NewGuid().ToString();
 
 	private SKGLView? _canvas;
@@ -104,7 +105,7 @@
 		_isDrawingLoopRunning = true;
 
 		var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
-		while (!CanvasCore.IsValid)
+		while (!CanvasCore.IsValid && !_disposing)
 		{
 			_canvas!.Invalidate();
 			await Task.Delay(ts);
@@ -130,6 +131,7 @@
 	{
 		if (_dom is null) return;
 		_dom.RemoveOnResizeListener(_id);
+		_disposing = true;
 		await _dom.DisposeAsync();
 	}
 }

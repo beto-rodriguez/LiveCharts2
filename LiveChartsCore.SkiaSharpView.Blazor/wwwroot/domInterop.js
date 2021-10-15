@@ -5,9 +5,8 @@ export var DOMInterop;
     }
     DOMInterop.getBoundingClientRect = getBoundingClientRect;
     function registerResizeListener(element, elementId) {
-        console.log('registerResizeListener:');
-        console.log(element);
         var observer = new ResizeObserver(function () {
+            console.log("[resized invoked js] " + elementId);
             DotNet.invokeMethodAsync('LiveChartsCore.SkiaSharpView.Blazor', 'InvokeResize', elementId, element.getBoundingClientRect());
         });
         observer.observe(element);

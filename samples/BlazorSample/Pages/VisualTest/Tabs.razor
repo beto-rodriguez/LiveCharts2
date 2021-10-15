@@ -2,10 +2,12 @@
 @using LiveChartsCore.SkiaSharpView.Blazor
 @using ViewModelsSamples.VisualTest.ReattachVisual
 
+<button type="button" class="btn btn-primary" @onclick="Toggle">Toggle</button>
+
 @if (IsVisible)
 {
 	<h1>Tab 1?</h1>
-	<div style="max-height: 400px">
+	<div style="max-width: 400px">
 		<CartesianChart
 			Series="ViewModel.Series">
 		</CartesianChart>
@@ -14,7 +16,7 @@
 else
 {
 	<h1>Tab 2?</h1>
-	<div style="max-height: 400px">
+	<div style="max-width: 400px">
 		<PieChart
 			Series="ViewModel.PieSeries">
 		</PieChart>

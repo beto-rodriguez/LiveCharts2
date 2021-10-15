@@ -2,21 +2,23 @@
 @using LiveChartsCore.SkiaSharpView.Blazor
 @using ViewModelsSamples.VisualTest.ReattachVisual
 
+<button type="button" class="btn btn-primary" @onclick="Toggle">Toggle</button>
+
 @if (IsVisible)
 {
-	<div style="max-height: 400px">
+	<div style="max-width: 400px">
 		<CartesianChart
 			Series="ViewModel.Series">
 		</CartesianChart>
 	</div>
 
-	<div style="max-height: 400px">
+	<div style="max-width: 400px">
 		<PieChart
 			Series="ViewModel.PieSeries">
 		</PieChart>
 	</div>
 
-	<div style="max-height: 400px">
+	<div style="max-width: 400px">
 		<PolarChart
 			Series="ViewModel.PolarSeries">
 		</PolarChart>
