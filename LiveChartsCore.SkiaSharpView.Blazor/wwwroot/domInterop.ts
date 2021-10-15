@@ -12,7 +12,6 @@ export namespace DOMInterop {
         elementId: string
     ): void {
         var observer = new ResizeObserver(function () {
-            console.log("[resized invoked js] " + elementId);
             DotNet.invokeMethodAsync(
                 'LiveChartsCore.SkiaSharpView.Blazor',
                 'InvokeResize',

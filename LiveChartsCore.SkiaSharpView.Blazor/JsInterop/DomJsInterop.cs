@@ -40,7 +40,6 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
 
         public void RemoveOnResizeListener(string elementId)
         {
-            Console.WriteLine("[removed listener]" + elementId);
             _ = s_resizeEvent.Remove(elementId);
         }
 
@@ -63,8 +62,6 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
         [JSInvokable("InvokeResize")]
         public static Task InvokeResize(string elementId, DOMRect newSize)
         {
-            Console.WriteLine("[resized invoked dotnet]" + elementId);
-
             if (!s_resizeEvent.TryGetValue(elementId, out var actions))
             {
                 // it was probably already disposed.
