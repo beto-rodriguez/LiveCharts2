@@ -126,9 +126,10 @@
 		CanvasCore.SetPaintTasks(tasks);
 	}
 
-	void IDisposable.Dispose()
+	async void IDisposable.Dispose()
 	{
 		if (_dom is null) return;
 		_dom.RemoveOnResizeListener(_id);
+		await _dom.DisposeAsync();
 	}
 }
