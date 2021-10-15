@@ -420,10 +420,10 @@ namespace LiveChartsCore
                 var uwx = xScale.ToPixels((float)x.UnitWidth) - xScale.ToPixels(0);
                 var uwy = yScale.ToPixels((float)y.UnitWidth) - yScale.ToPixels(0);
 
-                switch (chart.TooltipFindingStrategy)
+                switch (automaticStategy)
                 {
                     case TooltipFindingStrategy.CompareAll:
-                        tolerance = (float)Math.Sqrt(Math.Pow(uwx, 2) + Math.Pow(uwy, 2));
+                        tolerance = (float)Math.Sqrt(Math.Pow(uwx, 2) + Math.Pow(uwy, 2)) / 2;
                         break;
                     case TooltipFindingStrategy.CompareOnlyX:
                         tolerance = Math.Abs(uwx);
