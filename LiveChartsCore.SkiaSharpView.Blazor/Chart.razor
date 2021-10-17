@@ -32,7 +32,14 @@
 @implements IChartView<SkiaSharpDrawingContext>
 @*Ideally this component should be abstract, is it posible in Blazor?*@
 
-<MotionCanvas @ref="motionCanvas"></MotionCanvas>
+<MotionCanvas
+	@ref="motionCanvas"
+	OnPointerDownCallback="OnPointerDown"
+	OnPointerMoveCallback="OnPointerMove"
+	OnPointerUpCallback="OnPointerUp"
+	OnPointerLeaveCallback="OnPointerLeave"
+	OnWheelCallback="OnWheel">
+</MotionCanvas>
 
 @code {
 	protected Chart<SkiaSharpDrawingContext>? core;
@@ -76,11 +83,6 @@
 		core.Measuring += OnCoreMeasuring;
 		core.UpdateStarted += OnCoreUpdateStarted;
 		core.UpdateFinished += OnCoreUpdateFinished;
-
-		// ToDo: the pointer events...
-		// where c is the canvas..
-		//c.MouseLeave += Chart_MouseLeave;
-		//c.MouseMove += OnMouseMove;
 
 		core?.Load();
 		motionCanvas.Resized += OnResized;
@@ -299,6 +301,29 @@
 	{
 		Measuring?.Invoke(this);
 	}
+
+	protected virtual void OnPointerDown(PointerEventArgs e)
+	{
+		core?.InvokePointerDown(new LvcPoint((float)e.OffsetX, (float)e.OffsetY));
+	}
+
+	protected virtual void OnPointerMove(PointerEventArgs e)
+	{
+		core?.InvokePointerMove(new LvcPoint((float)e.OffsetX, (float)e.OffsetY));
+	}
+
+	protected virtual void OnPointerUp(PointerEventArgs e)
+	{
+		core?.InvokePointerUp(new LvcPoint((float)e.OffsetX, (float)e.OffsetY));
+	}
+
+	protected virtual void OnWheel(WheelEventArgs e) { }
+
+	protected virtual void OnPointerLeave(PointerEventArgs e)
+	{
+		HideTooltip();
+		core?.InvokePointerLeft();
+    }
 
 	private void OnResized(MotionCanvas motionCanvas)
 	{

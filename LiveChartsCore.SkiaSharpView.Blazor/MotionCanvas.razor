@@ -33,7 +33,15 @@
 @implements IDisposable
 
 <div @ref="_wrapper" class="lvc-motion-canvas">
-	<SKGLView @ref="_canvas" OnPaintSurface="OnPaintSurface" IgnorePixelScaling="true" />
+	<SKGLView
+		@ref="_canvas"
+		OnPaintSurface="OnPaintSurface"
+		IgnorePixelScaling="true"
+		@onpointerdown="OnPointerDown"
+		@onpointermove="OnPointerMove"
+		@onpointerup="OnPointerUp"
+		@onpointerleave="OnPointerLeave"
+		@onmousewheel="OnWheel"/>
 </div>
 
 @code {
@@ -67,10 +75,12 @@
 		await _dom.OnResize(_wrapper, _id, OnWrapperResized);
 	}
 
-	public double FramesPerSecond { get; set; } = 60;
-
 	public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
 
+	[Parameter]
+	public double FramesPerSecond { get; set; } = 60;
+
+	[Parameter]
 	public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
 	{
 		get => _paintTasksSchedule;
@@ -79,6 +89,46 @@
 			_paintTasksSchedule = value;
 			OnPaintTasksChanged();
 		}
+	}
+
+	[Parameter]
+	public EventCallback<PointerEventArgs> OnPointerDownCallback { get; set; }
+
+	[Parameter]
+	public EventCallback<PointerEventArgs> OnPointerMoveCallback { get; set; }
+
+	[Parameter]
+	public EventCallback<PointerEventArgs> OnPointerUpCallback { get; set; }
+
+	[Parameter]
+	public EventCallback<WheelEventArgs> OnWheelCallback { get; set; }
+
+	[Parameter]
+	public EventCallback<PointerEventArgs> OnPointerLeaveCallback { get; set; }
+
+	protected virtual void OnPointerDown(PointerEventArgs e)
+	{
+		OnPointerDownCallback.InvokeAsync(e);
+	}
+
+	protected virtual void OnPointerMove(PointerEventArgs e)
+	{
+		OnPointerMoveCallback.InvokeAsync(e);
+	}
+
+	protected virtual void OnPointerUp(PointerEventArgs e)
+	{
+		OnPointerUpCallback.InvokeAsync(e);
+	}
+
+	protected virtual void OnWheel(WheelEventArgs e)
+	{
+		OnWheelCallback.InvokeAsync(e);
+	}
+
+	protected virtual void OnPointerLeave(PointerEventArgs e)
+	{
+		OnPointerLeaveCallback.InvokeAsync(e);
 	}
 
 	private void OnWrapperResized(DOMRect newSize)

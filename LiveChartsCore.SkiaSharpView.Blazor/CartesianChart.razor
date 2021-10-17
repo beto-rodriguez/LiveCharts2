@@ -188,6 +188,21 @@
 		core.Update();
 	}
 
+	protected override void OnWheel(WheelEventArgs e)
+	{
+		if (core is null) throw new Exception("core not found");
+		var c = (CartesianChart<SkiaSharpDrawingContext>)core;
+		var p = new LvcPoint((float)e.OffsetX, (float)e.OffsetY);
+
+		Console.WriteLine($"dx {e.DeltaX}, dy {e.DeltaY}, dz {e.DeltaZ}, dm {e.DeltaMode}");
+
+		c.Zoom(p, e.DeltaY < 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+
+		// ToDo:
+		// capute pointer??
+		// Capture = true;
+	}
+
 	private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
 	{
 		if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
@@ -199,5 +214,4 @@
 		if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
 		OnPropertyChanged();
 	}
-
 }
