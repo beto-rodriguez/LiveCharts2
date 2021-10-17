@@ -81,7 +81,7 @@
 	}
 
 	CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core =>
-		core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
+	core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
 
 	/// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
 	[Parameter]

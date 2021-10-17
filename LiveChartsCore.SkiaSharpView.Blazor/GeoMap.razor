@@ -55,14 +55,16 @@
 	protected override void OnInitialized()
 	{
 		base.OnInitialized();
+
+		if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+		_activeMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
 	}
 
 	protected override void OnAfterRender(bool firstRender)
 	{
 		base.OnAfterRender(firstRender);
 
-		if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-		_activeMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
+		if (!firstRender) return;
 
 		_core = new GeoMap<SkiaSharpDrawingContext>(this);
 		_shapesObserver = new CollectionDeepObserver<IMapElement>(

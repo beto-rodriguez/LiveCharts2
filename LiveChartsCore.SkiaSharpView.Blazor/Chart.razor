@@ -69,6 +69,7 @@
 	{
 		base.OnAfterRender(firstRender);
 
+		if (!firstRender) return;
 		InitializeCore();
 		if (core is null || motionCanvas is null) throw new Exception("Core or MotionCanvas not found!");
 
@@ -261,7 +262,7 @@
 
 	void IChartView.InvokeOnUIThread(Action action)
 	{
-		InvokeAsync(action);//.Wait();
+		InvokeAsync(action);
 	}
 
 	/// <inheritdoc cref="IChartView.SyncAction(Action)"/>
