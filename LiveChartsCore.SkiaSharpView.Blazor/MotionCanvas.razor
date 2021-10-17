@@ -33,10 +33,19 @@
 @implements IDisposable
 
 <div @ref="_wrapper" class="lvc-motion-canvas">
-	<SKGLView
+	@*<SKGLView
+		@ref="_glCanvas"
+		OnPaintSurface="OnPaintGlSurface"
+		IgnorePixelScaling="true"
+		@onpointerdown="OnPointerDown"
+		@onpointermove="OnPointerMove"
+		@onpointerup="OnPointerUp"
+		@onpointerleave="OnPointerLeave"
+		@onmousewheel="OnWheel"/>*@
+
+	<SKCanvasView
 		@ref="_canvas"
 		OnPaintSurface="OnPaintSurface"
-		IgnorePixelScaling="true"
 		@onpointerdown="OnPointerDown"
 		@onpointermove="OnPointerMove"
 		@onpointerup="OnPointerUp"
@@ -50,7 +59,8 @@
 	private bool _disposing = false;
 	private string _id = Guid.NewGuid().ToString();
 
-	private SKGLView? _canvas;
+	private SKGLView? _glCanvas;
+	private SKCanvasView? _canvas;
 	private bool _isDrawingLoopRunning = false;
 	private List<PaintSchedule<SkiaSharpDrawingContext>> _paintTasksSchedule = new();
 
@@ -139,7 +149,12 @@
 		Resized?.Invoke(this);
 	}
 
-	private void OnPaintSurface(SKPaintGLSurfaceEventArgs e)
+	private void OnPaintGlSurface(SKPaintGLSurfaceEventArgs e)
+	{
+		CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
+	}
+
+	private void OnPaintSurface(SKPaintSurfaceEventArgs e)
 	{
 		CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
 	}
@@ -157,7 +172,8 @@
 		var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
 		while (!CanvasCore.IsValid && !_disposing)
 		{
-			_canvas!.Invalidate();
+			_glCanvas?.Invalidate();
+			_canvas?.Invalidate();
 			await Task.Delay(ts);
 		}
 
