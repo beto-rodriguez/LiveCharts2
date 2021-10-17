@@ -66,8 +66,8 @@ namespace WinFormsSample.Lines.Properties
             var b10 = new Button { Text = "new series", Location = new System.Drawing.Point(720, 0) };
             b10.Click += (object sender, System.EventArgs e) =>
             {
-                var newInstance = viewModel.ChangeSeriesInstance();
-                cartesianChart.Series = newInstance;
+                viewModel.ChangeSeriesInstance();
+                cartesianChart.Series = viewModel.Series;
             };
             Controls.Add(b10);
         }
