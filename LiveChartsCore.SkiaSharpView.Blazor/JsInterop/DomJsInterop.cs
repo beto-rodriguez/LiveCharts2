@@ -25,6 +25,22 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
             return await module.InvokeAsync<DOMRect>("DOMInterop.getBoundingClientRect", elementReference);
         }
 
+        /// <summary>
+        /// Sets the css top and left properties of he given element to the specified coordinates.
+        /// </summary>
+        /// <param name="elementReference">The html element.</param>
+        /// <param name="x">The x coordinate (left property in css).</param>
+        /// <param name="y">The y coordinate (top property in css).</param>
+        /// <param name="relativeTo">Indicates whether the function should add the given element postion to each coordinate.</param>
+        /// <returns></returns>
+        public async ValueTask SetPosition(
+            ElementReference elementReference, double x, double y, ElementReference? relativeTo = null)
+        {
+            var module = await _moduleTask.Value;
+
+            await module.InvokeVoidAsync("DOMInterop.setPosition", elementReference, x, y, relativeTo);
+        }
+
         public async ValueTask OnResize(ElementReference element, string elementId, Action<DOMRect> handler)
         {
             if (!s_resizeEvent.TryGetValue(elementId, out var actions))
@@ -76,7 +92,7 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
             return Task.CompletedTask;
         }
 
-        public async ValueTask DisposeAsync()
+        async ValueTask IAsyncDisposable.DisposeAsync()
         {
             if (_moduleTask.IsValueCreated)
             {

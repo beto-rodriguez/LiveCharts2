@@ -1,0 +1,20 @@
+﻿.lvc-tooltip-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: transparent;
+    padding: 15px;
+    -moz-transition: top ease-out 0.2s, left ease-out 0.2s;
+    -o-transition: top ease-out 0.2s, left ease-out 0.2s;
+    -webkit-transition: top ease-out 0.2s, left ease-out 0.2s;
+    transition: top ease-out 0.2s, left ease-out 0.2s;
+}
+
+.lvc-tooltip {
+    background-color: white;
+    padding: 10px 16px;
+    border-radius: 8px;   
+    -moz-box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}

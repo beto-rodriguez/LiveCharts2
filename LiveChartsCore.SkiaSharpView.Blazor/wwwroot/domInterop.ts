@@ -20,4 +20,23 @@ export namespace DOMInterop {
         });
         observer.observe(element);
     }
+
+    export function setPosition(
+        element: HTMLElement,
+        x: number,
+        y: number,
+        relativeTo: HTMLElement | undefined
+    ) {
+        var rx = 0;
+        var ry = 0;
+
+        if (relativeTo) {
+            var bounds = relativeTo.getBoundingClientRect();
+            rx = bounds.left;
+            ry = bounds.top;
+        }
+
+        element.style.top = (y + ry) + 'px';
+        element.style.left = (x + rx) + 'px';
+    }
 }

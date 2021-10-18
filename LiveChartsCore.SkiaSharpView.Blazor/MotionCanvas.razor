@@ -198,6 +198,6 @@
 		if (_dom is null) return;
 		_dom.RemoveOnResizeListener(_id);
 		_disposing = true;
-		await _dom.DisposeAsync();
+		await ((IAsyncDisposable)_dom).DisposeAsync();
 	}
 }

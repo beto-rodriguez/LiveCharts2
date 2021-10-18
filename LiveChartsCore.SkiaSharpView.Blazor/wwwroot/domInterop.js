@@ -11,5 +11,17 @@ export var DOMInterop;
         observer.observe(element);
     }
     DOMInterop.registerResizeListener = registerResizeListener;
+    function setPosition(element, x, y, relativeTo) {
+        var rx = 0;
+        var ry = 0;
+        if (relativeTo) {
+            var bounds = relativeTo.getBoundingClientRect();
+            rx = bounds.left;
+            ry = bounds.top;
+        }
+        element.style.top = (y + ry) + 'px';
+        element.style.left = (x + rx) + 'px';
+    }
+    DOMInterop.setPosition = setPosition;
 })(DOMInterop || (DOMInterop = {}));
 //# sourceMappingURL=domInterop.js.map

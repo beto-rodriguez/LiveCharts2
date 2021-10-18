@@ -29,24 +29,31 @@
 @using LiveChartsCore.Measure
 @using LiveChartsCore.SkiaSharpView.Drawing
 
-@implements IChartView<SkiaSharpDrawingContext>
 @*Ideally this component should be abstract, is it posible in Blazor?*@
+@implements IChartView<SkiaSharpDrawingContext>
+@implements IBlazorChart;
 
-<MotionCanvas
-	@ref="motionCanvas"
-	OnPointerDownCallback="OnPointerDown"
-	OnPointerMoveCallback="OnPointerMove"
-	OnPointerUpCallback="OnPointerUp"
-	OnPointerLeaveCallback="OnPointerLeave"
-	OnWheelCallback="OnWheel">
-</MotionCanvas>
+<div class="lvc-chart-container" @ref="_wrapper">
+	<DefaultTooltip @ref="tooltip" />
+
+	<MotionCanvas
+		@ref="motionCanvas"
+		OnPointerDownCallback="OnPointerDown"
+		OnPointerMoveCallback="OnPointerMove"
+		OnPointerUpCallback="OnPointerUp"
+		OnPointerLeaveCallback="OnPointerLeave"
+		OnWheelCallback="OnWheel">
+	</MotionCanvas>
+</div>
+
 
 @code {
 	protected Chart<SkiaSharpDrawingContext>? core;
 	protected MotionCanvas? motionCanvas;
 
+	private ElementReference _wrapper;
 	private IChartLegend<SkiaSharpDrawingContext>? legend = null;
-	private IChartTooltip<SkiaSharpDrawingContext>? tooltip = null;
+	private IChartTooltip<SkiaSharpDrawingContext>? tooltip = null!;
 
 	private LegendPosition _legendPosition = LiveCharts.CurrentSettings.DefaultLegendPosition;
 	private LegendOrientation _legendOrientation = LiveCharts.CurrentSettings.DefaultLegendOrientation;
@@ -102,6 +109,8 @@
 	#endregion
 
 	#region properties
+
+	ElementReference IBlazorChart.WrapperElementReference => _wrapper;
 
 	/// <inheritdoc cref="IChartView.DesignerMode" />
 	bool IChartView.DesignerMode => false;
