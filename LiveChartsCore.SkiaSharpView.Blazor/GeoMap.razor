@@ -27,21 +27,37 @@
 @using LiveChartsCore.Kernel
 @using LiveChartsCore.SkiaSharpView.Drawing
 @using LiveChartsCore.SkiaSharpView.Painting
+@using Microsoft.JSInterop
 @using SkiaSharp
 @using System.Collections.Specialized
 @using System.ComponentModel
 
+@inject IJSRuntime JS
 @implements IGeoMapView<SkiaSharpDrawingContext>
+@implements IDisposable
 
-<JsFlexibleContainer>
-	<Content>
-		<MotionCanvas @ref="motionCanvas"></MotionCanvas>
-	</Content>
-</JsFlexibleContainer>
+<!--
+	the first wrapper <div/> is required so blazor is able to the isolate the css, do not remove!
+	blazor bug?
+-->
+
+<div>
+	<JsFlexibleContainer @ref="_jsFlexibleContainer">
+		<Content>
+			<div class="lvc-canvas-container" @ref="_canvasContainer">
+				<MotionCanvas @ref="motionCanvas"></MotionCanvas>
+			</div>
+		</Content>
+	</JsFlexibleContainer>
+</div>
 
 @code {
-	private JsFlexibleContainer _jsFlexibleContainer = null!; // <<<< 🤣
+	private DomJsInterop? _dom;
+	private JsFlexibleContainer _jsFlexibleContainer = null!;
+	private ElementReference _canvasContainer;
 	private MotionCanvas? motionCanvas;
+	private double _canvasWidth;
+	private double _canvasHeight;
 	private CollectionDeepObserver<IMapElement>? _shapesObserver;
 	private GeoMap<SkiaSharpDrawingContext>? _core;
 	private IEnumerable<IMapElement> _shapes = Enumerable.Empty<IMapElement>();
@@ -65,10 +81,8 @@
 		_activeMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
 	}
 
-	protected override void OnAfterRender(bool firstRender)
+	protected async override Task OnAfterRenderAsync(bool firstRender)
 	{
-		base.OnAfterRender(firstRender);
-
 		if (!firstRender) return;
 
 		_core = new GeoMap<SkiaSharpDrawingContext>(this);
@@ -88,10 +102,15 @@
 
 		//Resize += GeoMap_Resize;
 
+		if (_dom is null) _dom = new DomJsInterop(JS);
+		var canvasBounds = await _dom.GetBoundingClientRect(_canvasContainer);
+		_canvasWidth = canvasBounds.Width;
+		_canvasHeight = canvasBounds.Height;
+
 		_core.Update();
 
 		if (motionCanvas is null) throw new Exception("MotionCanvas not found");
-		//motionCanvas.Resized += OnResized;
+		_jsFlexibleContainer.Resized += OnResized;
 	}
 
 	/// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
@@ -132,10 +151,10 @@
 	}
 
 	/// <inheritdoc cref="IGeoMapView{TDrawingContext}.Width"/>
-	float IGeoMapView<SkiaSharpDrawingContext>.Width => 500;
+	float IGeoMapView<SkiaSharpDrawingContext>.Width => (float)_canvasWidth;
 
 	/// <inheritdoc cref="IGeoMapView{TDrawingContext}.Height"/>
-	float IGeoMapView<SkiaSharpDrawingContext>.Height => 400;
+	float IGeoMapView<SkiaSharpDrawingContext>.Height => (float)_canvasHeight;
 
 	/// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
 	[Parameter]
@@ -202,8 +221,20 @@
 		_core?.Update();
 	}
 
-	private void OnResized(MotionCanvas motionCanvas)
+	private async void OnResized(JsFlexibleContainer motionCanvas)
 	{
+		if (_dom is null) return;
+
+		var canvasBounds = await _dom.GetBoundingClientRect(_canvasContainer);
+		_canvasWidth = canvasBounds.Width;
+		_canvasHeight = canvasBounds.Height;
+
 		_core?.Update();
+	}
+
+	async void IDisposable.Dispose()
+	{
+		if (_dom is null) return;
+		await ((IAsyncDisposable)_dom).DisposeAsync();
 	}
 }
