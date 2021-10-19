@@ -35,16 +35,23 @@
 
 <div @ref="_wrapper">
 	<div class="lvc-legend">
-		@foreach(var series in Series)
+		@if (LegendTemplate is null)
 		{
-			<div class="lvc-legend-item @OrientationClass">
-				<div class="lvc-miniature" style="@GetStyle(series)">
-					<MotionCanvas PaintTasks="@GetPaintSchedules(series)"/>
+			@foreach (var series in Series)
+			{
+				<div class="lvc-legend-item @OrientationClass">
+					<div class="lvc-miniature" style="@GetStyle(series)">
+						<MotionCanvas PaintTasks="@GetPaintSchedules(series)" />
+					</div>
+					<div>
+						@series.Name
+					</div>
 				</div>
-				<div>
-					@series.Name
-				</div>
-			</div>
+			}
+		}
+		else
+		{
+			@LegendTemplate(Series)
 		}
 	</div>
 </div>
@@ -59,6 +66,12 @@
 
 		if (_dom is null) _dom = new DomJsInterop(JS);
 	}
+
+	/// <summary>
+	/// Gets or sets the legend template.
+	/// </summary>
+	[Parameter]
+	public RenderFragment<ISeries[]>? LegendTemplate { get; set; }
 
 	public ISeries[] Series { get; set; } = new ISeries[0];
 

@@ -34,16 +34,23 @@
 
 <div @ref="_wrapper" class="lvc-tooltip-container @Class">
 	<div class="lvc-tooltip">
-		@foreach(var tooltipPoint in Points)
+		@if (TooltipTemplate is null)
 		{
-			<div class="lvc-tooltip-item">
-				<div class="lvc-miniature" style="@GetStyle(tooltipPoint.Series)">
-					<MotionCanvas PaintTasks="@GetPaintSchedules(tooltipPoint.Series)"/>
+			@foreach (var tooltipPoint in Points)
+			{
+				<div class="lvc-tooltip-item">
+					<div class="lvc-miniature" style="@GetStyle(tooltipPoint.Series)">
+						<MotionCanvas PaintTasks="@GetPaintSchedules(tooltipPoint.Series)" />
+					</div>
+					<div>
+						@tooltipPoint.Point.AsTooltipString
+					</div>
 				</div>
-				<div>
-					@tooltipPoint.Point.AsTooltipString
-				</div>
-			</div>
+			}
+		}
+		else
+		{
+			@TooltipTemplate(Points)
 		}
 	</div>
 </div>
@@ -62,6 +69,12 @@
 
 	[Parameter]
 	public string Class { get; set; } = string.Empty;
+
+	/// <summary>
+	/// Gets or sets the tooltip legend.
+	/// </summary>
+	[Parameter]
+	public RenderFragment<TooltipPoint[]>? TooltipTemplate { get; set; }
 
 	public TooltipPoint[] Points { get; set; } = new TooltipPoint[0];
 
