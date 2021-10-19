@@ -44,7 +44,7 @@
 -->
 
 <div>
-	<DefaultTooltip @ref="tooltip" Class="@TooltipClass" />
+	<DefaultTooltip @ref="tooltip" Class="@TooltipClass" TooltipTemplate="@TooltipTemplate" />
 
 	<JsFlexibleContainer @ref="_jsFlexibleContainer" Class="lvc-chart-container">
 		<Content>
@@ -59,7 +59,7 @@
 				</MotionCanvas>
 			</div>
 			<div class="lvc-legend-container @LegendClass">
-				<DefaultLegend @ref="legend" />
+				<DefaultLegend @ref="legend" LegendTemplate="@LegendTemplate" />
 			</div>
 		</Content>
 	</JsFlexibleContainer>

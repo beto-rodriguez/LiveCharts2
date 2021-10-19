@@ -2,10 +2,35 @@
 @using LiveChartsCore.SkiaSharpView.Blazor
 @using ViewModelsSamples.General.TemplatedTooltips
 
-<h1>There are missing features in this sample...</h1>
+<CartesianChart Series="ViewModel.Series">
 
-<CartesianChart
-	Series="ViewModel.Series">
+	<!--
+		Use TooltipTemplate property to pass your own template.
+
+		GetSeriesMiniatureStyle():
+		returns a css style that sets the width and height css properties
+		based on the series properties.
+
+		GetSeriesAsMiniaturePaints():
+		returns the series as miniature shapes for the MotionCanvas class.
+	-->
+
+	<TooltipTemplate>
+		<h5>This is a custom tooltip</h5>
+
+		@foreach (var tooltipPoint in @context)
+		{
+			<div class="d-flex">
+				<div>
+					@tooltipPoint.Point.AsTooltipString
+				</div>
+				<div class="lvc-miniature" style="@LiveChartsBlazor.GetSeriesMiniatureStyle(tooltipPoint.Series)">
+					<MotionCanvas PaintTasks="@LiveChartsBlazor.GetSeriesAsMiniaturePaints(tooltipPoint.Series)" />
+				</div>
+			</div>
+		}
+	</TooltipTemplate>
+
 </CartesianChart>
 
 @code {

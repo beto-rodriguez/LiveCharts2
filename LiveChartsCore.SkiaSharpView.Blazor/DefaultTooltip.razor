@@ -39,8 +39,8 @@
 			@foreach (var tooltipPoint in Points)
 			{
 				<div class="lvc-tooltip-item">
-					<div class="lvc-miniature" style="@GetStyle(tooltipPoint.Series)">
-						<MotionCanvas PaintTasks="@GetPaintSchedules(tooltipPoint.Series)" />
+					<div class="lvc-miniature" style="@LiveChartsBlazor.GetSeriesMiniatureStyle(tooltipPoint.Series)">
+						<MotionCanvas PaintTasks="@LiveChartsBlazor.GetSeriesAsMiniaturePaints(tooltipPoint.Series)" />
 					</div>
 					<div>
 						@tooltipPoint.Point.AsTooltipString
@@ -58,7 +58,7 @@
 @code {
 	private DomJsInterop? _dom;
 	private ElementReference _wrapper;
-	private IBlazorChart _chart;
+	private IBlazorChart? _chart = null;
 
 	protected override void OnAfterRender(bool firstRender)
 	{
@@ -68,7 +68,7 @@
 	}
 
 	[Parameter]
-	public string Class { get; set; } = string.Empty;
+	public string Class { get; set; } = "closed";
 
 	/// <summary>
 	/// Gets or sets the tooltip legend.
@@ -123,22 +123,12 @@
 
 	void IChartTooltip<SkiaSharpDrawingContext>.Hide()
 	{
+		if (_chart is null) return;
+
 		// ToDo:
 		// the LiveCharts API should inject the chart to this method.
 
 		_chart.TooltipClass = "closed";
-	}
-
-	public List<PaintSchedule<SkiaSharpDrawingContext>> GetPaintSchedules(ISeries series)
-	{
-		var skSeries = (IChartSeries<SkiaSharpDrawingContext>)series;
-		return skSeries.CanvasSchedule.PaintSchedules;
-	}
-
-	public string GetStyle(ISeries series)
-	{
-		var skSeries = (IChartSeries<SkiaSharpDrawingContext>)series;
-		return $"width: {skSeries.CanvasSchedule.Width}px; height: {skSeries.CanvasSchedule.Height}px";
 	}
 
 	async void IDisposable.Dispose()

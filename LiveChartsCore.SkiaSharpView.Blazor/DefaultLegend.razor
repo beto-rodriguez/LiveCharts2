@@ -40,8 +40,8 @@
 			@foreach (var series in Series)
 			{
 				<div class="lvc-legend-item @OrientationClass">
-					<div class="lvc-miniature" style="@GetStyle(series)">
-						<MotionCanvas PaintTasks="@GetPaintSchedules(series)" />
+					<div class="lvc-miniature" style="@LiveChartsBlazor.GetSeriesMiniatureStyle(series)">
+						<MotionCanvas PaintTasks="@LiveChartsBlazor.GetSeriesAsMiniaturePaints(series)" />
 					</div>
 					<div>
 						@series.Name
@@ -124,31 +124,6 @@
 		        : "column";
 
 		await InvokeAsync(StateHasChanged);
-
-		//var avaloniaChart = (IAvaloniaChart)chart.View;
-
-		//CustomTemplate = avaloniaChart.LegendTemplate;
-		//FontFamily = avaloniaChart.LegendFontFamily;
-		//FontSize = avaloniaChart.LegendFontSize;
-		//FontWeight = avaloniaChart.LegendFontWeight;
-		//FontStyle = avaloniaChart.LegendFontStyle;
-		//TextBrush = avaloniaChart.LegendTextBrush;
-		//BackgroundBrush = avaloniaChart.LegendBackground;
-
-		//BuildContent();
-		//Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-	}
-
-	public List<PaintSchedule<SkiaSharpDrawingContext>> GetPaintSchedules(ISeries series)
-	{
-		var skSeries = (IChartSeries<SkiaSharpDrawingContext>)series;
-		return skSeries.CanvasSchedule.PaintSchedules;
-	}
-
-	public string GetStyle(ISeries series)
-	{
-		var skSeries = (IChartSeries<SkiaSharpDrawingContext>)series;
-		return $"width: {skSeries.CanvasSchedule.Width}px; height: {skSeries.CanvasSchedule.Height}px";
 	}
 
 	async void IDisposable.Dispose()

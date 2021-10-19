@@ -160,7 +160,7 @@
     transition: top ease-out 0.2s, left ease-out 0.2s, opacity ease-out 0.2s;
 }
 
-::deep .lvc-tooltip-wrapper.closed {
+::deep .lvc-tooltip-container.closed {
     opacity: 0;
 }
 

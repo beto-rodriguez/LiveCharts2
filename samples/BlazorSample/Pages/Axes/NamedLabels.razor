@@ -2,6 +2,21 @@
 @using LiveChartsCore.SkiaSharpView.Blazor
 @using ViewModelsSamples.Axes.NamedLabels
 
+<style>
+	/*
+		You can also use css to override the styles.
+	*/
+
+	.lvc-tooltip {
+		background-color: #480032 !important;
+	}
+
+	.lvc-tooltip-item {
+		font-family: SFMono-Regular,Menlo,Monaco,Consolas !important;
+		color: #F2F4C3 !important;
+	}
+</style>
+
 <CartesianChart
 	Series="ViewModel.Series"
 	XAxes="ViewModel.XAxes"

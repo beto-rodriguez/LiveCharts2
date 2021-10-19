@@ -2,10 +2,38 @@
 @using LiveChartsCore.SkiaSharpView.Blazor
 @using ViewModelsSamples.General.TemplatedLegends
 
-<h1>There are missing features in this sample...</h1>
-
 <CartesianChart
-	Series="ViewModel.Series">
+	Series="ViewModel.Series"
+	LegendPosition="LiveChartsCore.Measure.LegendPosition.Right">
+
+	<!--
+		Use LegendTemplate property to pass your own template.
+
+		GetSeriesMiniatureStyle():
+		returns a css style that sets the width and height css properties
+		based on the series properties.
+
+		GetSeriesAsMiniaturePaints():
+		returns the series as miniature shapes for the MotionCanvas class.
+	-->
+
+	<LegendTemplate>
+		<h5>This is a custom legend</h5>
+
+		@foreach (var series in @context)
+		{
+			<div class="d-flex">
+				<div>
+					@series.Name
+				</div>
+
+				<div class="lvc-miniature" style="@LiveChartsBlazor.GetSeriesMiniatureStyle(series)">
+					<MotionCanvas PaintTasks="@LiveChartsBlazor.GetSeriesAsMiniaturePaints(series)" />
+				</div>
+			</div>
+		}
+	</LegendTemplate>
+
 </CartesianChart>
 
 @code {
