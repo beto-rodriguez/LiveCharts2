@@ -29,6 +29,8 @@
 @using Microsoft.JSInterop
 @using SkiaSharp.Views.Blazor
 
+@implements IDisposable
+
 @*<SKGLView
 	@ref="_glCanvas"
 	OnPaintSurface="OnPaintGlSurface"
@@ -51,6 +53,7 @@
 @code {
 	private SKGLView? _glCanvas;
 	private SKCanvasView? _canvas;
+	private bool _disposing = false;
 	private bool _isDrawingLoopRunning = false;
 	private List<PaintSchedule<SkiaSharpDrawingContext>> _paintTasksSchedule = new();
 
@@ -136,7 +139,7 @@
 		_isDrawingLoopRunning = true;
 
 		var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
-		while (!CanvasCore.IsValid) // && !_disposing)
+		while (!CanvasCore.IsValid && !_disposing)
 		{
 			_glCanvas?.Invalidate();
 			_canvas?.Invalidate();
@@ -157,5 +160,10 @@
 		}
 
 		CanvasCore.SetPaintTasks(tasks);
+	}
+
+	void IDisposable.Dispose()
+	{
+		_disposing = true;
 	}
 }
