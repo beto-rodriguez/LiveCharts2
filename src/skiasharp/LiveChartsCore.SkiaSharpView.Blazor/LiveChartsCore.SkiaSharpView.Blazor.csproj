@@ -35,11 +35,11 @@
     <PackageReference Include="SkiaSharp.Views.Blazor" Version="2.88.0-preview.150" />
   </ItemGroup>
 
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
-
   <ItemGroup>
-    <ProjectReference Include="..\src\LiveChartsCore\LiveChartsCore.csproj" />
-    <ProjectReference Include="..\src\skiasharp\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
+    <ProjectReference Include="..\..\LiveChartsCore\LiveChartsCore.csproj" />
+    <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
   </ItemGroup>
+
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
 
 </Project>

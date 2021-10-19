@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\LiveChartsCore.SkiaSharpView.Blazor\LiveChartsCore.SkiaSharpView.Blazor.csproj" />
+    <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Blazor\LiveChartsCore.SkiaSharpView.Blazor.csproj" />
     <ProjectReference Include="..\ViewModelsSamples\ViewModelsSamples.csproj" />
   </ItemGroup>
 
