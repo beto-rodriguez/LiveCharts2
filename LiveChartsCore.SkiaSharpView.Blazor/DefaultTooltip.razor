@@ -32,9 +32,8 @@
 @implements IChartTooltip<SkiaSharpDrawingContext>
 @implements IDisposable
 
-<div @ref="_wrapper" class="lvc-tooltip-wrapper">
+<div @ref="_wrapper" class="lvc-tooltip-wrapper @Class">
 	<div class="lvc-tooltip">
-
 		@foreach(var tooltipPoint in Points)
 		{
 			<div class="lvc-tooltip-item">
@@ -47,6 +46,7 @@
 @code {
 	private DomJsInterop? _dom;
 	private ElementReference _wrapper;
+	private IBlazorChart _chart;
 
 	protected override void OnAfterRender(bool firstRender)
 	{
@@ -55,12 +55,19 @@
 		if (_dom is null) _dom = new DomJsInterop(JS);
 	}
 
+	[Parameter]
+	public string Class { get; set; } = string.Empty;
+
 	public TooltipPoint[] Points { get; set; } = new TooltipPoint[0];
 
 	async void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
 	{
 		if (_dom is null) return;
 
+		var blazorChart = (IBlazorChart)chart.View;
+		_chart = blazorChart;
+
+		_chart.TooltipClass = "";
 		Points = tooltipPoints.ToArray();
 
 		//TooltipBackground = avaloniaChart.TooltipBackground;
@@ -69,6 +76,7 @@
 		//TooltipFontStyle = avaloniaChart.TooltipFontStyle;
 		//TooltipFontWeight = avaloniaChart.TooltipFontWeight;
 		//TooltipTextBrush = avaloniaChart.TooltipTextBrush;
+
 
 		await InvokeAsync(StateHasChanged);
 		var clientRect = await _dom.GetBoundingClientRect(_wrapper);
@@ -82,8 +90,6 @@
 
 		if (location is null) throw new Exception("location not found");
 
-		var blazorChart = (IBlazorChart)chart.View;
-
 		double x = location.Value.X;
 		double y = location.Value.Y;
 		var s = chart.ControlSize;
@@ -94,12 +100,15 @@
 		if (location.Value.Y < 0) y = 0;
 		if (location.Value.Y + tooltipSize.Height > h) x = h - tooltipSize.Height;
 
-		await _dom.SetPosition(_wrapper, x, y, blazorChart.WrapperElementReference);
+		await _dom.SetPosition(_wrapper, x, y, blazorChart.CanvasContainerElement);
 	}
 
 	void IChartTooltip<SkiaSharpDrawingContext>.Hide()
 	{
-		
+		// ToDo:
+		// the LiveCharts API should inject the chart to this method.
+
+		_chart.TooltipClass = "closed";
 	}
 
 	async void IDisposable.Dispose()

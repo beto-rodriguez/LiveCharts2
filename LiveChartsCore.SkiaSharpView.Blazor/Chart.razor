@@ -22,38 +22,61 @@
 	SOFTWARE.
 *@
 
+@*Ideally this component should be abstract, is it posible in Blazor?*@
+
 @using LiveChartsCore.Drawing
 @using LiveChartsCore.Kernel
 @using LiveChartsCore.Kernel.Events
 @using LiveChartsCore.Kernel.Sketches
 @using LiveChartsCore.Measure
+@using LiveChartsCore.SkiaSharpView.Blazor.JsInterop.Models
 @using LiveChartsCore.SkiaSharpView.Drawing
+@using Microsoft.JSInterop
 
-@*Ideally this component should be abstract, is it posible in Blazor?*@
+@inject IJSRuntime JS
 @implements IChartView<SkiaSharpDrawingContext>
-@implements IBlazorChart;
+@implements IBlazorChart
+@implements IDisposable
 
-<div class="lvc-chart-container" @ref="_wrapper">
-	<DefaultTooltip @ref="tooltip" />
+<!--
+	the first wrapper <div/> is required so blazor is able to the isolate the css, do not remove!
+	blazor bug?
+-->
 
-	<MotionCanvas
-		@ref="motionCanvas"
-		OnPointerDownCallback="OnPointerDown"
-		OnPointerMoveCallback="OnPointerMove"
-		OnPointerUpCallback="OnPointerUp"
-		OnPointerLeaveCallback="OnPointerLeave"
-		OnWheelCallback="OnWheel">
-	</MotionCanvas>
+<div>
+	<DefaultTooltip @ref="tooltip" Class="@TooltipClass" />
+
+	<JsFlexibleContainer @ref="_jsFlexibleContainer" Class="lvc-chart-container">
+		<Content>
+			<div class="lvc-canvas-container @ContainerClass" @ref="_canvasContainer">
+				<MotionCanvas
+					@ref="motionCanvas"
+					OnPointerDownCallback="OnPointerDown"
+					OnPointerMoveCallback="OnPointerMove"
+					OnPointerUpCallback="OnPointerUp"
+					OnPointerLeaveCallback="OnPointerLeave"
+					OnWheelCallback="OnWheel">
+				</MotionCanvas>
+			</div>
+			<div class="lvc-legend-container @LegendClass">
+				<DefaultLegend @ref="legend" />
+			</div>
+		</Content>
+	</JsFlexibleContainer>
 </div>
 
-
 @code {
+	private DomJsInterop? _dom;
+	private JsFlexibleContainer _jsFlexibleContainer = null!;
+	private ElementReference _canvasContainer;
+	private IChartLegend<SkiaSharpDrawingContext> legend = null!;
+	private IChartTooltip<SkiaSharpDrawingContext> tooltip = null!;
+
 	protected Chart<SkiaSharpDrawingContext>? core;
 	protected MotionCanvas? motionCanvas;
 
-	private ElementReference _wrapper;
-	private IChartLegend<SkiaSharpDrawingContext>? legend = null;
-	private IChartTooltip<SkiaSharpDrawingContext>? tooltip = null!;
+	private double _canvasWidth;
+	private double _canvasHeight;
 
 	private LegendPosition _legendPosition = LiveCharts.CurrentSettings.DefaultLegendPosition;
 	private LegendOrientation _legendOrientation = LiveCharts.CurrentSettings.DefaultLegendOrientation;
@@ -79,11 +102,10 @@
 		initializer.ApplyStyleToChart(this);
 	}
 
-	protected override void OnAfterRender(bool firstRender)
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		base.OnAfterRender(firstRender);
-
 		if (!firstRender) return;
+
 		InitializeCore();
 		if (core is null || motionCanvas is null) throw new Exception("Core or MotionCanvas not found!");
 
@@ -91,8 +113,13 @@
 		core.UpdateStarted += OnCoreUpdateStarted;
 		core.UpdateFinished += OnCoreUpdateFinished;
 
+		if (_dom is null) _dom = new DomJsInterop(JS);
+		var canvasBounds = await _dom.GetBoundingClientRect(_canvasContainer);
+		_canvasWidth = canvasBounds.Width;
+		_canvasHeight = canvasBounds.Height;
+
 		core?.Load();
-		motionCanvas.Resized += OnResized;
+		_jsFlexibleContainer.Resized += OnResized;
 	}
 
 	#region events
@@ -110,7 +137,13 @@
 
 	#region properties
 
-	ElementReference IBlazorChart.WrapperElementReference => _wrapper;
+	public ElementReference CanvasContainerElement => _canvasContainer;
+
+	public string ContainerClass { get; set; } = string.Empty;
+
+	public string LegendClass { get; set; } = string.Empty;
+
+	public string TooltipClass { get; set; } = "closed";
 
 	/// <inheritdoc cref="IChartView.DesignerMode" />
 	bool IChartView.DesignerMode => false;
@@ -126,7 +159,7 @@
 
 	LvcSize IChartView.ControlSize => motionCanvas is null
 		? new LvcSize()
-		: new LvcSize() { Width = (float)motionCanvas.Width, Height = (float)motionCanvas.Height };
+		: new LvcSize { Width = (float)_canvasWidth, Height = (float)_canvasHeight };
 
 	/// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
 	public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => motionCanvas?.CanvasCore ?? throw new Exception("canvas not found!");
@@ -332,10 +365,22 @@
 	{
 		HideTooltip();
 		core?.InvokePointerLeft();
-    }
+	}
 
-	private void OnResized(MotionCanvas motionCanvas)
+	private async void OnResized(JsFlexibleContainer container)
 	{
+		if (_dom is null) return;
+
+		var canvasBounds = await _dom.GetBoundingClientRect(_canvasContainer);
+		_canvasWidth = canvasBounds.Width;
+		_canvasHeight = canvasBounds.Height;
+
 		core?.Update();
+	}
+
+	async void IDisposable.Dispose()
+	{
+		if (_dom is null) return;
+		await ((IAsyncDisposable)_dom).DisposeAsync();
 	}
 }

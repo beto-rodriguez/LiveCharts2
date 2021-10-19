@@ -62,9 +62,3 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
-
-.lvc-motion-canvas,
-.lvc-motion-canvas canvas {
-    width: 100%;
-    height: 100%;
-}

@@ -29,60 +29,34 @@
 @using Microsoft.JSInterop
 @using SkiaSharp.Views.Blazor
 
-@inject IJSRuntime JS
-@implements IDisposable
+@*<SKGLView
+	@ref="_glCanvas"
+	OnPaintSurface="OnPaintGlSurface"
+	IgnorePixelScaling="true"
+	@onpointerdown="OnPointerDown"
+	@onpointermove="OnPointerMove"
+	@onpointerup="OnPointerUp"
+	@onpointerleave="OnPointerLeave"
+	@onmousewheel="OnWheel"/>*@
 
-<div @ref="_wrapper" class="lvc-motion-canvas">
-	@*<SKGLView
-		@ref="_glCanvas"
-		OnPaintSurface="OnPaintGlSurface"
-		IgnorePixelScaling="true"
-		@onpointerdown="OnPointerDown"
-		@onpointermove="OnPointerMove"
-		@onpointerup="OnPointerUp"
-		@onpointerleave="OnPointerLeave"
-		@onmousewheel="OnWheel"/>*@
-
-	<SKCanvasView
-		@ref="_canvas"
-		OnPaintSurface="OnPaintSurface"
-		@onpointerdown="OnPointerDown"
-		@onpointermove="OnPointerMove"
-		@onpointerup="OnPointerUp"
-		@onpointerleave="OnPointerLeave"
-		@onmousewheel="OnWheel"/>
-</div>
+<SKCanvasView
+	@ref="_canvas"
+	OnPaintSurface="OnPaintSurface"
+	@onpointerdown="OnPointerDown"
+	@onpointermove="OnPointerMove"
+	@onpointerup="OnPointerUp"
+	@onpointerleave="OnPointerLeave"
+	@onmousewheel="OnWheel" />
 
 @code {
-	private DomJsInterop? _dom;
-	private ElementReference _wrapper;
-	private bool _disposing = false;
-	private string _id = Guid.NewGuid().ToString();
-
 	private SKGLView? _glCanvas;
 	private SKCanvasView? _canvas;
 	private bool _isDrawingLoopRunning = false;
 	private List<PaintSchedule<SkiaSharpDrawingContext>> _paintTasksSchedule = new();
 
-	public double Width { get; set; }
-	public double Height { get; set; }
-	public event Action<MotionCanvas>? Resized;
-
 	protected override void OnInitialized()
 	{
 		CanvasCore.Invalidated += CanvasCore_Invalidated;
-	}
-
-	protected override async Task OnAfterRenderAsync(bool firstRender)
-	{
-		if (_dom is null) _dom = new DomJsInterop(JS);
-
-		var wrapperBounds = await _dom.GetBoundingClientRect(_wrapper);
-
-		Width = wrapperBounds.Width;
-		Height = wrapperBounds.Height;
-
-		await _dom.OnResize(_wrapper, _id, OnWrapperResized);
 	}
 
 	public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
@@ -141,14 +115,6 @@
 		OnPointerLeaveCallback.InvokeAsync(e);
 	}
 
-	private void OnWrapperResized(DOMRect newSize)
-	{
-		Width = newSize.Width;
-		Height = newSize.Height;
-
-		Resized?.Invoke(this);
-	}
-
 	private void OnPaintGlSurface(SKPaintGLSurfaceEventArgs e)
 	{
 		CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
@@ -170,7 +136,7 @@
 		_isDrawingLoopRunning = true;
 
 		var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
-		while (!CanvasCore.IsValid && !_disposing)
+		while (!CanvasCore.IsValid) // && !_disposing)
 		{
 			_glCanvas?.Invalidate();
 			_canvas?.Invalidate();
@@ -191,13 +157,5 @@
 		}
 
 		CanvasCore.SetPaintTasks(tasks);
-	}
-
-	async void IDisposable.Dispose()
-	{
-		if (_dom is null) return;
-		_dom.RemoveOnResizeListener(_id);
-		_disposing = true;
-		await ((IAsyncDisposable)_dom).DisposeAsync();
 	}
 }

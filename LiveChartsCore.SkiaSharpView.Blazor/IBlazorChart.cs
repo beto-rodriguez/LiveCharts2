@@ -26,6 +26,12 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
 {
     public interface IBlazorChart
     {
-        public ElementReference WrapperElementReference { get; }
+        ElementReference CanvasContainerElement { get; }
+
+        string ContainerClass { get; set; }
+
+        string LegendClass { get; set; }
+
+        string TooltipClass { get; set; }
     }
 }
