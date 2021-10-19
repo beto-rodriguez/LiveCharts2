@@ -490,6 +490,7 @@ namespace LiveChartsCore
                          if (!points.Any())
                          {
                              ClearTooltipData();
+                             Tooltip.Hide();
                              return;
                          }
 
