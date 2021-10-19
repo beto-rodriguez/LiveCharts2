@@ -214,6 +214,6 @@
 /* Toooltips command Legends (Shared) */
 
 ::deep .lvc-miniature {
-    padding-right: 8px;
-    padding-left: 8px;
+    margin-right: 4px;
+    margin-left: 4px;
 }
