@@ -35,11 +35,15 @@
 
 <div @ref="_wrapper">
 	<div class="lvc-legend">
-
 		@foreach(var series in Series)
 		{
-			<div class="lvc-legend-item">
-				@series.Name
+			<div class="lvc-legend-item @OrientationClass">
+				<div class="lvc-miniature" style="@GetStyle(series)">
+					<MotionCanvas PaintTasks="@GetPaintSchedules(series)"/>
+				</div>
+				<div>
+					@series.Name
+				</div>
 			</div>
 		}
 	</div>
@@ -57,6 +61,8 @@
 	}
 
 	public ISeries[] Series { get; set; } = new ISeries[0];
+
+	public string OrientationClass { get; set; } = string.Empty;
 
 	async void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
 	{
@@ -78,30 +84,33 @@
 			case LegendPosition.Top:
 				blazorChart.LegendClass = "start";
 				blazorChart.ContainerClass = "column";
+				if (legendOrientation == LegendOrientation.Auto) OrientationClass = "";
 				break;
 		    case LegendPosition.Left:
 		        blazorChart.LegendClass = "start";
 				blazorChart.ContainerClass = "";
+				if (legendOrientation == LegendOrientation.Auto) OrientationClass = "column";
 		        break;
 		    case LegendPosition.Right:
 		        blazorChart.LegendClass = "";
 				blazorChart.ContainerClass = "";
+				if (legendOrientation == LegendOrientation.Auto) OrientationClass = "column";
 		        break;
 		    case LegendPosition.Bottom:
 		        blazorChart.LegendClass = "";
 				blazorChart.ContainerClass = "column";
+				if (legendOrientation == LegendOrientation.Auto) OrientationClass = "";
 		        break;
 		    default:
 		        break;
 		}
 
-		// ...??
-		await InvokeAsync(StateHasChanged);
+		if (legendOrientation != LegendOrientation.Auto)
+		    OrientationClass = legendOrientation == LegendOrientation.Horizontal
+		        ? ""
+		        : "column";
 
-		//if (legendOrientation != LegendOrientation.Auto)
-		//    Orientation = legendOrientation == LegendOrientation.Horizontal
-		//        ? Orientation.Horizontal
-		//        : Orientation.Vertical;
+		await InvokeAsync(StateHasChanged);
 
 		//var avaloniaChart = (IAvaloniaChart)chart.View;
 
@@ -115,6 +124,18 @@
 
 		//BuildContent();
 		//Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+	}
+
+	public List<PaintSchedule<SkiaSharpDrawingContext>> GetPaintSchedules(ISeries series)
+	{
+		var skSeries = (IChartSeries<SkiaSharpDrawingContext>)series;
+		return skSeries.CanvasSchedule.PaintSchedules;
+	}
+
+	public string GetStyle(ISeries series)
+	{
+		var skSeries = (IChartSeries<SkiaSharpDrawingContext>)series;
+		return $"width: {skSeries.CanvasSchedule.Width}px; height: {skSeries.CanvasSchedule.Height}px";
 	}
 
 	async void IDisposable.Dispose()

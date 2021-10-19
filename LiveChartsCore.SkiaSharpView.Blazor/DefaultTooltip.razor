@@ -32,12 +32,17 @@
 @implements IChartTooltip<SkiaSharpDrawingContext>
 @implements IDisposable
 
-<div @ref="_wrapper" class="lvc-tooltip-wrapper @Class">
+<div @ref="_wrapper" class="lvc-tooltip-container @Class">
 	<div class="lvc-tooltip">
 		@foreach(var tooltipPoint in Points)
 		{
 			<div class="lvc-tooltip-item">
-				@tooltipPoint.Point.AsTooltipString
+				<div class="lvc-miniature" style="@GetStyle(tooltipPoint.Series)">
+					<MotionCanvas PaintTasks="@GetPaintSchedules(tooltipPoint.Series)"/>
+				</div>
+				<div>
+					@tooltipPoint.Point.AsTooltipString
+				</div>
 			</div>
 		}
 	</div>
@@ -109,6 +114,18 @@
 		// the LiveCharts API should inject the chart to this method.
 
 		_chart.TooltipClass = "closed";
+	}
+
+	public List<PaintSchedule<SkiaSharpDrawingContext>> GetPaintSchedules(ISeries series)
+	{
+		var skSeries = (IChartSeries<SkiaSharpDrawingContext>)series;
+		return skSeries.CanvasSchedule.PaintSchedules;
+	}
+
+	public string GetStyle(ISeries series)
+	{
+		var skSeries = (IChartSeries<SkiaSharpDrawingContext>)series;
+		return $"width: {skSeries.CanvasSchedule.Width}px; height: {skSeries.CanvasSchedule.Height}px";
 	}
 
 	async void IDisposable.Dispose()

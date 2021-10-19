@@ -56,6 +56,8 @@
     align-self: auto;
 }
 
+/* Legends */
+
 ::deep .lvc-legend-container {
     -webkit-order: 0;
     -ms-flex-order: 0;
@@ -84,7 +86,68 @@
         display: none !important;
     }
 
-::deep .lvc-tooltip-wrapper {
+    ::deep .lvc-legend-container canvas {
+        width: 100%;
+        height: 100%;
+    }
+
+::deep .lvc-legend-item {
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -webkit-align-content: stretch;
+    -ms-flex-line-pack: stretch;
+    align-content: stretch;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+    ::deep .lvc-legend-item.column {
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        -webkit-flex-wrap: nowrap;
+        -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+        -webkit-justify-content: flex-start;
+        -ms-flex-pack: start;
+        justify-content: flex-start;
+        -webkit-align-content: stretch;
+        -ms-flex-line-pack: stretch;
+        align-content: stretch;
+        -webkit-align-items: center;
+        -ms-flex-align: center;
+        align-items: center;
+    }
+
+    ::deep .lvc-legend-item div {
+        -webkit-order: 0;
+        -ms-flex-order: 0;
+        order: 0;
+        -webkit-flex: 0 1 auto;
+        -ms-flex: 0 1 auto;
+        flex: 0 1 auto;
+        -webkit-align-self: auto;
+        -ms-flex-item-align: auto;
+        align-self: auto;
+    }
+
+/* Tooltips */
+
+::deep .lvc-tooltip-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -97,9 +160,9 @@
     transition: top ease-out 0.2s, left ease-out 0.2s, opacity ease-out 0.2s;
 }
 
-    ::deep .lvc-tooltip-wrapper.closed {
-        opacity: 0;
-    }
+::deep .lvc-tooltip-wrapper.closed {
+    opacity: 0;
+}
 
 ::deep .lvc-tooltip {
     background-color: white;
@@ -108,4 +171,49 @@
     -moz-box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     -webkit-box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+::deep .lvc-tooltip-container canvas {
+    width: 100%;
+    height: 100%;
+}
+
+::deep .lvc-tooltip-item {
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -webkit-align-content: stretch;
+    -ms-flex-line-pack: stretch;
+    align-content: stretch;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+    ::deep .lvc-tooltip-item div {
+        -webkit-order: 0;
+        -ms-flex-order: 0;
+        order: 0;
+        -webkit-flex: 0 1 auto;
+        -ms-flex: 0 1 auto;
+        flex: 0 1 auto;
+        -webkit-align-self: auto;
+        -ms-flex-item-align: auto;
+        align-self: auto;
+    }
+
+/* Toooltips command Legends (Shared) */
+
+::deep .lvc-miniature {
+    padding-right: 8px;
+    padding-left: 8px;
 }
