@@ -29,4 +29,5 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.UWP")]
 [assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.WPF")]
 [assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.XamarinForms")]
+[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Blazor")]
 [assembly: InternalsVisibleTo("LiveChartsBackersPackage")]

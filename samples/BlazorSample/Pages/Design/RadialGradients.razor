@@ -1,0 +1,11 @@
+﻿@page "/Design/RadialGradients"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Design.RadialGradients
+
+<PieChart
+	Series="ViewModel.Series">
+</PieChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}

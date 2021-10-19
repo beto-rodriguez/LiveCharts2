@@ -1,0 +1,12 @@
+﻿@page "/StepLines/Area"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.StepLines.Area
+
+<CartesianChart
+	Series="ViewModel.Series"
+	DrawMarginFrame="ViewModel.DrawMarginFrame">
+</CartesianChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}

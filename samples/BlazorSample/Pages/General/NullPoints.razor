@@ -1,0 +1,11 @@
+﻿@page "/General/NullPoints"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.General.NullPoints
+
+<CartesianChart
+	Series="ViewModel.Series">
+</CartesianChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}

@@ -1,0 +1,12 @@
+﻿@page "/General/MultiThreading"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.General.MultiThreading
+
+<CartesianChart
+	Series="ViewModel.Series"
+	SyncContext="ViewModel.Sync">
+</CartesianChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}

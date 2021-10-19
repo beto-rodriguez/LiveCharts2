@@ -1,0 +1,27 @@
+﻿@page "/Bars/Race"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Bars.Race
+
+<CartesianChart
+	Series="ViewModel.Series">
+</CartesianChart>
+
+@code {
+	protected override void OnAfterRender(bool firstRender)
+	{
+		base.OnAfterRender(firstRender);
+
+		Update();
+	}
+
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+
+	public async void Update()
+	{
+		while (true)
+		{
+			ViewModel.RandomIncrement();
+			await Task.Delay(1500);
+		}
+	}
+}

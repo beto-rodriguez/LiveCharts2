@@ -1,0 +1,18 @@
+﻿@page "/Axes/ColorsAndPosition"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Axes.ColorsAndPosition
+
+<div>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.SetNewColor">Set new color</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.TogglePosition">Toggle position</button>
+</div>
+
+<CartesianChart
+	Series="ViewModel.Series"
+	XAxes="ViewModel.XAxes"
+	YAxes="ViewModel.YAxes">
+</CartesianChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}

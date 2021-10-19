@@ -105,9 +105,6 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 throw new Exception("Default colors are not valid");
             initializer.ApplyStyleToChart(this);
 
-            var c = Controls[0].Controls[0];
-            c.MouseMove += OnMouseMove;
-
             InitializeCore();
 
             if (core is null) throw new Exception("Core not found!");
@@ -115,9 +112,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             core.UpdateStarted += OnCoreUpdateStarted;
             core.UpdateFinished += OnCoreUpdateFinished;
 
+            var c = Controls[0].Controls[0];
+            c.MouseMove += OnMouseMove;
             c.MouseLeave += Chart_MouseLeave;
 
-            var s = PointStates;
             Load += Chart_Load;
         }
 
@@ -376,12 +374,22 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             Measuring?.Invoke(this);
         }
 
-        private void OnMouseMove(object? sender, MouseEventArgs e)
+        /// <summary>
+        /// Called when the mouse goes down.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected virtual void OnMouseMove(object? sender, MouseEventArgs e)
         {
             core?.InvokePointerMove(new LvcPoint(e.Location.X, e.Location.Y));
         }
 
-        private void Chart_MouseLeave(object? sender, EventArgs e)
+        /// <summary>
+        /// Called when the mouse leaves the control.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected virtual void Chart_MouseLeave(object? sender, EventArgs e)
         {
             HideTooltip();
             core?.InvokePointerLeft();

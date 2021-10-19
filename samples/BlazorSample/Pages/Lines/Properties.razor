@@ -1,0 +1,24 @@
+﻿@page "/Lines/Properties"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Lines.Properties
+
+<div>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.ChangeValuesInstance">Values</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.ChangeSeriesInstance">Series</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.NewFill">Fill</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.NewStroke">Stroke</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.NewGeometryFill">Geometry fill</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.NewGeometryStroke">Geometry stroke</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.IncreaseLineSmoothness">+ smooth</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.DecreaseLineSmoothness">- smooth</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.IncreaseGeometrySize">+ geo size</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.DecreaseGeometrySize">- geo size</button>
+</div>
+
+<CartesianChart
+	Series="ViewModel.Series">
+</CartesianChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}

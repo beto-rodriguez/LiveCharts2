@@ -1,0 +1,11 @@
+﻿@page "/StackedBars/Groups"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.StackedBars.Groups
+
+<CartesianChart
+	Series="ViewModel.Series">
+</CartesianChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}

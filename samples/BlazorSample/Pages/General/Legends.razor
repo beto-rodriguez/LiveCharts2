@@ -1,0 +1,12 @@
+﻿@page "/General/Legends"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.General.Legends
+
+<CartesianChart
+	Series="ViewModel.Series"
+	LegendPosition="LiveChartsCore.Measure.LegendPosition.Right">
+</CartesianChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}

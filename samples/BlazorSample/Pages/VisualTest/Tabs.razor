@@ -1,0 +1,36 @@
+﻿@page "/VisualTest/Tabs"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.VisualTest.ReattachVisual
+
+<button type="button" class="btn btn-primary" @onclick="Toggle">Toggle</button>
+
+@if (IsVisible)
+{
+	<h1>Tab 1?</h1>
+	<div style="max-width: 400px">
+		<CartesianChart
+			Series="ViewModel.Series">
+		</CartesianChart>
+	</div>
+}
+else
+{
+	<h1>Tab 2?</h1>
+	<div style="max-width: 400px">
+		<PieChart
+			Series="ViewModel.PieSeries">
+		</PieChart>
+	</div>
+}
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+
+	public bool IsVisible{ get; set; }
+
+	public void Toggle()
+	{
+		IsVisible = !IsVisible;
+	}
+
+}

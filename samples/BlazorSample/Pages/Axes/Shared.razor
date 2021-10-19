@@ -1,0 +1,23 @@
+﻿@page "/Axes/Shared"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Axes.Shared
+
+<div style="max-width: 400px">
+	<CartesianChart
+		Series="ViewModel.SeriesCollection1"
+		XAxes="ViewModel.SharedXAxis"
+		ZoomMode="LiveChartsCore.Measure.ZoomAndPanMode.X">
+	</CartesianChart>
+</div>
+
+<div style="max-width: 400px">
+	<LiveChartsCore.SkiaSharpView.Blazor.CartesianChart
+		Series="ViewModel.SeriesCollection2"
+		XAxes="ViewModel.SharedXAxis"
+		ZoomMode="LiveChartsCore.Measure.ZoomAndPanMode.X">
+	</LiveChartsCore.SkiaSharpView.Blazor.CartesianChart>
+</div>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}

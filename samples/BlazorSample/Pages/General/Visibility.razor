@@ -1,0 +1,17 @@
+﻿@page "/General/Visibility"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.General.Visibility
+
+<div>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.ToogleSeries0">Toggle first</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.ToogleSeries1">Toggle second</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.ToogleSeries2">Toggle third</button>
+</div>
+
+<CartesianChart
+	Series="ViewModel.Series">
+</CartesianChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}

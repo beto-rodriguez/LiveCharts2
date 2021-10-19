@@ -1,0 +1,11 @@
+﻿@page "/StepLines/Custom"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.StepLines.Custom
+
+<CartesianChart
+	Series="ViewModel.Series">
+</CartesianChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}

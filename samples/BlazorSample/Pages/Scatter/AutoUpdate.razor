@@ -1,0 +1,34 @@
+﻿@page "/Scatter/AutoUpdate"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Scatter.AutoUpdate
+
+<div>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.AddRandomItem">Add item</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.RemoveFirstItem">Remove item</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.ReplaceRandomItem">Replace item</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.AddSeries">Add Series</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.RemoveLastSeries">Remove Series</button>
+	<button type="button" class="btn btn-primary" @onclick="ToggleConstantChanges">Constant changes</button>
+</div>
+
+<CartesianChart
+	Series="ViewModel.Series">
+</CartesianChart>
+
+@code {
+	private bool? _isStreaming = false;
+
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+
+	public async void ToggleConstantChanges()
+	{
+		_isStreaming = _isStreaming is null ? true : !_isStreaming;
+
+		while (_isStreaming.Value)
+		{
+			ViewModel.RemoveFirstItem();
+			ViewModel.AddRandomItem();
+			await Task.Delay(100);
+		}
+	}
+}

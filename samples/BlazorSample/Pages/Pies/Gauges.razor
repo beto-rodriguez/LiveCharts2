@@ -1,0 +1,118 @@
+﻿@page "/Pies/Gauges"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Pies.Gauges
+
+<style>
+	.sample-wrap {
+		display: inline-block;
+		max-width: 400px
+	}
+</style>
+
+<div class="sample-wrap">
+	<PieChart Series="ViewModel.Series1"
+			  Total="ViewModel.GaugeTotal1">
+	</PieChart>
+</div>
+
+<div class="sample-wrap">
+	<PieChart Series="ViewModel.Series2"
+			  InitialRotation="ViewModel.InitialRotation2"
+			  Total="ViewModel.GaugeTotal2">
+	</PieChart>
+</div>
+
+<div class="sample-wrap">
+	<PieChart Series="ViewModel.Series3"
+			  InitialRotation="ViewModel.InitialRotation3"
+			  Total="ViewModel.GaugeTotal3">
+	</PieChart>
+</div>
+
+<div class="sample-wrap">
+	<PieChart Series="ViewModel.Series4"
+			  InitialRotation="ViewModel.InitialRotation4"
+			  Total="ViewModel.GaugeTotal4">
+	</PieChart>
+</div>
+
+<div class="sample-wrap">
+	<PieChart Series="ViewModel.Series5"
+			  InitialRotation="ViewModel.InitialRotation5"
+			  Total="ViewModel.GaugeTotal5">
+	</PieChart>
+</div>
+
+<div class="sample-wrap">
+	<PieChart Series="ViewModel.Series6"
+			  InitialRotation="ViewModel.InitialRotation6"
+			  Total="ViewModel.GaugeTotal6">
+	</PieChart>
+</div>
+
+<div class="sample-wrap">
+	<PieChart Series="ViewModel.Series7"
+			  InitialRotation="ViewModel.InitialRotation7"
+			  Total="ViewModel.GaugeTotal7">
+	</PieChart>
+</div>
+
+<div class="sample-wrap">
+	<PieChart Series="ViewModel.Series8"
+			  InitialRotation="ViewModel.InitialRotation8"
+			  MaxAngle="ViewModel.MaxAngle8"
+			  Total="ViewModel.GaugeTotal8">
+	</PieChart>
+</div>
+
+<div class="sample-wrap">
+	<PieChart Series="ViewModel.Series9"
+			  InitialRotation="ViewModel.InitialRotation9"
+			  MaxAngle="ViewModel.MaxAngle9"
+			  Total="ViewModel.GaugeTotal9">
+	</PieChart>
+</div>
+
+<div class="sample-wrap">
+	<PieChart Series="ViewModel.Series10"
+			  InitialRotation="ViewModel.InitialRotation10"
+			  MaxAngle="ViewModel.MaxAngle10"
+			  Total="ViewModel.GaugeTotal10">
+	</PieChart>
+</div>
+
+<div class="sample-wrap">
+	<PieChart Series="ViewModel.Series11"
+			  InitialRotation="ViewModel.InitialRotation11"
+			  MaxAngle="ViewModel.MaxAngle11"
+			  Total="ViewModel.GaugeTotal11">
+	</PieChart>
+</div>
+
+<div class="sample-wrap">
+	<PieChart Series="ViewModel.Series12"
+			  InitialRotation="ViewModel.InitialRotation12"
+			  MaxAngle="ViewModel.MaxAngle12"
+			  Total="ViewModel.GaugeTotal12">
+	</PieChart>
+</div>
+
+<div class="sample-wrap">
+	<PieChart Series="ViewModel.Series13"
+			  InitialRotation="ViewModel.InitialRotation13"
+			  MaxAngle="ViewModel.MaxAngle13"
+			  Total="ViewModel.GaugeTotal13">
+	</PieChart>
+</div>
+
+<div class="sample-wrap">
+	<PieChart Series="ViewModel.Series14"
+			  InitialRotation="ViewModel.InitialRotation14"
+			  MaxAngle="ViewModel.MaxAngle14"
+			  Total="ViewModel.GaugeTotal14">
+	</PieChart>
+</div>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}

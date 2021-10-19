@@ -1,0 +1,18 @@
+﻿@page "/Axes/LabelsRotation"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Axes.LabelsRotation
+
+<div>
+	<button type="button" class="btn btn-primary" @onclick="() => ViewModel.SliderValue += 10">Rotate +</button>
+	<button type="button" class="btn btn-primary" @onclick="() => ViewModel.SliderValue -= 10">Rotate -</button>
+</div>
+
+<CartesianChart
+	Series="ViewModel.Series"
+	XAxes="ViewModel.XAxes"
+	YAxes="ViewModel.YAxes">
+</CartesianChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}

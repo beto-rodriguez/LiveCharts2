@@ -1,0 +1,119 @@
+﻿@page "/General/ChartToImage"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using LiveChartsCore.SkiaSharpView.SKCharts
+@using ViewModelsSamples.General.ChartToImage
+
+<h1>There are missing features in this sample...</h1>
+
+<div style="max-height: 400px">
+	<CartesianChart
+		@ref="_cartesianChart"
+		Series="ViewModel.CatesianSeries">
+	</CartesianChart>
+</div>
+
+<div style="max-height: 400px">
+	<PieChart
+		@ref="_pieChart"
+		Series="ViewModel.PieSeries">
+	</PieChart>
+</div>
+
+<div style="max-height: 400px">
+	<GeoMap
+		@ref="_mapChart"
+		Shapes="ViewModel.MapShapes">
+	</GeoMap>
+</div>
+
+@code {
+	private CartesianChart _cartesianChart = null!;
+	private PieChart _pieChart = null!;
+	private GeoMap _mapChart = null!;
+
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+
+	protected override void OnAfterRender(bool firstRender)
+	{
+		base.OnAfterRender(firstRender);
+
+		// ToDo: download the images.
+		// we can not (I hope) write to the disk in Wasm.
+		// we need to use js interop to download the image from the browser.
+
+		// CARTESIAN CHART
+
+		// you can create an image of a chart from memory using the
+		// SKCartesianChart, SKPieChart or SKGeoMap classes.
+
+		// in the case of this sample
+		// the image was generated at the root folder ( samples/AvaloniaSample/bin/Debug/{targetFramework}/ )
+
+		var cartesianChart = new SKCartesianChart
+		{
+			Width = 900,
+			Height = 600,
+			Series = ViewModel.CatesianSeries
+		};
+
+		// notice classes that implement ISkiaSharpChart (SKCartesianChart, SKPieChart and SKGeoMap classes)
+		// do not require a UI you can use this objects installing only the
+		// LiveChartsCore.SkiaSharpView package.
+
+		// you can save the image to png (by default), or use the second argument to specify another format.
+		cartesianChart.SaveImage("CartesianImageFromMemory.png"); // <- path where the image will be generated
+
+		// alternatively you can get the image and do different operations:
+		using var image = cartesianChart.GetImage();
+		using var data = image.Encode();
+		var base64 = Convert.ToBase64String(data.AsSpan());
+
+		// or you could also use a chart in the user interface to create an image
+		CreateImageFromCartesianControl();
+
+
+		// PIE CHART
+		new SKPieChart
+		{
+			Width = 900,
+			Height = 600,
+			Series = ViewModel.PieSeries
+		}.SaveImage("PieImageFromMemory.png");
+
+		// or create it from a control in the UI
+		CreateImageFromPieControl();
+
+
+		// GEO MAP CHART
+		new SKGeoMap
+		{
+			Width = 900,
+			Height = 600,
+			Shapes = ViewModel.MapShapes
+		}.SaveImage("MapImageFromMemory.png");
+
+		// or create it from a control in the UI
+		CreateImageFromGeoControl();
+	}
+
+	private void CreateImageFromCartesianControl()
+	{
+		var chartControl = _cartesianChart; 
+		var skChart = new SKCartesianChart(chartControl) { Width = 900, Height = 600, };
+		skChart.SaveImage("CartesianImageFromControl.png");
+	}
+
+	private void CreateImageFromPieControl()
+	{
+		var chartControl = _pieChart;
+		var skChart = new SKPieChart(chartControl) { Width = 900, Height = 600, };
+		skChart.SaveImage("PieImageFromControl.png");
+	}
+
+	private void CreateImageFromGeoControl()
+	{
+		var chartControl =  _mapChart;
+		var skChart = new SKGeoMap(chartControl) { Width = 900, Height = 600, };
+		skChart.SaveImage("MapImageFromControl.png");
+	}
+}

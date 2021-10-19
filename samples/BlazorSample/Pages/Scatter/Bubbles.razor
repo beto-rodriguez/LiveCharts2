@@ -1,0 +1,11 @@
+﻿@page "/Scatter/Bubbles"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Scatter.Bubbles
+
+<CartesianChart
+	Series="ViewModel.Series">
+</CartesianChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}

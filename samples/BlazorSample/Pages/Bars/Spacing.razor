@@ -1,0 +1,11 @@
+﻿@page "/Bars/Spacing"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Bars.Spacing
+
+<CartesianChart
+	Series="ViewModel.Series">
+</CartesianChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+}
