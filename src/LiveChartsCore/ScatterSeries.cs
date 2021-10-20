@@ -171,7 +171,7 @@ namespace LiveChartsCore
                 sizedGeometry.Height = gs;
                 sizedGeometry.RemoveOnCompleted = false;
 
-                point.Context.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs, y - hgs, gs + 2 * sw, gs + 2 * sw);
+                point.Context.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs - sw, y - hgs - sw, gs + 2 * sw, gs + 2 * sw);
 
                 _ = toDeletePoints.Remove(point);
 

@@ -365,7 +365,7 @@ namespace LiveChartsCore
                     var hags = gs < 8 ? 8 : gs;
 
                     data.TargetPoint.Context.HoverArea = new RectangleHoverArea()
-                        .SetDimensions(x - hgs, y - hgs + 2 * sw, hags, hags + 2 * sw);
+                        .SetDimensions(x - hgs - sw, y - hgs - sw, gs + 2 * sw, gs + 2 * sw);
 
                     _ = toDeletePoints.Remove(data.TargetPoint);
 
