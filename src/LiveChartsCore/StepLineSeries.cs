@@ -155,6 +155,9 @@ namespace LiveChartsCore
                 _fillPathHelperDictionary[chart.Canvas.Sync] = fillPathHelperContainer;
             }
 
+            foreach (var item in strokePathHelperContainer) item.Path.ClearCommands();
+            foreach (var item in fillPathHelperContainer) item.Path.ClearCommands();
+
             foreach (var segment in segments)
             {
                 var wasFillInitialized = false;
