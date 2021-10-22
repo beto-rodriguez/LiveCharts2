@@ -18,7 +18,7 @@ LiveChartsCore.SkiaSharpView.WPF<br/>
 LiveChartsCore.SkiaSharpView.WinForms<br/>
 LiveChartsCore.SkiaSharpView.Avalonia<br/>
 LiveChartsCore.SkiaSharpView.XamarinForms<br/>
-LiveChartsCore.SkiaSharpView.UWP (see [#145](https://github.com/beto-rodriguez/LiveCharts2/issues/145))<br/>
+LiveChartsCore.SkiaSharpView.UWP<br/>
 LiveChartsCore.SkiaSharpView.WinUI<br/>
 LiveChartsCore.SkiaSharpView.Blazor<br/>
 
