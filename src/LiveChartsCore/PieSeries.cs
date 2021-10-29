@@ -125,6 +125,12 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
         public override void Measure(Chart<TDrawingContext> chart)
         {
+            if (CustomMeasureHandler is not null)
+            {
+                CustomMeasureHandler(chart);
+                return;
+            }
+
             var pieChart = (PieChart<TDrawingContext>)chart;
 
             var drawLocation = pieChart.DrawMarginLocation;

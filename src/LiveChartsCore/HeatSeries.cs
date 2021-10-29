@@ -80,6 +80,12 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
         public override void Measure(Chart<TDrawingContext> chart)
         {
+            if (CustomMeasureHandler is not null)
+            {
+                CustomMeasureHandler(chart);
+                return;
+            }
+
             _paintTaks ??= LiveCharts.CurrentSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
 
             var cartesianChart = (CartesianChart<TDrawingContext>)chart;

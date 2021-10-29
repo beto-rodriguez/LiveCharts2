@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel.Sketches;
@@ -42,6 +43,12 @@ namespace LiveChartsCore.Kernel.Providers
         {
             return new();
         }
+
+        /// <summary>
+        /// Gets the series custom measue handler.
+        /// </summary>
+        /// <returns></returns>
+        public abstract Action<Chart<TDrawingContext>>? GetSeriesCustomMeasureHandler();
 
         /// <summary>
         /// Gets a new instance of the default map factory.

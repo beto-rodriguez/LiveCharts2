@@ -91,6 +91,8 @@ namespace LiveChartsCore
         private bool _isVisible = true;
         private LvcPoint _dataPadding = new(0.5f, 0.5f);
         private DataFactory<TModel, TDrawingContext>? _dataFactory;
+        private bool _requestedCustomMeasureHandler = false;
+        private Action<Chart<TDrawingContext>>? _customMeasureHandler = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -221,7 +223,7 @@ namespace LiveChartsCore
         bool IStopNPC.IsNotifyingChanges { get; set; }
 
         /// <summary>
-        /// Gets or sets the data factory.
+        /// Gets the data factory.
         /// </summary>
         protected DataFactory<TModel, TDrawingContext> DataFactory
         {
@@ -234,6 +236,24 @@ namespace LiveChartsCore
                 }
 
                 return _dataFactory;
+            }
+        }
+
+        /// <summary>
+        /// Gets the custom measure handler.
+        /// </summary>
+        protected Action<Chart<TDrawingContext>>? CustomMeasureHandler
+        {
+            get
+            {
+                if (!_requestedCustomMeasureHandler)
+                {
+                    var factory = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>();
+                    _customMeasureHandler = factory.GetSeriesCustomMeasureHandler();
+                    _requestedCustomMeasureHandler = true;
+                }
+
+                return _customMeasureHandler;
             }
         }
 

@@ -143,6 +143,12 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
         public override void Measure(Chart<TDrawingContext> chart)
         {
+            if (CustomMeasureHandler is not null)
+            {
+                CustomMeasureHandler(chart);
+                return;
+            }
+
             var polarChart = (PolarChart<TDrawingContext>)chart;
             var angleAxis = polarChart.AngleAxes[ScalesAngleAt];
             var radiusAxis = polarChart.RadiusAxes[ScalesRadiusAt];
