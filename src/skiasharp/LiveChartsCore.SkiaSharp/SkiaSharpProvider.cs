@@ -58,8 +58,8 @@ namespace LiveChartsCore.SkiaSharpView
             return new SolidColorPaint(new SKColor(color.R, color.G, color.B, color.A));
         }
 
-        /// <inheritdoc cref="ChartProvider{TDrawingContext}.GetSeriesCustomMeasureHandler()"/>
-        public override Action<Chart<SkiaSharpDrawingContext>>? GetSeriesCustomMeasureHandler()
+        /// <inheritdoc cref="ChartProvider{TDrawingContext}.GetSeriesCustomMeasureHandler(ISeries)"/>
+        public override Action<Chart<SkiaSharpDrawingContext>>? GetSeriesCustomMeasureHandler(ISeries series)
         {
             return null;
         }

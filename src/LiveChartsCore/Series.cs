@@ -249,7 +249,7 @@ namespace LiveChartsCore
                 if (!_requestedCustomMeasureHandler)
                 {
                     var factory = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>();
-                    _customMeasureHandler = factory.GetSeriesCustomMeasureHandler();
+                    _customMeasureHandler = factory.GetSeriesCustomMeasureHandler(this);
                     _requestedCustomMeasureHandler = true;
                 }
 

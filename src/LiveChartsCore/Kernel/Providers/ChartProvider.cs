@@ -48,7 +48,7 @@ namespace LiveChartsCore.Kernel.Providers
         /// Gets the series custom measue handler.
         /// </summary>
         /// <returns></returns>
-        public abstract Action<Chart<TDrawingContext>>? GetSeriesCustomMeasureHandler();
+        public abstract Action<Chart<TDrawingContext>>? GetSeriesCustomMeasureHandler(ISeries series);
 
         /// <summary>
         /// Gets a new instance of the default map factory.
