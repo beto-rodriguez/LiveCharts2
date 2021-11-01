@@ -114,7 +114,7 @@ namespace LiveChartsCore
         /// <param name="primaryScale">The primary scale.</param>
         /// <param name="secondaryScale">The secondary scale.</param>
         /// <returns></returns>
-        protected abstract void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale);
+        protected internal abstract void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale);
 
         /// <summary>
         /// Gets the label position.
@@ -130,7 +130,7 @@ namespace LiveChartsCore
         /// <param name="drawMarginLocation">The draw margin location.</param>
         /// <param name="drawMarginSize">the draw margin size</param>
         /// <returns></returns>
-        protected virtual LvcPoint GetLabelPosition(
+        protected internal virtual LvcPoint GetLabelPosition(
             float x,
             float y,
             float width,

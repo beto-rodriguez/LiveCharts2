@@ -45,12 +45,6 @@ namespace LiveChartsCore.Kernel.Providers
         }
 
         /// <summary>
-        /// Gets the series custom measue handler.
-        /// </summary>
-        /// <returns></returns>
-        public abstract Action<Chart<TDrawingContext>>? GetSeriesCustomMeasureHandler(ISeries series);
-
-        /// <summary>
         /// Gets a new instance of the default map factory.
         /// </summary>
         /// <returns></returns>
@@ -73,5 +67,31 @@ namespace LiveChartsCore.Kernel.Providers
         /// </summary>
         /// <returns></returns>
         public abstract IPaint<TDrawingContext> GetSolidColorPaint(LvcColor color = new LvcColor());
+
+
+        /// <summary>
+        /// Gets the series custom measure handler.
+        /// </summary>
+        /// <returns></returns>
+        public virtual Action<Chart<TDrawingContext>>? SeriesCustomMeasureHandler(ISeries series)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the line series custom measure handler.
+        /// </summary>
+        /// <returns></returns>
+        public virtual Action<Chart<TDrawingContext>>? LineCustomMeasureHandler<TModel, TVisual, TLabel, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>(
+            LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs> series)
+                where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
+                where TLineSegment : ILinePathSegment<TPathArgs>, new()
+                where TBezierSegment : IBezierSegment<TPathArgs>, new()
+                where TMoveToCommand : IMoveToPathCommand<TPathArgs>, new()
+                where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+                where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+        {
+            return null;
+        }
     }
 }

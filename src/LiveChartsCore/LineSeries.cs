@@ -44,8 +44,8 @@ namespace LiveChartsCore
             where TLabel : class, ILabelGeometry<TDrawingContext>, new()
             where TDrawingContext : DrawingContext
     {
-        private readonly Dictionary<object, List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>> _fillPathHelperDictionary = new();
-        private readonly Dictionary<object, List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>> _strokePathHelperDictionary = new();
+        internal readonly Dictionary<object, List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>> _fillPathHelperDictionary = new();
+        internal readonly Dictionary<object, List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>> _strokePathHelperDictionary = new();
         private float _lineSmoothness = 0.65f;
         private float _geometrySize = 14f;
         private bool _enableNullSplitting = true;
@@ -101,9 +101,9 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
         public override void Measure(Chart<TDrawingContext> chart)
         {
-            if (CustomMeasureHandler is not null)
+            if (GetCustomMeasureHandler() is not null)
             {
-                CustomMeasureHandler(chart);
+                GetCustomMeasureHandler()!(chart);
                 return;
             }
 
@@ -523,7 +523,7 @@ namespace LiveChartsCore
         /// <param name="areaHelper">The area helper.</param>
         /// <param name="defaultAnimation">The default animation.</param>
         /// <returns></returns>
-        protected virtual void SetDefaultPathTransitions(
+        protected internal virtual void SetDefaultPathTransitions(
             AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs> areaHelper,
             Animation defaultAnimation)
         {
@@ -613,7 +613,15 @@ namespace LiveChartsCore
             CanvasSchedule = context;
         }
 
-        private IEnumerable<BezierData> GetSpline(
+        /// <summary>
+        /// Buils an spline from the given points.
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="xScale"></param>
+        /// <param name="yScale"></param>
+        /// <param name="stacker"></param>
+        /// <returns></returns>
+        protected internal IEnumerable<BezierData> GetSpline(
             ChartPoint[] points,
             Scaler xScale,
             Scaler yScale,
@@ -751,7 +759,7 @@ namespace LiveChartsCore
         }
 
         /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
-        protected override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
+        protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
         {
             var visual = (LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>?)point.Context.Visual;
             if (visual is null) return;
@@ -784,6 +792,28 @@ namespace LiveChartsCore
             label.RemoveOnCompleted = true;
         }
 
+        /// <inheritdoc/>
+        protected override Action<Chart<TDrawingContext>>? GetCustomMeasureHandler()
+        {
+            if (!_requestedCustomMeasureHandler)
+            {
+                var factory = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>();
+                _customMeasureHandler = factory.LineCustomMeasureHandler<TModel, TVisual, TLabel, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>(this);
+                _requestedCustomMeasureHandler = true;
+            }
+
+            return _customMeasureHandler;
+        }
+
+        /// <summary>
+        /// Gets the paint tasks.
+        /// </summary>
+        /// <returns></returns>
+        protected override IPaint<TDrawingContext>?[] GetPaintTasks()
+        {
+            return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint, hoverPaint };
+        }
+
         /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDispose(IChartView)"/>
         public override void SoftDeleteOrDispose(IChartView chart)
         {
@@ -808,13 +838,13 @@ namespace LiveChartsCore
             if (GeometryStroke is not null) canvas.RemovePaintTask(GeometryStroke);
         }
 
-        /// <summary>
-        /// Gets the paint tasks.
-        /// </summary>
-        /// <returns></returns>
-        protected override IPaint<TDrawingContext>?[] GetPaintTasks()
+        /// <inheritdoc/>
+        public override void RemoveFromUI(Chart<TDrawingContext> chart)
         {
-            return new[] { Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint, hoverPaint };
+            base.RemoveFromUI(chart);
+
+            _ = _fillPathHelperDictionary.Remove(chart.Canvas.Sync);
+            _ = _strokePathHelperDictionary.Remove(chart.Canvas.Sync);
         }
 
         private IEnumerable<ChartPoint[]> SplitEachNull(
@@ -853,15 +883,6 @@ namespace LiveChartsCore
             }
 
             if (l.Count > 0) yield return l.ToArray();
-        }
-
-        /// <inheritdoc/>
-        public override void RemoveFromUI(Chart<TDrawingContext> chart)
-        {
-            base.RemoveFromUI(chart);
-
-            _ = _fillPathHelperDictionary.Remove(chart.Canvas.Sync);
-            _ = _strokePathHelperDictionary.Remove(chart.Canvas.Sync);
         }
     }
 }

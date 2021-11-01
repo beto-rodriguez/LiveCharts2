@@ -29,7 +29,7 @@ namespace LiveChartsCore.Kernel.Sketches
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="IChartSeries{TDrawingContext}" />
-    public interface IPolarLineSeries<TDrawingContext> : ILineSeries<TDrawingContext>, IPolarSeries<TDrawingContext>
+    public interface IPolarLineSeries<TDrawingContext> : IChartSeries<TDrawingContext>, IStrokedAndFilled<TDrawingContext>, IPolarSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
@@ -39,5 +39,43 @@ namespace LiveChartsCore.Kernel.Sketches
         /// The value.
         /// </value>
         bool IsClosed { get; set; }
+
+        /// <summary>
+        /// Gets or sets the size of the geometry.
+        /// </summary>
+        /// <value>
+        /// The size of the geometry.
+        /// </value>
+        double GeometrySize { get; set; }
+
+        /// <summary>
+        /// Gets or sets the line smoothness, where 0 is a straight line, and 1 the most curved line, default is 0.65
+        /// </summary>
+        /// <value>
+        /// The line smoothness.
+        /// </value>
+        double LineSmoothness { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the line should split every null point, 
+        /// enabling it has a performance impact, default is true.
+        /// </summary>
+        bool EnableNullSplitting { get; set; }
+
+        /// <summary>
+        /// Gets or sets the geometry fill.
+        /// </summary>
+        /// <value>
+        /// The shapes fill.
+        /// </value>
+        IPaint<TDrawingContext>? GeometryFill { get; set; }
+
+        /// <summary>
+        /// Gets or sets the geometry stroke.
+        /// </summary>
+        /// <value>
+        /// The shapes stroke.
+        /// </value>
+        IPaint<TDrawingContext>? GeometryStroke { get; set; }
     }
 }

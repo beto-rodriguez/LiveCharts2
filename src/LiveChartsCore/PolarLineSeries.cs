@@ -143,9 +143,9 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
         public override void Measure(Chart<TDrawingContext> chart)
         {
-            if (CustomMeasureHandler is not null)
+            if (GetCustomMeasureHandler() is not null)
             {
-                CustomMeasureHandler(chart);
+                GetCustomMeasureHandler()!(chart);
                 return;
             }
 

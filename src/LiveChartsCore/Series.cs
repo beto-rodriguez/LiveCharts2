@@ -81,6 +81,16 @@ namespace LiveChartsCore
         /// </summary>
         protected IPaint<TDrawingContext>? hoverPaint;
 
+        /// <summary>
+        /// Indicates whether the custom measure handler was requested already.
+        /// </summary>
+        protected bool _requestedCustomMeasureHandler = false;
+
+        /// <summary>
+        /// The custom measure handler.
+        /// </summary>
+        protected Action<Chart<TDrawingContext>>? _customMeasureHandler = null;
+
         private readonly CollectionDeepObserver<TModel> _observer;
         private IEnumerable<TModel>? _values;
         private string? _name;
@@ -91,8 +101,6 @@ namespace LiveChartsCore
         private bool _isVisible = true;
         private LvcPoint _dataPadding = new(0.5f, 0.5f);
         private DataFactory<TModel, TDrawingContext>? _dataFactory;
-        private bool _requestedCustomMeasureHandler = false;
-        private Action<Chart<TDrawingContext>>? _customMeasureHandler = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -105,6 +113,9 @@ namespace LiveChartsCore
                 (sender, e) => NotifySubscribers(),
                 (sender, e) => NotifySubscribers());
         }
+
+        /// <inheritdoc cref="ISeries.ActivePoints" />
+        public HashSet<ChartPoint> ActivePoints => everFetched;
 
         /// <inheritdoc />
         public SeriesProperties SeriesProperties { get; }
@@ -239,24 +250,6 @@ namespace LiveChartsCore
             }
         }
 
-        /// <summary>
-        /// Gets the custom measure handler.
-        /// </summary>
-        protected Action<Chart<TDrawingContext>>? CustomMeasureHandler
-        {
-            get
-            {
-                if (!_requestedCustomMeasureHandler)
-                {
-                    var factory = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>();
-                    _customMeasureHandler = factory.GetSeriesCustomMeasureHandler(this);
-                    _requestedCustomMeasureHandler = true;
-                }
-
-                return _customMeasureHandler;
-            }
-        }
-
         /// <inheritdoc cref="ISeries.VisibilityChanged"/>
         public event Action<ISeries>? VisibilityChanged;
 
@@ -329,7 +322,7 @@ namespace LiveChartsCore
         /// Called when a point was measured.
         /// </summary>
         /// <param name="chartPoint">The chart point.</param>
-        protected virtual void OnPointMeasured(ChartPoint chartPoint)
+        protected internal virtual void OnPointMeasured(ChartPoint chartPoint)
         {
             PointMeasured?.Invoke(new TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>(chartPoint));
         }
@@ -338,7 +331,7 @@ namespace LiveChartsCore
         /// Called when a point is created.
         /// </summary>
         /// <param name="chartPoint">The chart point.</param>
-        protected virtual void OnPointCreated(ChartPoint chartPoint)
+        protected internal virtual void OnPointCreated(ChartPoint chartPoint)
         {
             SetDefaultPointTransitions(chartPoint);
             PointCreated?.Invoke(new TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>(chartPoint));
@@ -411,6 +404,21 @@ namespace LiveChartsCore
                 visual.HighlightableGeometry);
 
             PointHoverLost?.Invoke(new TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>(point));
+        }
+
+        /// <summary>
+        /// Gets the custom measure handler.
+        /// </summary>
+        protected virtual Action<Chart<TDrawingContext>>? GetCustomMeasureHandler()
+        {
+            if (!_requestedCustomMeasureHandler)
+            {
+                var factory = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>();
+                _customMeasureHandler = factory.SeriesCustomMeasureHandler(this);
+                _requestedCustomMeasureHandler = true;
+            }
+
+            return _customMeasureHandler;
         }
 
         /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>

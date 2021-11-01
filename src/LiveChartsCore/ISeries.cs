@@ -46,6 +46,11 @@ namespace LiveChartsCore
         SeriesProperties SeriesProperties { get; }
 
         /// <summary>
+        /// Gets the active pints.
+        /// </summary>
+        HashSet<ChartPoint> ActivePoints { get; }
+
+        /// <summary>
         /// Gets or sets the name of the series, the name is normally used by <see cref="IChartTooltip{TDrawingContext}"/> or 
         /// <see cref="IChartLegend{TDrawingContext}"/>, the default value is set automatically by the library.
         /// </summary>

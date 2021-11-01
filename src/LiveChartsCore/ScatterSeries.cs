@@ -78,9 +78,9 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
         public override void Measure(Chart<TDrawingContext> chart)
         {
-            if (CustomMeasureHandler is not null)
+            if (GetCustomMeasureHandler() is not null)
             {
-                CustomMeasureHandler(chart);
+                GetCustomMeasureHandler()!(chart);
                 return;
             }
 
@@ -342,7 +342,7 @@ namespace LiveChartsCore
         }
 
         /// <inheritdoc cref="SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
-        protected override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
+        protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
         {
             var visual = (TVisual?)point.Context.Visual;
             if (visual is null) return;

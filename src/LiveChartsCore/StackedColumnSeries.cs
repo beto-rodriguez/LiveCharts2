@@ -316,7 +316,7 @@ namespace LiveChartsCore
         /// <param name="point">The point.</param>
         /// <param name="primaryScale">The primary scale.</param>
         /// <param name="secondaryScale">The secondary scale.</param>
-        protected override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
+        protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
         {
             var visual = (TVisual?)point.Context.Visual;
             if (visual is null) return;
