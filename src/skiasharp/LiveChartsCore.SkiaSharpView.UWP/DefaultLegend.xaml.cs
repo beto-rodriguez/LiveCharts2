@@ -137,7 +137,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             FontWeight = winuiChart.LegendFontWeight;
             FontStyle = winuiChart.LegendFontStyle;
             FontStretch = winuiChart.LegendFontStretch;
-            //LegendBackground = wpfChart.LegendBackground;
+            Background = winuiChart.LegendBackground;
 
             UpdateLayout();
         }

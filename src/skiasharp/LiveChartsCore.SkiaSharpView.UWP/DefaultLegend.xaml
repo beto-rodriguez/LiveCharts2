@@ -13,7 +13,10 @@
     <ItemsControl ItemsSource="{Binding Series}">
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" />
+                <StackPanel Background="{Binding Background}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Orientation="Vertical" />
             </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate>
