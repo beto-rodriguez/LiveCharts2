@@ -20,15 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+
+/* Unmerged change from project 'LiveChartsCore.SkiaSharpView.WinForms (netcoreapp3.1)'
+Before:
+using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.SkiaSharpView.Drawing;
+After:
+using LiveChartsCore.Collections.Generic;
+using System.Drawing;
+using LiveChartsCore.Linq;
+*/
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms
 {

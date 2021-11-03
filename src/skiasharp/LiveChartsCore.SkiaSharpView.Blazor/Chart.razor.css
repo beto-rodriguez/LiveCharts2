@@ -160,9 +160,9 @@
     transition: top ease-out 0.2s, left ease-out 0.2s, opacity ease-out 0.2s;
 }
 
-::deep .lvc-tooltip-container.closed {
-    opacity: 0;
-}
+    ::deep .lvc-tooltip-container.closed {
+        opacity: 0;
+    }
 
 ::deep .lvc-tooltip {
     background-color: white;

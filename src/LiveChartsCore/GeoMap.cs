@@ -20,14 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
+using System;
 using System.Collections.Generic;
-using LiveChartsCore.Measure;
+using System.Threading.Tasks;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
-using System.Threading.Tasks;
-using System;
 using LiveChartsCore.Kernel.Events;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore
 {

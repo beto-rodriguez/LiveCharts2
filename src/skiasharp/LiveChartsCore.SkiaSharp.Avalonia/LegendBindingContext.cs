@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Avalonia.Media;
 using System.Collections.Generic;
 using System.Linq;
+using Avalonia.Media;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia
 {

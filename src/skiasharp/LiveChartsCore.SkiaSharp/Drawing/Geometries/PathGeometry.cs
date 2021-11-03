@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using SkiaSharp;
-using System.Collections.Generic;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
 {
