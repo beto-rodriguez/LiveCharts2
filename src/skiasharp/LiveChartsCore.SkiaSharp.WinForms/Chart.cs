@@ -249,7 +249,9 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.PointStates" />
+        /// <summary>
+        /// Gets or sets the point states.
+        /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
 

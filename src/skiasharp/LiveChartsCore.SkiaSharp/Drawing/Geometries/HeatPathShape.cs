@@ -56,7 +56,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             set { _fillProperty.SetMovement(value, this); _hasColor = true; }
         }
 
-        /// <inheritdoc cref="Draw(SkiaSharpDrawingContext)"/>
+        /// <inheritdoc cref="PathGeometry.Draw(SkiaSharpDrawingContext)"/>
         public override void Draw(SkiaSharpDrawingContext context)
         {
             if (_commands.Count == 0) return;

@@ -82,7 +82,7 @@ namespace LiveChartsCore.Kernel.Drawing
             return this;
         }
 
-        /// <inheritdoc cref="GetDistanceToPoint(LvcPoint, TooltipFindingStrategy)"/>
+        /// <inheritdoc cref="HoverArea.GetDistanceToPoint(LvcPoint, TooltipFindingStrategy)"/>
         public override float GetDistanceToPoint(LvcPoint point, TooltipFindingStrategy strategy)
         {
             var dx = point.X - (X + Width * 0.5f);
@@ -100,7 +100,7 @@ namespace LiveChartsCore.Kernel.Drawing
             };
         }
 
-        /// <inheritdoc cref="SuggestTooltipPlacement(TooltipPlacementContext)"/>
+        /// <inheritdoc cref="HoverArea.SuggestTooltipPlacement(TooltipPlacementContext)"/>
         public override void SuggestTooltipPlacement(TooltipPlacementContext cartesianContext)
         {
             if (Y < cartesianContext.MostTop) cartesianContext.MostTop = Y;

@@ -95,7 +95,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </value>
         public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
 
-        /// <inheritdoc cref="OnApplyTemplate" />
+        /// <summary>
+        /// Called when the template is applied.
+        /// </summary>
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();

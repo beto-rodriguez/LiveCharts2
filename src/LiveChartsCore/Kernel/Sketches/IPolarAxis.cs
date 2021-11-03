@@ -22,7 +22,6 @@
 
 using System;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Drawing.Common;
 using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.Kernel.Sketches

@@ -23,7 +23,6 @@
 using System;
 using LiveChartsCore.Measure;
 using System.Collections.Generic;
-using LiveChartsCore.Drawing.Common;
 using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Kernel.Sketches

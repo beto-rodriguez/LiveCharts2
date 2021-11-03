@@ -257,7 +257,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         #endregion
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Called when the template is applied.
+        /// </summary>
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();

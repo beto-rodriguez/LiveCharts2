@@ -32,7 +32,9 @@ namespace LiveChartsCore.Geo
     public abstract class MapShape<TDrawingContext> : IMapElement, INotifyPropertyChanged
         where TDrawingContext : DrawingContext
     {
-        /// <inheritdoc cref="INotifyPropertyChanged.PropertyChanged"/>
+        /// <summary>
+        /// Called when a property changes.
+        /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <inheritdoc cref="IMapElement.Measure(object)"/>

@@ -85,7 +85,7 @@ namespace LiveChartsCore.Kernel.Drawing
             return this;
         }
 
-        /// <inheritdoc cref="GetDistanceToPoint(LvcPoint, TooltipFindingStrategy)"/>
+        /// <inheritdoc cref="HoverArea.GetDistanceToPoint(LvcPoint, TooltipFindingStrategy)"/>
         public override float GetDistanceToPoint(LvcPoint point, TooltipFindingStrategy strategy)
         {
             var startAngle = StartAngle % 360;
@@ -104,7 +104,7 @@ namespace LiveChartsCore.Kernel.Drawing
             return startAngle <= beta && endAngle >= beta && r < Radius ? 0 : float.MaxValue;
         }
 
-        /// <inheritdoc cref="SuggestTooltipPlacement(TooltipPlacementContext)"/>
+        /// <inheritdoc cref="HoverArea.SuggestTooltipPlacement(TooltipPlacementContext)"/>
         public override void SuggestTooltipPlacement(TooltipPlacementContext context)
         {
             var angle = (StartAngle + EndAngle) / 2;

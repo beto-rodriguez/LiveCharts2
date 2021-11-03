@@ -143,7 +143,9 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip"/>
         public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => null;
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.PointStates"/>
+        /// <summary>
+        /// Gets or sets the point states.
+        /// </summary>
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
 
         /// <inheritdoc cref="IChartView.CoreChart"/>

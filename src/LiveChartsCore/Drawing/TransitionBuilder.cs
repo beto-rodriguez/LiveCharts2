@@ -22,7 +22,7 @@
 
 using System;
 
-namespace LiveChartsCore.Drawing.Common
+namespace LiveChartsCore.Drawing
 {
     /// <summary>
     /// The Transition builder class helps to build transitions using fluent syntax.

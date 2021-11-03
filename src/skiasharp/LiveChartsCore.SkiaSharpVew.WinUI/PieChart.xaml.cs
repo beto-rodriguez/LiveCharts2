@@ -656,7 +656,9 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
         public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.PointStates" />
+        /// <summary>
+        /// Gets or sets the point states.
+        /// </summary>
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />

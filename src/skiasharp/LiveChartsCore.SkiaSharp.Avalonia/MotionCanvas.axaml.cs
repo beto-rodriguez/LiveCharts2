@@ -109,7 +109,10 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </value>
         public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
 
-        /// <inheritdoc cref="Render(a.DrawingContext)" />
+        /// <summary>
+        /// Renders the control.
+        /// </summary>
+        /// <param name="context"></param>
         public override void Render(a.DrawingContext context)
         {
             var drawOperation = new CustomDrawOp(this, CanvasCore, new Rect(0, 0, Bounds.Width, Bounds.Height), BackColor);

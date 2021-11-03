@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing.Common
+namespace LiveChartsCore.Drawing
 {
     /// <summary>
     /// Defines the padding measure helped class,.

@@ -622,7 +622,7 @@ namespace LiveChartsCore
         /// Softly deletes the all points from the chart.
         /// </summary>
         /// <param name="chart"></param>
-        /// <inheritdoc cref="M:LiveChartsCore.ISeries.Delete(LiveChartsCore.Kernel.IChartView)" />
+        /// <inheritdoc cref="ISeries.SoftDeleteOrDispose" />
         public override void SoftDeleteOrDispose(IChartView chart)
         {
             var core = ((IPieChartView<TDrawingContext>)chart).Core;

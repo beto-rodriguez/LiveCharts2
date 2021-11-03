@@ -561,7 +561,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
         public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.PointStates" />
+        /// <summary>
+        /// Gets or sets the point states.
+        /// </summary>
         public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />

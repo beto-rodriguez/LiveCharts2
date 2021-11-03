@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LiveChartsCore.Drawing.Common
+namespace LiveChartsCore.Drawing
 {
     /// <inheritdoc cref="IAnimatable" />
     public abstract class Animatable : IAnimatable
@@ -52,15 +52,13 @@ namespace LiveChartsCore.Drawing.Common
         /// <inheritdoc cref="IAnimatable.RemoveOnCompleted" />
         public bool RemoveOnCompleted { get => _removeOnCompleted; set => _removeOnCompleted = value; }
 
-        /// <inheritdoc cref="SetPropertiesTransitions(Animation, string[])" />
+        /// <inheritdoc cref="IAnimatable.SetPropertiesTransitions(Animation, string[])" />
         public void SetPropertiesTransitions(Animation? animation, params string[] properties)
         {
             var a = animation?.Duration == 0 ? null : animation;
 
             foreach (var name in properties)
-            {
                 transitionProperties[name].Animation = a;
-            }
         }
 
         /// <inheritdoc cref="IAnimatable.RemovePropertyTransition(string)" />
@@ -73,9 +71,7 @@ namespace LiveChartsCore.Drawing.Common
         public void RemoveTransitions()
         {
             foreach (var property in transitionProperties)
-            {
                 property.Value.Animation = null;
-            }
         }
 
         /// <summary>

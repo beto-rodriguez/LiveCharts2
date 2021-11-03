@@ -67,7 +67,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="IWeigthedMapShape.Value"/>
         public double Value { get => _value; set { _value = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="Measure(MapShapeContext{SkiaSharpDrawingContext})"/>
+        /// <inheritdoc cref="IMapElement.Measure(object)"/>
         public override void Measure(MapShapeContext<SkiaSharpDrawingContext> context)
         {
             var projector = Maps.BuildProjector(context.Chart.MapProjection, new[] { context.Chart.Width, context.Chart.Height });
@@ -86,7 +86,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             }
         }
 
-        /// <inheritdoc cref="RemoveFromUI(MapShapeContext{SkiaSharpDrawingContext})"/>
+        /// <inheritdoc cref="IMapElement.RemoveFromUI(object)"/>
         public override void RemoveFromUI(MapShapeContext<SkiaSharpDrawingContext> context)
         {
             if (_paths is null) return;
