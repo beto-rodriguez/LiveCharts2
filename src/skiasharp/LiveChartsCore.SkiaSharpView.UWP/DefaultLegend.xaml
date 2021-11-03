@@ -20,13 +20,12 @@
             <DataTemplate x:DataType="core:ISeries">
                 <Border Padding="15 4">
                     <StackPanel Orientation="Horizontal">
-                        <local:MotionCanvas Margin="0 0 8 0" 
+                        <local:MotionCanvas Margin="0 0 8 0"
                                     PaintTasks="{Binding CanvasSchedule.PaintSchedules}"
                                     Width="{Binding CanvasSchedule.Width}"
                                     Height="{Binding CanvasSchedule.Height}"
                                     VerticalAlignment="Center"/>
                         <TextBlock Text="{x:Bind Name}"
-                                   Foreground="Black"
                                    VerticalAlignment="Center"/>
                     </StackPanel>
                 </Border>
