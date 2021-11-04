@@ -26,11 +26,18 @@ using Microsoft.JSInterop;
 
 namespace LiveChartsCore.SkiaSharpView.Blazor
 {
+    /// <summary>
+    /// An object that handles the comminication with the DOM.
+    /// </summary>
     public class DomJsInterop : IAsyncDisposable
     {
         private readonly Lazy<Task<IJSObjectReference>> _moduleTask;
         private static readonly Dictionary<string, List<Action<DOMRect>>> s_resizeEvent = new();
 
+        /// <summary>
+        /// Initialized a new instance of the <see cref="DomJsInterop"/> class.
+        /// </summary>
+        /// <param name="jsRuntime"></param>
         public DomJsInterop(IJSRuntime jsRuntime)
         {
             _moduleTask = new(() =>
@@ -40,6 +47,11 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
                 .AsTask());
         }
 
+        /// <summary>
+        /// Gets the bounding client rectangle of the given element.
+        /// </summary>
+        /// <param name="elementReference">The HTMl element reference.</param>
+        /// <returns></returns>
         public async ValueTask<DOMRect> GetBoundingClientRect(ElementReference elementReference)
         {
             var module = await _moduleTask.Value;
@@ -50,7 +62,7 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
         /// <summary>
         /// Sets the css top and left properties of he given element to the specified coordinates.
         /// </summary>
-        /// <param name="elementReference">The html element.</param>
+        /// <param name="elementReference">The HTML element.</param>
         /// <param name="x">The x coordinate (left property in css).</param>
         /// <param name="y">The y coordinate (top property in css).</param>
         /// <param name="relativeTo">Indicates whether the function should add the given element postion to each coordinate.</param>
@@ -63,6 +75,13 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
             await module.InvokeVoidAsync("DOMInterop.setPosition", elementReference, x, y, relativeTo);
         }
 
+        /// <summary>
+        /// Registers a handler for the resize observer for the given HTML element.
+        /// </summary>
+        /// <param name="element">The HTML element.</param>
+        /// <param name="elementId">The elemnt id.</param>
+        /// <param name="handler">The handler.</param>
+        /// <returns></returns>
         public async ValueTask OnResize(ElementReference element, string elementId, Action<DOMRect> handler)
         {
             if (!s_resizeEvent.TryGetValue(elementId, out var actions))
@@ -76,11 +95,19 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
             actions.Add(handler);
         }
 
+        /// <summary>
+        /// Removes the handler from the specified element id.
+        /// </summary>
+        /// <param name="elementId">The element id.</param>
         public void RemoveOnResizeListener(string elementId)
         {
             _ = s_resizeEvent.Remove(elementId);
         }
 
+        /// <summary>
+        /// Removes the given resize handler.
+        /// </summary>
+        /// <param name="handler">The handler.</param>
         public void RemoveOnResizeListener(Action<DOMRect> handler)
         {
             foreach (var elementId in s_resizeEvent.Keys.ToArray())
@@ -97,6 +124,12 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
             }
         }
 
+        /// <summary>
+        /// Called when a HTML element was resized.
+        /// </summary>
+        /// <param name="elementId"></param>
+        /// <param name="newSize"></param>
+        /// <returns></returns>
         [JSInvokable("InvokeResize")]
         public static Task InvokeResize(string elementId, DOMRect newSize)
         {

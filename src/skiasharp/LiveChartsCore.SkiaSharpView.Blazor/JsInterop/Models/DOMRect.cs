@@ -22,15 +22,49 @@
 
 namespace LiveChartsCore.SkiaSharpView.Blazor.JsInterop.Models
 {
+    /// <summary>
+    /// Defines the DOM rect class from an HTML element.
+    /// </summary>
     public class DOMRect
     {
+        /// <summary>
+        /// Gets or sets the bottom.
+        /// </summary>
         public double Bottom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the height.
+        /// </summary>
         public double Height { get; set; }
+
+        /// <summary>
+        /// Gets or sets the left.
+        /// </summary>
         public double Left { get; set; }
+
+        /// <summary>
+        /// Gets or sets the right.
+        /// </summary>
         public double Right { get; set; }
+
+        /// <summary>
+        /// Gets or sets the top.
+        /// </summary>
         public double Top { get; set; }
+
+        /// <summary>
+        /// Gets or sets the width.
+        /// </summary>
         public double Width { get; set; }
+
+        /// <summary>
+        /// Gets or sets the x.
+        /// </summary>
         public double X { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Y.
+        /// </summary>
         public double Y { get; set; }
     }
 }

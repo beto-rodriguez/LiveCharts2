@@ -27,20 +27,38 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 
 namespace LiveChartsCore.SkiaSharpView.Blazor
 {
+    /// <summary>
+    /// The LiveCharts-Blazor config.
+    /// </summary>
     public static class LiveChartsBlazor
     {
+        /// <summary>
+        /// Gets the given series as miniatures paint tasks.
+        /// </summary>
+        /// <param name="series"></param>
+        /// <returns></returns>
         public static List<PaintSchedule<SkiaSharpDrawingContext>> GetSeriesAsMiniaturePaints(ISeries series)
         {
             var skSeries = (IChartSeries<SkiaSharpDrawingContext>)series;
             return skSeries.CanvasSchedule.PaintSchedules;
         }
 
+        /// <summary>
+        /// Gets the given series as minitaures style.
+        /// </summary>
+        /// <param name="series"></param>
+        /// <returns></returns>
         public static string GetSeriesMiniatureStyle(ISeries series)
         {
             var skSeries = (IChartSeries<SkiaSharpDrawingContext>)series;
             return $"width: {skSeries.CanvasSchedule.Width}px; height: {skSeries.CanvasSchedule.Height}px";
         }
 
+        /// <summary>
+        /// Gets the given series as miniatures data.
+        /// </summary>
+        /// <param name="series"></param>
+        /// <returns></returns>
         public static CanvasSchedule<SkiaSharpDrawingContext> GetSeriesMiniatureData(ISeries series)
         {
             var skSeries = (IChartSeries<SkiaSharpDrawingContext>)series;

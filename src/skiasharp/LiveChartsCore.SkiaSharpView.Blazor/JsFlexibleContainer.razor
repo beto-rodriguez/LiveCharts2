@@ -22,62 +22,7 @@
 	SOFTWARE.
 *@
 
-@using LiveChartsCore.SkiaSharpView.Blazor.JsInterop.Models
-@using Microsoft.JSInterop
-
-@inject IJSRuntime JS
-@implements IDisposable
-
-<div @ref="_container" class="@Class">
+<div @ref="Container" class="@Class">
 	@Content
 </div>
 
-@code {
-	private DomJsInterop? _dom;
-	private ElementReference _container;
-	private string _id = Guid.NewGuid().ToString();
-
-	public double Width { get; private set; }
-
-	public double Height { get; private set; }
-
-	public ElementReference Container => _container;
-
-	public bool Disposing { get; private set; }
-
-	[Parameter]
-	public RenderFragment? Content { get; set; }
-
-	[Parameter]
-	public string Class { get; set; } = string.Empty;
-
-	public event Action<JsFlexibleContainer>? Resized;
-
-	protected override async Task OnAfterRenderAsync(bool firstRender)
-	{
-		if (_dom is null) _dom = new DomJsInterop(JS);
-
-		var wrapperBounds = await _dom.GetBoundingClientRect(_container);
-
-		Width = wrapperBounds.Width;
-		Height = wrapperBounds.Height;
-
-		await _dom.OnResize(_container, _id, OnContainerResized);
-	}
-
-	protected virtual void OnContainerResized(DOMRect newSize)
-	{
-		Width = newSize.Width;
-		Height = newSize.Height;
-
-		Resized?.Invoke(this);
-	}
-
-	async void IDisposable.Dispose()
-	{
-		if (_dom is null) return;
-		_dom.RemoveOnResizeListener(_id);
-		Disposing = true;
-		await ((IAsyncDisposable)_dom).DisposeAsync();
-	}
-}
