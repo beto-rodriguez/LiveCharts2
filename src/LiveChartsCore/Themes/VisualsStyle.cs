@@ -126,6 +126,22 @@ namespace LiveChartsCore.Themes
         /// Gets or sets the line series builder.
         /// </summary>
         /// <value>
+        /// The polar series builder.
+        /// </value>
+        public List<Action<IPolarSeries<TDrawingContext>>> PolarSeriesBuilder { get; set; } = new List<Action<IPolarSeries<TDrawingContext>>>();
+
+        /// <summary>
+        /// Gets or sets the line series builder.
+        /// </summary>
+        /// <value>
+        /// The polar series builder.
+        /// </value>
+        public List<Action<IPolarSeries<TDrawingContext>>> StackedPolarSeriesBuilder { get; set; } = new List<Action<IPolarSeries<TDrawingContext>>>();
+
+        /// <summary>
+        /// Gets or sets the line series builder.
+        /// </summary>
+        /// <value>
         /// The pie series builder.
         /// </value>
         public List<Action<IHeatSeries<TDrawingContext>>> HeatSeriesBuilder { get; set; } = new List<Action<IHeatSeries<TDrawingContext>>>();
@@ -310,6 +326,17 @@ namespace LiveChartsCore.Themes
                 if ((series.SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked)
                 {
                     foreach (var rule in StackedLineSeriesBuilder) rule(lineSeries);
+                }
+            }
+
+            if ((series.SeriesProperties & SeriesProperties.Polar) == SeriesProperties.Polar)
+            {
+                var polarSeries = (IPolarSeries<TDrawingContext>)series;
+                foreach (var rule in PolarSeriesBuilder) rule(polarSeries);
+
+                if ((series.SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked)
+                {
+                    foreach (var rule in StackedPolarSeriesBuilder) rule(polarSeries);
                 }
             }
 

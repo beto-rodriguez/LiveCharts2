@@ -468,7 +468,6 @@ namespace LiveChartsCore
                 // apply padding
                 if (axis.MinLimit is null)
                 {
-                    var s = 0d;//new Scaler(DrawMarginLocation, DrawMarginSize, axis);
                     // correction by geometry size
                     var p = 0d;//Math.Abs(s.ToChartValues(axis.DataBounds.RequestedGeometrySize) - s.ToChartValues(0));
                     if (axis.DataBounds.PaddingMin > p) p = axis.DataBounds.PaddingMin;
