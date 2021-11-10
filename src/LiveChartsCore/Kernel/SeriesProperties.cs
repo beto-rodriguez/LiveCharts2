@@ -119,6 +119,11 @@ namespace LiveChartsCore.Kernel
         /// <summary>
         /// The prefers xy tool tips
         /// </summary>
-        PrefersXYStrategyTooltips = 1 << 18
+        PrefersXYStrategyTooltips = 1 << 18,
+
+        /// <summary>
+        /// The polar series
+        /// </summary>
+        Polar = 1 << 19
     }
 }

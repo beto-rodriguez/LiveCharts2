@@ -64,7 +64,7 @@ namespace LiveChartsCore
         /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
         public PolarLineSeries(bool isStacked = false)
             : base(
-                  SeriesProperties.Line | SeriesProperties.PrimaryAxisVerticalOrientation |
+                  SeriesProperties.Polar | SeriesProperties.PrimaryAxisVerticalOrientation |
                   (isStacked ? SeriesProperties.Stacked : 0) | SeriesProperties.Sketch | SeriesProperties.PrefersXStrategyTooltips)
         {
             DataPadding = new LvcPoint(1f, 1.5f);
