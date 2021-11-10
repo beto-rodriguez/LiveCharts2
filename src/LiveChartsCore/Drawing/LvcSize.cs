@@ -48,7 +48,11 @@ namespace LiveChartsCore.Drawing
         /// </summary>
         public float Height { get; set; }
 
-        /// <inheritdoc cref="object.Equals(object?)"/>
+        /// <summary>
+        /// Determines whether the instance is equals to the given instance.
+        /// </summary>
+        /// <param name="obj">The instance to compare to.</param>
+        /// <returns>The comparision result.</returns>
         public override bool Equals(object? obj)
         {
             return obj is LvcSize size &&
@@ -56,7 +60,10 @@ namespace LiveChartsCore.Drawing
                 Height == size.Height;
         }
 
-        /// <inheritdoc cref="object.GetHashCode()"/>
+        /// <summary>
+        /// Gets the object hash code.
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             var hashCode = 859600377;

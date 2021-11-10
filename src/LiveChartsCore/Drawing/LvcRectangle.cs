@@ -86,7 +86,11 @@ namespace LiveChartsCore.Drawing
         /// </summary>
         private bool IsEmpty { get; set; }
 
-        /// <inheritdoc cref="object.Equals(object?)"/>
+        /// <summary>
+        /// Determines whether the instance is equals to the given instance.
+        /// </summary>
+        /// <param name="obj">The instance to compare to.</param>
+        /// <returns>The comparision result.</returns>
         public override bool Equals(object? obj)
         {
             return obj is LvcRectangle rectangle
@@ -94,7 +98,10 @@ namespace LiveChartsCore.Drawing
                     (Location == rectangle.Location && Size == rectangle.Size));
         }
 
-        /// <inheritdoc cref="object.GetHashCode()"/>
+        /// <summary>
+        /// Gets the object hash code.
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             var hashCode = 574998336;
