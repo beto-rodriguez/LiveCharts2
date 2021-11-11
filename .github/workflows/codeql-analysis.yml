@@ -30,7 +30,7 @@ jobs:
     - name: install workloads # only if not installed?
       run: |
         dotnet tool install -g Redth.Net.Maui.Check
-        maui-check
+        maui-check --fix
 
     - name: Release build
       run: |
