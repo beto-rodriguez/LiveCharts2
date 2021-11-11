@@ -29,8 +29,7 @@ jobs:
 
     - name: install workloads # only if not installed?
       run: |
-        dotnet tool install -g Redth.Net.Maui.Check
-        maui-check --ci
+        dotnet workload install maui --from-rollback-file https://aka.ms/dotnet/maui/preview.10.json --source https://aka.ms/dotnet6/nuget/index.json --source https://api.nuget.org/v3/index.json
 
     - name: Release build
       run: |
