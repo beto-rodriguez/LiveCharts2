@@ -29,9 +29,7 @@ jobs:
 
     - name: install workloads # only if not installed?
       run: |
-        dotnet workload install android
-        dotnet workload install ios
-        dotnet workload install maccatalyst
+        dotnet workload install maui-android maui-ios
 
     - name: Release build
       run: |
