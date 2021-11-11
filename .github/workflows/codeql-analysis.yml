@@ -29,8 +29,8 @@ jobs:
 
     - name: install workloads # only if not installed?
       run: |
-        dotnet workload install maui-android maui-ios
-        dotnet workload install maccatalyst
+        dotnet tool install -g Redth.Net.Maui.Check
+        maui-check
 
     - name: Release build
       run: |
