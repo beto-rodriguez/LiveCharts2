@@ -27,6 +27,9 @@ jobs:
       with:
         dotnet-version: '6.0.x'
 
+    - name: install android workload
+      run: dotnet workload install android # only if not installed?
+
     #- name: Initialize CodeQL
     #  uses: github/codeql-action/init@v1
     #  with:
