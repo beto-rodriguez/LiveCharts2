@@ -1,9 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <LangVersion>9.0</LangVersion>
-    <TargetFrameworks>net462;netstandard2.0;netcoreapp2.0;</TargetFrameworks>
+    
+    <TargetFrameworks>net462;netstandard2.0;netcoreapp2.0;net6.0;net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
+    
     <AssemblyName>LiveChartsCore.SkiaSharpView</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView</RootNamespace>
     <Version>2.0.0-beta.80</Version>
@@ -22,7 +24,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SkiaSharp" Version="2.80.3" />
+    <PackageReference Include="SkiaSharp" Version="2.88.0-preview.155" />
   </ItemGroup>
 
   <ItemGroup>
