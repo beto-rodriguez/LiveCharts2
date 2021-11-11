@@ -27,13 +27,10 @@ jobs:
       with:
         dotnet-version: '6.0.x'
 
-    - name: install android workload
-      run: dotnet workload install android # only if not installed?
-
-    #- name: Initialize CodeQL
-    #  uses: github/codeql-action/init@v1
-    #  with:
-    #    languages: ${{ matrix.language }}
+    - name: install workloads # only if not installed?
+      run: |
+        dotnet workload install android
+        dotnet workload install ios
 
     - name: Release build
       run: |
@@ -51,5 +48,10 @@ jobs:
     - name: Run unit tests
       run: dotnet test ./tests/LiveChartsCore.UnitTesting
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
+    #- name: Initialize CodeQL
+    #  uses: github/codeql-action/init@v1
+    #  with:
+    #    languages: ${{ matrix.language }}
+
+    #- name: Perform CodeQL Analysis
+    #  uses: github/codeql-action/analyze@v1
