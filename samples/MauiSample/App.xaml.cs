@@ -1,7 +1,4 @@
-﻿using Microsoft.Maui;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.PlatformConfiguration.WindowsSpecific;
-using Application = Microsoft.Maui.Controls.Application;
+﻿using Application = Microsoft.Maui.Controls.Application;
 
 namespace MauiSample
 {
@@ -11,7 +8,7 @@ namespace MauiSample
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            MainPage = new AppShell();
         }
     }
 }

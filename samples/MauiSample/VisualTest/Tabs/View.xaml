@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MauiSample.VisualTest.Tabs.View"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             xmlns:vms="clr-namespace:ViewModelsSamples.VisualTest.Tabs;assembly=ViewModelsSamples"
+             >
+
+    <!--xmlns:mct="clr-namespace:Xamarin.CommunityToolkit.Core;assembly=Xamarin.CommunityToolkit.MauiCompat"-->
+
+    <ContentPage.BindingContext>
+        <vms:ViewModel/>
+    </ContentPage.BindingContext>
+	<ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!--<mct:TabView
+                TabStripPlacement="Bottom"
+                TabStripBackgroundColor="Blue"
+                TabStripHeight="60"
+                TabIndicatorColor="Yellow"
+                TabContentBackgroundColor="Yellow">
+
+                <xct:TabViewItem
+                    Text="Tab 1"
+                    TextColor="Black"
+                    FontSize="12">
+                    <lvc:CartesianChart Series="{Binding LineSeries}"></lvc:CartesianChart>
+                </xct:TabViewItem>
+
+                <xct:TabViewItem
+                    Text="Tab 2"
+                    TextColor="Black"
+                    FontSize="12">
+                    <lvc:CartesianChart Series="{Binding ColumnSeries}"></lvc:CartesianChart>
+                </xct:TabViewItem>
+
+            </mct:TabView>-->
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

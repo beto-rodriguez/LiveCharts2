@@ -708,6 +708,8 @@ namespace LiveChartsCore.SkiaSharpView.Maui
 
         void IChartView.InvokeOnUIThread(Action action)
         {
+            // throws on win ui
+            // https://github.com/dotnet/maui/issues/2451
             MainThread.BeginInvokeOnMainThread(action);
         }
 

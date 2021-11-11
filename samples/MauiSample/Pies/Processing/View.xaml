@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MauiSample.Pies.Processing.View"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             xmlns:local="clr-namespace:MauiSample.Pies.Processing"
+             xmlns:vms="clr-namespace:ViewModelsSamples.Pies.Processing;assembly=ViewModelsSamples"
+             >
+    <ContentPage.BindingContext>
+        <vms:ViewModel/>
+    </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <local:PaintTaskToColorConverter x:Key="toBrush"></local:PaintTaskToColorConverter>
+    </ContentPage.Resources>
+	<ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="200"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <lvc:PieChart
+                Background="#f5f5f5"
+                Series="{Binding Series}"/>
+
+            <StackLayout
+                Grid.Row="1"
+                BindableLayout.ItemsSource="{Binding Series}"
+                Margin="0, 10, 0, 10"
+                >
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                            <Label Text="{Binding Values[0].Value}"
+                            FontSize="35"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            TextColor="{Binding DefaultPaintContext.PaintTasks, Converter={StaticResource toBrush}}"
+                            FontAttributes="Bold" />
+                            <Label Margin="8, 0, 8, 0"
+                            Text="{Binding Name}"
+                            FontSize="18"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            TextColor="{Binding DefaultPaintContext.PaintTasks, Converter={StaticResource toBrush}}"/>
+                        </StackLayout>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
