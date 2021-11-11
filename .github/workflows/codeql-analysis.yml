@@ -18,16 +18,19 @@ jobs:
       matrix:
         language: [ 'csharp' ]
         targetplatform: [ x86, x64 ]
-        dotnet-version: [ '6.0.x' ]
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-      
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v1
+
+    - uses: actions/setup-dotnet@v1
       with:
-        languages: ${{ matrix.language }}
+        dotnet-version: '6.0.x'
+
+    #- name: Initialize CodeQL
+    #  uses: github/codeql-action/init@v1
+    #  with:
+    #    languages: ${{ matrix.language }}
 
     - name: Release build
       run: |
