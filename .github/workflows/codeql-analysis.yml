@@ -18,6 +18,7 @@ jobs:
       matrix:
         language: [ 'csharp' ]
         targetplatform: [ x86, x64 ]
+        dotnet-version: [ '6.0.x' ]
 
     steps:
     - name: Checkout repository
