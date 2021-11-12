@@ -27,7 +27,7 @@ jobs:
       with:
         dotnet-version: '6.0.x'
 
-    - name: install workloads # only if not installed?
+    - name: install workloads
       run: |
         dotnet workload install maui --from-rollback-file https://aka.ms/dotnet/maui/preview.10.json --source https://aka.ms/dotnet6/nuget/index.json --source https://api.nuget.org/v3/index.json
 
