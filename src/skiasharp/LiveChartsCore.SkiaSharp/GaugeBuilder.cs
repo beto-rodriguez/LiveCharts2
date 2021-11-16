@@ -252,7 +252,8 @@ namespace LiveChartsCore.SkiaSharpView
                     DataLabelsPaint = item.Item4,
                     DataLabelsFormatter = LabelFormatter,
                     Fill = item.Item3,
-                    HoverPushout = 0
+                    HoverPushout = 0,
+                    DataLabelsPosition = PolarLabelsPosition.ChartCenter
                 };
                 ApplyStyles(sf);
                 series.Add(sf);

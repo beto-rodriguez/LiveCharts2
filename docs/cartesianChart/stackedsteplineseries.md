@@ -20,19 +20,19 @@ and the current theme.
     new StackedStepAreaSeries&lt;double>
     {
         Values = new List&lt;double> { 3, 2, 3, 5, 3, 4, 6 },
-        Stroke = new SolidColorPaintTask(SKColors.Blue) { StrokeThickness = 4 }, // mark
+        Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 4 }, // mark
         Fill = null
     },
     new StackedStepAreaSeries&lt;double>
     {
         Values = new List&lt;double> { 6, 5, 6, 3, 8, 5, 2 },
-        Stroke = new SolidColorPaintTask(SKColors.Red) { StrokeThickness = 8 }, // mark
+        Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 8 }, // mark
         Fill = null
     },
     new StackedStepAreaSeries&lt;double>
     {
         Values = new List&lt;double> { 4, 8, 2, 8, 9, 5, 3 },
-        Stroke = new SolidColorPaintTask(SKColors.Green) { StrokeThickness = 12 }, // mark
+        Stroke = new SolidColorPaint(SKColors.Green) { StrokeThickness = 12 }, // mark
         Fill = null
     }
 };</code></pre>
@@ -51,19 +51,19 @@ The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent 
     new StackedStepAreaSeries&lt;double>
     {
         Values = new List&lt;double> { 3, 2, 3, 5, 3, 4, 6 },
-        Fill = new SolidColorPaintTask(SKColors.Blue.WithAlpha(90)), // mark
+        Fill = new SolidColorPaint(SKColors.Blue.WithAlpha(90)), // mark
         Stroke = null
     },
     new StackedStepAreaSeries&lt;double>
     {
         Values = new List&lt;double> { 6, 5, 6, 3, 8, 5, 2 },
-        Fill = new SolidColorPaintTask(SKColors.Red.WithAlpha(90)), // mark
+        Fill = new SolidColorPaint(SKColors.Red.WithAlpha(90)), // mark
         Stroke = null
     },
     new StackedStepAreaSeries&lt;double>
     {
         Values = new List<double> { 4, 8, 2, 8, 9, 5, 3 },
-        Fill = new SolidColorPaintTask(SKColors.Green.WithAlpha(90)), // mark
+        Fill = new SolidColorPaint(SKColors.Green.WithAlpha(90)), // mark
         Stroke = null
     }
 };</code></pre>
@@ -82,22 +82,22 @@ the series position in your series collection and the current theme.
     {
         Values = new List&lt;double> { 3, 2, 3, 5, 3, 4, 6 },
         GeometrySize = 20,
-        GeometryFill = new SolidColorPaintTask(SKColors.WhiteSmoke), // mark
-        GeometryStroke = new SolidColorPaintTask(SKColors.Red) { StrokeThickness = 3 }, // mark
+        GeometryFill = new SolidColorPaint(SKColors.WhiteSmoke), // mark
+        GeometryStroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 3 }, // mark
     },
     new StackedStepAreaSeries&lt;double>
     {
         Values = new List&lt;double> { 6, 5, 6, 3, 8, 5, 2 },
         GeometrySize = 20,
-        GeometryFill = new SolidColorPaintTask(SKColors.WhiteSmoke), // mark
-        GeometryStroke = new SolidColorPaintTask(SKColors.Green) { StrokeThickness = 6 }, // mark
+        GeometryFill = new SolidColorPaint(SKColors.WhiteSmoke), // mark
+        GeometryStroke = new SolidColorPaint(SKColors.Green) { StrokeThickness = 6 }, // mark
     },
     new StackedStepAreaSeries&lt;double>
     {
         Values = new List&lt;double> { 4, 8, 2, 8, 9, 5, 3 },
         GeometrySize = 20,
-        GeometryFill = new SolidColorPaintTask(SKColors.WhiteSmoke), // mark
-        GeometryStroke = new SolidColorPaintTask(SKColors.Blue) { StrokeThickness = 10 }, // mark
+        GeometryFill = new SolidColorPaint(SKColors.WhiteSmoke), // mark
+        GeometryStroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 10 }, // mark
     }
 };</code></pre>
 
@@ -112,13 +112,13 @@ Determines the size of the geometry, if this property is not set, then the libra
     new StackedStepAreaSeries&lt;double>
     {
         Values = new List&lt;double> { 3, 2, 3, 5, 3, 4, 6 },
-        GeometryFill = new SolidColorPaintTask(SKColors.Black),
+        GeometryFill = new SolidColorPaint(SKColors.Black),
         GeometrySize = 10, // mark
     },
     new StackedStepAreaSeries&lt;double>
     {
         Values = new List&lt;double> { 6, 5, 6, 3, 8, 5, 2 },
-        GeometryFill = new SolidColorPaintTask(SKColors.Black),
+        GeometryFill = new SolidColorPaint(SKColors.Black),
         GeometrySize = 20, // mark
     }
 };</code></pre>

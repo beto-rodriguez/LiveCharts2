@@ -47,10 +47,10 @@ Series = new ISeries[]
 {
     new CandlesticksSeries&lt;FinancialPoint>
     {
-        UpFill = new SolidColorPaintTask(SKColors.Blue), // mark
-        UpStroke = new SolidColorPaintTask(SKColors.CornflowerBlue) { StrokeThickness = 5 }, // mark
-        DownFill = new SolidColorPaintTask(SKColors.Red), // mark
-        DownStroke = new SolidColorPaintTask(SKColors.Orange) { StrokeThickness = 5 }, // mark
+        UpFill = new SolidColorPaint(SKColors.Blue), // mark
+        UpStroke = new SolidColorPaint(SKColors.CornflowerBlue) { StrokeThickness = 5 }, // mark
+        DownFill = new SolidColorPaint(SKColors.Red), // mark
+        DownStroke = new SolidColorPaint(SKColors.Orange) { StrokeThickness = 5 }, // mark
         Values = new ObservableCollection&lt;FinancialPoint>
         {
             //                             date,        high, open, close, low

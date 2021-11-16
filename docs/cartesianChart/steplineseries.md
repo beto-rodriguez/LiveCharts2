@@ -20,7 +20,7 @@ and the current theme.
     new StepLineSeries&lt;int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
-        Stroke = new SolidColorPaintTask(SKColors.Blue) { StrokeThickness = 4 }, // mark
+        Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 4 }, // mark
         Fill = null,
         GeometryFill = null,
         GeometryStroke = null
@@ -28,7 +28,7 @@ and the current theme.
     new StepLineSeries&lt;int>
     {
         Values = new [] { 7, 5, 3, 4, 6 },
-        Stroke = new SolidColorPaintTask(SKColors.Red) { StrokeThickness = 8 }, // mark
+        Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 8 }, // mark
         Fill = null,
         GeometryFill = null,
         GeometryStroke = null
@@ -50,7 +50,7 @@ Series = new ISeries[]
     new StepLineSeries&lt;int>
     {
         Values = new [] { 4, 3, 7, 2, 8 },
-        Fill = new SolidColorPaintTask(SKColors.Blue.WithAlpha(90)), // mark
+        Fill = new SolidColorPaint(SKColors.Blue.WithAlpha(90)), // mark
         Stroke = null,
         GeometryFill = null,
         GeometryStroke = null
@@ -70,10 +70,10 @@ the series position in your series collection and the current theme.
     new StepLineSeries&lt;int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
-        Stroke = new SolidColorPaintTask(SKColors.Blue) { StrokeThickness = 4 },
+        Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 4 },
         Fill = null,
-        GeometryFill = new SolidColorPaintTask(SKColors.AliceBlue), // mark
-        GeometryStroke = new SolidColorPaintTask(SKColors.Gray) { StrokeThickness = 4 } // mark
+        GeometryFill = new SolidColorPaint(SKColors.AliceBlue), // mark
+        GeometryStroke = new SolidColorPaint(SKColors.Gray) { StrokeThickness = 4 } // mark
     }
 };</code></pre>
 
@@ -256,11 +256,10 @@ You can use any geometry to represent a point in a line series.
     new StepLineSeries&lt;double, MyGeometry>
     {
         Values = new List&lt;double> { -2, 2, 1, 3, -1, 4, 3 },
-
-        Stroke = new SolidColorPaintTask(SKColors.DarkOliveGreen, 3),
+        Stroke = new SolidColorPaint(SKColors.DarkOliveGreen, 3),
         Fill = null,
         GeometryStroke = null,
-        GeometryFill = new SolidColorPaintTask(SKColors.DarkOliveGreen),
+        GeometryFill = new SolidColorPaint(SKColors.DarkOliveGreen),
         GeometrySize = 40
     }
 };</code></pre>

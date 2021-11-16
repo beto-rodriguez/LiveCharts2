@@ -6,18 +6,16 @@
 
 {{ render this "~/shared/series.md" }}
 
-{{ render this "~/shared/datalabels.md" }}
-
 ## Stroke property
 
 If the stroke property is not set, then LiveCharts will create it based on the series position in your series collection
 and the current theme.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stackedareastroke.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/polarlinestroke.png)
 
 <pre><code>Series = new ISeries[]
 {
-    new StackedAreaSeries&lt;int>
+    new PolarLineSeries&lt;int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
         Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 4 }, // mark
@@ -25,7 +23,7 @@ and the current theme.
         GeometryFill = null,
         GeometryStroke = null
     },
-    new StackedAreaSeries&lt;int>
+    new PolarLineSeries&lt;int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
         Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 8 }, // mark
@@ -33,7 +31,7 @@ and the current theme.
         GeometryFill = null,
         GeometryStroke = null
     },
-    new StackedAreaSeries&lt;int>
+    new PolarLineSeries&lt;int>
     {
         Values = new [] { 4, 2, 5, 3, 9 },
         Stroke = new SolidColorPaint(SKColors.Green) { StrokeThickness = 1 }, // mark
@@ -50,11 +48,11 @@ and the current theme.
 
 The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent and 255 disables transparency completely.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stackedareafill.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/polarlinefill.png)
 
 <pre><code>Series = new ISeries[]
 {
-    new LineSeries&lt;int>
+    new PolarLineSeries&lt;int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
         Fill = new SolidColorPaint(SKColors.Blue.WithAlpha(90)), // mark
@@ -62,7 +60,7 @@ The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent 
         GeometryFill = null,
         GeometryStroke = null
     },
-    new LineSeries&lt;int>
+    new PolarLineSeries&lt;int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
         Fill = new SolidColorPaint(SKColors.Red.WithAlpha(90)), // mark
@@ -70,7 +68,7 @@ The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent 
         GeometryFill = null,
         GeometryStroke = null
     },
-    new LineSeries&lt;int>
+    new PolarLineSeries&lt;int>
     {
         Values = new [] { 4, 2, 5, 3, 9 },
         Fill = new SolidColorPaint(SKColors.Green.WithAlpha(90)), // mark
@@ -82,34 +80,29 @@ The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent 
 
 ## GeometryFill and GeometryStroke properties
 
-The geometry is the circle shape (by default) that the line series draws for every point, byt by default the size is `0` 
-you can customize the fill and stroke of this shape, if none of these properties are set then LiveCharts will create them 
-based on the series position in your series collection and the current theme.
+The geometry is the circle shape (by default) that the line series draws for every point, you can customize
+the fill and stroke of this shape, if none of these properties are set then LiveCharts will create them based on 
+the series position in your series collection and the current theme.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stackedareageometrystrokefill.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/polarlinegsf.png)
 
 <pre><code>Series = new ISeries[]
 {
-    new StackedAreaSeries&lt;int>
+    new PolarLineSeries&lt;int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
-        GeometrySize = 20,
-        GeometryFill = new SolidColorPaint(SKColors.WhiteSmoke), // mark
-        GeometryStroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 3 }, // mark
+        Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 4 },
+        Fill = null,
+        GeometryFill = new SolidColorPaint(SKColors.AliceBlue), // mark
+        GeometryStroke = new SolidColorPaint(SKColors.Gray) { StrokeThickness = 4 } // mark
     },
-    new StackedAreaSeries&lt;int>
+    new PolarLineSeries&lt;int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
-        GeometrySize = 20,
-        GeometryFill = new SolidColorPaint(SKColors.WhiteSmoke), // mark
-        GeometryStroke = new SolidColorPaint(SKColors.Green) { StrokeThickness = 6 }, // mark
-    },
-    new StackedAreaSeries&lt;int>
-    {
-        Values = new [] { 4, 2, 5, 3, 9 },
-        GeometrySize = 20,
-        GeometryFill = new SolidColorPaint(SKColors.WhiteSmoke), // mark
-        GeometryStroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 10 }, // mark
+        Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 8 },
+        Fill = null,
+        GeometryFill = new SolidColorPaint(SKColors.IndianRed), // mark
+        GeometryStroke = new SolidColorPaint(SKColors.DarkSalmon) { StrokeThickness = 8 } // mark
     }
 };</code></pre>
 
@@ -117,30 +110,19 @@ based on the series position in your series collection and the current theme.
 
 Determines the size of the geometry, if this property is not set, then the library will decide it based on the theme.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stackedareags.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/polarlinegs.png)
 
 <pre><code>Series = new ISeries[]
 {
-    new StackedAreaSeries&lt;int>
+    new PolarLineSeries&lt;int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
-        GeometrySize = 10, // mark
-        GeometryFill = new SolidColorPaint(SKColors.WhiteSmoke),
-        GeometryStroke = new SolidColorPaint(SKColors.Red),
+        GeometrySize = 10 // mark
     },
-    new StackedAreaSeries&lt;int>
+    new PolarLineSeries&lt;int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
-        GeometrySize = 20, // mark
-        GeometryFill = new SolidColorPaint(SKColors.WhiteSmoke),
-        GeometryStroke = new SolidColorPaint(SKColors.Green),
-    },
-    new StackedAreaSeries&lt;int>
-    {
-        Values = new [] { 4, 2, 5, 3, 9 },
-        GeometrySize = 30, // mark
-        GeometryFill = new SolidColorPaint(SKColors.WhiteSmoke),
-        GeometryStroke = new SolidColorPaint(SKColors.Blue),
+        GeometrySize = 30 // mark
     }
 };</code></pre>
 
@@ -149,32 +131,49 @@ Determines the size of the geometry, if this property is not set, then the libra
 Determines if the series line is straight or curved, this property is of type `double` and goes from `0` to `1` any other
 value will be ignored, where 0 is straight and 1 is the most curved line.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/linesmothness.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/polarlinesmothness.png)
 
 <pre><code>Series = new ISeries[]
 {
-    new StackedAreaSeries&lt;int>
+    new PolarLineSeries&lt;int>
     {
-        Values = new [] { 4, 4, 7, 2, 8 },
-        LineSmoothness = 0, // mark
+        Values = new [] { 5, 4, 7, 3, 8 },
+        LineSmoothness = 0 // mark
     },
-    new StackedAreaSeries&lt;int>
+    new PolarLineSeries&lt;int>
     {
-        Values = new [] { 7, 5, 3, 2, 6 },
-        LineSmoothness = 0.5 // mark
-    },
-    new StackedAreaSeries&lt;int>
-    {
-        Values = new [] { 4, 2, 5, 3, 9 },
+        Values = new [] { 7, 2, 6, 2, 6 },
         LineSmoothness = 1 // mark
     }
 };</code></pre>
 
-## Plotting custom types
+## EnableNullSplitting property
 
-:::info
-this sample uses the LineSeries class, notice StackedLineSeries inherits from LineSeries, this sample also applies for the StackedLineSeries class.
-:::
+This property is enabled by default (`true`), it has a performance cost and allows the series to create gaps, when the
+series finds a `null` instance then the series will create a gap.
+
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/polarlinesnullsplit.png)
+
+<pre><code>Series = new ISeries[]
+{
+    new PolarLineSeries&lt;int?>
+    {
+        Values = new int?[] 
+        { 
+            5, 
+            4, 
+            2, 
+            null, // mark
+            3, 
+            8, 
+            6 
+        },
+        LineSmoothness = 0,
+        IsClosed = false
+    }
+};</code></pre>
+
+## Plotting custom types
 
 You can teach LiveCharts to plot anything, imagine the case where we have an array of the `City` class defined bellow:
 
@@ -226,7 +225,7 @@ Now we are ready to plot cities all over our application:
 
 <pre><code>Series = new[]
 {
-    new LineSeries&lt;City>
+    new PolarLineSeries&lt;City>
     {
         Name = "Population",
         TooltipLabelFormatter = point => $"{point.Model.Name} {point.PrimaryValue:N2}M",
@@ -242,7 +241,7 @@ Now we are ready to plot cities all over our application:
     }
 };</code></pre>
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/linect.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/polarlinect.png)
 
 Alternatively you could create a **local** mapper that will only work for a specific series, global mappers will be 
 ignored when the series `Mapping` property is not null.
@@ -260,7 +259,7 @@ ignored when the series `Mapping` property is not null.
 Series = new[]
 {
     // this series draws the Population property in the Y axis
-    new LineSeries&lt;City>
+    new PolarLineSeries&lt;City>
     {
         Name = "Population",
         TooltipLabelFormatter = point => $"{point.Model.Name} population: {point.PrimaryValue:N2}M",
@@ -299,15 +298,72 @@ Series = new[]
     //}
 };</code></pre>
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/linectl.png)
-
-## EnableNullSplitting property
-
-Even the property is visible, this feature is not supported by now.
-
 ## Custom geometries
 
-You can use any geometry to represent a point in a line series, if you want this feature, please check the sample in the 
-[line series article]({{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Line%20Series).
+You can use any geometry to represent a point in a line series.
+
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/polarlinescg.png)
+
+<pre><code>Series = new List&lt;ISeries>
+{
+    // use the second argument type to specify the geometry to draw for every point
+    // there are already many predefined geometries in the
+    // LiveChartsCore.SkiaSharpView.Drawing.Geometries namespace
+    new PolarLineSeries&lt;double, LiveChartsCore.SkiaSharpView.Drawing.Geometries.RectangleGeometry>
+    {
+        Values = new List&lt;double> { 3, 3, -3, -2, -4, -3, -1 },
+        Fill = null,
+        LineSmoothness = 1
+    },
+
+    // you can also define your own SVG geometry
+    new PolarLineSeries&lt;double, MyGeometry>
+    {
+        Values = new List&lt;double> { -2, 2, 1, 3, -1, 4, 3 },
+
+        Stroke = new SolidColorPaint(SKColors.DarkOliveGreen, 3),
+        Fill = null,
+        GeometryStroke = null,
+        GeometryFill = new SolidColorPaint(SKColors.DarkOliveGreen),
+        GeometrySize = 40
+    }
+};</code></pre>
+
+Where `MyGeometry` class is our custom shape, you can draw anything `SkiaSharp` supports at this point,
+but in this case we will draw an SVG path, we inherit from `SVGPathGeometry`, and for performance reasons
+we use a static variable to parse the SVG path, this ways the parse operation only runs once.
+
+<pre><code>public class MyGeometry : LiveChartsCore.SkiaSharpView.Drawing.Geometries.SVGPathGeometry
+{
+    // the static field is important to prevent the svg path is parsed multiple times // mark
+    // Icon from Google Material Icons font.
+    // https://fonts.google.com/icons?selected=Material%20Icons%20Outlined%3Atask_alt%3A
+    public static SKPath svgPath = SKPath.ParseSvgPathData(
+        "M22,5.18L10.59,16.6l-4.24-4.24l1.41-1.41l2.83,2.83l10-10L22,5.18z M19.79,10.22C19.92,10.79,20,11.39,20,12 " +
+        "c0,4.42-3.58,8-8,8s-8-3.58-8-8c0-4.42,3.58-8,8-8c1.58,0,3.04,0.46,4.28,1.25l1.44-1.44C16.1,2.67,14.13,2,12,2C6.48,2,2,6.48,2,12 " +
+        "c0,5.52,4.48,10,10,10s10-4.48,10-10c0-1.19-0.22-2.33-0.6-3.39L19.79,10.22z");
+
+    public MyGeometry()
+        : base(svgPath)
+    {
+    }
+
+    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    {
+        // lets also draw a white circle as background before the svg path is drawn
+        // this will just make things look better
+
+        using (var backgroundPaint = new SKPaint())
+        {
+            backgroundPaint.Style = SKPaintStyle.Fill;
+            backgroundPaint.Color = SKColors.White;
+
+            var r = Width / 2;
+            context.Canvas.DrawCircle(X + r, Y + r, r, backgroundPaint);
+        }
+
+        base.OnDraw(context, paint);
+    }
+}</code></pre>
 
 {{ render this "~/shared/series2.md" }}

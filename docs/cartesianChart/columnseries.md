@@ -20,13 +20,13 @@ and the current theme.
     new ColumnSeries&lt;int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
-        Stroke = new SolidColorPaintTask(SKColors.Blue) { StrokeThickness = 4 }, // mark
+        Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 4 }, // mark
         Fill = null,
     },
     new ColumnSeries&lt;int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
-        Stroke = new SolidColorPaintTask(SKColors.Red) { StrokeThickness = 8 }, // mark
+        Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 8 }, // mark
         Fill = null,
     }
 };</code></pre>
@@ -43,13 +43,13 @@ and the current theme.
     new ColumnSeries&lt;int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
-        Fill = new SolidColorPaintTask(SKColors.Blue), // mark
+        Fill = new SolidColorPaint(SKColors.Blue), // mark
         Stroke = null
     },
     new ColumnSeries<int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
-        Fill = new SolidColorPaintTask(SKColors.Red), // mark
+        Fill = new SolidColorPaint(SKColors.Red), // mark
         Stroke = null
     }
 };</code></pre>
@@ -158,14 +158,14 @@ to create backgrounds for columns, take a look at the following sample:
     {
         Values = new ObservableCollection&lt;double> { 10, 10, 10, 10, 10, 10, 10 },
         Stroke = null,
-        Fill = new SolidColorPaintTask(new SKColor(30, 30, 30, 30)),
+        Fill = new SolidColorPaint(new SKColor(30, 30, 30, 30)),
         IgnoresBarPosition = true // mark
     },
     new ColumnSeries&lt;double>
     {
         Values = new ObservableCollection&lt;double> { 3, 10, 5, 3, 7, 3, 8 },
         Stroke = null,
-        Fill = new SolidColorPaintTask(SKColors.CornflowerBlue),
+        Fill = new SolidColorPaint(SKColors.CornflowerBlue),
         IgnoresBarPosition = true // mark
     }
 };</code></pre>
@@ -298,7 +298,7 @@ You can use any geometry to represent a point in a line series.
     new ColumnSeries&lt;double, LiveChartsCore.SkiaSharpView.Drawing.Geometries.OvalGeometry>
     {
         Values = new List&lt;double> { 4, 2, 0, 5, 2, 6 },
-        Fill = new SolidColorPaintTask(SKColors.CornflowerBlue)
+        Fill = new SolidColorPaint(SKColors.CornflowerBlue)
     },
 
     // you can also define your own geometry using SVG
@@ -306,7 +306,7 @@ You can use any geometry to represent a point in a line series.
     {
         Values = new List&lt;double> { 3, 2, 3, 4, 5, 3 },
         Stroke = null,
-        Fill = new SolidColorPaintTask(SKColors.Coral, 5)
+        Fill = new SolidColorPaint(SKColors.Coral, 5)
     }
 };</code></pre>
 

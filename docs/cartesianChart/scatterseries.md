@@ -19,7 +19,7 @@ and the current theme.
 {
     new ScatterSeries&lt;ObservablePoint>
     {
-        Stroke = new SolidColorPaintTask(SKColors.Blue) { StrokeThickness = 4 }, // mark
+        Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 4 }, // mark
         Fill = null,
         Values = new ObservableCollection&lt;ObservablePoint>
         {
@@ -60,7 +60,7 @@ and the current theme.
 {
     new ScatterSeries&lt;ObservablePoint>
     {
-        Fill = new SolidColorPaintTask(SKColors.Blue), // mark
+        Fill = new SolidColorPaint(SKColors.Blue), // mark
         Stroke = null,
         Values = new ObservableCollection&lt;ObservablePoint>
         {

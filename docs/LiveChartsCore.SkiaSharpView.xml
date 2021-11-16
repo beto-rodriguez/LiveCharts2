@@ -1147,15 +1147,15 @@
             Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
             </summary>
         </member>
-        <member name="T:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask">
+        <member name="T:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaint">
             <summary>
             Defines a set of geometries that will be painted using a radial gradient shader.
             </summary>
             <seealso cref="T:LiveChartsCore.SkiaSharpView.Painting.PaintTask" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask.#ctor(SkiaSharp.SKColor[],System.Nullable{SkiaSharp.SKPoint},System.Single,System.Single[],SkiaSharp.SKShaderTileMode)">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaint.#ctor(SkiaSharp.SKColor[],System.Nullable{SkiaSharp.SKPoint},System.Single,System.Single[],SkiaSharp.SKShaderTileMode)">
             <summary>
-            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask"/> class.
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaint"/> class.
             </summary>
             <param name="gradientStops">The gradient stops.</param>
             <param name="center">
@@ -1174,14 +1174,14 @@
             The shader tile mode, default is <see cref="F:SkiaSharp.SKShaderTileMode.Repeat"/>.
             </param>
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask.#ctor(SkiaSharp.SKColor,SkiaSharp.SKColor)">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaint.#ctor(SkiaSharp.SKColor,SkiaSharp.SKColor)">
             <summary>
-            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask"/> class.
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaint"/> class.
             </summary>
             <param name="centerColor">Color of the center.</param>
             <param name="outerColor">Color of the outer.</param>
         </member>
-        <member name="P:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask.PathEffect">
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaint.PathEffect">
             <summary>
             Gets or sets the path effect.
             </summary>
@@ -1189,48 +1189,48 @@
             The path effect.
             </value>
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask.CloneTask">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaint.CloneTask">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.CloneTask" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask.InitializeTask(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaint.InitializeTask(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.InitializeTask(`0)" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask.ResetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaint.ResetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.ResetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask.SetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaint.SetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.SetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaintTask.Dispose">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.RadialGradientPaint.Dispose">
             <summary>
             Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
             </summary>
         </member>
-        <member name="T:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask">
+        <member name="T:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint">
             <summary>
             Defines a set of geometries that will be painted using a solid color.
             </summary>
             <seealso cref="T:LiveChartsCore.SkiaSharpView.Painting.PaintTask" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.#ctor">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint.#ctor">
             <summary>
-            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask"/> class.
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint"/> class.
             </summary>
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.#ctor(SkiaSharp.SKColor)">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint.#ctor(SkiaSharp.SKColor)">
             <summary>
-            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask"/> class.
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint"/> class.
             </summary>
             <param name="color">The color.</param>
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.#ctor(SkiaSharp.SKColor,System.Single)">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint.#ctor(SkiaSharp.SKColor,System.Single)">
             <summary>
-            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask"/> class.
+            Initializes a new instance of the <see cref="T:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint"/> class.
             </summary>
             <param name="color">The color.</param>
             <param name="strokeWidth">Width of the stroke.</param>
         </member>
-        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.StrokeCap">
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint.StrokeCap">
             <summary>
             Gets or sets the stroke cap.
             </summary>
@@ -1238,7 +1238,7 @@
             The stroke cap.
             </value>
         </member>
-        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.StrokeJoin">
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint.StrokeJoin">
             <summary>
             Gets or sets the stroke join.
             </summary>
@@ -1246,7 +1246,7 @@
             The stroke join.
             </value>
         </member>
-        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.StrokeMiter">
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint.StrokeMiter">
             <summary>
             Gets or sets the stroke miter.
             </summary>
@@ -1254,7 +1254,7 @@
             The stroke miter.
             </value>
         </member>
-        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.PathEffect">
+        <member name="P:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint.PathEffect">
             <summary>
             Gets or sets the path effect.
             </summary>
@@ -1262,19 +1262,19 @@
             The path effect.
             </value>
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.CloneTask">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint.CloneTask">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.CloneTask" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.InitializeTask(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint.InitializeTask(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext)">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.InitializeTask(`0)" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.SetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint.SetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.SetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.ResetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint.ResetOpacity(LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext,LiveChartsCore.Drawing.IGeometry{LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext})">
             <inheritdoc cref="M:LiveChartsCore.Drawing.IDrawableTask`1.ResetOpacity(`0,LiveChartsCore.Drawing.IGeometry{`0})" />
         </member>
-        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaintTask.Dispose">
+        <member name="M:LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint.Dispose">
             <summary>
             Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
             </summary>

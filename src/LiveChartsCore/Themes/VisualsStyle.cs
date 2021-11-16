@@ -348,7 +348,7 @@ namespace LiveChartsCore.Themes
                 }
             }
 
-            if ((series.SeriesProperties & SeriesProperties.PolarLine) == SeriesProperties.Polar)
+            if ((series.SeriesProperties & SeriesProperties.PolarLine) == SeriesProperties.PolarLine)
             {
                 var polarSeries = (IPolarLineSeries<TDrawingContext>)series;
                 foreach (var rule in PolarLineSeriesBuilder) rule(polarSeries);

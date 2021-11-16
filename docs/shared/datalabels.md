@@ -6,8 +6,8 @@ following sample:
 <pre><code>new {{ name  | to_title_case_no_spaces }}&lt;double>
 {
     DataLabelsSize = 20,
-    DataLabelsPaint = new SolidColorPaintTask(SKColors.Blue),
-    // all the available positions at: 
+    DataLabelsPaint = new SolidColorPaint(SKColors.Blue),
+    // all the available positions at:
     // {{ website_url }}/api/{{ version }}/LiveChartsCore.Measure.DataLabelsPosition
     DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
     // The DataLabelsFormatter is a function 

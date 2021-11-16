@@ -20,7 +20,7 @@ and the current theme.
     new LineSeries&lt;int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
-        Stroke = new SolidColorPaintTask(SKColors.Blue) { StrokeThickness = 4 }, // mark
+        Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 4 }, // mark
         Fill = null,
         GeometryFill = null,
         GeometryStroke = null
@@ -28,7 +28,7 @@ and the current theme.
     new LineSeries&lt;int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
-        Stroke = new SolidColorPaintTask(SKColors.Red) { StrokeThickness = 8 }, // mark
+        Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 8 }, // mark
         Fill = null,
         GeometryFill = null,
         GeometryStroke = null
@@ -36,7 +36,7 @@ and the current theme.
     new LineSeries&lt;int>
     {
         Values = new [] { 4, 2, 5, 3, 9 },
-        Stroke = new SolidColorPaintTask(SKColors.Green) { StrokeThickness = 1 }, // mark
+        Stroke = new SolidColorPaint(SKColors.Green) { StrokeThickness = 1 }, // mark
         Fill = null,
         GeometryFill = null,
         GeometryStroke = null
@@ -57,7 +57,7 @@ The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent 
     new LineSeries&lt;int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
-        Fill = new SolidColorPaintTask(SKColors.Blue.WithAlpha(90)), // mark
+        Fill = new SolidColorPaint(SKColors.Blue.WithAlpha(90)), // mark
         Stroke = null,
         GeometryFill = null,
         GeometryStroke = null
@@ -65,7 +65,7 @@ The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent 
     new LineSeries&lt;int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
-        Fill = new SolidColorPaintTask(SKColors.Red.WithAlpha(90)), // mark
+        Fill = new SolidColorPaint(SKColors.Red.WithAlpha(90)), // mark
         Stroke = null,
         GeometryFill = null,
         GeometryStroke = null
@@ -73,7 +73,7 @@ The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent 
     new LineSeries&lt;int>
     {
         Values = new [] { 4, 2, 5, 3, 9 },
-        Fill = new SolidColorPaintTask(SKColors.Green.WithAlpha(90)), // mark
+        Fill = new SolidColorPaint(SKColors.Green.WithAlpha(90)), // mark
         Stroke = null,
         GeometryFill = null,
         GeometryStroke = null
@@ -93,18 +93,18 @@ the series position in your series collection and the current theme.
     new LineSeries&lt;int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
-        Stroke = new SolidColorPaintTask(SKColors.Blue) { StrokeThickness = 4 },
+        Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 4 },
         Fill = null,
-        GeometryFill = new SolidColorPaintTask(SKColors.AliceBlue), // mark
-        GeometryStroke = new SolidColorPaintTask(SKColors.Gray) { StrokeThickness = 4 } // mark
+        GeometryFill = new SolidColorPaint(SKColors.AliceBlue), // mark
+        GeometryStroke = new SolidColorPaint(SKColors.Gray) { StrokeThickness = 4 } // mark
     },
     new LineSeries&lt;int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
-        Stroke = new SolidColorPaintTask(SKColors.Red) { StrokeThickness = 8 },
+        Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 8 },
         Fill = null,
-        GeometryFill = new SolidColorPaintTask(SKColors.IndianRed), // mark
-        GeometryStroke = new SolidColorPaintTask(SKColors.DarkSalmon) { StrokeThickness = 8 } // mark
+        GeometryFill = new SolidColorPaint(SKColors.IndianRed), // mark
+        GeometryStroke = new SolidColorPaint(SKColors.DarkSalmon) { StrokeThickness = 8 } // mark
     }
 };</code></pre>
 
@@ -323,11 +323,10 @@ You can use any geometry to represent a point in a line series.
     new LineSeries&lt;double, MyGeometry>
     {
         Values = new List&lt;double> { -2, 2, 1, 3, -1, 4, 3 },
-
-        Stroke = new SolidColorPaintTask(SKColors.DarkOliveGreen, 3),
+        Stroke = new SolidColorPaint(SKColors.DarkOliveGreen, 3),
         Fill = null,
         GeometryStroke = null,
-        GeometryFill = new SolidColorPaintTask(SKColors.DarkOliveGreen),1
+        GeometryFill = new SolidColorPaint(SKColors.DarkOliveGreen),
         GeometrySize = 40
     }
 };</code></pre>
