@@ -57,7 +57,7 @@ namespace LiveChartsCore
         private RadialAlignment _radialAlign = RadialAlignment.Outer;
         private bool _invertedCornerRadius = false;
         private bool _isFillSeries;
-        private PolarLabelsPosition _labelsPosition;
+        private PolarLabelsPosition _labelsPosition = PolarLabelsPosition.Middle;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
@@ -219,6 +219,21 @@ namespace LiveChartsCore
                 }
             }
 
+            var r = (float)DataLabelsRotation;
+            var isTangent = false;
+            var isCotangent = false;
+
+            if (((int)r & LiveCharts.TangentAngle) != 0)
+            {
+                r -= LiveCharts.TangentAngle;
+                isTangent = true;
+            }
+
+            if (((int)r & LiveCharts.CotangentAngle) != 0)
+            {
+                r -= LiveCharts.CotangentAngle;
+                isCotangent = true;
+            }
             var i = 1f;
 
             foreach (var point in fetched)
@@ -328,9 +343,19 @@ namespace LiveChartsCore
                 {
                     var label = (TLabel?)point.Context.Label;
 
+                    // middleAngle = startAngle + (sweepAngle/2);
+                    var middleAngle = (float)(start + initialRotation + end * 0.5);
+
+                    var actualRotation = r +
+                            (isTangent ? middleAngle - 90 : 0) +
+                            (isCotangent ? middleAngle : 0);
+
+                    if ((isTangent || isCotangent) && ((actualRotation + 90) % 360) > 180)
+                        actualRotation += 180;
+
                     if (label is null)
                     {
-                        var l = new TLabel { X = cx, Y = cy, RotateTransform = (float)DataLabelsRotation };
+                        var l = new TLabel { X = cx, Y = cy, RotateTransform = actualRotation };
 
                         _ = l.TransitionateProperties(nameof(l.X), nameof(l.Y))
                             .WithAnimation(animation =>
@@ -348,6 +373,7 @@ namespace LiveChartsCore
                     label.Text = DataLabelsFormatter(new TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>(point));
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
+                    label.RotateTransform = actualRotation;
 
                     if (DataLabelsPosition == PolarLabelsPosition.Start)
                     {
