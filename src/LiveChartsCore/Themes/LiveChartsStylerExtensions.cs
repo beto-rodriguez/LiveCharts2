@@ -350,5 +350,37 @@ namespace LiveChartsCore.Themes
             styler.FinancialSeriesBuilder.Add(predicate);
             return styler;
         }
+
+        /// <summary>
+        ///  Defines a style builder for <see cref="IPolarSeries{TDrawingContext}"/> objects.
+        /// </summary>
+        /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+        /// <param name="styler">The styler.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns></returns>
+        public static VisualsStyle<TDrawingContext> HasRuleForPolaSeries<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
+            Action<IPolarSeries<TDrawingContext>> predicate)
+            where TDrawingContext : DrawingContext
+        {
+            styler.PolarSeriesBuilder.Add(predicate);
+            return styler;
+        }
+
+        /// <summary>
+        ///  Defines a style builder for <see cref="IPolarLineSeries{TDrawingContext}"/> objects.
+        /// </summary>
+        /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+        /// <param name="styler">The styler.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns></returns>
+        public static VisualsStyle<TDrawingContext> HasRuleForPolarLineSeries<TDrawingContext>(
+            this VisualsStyle<TDrawingContext> styler,
+            Action<IPolarLineSeries<TDrawingContext>> predicate)
+            where TDrawingContext : DrawingContext
+        {
+            styler.PolarLineSeriesBuilder.Add(predicate);
+            return styler;
+        }
     }
 }

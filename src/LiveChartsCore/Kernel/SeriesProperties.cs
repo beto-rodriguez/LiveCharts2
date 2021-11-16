@@ -124,6 +124,11 @@ namespace LiveChartsCore.Kernel
         /// <summary>
         /// The polar series
         /// </summary>
-        Polar = 1 << 19
+        Polar = 1 << 19,
+
+        /// <summary>
+        /// The polar line series
+        /// </summary>
+        PolarLine = 1 << 19
     }
 }

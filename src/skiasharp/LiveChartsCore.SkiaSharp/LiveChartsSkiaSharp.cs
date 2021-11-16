@@ -171,6 +171,12 @@ namespace LiveChartsCore.SkiaSharpView
                                    financialSeries.DownFill = DefaultPaintTask;
                                    financialSeries.UpStroke = DefaultPaintTask;
                                    financialSeries.DownStroke = DefaultPaintTask;
+                               })
+                               .HasRuleForPolarLineSeries(polarLine =>
+                               {
+                                   polarLine.GeometrySize = 18;
+                                   polarLine.GeometryFill = new SolidColorPaint(LvcColor.FromArgb(255, 250, 250, 250).AsSKColor());
+                                   polarLine.GeometryStroke = DefaultPaintTask;
                                }))
                        // finally add a resolver for the DefaultPaintTask
                        // the library already provides the AddDefaultLightResolvers() and AddDefaultDarkResolvers methods
@@ -279,6 +285,12 @@ namespace LiveChartsCore.SkiaSharpView
                                    financialSeries.DownFill = DefaultPaintTask;
                                    financialSeries.UpStroke = DefaultPaintTask;
                                    financialSeries.DownStroke = DefaultPaintTask;
+                               })
+                               .HasRuleForPolarLineSeries(polarLine =>
+                               {
+                                   polarLine.GeometrySize = 18;
+                                   polarLine.GeometryFill = new SolidColorPaint(LvcColor.FromArgb(255, 40, 40, 40).AsSKColor());
+                                   polarLine.GeometryStroke = DefaultPaintTask;
                                }))
                        // finally add a resolver for the DefaultPaintTask
                        // the library already provides the AddDefaultResolvers() method
@@ -363,6 +375,17 @@ namespace LiveChartsCore.SkiaSharpView
                             if (lineSeries.GeometryStroke == DefaultPaintTask)
                                 lineSeries.GeometryStroke =
                                     new SolidColorPaint(color.AsSKColor(), lineSeries.Stroke?.StrokeThickness ?? 5);
+                        }
+
+                        if ((series.SeriesProperties & SeriesProperties.PolarLine) == SeriesProperties.PolarLine)
+                        {
+                            var polarLine = (IPolarLineSeries<SkiaSharpDrawingContext>)series;
+
+                            if (polarLine.GeometryFill == DefaultPaintTask)
+                                polarLine.GeometryFill = new SolidColorPaint(color.AsSKColor());
+                            if (polarLine.GeometryStroke == DefaultPaintTask)
+                                polarLine.GeometryStroke =
+                                    new SolidColorPaint(color.AsSKColor(), polarLine.Stroke?.StrokeThickness ?? 5);
                         }
 
                         if ((series.SeriesProperties & SeriesProperties.StepLine) == SeriesProperties.StepLine)
@@ -498,6 +521,17 @@ namespace LiveChartsCore.SkiaSharpView
                             if (lineSeries.GeometryStroke == DefaultPaintTask)
                                 lineSeries.GeometryStroke =
                                     new SolidColorPaint(color.AsSKColor(), lineSeries.Stroke?.StrokeThickness ?? 5);
+                        }
+
+                        if ((series.SeriesProperties & SeriesProperties.PolarLine) == SeriesProperties.PolarLine)
+                        {
+                            var polarLine = (IPolarLineSeries<SkiaSharpDrawingContext>)series;
+
+                            if (polarLine.GeometryFill == DefaultPaintTask)
+                                polarLine.GeometryFill = new SolidColorPaint(color.AsSKColor());
+                            if (polarLine.GeometryStroke == DefaultPaintTask)
+                                polarLine.GeometryStroke =
+                                    new SolidColorPaint(color.AsSKColor(), polarLine.Stroke?.StrokeThickness ?? 5);
                         }
 
                         if ((series.SeriesProperties & SeriesProperties.StepLine) == SeriesProperties.StepLine)
