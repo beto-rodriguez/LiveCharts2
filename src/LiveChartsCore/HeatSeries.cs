@@ -33,10 +33,10 @@ namespace LiveChartsCore
     /// <summary>
     /// Defines a column series.
     /// </summary>
-    /// <typeparam name="TModel"></typeparam>
-    /// <typeparam name="TVisual"></typeparam>
-    /// <typeparam name="TLabel"></typeparam>
-    /// <typeparam name="TDrawingContext"></typeparam>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <typeparam name="TVisual">The type of the visual.</typeparam>
+    /// <typeparam name="TLabel">The type of the label.</typeparam>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         : CartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IHeatSeries<TDrawingContext>
             where TVisual : class, ISolidColorChartPoint<TDrawingContext>, new()

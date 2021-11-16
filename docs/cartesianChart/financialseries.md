@@ -1,13 +1,12 @@
-# The candle sticks series
+<div id="edit-this-article-source">
+    {{ edit_source | replace_local_to_server}}
+</div>
 
-:::info
-The `CandlesticksSeries` class inherits from `Series` thus the [Series article](todo: addLink) also applies for this object.
-:::
+# {{ name | to_title_case }}
 
-:::info
-This article do not include all the properties inside this object, if you want to learn more about it, please use the 
-API browser in our website.
-:::
+{{ render this "~/shared/series.md" }}
+
+{{ render this "~/shared/datalabels.md" }}
 
 ## UpStroke property
 
@@ -31,8 +30,7 @@ The following sample illustrates the use of the previous properties.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/financialpaints.png)
 
-``` c#
-XAxes = new[]
+<pre><code>XAxes = new[]
 {
     new Axis
     {
@@ -47,15 +45,15 @@ XAxes = new[]
 
 Series = new ISeries[]
 {
-    new CandlesticksSeries<FinancialPoint>
+    new CandlesticksSeries&lt;FinancialPoint>
     {
-        UpFill = new SolidColorPaintTask(SKColors.Blue),
-        UpStroke = new SolidColorPaintTask(SKColors.CornflowerBlue) { StrokeThickness = 5 },
-        DownFill = new SolidColorPaintTask(SKColors.Red),
-        DownStroke = new SolidColorPaintTask(SKColors.Orange) { StrokeThickness = 5 },
-        Values = new ObservableCollection<FinancialPoint>
+        UpFill = new SolidColorPaintTask(SKColors.Blue), // mark
+        UpStroke = new SolidColorPaintTask(SKColors.CornflowerBlue) { StrokeThickness = 5 }, // mark
+        DownFill = new SolidColorPaintTask(SKColors.Red), // mark
+        DownStroke = new SolidColorPaintTask(SKColors.Orange) { StrokeThickness = 5 }, // mark
+        Values = new ObservableCollection&lt;FinancialPoint>
         {
-            //                                 date, high, open, close, low
+            //                             date,        high, open, close, low
             new FinancialPoint(new DateTime(2021, 1, 1), 523, 500, 450, 400),
             new FinancialPoint(new DateTime(2021, 1, 2), 500, 450, 425, 400),
             new FinancialPoint(new DateTime(2021, 1, 3), 490, 425, 400, 380),
@@ -79,8 +77,7 @@ Series = new ISeries[]
             new FinancialPoint(new DateTime(2021, 1, 21), 630, 610, 630, 590),
         }
     }
-};
-```
+};</code></pre>
 
 ## MaxBarWidth property
 
@@ -88,8 +85,7 @@ Specifies the maximum width a column can take, take a look at the following samp
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/financialw10.png)
 
-``` c#
-XAxes = new[]
+<pre><code>XAxes = new[]
 {
     new Axis
     {
@@ -98,15 +94,15 @@ XAxes = new[]
         // set the unit width of the axis to "days"
         // since our X axis is of type date time and 
         // the interval between our points is in days
-        UnitWidth = TimeSpan.FromDays(1).Ticks
+        UnitWidth = TimeSpan.FromDays(1).Ticks // mark
     }
 };
 
 Series = new ISeries[]
 {
-    new CandlesticksSeries<FinancialPoint>
+    new CandlesticksSeries&lt;FinancialPoint>
     {
-        Values = new ObservableCollection<FinancialPoint>
+        Values = new ObservableCollection&lt;FinancialPoint>
         {
             new FinancialPoint(new DateTime(2021, 1, 1), 523, 500, 450, 400),
             new FinancialPoint(new DateTime(2021, 1, 2), 500, 450, 425, 400),
@@ -120,30 +116,26 @@ Series = new ISeries[]
             new FinancialPoint(new DateTime(2021, 1, 10), 490, 420, 460, 400)
         }
     }
-};
-```
+};</code></pre>
 
 ## Plotting custom types
 
 You can teach LiveCharts to plot anything, imagine the case where we have an array of the `Stock` class defined bellow:
 
-``` c#
-public class Stock
+<pre><code>public class Stock
 {
     public DateTime Date { get; set; }
     public double Open { get; set; }
     public double Close { get; set; }
     public double High { get; set; }
     public double Low { get; set; }
-}
-```
+}</code></pre>
 
 You can register this type **globally**, this means that every time LiveCharts finds a `Stock` instance in a chart
 it will use the mapper we registered, global mappers are unique for a type, if you need to plot multiple
 properties then you should use local mappers.
 
-``` c#
-// Ideally you should call this when your application starts
+<pre><code>// Ideally you should call this when your application starts
 // If you need help to decide where to add this code
 // please see the installation guide in this docs.
 
@@ -151,7 +143,7 @@ properties then you should use local mappers.
 
 LiveCharts.Configure(config =>
     config
-        .HasMap<Stock>((stock, point) =>
+        .HasMap&lt;Stock>((stock, point) =>
         {
             // in this lambda function we take an instance of the City class (see city parameter)
             // and the point in the chart for that instance (see point parameter)
@@ -169,15 +161,13 @@ LiveCharts.Configure(config =>
             point.QuaternaryValue = (float)stock.Close;
             point.QuinaryValue = (float)stock.Low;
         })
-        .HasMap<Foo>(...) // you can register more types here using our fluent syntax
-        .HasMap<Bar>(...)
-    );
-```
+        .HasMap&lt;Foo>(...) // you can register more types here using our fluent syntax
+        .HasMap&lt;Bar>(...)
+    );</code></pre>
 
 Now we are ready to plot stock all over our application:
 
-``` c#
-var stockData = new[]
+<pre><code>var stockData = new[]
 {
     new Stock
     {
@@ -211,26 +201,24 @@ XAxes = new[]
 
 Series = new[]
 {
-    new CandlesticksSeries<Stock>
+    new CandlesticksSeries&lt;Stock>
     {
         TooltipLabelFormatter =
-                (p) => $"H: {p.PrimaryValue:N2}, O: {p.TertiaryValue:N2}, C: {p.QuaternaryValue:N2}, L: {p.QuinaryValue:N2}",
+            (p) => $"H: {p.PrimaryValue:N2}, O: {p.TertiaryValue:N2}, C: {p.QuaternaryValue:N2}, L: {p.QuinaryValue:N2}",
         Values = stockData
     }
-};
-```
+};</code></pre>
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/financialct.png)
 
 Alternatively you could create a **local** mapper that will only work for a specific series, global mappers will be 
 ignored when the series `Mapping` property is not null.
 
-``` c#
-Series = new[]
+<pre><code>Series = new[]
 {
-    new CandlesticksSeries<City>
+    new CandlesticksSeries&lt;Stock>
     {
-        Mapping = (city, point) =>
+        Mapping = (stock, point) =>
         {
             point.SecondaryValue = stock.Date.Ticks;
             point.PrimaryValue = (float)stock.High;
@@ -240,5 +228,4 @@ Series = new[]
         },
         Values = stockData
     }
-};
-```
+};</code></pre>

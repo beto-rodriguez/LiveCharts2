@@ -21,7 +21,7 @@ namespace ViewModelsSamples.StepLines.Custom
             },
 
             // you can also define your own SVG geometry
-            new StepLineSeries<double, MyGeomeometry>
+            new StepLineSeries<double, MyGeometry>
             {
                 Values = new List<double> { -2, 2, 1, 3, -1, 4, 3 },
 
@@ -34,14 +34,17 @@ namespace ViewModelsSamples.StepLines.Custom
         };
     }
 
-    public class MyGeomeometry : LiveChartsCore.SkiaSharpView.Drawing.Geometries.SVGPathGeometry
+    public class MyGeometry : LiveChartsCore.SkiaSharpView.Drawing.Geometries.SVGPathGeometry
     {
-        // Icon made by Freepik from www.flaticon.com
-        // https://www.flaticon.com/free-icon/tick_327698?term=check&page=3&position=83&page=3&position=83&related_id=327698&origin=search
+        // the static field is important to prevent the svg path is parsed multiple times // mark
+        // Icon from Google Material Icons font.
+        // https://fonts.google.com/icons?selected=Material%20Icons%20Outlined%3Atask_alt%3A
         public static SKPath svgPath = SKPath.ParseSvgPathData(
-            "M256,0C114.615,0,0,114.615,0,256s114.615,256,256,256s256-114.615,256-256S397.385,0,256,0z M386.594,226.664    L252.747,360.511c-7.551,7.551-17.795,11.794-28.475,11.794s-20.923-4.243-28.475-11.795l-70.388-70.389    c-15.726-15.726-15.726-41.223,0.001-56.95c15.727-15.725,41.224-15.726,56.95,0.001l41.913,41.915l105.371-105.371    c15.727-15.726,41.223-15.726,56.951,0.001C402.319,185.44,402.319,210.938,386.594,226.664z");
+            "M22,5.18L10.59,16.6l-4.24-4.24l1.41-1.41l2.83,2.83l10-10L22,5.18z M19.79,10.22C19.92,10.79,20,11.39,20,12 " +
+            "c0,4.42-3.58,8-8,8s-8-3.58-8-8c0-4.42,3.58-8,8-8c1.58,0,3.04,0.46,4.28,1.25l1.44-1.44C16.1,2.67,14.13,2,12,2C6.48,2,2,6.48,2,12 " +
+            "c0,5.52,4.48,10,10,10s10-4.48,10-10c0-1.19-0.22-2.33-0.6-3.39L19.79,10.22z");
 
-        public MyGeomeometry()
+        public MyGeometry()
             : base(svgPath)
         {
         }
@@ -61,6 +64,7 @@ namespace ViewModelsSamples.StepLines.Custom
             }
 
             base.OnDraw(context, paint);
+
         }
     }
 }

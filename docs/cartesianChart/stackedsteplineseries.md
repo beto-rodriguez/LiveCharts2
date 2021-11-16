@@ -2,17 +2,11 @@
     {{ edit_source | replace_local_to_server}}
 </div>
 
-# The stacked step area series
+# {{ name | to_title_case }}
 
-:::info
-The `StackedStepAreaSeries` class inherits `StepLineSeries` and the `StepLineSeries` inherits from `Series` thus 
-the [Series article](todo: addLink) also applies for this object.
-:::
+{{ render this "~/shared/series.md" }}
 
-:::info
-This article do not include all the properties inside this object, if you want to learn more about it, please use the 
-API browser in our website.
-:::
+{{ render this "~/shared/datalabels.md" }}
 
 ## Stroke property
 
@@ -21,29 +15,27 @@ and the current theme.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stackedstepstroke.png)
 
-``` c#
-Series = new ISeries[]
+<pre><code>Series = new ISeries[]
 {
-    new StackedStepAreaSeries<double>
+    new StackedStepAreaSeries&lt;double>
     {
-        Values = new List<double> { 3, 2, 3, 5, 3, 4, 6 },
-        Stroke = new SolidColorPaintTask(SKColors.Blue) { StrokeThickness = 4 },
+        Values = new List&lt;double> { 3, 2, 3, 5, 3, 4, 6 },
+        Stroke = new SolidColorPaintTask(SKColors.Blue) { StrokeThickness = 4 }, // mark
         Fill = null
     },
-    new StackedStepAreaSeries<double>
+    new StackedStepAreaSeries&lt;double>
     {
-        Values = new List<double> { 6, 5, 6, 3, 8, 5, 2 },
-        Stroke = new SolidColorPaintTask(SKColors.Red) { StrokeThickness = 8 },
+        Values = new List&lt;double> { 6, 5, 6, 3, 8, 5, 2 },
+        Stroke = new SolidColorPaintTask(SKColors.Red) { StrokeThickness = 8 }, // mark
         Fill = null
     },
-    new StackedStepAreaSeries<double>
+    new StackedStepAreaSeries&lt;double>
     {
-        Values = new List<double> { 4, 8, 2, 8, 9, 5, 3 },
-        Stroke = new SolidColorPaintTask(SKColors.Green) { StrokeThickness = 12 },
+        Values = new List&lt;double> { 4, 8, 2, 8, 9, 5, 3 },
+        Stroke = new SolidColorPaintTask(SKColors.Green) { StrokeThickness = 12 }, // mark
         Fill = null
     }
-};
-```
+};</code></pre>
 
 ## Fill property
 
@@ -54,29 +46,27 @@ The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent 
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stackedstepfill.png)
 
-``` c#
-Series = new ISeries[]
+<pre><code>Series = new ISeries[]
 {
-    new StackedStepAreaSeries<double>
+    new StackedStepAreaSeries&lt;double>
     {
-        Values = new List<double> { 3, 2, 3, 5, 3, 4, 6 },
-        Fill = new SolidColorPaintTask(SKColors.Blue.WithAlpha(90)),
+        Values = new List&lt;double> { 3, 2, 3, 5, 3, 4, 6 },
+        Fill = new SolidColorPaintTask(SKColors.Blue.WithAlpha(90)), // mark
         Stroke = null
     },
-    new StackedStepAreaSeries<double>
+    new StackedStepAreaSeries&lt;double>
     {
-        Values = new List<double> { 6, 5, 6, 3, 8, 5, 2 },
-        Fill = new SolidColorPaintTask(SKColors.Red.WithAlpha(90)),
+        Values = new List&lt;double> { 6, 5, 6, 3, 8, 5, 2 },
+        Fill = new SolidColorPaintTask(SKColors.Red.WithAlpha(90)), // mark
         Stroke = null
     },
-    new StackedStepAreaSeries<double>
+    new StackedStepAreaSeries&lt;double>
     {
         Values = new List<double> { 4, 8, 2, 8, 9, 5, 3 },
-        Fill = new SolidColorPaintTask(SKColors.Green.WithAlpha(90)),
+        Fill = new SolidColorPaintTask(SKColors.Green.WithAlpha(90)), // mark
         Stroke = null
     }
-};
-```
+};</code></pre>
 
 ## GeometryFill and GeometryStroke properties
 
@@ -86,32 +76,30 @@ the series position in your series collection and the current theme.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stackedstepgs.png)
 
-``` c#
-Series = new ISeries[]
+<pre><code>Series = new ISeries[]
 {
-    new StackedStepAreaSeries<double>
+    new StackedStepAreaSeries&lt;double>
     {
-        Values = new List<double> { 3, 2, 3, 5, 3, 4, 6 },
+        Values = new List&lt;double> { 3, 2, 3, 5, 3, 4, 6 },
         GeometrySize = 20,
-        GeometryFill = new SolidColorPaintTask(SKColors.WhiteSmoke),
-        GeometryStroke = new SolidColorPaintTask(SKColors.Red) { StrokeThickness = 3 },
+        GeometryFill = new SolidColorPaintTask(SKColors.WhiteSmoke), // mark
+        GeometryStroke = new SolidColorPaintTask(SKColors.Red) { StrokeThickness = 3 }, // mark
     },
-    new StackedStepAreaSeries<double>
+    new StackedStepAreaSeries&lt;double>
     {
-        Values = new List<double> { 6, 5, 6, 3, 8, 5, 2 },
+        Values = new List&lt;double> { 6, 5, 6, 3, 8, 5, 2 },
         GeometrySize = 20,
-        GeometryFill = new SolidColorPaintTask(SKColors.WhiteSmoke),
-        GeometryStroke = new SolidColorPaintTask(SKColors.Green) { StrokeThickness = 6 },
+        GeometryFill = new SolidColorPaintTask(SKColors.WhiteSmoke), // mark
+        GeometryStroke = new SolidColorPaintTask(SKColors.Green) { StrokeThickness = 6 }, // mark
     },
-    new StackedStepAreaSeries<double>
+    new StackedStepAreaSeries&lt;double>
     {
-        Values = new List<double> { 4, 8, 2, 8, 9, 5, 3 },
+        Values = new List&lt;double> { 4, 8, 2, 8, 9, 5, 3 },
         GeometrySize = 20,
-        GeometryFill = new SolidColorPaintTask(SKColors.WhiteSmoke),
-        GeometryStroke = new SolidColorPaintTask(SKColors.Blue) { StrokeThickness = 10 },
+        GeometryFill = new SolidColorPaintTask(SKColors.WhiteSmoke), // mark
+        GeometryStroke = new SolidColorPaintTask(SKColors.Blue) { StrokeThickness = 10 }, // mark
     }
-};
-```
+};</code></pre>
 
 ## GeometrySize property
 
@@ -119,23 +107,21 @@ Determines the size of the geometry, if this property is not set, then the libra
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stackedstepgss.png)
 
-``` c#
-Series = new ISeries[]
+<pre><code>Series = new ISeries[]
 {
-    new StackedStepAreaSeries<double>
+    new StackedStepAreaSeries&lt;double>
     {
-        Values = new List<double> { 3, 2, 3, 5, 3, 4, 6 },
+        Values = new List&lt;double> { 3, 2, 3, 5, 3, 4, 6 },
         GeometryFill = new SolidColorPaintTask(SKColors.Black),
-        GeometrySize = 10,
+        GeometrySize = 10, // mark
     },
-    new StackedStepAreaSeries<double>
+    new StackedStepAreaSeries&lt;double>
     {
-        Values = new List<double> { 6, 5, 6, 3, 8, 5, 2 },
+        Values = new List&lt;double> { 6, 5, 6, 3, 8, 5, 2 },
         GeometryFill = new SolidColorPaintTask(SKColors.Black),
-        GeometrySize = 20,
+        GeometrySize = 20, // mark
     }
-};
-```
+};</code></pre>
 
 ## Plotting custom types
 
@@ -145,21 +131,18 @@ this sample uses the StepLineSeries class, notice StackedStepAreaSeries inherits
 
 You can teach LiveCharts to plot anything, imagine the case where we have an array of the `City` class defined bellow:
 
-``` c#
-public class City
+<pre><code>public class City
 {
     public string Name { get; set; }
     public double Population { get; set; }
     public double LandArea { get; set; }
-}
-```
+}</code></pre>
 
 You can register this type **globally**, this means that every time LiveCharts finds a `City` instance in a chart
 it will use the mapper we registered, global mappers are unique for a type, if you need to plot multiple
 properties then you should use local mappers.
 
-``` c#
-// Ideally you should call this when your application starts
+<pre><code>// Ideally you should call this when your application starts
 // If you need help to decide where to add this code
 // please see the installation guide in this docs.
 
@@ -168,7 +151,7 @@ properties then you should use local mappers.
 
 LiveCharts.Configure(config =>
     config
-        .HasMap<City>((city, point) =>
+        .HasMap&lt;City>((city, point) =>
         {
             // in this lambda function we take an instance of the City class (see city parameter)
             // and the point in the chart for that instance (see point parameter)
@@ -188,17 +171,15 @@ LiveCharts.Configure(config =>
 
             // point.SecondaryValue = (float)city.LandArea;
         })
-        .HasMap<Foo>(...) // you can register more types here using our fluent syntax
-        .HasMap<Bar>(...)
-    );
-```
+        .HasMap&lt;Foo>(...) // you can register more types here using our fluent syntax
+        .HasMap&lt;Bar>(...)
+    );</code></pre>
 
 Now we are ready to plot cities all over our application:
 
-``` c#
-Series = new[]
+<pre><code>Series = new[]
 {
-    new StepLineSeries<City>
+    new StepLineSeries&lt;City>
     {
         Name = "Population",
         TooltipLabelFormatter = point => $"{point.Model.Name} {point.PrimaryValue:N2}M",
@@ -212,16 +193,14 @@ Series = new[]
             new City { Name = "Guadalajara", Population = 4, LandArea = 5 }
         }
     }
-};
-```
+};</code></pre>
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stepct.png)
 
 Alternatively you could create a **local** mapper that will only work for a specific series, global mappers will be 
 ignored when the series `Mapping` property is not null.
 
-``` c#
-var cities = new[]
+<pre><code>var cities = new[]
 {
     new City { Name = "Tokyo", Population = 4, LandArea = 3 },
     new City { Name = "New York", Population = 6, LandArea = 4 },
@@ -234,7 +213,7 @@ var cities = new[]
 Series = new[]
 {
     // this series draws the Population property in the Y axis
-    new StepLineSeries<City>
+    new StepLineSeries&lt;City>
     {
         Name = "Population",
         TooltipLabelFormatter = point => $"{point.Model.Name} population: {point.PrimaryValue:N2}M",
@@ -247,7 +226,7 @@ Series = new[]
     },
 
     // draws the LandArea property in the Y axis
-    new StepLineSeries<City>
+    new StepLineSeries&lt;City>
     {
         Name = "Population",
         TooltipLabelFormatter = (point) => $"{point.Model.Name} area: {point.PrimaryValue:N2}KM2",
@@ -258,8 +237,7 @@ Series = new[]
             point.SecondaryValue = point.Context.Index;
         }
     }
-};
-```
+};</code></pre>
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stepctl.png)
 

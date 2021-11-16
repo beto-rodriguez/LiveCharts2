@@ -32,8 +32,17 @@ using LiveChartsCore.Measure;
 namespace LiveChartsCore
 {
     /// <summary>
-    /// Defines the data to plot as a line.
+    /// Defines the data to plot as a polar line.
     /// </summary>
+    /// <typeparam name="TModel">The type of the model to plot.</typeparam>
+    /// <typeparam name="TVisual">The type of the visual point.</typeparam>
+    /// <typeparam name="TLabel">The type of the data label.</typeparam>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+    /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
+    /// <typeparam name="TLineSegment">The type of the line segment.</typeparam>
+    /// <typeparam name="TBezierSegment">The type of the bezier segmen.</typeparam>
+    /// <typeparam name="TMoveToCommand">The type of the move command.</typeparam>
+    /// <typeparam name="TPathArgs">The type of the path arguments.</typeparam>
     public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>
         : ChartSeries<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>, IPolarLineSeries<TDrawingContext>, IPolarSeries<TDrawingContext>
             where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()

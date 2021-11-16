@@ -31,7 +31,13 @@ using LiveChartsCore.Measure;
 
 namespace LiveChartsCore
 {
-    /// <inheritdoc cref="IPieSeries{TDrawingContext}" />
+    /// <summary>
+    /// Defines a pie series.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <typeparam name="TVisual">The type of the visual.</typeparam>
+    /// <typeparam name="TLabel">The type of the label.</typeparam>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     public abstract class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
         : ChartSeries<TModel, TVisual, TLabel, TDrawingContext>, IPieSeries<TDrawingContext>
             where TDrawingContext : DrawingContext

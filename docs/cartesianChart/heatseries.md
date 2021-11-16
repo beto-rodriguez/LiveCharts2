@@ -1,13 +1,12 @@
-# Heat series
+<div id="edit-this-article-source">
+    {{ edit_source | replace_local_to_server}}
+</div>
 
-:::info
-The `HeatSeries` class inherits from `Series` thus the [Series article](todo: addLink) also applies for this object.
-:::
+# {{ name | to_title_case }}
 
-:::info
-This article do not include all the properties inside this object, if you want to learn more about it, please use the 
-API browser in our website.
-:::
+{{ render this "~/shared/series.md" }}
+
+{{ render this "~/shared/datalabels.md" }}
 
 ## HeatMap property
 
@@ -17,18 +16,17 @@ will be interpolated lineally to create a new color, you can add as many colors 
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/heathm.png)
 
-``` c#
-Series = new ISeries[]
+<pre><code>Series = new ISeries[]
 {
-    new HeatSeries<WeightedPoint>
+    new HeatSeries&lt;WeightedPoint>
     {
-        HeatMap = new[]
-        {
-            Color.Yellow, // the first element is the "coldest"
-            Color.Black,
-            Color.Blue // the last element is the "hottest"
-        },
-        Values = new ObservableCollection<WeightedPoint>
+        HeatMap = new[] // mark
+        { // mark
+            Color.Yellow, // the first element is the "coldest" // mark
+            Color.Black, // mark
+            Color.Blue // the last element is the "hottest" // mark
+        }, // mark
+        Values = new ObservableCollection&lt;WeightedPoint>
         {
             new WeightedPoint(0, 16, 500),
             new WeightedPoint(0, 15, 475),
@@ -49,8 +47,7 @@ Series = new ISeries[]
             new WeightedPoint(0, 0, 100)
         }
     }
-};
-```
+};</code></pre>
 
 ## ColorStops property
 
@@ -62,10 +59,9 @@ used in the remaining 90% of the gradient.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/heatcs.png)
 
-``` c#
-Series = new ISeries[]
+<pre><code>Series = new ISeries[]
 {
-    new HeatSeries<WeightedPoint>
+    new HeatSeries&lt;WeightedPoint>
     {
         HeatMap = new[]
         {
@@ -73,13 +69,13 @@ Series = new ISeries[]
             Color.Black,
             Color.Blue
         },
-        ColorStops = new[]
-        {
-            0,
-            0.9,
-            1
-        },
-        Values = new ObservableCollection<WeightedPoint>
+        ColorStops = new[] // mark
+        { // mark
+            0, // mark
+            0.9, // mark
+            1 // mark
+        }, // mark
+        Values = new ObservableCollection&lt;WeightedPoint>
         {
             new WeightedPoint(0, 16, 500),
             new WeightedPoint(0, 15, 475),
@@ -100,8 +96,7 @@ Series = new ISeries[]
             new WeightedPoint(0, 0, 100)
         }
     }
-};
-```
+};</code></pre>
 
 ## PointPadding property
 
@@ -109,19 +104,18 @@ Defines the padding for every point in the series.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/heatp.png)
 
-``` c#
-Series = new ISeries[]
+<pre><code>Series = new ISeries[]
 {
-    new HeatSeries<WeightedPoint>
+    new HeatSeries&lt;WeightedPoint>
     {
-        PointPadding = new LiveChartsCore.Drawing.Common.Padding(20),
+        PointPadding = new LiveChartsCore.Drawing.Common.Padding(20), // mark
         HeatMap = new[]
         {
             Color.FromArgb(255, 255, 241, 118), // the first element is the "coldest"
             Color.DarkSlateGray,
             Color.Blue // the last element is the "hottest"
         },
-        Values = new ObservableCollection<WeightedPoint>
+        Values = new ObservableCollection&lt;WeightedPoint>
         {
             // Charles
             new WeightedPoint(0, 0, 150), // Jan
@@ -158,7 +152,7 @@ Series = new ISeries[]
     }
 };
 
-XAxes = new ObservableCollection<Axis>
+XAxes = new ObservableCollection&lt;Axis>
 {
     new Axis
     {
@@ -166,34 +160,30 @@ XAxes = new ObservableCollection<Axis>
     }
 };
 
-YAxes = new ObservableCollection<Axis>
+YAxes = new ObservableCollection&lt;Axis>
 {
     new Axis
     {
         Labels = new [] { "Jan", "Feb", "Mar", "Apr", "May", "Jun" }
     }
-};
-```
+};</code></pre>
 
 ## Plotting custom types
 
 You can teach LiveCharts to plot anything, imagine the case where we have an array of the `City` class defined bellow:
 
-``` c#
-public class City
+<pre><code>public class City
 {
     public double Population { get; set; }
     public int Year { get; set; }
     public int CityId { get; set; }
-}
-```
+}</code></pre>
 
 You can register this type **globally**, this means that every time LiveCharts finds a `City` instance in a chart
 it will use the mapper we registered, global mappers are unique for a type, if you need to plot multiple
 properties then you should use local mappers.
 
-``` c#
-// Ideally you should call this when your application starts
+<pre><code>// Ideally you should call this when your application starts
 // If you need help to decide where to add this code
 // please see the installation guide in this docs.
 
@@ -202,7 +192,7 @@ properties then you should use local mappers.
 
 LiveCharts.Configure(config =>
     config
-        .HasMap<City>((city, point) =>
+        .HasMap&lt;City>((city, point) =>
         {
             // in this lambda function we take an instance of the City class (see city parameter)
             // and the point in the chart for that instance (see point parameter)
@@ -217,15 +207,13 @@ LiveCharts.Configure(config =>
             // generated based on this value (Tertiary).
             point.TertiaryValue = (float)city.Population;
         })
-        .HasMap<Foo>(...) // you can register more types here using our fluent syntax
-        .HasMap<Bar>(...)
-    );
-```
+        .HasMap&lt;Foo>(...) // you can register more types here using our fluent syntax
+        .HasMap&lt;Bar>(...)
+    );</code></pre>
 
 Now we are ready to plot cities all over our application:
 
-``` c#
-var cities = new[]
+<pre><code>var cities = new[]
 {
     new City { Population = 4.5, CityId = 0, Year = 2019 },
     new City { Population = 5.1, CityId = 0, Year = 2020 },
@@ -247,23 +235,21 @@ YAxes = new[]
 
 Series = new[]
 {
-    new HeatSeries<City>
+    new HeatSeries&lt;City>
     {
         TooltipLabelFormatter = (point) => $"{YAxes[0].Labels[point.Model.CityId]} {point.Model.Year} {point.TertiaryValue}M",
         Values = cities
     }
-};
-```
+};</code></pre>
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/heatct.png)
 
 Alternatively you could create a **local** mapper that will only work for a specific series, global mappers will be 
 ignored when the series `Mapping` property is not null.
 
-``` c#
-Series = new[]
+<pre><code>Series = new[]
 {
-    new HeatSeries<City>
+    new HeatSeries&lt;City>
     {
         TooltipLabelFormatter = (point) => $"{YAxes[0].Labels[point.Model.CityId]} {point.Model.Year} {point.TertiaryValue}M",
         Mapping = (city, point) =>
@@ -274,5 +260,6 @@ Series = new[]
         },
         Values = cities
     }
-};
-```
+};</code></pre>
+
+{{ render this "~/shared/series2.md" }}

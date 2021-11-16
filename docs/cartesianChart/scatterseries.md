@@ -2,16 +2,11 @@
     {{ edit_source | replace_local_to_server}}
 </div>
 
-# The scatter series
+# {{ name | to_title_case }}
 
-:::info
-The `ScatterSeries` class inherits from `Series` thus the [Series article](todo: addLink) also applies for this object.
-:::
+{{ render this "~/shared/series.md" }}
 
-:::info
-This article do not include all the properties inside this object, if you want to learn more about it, please use the 
-API browser in our website.
-:::
+{{ render this "~/shared/datalabels.md" }}
 
 ## Stroke property
 
@@ -20,14 +15,13 @@ and the current theme.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/scatterstroke.png)
 
-``` c#
-Series = new ISeries[]
+<pre><code>Series = new ISeries[]
 {
-    new ScatterSeries<ObservablePoint>
+    new ScatterSeries&lt;ObservablePoint>
     {
-        Stroke = new SolidColorPaintTask(SKColors.Blue) { StrokeThickness = 4 },
+        Stroke = new SolidColorPaintTask(SKColors.Blue) { StrokeThickness = 4 }, // mark
         Fill = null,
-        Values = new ObservableCollection<ObservablePoint>
+        Values = new ObservableCollection&lt;ObservablePoint>
         {
             new ObservablePoint(2.2, 5.4),
             new ObservablePoint(4.5, 2.5),
@@ -53,8 +47,7 @@ Series = new ISeries[]
             new ObservablePoint(5.3, 7.1),
         }
     }
-};
-```
+};</code></pre>
 
 ## Fill property
 
@@ -63,14 +56,13 @@ and the current theme.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/scatterfill.png)
 
-``` c#
-Series = new ISeries[]
+<pre><code>Series = new ISeries[]
 {
-    new ScatterSeries<ObservablePoint>
+    new ScatterSeries&lt;ObservablePoint>
     {
-        Fill = new SolidColorPaintTask(SKColors.Blue),
+        Fill = new SolidColorPaintTask(SKColors.Blue), // mark
         Stroke = null,
-        Values = new ObservableCollection<ObservablePoint>
+        Values = new ObservableCollection&lt;ObservablePoint>
         {
             new ObservablePoint(2.2, 5.4),
             new ObservablePoint(4.5, 2.5),
@@ -96,8 +88,7 @@ Series = new ISeries[]
             new ObservablePoint(5.3, 7.1),
         }
     }
-};
-```
+};</code></pre>
 
 ## GeometrySize property
 
@@ -105,10 +96,10 @@ Determines the size of the geometry, if this property is not set, then the libra
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/scattergeometrysize.png)
 
-``` c#
+<pre><code>
 var r = new Random();
-var values1 = new ObservableCollection<ObservablePoint>();
-var values2 = new ObservableCollection<ObservablePoint>();
+var values1 = new ObservableCollection&lt;ObservablePoint>();
+var values2 = new ObservableCollection&lt;ObservablePoint>();
 
 for (var i = 0; i < 20; i++)
 {
@@ -118,18 +109,17 @@ for (var i = 0; i < 20; i++)
 
 Series = new ISeries[]
 {
-    new ScatterSeries<ObservablePoint, RectangleGeometry>
+    new ScatterSeries&lt;ObservablePoint, RectangleGeometry>
     {
         Values = values1,
-        GeometrySize = 10,
+        GeometrySize = 10, // mark
     },
-    new ScatterSeries<ObservablePoint, CircleGeometry>
+    new ScatterSeries&lt;ObservablePoint, CircleGeometry>
     {
         Values = values2,
-        GeometrySize = 30
+        GeometrySize = 30 // mark
     }
-};
-```
+};</code></pre>
 
 ## MinGeometrySize property
 
@@ -146,10 +136,9 @@ will interpolate lineally to determine the corresponding size.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/scattermgs.png)
 
-``` c#
-var r = new Random();
-var values1 = new ObservableCollection<WeightedPoint>();
-var values2 = new ObservableCollection<WeightedPoint>();
+<pre><code>var r = new Random();
+var values1 = new ObservableCollection&lt;WeightedPoint>();
+var values2 = new ObservableCollection&lt;WeightedPoint>();
 
 for (var i = 0; i < 20; i++)
 {
@@ -157,43 +146,39 @@ for (var i = 0; i < 20; i++)
     values2.Add(new WeightedPoint(r.Next(0, 20), r.Next(0, 20), r.Next(0, 20)));
 }
 
-Series = new ObservableCollection<ISeries>
+Series = new ObservableCollection&lt;ISeries>
 {
-    new ScatterSeries<WeightedPoint, RoundedRectangleGeometry>
+    new ScatterSeries&lt;WeightedPoint, RoundedRectangleGeometry>
     {
         Values = values1,
         GeometrySize = 40,
-        MinGeometrySize = 15
+        MinGeometrySize = 15 // mark
     },
 
-    new ScatterSeries<WeightedPoint, CircleGeometry>
+    new ScatterSeries&lt;WeightedPoint, CircleGeometry>
     {
         Values = values2,
         GeometrySize = 40,
-        MinGeometrySize = 15
+        MinGeometrySize = 15 // mark
     }
-};
-```
+};</code></pre>
 
 ## Plotting custom types
 
 You can teach LiveCharts to plot anything, imagine the case where we have an array of the `City` class defined bellow:
 
-``` c#
-public class City
+<pre><code>public class City
 {
     public string Name { get; set; }
     public double Population { get; set; }
     public double LandArea { get; set; }
-}
-```
+}</code></pre>
 
 You can register this type **globally**, this means that every time LiveCharts finds a `City` instance in a chart
 it will use the mapper we registered, global mappers are unique for a type, if you need to plot multiple
 properties then you should use local mappers.
 
-``` c#
-// Ideally you should call this when your application starts
+<pre><code>// Ideally you should call this when your application starts
 // If you need help to decide where to add this code
 // please see the installation guide in this docs.
 
@@ -202,7 +187,7 @@ properties then you should use local mappers.
 
 LiveCharts.Configure(config =>
     config
-        .HasMap<City>((city, point) =>
+        .HasMap&lt;City>((city, point) =>
         {
             // in this lambda function we take an instance of the City class (see city parameter)
             // and the point in the chart for that instance (see point parameter)
@@ -229,17 +214,15 @@ LiveCharts.Configure(config =>
             // the sizes of the geometries depend on MinGeometrySize to GeometrySize properties.
             point.TertiaryValue = (float)city.LandArea;
         })
-        .HasMap<Foo>(...) // you can register more types here using our fluent syntax
-        .HasMap<Bar>(...)
-    );
-```
+        .HasMap&lt;Foo>(...) // you can register more types here using our fluent syntax
+        .HasMap&lt;Bar>(...)
+    );</code></pre>
 
 Now we are ready to plot cities all over our application:
 
-``` c#
-Series = new[]
+<pre><code>Series = new[]
 {
-    new ScatterSeries<City>
+    new ScatterSeries&lt;City>
     {
         Name = "Population",
         TooltipLabelFormatter = (point) => $"{point.Model.Name} population: {point.PrimaryValue:N2}M, area: {point.TertiaryValue}KM2",
@@ -255,16 +238,14 @@ Series = new[]
             new City { Name = "Guadalajara", Population = 4, LandArea = 5 }
         }
     }
-};
-```
+};</code></pre>
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/scatterct.png)
 
 Alternatively you could create a **local** mapper that will only work for a specific series, global mappers will be 
 ignored when the series `Mapping` property is not null.
 
-``` c#
-var cities = new[]
+<pre><code>var cities = new[]
 {
     new City { Name = "Tokyo", Population = 4, LandArea = 3 },
     new City { Name = "New York", Population = 6, LandArea = 4 },
@@ -277,7 +258,7 @@ var cities = new[]
 Series = new[]
 {
     // compares Population (Y), LandArea (Y) and Density (weight)
-    new LineSeries<City>
+    new LineSeries&lt;City>
     {
         Name = "Population",
         TooltipLabelFormatter = 
@@ -290,8 +271,7 @@ Series = new[]
             point.TertiaryValue = (float)(city.Population/city.LandArea);
         }
     }
-};
-```
+};</code></pre>
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/scatterctl.png)
 
@@ -301,10 +281,9 @@ You can use any geometry to represent a point in a line series.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/scattercustom.png)
 
-``` c#
-var r = new Random();
-var values1 = new ObservableCollection<ObservablePoint>();
-var values2 = new ObservableCollection<ObservablePoint>();
+<pre><code>var r = new Random();
+var values1 = new ObservableCollection&lt;ObservablePoint>();
+var values2 = new ObservableCollection&lt;ObservablePoint>();
 
 for (var i = 0; i < 20; i++)
 {
@@ -312,12 +291,12 @@ for (var i = 0; i < 20; i++)
     values2.Add(new ObservablePoint(r.Next(0, 20), r.Next(0, 20)));
 }
 
-Series = new ObservableCollection<ISeries>
+Series = new ObservableCollection&lt;ISeries>
 {
     // use the second type argument to specify the geometry to draw for every point
     // there are already many predefined geometries in the
     // LiveChartsCore.SkiaSharpView.Drawing.Geometries namespace
-    new ScatterSeries<ObservablePoint, RoundedRectangleGeometry>
+    new ScatterSeries&lt;ObservablePoint, RoundedRectangleGeometry>
     {
         Values = values1,
         Stroke = null,
@@ -325,40 +304,32 @@ Series = new ObservableCollection<ISeries>
     },
 
     // Or Define your own SVG geometry
-    new ScatterSeries<ObservablePoint, MyGeomeometry>
+    new ScatterSeries&lt;ObservablePoint, MyGeomeometry>
     {
         Values = values2,
         GeometrySize = 40
     }
-};
-```
+};</code></pre>
 
 Where `MyGeometry` class is our custom shape, you can draw anything `SkiaSharp` supports at this point,
 but in this case we will draw an SVG path, we inherit from `SVGPathGeometry`, and for performance reasons
 we use a static variable to parse the SVG path, this ways the parse operation only runs once.
 
-``` c#
-public class MyGeometry : SVGPathGeometry
+<pre><code>public class MyGeometry : SVGPathGeometry
 {
-    // Icon made by Pixel perfect from www.flaticon.com
-    // https://www.flaticon.com/free-icon/target_726157?term=target&page=1&position=72&page=1&position=72&related_id=726157&origin=search
+    // the static field is important to prevent the svg path is parsed multiple times // mark
+    // Icon from Google Material Icons font.
+    // https://fonts.google.com/icons?selected=Material%20Icons%20Outlined%3Amy_location%3A
     public static SKPath svgPath = SKPath.ParseSvgPathData(
-        "M510.795,57.902c-2.464-5.984-8.32-9.888-14.784-9.888h-32v-32c0-6.464-3.904-12.32-9.888-14.784    " +
-        "c-5.952-2.496-12.832-1.12-17.44,3.456l-48,48c-2.976,3.008-4.672,7.072-4.672,11.328v41.376L212.683,276.686    " +
-        "c-6.24,6.24-6.24,16.384,0,22.624c3.136,3.136,7.232,4.704,11.328,4.704s8.192-1.568,11.328-4.672l171.296-171.328h41.376    " +
-        "c4.256,0,8.32-1.696,11.328-4.672l48-48C511.883,70.734,513.259,63.886,510.795,57.902z" +
-        "M342.027,238.574l-54.56,54.752c-2.72,32.832-29.92,58.688-63.456,58.688c-35.36,0-64-28.64-64-64    " +
-        "c0-34.208,26.912-61.92,60.672-63.68l53.728-53.92c-15.488-6.656-32.48-10.4-50.4-10.4c-70.592,0-128,57.408-128,128    " +
-        "s57.408,128,128,128s128-57.408,128-128C352.011,270.478,348.427,253.806,342.027,238.574z" +
-        "M412.715,167.662l-47.168,47.328c11.392,21.984,18.464,46.592,18.464,73.024c0,88.224-71.776,160-160,160    " +
-        "s-160-71.776-160-160s71.776-160,160-160c26.784,0,51.648,7.232,73.856,18.912l47.104-47.264    " +
-        "c-34.912-22.464-76.384-35.648-120.96-35.648c-123.712,0-224,100.288-224,224s100.288,224,224,224s224-100.288,224-224    " +
-        "C448.011,243.662,434.955,202.446,412.715,167.662z");
+        "M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 " +
+        "11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 " +
+        "3.13 7 7-3.13 7-7 7z");
 
     public MyGeometry()
         : base(svgPath)
     {
 
     }
-}
-```
+}</code></pre>
+
+{{ render this "~/shared/series2.md" }}

@@ -33,7 +33,7 @@ namespace LiveChartsCore.Measure
         End,
 
         /// <summary>
-        /// Aligns the label to the start  in the axis direction.
+        /// Aligns the label to the start in the axis direction.
         /// </summary>
         Start,
 

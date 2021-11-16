@@ -2,16 +2,11 @@
     {{ edit_source | replace_local_to_server}}
 </div>
 
-# The stacked area series
+# {{ name | to_title_case }}
 
-:::info
-The `StackedAreaSeries` class inherits from `LineSeries` and `LineSeries` inherits from `Series` thus the [Series article](todo: addLink) also applies for this object.
-:::
+{{ render this "~/shared/series.md" }}
 
-:::info
-This article do not include all the properties inside this object, if you want to learn more about it, please use the 
-API browser in our website.
-:::
+{{ render this "~/shared/datalabels.md" }}
 
 ## Stroke property
 
@@ -20,35 +15,33 @@ and the current theme.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stackedareastroke.png)
 
-``` c#
-Series = new ISeries[]
+<pre><code>Series = new ISeries[]
 {
-    new StackedAreaSeries<int>
+    new StackedAreaSeries&lt;int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
-        Stroke = new SolidColorPaintTask(SKColors.Blue) { StrokeThickness = 4 },
+        Stroke = new SolidColorPaintTask(SKColors.Blue) { StrokeThickness = 4 }, // mark
         Fill = null,
         GeometryFill = null,
         GeometryStroke = null
     },
-    new StackedAreaSeries<int>
+    new StackedAreaSeries&lt;int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
-        Stroke = new SolidColorPaintTask(SKColors.Red) { StrokeThickness = 8 },
+        Stroke = new SolidColorPaintTask(SKColors.Red) { StrokeThickness = 8 }, // mark
         Fill = null,
         GeometryFill = null,
         GeometryStroke = null
     },
-    new StackedAreaSeries<int>
+    new StackedAreaSeries&lt;int>
     {
         Values = new [] { 4, 2, 5, 3, 9 },
-        Stroke = new SolidColorPaintTask(SKColors.Green) { StrokeThickness = 1 },
+        Stroke = new SolidColorPaintTask(SKColors.Green) { StrokeThickness = 1 }, // mark
         Fill = null,
         GeometryFill = null,
         GeometryStroke = null
     }
-};
-```
+};</code></pre>
 
 ## Fill property
 
@@ -59,35 +52,33 @@ The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent 
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stackedareafill.png)
 
-``` c#
-Series = new ISeries[]
+<pre><code>Series = new ISeries[]
 {
-    new LineSeries<int>
+    new LineSeries&lt;int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
-        Fill = new SolidColorPaintTask(SKColors.Blue.WithAlpha(90)),
+        Fill = new SolidColorPaintTask(SKColors.Blue.WithAlpha(90)), // mark
         Stroke = null,
         GeometryFill = null,
         GeometryStroke = null
     },
-    new LineSeries<int>
+    new LineSeries&lt;int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
-        Fill = new SolidColorPaintTask(SKColors.Red.WithAlpha(90)),
+        Fill = new SolidColorPaintTask(SKColors.Red.WithAlpha(90)), // mark
         Stroke = null,
         GeometryFill = null,
         GeometryStroke = null
     },
-    new LineSeries<int>
+    new LineSeries&lt;int>
     {
         Values = new [] { 4, 2, 5, 3, 9 },
-        Fill = new SolidColorPaintTask(SKColors.Green.WithAlpha(90)),
+        Fill = new SolidColorPaintTask(SKColors.Green.WithAlpha(90)), // mark
         Stroke = null,
         GeometryFill = null,
         GeometryStroke = null
     }
-};
-```
+};</code></pre>
 
 ## GeometryFill and GeometryStroke properties
 
@@ -97,32 +88,30 @@ based on the series position in your series collection and the current theme.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stackedareageometrystrokefill.png)
 
-``` c#
-Series = new ISeries[]
+<pre><code>Series = new ISeries[]
 {
-    new StackedAreaSeries<int>
+    new StackedAreaSeries&lt;int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
         GeometrySize = 20,
-        GeometryFill = new SolidColorPaintTask(SKColors.WhiteSmoke),
-        GeometryStroke = new SolidColorPaintTask(SKColors.Red) { StrokeThickness = 3 },
+        GeometryFill = new SolidColorPaintTask(SKColors.WhiteSmoke), // mark
+        GeometryStroke = new SolidColorPaintTask(SKColors.Red) { StrokeThickness = 3 }, // mark
     },
-    new StackedAreaSeries<int>
+    new StackedAreaSeries&lt;int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
         GeometrySize = 20,
-        GeometryFill = new SolidColorPaintTask(SKColors.WhiteSmoke),
-        GeometryStroke = new SolidColorPaintTask(SKColors.Green) { StrokeThickness = 6 },
+        GeometryFill = new SolidColorPaintTask(SKColors.WhiteSmoke), // mark
+        GeometryStroke = new SolidColorPaintTask(SKColors.Green) { StrokeThickness = 6 }, // mark
     },
-    new StackedAreaSeries<int>
+    new StackedAreaSeries&lt;int>
     {
         Values = new [] { 4, 2, 5, 3, 9 },
         GeometrySize = 20,
-        GeometryFill = new SolidColorPaintTask(SKColors.WhiteSmoke),
-        GeometryStroke = new SolidColorPaintTask(SKColors.Blue) { StrokeThickness = 10 },
+        GeometryFill = new SolidColorPaintTask(SKColors.WhiteSmoke), // mark
+        GeometryStroke = new SolidColorPaintTask(SKColors.Blue) { StrokeThickness = 10 }, // mark
     }
-};
-```
+};</code></pre>
 
 ## GeometrySize property
 
@@ -130,32 +119,30 @@ Determines the size of the geometry, if this property is not set, then the libra
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stackedareags.png)
 
-``` c#
-Series = new ISeries[]
+<pre><code>Series = new ISeries[]
 {
-    new StackedAreaSeries<int>
+    new StackedAreaSeries&lt;int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
-        GeometrySize = 10,
+        GeometrySize = 10, // mark
         GeometryFill = new SolidColorPaintTask(SKColors.WhiteSmoke),
         GeometryStroke = new SolidColorPaintTask(SKColors.Red),
     },
-    new StackedAreaSeries<int>
+    new StackedAreaSeries&lt;int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
-        GeometrySize = 20,
+        GeometrySize = 20, // mark
         GeometryFill = new SolidColorPaintTask(SKColors.WhiteSmoke),
         GeometryStroke = new SolidColorPaintTask(SKColors.Green),
     },
-    new StackedAreaSeries<int>
+    new StackedAreaSeries&lt;int>
     {
         Values = new [] { 4, 2, 5, 3, 9 },
-        GeometrySize = 30,
+        GeometrySize = 30, // mark
         GeometryFill = new SolidColorPaintTask(SKColors.WhiteSmoke),
         GeometryStroke = new SolidColorPaintTask(SKColors.Blue),
     }
-};
-```
+};</code></pre>
 
 ## LineSmoothness property
 
@@ -164,26 +151,24 @@ value will be ignored, where 0 is straight and 1 is the most curved line.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/linesmothness.png)
 
-``` c#
-Series = new ISeries[]
+<pre><code>Series = new ISeries[]
 {
-    new StackedAreaSeries<int>
+    new StackedAreaSeries&lt;int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
-        LineSmoothness = 0,
+        LineSmoothness = 0, // mark
     },
-    new StackedAreaSeries<int>
+    new StackedAreaSeries&lt;int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
-        LineSmoothness = 0.5
+        LineSmoothness = 0.5 // mark
     },
-    new StackedAreaSeries<int>
+    new StackedAreaSeries&lt;int>
     {
         Values = new [] { 4, 2, 5, 3, 9 },
-        LineSmoothness = 1
+        LineSmoothness = 1 // mark
     }
-};
-```
+};</code></pre>
 
 ## Plotting custom types
 
@@ -193,21 +178,18 @@ this sample uses the LineSeries class, notice StackedLineSeries inherits from Li
 
 You can teach LiveCharts to plot anything, imagine the case where we have an array of the `City` class defined bellow:
 
-``` c#
-public class City
+<pre><code>public class City
 {
     public string Name { get; set; }
     public double Population { get; set; }
     public double LandArea { get; set; }
-}
-```
+}</code></pre>
 
 You can register this type **globally**, this means that every time LiveCharts finds a `City` instance in a chart
 it will use the mapper we registered, global mappers are unique for a type, if you need to plot multiple
 properties then you should use local mappers.
 
-``` c#
-// Ideally you should call this when your application starts
+<pre><code>// Ideally you should call this when your application starts
 // If you need help to decide where to add this code
 // please see the installation guide in this docs.
 
@@ -216,7 +198,7 @@ properties then you should use local mappers.
 
 LiveCharts.Configure(config =>
     config
-        .HasMap<City>((city, point) =>
+        .HasMap&lt;City>((city, point) =>
         {
             // in this lambda function we take an instance of the City class (see city parameter)
             // and the point in the chart for that instance (see point parameter)
@@ -236,17 +218,15 @@ LiveCharts.Configure(config =>
 
             // point.SecondaryValue = (float)city.LandArea;
         })
-        .HasMap<Foo>(...) // you can register more types here using our fluent syntax
-        .HasMap<Bar>(...)
-    );
-```
+        .HasMap&lt;Foo>(...) // you can register more types here using our fluent syntax
+        .HasMap&lt;Bar>(...)
+    );</code></pre>
 
 Now we are ready to plot cities all over our application:
 
-``` c#
-Series = new[]
+<pre><code>Series = new[]
 {
-    new LineSeries<City>
+    new LineSeries&lt;City>
     {
         Name = "Population",
         TooltipLabelFormatter = point => $"{point.Model.Name} {point.PrimaryValue:N2}M",
@@ -260,16 +240,14 @@ Series = new[]
             new City { Name = "Guadalajara", Population = 4, LandArea = 5 }
         }
     }
-};
-```
+};</code></pre>
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/linect.png)
 
 Alternatively you could create a **local** mapper that will only work for a specific series, global mappers will be 
 ignored when the series `Mapping` property is not null.
 
-``` c#
-var cities = new[]
+<pre><code>var cities = new[]
 {
     new City { Name = "Tokyo", Population = 4, LandArea = 3 },
     new City { Name = "New York", Population = 6, LandArea = 4 },
@@ -282,7 +260,7 @@ var cities = new[]
 Series = new[]
 {
     // this series draws the Population property in the Y axis
-    new LineSeries<City>
+    new LineSeries&lt;City>
     {
         Name = "Population",
         TooltipLabelFormatter = point => $"{point.Model.Name} population: {point.PrimaryValue:N2}M",
@@ -295,7 +273,7 @@ Series = new[]
     },
 
     // draws the LandArea property in the Y axis
-    new LineSeries<City>
+    new LineSeries&lt;City>
     {
         Name = "Population",
         TooltipLabelFormatter = (point) => $"{point.Model.Name} area: {point.PrimaryValue:N2}KM2",
@@ -308,7 +286,7 @@ Series = new[]
     },
 
     // compares Population (Y) and LandArea (Y)
-    //new LineSeries<City>
+    //new LineSeries&lt;City>
     //{
     //    Name = "Population",
     //    TooltipLabelFormatter = (point) => $"{point.Model.Name} population: {point.PrimaryValue:N2}M, area: {point.SecondaryValue}KM2",
@@ -319,8 +297,7 @@ Series = new[]
     //        point.SecondaryValue = (float)city.LandArea;
     //    }
     //}
-};
-```
+};</code></pre>
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/linectl.png)
 
@@ -331,4 +308,6 @@ Even the property is visible, this feature is not supported by now.
 ## Custom geometries
 
 You can use any geometry to represent a point in a line series, if you want this feature, please check the sample in the 
-line series article.
+[line series article]({{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Line%20Series).
+
+{{ render this "~/shared/series2.md" }}

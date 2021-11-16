@@ -33,10 +33,10 @@ namespace LiveChartsCore
     /// <summary>
     /// Defines a column series.
     /// </summary>
-    /// <typeparam name="TModel"></typeparam>
-    /// <typeparam name="TVisual"></typeparam>
-    /// <typeparam name="TLabel"></typeparam>
-    /// <typeparam name="TDrawingContext"></typeparam>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <typeparam name="TVisual">The type of the visual.</typeparam>
+    /// <typeparam name="TLabel">the type of the label.</typeparam>
+    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TModel, TVisual, TLabel, TDrawingContext>
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TDrawingContext : DrawingContext

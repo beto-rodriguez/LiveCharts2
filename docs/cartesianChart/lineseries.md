@@ -2,16 +2,11 @@
     {{ edit_source | replace_local_to_server}}
 </div>
 
-# The line series
+# {{ name | to_title_case }}
 
-:::info
-The `LineSeries` class inherits from `Series` thus the [Series article](todo: addLink) also applies for this object.
-:::
+{{ render this "~/shared/series.md" }}
 
-:::info
-This article do not include all the properties inside this object, if you want to learn more about it, please use the 
-API browser in our website.
-:::
+{{ render this "~/shared/datalabels.md" }}
 
 ## Stroke property
 
@@ -20,35 +15,33 @@ and the current theme.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/linestroke.png)
 
-``` c#
-Series = new ISeries[]
+<pre><code>Series = new ISeries[]
 {
-    new LineSeries<int>
+    new LineSeries&lt;int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
-        Stroke = new SolidColorPaintTask(SKColors.Blue) { StrokeThickness = 4 },
+        Stroke = new SolidColorPaintTask(SKColors.Blue) { StrokeThickness = 4 }, // mark
         Fill = null,
         GeometryFill = null,
         GeometryStroke = null
     },
-    new LineSeries<int>
+    new LineSeries&lt;int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
-        Stroke = new SolidColorPaintTask(SKColors.Red) { StrokeThickness = 8 },
+        Stroke = new SolidColorPaintTask(SKColors.Red) { StrokeThickness = 8 }, // mark
         Fill = null,
         GeometryFill = null,
         GeometryStroke = null
     },
-    new LineSeries<int>
+    new LineSeries&lt;int>
     {
         Values = new [] { 4, 2, 5, 3, 9 },
-        Stroke = new SolidColorPaintTask(SKColors.Green) { StrokeThickness = 1 },
+        Stroke = new SolidColorPaintTask(SKColors.Green) { StrokeThickness = 1 }, // mark
         Fill = null,
         GeometryFill = null,
         GeometryStroke = null
     }
-};
-```
+};</code></pre>
 
 ## Fill property
 
@@ -59,35 +52,33 @@ The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent 
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/linefill.png)
 
-``` c#
-Series = new ISeries[]
+<pre><code>Series = new ISeries[]
 {
-    new LineSeries<int>
+    new LineSeries&lt;int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
-        Fill = new SolidColorPaintTask(SKColors.Blue.WithAlpha(90)),
+        Fill = new SolidColorPaintTask(SKColors.Blue.WithAlpha(90)), // mark
         Stroke = null,
         GeometryFill = null,
         GeometryStroke = null
     },
-    new LineSeries<int>
+    new LineSeries&lt;int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
-        Fill = new SolidColorPaintTask(SKColors.Red.WithAlpha(90)),
+        Fill = new SolidColorPaintTask(SKColors.Red.WithAlpha(90)), // mark
         Stroke = null,
         GeometryFill = null,
         GeometryStroke = null
     },
-    new LineSeries<int>
+    new LineSeries&lt;int>
     {
         Values = new [] { 4, 2, 5, 3, 9 },
-        Fill = new SolidColorPaintTask(SKColors.Green.WithAlpha(90)),
+        Fill = new SolidColorPaintTask(SKColors.Green.WithAlpha(90)), // mark
         Stroke = null,
         GeometryFill = null,
         GeometryStroke = null
     }
-};
-```
+};</code></pre>
 
 ## GeometryFill and GeometryStroke properties
 
@@ -97,27 +88,25 @@ the series position in your series collection and the current theme.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/geometrystrokefill.png)
 
-``` c#
-Series = new ISeries[]
+<pre><code>Series = new ISeries[]
 {
-    new LineSeries<int>
+    new LineSeries&lt;int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
         Stroke = new SolidColorPaintTask(SKColors.Blue) { StrokeThickness = 4 },
         Fill = null,
-        GeometryFill = new SolidColorPaintTask(SKColors.AliceBlue),
-        GeometryStroke = new SolidColorPaintTask(SKColors.Gray) { StrokeThickness = 4 }
+        GeometryFill = new SolidColorPaintTask(SKColors.AliceBlue), // mark
+        GeometryStroke = new SolidColorPaintTask(SKColors.Gray) { StrokeThickness = 4 } // mark
     },
-    new LineSeries<int>
+    new LineSeries&lt;int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
         Stroke = new SolidColorPaintTask(SKColors.Red) { StrokeThickness = 8 },
         Fill = null,
-        GeometryFill = new SolidColorPaintTask(SKColors.IndianRed),
-        GeometryStroke = new SolidColorPaintTask(SKColors.DarkSalmon) { StrokeThickness = 8 }
+        GeometryFill = new SolidColorPaintTask(SKColors.IndianRed), // mark
+        GeometryStroke = new SolidColorPaintTask(SKColors.DarkSalmon) { StrokeThickness = 8 } // mark
     }
-};
-```
+};</code></pre>
 
 ## GeometrySize property
 
@@ -125,21 +114,19 @@ Determines the size of the geometry, if this property is not set, then the libra
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/geometrysize.png)
 
-``` c#
-Series = new ISeries[]
+<pre><code>Series = new ISeries[]
 {
-    new LineSeries<int>
+    new LineSeries&lt;int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
-        GeometrySize = 10
+        GeometrySize = 10 // mark
     },
-    new LineSeries<int>
+    new LineSeries&lt;int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
-        GeometrySize = 30
+        GeometrySize = 30 // mark
     }
-};
-```
+};</code></pre>
 
 ## LineSmoothness property
 
@@ -148,59 +135,61 @@ value will be ignored, where 0 is straight and 1 is the most curved line.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/linesmothness.png)
 
-``` c#
-Series = new ISeries[]
+<pre><code>Series = new ISeries[]
 {
-    new LineSeries<int>
+    new LineSeries&lt;int>
     {
         Values = new [] { 5, 4, 7, 3, 8 },
-        LineSmoothness = 0
+        LineSmoothness = 0 // mark
     },
-    new LineSeries<int>
+    new LineSeries&lt;int>
     {
         Values = new [] { 7, 2, 6, 2, 6 },
-        LineSmoothness = 1
+        LineSmoothness = 1 // mark
     }
-};
-```
+};</code></pre>
 
 ## EnableNullSplitting property
 
-This property is enabled by default (`true`), it has a performance cost and allows the series to create gaps, then the
+This property is enabled by default (`true`), it has a performance cost and allows the series to create gaps, when the
 series finds a `null` instance then the series will create a gap.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/linesnullsplit.png)
 
-``` c#
-Series = new ISeries[]
+<pre><code>Series = new ISeries[]
 {
-    new LineSeries<int?>
+    new LineSeries&lt;int?>
     {
-        Values = new int?[] { 5, 4, 2, null, 3, 8, 6 },
+        Values = new int?[] 
+        { 
+            5, 
+            4, 
+            2, 
+            null, // mark
+            3, 
+            8, 
+            6 
+        },
         LineSmoothness = 0
     }
-};
-```
+};</code></pre>
 
 ## Plotting custom types
 
 You can teach LiveCharts to plot anything, imagine the case where we have an array of the `City` class defined bellow:
 
-``` c#
-public class City
+<pre><code>public class City
 {
     public string Name { get; set; }
     public double Population { get; set; }
     public double LandArea { get; set; }
-}
-```
+}</code></pre>
 
 You can register this type **globally**, this means that every time LiveCharts finds a `City` instance in a chart
 it will use the mapper we registered, global mappers are unique for a type, if you need to plot multiple
 properties then you should use local mappers.
 
-``` c#
-// Ideally you should call this when your application starts
+<pre><code>// Ideally you should call this when your application starts
 // If you need help to decide where to add this code
 // please see the installation guide in this docs.
 
@@ -209,7 +198,7 @@ properties then you should use local mappers.
 
 LiveCharts.Configure(config =>
     config
-        .HasMap<City>((city, point) =>
+        .HasMap&lt;City>((city, point) =>
         {
             // in this lambda function we take an instance of the City class (see city parameter)
             // and the point in the chart for that instance (see point parameter)
@@ -229,17 +218,15 @@ LiveCharts.Configure(config =>
 
             // point.SecondaryValue = (float)city.LandArea;
         })
-        .HasMap<Foo>(...) // you can register more types here using our fluent syntax
-        .HasMap<Bar>(...)
-    );
-```
+        .HasMap&lt;Foo>(...) // you can register more types here using our fluent syntax
+        .HasMap&lt;Bar>(...)
+    );</code></pre>
 
 Now we are ready to plot cities all over our application:
 
-``` c#
-Series = new[]
+<pre><code>Series = new[]
 {
-    new LineSeries<City>
+    new LineSeries&lt;City>
     {
         Name = "Population",
         TooltipLabelFormatter = point => $"{point.Model.Name} {point.PrimaryValue:N2}M",
@@ -253,16 +240,14 @@ Series = new[]
             new City { Name = "Guadalajara", Population = 4, LandArea = 5 }
         }
     }
-};
-```
+};</code></pre>
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/linect.png)
 
 Alternatively you could create a **local** mapper that will only work for a specific series, global mappers will be 
 ignored when the series `Mapping` property is not null.
 
-``` c#
-var cities = new[]
+<pre><code>var cities = new[]
 {
     new City { Name = "Tokyo", Population = 4, LandArea = 3 },
     new City { Name = "New York", Population = 6, LandArea = 4 },
@@ -275,7 +260,7 @@ var cities = new[]
 Series = new[]
 {
     // this series draws the Population property in the Y axis
-    new LineSeries<City>
+    new LineSeries&lt;City>
     {
         Name = "Population",
         TooltipLabelFormatter = point => $"{point.Model.Name} population: {point.PrimaryValue:N2}M",
@@ -288,7 +273,7 @@ Series = new[]
     },
 
     // draws the LandArea property in the Y axis
-    new LineSeries<City>
+    new LineSeries&lt;City>
     {
         Name = "Population",
         TooltipLabelFormatter = (point) => $"{point.Model.Name} area: {point.PrimaryValue:N2}KM2",
@@ -301,7 +286,7 @@ Series = new[]
     },
 
     // compares Population (Y) and LandArea (Y)
-    //new LineSeries<City>
+    //new LineSeries&lt;City>
     //{
     //    Name = "Population",
     //    TooltipLabelFormatter = (point) => $"{point.Model.Name} population: {point.PrimaryValue:N2}M, area: {point.SecondaryValue}KM2",
@@ -312,8 +297,7 @@ Series = new[]
     //        point.SecondaryValue = (float)city.LandArea;
     //    }
     //}
-};
-```
+};</code></pre>
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/linectl.png)
 
@@ -323,23 +307,22 @@ You can use any geometry to represent a point in a line series.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/linescustom.png)
 
-``` c#
-Series = new List<ISeries>
+<pre><code>Series = new List&lt;ISeries>
 {
     // use the second argument type to specify the geometry to draw for every point
     // there are already many predefined geometries in the
     // LiveChartsCore.SkiaSharpView.Drawing.Geometries namespace
-    new LineSeries<double, LiveChartsCore.SkiaSharpView.Drawing.Geometries.RectangleGeometry>
+    new LineSeries&lt;double, LiveChartsCore.SkiaSharpView.Drawing.Geometries.RectangleGeometry>
     {
-        Values = new List<double> { 3, 3, -3, -2, -4, -3, -1 },
+        Values = new List&lt;double> { 3, 3, -3, -2, -4, -3, -1 },
         Fill = null,
         LineSmoothness = 1
     },
 
     // you can also define your own SVG geometry
-    new LineSeries<double, MyGeomeometry>
+    new LineSeries&lt;double, MyGeometry>
     {
-        Values = new List<double> { -2, 2, 1, 3, -1, 4, 3 },
+        Values = new List&lt;double> { -2, 2, 1, 3, -1, 4, 3 },
 
         Stroke = new SolidColorPaintTask(SKColors.DarkOliveGreen, 3),
         Fill = null,
@@ -347,25 +330,23 @@ Series = new List<ISeries>
         GeometryFill = new SolidColorPaintTask(SKColors.DarkOliveGreen),1
         GeometrySize = 40
     }
-};
-```
+};</code></pre>
 
 Where `MyGeometry` class is our custom shape, you can draw anything `SkiaSharp` supports at this point,
 but in this case we will draw an SVG path, we inherit from `SVGPathGeometry`, and for performance reasons
 we use a static variable to parse the SVG path, this ways the parse operation only runs once.
 
-``` c#
-public class MyGeomeometry : LiveChartsCore.SkiaSharpView.Drawing.Geometries.SVGPathGeometry
+<pre><code>public class MyGeometry : LiveChartsCore.SkiaSharpView.Drawing.Geometries.SVGPathGeometry
 {
-    // Icon made by Freepik from www.flaticon.com
-    // https://www.flaticon.com/free-icon/tick_327698?term=check&page=3&position=83&page=3&position=83&related_id=327698&origin=search
+    // the static field is important to prevent the svg path is parsed multiple times // mark
+    // Icon from Google Material Icons font.
+    // https://fonts.google.com/icons?selected=Material%20Icons%20Outlined%3Atask_alt%3A
     public static SKPath svgPath = SKPath.ParseSvgPathData(
-        "M256,0C114.615,0,0,114.615,0,256s114.615,256,256,256s256-114.615,256-256S397.385,0,256,0z M386.594,226.664    " +
-        "L252.747,360.511c-7.551,7.551-17.795,11.794-28.475,11.794s-20.923-4.243-28.475-11.795l-70.388-70.389    " +
-        "c-15.726-15.726-15.726-41.223,0.001-56.95c15.727-15.725,41.224-15.726,56.95,0.001l41.913,41.915l105.371-105.371    " +
-        "c15.727-15.726,41.223-15.726,56.951,0.001C402.319,185.44,402.319,210.938,386.594,226.664z");
+        "M22,5.18L10.59,16.6l-4.24-4.24l1.41-1.41l2.83,2.83l10-10L22,5.18z M19.79,10.22C19.92,10.79,20,11.39,20,12 " +
+        "c0,4.42-3.58,8-8,8s-8-3.58-8-8c0-4.42,3.58-8,8-8c1.58,0,3.04,0.46,4.28,1.25l1.44-1.44C16.1,2.67,14.13,2,12,2C6.48,2,2,6.48,2,12 " +
+        "c0,5.52,4.48,10,10,10s10-4.48,10-10c0-1.19-0.22-2.33-0.6-3.39L19.79,10.22z");
 
-    public MyGeomeometry()
+    public MyGeometry()
         : base(svgPath)
     {
     }
@@ -386,5 +367,6 @@ public class MyGeomeometry : LiveChartsCore.SkiaSharpView.Drawing.Geometries.SVG
 
         base.OnDraw(context, paint);
     }
-}
-```
+}</code></pre>
+
+{{ render this "~/shared/series2.md" }}
