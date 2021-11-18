@@ -22,7 +22,7 @@ Defines the animations speed of all the [chart elements]({{ website_url }}/api/{
 <pre><code>cartesianChart1.AnimationsSpeed = TimeSpan.FromMilliseconds(500);</code></pre>
 {{~ end ~}}
 
-## EasingFunction properties
+## EasingFunction property
 
 This property defines the way the shapes in the chart animate, in other words it controls the way the 
 [IMotionProperties]({{ website_url }}/api/{{ version }}/LiveChartsCore.Motion.IMotionProperty) of all the 
@@ -34,15 +34,18 @@ and  returns `float` value as the result (the progress of the animation from 0 t
 [this article](https://medium.com/@ryan_brownhill/crafting-easing-curves-for-user-interfaces-34f39e1b4a43).
 
 {{~ if xaml ~}}
-<pre><code>&lt;Control
+<pre><code>&lt;Container
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:lvcore="clr-namespace:LiveChartsCore;assembly=LiveChartsCore"> &lt;!-- import the core ns --> &lt;!-- mark -->
+
     &lt;lvc:CartesianChart
         Series="{Binding Series}"
         AnimationsSpeed="00:00:00.500"
         EasingFunction="{Binding Source={x:Static lvcore:EasingFunctions.BounceOut}}"> &lt;!-- mark -->
-    &lt;/lvc:CartesianChart></code></pre>
+    &lt;/lvc:CartesianChart>
+    
+&lt;/Container></code></pre>
 {{~ end ~}}
 
 {{~ if blazor ~}}
@@ -61,11 +64,11 @@ and  returns `float` value as the result (the progress of the animation from 0 t
 
 Now the chart will animate following the **BounceOut** curve.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/_assets/bounceout-anim.gif)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/bounceout-anim.gif)
 
 Now try the `LiveChartsCore.EasingFunctions.Lineal` function, it will animate things lineally as the time elapses.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/_assets/lineal-anim.gif)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/lineal-anim.gif)
 
 Finally you can also build your own function:
 
@@ -136,4 +139,4 @@ private LiveChartsCore.Measure.Margin margin = new LiveChartsCore.Measure.Margin
 cartesianChart1.DrawMargin = new LiveChartsCore.Measure.Margin(100);</code></pre>
 {{~ end ~}}
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/_assets/drawmargin.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/drawmargin.png)
