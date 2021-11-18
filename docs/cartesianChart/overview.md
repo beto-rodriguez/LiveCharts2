@@ -6,8 +6,8 @@ at the [ApiExplorer]({{ website_url }}/api/{{ version }}/LiveChartsCore.SkiaShar
 :::
 
 The `CartesianChart` control is a 'ready to go' control to create plots using the 
-[Cartesian coordinate system](https://en.wikipedia.org/wiki/Cartesian_coordinate_system), The control supports multiple series as long as 
-they implement the [`ICartesianSeries`]({{ website_url }}/api/{{ version }}/LiveChartsCore.Kernel.Sketches.ICartesianSeries-1) interface.
+[Cartesian coordinate system](https://en.wikipedia.org/wiki/Cartesian_coordinate_system), The control supports all series that 
+implement the [`ICartesianSeries`]({{ website_url }}/api/{{ version }}/LiveChartsCore.Kernel.Sketches.ICartesianSeries-1) interface.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/_assets/chart-overview.png)
 
@@ -22,8 +22,8 @@ they implement the [`ICartesianSeries`]({{ website_url }}/api/{{ version }}/Live
 :::
 
 :::series-miniature
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/samples/bars/basic/result.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/samples/scatter/basic/result.png)
 :::
 
-## DrawMargin property
+{{ render this "~/shared/chart.md" }}
 

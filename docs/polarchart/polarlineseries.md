@@ -6,6 +6,8 @@
 
 {{ render this "~/shared/series.md" }}
 
+{{ render this "~/shared/polarlabels.md" }}
+
 ## Stroke property
 
 If the stroke property is not set, then LiveCharts will create it based on the series position in your series collection
@@ -302,7 +304,7 @@ Series = new[]
 
 You can use any geometry to represent a point in a line series.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/polarlinescg.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/polarlinecg.png)
 
 <pre><code>Series = new List&lt;ISeries>
 {

@@ -69,7 +69,6 @@ namespace LiveChartsCore.Kernel.Sketches
         /// </value>
         LegendOrientation LegendOrientation { get; }
 
-
         /// <summary>
         /// Gets the toolTip position.
         /// </summary>
