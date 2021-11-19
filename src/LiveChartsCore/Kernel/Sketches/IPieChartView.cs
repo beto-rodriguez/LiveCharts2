@@ -70,9 +70,6 @@ namespace LiveChartsCore.Kernel.Sketches
         /// Gets or sets the total, it is the maximum value a pie slice can represent, when this property is null, the <see cref="Total"/> property
         /// will be calculated automatically based on the series data. Default value is null.
         /// </summary>
-        /// <value>
-        /// The total stacked.
-        /// </value>
         public double? Total { get; set; }
     }
 }

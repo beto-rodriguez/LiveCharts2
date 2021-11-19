@@ -1,5 +1,12 @@
 ## AnimationsSpeed property
 
+{{~ if name != "Cartesian chart control" ~}}
+:::info
+This section uses the `CartesianChart` control, but it works the same in the `{{ name  | to_title_case_no_spaces }}` control.
+:::
+{{~ end ~}}
+
+
 Defines the animations speed of all the [chart elements]({{ website_url }}/api/{{ version }}/LiveChartsCore.Kernel.IChartElement-1) (axes, series, sections).
 
 {{~ if xaml ~}}
@@ -23,6 +30,12 @@ Defines the animations speed of all the [chart elements]({{ website_url }}/api/{
 {{~ end ~}}
 
 ## EasingFunction property
+
+{{~ if name != "Cartesian chart control" ~}}
+:::info
+This section uses the `CartesianChart` control, but it works the same in the `{{ name  | to_title_case_no_spaces }}` control.
+:::
+{{~ end ~}}
 
 This property defines the way the shapes in the chart animate, in other words it controls the way the 
 [IMotionProperties]({{ website_url }}/api/{{ version }}/LiveChartsCore.Motion.IMotionProperty) of all the 
@@ -108,6 +121,12 @@ Func<float, float> easingCurve = LiveChartsCore.EasingFunctions.BuildCustomElast
 
 ## Disable animations
 
+{{~ if name != "Cartesian chart control" ~}}
+:::info
+This section uses the `CartesianChart` control, but it works the same in the `{{ name  | to_title_case_no_spaces }}` control.
+:::
+{{~ end ~}}
+
 Settings the `EasingFunction` to `null` disables animations.
 
 {{~ if xaml ~}}
@@ -136,6 +155,12 @@ an excellent user experience.
 :::
 
 ## DrawMargin property
+
+{{~ if name != "Cartesian chart control" ~}}
+:::info
+This section uses the `CartesianChart` control, but it works the same in the `{{ name  | to_title_case_no_spaces }}` control.
+:::
+{{~ end ~}}
 
 Defines the distance from the axes (or edge of the chart if there is no axis) to the draw margin area.
 
