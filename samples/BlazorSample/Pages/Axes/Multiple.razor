@@ -2,9 +2,25 @@
 @using LiveChartsCore.SkiaSharpView.Blazor
 @using ViewModelsSamples.Axes.Multiple
 
+<style>
+	/*
+		You can also use css to override the styles.
+	*/
+
+	.lvc-legend {
+		background-color: #fafafa !important;
+	}
+
+	.lvc-legend-item {
+		font-family: SFMono-Regular,Menlo,Monaco,Consolas !important;
+		color: #808080 !important;
+	}
+</style>
+
 <CartesianChart
 	Series="ViewModel.Series"
-	YAxes="ViewModel.YAxes">
+	YAxes="ViewModel.YAxes"
+	LegendPosition="LiveChartsCore.Measure.LegendPosition.Left">
 </CartesianChart>
 
 @code {

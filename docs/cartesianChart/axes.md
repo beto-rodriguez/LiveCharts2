@@ -184,15 +184,12 @@ namespace ViewModelsSamples.Bars.Basic
                 new Axis
                 {
                     Name = "X Axis",
-                    NamePaint = new SolidColorPaint(SKColors.Black),
+                    NamePaint = new SolidColorPaint(SKColors.Black), // mark
 
-                    LabelsPaint = new SolidColorPaint(SKColors.Blue),
+                    LabelsPaint = new SolidColorPaint(SKColors.Blue), // mark
                     TextSize = 10,
 
-                    SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
-                    {
-                        StrokeThickness = 2
-                    }
+                    SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) { StrokeThickness = 2 }  // mark
                 }
             };
 
@@ -202,16 +199,16 @@ namespace ViewModelsSamples.Bars.Basic
                 new Axis
                 {
                     Name = "Y Axis",
-                    NamePaint = new SolidColorPaint(SKColors.Red),
+                    NamePaint = new SolidColorPaint(SKColors.Red), // mark
 
-                    LabelsPaint = new SolidColorPaint(SKColors.Green),
+                    LabelsPaint = new SolidColorPaint(SKColors.Green), // mark
                     TextSize = 20,
 
-                    SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
-                    {
-                        StrokeThickness = 2,
-                        PathEffect = new DashEffect(new float[] { 3, 3 })
-                    }
+                    SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) // mark
+                    { // mark
+                        StrokeThickness = 2, // mark
+                        PathEffect = new DashEffect(new float[] { 3, 3 }) // mark
+                    } // mark
                 }
             };
     }
@@ -246,15 +243,12 @@ private Axis[] xAxes { get; set; }
         new Axis
         {
             Name = "X Axis",
-            NamePaint = new SolidColorPaint(SKColors.Black),
+            NamePaint = new SolidColorPaint(SKColors.Black), // mark
 
-            LabelsPaint = new SolidColorPaint(SKColors.Blue),
+            LabelsPaint = new SolidColorPaint(SKColors.Blue), // mark
             TextSize = 10,
 
-            SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
-            {
-                StrokeThickness = 2
-            }
+            SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) { StrokeThickness = 2 } // mark
         }
     };
 
@@ -264,16 +258,16 @@ private Axis[] yAxes { get; set; }
         new Axis
         {
             Name = "Y Axis",
-            NamePaint = new SolidColorPaint(SKColors.Red),
+            NamePaint = new SolidColorPaint(SKColors.Red), // mark
 
-            LabelsPaint = new SolidColorPaint(SKColors.Green),
+            LabelsPaint = new SolidColorPaint(SKColors.Green), // mark
             TextSize = 20,
 
-            SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
-            {
-                StrokeThickness = 2,
-                PathEffect = new DashEffect(new float[] { 3, 3 })
-            }
+            SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) // mark
+            { // mark
+                StrokeThickness = 2, // mark
+                PathEffect = new DashEffect(new float[] { 3, 3 }) // mark
+            } // mark
         }
     };</code></pre>
 {{~ end ~}}
@@ -284,15 +278,12 @@ private Axis[] yAxes { get; set; }
     new Axis
     {
         Name = "X Axis",
-        NamePaint = new SolidColorPaint(SKColors.Black),
+        NamePaint = new SolidColorPaint(SKColors.Black), // mark
 
-        LabelsPaint = new SolidColorPaint(SKColors.Blue),
+        LabelsPaint = new SolidColorPaint(SKColors.Blue), // mark
         TextSize = 10,
 
-        SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
-        {
-            StrokeThickness = 2
-        }
+        SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) { StrokeThickness = 2 } // mark
     }
 };
 
@@ -301,16 +292,16 @@ cartesianChart1.YAxes = new Axis[]
     new Axis
     {
         Name = "Y Axis",
-        NamePaint = new SolidColorPaint(SKColors.Red),
+        NamePaint = new SolidColorPaint(SKColors.Red), // mark
 
-        LabelsPaint = new SolidColorPaint(SKColors.Green),
+        LabelsPaint = new SolidColorPaint(SKColors.Green), // mark
         TextSize = 20,
 
-        SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
-        {
-            StrokeThickness = 2,
-            PathEffect = new DashEffect(new float[] { 3, 3 })
-        }
+        SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) // mark
+        { // mark
+            StrokeThickness = 2, // mark
+            PathEffect = new DashEffect(new float[] { 3, 3 }) // mark
+        } // mark
     }
 };</code></pre>
 {{~ end ~}}

@@ -106,6 +106,35 @@ the builders.
 Func<float, float> easingCurve = LiveChartsCore.EasingFunctions.BuildCustomElasticOut(0.8f, 1.1f);
 // there are more builders, check them out all, they start with Build{ function }({ args })</code></pre>
 
+## Disable animations
+
+Settings the `EasingFunction` to `null` disables animations.
+
+{{~ if xaml ~}}
+<pre><code>&lt;lvc:CartesianChart
+    EasingFunction="{x:Null}"> &lt;!-- mark -->
+&lt;/lvc:CartesianChart></code></pre>
+{{~ end ~}}
+
+{{~ if blazor ~}}
+<pre><code>&lt;lvc:CartesianChart
+    EasingFunction="null"> &lt;!-- mark -->
+&lt;/lvc:CartesianChart></code></pre>
+{{~ end ~}}
+
+{{~ if winforms ~}}
+<pre><code>cartesianChart1.EasingFunction = null; // mark</code></pre>
+{{~ end ~}}
+
+:::info
+**Disabling animations will not improve performance drastically**: if you come from `LiveCharts 0.x` version then
+maybe you are thinking that disabling animations will improve the performance of the library, in most of the cases
+that is not true, animations are not the bottle neck in performance in `LiveCharts 2.x`, normally you must need to 
+clean your code somewhere else, not here, plus we put a lot of effort building the animations of the library, please
+just do not disable them 😭, instead try to make them run faster, animating data visualization normally brings
+an excellent user experience.
+:::
+
 ## DrawMargin property
 
 Defines the distance from the axes (or edge of the chart if there is no axis) to the draw margin area.

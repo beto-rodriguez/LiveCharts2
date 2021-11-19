@@ -164,11 +164,11 @@ the **Zooming**, the **Panning**, the **Scale** (log) and the **Paging**.
 This is a brief sample about how to use the main features of the Axis class, you can find a more detailed article at the button below or at the 
 [API explorer]({{ website_url }}/api/{{ version}}/LiveChartsCore.SkiaSharpView.Axis).
 
-<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Axes" class="btn btn-light btn-lg text-primary shadow-sm">
-Go to the full axes article
+<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Axes" class="btn btn-light btn-lg text-primary shadow-sm mb-3">
+<b>Go to the full axes article</b>
 </a>
 
-**Paints**
+## Axes.SeparatorsStyle
 
 {{~ if xaml ~}}
 <pre><code>using LiveChartsCore;
@@ -190,15 +190,12 @@ namespace ViewModelsSamples.Bars.Basic
                 new Axis
                 {
                     Name = "X Axis",
-                    NamePaint = new SolidColorPaint(SKColors.Black),
+                    NamePaint = new SolidColorPaint(SKColors.Black), // mark
 
-                    LabelsPaint = new SolidColorPaint(SKColors.Blue),
+                    LabelsPaint = new SolidColorPaint(SKColors.Blue), // mark
                     TextSize = 10,
 
-                    SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
-                    {
-                        StrokeThickness = 2
-                    }
+                    SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) { StrokeThickness = 2 }  // mark
                 }
             };
 
@@ -208,16 +205,16 @@ namespace ViewModelsSamples.Bars.Basic
                 new Axis
                 {
                     Name = "Y Axis",
-                    NamePaint = new SolidColorPaint(SKColors.Red),
+                    NamePaint = new SolidColorPaint(SKColors.Red), // mark
 
-                    LabelsPaint = new SolidColorPaint(SKColors.Green),
+                    LabelsPaint = new SolidColorPaint(SKColors.Green), // mark
                     TextSize = 20,
 
-                    SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
-                    {
-                        StrokeThickness = 2,
-                        PathEffect = new DashEffect(new float[] { 3, 3 })
-                    }
+                    SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) // mark
+                    { // mark
+                        StrokeThickness = 2, // mark
+                        PathEffect = new DashEffect(new float[] { 3, 3 }) // mark
+                    } // mark
                 }
             };
     }
@@ -252,15 +249,12 @@ private Axis[] xAxes { get; set; }
         new Axis
         {
             Name = "X Axis",
-            NamePaint = new SolidColorPaint(SKColors.Black),
+            NamePaint = new SolidColorPaint(SKColors.Black), // mark
 
-            LabelsPaint = new SolidColorPaint(SKColors.Blue),
+            LabelsPaint = new SolidColorPaint(SKColors.Blue), // mark
             TextSize = 10,
 
-            SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
-            {
-                StrokeThickness = 2
-            }
+            SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) { StrokeThickness = 2 } // mark
         }
     };
 
@@ -270,16 +264,16 @@ private Axis[] yAxes { get; set; }
         new Axis
         {
             Name = "Y Axis",
-            NamePaint = new SolidColorPaint(SKColors.Red),
+            NamePaint = new SolidColorPaint(SKColors.Red), // mark
 
-            LabelsPaint = new SolidColorPaint(SKColors.Green),
+            LabelsPaint = new SolidColorPaint(SKColors.Green), // mark
             TextSize = 20,
 
-            SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
-            {
-                StrokeThickness = 2,
-                PathEffect = new DashEffect(new float[] { 3, 3 })
-            }
+            SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) // mark
+            { // mark
+                StrokeThickness = 2, // mark
+                PathEffect = new DashEffect(new float[] { 3, 3 }) // mark
+            } // mark
         }
     };</code></pre>
 {{~ end ~}}
@@ -290,15 +284,12 @@ private Axis[] yAxes { get; set; }
     new Axis
     {
         Name = "X Axis",
-        NamePaint = new SolidColorPaint(SKColors.Black),
+        NamePaint = new SolidColorPaint(SKColors.Black), // mark
 
-        LabelsPaint = new SolidColorPaint(SKColors.Blue),
+        LabelsPaint = new SolidColorPaint(SKColors.Blue), // mark
         TextSize = 10,
 
-        SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
-        {
-            StrokeThickness = 2
-        }
+        SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) { StrokeThickness = 2 } // mark
     }
 };
 
@@ -307,23 +298,23 @@ cartesianChart1.YAxes = new Axis[]
     new Axis
     {
         Name = "Y Axis",
-        NamePaint = new SolidColorPaint(SKColors.Red),
+        NamePaint = new SolidColorPaint(SKColors.Red), // mark
 
-        LabelsPaint = new SolidColorPaint(SKColors.Green),
+        LabelsPaint = new SolidColorPaint(SKColors.Green), // mark
         TextSize = 20,
 
-        SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
-        {
-            StrokeThickness = 2,
-            PathEffect = new DashEffect(new float[] { 3, 3 })
-        }
+        SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) // mark
+        { // mark
+            StrokeThickness = 2, // mark
+            PathEffect = new DashEffect(new float[] { 3, 3 }) // mark
+        } // mark
     }
 };</code></pre>
 {{~ end ~}}
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/axes-paints.png)
 
-**Labels and Labelers**
+## Axes.Labels and Axes.Labelers
 
 <pre><code>Series = new ObservableCollection&lt;ISeries>
 {
@@ -362,9 +353,9 @@ YAxes = new List&lt;Axis>
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/1.7.labels.png)
 
-**Zooming and panning**
+## Zooming and panning
 
-It is disabled by default, to enable you must set the `ZoomMode` property.
+It is disabled by default, to enable it you must set the `ZoomMode` property.
 
 {{~ if xaml ~}}
 <pre><code>&lt;lvc:CartesianChart
@@ -387,7 +378,7 @@ It is disabled by default, to enable you must set the `ZoomMode` property.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/zoom-x.gif)
 
-**Clearing the current zooming or panning**
+## Clearing the current zooming or panning
 
 Setting `MinLimit` and `MaxLimit` properties to `null` will clear the current `zooming` or `panning`, and will let the chart fit the view
 of the chart to the available data in the chart, the default value of both properties is `null`.
