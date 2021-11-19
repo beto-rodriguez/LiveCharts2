@@ -100,7 +100,7 @@ namespace LiveChartsCore.Kernel.Sketches
         TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
         /// <summary>
-        /// Gets or sets the zooming speed from 0 to 1, where 0 is the fastest and 1 the slowest.
+        /// Gets or sets the zooming speed from 0 to 1, where 0 is the slowest and 1 the fastest.
         /// </summary>
         /// <value>
         /// The zooming speed.

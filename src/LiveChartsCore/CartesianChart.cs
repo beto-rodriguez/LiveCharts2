@@ -202,6 +202,8 @@ namespace LiveChartsCore
             if (YAxes is null || XAxes is null) return;
 
             var speed = _zoomingSpeed < 0.1 ? 0.1 : (_zoomingSpeed > 0.95 ? 0.95 : _zoomingSpeed);
+            speed = 1 - speed;
+
             var m = direction == ZoomDirection.ZoomIn ? speed : 1 / speed;
 
             if ((_zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X)

@@ -378,6 +378,30 @@ It is disabled by default, to enable it you must set the `ZoomMode` property.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/zoom-x.gif)
 
+## ZoomingSpeed property
+
+Defines the zooming speed, it is of type `double` and goes from 0 to 1, where 0 is the slowest and 1 the fastest,
+do not confuse with animations seed, this property controls the new axis length (`MaxLimit` - `MinLimit`) when the `Zoom()` 
+method is called.
+
+{{~ if xaml ~}}
+<pre><code>&lt;lvc:CartesianChart
+    Series="{Binding Series}"
+    ZoomingSpeed="0"> &lt;!-- mark -->
+&lt;/lvc:CartesianChart></code></pre>
+{{~ end ~}}
+
+{{~ if blazor ~}}
+<pre><code>&lt;CartesianChart
+    Series="series"
+    ZoomingSpeed="0"> &lt;!-- mark -->
+&lt;/CartesianChart></code></pre>
+{{~ end ~}}
+
+{{~ if winforms ~}}
+<pre><code>cartesianChart1.ZoomingSpeed = 0;</code></pre>
+{{~ end ~}}
+
 ## Clearing the current zooming or panning
 
 Setting `MinLimit` and `MaxLimit` properties to `null` will clear the current `zooming` or `panning`, and will let the chart fit the view
@@ -531,3 +555,195 @@ disable legends in a chart, default value is `Hidden`.
 // or use Top, Left, Right or Hidden
 </code></pre>
 {{~ end ~}}
+
+## DrawMarginFrame property
+
+This property defines a visual border for the `DrawMargin`.
+
+{{~ if xaml ~}}
+<pre><code>using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
+
+namespace ViewModelsSamples.Lines.Area
+{
+    public class ViewModel
+    {
+        public DrawMarginFrame DrawMarginFrame => new DrawMarginFrame
+        {
+            Fill = new SolidColorPaint(SKColors.AliceBlue),
+            Stroke = new SolidColorPaint(SKColors.Black, 3)
+        };
+
+        public ISeries[] Series { get; set; } = new[] { ... };
+    }
+}</code></pre>
+
+<pre><code>&lt;lvc:CartesianChart
+    Series="{Binding Series}"
+    DrawMarginFrame="{Binding DrawMarginFrame}">&lt;!-- mark -->
+&lt;/lvc:CartesianChart></code></pre>
+{{~ end ~}}
+
+{{~ if blazor ~}}
+<pre><code>&lt;CartesianChart
+    Series="series"
+    DrawMarginFrame="drawMarginFrame">&lt;!-- mark -->
+&lt;/CartesianChart></code></pre>
+
+<pre><code>private DrawMarginFrame drawMarginFrame { get; set; }
+    = new DrawMarginFrame
+    {
+        Fill = new SolidColorPaint(SKColors.AliceBlue),
+        Stroke = new SolidColorPaint(SKColors.Black, 3)
+    };</code></pre>
+{{~ end ~}}
+
+{{~ if winforms ~}}
+<pre><code>cartesianChart1.DrawMarginFrame = new DrawMarginFrame
+{
+    Fill = new SolidColorPaint(SKColors.AliceBlue),
+    Stroke = new SolidColorPaint(SKColors.Black, 3)
+};</code></pre>
+{{~ end ~}}
+
+![sections](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/drawmarginframe.png)
+
+## Sections 
+
+A section is a visual area in a chart that highlights a range of values in an axis, to stablish the limits of a section
+you must use the `Xi` and `Xj` properties in the `X` axis, the `Xi` represents the start of the section while the `Xj` the end,
+the same goes for the `Yi` and `Yj` properties for the `Y` axis.
+
+**Xi:** Gets or sets the xi, the value where the section starts at the X axis, set the property to null to indicate that 
+the section must start at the beginning of the X axis, default is null.
+
+**Xj:** Gets or sets the xj, the value where the section ends and the X axis, set the property to null to indicate that 
+the section must go to the end of the X axis, default is null.
+
+**Yi:** Gets or sets the yi, the value where the section starts and the Y axis, set the property to null to indicate that 
+the section must start at the beginning of the Y axis, default is null.
+
+**Yj:** Gets or sets the yj, the value where the section ends and the Y axis, set the property to null to indicate that 
+the section must go to the end of the Y axis, default is null.
+
+{{~ if xaml ~}}
+<pre><code>using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
+
+namespace ViewModelsSamples.General.Sections
+{
+    public class ViewModel
+    {
+        public RectangularSection[] Sections { get; set; }
+            = new RectangularSection[]
+            {
+                new RectangularSection
+                {
+                    // creates a section from 3 to 4 in the X axis
+                    Xi = 3,
+                    Xj = 4,
+                    Fill = new SolidColorPaint(new SKColor(255, 205, 210))
+                },
+
+                new RectangularSection
+                {
+                    // creates a section from 5 to 6 in the X axis
+                    // and from 2 to 8 in the Y axis
+                    Xi = 5,
+                    Xj = 6,
+                    Yi = 2,
+                    Yj = 8,
+                    Fill = new SolidColorPaint(new SKColor(187, 222, 251))
+                },
+
+                 new RectangularSection
+                {
+                    // creates a section from 8 to the end in the X axis
+                    Xi = 8,
+                    Fill = new SolidColorPaint(new SKColor(249, 251, 231))
+                }
+            };
+
+        public ISeries[] Series { get; set; } = new ISeries[] { ... };
+    }
+}</code></pre>
+
+<pre><code>&lt;lvc:CartesianChart
+    Series="{Binding Series}"
+    Sections="{Binding Sections}">&lt;!-- mark -->
+&lt;/lvc:CartesianChart></code></pre>
+{{~ end ~}}
+
+{{~ if blazor ~}}
+<pre><code>&lt;CartesianChart
+    Series="series"
+    Sections="sections">&lt;!-- mark -->
+&lt;/CartesianChart></code></pre>
+
+<pre><code>private RectangularSection[] sections { get; set; }
+    = new RectangularSection[]
+    {
+        new RectangularSection
+        {
+            // creates a section from 3 to 4 in the X axis
+            Xi = 3,
+            Xj = 4,
+            Fill = new SolidColorPaint(new SKColor(255, 205, 210))
+        },
+
+        new RectangularSection
+        {
+            // creates a section from 5 to 6 in the X axis
+            // and from 2 to 8 in the Y axis
+            Xi = 5,
+            Xj = 6,
+            Yi = 2,
+            Yj = 8,
+            Fill = new SolidColorPaint(new SKColor(187, 222, 251))
+        },
+
+            new RectangularSection
+        {
+            // creates a section from 8 to the end in the X axis
+            Xi = 8,
+            Fill = new SolidColorPaint(new SKColor(249, 251, 231))
+        }
+    };</code></pre>
+{{~ end ~}}
+
+{{~ if winforms ~}}
+<pre><code>cartesianChart1.Sections = = new RectangularSection[]
+{
+    new RectangularSection
+    {
+        // creates a section from 3 to 4 in the X axis
+        Xi = 3,
+        Xj = 4,
+        Fill = new SolidColorPaint(new SKColor(255, 205, 210))
+    },
+
+    new RectangularSection
+    {
+        // creates a section from 5 to 6 in the X axis
+        // and from 2 to 8 in the Y axis
+        Xi = 5,
+        Xj = 6,
+        Yi = 2,
+        Yj = 8,
+        Fill = new SolidColorPaint(new SKColor(187, 222, 251))
+    },
+
+        new RectangularSection
+    {
+        // creates a section from 8 to the end in the X axis
+        Xi = 8,
+        Fill = new SolidColorPaint(new SKColor(249, 251, 231))
+    }
+};</code></pre>
+{{~ end ~}}
+
+![sections](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/cc-sections.png)

@@ -118,7 +118,6 @@ If you need to customize more, you can also use the create your own template:
 {{~ end ~}}
 
 {{~ if avalonia ~}}
-
 <pre><code>&lt;lvc:CartesianChart Series="{Binding Series}" LegendPosition="Right">
     &lt;lvc:CartesianChart.LegendTemplate>
     &lt;DataTemplate>
@@ -151,7 +150,7 @@ If you need to customize more, you can also use the create your own template:
 &lt;/lvc:CartesianChart></code></pre>
 {{~ end ~}}
 
-{{~ if blazor ~}
+{{~ if blazor ~}}
 <pre><code>@page "/General/TemplatedLegends"
 @using LiveChartsCore.SkiaSharpView.Blazor
 @using ViewModelsSamples.General.TemplatedLegends
