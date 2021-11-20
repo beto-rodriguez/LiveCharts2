@@ -182,12 +182,10 @@ namespace LiveChartsCore.Measure
             unchecked
             {
                 return new LvcPoint(
-                (float)(MinAngle + _deltaAngleVal * a / _circumference),
-                (float)(MinRadius + r * (MaxRadius - MinRadius)));
+                    (float)(MinAngle + _deltaAngleVal * a / _circumference),
+                    (float)(MinRadius + r * (MaxRadius - MinRadius)));
             }
         }
-
-
 
         /// <summary>
         /// Converts to pixels.
