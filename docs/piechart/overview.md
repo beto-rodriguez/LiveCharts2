@@ -66,7 +66,7 @@ Drag a new `PieChart` control from your toolbox, then in the code behind assign 
 
 ## InitialRotation property
 
-Controls the angle in degrees where the first slice is drawn, the `InitialRotation` property will change the start ange of
+Controls the angle in degrees where the first slice is drawn, the `InitialRotation` property will change the start angle of
 the pie, the following diagram explains where the `PieChart` rotation starts:
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/pie-rotation.png)
@@ -89,7 +89,7 @@ Drag a new `PieChart` control from your toolbox, then in the code behind assign 
 <pre><code>PieChart1.InitialRotation = -90;</code></pre>
 {{~ end ~}}
 
-Notice the `InitialRotation` property is animated automatically based on the chart animations settings:
+Notice a change in the `InitialRotation` property is animated automatically based on the chart animations settings:
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/pie-inrot.gif)
 

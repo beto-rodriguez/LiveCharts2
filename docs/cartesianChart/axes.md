@@ -222,54 +222,56 @@ namespace ViewModelsSamples.Bars.Basic
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>&lt;CartesianChart
-    Series="series"
-    XAxes="xAxes"
-    YAxes="yAxes">
-&lt;/CartesianChart></code></pre>
-
 <pre><code>@using LiveChartsCore;
 @using LiveChartsCore.SkiaSharpView;
 @using LiveChartsCore.SkiaSharpView.Painting;
 @using LiveChartsCore.SkiaSharpView.Painting.Effects;
 @using SkiaSharp;
 
-private ISeries[] series { get; set; }
-    = new ISeries[] { new ColumnSeries&lt;int> { Values = new[] { 2, 5, 4, -2, 4, -3, 5 } } };
+&lt;CartesianChart
+    Series="series"
+    XAxes="xAxes"
+    YAxes="yAxes">
+&lt;/CartesianChart>
 
-private Axis[] xAxes { get; set; }
-    = new Axis[]
-    {
-        new Axis
+@code {
+    private ISeries[] series { get; set; }
+        = new ISeries[] { new ColumnSeries&lt;int> { Values = new[] { 2, 5, 4, -2, 4, -3, 5 } } };
+
+    private Axis[] xAxes { get; set; }
+        = new Axis[]
         {
-            Name = "X Axis",
-            NamePaint = new SolidColorPaint(SKColors.Black), // mark
+            new Axis
+            {
+                Name = "X Axis",
+                NamePaint = new SolidColorPaint(SKColors.Black), // mark
 
-            LabelsPaint = new SolidColorPaint(SKColors.Blue), // mark
-            TextSize = 10,
+                LabelsPaint = new SolidColorPaint(SKColors.Blue), // mark
+                TextSize = 10,
 
-            SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) { StrokeThickness = 2 } // mark
-        }
-    };
+                SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) { StrokeThickness = 2 } // mark
+            }
+        };
 
-private Axis[] yAxes { get; set; }
-    = new Axis[]
-    {
-        new Axis
+    private Axis[] yAxes { get; set; }
+        = new Axis[]
         {
-            Name = "Y Axis",
-            NamePaint = new SolidColorPaint(SKColors.Red), // mark
+            new Axis
+            {
+                Name = "Y Axis",
+                NamePaint = new SolidColorPaint(SKColors.Red), // mark
 
-            LabelsPaint = new SolidColorPaint(SKColors.Green), // mark
-            TextSize = 20,
+                LabelsPaint = new SolidColorPaint(SKColors.Green), // mark
+                TextSize = 20,
 
-            SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) // mark
-            { // mark
-                StrokeThickness = 2, // mark
-                PathEffect = new DashEffect(new float[] { 3, 3 }) // mark
-            } // mark
-        }
-    };</code></pre>
+                SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) // mark
+                { // mark
+                    StrokeThickness = 2, // mark
+                    PathEffect = new DashEffect(new float[] { 3, 3 }) // mark
+                } // mark
+            }
+        };
+}</code></pre>
 {{~ end ~}}
 
 {{~ if winforms ~}}
