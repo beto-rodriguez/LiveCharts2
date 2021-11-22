@@ -63,18 +63,18 @@ namespace LiveChartsCore.Kernel
                 placementContext.MostBottom = chartSize.Height - tooltipSize.Height;
             if (placementContext.MostTop < 0) placementContext.MostTop = 0;
 
-            var avrgX = (placementContext.MostRight + placementContext.MostLeft) / 2f - tooltipSize.Width * 0.5f;
+            var avrgX = (placementContext.MostRight + placementContext.MostLeft) / 2f + tooltipSize.Width * 0.5f;
             var avrgY = (placementContext.MostTop + placementContext.MostBottom) / 2f - tooltipSize.Height * 0.5f;
 
             return position switch
             {
                 TooltipPosition.Top => new LvcPoint(avrgX, placementContext.MostTop - tooltipSize.Height),
                 TooltipPosition.Bottom => new LvcPoint(avrgX, placementContext.MostBottom),
-                TooltipPosition.Left => new LvcPoint(placementContext.MostLeft - tooltipSize.Width, avrgY),
-                TooltipPosition.Right => new LvcPoint(placementContext.MostRight, avrgY),
+                TooltipPosition.Left => new LvcPoint(placementContext.MostLeft, avrgY),
+                TooltipPosition.Right => new LvcPoint(placementContext.MostRight + tooltipSize.Width, avrgY),
                 TooltipPosition.Center => new LvcPoint(avrgX, avrgY),
                 TooltipPosition.Hidden => new LvcPoint(),
-                _ => new LvcPoint(),
+                _ => new LvcPoint()
             };
         }
 
