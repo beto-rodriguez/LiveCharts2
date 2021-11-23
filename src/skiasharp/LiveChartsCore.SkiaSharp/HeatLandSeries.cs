@@ -21,36 +21,35 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing;
 
-namespace LiveChartsCore.Geo
+namespace LiveChartsCore.SkiaSharpView
 {
-    /// <summary>
-    /// Defines a heat land shape.
-    /// </summary>
-    public interface IHeatPathShape
+    /// <inheritdoc cref="HeatLandSeries{TDrawingContext}"/>
+    public class HeatLandSeries : HeatLandSeries<SkiaSharpDrawingContext>
     {
-        ///// <summary>
-        ///// Gets or sets the color of the stroke.
-        ///// </summary>
-        ///// <value>
-        ///// The color of the stroke.
-        ///// </value>
-        //LvcColor StrokeColor { get; set; }
-
-        ///// <summary>
-        ///// Gets or sets the stroke thickness.
-        ///// </summary>
-        ///// <value>
-        ///// The stroke thickness.
-        ///// </value>
-        //float StrokeThickness { get; set; }
-
         /// <summary>
-        /// Gets or sets the color of the fill.
+        /// Initialices a new instance of the <see cref="HeatLandSeries"/> class.
         /// </summary>
-        /// <value>
-        /// The color of the fill.
-        /// </value>
-        LvcColor FillColor { get; set; }
+        public HeatLandSeries()
+        {
+            HeatMap = new[]
+            {
+                LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
+                LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
+            };
+
+            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+            IntitializeSeries(LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetSolidColorPaint());
+
+            // ToDo: Themeit!
+
+            //var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
+            //var initializer = stylesBuilder.GetVisualsInitializer();
+            //if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
+            //    throw new Exception("Default colors are not valid");
+
+            //initializer.ApplyStyleToSeries(this);
+        }
     }
 }

@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Geo;
 using LiveChartsCore.Motion;
 using SkiaSharp;
 
@@ -31,7 +32,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     /// Defines a path geometry with a specified color.
     /// </summary>
     /// <seealso cref="PathGeometry" />
-    public class HeatPathShape : PathGeometry
+    public class HeatPathShape : PathGeometry, IHeatPathShape
     {
         private readonly ColorMotionProperty _fillProperty;
         private bool _hasColor = false;
@@ -53,7 +54,11 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         public LvcColor FillColor
         {
             get => _fillProperty.GetMovement(this);
-            set { _fillProperty.SetMovement(value, this); _hasColor = true; }
+            set
+            {
+                _fillProperty.SetMovement(value, this);
+                _hasColor = true;
+            }
         }
 
         /// <inheritdoc cref="PathGeometry.Draw(SkiaSharpDrawingContext)"/>

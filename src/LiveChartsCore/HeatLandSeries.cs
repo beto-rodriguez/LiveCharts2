@@ -20,9 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 
 namespace LiveChartsCore
@@ -31,41 +36,77 @@ namespace LiveChartsCore
     /// Defines the heat land series class.
     /// </summary>
     /// <typeparam name="TDrawingContext"></typeparam>
-    public class HeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>
+    public class HeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, INotifyPropertyChanged
         where TDrawingContext : DrawingContext
     {
-        private readonly IPaint<TDrawingContext> _heatPaint;
+        private IPaint<TDrawingContext>? _heatPaint;
         private bool _isHeatInCanvas = false;
+        private LvcColor[] _heatMap = new LvcColor[0];
+        private double[]? _colorStops;
+        private IWeigthedMapShape[]? _lands;
+        private bool _isVisible;
+        private readonly HashSet<GeoMap<TDrawingContext>> _subscribedTo = new();
+        private readonly CollectionDeepObserver<IWeigthedMapShape> _observer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HeatLandSeries{TDrawingContext}"/> class.
         /// </summary>
         public HeatLandSeries()
         {
-            _heatPaint = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
+            _observer = new CollectionDeepObserver<IWeigthedMapShape>(
+                (sender, e) => NotifySubscribers(),
+                (sender, e) => NotifySubscribers());
         }
+
+        /// <summary>
+        /// Called when a property changes.
+        /// </summary>
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        /// <summary>
+        /// Gets or sets the nam
+        /// </summary>
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the heat map.
         /// </summary>
-        public LvcColor[] HeatMap { get; set; } = new LvcColor[0];
-
+        public LvcColor[] HeatMap { get => _heatMap; set { _heatMap = value; OnPropertyChanged(); } }
         /// <summary>
         /// Gets or sets the color stops.
         /// </summary>
-        public double[]? ColorStops { get; set; }
+        public double[]? ColorStops { get => _colorStops; set { _colorStops = value; OnPropertyChanged(); } }
 
         /// <summary>
         /// Gets or sets the lands.
         /// </summary>
-        public IWeigthedMapShape[]? Lands { get; set; }
+        public IWeigthedMapShape[]? Lands
+        {
+            get => _lands;
+            set
+            {
+                _observer.Dispose(_lands);
+                _observer.Initialize(value);
+                _lands = value;
+                OnPropertyChanged();
+            }
+        }
 
         /// <inheritdoc cref="IGeoSeries{TDrawingContext}.IsVisible"/>
-        public bool IsVisible { get; set; }
+        public bool IsVisible { get => _isVisible; set { _isVisible = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IGeoSeries{TDrawingContext}.Measure(MapContext{TDrawingContext})"/>
         public void Measure(MapContext<TDrawingContext> context)
         {
+            _ = _subscribedTo.Add(context.CoreMap);
+            // possible memory leak???
+            // ToDo: test it
+            // what happens when the same series is subscribed to 2 charts.
+            // then we remove one chart from the ui
+            // is the chart alive in memory because of this reference?
+
+            if (_heatPaint is null) throw new Exception("Default paint not found");
+
             if (!_isHeatInCanvas)
             {
                 context.View.Canvas.AddDrawableTask(_heatPaint);
@@ -97,7 +138,7 @@ namespace LiveChartsCore
                 var shapesQuery = mapLand.Data
                     .Select(x => x.Shape)
                     .Where(x => x is not null)
-                    .Cast<IHeatLandShape>();
+                    .Cast<IHeatPathShape>();
 
                 foreach (var pathShape in shapesQuery)
                 {
@@ -116,6 +157,27 @@ namespace LiveChartsCore
         public void Delete(MapContext<TDrawingContext> context)
         {
             throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// Initializes the series.
+        /// </summary>
+        protected void IntitializeSeries(IPaint<TDrawingContext> heatPaint)
+        {
+            _heatPaint = heatPaint;
+        }
+
+        /// <summary>
+        /// Called to invoke the property changed event.
+        /// </summary>
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void NotifySubscribers()
+        {
+            foreach (var chart in _subscribedTo) chart.Update();
         }
     }
 }
