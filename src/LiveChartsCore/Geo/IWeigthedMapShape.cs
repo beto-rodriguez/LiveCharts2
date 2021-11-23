@@ -20,17 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
+
 namespace LiveChartsCore.Geo
 {
     /// <summary>
     /// Defines a weighted map shape.
     /// </summary>
-    public interface IWeigthedMapShape
+    public interface IWeigthedMapShape : IMapElement
     {
         /// <summary>
-        /// Gets or sets an index that specifies the weighted group, all the shapes that share the same index will create an weighted plane.
+        /// Gets or sets the name of the land.
         /// </summary>
-        int WeigthedAt { get; set; }
+        string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the value.

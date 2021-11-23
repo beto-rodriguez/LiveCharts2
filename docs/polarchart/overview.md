@@ -507,7 +507,7 @@ AngleAxes = new PolarAxis[]
     }
 };</code></pre>
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/polar-labelrs-rotation.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/polar-labels-rotation.png)
 
 You can also place labels at the cotangent angle:
 
@@ -544,3 +544,9 @@ the following expressions are valid also:
 
 When the `Visible` property is set to `false` the axis will not be drawn and also it will not take any space in the chart
 default is `true`.
+
+{{ render this "~/shared/chart.md" }}
+
+{{ render this "~/shared/tooltips.md" }}
+
+{{ render this "~/shared/legends.md" }}

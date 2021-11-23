@@ -39,17 +39,17 @@ namespace LiveChartsCore.Geo
         /// <param name="chart">The chart.</param>
         /// <param name="heatPaint">The heat paint.</param>
         /// <param name="heatStops">The heat stops.</param>
-        /// <param name="boundsDictionary">The bounds.</param>
+        /// <param name="bounds">The bounds.</param>
         public MapShapeContext(
             IGeoMapView<TDrawingContext> chart,
             IPaint<TDrawingContext> heatPaint,
             List<Tuple<double, LvcColor>> heatStops,
-            Dictionary<int, Bounds> boundsDictionary)
+            Bounds bounds)
         {
             Chart = chart;
             HeatPaint = heatPaint;
             HeatStops = heatStops;
-            BoundsDictionary = boundsDictionary;
+            Bounds = bounds;
         }
 
         /// <summary>
@@ -70,6 +70,6 @@ namespace LiveChartsCore.Geo
         /// <summary>
         /// Gets the bounds dictionary.
         /// </summary>
-        public Dictionary<int, Bounds> BoundsDictionary { get; }
+        public Bounds Bounds { get; }
     }
 }

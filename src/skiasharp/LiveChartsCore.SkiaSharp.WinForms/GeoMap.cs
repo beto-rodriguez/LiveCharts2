@@ -43,8 +43,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
     public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     {
         private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
+        private readonly CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>> _seriesObserver;
         private readonly GeoMap<SkiaSharpDrawingContext> _core;
         private IEnumerable<IMapElement> _shapes = Enumerable.Empty<IMapElement>();
+        private IEnumerable<IGeoSeries<SkiaSharpDrawingContext>> _series = Enumerable.Empty<IGeoSeries<SkiaSharpDrawingContext>>();
         private CoreMap<SkiaSharpDrawingContext> _activeMap;
         private MapProjection _mapProjection = MapProjection.Default;
         private LvcColor[] _heatMap = new[]
@@ -68,6 +70,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
             _core = new GeoMap<SkiaSharpDrawingContext>(this);
             _shapesObserver = new CollectionDeepObserver<IMapElement>(
+                (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
+                (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
+                true);
+            _seriesObserver = new CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>>(
                 (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
                 (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
                 true);
@@ -166,6 +172,20 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                 _shapesObserver.Dispose(_shapes);
                 _shapesObserver.Initialize(value);
                 _shapes = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public IEnumerable<IGeoSeries<SkiaSharpDrawingContext>> Series
+        {
+            get => _series;
+            set
+            {
+                _seriesObserver.Dispose(_series);
+                _seriesObserver.Initialize(value);
+                _series = value;
                 OnPropertyChanged();
             }
         }

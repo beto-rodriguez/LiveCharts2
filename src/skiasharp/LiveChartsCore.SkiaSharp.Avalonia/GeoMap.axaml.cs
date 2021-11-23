@@ -46,6 +46,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
     public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     {
         private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
+        private readonly CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>> _seriesObserver;
         private readonly GeoMap<SkiaSharpDrawingContext> _core;
 
         /// <summary>
@@ -57,6 +58,10 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
             _core = new GeoMap<SkiaSharpDrawingContext>(this);
             _shapesObserver = new CollectionDeepObserver<IMapElement>(
+                (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
+                (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
+                true);
+            _seriesObserver = new CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>>(
                 (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
                 (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
                 true);
@@ -122,6 +127,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         public static readonly AvaloniaProperty<IEnumerable<IMapElement>> ShapesProperty =
           AvaloniaProperty.Register<CartesianChart, IEnumerable<IMapElement>>(nameof(Shapes),
               Enumerable.Empty<IMapElement>(), inherits: true);
+
+        /// <summary>
+        /// The series property.
+        /// </summary>
+        public static readonly AvaloniaProperty<IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>> SeriesProperty =
+          AvaloniaProperty.Register<CartesianChart, IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>>(nameof(Series),
+              Enumerable.Empty<IGeoSeries<SkiaSharpDrawingContext>>(), inherits: true);
 
         /// <summary>
         /// The stroke property.
@@ -234,6 +246,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             set => SetValue(ShapesProperty, value);
         }
 
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
+        public IEnumerable<IGeoSeries<SkiaSharpDrawingContext>> Series
+        {
+            get => (IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty);
+            set => SetValue(ShapesProperty, value);
+        }
+
         #endregion
 
         void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
@@ -252,6 +271,12 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             {
                 _shapesObserver.Dispose((IEnumerable<IMapElement>)change.OldValue.Value);
                 _shapesObserver.Initialize((IEnumerable<IMapElement>)change.NewValue.Value);
+            }
+
+            if (change.Property.Name == nameof(Series))
+            {
+                _seriesObserver.Dispose((IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)change.OldValue.Value);
+                _seriesObserver.Initialize((IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)change.NewValue.Value);
             }
 
             if (change.Property.Name == nameof(ViewCommand))

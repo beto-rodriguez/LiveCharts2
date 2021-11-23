@@ -53,26 +53,6 @@ namespace LiveChartsCore.Geo
         float Height { get; }
 
         /// <summary>
-        /// Gets or sets whether the chart auto-updates are enabled.
-        /// </summary>
-        bool AutoUpdateEnabled { get; set; }
-
-        /// <summary>
-        /// Gets or sets the projection.
-        /// </summary>
-        MapProjection MapProjection { get; set; }
-
-        /// <summary>
-        /// Gets or sets the heat map.
-        /// </summary>
-        LvcColor[] HeatMap { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color stops.
-        /// </summary>
-        double[]? ColorStops { get; set; }
-
-        /// <summary>
         /// Gets or sets the stroke.
         /// </summary>
         IPaint<TDrawingContext>? Stroke { get; set; }
@@ -83,9 +63,14 @@ namespace LiveChartsCore.Geo
         IPaint<TDrawingContext>? Fill { get; set; }
 
         /// <summary>
-        /// Gets or sets the shapes to draw in the map.
+        /// Gets or sets whether the chart auto-updates are enabled.
         /// </summary>
-        IEnumerable<IMapElement> Shapes { get; set; }
+        bool AutoUpdateEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the projection.
+        /// </summary>
+        MapProjection MapProjection { get; set; }
 
         /// <summary>
         /// Gets whether the control is in designer mode.
@@ -108,5 +93,28 @@ namespace LiveChartsCore.Geo
         /// </summary>
         /// <param name="action"></param>
         void InvokeOnUIThread(Action action);
+
+        /// <summary>
+        /// Gets or sets the heat map.
+        /// </summary>
+        [Obsolete]
+        LvcColor[] HeatMap { get; set; }
+
+        /// <summary>
+        /// Gets or sets the color stops.
+        /// </summary>
+        [Obsolete]
+        double[]? ColorStops { get; set; }
+
+        /// <summary>
+        /// Gets or sets the shapes to draw in the map.
+        /// </summary>
+        [Obsolete]
+        IEnumerable<IMapElement> Shapes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the series.
+        /// </summary>
+        IEnumerable<IGeoSeries<TDrawingContext>> Series { get; set; }
     }
 }

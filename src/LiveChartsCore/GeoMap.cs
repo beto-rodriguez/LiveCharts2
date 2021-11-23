@@ -216,39 +216,39 @@ namespace LiveChartsCore
                 this, View, View.ActiveMap,
                 Maps.BuildProjector(View.MapProjection, new[] { View.Width, View.Height }));
 
-            var bounds = new Dictionary<int, Bounds>();
+            #region obsolete, will be removed
+            var weightBounds = new Bounds();
             foreach (var shape in _mapFactory.FetchMapElements(context))
             {
                 if (shape is not IWeigthedMapShape wShape) continue;
-
-                if (!bounds.TryGetValue(wShape.WeigthedAt, out var weightBounds))
-                {
-                    weightBounds = new Bounds();
-                    bounds.Add(wShape.WeigthedAt, weightBounds);
-                }
-
                 weightBounds.AppendValue(wShape.Value);
             }
-
-            var hm = View.HeatMap;
-
-            if (_heatKnownLength != View.HeatMap.Length)
-            {
-                _heatStops = HeatFunctions.BuildColorStops(hm, View.ColorStops);
-                _heatKnownLength = View.HeatMap.Length;
-            }
+            //var hm = View.HeatMap;
+            //if (_heatKnownLength != View.HeatMap.Length)
+            //{
+            //    _heatStops = HeatFunctions.BuildColorStops(hm, View.ColorStops);
+            //    _heatKnownLength = View.HeatMap.Length;
+            //}
+            #endregion
 
             _mapFactory.GenerateLands(context);
 
             var toDeleteShapes = new HashSet<IMapElement>(_everMeasuredShapes);
-            var shapeContext = new MapShapeContext<TDrawingContext>(View, _heatPaint, _heatStops, bounds);
+            var shapeContext = new MapShapeContext<TDrawingContext>(View, _heatPaint, _heatStops, weightBounds);
 
-            foreach (var shape in _mapFactory.FetchMapElements(context))
+            foreach (var series in View.Series)
             {
-                _ = _everMeasuredShapes.Add(shape);
-                shape.Measure(shapeContext);
-                _ = toDeleteShapes.Remove(shape);
+                series.Measure(context);
             }
+
+            #region OBSOLETE
+            //foreach (var shape in _mapFactory.FetchMapElements(context))
+            //{
+            //    _ = _everMeasuredShapes.Add(shape);
+            //    shape.Measure(shapeContext);
+            //    _ = toDeleteShapes.Remove(shape);
+            //}
+            #endregion
 
             foreach (var shape in toDeleteShapes)
             {

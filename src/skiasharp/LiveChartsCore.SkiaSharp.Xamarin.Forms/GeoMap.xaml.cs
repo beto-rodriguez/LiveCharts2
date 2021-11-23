@@ -46,6 +46,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
     public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
     {
         private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
+        private readonly CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>> _seriesObserver;
         private readonly GeoMap<SkiaSharpDrawingContext> _core;
 
         /// <summary>
@@ -66,7 +67,12 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
                 (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
                 true);
+            _seriesObserver = new CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>>(
+                (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
+                (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
+                true);
             SetValue(ShapesProperty, Enumerable.Empty<IMapElement>());
+            SetValue(SeriesProperty, Enumerable.Empty<IGeoSeries<SkiaSharpDrawingContext>>());
             SetValue(ActiveMapProperty, Maps.GetWorldMap<SkiaSharpDrawingContext>());
             SetValue(SyncContextProperty, new object());
         }
@@ -160,6 +166,22 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                    chart._core.Update();
                });
 
+        /// <summary>
+        /// The `series property
+        /// </summary>
+        public static readonly BindableProperty SeriesProperty =
+           BindableProperty.Create(
+               nameof(Series), typeof(IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>), typeof(GeoMap),
+               Enumerable.Empty<IGeoSeries<SkiaSharpDrawingContext>>(),
+               BindingMode.Default, null, (BindableObject o, object oldValue, object newValue) =>
+               {
+                   var chart = (GeoMap)o;
+                   var seriesObserver = chart._seriesObserver;
+                   seriesObserver.Dispose((IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)oldValue);
+                   seriesObserver.Initialize((IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)newValue);
+                   chart._core.Update();
+               });
+
         #endregion
 
         #region props
@@ -248,6 +270,13 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         {
             get => (IEnumerable<IMapElement>)GetValue(ShapesProperty);
             set => SetValue(ShapesProperty, value);
+        }
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
+        public IEnumerable<IGeoSeries<SkiaSharpDrawingContext>> Series
+        {
+            get => (IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty);
+            set => SetValue(SeriesProperty, value);
         }
 
         #endregion

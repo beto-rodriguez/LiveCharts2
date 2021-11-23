@@ -20,43 +20,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Geo
 {
     /// <summary>
-    /// Defines a map factory.
+    /// Defines a geographical data series.
     /// </summary>
-    public interface IMapFactory<TDrawingContext>
+    public interface IGeoSeries<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>
-        /// Updates the lands.
+        /// Gets or sets a value to indecate whether the series is visible.
         /// </summary>
-        /// <param name="context"></param>
-        void GenerateLands(MapContext<TDrawingContext> context);
+        public bool IsVisible { get; set; }
 
         /// <summary>
-        /// Fetches the map elements.
+        /// Draw the series.
         /// </summary>
         /// <param name="context">The map context.</param>
-        [Obsolete]
-        IEnumerable<IMapElement> FetchMapElements(MapContext<TDrawingContext> context);
+        void Measure(MapContext<TDrawingContext> context);
 
         /// <summary>
-        /// Move the map to the specified view.
+        /// Deletes he specified map element.
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="command">The command.</param>
-        void ViewTo(GeoMap<TDrawingContext> sender, object command);
+        /// <param name="context">The map context.</param>
+        /// <param name="mapElement">The map element.</param>
+        void DeleteMapElement(MapContext<TDrawingContext> context, IMapElement mapElement);
 
         /// <summary>
-        /// Pans the map.
+        /// Deltes the series.
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="delta">The delta.</param>
-        void Pan(GeoMap<TDrawingContext> sender, LvcPoint delta);
+        /// <param name="context">The map context.</param>
+        void Delete(MapContext<TDrawingContext> context);
     }
 }

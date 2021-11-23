@@ -55,10 +55,12 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         public SKGeoMap(IGeoMapView<SkiaSharpDrawingContext> mapView) : this()
         {
             MapProjection = mapView.MapProjection;
-            HeatMap = mapView.HeatMap;
-            ColorStops = mapView.ColorStops;
             Stroke = mapView.Stroke;
             Fill = mapView.Fill;
+
+            // obsoletes, moved to series property.
+            HeatMap = mapView.HeatMap;
+            ColorStops = mapView.ColorStops;
             Shapes = mapView.Shapes;
         }
 
@@ -142,6 +144,9 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
         public IEnumerable<IMapElement> Shapes { get; set; } = Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>();
+
+        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
+        public IEnumerable<IGeoSeries<SkiaSharpDrawingContext>> Series { get; set; }
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ViewCommand"/>
         public object? ViewCommand

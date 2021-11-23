@@ -61,29 +61,26 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// </summary>
         public string Name { get; set; } = string.Empty;
 
-        /// <inheritdoc cref="IWeigthedMapShape.WeigthedAt"/>
-        public int WeigthedAt { get => _weigthedAt; set { _weigthedAt = value; OnPropertyChanged(); } }
-
         /// <inheritdoc cref="IWeigthedMapShape.Value"/>
         public double Value { get => _value; set { _value = value; OnPropertyChanged(); } }
 
         /// <inheritdoc cref="IMapElement.Measure(object)"/>
         public override void Measure(MapShapeContext<SkiaSharpDrawingContext> context)
         {
-            var projector = Maps.BuildProjector(context.Chart.MapProjection, new[] { context.Chart.Width, context.Chart.Height });
+            //var projector = Maps.BuildProjector(context.Chart.MapProjection, new[] { context.Chart.Width, context.Chart.Height });
 
-            var heat = HeatFunctions.InterpolateColor(
-                (float)Value, context.BoundsDictionary[WeigthedAt], context.Chart.HeatMap, context.HeatStops);
+            //var heat = HeatFunctions.InterpolateColor(
+            //    (float)Value, context.Bounds, context.Chart.HeatMap, context.HeatStops);
 
-            var land = context.Chart.ActiveMap.FindLand(Name);
-            if (land is null) return;
+            //var land = context.Chart.ActiveMap.FindLand(Name);
+            //if (land is null) return;
 
-            var shapesQuery = land.Data.Select(x => x.Shape).Where(x => x is not null).Cast<HeatPathShape>();
+            //var shapesQuery = land.Data.Select(x => x.Shape).Where(x => x is not null).Cast<HeatPathShape>();
 
-            foreach (var pathShape in shapesQuery)
-            {
-                pathShape.FillColor = heat;
-            }
+            //foreach (var pathShape in shapesQuery)
+            //{
+            //    pathShape.FillColor = heat;
+            //}
         }
 
         /// <inheritdoc cref="IMapElement.RemoveFromUI(object)"/>
