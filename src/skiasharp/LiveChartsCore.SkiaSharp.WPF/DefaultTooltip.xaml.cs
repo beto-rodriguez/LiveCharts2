@@ -36,7 +36,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
     /// <inheritdoc cref="IChartTooltip{TDrawingContext}" />
     public partial class DefaultTooltip : Popup, IChartTooltip<SkiaSharpDrawingContext>
     {
-        private readonly DataTemplate _defaultTempalte;
+        private readonly DataTemplate _defaultTemplate;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
@@ -46,7 +46,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             InitializeComponent();
             SetCurrentValue(PopupAnimationProperty, PopupAnimation.Fade);
             SetCurrentValue(PlacementProperty, PlacementMode.Relative);
-            _defaultTempalte = (DataTemplate)FindResource("defaultTemplate");
+            _defaultTemplate = (DataTemplate)FindResource("defaultTemplate");
         }
 
         #region dependency properties
@@ -93,7 +93,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </summary>
         public static readonly DependencyProperty FontWeightProperty =
            DependencyProperty.Register(
-               nameof(FontWeightProperty), typeof(FontWeight), typeof(DefaultTooltip), new PropertyMetadata(FontWeights.Normal));
+               nameof(FontWeight), typeof(FontWeight), typeof(DefaultTooltip), new PropertyMetadata(FontWeights.Normal));
 
         /// <summary>
         /// The font style property
@@ -249,7 +249,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var wpfChart = (Chart)chart.View;
-            var template = wpfChart.TooltipTemplate ?? _defaultTempalte;
+            var template = wpfChart.TooltipTemplate ?? _defaultTemplate;
             if (Template != template) Template = template;
 
             LvcPoint? location = null;

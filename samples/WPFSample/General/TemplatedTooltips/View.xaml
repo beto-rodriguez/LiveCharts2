@@ -11,10 +11,12 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <lvc:CartesianChart Grid.Row="0" Series="{Binding Series}" TooltipPosition="Top" >
+        <lvc:CartesianChart Grid.Row="0" Series="{Binding Series}" TooltipPosition="Top" 
+            TooltipBackground="#303030" TooltipTextBrush="Yellow"
+            TooltipFontFamily="Courier" TooltipFontSize="14" TooltipFontWeight="Bold" >
             <lvc:CartesianChart.TooltipTemplate>
                 <DataTemplate>
-                    <Border Background="#303030">
+                    <Border Background="{Binding Background, RelativeSource={RelativeSource AncestorType=lvc:DefaultTooltip}}">
                         <ItemsControl ItemsSource="{Binding Points, RelativeSource={RelativeSource AncestorType=lvc:DefaultTooltip}}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -25,7 +27,11 @@
                                 <DataTemplate DataType="{x:Type ctx:TooltipPoint}">
                                     <Border Padding="7 5">
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding Point.AsTooltipString}" Margin="0 0 8 0" Foreground="AntiqueWhite" />
+                                            <TextBlock Text="{Binding Point.AsTooltipString}" Margin="0 0 8 0" VerticalAlignment="Center" 
+                                                Foreground="{Binding TextColor, RelativeSource={RelativeSource AncestorType=lvc:DefaultTooltip}}"
+                                                FontFamily="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=lvc:DefaultTooltip}}"
+                                                FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=lvc:DefaultTooltip}}"
+                                                FontWeight="{Binding FontWeight, RelativeSource={RelativeSource AncestorType=lvc:DefaultTooltip}}"/>
                                             <lvc:MotionCanvas Margin="0 0 8 0" 
                                                 PaintTasks="{Binding Series.CanvasSchedule.PaintSchedules}"
                                                 Width="{Binding Series.CanvasSchedule.Width}"
