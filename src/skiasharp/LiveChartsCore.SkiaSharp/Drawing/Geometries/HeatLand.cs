@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
 
@@ -65,20 +66,23 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <inheritdoc cref="IMapElement.Measure(object)"/>
         public override void Measure(MapShapeContext<SkiaSharpDrawingContext> context)
         {
-            //var projector = Maps.BuildProjector(context.Chart.MapProjection, new[] { context.Chart.Width, context.Chart.Height });
+            var projector = Maps.BuildProjector(context.Chart.MapProjection, new[] { context.Chart.Width, context.Chart.Height });
 
-            //var heat = HeatFunctions.InterpolateColor(
-            //    (float)Value, context.Bounds, context.Chart.HeatMap, context.HeatStops);
+            var heat = HeatFunctions.InterpolateColor(
+                (float)Value, context.Bounds, context.Chart.HeatMap, context.HeatStops);
 
-            //var land = context.Chart.ActiveMap.FindLand(Name);
-            //if (land is null) return;
+            var land = context.Chart.ActiveMap.FindLand(Name);
+            if (land is null) return;
 
-            //var shapesQuery = land.Data.Select(x => x.Shape).Where(x => x is not null).Cast<HeatPathShape>();
+            var shapesQuery = land.Data
+                .Select(x => x.Shape)
+                .Where(x => x is not null)
+                .Cast<HeatPathShape>();
 
-            //foreach (var pathShape in shapesQuery)
-            //{
-            //    pathShape.FillColor = heat;
-            //}
+            foreach (var pathShape in shapesQuery)
+            {
+                pathShape.FillColor = heat;
+            }
         }
 
         /// <inheritdoc cref="IMapElement.RemoveFromUI(object)"/>

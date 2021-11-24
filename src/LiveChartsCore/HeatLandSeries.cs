@@ -101,12 +101,6 @@ namespace LiveChartsCore
         public void Measure(MapContext<TDrawingContext> context)
         {
             _ = _subscribedTo.Add(context.CoreMap);
-            // possible memory leak???
-            // ToDo: test it
-            // what happens when the same series is subscribed to 2 charts.
-            // then we remove one chart from the ui
-            // is the chart alive in memory because of this reference?
-            // problably yes, and we need to call unsubscribe the series from the chart.
 
             if (_heatPaint is null) throw new Exception("Default paint not found");
 
@@ -153,13 +147,14 @@ namespace LiveChartsCore
                 _ = toRemove.Remove(mapLand);
             }
 
-            RemoveVisuals(toRemove);
+            ClearHeat(toRemove);
         }
 
         /// <inheritdoc cref="IGeoSeries{TDrawingContext}.Delete(MapContext{TDrawingContext})"/>
         public void Delete(MapContext<TDrawingContext> context)
         {
-            throw new NotImplementedException();
+            ClearHeat(_everUsed);
+            _subscribedTo.Remove(context.CoreMap);
         }
 
         /// <summary>
@@ -183,7 +178,7 @@ namespace LiveChartsCore
             foreach (var chart in _subscribedTo) chart.Update();
         }
 
-        private void RemoveVisuals(IEnumerable<LandDefinition> toRemove)
+        private void ClearHeat(IEnumerable<LandDefinition> toRemove)
         {
             foreach (var mapLand in toRemove)
             {

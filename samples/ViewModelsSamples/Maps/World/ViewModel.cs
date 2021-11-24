@@ -50,6 +50,28 @@ namespace ViewModelsSamples.Maps.World
 
         public HeatLandSeries[] Series { get; set; }
 
+        #region Obsolete
+
+        public IWeigthedMapShape[] Shapes => new HeatLand[]
+        {
+            new HeatLand { Name = "bra", Value = 13 },
+            new HeatLand { Name = "mex", Value = 10 },
+            new HeatLand { Name = "usa", Value = 15 },
+            new HeatLand { Name = "can", Value = 8 },
+            new HeatLand { Name = "ind", Value = 12 },
+            new HeatLand { Name = "deu", Value = 13 },
+            new HeatLand { Name= "jpn", Value = 15 },
+            new HeatLand { Name = "chn", Value = 14 },
+            new HeatLand { Name = "rus", Value = 11 },
+            new HeatLand { Name = "fra", Value = 8 },
+            new HeatLand { Name = "esp", Value = 7 },
+            new HeatLand { Name = "kor", Value = 10 },
+            new HeatLand { Name = "zaf", Value = 12 },
+            new HeatLand { Name = "are", Value = 13 }
+        };
+
+        #endregion
+
         public ICommand ToggleBrazilCommand => new Command(o => ToggleBrazil());
 
         private async void DoRandomChanges()
@@ -79,7 +101,5 @@ namespace ViewModelsSamples.Maps.World
             Series[0].Lands = Series[0].Lands.Concat(new[] { _brazil }).ToArray();
             _isBrazilInChart = true;
         }
-
-        private void 
     }
 }

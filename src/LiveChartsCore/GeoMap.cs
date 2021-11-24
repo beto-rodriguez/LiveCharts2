@@ -40,14 +40,14 @@ namespace LiveChartsCore
     {
         private readonly IMapFactory<TDrawingContext> _mapFactory;
         private readonly HashSet<IMapElement> _everMeasuredShapes = new();
+        private readonly HashSet<IGeoSeries<TDrawingContext>> _everMeasuredSeries = new();
         private readonly ActionThrottler _updateThrottler;
         private readonly ActionThrottler _panningThrottler;
         private readonly IPaint<TDrawingContext> _heatPaint;
         private bool _isHeatInCanvas = false;
         private IPaint<TDrawingContext>? _previousStroke;
         private IPaint<TDrawingContext>? _previousFill;
-        private int _heatKnownLength = 0;
-        private List<Tuple<double, LvcColor>> _heatStops = new();
+        private readonly List<Tuple<double, LvcColor>> _heatStops = new();
         private LvcPoint _pointerPosition = new(-10, -10);
         private LvcPoint _pointerPanningPosition = new(-10, -10);
         private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
@@ -223,37 +223,42 @@ namespace LiveChartsCore
                 if (shape is not IWeigthedMapShape wShape) continue;
                 weightBounds.AppendValue(wShape.Value);
             }
-            //var hm = View.HeatMap;
-            //if (_heatKnownLength != View.HeatMap.Length)
-            //{
-            //    _heatStops = HeatFunctions.BuildColorStops(hm, View.ColorStops);
-            //    _heatKnownLength = View.HeatMap.Length;
-            //}
+            var hm = View.HeatMap;
+            var heatStops = HeatFunctions.BuildColorStops(hm, View.ColorStops);
             #endregion
 
             _mapFactory.GenerateLands(context);
 
             var toDeleteShapes = new HashSet<IMapElement>(_everMeasuredShapes);
-            var shapeContext = new MapShapeContext<TDrawingContext>(View, _heatPaint, _heatStops, weightBounds);
 
+            var toDeleteSeries = new HashSet<IGeoSeries<TDrawingContext>>(_everMeasuredSeries);
             foreach (var series in View.Series)
             {
                 series.Measure(context);
+                _ = _everMeasuredSeries.Add(series);
+                _ = toDeleteSeries.Remove(series);
             }
 
             #region OBSOLETE
-            //foreach (var shape in _mapFactory.FetchMapElements(context))
-            //{
-            //    _ = _everMeasuredShapes.Add(shape);
-            //    shape.Measure(shapeContext);
-            //    _ = toDeleteShapes.Remove(shape);
-            //}
+            var shapeContext = new MapShapeContext<TDrawingContext>(View, _heatPaint, heatStops, weightBounds);
+            foreach (var shape in _mapFactory.FetchMapElements(context))
+            {
+                _ = _everMeasuredShapes.Add(shape);
+                shape.Measure(shapeContext);
+                _ = toDeleteShapes.Remove(shape);
+            }
             #endregion
 
             foreach (var shape in toDeleteShapes)
             {
                 shape.RemoveFromUI(context);
                 _ = _everMeasuredShapes.Remove(shape);
+            }
+
+            foreach (var series in toDeleteSeries)
+            {
+                series.Delete(context);
+                _everMeasuredSeries.Remove(series);
             }
 
             View.Canvas.Invalidate();

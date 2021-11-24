@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.ComponentModel;
 
 namespace LiveChartsCore.Geo
@@ -32,11 +33,13 @@ namespace LiveChartsCore.Geo
         /// <summary>
         /// Measures the element with the given context.
         /// </summary>
+        [Obsolete]
         void Measure(object context);
 
         /// <summary>
         /// Removes the element with the given context.
         /// </summary>
+        [Obsolete]
         void RemoveFromUI(object context);
     }
 }
