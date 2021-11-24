@@ -42,13 +42,6 @@ namespace LiveChartsCore.Geo
         void Measure(MapContext<TDrawingContext> context);
 
         /// <summary>
-        /// Deletes he specified map element.
-        /// </summary>
-        /// <param name="context">The map context.</param>
-        /// <param name="mapElement">The map element.</param>
-        void DeleteMapElement(MapContext<TDrawingContext> context, IMapElement mapElement);
-
-        /// <summary>
         /// Deltes the series.
         /// </summary>
         /// <param name="context">The map context.</param>

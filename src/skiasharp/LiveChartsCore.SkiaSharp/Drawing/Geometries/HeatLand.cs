@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
 
@@ -35,7 +34,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     {
         private double _value;
         private Tuple<HeatPathShape, IEnumerable<PathCommand>>[]? _paths;
-        private int _weigthedAt;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HeatLand"/> class.

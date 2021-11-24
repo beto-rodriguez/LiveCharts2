@@ -11,5 +11,15 @@
         <vms:ViewModel/>
     </UserControl.DataContext>
 
-    <lvc:GeoMap Series="{Binding Series}"></lvc:GeoMap>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Margin="6" Command="{Binding ToggleBrazilCommand}">Toggle Brazil</Button>
+        </StackPanel>
+        <lvc:GeoMap Grid.Row="1" Series="{Binding Series}"></lvc:GeoMap>
+    </Grid>
+
 </UserControl>

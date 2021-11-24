@@ -35,14 +35,13 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
     public class HeatPathShape : PathGeometry, IHeatPathShape
     {
         private readonly ColorMotionProperty _fillProperty;
-        private bool _hasColor = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HeatPathShape"/> class.
         /// </summary>
         public HeatPathShape() : base()
         {
-            _fillProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(FillColor), new LvcColor(255, 255, 255, 0)));
+            _fillProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(FillColor), LvcColor.Empty));
         }
 
         /// <summary>
@@ -54,11 +53,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         public LvcColor FillColor
         {
             get => _fillProperty.GetMovement(this);
-            set
-            {
-                _fillProperty.SetMovement(value, this);
-                _hasColor = true;
-            }
+            set => _fillProperty.SetMovement(value, this);
         }
 
         /// <inheritdoc cref="PathGeometry.Draw(SkiaSharpDrawingContext)"/>
@@ -92,15 +87,17 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
             var originalColor = context.Paint.Color;
             var originalStyle = context.Paint.Style;
 
-            if (_hasColor)
+            var fill = FillColor;
+
+            if (fill != LvcColor.Empty)
             {
-                context.Paint.Color = FillColor.AsSKColor();
+                context.Paint.Color = fill.AsSKColor();
                 context.Paint.Style = SKPaintStyle.Fill;
             }
 
             context.Canvas.DrawPath(path, context.Paint);
 
-            if (_hasColor)
+            if (fill != LvcColor.Empty)
             {
                 context.Paint.Color = originalColor;
                 context.Paint.Style = originalStyle;

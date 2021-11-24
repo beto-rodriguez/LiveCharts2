@@ -43,10 +43,11 @@ namespace LiveChartsCore
         private bool _isHeatInCanvas = false;
         private LvcColor[] _heatMap = new LvcColor[0];
         private double[]? _colorStops;
-        private IWeigthedMapShape[]? _lands;
+        private IEnumerable<IWeigthedMapShape>? _lands;
         private bool _isVisible;
         private readonly HashSet<GeoMap<TDrawingContext>> _subscribedTo = new();
         private readonly CollectionDeepObserver<IWeigthedMapShape> _observer;
+        private readonly HashSet<LandDefinition> _everUsed = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HeatLandSeries{TDrawingContext}"/> class.
@@ -72,6 +73,7 @@ namespace LiveChartsCore
         /// Gets or sets the heat map.
         /// </summary>
         public LvcColor[] HeatMap { get => _heatMap; set { _heatMap = value; OnPropertyChanged(); } }
+
         /// <summary>
         /// Gets or sets the color stops.
         /// </summary>
@@ -80,7 +82,7 @@ namespace LiveChartsCore
         /// <summary>
         /// Gets or sets the lands.
         /// </summary>
-        public IWeigthedMapShape[]? Lands
+        public IEnumerable<IWeigthedMapShape>? Lands
         {
             get => _lands;
             set
@@ -104,6 +106,7 @@ namespace LiveChartsCore
             // what happens when the same series is subscribed to 2 charts.
             // then we remove one chart from the ui
             // is the chart alive in memory because of this reference?
+            // problably yes, and we need to call unsubscribe the series from the chart.
 
             if (_heatPaint is null) throw new Exception("Default paint not found");
 
@@ -124,6 +127,7 @@ namespace LiveChartsCore
 
             var heatStops = HeatFunctions.BuildColorStops(HeatMap, ColorStops);
             var shapeContext = new MapShapeContext<TDrawingContext>(context.View, _heatPaint, heatStops, bounds);
+            var toRemove = new HashSet<LandDefinition>(_everUsed);
 
             foreach (var land in Lands ?? Enumerable.Empty<IWeigthedMapShape>())
             {
@@ -144,19 +148,18 @@ namespace LiveChartsCore
                 {
                     pathShape.FillColor = heat;
                 }
-            }
-        }
 
-        /// <inheritdoc cref="IGeoSeries{TDrawingContext}.DeleteMapElement(MapContext{TDrawingContext}, IMapElement)"/>
-        public void DeleteMapElement(MapContext<TDrawingContext> context, IMapElement mapElement)
-        {
-            throw new System.NotImplementedException();
+                _ = _everUsed.Add(mapLand);
+                _ = toRemove.Remove(mapLand);
+            }
+
+            RemoveVisuals(toRemove);
         }
 
         /// <inheritdoc cref="IGeoSeries{TDrawingContext}.Delete(MapContext{TDrawingContext})"/>
         public void Delete(MapContext<TDrawingContext> context)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -178,6 +181,24 @@ namespace LiveChartsCore
         private void NotifySubscribers()
         {
             foreach (var chart in _subscribedTo) chart.Update();
+        }
+
+        private void RemoveVisuals(IEnumerable<LandDefinition> toRemove)
+        {
+            foreach (var mapLand in toRemove)
+            {
+                var shapesQuery = mapLand.Data
+                    .Select(x => x.Shape)
+                    .Where(x => x is not null)
+                    .Cast<IHeatPathShape>();
+
+                foreach (var pathShape in shapesQuery)
+                {
+                    pathShape.FillColor = LvcColor.Empty;
+                }
+
+                _ = _everUsed.Remove(mapLand);
+            }
         }
     }
 }
