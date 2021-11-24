@@ -192,6 +192,8 @@ namespace LiveChartsCore
                 if (View.Stroke is not null)
                 {
                     if (View.Stroke.ZIndex == 0) View.Stroke.ZIndex = 2;
+                    View.Stroke.IsStroke = true; // ToDo: why both properties? IsStroke? IsFill?
+                    View.Stroke.IsFill = false;
                     View.Canvas.AddDrawableTask(View.Stroke);
                 }
 
@@ -204,7 +206,11 @@ namespace LiveChartsCore
                     View.Canvas.RemovePaintTask(_previousFill);
 
                 if (View.Fill is not null)
+                {
+                    View.Fill.IsStroke = false; // ToDo: why both properties? IsStroke? IsFill?
+                    View.Fill.IsFill = true;
                     View.Canvas.AddDrawableTask(View.Fill);
+                }
 
                 _previousFill = View.Fill;
             }

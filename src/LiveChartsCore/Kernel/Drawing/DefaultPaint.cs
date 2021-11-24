@@ -33,7 +33,7 @@ namespace LiveChartsCore.Kernel.Drawing
     /// </summary>
     /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
     /// <seealso cref="IPaint{TDrawingContext}" />
-    public class DefaultPaintTask<TDrawingContext> : IPaint<TDrawingContext>
+    public class DefaultPaint<TDrawingContext> : IPaint<TDrawingContext>
         where TDrawingContext : DrawingContext
     {
         /// <summary>

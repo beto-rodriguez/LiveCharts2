@@ -43,6 +43,11 @@ and the current theme.
     }
 };</code></pre>
 
+:::info
+Paints can create gradients, dashed lines and more, if you need help using the `Paint` instances take 
+a look at the [Paints article]({{ website_url }}/docs/{{ platform }}/{{ version }}/Overview.Paints).
+:::
+
 ## Fill property
 
 If the fill property is not set, then LiveCharts will create it based on the series position in your series collection
@@ -80,6 +85,11 @@ The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent 
     }
 };</code></pre>
 
+:::info
+Paints can create gradients, dashed lines and more, if you need help using the `Paint` instances take 
+a look at the [Paints article]({{ website_url }}/docs/{{ platform }}/{{ version }}/Overview.Paints).
+:::
+
 ## GeometryFill and GeometryStroke properties
 
 The geometry is the circle shape (by default) that the line series draws for every point, byt by default the size is `0` 
@@ -112,6 +122,11 @@ based on the series position in your series collection and the current theme.
         GeometryStroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 10 }, // mark
     }
 };</code></pre>
+
+:::info
+Paints can create gradients, dashed lines and more, if you need help using the `Paint` instances take 
+a look at the [Paints article]({{ website_url }}/docs/{{ platform }}/{{ version }}/Overview.Paints).
+:::
 
 ## GeometrySize property
 

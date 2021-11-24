@@ -17,7 +17,7 @@ not cover all of them, if you need to know more about this type then use the [AP
 
 ## Zooming and Panning
 
-Both of these features are directly related to the [MaxLimit and MinLimit properties](#MaxLimit and MinLimit properties),
+Both of these features are directly related to the <a href="#MaxLimit and MinLimit properties">MaxLimit and MinLimit properties</a>,
 zooming occurs when the mouse wheel moves or when the pinch gesture occurs, the panning is called when the pointer goes down,
 moves and then goes up
 
@@ -161,8 +161,7 @@ places the axis at the top for X axes and at the right for Y axes.
 
 ## LabelsPaint and SeparatorsPaint properties
 
-You can set the color, use dashed lines, build gradients for the axis name, labels and separators, if you need help using `Paint` instances take 
-a look at the [Paints article]({{ website_url }}/docs/{{ platform }}/{{ version }}/Overview.Paints).
+You can set the color, use dashed lines, build gradients for the axis name, labels and separators.
 
 {{~ if xaml ~}}
 <pre><code>using LiveChartsCore;
@@ -309,6 +308,11 @@ cartesianChart1.YAxes = new Axis[]
 {{~ end ~}}
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/axes-paints.png)
+
+:::info
+Paints can create gradients, dashed lines and more, if you need help using the `Paint` instances take 
+a look at the [Paints article]({{ website_url }}/docs/{{ platform }}/{{ version }}/Overview.Paints).
+:::
 
 ## Labels vs Labeler properties
 

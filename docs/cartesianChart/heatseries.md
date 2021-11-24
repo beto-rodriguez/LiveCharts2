@@ -10,42 +10,27 @@
 
 ## HeatMap property
 
-This property defines the gradient colors, it is an array of `System.Drawing.Color` where the first element in the array
-is the the smallest or coldest and the last item in the array  is the greatest or hottest, any value between the chart limits 
-will be interpolated lineally to create a new color, you can add as many colors as you need to define the gradient.
+This property defines the gradient colors, it is an array of [`LvcColor`]({{ website_url }}/api/{{ version }}/LiveChartsCore.Drawing.LvcColor) 
+where the first element in the array is the the smallest or coldest and the last item in the array  is the greatest or hottest, 
+any value between the chart limits will be interpolated lineally to create a new color, you can add as many colors as you need 
+to define the gradient.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/heathm.png)
 
-<pre><code>Series = new ISeries[]
+<pre><code>using SkiaSharp;
+using LiveChartsCore.SkiaSharpView;
+
+Series = new ISeries[]
 {
     new HeatSeries&lt;WeightedPoint>
     {
         HeatMap = new[] // mark
         { // mark
-            Color.Yellow, // the first element is the "coldest" // mark
-            Color.Black, // mark
-            Color.Blue // the last element is the "hottest" // mark
+            SKColors.Yellow.AsLvcColor(), // the first element is the "coldest" // mark
+            SKColors.Black.AsLvcColor(), // mark
+            SKColors.Blue.AsLvcColor() // the last element is the "hottest" // mark
         }, // mark
-        Values = new ObservableCollection&lt;WeightedPoint>
-        {
-            new WeightedPoint(0, 16, 500),
-            new WeightedPoint(0, 15, 475),
-            new WeightedPoint(0, 14, 450),
-            new WeightedPoint(0, 13, 425),
-            new WeightedPoint(0, 12, 400),
-            new WeightedPoint(0, 11, 375),
-            new WeightedPoint(0, 10, 350),
-            new WeightedPoint(0, 9, 325),
-            new WeightedPoint(0, 8, 300),
-            new WeightedPoint(0, 7, 275),
-            new WeightedPoint(0, 6, 250),
-            new WeightedPoint(0, 5, 225),
-            new WeightedPoint(0, 4, 200),
-            new WeightedPoint(0, 3, 175),
-            new WeightedPoint(0, 2, 150),
-            new WeightedPoint(0, 1, 125),
-            new WeightedPoint(0, 0, 100)
-        }
+        Values = new ObservableCollection&lt;WeightedPoint> { ... }
     }
 };</code></pre>
 
@@ -59,15 +44,18 @@ used in the remaining 90% of the gradient.
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/heatcs.png)
 
-<pre><code>Series = new ISeries[]
+<pre><code>using SkiaSharp;
+using LiveChartsCore.SkiaSharpView;
+
+Series = new ISeries[]
 {
     new HeatSeries&lt;WeightedPoint>
     {
         HeatMap = new[]
         {
-            Color.Yellow,
-            Color.Black,
-            Color.Blue
+            SKColors.Yellow.AsLvcColor(), // the first element is the "coldest" // mark
+            SKColors.Black.AsLvcColor(), // mark
+            SKColors.Blue.AsLvcColor() // the last element is the "hottest" // mark
         },
         ColorStops = new[] // mark
         { // mark
@@ -75,26 +63,7 @@ used in the remaining 90% of the gradient.
             0.9, // mark
             1 // mark
         }, // mark
-        Values = new ObservableCollection&lt;WeightedPoint>
-        {
-            new WeightedPoint(0, 16, 500),
-            new WeightedPoint(0, 15, 475),
-            new WeightedPoint(0, 14, 450),
-            new WeightedPoint(0, 13, 425),
-            new WeightedPoint(0, 12, 400),
-            new WeightedPoint(0, 11, 375),
-            new WeightedPoint(0, 10, 350),
-            new WeightedPoint(0, 9, 325),
-            new WeightedPoint(0, 8, 300),
-            new WeightedPoint(0, 7, 275),
-            new WeightedPoint(0, 6, 250),
-            new WeightedPoint(0, 5, 225),
-            new WeightedPoint(0, 4, 200),
-            new WeightedPoint(0, 3, 175),
-            new WeightedPoint(0, 2, 150),
-            new WeightedPoint(0, 1, 125),
-            new WeightedPoint(0, 0, 100)
-        }
+        Values = new ObservableCollection&lt;WeightedPoint> { ... }
     }
 };</code></pre>
 

@@ -79,6 +79,11 @@ Series = new ISeries[]
     }
 };</code></pre>
 
+:::info
+Paints can create gradients, dashed lines and more, if you need help using the `Paint` instances take 
+a look at the [Paints article]({{ website_url }}/docs/{{ platform }}/{{ version }}/Overview.Paints).
+:::
+
 ## MaxBarWidth property
 
 Specifies the maximum width a column can take, take a look at the following sample, where the max width is `10`.

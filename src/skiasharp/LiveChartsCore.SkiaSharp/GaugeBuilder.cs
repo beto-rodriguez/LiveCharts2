@@ -48,7 +48,7 @@ namespace LiveChartsCore.SkiaSharpView
         private double? _backgroundOffsetRadius = null;
         private double? _backgroundCornerRadius = null;
         private double? _cornerRadius = null;
-        private IPaint<SkiaSharpDrawingContext> _background = LiveChartsSkiaSharp.DefaultPaintTask;
+        private IPaint<SkiaSharpDrawingContext> _background = LiveChartsSkiaSharp.DefaultPaint;
         private double? _labelsSize = null;
         private PolarLabelsPosition? _labelsPosition = null;
         private double? _backgroundMaxRadialColumnWidth = null;
@@ -135,8 +135,8 @@ namespace LiveChartsCore.SkiaSharpView
         public double? BackgroundCornerRadius { get => _backgroundCornerRadius; set { _backgroundCornerRadius = value; OnPopertyChanged(); } }
 
         /// <summary>
-        /// Gets or sets the background, setting this property to <see cref="LiveChartsSkiaSharp.DefaultPaintTask"/> will let the theme decide
-        /// the value, default is <see cref="LiveChartsSkiaSharp.DefaultPaintTask"/>.
+        /// Gets or sets the background, setting this property to <see cref="LiveChartsSkiaSharp.DefaultPaint"/> will let the theme decide
+        /// the value, default is <see cref="LiveChartsSkiaSharp.DefaultPaint"/>.
         /// </summary>
         /// <value>
         /// The background.
@@ -212,7 +212,7 @@ namespace LiveChartsCore.SkiaSharpView
         /// <returns></returns>
         public GaugeBuilder AddValue(ObservableValue value)
         {
-            return AddValue(value, null, LiveChartsSkiaSharp.DefaultPaintTask, LiveChartsSkiaSharp.DefaultPaintTask);
+            return AddValue(value, null, LiveChartsSkiaSharp.DefaultPaint, LiveChartsSkiaSharp.DefaultPaint);
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace LiveChartsCore.SkiaSharpView
         /// <returns></returns>
         public GaugeBuilder AddValue(ObservableValue value, string? seriesName)
         {
-            return AddValue(value, seriesName, LiveChartsSkiaSharp.DefaultPaintTask, LiveChartsSkiaSharp.DefaultPaintTask);
+            return AddValue(value, seriesName, LiveChartsSkiaSharp.DefaultPaint, LiveChartsSkiaSharp.DefaultPaint);
         }
 
         /// <summary>
@@ -302,7 +302,7 @@ namespace LiveChartsCore.SkiaSharpView
         /// <returns></returns>
         public void ApplyStylesToFill(PieSeries<ObservableValue> series)
         {
-            if (Background != LiveChartsSkiaSharp.DefaultPaintTask) series.Fill = Background;
+            if (Background != LiveChartsSkiaSharp.DefaultPaint) series.Fill = Background;
             if (BackgroundInnerRadius is not null) series.InnerRadius = BackgroundInnerRadius.Value;
             if (BackgroundOffsetRadius is not null)
             {
@@ -323,7 +323,7 @@ namespace LiveChartsCore.SkiaSharpView
         {
             if (_keyValuePairs.TryGetValue(series, out var t))
             {
-                if (t.Item3 != LiveChartsSkiaSharp.DefaultPaintTask) series.Fill = t.Item3;
+                if (t.Item3 != LiveChartsSkiaSharp.DefaultPaint) series.Fill = t.Item3;
             }
             if (LabelsSize is not null) series.DataLabelsSize = LabelsSize.Value;
             if (LabelsPosition is not null) series.DataLabelsPosition = LabelsPosition.Value;
