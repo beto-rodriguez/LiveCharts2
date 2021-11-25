@@ -22,11 +22,14 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-      
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v1
+
+    - uses: actions/setup-dotnet@v1
       with:
-        languages: ${{ matrix.language }}
+        dotnet-version: '6.0.x'
+
+    - name: install workloads
+      run: |
+        dotnet workload install maui --from-rollback-file https://aka.ms/dotnet/maui/preview.10.json --source https://aka.ms/dotnet6/nuget/index.json --source https://api.nuget.org/v3/index.json
 
     - name: Release build
       run: |
@@ -44,5 +47,10 @@ jobs:
     - name: Run unit tests
       run: dotnet test ./tests/LiveChartsCore.UnitTesting
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
+    #- name: Initialize CodeQL
+    #  uses: github/codeql-action/init@v1
+    #  with:
+    #    languages: ${{ matrix.language }}
+
+    #- name: Perform CodeQL Analysis
+    #  uses: github/codeql-action/analyze@v1

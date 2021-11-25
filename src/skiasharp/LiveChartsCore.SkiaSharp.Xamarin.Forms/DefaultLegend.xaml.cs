@@ -25,6 +25,7 @@ using System.Linq;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.XamarinForms;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

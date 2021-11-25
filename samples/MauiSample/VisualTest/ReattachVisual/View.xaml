@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MauiSample.VisualTest.ReattachVisual.View"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             xmlns:vms="clr-namespace:ViewModelsSamples.VisualTest.ReattachVisual;assembly=ViewModelsSamples"
+             >
+    <ContentPage.BindingContext>
+        <vms:ViewModel/>
+    </ContentPage.BindingContext>
+	<ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" x:Name="parent">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <lvc:CartesianChart
+                    x:Name="chart"
+                    Grid.Row="0"
+                    Series="{Binding Series}"
+                    Sections="{Binding Sections}"
+                    ZoomMode="X">
+                </lvc:CartesianChart>
+
+                <lvc:PieChart
+                    x:Name="pieChart"
+                    Grid.Row="1"
+                    Series="{Binding PieSeries}">
+                </lvc:PieChart>
+
+                <lvc:PolarChart
+                    x:Name="polarChart"
+                    Grid.Row="2"
+                    Series="{Binding PolarSeries}">
+                </lvc:PolarChart>
+            </Grid>
+
+            <Button
+                Grid.Row="1"
+                Text="Toggle attach"
+                Clicked="Button_Clicked">
+            </Button>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

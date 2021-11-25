@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MauiSample.Axes.LabelsRotation.View"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             xmlns:vms="clr-namespace:ViewModelsSamples.Axes.LabelsRotation;assembly=ViewModelsSamples"
+             >
+    <ContentPage.BindingContext>
+        <vms:ViewModel/>
+    </ContentPage.BindingContext>
+	<ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <StackLayout
+                Grid.Row="0"
+                Orientation="Horizontal"
+                VerticalOptions="Center"
+                >
+                <Label Text="Rotation"></Label>
+                <Label
+                    MinimumWidthRequest="100"
+                    Margin="10, 0" Text="{Binding SliderValue, StringFormat='{0:D2}'}">
+                </Label>
+            </StackLayout>
+            
+            <Slider
+                Grid.Row="1"
+                MinimumWidthRequest="300"
+                Minimum="-360"
+                Maximum="720"
+                Value="{Binding SliderValue, Mode=TwoWay}" />
+            
+            <lvc:CartesianChart
+                Grid.Row="2"
+                Series="{Binding Series}"
+                XAxes="{Binding XAxes}"
+                YAxes="{Binding YAxes}">
+            </lvc:CartesianChart>
+            
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
