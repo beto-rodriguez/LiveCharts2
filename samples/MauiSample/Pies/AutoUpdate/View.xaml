@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MauiSample.Pies.AutoUpdate.View"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             xmlns:vms="clr-namespace:ViewModelsSamples.Pies.AutoUpdate;assembly=ViewModelsSamples"
+             >
+    <ContentPage.BindingContext>
+        <vms:ViewModel/>
+    </ContentPage.BindingContext>
+	<ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <StackLayout Grid.Row="0" Orientation="Horizontal">
+                <Button Margin="6" Command="{Binding AddSeriesCommand}" Text="Add series" />
+                <Button Margin="6" Command="{Binding RemoveSeriesCommand}" Text="Remove series"/>
+            </StackLayout>
+            
+            <StackLayout Grid.Row="1" Orientation="Horizontal">
+                <Button Margin="6" Command="{Binding UpdateAllCommand}" Text="Update Series"/>
+                <Button Margin="6" Clicked="Button_Clicked" Text="Remove Series" />
+            </StackLayout>
+            
+            <lvc:PieChart Grid.Row="2" Series="{Binding Series}"></lvc:PieChart>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

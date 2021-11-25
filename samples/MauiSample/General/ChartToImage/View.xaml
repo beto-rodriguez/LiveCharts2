@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MauiSample.General.ChartToImage.View"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             xmlns:vms="clr-namespace:ViewModelsSamples.General.ChartToImage;assembly=ViewModelsSamples"
+             >
+    <ContentPage.BindingContext>
+        <vms:ViewModel/>
+    </ContentPage.BindingContext>
+	<ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <lvc:CartesianChart Grid.Row="0" x:Name="cartesianChart" Series="{Binding CatesianSeries}"></lvc:CartesianChart>
+            <lvc:PieChart Grid.Row="1" x:Name="pieChart" Series="{Binding PieSeries}"></lvc:PieChart>
+            <lvc:GeoMap Grid.Row="2" x:Name="geoChart" Shapes="{Binding MapValues}"></lvc:GeoMap>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

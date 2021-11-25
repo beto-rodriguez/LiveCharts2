@@ -22,7 +22,7 @@
 
 using Xamarin.Forms;
 
-namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
+namespace LiveChartsCore.SkiaSharpView.XamarinForms
 {
     /// <summary>
     /// A chart for Xamarin.

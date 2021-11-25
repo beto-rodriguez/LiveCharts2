@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MauiSample.Pies.Gauges.View"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             xmlns:vms="clr-namespace:ViewModelsSamples.Pies.Gauges;assembly=ViewModelsSamples"
+             >
+    <ContentPage.BindingContext>
+        <vms:ViewModel/>
+    </ContentPage.BindingContext>
+	<ContentPage.Content>
+        <ScrollView>
+            <StackLayout>
+                <lvc:PieChart HeightRequest="100"
+                    Series="{Binding Series1}"
+                    Total="{Binding GaugeTotal1}"/>
+
+                <lvc:PieChart HeightRequest="100"
+                    Series="{Binding Series2}"
+                    InitialRotation="{Binding InitialRotation2}"
+                    Total="{Binding GaugeTotal2}"/>
+
+                <lvc:PieChart HeightRequest="100"
+                    Series="{Binding Series3}"
+                    InitialRotation="{Binding InitialRotation3}"
+                    Total="{Binding GaugeTotal3}"/>
+
+                <lvc:PieChart HeightRequest="100"
+                    Series="{Binding Series4}"
+                    InitialRotation="{Binding InitialRotation4}"
+                    Total="{Binding GaugeTotal4}"/>
+
+                <lvc:PieChart HeightRequest="100"
+                    Series="{Binding Series5}"
+                    InitialRotation="{Binding InitialRotation5}"
+                    Total="{Binding GaugeTotal5}"/>
+
+                <lvc:PieChart HeightRequest="100"
+                    Series="{Binding Series6}"
+                    InitialRotation="{Binding InitialRotation6}"
+                    Total="{Binding GaugeTotal6}"/>
+
+                <lvc:PieChart HeightRequest="100"
+                    Series="{Binding Series7}"
+                    InitialRotation="{Binding InitialRotation7}"
+                    Total="{Binding GaugeTotal7}"/>
+
+                <lvc:PieChart HeightRequest="100"
+                    Series="{Binding Series8}"
+                    InitialRotation="{Binding InitialRotation8}"
+                    MaxAngle="{Binding MaxAngle8}"
+                    Total="{Binding GaugeTotal8}"/>
+
+                <lvc:PieChart HeightRequest="100"
+                    Series="{Binding Series9}"
+                    InitialRotation="{Binding InitialRotation9}"
+                    MaxAngle="{Binding MaxAngle9}"
+                    Total="{Binding GaugeTotal9}"/>
+
+                <lvc:PieChart HeightRequest="100"
+                    Series="{Binding Series10}"
+                    InitialRotation="{Binding InitialRotation10}"
+                    MaxAngle="{Binding MaxAngle10}"
+                    Total="{Binding GaugeTotal10}"/>
+
+                <lvc:PieChart HeightRequest="100"
+                    Series="{Binding Series11}"
+                    InitialRotation="{Binding InitialRotation11}"
+                    MaxAngle="{Binding MaxAngle11}"
+                    Total="{Binding GaugeTotal11}"/>
+
+                <lvc:PieChart HeightRequest="100"
+                    Series="{Binding Series12}"
+                    InitialRotation="{Binding InitialRotation12}"
+                    MaxAngle="{Binding MaxAngle12}"
+                    Total="{Binding GaugeTotal12}"/>
+
+                <lvc:PieChart HeightRequest="100"
+                    Series="{Binding Series13}"
+                    InitialRotation="{Binding InitialRotation13}"
+                    MaxAngle="{Binding MaxAngle13}"
+                    Total="{Binding GaugeTotal13}"/>
+
+                <lvc:PieChart HeightRequest="100"
+                    Series="{Binding Series14}"
+                    InitialRotation="{Binding InitialRotation14}"
+                    MaxAngle="{Binding MaxAngle14}"
+                    Total="{Binding GaugeTotal14}"/>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>
