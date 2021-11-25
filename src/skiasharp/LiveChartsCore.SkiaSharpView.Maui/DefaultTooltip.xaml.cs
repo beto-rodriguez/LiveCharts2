@@ -28,14 +28,13 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.XamarinForms;
-using Xamarin.Essentials;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
+using Microsoft.Maui.Essentials;
+using Microsoft.Maui.Graphics;
 
-namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
+namespace LiveChartsCore.SkiaSharpView.Maui
 {
-    /// <inheritdoc cref="IChartTooltip{TDrawingContext}" />
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawingContext>
     {
@@ -112,7 +111,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
-            var mobileChart = (IMobileChart)chart.View;
+            var mobileChart = (IMauiChart)chart.View;
 
             Points = tooltipPoints;
 
@@ -197,7 +196,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             });
         }
 
-        private void _closeTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void _closeTimer_Elapsed(object? sender, ElapsedEventArgs e)
         {
             ((IChartTooltip<SkiaSharpDrawingContext>)this).Hide();
             _closeTimer.Stop();

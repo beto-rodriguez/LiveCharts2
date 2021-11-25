@@ -25,11 +25,12 @@ using System.Linq;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.XamarinForms;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+using Microsoft.Maui;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
+using Microsoft.Maui.Graphics;
 
-namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
+namespace LiveChartsCore.SkiaSharpView.Maui
 {
     /// <inheritdoc cref="IChartLegend{TDrawingContext}" />
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -112,7 +113,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
         {
-            var mobileChart = (IMobileChart)chart.View;
+            var mobileChart = (IMauiChart)chart.View;
             var series = chart.ChartSeries;
             var legendOrientation = chart.LegendOrientation;
             var legendPosition = chart.LegendPosition;
@@ -135,10 +136,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                         new RowDefinition { Height = GridLength.Auto },
                         new RowDefinition { Height = GridLength.Star }
                     };
-                    Grid.SetRow(mobileChart.Legend, 0);
-                    Grid.SetRow(mobileChart.Canvas, 1);
-                    Grid.SetColumn(mobileChart.Legend, 0);
-                    Grid.SetColumn(mobileChart.Canvas, 0);
+                    GridLayout.SetRow(mobileChart.Legend, 0);
+                    GridLayout.SetRow(mobileChart.Canvas, 1);
+                    GridLayout.SetColumn(mobileChart.Legend, 0);
+                    GridLayout.SetColumn(mobileChart.Canvas, 0);
                     break;
                 case LegendPosition.Left:
                     IsVisible = true;
@@ -152,10 +153,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                         new ColumnDefinition { Width = GridLength.Auto },
                         new ColumnDefinition { Width = GridLength.Star }
                     };
-                    Grid.SetColumn(mobileChart.Legend, 0);
-                    Grid.SetColumn(mobileChart.Canvas, 1);
-                    Grid.SetRow(mobileChart.Legend, 0);
-                    Grid.SetRow(mobileChart.Canvas, 0);
+                    GridLayout.SetColumn(mobileChart.Legend, 0);
+                    GridLayout.SetColumn(mobileChart.Canvas, 1);
+                    GridLayout.SetRow(mobileChart.Legend, 0);
+                    GridLayout.SetRow(mobileChart.Canvas, 0);
                     break;
                 case LegendPosition.Right:
                     IsVisible = true;
@@ -169,10 +170,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                         new ColumnDefinition { Width = GridLength.Star },
                         new ColumnDefinition { Width = GridLength.Auto }
                     };
-                    Grid.SetColumn(mobileChart.Canvas, 0);
-                    Grid.SetColumn(mobileChart.Legend, 1);
-                    Grid.SetRow(mobileChart.Legend, 0);
-                    Grid.SetRow(mobileChart.Canvas, 0);
+                    GridLayout.SetColumn(mobileChart.Canvas, 0);
+                    GridLayout.SetColumn(mobileChart.Legend, 1);
+                    GridLayout.SetRow(mobileChart.Legend, 0);
+                    GridLayout.SetRow(mobileChart.Canvas, 0);
                     break;
                 case LegendPosition.Bottom:
                     IsVisible = true;
@@ -186,10 +187,10 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                         new RowDefinition { Height = GridLength.Star },
                         new RowDefinition { Height = GridLength.Auto }
                     };
-                    Grid.SetRow(mobileChart.Canvas, 0);
-                    Grid.SetRow(mobileChart.Legend, 1);
-                    Grid.SetColumn(mobileChart.Legend, 0);
-                    Grid.SetColumn(mobileChart.Canvas, 0);
+                    GridLayout.SetRow(mobileChart.Canvas, 0);
+                    GridLayout.SetRow(mobileChart.Legend, 1);
+                    GridLayout.SetColumn(mobileChart.Legend, 0);
+                    GridLayout.SetColumn(mobileChart.Canvas, 0);
                     break;
                 default:
                     break;

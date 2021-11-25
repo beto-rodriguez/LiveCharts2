@@ -20,14 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Xamarin.Forms;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
 
-namespace LiveChartsCore.SkiaSharpView.XamarinForms
+namespace LiveChartsCore.SkiaSharpView.Maui
 {
     /// <summary>
     /// A chart for Xamarin.
     /// </summary>
-    public interface IMobileChart
+    public interface IMauiChart
     {
         /// <summary>
         /// Gets the layout grid.

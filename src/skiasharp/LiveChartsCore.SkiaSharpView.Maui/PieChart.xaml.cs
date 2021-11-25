@@ -39,8 +39,9 @@ using SkiaSharp.Views.Maui;
 
 namespace LiveChartsCore.SkiaSharpView.Maui
 {
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}"/>
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingContext>
+    public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingContext>, IMauiChart
     {
         #region fields
 
@@ -301,6 +302,10 @@ namespace LiveChartsCore.SkiaSharpView.Maui
 
         #region properties
 
+        Grid IMauiChart.LayoutGrid => grid;
+        BindableObject IMauiChart.Canvas => canvas;
+        BindableObject IMauiChart.Legend => legend;
+
         /// <inheritdoc cref="IChartView.DesignerMode" />
         bool IChartView.DesignerMode => DesignMode.IsDesignModeEnabled;
 
@@ -334,12 +339,6 @@ namespace LiveChartsCore.SkiaSharpView.Maui
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => canvas.CanvasCore;
-
-        //BindableObject IMobileChart.Canvas => canvas;
-
-        //BindableObject IMobileChart.Legend => legend;
-
-        //Grid IMobileChart.LayoutGrid => _grid ??= this.FindByName<Grid>("gridLayout");
 
         /// <inheritdoc cref="IChartView.DrawMargin" />
         public Margin? DrawMargin
@@ -477,7 +476,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui
         }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
-        public IChartLegend<SkiaSharpDrawingContext>? Legend => null; // legend;
+        public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
 
         /// <inheritdoc cref="IChartView.TooltipPosition" />
         public TooltipPosition TooltipPosition
@@ -559,7 +558,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui
         }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
-        public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => null; // tooltip;
+        public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
 
         /// <summary>
         /// Gets or sets the point states.
@@ -585,18 +584,18 @@ namespace LiveChartsCore.SkiaSharpView.Maui
         /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
         public void ShowTooltip(IEnumerable<TooltipPoint> points)
         {
-            //if (tooltip is null || core is null) return;
+            if (tooltip is null || core is null) return;
 
-            //((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(points, core);
+            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(points, core);
         }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
         public void HideTooltip()
         {
-            //if (tooltip is null || core is null) return;
+            if (tooltip is null || core is null) return;
 
-            //core.ClearTooltipData();
-            //((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
+            core.ClearTooltipData();
+            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
         }
 
         /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
@@ -652,7 +651,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui
             else core?.Load();
         }
 
-        private void OnSizeChanged(object sender, EventArgs e)
+        private void OnSizeChanged(object? sender, EventArgs e)
         {
             if (core is null) return;
             core.Update();
@@ -664,7 +663,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui
             if (TooltipPosition == TooltipPosition.Hidden) return;
             var location = new LvcPoint(e.Location.X, e.Location.Y);
             core.InvokePointerDown(location);
-            //((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindPointsNearTo(location), core);
+            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindPointsNearTo(location), core);
         }
 
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
