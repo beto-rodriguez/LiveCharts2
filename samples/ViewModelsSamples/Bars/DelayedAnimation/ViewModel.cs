@@ -43,7 +43,7 @@ namespace ViewModelsSamples.Bars.DelayedAnimation
             Series = new List<ISeries> { columnSeries1, columnSeries2 };
         }
 
-        private void OnPointMeasured(TypedChartPoint<float, RoundedRectangleGeometry, LabelGeometry, SkiaSharpDrawingContext> point)
+        private void OnPointMeasured(ChartPoint<float, RoundedRectangleGeometry, LabelGeometry> point)
         {
             var visual = point.Visual;
             var delayedFunction = new DelayedFunction(EasingFunctions.BuildCustomElasticOut(1.5f, 0.60f), point, 30f);

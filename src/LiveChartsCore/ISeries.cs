@@ -51,6 +51,11 @@ namespace LiveChartsCore
         HashSet<ChartPoint> ActivePoints { get; }
 
         /// <summary>
+        /// Gets whether the series requires to find the closest point whtn the pointer goes down.
+        /// </summary>
+        bool RequiresFindClosestOnPointerDown { get; }
+
+        /// <summary>
         /// Gets or sets the name of the series, the name is normally used by <see cref="IChartTooltip{TDrawingContext}"/> or 
         /// <see cref="IChartLegend{TDrawingContext}"/>, the default value is set automatically by the library.
         /// </summary>
@@ -149,13 +154,13 @@ namespace LiveChartsCore
         TooltipPoint[] FindPointsNearTo(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy automaticStategy);
 
         /// <summary>
-        /// 
+        /// Called when the pointer enters a chart point.
         /// </summary>
         /// <param name="point"></param>
         void OnPointerEnter(ChartPoint point);
 
         /// <summary>
-        /// 
+        /// Called when the pointer leaves a chart point.
         /// </summary>
         /// <param name="point"></param>
         void OnPointerLeft(ChartPoint point);

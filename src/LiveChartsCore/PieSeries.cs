@@ -370,7 +370,7 @@ namespace LiveChartsCore
 
                     DataLabelsPaint.AddGeometryToPaintTask(pieChart.Canvas, label);
 
-                    label.Text = DataLabelsFormatter(new TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>(point));
+                    label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
                     label.RotateTransform = actualRotation;

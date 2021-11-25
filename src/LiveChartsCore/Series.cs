@@ -96,8 +96,8 @@ namespace LiveChartsCore
         private string? _name;
         private Action<TModel, ChartPoint>? _mapping;
         private int _zIndex;
-        private Func<TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>, string> _tooltipLabelFormatter = (point) => $"{point.Context.Series.Name} {point.PrimaryValue}";
-        private Func<TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>, string> _dataLabelsFormatter = (point) => $"{point.PrimaryValue}";
+        private Func<ChartPoint<TModel, TVisual, TLabel>, string> _tooltipLabelFormatter = (point) => $"{point.Context.Series.Name} {point.PrimaryValue}";
+        private Func<ChartPoint<TModel, TVisual, TLabel>, string> _dataLabelsFormatter = (point) => $"{point.PrimaryValue}";
         private bool _isVisible = true;
         private LvcPoint _dataPadding = new(0.5f, 0.5f);
         private DataFactory<TModel, TDrawingContext>? _dataFactory;
@@ -117,10 +117,10 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ISeries.ActivePoints" />
         public HashSet<ChartPoint> ActivePoints => everFetched;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISeries.SeriesProperties"/>
         public SeriesProperties SeriesProperties { get; }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISeries.Name"/>
         public string? Name { get => _name; set { _name = value; OnPropertyChanged(); } }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace LiveChartsCore
 
         IEnumerable? ISeries.Values { get => Values; set => Values = (IEnumerable<TModel>?)value; }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISeries.Pivot"/>
         public double Pivot { get => pivot; set { pivot = (float)value; OnPropertyChanged(); } }
 
         /// <summary>
@@ -149,28 +149,34 @@ namespace LiveChartsCore
         /// </summary>
         public Action<TModel, ChartPoint>? Mapping { get => _mapping; set { _mapping = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc />
         int ISeries.SeriesId { get; set; } = -1;
+
+        bool ISeries.RequiresFindClosestOnPointerDown => DataPointerDown is not null;
 
         /// <summary>
         /// Occurs when an instance of <see cref="ChartPoint"/> is measured.
         /// </summary>
-        public event Action<TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>>? PointMeasured;
+        public event Action<ChartPoint<TModel, TVisual, TLabel>>? PointMeasured;
 
         /// <summary>
         /// Occurs when an instance of <see cref="ChartPoint"/> is created.
         /// </summary>
-        public event Action<TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>>? PointCreated;
+        public event Action<ChartPoint<TModel, TVisual, TLabel>>? PointCreated;
 
         /// <summary>
         /// Occurs when the pointer is over a chart point.
         /// </summary>
-        public event Action<TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>>? PointHovered;
+        public event Action<ChartPoint<TModel, TVisual, TLabel>>? PointHovered;
 
         /// <summary>
         /// Occurs when the pointer left a chart point.
         /// </summary>
-        public event Action<TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>>? PointHoverLost;
+        public event Action<ChartPoint<TModel, TVisual, TLabel>>? PointHoverLost;
+
+        /// <summary>
+        /// Occurs when the pointer goes down over a chart point(s).
+        /// </summary>
+        public event Action<ChartPoint<TModel, TVisual, TLabel>[]>? DataPointerDown;
 
         /// <summary>
         /// Occurs when a property changes.
@@ -187,7 +193,7 @@ namespace LiveChartsCore
         /// <value>
         /// The tool tip label formatter.
         /// </value>
-        public Func<TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>, string> TooltipLabelFormatter
+        public Func<ChartPoint<TModel, TVisual, TLabel>, string> TooltipLabelFormatter
         {
             get => _tooltipLabelFormatter;
             set { _tooltipLabelFormatter = value; OnPropertyChanged(); }
@@ -200,7 +206,7 @@ namespace LiveChartsCore
         /// <value>
         /// The data label formatter.
         /// </value>
-        public Func<TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>, string> DataLabelsFormatter
+        public Func<ChartPoint<TModel, TVisual, TLabel>, string> DataLabelsFormatter
         {
             get => _dataLabelsFormatter;
             set { _dataLabelsFormatter = value; OnPropertyChanged(); }
@@ -253,7 +259,7 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ISeries.VisibilityChanged"/>
         public event Action<ISeries>? VisibilityChanged;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IChartSeries{TDrawingContext}.GetStackGroup"/>
         public virtual int GetStackGroup()
         {
             return 0;
@@ -306,13 +312,13 @@ namespace LiveChartsCore
         /// <inheritdoc cref="ISeries.GetTooltipText(ChartPoint)"/>
         public string GetTooltipText(ChartPoint point)
         {
-            return TooltipLabelFormatter(new TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>(point));
+            return TooltipLabelFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
         }
 
         /// <inheritdoc cref="ISeries.GetDataLabelText(ChartPoint)"/>
         public string GetDataLabelText(ChartPoint point)
         {
-            return DataLabelsFormatter(new TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>(point));
+            return DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
         }
 
         /// <inheritdoc cref="ISeries.SoftDeleteOrDispose"/>
@@ -324,7 +330,7 @@ namespace LiveChartsCore
         /// <param name="chartPoint">The chart point.</param>
         protected internal virtual void OnPointMeasured(ChartPoint chartPoint)
         {
-            PointMeasured?.Invoke(new TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>(chartPoint));
+            PointMeasured?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(chartPoint));
         }
 
         /// <summary>
@@ -334,7 +340,7 @@ namespace LiveChartsCore
         protected internal virtual void OnPointCreated(ChartPoint chartPoint)
         {
             SetDefaultPointTransitions(chartPoint);
-            PointCreated?.Invoke(new TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>(chartPoint));
+            PointCreated?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(chartPoint));
         }
 
         /// <summary>
@@ -364,7 +370,7 @@ namespace LiveChartsCore
             VisibilityChanged?.Invoke(this);
         }
 
-        /// <summary>
+        /// <summary/>
         /// Called when the pointer enters a point.
         /// </summary>
         /// /// <param name="point">The chart point.</param>
@@ -385,7 +391,7 @@ namespace LiveChartsCore
 
             hoverPaint.AddGeometryToPaintTask(chart.CoreCanvas, visual.HighlightableGeometry);
 
-            PointHovered?.Invoke(new TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>(point));
+            PointHovered?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(point));
         }
 
         /// <summary>
@@ -403,7 +409,7 @@ namespace LiveChartsCore
                 (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas,
                 visual.HighlightableGeometry);
 
-            PointHoverLost?.Invoke(new TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>(point));
+            PointHoverLost?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(point));
         }
 
         /// <summary>

@@ -347,6 +347,9 @@ namespace LiveChartsCore
         internal void InvokePointerDown(LvcPoint point)
         {
             PointerDown?.Invoke(point);
+            if (ChartSeries.All(x => !x.RequiresFindClosestOnPointerDown)) return;
+
+            var p = FindPointsNearTo(point);
         }
 
         internal void InvokePointerMove(LvcPoint point)

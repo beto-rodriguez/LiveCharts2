@@ -4,6 +4,8 @@
     {
         public static string[] Samples = new[]
         {
+            "General/Events",
+
             "Design/LinearGradients",
             "Design/RadialGradients",
             "Design/StrokeDashArray",
