@@ -24,7 +24,7 @@
                   </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
-                  <DataTemplate DataType="{x:Type ctx:TooltipPoint}">
+                  <DataTemplate DataType="{x:Type ctx:ChartPoint}">
                     <Border Padding="7 5">
                       <StackPanel Orientation="Horizontal">
                         <TextBlock
@@ -35,9 +35,9 @@
                         <!-- LiveCharts uses the motion canvas control to display the series miniature -->
                         <lvc:MotionCanvas
                             Margin="0 0 8 0"
-                            PaintTasks="{Binding Series.CanvasSchedule.PaintSchedules}"
-                            Width="{Binding Series.CanvasSchedule.Width}"
-                            Height="{Binding Series.CanvasSchedule.Height}"
+                            PaintTasks="{Binding Context.Series.CanvasSchedule.PaintSchedules}"
+                            Width="{Binding Context.Series.CanvasSchedule.Width}"
+                            Height="{Binding Context.Series.CanvasSchedule.Height}"
                             VerticalAlignment="Center"/>
                       </StackPanel>
                     </Border>

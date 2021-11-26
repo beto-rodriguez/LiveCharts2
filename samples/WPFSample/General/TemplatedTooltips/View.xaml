@@ -25,11 +25,11 @@
                                 <DataTemplate DataType="{x:Type ctx:ChartPoint}">
                                     <Border Padding="7 5">
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding Point.AsTooltipString}" Margin="0 0 8 0" Foreground="AntiqueWhite" />
+                                            <TextBlock Text="{Binding AsTooltipString}" Margin="0 0 8 0" Foreground="AntiqueWhite" />
                                             <lvc:MotionCanvas Margin="0 0 8 0" 
-                                                PaintTasks="{Binding Series.CanvasSchedule.PaintSchedules}"
-                                                Width="{Binding Series.CanvasSchedule.Width}"
-                                                Height="{Binding Series.CanvasSchedule.Height}"
+                                                PaintTasks="{Binding Context.Series.CanvasSchedule.PaintSchedules}"
+                                                Width="{Binding Context.Series.CanvasSchedule.Width}"
+                                                Height="{Binding Conxtext.Series.CanvasSchedule.Height}"
                                                 VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Border>

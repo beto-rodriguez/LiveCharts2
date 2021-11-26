@@ -59,10 +59,10 @@ namespace WinFormsSample.General.TemplatedTooltips
             foreach (var point in tooltipPoints)
             {
                 using var g = CreateGraphics();
-                var text = point.Point.AsTooltipString;
+                var text = point.AsTooltipString;
                 var size = g.MeasureString(text, chart.TooltipFont);
 
-                var drawableSeries = (IChartSeries<SkiaSharpDrawingContext>)point.Series;
+                var drawableSeries = (IChartSeries<SkiaSharpDrawingContext>)point.Context.Series;
 
                 Controls.Add(new MotionCanvas
                 {
