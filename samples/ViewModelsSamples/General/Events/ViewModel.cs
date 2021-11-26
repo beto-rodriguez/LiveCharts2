@@ -3,6 +3,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ViewModelsSamples.General.Events
 {
@@ -13,7 +14,7 @@ namespace ViewModelsSamples.General.Events
             var columnSeries = new ColumnSeries<City>
             {
                 Values = new[]
-                    {
+                {
                     new City { Name = "Tokyo", Population = 4 },
                     new City { Name = "New York", Population = 6 },
                     new City { Name = "Seoul", Population = 2 },
@@ -29,10 +30,12 @@ namespace ViewModelsSamples.General.Events
                 }
             };
 
-            columnSeries.DataPointHover += ColumnSeries_DataPointerDown; ;
+            columnSeries.DataPointerDown += ColumnSeries_DataPointerDown; ;
 
             Series = new ISeries[] { columnSeries };
         }
+
+        private int i = 0;
 
         private void ColumnSeries_DataPointerDown(
             IEnumerable<ChartPoint<City, RoundedRectangleGeometry, LabelGeometry>> points)
@@ -40,7 +43,7 @@ namespace ViewModelsSamples.General.Events
             // the event passes a collection of the point that were triggered by the pointer down event.
             foreach (var point in points)
             {
-                var bingo = point;
+                Trace.WriteLine(i++);
             }
         }
 

@@ -277,9 +277,9 @@ namespace LiveChartsCore
         /// Called when the pointer goes down on a point or points.
         /// </summary>
         /// <param name="points"></param>
-        protected virtual void OnDataPointerDown(IEnumerable<PointInfo> points)
+        protected virtual void OnDataPointerDown(IEnumerable<ChartPoint> points)
         {
-            DataPointerDown?.Invoke(points.Select(x => new ChartPoint<TModel, TVisual, TLabel>(x.Point)));
+            DataPointerDown?.Invoke(points.Select(x => new ChartPoint<TModel, TVisual, TLabel>(x)));
         }
 
         IEnumerable<ChartPoint> ISeries.Fetch(IChart chart)
@@ -287,19 +287,27 @@ namespace LiveChartsCore
             return Fetch(chart);
         }
 
-        PointInfo[] ISeries.FindPointsNearTo(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy automaticStategy)
+        IEnumerable<ChartPoint> ISeries.FindHoveredPoints(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy)
         {
-            return this switch
-            {
-                IPieSeries<TDrawingContext> pieSeries when pieSeries.IsFillSeries => new PointInfo[0],
-                IBarSeries<TDrawingContext> barSeries => FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy),
-                _ => FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy)
-                    .GroupBy(g => g.PointerDistance)
-                    .OrderBy(g => g.Key)
-                    .DefaultIfEmpty(Enumerable.Empty<PointInfo>())
-                    .First()
-                    .ToArray(),
-            };
+            return
+                Fetch(chart)
+                .Where(x =>
+                    x.Context.HoverArea is not null &&
+                    x.Context.HoverArea.IsPointerOver(pointerPosition, strategy));
+
+
+
+            //return this switch
+            //{
+            //    IPieSeries<TDrawingContext> pieSeries when pieSeries.IsFillSeries => new PointInfo[0],
+            //    IBarSeries<TDrawingContext> barSeries => FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy),
+            //    _ => FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy)
+            //        .GroupBy(g => g.PointerDistance)
+            //        .OrderBy(g => g.Key)
+            //        .DefaultIfEmpty(Enumerable.Empty<PointInfo>())
+            //        .First()
+            //        .ToArray(),
+            //};
         }
 
         void ISeries.OnPointerEnter(ChartPoint point)
@@ -444,56 +452,6 @@ namespace LiveChartsCore
             DataFactory?.Dispose(chart);
             _dataFactory = null;
             everFetched = new();
-        }
-
-        private PointInfo[] FilterTooltipPoints(
-            IEnumerable<ChartPoint>? points, IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy automaticStategy)
-        {
-            if (points is null) return new PointInfo[0];
-            var tolerance = float.MaxValue;
-
-            if (this is ICartesianSeries<TDrawingContext> cartesianSeries)
-            {
-                var cartesianChart = (CartesianChart<TDrawingContext>)chart;
-                var drawLocation = cartesianChart.DrawMarginLocation;
-                var drawMarginSize = cartesianChart.DrawMarginSize;
-                var x = cartesianChart.XAxes[cartesianSeries.ScalesXAt];
-                var y = cartesianChart.YAxes[cartesianSeries.ScalesYAt];
-                var xScale = new Scaler(drawLocation, drawMarginSize, x);
-                var yScale = new Scaler(drawLocation, drawMarginSize, y);
-                var uwx = xScale.ToPixels((float)x.UnitWidth) - xScale.ToPixels(0);
-                var uwy = yScale.ToPixels((float)y.UnitWidth) - yScale.ToPixels(0);
-
-                switch (automaticStategy)
-                {
-                    case TooltipFindingStrategy.CompareAll:
-                        tolerance = (float)Math.Sqrt(Math.Pow(uwx, 2) + Math.Pow(uwy, 2)) / 2;
-                        break;
-                    case TooltipFindingStrategy.CompareOnlyX:
-                        tolerance = Math.Abs(uwx);
-                        break;
-                    case TooltipFindingStrategy.CompareOnlyY:
-                        tolerance = Math.Abs(uwy);
-                        break;
-                    case TooltipFindingStrategy.Automatic:
-                    default:
-                        break;
-                }
-            }
-
-            var distancesT = points
-                .Where(point => !(point is null || point.Context.HoverArea is null))
-                .Select(point => new PointInfo(
-                    this, point, point.Context.HoverArea!.GetDistanceToPoint(pointerPosition, automaticStategy)))
-                .Where(point => point.PointerDistance < tolerance)
-                .OrderBy(dtp => dtp.PointerDistance);
-
-            var lowestD = distancesT.FirstOrDefault()?.PointerDistance;
-            var secondLowestD = distancesT.FirstOrDefault(dtp => dtp.PointerDistance > lowestD)?.PointerDistance;
-
-            return distancesT
-                .TakeWhile(dtp => dtp.PointerDistance == lowestD || dtp.PointerDistance == secondLowestD)
-                .ToArray();
         }
 
         private void NotifySubscribers()

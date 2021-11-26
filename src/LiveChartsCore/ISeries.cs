@@ -147,11 +147,11 @@ namespace LiveChartsCore
         /// Gets the <see cref="ChartPoint"/> instances which contain the <paramref name="pointerPosition"/>, according 
         /// to the chart's <see cref="TooltipFindingStrategy"/> property.
         /// </summary>
-        /// <param name="chart">the chart</param>
-        /// <param name="pointerPosition">the pointer position</param>
-        /// <param name="automaticStategy">the already resolved strategy when strategy is set to automatic.</param>
+        /// <param name="chart">the chart.</param>
+        /// <param name="pointerPosition">the pointer position.</param>
+        /// <param name="strategy">the strategy.</param>
         /// <returns></returns>
-        PointInfo[] FindPointsNearTo(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy automaticStategy);
+        IEnumerable<ChartPoint> FindHoveredPoints(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy);
 
         /// <summary>
         /// Called when the pointer enters a chart point.

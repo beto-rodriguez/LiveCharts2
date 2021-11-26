@@ -192,7 +192,13 @@ namespace LiveChartsCore
                 }
                 visual.RemoveOnCompleted = false;
 
-                var ha = new RectangleHoverArea().SetDimensions(secondary - helper.uwm + helper.cp, cy, helper.uw, b);
+                var ha = new RectangleHoverArea().SetDimensions(x, cy, helper.uw, b);
+
+                visual.X = x;
+                visual.Y = cy;
+                visual.Width = helper.uw;
+                visual.Height = b;
+
                 point.Context.HoverArea = ha;
 
                 _ = toDeletePoints.Remove(point);

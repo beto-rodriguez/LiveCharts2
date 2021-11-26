@@ -47,15 +47,15 @@
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type ctx:PointInfo}">
+                        <DataTemplate DataType="{x:Type ctx:ChartPoint}">
                             <Border Padding="7 5">
                                 <StackPanel Orientation="Horizontal">
                                     <local:MotionCanvas Margin="0 0 8 0" 
-                                                        PaintTasks="{Binding Series.CanvasSchedule.PaintSchedules}"
-                                                        Width="{Binding Series.CanvasSchedule.Width}"
-                                                        Height="{Binding Series.CanvasSchedule.Height}"
+                                                        PaintTasks="{Binding Context.Series.CanvasSchedule.PaintSchedules}"
+                                                        Width="{Binding Context.Series.CanvasSchedule.Width}"
+                                                        Height="{Binding Context.Series.CanvasSchedule.Height}"
                                                         VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding Point.AsTooltipString}"
+                                    <TextBlock Text="{Binding AsTooltipString}"
                                                Margin="0 0 8 0"
                                                FontFamily="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}" 
                                                Foreground="{Binding TextColor, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"

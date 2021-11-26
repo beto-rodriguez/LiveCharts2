@@ -63,8 +63,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// </summary>
         public static readonly DependencyProperty PointsProperty =
            DependencyProperty.Register(
-               nameof(Points), typeof(IEnumerable<PointInfo>),
-               typeof(DefaultTooltip), new PropertyMetadata(new List<PointInfo>()));
+               nameof(Points), typeof(IEnumerable<ChartPoint>),
+               typeof(DefaultTooltip), new PropertyMetadata(new List<ChartPoint>()));
 
         /// <summary>
         /// The background property
@@ -166,9 +166,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <value>
         /// The points.
         /// </value>
-        public IEnumerable<PointInfo> Points
+        public IEnumerable<ChartPoint> Points
         {
-            get => (IEnumerable<PointInfo>)GetValue(PointsProperty);
+            get => (IEnumerable<ChartPoint>)GetValue(PointsProperty);
             set => SetValue(PointsProperty, value);
         }
 
@@ -246,7 +246,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         #endregion
 
-        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<PointInfo> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var wpfChart = (Chart)chart.View;
             var template = wpfChart.TooltipTemplate ?? _defaultTempalte;

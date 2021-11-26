@@ -32,7 +32,6 @@ namespace LiveChartsCore.Kernel.Drawing
     /// <seealso cref="HoverArea" />
     public class RectangleHoverArea : HoverArea
     {
-
         /// <summary>
         /// Gets or sets the x location.
         /// </summary>
@@ -82,21 +81,19 @@ namespace LiveChartsCore.Kernel.Drawing
             return this;
         }
 
-        /// <inheritdoc cref="HoverArea.GetDistanceToPoint(LvcPoint, TooltipFindingStrategy)"/>
-        public override float GetDistanceToPoint(LvcPoint point, TooltipFindingStrategy strategy)
+        /// <inheritdoc cref="HoverArea.IsPointerOver(LvcPoint, TooltipFindingStrategy)"/>
+        public override bool IsPointerOver(LvcPoint pointerLocation, TooltipFindingStrategy strategy)
         {
-            var dx = point.X - (X + Width * 0.5f);
-            var dy = point.Y - (Y + Height * 0.5f);
+            var isInX = pointerLocation.X > X && pointerLocation.X < X + Width;
+            var isInY = pointerLocation.Y > Y && pointerLocation.Y < Y + Height; // <-- first time the new vs2022 intelisense surprises me 🎉🎉, this line was generated automatically
 
-            // compiler bug?
-#pragma warning disable IDE0072 // Add missing cases
             return strategy switch
-#pragma warning restore IDE0072 // Add missing cases
             {
-                TooltipFindingStrategy.CompareAll => (float)Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2)),
-                TooltipFindingStrategy.CompareOnlyX => Math.Abs(dx),
-                TooltipFindingStrategy.CompareOnlyY => Math.Abs(dy),
-                TooltipFindingStrategy.Automatic or _ => throw new Exception($"The strategy {strategy} is not supported.")
+                TooltipFindingStrategy.CompareOnlyX => isInX,
+                TooltipFindingStrategy.CompareOnlyY => isInY, // this line too!
+                TooltipFindingStrategy.CompareAll => isInX && isInY, // but it was not able to complete this one :(
+                TooltipFindingStrategy.Automatic => throw new Exception($"The strategy {strategy} is not supported."),
+                _ => throw new NotImplementedException()
             };
         }
 

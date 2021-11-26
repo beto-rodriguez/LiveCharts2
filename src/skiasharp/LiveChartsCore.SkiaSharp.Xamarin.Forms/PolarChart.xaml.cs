@@ -775,7 +775,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             if (TooltipPosition == TooltipPosition.Hidden) return;
             var location = new LvcPoint(e.Location.X, e.Location.Y);
             core.InvokePointerDown(location);
-            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindPointsNearTo(location), core);
+            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindHoveredPointsBy(location), core);
         }
 
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)

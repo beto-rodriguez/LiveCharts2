@@ -90,6 +90,6 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <summary>
         /// Called when the pointer goes down on a data point.
         /// </summary>
-        void OnDataPointerDown(IEnumerable<PointInfo> points);
+        void OnDataPointerDown(IEnumerable<ChartPoint> points);
     }
 }

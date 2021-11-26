@@ -114,10 +114,11 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="pointerPosition">The pointer position.</param>
         /// <returns></returns>
-        public override PointInfo[] FindPointsNearTo(LvcPoint pointerPosition)
+        public override IEnumerable<ChartPoint> FindHoveredPointsBy(LvcPoint pointerPosition)
         {
             return _chartView.Series.SelectMany(
-                series => series.FindPointsNearTo(this, pointerPosition, TooltipFindingStrategy.CompareAll)).ToArray();
+                series =>
+                    series.FindHoveredPoints(this, pointerPosition, TooltipFindingStrategy.CompareAll));
         }
 
         /// <summary>

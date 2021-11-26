@@ -127,7 +127,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="pointerPosition">The pointer position.</param>
         /// <returns></returns>
-        public override PointInfo[] FindPointsNearTo(LvcPoint pointerPosition)
+        public override IEnumerable<ChartPoint> FindHoveredPointsBy(LvcPoint pointerPosition)
         {
             var actualStrategy = TooltipFindingStrategy;
             if (actualStrategy == TooltipFindingStrategy.Automatic)
@@ -146,31 +146,8 @@ namespace LiveChartsCore
                     : (areAllY ? TooltipFindingStrategy.CompareOnlyY : TooltipFindingStrategy.CompareAll);
             }
 
-            var barLikeSeries = new List<ISeries>();
-            var otherSeries = new List<ISeries>();
-
-            foreach (var item in _chartView.Series)
-            {
-                if (item.IsBarSeries() || item.IsFinancialSeries())
-                {
-                    barLikeSeries.Add(item);
-                    continue;
-                }
-
-                otherSeries.Add(item);
-            }
-
-            return
-                Enumerable.Concat(
-                    barLikeSeries
-                        .SelectMany(series => series.FindPointsNearTo(this, pointerPosition, actualStrategy))
-                        .GroupBy(tp => tp.Point.Context.Index)
-                        .Select(gtp => new { group = gtp, minD = gtp.Min(tp => tp.PointerDistance) })
-                        .OrderBy(mgtp => mgtp.minD)
-                        .Select(a => a.group)
-                        .FirstOrDefault() ?? Enumerable.Empty<PointInfo>(),
-                    otherSeries.SelectMany(series => series.FindPointsNearTo(this, pointerPosition, actualStrategy)))
-                .ToArray();
+            return ChartSeries.SelectMany(x =>
+                x.FindHoveredPoints(this, pointerPosition, actualStrategy));
         }
 
         /// <summary>

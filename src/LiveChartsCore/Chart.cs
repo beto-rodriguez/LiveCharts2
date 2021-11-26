@@ -313,7 +313,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="pointerPosition">The pointer position.</param>
         /// <returns></returns>
-        public abstract PointInfo[] FindPointsNearTo(LvcPoint pointerPosition);
+        public abstract IEnumerable<ChartPoint> FindHoveredPointsBy(LvcPoint pointerPosition);
 
         /// <summary>
         /// Loads the control resources.
@@ -352,7 +352,7 @@ namespace LiveChartsCore
             {
                 if (!series.RequiresFindClosestOnPointerDown) continue;
 
-                var points = series.FindPointsNearTo(this, point, TooltipFindingStrategy.CompareAll);
+                var points = series.FindHoveredPoints(this, point, TooltipFindingStrategy.CompareOnlyX);
                 series.OnDataPointerDown(points);
             }
         }
@@ -493,7 +493,7 @@ namespace LiveChartsCore
                          // it should not be crital, should not be even close to be the 'bottle neck' in a case where
                          // we face perfomance issues.
 
-                         var points = FindPointsNearTo(_pointerPosition).ToArray();
+                         var points = FindHoveredPointsBy(_pointerPosition).ToArray();
 
                          if (!points.Any())
                          {
@@ -502,13 +502,13 @@ namespace LiveChartsCore
                              return;
                          }
 
-                         if (_activePoints.Count > 0 && points.All(x => _activePoints.ContainsKey(x.Point))) return;
+                         if (_activePoints.Count > 0 && points.All(x => _activePoints.ContainsKey(x))) return;
 
                          var o = new object();
                          foreach (var tooltipPoint in points)
                          {
-                             tooltipPoint.Point.Context.Series.OnPointerEnter(tooltipPoint.Point);
-                             _activePoints[tooltipPoint.Point] = o;
+                             tooltipPoint.Context.Series.OnPointerEnter(tooltipPoint);
+                             _activePoints[tooltipPoint] = o;
                          }
 
                          foreach (var point in _activePoints.Keys.ToArray())

@@ -22,7 +22,7 @@
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
-                                <DataTemplate DataType="{x:Type ctx:TooltipPoint}">
+                                <DataTemplate DataType="{x:Type ctx:ChartPoint}">
                                     <Border Padding="7 5">
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock Text="{Binding Point.AsTooltipString}" Margin="0 0 8 0" Foreground="AntiqueWhite" />

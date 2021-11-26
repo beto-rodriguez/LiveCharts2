@@ -101,7 +101,7 @@ namespace LiveChartsCore
         /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
         public abstract bool MiniatureEquals(IChartSeries<TDrawingContext> instance);
 
-        void IChartSeries<TDrawingContext>.OnDataPointerDown(IEnumerable<PointInfo> points)
+        void IChartSeries<TDrawingContext>.OnDataPointerDown(IEnumerable<ChartPoint> points)
         {
             OnDataPointerDown(points);
         }

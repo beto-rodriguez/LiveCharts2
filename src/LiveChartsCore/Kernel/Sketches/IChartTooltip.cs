@@ -37,7 +37,7 @@ namespace LiveChartsCore.Kernel.Sketches
         /// </summary>
         /// <param name="foundPoints">The found points.</param>
         /// <param name="chart">The chart.</param>
-        void Show(IEnumerable<PointInfo> foundPoints, Chart<TDrawingContext> chart);
+        void Show(IEnumerable<ChartPoint> foundPoints, Chart<TDrawingContext> chart);
 
         /// <summary>
         /// Hides this tool tip instance.

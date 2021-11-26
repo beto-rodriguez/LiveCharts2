@@ -31,14 +31,12 @@ namespace LiveChartsCore.Kernel.Drawing
     public abstract class HoverArea
     {
         /// <summary>
-        /// Determines whether the area is trigger by the specified point in the user interface.
+        /// Determines whether the pointer is over the area.
         /// </summary>
-        /// <param name="point">The point.</param>
+        /// <param name="pointerLocation">The pointer location.</param>
         /// <param name="strategy">The strategy.</param>
-        /// <returns>
-        ///   <c>true</c> if [is trigger by] [the specified point]; otherwise, <c>false</c>.
-        /// </returns>
-        public abstract float GetDistanceToPoint(LvcPoint point, TooltipFindingStrategy strategy);
+        /// <returns></returns>
+        public abstract bool IsPointerOver(LvcPoint pointerLocation, TooltipFindingStrategy strategy);
 
         /// <summary>
         /// Suggests the tooltip placement.
