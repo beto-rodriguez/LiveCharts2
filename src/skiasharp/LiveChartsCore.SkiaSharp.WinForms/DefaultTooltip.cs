@@ -56,7 +56,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             ShowInTaskbar = false;
         }
 
-        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<PointInfo> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var wfChart = (Chart)chart.View;
 
@@ -86,7 +86,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             Show();
         }
 
-        private SizeF DrawAndMesure(IEnumerable<TooltipPoint> tooltipPoints, Chart chart)
+        private SizeF DrawAndMesure(IEnumerable<PointInfo> tooltipPoints, Chart chart)
         {
             SuspendLayout();
             Controls.Clear();

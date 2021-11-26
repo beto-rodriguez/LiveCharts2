@@ -44,7 +44,7 @@ namespace LiveChartsCore.Kernel
         /// <param name="chartSize"></param>
         /// <returns></returns>
         public static LvcPoint? GetCartesianTooltipLocation(
-            this IEnumerable<TooltipPoint> foundPoints, TooltipPosition position, LvcSize tooltipSize, LvcSize chartSize)
+            this IEnumerable<PointInfo> foundPoints, TooltipPosition position, LvcSize tooltipSize, LvcSize chartSize)
         {
             var count = 0f;
 
@@ -86,7 +86,7 @@ namespace LiveChartsCore.Kernel
         /// <param name="tooltipSize">Size of the tooltip.</param>
         /// <returns></returns>
         public static LvcPoint? GetPieTooltipLocation(
-            this IEnumerable<TooltipPoint> foundPoints, TooltipPosition position, LvcSize tooltipSize)
+            this IEnumerable<PointInfo> foundPoints, TooltipPosition position, LvcSize tooltipSize)
         {
             var placementContext = new TooltipPlacementContext();
             var found = false;

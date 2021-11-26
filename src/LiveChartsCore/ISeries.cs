@@ -151,7 +151,7 @@ namespace LiveChartsCore
         /// <param name="pointerPosition">the pointer position</param>
         /// <param name="automaticStategy">the already resolved strategy when strategy is set to automatic.</param>
         /// <returns></returns>
-        TooltipPoint[] FindPointsNearTo(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy automaticStategy);
+        PointInfo[] FindPointsNearTo(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy automaticStategy);
 
         /// <summary>
         /// Called when the pointer enters a chart point.

@@ -18,7 +18,7 @@ namespace WinFormsSample.General.TemplatedTooltips
             InitializeComponent();
         }
 
-        public void Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+        public void Show(IEnumerable<PointInfo> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var wfChart = (Chart)chart.View;
 
@@ -49,7 +49,7 @@ namespace WinFormsSample.General.TemplatedTooltips
             wfChart.CoreCanvas.Invalidate();
         }
 
-        private SizeF DrawAndMesure(IEnumerable<TooltipPoint> tooltipPoints, Chart chart)
+        private SizeF DrawAndMesure(IEnumerable<PointInfo> tooltipPoints, Chart chart)
         {
             SuspendLayout();
             Controls.Clear();

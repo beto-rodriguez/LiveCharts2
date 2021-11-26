@@ -29,15 +29,19 @@ namespace ViewModelsSamples.General.Events
                 }
             };
 
-            columnSeries.DataPointerDown += ColumnSeriesOnPointerDown;
+            columnSeries.DataPointerDown += ColumnSeries_DataPointerDown; ;
 
             Series = new ISeries[] { columnSeries };
         }
 
-        private void ColumnSeriesOnPointerDown(
-            ChartPoint<City, RoundedRectangleGeometry, LabelGeometry>[] points)
+        private void ColumnSeries_DataPointerDown(
+            IEnumerable<ChartPoint<City, RoundedRectangleGeometry, LabelGeometry>> points)
         {
-            throw new System.NotImplementedException();
+            // the event passes a collection of the point that were triggered by the pointer down event.
+            foreach (var point in points)
+            {
+                var bingo = point;
+            }
         }
 
         public IEnumerable<ISeries> Series { get; set; }

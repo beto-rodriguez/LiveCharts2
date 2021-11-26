@@ -21,6 +21,8 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
@@ -96,6 +98,14 @@ namespace LiveChartsCore
         /// </value>
         public double LegendShapeSize { get => _legendShapeSize; set { _legendShapeSize = value; OnPropertyChanged(); } }
 
+        /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
+        public abstract bool MiniatureEquals(IChartSeries<TDrawingContext> instance);
+
+        void IChartSeries<TDrawingContext>.OnDataPointerDown(IEnumerable<PointInfo> points)
+        {
+            OnDataPointerDown(points);
+        }
+
         /// <summary>
         /// Called when the paint context changed.
         /// </summary>
@@ -116,8 +126,5 @@ namespace LiveChartsCore
 
             initializer.ApplyStyleToSeries(this);
         }
-
-        /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
-        public abstract bool MiniatureEquals(IChartSeries<TDrawingContext> instance);
     }
 }

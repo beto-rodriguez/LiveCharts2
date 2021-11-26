@@ -20,28 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
-using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
 
-namespace LiveChartsCore.Kernel.Sketches
+namespace LiveChartsCore.Events
 {
     /// <summary>
-    /// Defines a tool tip.
+    /// Defines a method to handle chart point events.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public interface IChartTooltip<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Shows the tool tip in the specified chart.
-        /// </summary>
-        /// <param name="foundPoints">The found points.</param>
-        /// <param name="chart">The chart.</param>
-        void Show(IEnumerable<PointInfo> foundPoints, Chart<TDrawingContext> chart);
-
-        /// <summary>
-        /// Hides this tool tip instance.
-        /// </summary>
-        void Hide();
-    }
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <typeparam name="TVisual">The type of the visual.</typeparam>
+    /// <typeparam name="TLabel">The type of the label.</typeparam>
+    /// <param name="point">The found points.</param>
+    public delegate void ChartPointHandler<TModel, TVisual, TLabel>(ChartPoint<TModel, TVisual, TLabel> point);
 }

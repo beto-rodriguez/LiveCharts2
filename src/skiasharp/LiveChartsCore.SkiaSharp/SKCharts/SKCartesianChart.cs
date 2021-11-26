@@ -208,8 +208,8 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
         public void SetTooltipStyle(LvcColor background, LvcColor textColor) { }
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
-        public void ShowTooltip(IEnumerable<TooltipPoint> points)
+        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{PointInfo})"/>
+        public void ShowTooltip(IEnumerable<PointInfo> points)
         {
             throw new NotImplementedException();
         }

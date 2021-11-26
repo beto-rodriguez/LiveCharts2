@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Drawing;
 
@@ -85,5 +86,10 @@ namespace LiveChartsCore.Kernel.Sketches
         /// <param name="instance">The instance to compare.</param>
         /// <returns></returns>
         bool MiniatureEquals(IChartSeries<TDrawingContext> instance);
+
+        /// <summary>
+        /// Called when the pointer goes down on a data point.
+        /// </summary>
+        void OnDataPointerDown(IEnumerable<PointInfo> points);
     }
 }

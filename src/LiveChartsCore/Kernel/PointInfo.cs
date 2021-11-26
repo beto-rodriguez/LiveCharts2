@@ -20,28 +20,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
-using LiveChartsCore.Drawing;
-
-namespace LiveChartsCore.Kernel.Sketches
+namespace LiveChartsCore.Kernel
 {
     /// <summary>
-    /// Defines a tool tip.
+    /// Defines the point info class, a helper class to have some extra info about a data point.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public interface IChartTooltip<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public class PointInfo
     {
         /// <summary>
-        /// Shows the tool tip in the specified chart.
+        /// Initializes a new instance of the <see cref="PointInfo"/> class.
         /// </summary>
-        /// <param name="foundPoints">The found points.</param>
-        /// <param name="chart">The chart.</param>
-        void Show(IEnumerable<PointInfo> foundPoints, Chart<TDrawingContext> chart);
+        /// <param name="series">The series.</param>
+        /// <param name="point">The point.</param>
+        /// <param name="pointerDistance">The distance to the pointer.</param>
+        public PointInfo(ISeries series, ChartPoint point, float pointerDistance)
+        {
+            Series = series;
+            Point = point;
+            PointerDistance = pointerDistance;
+        }
 
         /// <summary>
-        /// Hides this tool tip instance.
+        /// Gets or sets the series.
         /// </summary>
-        void Hide();
+        /// <value>
+        /// The series.
+        /// </value>
+        public ISeries Series { get; set; }
+
+        /// <summary>
+        /// Gets or sets the point.
+        /// </summary>
+        /// <value>
+        /// The point.
+        /// </value>
+        public ChartPoint Point { get; set; }
+
+        /// <summary>
+        /// Gets or sets the current distance to pointer.
+        /// </summary>
+        /// <value>
+        /// The pointer distance.
+        /// </value>
+        public float PointerDistance { get; set; }
     }
 }

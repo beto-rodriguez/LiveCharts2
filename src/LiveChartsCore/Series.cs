@@ -27,6 +27,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Events;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Providers;
 using LiveChartsCore.Kernel.Sketches;
@@ -166,17 +167,17 @@ namespace LiveChartsCore
         /// <summary>
         /// Occurs when the pointer is over a chart point.
         /// </summary>
-        public event Action<ChartPoint<TModel, TVisual, TLabel>>? PointHovered;
+        public event ChartPointHandler<TModel, TVisual, TLabel>? PointHovered;
 
         /// <summary>
         /// Occurs when the pointer left a chart point.
         /// </summary>
-        public event Action<ChartPoint<TModel, TVisual, TLabel>>? PointHoverLost;
+        public event ChartPointHandler<TModel, TVisual, TLabel>? PointHoverLost;
 
         /// <summary>
         /// Occurs when the pointer goes down over a chart point(s).
         /// </summary>
-        public event Action<ChartPoint<TModel, TVisual, TLabel>[]>? DataPointerDown;
+        public event ChartPointsHandler<TModel, TVisual, TLabel>? DataPointerDown;
 
         /// <summary>
         /// Occurs when a property changes.
@@ -272,21 +273,30 @@ namespace LiveChartsCore
             return DataFactory.Fetch(this, chart);
         }
 
+        /// <summary>
+        /// Called when the pointer goes down on a point or points.
+        /// </summary>
+        /// <param name="points"></param>
+        protected virtual void OnDataPointerDown(IEnumerable<PointInfo> points)
+        {
+            DataPointerDown?.Invoke(points.Select(x => new ChartPoint<TModel, TVisual, TLabel>(x.Point)));
+        }
+
         IEnumerable<ChartPoint> ISeries.Fetch(IChart chart)
         {
             return Fetch(chart);
         }
 
-        TooltipPoint[] ISeries.FindPointsNearTo(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy automaticStategy)
+        PointInfo[] ISeries.FindPointsNearTo(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy automaticStategy)
         {
             return this switch
             {
-                IPieSeries<TDrawingContext> pieSeries when pieSeries.IsFillSeries => new TooltipPoint[0],
+                IPieSeries<TDrawingContext> pieSeries when pieSeries.IsFillSeries => new PointInfo[0],
                 IBarSeries<TDrawingContext> barSeries => FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy),
                 _ => FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy)
                     .GroupBy(g => g.PointerDistance)
                     .OrderBy(g => g.Key)
-                    .DefaultIfEmpty(Enumerable.Empty<TooltipPoint>())
+                    .DefaultIfEmpty(Enumerable.Empty<PointInfo>())
                     .First()
                     .ToArray(),
             };
@@ -436,10 +446,10 @@ namespace LiveChartsCore
             everFetched = new();
         }
 
-        private TooltipPoint[] FilterTooltipPoints(
+        private PointInfo[] FilterTooltipPoints(
             IEnumerable<ChartPoint>? points, IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy automaticStategy)
         {
-            if (points is null) return new TooltipPoint[0];
+            if (points is null) return new PointInfo[0];
             var tolerance = float.MaxValue;
 
             if (this is ICartesianSeries<TDrawingContext> cartesianSeries)
@@ -473,7 +483,7 @@ namespace LiveChartsCore
 
             var distancesT = points
                 .Where(point => !(point is null || point.Context.HoverArea is null))
-                .Select(point => new TooltipPoint(
+                .Select(point => new PointInfo(
                     this, point, point.Context.HoverArea!.GetDistanceToPoint(pointerPosition, automaticStategy)))
                 .Where(point => point.PointerDistance < tolerance)
                 .OrderBy(dtp => dtp.PointerDistance);

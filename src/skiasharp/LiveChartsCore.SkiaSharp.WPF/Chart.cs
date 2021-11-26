@@ -639,8 +639,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             core.UpdateFinished += OnCoreUpdateFinished;
         }
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
-        public void ShowTooltip(IEnumerable<TooltipPoint> points)
+        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{PointInfo})"/>
+        public void ShowTooltip(IEnumerable<PointInfo> points)
         {
             if (tooltip is null || core is null) return;
 

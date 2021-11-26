@@ -677,8 +677,8 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
 
         #endregion
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
-        public void ShowTooltip(IEnumerable<TooltipPoint> points)
+        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{PointInfo})"/>
+        public void ShowTooltip(IEnumerable<PointInfo> points)
         {
             if (tooltip == null || _core == null) return;
 

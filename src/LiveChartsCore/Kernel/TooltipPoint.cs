@@ -20,14 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+
 namespace LiveChartsCore.Kernel
 {
     /// <summary>
     /// Defines the tooltip point class.
     /// </summary>
-    public class TooltipPoint
+    [Obsolete("Renamed to PointInfo")]
+    public class TooltipPoint : PointInfo
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TooltipPoint"/> class.
         /// </summary>
@@ -35,34 +37,9 @@ namespace LiveChartsCore.Kernel
         /// <param name="point">The point.</param>
         /// <param name="pointerDistance">The distance to the pointer.</param>
         public TooltipPoint(ISeries series, ChartPoint point, float pointerDistance)
+            : base(series, point, pointerDistance)
         {
-            Series = series;
-            Point = point;
-            PointerDistance = pointerDistance;
+
         }
-
-        /// <summary>
-        /// Gets or sets the series.
-        /// </summary>
-        /// <value>
-        /// The series.
-        /// </value>
-        public ISeries Series { get; set; }
-
-        /// <summary>
-        /// Gets or sets the point.
-        /// </summary>
-        /// <value>
-        /// The point.
-        /// </value>
-        public ChartPoint Point { get; set; }
-
-        /// <summary>
-        /// Gets or sets the current distance to pointer.
-        /// </summary>
-        /// <value>
-        /// The pointer distance.
-        /// </value>
-        public float PointerDistance { get; set; }
     }
 }

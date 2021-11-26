@@ -313,7 +313,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="pointerPosition">The pointer position.</param>
         /// <returns></returns>
-        public abstract TooltipPoint[] FindPointsNearTo(LvcPoint pointerPosition);
+        public abstract PointInfo[] FindPointsNearTo(LvcPoint pointerPosition);
 
         /// <summary>
         /// Loads the control resources.
@@ -347,9 +347,14 @@ namespace LiveChartsCore
         internal void InvokePointerDown(LvcPoint point)
         {
             PointerDown?.Invoke(point);
-            if (ChartSeries.All(x => !x.RequiresFindClosestOnPointerDown)) return;
 
-            var p = FindPointsNearTo(point);
+            foreach (var series in ChartSeries)
+            {
+                if (!series.RequiresFindClosestOnPointerDown) continue;
+
+                var points = series.FindPointsNearTo(this, point, TooltipFindingStrategy.CompareAll);
+                series.OnDataPointerDown(points);
+            }
         }
 
         internal void InvokePointerMove(LvcPoint point)

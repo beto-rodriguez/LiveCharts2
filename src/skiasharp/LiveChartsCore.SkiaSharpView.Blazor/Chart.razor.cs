@@ -218,12 +218,12 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
         /// Gets or sets the tooltip legend.
         /// </summary>
         [Parameter]
-        public RenderFragment<TooltipPoint[]>? TooltipTemplate { get; set; }
+        public RenderFragment<PointInfo[]>? TooltipTemplate { get; set; }
 
         #endregion
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
-        public void ShowTooltip(IEnumerable<TooltipPoint> points)
+        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{PointInfo})"/>
+        public void ShowTooltip(IEnumerable<PointInfo> points)
         {
             if (Tooltip is null || core is null) return;
 

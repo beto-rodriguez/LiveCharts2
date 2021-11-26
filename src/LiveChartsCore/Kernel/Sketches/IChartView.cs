@@ -205,7 +205,7 @@ namespace LiveChartsCore.Kernel.Sketches
         /// Shows the tool tip based on the given points.
         /// </summary>
         /// <param name="points">The points.</param>
-        void ShowTooltip(IEnumerable<TooltipPoint> points);
+        void ShowTooltip(IEnumerable<PointInfo> points);
 
         /// <summary>
         /// Hides the tool tip.

@@ -127,7 +127,7 @@ namespace LiveChartsCore
         /// </summary>
         /// <param name="pointerPosition">The pointer position.</param>
         /// <returns></returns>
-        public override TooltipPoint[] FindPointsNearTo(LvcPoint pointerPosition)
+        public override PointInfo[] FindPointsNearTo(LvcPoint pointerPosition)
         {
             var actualStrategy = TooltipFindingStrategy;
             if (actualStrategy == TooltipFindingStrategy.Automatic)
@@ -168,7 +168,7 @@ namespace LiveChartsCore
                         .Select(gtp => new { group = gtp, minD = gtp.Min(tp => tp.PointerDistance) })
                         .OrderBy(mgtp => mgtp.minD)
                         .Select(a => a.group)
-                        .FirstOrDefault() ?? Enumerable.Empty<TooltipPoint>(),
+                        .FirstOrDefault() ?? Enumerable.Empty<PointInfo>(),
                     otherSeries.SelectMany(series => series.FindPointsNearTo(this, pointerPosition, actualStrategy)))
                 .ToArray();
         }

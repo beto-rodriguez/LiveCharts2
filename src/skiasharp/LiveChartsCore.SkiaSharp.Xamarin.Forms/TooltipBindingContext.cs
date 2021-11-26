@@ -38,7 +38,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <value>
         /// The points.
         /// </value>
-        public IEnumerable<TooltipPoint>? Points { get; set; } = Enumerable.Empty<TooltipPoint>();
+        public IEnumerable<PointInfo>? Points { get; set; } = Enumerable.Empty<PointInfo>();
 
         /// <summary>
         /// Gets or sets the font family.

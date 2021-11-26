@@ -67,7 +67,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui
         /// <value>
         /// The points.
         /// </value>
-        public IEnumerable<TooltipPoint> Points { get; set; } = Enumerable.Empty<TooltipPoint>();
+        public IEnumerable<PointInfo> Points { get; set; } = Enumerable.Empty<PointInfo>();
 
         /// <summary>
         /// Gets or sets the font family.
@@ -109,7 +109,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui
         /// </value>
         public Color TooltipBackgroundColor { get; set; }
 
-        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<PointInfo> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var mobileChart = (IMauiChart)chart.View;
 

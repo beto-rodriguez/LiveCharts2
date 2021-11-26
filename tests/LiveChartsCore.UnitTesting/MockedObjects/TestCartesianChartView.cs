@@ -115,7 +115,7 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
             return new double[2];
         }
 
-        public void ShowTooltip(IEnumerable<TooltipPoint> points) { }
+        public void ShowTooltip(IEnumerable<PointInfo> points) { }
 
         public void SetTooltipStyle(LvcColor background, LvcColor textColor) { }
 
