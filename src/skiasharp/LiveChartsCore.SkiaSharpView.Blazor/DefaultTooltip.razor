@@ -29,11 +29,11 @@
 			@foreach (var tooltipPoint in Points)
 			{
 				<div class="lvc-tooltip-item">
-					<div class="lvc-miniature" style="@LiveChartsBlazor.GetSeriesMiniatureStyle(tooltipPoint.Series)">
-						<MotionCanvas PaintTasks="@LiveChartsBlazor.GetSeriesAsMiniaturePaints(tooltipPoint.Series)" />
+					<div class="lvc-miniature" style="@LiveChartsBlazor.GetSeriesMiniatureStyle(tooltipPoint.Context.Series)">
+						<MotionCanvas PaintTasks="@LiveChartsBlazor.GetSeriesAsMiniaturePaints(tooltipPoint.Context.Series)" />
 					</div>
 					<div>
-						@tooltipPoint.Point.AsTooltipString
+						@tooltipPoint.AsTooltipString
 					</div>
 				</div>
 			}

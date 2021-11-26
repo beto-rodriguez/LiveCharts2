@@ -48,8 +48,8 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty PointsProperty =
            DependencyProperty.Register(
-               nameof(Points), typeof(IEnumerable<PointInfo>),
-               typeof(DefaultTooltip), new PropertyMetadata(new List<PointInfo>()));
+               nameof(Points), typeof(IEnumerable<ChartPoint>),
+               typeof(DefaultTooltip), new PropertyMetadata(new List<ChartPoint>()));
 
         /// <summary>
         /// Gets or sets the points.
@@ -57,13 +57,13 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// <value>
         /// The points.
         /// </value>
-        public IEnumerable<PointInfo> Points
+        public IEnumerable<ChartPoint> Points
         {
-            get => (IEnumerable<PointInfo>)GetValue(PointsProperty);
+            get => (IEnumerable<ChartPoint>)GetValue(PointsProperty);
             set => SetValue(PointsProperty, value);
         }
 
-        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<PointInfo> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var winuiChart = (IUwpChart)chart.View;
 

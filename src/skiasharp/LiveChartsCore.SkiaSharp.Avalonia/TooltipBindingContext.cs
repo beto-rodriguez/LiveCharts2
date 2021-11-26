@@ -38,7 +38,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <value>
         /// The points.
         /// </value>
-        public IEnumerable<PointInfo> Points { get; set; } = Enumerable.Empty<PointInfo>();
+        public IEnumerable<ChartPoint> Points { get; set; } = Enumerable.Empty<ChartPoint>();
 
         /// <summary>
         /// Gets or sets the tool tip font family.

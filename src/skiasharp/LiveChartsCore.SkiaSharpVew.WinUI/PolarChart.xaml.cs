@@ -752,8 +752,8 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             //return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
         }
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{PointInfo})"/>
-        public void ShowTooltip(IEnumerable<PointInfo> points)
+        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
+        public void ShowTooltip(IEnumerable<ChartPoint> points)
         {
             if (tooltip == null || _core == null) return;
 

@@ -43,7 +43,7 @@ namespace ViewModelsSamples.General.Events
             // the event passes a collection of the point that were triggered by the pointer down event.
             foreach (var point in points)
             {
-                Trace.WriteLine(i++);
+                Trace.WriteLine(point.Model.Name);
             }
         }
 

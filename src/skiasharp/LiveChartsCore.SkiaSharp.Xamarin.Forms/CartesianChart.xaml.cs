@@ -683,7 +683,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
         }
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{PointInfo})"/>
+        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
         public void ShowTooltip(IEnumerable<ChartPoint> points)
         {
             if (tooltip is null || core is null) return;

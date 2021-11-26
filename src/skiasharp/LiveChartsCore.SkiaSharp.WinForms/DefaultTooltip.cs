@@ -56,7 +56,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             ShowInTaskbar = false;
         }
 
-        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<PointInfo> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var wfChart = (Chart)chart.View;
 
@@ -86,7 +86,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             Show();
         }
 
-        private SizeF DrawAndMesure(IEnumerable<PointInfo> tooltipPoints, Chart chart)
+        private SizeF DrawAndMesure(IEnumerable<ChartPoint> tooltipPoints, Chart chart)
         {
             SuspendLayout();
             Controls.Clear();
@@ -97,10 +97,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             using var g = CreateGraphics();
             foreach (var point in tooltipPoints)
             {
-                var text = point.Point.AsTooltipString;
+                var text = point.AsTooltipString;
                 var size = g.MeasureString(text, chart.TooltipFont);
 
-                var drawableSeries = (IChartSeries<SkiaSharpDrawingContext>)point.Series;
+                var drawableSeries = (IChartSeries<SkiaSharpDrawingContext>)point.Context.Series;
 
                 Controls.Add(new MotionCanvas
                 {

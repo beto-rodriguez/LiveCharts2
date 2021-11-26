@@ -18,19 +18,19 @@
               </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
-              <DataTemplate DataType="{x:Type ctx:TooltipPoint}">
+              <DataTemplate DataType="{x:Type ctx:ChartPoint}">
                 <Border Padding="7 5">
                   <StackPanel Orientation="Horizontal">
                     <local:MotionCanvas
                         BackColor="#fafafa"
                         Margin="0 0 8 0"
-                        PaintTasks="{Binding Series.CanvasSchedule.PaintSchedules}"
+                        PaintTasks="{Binding Context.Series.CanvasSchedule.PaintSchedules}"
                         Width="{Binding Series.CanvasSchedule.Width}"
                         Height="{Binding Series.CanvasSchedule.Height}"
                         VerticalAlignment="Center"/>
                     <TextBlock 
                         Margin="0 0 8 0"
-                        Text="{Binding Point.AsTooltipString}"
+                        Text="{Binding AsTooltipString}"
                         FontFamily="{Binding TooltipFontFamily, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
                         Foreground="{Binding TooltipTextBrush, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
                         FontSize="{Binding TooltipFontSize, RelativeSource={RelativeSource AncestorType=local:DefaultTooltip}}"
