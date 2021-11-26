@@ -167,7 +167,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                });
 
         /// <summary>
-        /// The `series property
+        /// The series property
         /// </summary>
         public static readonly BindableProperty SeriesProperty =
            BindableProperty.Create(
