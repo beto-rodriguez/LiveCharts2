@@ -29,7 +29,7 @@ namespace ViewModelsSamples.General.Events
                 }
             };
 
-            columnSeries.DataPointerDown += ColumnSeries_DataPointerDown; ;
+            columnSeries.DataPointHover += ColumnSeries_DataPointerDown; ;
 
             Series = new ISeries[] { columnSeries };
         }

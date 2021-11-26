@@ -167,12 +167,12 @@ namespace LiveChartsCore
         /// <summary>
         /// Occurs when the pointer is over a chart point.
         /// </summary>
-        public event ChartPointHandler<TModel, TVisual, TLabel>? PointHovered;
+        public event ChartPointHandler<TModel, TVisual, TLabel>? DataPointerHover;
 
         /// <summary>
         /// Occurs when the pointer left a chart point.
         /// </summary>
-        public event ChartPointHandler<TModel, TVisual, TLabel>? PointHoverLost;
+        public event ChartPointHandler<TModel, TVisual, TLabel>? DataPointerHoverLost;
 
         /// <summary>
         /// Occurs when the pointer goes down over a chart point(s).
@@ -401,7 +401,7 @@ namespace LiveChartsCore
 
             hoverPaint.AddGeometryToPaintTask(chart.CoreCanvas, visual.HighlightableGeometry);
 
-            PointHovered?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(point));
+            DataPointerHover?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(point));
         }
 
         /// <summary>
@@ -419,7 +419,7 @@ namespace LiveChartsCore
                 (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas,
                 visual.HighlightableGeometry);
 
-            PointHoverLost?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(point));
+            DataPointerHoverLost?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(point));
         }
 
         /// <summary>
