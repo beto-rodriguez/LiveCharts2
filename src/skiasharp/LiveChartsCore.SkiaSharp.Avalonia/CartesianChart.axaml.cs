@@ -26,6 +26,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -661,6 +662,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             }
         }
 
+        /// <summary>
+        /// Gets or sets a command to execute when the pointer goes down on a data or data points.
+        /// </summary>
+        public ICommand DataPointerDownCommand { get; set; }
+
         #endregion
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
@@ -870,6 +876,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
         {
             DataPointerDown?.Invoke(this, points);
+            if (DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
         }
     }
 }

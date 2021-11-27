@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -615,6 +616,11 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             }
         }
 
+        /// <summary>
+        /// Gets or sets a command to execute when the pointer goes down on a data or data points.
+        /// </summary>
+        public ICommand DataPointerDownCommand { get; set; }
+
         #endregion
 
         /// <summary>
@@ -742,13 +748,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 SetCurrentValue(dp, value);
         }
 
-        private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        private void OnMouseMove(object sender, MouseEventArgs e)
         {
             var p = e.GetPosition(this);
             core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
         }
 
-        private void OnMouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        private void OnMouseLeave(object sender, MouseEventArgs e)
         {
             HideTooltip();
             core?.InvokePointerLeft();
@@ -767,6 +773,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
         {
             DataPointerDown?.Invoke(this, points);
+            if (DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
         }
     }
 }

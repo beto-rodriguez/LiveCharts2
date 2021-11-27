@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Windows.Input;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
@@ -790,6 +791,11 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             }
         }
 
+        /// <summary>
+        /// Gets or sets a command to execute when the pointer goes down on a data or data points.
+        /// </summary>
+        public ICommand DataPointerDownCommand { get; set; }
+
         #endregion
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
@@ -972,6 +978,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
         {
             DataPointerDown?.Invoke(this, points);
+            if (DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
         }
     }
 }
