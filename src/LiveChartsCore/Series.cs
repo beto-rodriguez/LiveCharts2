@@ -294,20 +294,6 @@ namespace LiveChartsCore
                 .Where(x =>
                     x.Context.HoverArea is not null &&
                     x.Context.HoverArea.IsPointerOver(pointerPosition, strategy));
-
-
-
-            //return this switch
-            //{
-            //    IPieSeries<TDrawingContext> pieSeries when pieSeries.IsFillSeries => new ChartPoint[0],
-            //    IBarSeries<TDrawingContext> barSeries => FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy),
-            //    _ => FilterTooltipPoints(Fetch(chart), chart, pointerPosition, automaticStategy)
-            //        .GroupBy(g => g.PointerDistance)
-            //        .OrderBy(g => g.Key)
-            //        .DefaultIfEmpty(Enumerable.Empty<ChartPoint>())
-            //        .First()
-            //        .ToArray(),
-            //};
         }
 
         void ISeries.OnPointerEnter(ChartPoint point)

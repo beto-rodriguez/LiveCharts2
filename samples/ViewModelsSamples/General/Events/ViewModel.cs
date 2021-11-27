@@ -52,6 +52,9 @@ namespace ViewModelsSamples.General.Events
                 columnSeries,
                 columnSeries2,
                 new LineSeries<int> { Values = new[] { 6, 7, 2, 9, 6, 2 } },
+                new ScatterSeries<int, RectangleGeometry> { Values = new[] { 1, 5, 3, 8, 4, 2 } },
+                new StackedColumnSeries<int> { Values = new[] { 1, 5, 3, 8, 4, 2 } },
+                new StackedColumnSeries<int> { Values = new[] { 1, 5, 3, 8, 4, 2 } }
             };
         }
 

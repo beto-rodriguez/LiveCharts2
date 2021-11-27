@@ -10,6 +10,10 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <lvc:CartesianChart Series="{Binding Series}" XAxes="{Binding X}"></lvc:CartesianChart>
+        <lvc:CartesianChart
+            Series="{Binding Series}"
+            XAxes="{Binding X}"
+            TooltipFindingStrategy="CompareOnlyX">
+        </lvc:CartesianChart>
     </Grid>
 </UserControl>

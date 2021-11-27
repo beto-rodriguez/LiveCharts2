@@ -122,6 +122,9 @@ namespace LiveChartsCore
             var requiresWScale = _weightBounds.Max - _weightBounds.Min > 0;
             var wm = -(GeometrySize - MinGeometrySize) / (_weightBounds.Max - _weightBounds.Min);
 
+            var uwx = xScale.MeasureInPixels(secondaryAxis.UnitWidth);
+            var uwy = yScale.MeasureInPixels(secondaryAxis.UnitWidth);
+
             foreach (var point in Fetch(cartesianChart))
             {
                 var visual = (TVisual?)point.Context.Visual;
@@ -175,9 +178,10 @@ namespace LiveChartsCore
                 sizedGeometry.Y = y - hgs;
                 sizedGeometry.Width = gs;
                 sizedGeometry.Height = gs;
+
                 sizedGeometry.RemoveOnCompleted = false;
 
-                point.Context.HoverArea = new RectangleHoverArea().SetDimensions(x - hgs - sw, y - hgs - sw, gs + 2 * sw, gs + 2 * sw);
+                point.Context.HoverArea = new RectangleHoverArea(x - uwx * 0.5f, y - uwy * 0.5f, uwx, uwy);
 
                 _ = toDeletePoints.Remove(point);
 
