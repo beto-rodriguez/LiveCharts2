@@ -2,6 +2,8 @@
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -11,17 +13,19 @@ namespace ViewModelsSamples.General.Events
     {
         public ViewModel()
         {
+            var data = new[]
+            {
+                new City { Name = "Tokyo", Population = 4, JustAnotherProperty = 6 },
+                new City { Name = "New York", Population = 6, JustAnotherProperty = 8 },
+                new City { Name = "Seoul", Population = 2, JustAnotherProperty = 3 },
+                new City { Name = "Moscow", Population = 8, JustAnotherProperty = 6 },
+                new City { Name = "Shanghai", Population = 3, JustAnotherProperty = 5 },
+                new City { Name = "Guadalajara", Population = 4, JustAnotherProperty = 2 }
+            };
+
             var columnSeries = new ColumnSeries<City>
             {
-                Values = new[]
-                {
-                    new City { Name = "Tokyo", Population = 4 },
-                    new City { Name = "New York", Population = 6 },
-                    new City { Name = "Seoul", Population = 2 },
-                    new City { Name = "Moscow", Population = 8 },
-                    new City { Name = "Shanghai", Population = 3 },
-                    new City { Name = "Guadalajara", Population = 4 }
-                },
+                Values = data,
                 TooltipLabelFormatter = point => $"{point.Model.Name} {point.Model.Population} Million",
                 Mapping = (city, point) =>
                 {
@@ -30,9 +34,25 @@ namespace ViewModelsSamples.General.Events
                 }
             };
 
-            columnSeries.DataPointerDown += ColumnSeries_DataPointerDown; ;
+            var columnSeries2 = new ColumnSeries<City>
+            {
+                Values = data,
+                TooltipLabelFormatter = point => $"{point.Model.Name} {point.Model.JustAnotherProperty} Anothers",
+                Mapping = (city, point) =>
+                {
+                    point.PrimaryValue = city.JustAnotherProperty;
+                    point.SecondaryValue = point.Context.Index;
+                }
+            };
 
-            Series = new ISeries[] { columnSeries };
+            columnSeries.DataPointerDown += ColumnSeries_DataPointerDown;
+
+            Series = new ISeries[]
+            {
+                columnSeries,
+                columnSeries2,
+                new LineSeries<int> { Values = new[] { 6, 7, 2, 9, 6, 2 } },
+            };
         }
 
         private int i = 0;
@@ -48,5 +68,7 @@ namespace ViewModelsSamples.General.Events
         }
 
         public IEnumerable<ISeries> Series { get; set; }
+
+        public Axis[] X { get; set; } = new Axis[] { new Axis { SeparatorsPaint = new SolidColorPaint(SKColors.Red, 2) } };
     }
 }

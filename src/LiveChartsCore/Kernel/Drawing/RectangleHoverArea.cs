@@ -33,6 +33,29 @@ namespace LiveChartsCore.Kernel.Drawing
     public class RectangleHoverArea : HoverArea
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="RectangleHoverArea"/> class.
+        /// </summary>
+        public RectangleHoverArea()
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RectangleHoverArea"/> class.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        public RectangleHoverArea(float x, float y, float width, float height)
+        {
+            X = x;
+            Y = y;
+            Width = width;
+            Height = height;
+        }
+
+        /// <summary>
         /// Gets or sets the x location.
         /// </summary>
         /// <value>

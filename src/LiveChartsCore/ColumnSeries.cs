@@ -184,6 +184,7 @@ namespace LiveChartsCore
                 visual.Y = cy;
                 visual.Width = helper.uw;
                 visual.Height = b;
+
                 if (_isRounded)
                 {
                     var rounded = (IRoundedRectangleChartPoint<TDrawingContext>)visual;
@@ -192,14 +193,7 @@ namespace LiveChartsCore
                 }
                 visual.RemoveOnCompleted = false;
 
-                var ha = new RectangleHoverArea().SetDimensions(x, cy, helper.uw, b);
-
-                visual.X = x;
-                visual.Y = cy;
-                visual.Width = helper.uw;
-                visual.Height = b;
-
-                point.Context.HoverArea = ha;
+                point.Context.HoverArea = new RectangleHoverArea(secondary - helper.actualUw * 0.5f, cy, helper.actualUw, b);
 
                 _ = toDeletePoints.Remove(point);
 
@@ -371,6 +365,7 @@ namespace LiveChartsCore
                 this.p = p;
 
                 uw = scaler.MeasureInPixels(axis.UnitWidth);
+                actualUw = uw;
 
                 var gp = (float)barSeries.GroupPadding;
 
@@ -403,7 +398,7 @@ namespace LiveChartsCore
                 }
             }
 
-            public float uw, uwm, cp, p;
+            public float uw, uwm, cp, p, actualUw;
         }
     }
 }
