@@ -315,6 +315,9 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
         public event ChartEventHandler<SkiaSharpDrawingContext> UpdateFinished;
 
+        /// <inheritdoc cref="IChartView.DataPointerDown" />
+        public event ChartPointsHandler? DataPointerDown;
+
         #endregion
 
         #region properties
@@ -801,6 +804,11 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             if (chart._core == null) return;
 
             chart._core.Update();
+        }
+
+        void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
+        {
+            DataPointerDown?.Invoke(this, points);
         }
     }
 }

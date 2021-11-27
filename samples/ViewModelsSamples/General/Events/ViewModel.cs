@@ -6,6 +6,7 @@ using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace ViewModelsSamples.General.Events
 {
@@ -58,11 +59,12 @@ namespace ViewModelsSamples.General.Events
             };
         }
 
-        private int i = 0;
-
         private void ColumnSeries_DataPointerDown(
             IEnumerable<ChartPoint<City, RoundedRectangleGeometry, LabelGeometry>> points)
         {
+            var a = points.ToArray().Length;
+            Trace.WriteLine(a);
+
             // the event passes a collection of the point that were triggered by the pointer down event.
             foreach (var point in points)
             {

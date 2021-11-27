@@ -323,6 +323,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
         public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateFinished;
 
+        /// <inheritdoc cref="IChartView.DataPointerDown" />
+        public event ChartPointsHandler? DataPointerDown;
+
         #endregion
 
         #region properties
@@ -862,6 +865,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         private void CartesianChart_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
         {
             _core?.Unload();
+        }
+
+        void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
+        {
+            DataPointerDown?.Invoke(this, points);
         }
     }
 }

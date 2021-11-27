@@ -121,6 +121,17 @@ namespace LiveChartsCore.Kernel.Sketches
         TooltipPosition TooltipPosition { get; set; }
 
         /// <summary>
+        /// Occurs when the pointer goes down over a chart point(s).
+        /// </summary>
+        event ChartPointsHandler? DataPointerDown;
+
+        /// <summary>
+        /// Called when the pointer goes down on a data point or points.
+        /// </summary>
+        /// <param name="points"></param>
+        void OnDataPointerDown(IEnumerable<ChartPoint> points);
+
+        /// <summary>
         /// Gets or sets the Synchronization Context, use this property to
         /// use an external object to handle multi threading synchronization.
         /// </summary>

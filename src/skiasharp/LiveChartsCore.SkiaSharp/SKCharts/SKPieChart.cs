@@ -179,6 +179,9 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
         public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateFinished;
 
+        /// <inheritdoc cref="IChartView.DataPointerDown" />
+        public event ChartPointsHandler? DataPointerDown;
+
         /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
         public void HideTooltip()
         {
@@ -257,6 +260,11 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
         {
             Measuring?.Invoke(this);
+        }
+
+        void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
+        {
+            throw new NotImplementedException();
         }
     }
 }

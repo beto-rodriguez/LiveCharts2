@@ -298,6 +298,9 @@ namespace LiveChartsCore.SkiaSharpView.Maui
         /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
         public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateFinished;
 
+        /// <inheritdoc cref="IChartView.DataPointerDown" />
+        public event ChartPointsHandler? DataPointerDown;
+
         #endregion
 
         #region properties
@@ -679,6 +682,11 @@ namespace LiveChartsCore.SkiaSharpView.Maui
         private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
         {
             Measuring?.Invoke(this);
+        }
+
+        void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
+        {
+            DataPointerDown?.Invoke(this, points);
         }
     }
 }

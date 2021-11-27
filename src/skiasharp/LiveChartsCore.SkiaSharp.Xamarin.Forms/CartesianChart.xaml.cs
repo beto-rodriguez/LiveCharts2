@@ -363,6 +363,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
         public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateFinished;
 
+        /// <inheritdoc cref="IChartView.DataPointerDown" />
+        public event ChartPointsHandler? DataPointerDown;
+
         #endregion
 
         #region properties
@@ -818,6 +821,11 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
         {
             Measuring?.Invoke(this);
+        }
+
+        void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
+        {
+            DataPointerDown?.Invoke(this, points);
         }
     }
 }

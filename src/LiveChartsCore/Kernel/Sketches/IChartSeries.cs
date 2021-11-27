@@ -88,8 +88,8 @@ namespace LiveChartsCore.Kernel.Sketches
         bool MiniatureEquals(IChartSeries<TDrawingContext> instance);
 
         /// <summary>
-        /// Called when the pointer goes down on a data point.
+        /// Called when the pointer goes down on a data point or points.
         /// </summary>
-        void OnDataPointerDown(IEnumerable<ChartPoint> points);
+        void OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points);
     }
 }

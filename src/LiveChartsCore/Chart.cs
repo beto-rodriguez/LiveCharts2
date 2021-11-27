@@ -353,7 +353,7 @@ namespace LiveChartsCore
                 if (!series.RequiresFindClosestOnPointerDown) continue;
 
                 var points = series.FindHoveredPoints(this, point, TooltipFindingStrategy.CompareOnlyX);
-                series.OnDataPointerDown(points);
+                series.OnDataPointerDown(View, points);
             }
         }
 

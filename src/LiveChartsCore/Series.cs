@@ -27,8 +27,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Events;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Providers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -276,10 +276,11 @@ namespace LiveChartsCore
         /// <summary>
         /// Called when the pointer goes down on a point or points.
         /// </summary>
-        /// <param name="points"></param>
-        protected virtual void OnDataPointerDown(IEnumerable<ChartPoint> points)
+        /// <param name="chart">the chart.</param>
+        /// <param name="points">the points.</param>
+        protected virtual void OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points)
         {
-            DataPointerDown?.Invoke(points.Select(x => new ChartPoint<TModel, TVisual, TLabel>(x)));
+            DataPointerDown?.Invoke(chart, points.Select(x => new ChartPoint<TModel, TVisual, TLabel>(x)));
         }
 
         IEnumerable<ChartPoint> ISeries.Fetch(IChart chart)
@@ -395,7 +396,7 @@ namespace LiveChartsCore
 
             hoverPaint.AddGeometryToPaintTask(chart.CoreCanvas, visual.HighlightableGeometry);
 
-            DataPointerHover?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(point));
+            DataPointerHover?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
         }
 
         /// <summary>
@@ -413,7 +414,7 @@ namespace LiveChartsCore
                 (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas,
                 visual.HighlightableGeometry);
 
-            DataPointerHoverLost?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(point));
+            DataPointerHoverLost?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
         }
 
         /// <summary>

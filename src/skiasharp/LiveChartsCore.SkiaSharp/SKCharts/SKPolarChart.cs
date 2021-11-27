@@ -37,14 +37,14 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
     /// <summary>
     /// In-memory chart that is able to generate a chart images.
     /// </summary>
-    public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, ISkiaSharpChart
+    public class SKPolarChart : IPolarChartView<SkiaSharpDrawingContext>, ISkiaSharpChart
     {
         private LvcColor _backColor;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SKCartesianChart"/> class.
+        /// Initializes a new instance of the <see cref="SKPolarChart"/> class.
         /// </summary>
-        public SKCartesianChart()
+        public SKPolarChart()
         {
             if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
@@ -54,23 +54,25 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
                 throw new Exception("Default colors are not valid");
             initializer.ApplyStyleToChart(this);
 
-            Core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, CoreCanvas);
+            Core = new PolarChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, CoreCanvas);
             Core.Measuring += OnCoreMeasuring;
             Core.UpdateStarted += OnCoreUpdateStarted;
             Core.UpdateFinished += OnCoreUpdateFinished;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SKCartesianChart"/> class.
+        /// Initializes a new instance of the <see cref="SKPolarChart"/> class.
         /// </summary>
         /// <param name="view">The view.</param>
-        public SKCartesianChart(ICartesianChartView<SkiaSharpDrawingContext> view) : this()
+        public SKPolarChart(IPolarChartView<SkiaSharpDrawingContext> view) : this()
         {
-            XAxes = view.XAxes;
-            YAxes = view.YAxes;
+            AngleAxes = view.AngleAxes;
+            RadiusAxes = view.RadiusAxes;
             Series = view.Series;
-            Sections = view.Sections;
-            DrawMarginFrame = view.DrawMarginFrame;
+            FitToBounds = view.FitToBounds;
+            TotalAngle = view.TotalAngle;
+            InnerRadius = view.InnerRadius;
+            InitialRotation = view.InitialRotation;
         }
 
 
@@ -101,38 +103,20 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         /// </value>
         public int Width { get; set; } = 900;
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Core"/>
-        public CartesianChart<SkiaSharpDrawingContext> Core { get; }
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Core"/>
+        public PolarChart<SkiaSharpDrawingContext> Core { get; }
 
         /// <inheritdoc cref="IChartView.SyncContext"/>
         public object SyncContext { get => CoreCanvas.Sync; set => CoreCanvas.Sync = value; }
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.XAxes"/>
-        public IEnumerable<ICartesianAxis> XAxes { get; set; } = new Axis[] { new Axis() };
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.AngleAxes"/>
+        public IEnumerable<IPolarAxis> AngleAxes { get; set; } = new[] { new PolarAxis() };
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.YAxes"/>
-        public IEnumerable<ICartesianAxis> YAxes { get; set; } = new Axis[] { new Axis() };
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.RadiusAxes"/>
+        public IEnumerable<IPolarAxis> RadiusAxes { get; set; } = new[] { new PolarAxis() };
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections"/>
-        public IEnumerable<Section<SkiaSharpDrawingContext>> Sections { get; set; } = new RectangularSection[0];
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series"/>
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series"/>
         public IEnumerable<ISeries> Series { get; set; } = new ISeries[0];
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame"/>
-        public DrawMarginFrame<SkiaSharpDrawingContext>? DrawMarginFrame { get; set; }
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomMode"/>
-        public ZoomAndPanMode ZoomMode { get; set; }
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomingSpeed"/>
-        public double ZoomingSpeed { get; set; }
-
-        /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled"/>
-        public bool AutoUpdateEnabled { get; set; }
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy"/>
-        public TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas"/>
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas { get; } = new();
@@ -184,6 +168,21 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         /// <inheritdoc cref="IChartView.TooltipPosition"/>
         public TooltipPosition TooltipPosition { get; set; }
 
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.FitToBounds"/>
+        public bool FitToBounds { get; set; }
+
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.TotalAngle"/>
+        public double TotalAngle { get; set; }
+
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InnerRadius"/>
+        public double InnerRadius { get; set; }
+
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InitialRotation"/>
+        public double InitialRotation { get; set; }
+
+        /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled"/>
+        public bool AutoUpdateEnabled { get; set; }
+
         /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
         public event ChartEventHandler<SkiaSharpDrawingContext>? Measuring;
 
@@ -202,7 +201,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)"/>
+        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)"/>
         public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
             throw new NotImplementedException();

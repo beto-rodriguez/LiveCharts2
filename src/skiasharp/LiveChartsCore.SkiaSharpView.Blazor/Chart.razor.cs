@@ -121,6 +121,9 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
         /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
         public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateFinished;
 
+        /// <inheritdoc cref="IChartView.DataPointerDown" />
+        public event ChartPointsHandler? DataPointerDown;
+
         #endregion
 
         #region properties
@@ -353,6 +356,11 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
             _canvasHeight = canvasBounds.Height;
 
             core?.Update();
+        }
+
+        void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
+        {
+            DataPointerDown?.Invoke(this, points);
         }
 
         async void IDisposable.Dispose()
