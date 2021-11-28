@@ -372,6 +372,13 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             DependencyProperty.Register(
                 nameof(LegendTemplate), typeof(DataTemplate), typeof(CartesianChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
 
+        /// <summary>
+        /// The data pointer down command property
+        /// </summary>
+        public static readonly DependencyProperty DataPointerDownCommandProperty =
+            DependencyProperty.Register(
+                nameof(DataPointerDownCommand), typeof(ICommand), typeof(CartesianChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
+
         #endregion
 
         #region events
@@ -794,7 +801,11 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// <summary>
         /// Gets or sets a command to execute when the pointer goes down on a data or data points.
         /// </summary>
-        public ICommand DataPointerDownCommand { get; set; }
+        public ICommand? DataPointerDownCommand
+        {
+            get => (ICommand?)GetValue(DataPointerDownCommandProperty);
+            set => SetValue(DataPointerDownCommandProperty, value);
+        }
 
         #endregion
 

@@ -51,7 +51,7 @@ namespace LiveChartsCore
         HashSet<ChartPoint> ActivePoints { get; }
 
         /// <summary>
-        /// Gets whether the series requires to find the closest point whtn the pointer goes down.
+        /// Gets whether the series requires to find the closest point when the pointer goes down.
         /// </summary>
         bool RequiresFindClosestOnPointerDown { get; }
 

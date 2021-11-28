@@ -311,6 +311,12 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             AvaloniaProperty.Register<CartesianChart, IBrush>(nameof(LegendBackground),
                 new SolidColorBrush(new Color(255, 255, 255, 255)), inherits: true);
 
+        /// <summary>
+        /// The data pointer down command property
+        /// </summary>
+        public static readonly AvaloniaProperty<ICommand?> DataPointerDowndCommandProperty =
+            AvaloniaProperty.Register<CartesianChart, ICommand?>(nameof(DataPointerDownCommand), null, inherits: true);
+
         #endregion
 
         #region events
@@ -665,7 +671,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <summary>
         /// Gets or sets a command to execute when the pointer goes down on a data or data points.
         /// </summary>
-        public ICommand DataPointerDownCommand { get; set; }
+        public ICommand? DataPointerDownCommand
+        {
+            get => (ICommand?)GetValue(DataPointerDowndCommandProperty);
+            set => SetValue(DataPointerDowndCommandProperty, value);
+        }
 
         #endregion
 

@@ -1,12 +1,13 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
+using System.Windows.Input;
 
 namespace ViewModelsSamples.General.Events
 {
@@ -60,11 +61,9 @@ namespace ViewModelsSamples.General.Events
         }
 
         private void ColumnSeries_DataPointerDown(
+            IChartView chart,
             IEnumerable<ChartPoint<City, RoundedRectangleGeometry, LabelGeometry>> points)
         {
-            var a = points.ToArray().Length;
-            Trace.WriteLine(a);
-
             // the event passes a collection of the point that were triggered by the pointer down event.
             foreach (var point in points)
             {
@@ -73,6 +72,9 @@ namespace ViewModelsSamples.General.Events
         }
 
         public IEnumerable<ISeries> Series { get; set; }
+
+        // XAML platforms also support ICommands
+        public ICommand DataPointerDownCommand { get; set; } = new RelayCommand(); // mark
 
         public Axis[] X { get; set; } = new Axis[] { new Axis { SeparatorsPaint = new SolidColorPaint(SKColors.Red, 2) } };
     }

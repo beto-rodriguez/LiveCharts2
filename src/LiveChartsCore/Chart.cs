@@ -355,6 +355,8 @@ namespace LiveChartsCore
                 var points = series.FindHoveredPoints(this, point, TooltipFindingStrategy.CompareOnlyX);
                 series.OnDataPointerDown(View, points);
             }
+
+            View.OnDataPointerDown(ChartSeries.SelectMany(x => x.FindHoveredPoints(this, point, TooltipFindingStrategy.CompareOnlyX)));
         }
 
         internal void InvokePointerMove(LvcPoint point)

@@ -273,6 +273,14 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             DependencyProperty.Register(
                 nameof(LegendTemplate), typeof(DataTemplate), typeof(Chart), new PropertyMetadata(null, OnDependencyPropertyChanged));
 
+        /// <summary>
+        /// The legend font style property
+        /// </summary>
+        public static readonly DependencyProperty DataPointerDownCommandProperty =
+           DependencyProperty.Register(
+               nameof(DataPointerDownCommand), typeof(ICommand), typeof(Chart),
+               new PropertyMetadata(null, OnDependencyPropertyChanged));
+
         #endregion
 
         #region events
@@ -619,7 +627,11 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         /// <summary>
         /// Gets or sets a command to execute when the pointer goes down on a data or data points.
         /// </summary>
-        public ICommand DataPointerDownCommand { get; set; }
+        public ICommand? DataPointerDownCommand
+        {
+            get => (ICommand?)GetValue(DataPointerDownCommandProperty);
+            set => SetValue(DataPointerDownCommandProperty, value);
+        }
 
         #endregion
 
@@ -773,6 +785,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
         {
             DataPointerDown?.Invoke(this, points);
+
+            if (DataPointerDownCommand is null) return;
             if (DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
         }
     }

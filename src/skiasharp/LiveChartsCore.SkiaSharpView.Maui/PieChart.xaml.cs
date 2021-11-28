@@ -286,6 +286,14 @@ namespace LiveChartsCore.SkiaSharpView.Maui
                 nameof(TooltipFontAttributes), typeof(FontAttributes), typeof(CartesianChart),
                 FontAttributes.None, propertyChanged: OnBindablePropertyChanged);
 
+        /// <summary>
+        /// The data pointer down command property
+        /// </summary>
+        public static readonly BindableProperty DataPointerDownCommandProperty =
+            BindableProperty.Create(
+                nameof(DataPointerDownCommand), typeof(ICommand), typeof(PieChart),
+                null, propertyChanged: OnBindablePropertyChanged);
+
         #endregion
 
         #region events
@@ -586,7 +594,11 @@ namespace LiveChartsCore.SkiaSharpView.Maui
         /// <summary>
         /// Gets or sets a command to execute when the pointer goes down on a data or data points.
         /// </summary>
-        public ICommand DataPointerDownCommand { get; set; }
+        public ICommand? DataPointerDownCommand
+        {
+            get => (ICommand?)GetValue(DataPointerDownCommandProperty);
+            set => SetValue(DataPointerDownCommandProperty, value);
+        }
 
         #endregion
 
