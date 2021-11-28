@@ -776,6 +776,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
                 SizeChanged += OnSizeChanged;
                 PointerMoved += OnPointerMoved;
                 PointerExited += OnPointerExited;
+                PointerPressed += OnPointerPressed;
             }
 
             _core.Load();
@@ -815,6 +816,12 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             _core?.InvokePointerLeft();
         }
 
+        private void OnPointerReleased(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            var p = e.GetCurrentPoint(this);
+            _core?.InvokePointerUp(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
+        }
+
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
             _core?.Unload();
@@ -831,6 +838,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
         {
             DataPointerDown?.Invoke(this, points);
+            if (DataPointerDownCommand is null) return;
             if (DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
         }
     }

@@ -768,6 +768,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                 _core.UpdateStarted += OnCoreUpdateStarted;
                 _core.UpdateFinished += OnCoreUpdateFinished;
 
+                PointerPressed += OnPointerPressed;
                 SizeChanged += OnSizeChanged;
                 PointerMoved += OnPointerMoved;
                 PointerExited += OnPointerExited;
@@ -781,6 +782,12 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         {
             if (_core == null) throw new Exception("Core not found!");
             _core.Update();
+        }
+
+        private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            _ = CapturePointer(e.Pointer);
+            _core?.InvokePointerDown(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
         }
 
         private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
@@ -826,6 +833,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
         {
             DataPointerDown?.Invoke(this, points);
+            if (DataPointerDownCommand is null) return;
             if (DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
         }
     }

@@ -99,9 +99,10 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                });
 
             Series = new ObservableCollection<ISeries>();
-            PointerLeave += CartesianChart_PointerLeave;
+            PointerLeave += Chart_PointerLeave;
 
-            PointerMoved += CartesianChart_PointerMoved;
+            PointerMoved += Chart_PointerMoved;
+            PointerPressed += Chart_PointerPressed;
             DetachedFromVisualTree += PieChart_DetachedFromVisualTree;
         }
 
@@ -707,10 +708,16 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             AvaloniaXamlLoader.Load(this);
         }
 
-        private void CartesianChart_PointerMoved(object? sender, PointerEventArgs e)
+        private void Chart_PointerMoved(object? sender, PointerEventArgs e)
         {
             var p = e.GetPosition(this);
             _core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
+        }
+
+        private void Chart_PointerPressed(object sender, PointerPressedEventArgs e)
+        {
+            var p = e.GetPosition(this);
+            _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y));
         }
 
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
@@ -728,7 +735,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             Measuring?.Invoke(this);
         }
 
-        private void CartesianChart_PointerLeave(object? sender, PointerEventArgs e)
+        private void Chart_PointerLeave(object? sender, PointerEventArgs e)
         {
             _ = Dispatcher.UIThread.InvokeAsync(HideTooltip, DispatcherPriority.Background);
             _core?.InvokePointerLeft();
@@ -747,6 +754,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
         {
             DataPointerDown?.Invoke(this, points);
+            if (DataPointerDownCommand is null) return;
             if (DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
         }
     }

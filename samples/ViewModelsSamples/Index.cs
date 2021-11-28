@@ -4,7 +4,9 @@
     {
         public static string[] Samples = new[]
         {
-            "General/Events",
+            "Events/Cartesian",
+            "Events/Pie",
+            "Events/Polar",
 
             "Design/LinearGradients",
             "Design/RadialGradients",

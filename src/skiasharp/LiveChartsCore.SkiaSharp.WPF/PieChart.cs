@@ -26,6 +26,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -60,6 +61,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 });
 
             SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
+            MouseDown += OnMouseDown;
         }
 
         /// <summary>
@@ -144,6 +146,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
             tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
             core.Update();
+        }
+
+        private void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var p = e.GetPosition(this);
+            core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y));
         }
     }
 }

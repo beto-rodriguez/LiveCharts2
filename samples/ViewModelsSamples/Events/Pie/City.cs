@@ -1,4 +1,4 @@
-﻿namespace ViewModelsSamples.General.Events
+﻿namespace ViewModelsSamples.Events.Pie
 {
     public class City
     {
