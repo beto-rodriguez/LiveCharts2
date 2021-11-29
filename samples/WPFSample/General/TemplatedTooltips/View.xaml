@@ -29,7 +29,7 @@
                                             <lvc:MotionCanvas Margin="0 0 8 0" 
                                                 PaintTasks="{Binding Context.Series.CanvasSchedule.PaintSchedules}"
                                                 Width="{Binding Context.Series.CanvasSchedule.Width}"
-                                                Height="{Binding Conxtext.Series.CanvasSchedule.Height}"
+                                                Height="{Binding Context.Series.CanvasSchedule.Height}"
                                                 VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Border>

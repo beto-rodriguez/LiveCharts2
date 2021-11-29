@@ -29,7 +29,7 @@
                       <StackPanel Orientation="Horizontal">
                         <TextBlock
                             Foreground="#fafafa"
-                            Text="{Binding Point.AsTooltipString}"
+                            Text="{Binding AsTooltipString}"
                             Margin="0 0 8 0"
                             VerticalAlignment="Center"/>
                         <!-- LiveCharts uses the motion canvas control to display the series miniature -->

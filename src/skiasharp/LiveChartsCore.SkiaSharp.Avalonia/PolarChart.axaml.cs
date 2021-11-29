@@ -300,7 +300,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <summary>
         /// The data pointer down command property
         /// </summary>
-        public static readonly AvaloniaProperty<ICommand?> DataPointerDowndCommandProperty =
+        public static readonly AvaloniaProperty<ICommand?> DataPointerDownCommandProperty =
             AvaloniaProperty.Register<PolarChart, ICommand?>(nameof(DataPointerDownCommand), null, inherits: true);
 
         #endregion
@@ -648,8 +648,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// </summary>
         public ICommand? DataPointerDownCommand
         {
-            get => (ICommand?)GetValue(DataPointerDowndCommandProperty);
-            set => SetValue(DataPointerDowndCommandProperty, value);
+            get => (ICommand?)GetValue(DataPointerDownCommandProperty);
+            set => SetValue(DataPointerDownCommandProperty, value);
         }
 
         #endregion

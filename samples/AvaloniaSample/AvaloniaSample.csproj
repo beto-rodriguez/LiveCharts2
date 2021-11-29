@@ -90,6 +90,15 @@
     <Compile Update="Design\LinearGradients\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Events\Cartesian\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Events\Pie\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Events\Polar\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Financial\BasicCandlesticks\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
