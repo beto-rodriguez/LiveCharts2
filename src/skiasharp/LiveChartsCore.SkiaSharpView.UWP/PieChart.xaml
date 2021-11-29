@@ -23,7 +23,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <local:MotionCanvas Margin="0 0 8 0" 
                                                     PaintTasks="{Binding Context.Series.CanvasSchedule.PaintSchedules}"
-                                                    Width="{Binding Pointext.Series.CanvasSchedule.Width}"
+                                                    Width="{Binding Context.Series.CanvasSchedule.Width}"
                                                     Height="{Binding Context.Series.CanvasSchedule.Height}"
                                                     VerticalAlignment="Center"/>
                                 <TextBlock Text="{Binding AsTooltipString}"

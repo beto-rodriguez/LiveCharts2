@@ -786,7 +786,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
 
         private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            _ = CapturePointer(e.Pointer);
+            var p = e.GetCurrentPoint(this);
             _core?.InvokePointerDown(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
         }
 
