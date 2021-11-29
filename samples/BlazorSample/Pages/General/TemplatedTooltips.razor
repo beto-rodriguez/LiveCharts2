@@ -22,7 +22,7 @@
 		{
 			<div class="d-flex">
 				<div>
-					@tooltipPoint.Point.AsTooltipString
+					@tooltipPoint.AsTooltipString
 				</div>
 				<div class="lvc-miniature" style="@LiveChartsBlazor.GetSeriesMiniatureStyle(tooltipPoint.Context.Series)">
 					<MotionCanvas PaintTasks="@LiveChartsBlazor.GetSeriesAsMiniaturePaints(tooltipPoint.Context.Series)" />
