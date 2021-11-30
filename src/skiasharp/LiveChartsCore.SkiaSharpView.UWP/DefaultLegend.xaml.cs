@@ -109,14 +109,6 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                     ? Orientation.Horizontal
                     : Orientation.Vertical;
 
-            FontFamily = uwpChart.LegendFontFamily;
-            Foreground = uwpChart.LegendTextBrush;
-            FontSize = uwpChart.LegendFontSize;
-            FontWeight = uwpChart.LegendFontWeight;
-            FontStyle = uwpChart.LegendFontStyle;
-            FontStretch = uwpChart.LegendFontStretch;
-            Background = uwpChart.LegendBackground;
-
             DataContext = new LegendBindingContext
             {
                 Background = uwpChart.LegendBackground,

@@ -44,6 +44,11 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         Grid LayoutGrid { get; }
 
         /// <summary>
+        /// Gets the tooltip control.
+        /// </summary>
+        ToolTip TooltipControl { get; }
+
+        /// <summary>
         /// Gets the canvas.
         /// </summary>
         /// <value>

@@ -13,27 +13,35 @@
     </UserControl.DataContext>
     <Grid>
         <lvc:CartesianChart Series="{Binding Series}" LegendPosition="Right" >
-            <!--<lvc:CartesianChart.LegendTemplate>
+            <lvc:CartesianChart.LegendTemplate>
                 <DataTemplate>
-                    <ItemsControl ItemsSource="{Binding Series, RelativeSource={RelativeSource AncestorType=lvc:DefaultLegend}}">
+                    <ItemsControl ItemsSource="{Binding SeriesCollection}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                    Orientation="{Binding Orientation, RelativeSource={RelativeSource AncestorType=lvc:DefaultLegend}}" />
+                                <StackPanel
+                                    Background="{Binding Background}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Orientation="{Binding Orientation}" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Padding="15 4" Background="#F5F5DC">
-                                    <StackPanel Orientation="Horizontal">
+                                <Border Padding="15 4">
+                                    <StackPanel Orientation="Horizontal" Background="#F5F5DC">
                                         <TextBlock
-                                            Text="{Binding Name}"
+                                            Text="{Binding Series.Name}"
+                                            FontFamily="{Binding FontFamily}"
+                                            Foreground="{Binding Foreground}"
+                                            FontSize="{Binding FontSize}"
+                                            FontStyle="{Binding FontStyle}"
+                                            FontStretch="{Binding FontStretch}"
                                             VerticalAlignment="Center"/>
                                         <lvc:MotionCanvas
-                                            Margin="8 0 0 0"
-                                            PaintTasks="{Binding CanvasSchedule.PaintSchedules}"
-                                            Width="{Binding CanvasSchedule.Width}"
-                                            Height="{Binding CanvasSchedule.Height}"
+                                            Margin="0 0 8 0"
+                                            PaintTasks="{Binding Series.CanvasSchedule.PaintSchedules}"
+                                            Width="{Binding Series.CanvasSchedule.Width}"
+                                            Height="{Binding Series.CanvasSchedule.Height}"
                                             VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </Border>
@@ -41,7 +49,7 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </DataTemplate>
-            </lvc:CartesianChart.LegendTemplate>-->
+            </lvc:CartesianChart.LegendTemplate>
         </lvc:CartesianChart>
     </Grid>
 

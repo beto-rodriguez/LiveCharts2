@@ -374,6 +374,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         #region properties
 
         Grid IWinUIChart.LayoutGrid => grid;
+        ToolTip IWinUIChart.TooltipControl => tooltipControl;
         FrameworkElement IWinUIChart.Canvas => motionCanvas;
         FrameworkElement IWinUIChart.Legend => legend;
 
