@@ -33,6 +33,9 @@
     <None Remove="Design\StrokeDashArray\View.xaml" />
     <None Remove="Design\RadialGradients\View.xaml" />
     <None Remove="Design\LinearGradients\View.xaml" />
+    <None Remove="Events\Cartesian\View.xaml" />
+    <None Remove="Events\Pie\View.xaml" />
+    <None Remove="Events\Polar\View.xaml" />
     <None Remove="Financial\BasicCandlesticks\View.xaml" />
     <None Remove="General\MultiThreading\View.xaml" />
     <None Remove="General\Visibility\View.xaml" />
@@ -157,6 +160,15 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Design\RadialGradients - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Events\Cartesian\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Events\Pie\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Events\Polar\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Financial\LinearGradients\View.xaml">

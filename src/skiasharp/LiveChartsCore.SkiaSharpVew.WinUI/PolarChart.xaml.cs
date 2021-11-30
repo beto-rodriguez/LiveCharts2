@@ -907,12 +907,10 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         {
             var p = e.GetCurrentPoint(this);
             _core?.InvokePointerUp(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
-            ReleasePointerCapture(e.Pointer);
         }
 
         private void OnPointerPressed(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            _ = CapturePointer(e.Pointer);
             var p = e.GetCurrentPoint(this);
             _core?.InvokePointerDown(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
         }
