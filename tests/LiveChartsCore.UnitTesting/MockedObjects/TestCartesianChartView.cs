@@ -100,6 +100,7 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
         public event ChartEventHandler<SkiaSharpDrawingContext> Measuring;
         public event ChartEventHandler<SkiaSharpDrawingContext> UpdateStarted;
         public event ChartEventHandler<SkiaSharpDrawingContext> UpdateFinished;
+        public event ChartPointsHandler DataPointerDown;
 
         public void DummyRaiseEvents()
         {
@@ -127,6 +128,11 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
         public void SyncAction(Action action)
         {
             action();
+        }
+
+        public void OnDataPointerDown(IEnumerable<ChartPoint> points)
+        {
+            throw new NotImplementedException();
         }
     }
 }
