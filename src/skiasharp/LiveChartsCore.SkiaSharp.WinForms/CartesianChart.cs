@@ -79,8 +79,8 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
 
             var c = Controls[0].Controls[0];
 
-            c.MouseWheel += OnMouseWheel;
             c.MouseDown += OnMouseDown;
+            c.MouseWheel += OnMouseWheel;
             c.MouseUp += OnMouseUp;
         }
 
