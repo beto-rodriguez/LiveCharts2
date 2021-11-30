@@ -404,6 +404,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         #region properties
 
         Grid IUwpChart.LayoutGrid => grid;
+        ToolTip IUwpChart.TooltipControl => tooltipControl;
         FrameworkElement IUwpChart.Canvas => motionCanvas;
         FrameworkElement IUwpChart.Legend => legend;
 

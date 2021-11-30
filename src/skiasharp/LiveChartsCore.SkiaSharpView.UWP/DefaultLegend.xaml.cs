@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
+using System.Linq;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -32,66 +32,44 @@ namespace LiveChartsCore.SkiaSharpView.UWP
     /// <inheritdoc cref="IChartLegend{TDrawingContext}"/>
     public sealed partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
     {
+        private readonly DataTemplate _defaultTempalte;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultLegend"/> class.
         /// </summary>
         public DefaultLegend()
         {
             InitializeComponent();
-
-            DataContext = this;
+            _defaultTempalte = (DataTemplate)Resources["defaultTemplate"];
         }
 
         /// <summary>
-        /// The series property
+        /// The actual tempalte property.
         /// </summary>
-        public static readonly DependencyProperty SeriesProperty =
-            DependencyProperty.Register(
-                nameof(Series), typeof(IEnumerable<IChartSeries<SkiaSharpDrawingContext>>),
-                typeof(DefaultLegend), new PropertyMetadata(new List<IChartSeries<SkiaSharpDrawingContext>>()));
+        public static readonly DependencyProperty ActualTemplateProperty =
+            DependencyProperty.Register(nameof(ActualTemplate), typeof(DataTemplate), typeof(DefaultLegend), new PropertyMetadata(null));
 
         /// <summary>
-        /// The orientation property
+        /// Gets or sets the actual template.
         /// </summary>
-        public static readonly DependencyProperty OrientationProperty =
-            DependencyProperty.Register(
-                nameof(Orientation), typeof(Orientation), typeof(DefaultLegend), new PropertyMetadata(Orientation.Horizontal));
-
-        /// <summary>
-        /// Gets or sets the series.
-        /// </summary>
-        /// <value>
-        /// The series.
-        /// </value>
-        public IEnumerable<IChartSeries<SkiaSharpDrawingContext>> Series
+        public DataTemplate ActualTemplate
         {
-            get => (IEnumerable<IChartSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty);
-            set => SetValue(SeriesProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets the orientation.
-        /// </summary>
-        /// <value>
-        /// The orientation.
-        /// </value>
-        public Orientation Orientation
-        {
-            get => (Orientation)GetValue(OrientationProperty);
-            set => SetValue(OrientationProperty, value);
+            get => (DataTemplate)GetValue(ActualTemplateProperty);
+            set => SetValue(ActualTemplateProperty, value);
         }
 
         void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
         {
-            var winuiChart = (IUwpChart)chart.View;
+            var uwpChart = (IUwpChart)chart.View;
 
             var series = chart.ChartSeries;
             var legendOrientation = chart.LegendOrientation;
             var legendPosition = chart.LegendPosition;
-            //var template = wpfChart.LegendTemplate ?? _defaultTempalte;
-            //if (CustomTemplate != template) CustomTemplate = template;
 
-            Series = series;
+            var template = uwpChart.LegendTemplate ?? _defaultTempalte;
+            if (ActualTemplate != template) ActualTemplate = template;
+
+            var orientation = Orientation.Horizontal;
 
             switch (legendPosition)
             {
@@ -100,44 +78,61 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                     break;
                 case LegendPosition.Top:
                     Visibility = Visibility.Visible;
-                    if (legendOrientation == LegendOrientation.Auto) Orientation = Orientation.Horizontal;
-                    Grid.SetColumn(winuiChart.Legend, 1);
-                    Grid.SetRow(winuiChart.Legend, 0);
+                    if (legendOrientation == LegendOrientation.Auto) orientation = Orientation.Horizontal;
+                    Grid.SetColumn(uwpChart.Legend, 1);
+                    Grid.SetRow(uwpChart.Legend, 0);
                     break;
                 case LegendPosition.Left:
                     Visibility = Visibility.Visible;
-                    if (legendOrientation == LegendOrientation.Auto) Orientation = Orientation.Vertical;
-                    Grid.SetColumn(winuiChart.Legend, 0);
-                    Grid.SetRow(winuiChart.Legend, 1);
+                    if (legendOrientation == LegendOrientation.Auto) orientation = Orientation.Vertical;
+                    Grid.SetColumn(uwpChart.Legend, 0);
+                    Grid.SetRow(uwpChart.Legend, 1);
                     break;
                 case LegendPosition.Right:
                     Visibility = Visibility.Visible;
-                    if (legendOrientation == LegendOrientation.Auto) Orientation = Orientation.Vertical;
-                    Grid.SetColumn(winuiChart.Legend, 2);
-                    Grid.SetRow(winuiChart.Legend, 1);
+                    if (legendOrientation == LegendOrientation.Auto) orientation = Orientation.Vertical;
+                    Grid.SetColumn(uwpChart.Legend, 2);
+                    Grid.SetRow(uwpChart.Legend, 1);
                     break;
                 case LegendPosition.Bottom:
                     Visibility = Visibility.Visible;
-                    if (legendOrientation == LegendOrientation.Auto) Orientation = Orientation.Horizontal;
-                    Grid.SetColumn(winuiChart.Legend, 1);
-                    Grid.SetRow(winuiChart.Legend, 2);
+                    if (legendOrientation == LegendOrientation.Auto) orientation = Orientation.Horizontal;
+                    Grid.SetColumn(uwpChart.Legend, 1);
+                    Grid.SetRow(uwpChart.Legend, 2);
                     break;
                 default:
                     break;
             }
 
             if (legendOrientation != LegendOrientation.Auto)
-                Orientation = legendOrientation == LegendOrientation.Horizontal
+                orientation = legendOrientation == LegendOrientation.Horizontal
                     ? Orientation.Horizontal
                     : Orientation.Vertical;
 
-            FontFamily = winuiChart.LegendFontFamily;
-            Foreground = winuiChart.LegendTextBrush;
-            FontSize = winuiChart.LegendFontSize;
-            FontWeight = winuiChart.LegendFontWeight;
-            FontStyle = winuiChart.LegendFontStyle;
-            FontStretch = winuiChart.LegendFontStretch;
-            Background = winuiChart.LegendBackground;
+            FontFamily = uwpChart.LegendFontFamily;
+            Foreground = uwpChart.LegendTextBrush;
+            FontSize = uwpChart.LegendFontSize;
+            FontWeight = uwpChart.LegendFontWeight;
+            FontStyle = uwpChart.LegendFontStyle;
+            FontStretch = uwpChart.LegendFontStretch;
+            Background = uwpChart.LegendBackground;
+
+            DataContext = new LegendBindingContext
+            {
+                Background = uwpChart.LegendBackground,
+                Orientation = orientation,
+                SeriesCollection = series.Select(x =>
+                    new BindingSeries
+                    {
+                        Series = x,
+                        FontFamily = uwpChart.LegendFontFamily,
+                        Foreground = uwpChart.LegendTextBrush,
+                        FontSize = uwpChart.LegendFontSize,
+                        FontWeight = uwpChart.LegendFontWeight,
+                        FontStyle = uwpChart.LegendFontStyle,
+                        FontStretch = uwpChart.LegendFontStretch
+                    })
+            };
 
             UpdateLayout();
         }

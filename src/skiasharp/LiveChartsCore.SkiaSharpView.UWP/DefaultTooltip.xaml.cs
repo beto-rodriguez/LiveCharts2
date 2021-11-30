@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -33,45 +34,45 @@ using Windows.UI.Xaml.Controls;
 namespace LiveChartsCore.SkiaSharpView.UWP
 {
     /// <inheritdoc cref="IChartTooltip{TDrawingContext}"/>
-    public sealed partial class DefaultTooltip : ToolTip, IChartTooltip<SkiaSharpDrawingContext>
+    public sealed partial class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext>
     {
+        private readonly DataTemplate _defaultTempalte;
+        private IUwpChart _uwpChart;
+
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
         /// </summary>
         public DefaultTooltip()
         {
-            DataContext = this;
+            InitializeComponent();
+            _defaultTempalte = (DataTemplate)Resources["defaultTemplate"];
         }
 
         /// <summary>
-        /// The points property
+        /// The actual tempalte property.
         /// </summary>
-        public static readonly DependencyProperty PointsProperty =
-           DependencyProperty.Register(
-               nameof(Points), typeof(IEnumerable<ChartPoint>),
-               typeof(DefaultTooltip), new PropertyMetadata(new List<ChartPoint>()));
+        public static readonly DependencyProperty ActualTemplateProperty =
+            DependencyProperty.Register(nameof(ActualTemplate), typeof(DataTemplate), typeof(DefaultTooltip), new PropertyMetadata(null));
 
         /// <summary>
-        /// Gets or sets the points.
+        /// Gets or sets the actual template.
         /// </summary>
-        /// <value>
-        /// The points.
-        /// </value>
-        public IEnumerable<ChartPoint> Points
+        public DataTemplate ActualTemplate
         {
-            get => (IEnumerable<ChartPoint>)GetValue(PointsProperty);
-            set => SetValue(PointsProperty, value);
+            get => (DataTemplate)GetValue(ActualTemplateProperty);
+            set => SetValue(ActualTemplateProperty, value);
         }
 
         void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
-            var winuiChart = (IUwpChart)chart.View;
+            var uwpChart = (IUwpChart)chart.View;
+            _uwpChart = uwpChart;
+
+            var template = uwpChart.TooltipTemplate ?? _defaultTempalte;
+            if (ActualTemplate != template) ActualTemplate = template;
 
             LvcPoint? location = null;
-
-            IsOpen = true;
-            Points = tooltipPoints;
-
+            uwpChart.TooltipControl.IsOpen = true;
             Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
             if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
@@ -90,20 +91,29 @@ namespace LiveChartsCore.SkiaSharpView.UWP
 
             if (location is null) throw new Exception("location not supported");
 
-            PlacementRect = new Rect(location.Value.X, location.Value.Y, 0, 0);
+            uwpChart.TooltipControl.PlacementRect = new Rect(location.Value.X, location.Value.Y, 0, 0);
 
-            Background = winuiChart.TooltipBackground;
-            FontFamily = winuiChart.TooltipFontFamily;
-            //TextColor = wpfChart.TooltipTextBrush;
-            FontSize = winuiChart.TooltipFontSize;
-            FontWeight = winuiChart.TooltipFontWeight;
-            FontStyle = winuiChart.TooltipFontStyle;
-            FontStretch = winuiChart.TooltipFontStretch;
+            DataContext = new TooltipBindingContext
+            {
+                Background = uwpChart.TooltipBackground,
+                Points = tooltipPoints.Select(x =>
+                    new BindingPoint
+                    {
+                        ChartPoint = x,
+                        FontFamily = uwpChart.TooltipFontFamily,
+                        Foreground = uwpChart.TooltipTextBrush,
+                        FontSize = uwpChart.TooltipFontSize,
+                        FontWeight = uwpChart.TooltipFontWeight,
+                        FontStyle = uwpChart.TooltipFontStyle,
+                        FontStretch = uwpChart.TooltipFontStretch
+                    }).ToArray()
+            };
         }
 
         void IChartTooltip<SkiaSharpDrawingContext>.Hide()
         {
-            IsOpen = false;
+            if (_uwpChart is null) return;
+            _uwpChart.TooltipControl.IsOpen = false;
         }
     }
 }
