@@ -28,22 +28,22 @@
                 <lvc:CartesianChart.TooltipTemplate>
                     <DataTemplate>
                         <Frame Background="#353535" CornerRadius="4" HasShadow="True" Padding="6">
-                            <!--<StackLayout BindableLayout.ItemsSource="{Binding Points, Source={RelativeSource AncestorType={x:Type lvc:TooltipBindingContext}}}">
+                            <StackLayout BindableLayout.ItemsSource="{Binding Points, Source={RelativeSource AncestorType={x:Type lvc:TooltipBindingContext}}}">
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate>
                                         <StackLayout Orientation="Horizontal" VerticalOptions="Center">
-                                            <Label Text="{Binding Point.AsTooltipString}"
+                                            <Label Text="{Binding AsTooltipString}"
                                             TextColor="#fafafa"/>
                                             <lvc:MotionCanvas 
                                             VerticalOptions="Center"
                                             Margin="5, 0, 0, 0"
-                                            WidthRequest="{Binding Series, Converter={StaticResource wConverter}}"
-                                            HeightRequest="{Binding Series, Converter={StaticResource hConverter}}"
-                                            PaintTasks="{Binding Series, Converter={StaticResource paintTaskConverter}}"/>
+                                            WidthRequest="{Binding Context.Series, Converter={StaticResource wConverter}}"
+                                            HeightRequest="{Binding Context.Series, Converter={StaticResource hConverter}}"
+                                            PaintTasks="{Binding Context.Series, Converter={StaticResource paintTaskConverter}}"/>
                                         </StackLayout>
                                     </DataTemplate>
                                 </BindableLayout.ItemTemplate>
-                            </StackLayout>-->
+                            </StackLayout>
                         </Frame>
                     </DataTemplate>
                 </lvc:CartesianChart.TooltipTemplate>

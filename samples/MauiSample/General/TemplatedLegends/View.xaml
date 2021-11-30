@@ -26,7 +26,7 @@
                 <lvc:CartesianChart.LegendTemplate>
                     <DataTemplate>
                         <Frame Background="#F5F5DC" CornerRadius="4" Padding="6">
-                            <!--<StackLayout 
+                            <StackLayout 
                                 BindableLayout.ItemsSource="{Binding Series, Source={RelativeSource AncestorType={x:Type lvc:LegendBindingContext}}}"
                                 Orientation="{Binding Orientation, Source={RelativeSource AncestorType={x:Type lvc:LegendBindingContext}}}"
                                 VerticalOptions="Center">
@@ -44,7 +44,7 @@
                                         </StackLayout>
                                     </DataTemplate>
                                 </BindableLayout.ItemTemplate>
-                            </StackLayout>-->
+                            </StackLayout>
                         </Frame>
                     </DataTemplate>
                 </lvc:CartesianChart.LegendTemplate>
