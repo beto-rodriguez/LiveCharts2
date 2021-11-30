@@ -132,7 +132,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui
                 location = tooltipPoints.GetPieTooltipLocation(
                     chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height));
             }
-            if (location is null) throw new Exception("location not supported");
+            if (location is null) return;
 
             IsVisible = true;
             var template = mobileChart.TooltipTemplate ?? _defaultTemplate;
