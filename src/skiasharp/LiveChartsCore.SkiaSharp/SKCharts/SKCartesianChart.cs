@@ -138,7 +138,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas { get; } = new();
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.Legend"/>
-        public IChartLegend<SkiaSharpDrawingContext>? Legend => null;
+        public IChartLegend<SkiaSharpDrawingContext>? Legend { get; set; }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip"/>
         public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => null;
