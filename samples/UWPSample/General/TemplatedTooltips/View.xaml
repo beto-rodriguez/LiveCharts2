@@ -13,6 +13,7 @@
     </UserControl.DataContext>
     <Grid>
         <lvc:CartesianChart Series="{Binding Series}" TooltipPosition="Top" >
+            <!-- mark -untilCloses CartesianChart.TooltipTemplate -->
             <lvc:CartesianChart.TooltipTemplate>
                 <DataTemplate>
                     <Border Background="#303030">

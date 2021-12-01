@@ -12,6 +12,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <lvc:CartesianChart Grid.Row="0" Series="{Binding Series}" TooltipPosition="Top" >
+            <!-- mark -untilCloses CartesianChart.TooltipTemplate -->
             <lvc:CartesianChart.TooltipTemplate>
                 <DataTemplate>
                     <Border Background="#303030">

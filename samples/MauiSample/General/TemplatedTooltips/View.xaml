@@ -25,6 +25,7 @@
             <lvc:CartesianChart
                 Grid.Row="0"
                 Series="{Binding Series}">
+                <!-- mark -untilCloses CartesianChart.TooltipTemplate -->
                 <lvc:CartesianChart.TooltipTemplate>
                     <DataTemplate>
                         <Frame Background="#353535" CornerRadius="4" HasShadow="True" Padding="6">
