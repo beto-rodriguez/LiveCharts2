@@ -218,7 +218,7 @@ namespace LiveChartsCore
             var previousSacale = ((ICartesianAxis)this).PreviousDataBounds is null
                 ? null
                 : new Scaler(drawLocation, drawMarginSize, this, true);
-            var axisTick = ((ICartesianAxis)this).GetTick(drawMarginSize);
+            var axisTick = this.GetTick(drawMarginSize);
 
             var labeler = Labeler;
             if (Labels is not null)
@@ -319,7 +319,13 @@ namespace LiveChartsCore
             {
                 if (i < min) continue;
 
-                var label = labeler(i);
+                // - 1d + 1d is a dummy operation to fix a bug
+                // where i == 0 then calling i.ToString() returns "-0"...
+                // that dummy operation seems to hide that issue
+                // I am not completly sure of what causes that
+                // it seems that the bits storing that number (i) have the negative bit on
+                var label = labeler(i - 1d + 1d);
+
                 float x, y;
                 if (_orientation == AxisOrientation.X)
                 {

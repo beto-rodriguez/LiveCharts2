@@ -61,7 +61,7 @@ namespace LiveChartsCore.Kernel
         /// <value>
         /// The default zoom speed.
         /// </value>
-        public double DefaultZoomSpeed { get; set; } = 0.8;
+        public double DefaultZoomSpeed { get; set; } = 0.2;
 
         /// <summary>
         /// Gets or sets the default zoom mode.
