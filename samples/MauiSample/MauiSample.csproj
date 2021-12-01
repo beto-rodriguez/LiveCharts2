@@ -123,6 +123,10 @@
 	  <MauiXaml Update="Design\StrokeDashArray\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Events\AddPointOnClick\View.xaml">
+	    <SubType>Designer</SubType>
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Events\Cartesian\View.xaml">
 	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:Compile</Generator>
@@ -285,6 +289,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Events\AddPointOnClick\View.xaml.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
 	  <Compile Update="Events\Cartesian\View.xaml.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>

@@ -4,6 +4,7 @@
     {
         public static string[] Samples = new[]
         {
+            "Events/AddPointOnClick",
             "Events/Cartesian",
             "Events/Pie",
             "Events/Polar",

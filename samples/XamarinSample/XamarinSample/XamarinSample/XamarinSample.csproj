@@ -91,6 +91,9 @@
     <Compile Update="Design\LinearGradients\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Events\AddPointOnClick\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Events\Cartesian\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

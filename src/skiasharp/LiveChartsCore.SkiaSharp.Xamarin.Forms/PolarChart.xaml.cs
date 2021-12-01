@@ -33,6 +33,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.XamarinForms;
+using SkiaSharp.Views.Forms;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -352,6 +353,11 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         /// <inheritdoc cref="IChartView.DataPointerDown" />
         public event ChartPointsHandler? DataPointerDown;
+
+        /// <summary>
+        /// Called when the chart is touched.
+        /// </summary>
+        public event EventHandler<SKTouchEventArgs> Touched;
 
         #endregion
 
@@ -790,13 +796,18 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             //    e.Scale > 1 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
         }
 
-        private void OnSkCanvasTouched(object? sender, SkiaSharp.Views.Forms.SKTouchEventArgs e)
+        private void OnSkCanvasTouched(object? sender, SKTouchEventArgs e)
         {
             if (core is null) return;
-            if (TooltipPosition == TooltipPosition.Hidden) return;
-            var location = new LvcPoint(e.Location.X, e.Location.Y);
-            core.InvokePointerDown(location);
-            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindHoveredPointsBy(location), core);
+
+            if (TooltipPosition != TooltipPosition.Hidden)
+            {
+                var location = new LvcPoint(e.Location.X, e.Location.Y);
+                core.InvokePointerDown(location);
+                ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindHoveredPointsBy(location), core);
+            }
+
+            Touched?.Invoke(this, e);
         }
 
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)

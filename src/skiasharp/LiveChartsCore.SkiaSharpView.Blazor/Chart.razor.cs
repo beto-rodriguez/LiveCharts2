@@ -223,6 +223,24 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
         [Parameter]
         public RenderFragment<ChartPoint[]>? TooltipTemplate { get; set; }
 
+        /// <summary>
+        /// Gets or sets the pointer down callback.
+        /// </summary>
+        [Parameter]
+        public EventCallback<PointerEventArgs> OnPointerDownCallback { get; set; }
+
+        /// <summary>
+        /// Gets or sets the pointer move callback.
+        /// </summary>
+        [Parameter]
+        public EventCallback<PointerEventArgs> OnPointerMoveCallback { get; set; }
+
+        /// <summary>
+        /// Gets or sets the pointer up callback.
+        /// </summary>
+        [Parameter]
+        public EventCallback<PointerEventArgs> OnPointerUpCallback { get; set; }
+
         #endregion
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
@@ -310,8 +328,8 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
         protected virtual void OnPointerDown(PointerEventArgs e)
         {
             core?.InvokePointerDown(new LvcPoint((float)e.OffsetX, (float)e.OffsetY));
+            _ = OnPointerDownCallback.InvokeAsync(e);
         }
-
 
         /// <summary>
         /// Called when the pointer moves.
@@ -320,6 +338,7 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
         protected virtual void OnPointerMove(PointerEventArgs e)
         {
             core?.InvokePointerMove(new LvcPoint((float)e.OffsetX, (float)e.OffsetY));
+            _ = OnPointerMoveCallback.InvokeAsync(e);
         }
 
         /// <summary>
@@ -329,6 +348,7 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
         protected virtual void OnPointerUp(PointerEventArgs e)
         {
             core?.InvokePointerUp(new LvcPoint((float)e.OffsetX, (float)e.OffsetY));
+            _ = OnPointerUpCallback.InvokeAsync(e);
         }
 
         /// <summary>

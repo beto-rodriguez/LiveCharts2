@@ -77,6 +77,9 @@
     <Compile Update="Design\LinearGradients\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Events\AddPointOnClick\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Events\Cartesian\View.cs">
       <SubType>UserControl</SubType>
     </Compile>

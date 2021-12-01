@@ -353,6 +353,11 @@ namespace LiveChartsCore.SkiaSharpView.Maui
         /// <inheritdoc cref="IChartView.DataPointerDown" />
         public event ChartPointsHandler? DataPointerDown;
 
+        /// <summary>
+        /// Called when the chart is touched.
+        /// </summary>
+        public event EventHandler<SKTouchEventArgs> Touched;
+
         #endregion
 
         #region properties
@@ -790,10 +795,15 @@ namespace LiveChartsCore.SkiaSharpView.Maui
         private void OnSkCanvasTouched(object? sender, SKTouchEventArgs e)
         {
             if (core is null) return;
-            if (TooltipPosition == TooltipPosition.Hidden) return;
-            var location = new LvcPoint(e.Location.X, e.Location.Y);
-            core.InvokePointerDown(location);
-            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindHoveredPointsBy(location), core);
+
+            if (TooltipPosition != TooltipPosition.Hidden)
+            {
+                var location = new LvcPoint(e.Location.X, e.Location.Y);
+                core.InvokePointerDown(location);
+                ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindHoveredPointsBy(location), core);
+            }
+
+            Touched?.Invoke(this, e);
         }
 
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)

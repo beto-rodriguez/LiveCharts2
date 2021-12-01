@@ -811,7 +811,6 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             set => SetValue(DataPointerDownCommandProperty, value);
         }
 
-
         #endregion
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />

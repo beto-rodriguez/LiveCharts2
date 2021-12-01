@@ -88,6 +88,9 @@
     <Compile Update="Design\LinearGradients\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Events\AddPointOnClick\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Events\Pie\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -320,6 +323,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Design\LinearGradients\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Events\AddPointOnClick\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

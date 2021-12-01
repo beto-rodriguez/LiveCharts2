@@ -33,6 +33,7 @@
     <None Remove="Design\StrokeDashArray\View.xaml" />
     <None Remove="Design\RadialGradients\View.xaml" />
     <None Remove="Design\LinearGradients\View.xaml" />
+    <None Remove="Events\AddPointOnClick\View.xaml" />
     <None Remove="Events\Cartesian\View.xaml" />
     <None Remove="Events\Pie\View.xaml" />
     <None Remove="Events\Polar\View.xaml" />
@@ -160,6 +161,9 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Design\RadialGradients - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Events\AddPointOnClick\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Events\Cartesian\View.xaml">
