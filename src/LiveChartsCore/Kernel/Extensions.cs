@@ -44,7 +44,7 @@ namespace LiveChartsCore.Kernel
         /// <param name="chartSize"></param>
         /// <returns></returns>
         public static LvcPoint? GetCartesianTooltipLocation(
-            this IEnumerable<TooltipPoint> foundPoints, TooltipPosition position, LvcSize tooltipSize, LvcSize chartSize)
+            this IEnumerable<ChartPoint> foundPoints, TooltipPosition position, LvcSize tooltipSize, LvcSize chartSize)
         {
             var count = 0f;
 
@@ -52,8 +52,8 @@ namespace LiveChartsCore.Kernel
 
             foreach (var point in foundPoints)
             {
-                if (point.Point.Context.HoverArea is null) continue;
-                point.Point.Context.HoverArea.SuggestTooltipPlacement(placementContext);
+                if (point.Context.HoverArea is null) continue;
+                point.Context.HoverArea.SuggestTooltipPlacement(placementContext);
                 count++;
             }
 
@@ -86,15 +86,15 @@ namespace LiveChartsCore.Kernel
         /// <param name="tooltipSize">Size of the tooltip.</param>
         /// <returns></returns>
         public static LvcPoint? GetPieTooltipLocation(
-            this IEnumerable<TooltipPoint> foundPoints, TooltipPosition position, LvcSize tooltipSize)
+            this IEnumerable<ChartPoint> foundPoints, TooltipPosition position, LvcSize tooltipSize)
         {
             var placementContext = new TooltipPlacementContext();
             var found = false;
 
             foreach (var foundPoint in foundPoints)
             {
-                if (foundPoint.Point.Context.HoverArea is null) continue;
-                foundPoint.Point.Context.HoverArea.SuggestTooltipPlacement(placementContext);
+                if (foundPoint.Context.HoverArea is null) continue;
+                foundPoint.Context.HoverArea.SuggestTooltipPlacement(placementContext);
                 found = true;
                 break; // we only care about the first one.
             }

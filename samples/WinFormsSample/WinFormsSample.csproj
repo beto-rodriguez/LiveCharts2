@@ -77,6 +77,15 @@
     <Compile Update="Design\LinearGradients\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Events\Cartesian\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Events\Pie\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Events\Polar\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Financial\BasicCandleSticks\View.cs">
       <SubType>UserControl</SubType>
     </Compile>

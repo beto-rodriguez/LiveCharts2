@@ -21,6 +21,9 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
@@ -637,6 +640,29 @@ namespace LiveChartsCore.SkiaSharpView
         public static string MatchChar(char @char)
         {
             return $"{SkiaFontMatchChar}|{@char}";
+        }
+
+        /// <summary>
+        /// Converts an IEnumerable to an ObservableCollection of pie series.
+        /// </summary>
+        /// <typeparam name="T">The type.</typeparam>
+        /// <param name="source">The data source.</param>
+        /// <param name="buider">An optional builder.</param>
+        /// <returns></returns>
+        public static ObservableCollection<ISeries> AsLiveChartsPieSeries<T>(
+            this IEnumerable<T> source,
+            Action<T, PieSeries<T>>? buider = null)
+        {
+            if (buider is null) buider = (instance, series) => { };
+
+            return new ObservableCollection<ISeries>(
+                source.Select(instance =>
+                {
+                    var series = new PieSeries<T> { Values = new ObservableCollection<T> { instance } };
+                    buider(instance, series);
+                    return series;
+                })
+                .ToArray());
         }
     }
 }

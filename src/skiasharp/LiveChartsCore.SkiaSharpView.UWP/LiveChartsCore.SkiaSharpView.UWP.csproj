@@ -131,17 +131,19 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BindingSeries.cs" />
+    <Compile Include="DefaultTooltip.xaml.cs">
+      <DependentUpon>DefaultTooltip.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GeoMap.xaml.cs">
       <DependentUpon>GeoMap.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LegendBindingContext.cs" />
     <Compile Include="PolarChart.xaml.cs">
       <DependentUpon>PolarChart.xaml</DependentUpon>
     </Compile>
     <Compile Include="CartesianChart.xaml.cs">
       <DependentUpon>CartesianChart.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="DefaultTooltip.xaml.cs">
-      <DependentUpon>DefaultTooltip.xaml</DependentUpon>
     </Compile>
     <Compile Include="DefaultLegend.xaml.cs">
       <DependentUpon>DefaultLegend.xaml</DependentUpon>
@@ -154,6 +156,8 @@
       <DependentUpon>PieChart.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TooltipBindingContext.cs" />
+    <Compile Include="BindingPoint.cs" />
     <EmbeddedResource Include="Properties\LiveChartsCore.SkiaSharpView.UWP.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +179,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="DefaultTooltip.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GeoMap.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -186,10 +194,6 @@
     <Page Include="CartesianChart.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="DefaultTooltip.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="DefaultLegend.xaml">
       <SubType>Designer</SubType>

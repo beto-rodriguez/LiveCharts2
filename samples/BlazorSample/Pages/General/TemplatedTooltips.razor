@@ -15,6 +15,7 @@
 		returns the series as miniature shapes for the MotionCanvas class.
 	-->
 
+	<!-- mark -untilCloses TooltipTemplate -->
 	<TooltipTemplate>
 		<h5>This is a custom tooltip</h5>
 
@@ -22,10 +23,10 @@
 		{
 			<div class="d-flex">
 				<div>
-					@tooltipPoint.Point.AsTooltipString
+					@tooltipPoint.AsTooltipString
 				</div>
-				<div class="lvc-miniature" style="@LiveChartsBlazor.GetSeriesMiniatureStyle(tooltipPoint.Series)">
-					<MotionCanvas PaintTasks="@LiveChartsBlazor.GetSeriesAsMiniaturePaints(tooltipPoint.Series)" />
+				<div class="lvc-miniature" style="@LiveChartsBlazor.GetSeriesMiniatureStyle(tooltipPoint.Context.Series)">
+					<MotionCanvas PaintTasks="@LiveChartsBlazor.GetSeriesAsMiniaturePaints(tooltipPoint.Context.Series)" />
 				</div>
 			</div>
 		}

@@ -11,6 +11,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <lvc:CartesianChart Grid.Row="0" Series="{Binding Series}" LegendPosition="Right" >
+            <!-- mark -untilCloses CartesianChart.LegendTemplate -->
             <lvc:CartesianChart.LegendTemplate>
                 <DataTemplate>
                     <ItemsControl ItemsSource="{Binding Series, RelativeSource={RelativeSource AncestorType=lvc:DefaultLegend}}">

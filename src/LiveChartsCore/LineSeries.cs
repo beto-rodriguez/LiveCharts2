@@ -179,6 +179,8 @@ namespace LiveChartsCore
             foreach (var item in strokePathHelperContainer) item.Path.ClearCommands();
             foreach (var item in fillPathHelperContainer) item.Path.ClearCommands();
 
+            var uwx = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
+
             foreach (var segment in segments)
             {
                 var wasFillInitialized = false;
@@ -379,8 +381,7 @@ namespace LiveChartsCore
 
                     var hags = gs < 8 ? 8 : gs;
 
-                    data.TargetPoint.Context.HoverArea = new RectangleHoverArea()
-                        .SetDimensions(x - hgs - sw, y - hgs - sw, gs + 2 * sw, gs + 2 * sw);
+                    data.TargetPoint.Context.HoverArea = new RectangleHoverArea(x - uwx * 0.5f, y - hgs, uwx, gs);
 
                     _ = toDeletePoints.Remove(data.TargetPoint);
 
@@ -405,7 +406,7 @@ namespace LiveChartsCore
 
                         DataLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, label);
                         label.Text = DataLabelsFormatter(
-                            new TypedChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>(data.TargetPoint));
+                            new ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel>(data.TargetPoint));
                         label.TextSize = dls;
                         label.Padding = DataLabelsPadding;
                         var labelPosition = GetLabelPosition(

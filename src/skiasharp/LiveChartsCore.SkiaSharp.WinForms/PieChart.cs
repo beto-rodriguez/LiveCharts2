@@ -24,6 +24,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Windows.Forms;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -64,6 +66,9 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
                    OnPropertyChanged();
                },
                true);
+
+            var c = Controls[0].Controls[0];
+            c.MouseDown += OnMouseDown;
         }
 
         PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core =>
@@ -100,6 +105,11 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore);
             if (((IChartView)this).DesignerMode) return;
             core.Update();
+        }
+
+        private void OnMouseDown(object? sender, MouseEventArgs e)
+        {
+            core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y));
         }
     }
 

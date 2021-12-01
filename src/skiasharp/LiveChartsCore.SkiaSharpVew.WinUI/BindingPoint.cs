@@ -20,49 +20,50 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Kernel
+using LiveChartsCore.Kernel;
+using Microsoft.UI.Xaml.Media;
+using Windows.UI.Text;
+
+namespace LiveChartsCore.SkiaSharpView.WinUI
 {
     /// <summary>
-    /// Defines the tooltip point class.
+    /// The Uwp poing class, just used to bind the tooltips.
     /// </summary>
-    public class TooltipPoint
+    public class BindingPoint
     {
+        /// <summary>
+        /// Ges the chart point.
+        /// </summary>
+        public ChartPoint ChartPoint { get; init; } // <- how to force the init.. so the nullables do not complain?
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TooltipPoint"/> class.
+        /// Gets the font family.
         /// </summary>
-        /// <param name="series">The series.</param>
-        /// <param name="point">The point.</param>
-        /// <param name="pointerDistance">The distance to the pointer.</param>
-        public TooltipPoint(ISeries series, ChartPoint point, float pointerDistance)
-        {
-            Series = series;
-            Point = point;
-            PointerDistance = pointerDistance;
-        }
+        public FontFamily FontFamily { get; init; }
 
         /// <summary>
-        /// Gets or sets the series.
+        /// Gets the foreground.
         /// </summary>
-        /// <value>
-        /// The series.
-        /// </value>
-        public ISeries Series { get; set; }
+        public Brush Foreground { get; init; }
 
         /// <summary>
-        /// Gets or sets the point.
+        /// Gets the font size.
         /// </summary>
-        /// <value>
-        /// The point.
-        /// </value>
-        public ChartPoint Point { get; set; }
+        public double FontSize { get; init; }
 
         /// <summary>
-        /// Gets or sets the current distance to pointer.
+        /// Gets the font weight.
         /// </summary>
-        /// <value>
-        /// The pointer distance.
-        /// </value>
-        public float PointerDistance { get; set; }
+        public FontWeight FontWeight { get; init; }
+
+        /// <summary>
+        /// Gets the font style.
+        /// </summary>
+        public FontStyle FontStyle { get; init; }
+
+        /// <summary>
+        /// Gets the font stretch.
+        /// </summary>
+        public FontStretch FontStretch { get; init; }
     }
 }

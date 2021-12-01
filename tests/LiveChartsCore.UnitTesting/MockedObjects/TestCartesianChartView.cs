@@ -100,6 +100,7 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
         public event ChartEventHandler<SkiaSharpDrawingContext> Measuring;
         public event ChartEventHandler<SkiaSharpDrawingContext> UpdateStarted;
         public event ChartEventHandler<SkiaSharpDrawingContext> UpdateFinished;
+        public event ChartPointsHandler DataPointerDown;
 
         public void DummyRaiseEvents()
         {
@@ -115,7 +116,7 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
             return new double[2];
         }
 
-        public void ShowTooltip(IEnumerable<TooltipPoint> points) { }
+        public void ShowTooltip(IEnumerable<ChartPoint> points) { }
 
         public void SetTooltipStyle(LvcColor background, LvcColor textColor) { }
 
@@ -127,6 +128,11 @@ namespace LiveChartsCore.UnitTesting.MockedObjects
         public void SyncAction(Action action)
         {
             action();
+        }
+
+        public void OnDataPointerDown(IEnumerable<ChartPoint> points)
+        {
+            throw new NotImplementedException();
         }
     }
 }

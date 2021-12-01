@@ -10,32 +10,9 @@
     d:DesignWidth="400">
 
     <ToolTipService.ToolTip>
-        <local:DefaultTooltip x:Name="tooltip" BorderThickness="0">
-            <ItemsControl ItemsSource="{Binding Points, ElementName=tooltip}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Padding="7 5">
-                            <StackPanel Orientation="Horizontal">
-                                <local:MotionCanvas Margin="0 0 8 0" 
-                                                    PaintTasks="{Binding Series.CanvasSchedule.PaintSchedules}"
-                                                    Width="{Binding Series.CanvasSchedule.Width}"
-                                                    Height="{Binding Series.CanvasSchedule.Height}"
-                                                    VerticalAlignment="Center"/>
-                                <TextBlock Text="{Binding Point.AsTooltipString}"
-                                           Foreground="Black"
-                                           Margin="0 0 8 0"
-                                           VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </local:DefaultTooltip>
+        <ToolTip x:Name="tooltipControl" BorderThickness="0" Padding="0" Background="Transparent">
+            <local:DefaultTooltip x:Name="tooltip"/>
+        </ToolTip>
     </ToolTipService.ToolTip>
 
     <Grid x:Name="grid">
@@ -49,7 +26,7 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <local:MotionCanvas Grid.Row="1" Grid.Column="1" x:Name="motionCanvas"></local:MotionCanvas>
-        <local:DefaultLegend Grid.Row="1" Grid.Column="2" x:Name="legend"></local:DefaultLegend>
+        <local:MotionCanvas Grid.Row="1" Grid.Column="1" x:Name="motionCanvas"/>
+        <local:DefaultLegend Grid.Row="1" Grid.Column="2" x:Name="legend" VerticalAlignment="Center" HorizontalAlignment="Center"/>
     </Grid>
 </UserControl>

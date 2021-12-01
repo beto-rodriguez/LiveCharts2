@@ -1,0 +1,50 @@
+﻿@page "/Events/Pie"
+@using LiveChartsCore.Kernel
+@using LiveChartsCore.Kernel.Sketches
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Events.Pie
+
+<PieChart
+	@ref="_chart"
+	Series="ViewModel.Series">
+</PieChart>
+
+@code {
+	private PieChart? _chart;
+	public ViewModel ViewModel { get; set; } = new ViewModel();
+
+	protected override void OnAfterRender(bool firstRender)
+	{
+		base.OnAfterRender(firstRender);
+
+		if (_chart is null) return;
+		_chart.DataPointerDown += OnDataPointerDown;
+	}
+
+	private void OnDataPointerDown(IChartView view, IEnumerable<ChartPoint> points)
+	{
+		// notice in the chart event we are not able to use strongly typed points
+        // but we can cast the point.Context.DataSource to the actual type.
+
+        foreach (var point in points)
+        {
+            if (point.Context.DataSource is City city)
+            {
+                Console.WriteLine($"[chart.dataPointerDownEvent] clicked on {city.Name}");
+                continue;
+            }
+
+            if (point.Context.DataSource is int integer)
+            {
+                Console.WriteLine($"[chart.dataPointerDownEvent] clicked on number {integer}");
+                continue;
+            }
+
+            // handle more possible types here...
+            // if (point.Context.DataSource is Foo foo)
+            // {
+            //     ...
+            // }
+        }
+	}
+}

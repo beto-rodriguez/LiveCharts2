@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -272,6 +273,14 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             DependencyProperty.Register(
                 nameof(LegendTemplate), typeof(DataTemplate), typeof(Chart), new PropertyMetadata(null, OnDependencyPropertyChanged));
 
+        /// <summary>
+        /// The legend font style property
+        /// </summary>
+        public static readonly DependencyProperty DataPointerDownCommandProperty =
+           DependencyProperty.Register(
+               nameof(DataPointerDownCommand), typeof(ICommand), typeof(Chart),
+               new PropertyMetadata(null, OnDependencyPropertyChanged));
+
         #endregion
 
         #region events
@@ -284,6 +293,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
         public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateFinished;
+
+        /// <inheritdoc cref="IChartView.DataPointerDown" />
+        public event ChartPointsHandler? DataPointerDown;
 
         #endregion
 
@@ -612,6 +624,15 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             }
         }
 
+        /// <summary>
+        /// Gets or sets a command to execute when the pointer goes down on a data or data points.
+        /// </summary>
+        public ICommand? DataPointerDownCommand
+        {
+            get => (ICommand?)GetValue(DataPointerDownCommandProperty);
+            set => SetValue(DataPointerDownCommandProperty, value);
+        }
+
         #endregion
 
         /// <summary>
@@ -639,8 +660,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF
             core.UpdateFinished += OnCoreUpdateFinished;
         }
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
-        public void ShowTooltip(IEnumerable<TooltipPoint> points)
+        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
+        public void ShowTooltip(IEnumerable<ChartPoint> points)
         {
             if (tooltip is null || core is null) return;
 
@@ -739,13 +760,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
                 SetCurrentValue(dp, value);
         }
 
-        private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        private void OnMouseMove(object sender, MouseEventArgs e)
         {
             var p = e.GetPosition(this);
             core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
         }
 
-        private void OnMouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        private void OnMouseLeave(object sender, MouseEventArgs e)
         {
             HideTooltip();
             core?.InvokePointerLeft();
@@ -759,6 +780,13 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         private void Chart_Unloaded(object sender, RoutedEventArgs e)
         {
             core?.Unload();
+        }
+
+        void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
+        {
+            DataPointerDown?.Invoke(this, points);
+            if (DataPointerDownCommand is null) return;
+            if (DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
         }
     }
 }

@@ -69,6 +69,7 @@ namespace LiveChartsCore
                 secondaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis);
 
             var uw = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
+            var actualUw = uw;
 
             var gp = (float)GroupPadding;
             if (uw - gp < 1) gp -= uw - gp;
@@ -182,7 +183,7 @@ namespace LiveChartsCore
                 sizedGeometry.Ry = ry;
                 sizedGeometry.RemoveOnCompleted = false;
 
-                point.Context.HoverArea = new RectangleHoverArea().SetDimensions(secondary - uwm + cp, primaryJ, uw, primaryI - primaryJ);
+                point.Context.HoverArea = new RectangleHoverArea(secondary - actualUw * 0.5f, primaryJ, actualUw, primaryI - primaryJ);
 
                 _ = toDeletePoints.Remove(point);
 
@@ -204,7 +205,7 @@ namespace LiveChartsCore
                     }
 
                     DataLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, label);
-                    label.Text = DataLabelsFormatter(new TypedChartPoint<TModel, TVisual, TLabel, TDrawingContext>(point));
+                    label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
                     var labelPosition = GetLabelPosition(

@@ -39,7 +39,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui
         /// <value>
         /// The points.
         /// </value>
-        public IEnumerable<TooltipPoint>? Points { get; set; } = Enumerable.Empty<TooltipPoint>();
+        public IEnumerable<ChartPoint>? Points { get; set; } = Enumerable.Empty<ChartPoint>();
 
         /// <summary>
         /// Gets or sets the font family.

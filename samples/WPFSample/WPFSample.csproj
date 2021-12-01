@@ -88,7 +88,16 @@
     <Compile Update="Design\LinearGradients\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Events\Pie\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Events\Polar\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="General\ChartToImage\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Events\Cartesian\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="General\MultiThreading\View.xaml.cs">
@@ -314,7 +323,19 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Events\Pie\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Events\Polar\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="General\ChartToImage\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Events\Cartesian\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

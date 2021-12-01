@@ -85,15 +85,15 @@ namespace LiveChartsCore.Kernel.Drawing
             return this;
         }
 
-        /// <inheritdoc cref="HoverArea.GetDistanceToPoint(LvcPoint, TooltipFindingStrategy)"/>
-        public override float GetDistanceToPoint(LvcPoint point, TooltipFindingStrategy strategy)
+        /// <inheritdoc cref="HoverArea.IsPointerOver(LvcPoint, TooltipFindingStrategy)"/>
+        public override bool IsPointerOver(LvcPoint pointerLocation, TooltipFindingStrategy strategy)
         {
             var startAngle = StartAngle % 360;
             // -0.01 is a work around to avoid the case where the last slice (360) would be converted to 0 also
             var endAngle = (EndAngle - 0.01) % 360;
 
-            var dx = CenterX - point.X;
-            var dy = CenterY - point.Y;
+            var dx = CenterX - pointerLocation.X;
+            var dy = CenterY - pointerLocation.Y;
             var beta = Math.Atan(dy / dx) * (180 / Math.PI);
 
             if ((dx > 0 && dy < 0) || (dx > 0 && dy > 0)) beta += 180;
@@ -101,7 +101,7 @@ namespace LiveChartsCore.Kernel.Drawing
 
             var r = Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2));
 
-            return startAngle <= beta && endAngle >= beta && r < Radius ? 0 : float.MaxValue;
+            return startAngle <= beta && endAngle >= beta && r < Radius; // previously -> startAngle <= beta && endAngle >= beta && r < Radius ? 0 : float.MaxValue;
         }
 
         /// <inheritdoc cref="HoverArea.SuggestTooltipPlacement(TooltipPlacementContext)"/>

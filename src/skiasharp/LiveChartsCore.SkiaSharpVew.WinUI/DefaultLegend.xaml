@@ -8,29 +8,46 @@
     xmlns:ctx="using:LiveChartsCore.Kernel"
     DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
     mc:Ignorable="d"
-    x:Name="legend">
+    x:Name="control">
 
-    <ItemsControl ItemsSource="{Binding Series}">
-        <ItemsControl.ItemsPanel>
-            <ItemsPanelTemplate>
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" />
-            </ItemsPanelTemplate>
-        </ItemsControl.ItemsPanel>
-        <ItemsControl.ItemTemplate>
-            <DataTemplate>
-                <Border Padding="15 4">
-                    <StackPanel Orientation="Horizontal">
-                        <local:MotionCanvas Margin="0 0 8 0" 
-                                    PaintTasks="{Binding CanvasSchedule.PaintSchedules}"
-                                    Width="{Binding CanvasSchedule.Width}"
-                                    Height="{Binding CanvasSchedule.Height}"
+    <UserControl.Resources>
+        <DataTemplate x:Key="defaultTemplate">
+            <ItemsControl ItemsSource="{Binding SeriesCollection}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel
+                            Background="{Binding Background}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Orientation="{Binding Orientation}" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Padding="15 4">
+                            <StackPanel Orientation="Horizontal">
+                                <local:MotionCanvas
+                                    Margin="0 0 8 0"
+                                    PaintTasks="{Binding Series.CanvasSchedule.PaintSchedules}"
+                                    Width="{Binding Series.CanvasSchedule.Width}"
+                                    Height="{Binding Series.CanvasSchedule.Height}"
                                     VerticalAlignment="Center"/>
-                        <TextBlock Text="{Binding Name}"
-                                   Foreground="Black"
-                                   VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Border>
-            </DataTemplate>
-        </ItemsControl.ItemTemplate>
-    </ItemsControl>
+                                <TextBlock
+                                    Text="{Binding Series.Name}"
+                                    FontFamily="{Binding FontFamily}"
+                                    Foreground="{Binding Foreground}"
+                                    FontSize="{Binding FontSize}"
+                                    FontStyle="{Binding FontStyle}"
+                                    FontStretch="{Binding FontStretch}"
+                                    VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <ContentControl ContentTemplate="{Binding ElementName=control, Path=ActualTemplate}"/>
+    
 </UserControl>

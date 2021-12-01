@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Windows.Input;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
@@ -285,6 +286,14 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                 nameof(TooltipFontAttributes), typeof(FontAttributes), typeof(CartesianChart),
                 FontAttributes.None, propertyChanged: OnBindablePropertyChanged);
 
+        /// <summary>
+        /// The data pointer down command property
+        /// </summary>
+        public static readonly BindableProperty DataPointerDownCommandProperty =
+            BindableProperty.Create(
+                nameof(DataPointerDownCommand), typeof(ICommand), typeof(PieChart),
+                null, propertyChanged: OnBindablePropertyChanged);
+
         #endregion
 
         #region events
@@ -297,6 +306,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
         public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateFinished;
+
+        /// <inheritdoc cref="IChartView.DataPointerDown" />
+        public event ChartPointsHandler? DataPointerDown;
 
         #endregion
 
@@ -581,10 +593,19 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             }
         }
 
+        /// <summary>
+        /// Gets or sets a command to execute when the pointer goes down on a data or data points.
+        /// </summary>
+        public ICommand? DataPointerDownCommand
+        {
+            get => (ICommand?)GetValue(DataPointerDownCommandProperty);
+            set => SetValue(DataPointerDownCommandProperty, value);
+        }
+
         #endregion
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
-        public void ShowTooltip(IEnumerable<TooltipPoint> points)
+        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
+        public void ShowTooltip(IEnumerable<ChartPoint> points)
         {
             if (tooltip is null || core is null) return;
 
@@ -665,7 +686,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
             if (TooltipPosition == TooltipPosition.Hidden) return;
             var location = new LvcPoint(e.Location.X, e.Location.Y);
             core.InvokePointerDown(location);
-            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindPointsNearTo(location), core);
+            ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Show(core.FindHoveredPointsBy(location), core);
         }
 
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
@@ -681,6 +702,13 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
         {
             Measuring?.Invoke(this);
+        }
+
+        void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
+        {
+            DataPointerDown?.Invoke(this, points);
+            if (DataPointerDownCommand is null) return;
+            if (DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
         }
     }
 }

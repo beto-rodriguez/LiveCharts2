@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Windows.Input;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
@@ -356,6 +357,13 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             DependencyProperty.Register(
                 nameof(LegendTemplate), typeof(DataTemplate), typeof(PolarChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
 
+        /// <summary>
+        /// The data pointer down command property
+        /// </summary>
+        public static readonly DependencyProperty DataPointerDownCommandProperty =
+            DependencyProperty.Register(
+                nameof(DataPointerDownCommand), typeof(ICommand), typeof(PolarChart), new PropertyMetadata(null, OnDependencyPropertyChanged));
+
         #endregion
 
         #region events
@@ -369,11 +377,15 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
         public event ChartEventHandler<SkiaSharpDrawingContext> UpdateFinished;
 
+        /// <inheritdoc cref="IChartView.DataPointerDown" />
+        public event ChartPointsHandler? DataPointerDown;
+
         #endregion
 
         #region properties
 
         Grid IUwpChart.LayoutGrid => grid;
+        ToolTip IUwpChart.TooltipControl => tooltipControl;
         FrameworkElement IUwpChart.Canvas => motionCanvas;
         FrameworkElement IUwpChart.Legend => legend;
 
@@ -752,6 +764,15 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             }
         }
 
+        /// <summary>
+        /// Gets or sets a command to execute when the pointer goes down on a data or data points.
+        /// </summary>
+        public ICommand DataPointerDownCommand
+        {
+            get => (ICommand)GetValue(DataPointerDownCommandProperty);
+            set => SetValue(DataPointerDownCommandProperty, value);
+        }
+
         #endregion
 
         /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
@@ -763,8 +784,8 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             //return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
         }
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
-        public void ShowTooltip(IEnumerable<TooltipPoint> points)
+        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
+        public void ShowTooltip(IEnumerable<ChartPoint> points)
         {
             if (tooltip == null || _core == null) return;
 
@@ -890,12 +911,10 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         {
             var p = e.GetCurrentPoint(this);
             _core?.InvokePointerUp(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
-            ReleasePointerCapture(e.Pointer);
         }
 
         private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            _ = CapturePointer(e.Pointer);
             var p = e.GetCurrentPoint(this);
             _core?.InvokePointerDown(new LvcPoint((float)p.Position.X, (float)p.Position.Y));
         }
@@ -923,6 +942,13 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             if (chart._core == null) return;
 
             chart._core.Update();
+        }
+
+        void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
+        {
+            DataPointerDown?.Invoke(this, points);
+            if (DataPointerDownCommand is null) return;
+            if (DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
         }
     }
 }

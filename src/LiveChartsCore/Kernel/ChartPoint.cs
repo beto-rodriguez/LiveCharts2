@@ -111,4 +111,56 @@ namespace LiveChartsCore.Kernel
         /// </value>
         public ChartPointContext Context { get; }
     }
+
+    /// <summary>
+    /// Defines a point in a chart with known visual and label types.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <typeparam name="TVisual">The type of the visual.</typeparam>
+    /// <typeparam name="TLabel">The type of the label.</typeparam>
+    public class ChartPoint<TModel, TVisual, TLabel> : ChartPoint
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ChartPoint{TModel, TVisual, TLabel}"/> class.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        public ChartPoint(ChartPoint point) : base(point.Context.Chart, point.Context.Series)
+        {
+            IsNull = point.IsNull;
+            PrimaryValue = point.PrimaryValue;
+            SecondaryValue = point.SecondaryValue;
+            TertiaryValue = point.TertiaryValue;
+            QuaternaryValue = point.QuaternaryValue;
+            QuinaryValue = point.QuinaryValue;
+            Context.Index = point.Context.Index;
+            Context.DataSource = point.Context.DataSource;
+            Context.Visual = point.Context.Visual;
+            Context.Label = point.Context.Label;
+            Context.HoverArea = point.Context.HoverArea;
+        }
+
+        /// <summary>
+        /// Gets the model.
+        /// </summary>
+        /// <value>
+        /// The model.
+        /// </value>
+        public TModel? Model => (TModel?)Context.DataSource;
+
+        /// <summary>
+        /// Gets the visual.
+        /// </summary>
+        /// <value>
+        /// The visual.
+        /// </value>
+        public TVisual? Visual => (TVisual?)Context.Visual;
+
+        /// <summary>
+        /// Gets the label.
+        /// </summary>
+        /// <value>
+        /// The label.
+        /// </value>
+        public TLabel? Label => (TLabel?)Context.Label;
+    }
 }

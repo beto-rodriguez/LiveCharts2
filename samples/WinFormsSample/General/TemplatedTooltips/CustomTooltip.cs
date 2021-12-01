@@ -18,7 +18,7 @@ namespace WinFormsSample.General.TemplatedTooltips
             InitializeComponent();
         }
 
-        public void Show(IEnumerable<TooltipPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+        public void Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
         {
             var wfChart = (Chart)chart.View;
 
@@ -49,7 +49,7 @@ namespace WinFormsSample.General.TemplatedTooltips
             wfChart.CoreCanvas.Invalidate();
         }
 
-        private SizeF DrawAndMesure(IEnumerable<TooltipPoint> tooltipPoints, Chart chart)
+        private SizeF DrawAndMesure(IEnumerable<ChartPoint> tooltipPoints, Chart chart)
         {
             SuspendLayout();
             Controls.Clear();
@@ -59,10 +59,10 @@ namespace WinFormsSample.General.TemplatedTooltips
             foreach (var point in tooltipPoints)
             {
                 using var g = CreateGraphics();
-                var text = point.Point.AsTooltipString;
+                var text = point.AsTooltipString;
                 var size = g.MeasureString(text, chart.TooltipFont);
 
-                var drawableSeries = (IChartSeries<SkiaSharpDrawingContext>)point.Series;
+                var drawableSeries = (IChartSeries<SkiaSharpDrawingContext>)point.Context.Series;
 
                 Controls.Add(new MotionCanvas
                 {

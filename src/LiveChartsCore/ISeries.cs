@@ -51,6 +51,11 @@ namespace LiveChartsCore
         HashSet<ChartPoint> ActivePoints { get; }
 
         /// <summary>
+        /// Gets whether the series requires to find the closest point when the pointer goes down.
+        /// </summary>
+        bool RequiresFindClosestOnPointerDown { get; }
+
+        /// <summary>
         /// Gets or sets the name of the series, the name is normally used by <see cref="IChartTooltip{TDrawingContext}"/> or 
         /// <see cref="IChartLegend{TDrawingContext}"/>, the default value is set automatically by the library.
         /// </summary>
@@ -142,20 +147,20 @@ namespace LiveChartsCore
         /// Gets the <see cref="ChartPoint"/> instances which contain the <paramref name="pointerPosition"/>, according 
         /// to the chart's <see cref="TooltipFindingStrategy"/> property.
         /// </summary>
-        /// <param name="chart">the chart</param>
-        /// <param name="pointerPosition">the pointer position</param>
-        /// <param name="automaticStategy">the already resolved strategy when strategy is set to automatic.</param>
+        /// <param name="chart">the chart.</param>
+        /// <param name="pointerPosition">the pointer position.</param>
+        /// <param name="strategy">the strategy.</param>
         /// <returns></returns>
-        TooltipPoint[] FindPointsNearTo(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy automaticStategy);
+        IEnumerable<ChartPoint> FindHoveredPoints(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy);
 
         /// <summary>
-        /// 
+        /// Called when the pointer enters a chart point.
         /// </summary>
         /// <param name="point"></param>
         void OnPointerEnter(ChartPoint point);
 
         /// <summary>
-        /// 
+        /// Called when the pointer leaves a chart point.
         /// </summary>
         /// <param name="point"></param>
         void OnPointerLeft(ChartPoint point);

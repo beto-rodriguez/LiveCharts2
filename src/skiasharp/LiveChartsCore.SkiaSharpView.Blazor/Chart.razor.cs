@@ -121,6 +121,9 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
         /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
         public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateFinished;
 
+        /// <inheritdoc cref="IChartView.DataPointerDown" />
+        public event ChartPointsHandler? DataPointerDown;
+
         #endregion
 
         #region properties
@@ -218,12 +221,12 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
         /// Gets or sets the tooltip legend.
         /// </summary>
         [Parameter]
-        public RenderFragment<TooltipPoint[]>? TooltipTemplate { get; set; }
+        public RenderFragment<ChartPoint[]>? TooltipTemplate { get; set; }
 
         #endregion
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
-        public void ShowTooltip(IEnumerable<TooltipPoint> points)
+        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
+        public void ShowTooltip(IEnumerable<ChartPoint> points)
         {
             if (Tooltip is null || core is null) return;
 
@@ -353,6 +356,11 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
             _canvasHeight = canvasBounds.Height;
 
             core?.Update();
+        }
+
+        void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
+        {
+            DataPointerDown?.Invoke(this, points);
         }
 
         async void IDisposable.Dispose()

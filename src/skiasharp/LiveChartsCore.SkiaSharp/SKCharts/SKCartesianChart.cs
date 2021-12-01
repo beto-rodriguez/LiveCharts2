@@ -193,6 +193,9 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
         public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateFinished;
 
+        /// <inheritdoc cref="IChartView.DataPointerDown" />
+        public event ChartPointsHandler? DataPointerDown;
+
         /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
         public void HideTooltip()
         {
@@ -208,8 +211,8 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
         public void SetTooltipStyle(LvcColor background, LvcColor textColor) { }
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
-        public void ShowTooltip(IEnumerable<TooltipPoint> points)
+        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
+        public void ShowTooltip(IEnumerable<ChartPoint> points)
         {
             throw new NotImplementedException();
         }
@@ -277,6 +280,11 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         private void OnCoreMeasuring(IChartView<SkiaSharpDrawingContext> chart)
         {
             Measuring?.Invoke(this);
+        }
+
+        void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
+        {
+            throw new NotImplementedException();
         }
     }
 }

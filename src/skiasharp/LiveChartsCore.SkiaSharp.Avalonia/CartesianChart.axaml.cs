@@ -26,6 +26,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -310,6 +311,12 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             AvaloniaProperty.Register<CartesianChart, IBrush>(nameof(LegendBackground),
                 new SolidColorBrush(new Color(255, 255, 255, 255)), inherits: true);
 
+        /// <summary>
+        /// The data pointer down command property
+        /// </summary>
+        public static readonly AvaloniaProperty<ICommand?> DataPointerDownCommandProperty =
+            AvaloniaProperty.Register<CartesianChart, ICommand?>(nameof(DataPointerDownCommand), null, inherits: true);
+
         #endregion
 
         #region events
@@ -322,6 +329,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
         public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateFinished;
+
+        /// <inheritdoc cref="IChartView.DataPointerDown" />
+        public event ChartPointsHandler? DataPointerDown;
 
         #endregion
 
@@ -658,6 +668,15 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             }
         }
 
+        /// <summary>
+        /// Gets or sets a command to execute when the pointer goes down on a data or data points.
+        /// </summary>
+        public ICommand? DataPointerDownCommand
+        {
+            get => (ICommand?)GetValue(DataPointerDownCommandProperty);
+            set => SetValue(DataPointerDownCommandProperty, value);
+        }
+
         #endregion
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
@@ -668,8 +687,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
         }
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
-        public void ShowTooltip(IEnumerable<TooltipPoint> points)
+        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
+        public void ShowTooltip(IEnumerable<ChartPoint> points)
         {
             if (tooltip is null || _core is null) return;
 
@@ -862,6 +881,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         private void CartesianChart_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
         {
             _core?.Unload();
+        }
+
+        void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
+        {
+            DataPointerDown?.Invoke(this, points);
+            if (DataPointerDownCommand is null) return;
+            if (DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
         }
     }
 }

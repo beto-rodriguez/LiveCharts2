@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -98,9 +99,10 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                });
 
             Series = new ObservableCollection<ISeries>();
-            PointerLeave += CartesianChart_PointerLeave;
+            PointerLeave += Chart_PointerLeave;
 
-            PointerMoved += CartesianChart_PointerMoved;
+            PointerMoved += Chart_PointerMoved;
+            PointerPressed += Chart_PointerPressed;
             DetachedFromVisualTree += PieChart_DetachedFromVisualTree;
         }
 
@@ -269,6 +271,12 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             AvaloniaProperty.Register<CartesianChart, IBrush>(nameof(LegendBackground),
                 new SolidColorBrush(new Color(255, 255, 255, 255)), inherits: true);
 
+        /// <summary>
+        /// The data pointer down command property
+        /// </summary>
+        public static readonly AvaloniaProperty<ICommand?> DataPointerDownCommandProperty =
+            AvaloniaProperty.Register<PieChart, ICommand?>(nameof(DataPointerDownCommand), null, inherits: true);
+
         #endregion
 
         #region events
@@ -281,6 +289,9 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.UpdateFinished" />
         public event ChartEventHandler<SkiaSharpDrawingContext>? UpdateFinished;
+
+        /// <inheritdoc cref="IChartView.DataPointerDown" />
+        public event ChartPointsHandler? DataPointerDown;
 
         #endregion
 
@@ -586,10 +597,19 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             }
         }
 
+        /// <summary>
+        /// Gets or sets a command to execute when the pointer goes down on a data or data points.
+        /// </summary>
+        public ICommand? DataPointerDownCommand
+        {
+            get => (ICommand?)GetValue(DataPointerDownCommandProperty);
+            set => SetValue(DataPointerDownCommandProperty, value);
+        }
+
         #endregion
 
-        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{TooltipPoint})"/>
-        public void ShowTooltip(IEnumerable<TooltipPoint> points)
+        /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
+        public void ShowTooltip(IEnumerable<ChartPoint> points)
         {
             if (tooltip is null || _core is null) return;
 
@@ -688,10 +708,16 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             AvaloniaXamlLoader.Load(this);
         }
 
-        private void CartesianChart_PointerMoved(object? sender, PointerEventArgs e)
+        private void Chart_PointerMoved(object? sender, PointerEventArgs e)
         {
             var p = e.GetPosition(this);
             _core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
+        }
+
+        private void Chart_PointerPressed(object sender, PointerPressedEventArgs e)
+        {
+            var p = e.GetPosition(this);
+            _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y));
         }
 
         private void OnCoreUpdateFinished(IChartView<SkiaSharpDrawingContext> chart)
@@ -709,7 +735,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
             Measuring?.Invoke(this);
         }
 
-        private void CartesianChart_PointerLeave(object? sender, PointerEventArgs e)
+        private void Chart_PointerLeave(object? sender, PointerEventArgs e)
         {
             _ = Dispatcher.UIThread.InvokeAsync(HideTooltip, DispatcherPriority.Background);
             _core?.InvokePointerLeft();
@@ -723,6 +749,13 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         private void PieChart_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
         {
             _core?.Unload();
+        }
+
+        void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
+        {
+            DataPointerDown?.Invoke(this, points);
+            if (DataPointerDownCommand is null) return;
+            if (DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
         }
     }
 }

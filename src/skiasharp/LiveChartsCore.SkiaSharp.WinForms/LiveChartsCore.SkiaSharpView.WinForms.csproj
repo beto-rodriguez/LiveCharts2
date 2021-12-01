@@ -37,9 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="PolarChart.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Update="PolarChart.cs" />
   </ItemGroup>
 
 </Project>

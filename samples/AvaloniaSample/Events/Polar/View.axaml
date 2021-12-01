@@ -1,0 +1,20 @@
+<UserControl x:Class="AvaloniaSample.Events.Polar.View"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:vms="using:ViewModelsSamples.Events.Polar">
+  <UserControl.DataContext>
+    <vms:ViewModel/>
+  </UserControl.DataContext>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+
+    <lvc:PolarChart
+        Series="{Binding Series}"
+        DataPointerDownCommand="{Binding DataPointerDownCommand}"
+        DataPointerDown="Chart_DataPointerDown">
+    </lvc:PolarChart>
+  </Grid>
+</UserControl>
