@@ -27,13 +27,14 @@ jobs:
       with:
         dotnet-version: '6.0.x'
 
-    - name: Run unit tests
-      run: dotnet test ./tests/LiveChartsCore.UnitTesting
+    - name: Install workloads
+      run: |
+        dotnet workload install wasm-tools
 
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v1
-      with:
-        languages: ${{ matrix.language }}
+    - name: Build assemblies
+      run: |
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Blazor --configuration Release
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
+    - name: Build Samples
+      run: |
+        dotnet build ./samples/BlazorSample --configuration Release

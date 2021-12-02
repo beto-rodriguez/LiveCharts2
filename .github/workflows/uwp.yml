@@ -23,17 +23,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '6.0.x'
+    #- uses: actions/setup-dotnet@v1
+    #  with:
+    #    dotnet-version: '6.0.x'
 
-    - name: Run unit tests
-      run: dotnet test ./tests/LiveChartsCore.UnitTesting
-
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v1
-      with:
-        languages: ${{ matrix.language }}
-
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
+    - name: Build assemblies
+      run: |
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.UWP --configuration Release
+    - name: Build Samples
+      run: |
+        dotnet build ./samples/UWPSample --configuration Release
