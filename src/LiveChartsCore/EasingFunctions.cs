@@ -357,7 +357,6 @@ namespace LiveChartsCore
         public static Func<float, Func<float, float>> BuildCustomBackInOut =>
             overshoot => t => BackEasingFunction.InOut(t, overshoot);
 
-
         /// <summary>
         /// Gets the build custom elastic in.
         /// </summary>

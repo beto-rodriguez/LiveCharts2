@@ -85,7 +85,6 @@ namespace WinFormsSample.General.ChartToImage
             // or you could also use a chart in the user interface to create an image
             CreateImageFromCartesianControl();
 
-
             // PIE CHART IMAGE
             new SKPieChart
             {
@@ -96,7 +95,6 @@ namespace WinFormsSample.General.ChartToImage
 
             // or create it from a control in the UI
             CreateImageFromPieControl();
-
 
             // GEO MAP CHART IMAGE
             new SKGeoMap

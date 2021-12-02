@@ -168,9 +168,9 @@
     background-color: white;
     padding: 10px 16px;
     border-radius: 8px;
-    -moz-box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    -webkit-box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    -moz-box-shadow: rgba(0, 0, 0, 0.16) 0 1px 4px;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.16) 0 1px 4px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0 1px 4px;
 }
 
 ::deep .lvc-tooltip-container canvas {

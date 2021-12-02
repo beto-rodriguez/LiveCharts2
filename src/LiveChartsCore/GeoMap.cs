@@ -309,4 +309,3 @@ namespace LiveChartsCore
         }
     }
 }
-

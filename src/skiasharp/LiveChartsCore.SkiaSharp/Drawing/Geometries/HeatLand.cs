@@ -39,10 +39,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// <summary>
         /// Initializes a new instance of the <see cref="HeatLand"/> class.
         /// </summary>
-        public HeatLand()
-        {
-
-        }
+        public HeatLand() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HeatLand"/> class.

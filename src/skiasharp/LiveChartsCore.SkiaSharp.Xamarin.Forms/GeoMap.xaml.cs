@@ -141,7 +141,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                   new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true },
                   BindingMode.Default, null, OnBindablePropertyChanged);
 
-
         /// <summary>
         /// The fill property
         /// </summary>

@@ -33,7 +33,6 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts
 {
-
     /// <summary>
     /// In-memory chart that is able to generate a chart images.
     /// </summary>
@@ -74,7 +73,6 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
             InnerRadius = view.InnerRadius;
             InitialRotation = view.InitialRotation;
         }
-
 
         /// <inheritdoc cref="IChartView.DesignerMode" />
         public bool DesignerMode => false;

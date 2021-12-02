@@ -65,9 +65,7 @@ namespace LiveChartsCore
         protected PieSeries(bool isGauge = false, bool isGaugeFill = false)
             : base(SeriesProperties.PieSeries | SeriesProperties.Stacked |
                   (isGauge ? SeriesProperties.Gauge : 0) | (isGaugeFill ? SeriesProperties.GaugeFill : 0) | SeriesProperties.Solid)
-        {
-
-        }
+        { }
 
         /// <summary>
         /// Gets or sets the stroke.

@@ -27,8 +27,6 @@ using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Kernel
 {
-
-
     /// <summary>
     /// Defines the points states dictionary class.
     /// </summary>

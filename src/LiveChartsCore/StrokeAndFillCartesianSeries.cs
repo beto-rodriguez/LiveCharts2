@@ -47,10 +47,9 @@ namespace LiveChartsCore
         /// Initializes a new instance of the <see cref="StrokeAndFillCartesianSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
         /// </summary>
         /// <param name="properties">The properties.</param>
-        protected StrokeAndFillCartesianSeries(SeriesProperties properties) : base(properties)
-        {
-
-        }
+        protected StrokeAndFillCartesianSeries(SeriesProperties properties)
+            : base(properties)
+        { }
 
         /// <summary>
         /// Gets or sets the stroke.

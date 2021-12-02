@@ -43,7 +43,6 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             _defaultTempalte = (DataTemplate)Resources["defaultTemplate"];
         }
 
-
         /// <summary>
         /// The actual tempalte property.
         /// </summary>

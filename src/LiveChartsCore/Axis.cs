@@ -567,7 +567,6 @@ namespace LiveChartsCore
         /// <returns></returns>
         public virtual void Delete(Chart<TDrawingContext> chart)
         {
-
             if (_labelsPaint is not null)
             {
                 chart.Canvas.RemovePaintTask(_labelsPaint);

@@ -134,6 +134,5 @@ namespace LiveChartsCore
 
             return value.ToString($"######0.####### {u}");
         }
-
     }
 }

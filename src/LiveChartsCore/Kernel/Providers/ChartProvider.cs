@@ -68,7 +68,6 @@ namespace LiveChartsCore.Kernel.Providers
         /// <returns></returns>
         public abstract IPaint<TDrawingContext> GetSolidColorPaint(LvcColor color = new LvcColor());
 
-
         /// <summary>
         /// Gets the series custom measure handler.
         /// </summary>

@@ -509,7 +509,6 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
             set => SetValue(ZoomingSpeedProperty, value);
         }
 
-
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy" />
         public TooltipFindingStrategy TooltipFindingStrategy
         {

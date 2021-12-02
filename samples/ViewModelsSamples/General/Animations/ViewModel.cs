@@ -30,6 +30,7 @@ namespace ViewModelsSamples.General.Animations
                 OnPropertyChanged();
             }
         }
+
         public Func<float, float> ActualCurve
         {
             get => _actualCurve;
@@ -129,31 +130,5 @@ namespace ViewModelsSamples.General.Animations
             foreach (var series in Series)
                 series.RestartAnimations();
         }
-    }
-
-    public class AvailableEasingCurve
-    {
-        public AvailableEasingCurve(string name, Func<float, float> easingFunction)
-        {
-            Name = name;
-            EasingFunction = easingFunction;
-        }
-
-        public string Name { get; set; }
-
-        public Func<float, float> EasingFunction { get; set; }
-    }
-
-    public class AvailableSpeed
-    {
-        public AvailableSpeed(string name, TimeSpan speed)
-        {
-            Name = name;
-            Speed = speed;
-        }
-
-        public string Name { get; set; }
-
-        public TimeSpan Speed { get; set; }
     }
 }

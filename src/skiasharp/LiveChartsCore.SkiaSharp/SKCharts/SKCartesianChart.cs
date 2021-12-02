@@ -33,7 +33,6 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts
 {
-
     /// <summary>
     /// In-memory chart that is able to generate a chart images.
     /// </summary>
@@ -72,7 +71,6 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
             Sections = view.Sections;
             DrawMarginFrame = view.DrawMarginFrame;
         }
-
 
         /// <inheritdoc cref="IChartView.DesignerMode" />
         public bool DesignerMode => false;

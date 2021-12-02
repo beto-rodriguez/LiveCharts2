@@ -293,4 +293,3 @@ namespace LiveChartsCore.SkiaSharpView.WPF
         }
     }
 }
-

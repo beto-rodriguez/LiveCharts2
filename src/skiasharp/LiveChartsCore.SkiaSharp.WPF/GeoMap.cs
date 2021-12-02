@@ -326,7 +326,6 @@ namespace LiveChartsCore.SkiaSharpView.WPF
 
         private void OnMouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-
             _core?.InvokePointerLeft();
         }
 

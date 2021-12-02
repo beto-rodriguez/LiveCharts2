@@ -54,9 +54,7 @@ namespace LiveChartsCore
         /// <param name="properties">The properties.</param>
         protected BarSeries(SeriesProperties properties)
             : base(properties)
-        {
-
-        }
+        { }
 
         /// <inheritdoc cref="IBarSeries{TDrawingContext}.GroupPadding"/>
         public double GroupPadding { get => _groupPadding; set { _groupPadding = value; OnPropertyChanged(); } }

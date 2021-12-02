@@ -257,7 +257,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
 
         void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
         {
-            _ = Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Normal);//.GetAwaiter().GetResult();
+            _ = Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Normal); //.GetAwaiter().GetResult();
         }
 
         /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})"/>
