@@ -116,7 +116,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         public IEnumerable<IPolarAxis> RadiusAxes { get; set; } = new[] { new PolarAxis() };
 
         /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series"/>
-        public IEnumerable<ISeries> Series { get; set; } = new ISeries[0];
+        public IEnumerable<ISeries> Series { get; set; } = Array.Empty<ISeries>();
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas"/>
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas { get; } = new();
@@ -283,7 +283,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
 
         void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
         {
-            throw new NotImplementedException();
+            DataPointerDown?.Invoke(this, points);
         }
     }
 }

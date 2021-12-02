@@ -146,7 +146,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         public IEnumerable<IMapElement> Shapes { get; set; } = Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>();
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
-        public IEnumerable<IGeoSeries<SkiaSharpDrawingContext>> Series { get; set; }
+        public IEnumerable<IGeoSeries<SkiaSharpDrawingContext>> Series { get; set; } = Array.Empty<IGeoSeries<SkiaSharpDrawingContext>>();
 
         /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ViewCommand"/>
         public object? ViewCommand

@@ -40,10 +40,10 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         public PathGeometry() { }
 
         /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.FirstCommand" />
-        public LinkedListNode<IPathCommand<SKPath>> FirstCommand => _commands.First;
+        public LinkedListNode<IPathCommand<SKPath>>? FirstCommand => _commands.First;
 
         /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.LastCommand" />
-        public LinkedListNode<IPathCommand<SKPath>> LastCommand => _commands.Last;
+        public LinkedListNode<IPathCommand<SKPath>>? LastCommand => _commands.Last;
 
         /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.CountCommands" />
         public int CountCommands => _commands.Count;
