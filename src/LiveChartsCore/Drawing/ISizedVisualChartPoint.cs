@@ -30,7 +30,5 @@ namespace LiveChartsCore.Drawing
     /// <seealso cref="IVisualChartPoint{TDrawingContext}" />
     public interface ISizedVisualChartPoint<TDrawingContext> : ISizedGeometry<TDrawingContext>, IVisualChartPoint<TDrawingContext>
         where TDrawingContext : DrawingContext
-    {
-
-    }
+    { }
 }

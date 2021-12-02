@@ -34,9 +34,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// Initializes a new instance of the <see cref="RectangleGeometry"/> class.
         /// </summary>
         public RectangleGeometry() : base()
-        {
-
-        }
+        { }
 
         /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
         public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)

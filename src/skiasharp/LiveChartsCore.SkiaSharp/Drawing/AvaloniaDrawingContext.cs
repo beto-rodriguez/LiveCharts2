@@ -40,9 +40,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
         /// <param name="canvas">The canvas.</param>
         public AvaloniaDrawingContext(MotionCanvas<SkiaSharpDrawingContext> motionCanvas, SKImageInfo info, SKSurface surface, SKCanvas canvas)
             : base(motionCanvas, info, surface, canvas, true)
-        {
-
-        }
+        { }
 
         /// <summary>
         /// Gets or sets the color of the back.
@@ -55,8 +53,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing
         /// <summary>
         /// Clears the canvas.
         /// </summary>
-        public override void ClearCanvas()
-        {
-        }
+        public override void ClearCanvas() { }
     }
 }
