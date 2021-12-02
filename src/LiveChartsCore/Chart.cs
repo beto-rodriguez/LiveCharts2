@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -286,7 +285,7 @@ namespace LiveChartsCore
         /// <summary>
         /// Gets the previous series.
         /// </summary>
-        public IReadOnlyList<IChartSeries<TDrawingContext>> PreviousSeries { get; protected set; } = new IChartSeries<TDrawingContext>[0];
+        public IReadOnlyList<IChartSeries<TDrawingContext>> PreviousSeries { get; protected set; } = Array.Empty<IChartSeries<TDrawingContext>>();
 
         object IChart.Canvas => Canvas;
 
@@ -485,7 +484,7 @@ namespace LiveChartsCore
                          {
                              Trace.WriteLine(
                                  $"[tooltip view thread]".PadRight(60) +
-                                 $"tread: {Thread.CurrentThread.ManagedThreadId}");
+                                 $"tread: {Environment.CurrentManagedThreadId}");
                          }
 #endif
                          if (Tooltip is null || TooltipPosition == TooltipPosition.Hidden || !_isPointerIn) return;

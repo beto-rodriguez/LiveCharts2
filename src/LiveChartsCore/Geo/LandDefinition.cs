@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+
 namespace LiveChartsCore.Geo
 {
     /// <summary>
@@ -84,6 +86,6 @@ namespace LiveChartsCore.Geo
         /// <summary>
         /// Gets or sets the data.
         /// </summary>
-        public LandData[] Data { get; set; } = new LandData[0];
+        public LandData[] Data { get; set; } = Array.Empty<LandData>();
     }
 }

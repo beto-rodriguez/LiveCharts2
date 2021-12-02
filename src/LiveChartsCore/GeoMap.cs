@@ -47,12 +47,10 @@ namespace LiveChartsCore
         private bool _isHeatInCanvas = false;
         private IPaint<TDrawingContext>? _previousStroke;
         private IPaint<TDrawingContext>? _previousFill;
-        private readonly List<Tuple<double, LvcColor>> _heatStops = new();
         private LvcPoint _pointerPosition = new(-10, -10);
         private LvcPoint _pointerPanningPosition = new(-10, -10);
         private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
         private bool _isPanning = false;
-        private bool _isPointerIn = false;
         private CoreMap<TDrawingContext>? _activeMap;
 
         /// <summary>
@@ -264,7 +262,7 @@ namespace LiveChartsCore
             foreach (var series in toDeleteSeries)
             {
                 series.Delete(context);
-                _everMeasuredSeries.Remove(series);
+                _ = _everMeasuredSeries.Remove(series);
             }
 
             View.Canvas.Invalidate();
@@ -296,7 +294,6 @@ namespace LiveChartsCore
         private void Chart_PointerMove(LvcPoint pointerPosition)
         {
             _pointerPosition = pointerPosition;
-            _isPointerIn = true;
             if (!_isPanning) return;
             _pointerPanningPosition = pointerPosition;
             _panningThrottler.Call();
@@ -304,7 +301,7 @@ namespace LiveChartsCore
 
         private void Chart_PointerLeft()
         {
-            _isPointerIn = false;
+            // ...?
         }
 
         private void Chart_PointerUp(LvcPoint pointerPosition)
