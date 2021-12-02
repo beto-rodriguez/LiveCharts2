@@ -38,9 +38,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
     /// </typeparam>
     public class ScatterSeries<TModel> : ScatterSeries<TModel, CircleGeometry, LabelGeometry>
-    {
-
-    }
+    { }
 
     /// <summary>
     /// Defines a scatter series in the user interface.
@@ -57,9 +55,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// </typeparam>
     public class ScatterSeries<TModel, TVisual> : ScatterSeries<TModel, TVisual, LabelGeometry>
         where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
-    {
-
-    }
+    { }
 
     /// <summary>
     /// Defines a scatter series in the user interface.

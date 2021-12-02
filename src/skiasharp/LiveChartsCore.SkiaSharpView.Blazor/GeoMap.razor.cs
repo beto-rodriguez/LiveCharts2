@@ -226,7 +226,7 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
 
         void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
         {
-            _ = InvokeAsync(action);//.Wait();
+            _ = InvokeAsync(action); //.Wait();
         }
 
         /// <summary>

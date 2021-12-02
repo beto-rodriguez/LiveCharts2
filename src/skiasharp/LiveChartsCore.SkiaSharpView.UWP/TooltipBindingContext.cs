@@ -40,5 +40,4 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public BindingPoint[] Points { get; set; } = Array.Empty<BindingPoint>();
     }
-
 }

@@ -57,6 +57,5 @@ namespace ViewModelsSamples.Axes.NamedLabels
         public List<Axis> XAxes { get; set; }
 
         public List<Axis> YAxes { get; set; }
-
     }
 }

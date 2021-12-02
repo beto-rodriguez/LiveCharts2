@@ -114,7 +114,6 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
                     chart.core.Update();
                 });
 
-
         /// <summary>
         /// The series property
         /// </summary>

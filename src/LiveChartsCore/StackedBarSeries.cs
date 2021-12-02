@@ -53,9 +53,7 @@ namespace LiveChartsCore
         /// <param name="properties">The series properties.</param>
         protected StackedBarSeries(SeriesProperties properties)
             : base(properties)
-        {
-
-        }
+        { }
 
         /// <inheritdoc cref="IBarSeries{TDrawingContext}.GroupPadding"/>
         public double GroupPadding { get; set; } = 10;

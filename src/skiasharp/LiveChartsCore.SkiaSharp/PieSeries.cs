@@ -45,9 +45,7 @@ namespace LiveChartsCore.SkiaSharpView
         /// <param name="isGauge"></param>
         /// <param name="isGaugeFill"></param>
         public PieSeries(bool isGauge = false, bool isGaugeFill = false) : base(isGauge, isGaugeFill)
-        {
-
-        }
+        { }
     }
 
     /// <summary>
@@ -72,9 +70,7 @@ namespace LiveChartsCore.SkiaSharpView
         /// <param name="isGauge"></param>
         /// <param name="isGaugeFill"></param>
         public PieSeries(bool isGauge = false, bool isGaugeFill = false) : base(isGauge, isGaugeFill)
-        {
-
-        }
+        { }
     }
 
     /// <summary>

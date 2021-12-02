@@ -168,4 +168,3 @@ namespace LiveChartsCore.Drawing
         }
     }
 }
-

@@ -35,10 +35,7 @@ namespace LiveChartsCore.Kernel.Drawing
         /// <summary>
         /// Initializes a new instance of the <see cref="RectangleHoverArea"/> class.
         /// </summary>
-        public RectangleHoverArea()
-        {
-
-        }
+        public RectangleHoverArea() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RectangleHoverArea"/> class.

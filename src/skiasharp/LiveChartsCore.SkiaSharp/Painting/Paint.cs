@@ -153,7 +153,6 @@ namespace LiveChartsCore.SkiaSharpView.Painting
         /// </value>
         public bool IsPaused { get; set; }
 
-
         /// <summary>
         /// Gets or sets the path effect.
         /// </summary>

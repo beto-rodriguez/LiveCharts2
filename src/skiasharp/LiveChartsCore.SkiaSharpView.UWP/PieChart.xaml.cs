@@ -366,7 +366,6 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             set => SetValue(SeriesProperty, value);
         }
 
-
         /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />
         public double InitialRotation
         {

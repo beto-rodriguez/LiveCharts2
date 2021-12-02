@@ -34,8 +34,8 @@ namespace WinFormsSample.Axes.LabelsRotation
             {
                 _viewModel.YAxes[0].LabelsRotation = b1.Value;
             };
-            Controls.Add(b1);
 
+            Controls.Add(b1);
         }
     }
 }

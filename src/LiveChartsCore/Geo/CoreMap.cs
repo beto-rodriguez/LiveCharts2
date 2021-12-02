@@ -38,10 +38,7 @@ namespace LiveChartsCore.Geo
         /// <summary>
         /// Initializes a new instance of the <see cref="CoreMap{TDrawingContext}"/> class.
         /// </summary>
-        public CoreMap()
-        {
-
-        }
+        public CoreMap() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CoreMap{TDrawingContext}"/> class, with the given layer.

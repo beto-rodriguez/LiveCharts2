@@ -500,6 +500,5 @@ namespace LiveChartsCore.UnitTesting
                 drawables == canvas.DrawablesCount &&
                 geometries == canvas.CountGeometries());
         }
-
     }
 }

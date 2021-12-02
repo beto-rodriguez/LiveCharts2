@@ -291,37 +291,6 @@ namespace LiveChartsCore
                 activeSeparators[polarChart] = separators;
             }
 
-            //if (Name is not null && NamePaint is not null)
-            //{
-            //    if (_nameGeometry is null)
-            //    {
-            //        _nameGeometry = new TTextGeometry
-            //        {
-            //            TextSize = size,
-            //            HorizontalAlign = Align.Middle,
-            //            VerticalAlign = Align.Middle
-            //        };
-            //    }
-
-            //    _nameGeometry.Padding = NamePadding;
-            //    _nameGeometry.Text = Name;
-            //    _nameGeometry.TextSize = (float)NameTextSize;
-
-            //    if (_orientation == AxisOrientation.X)
-            //    {
-            //        var nameSize = _nameGeometry.Measure(NamePaint);
-            //        _nameGeometry.X = (lxi + lxj) * 0.5f;
-            //        _nameGeometry.Y = Position == AxisPosition.Start ? yoo + nameSize.Height : yoo - nameSize.Height;
-            //    }
-            //    else
-            //    {
-            //        _nameGeometry.RotateTransform = -90;
-            //        var nameSize = _nameGeometry.Measure(NamePaint);
-            //        _nameGeometry.X = Position == AxisPosition.Start ? xoo - nameSize.Width - Padding.Bottom : xoo + nameSize.Width + Padding.Bottom;
-            //        _nameGeometry.Y = (lyi + lyj) * 0.5f;
-            //    }
-            //}
-
             var measured = new HashSet<IVisualSeparator<TDrawingContext>>();
 
             for (var i = start; i <= max; i += s)
@@ -418,8 +387,6 @@ namespace LiveChartsCore
                     separators.Add(i, visualSeparator);
                 }
 
-                //if (NamePaint is not null && _nameGeometry is not null)
-                //    NamePaint.AddGeometryToPaintTask(polarChart.Canvas, _nameGeometry);
                 if (SeparatorsPaint is not null && ShowSeparatorLines && visualSeparator.Geometry is not null)
                     SeparatorsPaint.AddGeometryToPaintTask(polarChart.Canvas, visualSeparator.Geometry);
                 if (LabelsPaint is not null && visualSeparator.Label is not null)
@@ -448,19 +415,8 @@ namespace LiveChartsCore
                     visualSeparator.Label.RotateTransform = actualRotation;
                     visualSeparator.Label.Opacity = 1;
 
-                    //var unitRadius = scaler.ToPixels(0, 1).Y - scaler.ToPixels(0, 0).Y; // [ pixels / chart value ]
-
-                    //var labelSize = LabelsPaint is null ? new LvcSize() : visualSeparator.Text.Measure(LabelsPaint);
-                    //var hyp = Math.Sqrt(Math.Pow(labelSize.Width * 0.5, 2) + Math.Pow(labelSize.Height * 0.5f, 2));
-
-                    //var tl = _orientation == PolarAxisOrientation.Angle
-                    //    ? scaler.ToPixels(visualSeparator.Value, scaler.MaxRadius + (hyp / unitRadius))
-                    //    : scaler.ToPixelsWithAngleInDegrees((float)LabelsAngle, visualSeparator.Value);
-
                     visualSeparator.Label.X = location.X;
                     visualSeparator.Label.Y = location.Y;
-
-                    if (((IPolarAxis)this).PreviousDataBounds is null) visualSeparator.Label.CompleteAllTransitions();
 
                     if (((IPolarAxis)this).PreviousDataBounds is null) visualSeparator.Label.CompleteAllTransitions();
                 }
@@ -482,7 +438,7 @@ namespace LiveChartsCore
                     if (visualSeparator is RadialAxisVisualSeparator<TDrawingContext> polarSeparator && polarSeparator.Circle is not null)
                     {
                         var h = Math.Sqrt(Math.Pow(location.X - scaler.CenterX, 2) + Math.Pow(location.Y - scaler.CenterY, 2));
-                        var radius = (float)h; //Math.Abs(location.X - scaler.CenterX);
+                        var radius = (float)h;
                         polarSeparator.Circle.X = scaler.CenterX - radius;
                         polarSeparator.Circle.Y = scaler.CenterY - radius;
                         polarSeparator.Circle.Width = radius * 2;
@@ -515,7 +471,6 @@ namespace LiveChartsCore
             {
                 Text = Name ?? string.Empty,
                 TextSize = (float)NameTextSize,
-                //RotateTransform = Orientation == AxisOrientation.X ? 0 : -90,
                 Padding = _labelsPadding
             };
 

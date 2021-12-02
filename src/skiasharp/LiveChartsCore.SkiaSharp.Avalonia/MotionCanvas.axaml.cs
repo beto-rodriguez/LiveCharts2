@@ -183,7 +183,6 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 if (context is not ISkiaDrawingContextImpl skiaContext)
                     throw new Exception("SkiaSharp is not supported.");
 
-
 #if DEBUG
                 if (LiveCharts.EnableLogging)
                 {

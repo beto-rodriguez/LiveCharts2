@@ -88,7 +88,7 @@ namespace LiveChartsCore
 
             _tooltipThrottler = new ActionThrottler(TooltipThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
             _panningThrottler = new ActionThrottler(PanningThrottlerUnlocked, TimeSpan.FromMilliseconds(30));
-            LockOnMeasure = true;//lockOnMeasure;
+            LockOnMeasure = true; //lockOnMeasure;
         }
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />

@@ -37,9 +37,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
         /// Initializes a new instance of the <see cref="SVGPathGeometry"/> class.
         /// </summary>
         public SVGPathGeometry() : base()
-        {
-
-        }
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SVGPathGeometry"/> class.

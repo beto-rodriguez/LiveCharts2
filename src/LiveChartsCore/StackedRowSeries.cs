@@ -50,9 +50,7 @@ namespace LiveChartsCore
             : base(
                   SeriesProperties.Bar | SeriesProperties.PrimaryAxisHorizontalOrientation | SeriesProperties.Stacked |
                   SeriesProperties.Solid | SeriesProperties.PrefersXStrategyTooltips)
-        {
-
-        }
+        { }
 
         /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
         public override void Measure(Chart<TDrawingContext> chart)

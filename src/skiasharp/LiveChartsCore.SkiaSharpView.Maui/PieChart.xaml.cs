@@ -112,7 +112,6 @@ namespace LiveChartsCore.SkiaSharpView.Maui
                     chart.core.Update();
                 });
 
-
         /// <summary>
         /// The series property
         /// </summary>

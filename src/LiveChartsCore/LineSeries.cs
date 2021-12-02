@@ -260,7 +260,7 @@ namespace LiveChartsCore
                             x0b = previousSecondaryScale.ToPixels(data.OriginalData.X0);
                             x1b = previousSecondaryScale.ToPixels(data.OriginalData.X1);
                             x2b = previousSecondaryScale.ToPixels(data.OriginalData.X2);
-                            y0b = previousPrimaryScale.ToPixels(data.OriginalData.Y0);// cartesianChart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y0) : pg - hgs;
+                            y0b = previousPrimaryScale.ToPixels(data.OriginalData.Y0); // cartesianChart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y0) : pg - hgs;
                             y1b = previousPrimaryScale.ToPixels(data.OriginalData.Y1); //cartesianChart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y1) : pg - hgs;
                             y2b = previousPrimaryScale.ToPixels(data.OriginalData.Y2); // cartesianChart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y2) : pg - hgs;
                         }

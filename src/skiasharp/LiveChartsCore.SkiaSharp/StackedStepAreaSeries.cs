@@ -41,9 +41,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// </typeparam>
     public class StackedStepAreaSeries<TModel>
         : StackedStepAreaSeries<TModel, CircleGeometry, LabelGeometry>
-    {
-
-    }
+    { }
 
     /// <summary>
     /// Defines a stacked area series in the user interface.
@@ -61,9 +59,7 @@ namespace LiveChartsCore.SkiaSharpView
     public class StackedStepAreaSeries<TModel, TVisual>
         : StackedStepAreaSeries<TModel, TVisual, LabelGeometry>
         where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
-    {
-
-    }
+    { }
 
     /// <summary>
     /// Defines a stacked area series in the user interface.

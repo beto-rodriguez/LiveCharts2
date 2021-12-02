@@ -19,7 +19,6 @@ namespace WinFormsSample.General.ChartToImage
 
             var viewModel = new ViewModel();
 
-
             // Adding a cartesian chart to the UI...
             _cartesian = new CartesianChart
             {
@@ -85,7 +84,6 @@ namespace WinFormsSample.General.ChartToImage
             // or you could also use a chart in the user interface to create an image
             CreateImageFromCartesianControl();
 
-
             // PIE CHART IMAGE
             new SKPieChart
             {
@@ -96,7 +94,6 @@ namespace WinFormsSample.General.ChartToImage
 
             // or create it from a control in the UI
             CreateImageFromPieControl();
-
 
             // GEO MAP CHART IMAGE
             new SKGeoMap

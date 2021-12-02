@@ -110,10 +110,7 @@ namespace LiveChartsCore.Kernel.Drawing
         /// </summary>
         /// <param name="canvas">The canvas.</param>
         /// <param name="geometry">The geometry.</param>
-        public void AddGeometryToPaintTask(MotionCanvas<TDrawingContext> canvas, IDrawable<TDrawingContext> geometry)
-        {
-
-        }
+        public void AddGeometryToPaintTask(MotionCanvas<TDrawingContext> canvas, IDrawable<TDrawingContext> geometry) { }
 
         /// <summary>
         /// Clones the task.
@@ -128,16 +125,12 @@ namespace LiveChartsCore.Kernel.Drawing
         /// Completes the transitions.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
-        public void CompleteTransitions(params string[] propertyName)
-        {
-        }
+        public void CompleteTransitions(params string[] propertyName) { }
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
 
         /// <summary>
         /// Gets the geometries.
@@ -163,43 +156,33 @@ namespace LiveChartsCore.Kernel.Drawing
         /// Initializes the task.
         /// </summary>
         /// <param name="context">The context.</param>
-        public void InitializeTask(TDrawingContext context)
-        {
-        }
+        public void InitializeTask(TDrawingContext context) { }
 
         /// <summary>
         /// Removes the geometry from pain task.
         /// </summary>
         /// <param name="canvas">The canvas.</param>
         /// <param name="geometry">The geometry.</param>
-        public void RemoveGeometryFromPainTask(MotionCanvas<TDrawingContext> canvas, IDrawable<TDrawingContext> geometry)
-        {
-        }
+        public void RemoveGeometryFromPainTask(MotionCanvas<TDrawingContext> canvas, IDrawable<TDrawingContext> geometry) { }
 
         /// <summary>
         /// Removes all geometry from paint task.
         /// </summary>
         /// <param name="canvas">The canvas.</param>
-        public void ClearGeometriesFromPaintTask(MotionCanvas<TDrawingContext> canvas)
-        {
-        }
+        public void ClearGeometriesFromPaintTask(MotionCanvas<TDrawingContext> canvas) { }
 
         /// <summary>
         /// Removes a property transition.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
-        public void RemovePropertyTransition(string propertyName)
-        {
-        }
+        public void RemovePropertyTransition(string propertyName) { }
 
         /// <summary>
         /// Sets the geometries.
         /// </summary>
         /// <param name="canvas">The canvas.</param>
         /// <param name="geometries">The geometries.</param>
-        public void SetGeometries(MotionCanvas<TDrawingContext> canvas, HashSet<IDrawable<TDrawingContext>> geometries)
-        {
-        }
+        public void SetGeometries(MotionCanvas<TDrawingContext> canvas, HashSet<IDrawable<TDrawingContext>> geometries) { }
 
         /// <summary>
         /// Sets the properties transitions.
@@ -207,45 +190,31 @@ namespace LiveChartsCore.Kernel.Drawing
         /// <param name="animation">The animation.</param>
         /// <param name="propertyName">Name of the property.</param>
         /// <exception cref="NotImplementedException"></exception>
-        public void SetPropertiesTransitions(Animation? animation, params string[] propertyName)
-        {
-        }
+        public void SetPropertiesTransitions(Animation? animation, params string[] propertyName) { }
 
         /// <summary>
         /// Completes all transitions.
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
-        public void CompleteAllTransitions()
-        {
-        }
+        public void CompleteAllTransitions() { }
 
         /// <summary>
         /// Removes all the current transitions.
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
-        public void RemoveTransitions()
-        {
-        }
+        public void RemoveTransitions() { }
 
         /// <inheritdoc cref="IPaint{TDrawingContext}.ApplyOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
-        public void ApplyOpacityMask(TDrawingContext context, IPaintable<TDrawingContext> geometry)
-        {
-        }
+        public void ApplyOpacityMask(TDrawingContext context, IPaintable<TDrawingContext> geometry) { }
 
         /// <inheritdoc cref="IPaint{TDrawingContext}.RestoreOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
-        public void RestoreOpacityMask(TDrawingContext context, IPaintable<TDrawingContext> geometry)
-        {
-        }
+        public void RestoreOpacityMask(TDrawingContext context, IPaintable<TDrawingContext> geometry) { }
 
         /// <inheritdoc cref="IPaint{TDrawingContext}.GetClipRectangle(MotionCanvas{TDrawingContext})" />
-        public LvcRectangle GetClipRectangle(MotionCanvas<TDrawingContext> canvas)
-        {
-            return LvcRectangle.Empty;
+        public LvcRectangle GetClipRectangle(MotionCanvas<TDrawingContext> canvas) { return LvcRectangle.Empty;
         }
 
         /// <inheritdoc cref="IPaint{TDrawingContext}.SetClipRectangle(MotionCanvas{TDrawingContext}, LvcRectangle)" />
-        public void SetClipRectangle(MotionCanvas<TDrawingContext> canvas, LvcRectangle value)
-        {
-        }
+        public void SetClipRectangle(MotionCanvas<TDrawingContext> canvas, LvcRectangle value) { }
     }
 }

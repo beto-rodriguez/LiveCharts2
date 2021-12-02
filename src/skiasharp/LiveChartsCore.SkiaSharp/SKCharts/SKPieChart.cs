@@ -71,7 +71,6 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
             Total = view.Total;
         }
 
-
         /// <inheritdoc cref="IChartView.DesignerMode" />
         public bool DesignerMode => false;
 

@@ -35,9 +35,7 @@ namespace LiveChartsCore.Motion
         /// <param name="propertyName">Name of the property.</param>
         public PointMotionProperty(string propertyName)
             : base(propertyName)
-        {
-
-        }
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FloatMotionProperty"/> class.

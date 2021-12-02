@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -39,9 +38,7 @@ namespace LiveChartsCore.Defaults
         /// Initializes a new instance of the <see cref="ObservablePoint"/> class.
         /// </summary>
         public ObservablePoint()
-        {
-
-        }
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservablePoint"/> class.
