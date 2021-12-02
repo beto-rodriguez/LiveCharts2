@@ -30,7 +30,5 @@ namespace LiveChartsCore.Drawing
     /// <seealso cref="IVisualChartPoint{TDrawingContext}" />
     public interface IDoughnutVisualChartPoint<TDrawingContext> : IDoughnutGeometry<TDrawingContext>, IVisualChartPoint<TDrawingContext>
         where TDrawingContext : DrawingContext
-    {
-
-    }
+    { }
 }

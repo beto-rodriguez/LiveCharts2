@@ -27,7 +27,5 @@ namespace LiveChartsCore.Drawing
     /// </summary>
     public interface ISolidColorChartPoint<TDrawingContext> : ISolidColorGeometry<TDrawingContext>, IVisualChartPoint<TDrawingContext>
         where TDrawingContext : DrawingContext
-    {
-
-    }
+    { }
 }
