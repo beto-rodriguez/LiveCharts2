@@ -42,7 +42,7 @@ jobs:
         #dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms --configuration Release
         #dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Maui --configuration Release
         dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.UWP --configuration Release
-        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI --configuration Release
+        #dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI --configuration Release
         #dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Blazor --configuration Release
 
     #- name: Run unit tests
