@@ -38,9 +38,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
     /// </typeparam>
     public class ColumnSeries<TModel> : ColumnSeries<TModel, RoundedRectangleGeometry, LabelGeometry>
-    {
-
-    }
+    { }
 
     /// <summary>
     /// Defines a column series in the user interface.
@@ -57,9 +55,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// </typeparam>
     public class ColumnSeries<TModel, TVisual> : ColumnSeries<TModel, TVisual, LabelGeometry>
         where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
-    {
-
-    }
+    { }
 
     /// <summary>
     /// Defines a column series in the user interface.

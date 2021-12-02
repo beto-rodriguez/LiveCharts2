@@ -40,9 +40,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
     /// </typeparam>
     public class LineSeries<TModel> : LineSeries<TModel, CircleGeometry, LabelGeometry>
-    {
-
-    }
+    { }
 
     /// <summary>
     /// Defines a line series in the user interface.
@@ -59,9 +57,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// </typeparam>
     public class LineSeries<TModel, TVisual> : LineSeries<TModel, TVisual, LabelGeometry>
         where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
-    {
-
-    }
+    { }
 
     /// <summary>
     /// Defines a line series in the user interface.

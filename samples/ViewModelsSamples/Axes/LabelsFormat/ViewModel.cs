@@ -71,6 +71,5 @@ namespace ViewModelsSamples.Axes.LabelsFormat
         public List<Axis> XAxes { get; set; }
 
         public List<Axis> YAxes { get; set; }
-
     }
 }

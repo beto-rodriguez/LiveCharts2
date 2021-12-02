@@ -90,7 +90,6 @@ namespace LiveChartsCore.Kernel.Sketches
         /// </value>
         ZoomAndPanMode ZoomMode { get; set; }
 
-
         /// <summary>
         /// Gets or sets the tool tip finding strategy.
         /// </summary>

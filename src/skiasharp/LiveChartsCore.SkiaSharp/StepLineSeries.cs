@@ -40,9 +40,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
     /// </typeparam>
     public class StepLineSeries<TModel> : StepLineSeries<TModel, CircleGeometry, LabelGeometry>
-    {
-
-    }
+    { }
 
     /// <summary>
     /// Defines a stepline series in the user interface.
@@ -59,9 +57,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// </typeparam>
     public class StepLineSeries<TModel, TVisual> : StepLineSeries<TModel, TVisual, LabelGeometry>
         where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
-    {
-
-    }
+    { }
 
     /// <summary>
     /// Defines a stepline series in the user interface.

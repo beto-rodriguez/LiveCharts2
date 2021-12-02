@@ -38,9 +38,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
     /// </typeparam> data label of every point.
     public class RowSeries<TModel> : RowSeries<TModel, RoundedRectangleGeometry, LabelGeometry>
-    {
-
-    }
+    { }
 
     /// <summary>
     /// Defines a row series in the user interface.
@@ -57,9 +55,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// </typeparam>
     public class RowSeries<TModel, TVisual> : RowSeries<TModel, TVisual, LabelGeometry>
         where TVisual : class, IRoundedRectangleChartPoint<SkiaSharpDrawingContext>, new()
-    {
-
-    }
+    { }
 
     /// <summary>
     /// Defines a row series in the user interface.

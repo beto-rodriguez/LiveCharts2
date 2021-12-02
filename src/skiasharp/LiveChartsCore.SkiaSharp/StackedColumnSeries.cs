@@ -38,9 +38,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
     /// </typeparam>
     public class StackedColumnSeries<TModel> : StackedColumnSeries<TModel, RoundedRectangleGeometry, LabelGeometry>
-    {
-
-    }
+    { }
 
     /// <summary>
     /// Defines a stacked column series in the user interface.
@@ -57,9 +55,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// </typeparam>
     public class StackedColumnSeries<TModel, TVisual> : StackedColumnSeries<TModel, TVisual, LabelGeometry>
         where TVisual : class, IRoundedRectangleChartPoint<SkiaSharpDrawingContext>, new()
-    {
-
-    }
+    { }
 
     /// <summary>
     /// Defines a stacked column series in the user interface.

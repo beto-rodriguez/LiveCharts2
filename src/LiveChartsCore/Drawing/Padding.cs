@@ -31,9 +31,7 @@ namespace LiveChartsCore.Drawing
         /// Initializes a new instance of the <see cref="Padding"/> class.
         /// </summary>
         public Padding()
-        {
-
-        }
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Padding"/> class.

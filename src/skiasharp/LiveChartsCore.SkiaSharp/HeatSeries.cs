@@ -38,9 +38,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// (<see cref="Series{TModel, TVisual, TLabel, TDrawingContext}.Mapping"/>).
     /// </typeparam>
     public class HeatSeries<TModel> : HeatSeries<TModel, ColoredRectangleGeometry, LabelGeometry>
-    {
-
-    }
+    { }
 
     /// <summary>
     /// Defines a heat series in the user interface.
@@ -57,9 +55,7 @@ namespace LiveChartsCore.SkiaSharpView
     /// </typeparam>
     public class HeatSeries<TModel, TVisual> : HeatSeries<TModel, TVisual, LabelGeometry>
         where TVisual : class, ISolidColorChartPoint<SkiaSharpDrawingContext>, new()
-    {
-
-    }
+    { }
 
     /// <summary>
     /// Defines a heat series in the user interface.

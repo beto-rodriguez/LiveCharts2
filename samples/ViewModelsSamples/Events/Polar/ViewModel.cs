@@ -34,7 +34,7 @@ namespace ViewModelsSamples.Events.Polar
                 }
             };
 
-            polarLineSeries.DataPointerDown += PolarLineSeries_DataPointerDown; ;
+            polarLineSeries.DataPointerDown += PolarLineSeries_DataPointerDown;
 
             Series = new ISeries[]
             {
