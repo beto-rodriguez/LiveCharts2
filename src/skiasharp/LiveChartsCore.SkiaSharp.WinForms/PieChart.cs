@@ -112,5 +112,4 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y));
         }
     }
-
 }

@@ -32,7 +32,6 @@ namespace ViewModelsSamples.StepLines.Custom
             }
 
             base.OnDraw(context, paint);
-
         }
     }
 }

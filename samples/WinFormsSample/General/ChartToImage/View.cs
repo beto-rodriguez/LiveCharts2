@@ -19,7 +19,6 @@ namespace WinFormsSample.General.ChartToImage
 
             var viewModel = new ViewModel();
 
-
             // Adding a cartesian chart to the UI...
             _cartesian = new CartesianChart
             {

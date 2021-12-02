@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -38,7 +37,8 @@ namespace LiveChartsCore.Defaults
         /// <summary>
         /// Initializes a new instance of the <see cref="TimeSpanPoint"/> class.
         /// </summary>
-        public TimeSpanPoint() { }
+        public TimeSpanPoint()
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TimeSpanPoint"/> class.

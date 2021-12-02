@@ -56,4 +56,3 @@ namespace LiveChartsCore.Kernel.Helpers
         public IGeometry<TDrawingContext>? Geometry { get; }
     }
 }
-

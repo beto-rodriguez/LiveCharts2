@@ -39,9 +39,7 @@ namespace LiveChartsCore.Defaults
         /// Initializes a new instance of the <see cref="WeightedPoint"/> class.
         /// </summary>
         public WeightedPoint()
-        {
-
-        }
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WeightedPoint"/> class.

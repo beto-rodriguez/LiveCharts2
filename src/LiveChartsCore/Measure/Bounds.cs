@@ -31,9 +31,7 @@ namespace LiveChartsCore.Measure
         /// Creates a new instance of the <see cref="Bounds"/> class.
         /// </summary>
         public Bounds()
-        {
-
-        }
+        { }
 
         /// <summary>
         /// Gets whether the bounds are empty.

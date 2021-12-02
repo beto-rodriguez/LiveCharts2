@@ -34,9 +34,7 @@ namespace LiveChartsCore.SkiaSharpView
         /// Initializes a new instance of the <see cref="GeoMap"/> class from the given core map.
         /// </summary>
         public GeoMap()
-        {
-
-        }
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeoMap"/> class from the given core map.

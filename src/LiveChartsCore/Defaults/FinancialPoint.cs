@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -42,9 +41,7 @@ namespace LiveChartsCore.Defaults
         /// Initializes a new instance of the <see cref="FinancialPoint"/> class.
         /// </summary>
         public FinancialPoint()
-        {
-
-        }
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FinancialPoint"/> class.

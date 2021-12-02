@@ -28,7 +28,5 @@ namespace LiveChartsCore.SkiaSharpView.Painting
     /// <inheritdoc cref="IPaint{TDrawingContext}" />
     [Obsolete("Renamed to Paint")]
     public abstract class PaintTask : Paint
-    {
-
-    }
+    { }
 }

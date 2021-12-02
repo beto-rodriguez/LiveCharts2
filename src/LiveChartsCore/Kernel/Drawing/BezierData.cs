@@ -27,7 +27,6 @@ namespace LiveChartsCore.Kernel.Drawing
     /// </summary>
     public class BezierData
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="BezierData"/> class.
         /// </summary>
