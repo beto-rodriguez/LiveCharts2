@@ -27,11 +27,14 @@ jobs:
       run: |
         dotnet workload install maui --from-rollback-file https://aka.ms/dotnet/maui/preview.10.json --source https://aka.ms/dotnet6/nuget/index.json --source https://api.nuget.org/v3/index.json
 
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+
+    # Workaround use ms build instead, it seems that dotnet build is not ready yet
+    #- name: Build assemblies
+    #  run: |
+    #    dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI --configuration Release
+
     - name: Build assemblies
       run: |
-        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI --configuration Release
-
-    - name: Build Samples
-      run: |
-        dotnet build ./samples/UWPSample --configuration Release
-        dotnet build ./samples/WinUISample --configuration Release
+        msbuid ./src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI -property:Configuration=Release
