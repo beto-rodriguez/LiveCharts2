@@ -27,9 +27,6 @@ jobs:
       with:
         dotnet-version: '6.0.x'
 
-    - name: Run unit tests
-      run: dotnet test ./tests/LiveChartsCore.UnitTesting
-
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
       with:
