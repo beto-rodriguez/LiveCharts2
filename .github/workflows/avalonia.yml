@@ -1,41 +1,40 @@
-name: "Avalonia"
+#name: "Avalonia"
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-  schedule:
-    - cron: '35 19 * * 4'
+#on:
+#  push:
+#    branches: [ master ]
+#  pull_request:
+#    branches: [ master ]
+#  schedule:
+#    - cron: '35 19 * * 4'
 
-jobs:
-  analyze:
-    name: Analyze
-    runs-on: windows-latest
+#jobs:
+#  analyze:
+#    name: Analyze
+#    runs-on: windows-latest
 
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ 'csharp' ]
-        targetplatform: [ x86, x64 ]
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        language: [ 'csharp' ]
+#        targetplatform: [ x86, x64 ]
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+#    steps:
+#    - name: Checkout repository
+#      uses: actions/checkout@v2
 
-    - uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '6.0.x'
+#    - uses: actions/setup-dotnet@v1
+#      with:
+#        dotnet-version: '6.0.x'
 
-    - name: Install workloads
-      run: |
-        dotnet workload install maui --from-rollback-file https://aka.ms/dotnet/maui/preview.10.json --source https://aka.ms/dotnet6/nuget/index.json --source https://api.nuget.org/v3/index.json
-        dotnet workload install wasm-tools
+#    - name: Install workloads
+#      run: |
+#        dotnet workload install maui --from-rollback-file https://aka.ms/dotnet/maui/preview.10.json --source https://aka.ms/dotnet6/nuget/index.json --source https://api.nuget.org/v3/index.json
 
-    - name: Build assemblies
-      run: |
-        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia --configuration Release
+#    - name: Build assemblies
+#      run: |
+#        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia --configuration Release
 
-    - name: Build Samples
-      run: |
-        dotnet build ./samples/AvaloniaSample --configuration Release
+#    - name: Build Samples
+#      run: |
+#        dotnet build ./samples/AvaloniaSample --configuration Release

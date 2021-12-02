@@ -28,7 +28,8 @@ jobs:
     - name: Install workloads
       run: |
         dotnet workload install maui --from-rollback-file https://aka.ms/dotnet/maui/preview.10.json --source https://aka.ms/dotnet6/nuget/index.json --source https://api.nuget.org/v3/index.json
-        dotnet workload install wasm-tools
+        dotnet tool install -g Redth.Net.Maui.Check
+        maui-check --ci --fix
 
     - name: Build assemblies
       run: |
