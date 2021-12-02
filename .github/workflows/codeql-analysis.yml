@@ -30,6 +30,7 @@ jobs:
     - name: Install workloads
       run: |
         dotnet workload install maui --from-rollback-file https://aka.ms/dotnet/maui/preview.10.json --source https://aka.ms/dotnet6/nuget/index.json --source https://api.nuget.org/v3/index.json
+        dotnet workload install wasm-tools
 
     - name: Build assemblies
       run: |
@@ -53,6 +54,7 @@ jobs:
         #dotnet build ./samples/WinFormsSample --configuration Release
         #dotnet build ./samples/WPFSample --configuration Release
         #dotnet build ./samples/XamarinSample/XamarinSample/XamarinSample --configuration Release
+        dotnet build ./samples/MauiSample --configuration Release
         #dotnet build ./samples/UWPSample --configuration Release
         #dotnet build ./samples/WinUISample --configuration Release
         dotnet build ./samples/BlazorSample --configuration Release
