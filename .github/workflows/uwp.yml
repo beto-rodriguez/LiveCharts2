@@ -32,4 +32,4 @@ jobs:
 
     - name: Build assemblies
       run: |
-        msbuid build ./src/skiasharp/LiveChartsCore.SkiaSharpView.UWP -property:Configuration=Release
+        msbuild build ./src/skiasharp/LiveChartsCore.SkiaSharpView.UWP -property:Configuration=Release

@@ -37,4 +37,4 @@ jobs:
 
     - name: Build assemblies
       run: |
-        msbuid ./src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI -property:Configuration=Release
+        msbuild ./src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI -property:Configuration=Release
