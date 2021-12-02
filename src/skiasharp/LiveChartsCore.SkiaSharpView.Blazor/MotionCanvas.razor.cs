@@ -32,7 +32,7 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
     /// <inheritdoc cref="MotionCanvas{TDrawingContext}"/>
     public partial class MotionCanvas : IDisposable
     {
-        private readonly SKGLView? _glCanvas;
+        //private readonly SKGLView? _glCanvas;
         private SKCanvasView? _canvas;
         private bool _disposing = false;
         private bool _isDrawingLoopRunning = false;
@@ -146,10 +146,10 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
             _ = OnPointerLeaveCallback.InvokeAsync(e);
         }
 
-        private void OnPaintGlSurface(SKPaintGLSurfaceEventArgs e)
-        {
-            CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
-        }
+        //private void OnPaintGlSurface(SKPaintGLSurfaceEventArgs e)
+        //{
+        //    CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
+        //}
 
         private void OnPaintSurface(SKPaintSurfaceEventArgs e)
         {
@@ -169,7 +169,7 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
             var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
             while (!CanvasCore.IsValid && !_disposing)
             {
-                _glCanvas?.Invalidate();
+                //_glCanvas?.Invalidate();
                 _canvas?.Invalidate();
                 await Task.Delay(ts);
             }

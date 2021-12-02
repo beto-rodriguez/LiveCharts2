@@ -378,7 +378,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         public event ChartEventHandler<SkiaSharpDrawingContext> UpdateFinished;
 
         /// <inheritdoc cref="IChartView.DataPointerDown" />
-        public event ChartPointsHandler? DataPointerDown;
+        public event ChartPointsHandler DataPointerDown;
 
         #endregion
 

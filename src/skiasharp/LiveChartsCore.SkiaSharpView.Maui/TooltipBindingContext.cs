@@ -63,7 +63,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui
         /// <value>
         /// The color of the text.
         /// </value>
-        public Color TextColor { get; set; }
+        public Color TextColor { get; set; } = Colors.Black;
 
         /// <summary>
         /// Gets or sets the font attributes.
@@ -79,6 +79,6 @@ namespace LiveChartsCore.SkiaSharpView.Maui
         /// <value>
         /// The color of the background.
         /// </value>
-        public Color TooltipBackgroundColor { get; set; }
+        public Color TooltipBackgroundColor { get; set; } = Colors.White;
     }
 }

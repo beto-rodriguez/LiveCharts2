@@ -57,7 +57,7 @@ namespace LiveChartsCore.SkiaSharpView.Blazor
         /// <summary>
         /// Gets or sets the series.
         /// </summary>
-        public ISeries[] Series { get; set; } = new ISeries[0];
+        public ISeries[] Series { get; set; } = Array.Empty<ISeries>();
 
         /// <summary>
         /// Gets or sets the orientation class.

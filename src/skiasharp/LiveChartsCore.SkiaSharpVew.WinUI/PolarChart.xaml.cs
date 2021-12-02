@@ -767,7 +767,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
         public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
         {
-            return new double[0];
+            return Array.Empty<double>();
             //if (_core == null) throw new Exception("core not found");
             //var cartesianCore = (PolarChart<SkiaSharpDrawingContext>)_core;
             //return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);

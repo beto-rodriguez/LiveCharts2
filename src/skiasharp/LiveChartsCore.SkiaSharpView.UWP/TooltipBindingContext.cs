@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using Windows.UI.Xaml.Media;
 
 namespace LiveChartsCore.SkiaSharpView.UWP
@@ -37,7 +38,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// <summary>
         /// Gets the points.
         /// </summary>
-        public BindingPoint[] Points { get; set; }
+        public BindingPoint[] Points { get; set; } = Array.Empty<BindingPoint>();
     }
 
 }

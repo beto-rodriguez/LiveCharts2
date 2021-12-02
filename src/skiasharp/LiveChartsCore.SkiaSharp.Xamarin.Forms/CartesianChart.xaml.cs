@@ -379,7 +379,7 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
         /// <summary>
         /// Called when the chart is touched.
         /// </summary>
-        public event EventHandler<SKTouchEventArgs> Touched;
+        public event EventHandler<SKTouchEventArgs>? Touched;
 
         #endregion
 

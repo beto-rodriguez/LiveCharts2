@@ -51,7 +51,6 @@ namespace LiveChartsCore.SkiaSharpView.Maui
         /// </summary>
         protected Chart<SkiaSharpDrawingContext>? core;
         private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-        private Grid? _grid;
 
         #endregion
 
@@ -313,7 +312,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui
         /// <summary>
         /// Called when the chart is touched.
         /// </summary>
-        public event EventHandler<SKTouchEventArgs> Touched;
+        public event EventHandler<SKTouchEventArgs>? Touched;
 
         #endregion
 

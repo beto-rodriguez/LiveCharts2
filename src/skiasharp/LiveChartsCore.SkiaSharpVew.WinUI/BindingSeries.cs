@@ -33,17 +33,17 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// <summary>
         /// Gets the series.
         /// </summary>
-        public ISeries Series { get; init; }
+        public ISeries Series { get; init; } = null!;
 
         /// <summary>
         /// Gets the font family.
         /// </summary>
-        public FontFamily FontFamily { get; init; }
+        public FontFamily FontFamily { get; init; } = null!;
 
         /// <summary>
         /// Gets the foreground.
         /// </summary>
-        public Brush Foreground { get; init; }
+        public Brush Foreground { get; init; } = null!;
 
         /// <summary>
         /// Gets the font size.

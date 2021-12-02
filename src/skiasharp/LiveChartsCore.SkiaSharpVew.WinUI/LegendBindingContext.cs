@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using Microsoft.UI.Xaml.Media;
 
@@ -33,12 +34,12 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// <summary>
         /// Gets the series.
         /// </summary>
-        public IEnumerable<BindingSeries> SeriesCollection { get; set; }
+        public IEnumerable<BindingSeries> SeriesCollection { get; set; } = Array.Empty<BindingSeries>();
 
         /// <summary>
         /// Gets the background.
         /// </summary>
-        public Brush Background { get; set; }
+        public Brush Background { get; set; } = new SolidColorBrush();
 
         /// <summary>
         /// Gets the orientation.

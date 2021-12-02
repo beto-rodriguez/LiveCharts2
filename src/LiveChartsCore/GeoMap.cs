@@ -47,7 +47,6 @@ namespace LiveChartsCore
         private bool _isHeatInCanvas = false;
         private IPaint<TDrawingContext>? _previousStroke;
         private IPaint<TDrawingContext>? _previousFill;
-        private LvcPoint _pointerPosition = new(-10, -10);
         private LvcPoint _pointerPanningPosition = new(-10, -10);
         private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
         private bool _isPanning = false;
@@ -86,7 +85,7 @@ namespace LiveChartsCore
         public IGeoMapView<TDrawingContext> View { get; private set; }
 
         /// <inheritdoc cref="IMapFactory{TDrawingContext}.ViewTo(GeoMap{TDrawingContext}, object)"/>
-        public virtual void ViewTo(object command)
+        public virtual void ViewTo(object? command)
         {
             _mapFactory.ViewTo(this, command);
         }
@@ -287,13 +286,11 @@ namespace LiveChartsCore
         private void Chart_PointerDown(LvcPoint pointerPosition)
         {
             _isPanning = true;
-            _pointerPosition = pointerPosition;
             _pointerPreviousPanningPosition = pointerPosition;
         }
 
         private void Chart_PointerMove(LvcPoint pointerPosition)
         {
-            _pointerPosition = pointerPosition;
             if (!_isPanning) return;
             _pointerPanningPosition = pointerPosition;
             _panningThrottler.Call();
