@@ -25,11 +25,11 @@ jobs:
       with:
         dotnet-version: '6.0.x'
 
-    - name: Install workloads
-      run: |
-        dotnet workload install maui --from-rollback-file https://aka.ms/dotnet/maui/preview.10.json --source https://aka.ms/dotnet6/nuget/index.json --source https://api.nuget.org/v3/index.json
-        dotnet tool install -g Redth.Net.Maui.Check
-        maui-check --ci --fix
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+      with:
+        vs-version: '[ 17.1.0-pre.1.0 ]'
+        vs-prerelease: true
 
     - name: Build assemblies
       run: |
