@@ -28,7 +28,7 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
       with:
-        vs-version: '[ 17.1.0-pre.1.0 ]'
+        vs-version: '[ 17.1.0-pre.1.0, 17.1.0-pre.1.0 ]'
         vs-prerelease: true
 
     - name: Build assemblies
