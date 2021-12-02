@@ -64,8 +64,19 @@ jobs:
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v1
+    #- name: Autobuild
+    #  uses: github/codeql-action/autobuild@v1
+
+    - name: Build assemblies
+      run: |
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia --configuration Release
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Blazor --configuration Release
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Maui --configuration Release
+        #dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.UWP --configuration Release # disabled for now, it is not working
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.WinForms --configuration Release
+        #dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI --configuration Release # disabled for now, it is not working
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.WPF --configuration Release
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms --configuration Release
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl
