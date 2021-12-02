@@ -400,7 +400,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
             core?.InvokePointerLeft();
         }
 
-        private void Chart_Load(object sender, EventArgs e)
+        private void Chart_Load(object? sender, EventArgs e)
         {
             core?.Load();
         }

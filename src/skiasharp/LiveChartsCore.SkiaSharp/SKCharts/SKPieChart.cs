@@ -106,7 +106,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         public object SyncContext { get => CoreCanvas.Sync; set => CoreCanvas.Sync = value; }
 
         /// <inheritdoc cref="IPieChartView{TDrawingContext}.Series"/>
-        public IEnumerable<ISeries> Series { get; set; } = new ISeries[0];
+        public IEnumerable<ISeries> Series { get; set; } = Array.Empty<ISeries>();
 
         /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation"/>
         public double InitialRotation { get; set; }
@@ -264,7 +264,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
 
         void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
         {
-            throw new NotImplementedException();
+            DataPointerDown?.Invoke(this, points);
         }
     }
 }

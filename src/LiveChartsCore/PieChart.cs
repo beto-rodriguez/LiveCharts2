@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -67,7 +66,7 @@ namespace LiveChartsCore
         /// <value>
         /// The series.
         /// </value>
-        public IPieSeries<TDrawingContext>[] Series { get; private set; } = new IPieSeries<TDrawingContext>[0];
+        public IPieSeries<TDrawingContext>[] Series { get; private set; } = Array.Empty<IPieSeries<TDrawingContext>>();
 
         /// <summary>
         /// Gets the drawable series.
@@ -132,7 +131,7 @@ namespace LiveChartsCore
             {
                 Trace.WriteLine(
                     $"[Cartesian chart measured]".PadRight(60) +
-                    $"tread: {Thread.CurrentThread.ManagedThreadId}");
+                    $"tread: {Environment.CurrentManagedThreadId}");
             }
 #endif
 

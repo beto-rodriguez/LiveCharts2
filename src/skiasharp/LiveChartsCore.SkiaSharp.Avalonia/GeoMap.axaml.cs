@@ -83,20 +83,20 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
         /// <summary>
         /// The active map property.
         /// </summary>
-        public static readonly AvaloniaProperty<CoreMap<SkiaSharpDrawingContext>> ActiveMapProperty =
-           AvaloniaProperty.Register<CartesianChart, CoreMap<SkiaSharpDrawingContext>>(nameof(ActiveMap), null, inherits: true);
+        public static readonly AvaloniaProperty<CoreMap<SkiaSharpDrawingContext>?> ActiveMapProperty =
+           AvaloniaProperty.Register<CartesianChart, CoreMap<SkiaSharpDrawingContext>?>(nameof(ActiveMap), null, inherits: true);
 
         /// <summary>
         /// The active map property.
         /// </summary>
-        public static readonly AvaloniaProperty<object> SyncContextProperty =
-           AvaloniaProperty.Register<CartesianChart, object>(nameof(SyncContext), null, inherits: true);
+        public static readonly AvaloniaProperty<object?> SyncContextProperty =
+           AvaloniaProperty.Register<CartesianChart, object?>(nameof(SyncContext), null, inherits: true);
 
         /// <summary>
         /// The active map property.
         /// </summary>
-        public static readonly AvaloniaProperty<object> ViewCommandProperty =
-           AvaloniaProperty.Register<CartesianChart, object>(nameof(ViewCommand), null, inherits: true);
+        public static readonly AvaloniaProperty<object?> ViewCommandProperty =
+           AvaloniaProperty.Register<CartesianChart, object?>(nameof(ViewCommand), null, inherits: true);
 
         /// <summary>
         /// The projection property.

@@ -375,7 +375,7 @@ namespace LiveChartsCore
             VisibilityChanged?.Invoke(this);
         }
 
-        /// <summary/>
+        /// <summary>
         /// Called when the pointer enters a point.
         /// </summary>
         /// /// <param name="point">The chart point.</param>

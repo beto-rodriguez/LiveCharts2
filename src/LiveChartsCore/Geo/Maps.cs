@@ -42,7 +42,7 @@ namespace LiveChartsCore.Geo
         {
             var a = Assembly.GetExecutingAssembly();
             var map = "LiveChartsCore.Geo.world.geojson";
-            using var reader = new StreamReader(a.GetManifestResourceStream(map));
+            using var reader = new StreamReader(a.GetManifestResourceStream(map) ?? throw new Exception("file not found"));
 
             return GetMapFromStreamReader<TDrawingContext>(reader);
         }

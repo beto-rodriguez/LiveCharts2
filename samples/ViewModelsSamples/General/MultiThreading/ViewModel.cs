@@ -55,7 +55,7 @@ namespace ViewModelsSamples.General.MultiThreading
             while (true)
             {
                 //Trace.WriteLine(
-                //   $"Thread id: {Thread.CurrentThread.ManagedThreadId}");
+                //   $"Thread id: {Environment.CurrentManagedThreadId}");
 
                 await Task.Delay(_delay);
                 lock (Sync)

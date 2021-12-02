@@ -1,5 +1,4 @@
-﻿using LiveChartsCore.SkiaSharpView.UWP;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml.Controls;
 
 namespace UWPSample.VisualTest.ReattachVisual
 {

@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -72,7 +71,7 @@ namespace LiveChartsCore
         /// <value>
         /// The x axes.
         /// </value>
-        public ICartesianAxis[] XAxes { get; private set; } = new ICartesianAxis[0];
+        public ICartesianAxis[] XAxes { get; private set; } = Array.Empty<ICartesianAxis>();
 
         /// <summary>
         /// Gets the y axes.
@@ -80,7 +79,7 @@ namespace LiveChartsCore
         /// <value>
         /// The y axes.
         /// </value>
-        public ICartesianAxis[] YAxes { get; private set; } = new ICartesianAxis[0];
+        public ICartesianAxis[] YAxes { get; private set; } = Array.Empty<ICartesianAxis>();
 
         /// <summary>
         /// Gets the series.
@@ -88,7 +87,7 @@ namespace LiveChartsCore
         /// <value>
         /// The series.
         /// </value>
-        public ICartesianSeries<TDrawingContext>[] Series { get; private set; } = new ICartesianSeries<TDrawingContext>[0];
+        public ICartesianSeries<TDrawingContext>[] Series { get; private set; } = Array.Empty<ICartesianSeries<TDrawingContext>>();
 
         /// <summary>
         /// Gets the sections.
@@ -96,7 +95,7 @@ namespace LiveChartsCore
         /// <value>
         /// The sections.
         /// </value>
-        public Section<TDrawingContext>[] Sections { get; private set; } = new Section<TDrawingContext>[0];
+        public Section<TDrawingContext>[] Sections { get; private set; } = Array.Empty<Section<TDrawingContext>>();
 
         /// <summary>
         /// Gets the drawable series.
@@ -325,7 +324,7 @@ namespace LiveChartsCore
             {
                 Trace.WriteLine(
                     $"[Cartesian chart measured]".PadRight(60) +
-                    $"tread: {Thread.CurrentThread.ManagedThreadId}");
+                    $"tread: {Environment.CurrentManagedThreadId}");
             }
 #endif
 
@@ -376,7 +375,7 @@ namespace LiveChartsCore
                 .Cast<ICartesianSeries<TDrawingContext>>()
                 .ToArray();
 
-            Sections = _chartView.Sections?.Where(x => x.IsVisible).ToArray() ?? new Section<TDrawingContext>[0];
+            Sections = _chartView.Sections?.Where(x => x.IsVisible).ToArray() ?? Array.Empty<Section<TDrawingContext>>();
 
             #endregion
 

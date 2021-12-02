@@ -127,7 +127,7 @@ namespace LiveChartsCore.Kernel.Providers
                 var canvas = (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas;
                 _ = _byChartbyValueVisualMap.TryGetValue(canvas.Sync, out var d);
                 var byValueVisualMap = d;
-                if (d is null) return;
+                if (byValueVisualMap is null) return;
                 _ = byValueVisualMap.Remove(point.Context.Index);
             }
             else
@@ -136,7 +136,7 @@ namespace LiveChartsCore.Kernel.Providers
                 var canvas = (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas;
                 _ = _byChartByReferenceVisualMap.TryGetValue(canvas.Sync, out var d);
                 var byReferenceVisualMap = d;
-                if (d is null) return;
+                if (byReferenceVisualMap is null) return;
                 _ = byReferenceVisualMap.Remove((TModel)point.Context.DataSource);
             }
         }

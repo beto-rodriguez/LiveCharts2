@@ -44,12 +44,12 @@ namespace LiveChartsCore.Drawing
         /// <summary>
         /// Gets the first linked node.
         /// </summary>
-        LinkedListNode<IPathCommand<TPathArgs>> FirstCommand { get; }
+        LinkedListNode<IPathCommand<TPathArgs>>? FirstCommand { get; }
 
         /// <summary>
         /// Gets the last linked node.
         /// </summary>
-        LinkedListNode<IPathCommand<TPathArgs>> LastCommand { get; }
+        LinkedListNode<IPathCommand<TPathArgs>>? LastCommand { get; }
 
         /// <summary>
         /// Gets current commands count.

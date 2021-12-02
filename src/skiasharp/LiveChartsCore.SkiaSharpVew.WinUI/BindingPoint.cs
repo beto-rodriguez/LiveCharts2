@@ -34,17 +34,17 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// <summary>
         /// Ges the chart point.
         /// </summary>
-        public ChartPoint ChartPoint { get; init; } // <- how to force the init.. so the nullables do not complain?
+        public ChartPoint ChartPoint { get; init; } = null!; // <- how to force the init.. so the nullables do not complain?
 
         /// <summary>
         /// Gets the font family.
         /// </summary>
-        public FontFamily FontFamily { get; init; }
+        public FontFamily FontFamily { get; init; } = null!;
 
         /// <summary>
         /// Gets the foreground.
         /// </summary>
-        public Brush Foreground { get; init; }
+        public Brush Foreground { get; init; } = null!;
 
         /// <summary>
         /// Gets the font size.

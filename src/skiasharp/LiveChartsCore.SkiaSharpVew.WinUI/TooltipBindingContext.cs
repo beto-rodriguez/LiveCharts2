@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using Microsoft.UI.Xaml.Media;
 
 namespace LiveChartsCore.SkiaSharpView.WinUI
@@ -32,12 +33,12 @@ namespace LiveChartsCore.SkiaSharpView.WinUI
         /// <summary>
         /// Gets the background.
         /// </summary>
-        public Brush Background { get; set; }
+        public Brush Background { get; set; } = new SolidColorBrush();
 
         /// <summary>
         /// Gets the points.
         /// </summary>
-        public BindingPoint[] Points { get; set; }
+        public BindingPoint[] Points { get; set; } = Array.Empty<BindingPoint>();
     }
 
 }

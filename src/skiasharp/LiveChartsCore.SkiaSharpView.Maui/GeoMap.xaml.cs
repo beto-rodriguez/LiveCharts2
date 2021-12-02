@@ -40,6 +40,7 @@ using SkiaSharp.Views.Maui;
 
 namespace LiveChartsCore.SkiaSharpView.Maui
 {
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}"/>
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
     {
@@ -284,7 +285,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui
             MainThread.BeginInvokeOnMainThread(action);
         }
 
-        private void GeoMap_SizeChanged(object sender, EventArgs e)
+        private void GeoMap_SizeChanged(object? sender, EventArgs e)
         {
             _core?.Update();
         }

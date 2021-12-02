@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 
 namespace LiveChartsCore.Drawing
 {
@@ -92,7 +91,7 @@ namespace LiveChartsCore.Drawing
             {
                 Trace.WriteLine(
                     $"[core canvas frame drawn] ".PadRight(60) +
-                    $"tread: {Thread.CurrentThread.ManagedThreadId}");
+                    $"tread: {Environment.CurrentManagedThreadId}");
             }
 #endif
 

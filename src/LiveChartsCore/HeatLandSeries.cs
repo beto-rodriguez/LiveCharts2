@@ -41,7 +41,7 @@ namespace LiveChartsCore
     {
         private IPaint<TDrawingContext>? _heatPaint;
         private bool _isHeatInCanvas = false;
-        private LvcColor[] _heatMap = new LvcColor[0];
+        private LvcColor[] _heatMap = Array.Empty<LvcColor>();
         private double[]? _colorStops;
         private IEnumerable<IWeigthedMapShape>? _lands;
         private bool _isVisible;
@@ -154,7 +154,7 @@ namespace LiveChartsCore
         public void Delete(MapContext<TDrawingContext> context)
         {
             ClearHeat(_everUsed);
-            _subscribedTo.Remove(context.CoreMap);
+            _ = _subscribedTo.Remove(context.CoreMap);
         }
 
         /// <summary>

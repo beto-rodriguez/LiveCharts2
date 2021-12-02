@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -69,7 +68,7 @@ namespace LiveChartsCore
         /// <value>
         /// The x axes.
         /// </value>
-        public IPolarAxis[] AngleAxes { get; private set; } = new IPolarAxis[0];
+        public IPolarAxis[] AngleAxes { get; private set; } = Array.Empty<IPolarAxis>();
 
         /// <summary>
         /// Gets the radius axes.
@@ -77,7 +76,7 @@ namespace LiveChartsCore
         /// <value>
         /// The y axes.
         /// </value>
-        public IPolarAxis[] RadiusAxes { get; private set; } = new IPolarAxis[0];
+        public IPolarAxis[] RadiusAxes { get; private set; } = Array.Empty<IPolarAxis>();
 
         /// <summary>
         /// Gets the series.
@@ -85,7 +84,7 @@ namespace LiveChartsCore
         /// <value>
         /// The series.
         /// </value>
-        public IPolarSeries<TDrawingContext>[] Series { get; private set; } = new IPolarSeries<TDrawingContext>[0];
+        public IPolarSeries<TDrawingContext>[] Series { get; private set; } = Array.Empty<IPolarSeries<TDrawingContext>>();
 
         /// <summary>
         /// Gets whether the series fit to bounds or not.
@@ -154,7 +153,7 @@ namespace LiveChartsCore
             {
                 Trace.WriteLine(
                     $"[Cartesian chart measured]".PadRight(60) +
-                    $"tread: {Thread.CurrentThread.ManagedThreadId}");
+                    $"tread: {Environment.CurrentManagedThreadId}");
             }
 #endif
             if (!IsLoaded) return; // <- prevents a visual glitch where the visual call the measure method
@@ -479,7 +478,6 @@ namespace LiveChartsCore
                 // apply padding
                 if (axis.MaxLimit is null)
                 {
-                    var s = 0d; //new Scaler(DrawMarginLocation, DrawMarginSize, axis);
                     // correction by geometry size
                     var p = 0d; // Math.Abs(s.ToChartValues(axis.DataBounds.RequestedGeometrySize) - s.ToChartValues(0));
                     if (axis.DataBounds.PaddingMax > p) p = axis.DataBounds.PaddingMax;

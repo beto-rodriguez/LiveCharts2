@@ -50,7 +50,7 @@ namespace LiveChartsCore.Geo
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="command">The command.</param>
-        void ViewTo(GeoMap<TDrawingContext> sender, object command);
+        void ViewTo(GeoMap<TDrawingContext> sender, object? command);
 
         /// <summary>
         /// Pans the map.

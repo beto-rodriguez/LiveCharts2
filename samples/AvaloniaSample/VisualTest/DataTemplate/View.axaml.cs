@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using LiveChartsCore.SkiaSharpView.Avalonia;
 
 namespace AvaloniaSample.VisualTest.DataTemplate
 {

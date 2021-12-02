@@ -77,12 +77,12 @@ namespace LiveChartsCore.Geo
         /// <summary>
         /// Gets or sets the X bounds.
         /// </summary>
-        public double[] Max { get; set; } = new double[0];
+        public double[] Max { get; set; } = Array.Empty<double>();
 
         /// <summary>
         /// Gets or sets the Y bounds.
         /// </summary>
-        public double[] Min { get; set; } = new double[0];
+        public double[] Min { get; set; } = Array.Empty<double>();
 
         /// <summary>
         /// Gets the lands.

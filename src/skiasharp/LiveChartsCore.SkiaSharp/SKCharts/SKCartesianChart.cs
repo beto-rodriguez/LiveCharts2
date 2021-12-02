@@ -114,10 +114,10 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
         public IEnumerable<ICartesianAxis> YAxes { get; set; } = new Axis[] { new Axis() };
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections"/>
-        public IEnumerable<Section<SkiaSharpDrawingContext>> Sections { get; set; } = new RectangularSection[0];
+        public IEnumerable<Section<SkiaSharpDrawingContext>> Sections { get; set; } = Array.Empty<RectangularSection>();
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series"/>
-        public IEnumerable<ISeries> Series { get; set; } = new ISeries[0];
+        public IEnumerable<ISeries> Series { get; set; } = Array.Empty<ISeries>();
 
         /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame"/>
         public DrawMarginFrame<SkiaSharpDrawingContext>? DrawMarginFrame { get; set; }
@@ -284,7 +284,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts
 
         void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
         {
-            throw new NotImplementedException();
+            DataPointerDown?.Invoke(this, points);
         }
     }
 }

@@ -2,7 +2,6 @@
 using LiveChartsCore.Easing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using System.Collections.Generic;
 

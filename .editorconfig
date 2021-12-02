@@ -11,6 +11,7 @@ insert_final_newline = true
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
+dotnet_diagnostic.CA1840.severity=warning
 
 [project.json]
 indent_size = 2
@@ -173,6 +174,7 @@ file_header_template = The MIT License(MIT)\n\nCopyright(c) 2021 Alberto Rodrigu
 
 # Default severity for analyzer diagnostics with category 'Style'
 dotnet_analyzer_diagnostic.category-Style.severity = warning
+dotnet_diagnostic.CA1825.severity=warning
 
 [*.{cpp,h,in}]
 curly_bracket_next_line = true

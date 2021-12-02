@@ -1,0 +1,54 @@
+name: "Build and test"
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: '35 19 * * 4'
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: windows-2022
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp' ]
+        targetplatform: [ x86, x64 ]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install workloads
+      run: |
+        dotnet workload install maui --from-rollback-file https://aka.ms/dotnet/maui/preview.10.json --source https://aka.ms/dotnet6/nuget/index.json --source https://api.nuget.org/v3/index.json
+        dotnet workload install wasm-tools
+
+    - name: Build assemblies
+      run: |
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia --configuration Release
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Blazor --configuration Release
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Maui --configuration Release
+        #dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.UWP --configuration Release # disabled for now, it is not working
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.WinForms --configuration Release
+        #dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI --configuration Release # disabled for now, it is not working
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.WPF --configuration Release
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms --configuration Release
+
+    - name: Build samples
+      run: |
+        dotnet build ./samples/AvaloniaSample --configuration Release
+        dotnet build ./samples/BlazorSample --configuration Release
+        dotnet build ./samples/MauiSample --configuration Release
+        #dotnet build ./samples/UWPSample --configuration Release
+        dotnet build ./samples/WinFormsSample --configuration Release
+        #dotnet build ./samples/WinUISample --configuration Release
+        dotnet build ./samples/WPFSample --configuration Release
+        dotnet build ./samples/XamarinSample/XamarinSample/XamarinSample --configuration Release
+
+    - name: Run unit tests
+      run: dotnet test ./tests/LiveChartsCore.UnitTesting

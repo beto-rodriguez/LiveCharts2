@@ -50,7 +50,6 @@ namespace LiveChartsCore
         private IPaint<TDrawingContext>? _upFill = null;
         private IPaint<TDrawingContext>? _downStroke = null;
         private IPaint<TDrawingContext>? _downFill = null;
-        private IPaint<TDrawingContext>? _hover;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FinancialSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.

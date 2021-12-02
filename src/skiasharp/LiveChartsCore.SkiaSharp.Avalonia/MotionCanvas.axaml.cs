@@ -23,7 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
@@ -190,7 +189,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia
                 {
                     Trace.WriteLine(
                     $"[rendering] ".PadRight(60) +
-                    $"tread: {Thread.CurrentThread.ManagedThreadId}");
+                    $"tread: {Environment.CurrentManagedThreadId}");
                 }
 #endif
 

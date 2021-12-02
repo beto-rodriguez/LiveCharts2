@@ -104,7 +104,7 @@ namespace LiveChartsCore.Kernel
                     item.PropertyChanged -= _onItemPropertyChanged;
         }
 
-        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (checkINotifyPropertyChanged)
                 switch (e.Action)
@@ -158,8 +158,10 @@ namespace LiveChartsCore.Kernel
             _onCollectionChanged(sender, e);
         }
 
-        private IEnumerable<INotifyPropertyChanged> GetINotifyPropertyChangedItems(IEnumerable source)
+        private static IEnumerable<INotifyPropertyChanged> GetINotifyPropertyChangedItems(IEnumerable? source)
         {
+            if (source is null) yield break;
+
             foreach (var item in source)
             {
                 if (item is not INotifyPropertyChanged inpc) continue;
