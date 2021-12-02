@@ -25,16 +25,6 @@ jobs:
       run: |
         dotnet workload install maui --from-rollback-file https://aka.ms/dotnet/maui/preview.10.json --source https://aka.ms/dotnet6/nuget/index.json --source https://api.nuget.org/v3/index.json
 
-    #- uses: actions/setup-dotnet@v1
-    #  with:
-    #    dotnet-version: '6.0.x'
-
-    #- name: Add msbuild to PATH
-    #  uses: microsoft/setup-msbuild@v1.1
-    #  with:
-    #    vs-version: '[17.1.0,17.2.0)'
-    #    vs-prerelease: true
-
     - name: Build assemblies
       run: |
         dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Maui --configuration Release
