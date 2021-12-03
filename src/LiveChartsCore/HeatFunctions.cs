@@ -81,7 +81,9 @@ namespace LiveChartsCore
         /// <returns></returns>
         public static LvcColor InterpolateColor(float weight, Bounds weightBounds, LvcColor[] heatMap, List<Tuple<double, LvcColor>> heatStops)
         {
-            var p = (weight - weightBounds.Min) / (weightBounds.Max - weightBounds.Min);
+            var range = weightBounds.Max - weightBounds.Min;
+            if (range == 0) range = double.Epsilon;
+            var p = (weight - weightBounds.Min) / range;
             if (p < 0) p = 0;
             if (p > 1) p = 1;
 
