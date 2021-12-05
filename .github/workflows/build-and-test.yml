@@ -39,19 +39,19 @@ jobs:
         dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.WinForms
         dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.WPF
         dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms
-        msbuild ./src/skiasharp/LiveChartsCore.SkiaSharpView.UWP/LiveChartsCore.SkiaSharpView.UWP.csproj
-        msbuild ./src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI/LiveChartsCore.SkiaSharpView.WinUI.csproj
+        msbuild ./src/skiasharp/LiveChartsCore.SkiaSharpView.UWP/LiveChartsCore.SkiaSharpView.UWP.csproj /t:Restore
+        msbuild ./src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI/LiveChartsCore.SkiaSharpView.WinUI.csproj /t:Restore
 
     - name: Build samples
       run: |
         dotnet build ./samples/AvaloniaSample
         dotnet build ./samples/BlazorSample
         dotnet build ./samples/MauiSample
-        #dotnet build ./samples/UWPSample
         dotnet build ./samples/WinFormsSample
-        #dotnet build ./samples/WinUISample
         dotnet build ./samples/WPFSample
         dotnet build ./samples/XamarinSample/XamarinSample/XamarinSample
+        msbuild ./samples/UWPSample/UWPSample.csproj /t:Restore
+        msbuild ./samples/WinUISample/WinUI/WinUI/WinUISample.csproj /t:Restore
 
     - name: Run unit tests
       run: dotnet test ./tests/LiveChartsCore.UnitTesting
