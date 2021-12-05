@@ -1,0 +1,57 @@
+name: "Build and Test"
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: '35 19 * * 4'
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: windows-2022
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp' ]
+        targetplatform: [ x86, x64 ]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+
+    - name: Install workloads
+      run: |
+        dotnet workload install maui --from-rollback-file https://aka.ms/dotnet/maui/preview.10.json --source https://aka.ms/dotnet6/nuget/index.json --source https://api.nuget.org/v3/index.json
+        dotnet workload install wasm-tools
+
+    - name: Build assemblies
+      run: |
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Blazor
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Maui
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.WinForms
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.WPF
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms
+        msbuild ./../src/skiasharp/LiveChartsCore.SkiaSharpView.UWP/LiveChartsCore.SkiaSharpView.UWP.csproj
+        msbuild ./../src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI/LiveChartsCore.SkiaSharpView.WinUI.csproj
+
+    - name: Build samples
+      run: |
+        dotnet build ./samples/AvaloniaSample
+        dotnet build ./samples/BlazorSample
+        dotnet build ./samples/MauiSample
+        #dotnet build ./samples/UWPSample
+        dotnet build ./samples/WinFormsSample
+        #dotnet build ./samples/WinUISample
+        dotnet build ./samples/WPFSample
+        dotnet build ./samples/XamarinSample/XamarinSample/XamarinSample
+
+    - name: Run unit tests
+      run: dotnet test ./tests/LiveChartsCore.UnitTesting

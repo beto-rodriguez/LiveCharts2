@@ -47,6 +47,9 @@ jobs:
         dotnet-version: '6.0'
         include-prerelease: True
 
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+
     # The maui Workloads
     - name: Install workloads
       run: |
@@ -69,14 +72,14 @@ jobs:
 
     - name: Build assemblies
       run: |
-        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia --configuration Release
-        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Blazor --configuration Release
-        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Maui --configuration Release
-        #dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.UWP --configuration Release # disabled for now, it is not working
-        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.WinForms --configuration Release
-        #dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI --configuration Release # disabled for now, it is not working
-        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.WPF --configuration Release
-        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms --configuration Release
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Blazor
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Maui
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.WinForms
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.WPF
+        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms
+        msbuild ./../src/skiasharp/LiveChartsCore.SkiaSharpView.UWP/LiveChartsCore.SkiaSharpView.UWP.csproj
+        msbuild ./../src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI/LiveChartsCore.SkiaSharpView.WinUI.csproj
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl
