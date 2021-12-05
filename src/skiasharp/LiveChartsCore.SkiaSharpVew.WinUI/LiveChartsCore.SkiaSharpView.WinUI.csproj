@@ -25,6 +25,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <SignAssembly Condition="'$(Configuration)' == 'Release'">True</SignAssembly>
+    <AssemblyOriginatorKeyFile Condition="'$(Configuration)' == 'Release'">./../../../nupkgs/keypair.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   
   <ItemGroup>
