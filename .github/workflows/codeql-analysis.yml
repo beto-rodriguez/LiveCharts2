@@ -78,8 +78,8 @@ jobs:
         dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.WinForms
         dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.WPF
         dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms
-        msbuild ./../src/skiasharp/LiveChartsCore.SkiaSharpView.UWP/LiveChartsCore.SkiaSharpView.UWP.csproj
-        msbuild ./../src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI/LiveChartsCore.SkiaSharpView.WinUI.csproj
+        msbuild ./src/skiasharp/LiveChartsCore.SkiaSharpView.UWP/LiveChartsCore.SkiaSharpView.UWP.csproj
+        msbuild ./src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI/LiveChartsCore.SkiaSharpView.WinUI.csproj
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl
