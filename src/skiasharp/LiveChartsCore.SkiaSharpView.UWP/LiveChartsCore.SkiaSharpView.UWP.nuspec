@@ -23,10 +23,10 @@
   </metadata>
 
   <files>
-    <file src="bin\Debug\LiveChartsCore.SkiaSharpView.UWP.dll" target="lib\uap10.0"/>
-    <file src="bin\Debug\LiveChartsCore.SkiaSharpView.UWP.pdb" target="lib\uap10.0"/>
-    <file src="bin\Debug\LiveChartsCore.SkiaSharpView.UWP.xml" target="lib\uap10.0"/>
-    <file src="bin\Debug\LiveChartsCore.SkiaSharpView.UWP.pri" target="lib\uap10.0"/>
-    <file src="bin\Debug\LiveChartsCore.SkiaSharpView.UWP\*.*" target="lib\uap10.0\LiveChartsCore.SkiaSharpView.UWP"/>
+    <file src="bin\Release\LiveChartsCore.SkiaSharpView.UWP.dll" target="lib\uap10.0"/>
+    <file src="bin\Release\LiveChartsCore.SkiaSharpView.UWP.pdb" target="lib\uap10.0"/>
+    <file src="bin\Release\LiveChartsCore.SkiaSharpView.UWP.xml" target="lib\uap10.0"/>
+    <file src="bin\Release\LiveChartsCore.SkiaSharpView.UWP.pri" target="lib\uap10.0"/>
+    <file src="bin\Release\LiveChartsCore.SkiaSharpView.UWP\*.*" target="lib\uap10.0\LiveChartsCore.SkiaSharpView.UWP"/>
   </files>
 </package>

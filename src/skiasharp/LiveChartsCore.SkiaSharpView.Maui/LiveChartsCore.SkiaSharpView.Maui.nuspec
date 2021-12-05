@@ -47,38 +47,38 @@
     <file src="images/icon.png" target="/" />
 
     <file
-      src="bin/Debug/net6.0/LiveChartsCore.SkiaSharpView.Maui.dll"
+      src="bin/Release/net6.0/LiveChartsCore.SkiaSharpView.Maui.dll"
       target="lib/net6.0/LiveChartsCore.SkiaSharpView.Maui.dll"/>
     <file
-      src="bin/Debug/net6.0/LiveChartsCore.SkiaSharpView.Maui.pdb"
+      src="bin/Release/net6.0/LiveChartsCore.SkiaSharpView.Maui.pdb"
       target="lib/net6.0/LiveChartsCore.SkiaSharpView.Maui.pdb"/>
 
     <file
-      src="bin/Debug/net6.0-android/LiveChartsCore.SkiaSharpView.Maui.dll"
+      src="bin/Release/net6.0-android/LiveChartsCore.SkiaSharpView.Maui.dll"
       target="lib/net6.0-android30.0/LiveChartsCore.SkiaSharpView.Maui.dll"/>
     <file
-      src="bin/Debug/net6.0-android/LiveChartsCore.SkiaSharpView.Maui.pdb"
+      src="bin/Release/net6.0-android/LiveChartsCore.SkiaSharpView.Maui.pdb"
       target="lib/net6.0-android30.0/LiveChartsCore.SkiaSharpView.Maui.pdb"/>
 
     <file
-      src="bin/Debug/net6.0-ios/LiveChartsCore.SkiaSharpView.Maui.dll"
+      src="bin/Release/net6.0-ios/LiveChartsCore.SkiaSharpView.Maui.dll"
       target="lib/net6.0-ios13.6/LiveChartsCore.SkiaSharpView.Maui.dll"/>
     <file
-      src="bin/Debug/net6.0-ios/LiveChartsCore.SkiaSharpView.Maui.pdb"
+      src="bin/Release/net6.0-ios/LiveChartsCore.SkiaSharpView.Maui.pdb"
       target="lib/net6.0-ios13.6/LiveChartsCore.SkiaSharpView.Maui.pdb"/>
 
     <file
-      src="bin/Debug/net6.0-maccatalyst/LiveChartsCore.SkiaSharpView.Maui.dll"
+      src="bin/Release/net6.0-maccatalyst/LiveChartsCore.SkiaSharpView.Maui.dll"
       target="lib/net6.0-maccatalyst13.5/LiveChartsCore.SkiaSharpView.Maui.dll"/>
     <file
-      src="bin/Debug/net6.0-maccatalyst/LiveChartsCore.SkiaSharpView.Maui.pdb"
+      src="bin/Release/net6.0-maccatalyst/LiveChartsCore.SkiaSharpView.Maui.pdb"
       target="lib/net6.0-maccatalyst13.5/LiveChartsCore.SkiaSharpView.Maui.pdb"/>
 
     <file
-      src="bin/Debug/net6.0-windows10.0.19041/LiveChartsCore.SkiaSharpView.Maui.dll"
+      src="bin/Release/net6.0-windows10.0.19041/LiveChartsCore.SkiaSharpView.Maui.dll"
       target="lib/net6.0-windows10.0.18362/LiveChartsCore.SkiaSharpView.Maui.dll"/>
     <file
-      src="bin/Debug/net6.0-windows10.0.19041/LiveChartsCore.SkiaSharpView.Maui.pdb"
+      src="bin/Release/net6.0-windows10.0.19041/LiveChartsCore.SkiaSharpView.Maui.pdb"
       target="lib/net6.0-windows10.0.18362/LiveChartsCore.SkiaSharpView.Maui.pdb"/>
   </files>
 </package>
