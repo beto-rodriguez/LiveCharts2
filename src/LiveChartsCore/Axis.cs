@@ -287,6 +287,8 @@ namespace LiveChartsCore
 
             if (Name is not null && NamePaint is not null)
             {
+                var isNew = false;
+
                 if (_nameGeometry is null)
                 {
                     _nameGeometry = new TTextGeometry
@@ -295,6 +297,17 @@ namespace LiveChartsCore
                         HorizontalAlign = Align.Middle,
                         VerticalAlign = Align.Middle
                     };
+
+                    _ = _nameGeometry
+                         .TransitionateProperties(
+                                 nameof(_nameGeometry.X),
+                                 nameof(_nameGeometry.Y))
+                         .WithAnimation(animation =>
+                             animation
+                                 .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
+                                 .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
+
+                    isNew = true;
                 }
 
                 _nameGeometry.Padding = NamePadding;
@@ -312,6 +325,8 @@ namespace LiveChartsCore
                     _nameGeometry.X = _nameDesiredSize.X + _nameDesiredSize.Width * 0.5f;
                     _nameGeometry.Y = (lyi + lyj) * 0.5f;
                 }
+
+                if (isNew) _nameGeometry.CompleteAllTransitions();
             }
 
             var measured = new HashSet<AxisVisualSeprator<TDrawingContext>>();
