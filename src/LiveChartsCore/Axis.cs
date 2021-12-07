@@ -58,7 +58,8 @@ namespace LiveChartsCore
         private Bounds? _visibleDataBounds = null;
         private double _labelsRotation;
         // xo (x origin) and yo (y origin) are the distance to the center of the axis to the control bounds
-        internal float _xo = 0f, _yo = 0f;
+        private float _xo = 0f, _yo = 0f;
+        private LvcRectangle _labelsDesiredSize = new(), _nameDesiredSize = new();
         private TTextGeometry? _nameGeometry;
         private AxisPosition _position = AxisPosition.Start;
         private Func<double, string> _labeler = Labelers.Default;
@@ -83,6 +84,8 @@ namespace LiveChartsCore
 
         float ICartesianAxis.Xo { get => _xo; set => _xo = value; }
         float ICartesianAxis.Yo { get => _yo; set => _yo = value; }
+        LvcRectangle ICartesianAxis.LabelsDesiredSize { get => _labelsDesiredSize; set => _labelsDesiredSize = value; }
+        LvcRectangle ICartesianAxis.NameDesiredSize { get => _nameDesiredSize; set => _nameDesiredSize = value; }
 
         Bounds? IPlane.PreviousDataBounds { get; set; }
 
@@ -300,15 +303,13 @@ namespace LiveChartsCore
 
                 if (_orientation == AxisOrientation.X)
                 {
-                    var nameSize = _nameGeometry.Measure(NamePaint);
                     _nameGeometry.X = (lxi + lxj) * 0.5f;
-                    _nameGeometry.Y = Position == AxisPosition.Start ? yoo + nameSize.Height : yoo - nameSize.Height;
+                    _nameGeometry.Y = _nameDesiredSize.Y + _nameDesiredSize.Height * 0.5f;
                 }
                 else
                 {
                     _nameGeometry.RotateTransform = -90;
-                    var nameSize = _nameGeometry.Measure(NamePaint);
-                    _nameGeometry.X = Position == AxisPosition.Start ? xoo - nameSize.Width - Padding.Bottom : xoo + nameSize.Width + Padding.Bottom;
+                    _nameGeometry.X = _nameDesiredSize.X + _nameDesiredSize.Width * 0.5f;
                     _nameGeometry.Y = (lyi + lyj) * 0.5f;
                 }
             }
@@ -500,7 +501,7 @@ namespace LiveChartsCore
                 Text = Name ?? string.Empty,
                 TextSize = (float)NameTextSize,
                 RotateTransform = Orientation == AxisOrientation.X ? 0 : -90,
-                Padding = Padding
+                Padding = NamePadding
             };
 
             return textGeometry.Measure(NamePaint);
@@ -543,7 +544,7 @@ namespace LiveChartsCore
                     RotateTransform = r,
                     Padding = _padding
                 };
-                var m = textGeometry.Measure(LabelsPaint); // TextBrush.MeasureText(labeler(i, axisTick));
+                var m = textGeometry.Measure(LabelsPaint);
                 if (m.Width > w) w = m.Width;
                 if (m.Height > h) h = m.Height;
             }

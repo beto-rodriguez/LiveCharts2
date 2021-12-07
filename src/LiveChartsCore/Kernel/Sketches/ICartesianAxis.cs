@@ -65,6 +65,16 @@ namespace LiveChartsCore.Kernel.Sketches
         float Yo { get; set; }
 
         /// <summary>
+        /// Gets or sets the reserved area for the labels.
+        /// </summary>
+        LvcRectangle LabelsDesiredSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets the reserved area for the name.
+        /// </summary>
+        LvcRectangle NameDesiredSize { get; set; }
+
+        /// <summary>
         /// Gets or sets the axis position.
         /// </summary>
         /// <value>
