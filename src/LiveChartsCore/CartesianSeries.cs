@@ -82,11 +82,15 @@ namespace LiveChartsCore
         {
             var core = ((ICartesianChartView<TDrawingContext>)chart).Core;
 
-            var secondaryAxis = core.XAxes[ScalesXAt];
-            var primaryAxis = core.YAxes[ScalesYAt];
+            var secondaryAxis = core.XAxes.Length > ScalesXAt ? core.XAxes[ScalesXAt] : null;
+            var primaryAxis = core.YAxes.Length > ScalesYAt ? core.YAxes[ScalesYAt] : null;
 
-            var secondaryScale = new Scaler(core.DrawMarginLocation, core.DrawMarginSize, secondaryAxis);
-            var primaryScale = new Scaler(core.DrawMarginLocation, core.DrawMarginSize, primaryAxis);
+            var secondaryScale = secondaryAxis is null
+                ? new Scaler()
+                : new Scaler(core.DrawMarginLocation, core.DrawMarginSize, secondaryAxis);
+            var primaryScale = primaryAxis is null
+                ? new Scaler()
+                : new Scaler(core.DrawMarginLocation, core.DrawMarginSize, primaryAxis);
 
             var deleted = new List<ChartPoint>();
             foreach (var point in everFetched)
