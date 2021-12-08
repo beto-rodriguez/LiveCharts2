@@ -529,6 +529,11 @@ namespace LiveChartsCore
                 if (axis.Position == AxisPosition.Start)
                 {
                     // X Bottom
+                    axis.NameDesiredSize = new LvcRectangle(
+                        new LvcPoint(0, ControlSize.Height - bs - ns.Height), new LvcSize(ControlSize.Width, ns.Height));
+                    axis.LabelsDesiredSize = new LvcRectangle(
+                        new LvcPoint(0, axis.NameDesiredSize.Y - s.Height), new LvcSize(ControlSize.Width, s.Height));
+
                     axis.Yo = m.Bottom + s.Height * 0.5f + ns.Height;
                     bs += s.Height + ns.Height;
                     m.Bottom = bs;
@@ -538,6 +543,11 @@ namespace LiveChartsCore
                 else
                 {
                     // X Top
+                    axis.NameDesiredSize = new LvcRectangle(
+                       new LvcPoint(0, ts), new LvcSize(ControlSize.Width, ns.Height));
+                    axis.LabelsDesiredSize = new LvcRectangle(
+                        new LvcPoint(0, ts + ns.Height), new LvcSize(ControlSize.Width, s.Height));
+
                     axis.Yo = ts + s.Height * 0.5f + ns.Height;
                     ts += s.Height + ns.Height;
                     m.Top = ts;
@@ -561,19 +571,29 @@ namespace LiveChartsCore
                 var drawablePlane = (IPlane<TDrawingContext>)axis;
                 var ns = drawablePlane.GetNameLabelSize(this);
                 var s = drawablePlane.GetPossibleSize(this);
-                var w = s.Width > m.Left ? s.Width : m.Left;
+                var w = s.Width; //s.Width > m.Left ? s.Width : m.Left;
+
                 if (axis.Position == AxisPosition.Start)
                 {
                     // Y Left
+                    axis.NameDesiredSize = new LvcRectangle(new LvcPoint(ls, 0), new LvcSize(ns.Width, ControlSize.Height));
+                    axis.LabelsDesiredSize = new LvcRectangle(new LvcPoint(ls + ns.Width, 0), new LvcSize(s.Width, ControlSize.Height));
+
                     axis.Xo = ls + w * 0.5f + ns.Width;
                     ls += w + ns.Width;
                     m.Left = ls;
+                    Trace.WriteLine($"ns => {ns.Width}, ls => {w}");
                     if (s.Height * 0.5f > m.Top) { m.Top = s.Height * 0.5f; }
                     if (s.Height * 0.5f > m.Bottom) { m.Bottom = s.Height * 0.5f; }
                 }
                 else
                 {
                     // Y Right
+                    axis.NameDesiredSize = new LvcRectangle(
+                        new LvcPoint(ControlSize.Width - rs - ns.Width, 0), new LvcSize(ns.Width, ControlSize.Height));
+                    axis.LabelsDesiredSize = new LvcRectangle(
+                        new LvcPoint(axis.NameDesiredSize.X - s.Width, 0), new LvcSize(s.Width, ControlSize.Height));
+
                     axis.Xo = rs + w * 0.5f + ns.Width;
                     rs += w + ns.Width;
                     m.Right = rs;
@@ -598,6 +618,7 @@ namespace LiveChartsCore
 
             var totalAxes = XAxes.Concat(YAxes).ToArray();
             var toDeleteAxes = new HashSet<IPlane<TDrawingContext>>(_everMeasuredAxes);
+
             foreach (var axis in totalAxes)
             {
                 if (axis.DataBounds.Max == axis.DataBounds.Min)
