@@ -23,11 +23,5 @@ namespace WPFSample
             if ((sender as FrameworkElement).DataContext is not string ctx) throw new Exception("Sample not found");
             content.Content = Activator.CreateInstance(null, $"WPFSample.{ctx.Replace('/', '.')}.View").Unwrap();
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            var w = new Window1();
-            w.Show();
-        }
     }
 }

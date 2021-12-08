@@ -19,13 +19,11 @@
             </Grid.RowDefinitions>
 
             <Border Grid.Row="0">
-                <!--<Image>
+                <Image>
                     <Image.Source>
                         <BitmapImage  UriSource="/Images/livecharts.png" />
                     </Image.Source>
-                </Image>-->
-
-                <Button Click="Button_Click"></Button>
+                </Image>
             </Border>
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0 20">
 
