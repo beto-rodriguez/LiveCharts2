@@ -1,13 +1,13 @@
-﻿using LiveChartsCore;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
+using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.Themes;
 using SkiaSharp;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace ViewModelsSamples.Axes.ColorsAndPosition;
 

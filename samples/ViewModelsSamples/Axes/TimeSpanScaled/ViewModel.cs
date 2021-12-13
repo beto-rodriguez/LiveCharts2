@@ -1,10 +1,10 @@
-﻿using LiveChartsCore;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace ViewModelsSamples.Axes.TimeSpanScaled;
 

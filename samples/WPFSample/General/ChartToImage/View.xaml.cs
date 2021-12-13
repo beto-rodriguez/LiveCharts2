@@ -1,8 +1,8 @@
-﻿using System.Windows.Controls;
-using LiveChartsCore.SkiaSharpView.WPF;
+﻿using System;
+using System.Windows.Controls;
 using LiveChartsCore.SkiaSharpView.SKCharts;
+using LiveChartsCore.SkiaSharpView.WPF;
 using ViewModelsSamples.General.ChartToImage;
-using System;
 
 namespace WPFSample.General.ChartToImage;
 

@@ -6,7 +6,7 @@ namespace UWPSample.Axes.Shared
     {
         public View()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

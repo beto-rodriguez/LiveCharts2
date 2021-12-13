@@ -1,17 +1,17 @@
-﻿using LiveChartsCore;
-using LiveChartsCore.Defaults;
-using LiveChartsCore.SkiaSharpView;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using LiveChartsCore;
+using LiveChartsCore.Defaults;
+using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Lines.AutoUpdate;
 
 public class ViewModel
 {
     private int _index = 0;
-    private readonly Random _random = new Random();
+    private readonly Random _random = new();
     private readonly ObservableCollection<ObservablePoint> _observableValues;
 
     public ViewModel()

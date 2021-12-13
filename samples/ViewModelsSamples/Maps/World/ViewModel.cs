@@ -12,7 +12,7 @@ public class ViewModel
 {
     private bool _isBrazilInChart = true;
     private readonly IWeigthedMapShape _brazil;
-    private readonly Random _r = new Random();
+    private readonly Random _r = new();
 
     public ViewModel()
     {

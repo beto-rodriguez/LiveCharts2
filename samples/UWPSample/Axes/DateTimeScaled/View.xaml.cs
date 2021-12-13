@@ -6,7 +6,7 @@ namespace UWPSample.Axes.DateTimeScaled
     {
         public View()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

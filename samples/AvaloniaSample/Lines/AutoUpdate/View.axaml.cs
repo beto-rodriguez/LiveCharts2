@@ -1,6 +1,6 @@
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using System.Threading.Tasks;
 using ViewModelsSamples.Lines.AutoUpdate;
 
 namespace AvaloniaSample.Lines.AutoUpdate;

@@ -89,12 +89,12 @@ public static class CubicBezierEasingFunction
 
         return (t) =>
         {
-                // Because JavaScript number are imprecise, we should guarantee the extremes are right.
-                //if (t == 0f || t == 1f)
-                //{
-                //    return t;
-                //}
-                return CalcBezier(getTForX(t), mY1, mY2);
+            // Because JavaScript number are imprecise, we should guarantee the extremes are right.
+            //if (t == 0f || t == 1f)
+            //{
+            //    return t;
+            //}
+            return CalcBezier(getTForX(t), mY1, mY2);
         };
     }
 

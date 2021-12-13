@@ -1,9 +1,9 @@
-﻿using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.SkiaSharpView.WinForms;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
+using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.SkiaSharpView.WinForms;
 using ViewModelsSamples.Events.Polar;
 
 namespace WinFormsSample.Events.Polar;

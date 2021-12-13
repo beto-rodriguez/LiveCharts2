@@ -1,10 +1,10 @@
-﻿using LiveChartsCore;
-using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using LiveChartsCore;
+using LiveChartsCore.Measure;
+using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.General.Legends;
 
@@ -32,8 +32,8 @@ public class ViewModel : INotifyPropertyChanged
             }
         };
 
-    public List<AvailablePosition> Positions => new List<AvailablePosition>
-        {
+    public List<AvailablePosition> Positions => new()
+    {
             new AvailablePosition("hidden", LegendPosition.Hidden),
             new AvailablePosition("top", LegendPosition.Top),
             new AvailablePosition("bottom", LegendPosition.Bottom),

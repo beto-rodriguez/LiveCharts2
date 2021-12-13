@@ -1,8 +1,8 @@
-﻿using LiveChartsCore.Defaults;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Forms;
+using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.WinForms;
-using System.Collections.ObjectModel;
-using System.Windows.Forms;
 using ViewModelsSamples.Events.AddPointOnClick;
 
 namespace WinFormsSample.Events.AddPointOnClick;

@@ -1,5 +1,5 @@
-﻿using LiveChartsCore.SkiaSharpView.WinForms;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+using LiveChartsCore.SkiaSharpView.WinForms;
 using ViewModelsSamples.StepLines.Zoom;
 
 namespace WinFormsSample.StepLines.Zoom;

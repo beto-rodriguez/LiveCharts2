@@ -1,8 +1,8 @@
-﻿using LiveChartsCore.Kernel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Input;
+using LiveChartsCore.Kernel;
 
 namespace ViewModelsSamples.Events.Polar;
 

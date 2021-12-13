@@ -1,8 +1,8 @@
-﻿using LiveChartsCore;
+﻿using System.Collections.Generic;
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
-using System.Collections.Generic;
 
 namespace ViewModelsSamples.Lines.Area;
 
@@ -24,7 +24,7 @@ public class ViewModel
         };
 
     // Creates a gray background and border in the draw margin.
-    public DrawMarginFrame DrawMarginFrame => new DrawMarginFrame
+    public DrawMarginFrame DrawMarginFrame => new()
     {
         Fill = new SolidColorPaint(new SKColor(220, 220, 220)),
         Stroke = new SolidColorPaint(new SKColor(180, 180, 180), 1)

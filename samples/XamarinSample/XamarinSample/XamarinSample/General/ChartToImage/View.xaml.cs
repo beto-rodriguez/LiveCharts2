@@ -1,10 +1,10 @@
-﻿using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-using LiveChartsCore.SkiaSharpView.SKCharts;
-using ViewModelsSamples.General.ChartToImage;
-using LiveChartsCore.SkiaSharpView.Xamarin.Forms;
+﻿using System;
 using System.IO;
-using System;
+using LiveChartsCore.SkiaSharpView.SKCharts;
+using LiveChartsCore.SkiaSharpView.Xamarin.Forms;
+using ViewModelsSamples.General.ChartToImage;
+using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace XamarinSample.General.ChartToImage;
 

@@ -1,8 +1,8 @@
-﻿using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.General.Visibility;
 

@@ -10,7 +10,7 @@ namespace ViewModelsSamples.General.MultiThreading;
 
 public class ViewModel
 {
-    private readonly Random _r = new Random();
+    private readonly Random _r = new();
     private readonly int _delay = 100;
     private readonly ObservableCollection<ObservableValue> _values;
 

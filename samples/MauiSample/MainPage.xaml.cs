@@ -1,6 +1,6 @@
-﻿using Microsoft.Maui.Controls;
+﻿using System;
+using Microsoft.Maui.Controls;
 using Microsoft.Maui.Essentials;
-using System;
 
 namespace MauiSample;
 

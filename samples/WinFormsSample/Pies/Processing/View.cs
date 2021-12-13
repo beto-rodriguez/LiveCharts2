@@ -1,9 +1,9 @@
-﻿using LiveChartsCore.Defaults;
+﻿using System.Drawing;
+using System.Windows.Forms;
+using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.WinForms;
-using System.Drawing;
-using System.Windows.Forms;
 using ViewModelsSamples.Pies.Processing;
 
 namespace WinFormsSample.Pies.Processing;

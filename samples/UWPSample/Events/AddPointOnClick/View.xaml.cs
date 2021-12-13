@@ -1,7 +1,7 @@
-﻿using Windows.UI.Xaml.Controls;
-using ViewModelsSamples.Events.AddPointOnClick;
+﻿using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Defaults;
+using ViewModelsSamples.Events.AddPointOnClick;
+using Windows.UI.Xaml.Controls;
 
 namespace UWPSample.Events.AddPointOnClick
 {

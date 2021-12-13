@@ -1,8 +1,8 @@
-﻿using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Axes.Logaritmic;
 

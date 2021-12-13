@@ -1,5 +1,5 @@
-﻿using LiveChartsCore.SkiaSharpView.WinForms;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+using LiveChartsCore.SkiaSharpView.WinForms;
 using ViewModelsSamples.Pies.Doughnut;
 
 namespace WinFormsSample.Pies.Doughnut;

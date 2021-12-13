@@ -1,10 +1,10 @@
-﻿using LiveChartsCore;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
+using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace ViewModelsSamples.General.Sections;
 

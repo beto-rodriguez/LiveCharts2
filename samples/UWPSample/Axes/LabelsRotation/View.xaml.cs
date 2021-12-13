@@ -6,7 +6,7 @@ namespace UWPSample.Axes.LabelsRotation
     {
         public View()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

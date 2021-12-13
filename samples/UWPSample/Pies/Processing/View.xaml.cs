@@ -1,9 +1,9 @@
 ﻿using System;
 using LiveChartsCore.SkiaSharpView.Painting;
+using Windows.UI;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
-using Windows.UI;
 
 namespace UWPSample.Pies.Processing
 {

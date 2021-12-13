@@ -1,8 +1,8 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using LiveChartsCore.SkiaSharpView.WinUI;
+﻿using System;
 using LiveChartsCore.SkiaSharpView.SKCharts;
+using LiveChartsCore.SkiaSharpView.WinUI;
+using Microsoft.UI.Xaml.Controls;
 using ViewModelsSamples.General.ChartToImage;
-using System;
 
 namespace WinUISample.General.ChartToImage;
 

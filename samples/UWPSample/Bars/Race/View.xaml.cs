@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
 using ViewModelsSamples.Bars.Race;
+using Windows.UI.Xaml.Controls;
 
 namespace UWPSample.Bars.Race
 {

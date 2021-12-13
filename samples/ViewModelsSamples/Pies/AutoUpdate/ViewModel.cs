@@ -1,15 +1,15 @@
-﻿using LiveChartsCore;
-using LiveChartsCore.Defaults;
-using LiveChartsCore.SkiaSharpView;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using LiveChartsCore;
+using LiveChartsCore.Defaults;
+using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Pies.AutoUpdate;
 
 public class ViewModel
 {
-    private Random random = new Random();
+    private readonly Random random = new();
 
     public ViewModel()
     {

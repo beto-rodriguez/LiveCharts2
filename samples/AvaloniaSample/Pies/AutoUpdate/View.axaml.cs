@@ -1,6 +1,6 @@
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using System.Threading.Tasks;
 using ViewModelsSamples.Pies.AutoUpdate;
 
 namespace AvaloniaSample.Pies.AutoUpdate;

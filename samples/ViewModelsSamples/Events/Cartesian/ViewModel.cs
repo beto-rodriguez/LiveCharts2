@@ -1,11 +1,11 @@
-﻿using LiveChartsCore;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Windows.Input;
+using LiveChartsCore;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Windows.Input;
 
 namespace ViewModelsSamples.Events.Cartesian;
 
@@ -30,7 +30,7 @@ public class ViewModel
             Mapping = (city, point) =>
             {
                 point.PrimaryValue = city.Population; // use the population property in this series // mark
-                    point.SecondaryValue = point.Context.Index;
+                point.SecondaryValue = point.Context.Index;
             }
         };
 

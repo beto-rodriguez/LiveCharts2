@@ -1,19 +1,19 @@
-﻿using LiveChartsCore;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 
 namespace ViewModelsSamples.Bars.Race;
 
 public class ViewModel : INotifyPropertyChanged
 {
-    private readonly Random _r = new Random();
+    private readonly Random _r = new();
     private List<ISeries> _series;
 
     public ViewModel()

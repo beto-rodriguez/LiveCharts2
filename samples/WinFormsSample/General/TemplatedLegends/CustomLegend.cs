@@ -1,11 +1,11 @@
-﻿using LiveChartsCore;
+﻿using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
+using LiveChartsCore;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.WinForms;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
 
 namespace WinFormsSample.General.TemplatedLegends;
 

@@ -1,8 +1,8 @@
-﻿using LiveChartsCore;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace ViewModelsSamples.Scatter.Basic;
 

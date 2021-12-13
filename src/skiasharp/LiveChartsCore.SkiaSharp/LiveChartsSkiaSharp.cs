@@ -112,25 +112,25 @@ public static class LiveChartsSkiaSharp
                            })
                            .HasRuleForLineSeries(lineSeries =>
                            {
-                                   // at this point ForAnySeries() was already called
-                                   // we are configuring the missing properties
-                                   lineSeries.GeometrySize = 18;
+                               // at this point ForAnySeries() was already called
+                               // we are configuring the missing properties
+                               lineSeries.GeometrySize = 18;
                                lineSeries.GeometryFill = new SolidColorPaint(LvcColor.FromArgb(255, 250, 250, 250).AsSKColor());
                                lineSeries.GeometryStroke = DefaultPaint;
                            })
                            .HasRuleForStepLineSeries(steplineSeries =>
                            {
-                                   // at this point ForAnySeries() was already called
-                                   // we are configuring the missing properties
-                                   steplineSeries.GeometrySize = 18;
+                               // at this point ForAnySeries() was already called
+                               // we are configuring the missing properties
+                               steplineSeries.GeometrySize = 18;
                                steplineSeries.GeometryFill = new SolidColorPaint(LvcColor.FromArgb(255, 250, 250, 250).AsSKColor());
                                steplineSeries.GeometryStroke = DefaultPaint;
                            })
                            .HasRuleForStackedLineSeries(stackedLine =>
                            {
-                                   // at this point both ForAnySeries() and ForLineSeries() were already called
-                                   // again we are correcting the previous settings
-                                   stackedLine.GeometrySize = 0;
+                               // at this point both ForAnySeries() and ForLineSeries() were already called
+                               // again we are correcting the previous settings
+                               stackedLine.GeometrySize = 0;
                                stackedLine.GeometryFill = null;
                                stackedLine.GeometryStroke = null;
                                stackedLine.Stroke = null;
@@ -138,9 +138,9 @@ public static class LiveChartsSkiaSharp
                            })
                            .HasRuleForBarSeries(barSeries =>
                            {
-                                   // only ForAnySeries() has run, a bar series is not
-                                   // any of the previous types.
-                                   barSeries.Stroke = null;
+                               // only ForAnySeries() has run, a bar series is not
+                               // any of the previous types.
+                               barSeries.Stroke = null;
                                barSeries.Rx = 4;
                                barSeries.Ry = 4;
                            })
@@ -165,8 +165,8 @@ public static class LiveChartsSkiaSharp
                            })
                            .HasRuleForHeatSeries(heatSeries =>
                            {
-                                   // ... rules here
-                               })
+                               // ... rules here
+                           })
                            .HasRuleForFinancialSeries(financialSeries =>
                            {
                                financialSeries.UpFill = DefaultPaint;
@@ -234,17 +234,17 @@ public static class LiveChartsSkiaSharp
                            })
                            .HasRuleForStepLineSeries(steplineSeries =>
                            {
-                                   // at this point ForAnySeries() was already called
-                                   // we are configuring the missing properties
-                                   steplineSeries.GeometrySize = 18;
+                               // at this point ForAnySeries() was already called
+                               // we are configuring the missing properties
+                               steplineSeries.GeometrySize = 18;
                                steplineSeries.GeometryFill = new SolidColorPaint(LvcColor.FromArgb(255, 40, 40, 40).AsSKColor());
                                steplineSeries.GeometryStroke = DefaultPaint;
                            })
                            .HasRuleForStackedLineSeries(stackedLine =>
                            {
-                                   // at this point both ForAnySeries() and ForLineSeries() were already called
-                                   // again we are correcting the previous settings
-                                   stackedLine.GeometrySize = 0;
+                               // at this point both ForAnySeries() and ForLineSeries() were already called
+                               // again we are correcting the previous settings
+                               stackedLine.GeometrySize = 0;
                                stackedLine.GeometryFill = null;
                                stackedLine.GeometryStroke = null;
                                stackedLine.Stroke = null;
@@ -252,9 +252,9 @@ public static class LiveChartsSkiaSharp
                            })
                            .HasRuleForBarSeries(barSeries =>
                            {
-                                   // only ForAnySeries() has run, a bar series is not
-                                   // any of the previous types.
-                                   barSeries.Stroke = null;
+                               // only ForAnySeries() has run, a bar series is not
+                               // any of the previous types.
+                               barSeries.Stroke = null;
                                barSeries.Rx = 4;
                                barSeries.Ry = 4;
                            })
@@ -279,8 +279,8 @@ public static class LiveChartsSkiaSharp
                            })
                            .HasRuleForHeatSeries(heatSeries =>
                            {
-                                   // ... rules here
-                               })
+                               // ... rules here
+                           })
                            .HasRuleForFinancialSeries(financialSeries =>
                            {
                                financialSeries.UpFill = DefaultPaint;

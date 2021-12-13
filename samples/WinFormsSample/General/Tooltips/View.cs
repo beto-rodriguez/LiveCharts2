@@ -1,6 +1,6 @@
-﻿using LiveChartsCore.Measure;
+﻿using System.Windows.Forms;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.WinForms;
-using System.Windows.Forms;
 using ViewModelsSamples.General.Tooltips;
 
 namespace WinFormsSample.General.Tooltips;

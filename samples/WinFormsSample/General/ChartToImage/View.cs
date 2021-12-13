@@ -1,16 +1,16 @@
-﻿using LiveChartsCore.SkiaSharpView.SKCharts;
-using LiveChartsCore.SkiaSharpView.WinForms;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using LiveChartsCore.SkiaSharpView.SKCharts;
+using LiveChartsCore.SkiaSharpView.WinForms;
 using ViewModelsSamples.General.ChartToImage;
 
 namespace WinFormsSample.General.ChartToImage;
 
 public partial class View : UserControl
 {
-    private CartesianChart _cartesian;
-    private PieChart _pie;
-    private GeoMap _map;
+    private readonly CartesianChart _cartesian;
+    private readonly PieChart _pie;
+    private readonly GeoMap _map;
 
     public View()
     {

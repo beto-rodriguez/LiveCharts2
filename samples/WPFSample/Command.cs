@@ -5,7 +5,7 @@ namespace WPFSample;
 
 public class Command : ICommand
 {
-    private Action<object> command;
+    private readonly Action<object> command;
     public event EventHandler CanExecuteChanged;
 
     public Command(Action<object> command)

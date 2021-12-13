@@ -1,10 +1,10 @@
-﻿using LiveChartsCore;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace ViewModelsSamples.Lines.Padding;
 
@@ -27,7 +27,7 @@ public class ViewModel
                 }
         };
 
-    public DrawMarginFrame DrawMarginFrame => new DrawMarginFrame
+    public DrawMarginFrame DrawMarginFrame => new()
     {
         Fill = new SolidColorPaint(new SKColor(220, 220, 220)),
         Stroke = new SolidColorPaint(new SKColor(180, 180, 180), 2)

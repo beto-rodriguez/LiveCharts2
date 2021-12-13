@@ -1,6 +1,6 @@
-﻿using LiveChartsCore;
+﻿using System;
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
-using System;
 
 namespace ViewModelsSamples.Axes.Shared;
 

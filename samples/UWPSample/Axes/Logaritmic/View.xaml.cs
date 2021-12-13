@@ -6,7 +6,7 @@ namespace UWPSample.Axes.Logaritmic
     {
         public View()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

@@ -1,10 +1,10 @@
-﻿using LiveChartsCore;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace ViewModelsSamples.Scatter.Bubbles;
 

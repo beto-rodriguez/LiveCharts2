@@ -1,9 +1,9 @@
-﻿using Windows.UI.Xaml.Controls;
-using LiveChartsCore.SkiaSharpView.UWP;
+﻿using System;
 using LiveChartsCore.SkiaSharpView.SKCharts;
+using LiveChartsCore.SkiaSharpView.UWP;
 using ViewModelsSamples.General.ChartToImage;
 using Windows.UI.Xaml;
-using System;
+using Windows.UI.Xaml.Controls;
 
 namespace UWPSample.General.ChartToImage
 {

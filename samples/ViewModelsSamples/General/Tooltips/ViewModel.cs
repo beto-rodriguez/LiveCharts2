@@ -1,10 +1,10 @@
-﻿using LiveChartsCore;
-using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using LiveChartsCore;
+using LiveChartsCore.Measure;
+using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.General.Tooltips;
 
@@ -26,8 +26,8 @@ public class ViewModel : INotifyPropertyChanged
             }
         };
 
-    public List<AvailablePositions> Positions => new List<AvailablePositions>
-        {
+    public List<AvailablePositions> Positions => new()
+    {
             new AvailablePositions("hidden", TooltipPosition.Hidden),
             new AvailablePositions("top", TooltipPosition.Top),
             new AvailablePositions("bottom", TooltipPosition.Bottom),

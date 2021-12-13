@@ -1,7 +1,7 @@
-﻿using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.StepLines.Zoom;
 

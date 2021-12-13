@@ -1,6 +1,6 @@
-﻿using LiveChartsCore.SkiaSharpView.WinForms;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using LiveChartsCore.SkiaSharpView.WinForms;
 using ViewModelsSamples.General.Animations;
 
 namespace WinFormsSample.General.Animations;

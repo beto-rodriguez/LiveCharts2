@@ -6,7 +6,7 @@ namespace UWPSample.Axes.NamedLabels
     {
         public View()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

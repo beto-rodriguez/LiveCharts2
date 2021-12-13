@@ -4,8 +4,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Avalonia.Media;
 using LiveChartsCore;
-using LiveChartsCore.Themes;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.Themes;
 
 namespace AvaloniaSample;
 
@@ -57,20 +57,20 @@ public class MainWindowViewModel : INotifyPropertyChanged
                 .AddDarkTheme(
                     theme =>
                     {
-                            // you can add additional rules to the current theme
-                            theme.Style
-                            .HasRuleForLineSeries(lineSeries =>
-                            {
-                                    // this method will be called in the constructor of a line series instance
+                        // you can add additional rules to the current theme
+                        theme.Style
+                        .HasRuleForLineSeries(lineSeries =>
+                        {
+                            // this method will be called in the constructor of a line series instance
 
-                                    lineSeries.LineSmoothness = 0.65;
-                                    // ...
-                                    // add more custom styles here ...
-                                }).HasRuleForBarSeries(barSeries =>
-                            {
-                                    // this method will be called in the constructor of a column series instance
-                                    // ...
-                                });
+                            lineSeries.LineSmoothness = 0.65;
+                            // ...
+                            // add more custom styles here ...
+                        }).HasRuleForBarSeries(barSeries =>
+                    {
+                        // this method will be called in the constructor of a column series instance
+                        // ...
+                    });
                     }));
     }
 

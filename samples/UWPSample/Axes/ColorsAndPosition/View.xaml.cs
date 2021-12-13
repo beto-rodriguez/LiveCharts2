@@ -6,7 +6,7 @@ namespace UWPSample.Axes.ColorsAndPosition
     {
         public View()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

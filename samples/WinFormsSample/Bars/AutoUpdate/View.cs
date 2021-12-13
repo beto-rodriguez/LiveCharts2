@@ -1,6 +1,6 @@
-﻿using LiveChartsCore.SkiaSharpView.WinForms;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows.Forms;
+using LiveChartsCore.SkiaSharpView.WinForms;
 using ViewModelsSamples.Bars.AutoUpdate;
 
 namespace WinFormsSample.Bars.AutoUpdate;

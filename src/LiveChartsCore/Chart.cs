@@ -480,21 +480,21 @@ public abstract class Chart<TDrawingContext> : IChart
                  lock (Canvas.Sync)
                  {
 #if DEBUG
-                         if (LiveCharts.EnableLogging)
+                     if (LiveCharts.EnableLogging)
                      {
                          Trace.WriteLine(
                              $"[tooltip view thread]".PadRight(60) +
                              $"tread: {Environment.CurrentManagedThreadId}");
                      }
 #endif
-                         if (Tooltip is null || TooltipPosition == TooltipPosition.Hidden || !_isPointerIn) return;
+                     if (Tooltip is null || TooltipPosition == TooltipPosition.Hidden || !_isPointerIn) return;
 
-                         // TODO:
-                         // all this needs a performance review...
-                         // it should not be crital, should not be even close to be the 'bottle neck' in a case where
-                         // we face perfomance issues.
+                     // TODO:
+                     // all this needs a performance review...
+                     // it should not be crital, should not be even close to be the 'bottle neck' in a case where
+                     // we face perfomance issues.
 
-                         var points = FindHoveredPointsBy(_pointerPosition).ToArray();
+                     var points = FindHoveredPointsBy(_pointerPosition).ToArray();
 
                      if (!points.Any())
                      {

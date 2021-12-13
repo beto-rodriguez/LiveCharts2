@@ -1,21 +1,21 @@
-﻿using LiveChartsCore;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows.Input;
+using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.Themes;
 using SkiaSharp;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
 
 namespace ViewModelsSamples.StepLines.Properties;
 
 public class ViewModel : INotifyPropertyChanged
 {
     private readonly LvcColor[] colors = ColorPalletes.FluentDesign;
-    private readonly Random random = new Random();
+    private readonly Random random = new();
     private StepLineSeries<double> lineSeries;
     private int currentColor = 0;
     private List<ISeries> series;

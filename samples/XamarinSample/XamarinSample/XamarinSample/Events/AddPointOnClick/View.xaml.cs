@@ -1,9 +1,9 @@
 ﻿using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.SkiaSharpView.Xamarin.Forms;
+using ViewModelsSamples.Events.AddPointOnClick;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using ViewModelsSamples.Events.AddPointOnClick;
-using LiveChartsCore.SkiaSharpView.Xamarin.Forms;
 
 namespace XamarinSample.Events.AddPointOnClick;
 
