@@ -1,11 +1,5 @@
 {{ render this "~/shared/genericSampleHeader.md" }}
 
-## View model
-
-```
-{{ full_name | get_vm_from_docs }}
-```
-
 {{~ if xaml ~}}
 ## XAML
 {{~ end ~}}
@@ -14,10 +8,16 @@
 ## Form code behind
 {{~ end ~}}
 
-{{~ if blazor~}}
+{{~~ if blazor~}}
 ## HTML
 {{~ end~}}
 
 ```
-{{ full_name | get_view_from_docs }}
+{{ "~/samples/" | get_view_from_docs }}
+```
+
+## View model
+
+```
+{{ "" | get_vm_from_docs }}
 ```

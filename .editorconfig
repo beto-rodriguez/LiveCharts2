@@ -175,6 +175,7 @@ file_header_template = The MIT License(MIT)\n\nCopyright(c) 2021 Alberto Rodrigu
 # Default severity for analyzer diagnostics with category 'Style'
 dotnet_analyzer_diagnostic.category-Style.severity = warning
 dotnet_diagnostic.CA1825.severity=warning
+csharp_style_namespace_declarations=file_scoped:silent
 
 [*.{cpp,h,in}]
 curly_bracket_next_line = true

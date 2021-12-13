@@ -8,6 +8,7 @@
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
 		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+    <LangVersion>10.0</LangVersion>
 
 		<!-- Display name -->
 		<ApplicationTitle>MauiSample</ApplicationTitle>

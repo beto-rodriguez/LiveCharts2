@@ -119,38 +119,46 @@ If you need to customize more, you can also use the create your own template:
 
 {{~ if avalonia ~}}
 {{~ "~/../samples/AvaloniaSample/General/TemplatedLegends/View.axaml" | render_file_as_code ~}}
+
 :::tip
-You can find a more complete example at the source code of the `DefaultLegend` class 
+You can find another example at the source code of the `DefaultLegend` class 
 ([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia/DefaultLegend.axaml), 
 [code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia/DefaultLegend.axaml.cs)).
 :::
+
 {{~ end ~}}
 
 {{~ if blazor ~}}
 {{~ "~/../samples/BlazorSample/Pages/General/TemplatedLegends.razor" | render_file_as_code ~}}
+
 :::tip
-You can find a more complete example at the source code of the `DefaultLegend` class 
+You can find another example at the source code of the `DefaultLegend` class 
 ([view](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Blazor/DefaultLegend.razor), 
 [code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Blazor/DefaultLegend.razor.cs)).
 :::
+
 {{~ end ~}}
 
 {{~ if maui ~}}
 {{~ "~/../samples/MauiSample/General/TemplatedLegends/View.xaml" | render_file_as_code ~}}
+
 :::tip
-You can find a more complete example at the source code of the `DefaultLegend` class 
+You can find another example at the source code of the `DefaultLegend` class 
 ([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Maui/DefaultLegend.xaml), 
 [code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Maui/DefaultLegend.xaml.cs)).
 :::
+
 {{~ end ~}}
 
 {{~ if uwp ~}}
 {{~ "~/../samples/UWPSample/General/TemplatedLegends/View.xaml" | render_file_as_code ~}}
+
 :::tip
-You can find a more complete example at the source code of the `DefaultLegend` class 
+You can find another example at the source code of the `DefaultLegend` class 
 ([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.UWP/DefaultLegend.xaml), 
 [code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.UWP/DefaultLegend.xaml.cs)).
 :::
+
 {{~ end ~}}
 
 {{~ if winforms ~}}
@@ -167,38 +175,46 @@ Your legend is ready to be used, now when you create a chart, we have to pass a 
 {
     Series = viewModel.Series
 };</code></pre>
+
 :::tip
-You can find a more complete example at the source code of the `DefaultLegend` class 
+You can find another example at the source code of the `DefaultLegend` class 
 ([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia/DefaultLegend.axaml.cs), 
 [code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia/DefaultLegend.axaml.cs)).
 :::
+
 {{~ end ~}}
 
 {{~ if winui ~}}
 {{~ "~/../samples/WinUISample/WinUI/WinUI/General/TemplatedLegends/View.xaml" | render_file_as_code ~}}
+
 :::tip
-You can find a more complete example at the source code of the `DefaultLegend` class 
+You can find another example at the source code of the `DefaultLegend` class 
 ([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI/DefaultLegend.xaml), 
 [code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI/DefaultLegend.xaml.cs)).
 :::
+
 {{~ end ~}}
 
 {{~ if wpf ~}}
 {{~ "~/../samples/WPFSample/General/TemplatedLegends/View.xaml" | render_file_as_code ~}}
+
 :::tip
-You can find a more complete example at the source code of the `DefaultLegend` class 
+You can find another example at the source code of the `DefaultLegend` class 
 ([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.WPF/DefaultLegend.xaml), 
 [code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.WPF/DefaultLegend.xaml.cs)).
 :::
+
 {{~ end ~}}
 
 {{~ if xamarin ~}}
 {{~ "~/../samples/XamarinSample/XamarinSample/XamarinSample/General/TemplatedLegends/View.xaml" | render_file_as_code ~}}
+
 :::tip
-You can find a more complete example at the source code of the `DefaultLegend` class 
+You can find another example at the source code of the `DefaultLegend` class 
 ([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms/DefaultLegend.xaml), 
 [code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms/DefaultLegend.xaml.cs)).
 :::
+
 {{~ end ~}}
 
 ![custom tooltip](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/legend-custom-template.png)

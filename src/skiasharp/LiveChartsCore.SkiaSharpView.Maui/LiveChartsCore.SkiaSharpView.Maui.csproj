@@ -6,6 +6,7 @@
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
     <Nullable>enable</Nullable>
+    <LangVersion>10.0</LangVersion>
 
 		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-ios'">14.2</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
