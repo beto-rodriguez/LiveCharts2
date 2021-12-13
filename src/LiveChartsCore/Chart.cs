@@ -123,7 +123,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <value>
     /// The measure work.
     /// </value>
-    public object MeasureWork { get; protected set; } = new object();
+    public object MeasureWork { get; protected set; } = new();
 
     /// <summary>
     /// Gets or sets the theme identifier.
@@ -131,7 +131,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <value>
     /// The theme identifier.
     /// </value>
-    public object ThemeId { get; protected set; } = new object();
+    public object ThemeId { get; protected set; } = new();
 
     /// <summary>
     /// Gets whether the control is loaded.
@@ -183,7 +183,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <value>
     /// The size of the control.
     /// </value>
-    public LvcSize ControlSize { get; protected set; } = new LvcSize();
+    public LvcSize ControlSize { get; protected set; } = new();
 
     /// <summary>
     /// Gets the draw margin location.
@@ -191,7 +191,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <value>
     /// The draw margin location.
     /// </value>
-    public LvcPoint DrawMarginLocation { get; protected set; } = new LvcPoint();
+    public LvcPoint DrawMarginLocation { get; protected set; } = new();
 
     /// <summary>
     /// Gets the size of the draw margin.
@@ -199,7 +199,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <value>
     /// The size of the draw margin.
     /// </value>
-    public LvcSize DrawMarginSize { get; protected set; } = new LvcSize();
+    public LvcSize DrawMarginSize { get; protected set; } = new();
 
     /// <summary>
     /// Gets the legend position.

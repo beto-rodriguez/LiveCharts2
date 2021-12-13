@@ -13,8 +13,7 @@ public class ViewModel : INotifyPropertyChanged
     private AvailableSpeed _selectedAvailableSpeed;
     private TimeSpan _actualSpeed;
 
-    private ISeries[] _series = new ISeries[]
-    {
+    private ISeries[] _series = {
             new ColumnSeries<int> { Values = new [] { 5, 6, 3, 1, 8, 5, 3, 5, 6, 3, 1} }
     };
 

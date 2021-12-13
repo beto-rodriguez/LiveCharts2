@@ -129,12 +129,12 @@ public partial class DefaultLegend : ContentView, IChartLegend<SkiaSharpDrawingC
                 if (legendOrientation == LiveChartsCore.Measure.LegendOrientation.Auto) LegendOrientation = StackOrientation.Horizontal;
                 mobileChart.LayoutGrid.ColumnDefinitions = new ColumnDefinitionCollection
                     {
-                        new ColumnDefinition { Width = GridLength.Star }
+                        new() { Width = GridLength.Star }
                     };
                 mobileChart.LayoutGrid.RowDefinitions = new RowDefinitionCollection
                     {
-                        new RowDefinition { Height = GridLength.Auto },
-                        new RowDefinition { Height = GridLength.Star }
+                        new() { Height = GridLength.Auto },
+                        new() { Height = GridLength.Star }
                     };
                 GridLayout.SetRow(mobileChart.Legend, 0);
                 GridLayout.SetRow(mobileChart.Canvas, 1);
@@ -146,12 +146,12 @@ public partial class DefaultLegend : ContentView, IChartLegend<SkiaSharpDrawingC
                 if (legendOrientation == LiveChartsCore.Measure.LegendOrientation.Auto) LegendOrientation = StackOrientation.Vertical;
                 mobileChart.LayoutGrid.RowDefinitions = new RowDefinitionCollection
                     {
-                        new RowDefinition { Height = GridLength.Star }
+                        new() { Height = GridLength.Star }
                     };
                 mobileChart.LayoutGrid.ColumnDefinitions = new ColumnDefinitionCollection
                     {
-                        new ColumnDefinition { Width = GridLength.Auto },
-                        new ColumnDefinition { Width = GridLength.Star }
+                        new() { Width = GridLength.Auto },
+                        new() { Width = GridLength.Star }
                     };
                 GridLayout.SetColumn(mobileChart.Legend, 0);
                 GridLayout.SetColumn(mobileChart.Canvas, 1);
@@ -163,12 +163,12 @@ public partial class DefaultLegend : ContentView, IChartLegend<SkiaSharpDrawingC
                 if (legendOrientation == LiveChartsCore.Measure.LegendOrientation.Auto) LegendOrientation = StackOrientation.Vertical;
                 mobileChart.LayoutGrid.RowDefinitions = new RowDefinitionCollection
                     {
-                        new RowDefinition { Height = GridLength.Star }
+                        new() { Height = GridLength.Star }
                     };
                 mobileChart.LayoutGrid.ColumnDefinitions = new ColumnDefinitionCollection
                     {
-                        new ColumnDefinition { Width = GridLength.Star },
-                        new ColumnDefinition { Width = GridLength.Auto }
+                        new() { Width = GridLength.Star },
+                        new() { Width = GridLength.Auto }
                     };
                 GridLayout.SetColumn(mobileChart.Canvas, 0);
                 GridLayout.SetColumn(mobileChart.Legend, 1);
@@ -180,12 +180,12 @@ public partial class DefaultLegend : ContentView, IChartLegend<SkiaSharpDrawingC
                 if (legendOrientation == LiveChartsCore.Measure.LegendOrientation.Auto) LegendOrientation = StackOrientation.Horizontal;
                 mobileChart.LayoutGrid.ColumnDefinitions = new ColumnDefinitionCollection
                     {
-                        new ColumnDefinition { Width = GridLength.Star }
+                        new() { Width = GridLength.Star }
                     };
                 mobileChart.LayoutGrid.RowDefinitions = new RowDefinitionCollection
                     {
-                        new RowDefinition { Height = GridLength.Star },
-                        new RowDefinition { Height = GridLength.Auto }
+                        new() { Height = GridLength.Star },
+                        new() { Height = GridLength.Auto }
                     };
                 GridLayout.SetRow(mobileChart.Canvas, 0);
                 GridLayout.SetRow(mobileChart.Legend, 1);

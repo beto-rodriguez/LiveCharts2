@@ -18,11 +18,11 @@ public class ViewModel
                 {
                     Values = new ObservableCollection<TimeSpanPoint>
                     {
-                        new TimeSpanPoint(TimeSpan.FromMilliseconds(1), 10),
-                        new TimeSpanPoint(TimeSpan.FromMilliseconds(2), 6),
-                        new TimeSpanPoint(TimeSpan.FromMilliseconds(3), 3),
-                        new TimeSpanPoint(TimeSpan.FromMilliseconds(4), 12),
-                        new TimeSpanPoint(TimeSpan.FromMilliseconds(5), 8),
+                        new(TimeSpan.FromMilliseconds(1), 10),
+                        new(TimeSpan.FromMilliseconds(2), 6),
+                        new(TimeSpan.FromMilliseconds(3), 3),
+                        new(TimeSpan.FromMilliseconds(4), 12),
+                        new(TimeSpan.FromMilliseconds(5), 8),
                     },
                 }
             };
@@ -33,7 +33,7 @@ public class ViewModel
 
         XAxes = new List<Axis>
             {
-                new Axis
+                new()
                 {
                     Labeler = value => TimeSpan.FromTicks((long)value).ToString("fff") + " ms",
 

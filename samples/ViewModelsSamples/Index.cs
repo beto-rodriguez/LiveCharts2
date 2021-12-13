@@ -2,8 +2,7 @@
 
 public static class Index
 {
-    public static string[] Samples = new[]
-    {
+    public static string[] Samples = {
             "Events/AddPointOnClick",
             "Events/Cartesian",
             "Events/Pie",

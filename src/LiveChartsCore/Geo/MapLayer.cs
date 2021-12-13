@@ -87,7 +87,7 @@ public class MapLayer<TDrawingContext>
     /// <summary>
     /// Gets the lands.
     /// </summary>
-    public Dictionary<string, LandDefinition> Lands { get; private set; } = new Dictionary<string, LandDefinition>();
+    public Dictionary<string, LandDefinition> Lands { get; private set; } = new();
 
     /// <summary>
     /// Gets or sets the land condition, it must return true if the land is required.

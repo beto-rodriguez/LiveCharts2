@@ -41,7 +41,7 @@ public class LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPa
     /// <value>
     /// The geometry.
     /// </value>
-    public TVisual Geometry { get; set; } = new TVisual();
+    public TVisual Geometry { get; set; } = new();
 
     /// <summary>
     /// Gets the bezier.
@@ -49,7 +49,7 @@ public class LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPa
     /// <value>
     /// The bezier.
     /// </value>
-    public TBezierSegment Bezier { get; set; } = new TBezierSegment();
+    public TBezierSegment Bezier { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the path.

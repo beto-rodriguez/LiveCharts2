@@ -40,7 +40,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The chart builder.
     /// </value>
-    public List<Action<IChartView<TDrawingContext>>> ChartBuilder { get; set; } = new List<Action<IChartView<TDrawingContext>>>();
+    public List<Action<IChartView<TDrawingContext>>> ChartBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the axis builder.
@@ -48,7 +48,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The axis builder.
     /// </value>
-    public List<Action<IPlane<TDrawingContext>>> AxisBuilder { get; set; } = new List<Action<IPlane<TDrawingContext>>>();
+    public List<Action<IPlane<TDrawingContext>>> AxisBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the draw margin frame builder.
@@ -56,7 +56,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The draw margin frame builder.
     /// </value>
-    public List<Action<DrawMarginFrame<TDrawingContext>>> DrawMarginFrameBuilder { get; set; } = new List<Action<DrawMarginFrame<TDrawingContext>>>();
+    public List<Action<DrawMarginFrame<TDrawingContext>>> DrawMarginFrameBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the series builder.
@@ -64,7 +64,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IChartSeries<TDrawingContext>>> SeriesBuilder { get; set; } = new List<Action<IChartSeries<TDrawingContext>>>();
+    public List<Action<IChartSeries<TDrawingContext>>> SeriesBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the pie series builder.
@@ -72,7 +72,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IPieSeries<TDrawingContext>>> PieSeriesBuilder { get; set; } = new List<Action<IPieSeries<TDrawingContext>>>();
+    public List<Action<IPieSeries<TDrawingContext>>> PieSeriesBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the gauge series builder.
@@ -80,7 +80,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IPieSeries<TDrawingContext>>> GaugeSeriesBuilder { get; set; } = new List<Action<IPieSeries<TDrawingContext>>>();
+    public List<Action<IPieSeries<TDrawingContext>>> GaugeSeriesBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the gauge fill series builder.
@@ -88,7 +88,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IPieSeries<TDrawingContext>>> GaugeFillSeriesBuilder { get; set; } = new List<Action<IPieSeries<TDrawingContext>>>();
+    public List<Action<IPieSeries<TDrawingContext>>> GaugeFillSeriesBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the Cartesian series builder.
@@ -96,7 +96,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<ICartesianSeries<TDrawingContext>>> CartesianSeriesBuilder { get; set; } = new List<Action<ICartesianSeries<TDrawingContext>>>();
+    public List<Action<ICartesianSeries<TDrawingContext>>> CartesianSeriesBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the stepline series builder.
@@ -104,7 +104,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IStepLineSeries<TDrawingContext>>> StepLineSeriesBuilder { get; set; } = new List<Action<IStepLineSeries<TDrawingContext>>>();
+    public List<Action<IStepLineSeries<TDrawingContext>>> StepLineSeriesBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the  stacked stepline series builder.
@@ -112,7 +112,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IStepLineSeries<TDrawingContext>>> StackedStepLineSeriesBuilder { get; set; } = new List<Action<IStepLineSeries<TDrawingContext>>>();
+    public List<Action<IStepLineSeries<TDrawingContext>>> StackedStepLineSeriesBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the line series builder.
@@ -120,7 +120,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<ILineSeries<TDrawingContext>>> LineSeriesBuilder { get; set; } = new List<Action<ILineSeries<TDrawingContext>>>();
+    public List<Action<ILineSeries<TDrawingContext>>> LineSeriesBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the line series builder.
@@ -128,7 +128,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The polar series builder.
     /// </value>
-    public List<Action<IPolarSeries<TDrawingContext>>> PolarSeriesBuilder { get; set; } = new List<Action<IPolarSeries<TDrawingContext>>>();
+    public List<Action<IPolarSeries<TDrawingContext>>> PolarSeriesBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the line series builder.
@@ -136,7 +136,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The polar series builder.
     /// </value>
-    public List<Action<IPolarLineSeries<TDrawingContext>>> PolarLineSeriesBuilder { get; set; } = new List<Action<IPolarLineSeries<TDrawingContext>>>();
+    public List<Action<IPolarLineSeries<TDrawingContext>>> PolarLineSeriesBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the line series builder.
@@ -144,7 +144,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The polar series builder.
     /// </value>
-    public List<Action<IPolarSeries<TDrawingContext>>> StackedPolarSeriesBuilder { get; set; } = new List<Action<IPolarSeries<TDrawingContext>>>();
+    public List<Action<IPolarSeries<TDrawingContext>>> StackedPolarSeriesBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the line series builder.
@@ -152,7 +152,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IHeatSeries<TDrawingContext>>> HeatSeriesBuilder { get; set; } = new List<Action<IHeatSeries<TDrawingContext>>>();
+    public List<Action<IHeatSeries<TDrawingContext>>> HeatSeriesBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the financial series builder.
@@ -160,7 +160,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IFinancialSeries<TDrawingContext>>> FinancialSeriesBuilder { get; set; } = new List<Action<IFinancialSeries<TDrawingContext>>>();
+    public List<Action<IFinancialSeries<TDrawingContext>>> FinancialSeriesBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the stacked line series builder.
@@ -168,7 +168,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<ILineSeries<TDrawingContext>>> StackedLineSeriesBuilder { get; set; } = new List<Action<ILineSeries<TDrawingContext>>>();
+    public List<Action<ILineSeries<TDrawingContext>>> StackedLineSeriesBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the bar series builder.
@@ -176,7 +176,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IBarSeries<TDrawingContext>>> BarSeriesBuilder { get; set; } = new List<Action<IBarSeries<TDrawingContext>>>();
+    public List<Action<IBarSeries<TDrawingContext>>> BarSeriesBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the column series builder.
@@ -184,7 +184,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IBarSeries<TDrawingContext>>> ColumnSeriesBuilder { get; set; } = new List<Action<IBarSeries<TDrawingContext>>>();
+    public List<Action<IBarSeries<TDrawingContext>>> ColumnSeriesBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the row series builder.
@@ -192,7 +192,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IBarSeries<TDrawingContext>>> RowSeriesBuilder { get; set; } = new List<Action<IBarSeries<TDrawingContext>>>();
+    public List<Action<IBarSeries<TDrawingContext>>> RowSeriesBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the stacked bar series builder.
@@ -200,7 +200,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IStackedBarSeries<TDrawingContext>>> StackedBarSeriesBuilder { get; set; } = new List<Action<IStackedBarSeries<TDrawingContext>>>();
+    public List<Action<IStackedBarSeries<TDrawingContext>>> StackedBarSeriesBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the stacked column series builder.
@@ -208,7 +208,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IStackedBarSeries<TDrawingContext>>> StackedColumnSeriesBuilder { get; set; } = new List<Action<IStackedBarSeries<TDrawingContext>>>();
+    public List<Action<IStackedBarSeries<TDrawingContext>>> StackedColumnSeriesBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the stacked row series builder.
@@ -216,7 +216,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IStackedBarSeries<TDrawingContext>>> StackedRowSeriesBuilder { get; set; } = new List<Action<IStackedBarSeries<TDrawingContext>>>();
+    public List<Action<IStackedBarSeries<TDrawingContext>>> StackedRowSeriesBuilder { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the scatter series builder.
@@ -224,7 +224,7 @@ public class VisualsStyle<TDrawingContext> where TDrawingContext : DrawingContex
     /// <value>
     /// The pie series builder.
     /// </value>
-    public List<Action<IScatterSeries<TDrawingContext>>> ScatterSeriesBuilder { get; set; } = new List<Action<IScatterSeries<TDrawingContext>>>();
+    public List<Action<IScatterSeries<TDrawingContext>>> ScatterSeriesBuilder { get; set; } = new();
 
     /// <summary>
     /// Constructs a chart.

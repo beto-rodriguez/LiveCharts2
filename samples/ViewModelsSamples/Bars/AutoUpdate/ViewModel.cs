@@ -28,19 +28,19 @@ public class ViewModel
                 // for more info please see:
                 // https://github.com/beto-rodriguez/LiveCharts2/blob/master/samples/ViewModelsSamples/General/UserDefinedTypes/ViewModel.cs#L22
 
-                new ObservablePoint(index++, 2),
-                new ObservablePoint(index++, 5),
-                new ObservablePoint(index++, 4),
-                new ObservablePoint(index++, 5),
-                new ObservablePoint(index++, 2),
-                new ObservablePoint(index++, 6),
-                new ObservablePoint(index++, 6),
-                new ObservablePoint(index++, 6),
-                new ObservablePoint(index++, 4),
-                new ObservablePoint(index++, 2),
-                new ObservablePoint(index++, 3),
-                new ObservablePoint(index++, 8),
-                new ObservablePoint(index++, 3)
+                new(index++, 2),
+                new(index++, 5),
+                new(index++, 4),
+                new(index++, 5),
+                new(index++, 2),
+                new(index++, 6),
+                new(index++, 6),
+                new(index++, 6),
+                new(index++, 4),
+                new(index++, 2),
+                new(index++, 3),
+                new(index++, 8),
+                new(index++, 3)
             };
 
         // using a collection that implements INotifyCollectionChanged as your series collection

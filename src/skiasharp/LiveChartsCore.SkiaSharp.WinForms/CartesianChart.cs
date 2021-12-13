@@ -42,8 +42,8 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
     private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserverer;
     private IEnumerable<ISeries> _series = new List<ISeries>();
-    private IEnumerable<ICartesianAxis> _xAxes = new List<Axis> { new Axis() };
-    private IEnumerable<ICartesianAxis> _yAxes = new List<Axis> { new Axis() };
+    private IEnumerable<ICartesianAxis> _xAxes = new List<Axis> { new() };
+    private IEnumerable<ICartesianAxis> _yAxes = new List<Axis> { new() };
     private IEnumerable<Section<SkiaSharpDrawingContext>> _sections = new List<Section<SkiaSharpDrawingContext>>();
     private DrawMarginFrame<SkiaSharpDrawingContext>? _drawMarginFrame;
     private TooltipFindingStrategy _tooltipFindingStrategy = LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy;

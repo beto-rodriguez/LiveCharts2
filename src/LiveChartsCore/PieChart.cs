@@ -90,7 +90,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
     /// <value>
     /// The value bounds.
     /// </value>
-    public Bounds ValueBounds { get; private set; } = new Bounds();
+    public Bounds ValueBounds { get; private set; } = new();
 
     /// <summary>
     /// Gets the index bounds.
@@ -98,7 +98,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
     /// <value>
     /// The index bounds.
     /// </value>
-    public Bounds IndexBounds { get; private set; } = new Bounds();
+    public Bounds IndexBounds { get; private set; } = new();
 
     /// <summary>
     /// Gets the pushout bounds.
@@ -106,7 +106,7 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
     /// <value>
     /// The pushout bounds.
     /// </value>
-    public Bounds PushoutBounds { get; private set; } = new Bounds();
+    public Bounds PushoutBounds { get; private set; } = new();
 
     /// <summary>
     /// Finds the points near to the specified point.

@@ -25,7 +25,7 @@ public class ViewModel
 
     public IEnumerable<Axis> YAxes { get; set; } = new Axis[]
     {
-            new Axis
+            new()
             {
                 MinStep = 1, // forces the step of the axis to be at least 1
                 Labeler = value => Math.Pow(s_logBase, value).ToString() // converts the log scale back for the label
@@ -38,37 +38,37 @@ public class ViewModel
             {
                 Values = new ObservableCollection<LogaritmicPoint>
                 {
-                    new LogaritmicPoint
+                    new()
                     {
                         X = 1,
                         Y = 10
                     },
-                    new LogaritmicPoint
+                    new()
                     {
                         X = 2,
                         Y = 100
                     },
-                    new LogaritmicPoint
+                    new()
                     {
                         X = 3,
                         Y = 1000
                     },
-                    new LogaritmicPoint
+                    new()
                     {
                         X = 4,
                         Y = 10000
                     },
-                    new LogaritmicPoint
+                    new()
                     {
                         X = 5,
                         Y = 100000
                     },
-                    new LogaritmicPoint
+                    new()
                     {
                         X = 6,
                         Y = 1000000
                     },
-                    new LogaritmicPoint
+                    new()
                     {
                         X = 7,
                         Y = 10000000

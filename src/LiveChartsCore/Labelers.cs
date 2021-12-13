@@ -110,7 +110,7 @@ public static class Labelers
     /// <returns></returns>
     public static NamedLabeler BuildNamedLabeler(IList<string> labels)
     {
-        return new(labels);
+        return new NamedLabeler(labels);
     }
 
     private static string Log10_7(double value)

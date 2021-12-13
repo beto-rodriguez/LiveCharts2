@@ -18,7 +18,7 @@ public class ViewModel
                 {
                     Values = new ObservableCollection<DateTimePoint>
                     {
-                        new DateTimePoint
+                        new()
                         {
                             DateTime = new DateTime(2021, 1, 1),
                             Value = 3
@@ -28,32 +28,32 @@ public class ViewModel
                         // notice we are missing the day new DateTime(2021, 1, 2)
                         // ...
 
-                        new DateTimePoint
+                        new()
                         {
                             DateTime = new DateTime(2021, 1, 3),
                             Value = 6
                         },
-                         new DateTimePoint
-                        {
+                         new()
+                         {
                             DateTime = new DateTime(2021, 1, 4),
                             Value = 5
                         },
-                          new DateTimePoint
-                        {
+                          new()
+                          {
                             DateTime = new DateTime(2021, 1, 5),
                             Value = 3
                         },
-                           new DateTimePoint
-                        {
+                           new()
+                           {
                             DateTime = new DateTime(2021, 1, 6),
                             Value = 5
                         },
-                        new DateTimePoint
+                        new()
                         {
                             DateTime = new DateTime(2021, 1, 7),
                             Value = 8
                         },
-                        new DateTimePoint
+                        new()
                         {
                             DateTime = new DateTime(2021, 1, 8),
                             Value = 6
@@ -68,7 +68,7 @@ public class ViewModel
 
         XAxes = new List<Axis>
             {
-                new Axis
+                new()
                 {
                     Labeler = value => new DateTime((long) value).ToString("MMMM dd"),
                     LabelsRotation = 15,

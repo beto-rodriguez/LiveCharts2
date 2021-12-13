@@ -38,7 +38,7 @@ public class StackPosition<TDrawingContext>
     /// <value>
     /// The stacker.
     /// </value>
-    public Stacker<TDrawingContext> Stacker { get; set; } = new Stacker<TDrawingContext>();
+    public Stacker<TDrawingContext> Stacker { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the position.

@@ -47,7 +47,7 @@ public static class LiveChartsSkiaSharp
     /// <value>
     /// The default paint.
     /// </value>
-    public static DefaultPaint<SkiaSharpDrawingContext> DefaultPaint { get; } = new DefaultPaint<SkiaSharpDrawingContext>();
+    public static DefaultPaint<SkiaSharpDrawingContext> DefaultPaint { get; } = new();
 
     /// <summary>
     /// Gets the default platform builder.

@@ -27,7 +27,7 @@ public class ViewModel
         SeriesCollection2 = new ISeries[] { new ColumnSeries<int> { Values = values2 } };
 
         // sharing the same instance for both charts will keep the zooming and panning synced
-        SharedXAxis = new Axis[] { new Axis() };
+        SharedXAxis = new Axis[] { new() };
     }
 
     public ISeries[] SeriesCollection1 { get; set; }

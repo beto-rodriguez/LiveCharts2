@@ -63,7 +63,7 @@ public class CoreMap<TDrawingContext>
     /// <summary>
     /// Gets the map layers dictionary.
     /// </summary>
-    public Dictionary<string, MapLayer<TDrawingContext>> Layers { get; protected set; } = new Dictionary<string, MapLayer<TDrawingContext>>();
+    public Dictionary<string, MapLayer<TDrawingContext>> Layers { get; protected set; } = new();
 
     /// <summary>
     /// Finds a land by short name.

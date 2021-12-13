@@ -85,7 +85,7 @@ public class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext
     /// <value>
     /// The tool tip font family.
     /// </value>
-    public FontFamily TooltipFontFamily { get; set; } = new FontFamily("Trebuchet MS");
+    public FontFamily TooltipFontFamily { get; set; } = new("Trebuchet MS");
 
     /// <summary>
     /// Gets or sets the size of the tool tip font.
@@ -117,7 +117,7 @@ public class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext
     /// <value>
     /// The tool tip text brush.
     /// </value>
-    public SolidColorBrush TooltipTextBrush { get; set; } = new SolidColorBrush(Color.FromRgb(35, 35, 35));
+    public SolidColorBrush TooltipTextBrush { get; set; } = new(Color.FromRgb(35, 35, 35));
 
     /// <summary>
     /// Gets or sets the tooltip background.

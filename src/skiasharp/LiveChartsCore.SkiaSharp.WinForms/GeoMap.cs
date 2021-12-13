@@ -49,8 +49,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     private IEnumerable<IGeoSeries<SkiaSharpDrawingContext>> _series = Enumerable.Empty<IGeoSeries<SkiaSharpDrawingContext>>();
     private CoreMap<SkiaSharpDrawingContext> _activeMap;
     private MapProjection _mapProjection = MapProjection.Default;
-    private LvcColor[] _heatMap = new[]
-    {
+    private LvcColor[] _heatMap = {
             LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
             LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
         };
@@ -101,7 +100,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.SyncContext" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public object SyncContext { get; set; } = new object();
+    public object SyncContext { get; set; } = new();
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ViewCommand" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

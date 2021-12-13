@@ -349,8 +349,8 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     }
 
     LvcSize IChartView.ControlSize => _avaloniaCanvas is null
-        ? new()
-        : new()
+        ? new LvcSize()
+        : new LvcSize
         {
             Width = (float)_avaloniaCanvas.Bounds.Width,
             Height = (float)_avaloniaCanvas.Bounds.Height

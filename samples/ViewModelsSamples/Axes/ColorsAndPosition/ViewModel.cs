@@ -34,7 +34,7 @@ public class ViewModel
 
         XAxes = new List<Axis>
             {
-                new Axis
+                new()
                 {
                     //Name = "X axis",
                     TextSize = 20,
@@ -51,7 +51,7 @@ public class ViewModel
 
         YAxes = new List<Axis>
             {
-                new Axis
+                new()
                 {
                     //Name = "Y axis",
                     TextSize = 20,

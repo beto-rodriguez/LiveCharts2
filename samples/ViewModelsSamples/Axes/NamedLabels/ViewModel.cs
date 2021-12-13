@@ -26,7 +26,7 @@ public class ViewModel
 
         XAxes = new List<Axis>
             {
-                new Axis
+                new()
                 {
                     // Use the labels property to define named labels.
                     Labels = new string[] { "Anne", "Johnny", "Zac", "Rosa" }
@@ -35,7 +35,7 @@ public class ViewModel
 
         YAxes = new List<Axis>
             {
-                new Axis
+                new()
                 {
                     // Now the Y axis we will display labels as currency
                     // LiveCharts provides some common formatters

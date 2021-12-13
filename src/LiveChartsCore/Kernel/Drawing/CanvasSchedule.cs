@@ -54,5 +54,5 @@ public class CanvasSchedule<TDrawingContext>
     /// <value>
     /// The paint tasks schedule.
     /// </value>
-    public List<PaintSchedule<TDrawingContext>> PaintSchedules { get; set; } = new List<PaintSchedule<TDrawingContext>>();
+    public List<PaintSchedule<TDrawingContext>> PaintSchedules { get; set; } = new();
 }

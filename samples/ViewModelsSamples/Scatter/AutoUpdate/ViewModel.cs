@@ -28,19 +28,19 @@ public class ViewModel
                 // for more info please see:
                 // https://github.com/beto-rodriguez/LiveCharts2/blob/master/samples/ViewModelsSamples/General/UserDefinedTypes/ViewModel.cs#L22
 
-                new WeightedPoint(index++, 2, 6),
-                new WeightedPoint(index++, 5, 5),
-                new WeightedPoint(index++, 4, 3),
-                new WeightedPoint(index++, 5, 9),
-                new WeightedPoint(index++, 2, 3),
-                new WeightedPoint(index++, 6, 2),
-                new WeightedPoint(index++, 6, 7),
-                new WeightedPoint(index++, 6, 8),
-                new WeightedPoint(index++, 4, 5),
-                new WeightedPoint(index++, 2, 3),
-                new WeightedPoint(index++, 3, 8),
-                new WeightedPoint(index++, 8, 9),
-                new WeightedPoint(index++, 3, 4)
+                new(index++, 2, 6),
+                new(index++, 5, 5),
+                new(index++, 4, 3),
+                new(index++, 5, 9),
+                new(index++, 2, 3),
+                new(index++, 6, 2),
+                new(index++, 6, 7),
+                new(index++, 6, 8),
+                new(index++, 4, 5),
+                new(index++, 2, 3),
+                new(index++, 3, 8),
+                new(index++, 8, 9),
+                new(index++, 3, 4)
             };
 
         // using a collection that implements INotifyCollectionChanged as your series collection

@@ -92,7 +92,7 @@ public class SKGeoMap : IGeoMapView<SkiaSharpDrawingContext>, ISkiaSharpChart
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.SyncContext" />
-    public object SyncContext { get; set; } = new object();
+    public object SyncContext { get; set; } = new();
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.DesignerMode" />
     public bool DesignerMode { get; set; } = false;
@@ -111,8 +111,7 @@ public class SKGeoMap : IGeoMapView<SkiaSharpDrawingContext>, ISkiaSharpChart
     public MapProjection MapProjection { get; set; }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.HeatMap"/>
-    public LvcColor[] HeatMap { get; set; } = new[]
-    {
+    public LvcColor[] HeatMap { get; set; } = {
             LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
             LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
         };

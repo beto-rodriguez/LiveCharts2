@@ -92,6 +92,6 @@ public class CandlestickGeometry : Geometry, IFinancialVisualChartPoint<SkiaShar
     /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
     protected override LvcSize OnMeasure(Paint paintTaks)
     {
-        return new(Width, Math.Abs(Low - Y));
+        return new LvcSize(Width, Math.Abs(Low - Y));
     }
 }

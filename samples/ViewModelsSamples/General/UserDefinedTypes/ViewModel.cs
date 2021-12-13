@@ -42,8 +42,7 @@ public class ViewModel
             );
     }
 
-    public ISeries[] Series { get; set; } = new ISeries[]
-    {
+    public ISeries[] Series { get; set; } = {
             new LineSeries<City>
             {
                 Name = "Population",

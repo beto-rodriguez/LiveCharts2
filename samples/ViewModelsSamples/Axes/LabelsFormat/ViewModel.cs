@@ -21,7 +21,7 @@ public class ViewModel
 
         XAxes = new List<Axis>
             {
-                new Axis
+                new()
                 {
                     Name = "أهلا", // sample strings => "こんにちは" "你好" "أهلا"
 
@@ -47,7 +47,7 @@ public class ViewModel
 
         YAxes = new List<Axis>
             {
-                new Axis
+                new()
                 {
                     Name = "Sales",
 

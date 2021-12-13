@@ -56,7 +56,7 @@ public static class LiveCharts
     /// <summary>
     /// Gets the default paint.
     /// </summary>
-    public static object DefaultPaint { get; internal set; } = new object();
+    public static object DefaultPaint { get; internal set; } = new();
 
     /// <summary>
     /// Gets the hover key.

@@ -106,10 +106,10 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
     public object SyncContext { get => CoreCanvas.Sync; set => CoreCanvas.Sync = value; }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.XAxes"/>
-    public IEnumerable<ICartesianAxis> XAxes { get; set; } = new Axis[] { new Axis() };
+    public IEnumerable<ICartesianAxis> XAxes { get; set; } = new Axis[] { new() };
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.YAxes"/>
-    public IEnumerable<ICartesianAxis> YAxes { get; set; } = new Axis[] { new Axis() };
+    public IEnumerable<ICartesianAxis> YAxes { get; set; } = new Axis[] { new() };
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections"/>
     public IEnumerable<Section<SkiaSharpDrawingContext>> Sections { get; set; } = Array.Empty<RectangularSection>();

@@ -62,7 +62,7 @@ public class LandData
     /// <value>
     /// The maximum bounds.
     /// </value>
-    public double[] MaxBounds { get; set; } = new double[] { double.MinValue, double.MinValue };
+    public double[] MaxBounds { get; set; } = { double.MinValue, double.MinValue };
 
     /// <summary>
     /// Gets or sets the minimum bounds.
@@ -70,7 +70,7 @@ public class LandData
     /// <value>
     /// The minimum bounds.
     /// </value>
-    public double[] MinBounds { get; set; } = new double[] { double.MaxValue, double.MaxValue };
+    public double[] MinBounds { get; set; } = { double.MaxValue, double.MaxValue };
 
     /// <summary>
     /// Gets the bounds hypotenuse.

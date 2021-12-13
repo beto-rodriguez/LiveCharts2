@@ -400,7 +400,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
 
     LvcSize IChartView.ControlSize => _canvas == null
                 ? throw new Exception("Canvas not found")
-                : (new() { Width = (float)_canvas.ActualWidth, Height = (float)_canvas.ActualHeight });
+                : (new LvcSize { Width = (float)_canvas.ActualWidth, Height = (float)_canvas.ActualHeight });
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
     public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => _canvas == null ? throw new Exception("Canvas not found") : _canvas.CanvasCore;

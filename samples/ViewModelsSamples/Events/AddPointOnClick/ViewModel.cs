@@ -11,9 +11,9 @@ public class ViewModel
     {
         var data = new ObservableCollection<ObservablePoint>
             {
-                new ObservablePoint(0, 5),
-                new ObservablePoint(3, 8),
-                new ObservablePoint(7, 9)
+                new(0, 5),
+                new(3, 8),
+                new(7, 9)
             };
 
         Data = data;

@@ -47,8 +47,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     private Bounds _weightBounds = new();
     private int _heatKnownLength = 0;
     private List<Tuple<double, LvcColor>> _heatStops = new();
-    private LvcColor[] _heatMap = new[]
-    {
+    private LvcColor[] _heatMap = {
             LvcColor.FromArgb(255, 87, 103, 222), // cold (min value)
             LvcColor.FromArgb(255, 95, 207, 249) // hot (max value)
         };

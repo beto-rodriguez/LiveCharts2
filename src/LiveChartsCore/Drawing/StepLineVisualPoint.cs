@@ -41,7 +41,7 @@ public class StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPa
     /// <value>
     /// The geometry.
     /// </value>
-    public TVisual Geometry { get; set; } = new TVisual();
+    public TVisual Geometry { get; set; } = new();
 
     /// <summary>
     /// Gets the stepline.
@@ -49,7 +49,7 @@ public class StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPa
     /// <value>
     /// The stepline.
     /// </value>
-    public TStepLineSegment StepSegment { get; set; } = new TStepLineSegment();
+    public TStepLineSegment StepSegment { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the path.

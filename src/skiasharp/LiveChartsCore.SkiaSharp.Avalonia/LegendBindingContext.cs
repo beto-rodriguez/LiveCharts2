@@ -45,7 +45,7 @@ public class LegendBindingContext
     /// <value>
     /// The font family.
     /// </value>
-    public FontFamily FontFamily { get; set; } = new FontFamily("Trebuchet MS");
+    public FontFamily FontFamily { get; set; } = new("Trebuchet MS");
 
     /// <summary>
     /// Gets or sets the size of the font.

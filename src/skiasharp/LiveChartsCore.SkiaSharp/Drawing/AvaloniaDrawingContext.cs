@@ -48,7 +48,7 @@ public class AvaloniaDrawingContext : SkiaSharpDrawingContext
     /// <value>
     /// The color of the back.
     /// </value>
-    public SKColor BackColor { get; set; } = new SKColor(255, 255, 255, 255);
+    public SKColor BackColor { get; set; } = new(255, 255, 255, 255);
 
     /// <summary>
     /// Clears the canvas.

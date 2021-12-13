@@ -59,19 +59,19 @@ public class ViewModel
 
         YAxes = new List<Axis>
             {
-                new Axis // the "units" and "tens" series will be scaled on this axis
+                new() // the "units" and "tens" series will be scaled on this axis
                 {
                     Name = "Tens",
                     LabelsPaint = new SolidColorPaint(blue)
                 },
-                new Axis // the "hundreds" series will be scaled on this axis
+                new() // the "hundreds" series will be scaled on this axis
                 {
                     Name = "Hundreds",
                     LabelsPaint = new SolidColorPaint(red),
                     ShowSeparatorLines = false,
                     Position = LiveChartsCore.Measure.AxisPosition.End
                 },
-                new Axis() // the "thousands" series will be scaled on this axis
+                new() // the "thousands" series will be scaled on this axis
                 {
                     Name = "Thousands",
                     LabelsPaint = new SolidColorPaint(yellow),

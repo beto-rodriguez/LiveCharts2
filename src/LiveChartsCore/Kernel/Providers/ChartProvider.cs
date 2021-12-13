@@ -41,7 +41,7 @@ public abstract class ChartProvider<TDrawingContext>
     /// <returns></returns>
     public virtual DataFactory<TModel, TDrawingContext> GetDefaultDataFactory<TModel>()
     {
-        return new();
+        return new DataFactory<TModel, TDrawingContext>();
     }
 
     /// <summary>
@@ -66,7 +66,7 @@ public abstract class ChartProvider<TDrawingContext>
     /// Gets a new paint of the given color.
     /// </summary>
     /// <returns></returns>
-    public abstract IPaint<TDrawingContext> GetSolidColorPaint(LvcColor color = new LvcColor());
+    public abstract IPaint<TDrawingContext> GetSolidColorPaint(LvcColor color = new());
 
     /// <summary>
     /// Gets the series custom measure handler.

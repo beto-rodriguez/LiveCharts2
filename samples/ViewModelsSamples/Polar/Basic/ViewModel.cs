@@ -34,9 +34,8 @@ public class ViewModel : INotifyPropertyChanged
         };
 
     public PolarAxis[] RadialAxes { get; set; }
-        = new PolarAxis[]
-        {
-                new PolarAxis
+        = {
+                new()
                 {
                     LabelsAngle = -60,
                     Labeler = v => (v * 10).ToString("N2")
@@ -44,9 +43,8 @@ public class ViewModel : INotifyPropertyChanged
         };
 
     public PolarAxis[] AngleAxes { get; set; }
-        = new PolarAxis[]
-        {
-                new PolarAxis
+        = {
+                new()
                 {
                     //LabelsRotation = 90,
                     LabelsRotation = LiveCharts.TangentAngle,

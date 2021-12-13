@@ -299,7 +299,7 @@ public static class EasingFunctions
             {
                 var newKeyFrames = new List<KeyFrame>(keyFrames)
                 {
-                        new KeyFrame
+                        new()
                         {
                             Time = 1,
                             Value = keyFrames[keyFrames.Length - 1].Value

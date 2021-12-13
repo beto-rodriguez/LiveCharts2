@@ -24,7 +24,7 @@ public class ViewModel : INotifyPropertyChanged
 
         XAxes = new List<Axis>
             {
-                new Axis
+                new()
                 {
                     // Use the Label property to indicate the format of the labels in the axis
                     // The Labeler takes the value of the label as parameter and must return it as string
@@ -44,7 +44,7 @@ public class ViewModel : INotifyPropertyChanged
 
         YAxes = new List<Axis>
             {
-                new Axis
+                new()
                 {
                     LabelsRotation = _sliderValue,
 

@@ -438,7 +438,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         base.RemoveFromUI(chart);
         DataFactory?.Dispose(chart);
         _dataFactory = null;
-        everFetched = new();
+        everFetched = new HashSet<ChartPoint>();
     }
 
     private void NotifySubscribers()

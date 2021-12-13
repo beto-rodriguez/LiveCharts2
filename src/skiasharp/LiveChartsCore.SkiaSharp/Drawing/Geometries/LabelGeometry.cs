@@ -71,7 +71,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     public LvcColor Background { get => _backgroundProperty.GetMovement(this); set => _backgroundProperty.SetMovement(value, this); }
 
     /// <inheritdoc cref="ILabelGeometry{TDrawingContext}.Padding" />
-    public Padding Padding { get; set; } = new Padding();
+    public Padding Padding { get; set; } = new();
 
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)

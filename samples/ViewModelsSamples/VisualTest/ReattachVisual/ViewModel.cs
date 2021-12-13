@@ -38,7 +38,7 @@ public class ViewModel
     public IEnumerable<RectangularSection> Sections { get; set; }
         = new ObservableCollection<RectangularSection>
         {
-                new RectangularSection
+                new()
                 {
                     Xi = 0,
                     Xj = 4,

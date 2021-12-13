@@ -109,7 +109,7 @@ public class LiveChartsSettings
     /// <value>
     /// The theme identifier.
     /// </value>
-    public object ThemeId { get; private set; } = new object();
+    public object ThemeId { get; private set; } = new();
 
     /// <summary>
     /// Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a<see cref="ChartPoint"/> instance,

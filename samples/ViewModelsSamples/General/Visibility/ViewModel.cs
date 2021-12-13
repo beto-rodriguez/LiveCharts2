@@ -8,24 +8,24 @@ namespace ViewModelsSamples.General.Visibility;
 
 public class ViewModel
 {
-    public List<ISeries> Series { get; set; } = new List<ISeries>
+    public List<ISeries> Series { get; set; } = new()
+    {
+        new ColumnSeries<double>
         {
-            new ColumnSeries<double>
-            {
-                Values = new ObservableCollection<double> { 2, 5, 4, 3 },
-                IsVisible = true
-            },
-            new ColumnSeries<double>
-            {
-                Values = new ObservableCollection<double> { 6, 3, 2, 8},
-                IsVisible = true
-            },
-            new ColumnSeries<double>
-            {
-                Values = new ObservableCollection<double> { 4, 2, 8, 7 },
-                IsVisible = true
-            }
-        };
+            Values = new ObservableCollection<double> { 2, 5, 4, 3 },
+            IsVisible = true
+        },
+        new ColumnSeries<double>
+        {
+            Values = new ObservableCollection<double> { 6, 3, 2, 8 },
+            IsVisible = true
+        },
+        new ColumnSeries<double>
+        {
+            Values = new ObservableCollection<double> { 4, 2, 8, 7 },
+            IsVisible = true
+        }
+    };
 
     public void ToogleSeries0()
     {
