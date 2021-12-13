@@ -20,21 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Geo
+namespace LiveChartsCore.Geo;
+
+/// <summary>
+/// Defines a weighted map shape.
+/// </summary>
+public interface IWeigthedMapShape : IMapElement
 {
     /// <summary>
-    /// Defines a weighted map shape.
+    /// Gets or sets the name of the land.
     /// </summary>
-    public interface IWeigthedMapShape : IMapElement
-    {
-        /// <summary>
-        /// Gets or sets the name of the land.
-        /// </summary>
-        string Name { get; set; }
+    string Name { get; set; }
 
-        /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
-        double Value { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the value.
+    /// </summary>
+    double Value { get; set; }
 }

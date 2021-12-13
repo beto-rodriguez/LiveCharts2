@@ -24,34 +24,33 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
+
+/// <inheritdoc cref="IMoveToPathCommand{TPath}" />
+public class MoveToPathCommand : PathCommand, IMoveToPathCommand<SKPath>
 {
-    /// <inheritdoc cref="IMoveToPathCommand{TPath}" />
-    public class MoveToPathCommand : PathCommand, IMoveToPathCommand<SKPath>
+    private readonly FloatMotionProperty _xProperty;
+    private readonly FloatMotionProperty _yProperty;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MoveToPathCommand"/> class.
+    /// </summary>
+    public MoveToPathCommand()
     {
-        private readonly FloatMotionProperty _xProperty;
-        private readonly FloatMotionProperty _yProperty;
+        _xProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0f));
+        _yProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0f));
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MoveToPathCommand"/> class.
-        /// </summary>
-        public MoveToPathCommand()
-        {
-            _xProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0f));
-            _yProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0f));
-        }
+    /// <inheritdoc cref="IMoveToPathCommand{TPath}.X" />
+    public float X { get => _xProperty.GetMovement(this); set => _xProperty.SetMovement(value, this); }
 
-        /// <inheritdoc cref="IMoveToPathCommand{TPath}.X" />
-        public float X { get => _xProperty.GetMovement(this); set => _xProperty.SetMovement(value, this); }
+    /// <inheritdoc cref="IMoveToPathCommand{TPath}.Y" />
+    public float Y { get => _yProperty.GetMovement(this); set => _yProperty.SetMovement(value, this); }
 
-        /// <inheritdoc cref="IMoveToPathCommand{TPath}.Y" />
-        public float Y { get => _yProperty.GetMovement(this); set => _yProperty.SetMovement(value, this); }
-
-        /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
-        public override void Execute(SKPath path, long currentTime, Animatable pathGeometry)
-        {
-            SetCurrentTime(currentTime);
-            path.MoveTo(X, Y);
-        }
+    /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
+    public override void Execute(SKPath path, long currentTime, Animatable pathGeometry)
+    {
+        SetCurrentTime(currentTime);
+        path.MoveTo(X, Y);
     }
 }

@@ -25,89 +25,88 @@ using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel;
+
+/// <summary>
+/// Defines a visual element in a chart.
+/// </summary>
+public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
-    /// <summary>
-    /// Defines a visual element in a chart.
-    /// </summary>
-    public abstract class ChartElement<TDrawingContext> : IChartElement<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    private readonly List<IPaint<TDrawingContext>> _deletingTasks = new();
+
+    /// <inheritdoc cref="IChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})" />
+    public abstract void Measure(Chart<TDrawingContext> chart);
+
+    /// <inheritdoc cref="IChartElement{TDrawingContext}.RemoveOldPaints(IChartView{TDrawingContext})" />
+    public void RemoveOldPaints(IChartView<TDrawingContext> chart)
     {
-        private readonly List<IPaint<TDrawingContext>> _deletingTasks = new();
+        if (_deletingTasks.Count == 0) return;
 
-        /// <inheritdoc cref="IChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})" />
-        public abstract void Measure(Chart<TDrawingContext> chart);
-
-        /// <inheritdoc cref="IChartElement{TDrawingContext}.RemoveOldPaints(IChartView{TDrawingContext})" />
-        public void RemoveOldPaints(IChartView<TDrawingContext> chart)
+        foreach (var item in _deletingTasks)
         {
-            if (_deletingTasks.Count == 0) return;
-
-            foreach (var item in _deletingTasks)
-            {
-                chart.CoreCanvas.RemovePaintTask(item);
-                item.Dispose();
-            }
-
-            _deletingTasks.Clear();
+            chart.CoreCanvas.RemovePaintTask(item);
+            item.Dispose();
         }
 
-        /// <inheritdoc cref="IChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})" />
-        public virtual void RemoveFromUI(Chart<TDrawingContext> chart)
-        {
-            foreach (var item in GetPaintTasks())
-            {
-                if (item is null) continue;
-                chart.Canvas.RemovePaintTask(item);
-                item.ClearGeometriesFromPaintTask(chart.Canvas);
-            }
-        }
-
-        /// <summary>
-        /// Sets the property value.
-        /// </summary>
-        /// <param name="reference">The referenced paint task.</param>
-        /// <param name="value">The value</param>
-        /// <param name="isStroke">if set to <c>true</c> [is stroke].</param>
-        /// <param name="propertyName">Name of the property.</param>
-        /// <returns></returns>
-        protected virtual void SetPaintProperty(
-            ref IPaint<TDrawingContext>? reference,
-            IPaint<TDrawingContext>? value,
-            bool isStroke = false,
-            [CallerMemberName] string? propertyName = null)
-        {
-            if (reference is not null) ScheduleDeleteFor(reference);
-            reference = value;
-            if (reference is not null)
-            {
-                reference.IsStroke = isStroke;
-                reference.IsFill = !isStroke; // seems unnecessary ????
-                if (!isStroke) reference.StrokeThickness = 0;
-            }
-
-            OnPaintChanged(propertyName);
-        }
-
-        /// <summary>
-        /// Schedules the delete for thew given <see cref="IPaint{TDrawingContext}"/> instance.
-        /// </summary>
-        /// <returns></returns>
-        protected void ScheduleDeleteFor(IPaint<TDrawingContext> paintTask)
-        {
-            _deletingTasks.Add(paintTask);
-        }
-
-        /// <summary>
-        /// Called when the fill changes.
-        /// </summary>
-        /// <returns></returns>
-        protected virtual void OnPaintChanged(string? propertyName) { }
-
-        /// <summary>
-        /// Gets the paint tasks.
-        /// </summary>
-        /// <returns></returns>
-        protected abstract IPaint<TDrawingContext>?[] GetPaintTasks();
+        _deletingTasks.Clear();
     }
+
+    /// <inheritdoc cref="IChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})" />
+    public virtual void RemoveFromUI(Chart<TDrawingContext> chart)
+    {
+        foreach (var item in GetPaintTasks())
+        {
+            if (item is null) continue;
+            chart.Canvas.RemovePaintTask(item);
+            item.ClearGeometriesFromPaintTask(chart.Canvas);
+        }
+    }
+
+    /// <summary>
+    /// Sets the property value.
+    /// </summary>
+    /// <param name="reference">The referenced paint task.</param>
+    /// <param name="value">The value</param>
+    /// <param name="isStroke">if set to <c>true</c> [is stroke].</param>
+    /// <param name="propertyName">Name of the property.</param>
+    /// <returns></returns>
+    protected virtual void SetPaintProperty(
+        ref IPaint<TDrawingContext>? reference,
+        IPaint<TDrawingContext>? value,
+        bool isStroke = false,
+        [CallerMemberName] string? propertyName = null)
+    {
+        if (reference is not null) ScheduleDeleteFor(reference);
+        reference = value;
+        if (reference is not null)
+        {
+            reference.IsStroke = isStroke;
+            reference.IsFill = !isStroke; // seems unnecessary ????
+            if (!isStroke) reference.StrokeThickness = 0;
+        }
+
+        OnPaintChanged(propertyName);
+    }
+
+    /// <summary>
+    /// Schedules the delete for thew given <see cref="IPaint{TDrawingContext}"/> instance.
+    /// </summary>
+    /// <returns></returns>
+    protected void ScheduleDeleteFor(IPaint<TDrawingContext> paintTask)
+    {
+        _deletingTasks.Add(paintTask);
+    }
+
+    /// <summary>
+    /// Called when the fill changes.
+    /// </summary>
+    /// <returns></returns>
+    protected virtual void OnPaintChanged(string? propertyName) { }
+
+    /// <summary>
+    /// Gets the paint tasks.
+    /// </summary>
+    /// <returns></returns>
+    protected abstract IPaint<TDrawingContext>?[] GetPaintTasks();
 }

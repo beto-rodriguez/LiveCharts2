@@ -22,35 +22,34 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Kernel.Sketches
+namespace LiveChartsCore.Kernel.Sketches;
+
+/// <summary>
+/// Defines a heat series plot.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="IChartSeries{TDrawingContext}" />
+public interface IHeatSeries<TDrawingContext> : ICartesianSeries<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a heat series plot.
+    /// Gets or sets the heat map.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IChartSeries{TDrawingContext}" />
-    public interface IHeatSeries<TDrawingContext> : ICartesianSeries<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets or sets the heat map.
-        /// </summary>
-        /// <value>
-        /// The heat map.
-        /// </value>
-        LvcColor[] HeatMap { get; set; }
+    /// <value>
+    /// The heat map.
+    /// </value>
+    LvcColor[] HeatMap { get; set; }
 
-        /// <summary>
-        /// Gets or sets the color stops.
-        /// </summary>
-        /// <value>
-        /// The color stops.
-        /// </value>
-        double[]? ColorStops { get; set; }
+    /// <summary>
+    /// Gets or sets the color stops.
+    /// </summary>
+    /// <value>
+    /// The color stops.
+    /// </value>
+    double[]? ColorStops { get; set; }
 
-        /// <summary>
-        /// Gets or sets the padding for each point.
-        /// </summary>
-        Padding PointPadding { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the padding for each point.
+    /// </summary>
+    Padding PointPadding { get; set; }
 }

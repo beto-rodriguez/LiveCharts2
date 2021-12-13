@@ -3,11 +3,11 @@ using LiveChartsCore.SkiaSharpView;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace ViewModelsSamples.Bars.Spacing
+namespace ViewModelsSamples.Bars.Spacing;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
+    public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
         {
             new ColumnSeries<double>
             {
@@ -21,5 +21,4 @@ namespace ViewModelsSamples.Bars.Spacing
                 MaxBarWidth = double.PositiveInfinity
             }
         };
-    }
 }

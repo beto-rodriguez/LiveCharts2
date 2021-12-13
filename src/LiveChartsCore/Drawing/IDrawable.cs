@@ -20,20 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Drawing;
+
+/// <summary>
+/// Defines a drawable object, an object that can be represented in the user interface.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="IAnimatable" />
+public interface IDrawable<TDrawingContext> : IAnimatable
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a drawable object, an object that can be represented in the user interface.
+    /// Draws the instance in the user interface with for the specified context.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IAnimatable" />
-    public interface IDrawable<TDrawingContext> : IAnimatable
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Draws the instance in the user interface with for the specified context.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        void Draw(TDrawingContext context);
-    }
+    /// <param name="context">The context.</param>
+    void Draw(TDrawingContext context);
 }

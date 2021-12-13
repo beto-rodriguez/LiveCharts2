@@ -4,33 +4,32 @@ using LiveChartsCore.SkiaSharpView.Painting;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace XamarinSample.Pies.Processing
+namespace XamarinSample.Pies.Processing;
+
+[XamlCompilation(XamlCompilationOptions.Compile)]
+public partial class View : ContentPage
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class View : ContentPage
+    public View()
     {
-        public View()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
+}
+
+public class PaintTaskToColorConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        return value is SolidColorPaint solidColor
+            ? Color.FromRgba(
+                    solidColor.Color.Red,
+                    solidColor.Color.Green,
+                    solidColor.Color.Blue,
+                    solidColor.Color.Alpha)
+            : null;
     }
 
-    public class PaintTaskToColorConverter : IValueConverter
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return value is SolidColorPaint solidColor
-                ? Color.FromRgba(
-                        solidColor.Color.Red,
-                        solidColor.Color.Green,
-                        solidColor.Color.Blue,
-                        solidColor.Color.Alpha)
-                : null;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        throw new NotImplementedException();
     }
 }

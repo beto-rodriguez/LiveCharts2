@@ -25,54 +25,53 @@ using System.Threading.Tasks;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView
+namespace LiveChartsCore.SkiaSharpView;
+
+/// <inheritdoc cref="CoreMap{TDrawingContext}"/>.
+public class GeoMap : CoreMap<SkiaSharpDrawingContext>
 {
-    /// <inheritdoc cref="CoreMap{TDrawingContext}"/>.
-    public class GeoMap : CoreMap<SkiaSharpDrawingContext>
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GeoMap"/> class from the given core map.
+    /// </summary>
+    public GeoMap()
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GeoMap"/> class from the given core map.
+    /// </summary>
+    /// <param name="coreMap"></param>
+    public GeoMap(CoreMap<SkiaSharpDrawingContext> coreMap)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GeoMap"/> class from the given core map.
-        /// </summary>
-        public GeoMap()
-        { }
+        Layers = coreMap.Layers;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GeoMap"/> class from the given core map.
-        /// </summary>
-        /// <param name="coreMap"></param>
-        public GeoMap(CoreMap<SkiaSharpDrawingContext> coreMap)
-        {
-            Layers = coreMap.Layers;
-        }
+    /// <inheritdoc cref="Maps.GetWorldMap{TDrawingContext}"/>.
+    public static GeoMap GetWorldMap()
+    {
+        return new GeoMap(Maps.GetWorldMap<SkiaSharpDrawingContext>());
+    }
 
-        /// <inheritdoc cref="Maps.GetWorldMap{TDrawingContext}"/>.
-        public static GeoMap GetWorldMap()
-        {
-            return new GeoMap(Maps.GetWorldMap<SkiaSharpDrawingContext>());
-        }
+    /// <inheritdoc cref="Maps.GetMapFromDirectory{TDrawingContext}(string)"/>.
+    public static GeoMap GetMapFromDirectory(string path)
+    {
+        return new GeoMap(Maps.GetMapFromDirectory<SkiaSharpDrawingContext>(path));
+    }
 
-        /// <inheritdoc cref="Maps.GetMapFromDirectory{TDrawingContext}(string)"/>.
-        public static GeoMap GetMapFromDirectory(string path)
-        {
-            return new GeoMap(Maps.GetMapFromDirectory<SkiaSharpDrawingContext>(path));
-        }
+    /// <inheritdoc cref="Maps.GetMapFromStreamReader{TDrawingContext}(StreamReader)"/>.
+    public static GeoMap GetMapFromStreamReader(StreamReader stream)
+    {
+        return new GeoMap(Maps.GetMapFromStreamReader<SkiaSharpDrawingContext>(stream));
+    }
 
-        /// <inheritdoc cref="Maps.GetMapFromStreamReader{TDrawingContext}(StreamReader)"/>.
-        public static GeoMap GetMapFromStreamReader(StreamReader stream)
-        {
-            return new GeoMap(Maps.GetMapFromStreamReader<SkiaSharpDrawingContext>(stream));
-        }
+    /// <inheritdoc cref="Maps.GetMapFromDirectory{TDrawingContext}(string)"/>.
+    public static Task<GeoMap> GetMapFromDirectoryAsync(string path)
+    {
+        return Task.Run(() => new GeoMap(Maps.GetMapFromDirectory<SkiaSharpDrawingContext>(path)));
+    }
 
-        /// <inheritdoc cref="Maps.GetMapFromDirectory{TDrawingContext}(string)"/>.
-        public static Task<GeoMap> GetMapFromDirectoryAsync(string path)
-        {
-            return Task.Run(() => new GeoMap(Maps.GetMapFromDirectory<SkiaSharpDrawingContext>(path)));
-        }
-
-        /// <inheritdoc cref="Maps.GetMapFromStreamReader{TDrawingContext}(StreamReader)"/>.
-        public static Task<GeoMap> GetMapFromStreamReaderAsync(StreamReader stream)
-        {
-            return Task.Run(() => new GeoMap(Maps.GetMapFromStreamReader<SkiaSharpDrawingContext>(stream)));
-        }
+    /// <inheritdoc cref="Maps.GetMapFromStreamReader{TDrawingContext}(StreamReader)"/>.
+    public static Task<GeoMap> GetMapFromStreamReaderAsync(StreamReader stream)
+    {
+        return Task.Run(() => new GeoMap(Maps.GetMapFromStreamReader<SkiaSharpDrawingContext>(stream)));
     }
 }

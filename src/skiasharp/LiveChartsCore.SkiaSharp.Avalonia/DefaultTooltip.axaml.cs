@@ -34,186 +34,185 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.Avalonia
+namespace LiveChartsCore.SkiaSharpView.Avalonia;
+
+/// <summary>
+/// Defines a default tool tip for a chart control.
+/// </summary>
+public class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext>
 {
+    private readonly DataTemplate _defaultTemplate;
+
     /// <summary>
-    /// Defines a default tool tip for a chart control.
+    /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
     /// </summary>
-    public class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext>
+    /// <exception cref="Exception">default template not found</exception>
+    public DefaultTooltip()
     {
-        private readonly DataTemplate _defaultTemplate;
+        InitializeComponent();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
-        /// </summary>
-        /// <exception cref="Exception">default template not found</exception>
-        public DefaultTooltip()
+        var template = (DataTemplate?)Resources["defaultTemplate"] ??
+                       throw new Exception("default template not found");
+
+        _defaultTemplate = template;
+        TooltipTemplate = template;
+
+        Canvas.SetTop(this, 0);
+        Canvas.SetLeft(this, 0);
+    }
+
+    #region properties
+
+    /// <summary>
+    /// Gets or sets the tool tip template.
+    /// </summary>
+    /// <value>
+    /// The tool tip template.
+    /// </value>
+    public DataTemplate? TooltipTemplate { get; set; }
+
+    /// <summary>
+    /// Gets or sets the points.
+    /// </summary>
+    /// <value>
+    /// The points.
+    /// </value>
+    public IEnumerable<ChartPoint> Points { get; set; } = Enumerable.Empty<ChartPoint>();
+
+    /// <summary>
+    /// Gets or sets the tool tip font family.
+    /// </summary>
+    /// <value>
+    /// The tool tip font family.
+    /// </value>
+    public FontFamily TooltipFontFamily { get; set; } = new FontFamily("Trebuchet MS");
+
+    /// <summary>
+    /// Gets or sets the size of the tool tip font.
+    /// </summary>
+    /// <value>
+    /// The size of the tool tip font.
+    /// </value>
+    public double TooltipFontSize { get; set; }
+
+    /// <summary>
+    /// Gets or sets the tool tip font weight.
+    /// </summary>
+    /// <value>
+    /// The tool tip font weight.
+    /// </value>
+    public FontWeight TooltipFontWeight { get; set; }
+
+    /// <summary>
+    /// Gets or sets the tool tip font style.
+    /// </summary>
+    /// <value>
+    /// The tool tip font style.
+    /// </value>
+    public FontStyle TooltipFontStyle { get; set; }
+
+    /// <summary>
+    /// Gets or sets the tool tip text brush.
+    /// </summary>
+    /// <value>
+    /// The tool tip text brush.
+    /// </value>
+    public SolidColorBrush TooltipTextBrush { get; set; } = new SolidColorBrush(Color.FromRgb(35, 35, 35));
+
+    /// <summary>
+    /// Gets or sets the tooltip background.
+    /// </summary>
+    /// <value>
+    /// The tooltip background.
+    /// </value>
+    public IBrush TooltipBackground { get; set; } = new SolidColorBrush(Color.FromRgb(250, 250, 250));
+
+    #endregion
+
+    void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+    {
+        var avaloniaChart = (IAvaloniaChart)chart.View;
+
+        var template = avaloniaChart.TooltipTemplate ?? _defaultTemplate;
+        if (TooltipTemplate != template) TooltipTemplate = template;
+
+        LvcPoint? location = null;
+
+        if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
         {
-            InitializeComponent();
-
-            var template = (DataTemplate?)Resources["defaultTemplate"] ??
-                           throw new Exception("default template not found");
-
-            _defaultTemplate = template;
-            TooltipTemplate = template;
-
-            Canvas.SetTop(this, 0);
-            Canvas.SetLeft(this, 0);
+            location = tooltipPoints.GetCartesianTooltipLocation(
+                chart.TooltipPosition, new LvcSize((float)Bounds.Width, (float)Bounds.Height), chart.ControlSize);
+        }
+        if (chart is PieChart<SkiaSharpDrawingContext>)
+        {
+            location = tooltipPoints.GetPieTooltipLocation(
+                chart.TooltipPosition, new LvcSize((float)Bounds.Width, (float)Bounds.Height));
         }
 
-        #region properties
+        if (location is null) throw new Exception("location not found");
 
-        /// <summary>
-        /// Gets or sets the tool tip template.
-        /// </summary>
-        /// <value>
-        /// The tool tip template.
-        /// </value>
-        public DataTemplate? TooltipTemplate { get; set; }
+        Points = tooltipPoints;
+        TooltipBackground = avaloniaChart.TooltipBackground;
+        TooltipFontFamily = avaloniaChart.TooltipFontFamily;
+        TooltipFontSize = avaloniaChart.TooltipFontSize;
+        TooltipFontStyle = avaloniaChart.TooltipFontStyle;
+        TooltipFontWeight = avaloniaChart.TooltipFontWeight;
+        TooltipTextBrush = avaloniaChart.TooltipTextBrush;
+        BuildContent();
 
-        /// <summary>
-        /// Gets or sets the points.
-        /// </summary>
-        /// <value>
-        /// The points.
-        /// </value>
-        public IEnumerable<ChartPoint> Points { get; set; } = Enumerable.Empty<ChartPoint>();
+        Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
-        /// <summary>
-        /// Gets or sets the tool tip font family.
-        /// </summary>
-        /// <value>
-        /// The tool tip font family.
-        /// </value>
-        public FontFamily TooltipFontFamily { get; set; } = new FontFamily("Trebuchet MS");
+        double x = location.Value.X;
+        double y = location.Value.Y;
+        var s = chart.ControlSize;
+        var w = s.Width;
+        var h = s.Height;
+        if (location.Value.X + Bounds.Width > w) x = w - Bounds.Width;
+        if (location.Value.X < 0) x = 0;
+        if (location.Value.Y < 0) y = 0;
+        if (location.Value.Y + Bounds.Height > h) x = h - Bounds.Height;
 
-        /// <summary>
-        /// Gets or sets the size of the tool tip font.
-        /// </summary>
-        /// <value>
-        /// The size of the tool tip font.
-        /// </value>
-        public double TooltipFontSize { get; set; }
-
-        /// <summary>
-        /// Gets or sets the tool tip font weight.
-        /// </summary>
-        /// <value>
-        /// The tool tip font weight.
-        /// </value>
-        public FontWeight TooltipFontWeight { get; set; }
-
-        /// <summary>
-        /// Gets or sets the tool tip font style.
-        /// </summary>
-        /// <value>
-        /// The tool tip font style.
-        /// </value>
-        public FontStyle TooltipFontStyle { get; set; }
-
-        /// <summary>
-        /// Gets or sets the tool tip text brush.
-        /// </summary>
-        /// <value>
-        /// The tool tip text brush.
-        /// </value>
-        public SolidColorBrush TooltipTextBrush { get; set; } = new SolidColorBrush(Color.FromRgb(35, 35, 35));
-
-        /// <summary>
-        /// Gets or sets the tooltip background.
-        /// </summary>
-        /// <value>
-        /// The tooltip background.
-        /// </value>
-        public IBrush TooltipBackground { get; set; } = new SolidColorBrush(Color.FromRgb(250, 250, 250));
-
-        #endregion
-
-        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
-        {
-            var avaloniaChart = (IAvaloniaChart)chart.View;
-
-            var template = avaloniaChart.TooltipTemplate ?? _defaultTemplate;
-            if (TooltipTemplate != template) TooltipTemplate = template;
-
-            LvcPoint? location = null;
-
-            if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
-            {
-                location = tooltipPoints.GetCartesianTooltipLocation(
-                    chart.TooltipPosition, new LvcSize((float)Bounds.Width, (float)Bounds.Height), chart.ControlSize);
-            }
-            if (chart is PieChart<SkiaSharpDrawingContext>)
-            {
-                location = tooltipPoints.GetPieTooltipLocation(
-                    chart.TooltipPosition, new LvcSize((float)Bounds.Width, (float)Bounds.Height));
-            }
-
-            if (location is null) throw new Exception("location not found");
-
-            Points = tooltipPoints;
-            TooltipBackground = avaloniaChart.TooltipBackground;
-            TooltipFontFamily = avaloniaChart.TooltipFontFamily;
-            TooltipFontSize = avaloniaChart.TooltipFontSize;
-            TooltipFontStyle = avaloniaChart.TooltipFontStyle;
-            TooltipFontWeight = avaloniaChart.TooltipFontWeight;
-            TooltipTextBrush = avaloniaChart.TooltipTextBrush;
-            BuildContent();
-
-            Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-
-            double x = location.Value.X;
-            double y = location.Value.Y;
-            var s = chart.ControlSize;
-            var w = s.Width;
-            var h = s.Height;
-            if (location.Value.X + Bounds.Width > w) x = w - Bounds.Width;
-            if (location.Value.X < 0) x = 0;
-            if (location.Value.Y < 0) y = 0;
-            if (location.Value.Y + Bounds.Height > h) x = h - Bounds.Height;
-
-            Transitions ??= new Transitions
+        Transitions ??= new Transitions
             {
                 new DoubleTransition {Property = Canvas.TopProperty, Duration = TimeSpan.FromMilliseconds(300)},
                 new DoubleTransition {Property = Canvas.LeftProperty, Duration = TimeSpan.FromMilliseconds(300)},
             };
 
-            Canvas.SetTop(this, y);
-            Canvas.SetLeft(this, x);
-        }
+        Canvas.SetTop(this, y);
+        Canvas.SetLeft(this, x);
+    }
 
-        /// <summary>
-        /// Builds the content.
-        /// </summary>
-        /// <returns></returns>
-        protected void BuildContent()
+    /// <summary>
+    /// Builds the content.
+    /// </summary>
+    /// <returns></returns>
+    protected void BuildContent()
+    {
+        var template = TooltipTemplate ?? _defaultTemplate;
+        var model = new TooltipBindingContext
         {
-            var template = TooltipTemplate ?? _defaultTemplate;
-            var model = new TooltipBindingContext
-            {
-                Points = Points,
-                TooltipFontFamily = TooltipFontFamily,
-                TooltipBackground = TooltipBackground,
-                TooltipFontSize = TooltipFontSize,
-                TooltipFontStyle = TooltipFontStyle,
-                TooltipFontWeight = TooltipFontWeight,
-                TooltipTextBrush = TooltipTextBrush
-            };
+            Points = Points,
+            TooltipFontFamily = TooltipFontFamily,
+            TooltipBackground = TooltipBackground,
+            TooltipFontSize = TooltipFontSize,
+            TooltipFontStyle = TooltipFontStyle,
+            TooltipFontWeight = TooltipFontWeight,
+            TooltipTextBrush = TooltipTextBrush
+        };
 
-            var templated = template.Build(model);
-            if (templated is null) return;
+        var templated = template.Build(model);
+        if (templated is null) return;
 
-            Content = templated;
-        }
+        Content = templated;
+    }
 
-        void IChartTooltip<SkiaSharpDrawingContext>.Hide()
-        {
-            Content = null;
-        }
+    void IChartTooltip<SkiaSharpDrawingContext>.Hide()
+    {
+        Content = null;
+    }
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
     }
 }

@@ -25,72 +25,71 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.Kernel.Providers
+namespace LiveChartsCore.Kernel.Providers;
+
+/// <summary>
+/// Defines the chart provider class.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+public abstract class ChartProvider<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines the chart provider class.
+    /// Gets a new instance of the default data factory.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public abstract class ChartProvider<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <returns></returns>
+    public virtual DataFactory<TModel, TDrawingContext> GetDefaultDataFactory<TModel>()
     {
-        /// <summary>
-        /// Gets a new instance of the default data factory.
-        /// </summary>
-        /// <typeparam name="TModel">The type of the model.</typeparam>
-        /// <returns></returns>
-        public virtual DataFactory<TModel, TDrawingContext> GetDefaultDataFactory<TModel>()
-        {
-            return new();
-        }
+        return new();
+    }
 
-        /// <summary>
-        /// Gets a new instance of the default map factory.
-        /// </summary>
-        /// <returns></returns>
-        public abstract IMapFactory<TDrawingContext> GetDefaultMapFactory();
+    /// <summary>
+    /// Gets a new instance of the default map factory.
+    /// </summary>
+    /// <returns></returns>
+    public abstract IMapFactory<TDrawingContext> GetDefaultMapFactory();
 
-        /// <summary>
-        /// Gets a new instance of the default Cartesian axis.
-        /// </summary>
-        /// <returns></returns>
-        public abstract ICartesianAxis GetDefaultCartesianAxis();
+    /// <summary>
+    /// Gets a new instance of the default Cartesian axis.
+    /// </summary>
+    /// <returns></returns>
+    public abstract ICartesianAxis GetDefaultCartesianAxis();
 
-        /// <summary>
-        /// Gets a new instance of the default polar axis.
-        /// </summary>
-        /// <returns></returns>
-        public abstract IPolarAxis GetDefaultPolarAxis();
+    /// <summary>
+    /// Gets a new instance of the default polar axis.
+    /// </summary>
+    /// <returns></returns>
+    public abstract IPolarAxis GetDefaultPolarAxis();
 
-        /// <summary>
-        /// Gets a new paint of the given color.
-        /// </summary>
-        /// <returns></returns>
-        public abstract IPaint<TDrawingContext> GetSolidColorPaint(LvcColor color = new LvcColor());
+    /// <summary>
+    /// Gets a new paint of the given color.
+    /// </summary>
+    /// <returns></returns>
+    public abstract IPaint<TDrawingContext> GetSolidColorPaint(LvcColor color = new LvcColor());
 
-        /// <summary>
-        /// Gets the series custom measure handler.
-        /// </summary>
-        /// <returns></returns>
-        public virtual Action<Chart<TDrawingContext>>? SeriesCustomMeasureHandler(ISeries series)
-        {
-            return null;
-        }
+    /// <summary>
+    /// Gets the series custom measure handler.
+    /// </summary>
+    /// <returns></returns>
+    public virtual Action<Chart<TDrawingContext>>? SeriesCustomMeasureHandler(ISeries series)
+    {
+        return null;
+    }
 
-        /// <summary>
-        /// Gets the line series custom measure handler.
-        /// </summary>
-        /// <returns></returns>
-        public virtual Action<Chart<TDrawingContext>>? LineCustomMeasureHandler<TModel, TVisual, TLabel, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>(
-            LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs> series)
-                where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
-                where TLineSegment : ILinePathSegment<TPathArgs>, new()
-                where TBezierSegment : IBezierSegment<TPathArgs>, new()
-                where TMoveToCommand : IMoveToPathCommand<TPathArgs>, new()
-                where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
-                where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-        {
-            return null;
-        }
+    /// <summary>
+    /// Gets the line series custom measure handler.
+    /// </summary>
+    /// <returns></returns>
+    public virtual Action<Chart<TDrawingContext>>? LineCustomMeasureHandler<TModel, TVisual, TLabel, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>(
+        LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs> series)
+            where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
+            where TLineSegment : ILinePathSegment<TPathArgs>, new()
+            where TBezierSegment : IBezierSegment<TPathArgs>, new()
+            where TMoveToCommand : IMoveToPathCommand<TPathArgs>, new()
+            where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
+            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    {
+        return null;
     }
 }

@@ -23,21 +23,20 @@
 using System;
 using Microsoft.UI.Xaml.Media;
 
-namespace LiveChartsCore.SkiaSharpView.WinUI
+namespace LiveChartsCore.SkiaSharpView.WinUI;
+
+/// <summary>
+/// Defines the tooltip binding context class.
+/// </summary>
+public class TooltipBindingContext
 {
     /// <summary>
-    /// Defines the tooltip binding context class.
+    /// Gets the background.
     /// </summary>
-    public class TooltipBindingContext
-    {
-        /// <summary>
-        /// Gets the background.
-        /// </summary>
-        public Brush Background { get; set; } = new SolidColorBrush();
+    public Brush Background { get; set; } = new SolidColorBrush();
 
-        /// <summary>
-        /// Gets the points.
-        /// </summary>
-        public BindingPoint[] Points { get; set; } = Array.Empty<BindingPoint>();
-    }
+    /// <summary>
+    /// Gets the points.
+    /// </summary>
+    public BindingPoint[] Points { get; set; } = Array.Empty<BindingPoint>();
 }

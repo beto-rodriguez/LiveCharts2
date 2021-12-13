@@ -1,9 +1,9 @@
-﻿namespace ViewModelsSamples
+﻿namespace ViewModelsSamples;
+
+public static class Index
 {
-    public static class Index
+    public static string[] Samples = new[]
     {
-        public static string[] Samples = new[]
-        {
             "Events/AddPointOnClick",
             "Events/Cartesian",
             "Events/Pie",
@@ -96,5 +96,4 @@
 
             "Maps/World"
         };
-    }
 }

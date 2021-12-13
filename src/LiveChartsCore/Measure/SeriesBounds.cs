@@ -22,40 +22,39 @@
 
 using LiveChartsCore.Kernel;
 
-namespace LiveChartsCore.Measure
+namespace LiveChartsCore.Measure;
+
+/// <summary>
+/// Defines the series bounds class, it contains the data bounds in a series.
+/// </summary>
+public class SeriesBounds
 {
+    private readonly bool _isPrevious;
+
     /// <summary>
-    /// Defines the series bounds class, it contains the data bounds in a series.
+    /// Initializes a new instance of the <see cref="SeriesBounds"/> class.
     /// </summary>
-    public class SeriesBounds
+    /// <param name="bounds">The bounds.</param>
+    /// <param name="isPrevious">if set to <c>true</c> [is previous].</param>
+    public SeriesBounds(DimensionalBounds bounds, bool isPrevious)
     {
-        private readonly bool _isPrevious;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SeriesBounds"/> class.
-        /// </summary>
-        /// <param name="bounds">The bounds.</param>
-        /// <param name="isPrevious">if set to <c>true</c> [is previous].</param>
-        public SeriesBounds(DimensionalBounds bounds, bool isPrevious)
-        {
-            Bounds = bounds;
-            _isPrevious = HasData;
-        }
-
-        /// <summary>
-        /// Gets the bounds.
-        /// </summary>
-        /// <value>
-        /// The bounds.
-        /// </value>
-        public DimensionalBounds Bounds { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether this instance is previous.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is previous; otherwise, <c>false</c>.
-        /// </value>
-        public bool HasData => _isPrevious || Bounds.IsEmpty;
+        Bounds = bounds;
+        _isPrevious = HasData;
     }
+
+    /// <summary>
+    /// Gets the bounds.
+    /// </summary>
+    /// <value>
+    /// The bounds.
+    /// </value>
+    public DimensionalBounds Bounds { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether this instance is previous.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if this instance is previous; otherwise, <c>false</c>.
+    /// </value>
+    public bool HasData => _isPrevious || Bounds.IsEmpty;
 }

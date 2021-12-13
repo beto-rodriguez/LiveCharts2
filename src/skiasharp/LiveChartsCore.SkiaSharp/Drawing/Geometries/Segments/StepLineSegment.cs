@@ -24,45 +24,44 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
+
+/// <inheritdoc cref="IStepLineSegment{TPathContext}" />
+public class StepLineSegment : PathCommand, IStepLineSegment<SKPath>
 {
-    /// <inheritdoc cref="IStepLineSegment{TPathContext}" />
-    public class StepLineSegment : PathCommand, IStepLineSegment<SKPath>
+    private readonly FloatMotionProperty _x0Property;
+    private readonly FloatMotionProperty _y0Property;
+    private readonly FloatMotionProperty _x1Property;
+    private readonly FloatMotionProperty _y1Property;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StepLineSegment"/> class.
+    /// </summary>
+    public StepLineSegment()
     {
-        private readonly FloatMotionProperty _x0Property;
-        private readonly FloatMotionProperty _y0Property;
-        private readonly FloatMotionProperty _x1Property;
-        private readonly FloatMotionProperty _y1Property;
+        _x0Property = RegisterMotionProperty(new FloatMotionProperty(nameof(X0), 0f));
+        _y0Property = RegisterMotionProperty(new FloatMotionProperty(nameof(Y0), 0f));
+        _x1Property = RegisterMotionProperty(new FloatMotionProperty(nameof(X1), 0f));
+        _y1Property = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StepLineSegment"/> class.
-        /// </summary>
-        public StepLineSegment()
-        {
-            _x0Property = RegisterMotionProperty(new FloatMotionProperty(nameof(X0), 0f));
-            _y0Property = RegisterMotionProperty(new FloatMotionProperty(nameof(Y0), 0f));
-            _x1Property = RegisterMotionProperty(new FloatMotionProperty(nameof(X1), 0f));
-            _y1Property = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
-        }
+    /// <inheritdoc cref="IAnimatableBezierSegment.X0" />
+    public float X0 { get => _x0Property.GetMovement(this); set => _x0Property.SetMovement(value, this); }
 
-        /// <inheritdoc cref="IAnimatableBezierSegment.X0" />
-        public float X0 { get => _x0Property.GetMovement(this); set => _x0Property.SetMovement(value, this); }
+    /// <inheritdoc cref="IAnimatableBezierSegment.Y0" />
+    public float Y0 { get => _y0Property.GetMovement(this); set => _y0Property.SetMovement(value, this); }
 
-        /// <inheritdoc cref="IAnimatableBezierSegment.Y0" />
-        public float Y0 { get => _y0Property.GetMovement(this); set => _y0Property.SetMovement(value, this); }
+    /// <inheritdoc cref="IAnimatableBezierSegment.X1" />
+    public float X1 { get => _x1Property.GetMovement(this); set => _x1Property.SetMovement(value, this); }
 
-        /// <inheritdoc cref="IAnimatableBezierSegment.X1" />
-        public float X1 { get => _x1Property.GetMovement(this); set => _x1Property.SetMovement(value, this); }
+    /// <inheritdoc cref="IAnimatableBezierSegment.Y1" />
+    public float Y1 { get => _y1Property.GetMovement(this); set => _y1Property.SetMovement(value, this); }
 
-        /// <inheritdoc cref="IAnimatableBezierSegment.Y1" />
-        public float Y1 { get => _y1Property.GetMovement(this); set => _y1Property.SetMovement(value, this); }
-
-        /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
-        public override void Execute(SKPath path, long currentTime, Animatable pathGeometry)
-        {
-            SetCurrentTime(currentTime);
-            path.LineTo(X0, Y0);
-            path.LineTo(X1, Y1);
-        }
+    /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
+    public override void Execute(SKPath path, long currentTime, Animatable pathGeometry)
+    {
+        SetCurrentTime(currentTime);
+        path.LineTo(X0, Y0);
+        path.LineTo(X1, Y1);
     }
 }

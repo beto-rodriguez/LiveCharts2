@@ -4,11 +4,11 @@ using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System.Collections.Generic;
 
-namespace ViewModelsSamples.Bars.Custom
+namespace ViewModelsSamples.Bars.Custom;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        public List<ISeries> Series { get; set; } = new List<ISeries>
+    public List<ISeries> Series { get; set; } = new List<ISeries>
         {
             // use the second type argument to specify the geometry to draw for every point
             // there are already many predefined geometries in the
@@ -27,5 +27,4 @@ namespace ViewModelsSamples.Bars.Custom
                 Fill = null
             }
         };
-    }
 }

@@ -26,83 +26,82 @@ using System.Linq;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
 
-namespace MauiSample
+namespace MauiSample;
+
+[XamlCompilation(XamlCompilationOptions.Compile)]
+public partial class AppShell : Shell
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class AppShell : Shell
+    private bool _isLoaded = false;
+    private readonly Dictionary<string, string> _routesSamples = new();
+
+    public AppShell()
     {
-        private bool _isLoaded = false;
-        private readonly Dictionary<string, string> _routesSamples = new();
+        InitializeComponent();
+        PropertyChanged += AppShell_PropertyChanged;
+    }
 
-        public AppShell()
+    private void AppShell_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (_isLoaded) return;
+        _isLoaded = true;
+
+        var samples = ViewModelsSamples.Index.Samples;
+
+        var i = 0;
+        for (var i1 = 0; i1 < samples.Length; i1++)
         {
-            InitializeComponent();
-            PropertyChanged += AppShell_PropertyChanged;
-        }
+            var item = samples[i1];
+            var t = Type.GetType($"MauiSample.{item.Replace('/', '.')}.View");
+            //var i = Activator.CreateInstance(t);
+            Routing.RegisterRoute(item, t);
 
-        private void AppShell_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (_isLoaded) return;
-            _isLoaded = true;
+            var shell_section = new ShellSection { Title = item };
 
-            var samples = ViewModelsSamples.Index.Samples;
+            ShellContent content;
 
-            var i = 0;
-            for (var i1 = 0; i1 < samples.Length; i1++)
+            try
             {
-                var item = samples[i1];
-                var t = Type.GetType($"MauiSample.{item.Replace('/', '.')}.View");
-                //var i = Activator.CreateInstance(t);
-                Routing.RegisterRoute(item, t);
-
-                var shell_section = new ShellSection { Title = item };
-
-                ShellContent content;
-
-                try
+                content = new ShellContent()
                 {
-                    content = new ShellContent()
-                    {
-                        Content = i == 0 ? Activator.CreateInstance(t) : null
-                    };
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-
-                shell_section.Items.Add(content);
-
-                Items.Add(shell_section);
-                _routesSamples.Add("//" + content.Route, item);
-                i++;
-
-                //if (i > 4) break;
+                    Content = i == 0 ? Activator.CreateInstance(t) : null
+                };
+            }
+            catch (Exception)
+            {
+                throw;
             }
 
-            Navigating += AppShell_Navigating;
+            shell_section.Items.Add(content);
+
+            Items.Add(shell_section);
+            _routesSamples.Add("//" + content.Route, item);
+            i++;
+
+            //if (i > 4) break;
         }
 
-        private void AppShell_Navigating(object sender, ShellNavigatingEventArgs e)
-        {
-            var shell = (AppShell)sender;
-            var r = shell.Items.Select(x => x.CurrentItem.CurrentItem.Route).ToArray();
-            var next = Items.FirstOrDefault(x => "//" + x.CurrentItem.CurrentItem.Route == e.Target.Location.OriginalString);
-
-            var item = _routesSamples[e.Target.Location.OriginalString];
-            var t = Type.GetType($"MauiSample.{item.Replace('/', '.')}.View");
-            var i = Activator.CreateInstance(t);
-            var c = next.Items[0].Items[0];
-            c.Content = i;
-        }
-
-        // UnComment the below method to handle Shell Menu item click event
-        // And ensure appropriate page definitions are available for it work as expected
-        /*
-        private async void OnMenuItemClicked(object sender, EventArgs e)
-        {
-            await Current.GoToAsync("//login");
-        }
-        */
+        Navigating += AppShell_Navigating;
     }
+
+    private void AppShell_Navigating(object sender, ShellNavigatingEventArgs e)
+    {
+        var shell = (AppShell)sender;
+        var r = shell.Items.Select(x => x.CurrentItem.CurrentItem.Route).ToArray();
+        var next = Items.FirstOrDefault(x => "//" + x.CurrentItem.CurrentItem.Route == e.Target.Location.OriginalString);
+
+        var item = _routesSamples[e.Target.Location.OriginalString];
+        var t = Type.GetType($"MauiSample.{item.Replace('/', '.')}.View");
+        var i = Activator.CreateInstance(t);
+        var c = next.Items[0].Items[0];
+        c.Content = i;
+    }
+
+    // UnComment the below method to handle Shell Menu item click event
+    // And ensure appropriate page definitions are available for it work as expected
+    /*
+    private async void OnMenuItemClicked(object sender, EventArgs e)
+    {
+        await Current.GoToAsync("//login");
+    }
+    */
 }

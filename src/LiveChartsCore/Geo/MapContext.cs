@@ -22,48 +22,47 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Geo
+namespace LiveChartsCore.Geo;
+
+/// <summary>
+/// Defines a map context.
+/// </summary>
+/// <typeparam name="TDrawingContext"></typeparam>
+public class MapContext<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a map context.
+    /// Initializes a new instance of <see cref="MapContext{TDrawingContext}"/> class.
     /// </summary>
-    /// <typeparam name="TDrawingContext"></typeparam>
-    public class MapContext<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public MapContext(
+        GeoMap<TDrawingContext> core,
+        IGeoMapView<TDrawingContext> view,
+        CoreMap<TDrawingContext> map,
+        MapProjector projector)
     {
-        /// <summary>
-        /// Initializes a new instance of <see cref="MapContext{TDrawingContext}"/> class.
-        /// </summary>
-        public MapContext(
-            GeoMap<TDrawingContext> core,
-            IGeoMapView<TDrawingContext> view,
-            CoreMap<TDrawingContext> map,
-            MapProjector projector)
-        {
-            CoreMap = core;
-            MapFile = map;
-            Projector = projector;
-            View = view;
-        }
-
-        /// <summary>
-        /// Gets the core map.
-        /// </summary>
-        public GeoMap<TDrawingContext> CoreMap { get; }
-
-        /// <summary>
-        /// Gets the map file.
-        /// </summary>
-        public CoreMap<TDrawingContext> MapFile { get; }
-
-        /// <summary>
-        /// Gets the map projector.
-        /// </summary>
-        public MapProjector Projector { get; }
-
-        /// <summary>
-        /// Gets the map view.
-        /// </summary>
-        public IGeoMapView<TDrawingContext> View { get; }
+        CoreMap = core;
+        MapFile = map;
+        Projector = projector;
+        View = view;
     }
+
+    /// <summary>
+    /// Gets the core map.
+    /// </summary>
+    public GeoMap<TDrawingContext> CoreMap { get; }
+
+    /// <summary>
+    /// Gets the map file.
+    /// </summary>
+    public CoreMap<TDrawingContext> MapFile { get; }
+
+    /// <summary>
+    /// Gets the map projector.
+    /// </summary>
+    public MapProjector Projector { get; }
+
+    /// <summary>
+    /// Gets the map view.
+    /// </summary>
+    public IGeoMapView<TDrawingContext> View { get; }
 }

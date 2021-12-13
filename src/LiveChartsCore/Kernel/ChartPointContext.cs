@@ -23,69 +23,68 @@
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel;
+
+/// <summary>
+/// Defines the environment of a point in a chart.
+/// </summary>
+public class ChartPointContext
 {
     /// <summary>
-    /// Defines the environment of a point in a chart.
+    /// Initializes a new instance of the <see cref="ChartPointContext"/> class.
     /// </summary>
-    public class ChartPointContext
+    /// <param name="chart">The chart.</param>
+    /// <param name="series">The series.</param>
+    public ChartPointContext(IChartView chart, ISeries series)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ChartPointContext"/> class.
-        /// </summary>
-        /// <param name="chart">The chart.</param>
-        /// <param name="series">The series.</param>
-        public ChartPointContext(IChartView chart, ISeries series)
-        {
-            Chart = chart;
-            Series = series;
-        }
-
-        /// <summary>
-        /// Gets the chart.
-        /// </summary>
-        /// <value>
-        /// The chart.
-        /// </value>
-        public IChartView Chart { get; }
-
-        /// <summary>
-        /// Gets the series.
-        /// </summary>
-        /// <value>
-        /// The series.
-        /// </value>
-        public ISeries Series { get; }
-
-        /// <summary>
-        /// Gets the position of the point the collection that was used when the point was drawn.
-        /// </summary>
-        public int Index { get; internal set; }
-
-        /// <summary>
-        /// Gets the DataSource.
-        /// </summary>
-        public object? DataSource { get; internal set; }
-
-        /// <summary>
-        /// Gets the visual.
-        /// </summary>
-        /// <value>
-        /// The visual.
-        /// </value>
-        public object? Visual { get; internal set; }
-
-        /// <summary>
-        /// Gets the label.
-        /// </summary>
-        /// <value>
-        /// The label.
-        /// </value>
-        public object? Label { get; internal set; }
-
-        /// <summary>
-        /// Gets or sets the area that triggers the ToolTip.
-        /// </summary>
-        public HoverArea? HoverArea { get; internal set; }
+        Chart = chart;
+        Series = series;
     }
+
+    /// <summary>
+    /// Gets the chart.
+    /// </summary>
+    /// <value>
+    /// The chart.
+    /// </value>
+    public IChartView Chart { get; }
+
+    /// <summary>
+    /// Gets the series.
+    /// </summary>
+    /// <value>
+    /// The series.
+    /// </value>
+    public ISeries Series { get; }
+
+    /// <summary>
+    /// Gets the position of the point the collection that was used when the point was drawn.
+    /// </summary>
+    public int Index { get; internal set; }
+
+    /// <summary>
+    /// Gets the DataSource.
+    /// </summary>
+    public object? DataSource { get; internal set; }
+
+    /// <summary>
+    /// Gets the visual.
+    /// </summary>
+    /// <value>
+    /// The visual.
+    /// </value>
+    public object? Visual { get; internal set; }
+
+    /// <summary>
+    /// Gets the label.
+    /// </summary>
+    /// <value>
+    /// The label.
+    /// </value>
+    public object? Label { get; internal set; }
+
+    /// <summary>
+    /// Gets or sets the area that triggers the ToolTip.
+    /// </summary>
+    public HoverArea? HoverArea { get; internal set; }
 }

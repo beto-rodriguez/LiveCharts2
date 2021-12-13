@@ -10,136 +10,135 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
-namespace ViewModelsSamples.Lines.Properties
+namespace ViewModelsSamples.Lines.Properties;
+
+public class ViewModel : INotifyPropertyChanged
 {
-    public class ViewModel : INotifyPropertyChanged
+    private readonly LvcColor[] colors = ColorPalletes.FluentDesign;
+    private readonly Random random = new Random();
+    private LineSeries<double> lineSeries;
+    private int currentColor = 0;
+    private List<ISeries> series;
+
+    public ViewModel()
     {
-        private readonly LvcColor[] colors = ColorPalletes.FluentDesign;
-        private readonly Random random = new Random();
-        private LineSeries<double> lineSeries;
-        private int currentColor = 0;
-        private List<ISeries> series;
-
-        public ViewModel()
+        lineSeries = new LineSeries<double>
         {
-            lineSeries = new LineSeries<double>
-            {
-                Values = new List<double> { -2, -1, 3, 5, 3, 4, 6 },
-                LineSmoothness = 0.5
-            };
+            Values = new List<double> { -2, -1, 3, 5, 3, 4, 6 },
+            LineSmoothness = 0.5
+        };
 
-            Series = new List<ISeries>
+        Series = new List<ISeries>
             {
                 lineSeries
             };
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    public List<ISeries> Series { get => series; set { series = value; OnPropertyChanged(); } }
+
+    public void ChangeValuesInstance()
+    {
+        var t = 0;
+        var values = new List<double>();
+        for (var i = 0; i < 10; i++)
+        {
+            t += random.Next(-5, 10);
+            values.Add(t);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        lineSeries.Values = values;
+    }
 
-        public List<ISeries> Series { get => series; set { series = value; OnPropertyChanged(); } }
-
-        public void ChangeValuesInstance()
+    public void ChangeSeriesInstance()
+    {
+        lineSeries = new LineSeries<double>
         {
-            var t = 0;
-            var values = new List<double>();
-            for (var i = 0; i < 10; i++)
-            {
-                t += random.Next(-5, 10);
-                values.Add(t);
-            }
+            Values = new List<double> { -2, -1, 3, 5, 3, 4, 6 },
+            LineSmoothness = 0.5
+        };
 
-            lineSeries.Values = values;
-        }
-
-        public void ChangeSeriesInstance()
-        {
-            lineSeries = new LineSeries<double>
-            {
-                Values = new List<double> { -2, -1, 3, 5, 3, 4, 6 },
-                LineSmoothness = 0.5
-            };
-
-            Series = new List<ISeries>
+        Series = new List<ISeries>
             {
                 lineSeries
             };
-        }
+    }
 
-        public void NewStroke()
-        {
-            var nextColorIndex = currentColor++ % colors.Length;
-            var color = colors[nextColorIndex];
-            lineSeries.Stroke = new SolidColorPaint(new SKColor(color.R, color.G, color.B)) { StrokeThickness = 3 };
-        }
+    public void NewStroke()
+    {
+        var nextColorIndex = currentColor++ % colors.Length;
+        var color = colors[nextColorIndex];
+        lineSeries.Stroke = new SolidColorPaint(new SKColor(color.R, color.G, color.B)) { StrokeThickness = 3 };
+    }
 
-        public void NewFill()
-        {
-            var nextColorIndex = currentColor++ % colors.Length;
-            var color = colors[nextColorIndex];
+    public void NewFill()
+    {
+        var nextColorIndex = currentColor++ % colors.Length;
+        var color = colors[nextColorIndex];
 
-            lineSeries.Fill = new SolidColorPaint(new SKColor(color.R, color.G, color.B, 90));
-        }
+        lineSeries.Fill = new SolidColorPaint(new SKColor(color.R, color.G, color.B, 90));
+    }
 
-        public void NewGeometryFill()
-        {
-            var nextColorIndex = currentColor++ % colors.Length;
-            var color = colors[nextColorIndex];
+    public void NewGeometryFill()
+    {
+        var nextColorIndex = currentColor++ % colors.Length;
+        var color = colors[nextColorIndex];
 
-            lineSeries.GeometryFill = new SolidColorPaint(new SKColor(color.R, color.G, color.B));
-        }
+        lineSeries.GeometryFill = new SolidColorPaint(new SKColor(color.R, color.G, color.B));
+    }
 
-        public void NewGeometryStroke()
-        {
-            var nextColorIndex = currentColor++ % colors.Length;
-            var color = colors[nextColorIndex];
+    public void NewGeometryStroke()
+    {
+        var nextColorIndex = currentColor++ % colors.Length;
+        var color = colors[nextColorIndex];
 
-            lineSeries.GeometryStroke = new SolidColorPaint(new SKColor(color.R, color.G, color.B)) { StrokeThickness = 3 };
-        }
+        lineSeries.GeometryStroke = new SolidColorPaint(new SKColor(color.R, color.G, color.B)) { StrokeThickness = 3 };
+    }
 
-        public void IncreaseLineSmoothness()
-        {
-            if (lineSeries.LineSmoothness == 1) return;
+    public void IncreaseLineSmoothness()
+    {
+        if (lineSeries.LineSmoothness == 1) return;
 
-            lineSeries.LineSmoothness += 0.1;
-        }
+        lineSeries.LineSmoothness += 0.1;
+    }
 
-        public void DecreaseLineSmoothness()
-        {
-            if (lineSeries.LineSmoothness == 0) return;
+    public void DecreaseLineSmoothness()
+    {
+        if (lineSeries.LineSmoothness == 0) return;
 
-            lineSeries.LineSmoothness -= 0.1;
-        }
+        lineSeries.LineSmoothness -= 0.1;
+    }
 
-        public void IncreaseGeometrySize()
-        {
-            if (lineSeries.GeometrySize == 60) return;
+    public void IncreaseGeometrySize()
+    {
+        if (lineSeries.GeometrySize == 60) return;
 
-            lineSeries.GeometrySize += 10;
-        }
+        lineSeries.GeometrySize += 10;
+    }
 
-        public void DecreaseGeometrySize()
-        {
-            if (lineSeries.GeometrySize == 0) return;
+    public void DecreaseGeometrySize()
+    {
+        if (lineSeries.GeometrySize == 0) return;
 
-            lineSeries.GeometrySize -= 10;
-        }
+        lineSeries.GeometrySize -= 10;
+    }
 
-        // The next commands are only to enable XAML bindings
-        // they are not used in the WinForms sample
-        public ICommand ChangeValuesInstanceCommand => new Command(o => ChangeValuesInstance());
-        public ICommand ChangeSeriesInstanceCommand => new Command(o => ChangeSeriesInstance());
-        public ICommand NewStrokeCommand => new Command(o => NewStroke());
-        public ICommand NewFillCommand => new Command(o => NewFill());
-        public ICommand NewGeometryFillCommand => new Command(o => NewGeometryFill());
-        public ICommand NewGeometryStrokeCommand => new Command(o => NewGeometryStroke());
-        public ICommand IncreaseLineSmoothnessCommand => new Command(o => IncreaseLineSmoothness());
-        public ICommand DecreseLineSmoothnessCommand => new Command(o => DecreaseLineSmoothness());
-        public ICommand IncreaseGeometrySizeCommand => new Command(o => IncreaseGeometrySize());
-        public ICommand DecreseGeometrySizeCommand => new Command(o => DecreaseGeometrySize());
+    // The next commands are only to enable XAML bindings
+    // they are not used in the WinForms sample
+    public ICommand ChangeValuesInstanceCommand => new Command(o => ChangeValuesInstance());
+    public ICommand ChangeSeriesInstanceCommand => new Command(o => ChangeSeriesInstance());
+    public ICommand NewStrokeCommand => new Command(o => NewStroke());
+    public ICommand NewFillCommand => new Command(o => NewFill());
+    public ICommand NewGeometryFillCommand => new Command(o => NewGeometryFill());
+    public ICommand NewGeometryStrokeCommand => new Command(o => NewGeometryStroke());
+    public ICommand IncreaseLineSmoothnessCommand => new Command(o => IncreaseLineSmoothness());
+    public ICommand DecreseLineSmoothnessCommand => new Command(o => DecreaseLineSmoothness());
+    public ICommand IncreaseGeometrySizeCommand => new Command(o => IncreaseGeometrySize());
+    public ICommand DecreseGeometrySizeCommand => new Command(o => DecreaseGeometrySize());
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

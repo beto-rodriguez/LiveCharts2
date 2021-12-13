@@ -28,33 +28,32 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView
+namespace LiveChartsCore.SkiaSharpView;
+
+/// <inheritdoc cref="ChartProvider{TDrawingContext}"/>
+public class SkiaSharpProvider : ChartProvider<SkiaSharpDrawingContext>
 {
-    /// <inheritdoc cref="ChartProvider{TDrawingContext}"/>
-    public class SkiaSharpProvider : ChartProvider<SkiaSharpDrawingContext>
+    /// <inheritdoc cref="ChartProvider{TDrawingContext}.GetDefaultMapFactory"/>
+    public override IMapFactory<SkiaSharpDrawingContext> GetDefaultMapFactory()
     {
-        /// <inheritdoc cref="ChartProvider{TDrawingContext}.GetDefaultMapFactory"/>
-        public override IMapFactory<SkiaSharpDrawingContext> GetDefaultMapFactory()
-        {
-            return new MapFactory();
-        }
+        return new MapFactory();
+    }
 
-        /// <inheritdoc cref="ChartProvider{TDrawingContext}.GetDefaultCartesianAxis"/>
-        public override ICartesianAxis GetDefaultCartesianAxis()
-        {
-            return new Axis();
-        }
+    /// <inheritdoc cref="ChartProvider{TDrawingContext}.GetDefaultCartesianAxis"/>
+    public override ICartesianAxis GetDefaultCartesianAxis()
+    {
+        return new Axis();
+    }
 
-        /// <inheritdoc cref="ChartProvider{TDrawingContext}.GetDefaultPolarAxis"/>
-        public override IPolarAxis GetDefaultPolarAxis()
-        {
-            return new PolarAxis();
-        }
+    /// <inheritdoc cref="ChartProvider{TDrawingContext}.GetDefaultPolarAxis"/>
+    public override IPolarAxis GetDefaultPolarAxis()
+    {
+        return new PolarAxis();
+    }
 
-        /// <inheritdoc cref="ChartProvider{TDrawingContext}.GetSolidColorPaint(LvcColor)"/>
-        public override IPaint<SkiaSharpDrawingContext> GetSolidColorPaint(LvcColor color)
-        {
-            return new SolidColorPaint(new SKColor(color.R, color.G, color.B, color.A));
-        }
+    /// <inheritdoc cref="ChartProvider{TDrawingContext}.GetSolidColorPaint(LvcColor)"/>
+    public override IPaint<SkiaSharpDrawingContext> GetSolidColorPaint(LvcColor color)
+    {
+        return new SolidColorPaint(new SKColor(color.R, color.G, color.B, color.A));
     }
 }

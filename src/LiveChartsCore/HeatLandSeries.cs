@@ -30,170 +30,169 @@ using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 
-namespace LiveChartsCore
+namespace LiveChartsCore;
+
+/// <summary>
+/// Defines the heat land series class.
+/// </summary>
+/// <typeparam name="TDrawingContext"></typeparam>
+public class HeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, INotifyPropertyChanged
+    where TDrawingContext : DrawingContext
 {
+    private IPaint<TDrawingContext>? _heatPaint;
+    private bool _isHeatInCanvas = false;
+    private LvcColor[] _heatMap = Array.Empty<LvcColor>();
+    private double[]? _colorStops;
+    private IEnumerable<IWeigthedMapShape>? _lands;
+    private bool _isVisible;
+    private readonly HashSet<GeoMap<TDrawingContext>> _subscribedTo = new();
+    private readonly CollectionDeepObserver<IWeigthedMapShape> _observer;
+    private readonly HashSet<LandDefinition> _everUsed = new();
+
     /// <summary>
-    /// Defines the heat land series class.
+    /// Initializes a new instance of the <see cref="HeatLandSeries{TDrawingContext}"/> class.
     /// </summary>
-    /// <typeparam name="TDrawingContext"></typeparam>
-    public class HeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, INotifyPropertyChanged
-        where TDrawingContext : DrawingContext
+    public HeatLandSeries()
     {
-        private IPaint<TDrawingContext>? _heatPaint;
-        private bool _isHeatInCanvas = false;
-        private LvcColor[] _heatMap = Array.Empty<LvcColor>();
-        private double[]? _colorStops;
-        private IEnumerable<IWeigthedMapShape>? _lands;
-        private bool _isVisible;
-        private readonly HashSet<GeoMap<TDrawingContext>> _subscribedTo = new();
-        private readonly CollectionDeepObserver<IWeigthedMapShape> _observer;
-        private readonly HashSet<LandDefinition> _everUsed = new();
+        _observer = new CollectionDeepObserver<IWeigthedMapShape>(
+            (sender, e) => NotifySubscribers(),
+            (sender, e) => NotifySubscribers());
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HeatLandSeries{TDrawingContext}"/> class.
-        /// </summary>
-        public HeatLandSeries()
+    /// <summary>
+    /// Called when a property changes.
+    /// </summary>
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    /// <summary>
+    /// Gets or sets the nam
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the heat map.
+    /// </summary>
+    public LvcColor[] HeatMap { get => _heatMap; set { _heatMap = value; OnPropertyChanged(); } }
+
+    /// <summary>
+    /// Gets or sets the color stops.
+    /// </summary>
+    public double[]? ColorStops { get => _colorStops; set { _colorStops = value; OnPropertyChanged(); } }
+
+    /// <summary>
+    /// Gets or sets the lands.
+    /// </summary>
+    public IEnumerable<IWeigthedMapShape>? Lands
+    {
+        get => _lands;
+        set
         {
-            _observer = new CollectionDeepObserver<IWeigthedMapShape>(
-                (sender, e) => NotifySubscribers(),
-                (sender, e) => NotifySubscribers());
+            _observer.Dispose(_lands);
+            _observer.Initialize(value);
+            _lands = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <inheritdoc cref="IGeoSeries{TDrawingContext}.IsVisible"/>
+    public bool IsVisible { get => _isVisible; set { _isVisible = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="IGeoSeries{TDrawingContext}.Measure(MapContext{TDrawingContext})"/>
+    public void Measure(MapContext<TDrawingContext> context)
+    {
+        _ = _subscribedTo.Add(context.CoreMap);
+
+        if (_heatPaint is null) throw new Exception("Default paint not found");
+
+        if (!_isHeatInCanvas)
+        {
+            context.View.Canvas.AddDrawableTask(_heatPaint);
+            _isHeatInCanvas = true;
         }
 
-        /// <summary>
-        /// Called when a property changes.
-        /// </summary>
-        public event PropertyChangedEventHandler? PropertyChanged;
+        var i = context.View.Fill?.ZIndex ?? 0;
+        _heatPaint.ZIndex = i + 1;
 
-        /// <summary>
-        /// Gets or sets the nam
-        /// </summary>
-        public string Name { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the heat map.
-        /// </summary>
-        public LvcColor[] HeatMap { get => _heatMap; set { _heatMap = value; OnPropertyChanged(); } }
-
-        /// <summary>
-        /// Gets or sets the color stops.
-        /// </summary>
-        public double[]? ColorStops { get => _colorStops; set { _colorStops = value; OnPropertyChanged(); } }
-
-        /// <summary>
-        /// Gets or sets the lands.
-        /// </summary>
-        public IEnumerable<IWeigthedMapShape>? Lands
+        var bounds = new Bounds();
+        foreach (var shape in Lands ?? Enumerable.Empty<IWeigthedMapShape>())
         {
-            get => _lands;
-            set
-            {
-                _observer.Dispose(_lands);
-                _observer.Initialize(value);
-                _lands = value;
-                OnPropertyChanged();
-            }
+            bounds.AppendValue(shape.Value);
         }
 
-        /// <inheritdoc cref="IGeoSeries{TDrawingContext}.IsVisible"/>
-        public bool IsVisible { get => _isVisible; set { _isVisible = value; OnPropertyChanged(); } }
+        var heatStops = HeatFunctions.BuildColorStops(HeatMap, ColorStops);
+        var shapeContext = new MapShapeContext<TDrawingContext>(context.View, _heatPaint, heatStops, bounds);
+        var toRemove = new HashSet<LandDefinition>(_everUsed);
 
-        /// <inheritdoc cref="IGeoSeries{TDrawingContext}.Measure(MapContext{TDrawingContext})"/>
-        public void Measure(MapContext<TDrawingContext> context)
+        foreach (var land in Lands ?? Enumerable.Empty<IWeigthedMapShape>())
         {
-            _ = _subscribedTo.Add(context.CoreMap);
+            var projector = Maps.BuildProjector(
+                context.View.MapProjection, new[] { context.View.Width, context.View.Height });
 
-            if (_heatPaint is null) throw new Exception("Default paint not found");
+            var heat = HeatFunctions.InterpolateColor((float)land.Value, bounds, HeatMap, heatStops);
 
-            if (!_isHeatInCanvas)
+            var mapLand = context.View.ActiveMap.FindLand(land.Name);
+            if (mapLand is null) return;
+
+            var shapesQuery = mapLand.Data
+                .Select(x => x.Shape)
+                .Where(x => x is not null)
+                .Cast<IHeatPathShape>();
+
+            foreach (var pathShape in shapesQuery)
             {
-                context.View.Canvas.AddDrawableTask(_heatPaint);
-                _isHeatInCanvas = true;
-            }
-
-            var i = context.View.Fill?.ZIndex ?? 0;
-            _heatPaint.ZIndex = i + 1;
-
-            var bounds = new Bounds();
-            foreach (var shape in Lands ?? Enumerable.Empty<IWeigthedMapShape>())
-            {
-                bounds.AppendValue(shape.Value);
-            }
-
-            var heatStops = HeatFunctions.BuildColorStops(HeatMap, ColorStops);
-            var shapeContext = new MapShapeContext<TDrawingContext>(context.View, _heatPaint, heatStops, bounds);
-            var toRemove = new HashSet<LandDefinition>(_everUsed);
-
-            foreach (var land in Lands ?? Enumerable.Empty<IWeigthedMapShape>())
-            {
-                var projector = Maps.BuildProjector(
-                    context.View.MapProjection, new[] { context.View.Width, context.View.Height });
-
-                var heat = HeatFunctions.InterpolateColor((float)land.Value, bounds, HeatMap, heatStops);
-
-                var mapLand = context.View.ActiveMap.FindLand(land.Name);
-                if (mapLand is null) return;
-
-                var shapesQuery = mapLand.Data
-                    .Select(x => x.Shape)
-                    .Where(x => x is not null)
-                    .Cast<IHeatPathShape>();
-
-                foreach (var pathShape in shapesQuery)
-                {
-                    pathShape.FillColor = heat;
-                }
-
-                _ = _everUsed.Add(mapLand);
-                _ = toRemove.Remove(mapLand);
+                pathShape.FillColor = heat;
             }
 
-            ClearHeat(toRemove);
+            _ = _everUsed.Add(mapLand);
+            _ = toRemove.Remove(mapLand);
         }
 
-        /// <inheritdoc cref="IGeoSeries{TDrawingContext}.Delete(MapContext{TDrawingContext})"/>
-        public void Delete(MapContext<TDrawingContext> context)
-        {
-            ClearHeat(_everUsed);
-            _ = _subscribedTo.Remove(context.CoreMap);
-        }
+        ClearHeat(toRemove);
+    }
 
-        /// <summary>
-        /// Initializes the series.
-        /// </summary>
-        protected void IntitializeSeries(IPaint<TDrawingContext> heatPaint)
-        {
-            _heatPaint = heatPaint;
-        }
+    /// <inheritdoc cref="IGeoSeries{TDrawingContext}.Delete(MapContext{TDrawingContext})"/>
+    public void Delete(MapContext<TDrawingContext> context)
+    {
+        ClearHeat(_everUsed);
+        _ = _subscribedTo.Remove(context.CoreMap);
+    }
 
-        /// <summary>
-        /// Called to invoke the property changed event.
-        /// </summary>
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+    /// <summary>
+    /// Initializes the series.
+    /// </summary>
+    protected void IntitializeSeries(IPaint<TDrawingContext> heatPaint)
+    {
+        _heatPaint = heatPaint;
+    }
 
-        private void NotifySubscribers()
-        {
-            foreach (var chart in _subscribedTo) chart.Update();
-        }
+    /// <summary>
+    /// Called to invoke the property changed event.
+    /// </summary>
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 
-        private void ClearHeat(IEnumerable<LandDefinition> toRemove)
+    private void NotifySubscribers()
+    {
+        foreach (var chart in _subscribedTo) chart.Update();
+    }
+
+    private void ClearHeat(IEnumerable<LandDefinition> toRemove)
+    {
+        foreach (var mapLand in toRemove)
         {
-            foreach (var mapLand in toRemove)
+            var shapesQuery = mapLand.Data
+                .Select(x => x.Shape)
+                .Where(x => x is not null)
+                .Cast<IHeatPathShape>();
+
+            foreach (var pathShape in shapesQuery)
             {
-                var shapesQuery = mapLand.Data
-                    .Select(x => x.Shape)
-                    .Where(x => x is not null)
-                    .Cast<IHeatPathShape>();
-
-                foreach (var pathShape in shapesQuery)
-                {
-                    pathShape.FillColor = LvcColor.Empty;
-                }
-
-                _ = _everUsed.Remove(mapLand);
+                pathShape.FillColor = LvcColor.Empty;
             }
+
+            _ = _everUsed.Remove(mapLand);
         }
     }
 }

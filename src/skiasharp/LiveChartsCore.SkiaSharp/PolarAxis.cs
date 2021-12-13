@@ -24,21 +24,20 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-namespace LiveChartsCore.SkiaSharpView
-{
-    /// <inheritdoc cref="ICartesianAxis" />
-    public class PolarAxis : PolarAxis<SkiaSharpDrawingContext, LabelGeometry, LineGeometry, CircleGeometry>
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Axis"/> class.
-        /// </summary>
-        public PolarAxis()
-        {
-            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-            var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
-            var initializer = stylesBuilder.GetVisualsInitializer();
+namespace LiveChartsCore.SkiaSharpView;
 
-            initializer.ApplyStyleToAxis(this);
-        }
+/// <inheritdoc cref="ICartesianAxis" />
+public class PolarAxis : PolarAxis<SkiaSharpDrawingContext, LabelGeometry, LineGeometry, CircleGeometry>
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Axis"/> class.
+    /// </summary>
+    public PolarAxis()
+    {
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<SkiaSharpDrawingContext>();
+        var initializer = stylesBuilder.GetVisualsInitializer();
+
+        initializer.ApplyStyleToAxis(this);
     }
 }

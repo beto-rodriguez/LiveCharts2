@@ -28,168 +28,167 @@ using Windows.UI.Text;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace LiveChartsCore.SkiaSharpView.WinUI
+namespace LiveChartsCore.SkiaSharpView.WinUI;
+
+/// <summary>
+/// Defines a win ui chart.
+/// </summary>
+public interface IWinUIChart
 {
     /// <summary>
-    /// Defines a win ui chart.
+    /// Gets the layout grid.
     /// </summary>
-    public interface IWinUIChart
-    {
-        /// <summary>
-        /// Gets the layout grid.
-        /// </summary>
-        /// <value>
-        /// The layout grid.
-        /// </value>
-        Grid LayoutGrid { get; }
+    /// <value>
+    /// The layout grid.
+    /// </value>
+    Grid LayoutGrid { get; }
 
-        /// <summary>
-        /// Gets the tooltip control.
-        /// </summary>
-        ToolTip TooltipControl { get; }
+    /// <summary>
+    /// Gets the tooltip control.
+    /// </summary>
+    ToolTip TooltipControl { get; }
 
-        /// <summary>
-        /// Gets the canvas.
-        /// </summary>
-        /// <value>
-        /// The canvas.
-        /// </value>
-        FrameworkElement Canvas { get; }
+    /// <summary>
+    /// Gets the canvas.
+    /// </summary>
+    /// <value>
+    /// The canvas.
+    /// </value>
+    FrameworkElement Canvas { get; }
 
-        /// <summary>
-        /// Gets the legend.
-        /// </summary>
-        /// <value>
-        /// The legend.
-        /// </value>
-        FrameworkElement Legend { get; }
+    /// <summary>
+    /// Gets the legend.
+    /// </summary>
+    /// <value>
+    /// The legend.
+    /// </value>
+    FrameworkElement Legend { get; }
 
-        /// <summary>
-        /// Gets or sets the tool tip template.
-        /// </summary>
-        /// <value>
-        /// The tool tip template.
-        /// </value>
-        DataTemplate? TooltipTemplate { get; set; }
+    /// <summary>
+    /// Gets or sets the tool tip template.
+    /// </summary>
+    /// <value>
+    /// The tool tip template.
+    /// </value>
+    DataTemplate? TooltipTemplate { get; set; }
 
-        /// <summary>
-        /// Gets or sets the tool tip font family.
-        /// </summary>
-        /// <value>
-        /// The tool tip font family.
-        /// </value>
-        FontFamily TooltipFontFamily { get; set; }
+    /// <summary>
+    /// Gets or sets the tool tip font family.
+    /// </summary>
+    /// <value>
+    /// The tool tip font family.
+    /// </value>
+    FontFamily TooltipFontFamily { get; set; }
 
-        /// <summary>
-        /// Gets or sets the size of the tool tip font.
-        /// </summary>
-        /// <value>
-        /// The size of the tool tip font.
-        /// </value>
-        double TooltipFontSize { get; set; }
+    /// <summary>
+    /// Gets or sets the size of the tool tip font.
+    /// </summary>
+    /// <value>
+    /// The size of the tool tip font.
+    /// </value>
+    double TooltipFontSize { get; set; }
 
-        /// <summary>
-        /// Gets or sets the color of the tool tip text.
-        /// </summary>
-        /// <value>
-        /// The color of the tool tip text.
-        /// </value>
-        Brush TooltipTextBrush { get; set; }
+    /// <summary>
+    /// Gets or sets the color of the tool tip text.
+    /// </summary>
+    /// <value>
+    /// The color of the tool tip text.
+    /// </value>
+    Brush TooltipTextBrush { get; set; }
 
-        /// <summary>
-        /// Gets or sets the color of the tool tip background.
-        /// </summary>
-        /// <value>
-        /// The color of the tool tip background.
-        /// </value>
-        Brush TooltipBackground { get; set; }
+    /// <summary>
+    /// Gets or sets the color of the tool tip background.
+    /// </summary>
+    /// <value>
+    /// The color of the tool tip background.
+    /// </value>
+    Brush TooltipBackground { get; set; }
 
-        /// <summary>
-        /// Gets or sets the legend font weight.
-        /// </summary>
-        /// <value>
-        /// The legend font weight.
-        /// </value>
-        FontWeight TooltipFontWeight { get; set; }
+    /// <summary>
+    /// Gets or sets the legend font weight.
+    /// </summary>
+    /// <value>
+    /// The legend font weight.
+    /// </value>
+    FontWeight TooltipFontWeight { get; set; }
 
-        /// <summary>
-        /// Gets or sets the legend font stretch.
-        /// </summary>
-        /// <value>
-        /// The legend font stretch.
-        /// </value>
-        FontStretch TooltipFontStretch { get; set; }
+    /// <summary>
+    /// Gets or sets the legend font stretch.
+    /// </summary>
+    /// <value>
+    /// The legend font stretch.
+    /// </value>
+    FontStretch TooltipFontStretch { get; set; }
 
-        /// <summary>
-        /// Gets or sets the legend font style.
-        /// </summary>
-        /// <value>
-        /// The legend font style.
-        /// </value>
-        FontStyle TooltipFontStyle { get; set; }
+    /// <summary>
+    /// Gets or sets the legend font style.
+    /// </summary>
+    /// <value>
+    /// The legend font style.
+    /// </value>
+    FontStyle TooltipFontStyle { get; set; }
 
-        /// <summary>
-        /// Gets or sets the legend font family.
-        /// </summary>
-        /// <value>
-        /// The legend font family.
-        /// </value>
-        FontFamily LegendFontFamily { get; set; }
+    /// <summary>
+    /// Gets or sets the legend font family.
+    /// </summary>
+    /// <value>
+    /// The legend font family.
+    /// </value>
+    FontFamily LegendFontFamily { get; set; }
 
-        /// <summary>
-        /// Gets or sets the size of the legend font.
-        /// </summary>
-        /// <value>
-        /// The size of the legend font.
-        /// </value>
-        double LegendFontSize { get; set; }
+    /// <summary>
+    /// Gets or sets the size of the legend font.
+    /// </summary>
+    /// <value>
+    /// The size of the legend font.
+    /// </value>
+    double LegendFontSize { get; set; }
 
-        /// <summary>
-        /// Gets or sets the color of the legend text.
-        /// </summary>
-        /// <value>
-        /// The color of the legend text.
-        /// </value>
-        Brush LegendTextBrush { get; set; }
+    /// <summary>
+    /// Gets or sets the color of the legend text.
+    /// </summary>
+    /// <value>
+    /// The color of the legend text.
+    /// </value>
+    Brush LegendTextBrush { get; set; }
 
-        /// <summary>
-        /// Gets or sets the color of the legend background.
-        /// </summary>
-        /// <value>
-        /// The color of the legend background.
-        /// </value>
-        Brush LegendBackground { get; set; }
+    /// <summary>
+    /// Gets or sets the color of the legend background.
+    /// </summary>
+    /// <value>
+    /// The color of the legend background.
+    /// </value>
+    Brush LegendBackground { get; set; }
 
-        /// <summary>
-        /// Gets or sets the legend font stretch.
-        /// </summary>
-        /// <value>
-        /// The legend font stretch.
-        /// </value>
-        FontStretch LegendFontStretch { get; set; }
+    /// <summary>
+    /// Gets or sets the legend font stretch.
+    /// </summary>
+    /// <value>
+    /// The legend font stretch.
+    /// </value>
+    FontStretch LegendFontStretch { get; set; }
 
-        /// <summary>
-        /// Gets or sets the legend font style.
-        /// </summary>
-        /// <value>
-        /// The legend font style.
-        /// </value>
-        FontStyle LegendFontStyle { get; set; }
+    /// <summary>
+    /// Gets or sets the legend font style.
+    /// </summary>
+    /// <value>
+    /// The legend font style.
+    /// </value>
+    FontStyle LegendFontStyle { get; set; }
 
-        /// <summary>
-        /// Gets or sets the legend font weight.
-        /// </summary>
-        /// <value>
-        /// The legend font weight.
-        /// </value>
-        FontWeight LegendFontWeight { get; set; }
+    /// <summary>
+    /// Gets or sets the legend font weight.
+    /// </summary>
+    /// <value>
+    /// The legend font weight.
+    /// </value>
+    FontWeight LegendFontWeight { get; set; }
 
-        /// <summary>
-        /// Gets or sets the legend template.
-        /// </summary>
-        /// <value>
-        /// The legend template.
-        /// </value>
-        DataTemplate? LegendTemplate { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the legend template.
+    /// </summary>
+    /// <value>
+    /// The legend template.
+    /// </value>
+    DataTemplate? LegendTemplate { get; set; }
 }

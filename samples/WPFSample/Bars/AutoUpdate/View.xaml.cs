@@ -2,31 +2,30 @@
 using System.Windows.Controls;
 using ViewModelsSamples.Bars.AutoUpdate;
 
-namespace WPFSample.Bars.AutoUpdate
+namespace WPFSample.Bars.AutoUpdate;
+
+/// <summary>
+/// Interaction logic for View.xaml
+/// </summary>
+public partial class View : UserControl
 {
-    /// <summary>
-    /// Interaction logic for View.xaml
-    /// </summary>
-    public partial class View : UserControl
+    private bool? _isStreaming = false;
+
+    public View()
     {
-        private bool? _isStreaming = false;
+        InitializeComponent();
+    }
 
-        public View()
+    private async void Button_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+        var vm = (ViewModel)DataContext;
+        _isStreaming = _isStreaming is null ? true : !_isStreaming;
+
+        while (_isStreaming.Value)
         {
-            InitializeComponent();
-        }
-
-        private async void Button_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            var vm = (ViewModel)DataContext;
-            _isStreaming = _isStreaming is null ? true : !_isStreaming;
-
-            while (_isStreaming.Value)
-            {
-                vm.RemoveFirstItem();
-                vm.AddRandomItem();
-                await Task.Delay(1000);
-            }
+            vm.RemoveFirstItem();
+            vm.AddRandomItem();
+            await Task.Delay(1000);
         }
     }
 }

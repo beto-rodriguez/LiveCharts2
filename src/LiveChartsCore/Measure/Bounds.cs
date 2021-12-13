@@ -20,86 +20,85 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Measure
+namespace LiveChartsCore.Measure;
+
+/// <summary>
+/// Represents the maximum and minimum values in a set.
+/// </summary>
+public class Bounds
 {
     /// <summary>
-    /// Represents the maximum and minimum values in a set.
+    /// Creates a new instance of the <see cref="Bounds"/> class.
     /// </summary>
-    public class Bounds
+    public Bounds()
+    { }
+
+    /// <summary>
+    /// Gets whether the bounds are empty.
+    /// </summary>
+    public bool IsEmpty { get; internal set; } = true;
+
+    /// <summary>
+    /// Gets or sets the maximum value in the data set.
+    /// </summary>
+    public double Max { get; set; } = float.MinValue;
+
+    /// <summary>
+    /// Gets or sets the minimum value in the data set.
+    /// </summary>
+    public double Min { get; set; } = float.MaxValue;
+
+    /// <summary>
+    /// Gets the padding, the distance from the edge to the first point in the series.
+    /// </summary>
+    public double PaddingMax { get; internal set; } = 0;
+
+    /// <summary>
+    /// Gets the padding, the distance from the edge to the last point in the series.
+    /// </summary>
+    public double PaddingMin { get; internal set; } = 0;
+
+    /// <summary>
+    /// Gets the requested geometry size.
+    /// </summary>
+    public double RequestedGeometrySize { get; internal set; } = 0;
+
+    /// <summary>
+    /// Gets the delta, the absolute range in the axis.
+    /// </summary>
+    /// <value>
+    /// The delta.
+    /// </value>
+    public double Delta => Max - Min;
+
+    /// <summary>
+    /// Gets or sets the minimum delta.
+    /// </summary>
+    /// <value>
+    /// The minimum delta.
+    /// </value>
+    public double MinDelta { get; set; }
+
+    /// <summary>
+    /// Compares the current bounds with a given value,
+    /// if the given value is greater than the current instance <see cref="Max"/> property then the given value is set at <see cref="Max"/> property,
+    /// if the given value is less than the current instance <see cref="Min"/> property then the given value is set at <see cref="Min"/> property.
+    /// </summary>
+    /// <param name="value">the value to append</param>
+    /// <returns>Whether the value affected the current bounds, true if it affected, false if did not.</returns>
+    public void AppendValue(double value)
     {
-        /// <summary>
-        /// Creates a new instance of the <see cref="Bounds"/> class.
-        /// </summary>
-        public Bounds()
-        { }
+        if (Max <= value) Max = value;
+        if (Min >= value) Min = value;
+        IsEmpty = false;
+    }
 
-        /// <summary>
-        /// Gets whether the bounds are empty.
-        /// </summary>
-        public bool IsEmpty { get; internal set; } = true;
-
-        /// <summary>
-        /// Gets or sets the maximum value in the data set.
-        /// </summary>
-        public double Max { get; set; } = float.MinValue;
-
-        /// <summary>
-        /// Gets or sets the minimum value in the data set.
-        /// </summary>
-        public double Min { get; set; } = float.MaxValue;
-
-        /// <summary>
-        /// Gets the padding, the distance from the edge to the first point in the series.
-        /// </summary>
-        public double PaddingMax { get; internal set; } = 0;
-
-        /// <summary>
-        /// Gets the padding, the distance from the edge to the last point in the series.
-        /// </summary>
-        public double PaddingMin { get; internal set; } = 0;
-
-        /// <summary>
-        /// Gets the requested geometry size.
-        /// </summary>
-        public double RequestedGeometrySize { get; internal set; } = 0;
-
-        /// <summary>
-        /// Gets the delta, the absolute range in the axis.
-        /// </summary>
-        /// <value>
-        /// The delta.
-        /// </value>
-        public double Delta => Max - Min;
-
-        /// <summary>
-        /// Gets or sets the minimum delta.
-        /// </summary>
-        /// <value>
-        /// The minimum delta.
-        /// </value>
-        public double MinDelta { get; set; }
-
-        /// <summary>
-        /// Compares the current bounds with a given value,
-        /// if the given value is greater than the current instance <see cref="Max"/> property then the given value is set at <see cref="Max"/> property,
-        /// if the given value is less than the current instance <see cref="Min"/> property then the given value is set at <see cref="Min"/> property.
-        /// </summary>
-        /// <param name="value">the value to append</param>
-        /// <returns>Whether the value affected the current bounds, true if it affected, false if did not.</returns>
-        public void AppendValue(double value)
-        {
-            if (Max <= value) Max = value;
-            if (Min >= value) Min = value;
-            IsEmpty = false;
-        }
-
-        /// <summary>
-        /// Determines whether the current instance has the same limit to the given instance.
-        /// </summary>
-        /// <param name="bounds">The bounds to compate.</param>
-        public bool HasSameLimitTo(Bounds bounds)
-        {
-            return Max == bounds.Max && Min == bounds.Min;
-        }
+    /// <summary>
+    /// Determines whether the current instance has the same limit to the given instance.
+    /// </summary>
+    /// <param name="bounds">The bounds to compate.</param>
+    public bool HasSameLimitTo(Bounds bounds)
+    {
+        return Max == bounds.Max && Min == bounds.Min;
     }
 }

@@ -25,59 +25,58 @@ using System.Linq;
 using LiveChartsCore.Kernel;
 using Xamarin.Forms;
 
-namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
+namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms;
+
+/// <summary>
+/// Defines the tool tip binding context.
+/// </summary>
+public class TooltipBindingContext
 {
     /// <summary>
-    /// Defines the tool tip binding context.
+    /// Gets or sets the points.
     /// </summary>
-    public class TooltipBindingContext
-    {
-        /// <summary>
-        /// Gets or sets the points.
-        /// </summary>
-        /// <value>
-        /// The points.
-        /// </value>
-        public IEnumerable<ChartPoint>? Points { get; set; } = Enumerable.Empty<ChartPoint>();
+    /// <value>
+    /// The points.
+    /// </value>
+    public IEnumerable<ChartPoint>? Points { get; set; } = Enumerable.Empty<ChartPoint>();
 
-        /// <summary>
-        /// Gets or sets the font family.
-        /// </summary>
-        /// <value>
-        /// The font family.
-        /// </value>
-        public string? FontFamily { get; set; }
+    /// <summary>
+    /// Gets or sets the font family.
+    /// </summary>
+    /// <value>
+    /// The font family.
+    /// </value>
+    public string? FontFamily { get; set; }
 
-        /// <summary>
-        /// Gets or sets the size of the font.
-        /// </summary>
-        /// <value>
-        /// The size of the font.
-        /// </value>
-        public double FontSize { get; set; }
+    /// <summary>
+    /// Gets or sets the size of the font.
+    /// </summary>
+    /// <value>
+    /// The size of the font.
+    /// </value>
+    public double FontSize { get; set; }
 
-        /// <summary>
-        /// Gets or sets the color of the text.
-        /// </summary>
-        /// <value>
-        /// The color of the text.
-        /// </value>
-        public Color TextColor { get; set; }
+    /// <summary>
+    /// Gets or sets the color of the text.
+    /// </summary>
+    /// <value>
+    /// The color of the text.
+    /// </value>
+    public Color TextColor { get; set; }
 
-        /// <summary>
-        /// Gets or sets the font attributes.
-        /// </summary>
-        /// <value>
-        /// The font attributes.
-        /// </value>
-        public FontAttributes FontAttributes { get; set; }
+    /// <summary>
+    /// Gets or sets the font attributes.
+    /// </summary>
+    /// <value>
+    /// The font attributes.
+    /// </value>
+    public FontAttributes FontAttributes { get; set; }
 
-        /// <summary>
-        /// Gets or sets the color of the background.
-        /// </summary>
-        /// <value>
-        /// The color of the background.
-        /// </value>
-        public Color TooltipBackgroundColor { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the color of the background.
+    /// </summary>
+    /// <value>
+    /// The color of the background.
+    /// </value>
+    public Color TooltipBackgroundColor { get; set; }
 }

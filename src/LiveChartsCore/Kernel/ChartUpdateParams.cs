@@ -20,27 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel;
+
+/// <summary>
+/// Defines the chart update parameter.
+/// </summary>
+public class ChartUpdateParams
 {
     /// <summary>
-    /// Defines the chart update parameter.
+    /// Gets or sets a value indicating whether this instance is automatic update.
     /// </summary>
-    public class ChartUpdateParams
-    {
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is automatic update.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is automatic update; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsAutomaticUpdate { get; set; } = true;
+    /// <value>
+    ///   <c>true</c> if this instance is automatic update; otherwise, <c>false</c>.
+    /// </value>
+    public bool IsAutomaticUpdate { get; set; } = true;
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="ChartUpdateParams"/> is throttling.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if throttling; otherwise, <c>false</c>.
-        /// </value>
-        public bool Throttling { get; set; } = true;
-    }
+    /// <summary>
+    /// Gets or sets a value indicating whether this <see cref="ChartUpdateParams"/> is throttling.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if throttling; otherwise, <c>false</c>.
+    /// </value>
+    public bool Throttling { get; set; } = true;
 }

@@ -1,12 +1,11 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 
-namespace WinUISample.StepLines.Properties
+namespace WinUISample.StepLines.Properties;
+
+public sealed partial class View : UserControl
 {
-    public sealed partial class View : UserControl
+    public View()
     {
-        public View()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

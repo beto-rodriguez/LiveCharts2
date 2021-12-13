@@ -6,14 +6,14 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace ViewModelsSamples.General.Legends
-{
-    public class ViewModel : INotifyPropertyChanged
-    {
-        private LegendPosition _position;
-        private AvailablePosition _selectedPosition;
+namespace ViewModelsSamples.General.Legends;
 
-        public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
+public class ViewModel : INotifyPropertyChanged
+{
+    private LegendPosition _position;
+    private AvailablePosition _selectedPosition;
+
+    public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
         {
             new ColumnSeries<double>
             {
@@ -32,7 +32,7 @@ namespace ViewModelsSamples.General.Legends
             }
         };
 
-        public List<AvailablePosition> Positions => new List<AvailablePosition>
+    public List<AvailablePosition> Positions => new List<AvailablePosition>
         {
             new AvailablePosition("hidden", LegendPosition.Hidden),
             new AvailablePosition("top", LegendPosition.Top),
@@ -41,24 +41,23 @@ namespace ViewModelsSamples.General.Legends
             new AvailablePosition("left", LegendPosition.Left)
         };
 
-        public AvailablePosition SelectedPosition
+    public AvailablePosition SelectedPosition
+    {
+        get => _selectedPosition;
+        set
         {
-            get => _selectedPosition;
-            set
-            {
-                _selectedPosition = value;
-                OnPropertyChanged();
-                Position = _selectedPosition.Position;
-            }
+            _selectedPosition = value;
+            OnPropertyChanged();
+            Position = _selectedPosition.Position;
         }
+    }
 
-        public LegendPosition Position { get => _position; set { _position = value; OnPropertyChanged(); } }
+    public LegendPosition Position { get => _position; set { _position = value; OnPropertyChanged(); } }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

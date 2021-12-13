@@ -22,27 +22,26 @@
 
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+
+/// <summary>
+/// Defines a circle geometry.
+/// </summary>
+/// <seealso cref="SizedGeometry" />
+public class CircleGeometry : SizedGeometry
 {
     /// <summary>
-    /// Defines a circle geometry.
+    /// Initializes a new instance of the <see cref="CircleGeometry"/> class.
     /// </summary>
-    /// <seealso cref="SizedGeometry" />
-    public class CircleGeometry : SizedGeometry
+    public CircleGeometry() : base()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CircleGeometry"/> class.
-        /// </summary>
-        public CircleGeometry() : base()
-        {
-            matchDimensions = true;
-        }
+        matchDimensions = true;
+    }
 
-        /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-        public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
-        {
-            var rx = Width / 2f;
-            context.Canvas.DrawCircle(X + rx, Y + rx, rx, paint);
-        }
+    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
+    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    {
+        var rx = Width / 2f;
+        context.Canvas.DrawCircle(X + rx, Y + rx, rx, paint);
     }
 }

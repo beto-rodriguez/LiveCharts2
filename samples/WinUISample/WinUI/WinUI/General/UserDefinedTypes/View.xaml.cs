@@ -1,12 +1,11 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 
-namespace WinUISample.General.UserDefinedTypes
+namespace WinUISample.General.UserDefinedTypes;
+
+public sealed partial class View : UserControl
 {
-    public sealed partial class View : UserControl
+    public View()
     {
-        public View()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

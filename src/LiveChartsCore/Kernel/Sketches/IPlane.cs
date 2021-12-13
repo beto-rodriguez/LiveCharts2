@@ -25,243 +25,242 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.Kernel.Sketches
+namespace LiveChartsCore.Kernel.Sketches;
+
+/// <summary>
+/// Defines a plane for a dimension.
+/// </summary>
+public interface IPlane : IStopNPC
 {
     /// <summary>
-    /// Defines a plane for a dimension.
+    /// Gets or sets the axis name.
     /// </summary>
-    public interface IPlane : IStopNPC
-    {
-        /// <summary>
-        /// Gets or sets the axis name.
-        /// </summary>
-        string? Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the size of the name label.
-        /// </summary>
-        /// <value>
-        /// The size of the text.
-        /// </value>
-        double NameTextSize { get; set; }
-
-        /// <summary>
-        /// Gets or sets the padding of the name label.
-        /// </summary>
-        Padding NamePadding { get; set; }
-
-        /// <summary>
-        /// Gets the previous data bounds.
-        /// </summary>
-        /// <value>
-        /// The previous data bounds.
-        /// </value>
-        Bounds? PreviousDataBounds { get; set; }
-
-        /// <summary>
-        /// Gets the previous data bounds.
-        /// </summary>
-        /// <value>
-        /// The previous data bounds.
-        /// </value>
-        Bounds? PreviousVisibleDataBounds { get; set; }
-
-        /// <summary>
-        /// Gets the data bounds, the min and max values in the axis.
-        /// </summary>
-        /// <value>
-        /// The data bounds.
-        /// </value>
-        Bounds DataBounds { get; }
-
-        /// <summary>
-        /// Gets the data visible bounds, the min and max visible values in the axis.
-        /// </summary>
-        /// <value>
-        /// The data bounds.
-        /// </value>
-        Bounds VisibleDataBounds { get; }
-
-        /// <summary>
-        /// Gets or sets the labeler, a function that receives a number and return the label content as string.
-        /// </summary>
-        /// <value>
-        /// The labeler.
-        /// </value>
-        Func<double, string> Labeler { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum step, the step defines the interval between every separator in the axis,
-        /// LiveCharts will calculate it automatically based on the chart data and the chart size size, if the calculated step is
-        /// less than the <see cref="MinStep"/> then <see cref="MinStep"/> will be used as the axis step, default is 0.
-        /// </summary>
-        /// <value>
-        /// The step.
-        /// </value>
-        double MinStep { get; set; }
-
-        /// <summary>
-        /// Gets or sets whether the axis should use the <see cref="MinStep"/> as the actual step of the axis, if true, the library
-        /// will not calculate the step of the axis automatically, instead it will use the value in the <see cref="MinStep"/> property.
-        /// Be careful when setting this property to true, it might cause performance issues if the step is too small for the current
-        /// data in the chart. Default value is false.
-        /// </summary>
-        bool ForceStepToMin { get; set; }
-
-        /// <summary>
-        /// Gets or sets the unit with, it means the width of every point (if the series requires it) in the chart values scale, this value
-        /// should normally be 1, unless you are plotting in a custom scale, default is 1.
-        /// </summary>
-        /// <value>
-        /// The unit with.
-        /// </value>
-        double UnitWidth { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum value visible in the axis, any point less than this value will be hidden, 
-        /// set it to null to use a value based on the smaller value in the chart.
-        /// </summary>
-        /// <value>
-        /// The minimum value.
-        /// </value>
-        double? MinLimit { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maximum value visible in the axis, any point greater than this value will be hidden, 
-        /// set it null to use a value based on the greater value in the chart.
-        /// </summary>
-        /// <value>
-        /// The maximum value.
-        /// </value>
-        double? MaxLimit { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is visible.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is visible; otherwise, <c>false</c>.
-        /// </value>
-        bool IsVisible { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the axis is inverted based on the Cartesian coordinate system.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is inverted; otherwise, <c>false</c>.
-        /// </value>
-        bool IsInverted { get; set; }
-
-        /// <summary>
-        /// Gets or sets the previous maximum limit.
-        /// </summary>
-        /// <value>
-        /// The previous maximum limit.
-        /// </value>
-        double? PreviousMaxLimit { get; set; }
-
-        /// <summary>
-        /// Gets or sets the previous minimum limit.
-        /// </summary>
-        /// <value>
-        /// The previous minimum limit.
-        /// </value>
-        double? PreviousMinLimit { get; set; }
-
-        /// <summary>
-        /// Gets or sets the labels rotation in degrees.
-        /// </summary>
-        /// <value>
-        /// The labels rotation.
-        /// </value>
-        double LabelsRotation { get; set; }
-
-        /// <summary>
-        /// Gets or sets the size of the labels.
-        /// </summary>
-        /// <value>
-        /// The size of the text.
-        /// </value>
-        double TextSize { get; set; }
-
-        /// <summary>
-        /// Gets or sets the labels, if labels are not null, then the axis label will be pulled from the labels collection,
-        /// the label is mapped to the chart based on the position of the label and the position of the point, both integers,
-        /// if the axis requires a label outside the bounds of the labels collection, then the index will be returned as the label.
-        /// Default value is null.
-        /// </summary>
-        /// <value>
-        /// The labels.
-        /// </value>
-        IList<string>? Labels { get; set; }
-
-        /// <summary>
-        /// Gets or sets the animations speed, if this property is null, the
-        /// <see cref="Chart{TDrawingContext}.AnimationsSpeed"/> property will be used.
-        /// </summary>
-        /// <value>
-        /// The animations speed.
-        /// </value>
-        TimeSpan? AnimationsSpeed { get; set; }
-
-        /// <summary>
-        /// Gets or sets the easing function to animate the series, if this property is null, the
-        /// <see cref="Chart{TDrawingContext}.EasingFunction"/> property will be used.
-        /// </summary>
-        /// <value>
-        /// The easing function.
-        /// </value>
-        Func<float, float>? EasingFunction { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the separator lines are visible.
-        /// </summary>
-        bool ShowSeparatorLines { get; set; }
-    }
+    string? Name { get; set; }
 
     /// <summary>
-    /// Defines an Axis in a Cartesian chart.
+    /// Gets or sets the size of the name label.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IDisposable" />
-    public interface IPlane<TDrawingContext> : IPlane, IChartElement<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets or sets the name paint.
-        /// </summary>
-        /// <value>
-        /// The text paint.
-        /// </value>
-        IPaint<TDrawingContext>? NamePaint { get; set; }
+    /// <value>
+    /// The size of the text.
+    /// </value>
+    double NameTextSize { get; set; }
 
-        /// <summary>
-        /// Gets or sets the text paint.
-        /// </summary>
-        /// <value>
-        /// The text paint.
-        /// </value>
-        IPaint<TDrawingContext>? LabelsPaint { get; set; }
+    /// <summary>
+    /// Gets or sets the padding of the name label.
+    /// </summary>
+    Padding NamePadding { get; set; }
 
-        /// <summary>
-        /// Gets or sets the separators paint.
-        /// </summary>
-        /// <value>
-        /// The separators paint.
-        /// </value>
-        IPaint<TDrawingContext>? SeparatorsPaint { get; set; }
+    /// <summary>
+    /// Gets the previous data bounds.
+    /// </summary>
+    /// <value>
+    /// The previous data bounds.
+    /// </value>
+    Bounds? PreviousDataBounds { get; set; }
 
-        /// <summary>
-        /// Gets the size of the possible.
-        /// </summary>
-        /// <param name="chart">The chart.</param>
-        /// <returns></returns>
-        LvcSize GetPossibleSize(Chart<TDrawingContext> chart);
+    /// <summary>
+    /// Gets the previous data bounds.
+    /// </summary>
+    /// <value>
+    /// The previous data bounds.
+    /// </value>
+    Bounds? PreviousVisibleDataBounds { get; set; }
 
-        /// <summary>
-        /// Gets the size of the axis name label.
-        /// </summary>
-        /// <param name="chart">the chart.</param>
-        /// <returns></returns>
-        LvcSize GetNameLabelSize(Chart<TDrawingContext> chart);
-    }
+    /// <summary>
+    /// Gets the data bounds, the min and max values in the axis.
+    /// </summary>
+    /// <value>
+    /// The data bounds.
+    /// </value>
+    Bounds DataBounds { get; }
+
+    /// <summary>
+    /// Gets the data visible bounds, the min and max visible values in the axis.
+    /// </summary>
+    /// <value>
+    /// The data bounds.
+    /// </value>
+    Bounds VisibleDataBounds { get; }
+
+    /// <summary>
+    /// Gets or sets the labeler, a function that receives a number and return the label content as string.
+    /// </summary>
+    /// <value>
+    /// The labeler.
+    /// </value>
+    Func<double, string> Labeler { get; set; }
+
+    /// <summary>
+    /// Gets or sets the minimum step, the step defines the interval between every separator in the axis,
+    /// LiveCharts will calculate it automatically based on the chart data and the chart size size, if the calculated step is
+    /// less than the <see cref="MinStep"/> then <see cref="MinStep"/> will be used as the axis step, default is 0.
+    /// </summary>
+    /// <value>
+    /// The step.
+    /// </value>
+    double MinStep { get; set; }
+
+    /// <summary>
+    /// Gets or sets whether the axis should use the <see cref="MinStep"/> as the actual step of the axis, if true, the library
+    /// will not calculate the step of the axis automatically, instead it will use the value in the <see cref="MinStep"/> property.
+    /// Be careful when setting this property to true, it might cause performance issues if the step is too small for the current
+    /// data in the chart. Default value is false.
+    /// </summary>
+    bool ForceStepToMin { get; set; }
+
+    /// <summary>
+    /// Gets or sets the unit with, it means the width of every point (if the series requires it) in the chart values scale, this value
+    /// should normally be 1, unless you are plotting in a custom scale, default is 1.
+    /// </summary>
+    /// <value>
+    /// The unit with.
+    /// </value>
+    double UnitWidth { get; set; }
+
+    /// <summary>
+    /// Gets or sets the minimum value visible in the axis, any point less than this value will be hidden, 
+    /// set it to null to use a value based on the smaller value in the chart.
+    /// </summary>
+    /// <value>
+    /// The minimum value.
+    /// </value>
+    double? MinLimit { get; set; }
+
+    /// <summary>
+    /// Gets or sets the maximum value visible in the axis, any point greater than this value will be hidden, 
+    /// set it null to use a value based on the greater value in the chart.
+    /// </summary>
+    /// <value>
+    /// The maximum value.
+    /// </value>
+    double? MaxLimit { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this instance is visible.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if this instance is visible; otherwise, <c>false</c>.
+    /// </value>
+    bool IsVisible { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the axis is inverted based on the Cartesian coordinate system.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if this instance is inverted; otherwise, <c>false</c>.
+    /// </value>
+    bool IsInverted { get; set; }
+
+    /// <summary>
+    /// Gets or sets the previous maximum limit.
+    /// </summary>
+    /// <value>
+    /// The previous maximum limit.
+    /// </value>
+    double? PreviousMaxLimit { get; set; }
+
+    /// <summary>
+    /// Gets or sets the previous minimum limit.
+    /// </summary>
+    /// <value>
+    /// The previous minimum limit.
+    /// </value>
+    double? PreviousMinLimit { get; set; }
+
+    /// <summary>
+    /// Gets or sets the labels rotation in degrees.
+    /// </summary>
+    /// <value>
+    /// The labels rotation.
+    /// </value>
+    double LabelsRotation { get; set; }
+
+    /// <summary>
+    /// Gets or sets the size of the labels.
+    /// </summary>
+    /// <value>
+    /// The size of the text.
+    /// </value>
+    double TextSize { get; set; }
+
+    /// <summary>
+    /// Gets or sets the labels, if labels are not null, then the axis label will be pulled from the labels collection,
+    /// the label is mapped to the chart based on the position of the label and the position of the point, both integers,
+    /// if the axis requires a label outside the bounds of the labels collection, then the index will be returned as the label.
+    /// Default value is null.
+    /// </summary>
+    /// <value>
+    /// The labels.
+    /// </value>
+    IList<string>? Labels { get; set; }
+
+    /// <summary>
+    /// Gets or sets the animations speed, if this property is null, the
+    /// <see cref="Chart{TDrawingContext}.AnimationsSpeed"/> property will be used.
+    /// </summary>
+    /// <value>
+    /// The animations speed.
+    /// </value>
+    TimeSpan? AnimationsSpeed { get; set; }
+
+    /// <summary>
+    /// Gets or sets the easing function to animate the series, if this property is null, the
+    /// <see cref="Chart{TDrawingContext}.EasingFunction"/> property will be used.
+    /// </summary>
+    /// <value>
+    /// The easing function.
+    /// </value>
+    Func<float, float>? EasingFunction { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the separator lines are visible.
+    /// </summary>
+    bool ShowSeparatorLines { get; set; }
+}
+
+/// <summary>
+/// Defines an Axis in a Cartesian chart.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="IDisposable" />
+public interface IPlane<TDrawingContext> : IPlane, IChartElement<TDrawingContext>
+    where TDrawingContext : DrawingContext
+{
+    /// <summary>
+    /// Gets or sets the name paint.
+    /// </summary>
+    /// <value>
+    /// The text paint.
+    /// </value>
+    IPaint<TDrawingContext>? NamePaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the text paint.
+    /// </summary>
+    /// <value>
+    /// The text paint.
+    /// </value>
+    IPaint<TDrawingContext>? LabelsPaint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the separators paint.
+    /// </summary>
+    /// <value>
+    /// The separators paint.
+    /// </value>
+    IPaint<TDrawingContext>? SeparatorsPaint { get; set; }
+
+    /// <summary>
+    /// Gets the size of the possible.
+    /// </summary>
+    /// <param name="chart">The chart.</param>
+    /// <returns></returns>
+    LvcSize GetPossibleSize(Chart<TDrawingContext> chart);
+
+    /// <summary>
+    /// Gets the size of the axis name label.
+    /// </summary>
+    /// <param name="chart">the chart.</param>
+    /// <returns></returns>
+    LvcSize GetNameLabelSize(Chart<TDrawingContext> chart);
 }

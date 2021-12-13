@@ -6,14 +6,14 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace ViewModelsSamples.General.Tooltips
-{
-    public class ViewModel : INotifyPropertyChanged
-    {
-        private TooltipPosition position;
-        private AvailablePositions selectedPosition;
+namespace ViewModelsSamples.General.Tooltips;
 
-        public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
+public class ViewModel : INotifyPropertyChanged
+{
+    private TooltipPosition position;
+    private AvailablePositions selectedPosition;
+
+    public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
         {
             new ColumnSeries<double>
             {
@@ -26,7 +26,7 @@ namespace ViewModelsSamples.General.Tooltips
             }
         };
 
-        public List<AvailablePositions> Positions => new List<AvailablePositions>
+    public List<AvailablePositions> Positions => new List<AvailablePositions>
         {
             new AvailablePositions("hidden", TooltipPosition.Hidden),
             new AvailablePositions("top", TooltipPosition.Top),
@@ -36,27 +36,26 @@ namespace ViewModelsSamples.General.Tooltips
             new AvailablePositions("center", TooltipPosition.Center),
         };
 
-        public AvailablePositions SelectedPosition
+    public AvailablePositions SelectedPosition
+    {
+        get => selectedPosition;
+        set
         {
-            get => selectedPosition;
-            set
-            {
-                selectedPosition = value;
-                OnPropertyChanged();
+            selectedPosition = value;
+            OnPropertyChanged();
 
-                // Workaroud for Avalonia, DisplayMemberPath is not supported
-                // https://github.com/AvaloniaUI/Avalonia/issues/4718
-                Position = selectedPosition.Position;
-            }
+            // Workaroud for Avalonia, DisplayMemberPath is not supported
+            // https://github.com/AvaloniaUI/Avalonia/issues/4718
+            Position = selectedPosition.Position;
         }
+    }
 
-        public TooltipPosition Position { get => position; set { position = value; OnPropertyChanged(); } }
+    public TooltipPosition Position { get => position; set { position = value; OnPropertyChanged(); } }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

@@ -25,72 +25,71 @@ using System.ComponentModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.Kernel.Sketches
+namespace LiveChartsCore.Kernel.Sketches;
+
+/// <summary>
+/// Defines an Axis in a Cartesian chart. 
+/// </summary>
+public interface ICartesianAxis : IPlane, INotifyPropertyChanged
 {
     /// <summary>
-    /// Defines an Axis in a Cartesian chart. 
+    /// Gets the orientation.
     /// </summary>
-    public interface ICartesianAxis : IPlane, INotifyPropertyChanged
-    {
-        /// <summary>
-        /// Gets the orientation.
-        /// </summary>
-        /// <value>
-        /// The orientation.
-        /// </value>
-        AxisOrientation Orientation { get; }
+    /// <value>
+    /// The orientation.
+    /// </value>
+    AxisOrientation Orientation { get; }
 
-        /// <summary>
-        /// Gets or sets the padding.
-        /// </summary>
-        /// <value>
-        /// The padding.
-        /// </value>
-        Padding Padding { get; set; }
+    /// <summary>
+    /// Gets or sets the padding.
+    /// </summary>
+    /// <value>
+    /// The padding.
+    /// </value>
+    Padding Padding { get; set; }
 
-        /// <summary>
-        /// Gets or sets the xo, a reference used internally to calculate the axis position.
-        /// </summary>
-        /// <value>
-        /// The xo.
-        /// </value>
-        float Xo { get; set; }
+    /// <summary>
+    /// Gets or sets the xo, a reference used internally to calculate the axis position.
+    /// </summary>
+    /// <value>
+    /// The xo.
+    /// </value>
+    float Xo { get; set; }
 
-        /// <summary>
-        /// Gets or sets the yo, a reference used internally to calculate the axis position.
-        /// </summary>
-        /// <value>
-        /// The yo.
-        /// </value>
-        float Yo { get; set; }
+    /// <summary>
+    /// Gets or sets the yo, a reference used internally to calculate the axis position.
+    /// </summary>
+    /// <value>
+    /// The yo.
+    /// </value>
+    float Yo { get; set; }
 
-        /// <summary>
-        /// Gets or sets the reserved area for the labels.
-        /// </summary>
-        LvcRectangle LabelsDesiredSize { get; set; }
+    /// <summary>
+    /// Gets or sets the reserved area for the labels.
+    /// </summary>
+    LvcRectangle LabelsDesiredSize { get; set; }
 
-        /// <summary>
-        /// Gets or sets the reserved area for the name.
-        /// </summary>
-        LvcRectangle NameDesiredSize { get; set; }
+    /// <summary>
+    /// Gets or sets the reserved area for the name.
+    /// </summary>
+    LvcRectangle NameDesiredSize { get; set; }
 
-        /// <summary>
-        /// Gets or sets the axis position.
-        /// </summary>
-        /// <value>
-        /// The position.
-        /// </value>
-        AxisPosition Position { get; set; }
+    /// <summary>
+    /// Gets or sets the axis position.
+    /// </summary>
+    /// <value>
+    /// The position.
+    /// </value>
+    AxisPosition Position { get; set; }
 
-        /// <summary>
-        /// Initializes the axis for the specified orientation.
-        /// </summary>
-        /// <param name="orientation">The orientation.</param>
-        void Initialize(AxisOrientation orientation);
+    /// <summary>
+    /// Initializes the axis for the specified orientation.
+    /// </summary>
+    /// <param name="orientation">The orientation.</param>
+    void Initialize(AxisOrientation orientation);
 
-        /// <summary>
-        /// Occurs when the axis is initialized.
-        /// </summary>
-        event Action<ICartesianAxis>? Initialized;
-    }
+    /// <summary>
+    /// Occurs when the axis is initialized.
+    /// </summary>
+    event Action<ICartesianAxis>? Initialized;
 }

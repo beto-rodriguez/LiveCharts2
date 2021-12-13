@@ -1,18 +1,17 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace AvaloniaSample.StackedBars.Basic
-{
-    public class View : UserControl
-    {
-        public View()
-        {
-            InitializeComponent();
-        }
+namespace AvaloniaSample.StackedBars.Basic;
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+public class View : UserControl
+{
+    public View()
+    {
+        InitializeComponent();
+    }
+
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
     }
 }

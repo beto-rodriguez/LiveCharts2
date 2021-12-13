@@ -23,46 +23,45 @@
 using Microsoft.UI.Xaml.Media;
 using Windows.UI.Text;
 
-namespace LiveChartsCore.SkiaSharpView.WinUI
+namespace LiveChartsCore.SkiaSharpView.WinUI;
+
+/// <summary>
+/// Defines the binding series class.
+/// </summary>
+public class BindingSeries
 {
     /// <summary>
-    /// Defines the binding series class.
+    /// Gets the series.
     /// </summary>
-    public class BindingSeries
-    {
-        /// <summary>
-        /// Gets the series.
-        /// </summary>
-        public ISeries Series { get; init; } = null!;
+    public ISeries Series { get; init; } = null!;
 
-        /// <summary>
-        /// Gets the font family.
-        /// </summary>
-        public FontFamily FontFamily { get; init; } = null!;
+    /// <summary>
+    /// Gets the font family.
+    /// </summary>
+    public FontFamily FontFamily { get; init; } = null!;
 
-        /// <summary>
-        /// Gets the foreground.
-        /// </summary>
-        public Brush Foreground { get; init; } = null!;
+    /// <summary>
+    /// Gets the foreground.
+    /// </summary>
+    public Brush Foreground { get; init; } = null!;
 
-        /// <summary>
-        /// Gets the font size.
-        /// </summary>
-        public double FontSize { get; init; }
+    /// <summary>
+    /// Gets the font size.
+    /// </summary>
+    public double FontSize { get; init; }
 
-        /// <summary>
-        /// Gets the font weight.
-        /// </summary>
-        public FontWeight FontWeight { get; init; }
+    /// <summary>
+    /// Gets the font weight.
+    /// </summary>
+    public FontWeight FontWeight { get; init; }
 
-        /// <summary>
-        /// Gets the font style.
-        /// </summary>
-        public FontStyle FontStyle { get; init; }
+    /// <summary>
+    /// Gets the font style.
+    /// </summary>
+    public FontStyle FontStyle { get; init; }
 
-        /// <summary>
-        /// Gets the font stretch.
-        /// </summary>
-        public FontStretch FontStretch { get; init; }
-    }
+    /// <summary>
+    /// Gets the font stretch.
+    /// </summary>
+    public FontStretch FontStretch { get; init; }
 }

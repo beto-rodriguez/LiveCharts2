@@ -20,30 +20,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Drawing;
+
+/// <summary>
+/// Defines a rounded rectangle visual chart point.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="ISizedVisualChartPoint{TDrawingContext}" />
+public interface IRoundedRectangleChartPoint<TDrawingContext> : ISizedVisualChartPoint<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a rounded rectangle visual chart point.
+    /// Gets or sets the rx, the radius used in the x axis to round the corners of each column in pixels.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="ISizedVisualChartPoint{TDrawingContext}" />
-    public interface IRoundedRectangleChartPoint<TDrawingContext> : ISizedVisualChartPoint<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets or sets the rx, the radius used in the x axis to round the corners of each column in pixels.
-        /// </summary>
-        /// <value>
-        /// The rx.
-        /// </value>
-        float Rx { get; set; }
+    /// <value>
+    /// The rx.
+    /// </value>
+    float Rx { get; set; }
 
-        /// <summary>
-        /// Gets or sets the ry, the radius used in the y axis to round the corners of each column in pixels.
-        /// </summary>
-        /// <value>
-        /// The ry.
-        /// </value>
-        float Ry { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the ry, the radius used in the y axis to round the corners of each column in pixels.
+    /// </summary>
+    /// <value>
+    /// The ry.
+    /// </value>
+    float Ry { get; set; }
 }

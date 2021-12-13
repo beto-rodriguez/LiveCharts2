@@ -22,113 +22,112 @@
 
 using System;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel;
+
+/// <summary>
+/// Defines the series properties enumeration.
+/// </summary>
+[Flags]
+public enum SeriesProperties
 {
     /// <summary>
-    /// Defines the series properties enumeration.
+    /// includes all series
     /// </summary>
-    [Flags]
-    public enum SeriesProperties
-    {
-        /// <summary>
-        /// includes all series
-        /// </summary>
-        AllSeries = 0,
+    AllSeries = 0,
 
-        /// <summary>
-        /// The Cartesian series
-        /// </summary>
-        CartesianSeries = 1 << 1,
-        /// <summary>
-        /// The bar series
-        /// </summary>
-        Bar = 1 << 2,
-        /// <summary>
-        /// The line series
-        /// </summary>
-        Line = 1 << 3,
-        /// <summary>
-        /// The stepline series
-        /// </summary>
-        StepLine = 1 << 4,
-        /// <summary>
-        /// The scatter series
-        /// </summary>
-        Scatter = 1 << 5,
+    /// <summary>
+    /// The Cartesian series
+    /// </summary>
+    CartesianSeries = 1 << 1,
+    /// <summary>
+    /// The bar series
+    /// </summary>
+    Bar = 1 << 2,
+    /// <summary>
+    /// The line series
+    /// </summary>
+    Line = 1 << 3,
+    /// <summary>
+    /// The stepline series
+    /// </summary>
+    StepLine = 1 << 4,
+    /// <summary>
+    /// The scatter series
+    /// </summary>
+    Scatter = 1 << 5,
 
-        /// <summary>
-        /// The heat series.
-        /// </summary>
-        Heat = 1 << 6,
+    /// <summary>
+    /// The heat series.
+    /// </summary>
+    Heat = 1 << 6,
 
-        /// <summary>
-        /// The financial series.
-        /// </summary>
-        Financial = 1 << 7,
+    /// <summary>
+    /// The financial series.
+    /// </summary>
+    Financial = 1 << 7,
 
-        /// <summary>
-        /// The pie series.
-        /// </summary>
-        PieSeries = 1 << 8,
+    /// <summary>
+    /// The pie series.
+    /// </summary>
+    PieSeries = 1 << 8,
 
-        /// <summary>
-        /// The stacked series
-        /// </summary>
-        Stacked = 1 << 9,
+    /// <summary>
+    /// The stacked series
+    /// </summary>
+    Stacked = 1 << 9,
 
-        /// <summary>
-        /// The vertical orientation
-        /// </summary>
-        PrimaryAxisVerticalOrientation = 1 << 10,
+    /// <summary>
+    /// The vertical orientation
+    /// </summary>
+    PrimaryAxisVerticalOrientation = 1 << 10,
 
-        /// <summary>
-        /// The horizontal orientation
-        /// </summary>
-        PrimaryAxisHorizontalOrientation = 1 << 11,
+    /// <summary>
+    /// The horizontal orientation
+    /// </summary>
+    PrimaryAxisHorizontalOrientation = 1 << 11,
 
-        /// <summary>
-        /// The gauge.
-        /// </summary>
-        Gauge = 1 << 12,
+    /// <summary>
+    /// The gauge.
+    /// </summary>
+    Gauge = 1 << 12,
 
-        /// <summary>
-        /// The gauge fill.
-        /// </summary>
-        GaugeFill = 1 << 13,
+    /// <summary>
+    /// The gauge fill.
+    /// </summary>
+    GaugeFill = 1 << 13,
 
-        /// <summary>
-        /// The sketch
-        /// </summary>
-        Sketch = 1 << 14,
+    /// <summary>
+    /// The sketch
+    /// </summary>
+    Sketch = 1 << 14,
 
-        /// <summary>
-        /// The solid
-        /// </summary>
-        Solid = 1 << 15,
+    /// <summary>
+    /// The solid
+    /// </summary>
+    Solid = 1 << 15,
 
-        /// <summary>
-        /// The prefers x tool tips
-        /// </summary>
-        PrefersXStrategyTooltips = 1 << 16,
+    /// <summary>
+    /// The prefers x tool tips
+    /// </summary>
+    PrefersXStrategyTooltips = 1 << 16,
 
-        /// <summary>
-        /// The prefers y tool tips
-        /// </summary>
-        PrefersYStrategyTooltips = 1 << 17,
+    /// <summary>
+    /// The prefers y tool tips
+    /// </summary>
+    PrefersYStrategyTooltips = 1 << 17,
 
-        /// <summary>
-        /// The prefers xy tool tips
-        /// </summary>
-        PrefersXYStrategyTooltips = 1 << 18,
+    /// <summary>
+    /// The prefers xy tool tips
+    /// </summary>
+    PrefersXYStrategyTooltips = 1 << 18,
 
-        /// <summary>
-        /// The polar series
-        /// </summary>
-        Polar = 1 << 19,
+    /// <summary>
+    /// The polar series
+    /// </summary>
+    Polar = 1 << 19,
 
-        /// <summary>
-        /// The polar line series
-        /// </summary>
-        PolarLine = 1 << 20
-    }
+    /// <summary>
+    /// The polar line series
+    /// </summary>
+    PolarLine = 1 << 20
 }

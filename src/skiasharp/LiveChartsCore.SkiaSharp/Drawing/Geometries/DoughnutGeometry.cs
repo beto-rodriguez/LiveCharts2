@@ -26,141 +26,140 @@ using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+
+/// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}" />
+public class DoughnutGeometry : Geometry, IDoughnutGeometry<SkiaSharpDrawingContext>, IDoughnutVisualChartPoint<SkiaSharpDrawingContext>
 {
-    /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}" />
-    public class DoughnutGeometry : Geometry, IDoughnutGeometry<SkiaSharpDrawingContext>, IDoughnutVisualChartPoint<SkiaSharpDrawingContext>
+    private readonly FloatMotionProperty _cxProperty;
+    private readonly FloatMotionProperty _cyProperty;
+    private readonly FloatMotionProperty _wProperty;
+    private readonly FloatMotionProperty _hProperty;
+    private readonly FloatMotionProperty _startProperty;
+    private readonly FloatMotionProperty _sweepProperty;
+    private readonly FloatMotionProperty _pushoutProperty;
+    private readonly FloatMotionProperty _innerRadiusProperty;
+    private readonly FloatMotionProperty _cornerRadiusProperty;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DoughnutGeometry"/> class.
+    /// </summary>
+    public DoughnutGeometry()
     {
-        private readonly FloatMotionProperty _cxProperty;
-        private readonly FloatMotionProperty _cyProperty;
-        private readonly FloatMotionProperty _wProperty;
-        private readonly FloatMotionProperty _hProperty;
-        private readonly FloatMotionProperty _startProperty;
-        private readonly FloatMotionProperty _sweepProperty;
-        private readonly FloatMotionProperty _pushoutProperty;
-        private readonly FloatMotionProperty _innerRadiusProperty;
-        private readonly FloatMotionProperty _cornerRadiusProperty;
+        _cxProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(CenterX)));
+        _cyProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(CenterY)));
+        _wProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width)));
+        _hProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Height)));
+        _startProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(StartAngle)));
+        _sweepProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(SweepAngle)));
+        _pushoutProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(PushOut)));
+        _innerRadiusProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(InnerRadius)));
+        _cornerRadiusProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(CornerRadius)));
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DoughnutGeometry"/> class.
-        /// </summary>
-        public DoughnutGeometry()
+    /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.CenterX" />
+    public float CenterX { get => _cxProperty.GetMovement(this); set => _cxProperty.SetMovement(value, this); }
+
+    /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.CenterY" />
+    public float CenterY { get => _cyProperty.GetMovement(this); set => _cyProperty.SetMovement(value, this); }
+
+    /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.Width" />
+    public float Width { get => _wProperty.GetMovement(this); set => _wProperty.SetMovement(value, this); }
+
+    /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.Height" />
+    public float Height { get => _hProperty.GetMovement(this); set => _hProperty.SetMovement(value, this); }
+
+    /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.StartAngle" />
+    public float StartAngle { get => _startProperty.GetMovement(this); set => _startProperty.SetMovement(value, this); }
+
+    /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.SweepAngle" />
+    public float SweepAngle
+    {
+        get =>
+            _sweepProperty.GetMovement(this);
+        set => _sweepProperty.SetMovement(value, this);
+    }
+
+    /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.PushOut" />
+    public float PushOut { get => _pushoutProperty.GetMovement(this); set => _pushoutProperty.SetMovement(value, this); }
+
+    /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.InnerRadius" />
+    public float InnerRadius { get => _innerRadiusProperty.GetMovement(this); set => _innerRadiusProperty.SetMovement(value, this); }
+
+    /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.CornerRadius" />
+    public float CornerRadius { get => _cornerRadiusProperty.GetMovement(this); set => _cornerRadiusProperty.SetMovement(value, this); }
+
+    /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.InvertedCornerRadius" />
+    public bool InvertedCornerRadius { get; set; }
+
+    internal static Action<DoughnutGeometry, SkiaSharpDrawingContext, SKPaint>? AlternativeDraw { get; set; }
+
+    /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
+    protected override LvcSize OnMeasure(Paint paint)
+    {
+        return new LvcSize(Width, Height);
+    }
+
+    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
+    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    {
+        if (AlternativeDraw is not null)
         {
-            _cxProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(CenterX)));
-            _cyProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(CenterY)));
-            _wProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width)));
-            _hProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Height)));
-            _startProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(StartAngle)));
-            _sweepProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(SweepAngle)));
-            _pushoutProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(PushOut)));
-            _innerRadiusProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(InnerRadius)));
-            _cornerRadiusProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(CornerRadius)));
+            AlternativeDraw(this, context, paint);
+            return;
         }
 
-        /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.CenterX" />
-        public float CenterX { get => _cxProperty.GetMovement(this); set => _cxProperty.SetMovement(value, this); }
+        if (CornerRadius > 0) throw new NotImplementedException($"{nameof(CornerRadius)} is not implemented.");
 
-        /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.CenterY" />
-        public float CenterY { get => _cyProperty.GetMovement(this); set => _cyProperty.SetMovement(value, this); }
+        using var path = new SKPath();
+        var cx = CenterX;
+        var cy = CenterY;
+        var wedge = InnerRadius;
+        var r = Width * 0.5f;
+        var startAngle = StartAngle;
+        var sweepAngle = SweepAngle;
+        const float toRadians = (float)(Math.PI / 180);
+        var pushout = PushOut;
 
-        /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.Width" />
-        public float Width { get => _wProperty.GetMovement(this); set => _wProperty.SetMovement(value, this); }
-
-        /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.Height" />
-        public float Height { get => _hProperty.GetMovement(this); set => _hProperty.SetMovement(value, this); }
-
-        /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.StartAngle" />
-        public float StartAngle { get => _startProperty.GetMovement(this); set => _startProperty.SetMovement(value, this); }
-
-        /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.SweepAngle" />
-        public float SweepAngle
-        {
-            get =>
-                _sweepProperty.GetMovement(this);
-            set => _sweepProperty.SetMovement(value, this);
-        }
-
-        /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.PushOut" />
-        public float PushOut { get => _pushoutProperty.GetMovement(this); set => _pushoutProperty.SetMovement(value, this); }
-
-        /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.InnerRadius" />
-        public float InnerRadius { get => _innerRadiusProperty.GetMovement(this); set => _innerRadiusProperty.SetMovement(value, this); }
-
-        /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.CornerRadius" />
-        public float CornerRadius { get => _cornerRadiusProperty.GetMovement(this); set => _cornerRadiusProperty.SetMovement(value, this); }
-
-        /// <inheritdoc cref="IDoughnutGeometry{TDrawingContext}.InvertedCornerRadius" />
-        public bool InvertedCornerRadius { get; set; }
-
-        internal static Action<DoughnutGeometry, SkiaSharpDrawingContext, SKPaint>? AlternativeDraw { get; set; }
-
-        /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
-        protected override LvcSize OnMeasure(Paint paint)
-        {
-            return new LvcSize(Width, Height);
-        }
-
-        /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-        public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
-        {
-            if (AlternativeDraw is not null)
+        path.MoveTo(
+            (float)(cx + Math.Cos(startAngle * toRadians) * wedge),
+            (float)(cy + Math.Sin(startAngle * toRadians) * wedge));
+        path.LineTo(
+            (float)(cx + Math.Cos(startAngle * toRadians) * (r + pushout)),
+            (float)(cy + Math.Sin(startAngle * toRadians) * (r + pushout)));
+        path.ArcTo(
+            new SKRect { Left = X, Top = Y, Size = new SKSize { Width = Width, Height = Height } },
+            startAngle,
+            sweepAngle,
+            false);
+        path.LineTo(
+            (float)(cx + Math.Cos((sweepAngle + startAngle) * toRadians) * wedge),
+            (float)(cy + Math.Sin((sweepAngle + startAngle) * toRadians) * wedge));
+        path.ArcTo(
+            new SKPoint { X = wedge + pushout, Y = wedge + pushout },
+            0,
+            sweepAngle > 180 ? SKPathArcSize.Large : SKPathArcSize.Small,
+            SKPathDirection.CounterClockwise,
+            new SKPoint
             {
-                AlternativeDraw(this, context, paint);
-                return;
-            }
+                X = (float)(cx + Math.Cos(startAngle * toRadians) * wedge),
+                Y = (float)(cy + Math.Sin(startAngle * toRadians) * wedge)
+            });
 
-            if (CornerRadius > 0) throw new NotImplementedException($"{nameof(CornerRadius)} is not implemented.");
+        path.Close();
 
-            using var path = new SKPath();
-            var cx = CenterX;
-            var cy = CenterY;
-            var wedge = InnerRadius;
-            var r = Width * 0.5f;
-            var startAngle = StartAngle;
-            var sweepAngle = SweepAngle;
-            const float toRadians = (float)(Math.PI / 180);
-            var pushout = PushOut;
+        if (pushout > 0)
+        {
+            var pushoutAngle = startAngle + 0.5f * sweepAngle;
+            var x = pushout * (float)Math.Cos(pushoutAngle * toRadians);
+            var y = pushout * (float)Math.Sin(pushoutAngle * toRadians);
 
-            path.MoveTo(
-                (float)(cx + Math.Cos(startAngle * toRadians) * wedge),
-                (float)(cy + Math.Sin(startAngle * toRadians) * wedge));
-            path.LineTo(
-                (float)(cx + Math.Cos(startAngle * toRadians) * (r + pushout)),
-                (float)(cy + Math.Sin(startAngle * toRadians) * (r + pushout)));
-            path.ArcTo(
-                new SKRect { Left = X, Top = Y, Size = new SKSize { Width = Width, Height = Height } },
-                startAngle,
-                sweepAngle,
-                false);
-            path.LineTo(
-                (float)(cx + Math.Cos((sweepAngle + startAngle) * toRadians) * wedge),
-                (float)(cy + Math.Sin((sweepAngle + startAngle) * toRadians) * wedge));
-            path.ArcTo(
-                new SKPoint { X = wedge + pushout, Y = wedge + pushout },
-                0,
-                sweepAngle > 180 ? SKPathArcSize.Large : SKPathArcSize.Small,
-                SKPathDirection.CounterClockwise,
-                new SKPoint
-                {
-                    X = (float)(cx + Math.Cos(startAngle * toRadians) * wedge),
-                    Y = (float)(cy + Math.Sin(startAngle * toRadians) * wedge)
-                });
-
-            path.Close();
-
-            if (pushout > 0)
-            {
-                var pushoutAngle = startAngle + 0.5f * sweepAngle;
-                var x = pushout * (float)Math.Cos(pushoutAngle * toRadians);
-                var y = pushout * (float)Math.Sin(pushoutAngle * toRadians);
-
-                _ = context.Canvas.Save();
-                context.Canvas.Translate(x, y);
-            }
-
-            context.Canvas.DrawPath(path, context.Paint);
-
-            if (pushout > 0) context.Canvas.Restore();
+            _ = context.Canvas.Save();
+            context.Canvas.Translate(x, y);
         }
+
+        context.Canvas.DrawPath(path, context.Paint);
+
+        if (pushout > 0) context.Canvas.Restore();
     }
 }

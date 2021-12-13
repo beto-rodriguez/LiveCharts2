@@ -23,32 +23,31 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.Geo
+namespace LiveChartsCore.Geo;
+
+/// <summary>
+/// Defines the 
+/// </summary>
+public class ZoomOnPointerView
 {
     /// <summary>
-    /// Defines the 
+    /// Initializes a new instance of the <see cref="ZoomOnPointerView"/> command.
     /// </summary>
-    public class ZoomOnPointerView
+    /// <param name="pivot">The pivot.</param>
+    /// <param name="direction">The direction.</param>
+    public ZoomOnPointerView(LvcPoint pivot, ZoomDirection direction)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ZoomOnPointerView"/> command.
-        /// </summary>
-        /// <param name="pivot">The pivot.</param>
-        /// <param name="direction">The direction.</param>
-        public ZoomOnPointerView(LvcPoint pivot, ZoomDirection direction)
-        {
-            Pivot = pivot;
-            Direction = direction;
-        }
-
-        /// <summary>
-        /// Gets the pivot.
-        /// </summary>
-        public LvcPoint Pivot { get; }
-
-        /// <summary>
-        /// Gets the direction.
-        /// </summary>
-        public ZoomDirection Direction { get; }
+        Pivot = pivot;
+        Direction = direction;
     }
+
+    /// <summary>
+    /// Gets the pivot.
+    /// </summary>
+    public LvcPoint Pivot { get; }
+
+    /// <summary>
+    /// Gets the direction.
+    /// </summary>
+    public ZoomDirection Direction { get; }
 }

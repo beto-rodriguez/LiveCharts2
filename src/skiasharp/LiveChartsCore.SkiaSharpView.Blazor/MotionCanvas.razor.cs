@@ -27,172 +27,171 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using SkiaSharp.Views.Blazor;
 
-namespace LiveChartsCore.SkiaSharpView.Blazor
+namespace LiveChartsCore.SkiaSharpView.Blazor;
+
+/// <inheritdoc cref="MotionCanvas{TDrawingContext}"/>
+public partial class MotionCanvas : IDisposable
 {
-    /// <inheritdoc cref="MotionCanvas{TDrawingContext}"/>
-    public partial class MotionCanvas : IDisposable
+    //private readonly SKGLView? _glCanvas;
+    private SKCanvasView? _canvas;
+    private bool _disposing = false;
+    private bool _isDrawingLoopRunning = false;
+    private List<PaintSchedule<SkiaSharpDrawingContext>> _paintTasksSchedule = new();
+
+    /// <summary>
+    /// Called when the control is initialized.
+    /// </summary>
+    protected override void OnInitialized()
     {
-        //private readonly SKGLView? _glCanvas;
-        private SKCanvasView? _canvas;
-        private bool _disposing = false;
-        private bool _isDrawingLoopRunning = false;
-        private List<PaintSchedule<SkiaSharpDrawingContext>> _paintTasksSchedule = new();
+        CanvasCore.Invalidated += CanvasCore_Invalidated;
+    }
 
-        /// <summary>
-        /// Called when the control is initialized.
-        /// </summary>
-        protected override void OnInitialized()
+    /// <summary>
+    /// Gets the <see cref="MotionCanvas{TDrawingContext}"/> (core).
+    /// </summary>
+    public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
+
+    /// <summary>
+    /// Gets or sets the FPS.
+    /// </summary>
+    [Parameter]
+    public double FramesPerSecond { get; set; } = 60;
+
+    /// <summary>
+    /// Gets or sets the paint tasks.
+    /// </summary>
+    [Parameter]
+    public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
+    {
+        get => _paintTasksSchedule;
+        set
         {
-            CanvasCore.Invalidated += CanvasCore_Invalidated;
+            _paintTasksSchedule = value;
+            OnPaintTasksChanged();
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the pointer down callback.
+    /// </summary>
+    [Parameter]
+    public EventCallback<PointerEventArgs> OnPointerDownCallback { get; set; }
+
+    /// <summary>
+    /// Gets or sets the pointer move callback.
+    /// </summary>
+    [Parameter]
+    public EventCallback<PointerEventArgs> OnPointerMoveCallback { get; set; }
+
+    /// <summary>
+    /// Gets or sets the pointer up callback.
+    /// </summary>
+    [Parameter]
+    public EventCallback<PointerEventArgs> OnPointerUpCallback { get; set; }
+
+    /// <summary>
+    /// Gets or sets the wheel changed callback.
+    /// </summary>
+    [Parameter]
+    public EventCallback<WheelEventArgs> OnWheelCallback { get; set; }
+
+    /// <summary>
+    /// Gets or sets the pointer leave callback.
+    /// </summary>
+    [Parameter]
+    public EventCallback<PointerEventArgs> OnPointerLeaveCallback { get; set; }
+
+    /// <summary>
+    /// Called when the pointer goes down.
+    /// </summary>
+    /// <param name="e"></param>
+    protected virtual void OnPointerDown(PointerEventArgs e)
+    {
+        _ = OnPointerDownCallback.InvokeAsync(e);
+    }
+
+    /// <summary>
+    /// Called when the pointer moves.
+    /// </summary>
+    /// <param name="e"></param>
+    protected virtual void OnPointerMove(PointerEventArgs e)
+    {
+        _ = OnPointerMoveCallback.InvokeAsync(e);
+    }
+
+    /// <summary>
+    /// Called when the pointer goes up.
+    /// </summary>
+    /// <param name="e"></param>
+    protected virtual void OnPointerUp(PointerEventArgs e)
+    {
+        _ = OnPointerUpCallback.InvokeAsync(e);
+    }
+
+    /// <summary>
+    /// Called when the wheel moves.
+    /// </summary>
+    /// <param name="e"></param>
+    protected virtual void OnWheel(WheelEventArgs e)
+    {
+        _ = OnWheelCallback.InvokeAsync(e);
+    }
+
+    /// <summary>
+    /// Called when the pointer leves the control.
+    /// </summary>
+    /// <param name="e"></param>
+    protected virtual void OnPointerLeave(PointerEventArgs e)
+    {
+        _ = OnPointerLeaveCallback.InvokeAsync(e);
+    }
+
+    //private void OnPaintGlSurface(SKPaintGLSurfaceEventArgs e)
+    //{
+    //    CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
+    //}
+
+    private void OnPaintSurface(SKPaintSurfaceEventArgs e)
+    {
+        CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
+    }
+
+    private void CanvasCore_Invalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
+    {
+        RunDrawingLoop();
+    }
+
+    private async void RunDrawingLoop()
+    {
+        if (_isDrawingLoopRunning) return;
+        _isDrawingLoopRunning = true;
+
+        var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
+        while (!CanvasCore.IsValid && !_disposing)
+        {
+            //_glCanvas?.Invalidate();
+            _canvas?.Invalidate();
+            await Task.Delay(ts);
         }
 
-        /// <summary>
-        /// Gets the <see cref="MotionCanvas{TDrawingContext}"/> (core).
-        /// </summary>
-        public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
+        _isDrawingLoopRunning = false;
+    }
 
-        /// <summary>
-        /// Gets or sets the FPS.
-        /// </summary>
-        [Parameter]
-        public double FramesPerSecond { get; set; } = 60;
+    private void OnPaintTasksChanged()
+    {
+        var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>>();
 
-        /// <summary>
-        /// Gets or sets the paint tasks.
-        /// </summary>
-        [Parameter]
-        public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
+        foreach (var item in _paintTasksSchedule)
         {
-            get => _paintTasksSchedule;
-            set
-            {
-                _paintTasksSchedule = value;
-                OnPaintTasksChanged();
-            }
+            item.PaintTask.SetGeometries(CanvasCore, item.Geometries);
+            _ = tasks.Add(item.PaintTask);
         }
 
-        /// <summary>
-        /// Gets or sets the pointer down callback.
-        /// </summary>
-        [Parameter]
-        public EventCallback<PointerEventArgs> OnPointerDownCallback { get; set; }
+        CanvasCore.SetPaintTasks(tasks);
+    }
 
-        /// <summary>
-        /// Gets or sets the pointer move callback.
-        /// </summary>
-        [Parameter]
-        public EventCallback<PointerEventArgs> OnPointerMoveCallback { get; set; }
-
-        /// <summary>
-        /// Gets or sets the pointer up callback.
-        /// </summary>
-        [Parameter]
-        public EventCallback<PointerEventArgs> OnPointerUpCallback { get; set; }
-
-        /// <summary>
-        /// Gets or sets the wheel changed callback.
-        /// </summary>
-        [Parameter]
-        public EventCallback<WheelEventArgs> OnWheelCallback { get; set; }
-
-        /// <summary>
-        /// Gets or sets the pointer leave callback.
-        /// </summary>
-        [Parameter]
-        public EventCallback<PointerEventArgs> OnPointerLeaveCallback { get; set; }
-
-        /// <summary>
-        /// Called when the pointer goes down.
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnPointerDown(PointerEventArgs e)
-        {
-            _ = OnPointerDownCallback.InvokeAsync(e);
-        }
-
-        /// <summary>
-        /// Called when the pointer moves.
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnPointerMove(PointerEventArgs e)
-        {
-            _ = OnPointerMoveCallback.InvokeAsync(e);
-        }
-
-        /// <summary>
-        /// Called when the pointer goes up.
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnPointerUp(PointerEventArgs e)
-        {
-            _ = OnPointerUpCallback.InvokeAsync(e);
-        }
-
-        /// <summary>
-        /// Called when the wheel moves.
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnWheel(WheelEventArgs e)
-        {
-            _ = OnWheelCallback.InvokeAsync(e);
-        }
-
-        /// <summary>
-        /// Called when the pointer leves the control.
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnPointerLeave(PointerEventArgs e)
-        {
-            _ = OnPointerLeaveCallback.InvokeAsync(e);
-        }
-
-        //private void OnPaintGlSurface(SKPaintGLSurfaceEventArgs e)
-        //{
-        //    CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
-        //}
-
-        private void OnPaintSurface(SKPaintSurfaceEventArgs e)
-        {
-            CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
-        }
-
-        private void CanvasCore_Invalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
-        {
-            RunDrawingLoop();
-        }
-
-        private async void RunDrawingLoop()
-        {
-            if (_isDrawingLoopRunning) return;
-            _isDrawingLoopRunning = true;
-
-            var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
-            while (!CanvasCore.IsValid && !_disposing)
-            {
-                //_glCanvas?.Invalidate();
-                _canvas?.Invalidate();
-                await Task.Delay(ts);
-            }
-
-            _isDrawingLoopRunning = false;
-        }
-
-        private void OnPaintTasksChanged()
-        {
-            var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>>();
-
-            foreach (var item in _paintTasksSchedule)
-            {
-                item.PaintTask.SetGeometries(CanvasCore, item.Geometries);
-                _ = tasks.Add(item.PaintTask);
-            }
-
-            CanvasCore.SetPaintTasks(tasks);
-        }
-
-        void IDisposable.Dispose()
-        {
-            _disposing = true;
-        }
+    void IDisposable.Dispose()
+    {
+        _disposing = true;
     }
 }

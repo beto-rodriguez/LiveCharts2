@@ -2,30 +2,29 @@
 using System.Windows.Forms;
 using ViewModelsSamples.Pies.NightingaleRose;
 
-namespace WinFormsSample.Pies.NightingaleRose
+namespace WinFormsSample.Pies.NightingaleRose;
+
+public partial class View : UserControl
 {
-    public partial class View : UserControl
+    private readonly PieChart pieChart;
+
+    public View()
     {
-        private readonly PieChart pieChart;
+        InitializeComponent();
+        Size = new System.Drawing.Size(50, 50);
 
-        public View()
+        var viewModel = new ViewModel();
+
+        pieChart = new PieChart
         {
-            InitializeComponent();
-            Size = new System.Drawing.Size(50, 50);
+            Series = viewModel.Series,
 
-            var viewModel = new ViewModel();
+            // out of livecharts properties...
+            Location = new System.Drawing.Point(0, 0),
+            Size = new System.Drawing.Size(50, 50),
+            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
+        };
 
-            pieChart = new PieChart
-            {
-                Series = viewModel.Series,
-
-                // out of livecharts properties...
-                Location = new System.Drawing.Point(0, 0),
-                Size = new System.Drawing.Size(50, 50),
-                Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
-            };
-
-            Controls.Add(pieChart);
-        }
+        Controls.Add(pieChart);
     }
 }

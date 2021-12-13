@@ -24,57 +24,56 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+
+/// <inheritdoc cref="ISizedGeometry{TDrawingContext}" />
+public abstract class SizedGeometry : Geometry, ISizedVisualChartPoint<SkiaSharpDrawingContext>
 {
-    /// <inheritdoc cref="ISizedGeometry{TDrawingContext}" />
-    public abstract class SizedGeometry : Geometry, ISizedVisualChartPoint<SkiaSharpDrawingContext>
+    /// <summary>
+    /// The width
+    /// </summary>
+    protected FloatMotionProperty widthProperty;
+
+    /// <summary>
+    /// The height
+    /// </summary>
+    protected FloatMotionProperty heightProperty;
+
+    /// <summary>
+    /// The match dimensions
+    /// </summary>
+    protected bool matchDimensions = false;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SizedGeometry"/> class.
+    /// </summary>
+    protected SizedGeometry() : base()
     {
-        /// <summary>
-        /// The width
-        /// </summary>
-        protected FloatMotionProperty widthProperty;
+        widthProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 0));
+        heightProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Height), 0));
+    }
 
-        /// <summary>
-        /// The height
-        /// </summary>
-        protected FloatMotionProperty heightProperty;
+    /// <inheritdoc cref="ISizedGeometry{TDrawingContext}.Width" />
+    public float Width { get => widthProperty.GetMovement(this); set => widthProperty.SetMovement(value, this); }
 
-        /// <summary>
-        /// The match dimensions
-        /// </summary>
-        protected bool matchDimensions = false;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SizedGeometry"/> class.
-        /// </summary>
-        protected SizedGeometry() : base()
+    /// <inheritdoc cref="ISizedGeometry{TDrawingContext}.Height" />
+    public float Height
+    {
+        get => matchDimensions ? widthProperty.GetMovement(this) : heightProperty.GetMovement(this);
+        set
         {
-            widthProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 0));
-            heightProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Height), 0));
-        }
-
-        /// <inheritdoc cref="ISizedGeometry{TDrawingContext}.Width" />
-        public float Width { get => widthProperty.GetMovement(this); set => widthProperty.SetMovement(value, this); }
-
-        /// <inheritdoc cref="ISizedGeometry{TDrawingContext}.Height" />
-        public float Height
-        {
-            get => matchDimensions ? widthProperty.GetMovement(this) : heightProperty.GetMovement(this);
-            set
+            if (matchDimensions)
             {
-                if (matchDimensions)
-                {
-                    widthProperty.SetMovement(value, this);
-                    return;
-                }
-                heightProperty.SetMovement(value, this);
+                widthProperty.SetMovement(value, this);
+                return;
             }
+            heightProperty.SetMovement(value, this);
         }
+    }
 
-        /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
-        protected override LvcSize OnMeasure(Paint paint)
-        {
-            return new LvcSize(Width, Height);
-        }
+    /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
+    protected override LvcSize OnMeasure(Paint paint)
+    {
+        return new LvcSize(Width, Height);
     }
 }

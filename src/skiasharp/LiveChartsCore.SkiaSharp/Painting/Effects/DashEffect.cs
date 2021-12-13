@@ -23,45 +23,44 @@
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Painting.Effects
+namespace LiveChartsCore.SkiaSharpView.Painting.Effects;
+
+/// <summary>
+/// Creates a stroke dash effect.
+/// </summary>
+/// <seealso cref="PathEffect" />
+public class DashEffect : PathEffect
 {
+    private readonly float[] _dashArray;
+    private readonly float _phase = 0;
+
     /// <summary>
-    /// Creates a stroke dash effect.
+    /// Initializes a new instance of the <see cref="DashEffect"/> class.
     /// </summary>
-    /// <seealso cref="PathEffect" />
-    public class DashEffect : PathEffect
+    public DashEffect(float[] dashArray, float phase = 0)
     {
-        private readonly float[] _dashArray;
-        private readonly float _phase = 0;
+        _dashArray = dashArray;
+        _phase = phase;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DashEffect"/> class.
-        /// </summary>
-        public DashEffect(float[] dashArray, float phase = 0)
-        {
-            _dashArray = dashArray;
-            _phase = phase;
-        }
+    /// <summary>
+    /// Creates a new object that is a copy of the current instance.
+    /// </summary>
+    /// <returns>
+    /// A new object that is a copy of this instance.
+    /// </returns>
+    /// <exception cref="System.NotImplementedException"></exception>
+    public override PathEffect Clone()
+    {
+        return new DashEffect(_dashArray, _phase);
+    }
 
-        /// <summary>
-        /// Creates a new object that is a copy of the current instance.
-        /// </summary>
-        /// <returns>
-        /// A new object that is a copy of this instance.
-        /// </returns>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public override PathEffect Clone()
-        {
-            return new DashEffect(_dashArray, _phase);
-        }
-
-        /// <summary>
-        /// Creates the path effect.
-        /// </summary>
-        /// <param name="drawingContext">The drawing context.</param>
-        public override void CreateEffect(SkiaSharpDrawingContext drawingContext)
-        {
-            SKPathEffect = SKPathEffect.CreateDash(_dashArray, _phase);
-        }
+    /// <summary>
+    /// Creates the path effect.
+    /// </summary>
+    /// <param name="drawingContext">The drawing context.</param>
+    public override void CreateEffect(SkiaSharpDrawingContext drawingContext)
+    {
+        SKPathEffect = SKPathEffect.CreateDash(_dashArray, _phase);
     }
 }

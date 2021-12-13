@@ -3,18 +3,18 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
-namespace ViewModelsSamples.Design.LinearGradients
-{
-    public class ViewModel
-    {
-        public ViewModel()
-        {
-            // linear gradients are based on SkiaSharp linear gradients
-            // for more info please see:
-            // https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/effects/shaders/linear-gradient
+namespace ViewModelsSamples.Design.LinearGradients;
 
-            var colors = new[]
-            {
+public class ViewModel
+{
+    public ViewModel()
+    {
+        // linear gradients are based on SkiaSharp linear gradients
+        // for more info please see:
+        // https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/effects/shaders/linear-gradient
+
+        var colors = new[]
+        {
                 new SKColor(45, 64, 89),
                 new SKColor(255, 212, 96)
                 // ...
@@ -25,8 +25,8 @@ namespace ViewModelsSamples.Design.LinearGradients
                 // to specify the distance between each color
             };
 
-            Series = new ISeries[]
-            {
+        Series = new ISeries[]
+        {
                 new ColumnSeries<int>
                 {
                     Values = new []{ 3, 7, 2, 9, 4 },
@@ -66,9 +66,8 @@ namespace ViewModelsSamples.Design.LinearGradients
                     GeometryStroke = new LinearGradientPaint(colors) { StrokeThickness = 10 },
                     Fill = null
                 }
-            };
-        }
-
-        public ISeries[] Series { get; set; }
+        };
     }
+
+    public ISeries[] Series { get; set; }
 }

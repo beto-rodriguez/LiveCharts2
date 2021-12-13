@@ -20,30 +20,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Drawing;
+
+/// <summary>
+/// Defines a stepline segment chart point.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="IVisualChartPoint{TDrawingContext}" />
+public interface IStepLineVisualChartPoint<TDrawingContext> : IVisualChartPoint<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a stepline segment chart point.
+    /// Gets the geometry.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IVisualChartPoint{TDrawingContext}" />
-    public interface IStepLineVisualChartPoint<TDrawingContext> : IVisualChartPoint<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets the geometry.
-        /// </summary>
-        /// <value>
-        /// The geometry.
-        /// </value>
-        ISizedGeometry<TDrawingContext> Geometry { get; }
+    /// <value>
+    /// The geometry.
+    /// </value>
+    ISizedGeometry<TDrawingContext> Geometry { get; }
 
-        /// <summary>
-        /// Gets the stepline.
-        /// </summary>
-        /// <value>
-        /// The stepline.
-        /// </value>
-        IAnimatableStepLineSegment StepLine { get; }
-    }
+    /// <summary>
+    /// Gets the stepline.
+    /// </summary>
+    /// <value>
+    /// The stepline.
+    /// </value>
+    IAnimatableStepLineSegment StepLine { get; }
 }

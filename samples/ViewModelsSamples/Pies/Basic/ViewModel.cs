@@ -2,11 +2,11 @@
 using LiveChartsCore.SkiaSharpView;
 using System.Collections.Generic;
 
-namespace ViewModelsSamples.Pies.Basic
+namespace ViewModelsSamples.Pies.Basic;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        public IEnumerable<ISeries> Series { get; set; } = new List<ISeries>
+    public IEnumerable<ISeries> Series { get; set; } = new List<ISeries>
         {
             new PieSeries<double> { Values = new List<double> { 2 } },
             new PieSeries<double> { Values = new List<double> { 4 } },
@@ -14,5 +14,4 @@ namespace ViewModelsSamples.Pies.Basic
             new PieSeries<double> { Values = new List<double> { 4 } },
             new PieSeries<double> { Values = new List<double> { 3 } }
         };
-    }
 }

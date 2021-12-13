@@ -27,167 +27,166 @@ using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
 using Newtonsoft.Json;
 
-namespace LiveChartsCore.Geo
+namespace LiveChartsCore.Geo;
+
+/// <summary>
+/// Defines a geographic map for LiveCharts controls.
+/// </summary>
+public class CoreMap<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a geographic map for LiveCharts controls.
+    /// Initializes a new instance of the <see cref="CoreMap{TDrawingContext}"/> class.
     /// </summary>
-    public class CoreMap<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public CoreMap() { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CoreMap{TDrawingContext}"/> class, with the given layer.
+    /// </summary>
+    /// <param name="path">The path to the GeoJson file for the layer.</param>
+    /// <param name="layerName">The layer name.</param>
+    public CoreMap(string path, string layerName = "default") : this(new StreamReader(path), layerName)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CoreMap{TDrawingContext}"/> class.
-        /// </summary>
-        public CoreMap() { }
+        _ = AddLayerFromDirectory(path, layerName);
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CoreMap{TDrawingContext}"/> class, with the given layer.
-        /// </summary>
-        /// <param name="path">The path to the GeoJson file for the layer.</param>
-        /// <param name="layerName">The layer name.</param>
-        public CoreMap(string path, string layerName = "default") : this(new StreamReader(path), layerName)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CoreMap{TDrawingContext}"/> class, with the given layer.
+    /// </summary>
+    /// <param name="streamReader">The stream reader instance of the GeoJson file for the layer.</param>
+    /// <param name="layerName">The layer name.</param>
+    public CoreMap(StreamReader streamReader, string layerName = "default")
+    {
+        _ = AddLayerFromStreamReader(streamReader, layerName);
+    }
+
+    /// <summary>
+    /// Gets the map layers dictionary.
+    /// </summary>
+    public Dictionary<string, MapLayer<TDrawingContext>> Layers { get; protected set; } = new Dictionary<string, MapLayer<TDrawingContext>>();
+
+    /// <summary>
+    /// Finds a land by short name.
+    /// </summary>
+    /// <param name="shortName">The short name.</param>
+    /// <param name="layerName">The layer name.</param>
+    /// <returns>The land, null if not found.</returns>
+    public LandDefinition? FindLand(string shortName, string layerName = "default")
+    {
+        return Layers[layerName].Lands.TryGetValue(shortName, out var land) ? land : null;
+    }
+
+    /// <summary>
+    /// Adds a layer to the map from a directory.
+    /// </summary>
+    /// <param name="path">The path to the GeoJson file for the layer.</param>
+    /// <param name="layerName">The layer name.</param>
+    /// <param name="stroke">The stroke.</param>
+    /// <param name="fill">The fill.</param>
+    /// <returns>The added layer.</returns>
+    public MapLayer<TDrawingContext> AddLayerFromDirectory(
+        string path, IPaint<TDrawingContext> stroke, IPaint<TDrawingContext> fill, string layerName = "default")
+    {
+        using var sr = new StreamReader(path);
+        return AddLayerFromStreamReader(sr, stroke, fill, layerName);
+    }
+
+    /// <summary>
+    /// Adds a layer to the map from a directory.
+    /// </summary>
+    /// <param name="path">The path to the GeoJson file for the layer.</param>
+    /// <param name="layerName">The layer name.</param>
+    /// <returns>The added layer.</returns>
+    public MapLayer<TDrawingContext> AddLayerFromDirectory(string path, string layerName = "default")
+    {
+        var defaultPaint = (IPaint<TDrawingContext>)LiveCharts.DefaultPaint;
+        return AddLayerFromDirectory(path, defaultPaint, defaultPaint, layerName);
+    }
+
+    /// <summary>
+    /// Adds a layer to the map from a stream reader.
+    /// </summary>
+    /// <param name="streamReader">The path to the stream reader.</param>
+    /// <param name="layerName">The layer name.</param>
+    /// <param name="stroke">The stroke.</param>
+    /// <param name="fill">The fill.</param>
+    /// <returns>The added layer.</returns>
+    public MapLayer<TDrawingContext> AddLayerFromStreamReader(
+        StreamReader streamReader, IPaint<TDrawingContext> stroke, IPaint<TDrawingContext> fill, string layerName = "default")
+    {
+        if (!Layers.TryGetValue(layerName, out var layer))
         {
-            _ = AddLayerFromDirectory(path, layerName);
+            layer = new MapLayer<TDrawingContext>(layerName, stroke, fill);
+            Layers.Add(layerName, layer);
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CoreMap{TDrawingContext}"/> class, with the given layer.
-        /// </summary>
-        /// <param name="streamReader">The stream reader instance of the GeoJson file for the layer.</param>
-        /// <param name="layerName">The layer name.</param>
-        public CoreMap(StreamReader streamReader, string layerName = "default")
-        {
-            _ = AddLayerFromStreamReader(streamReader, layerName);
-        }
+        var geoJson = JsonConvert.DeserializeObject<GeoJsonFile>(streamReader.ReadToEnd()) ?? throw new Exception("Map not found");
+        layer.AddFile(geoJson);
 
-        /// <summary>
-        /// Gets the map layers dictionary.
-        /// </summary>
-        public Dictionary<string, MapLayer<TDrawingContext>> Layers { get; protected set; } = new Dictionary<string, MapLayer<TDrawingContext>>();
+        return layer;
+    }
 
-        /// <summary>
-        /// Finds a land by short name.
-        /// </summary>
-        /// <param name="shortName">The short name.</param>
-        /// <param name="layerName">The layer name.</param>
-        /// <returns>The land, null if not found.</returns>
-        public LandDefinition? FindLand(string shortName, string layerName = "default")
-        {
-            return Layers[layerName].Lands.TryGetValue(shortName, out var land) ? land : null;
-        }
+    /// <summary>
+    /// Adds a layer to the map from a stream reader.
+    /// </summary>
+    /// <param name="streamReader">The path to the stream reader.</param>
+    /// <param name="layerName">The layer name.</param>
+    /// <returns>The added layer.</returns>
+    public MapLayer<TDrawingContext> AddLayerFromStreamReader(StreamReader streamReader, string layerName = "default")
+    {
+        var defaultPaint = (IPaint<TDrawingContext>)LiveCharts.DefaultPaint;
+        return AddLayerFromStreamReader(streamReader, defaultPaint, defaultPaint, layerName);
+    }
 
-        /// <summary>
-        /// Adds a layer to the map from a directory.
-        /// </summary>
-        /// <param name="path">The path to the GeoJson file for the layer.</param>
-        /// <param name="layerName">The layer name.</param>
-        /// <param name="stroke">The stroke.</param>
-        /// <param name="fill">The fill.</param>
-        /// <returns>The added layer.</returns>
-        public MapLayer<TDrawingContext> AddLayerFromDirectory(
-            string path, IPaint<TDrawingContext> stroke, IPaint<TDrawingContext> fill, string layerName = "default")
-        {
-            using var sr = new StreamReader(path);
-            return AddLayerFromStreamReader(sr, stroke, fill, layerName);
-        }
+    /// <summary>
+    /// Adds a layer to the map from a directory asynchronously.
+    /// </summary>
+    /// <param name="path">The path to the GeoJson file for the layer.</param>
+    /// <param name="layerName">The layer name.</param>
+    /// <param name="stroke">The stroke.</param>
+    /// <param name="fill">The fill.</param>
+    /// <returns>The added layer as await-able task.</returns>
+    public Task<MapLayer<TDrawingContext>> AddLayerFromDirectoryAsync(
+        string path, IPaint<TDrawingContext> stroke, IPaint<TDrawingContext> fill, string layerName = "default")
+    {
+        return Task.Run(() => AddLayerFromDirectory(path, stroke, fill, layerName));
+    }
 
-        /// <summary>
-        /// Adds a layer to the map from a directory.
-        /// </summary>
-        /// <param name="path">The path to the GeoJson file for the layer.</param>
-        /// <param name="layerName">The layer name.</param>
-        /// <returns>The added layer.</returns>
-        public MapLayer<TDrawingContext> AddLayerFromDirectory(string path, string layerName = "default")
-        {
-            var defaultPaint = (IPaint<TDrawingContext>)LiveCharts.DefaultPaint;
-            return AddLayerFromDirectory(path, defaultPaint, defaultPaint, layerName);
-        }
+    /// <summary>
+    /// Adds a layer to the map from a directory asynchronously.
+    /// </summary>
+    /// <param name="path">The path to the GeoJson file for the layer.</param>
+    /// <param name="layerName">The layer name.</param>
+    /// <returns>The added layer as await-able task.</returns>
+    public Task<MapLayer<TDrawingContext>> AddLayerFromDirectoryAsync(string path, string layerName = "default")
+    {
+        var defaultPaint = (IPaint<TDrawingContext>)LiveCharts.DefaultPaint;
+        return Task.Run(() => AddLayerFromDirectory(path, defaultPaint, defaultPaint, layerName));
+    }
 
-        /// <summary>
-        /// Adds a layer to the map from a stream reader.
-        /// </summary>
-        /// <param name="streamReader">The path to the stream reader.</param>
-        /// <param name="layerName">The layer name.</param>
-        /// <param name="stroke">The stroke.</param>
-        /// <param name="fill">The fill.</param>
-        /// <returns>The added layer.</returns>
-        public MapLayer<TDrawingContext> AddLayerFromStreamReader(
-            StreamReader streamReader, IPaint<TDrawingContext> stroke, IPaint<TDrawingContext> fill, string layerName = "default")
-        {
-            if (!Layers.TryGetValue(layerName, out var layer))
-            {
-                layer = new MapLayer<TDrawingContext>(layerName, stroke, fill);
-                Layers.Add(layerName, layer);
-            }
+    /// <summary>
+    /// Adds a layer to the map from a stream reader asynchronously.
+    /// </summary>
+    /// <param name="streamReader">The path to the stream reader.</param>
+    /// <param name="layerName">The layer name.</param>
+    /// <param name="stroke">The stroke.</param>
+    /// <param name="fill">The fill.</param>
+    /// <returns>The added layer as await-able task.</returns>
+    public Task<MapLayer<TDrawingContext>> AddLayerFromStreamReaderAsync(
+        StreamReader streamReader, IPaint<TDrawingContext> stroke, IPaint<TDrawingContext> fill, string layerName = "default")
+    {
+        return Task.Run(() => AddLayerFromStreamReader(streamReader, stroke, fill, layerName));
+    }
 
-            var geoJson = JsonConvert.DeserializeObject<GeoJsonFile>(streamReader.ReadToEnd()) ?? throw new Exception("Map not found");
-            layer.AddFile(geoJson);
-
-            return layer;
-        }
-
-        /// <summary>
-        /// Adds a layer to the map from a stream reader.
-        /// </summary>
-        /// <param name="streamReader">The path to the stream reader.</param>
-        /// <param name="layerName">The layer name.</param>
-        /// <returns>The added layer.</returns>
-        public MapLayer<TDrawingContext> AddLayerFromStreamReader(StreamReader streamReader, string layerName = "default")
-        {
-            var defaultPaint = (IPaint<TDrawingContext>)LiveCharts.DefaultPaint;
-            return AddLayerFromStreamReader(streamReader, defaultPaint, defaultPaint, layerName);
-        }
-
-        /// <summary>
-        /// Adds a layer to the map from a directory asynchronously.
-        /// </summary>
-        /// <param name="path">The path to the GeoJson file for the layer.</param>
-        /// <param name="layerName">The layer name.</param>
-        /// <param name="stroke">The stroke.</param>
-        /// <param name="fill">The fill.</param>
-        /// <returns>The added layer as await-able task.</returns>
-        public Task<MapLayer<TDrawingContext>> AddLayerFromDirectoryAsync(
-            string path, IPaint<TDrawingContext> stroke, IPaint<TDrawingContext> fill, string layerName = "default")
-        {
-            return Task.Run(() => AddLayerFromDirectory(path, stroke, fill, layerName));
-        }
-
-        /// <summary>
-        /// Adds a layer to the map from a directory asynchronously.
-        /// </summary>
-        /// <param name="path">The path to the GeoJson file for the layer.</param>
-        /// <param name="layerName">The layer name.</param>
-        /// <returns>The added layer as await-able task.</returns>
-        public Task<MapLayer<TDrawingContext>> AddLayerFromDirectoryAsync(string path, string layerName = "default")
-        {
-            var defaultPaint = (IPaint<TDrawingContext>)LiveCharts.DefaultPaint;
-            return Task.Run(() => AddLayerFromDirectory(path, defaultPaint, defaultPaint, layerName));
-        }
-
-        /// <summary>
-        /// Adds a layer to the map from a stream reader asynchronously.
-        /// </summary>
-        /// <param name="streamReader">The path to the stream reader.</param>
-        /// <param name="layerName">The layer name.</param>
-        /// <param name="stroke">The stroke.</param>
-        /// <param name="fill">The fill.</param>
-        /// <returns>The added layer as await-able task.</returns>
-        public Task<MapLayer<TDrawingContext>> AddLayerFromStreamReaderAsync(
-            StreamReader streamReader, IPaint<TDrawingContext> stroke, IPaint<TDrawingContext> fill, string layerName = "default")
-        {
-            return Task.Run(() => AddLayerFromStreamReader(streamReader, stroke, fill, layerName));
-        }
-
-        /// <summary>
-        /// Adds a layer to the map from a stream reader asynchronously.
-        /// </summary>
-        /// <param name="streamReader">The path to the stream reader.</param>
-        /// <param name="layerName">The layer name.</param>
-        /// <returns>The added layer as await-able task.</returns>
-        public Task<MapLayer<TDrawingContext>> AddLayerFromStreamReaderAsync(StreamReader streamReader, string layerName = "default")
-        {
-            var defaultPaint = (IPaint<TDrawingContext>)LiveCharts.DefaultPaint;
-            return Task.Run(() => AddLayerFromStreamReader(streamReader, defaultPaint, defaultPaint, layerName));
-        }
+    /// <summary>
+    /// Adds a layer to the map from a stream reader asynchronously.
+    /// </summary>
+    /// <param name="streamReader">The path to the stream reader.</param>
+    /// <param name="layerName">The layer name.</param>
+    /// <returns>The added layer as await-able task.</returns>
+    public Task<MapLayer<TDrawingContext>> AddLayerFromStreamReaderAsync(StreamReader streamReader, string layerName = "default")
+    {
+        var defaultPaint = (IPaint<TDrawingContext>)LiveCharts.DefaultPaint;
+        return Task.Run(() => AddLayerFromStreamReader(streamReader, defaultPaint, defaultPaint, layerName));
     }
 }

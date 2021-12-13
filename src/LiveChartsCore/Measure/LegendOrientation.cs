@@ -20,26 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Measure
+namespace LiveChartsCore.Measure;
+
+/// <summary>
+/// Defines the legend orientation.
+/// </summary>
+public enum LegendOrientation
 {
     /// <summary>
-    /// Defines the legend orientation.
+    /// The automatic orientation.
     /// </summary>
-    public enum LegendOrientation
-    {
-        /// <summary>
-        /// The automatic orientation.
-        /// </summary>
-        Auto,
+    Auto,
 
-        /// <summary>
-        /// The horizontal orientation.
-        /// </summary>
-        Horizontal,
+    /// <summary>
+    /// The horizontal orientation.
+    /// </summary>
+    Horizontal,
 
-        /// <summary>
-        /// The vertical orientation.
-        /// </summary>
-        Vertical
-    }
+    /// <summary>
+    /// The vertical orientation.
+    /// </summary>
+    Vertical
 }

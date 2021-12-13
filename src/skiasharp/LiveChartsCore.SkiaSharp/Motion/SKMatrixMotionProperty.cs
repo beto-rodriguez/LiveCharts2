@@ -23,47 +23,46 @@
 using LiveChartsCore.Motion;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Motion
+namespace LiveChartsCore.SkiaSharpView.Motion;
+
+/// <summary>
+/// Defines a motion property to handle the <see cref="SKMatrix"/> type.
+/// </summary>
+public class SKMatrixMotionProperty : MotionProperty<SKMatrix>
 {
     /// <summary>
-    /// Defines a motion property to handle the <see cref="SKMatrix"/> type.
+    /// Initializes a new instance of the <see cref="SKMatrixMotionProperty"/> class.
     /// </summary>
-    public class SKMatrixMotionProperty : MotionProperty<SKMatrix>
+    /// <param name="propertyName">The property name.</param>
+    public SKMatrixMotionProperty(string propertyName)
+        : base(propertyName)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SKMatrixMotionProperty"/> class.
-        /// </summary>
-        /// <param name="propertyName">The property name.</param>
-        public SKMatrixMotionProperty(string propertyName)
-            : base(propertyName)
-        {
-        }
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SKMatrixMotionProperty"/> class.
-        /// </summary>
-        /// <param name="propertyName">The property name.</param>
-        /// <param name="matrix">The initial matrix.</param>
-        public SKMatrixMotionProperty(string propertyName, SKMatrix matrix)
-            : base(propertyName)
-        {
-            fromValue = matrix;
-            toValue = matrix;
-        }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SKMatrixMotionProperty"/> class.
+    /// </summary>
+    /// <param name="propertyName">The property name.</param>
+    /// <param name="matrix">The initial matrix.</param>
+    public SKMatrixMotionProperty(string propertyName, SKMatrix matrix)
+        : base(propertyName)
+    {
+        fromValue = matrix;
+        toValue = matrix;
+    }
 
-        /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)"/>
-        protected override SKMatrix OnGetMovement(float progress)
-        {
-            return new SKMatrix(
-                fromValue.ScaleX + progress * (toValue.ScaleX - fromValue.ScaleX),
-                fromValue.SkewX + progress * (toValue.SkewX - fromValue.SkewX),
-                fromValue.TransX + progress * (toValue.TransX - fromValue.TransX),
-                fromValue.SkewY + progress * (toValue.SkewY - fromValue.SkewY),
-                fromValue.ScaleY + progress * (toValue.ScaleY - fromValue.ScaleY),
-                fromValue.TransY + progress * (toValue.TransY - fromValue.TransY),
-                fromValue.Persp0 + progress * (toValue.Persp0 - fromValue.Persp0),
-                fromValue.Persp1 + progress * (toValue.Persp1 - fromValue.Persp1),
-                fromValue.Persp2 + progress * (toValue.Persp2 - fromValue.Persp2));
-        }
+    /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)"/>
+    protected override SKMatrix OnGetMovement(float progress)
+    {
+        return new SKMatrix(
+            fromValue.ScaleX + progress * (toValue.ScaleX - fromValue.ScaleX),
+            fromValue.SkewX + progress * (toValue.SkewX - fromValue.SkewX),
+            fromValue.TransX + progress * (toValue.TransX - fromValue.TransX),
+            fromValue.SkewY + progress * (toValue.SkewY - fromValue.SkewY),
+            fromValue.ScaleY + progress * (toValue.ScaleY - fromValue.ScaleY),
+            fromValue.TransY + progress * (toValue.TransY - fromValue.TransY),
+            fromValue.Persp0 + progress * (toValue.Persp0 - fromValue.Persp0),
+            fromValue.Persp1 + progress * (toValue.Persp1 - fromValue.Persp1),
+            fromValue.Persp2 + progress * (toValue.Persp2 - fromValue.Persp2));
     }
 }

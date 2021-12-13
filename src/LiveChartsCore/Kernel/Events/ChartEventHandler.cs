@@ -23,13 +23,12 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.Kernel.Events
-{
-    /// <summary>
-    /// Defines a method that will handle an event in a chart.
-    /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <param name="chart">The chart.</param>
-    public delegate void ChartEventHandler<TDrawingContext>(IChartView<TDrawingContext> chart)
-        where TDrawingContext : DrawingContext;
-}
+namespace LiveChartsCore.Kernel.Events;
+
+/// <summary>
+/// Defines a method that will handle an event in a chart.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <param name="chart">The chart.</param>
+public delegate void ChartEventHandler<TDrawingContext>(IChartView<TDrawingContext> chart)
+    where TDrawingContext : DrawingContext;

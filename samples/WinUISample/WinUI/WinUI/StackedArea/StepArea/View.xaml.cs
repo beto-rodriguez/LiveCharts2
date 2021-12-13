@@ -1,12 +1,11 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 
-namespace WinUISample.StackedArea.StepArea
+namespace WinUISample.StackedArea.StepArea;
+
+public sealed partial class View : UserControl
 {
-    public sealed partial class View : UserControl
+    public View()
     {
-        public View()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

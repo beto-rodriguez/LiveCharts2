@@ -35,313 +35,312 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.WPF
+namespace LiveChartsCore.SkiaSharpView.WPF;
+
+/// <summary>
+/// Defines a geographic map.
+/// </summary>
+/// <seealso cref="Control" />
+public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
 {
-    /// <summary>
-    /// Defines a geographic map.
-    /// </summary>
-    /// <seealso cref="Control" />
-    public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
+    private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
+    private readonly CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>> _seriesObserver;
+    private GeoMap<SkiaSharpDrawingContext>? _core;
+
+    static GeoMap()
     {
-        private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
-        private readonly CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>> _seriesObserver;
-        private GeoMap<SkiaSharpDrawingContext>? _core;
+        DefaultStyleKeyProperty.OverrideMetadata(typeof(GeoMap), new FrameworkPropertyMetadata(typeof(GeoMap)));
+    }
 
-        static GeoMap()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(GeoMap), new FrameworkPropertyMetadata(typeof(GeoMap)));
-        }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GeoMap"/> class.
+    /// </summary>
+    public GeoMap()
+    {
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GeoMap"/> class.
-        /// </summary>
-        public GeoMap()
-        {
-            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        MouseDown += OnMouseDown;
+        MouseMove += OnMouseMove;
+        MouseUp += OnMouseUp;
+        MouseLeave += OnMouseLeave;
+        MouseWheel += OnMouseWheel;
 
-            MouseDown += OnMouseDown;
-            MouseMove += OnMouseMove;
-            MouseUp += OnMouseUp;
-            MouseLeave += OnMouseLeave;
-            MouseWheel += OnMouseWheel;
+        SizeChanged += GeoMap_SizeChanged;
 
-            SizeChanged += GeoMap_SizeChanged;
+        _shapesObserver = new CollectionDeepObserver<IMapElement>(
+            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
+            (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
+            true);
+        _seriesObserver = new CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>>(
+            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
+            (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
+            true);
+        SetCurrentValue(ShapesProperty, Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>());
+        SetCurrentValue(SeriesProperty, Enumerable.Empty<IGeoSeries<SkiaSharpDrawingContext>>());
+        SetCurrentValue(ActiveMapProperty, Maps.GetWorldMap<SkiaSharpDrawingContext>());
+        SetCurrentValue(SyncContextProperty, new object());
+    }
 
-            _shapesObserver = new CollectionDeepObserver<IMapElement>(
-                (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-                (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
-                true);
-            _seriesObserver = new CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>>(
-                (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-                (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
-                true);
-            SetCurrentValue(ShapesProperty, Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>());
-            SetCurrentValue(SeriesProperty, Enumerable.Empty<IGeoSeries<SkiaSharpDrawingContext>>());
-            SetCurrentValue(ActiveMapProperty, Maps.GetWorldMap<SkiaSharpDrawingContext>());
-            SetCurrentValue(SyncContextProperty, new object());
-        }
+    #region dependency props
 
-        #region dependency props
+    /// <summary>
+    /// The active map property
+    /// </summary>
+    public static readonly DependencyProperty ActiveMapProperty =
+        DependencyProperty.Register(nameof(ActiveMap), typeof(CoreMap<SkiaSharpDrawingContext>), typeof(GeoMap),
+            new PropertyMetadata(null, OnDependencyPropertyChanged));
 
-        /// <summary>
-        /// The active map property
-        /// </summary>
-        public static readonly DependencyProperty ActiveMapProperty =
-            DependencyProperty.Register(nameof(ActiveMap), typeof(CoreMap<SkiaSharpDrawingContext>), typeof(GeoMap),
-                new PropertyMetadata(null, OnDependencyPropertyChanged));
+    /// <summary>
+    /// The sync context property.
+    /// </summary>
+    public static readonly DependencyProperty SyncContextProperty =
+       DependencyProperty.Register(
+           nameof(SyncContext), typeof(object), typeof(GeoMap), new PropertyMetadata(null, OnDependencyPropertyChanged));
 
-        /// <summary>
-        /// The sync context property.
-        /// </summary>
-        public static readonly DependencyProperty SyncContextProperty =
-           DependencyProperty.Register(
-               nameof(SyncContext), typeof(object), typeof(GeoMap), new PropertyMetadata(null, OnDependencyPropertyChanged));
+    /// <summary>
+    /// The view command property.
+    /// </summary>
+    public static readonly DependencyProperty ViewCommandProperty =
+       DependencyProperty.Register(
+           nameof(ViewCommand), typeof(object), typeof(GeoMap), new PropertyMetadata(null,
+               (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+               {
+                   var chart = (GeoMap)o;
+                   chart._core?.ViewTo(args.NewValue);
+               }));
 
-        /// <summary>
-        /// The view command property.
-        /// </summary>
-        public static readonly DependencyProperty ViewCommandProperty =
-           DependencyProperty.Register(
-               nameof(ViewCommand), typeof(object), typeof(GeoMap), new PropertyMetadata(null,
-                   (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                   {
-                       var chart = (GeoMap)o;
-                       chart._core?.ViewTo(args.NewValue);
-                   }));
+    /// <summary>
+    /// The map projection property
+    /// </summary>
+    public static readonly DependencyProperty MapProjectionProperty =
+        DependencyProperty.Register(nameof(MapProjection), typeof(MapProjection), typeof(GeoMap),
+            new PropertyMetadata(MapProjection.Default, OnDependencyPropertyChanged));
 
-        /// <summary>
-        /// The map projection property
-        /// </summary>
-        public static readonly DependencyProperty MapProjectionProperty =
-            DependencyProperty.Register(nameof(MapProjection), typeof(MapProjection), typeof(GeoMap),
-                new PropertyMetadata(MapProjection.Default, OnDependencyPropertyChanged));
-
-        /// <summary>
-        /// The heat map property
-        /// </summary>
-        public static readonly DependencyProperty HeatMapProperty =
-            DependencyProperty.Register(
-                nameof(HeatMap), typeof(LvcColor[]), typeof(GeoMap),
-                new PropertyMetadata(
-                    new[]
-                    {
+    /// <summary>
+    /// The heat map property
+    /// </summary>
+    public static readonly DependencyProperty HeatMapProperty =
+        DependencyProperty.Register(
+            nameof(HeatMap), typeof(LvcColor[]), typeof(GeoMap),
+            new PropertyMetadata(
+                new[]
+                {
                         LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
                         LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
-                    }, OnDependencyPropertyChanged));
+                }, OnDependencyPropertyChanged));
 
-        /// <summary>
-        /// The color stops property
-        /// </summary>
-        public static readonly DependencyProperty ColorStopsProperty =
-            DependencyProperty.Register(nameof(ColorStops), typeof(double[]), typeof(GeoMap),
-                new PropertyMetadata(null, OnDependencyPropertyChanged));
+    /// <summary>
+    /// The color stops property
+    /// </summary>
+    public static readonly DependencyProperty ColorStopsProperty =
+        DependencyProperty.Register(nameof(ColorStops), typeof(double[]), typeof(GeoMap),
+            new PropertyMetadata(null, OnDependencyPropertyChanged));
 
-        /// <summary>
-        /// The values property
-        /// </summary>
-        public static readonly DependencyProperty ShapesProperty =
-            DependencyProperty.Register(nameof(Shapes), typeof(IEnumerable<IMapElement>),
-                typeof(GeoMap), new PropertyMetadata(null, (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                {
-                    var chart = (GeoMap)o;
-                    var seriesObserver = chart._shapesObserver;
-                    seriesObserver.Dispose((IEnumerable<MapShape<SkiaSharpDrawingContext>>)args.OldValue);
-                    seriesObserver.Initialize((IEnumerable<MapShape<SkiaSharpDrawingContext>>)args.NewValue);
-                    chart._core?.Update();
-                }));
-
-        /// <summary>
-        /// The series property
-        /// </summary>
-        public static readonly DependencyProperty SeriesProperty =
-            DependencyProperty.Register(nameof(Series), typeof(IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>),
-                typeof(GeoMap), new PropertyMetadata(null, (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                {
-                    var chart = (GeoMap)o;
-                    var seriesObserver = chart._seriesObserver;
-                    seriesObserver.Dispose((IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)args.OldValue);
-                    seriesObserver.Initialize((IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)args.NewValue);
-                    chart._core?.Update();
-                }));
-
-        /// <summary>
-        /// The stroke property
-        /// </summary>
-        public static readonly DependencyProperty StrokeProperty =
-            DependencyProperty.Register(
-                nameof(Stroke), typeof(IPaint<SkiaSharpDrawingContext>), typeof(GeoMap),
-                new PropertyMetadata(new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true }, OnDependencyPropertyChanged));
-
-        /// <summary>
-        /// The fill property
-        /// </summary>
-        public static readonly DependencyProperty FillProperty =
-            DependencyProperty.Register(
-                nameof(Fill), typeof(IPaint<SkiaSharpDrawingContext>), typeof(GeoMap),
-                new PropertyMetadata(new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true }, OnDependencyPropertyChanged));
-
-        #endregion
-
-        #region props
-
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.AutoUpdateEnabled" />
-        public bool AutoUpdateEnabled { get; set; } = true;
-
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.DesignerMode" />
-        bool IGeoMapView<SkiaSharpDrawingContext>.DesignerMode => DesignerProperties.GetIsInDesignMode(this);
-
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.SyncContext" />
-        public object SyncContext
-        {
-            get => GetValue(SyncContextProperty);
-            set => SetValue(SyncContextProperty, value);
-        }
-
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ViewCommand" />
-        public object? ViewCommand
-        {
-            get => GetValue(ViewCommandProperty);
-            set => SetValue(ViewCommandProperty, value);
-        }
-
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
-        public MotionCanvas<SkiaSharpDrawingContext> Canvas =>
-            Template.FindName("canvas", this) is not MotionCanvas canvas
-            ? throw new Exception(
-                $"{nameof(MotionCanvas)} not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
-                $"If you override the template please add an {nameof(MotionCanvas)} to the template and name it 'canvas'")
-            : canvas.CanvasCore;
-
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
-        public CoreMap<SkiaSharpDrawingContext> ActiveMap
-        {
-            get => (CoreMap<SkiaSharpDrawingContext>)GetValue(ActiveMapProperty);
-            set => SetValue(ActiveMapProperty, value);
-        }
-
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Width"/>
-        float IGeoMapView<SkiaSharpDrawingContext>.Width => (float)ActualWidth;
-
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Height"/>
-        float IGeoMapView<SkiaSharpDrawingContext>.Height => (float)ActualHeight;
-
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
-        public MapProjection MapProjection
-        {
-            get => (MapProjection)GetValue(MapProjectionProperty);
-            set => SetValue(MapProjectionProperty, value);
-        }
-
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.HeatMap"/>
-        public LvcColor[] HeatMap
-        {
-            get => (LvcColor[])GetValue(HeatMapProperty);
-            set => SetValue(HeatMapProperty, value);
-        }
-
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ColorStops"/>
-        public double[]? ColorStops
-        {
-            get => (double[])GetValue(ColorStopsProperty);
-            set => SetValue(ColorStopsProperty, value);
-        }
-
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
-        public IPaint<SkiaSharpDrawingContext>? Stroke
-        {
-            get => (IPaint<SkiaSharpDrawingContext>)GetValue(StrokeProperty);
-            set
+    /// <summary>
+    /// The values property
+    /// </summary>
+    public static readonly DependencyProperty ShapesProperty =
+        DependencyProperty.Register(nameof(Shapes), typeof(IEnumerable<IMapElement>),
+            typeof(GeoMap), new PropertyMetadata(null, (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
             {
-                if (value is not null) value.IsStroke = true;
-                SetValue(StrokeProperty, value);
-            }
-        }
+                var chart = (GeoMap)o;
+                var seriesObserver = chart._shapesObserver;
+                seriesObserver.Dispose((IEnumerable<MapShape<SkiaSharpDrawingContext>>)args.OldValue);
+                seriesObserver.Initialize((IEnumerable<MapShape<SkiaSharpDrawingContext>>)args.NewValue);
+                chart._core?.Update();
+            }));
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
-        public IPaint<SkiaSharpDrawingContext>? Fill
-        {
-            get => (IPaint<SkiaSharpDrawingContext>)GetValue(FillProperty);
-            set
+    /// <summary>
+    /// The series property
+    /// </summary>
+    public static readonly DependencyProperty SeriesProperty =
+        DependencyProperty.Register(nameof(Series), typeof(IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>),
+            typeof(GeoMap), new PropertyMetadata(null, (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
             {
-                if (value is not null) value.IsFill = true;
-                SetValue(FillProperty, value);
-            }
-        }
+                var chart = (GeoMap)o;
+                var seriesObserver = chart._seriesObserver;
+                seriesObserver.Dispose((IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)args.OldValue);
+                seriesObserver.Initialize((IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)args.NewValue);
+                chart._core?.Update();
+            }));
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
-        public IEnumerable<IMapElement> Shapes
+    /// <summary>
+    /// The stroke property
+    /// </summary>
+    public static readonly DependencyProperty StrokeProperty =
+        DependencyProperty.Register(
+            nameof(Stroke), typeof(IPaint<SkiaSharpDrawingContext>), typeof(GeoMap),
+            new PropertyMetadata(new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true }, OnDependencyPropertyChanged));
+
+    /// <summary>
+    /// The fill property
+    /// </summary>
+    public static readonly DependencyProperty FillProperty =
+        DependencyProperty.Register(
+            nameof(Fill), typeof(IPaint<SkiaSharpDrawingContext>), typeof(GeoMap),
+            new PropertyMetadata(new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true }, OnDependencyPropertyChanged));
+
+    #endregion
+
+    #region props
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.AutoUpdateEnabled" />
+    public bool AutoUpdateEnabled { get; set; } = true;
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.DesignerMode" />
+    bool IGeoMapView<SkiaSharpDrawingContext>.DesignerMode => DesignerProperties.GetIsInDesignMode(this);
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.SyncContext" />
+    public object SyncContext
+    {
+        get => GetValue(SyncContextProperty);
+        set => SetValue(SyncContextProperty, value);
+    }
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ViewCommand" />
+    public object? ViewCommand
+    {
+        get => GetValue(ViewCommandProperty);
+        set => SetValue(ViewCommandProperty, value);
+    }
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
+    public MotionCanvas<SkiaSharpDrawingContext> Canvas =>
+        Template.FindName("canvas", this) is not MotionCanvas canvas
+        ? throw new Exception(
+            $"{nameof(MotionCanvas)} not found. This was probably caused because the control {nameof(CartesianChart)} template was overridden, " +
+            $"If you override the template please add an {nameof(MotionCanvas)} to the template and name it 'canvas'")
+        : canvas.CanvasCore;
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
+    public CoreMap<SkiaSharpDrawingContext> ActiveMap
+    {
+        get => (CoreMap<SkiaSharpDrawingContext>)GetValue(ActiveMapProperty);
+        set => SetValue(ActiveMapProperty, value);
+    }
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Width"/>
+    float IGeoMapView<SkiaSharpDrawingContext>.Width => (float)ActualWidth;
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Height"/>
+    float IGeoMapView<SkiaSharpDrawingContext>.Height => (float)ActualHeight;
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
+    public MapProjection MapProjection
+    {
+        get => (MapProjection)GetValue(MapProjectionProperty);
+        set => SetValue(MapProjectionProperty, value);
+    }
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.HeatMap"/>
+    public LvcColor[] HeatMap
+    {
+        get => (LvcColor[])GetValue(HeatMapProperty);
+        set => SetValue(HeatMapProperty, value);
+    }
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ColorStops"/>
+    public double[]? ColorStops
+    {
+        get => (double[])GetValue(ColorStopsProperty);
+        set => SetValue(ColorStopsProperty, value);
+    }
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
+    public IPaint<SkiaSharpDrawingContext>? Stroke
+    {
+        get => (IPaint<SkiaSharpDrawingContext>)GetValue(StrokeProperty);
+        set
         {
-            get => (IEnumerable<IMapElement>)GetValue(ShapesProperty);
-            set => SetValue(ShapesProperty, value);
+            if (value is not null) value.IsStroke = true;
+            SetValue(StrokeProperty, value);
         }
+    }
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
-        public IEnumerable<IGeoSeries<SkiaSharpDrawingContext>> Series
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
+    public IPaint<SkiaSharpDrawingContext>? Fill
+    {
+        get => (IPaint<SkiaSharpDrawingContext>)GetValue(FillProperty);
+        set
         {
-            get => (IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty);
-            set => SetValue(SeriesProperty, value);
+            if (value is not null) value.IsFill = true;
+            SetValue(FillProperty, value);
         }
+    }
 
-        #endregion
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
+    public IEnumerable<IMapElement> Shapes
+    {
+        get => (IEnumerable<IMapElement>)GetValue(ShapesProperty);
+        set => SetValue(ShapesProperty, value);
+    }
 
-        /// <summary>
-        /// Called when the template is applied.
-        /// </summary>
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
+    public IEnumerable<IGeoSeries<SkiaSharpDrawingContext>> Series
+    {
+        get => (IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty);
+        set => SetValue(SeriesProperty, value);
+    }
 
-            _core = new GeoMap<SkiaSharpDrawingContext>(this);
-        }
+    #endregion
 
-        void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
-        {
-            Dispatcher.Invoke(action);
-        }
+    /// <summary>
+    /// Called when the template is applied.
+    /// </summary>
+    public override void OnApplyTemplate()
+    {
+        base.OnApplyTemplate();
 
-        private void GeoMap_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            _core?.Update();
-        }
+        _core = new GeoMap<SkiaSharpDrawingContext>(this);
+    }
 
-        private void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            _ = CaptureMouse();
-            var p = e.GetPosition(this);
-            _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y));
-        }
+    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
+    {
+        Dispatcher.Invoke(action);
+    }
 
-        private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            var p = e.GetPosition(this);
-            _core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
-        }
+    private void GeoMap_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        _core?.Update();
+    }
 
-        private void OnMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            var p = e.GetPosition(this);
-            _core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y));
-            ReleaseMouseCapture();
-        }
+    private void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        _ = CaptureMouse();
+        var p = e.GetPosition(this);
+        _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y));
+    }
 
-        private void OnMouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            _core?.InvokePointerLeft();
-        }
+    private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        var p = e.GetPosition(this);
+        _core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
+    }
 
-        private void OnMouseWheel(object? sender, System.Windows.Input.MouseWheelEventArgs e)
-        {
-            if (_core is null) throw new Exception("core not found");
-            var p = e.GetPosition(this);
-            _core.ViewTo(
-                new ZoomOnPointerView(
-                    new LvcPoint((float)p.X, (float)p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut));
-        }
+    private void OnMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        var p = e.GetPosition(this);
+        _core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y));
+        ReleaseMouseCapture();
+    }
 
-        private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
-        {
-            var chart = (GeoMap)o;
-            chart._core?.Update();
-        }
+    private void OnMouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        _core?.InvokePointerLeft();
+    }
+
+    private void OnMouseWheel(object? sender, System.Windows.Input.MouseWheelEventArgs e)
+    {
+        if (_core is null) throw new Exception("core not found");
+        var p = e.GetPosition(this);
+        _core.ViewTo(
+            new ZoomOnPointerView(
+                new LvcPoint((float)p.X, (float)p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut));
+    }
+
+    private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
+    {
+        var chart = (GeoMap)o;
+        chart._core?.Update();
     }
 }

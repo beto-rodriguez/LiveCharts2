@@ -25,51 +25,50 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.Geo
+namespace LiveChartsCore.Geo;
+
+/// <summary>
+/// Defines the map shape context class.
+/// </summary>
+public class MapShapeContext<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines the map shape context class.
+    /// Initializes a new instance of the <see cref="MapShapeContext{TDrawingContext}"/> class.
     /// </summary>
-    public class MapShapeContext<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    /// <param name="chart">The chart.</param>
+    /// <param name="heatPaint">The heat paint.</param>
+    /// <param name="heatStops">The heat stops.</param>
+    /// <param name="bounds">The bounds.</param>
+    public MapShapeContext(
+        IGeoMapView<TDrawingContext> chart,
+        IPaint<TDrawingContext> heatPaint,
+        List<Tuple<double, LvcColor>> heatStops,
+        Bounds bounds)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MapShapeContext{TDrawingContext}"/> class.
-        /// </summary>
-        /// <param name="chart">The chart.</param>
-        /// <param name="heatPaint">The heat paint.</param>
-        /// <param name="heatStops">The heat stops.</param>
-        /// <param name="bounds">The bounds.</param>
-        public MapShapeContext(
-            IGeoMapView<TDrawingContext> chart,
-            IPaint<TDrawingContext> heatPaint,
-            List<Tuple<double, LvcColor>> heatStops,
-            Bounds bounds)
-        {
-            Chart = chart;
-            HeatPaint = heatPaint;
-            HeatStops = heatStops;
-            Bounds = bounds;
-        }
-
-        /// <summary>
-        /// Gets the chart.
-        /// </summary>
-        public IGeoMapView<TDrawingContext> Chart { get; }
-
-        /// <summary>
-        /// Gets the heat paint.
-        /// </summary>
-        public IPaint<TDrawingContext> HeatPaint { get; }
-
-        /// <summary>
-        /// Gets the heat stops.
-        /// </summary>
-        public List<Tuple<double, LvcColor>> HeatStops { get; }
-
-        /// <summary>
-        /// Gets the bounds dictionary.
-        /// </summary>
-        public Bounds Bounds { get; }
+        Chart = chart;
+        HeatPaint = heatPaint;
+        HeatStops = heatStops;
+        Bounds = bounds;
     }
+
+    /// <summary>
+    /// Gets the chart.
+    /// </summary>
+    public IGeoMapView<TDrawingContext> Chart { get; }
+
+    /// <summary>
+    /// Gets the heat paint.
+    /// </summary>
+    public IPaint<TDrawingContext> HeatPaint { get; }
+
+    /// <summary>
+    /// Gets the heat stops.
+    /// </summary>
+    public List<Tuple<double, LvcColor>> HeatStops { get; }
+
+    /// <summary>
+    /// Gets the bounds dictionary.
+    /// </summary>
+    public Bounds Bounds { get; }
 }

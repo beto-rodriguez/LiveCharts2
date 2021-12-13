@@ -20,44 +20,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Drawing;
+
+/// <summary>
+/// Defiens an animable stepline segment.
+/// </summary>
+/// <seealso cref="IAnimatable" />
+public interface IAnimatableStepLineSegment : IAnimatable
 {
     /// <summary>
-    /// Defiens an animable stepline segment.
+    /// Gets or sets the x0.
     /// </summary>
-    /// <seealso cref="IAnimatable" />
-    public interface IAnimatableStepLineSegment : IAnimatable
-    {
-        /// <summary>
-        /// Gets or sets the x0.
-        /// </summary>
-        /// <value>
-        /// The x0.
-        /// </value>
-        float X0 { get; set; }
+    /// <value>
+    /// The x0.
+    /// </value>
+    float X0 { get; set; }
 
-        /// <summary>
-        /// Gets or sets the y0.
-        /// </summary>
-        /// <value>
-        /// The y0.
-        /// </value>
-        float Y0 { get; set; }
+    /// <summary>
+    /// Gets or sets the y0.
+    /// </summary>
+    /// <value>
+    /// The y0.
+    /// </value>
+    float Y0 { get; set; }
 
-        /// <summary>
-        /// Gets or sets the x1.
-        /// </summary>
-        /// <value>
-        /// The x1.
-        /// </value>
-        float X1 { get; set; }
+    /// <summary>
+    /// Gets or sets the x1.
+    /// </summary>
+    /// <value>
+    /// The x1.
+    /// </value>
+    float X1 { get; set; }
 
-        /// <summary>
-        /// Gets or sets the y1.
-        /// </summary>
-        /// <value>
-        /// The y1.
-        /// </value>
-        float Y1 { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the y1.
+    /// </summary>
+    /// <value>
+    /// The y1.
+    /// </value>
+    float Y1 { get; set; }
 }

@@ -6,17 +6,17 @@ using SkiaSharp;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace ViewModelsSamples.Axes.Multiple
-{
-    public class ViewModel
-    {
-        public ViewModel()
-        {
-            var blue = new SKColor(25, 118, 210);
-            var red = new SKColor(229, 57, 53);
-            var yellow = new SKColor(198, 167, 0);
+namespace ViewModelsSamples.Axes.Multiple;
 
-            Series = new ObservableCollection<ISeries>
+public class ViewModel
+{
+    public ViewModel()
+    {
+        var blue = new SKColor(25, 118, 210);
+        var red = new SKColor(229, 57, 53);
+        var yellow = new SKColor(198, 167, 0);
+
+        Series = new ObservableCollection<ISeries>
             {
                 new LineSeries<double>
                 {
@@ -57,7 +57,7 @@ namespace ViewModelsSamples.Axes.Multiple
                 }
             };
 
-            YAxes = new List<Axis>
+        YAxes = new List<Axis>
             {
                 new Axis // the "units" and "tens" series will be scaled on this axis
                 {
@@ -79,10 +79,9 @@ namespace ViewModelsSamples.Axes.Multiple
                     Position = LiveChartsCore.Measure.AxisPosition.End
                 }
             };
-        }
-
-        public IEnumerable<ISeries> Series { get; set; }
-
-        public IEnumerable<ICartesianAxis> YAxes { get; set; }
     }
+
+    public IEnumerable<ISeries> Series { get; set; }
+
+    public IEnumerable<ICartesianAxis> YAxes { get; set; }
 }

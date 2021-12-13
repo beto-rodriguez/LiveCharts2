@@ -31,196 +31,195 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.WinForms
+namespace LiveChartsCore.SkiaSharpView.WinForms;
+
+/// <inheritdoc cref="IPolarChartView{TDrawingContext}" />
+public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
 {
-    /// <inheritdoc cref="IPolarChartView{TDrawingContext}" />
-    public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
+    private bool _fitToBounds = false;
+    private double _totalAngle = 360;
+    private double _innerRadius;
+    private double _initialRotation;
+    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+    private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
+    private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
+    private IEnumerable<ISeries> _series = new List<ISeries>();
+    private IEnumerable<IPolarAxis> _angleAxes = new List<PolarAxis>();
+    private IEnumerable<IPolarAxis> _radiusAxes = new List<PolarAxis>();
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PolarChart"/> class.
+    /// </summary>
+    public PolarChart() : this(null, null) { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PolarChart"/> class.
+    /// </summary>
+    /// <param name="tooltip">The default tool tip control.</param>
+    /// <param name="legend">The default legend control.</param>
+    public PolarChart(IChartTooltip<SkiaSharpDrawingContext>? tooltip = null, IChartLegend<SkiaSharpDrawingContext>? legend = null)
+        : base(tooltip, legend)
     {
-        private bool _fitToBounds = false;
-        private double _totalAngle = 360;
-        private double _innerRadius;
-        private double _initialRotation;
-        private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-        private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
-        private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
-        private IEnumerable<ISeries> _series = new List<ISeries>();
-        private IEnumerable<IPolarAxis> _angleAxes = new List<PolarAxis>();
-        private IEnumerable<IPolarAxis> _radiusAxes = new List<PolarAxis>();
+        _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _angleObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _radiusObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PolarChart"/> class.
-        /// </summary>
-        public PolarChart() : this(null, null) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PolarChart"/> class.
-        /// </summary>
-        /// <param name="tooltip">The default tool tip control.</param>
-        /// <param name="legend">The default legend control.</param>
-        public PolarChart(IChartTooltip<SkiaSharpDrawingContext>? tooltip = null, IChartLegend<SkiaSharpDrawingContext>? legend = null)
-            : base(tooltip, legend)
-        {
-            _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            _angleObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            _radiusObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-
-            AngleAxes = new List<IPolarAxis>()
+        AngleAxes = new List<IPolarAxis>()
             {
                 LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
             };
-            RadiusAxes = new List<IPolarAxis>()
+        RadiusAxes = new List<IPolarAxis>()
             {
                 LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultPolarAxis()
             };
-            Series = new ObservableCollection<ISeries>();
+        Series = new ObservableCollection<ISeries>();
 
-            var c = Controls[0].Controls[0];
+        var c = Controls[0].Controls[0];
 
-            c.MouseWheel += OnMouseWheel;
-            c.MouseDown += OnMouseDown;
-            c.MouseUp += OnMouseUp;
-        }
+        c.MouseWheel += OnMouseWheel;
+        c.MouseDown += OnMouseDown;
+        c.MouseUp += OnMouseUp;
+    }
 
-        PolarChart<SkiaSharpDrawingContext> IPolarChartView<SkiaSharpDrawingContext>.Core => core is null ? throw new Exception("core not found") : (PolarChart<SkiaSharpDrawingContext>)core;
+    PolarChart<SkiaSharpDrawingContext> IPolarChartView<SkiaSharpDrawingContext>.Core => core is null ? throw new Exception("core not found") : (PolarChart<SkiaSharpDrawingContext>)core;
 
-        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.FitToBounds" />
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public bool FitToBounds
+    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.FitToBounds" />
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public bool FitToBounds
+    {
+        get => _fitToBounds;
+        set
         {
-            get => _fitToBounds;
-            set
-            {
-                _fitToBounds = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.TotalAngle" />
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public double TotalAngle
-        {
-            get => _totalAngle;
-            set
-            {
-                _totalAngle = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InnerRadius" />
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public double InnerRadius
-        {
-            get => _innerRadius;
-            set
-            {
-                _innerRadius = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InitialRotation" />
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public double InitialRotation
-        {
-            get => _initialRotation;
-            set
-            {
-                _initialRotation = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series" />
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<ISeries> Series
-        {
-            get => _series;
-            set
-            {
-                _seriesObserver.Dispose(_series);
-                _seriesObserver.Initialize(value);
-                _series = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.AngleAxes" />
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<IPolarAxis> AngleAxes
-        {
-            get => _angleAxes;
-            set
-            {
-                _angleObserver.Dispose(_angleAxes);
-                _angleObserver.Initialize(value);
-                _angleAxes = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.RadiusAxes" />
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<IPolarAxis> RadiusAxes
-        {
-            get => _radiusAxes;
-            set
-            {
-                _radiusObserver.Dispose(_radiusAxes);
-                _radiusObserver.Initialize(value);
-                _radiusAxes = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Initializes the core.
-        /// </summary>
-        protected override void InitializeCore()
-        {
-            core = new PolarChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore);
-            if (((IChartView)this).DesignerMode) return;
-            core.Update();
-        }
-
-        /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
-        public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
-        {
-            return new double[0];
-            //if (core is null) throw new Exception("core not found");
-            //var cartesianCore = (PolarChart<SkiaSharpDrawingContext>)core;
-            //return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
-        }
-
-        private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
+            _fitToBounds = value;
             OnPropertyChanged();
         }
+    }
 
-        private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.TotalAngle" />
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public double TotalAngle
+    {
+        get => _totalAngle;
+        set
         {
-            if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
+            _totalAngle = value;
             OnPropertyChanged();
         }
+    }
 
-        private void OnMouseWheel(object? sender, MouseEventArgs e)
+    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InnerRadius" />
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public double InnerRadius
+    {
+        get => _innerRadius;
+        set
         {
-            //if (core is null) throw new Exception("core not found");
-            //var c = (PolarChart<SkiaSharpDrawingContext>)core;
-            //var p = e.Location;
-            //c.Zoom(new PointF(p.X, p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
-            //Capture = true;
+            _innerRadius = value;
+            OnPropertyChanged();
         }
+    }
 
-        private void OnMouseDown(object? sender, MouseEventArgs e)
+    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InitialRotation" />
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public double InitialRotation
+    {
+        get => _initialRotation;
+        set
         {
-            core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y));
+            _initialRotation = value;
+            OnPropertyChanged();
         }
+    }
 
-        private void OnMouseUp(object? sender, MouseEventArgs e)
+    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series" />
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public IEnumerable<ISeries> Series
+    {
+        get => _series;
+        set
         {
-            core?.InvokePointerUp(new LvcPoint(e.Location.X, e.Location.Y));
+            _seriesObserver.Dispose(_series);
+            _seriesObserver.Initialize(value);
+            _series = value;
+            OnPropertyChanged();
         }
+    }
+
+    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.AngleAxes" />
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public IEnumerable<IPolarAxis> AngleAxes
+    {
+        get => _angleAxes;
+        set
+        {
+            _angleObserver.Dispose(_angleAxes);
+            _angleObserver.Initialize(value);
+            _angleAxes = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.RadiusAxes" />
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public IEnumerable<IPolarAxis> RadiusAxes
+    {
+        get => _radiusAxes;
+        set
+        {
+            _radiusObserver.Dispose(_radiusAxes);
+            _radiusObserver.Initialize(value);
+            _radiusAxes = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// Initializes the core.
+    /// </summary>
+    protected override void InitializeCore()
+    {
+        core = new PolarChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore);
+        if (((IChartView)this).DesignerMode) return;
+        core.Update();
+    }
+
+    /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
+    public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
+    {
+        return new double[0];
+        //if (core is null) throw new Exception("core not found");
+        //var cartesianCore = (PolarChart<SkiaSharpDrawingContext>)core;
+        //return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
+    }
+
+    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
+        OnPropertyChanged();
+    }
+
+    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
+        OnPropertyChanged();
+    }
+
+    private void OnMouseWheel(object? sender, MouseEventArgs e)
+    {
+        //if (core is null) throw new Exception("core not found");
+        //var c = (PolarChart<SkiaSharpDrawingContext>)core;
+        //var p = e.Location;
+        //c.Zoom(new PointF(p.X, p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+        //Capture = true;
+    }
+
+    private void OnMouseDown(object? sender, MouseEventArgs e)
+    {
+        core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y));
+    }
+
+    private void OnMouseUp(object? sender, MouseEventArgs e)
+    {
+        core?.InvokePointerUp(new LvcPoint(e.Location.X, e.Location.Y));
     }
 }

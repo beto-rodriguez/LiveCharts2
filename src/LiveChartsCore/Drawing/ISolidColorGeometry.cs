@@ -20,17 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Drawing;
+
+/// <summary>
+/// Defines a sized and solid color geometry.
+/// </summary>
+public interface ISolidColorGeometry<TDrawingContext> : ISizedGeometry<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a sized and solid color geometry.
+    /// Gets or sets the color.
     /// </summary>
-    public interface ISolidColorGeometry<TDrawingContext> : ISizedGeometry<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets or sets the color.
-        /// </summary>
-        LvcColor Color { get; set; }
-    }
+    LvcColor Color { get; set; }
 }

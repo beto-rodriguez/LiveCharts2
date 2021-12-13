@@ -5,13 +5,13 @@ using SkiaSharp;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace ViewModelsSamples.Axes.LabelsFormat
+namespace ViewModelsSamples.Axes.LabelsFormat;
+
+public class ViewModel
 {
-    public class ViewModel
+    public ViewModel()
     {
-        public ViewModel()
-        {
-            Series = new ObservableCollection<ISeries>
+        Series = new ObservableCollection<ISeries>
             {
                 new LineSeries<double>
                 {
@@ -19,7 +19,7 @@ namespace ViewModelsSamples.Axes.LabelsFormat
                 }
             };
 
-            XAxes = new List<Axis>
+        XAxes = new List<Axis>
             {
                 new Axis
                 {
@@ -45,7 +45,7 @@ namespace ViewModelsSamples.Axes.LabelsFormat
                 }
             };
 
-            YAxes = new List<Axis>
+        YAxes = new List<Axis>
             {
                 new Axis
                 {
@@ -64,12 +64,11 @@ namespace ViewModelsSamples.Axes.LabelsFormat
                     // the amount is in millions or trillions
                 }
             };
-        }
-
-        public IEnumerable<ISeries> Series { get; set; }
-
-        public List<Axis> XAxes { get; set; }
-
-        public List<Axis> YAxes { get; set; }
     }
+
+    public IEnumerable<ISeries> Series { get; set; }
+
+    public List<Axis> XAxes { get; set; }
+
+    public List<Axis> YAxes { get; set; }
 }

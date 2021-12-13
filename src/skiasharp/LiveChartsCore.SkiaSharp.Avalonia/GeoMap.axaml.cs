@@ -40,296 +40,295 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Avalonia
+namespace LiveChartsCore.SkiaSharpView.Avalonia;
+
+/// <inheritdoc cref="IGeoMapView{TDrawingContext}"/>
+public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 {
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}"/>
-    public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
+    private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
+    private readonly CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>> _seriesObserver;
+    private readonly GeoMap<SkiaSharpDrawingContext> _core;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GeoMap"/> class.
+    /// </summary>
+    public GeoMap()
     {
-        private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
-        private readonly CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>> _seriesObserver;
-        private readonly GeoMap<SkiaSharpDrawingContext> _core;
+        InitializeComponent();
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        _core = new GeoMap<SkiaSharpDrawingContext>(this);
+        _shapesObserver = new CollectionDeepObserver<IMapElement>(
+            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
+            (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
+            true);
+        _seriesObserver = new CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>>(
+            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
+            (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
+            true);
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GeoMap"/> class.
-        /// </summary>
-        public GeoMap()
-        {
-            InitializeComponent();
-            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-            _core = new GeoMap<SkiaSharpDrawingContext>(this);
-            _shapesObserver = new CollectionDeepObserver<IMapElement>(
-                (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-                (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
-                true);
-            _seriesObserver = new CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>>(
-                (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-                (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
-                true);
+        Background = new SolidColorBrush(new Color(0, 0, 0, 0));
 
-            Background = new SolidColorBrush(new Color(0, 0, 0, 0));
+        PointerWheelChanged += OnPointerWheelChanged;
+        PointerPressed += OnPointerPressed;
+        PointerMoved += OnPointerMoved;
+        PointerLeave += OnPointerLeave;
 
-            PointerWheelChanged += OnPointerWheelChanged;
-            PointerPressed += OnPointerPressed;
-            PointerMoved += OnPointerMoved;
-            PointerLeave += OnPointerLeave;
+        //Shapes = Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>();
+        ActiveMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
+        SyncContext = new object();
+    }
 
-            //Shapes = Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>();
-            ActiveMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
-            SyncContext = new object();
-        }
+    #region dependency props
 
-        #region dependency props
+    /// <summary>
+    /// The active map property.
+    /// </summary>
+    public static readonly AvaloniaProperty<CoreMap<SkiaSharpDrawingContext>?> ActiveMapProperty =
+       AvaloniaProperty.Register<CartesianChart, CoreMap<SkiaSharpDrawingContext>?>(nameof(ActiveMap), null, inherits: true);
 
-        /// <summary>
-        /// The active map property.
-        /// </summary>
-        public static readonly AvaloniaProperty<CoreMap<SkiaSharpDrawingContext>?> ActiveMapProperty =
-           AvaloniaProperty.Register<CartesianChart, CoreMap<SkiaSharpDrawingContext>?>(nameof(ActiveMap), null, inherits: true);
+    /// <summary>
+    /// The active map property.
+    /// </summary>
+    public static readonly AvaloniaProperty<object?> SyncContextProperty =
+       AvaloniaProperty.Register<CartesianChart, object?>(nameof(SyncContext), null, inherits: true);
 
-        /// <summary>
-        /// The active map property.
-        /// </summary>
-        public static readonly AvaloniaProperty<object?> SyncContextProperty =
-           AvaloniaProperty.Register<CartesianChart, object?>(nameof(SyncContext), null, inherits: true);
+    /// <summary>
+    /// The active map property.
+    /// </summary>
+    public static readonly AvaloniaProperty<object?> ViewCommandProperty =
+       AvaloniaProperty.Register<CartesianChart, object?>(nameof(ViewCommand), null, inherits: true);
 
-        /// <summary>
-        /// The active map property.
-        /// </summary>
-        public static readonly AvaloniaProperty<object?> ViewCommandProperty =
-           AvaloniaProperty.Register<CartesianChart, object?>(nameof(ViewCommand), null, inherits: true);
+    /// <summary>
+    /// The projection property.
+    /// </summary>
+    public static readonly AvaloniaProperty<MapProjection> MapProjectionProperty =
+       AvaloniaProperty.Register<CartesianChart, MapProjection>(nameof(MapProjection), MapProjection.Default, inherits: true);
 
-        /// <summary>
-        /// The projection property.
-        /// </summary>
-        public static readonly AvaloniaProperty<MapProjection> MapProjectionProperty =
-           AvaloniaProperty.Register<CartesianChart, MapProjection>(nameof(MapProjection), MapProjection.Default, inherits: true);
-
-        /// <summary>
-        /// The heat map property.
-        /// </summary>
-        public static readonly AvaloniaProperty<LvcColor[]> HeatMapProperty =
-          AvaloniaProperty.Register<CartesianChart, LvcColor[]>(nameof(HeatMap),
-              new[]
-              {
+    /// <summary>
+    /// The heat map property.
+    /// </summary>
+    public static readonly AvaloniaProperty<LvcColor[]> HeatMapProperty =
+      AvaloniaProperty.Register<CartesianChart, LvcColor[]>(nameof(HeatMap),
+          new[]
+          {
                   LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
                   LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
-              }, inherits: true);
+          }, inherits: true);
 
-        /// <summary>
-        /// The color stops property.
-        /// </summary>
-        public static readonly AvaloniaProperty<double[]?> ColorStopsProperty =
-          AvaloniaProperty.Register<CartesianChart, double[]?>(nameof(ColorStops), null, inherits: true);
+    /// <summary>
+    /// The color stops property.
+    /// </summary>
+    public static readonly AvaloniaProperty<double[]?> ColorStopsProperty =
+      AvaloniaProperty.Register<CartesianChart, double[]?>(nameof(ColorStops), null, inherits: true);
 
-        /// <summary>
-        /// The shapes property.
-        /// </summary>
-        public static readonly AvaloniaProperty<IEnumerable<IMapElement>> ShapesProperty =
-          AvaloniaProperty.Register<CartesianChart, IEnumerable<IMapElement>>(nameof(Shapes),
-              Enumerable.Empty<IMapElement>(), inherits: true);
+    /// <summary>
+    /// The shapes property.
+    /// </summary>
+    public static readonly AvaloniaProperty<IEnumerable<IMapElement>> ShapesProperty =
+      AvaloniaProperty.Register<CartesianChart, IEnumerable<IMapElement>>(nameof(Shapes),
+          Enumerable.Empty<IMapElement>(), inherits: true);
 
-        /// <summary>
-        /// The series property.
-        /// </summary>
-        public static readonly AvaloniaProperty<IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>> SeriesProperty =
-          AvaloniaProperty.Register<CartesianChart, IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>>(nameof(Series),
-              Enumerable.Empty<IGeoSeries<SkiaSharpDrawingContext>>(), inherits: true);
+    /// <summary>
+    /// The series property.
+    /// </summary>
+    public static readonly AvaloniaProperty<IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>> SeriesProperty =
+      AvaloniaProperty.Register<CartesianChart, IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>>(nameof(Series),
+          Enumerable.Empty<IGeoSeries<SkiaSharpDrawingContext>>(), inherits: true);
 
-        /// <summary>
-        /// The stroke property.
-        /// </summary>
-        public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>> StrokeProperty =
-          AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>>(nameof(Stroke),
-              new SolidColorPaint(new SKColor(255, 255, 255, 255), 1) { IsStroke = true }, inherits: true);
+    /// <summary>
+    /// The stroke property.
+    /// </summary>
+    public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>> StrokeProperty =
+      AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>>(nameof(Stroke),
+          new SolidColorPaint(new SKColor(255, 255, 255, 255), 1) { IsStroke = true }, inherits: true);
 
-        /// <summary>
-        /// The fill color property.
-        /// </summary>
-        public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>> FillProperty =
-          AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>>(nameof(Fill),
-               new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true }, inherits: true);
+    /// <summary>
+    /// The fill color property.
+    /// </summary>
+    public static readonly AvaloniaProperty<IPaint<SkiaSharpDrawingContext>> FillProperty =
+      AvaloniaProperty.Register<CartesianChart, IPaint<SkiaSharpDrawingContext>>(nameof(Fill),
+           new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true }, inherits: true);
 
-        #endregion
+    #endregion
 
-        #region props
+    #region props
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.AutoUpdateEnabled" />
-        public bool AutoUpdateEnabled { get; set; } = true;
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.AutoUpdateEnabled" />
+    public bool AutoUpdateEnabled { get; set; } = true;
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.DesignerMode" />
-        bool IGeoMapView<SkiaSharpDrawingContext>.DesignerMode => Design.IsDesignMode;
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.DesignerMode" />
+    bool IGeoMapView<SkiaSharpDrawingContext>.DesignerMode => Design.IsDesignMode;
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.SyncContext" />
-        public object SyncContext
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.SyncContext" />
+    public object SyncContext
+    {
+        get => GetValue(SyncContextProperty);
+        set => SetValue(SyncContextProperty, value);
+    }
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ViewCommand" />
+    public object? ViewCommand
+    {
+        get => GetValue(ViewCommandProperty);
+        set => SetValue(ViewCommandProperty, value);
+    }
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
+    public MotionCanvas<SkiaSharpDrawingContext> Canvas
+    {
+        get
         {
-            get => GetValue(SyncContextProperty);
-            set => SetValue(SyncContextProperty, value);
+            var canvas = this.FindControl<MotionCanvas>("canvas");
+            return canvas.CanvasCore;
+        }
+    }
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
+    public CoreMap<SkiaSharpDrawingContext> ActiveMap
+    {
+        get => (CoreMap<SkiaSharpDrawingContext>)GetValue(ActiveMapProperty);
+        set => SetValue(ActiveMapProperty, value);
+    }
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Width"/>
+    float IGeoMapView<SkiaSharpDrawingContext>.Width => (float)Bounds.Width;
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Height"/>
+    float IGeoMapView<SkiaSharpDrawingContext>.Height => (float)Bounds.Height;
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
+    public MapProjection MapProjection
+    {
+        get => (MapProjection)GetValue(MapProjectionProperty);
+        set => SetValue(MapProjectionProperty, value);
+    }
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.HeatMap"/>
+    public LvcColor[] HeatMap
+    {
+        get => (LvcColor[])GetValue(HeatMapProperty);
+        set => SetValue(HeatMapProperty, value);
+    }
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ColorStops"/>
+    public double[]? ColorStops
+    {
+        get => (double[])GetValue(ColorStopsProperty);
+        set => SetValue(ColorStopsProperty, value);
+    }
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
+    public IPaint<SkiaSharpDrawingContext>? Stroke
+    {
+        get => (IPaint<SkiaSharpDrawingContext>)GetValue(StrokeProperty);
+        set
+        {
+            if (value is not null) value.IsStroke = true;
+            SetValue(StrokeProperty, value);
+        }
+    }
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
+    public IPaint<SkiaSharpDrawingContext>? Fill
+    {
+        get => (IPaint<SkiaSharpDrawingContext>)GetValue(FillProperty);
+        set
+        {
+            if (value is not null) value.IsFill = true;
+            SetValue(FillProperty, value);
+        }
+    }
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
+    public IEnumerable<IMapElement> Shapes
+    {
+        get => (IEnumerable<IMapElement>)GetValue(ShapesProperty);
+        set => SetValue(ShapesProperty, value);
+    }
+
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
+    public IEnumerable<IGeoSeries<SkiaSharpDrawingContext>> Series
+    {
+        get => (IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty);
+        set => SetValue(ShapesProperty, value);
+    }
+
+    #endregion
+
+    void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
+    {
+        _ = Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Normal); //.GetAwaiter().GetResult();
+    }
+
+    /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})"/>
+    protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
+    {
+        base.OnPropertyChanged(change);
+
+        if (change.Property.Name == nameof(IsPointerOver)) return;
+
+        if (change.Property.Name == nameof(Shapes))
+        {
+            _shapesObserver.Dispose((IEnumerable<IMapElement>)change.OldValue.Value);
+            _shapesObserver.Initialize((IEnumerable<IMapElement>)change.NewValue.Value);
         }
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ViewCommand" />
-        public object? ViewCommand
+        if (change.Property.Name == nameof(Series))
         {
-            get => GetValue(ViewCommandProperty);
-            set => SetValue(ViewCommandProperty, value);
+            _seriesObserver.Dispose((IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)change.OldValue.Value);
+            _seriesObserver.Initialize((IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)change.NewValue.Value);
         }
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
-        public MotionCanvas<SkiaSharpDrawingContext> Canvas
+        if (change.Property.Name == nameof(ViewCommand))
         {
-            get
-            {
-                var canvas = this.FindControl<MotionCanvas>("canvas");
-                return canvas.CanvasCore;
-            }
+            _core.ViewTo(ViewCommand);
+            return;
         }
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
-        public CoreMap<SkiaSharpDrawingContext> ActiveMap
-        {
-            get => (CoreMap<SkiaSharpDrawingContext>)GetValue(ActiveMapProperty);
-            set => SetValue(ActiveMapProperty, value);
-        }
+        _core?.Update();
+    }
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Width"/>
-        float IGeoMapView<SkiaSharpDrawingContext>.Width => (float)Bounds.Width;
+    private void OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
+    {
+        if (_core is null) return;
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Height"/>
-        float IGeoMapView<SkiaSharpDrawingContext>.Height => (float)Bounds.Height;
+        var p = e.GetPosition(this);
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
-        public MapProjection MapProjection
-        {
-            get => (MapProjection)GetValue(MapProjectionProperty);
-            set => SetValue(MapProjectionProperty, value);
-        }
+        _core.ViewTo(
+            new ZoomOnPointerView(
+                new LvcPoint((float)p.X, (float)p.Y),
+                e.Delta.Y > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut));
+    }
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.HeatMap"/>
-        public LvcColor[] HeatMap
-        {
-            get => (LvcColor[])GetValue(HeatMapProperty);
-            set => SetValue(HeatMapProperty, value);
-        }
+    private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+        var p = e.GetPosition(this);
+        foreach (var w in desktop.Windows) w.PointerReleased += OnWindowPointerReleased;
+        _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y));
+    }
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ColorStops"/>
-        public double[]? ColorStops
-        {
-            get => (double[])GetValue(ColorStopsProperty);
-            set => SetValue(ColorStopsProperty, value);
-        }
+    private void OnPointerMoved(object? sender, PointerEventArgs e)
+    {
+        var p = e.GetPosition(this);
+        _core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
+    }
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
-        public IPaint<SkiaSharpDrawingContext>? Stroke
-        {
-            get => (IPaint<SkiaSharpDrawingContext>)GetValue(StrokeProperty);
-            set
-            {
-                if (value is not null) value.IsStroke = true;
-                SetValue(StrokeProperty, value);
-            }
-        }
+    private void OnWindowPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+        foreach (var w in desktop.Windows) w.PointerReleased -= OnWindowPointerReleased;
+        var p = e.GetPosition(this);
+        _core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y));
+    }
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
-        public IPaint<SkiaSharpDrawingContext>? Fill
-        {
-            get => (IPaint<SkiaSharpDrawingContext>)GetValue(FillProperty);
-            set
-            {
-                if (value is not null) value.IsFill = true;
-                SetValue(FillProperty, value);
-            }
-        }
+    private void OnPointerLeave(object? sender, PointerEventArgs e)
+    {
+        _core?.InvokePointerLeft();
+    }
 
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
-        public IEnumerable<IMapElement> Shapes
-        {
-            get => (IEnumerable<IMapElement>)GetValue(ShapesProperty);
-            set => SetValue(ShapesProperty, value);
-        }
-
-        /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
-        public IEnumerable<IGeoSeries<SkiaSharpDrawingContext>> Series
-        {
-            get => (IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty);
-            set => SetValue(ShapesProperty, value);
-        }
-
-        #endregion
-
-        void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
-        {
-            _ = Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Normal); //.GetAwaiter().GetResult();
-        }
-
-        /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})"/>
-        protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
-        {
-            base.OnPropertyChanged(change);
-
-            if (change.Property.Name == nameof(IsPointerOver)) return;
-
-            if (change.Property.Name == nameof(Shapes))
-            {
-                _shapesObserver.Dispose((IEnumerable<IMapElement>)change.OldValue.Value);
-                _shapesObserver.Initialize((IEnumerable<IMapElement>)change.NewValue.Value);
-            }
-
-            if (change.Property.Name == nameof(Series))
-            {
-                _seriesObserver.Dispose((IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)change.OldValue.Value);
-                _seriesObserver.Initialize((IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)change.NewValue.Value);
-            }
-
-            if (change.Property.Name == nameof(ViewCommand))
-            {
-                _core.ViewTo(ViewCommand);
-                return;
-            }
-
-            _core?.Update();
-        }
-
-        private void OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
-        {
-            if (_core is null) return;
-
-            var p = e.GetPosition(this);
-
-            _core.ViewTo(
-                new ZoomOnPointerView(
-                    new LvcPoint((float)p.X, (float)p.Y),
-                    e.Delta.Y > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut));
-        }
-
-        private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
-        {
-            if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
-            var p = e.GetPosition(this);
-            foreach (var w in desktop.Windows) w.PointerReleased += OnWindowPointerReleased;
-            _core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y));
-        }
-
-        private void OnPointerMoved(object? sender, PointerEventArgs e)
-        {
-            var p = e.GetPosition(this);
-            _core?.InvokePointerMove(new LvcPoint((float)p.X, (float)p.Y));
-        }
-
-        private void OnWindowPointerReleased(object? sender, PointerReleasedEventArgs e)
-        {
-            if (Application.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
-            foreach (var w in desktop.Windows) w.PointerReleased -= OnWindowPointerReleased;
-            var p = e.GetPosition(this);
-            _core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y));
-        }
-
-        private void OnPointerLeave(object? sender, PointerEventArgs e)
-        {
-            _core?.InvokePointerLeft();
-        }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
     }
 }

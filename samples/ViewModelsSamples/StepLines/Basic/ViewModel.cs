@@ -3,11 +3,11 @@ using LiveChartsCore.SkiaSharpView;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace ViewModelsSamples.StepLines.Basic
+namespace ViewModelsSamples.StepLines.Basic;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
+    public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
         {
             new StepLineSeries<double?>
             {
@@ -15,5 +15,4 @@ namespace ViewModelsSamples.StepLines.Basic
                 Fill = null
             }
         };
-    }
 }

@@ -22,44 +22,43 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Kernel.Sketches
+namespace LiveChartsCore.Kernel.Sketches;
+
+/// <summary>
+/// Defines a stepline series plot.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="IChartSeries{TDrawingContext}" />
+public interface IStepLineSeries<TDrawingContext> : IChartSeries<TDrawingContext>, IStrokedAndFilled<TDrawingContext>, ICartesianSeries<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a stepline series plot.
+    /// Gets or sets a value indicating whether the line should split every null point, 
+    /// enabling it has a performance impact, default is true.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IChartSeries{TDrawingContext}" />
-    public interface IStepLineSeries<TDrawingContext> : IChartSeries<TDrawingContext>, IStrokedAndFilled<TDrawingContext>, ICartesianSeries<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets or sets a value indicating whether the line should split every null point, 
-        /// enabling it has a performance impact, default is true.
-        /// </summary>
-        bool EnableNullSplitting { get; set; }
+    bool EnableNullSplitting { get; set; }
 
-        /// <summary>
-        /// Gets or sets the size of the geometry.
-        /// </summary>
-        /// <value>
-        /// The size of the geometry.
-        /// </value>
-        double GeometrySize { get; set; }
+    /// <summary>
+    /// Gets or sets the size of the geometry.
+    /// </summary>
+    /// <value>
+    /// The size of the geometry.
+    /// </value>
+    double GeometrySize { get; set; }
 
-        /// <summary>
-        /// Gets or sets the geometry fill.
-        /// </summary>
-        /// <value>
-        /// The shapes fill.
-        /// </value>
-        IPaint<TDrawingContext>? GeometryFill { get; set; }
+    /// <summary>
+    /// Gets or sets the geometry fill.
+    /// </summary>
+    /// <value>
+    /// The shapes fill.
+    /// </value>
+    IPaint<TDrawingContext>? GeometryFill { get; set; }
 
-        /// <summary>
-        /// Gets or sets the geometry stroke.
-        /// </summary>
-        /// <value>
-        /// The shapes stroke.
-        /// </value>
-        IPaint<TDrawingContext>? GeometryStroke { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the geometry stroke.
+    /// </summary>
+    /// <value>
+    /// The shapes stroke.
+    /// </value>
+    IPaint<TDrawingContext>? GeometryStroke { get; set; }
 }

@@ -5,11 +5,11 @@ using SkiaSharp;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace ViewModelsSamples.Bars.WithBackground
+namespace ViewModelsSamples.Bars.WithBackground;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        public List<ISeries> Series { get; set; } = new List<ISeries>
+    public List<ISeries> Series { get; set; } = new List<ISeries>
         {
             new ColumnSeries<double>
             {
@@ -27,9 +27,8 @@ namespace ViewModelsSamples.Bars.WithBackground
             }
         };
 
-        public List<Axis> YAxes { get; set; } = new List<Axis>
+    public List<Axis> YAxes { get; set; } = new List<Axis>
         {
             new Axis { MinLimit = 0, MaxLimit = 10 }
         };
-    }
 }

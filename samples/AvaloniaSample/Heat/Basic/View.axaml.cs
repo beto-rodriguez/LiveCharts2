@@ -1,18 +1,17 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace AvaloniaSample.Heat.Basic
-{
-    public class View : UserControl
-    {
-        public View()
-        {
-            InitializeComponent();
-        }
+namespace AvaloniaSample.Heat.Basic;
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+public class View : UserControl
+{
+    public View()
+    {
+        InitializeComponent();
+    }
+
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
     }
 }

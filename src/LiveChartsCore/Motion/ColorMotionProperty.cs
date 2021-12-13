@@ -22,46 +22,45 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Motion
+namespace LiveChartsCore.Motion;
+
+/// <summary>
+/// Defines the color motion property class.
+/// </summary>
+public class ColorMotionProperty : MotionProperty<LvcColor>
 {
     /// <summary>
-    /// Defines the color motion property class.
+    /// Initializes a new instance of the <see cref="ColorMotionProperty"/> class.
     /// </summary>
-    public class ColorMotionProperty : MotionProperty<LvcColor>
+    /// <param name="propertyName">Name of the property.</param>
+    public ColorMotionProperty(string propertyName)
+        : base(propertyName)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ColorMotionProperty"/> class.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        public ColorMotionProperty(string propertyName)
-            : base(propertyName)
-        {
-            fromValue = LvcColor.FromArgb(0, 0, 0, 0);
-            toValue = LvcColor.FromArgb(0, 0, 0, 0);
-        }
+        fromValue = LvcColor.FromArgb(0, 0, 0, 0);
+        toValue = LvcColor.FromArgb(0, 0, 0, 0);
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ColorMotionProperty"/> class.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        /// <param name="value">The value.</param>
-        public ColorMotionProperty(string propertyName, LvcColor value)
-            : base(propertyName)
-        {
-            fromValue = value;
-            toValue = value;
-        }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ColorMotionProperty"/> class.
+    /// </summary>
+    /// <param name="propertyName">Name of the property.</param>
+    /// <param name="value">The value.</param>
+    public ColorMotionProperty(string propertyName, LvcColor value)
+        : base(propertyName)
+    {
+        fromValue = value;
+        toValue = value;
+    }
 
-        /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
-        protected override LvcColor OnGetMovement(float progress)
-        {
-            return toValue == LvcColor.Empty
-                ? LvcColor.Empty
-                : LvcColor.FromArgb(
-                    (byte)(fromValue.A + progress * (toValue.A - fromValue.A)),
-                    (byte)(fromValue.R + progress * (toValue.R - fromValue.R)),
-                    (byte)(fromValue.G + progress * (toValue.G - fromValue.G)),
-                    (byte)(fromValue.B + progress * (toValue.B - fromValue.B)));
-        }
+    /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
+    protected override LvcColor OnGetMovement(float progress)
+    {
+        return toValue == LvcColor.Empty
+            ? LvcColor.Empty
+            : LvcColor.FromArgb(
+                (byte)(fromValue.A + progress * (toValue.A - fromValue.A)),
+                (byte)(fromValue.R + progress * (toValue.R - fromValue.R)),
+                (byte)(fromValue.G + progress * (toValue.G - fromValue.G)),
+                (byte)(fromValue.B + progress * (toValue.B - fromValue.B)));
     }
 }

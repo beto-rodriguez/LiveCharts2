@@ -1,17 +1,16 @@
 ﻿using System;
 
-namespace ViewModelsSamples.General.Animations
+namespace ViewModelsSamples.General.Animations;
+
+public class AvailableSpeed
 {
-    public class AvailableSpeed
+    public AvailableSpeed(string name, TimeSpan speed)
     {
-        public AvailableSpeed(string name, TimeSpan speed)
-        {
-            Name = name;
-            Speed = speed;
-        }
-
-        public string Name { get; set; }
-
-        public TimeSpan Speed { get; set; }
+        Name = name;
+        Speed = speed;
     }
+
+    public string Name { get; set; }
+
+    public TimeSpan Speed { get; set; }
 }

@@ -7,14 +7,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Input;
 
-namespace ViewModelsSamples.Events.Polar
+namespace ViewModelsSamples.Events.Polar;
+
+public class ViewModel
 {
-    public class ViewModel
+    public ViewModel()
     {
-        public ViewModel()
+        var data = new[]
         {
-            var data = new[]
-            {
                 new City { Name = "Tokyo", Population = 4 },
                 new City { Name = "New York", Population = 6 },
                 new City { Name = "Seoul", Population = 2 },
@@ -23,40 +23,39 @@ namespace ViewModelsSamples.Events.Polar
                 new City { Name = "Guadalajara", Population = 4 }
             };
 
-            var polarLineSeries = new PolarLineSeries<City>
+        var polarLineSeries = new PolarLineSeries<City>
+        {
+            Values = data,
+            TooltipLabelFormatter = point => $"{point.Model.Name} {point.Model.Population} Million",
+            Mapping = (city, point) =>
             {
-                Values = data,
-                TooltipLabelFormatter = point => $"{point.Model.Name} {point.Model.Population} Million",
-                Mapping = (city, point) =>
-                {
-                    point.PrimaryValue = city.Population; // use the population property in this series // mark
+                point.PrimaryValue = city.Population; // use the population property in this series // mark
                     point.SecondaryValue = point.Context.Index;
-                }
-            };
+            }
+        };
 
-            polarLineSeries.DataPointerDown += PolarLineSeries_DataPointerDown;
+        polarLineSeries.DataPointerDown += PolarLineSeries_DataPointerDown;
 
-            Series = new ISeries[]
-            {
+        Series = new ISeries[]
+        {
                 polarLineSeries,
                 new PolarLineSeries<int> { Values = new[] { 6, 7, 2, 9, 6, 2 } },
-            };
-        }
-
-        private void PolarLineSeries_DataPointerDown(
-            IChartView chart,
-            IEnumerable<ChartPoint<City, LiveChartsCore.Drawing.LineBezierVisualPoint<LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext, CircleGeometry, LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.CubicBezierSegment, SkiaSharp.SKPath>, LabelGeometry>> points)
-        {
-            // the event passes a collection of the points that were triggered by the pointer down event.
-            foreach (var point in points)
-            {
-                Trace.WriteLine($"[series.dataPointerDownEvent] clicked on {point.Model.Name}");
-            }
-        }
-
-        public IEnumerable<ISeries> Series { get; set; }
-
-        // XAML platforms also support ICommands
-        public ICommand DataPointerDownCommand { get; set; } = new RelayCommand(); // mark
+        };
     }
+
+    private void PolarLineSeries_DataPointerDown(
+        IChartView chart,
+        IEnumerable<ChartPoint<City, LiveChartsCore.Drawing.LineBezierVisualPoint<LiveChartsCore.SkiaSharpView.Drawing.SkiaSharpDrawingContext, CircleGeometry, LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments.CubicBezierSegment, SkiaSharp.SKPath>, LabelGeometry>> points)
+    {
+        // the event passes a collection of the points that were triggered by the pointer down event.
+        foreach (var point in points)
+        {
+            Trace.WriteLine($"[series.dataPointerDownEvent] clicked on {point.Model.Name}");
+        }
+    }
+
+    public IEnumerable<ISeries> Series { get; set; }
+
+    // XAML platforms also support ICommands
+    public ICommand DataPointerDownCommand { get; set; } = new RelayCommand(); // mark
 }

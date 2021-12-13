@@ -20,38 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Geo
+namespace LiveChartsCore.Geo;
+
+/// <summary>
+/// The map projector class.
+/// </summary>
+public abstract class MapProjector
 {
     /// <summary>
-    /// The map projector class.
+    /// Gets the map width.
     /// </summary>
-    public abstract class MapProjector
-    {
-        /// <summary>
-        /// Gets the map width.
-        /// </summary>
-        public float MapWidth { get; protected set; }
+    public float MapWidth { get; protected set; }
 
-        /// <summary>
-        /// Gets the map height.
-        /// </summary>
-        public float MapHeight { get; protected set; }
+    /// <summary>
+    /// Gets the map height.
+    /// </summary>
+    public float MapHeight { get; protected set; }
 
-        /// <summary>
-        /// Gets the x offset width.
-        /// </summary>
-        public float XOffset { get; protected set; }
+    /// <summary>
+    /// Gets the x offset width.
+    /// </summary>
+    public float XOffset { get; protected set; }
 
-        /// <summary>
-        /// Gets the y offset.
-        /// </summary>
-        public float YOffset { get; protected set; }
+    /// <summary>
+    /// Gets the y offset.
+    /// </summary>
+    public float YOffset { get; protected set; }
 
-        /// <summary>
-        /// Projects the given point.
-        /// </summary>
-        /// <param name="point">The point.</param>
-        /// <returns></returns>
-        public abstract float[] ToMap(double[] point);
-    }
+    /// <summary>
+    /// Projects the given point.
+    /// </summary>
+    /// <param name="point">The point.</param>
+    /// <returns></returns>
+    public abstract float[] ToMap(double[] point);
 }

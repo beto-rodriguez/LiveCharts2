@@ -2,11 +2,11 @@
 using LiveChartsCore.SkiaSharpView;
 using System.Collections.Generic;
 
-namespace ViewModelsSamples.StackedArea.StepArea
+namespace ViewModelsSamples.StackedArea.StepArea;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        public List<ISeries> Series { get; set; } = new List<ISeries>
+    public List<ISeries> Series { get; set; } = new List<ISeries>
         {
             new StackedStepAreaSeries<double>
             {
@@ -21,5 +21,4 @@ namespace ViewModelsSamples.StackedArea.StepArea
                 Values = new List<double> { 4, 8, 2, 8, 9, 5, 3 }
             }
         };
-    }
 }

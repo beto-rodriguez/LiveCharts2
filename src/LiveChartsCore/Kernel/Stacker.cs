@@ -24,107 +24,106 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel;
+
+/// <summary>
+/// Defines the stacker helper class.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+public class Stacker<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
+    private readonly Dictionary<IChartSeries<TDrawingContext>, int> _stackPositions = new();
+    private readonly List<Dictionary<double, StackedValue>> _stack = new();
+    private readonly Dictionary<double, double> _totals = new();
+    private int _stackCount = 0;
+    private int _knownMaxLenght = 0;
+
     /// <summary>
-    /// Defines the stacker helper class.
+    /// Initializes a new instance of the <see cref="Stacker{TDrawingContext}"/> class.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public class Stacker<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    public Stacker()
     {
-        private readonly Dictionary<IChartSeries<TDrawingContext>, int> _stackPositions = new();
-        private readonly List<Dictionary<double, StackedValue>> _stack = new();
-        private readonly Dictionary<double, double> _totals = new();
-        private int _stackCount = 0;
-        private int _knownMaxLenght = 0;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Stacker{TDrawingContext}"/> class.
-        /// </summary>
-        public Stacker()
+    /// <summary>
+    /// Gets the maximum length.
+    /// </summary>
+    /// <value>
+    /// The maximum length.
+    /// </value>
+    public int MaxLength { get; } = 0;
+
+    /// <summary>
+    /// Gets the series stack position.
+    /// </summary>
+    /// <param name="series">The series.</param>
+    /// <returns></returns>
+    public int GetSeriesStackPosition(IChartSeries<TDrawingContext> series)
+    {
+        if (!_stackPositions.TryGetValue(series, out var i))
         {
+            var n = new Dictionary<double, StackedValue>(_knownMaxLenght);
+            _stack.Add(n);
+            i = _stackCount++;
+            _stackPositions[series] = i;
         }
 
-        /// <summary>
-        /// Gets the maximum length.
-        /// </summary>
-        /// <value>
-        /// The maximum length.
-        /// </value>
-        public int MaxLength { get; } = 0;
+        return i;
+    }
 
-        /// <summary>
-        /// Gets the series stack position.
-        /// </summary>
-        /// <param name="series">The series.</param>
-        /// <returns></returns>
-        public int GetSeriesStackPosition(IChartSeries<TDrawingContext> series)
+    /// <summary>
+    /// Stacks the point.
+    /// </summary>
+    /// <param name="point">The point.</param>
+    /// <param name="seriesStackPosition">The series stack position.</param>
+    /// <returns></returns>
+    public double StackPoint(ChartPoint point, int seriesStackPosition)
+    {
+        var index = point.SecondaryValue;
+
+        var start = seriesStackPosition == 0
+            ? 0
+            : _stack[seriesStackPosition - 1].TryGetValue(index, out var activeStack)
+                ? activeStack.End
+                : 0;
+
+        var value = point.PrimaryValue;
+
+        var si = _stack[seriesStackPosition];
+
+        if (!si.TryGetValue(point.SecondaryValue, out var currentStack))
         {
-            if (!_stackPositions.TryGetValue(series, out var i))
-            {
-                var n = new Dictionary<double, StackedValue>(_knownMaxLenght);
-                _stack.Add(n);
-                i = _stackCount++;
-                _stackPositions[series] = i;
-            }
-
-            return i;
+            currentStack = new StackedValue { Start = start, End = start };
+            si.Add(index, currentStack);
+            if (!_totals.TryGetValue(index, out var _)) _totals.Add(index, 0);
+            _knownMaxLenght++;
         }
 
-        /// <summary>
-        /// Stacks the point.
-        /// </summary>
-        /// <param name="point">The point.</param>
-        /// <param name="seriesStackPosition">The series stack position.</param>
-        /// <returns></returns>
-        public double StackPoint(ChartPoint point, int seriesStackPosition)
+        currentStack.End += value;
+
+        var total = _totals[index] + value;
+        _totals[index] = total;
+
+        return total;
+    }
+
+    /// <summary>
+    /// Gets the stack.
+    /// </summary>
+    /// <param name="point">The point.</param>
+    /// <param name="seriesStackPosition">The series stack position.</param>
+    /// <returns></returns>
+    public StackedValue GetStack(ChartPoint point, int seriesStackPosition)
+    {
+        var index = point.SecondaryValue;
+        var p = _stack[seriesStackPosition][index];
+
+        return new StackedValue
         {
-            var index = point.SecondaryValue;
-
-            var start = seriesStackPosition == 0
-                ? 0
-                : _stack[seriesStackPosition - 1].TryGetValue(index, out var activeStack)
-                    ? activeStack.End
-                    : 0;
-
-            var value = point.PrimaryValue;
-
-            var si = _stack[seriesStackPosition];
-
-            if (!si.TryGetValue(point.SecondaryValue, out var currentStack))
-            {
-                currentStack = new StackedValue { Start = start, End = start };
-                si.Add(index, currentStack);
-                if (!_totals.TryGetValue(index, out var _)) _totals.Add(index, 0);
-                _knownMaxLenght++;
-            }
-
-            currentStack.End += value;
-
-            var total = _totals[index] + value;
-            _totals[index] = total;
-
-            return total;
-        }
-
-        /// <summary>
-        /// Gets the stack.
-        /// </summary>
-        /// <param name="point">The point.</param>
-        /// <param name="seriesStackPosition">The series stack position.</param>
-        /// <returns></returns>
-        public StackedValue GetStack(ChartPoint point, int seriesStackPosition)
-        {
-            var index = point.SecondaryValue;
-            var p = _stack[seriesStackPosition][index];
-
-            return new StackedValue
-            {
-                Start = p.Start,
-                End = p.End,
-                Total = _totals[index]
-            };
-        }
+            Start = p.Start,
+            End = p.End,
+            Total = _totals[index]
+        };
     }
 }

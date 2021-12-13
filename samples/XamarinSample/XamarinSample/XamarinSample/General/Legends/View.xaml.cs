@@ -1,14 +1,13 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace XamarinSample.General.Legends
+namespace XamarinSample.General.Legends;
+
+[XamlCompilation(XamlCompilationOptions.Compile)]
+public partial class View : ContentPage
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class View : ContentPage
+    public View()
     {
-        public View()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

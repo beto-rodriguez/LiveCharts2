@@ -2,31 +2,30 @@
 using System.Windows.Forms;
 using ViewModelsSamples.Design.LinearGradients;
 
-namespace WinFormsSample.Design.LinearGradients
+namespace WinFormsSample.Design.LinearGradients;
+
+public partial class View : UserControl
 {
-    public partial class View : UserControl
+    private readonly CartesianChart cartesianChart;
+
+    public View()
     {
-        private readonly CartesianChart cartesianChart;
+        InitializeComponent();
+        Size = new System.Drawing.Size(50, 50);
 
-        public View()
+        var viewModel = new ViewModel();
+
+        cartesianChart = new CartesianChart
         {
-            InitializeComponent();
-            Size = new System.Drawing.Size(50, 50);
+            Series = viewModel.Series,
+            LegendPosition = LiveChartsCore.Measure.LegendPosition.Right,
 
-            var viewModel = new ViewModel();
+            // out of livecharts properties...
+            Location = new System.Drawing.Point(0, 0),
+            Size = new System.Drawing.Size(50, 50),
+            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
+        };
 
-            cartesianChart = new CartesianChart
-            {
-                Series = viewModel.Series,
-                LegendPosition = LiveChartsCore.Measure.LegendPosition.Right,
-
-                // out of livecharts properties...
-                Location = new System.Drawing.Point(0, 0),
-                Size = new System.Drawing.Size(50, 50),
-                Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
-            };
-
-            Controls.Add(cartesianChart);
-        }
+        Controls.Add(cartesianChart);
     }
 }

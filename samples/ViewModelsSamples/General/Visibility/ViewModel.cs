@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-namespace ViewModelsSamples.General.Visibility
+namespace ViewModelsSamples.General.Visibility;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        public List<ISeries> Series { get; set; } = new List<ISeries>
+    public List<ISeries> Series { get; set; } = new List<ISeries>
         {
             new ColumnSeries<double>
             {
@@ -27,27 +27,26 @@ namespace ViewModelsSamples.General.Visibility
             }
         };
 
-        public void ToogleSeries0()
-        {
-            Series[0].IsVisible = !Series[0].IsVisible;
-        }
-
-        public void ToogleSeries1()
-        {
-            Series[1].IsVisible = !Series[1].IsVisible;
-        }
-
-        public void ToogleSeries2()
-        {
-            Series[2].IsVisible = !Series[2].IsVisible;
-        }
-
-        // The next commands are only to enable XAML bindings
-        // they are not used in the WinForms sample
-        public ICommand ToggleSeries0Command => new Command(o => ToogleSeries0());
-
-        public ICommand ToggleSeries1Command => new Command(o => ToogleSeries1());
-
-        public ICommand ToggleSeries2Command => new Command(o => ToogleSeries2());
+    public void ToogleSeries0()
+    {
+        Series[0].IsVisible = !Series[0].IsVisible;
     }
+
+    public void ToogleSeries1()
+    {
+        Series[1].IsVisible = !Series[1].IsVisible;
+    }
+
+    public void ToogleSeries2()
+    {
+        Series[2].IsVisible = !Series[2].IsVisible;
+    }
+
+    // The next commands are only to enable XAML bindings
+    // they are not used in the WinForms sample
+    public ICommand ToggleSeries0Command => new Command(o => ToogleSeries0());
+
+    public ICommand ToggleSeries1Command => new Command(o => ToogleSeries1());
+
+    public ICommand ToggleSeries2Command => new Command(o => ToogleSeries2());
 }

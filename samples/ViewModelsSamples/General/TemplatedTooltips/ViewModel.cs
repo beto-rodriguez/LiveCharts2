@@ -3,11 +3,11 @@ using LiveChartsCore.SkiaSharpView;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace ViewModelsSamples.General.TemplatedTooltips
+namespace ViewModelsSamples.General.TemplatedTooltips;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
+    public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
         {
             new ColumnSeries<double>
             {
@@ -19,5 +19,4 @@ namespace ViewModelsSamples.General.TemplatedTooltips
                 Fill = null
             }
         };
-    }
 }

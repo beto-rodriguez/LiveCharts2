@@ -6,62 +6,61 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using ViewModelsSamples.Events.Cartesian;
 
-namespace WinFormsSample.Events.Cartesian
+namespace WinFormsSample.Events.Cartesian;
+
+public partial class View : UserControl
 {
-    public partial class View : UserControl
+    /// <summary>
+    /// Initializes a new instance of the <see cref="View"/> class.
+    /// </summary>
+    public View()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="View"/> class.
-        /// </summary>
-        public View()
+        InitializeComponent();
+        Size = new System.Drawing.Size(50, 50);
+
+        var viewModel = new ViewModel();
+
+        var cartesianChart = new CartesianChart
         {
-            InitializeComponent();
-            Size = new System.Drawing.Size(50, 50);
+            Series = viewModel.Series,
 
-            var viewModel = new ViewModel();
+            // out of livecharts properties...
+            Location = new System.Drawing.Point(0, 0),
+            Size = new System.Drawing.Size(50, 50),
+            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
+        };
 
-            var cartesianChart = new CartesianChart
-            {
-                Series = viewModel.Series,
+        cartesianChart.DataPointerDown += Chart_DataPointerDown;
 
-                // out of livecharts properties...
-                Location = new System.Drawing.Point(0, 0),
-                Size = new System.Drawing.Size(50, 50),
-                Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
-            };
+        Controls.Add(cartesianChart);
+    }
 
-            cartesianChart.DataPointerDown += Chart_DataPointerDown;
+    private void Chart_DataPointerDown(
+        IChartView chart,
+        IEnumerable<ChartPoint> points)
+    {
+        // notice in the chart event we are not able to use strongly typed points
+        // but we can cast the point.Context.DataSource to the actual type.
 
-            Controls.Add(cartesianChart);
-        }
-
-        private void Chart_DataPointerDown(
-            IChartView chart,
-            IEnumerable<ChartPoint> points)
+        foreach (var point in points)
         {
-            // notice in the chart event we are not able to use strongly typed points
-            // but we can cast the point.Context.DataSource to the actual type.
-
-            foreach (var point in points)
+            if (point.Context.DataSource is City city)
             {
-                if (point.Context.DataSource is City city)
-                {
-                    Trace.WriteLine($"[chart.dataPointerDownEvent] clicked on {city.Name}");
-                    continue;
-                }
-
-                if (point.Context.DataSource is int integer)
-                {
-                    Trace.WriteLine($"[chart.dataPointerDownEvent] clicked on number {integer}");
-                    continue;
-                }
-
-                // handle more possible types here...
-                // if (point.Context.DataSource is Foo foo)
-                // {
-                //     ...
-                // }
+                Trace.WriteLine($"[chart.dataPointerDownEvent] clicked on {city.Name}");
+                continue;
             }
+
+            if (point.Context.DataSource is int integer)
+            {
+                Trace.WriteLine($"[chart.dataPointerDownEvent] clicked on number {integer}");
+                continue;
+            }
+
+            // handle more possible types here...
+            // if (point.Context.DataSource is Foo foo)
+            // {
+            //     ...
+            // }
         }
     }
 }

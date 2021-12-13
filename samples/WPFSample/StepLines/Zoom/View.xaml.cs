@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace WPFSample.StepLines.Zoom
+namespace WPFSample.StepLines.Zoom;
+
+/// <summary>
+/// Interaction logic for View.xaml
+/// </summary>
+public partial class View : UserControl
 {
-    /// <summary>
-    /// Interaction logic for View.xaml
-    /// </summary>
-    public partial class View : UserControl
+    public View()
     {
-        public View()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

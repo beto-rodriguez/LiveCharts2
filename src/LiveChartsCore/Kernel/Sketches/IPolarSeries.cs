@@ -23,49 +23,48 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.Kernel.Sketches
+namespace LiveChartsCore.Kernel.Sketches;
+
+/// <summary>
+/// Defines a polar series.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="IChartSeries{TDrawingContext}" />
+public interface IPolarSeries<TDrawingContext> : IChartSeries<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a polar series.
+    /// Gets or sets the axis index where the series is scaled in the angle plane, the index must exist 
+    /// in the <see cref="IPolarSeries{TDrawingContext}.ScalesAngleAt"/> collection.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IChartSeries{TDrawingContext}" />
-    public interface IPolarSeries<TDrawingContext> : IChartSeries<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets or sets the axis index where the series is scaled in the angle plane, the index must exist 
-        /// in the <see cref="IPolarSeries{TDrawingContext}.ScalesAngleAt"/> collection.
-        /// </summary>
-        /// <value>
-        /// The index of the axis.
-        /// </value>
-        int ScalesAngleAt { get; set; }
+    /// <value>
+    /// The index of the axis.
+    /// </value>
+    int ScalesAngleAt { get; set; }
 
-        /// <summary>
-        /// Gets or sets the axis index where the series is scaled in the radius plane, the index must exist 
-        /// in the <see cref="IPolarSeries{TDrawingContext}.ScalesRadiusAt"/> collection.
-        /// </summary>
-        /// <value>
-        /// The index of the axis.
-        /// </value>
-        int ScalesRadiusAt { get; set; }
+    /// <summary>
+    /// Gets or sets the axis index where the series is scaled in the radius plane, the index must exist 
+    /// in the <see cref="IPolarSeries{TDrawingContext}.ScalesRadiusAt"/> collection.
+    /// </summary>
+    /// <value>
+    /// The index of the axis.
+    /// </value>
+    int ScalesRadiusAt { get; set; }
 
-        /// <summary>
-        /// Gets or sets the data labels position.
-        /// </summary>
-        /// <value>
-        /// The data labels position.
-        /// </value>
-        PolarLabelsPosition DataLabelsPosition { get; set; }
+    /// <summary>
+    /// Gets or sets the data labels position.
+    /// </summary>
+    /// <value>
+    /// The data labels position.
+    /// </value>
+    PolarLabelsPosition DataLabelsPosition { get; set; }
 
-        /// <summary>
-        /// Gets the series bounds.
-        /// </summary>
-        /// <param name="chart">The chart.</param>
-        /// <param name="angleAxis">The angle axis.</param>
-        /// <param name="radiusAxis">The radius axis.</param>
-        /// <returns>the series bounds</returns>
-        SeriesBounds GetBounds(PolarChart<TDrawingContext> chart, IPolarAxis angleAxis, IPolarAxis radiusAxis);
-    }
+    /// <summary>
+    /// Gets the series bounds.
+    /// </summary>
+    /// <param name="chart">The chart.</param>
+    /// <param name="angleAxis">The angle axis.</param>
+    /// <param name="radiusAxis">The radius axis.</param>
+    /// <returns>the series bounds</returns>
+    SeriesBounds GetBounds(PolarChart<TDrawingContext> chart, IPolarAxis angleAxis, IPolarAxis radiusAxis);
 }

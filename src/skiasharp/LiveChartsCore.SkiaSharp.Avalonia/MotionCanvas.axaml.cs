@@ -35,179 +35,178 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 using a = Avalonia.Media;
 
-namespace LiveChartsCore.SkiaSharpView.Avalonia
+namespace LiveChartsCore.SkiaSharpView.Avalonia;
+
+/// <summary>
+/// The motion canvas control for avalonia, <see cref="MotionCanvas{TDrawingContext}"/>.
+/// </summary>
+public class MotionCanvas : UserControl
 {
     /// <summary>
-    /// The motion canvas control for avalonia, <see cref="MotionCanvas{TDrawingContext}"/>.
+    /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
     /// </summary>
-    public class MotionCanvas : UserControl
+    public MotionCanvas()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
-        /// </summary>
-        public MotionCanvas()
+        InitializeComponent();
+        CanvasCore.Invalidated += OnCanvasCoreInvalidated;
+    }
+
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
+    }
+
+    /// <summary>
+    /// The paint tasks property
+    /// </summary>
+    public static readonly AvaloniaProperty<List<PaintSchedule<SkiaSharpDrawingContext>>> PaintTasksProperty =
+        AvaloniaProperty.Register<MotionCanvas, List<PaintSchedule<SkiaSharpDrawingContext>>>(nameof(PaintTasks), inherits: true);
+
+    /// <summary>
+    /// The back color property
+    /// </summary>
+    public static readonly AvaloniaProperty<SKColor> BackColorProperty =
+        AvaloniaProperty.Register<MotionCanvas, SKColor>(nameof(BackColor), defaultValue: new SKColor(255, 255, 255, 0), inherits: true);
+
+    /// <summary>
+    /// Gets or sets the paint tasks.
+    /// </summary>
+    /// <value>
+    /// The paint tasks.
+    /// </value>
+    public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
+    {
+        get => (List<PaintSchedule<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty);
+        set => SetValue(PaintTasksProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the frames per second.
+    /// </summary>
+    /// <value>
+    /// The frames per second.
+    /// </value>
+    public double FramesPerSecond { get; set; }
+
+    /// <summary>
+    /// Gets or sets the color of the back.
+    /// </summary>
+    /// <value>
+    /// The color of the back.
+    /// </value>
+    public SKColor BackColor
+    {
+        get => (SKColor)GetValue(BackColorProperty);
+        set => SetValue(BackColorProperty, value);
+    }
+
+    /// <summary>
+    /// Gets the canvas core.
+    /// </summary>
+    /// <value>
+    /// The canvas core.
+    /// </value>
+    public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
+
+    /// <summary>
+    /// Renders the control.
+    /// </summary>
+    /// <param name="context"></param>
+    public override void Render(a.DrawingContext context)
+    {
+        var drawOperation = new CustomDrawOp(this, CanvasCore, new Rect(0, 0, Bounds.Width, Bounds.Height), BackColor);
+        context.Custom(drawOperation);
+    }
+
+    /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})" />
+    protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
+    {
+        if (change.Property.Name == nameof(PaintTasks))
         {
-            InitializeComponent();
-            CanvasCore.Invalidated += OnCanvasCoreInvalidated;
-        }
+            var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>>();
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
-
-        /// <summary>
-        /// The paint tasks property
-        /// </summary>
-        public static readonly AvaloniaProperty<List<PaintSchedule<SkiaSharpDrawingContext>>> PaintTasksProperty =
-            AvaloniaProperty.Register<MotionCanvas, List<PaintSchedule<SkiaSharpDrawingContext>>>(nameof(PaintTasks), inherits: true);
-
-        /// <summary>
-        /// The back color property
-        /// </summary>
-        public static readonly AvaloniaProperty<SKColor> BackColorProperty =
-            AvaloniaProperty.Register<MotionCanvas, SKColor>(nameof(BackColor), defaultValue: new SKColor(255, 255, 255, 0), inherits: true);
-
-        /// <summary>
-        /// Gets or sets the paint tasks.
-        /// </summary>
-        /// <value>
-        /// The paint tasks.
-        /// </value>
-        public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
-        {
-            get => (List<PaintSchedule<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty);
-            set => SetValue(PaintTasksProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets the frames per second.
-        /// </summary>
-        /// <value>
-        /// The frames per second.
-        /// </value>
-        public double FramesPerSecond { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color of the back.
-        /// </summary>
-        /// <value>
-        /// The color of the back.
-        /// </value>
-        public SKColor BackColor
-        {
-            get => (SKColor)GetValue(BackColorProperty);
-            set => SetValue(BackColorProperty, value);
-        }
-
-        /// <summary>
-        /// Gets the canvas core.
-        /// </summary>
-        /// <value>
-        /// The canvas core.
-        /// </value>
-        public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
-
-        /// <summary>
-        /// Renders the control.
-        /// </summary>
-        /// <param name="context"></param>
-        public override void Render(a.DrawingContext context)
-        {
-            var drawOperation = new CustomDrawOp(this, CanvasCore, new Rect(0, 0, Bounds.Width, Bounds.Height), BackColor);
-            context.Custom(drawOperation);
-        }
-
-        /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})" />
-        protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
-        {
-            if (change.Property.Name == nameof(PaintTasks))
+            foreach (var item in PaintTasks)
             {
-                var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>>();
-
-                foreach (var item in PaintTasks)
-                {
-                    item.PaintTask.SetGeometries(CanvasCore, item.Geometries);
-                    _ = tasks.Add(item.PaintTask);
-                }
-
-                CanvasCore.SetPaintTasks(tasks);
+                item.PaintTask.SetGeometries(CanvasCore, item.Geometries);
+                _ = tasks.Add(item.PaintTask);
             }
 
-            base.OnPropertyChanged(change);
+            CanvasCore.SetPaintTasks(tasks);
         }
 
-        private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
+        base.OnPropertyChanged(change);
+    }
+
+    private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
+    {
+        InvalidateVisual();
+    }
+
+    //private void InvalidateOnUIThread()
+    //{
+    //    _ = Dispatcher.UIThread.InvokeAsync(InvalidateVisual);
+    //}
+
+    // based on:
+    // https://github.com/AvaloniaUI/Avalonia/blob/554aaec5e5cc96c0b4318b6ed1fbf8159f442889/samples/RenderDemo/Pages/CustomSkiaPage.cs
+    private class CustomDrawOp : ICustomDrawOperation
+    {
+        private readonly MotionCanvas _avaloniaControl;
+        private readonly MotionCanvas<SkiaSharpDrawingContext> _motionCanvas;
+        private readonly SKColor _backColor;
+
+        public CustomDrawOp(
+            MotionCanvas avaloniaControl, MotionCanvas<SkiaSharpDrawingContext> motionCanvas, Rect bounds, SKColor backColor)
         {
-            InvalidateVisual();
+            _avaloniaControl = avaloniaControl;
+            _motionCanvas = motionCanvas;
+            _backColor = backColor;
+            Bounds = bounds;
         }
 
-        //private void InvalidateOnUIThread()
-        //{
-        //    _ = Dispatcher.UIThread.InvokeAsync(InvalidateVisual);
-        //}
+        public void Dispose() { }
 
-        // based on:
-        // https://github.com/AvaloniaUI/Avalonia/blob/554aaec5e5cc96c0b4318b6ed1fbf8159f442889/samples/RenderDemo/Pages/CustomSkiaPage.cs
-        private class CustomDrawOp : ICustomDrawOperation
+        public Rect Bounds { get; }
+
+        public bool HitTest(Point p)
         {
-            private readonly MotionCanvas _avaloniaControl;
-            private readonly MotionCanvas<SkiaSharpDrawingContext> _motionCanvas;
-            private readonly SKColor _backColor;
+            return false;
+        }
 
-            public CustomDrawOp(
-                MotionCanvas avaloniaControl, MotionCanvas<SkiaSharpDrawingContext> motionCanvas, Rect bounds, SKColor backColor)
-            {
-                _avaloniaControl = avaloniaControl;
-                _motionCanvas = motionCanvas;
-                _backColor = backColor;
-                Bounds = bounds;
-            }
+        public bool Equals(ICustomDrawOperation? other)
+        {
+            return false;
+        }
 
-            public void Dispose() { }
-
-            public Rect Bounds { get; }
-
-            public bool HitTest(Point p)
-            {
-                return false;
-            }
-
-            public bool Equals(ICustomDrawOperation? other)
-            {
-                return false;
-            }
-
-            public void Render(IDrawingContextImpl context)
-            {
-                if (context is not ISkiaDrawingContextImpl skiaContext)
-                    throw new Exception("SkiaSharp is not supported.");
+        public void Render(IDrawingContextImpl context)
+        {
+            if (context is not ISkiaDrawingContextImpl skiaContext)
+                throw new Exception("SkiaSharp is not supported.");
 
 #if DEBUG
-                if (LiveCharts.EnableLogging)
-                {
-                    Trace.WriteLine(
-                    $"[rendering] ".PadRight(60) +
-                    $"tread: {Environment.CurrentManagedThreadId}");
-                }
+            if (LiveCharts.EnableLogging)
+            {
+                Trace.WriteLine(
+                $"[rendering] ".PadRight(60) +
+                $"tread: {Environment.CurrentManagedThreadId}");
+            }
 #endif
 
-                // why isn't the render method called on the UI thread always?
-                // as a workaround we lock the canvas to draw the frame.
-                lock (_motionCanvas.Sync)
-                {
-                    _motionCanvas.DrawFrame(
-                       new AvaloniaDrawingContext(
-                           _motionCanvas, new SKImageInfo((int)Bounds.Width, (int)Bounds.Height), skiaContext.SkSurface, skiaContext.SkCanvas)
-                       {
-                           BackColor = _backColor
-                       });
-                }
-
-                if (_motionCanvas.IsValid) return;
-
-                _avaloniaControl.InvalidateVisual();
+            // why isn't the render method called on the UI thread always?
+            // as a workaround we lock the canvas to draw the frame.
+            lock (_motionCanvas.Sync)
+            {
+                _motionCanvas.DrawFrame(
+                   new AvaloniaDrawingContext(
+                       _motionCanvas, new SKImageInfo((int)Bounds.Width, (int)Bounds.Height), skiaContext.SkSurface, skiaContext.SkCanvas)
+                   {
+                       BackColor = _backColor
+                   });
             }
+
+            if (_motionCanvas.IsValid) return;
+
+            _avaloniaControl.InvalidateVisual();
         }
     }
 }

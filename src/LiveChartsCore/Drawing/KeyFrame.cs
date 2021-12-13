@@ -22,26 +22,25 @@
 
 using System;
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Drawing;
+
+/// <summary>
+/// Defines a key frame.
+/// </summary>
+public class KeyFrame
 {
     /// <summary>
-    /// Defines a key frame.
+    /// The time, from 0 to 1.
     /// </summary>
-    public class KeyFrame
-    {
-        /// <summary>
-        /// The time, from 0 to 1.
-        /// </summary>
-        public float Time { get; set; }
+    public float Time { get; set; }
 
-        /// <summary>
-        /// The value from 0 to 1.
-        /// </summary>
-        public float Value { get; set; }
+    /// <summary>
+    /// The value from 0 to 1.
+    /// </summary>
+    public float Value { get; set; }
 
-        /// <summary>
-        /// EasingFunction.
-        /// </summary>
-        public Func<float, float> EasingFunction { get; set; } = EasingFunctions.Lineal;
-    }
+    /// <summary>
+    /// EasingFunction.
+    /// </summary>
+    public Func<float, float> EasingFunction { get; set; } = EasingFunctions.Lineal;
 }

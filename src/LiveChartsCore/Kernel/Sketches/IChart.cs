@@ -22,72 +22,71 @@
 
 using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.Kernel.Sketches
+namespace LiveChartsCore.Kernel.Sketches;
+
+/// <summary>
+/// Defines a chart.
+/// </summary>
+public interface IChart
 {
     /// <summary>
-    /// Defines a chart.
+    /// Gets or sets the measure work.
     /// </summary>
-    public interface IChart
-    {
-        /// <summary>
-        /// Gets or sets the measure work.
-        /// </summary>
-        /// <value>
-        /// The measure work.
-        /// </value>
-        object MeasureWork { get; }
+    /// <value>
+    /// The measure work.
+    /// </value>
+    object MeasureWork { get; }
 
-        /// <summary>
-        /// Gets the chart view.
-        /// </summary>
-        /// <value>
-        /// The view.
-        /// </value>
-        IChartView View { get; }
+    /// <summary>
+    /// Gets the chart view.
+    /// </summary>
+    /// <value>
+    /// The view.
+    /// </value>
+    IChartView View { get; }
 
-        /// <summary>
-        /// Gets the canvas.
-        /// </summary>
-        /// <value>
-        /// The canvas.
-        /// </value>
-        object Canvas { get; }
+    /// <summary>
+    /// Gets the canvas.
+    /// </summary>
+    /// <value>
+    /// The canvas.
+    /// </value>
+    object Canvas { get; }
 
-        /// <summary>
-        /// Gets the legend position.
-        /// </summary>
-        /// <value>
-        /// The legend position.
-        /// </value>
-        LegendPosition LegendPosition { get; }
+    /// <summary>
+    /// Gets the legend position.
+    /// </summary>
+    /// <value>
+    /// The legend position.
+    /// </value>
+    LegendPosition LegendPosition { get; }
 
-        /// <summary>
-        /// Gets the legend orientation.
-        /// </summary>
-        /// <value>
-        /// The legend orientation.
-        /// </value>
-        LegendOrientation LegendOrientation { get; }
+    /// <summary>
+    /// Gets the legend orientation.
+    /// </summary>
+    /// <value>
+    /// The legend orientation.
+    /// </value>
+    LegendOrientation LegendOrientation { get; }
 
-        /// <summary>
-        /// Gets the toolTip position.
-        /// </summary>
-        /// <value>
-        /// The toolTip position.
-        /// </value>
-        TooltipPosition TooltipPosition { get; }
+    /// <summary>
+    /// Gets the toolTip position.
+    /// </summary>
+    /// <value>
+    /// The toolTip position.
+    /// </value>
+    TooltipPosition TooltipPosition { get; }
 
-        /// <summary>
-        /// Gets the toolTip finding strategy.
-        /// </summary>
-        /// <value>
-        /// The toolTip finding strategy.
-        /// </value>
-        TooltipFindingStrategy TooltipFindingStrategy { get; }
+    /// <summary>
+    /// Gets the toolTip finding strategy.
+    /// </summary>
+    /// <value>
+    /// The toolTip finding strategy.
+    /// </value>
+    TooltipFindingStrategy TooltipFindingStrategy { get; }
 
-        /// <summary>
-        /// Updates the chart in the user interface.
-        /// </summary>
-        void Update(ChartUpdateParams? chartUpdateParams = null);
-    }
+    /// <summary>
+    /// Updates the chart in the user interface.
+    /// </summary>
+    void Update(ChartUpdateParams? chartUpdateParams = null);
 }

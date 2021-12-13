@@ -25,127 +25,126 @@ using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 
-namespace LiveChartsCore
+namespace LiveChartsCore;
+
+/// <summary>
+/// Defines a draw margin frame visual in a chart.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+public abstract class DrawMarginFrame<TDrawingContext> : ChartElement<TDrawingContext>, INotifyPropertyChanged
+    where TDrawingContext : DrawingContext
 {
+    private IPaint<TDrawingContext>? _stroke = null;
+    private IPaint<TDrawingContext>? _fill = null;
+
     /// <summary>
-    /// Defines a draw margin frame visual in a chart.
+    /// Gets or sets the stroke.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public abstract class DrawMarginFrame<TDrawingContext> : ChartElement<TDrawingContext>, INotifyPropertyChanged
-        where TDrawingContext : DrawingContext
+    /// <value>
+    /// The stroke.
+    /// </value>
+    public IPaint<TDrawingContext>? Stroke
     {
-        private IPaint<TDrawingContext>? _stroke = null;
-        private IPaint<TDrawingContext>? _fill = null;
-
-        /// <summary>
-        /// Gets or sets the stroke.
-        /// </summary>
-        /// <value>
-        /// The stroke.
-        /// </value>
-        public IPaint<TDrawingContext>? Stroke
-        {
-            get => _stroke;
-            set => SetPaintProperty(ref _stroke, value, true);
-        }
-
-        /// <summary>
-        /// Gets or sets the fill.
-        /// </summary>
-        /// <value>
-        /// The fill.
-        /// </value>
-        public IPaint<TDrawingContext>? Fill
-        {
-            get => _fill;
-            set => SetPaintProperty(ref _fill, value);
-        }
-
-        /// <summary>
-        /// Occurs when a property value changes.
-        /// </summary>
-        /// <returns></returns>
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        /// <summary>
-        /// Gets the paint tasks.
-        /// </summary>
-        /// <returns></returns>
-        protected override IPaint<TDrawingContext>?[] GetPaintTasks()
-        {
-            return new[] { _stroke, _fill };
-        }
-
-        /// <summary>
-        /// Called when the fill changes.
-        /// </summary>
-        /// <param name="propertyName"></param>
-        protected override void OnPaintChanged(string? propertyName)
-        {
-            OnPropertyChanged(propertyName);
-        }
-
-        /// <summary>
-        /// Called when a property changes.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        /// <returns></returns>
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        get => _stroke;
+        set => SetPaintProperty(ref _stroke, value, true);
     }
 
     /// <summary>
-    /// Defines a draw margin frame visual in a chart.
+    /// Gets or sets the fill.
     /// </summary>
-    /// <typeparam name="TSizedGeometry">The type of the sized geometry.</typeparam>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public abstract class DrawMarginFrame<TSizedGeometry, TDrawingContext> : DrawMarginFrame<TDrawingContext>
-        where TDrawingContext : DrawingContext
-        where TSizedGeometry : ISizedGeometry<TDrawingContext>, new()
+    /// <value>
+    /// The fill.
+    /// </value>
+    public IPaint<TDrawingContext>? Fill
     {
-        private TSizedGeometry? _fillSizedGeometry;
-        private TSizedGeometry? _strokeSizedGeometry;
+        get => _fill;
+        set => SetPaintProperty(ref _fill, value);
+    }
 
-        /// <summary>
-        /// Measures the specified chart.
-        /// </summary>
-        /// <param name="chart">The chart.</param>
-        public override void Measure(Chart<TDrawingContext> chart)
+    /// <summary>
+    /// Occurs when a property value changes.
+    /// </summary>
+    /// <returns></returns>
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    /// <summary>
+    /// Gets the paint tasks.
+    /// </summary>
+    /// <returns></returns>
+    protected override IPaint<TDrawingContext>?[] GetPaintTasks()
+    {
+        return new[] { _stroke, _fill };
+    }
+
+    /// <summary>
+    /// Called when the fill changes.
+    /// </summary>
+    /// <param name="propertyName"></param>
+    protected override void OnPaintChanged(string? propertyName)
+    {
+        OnPropertyChanged(propertyName);
+    }
+
+    /// <summary>
+    /// Called when a property changes.
+    /// </summary>
+    /// <param name="propertyName">Name of the property.</param>
+    /// <returns></returns>
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+}
+
+/// <summary>
+/// Defines a draw margin frame visual in a chart.
+/// </summary>
+/// <typeparam name="TSizedGeometry">The type of the sized geometry.</typeparam>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+public abstract class DrawMarginFrame<TSizedGeometry, TDrawingContext> : DrawMarginFrame<TDrawingContext>
+    where TDrawingContext : DrawingContext
+    where TSizedGeometry : ISizedGeometry<TDrawingContext>, new()
+{
+    private TSizedGeometry? _fillSizedGeometry;
+    private TSizedGeometry? _strokeSizedGeometry;
+
+    /// <summary>
+    /// Measures the specified chart.
+    /// </summary>
+    /// <param name="chart">The chart.</param>
+    public override void Measure(Chart<TDrawingContext> chart)
+    {
+        var drawLocation = chart.DrawMarginLocation;
+        var drawMarginSize = chart.DrawMarginSize;
+
+        if (Fill is not null)
         {
-            var drawLocation = chart.DrawMarginLocation;
-            var drawMarginSize = chart.DrawMarginSize;
+            Fill.ZIndex = -3;
 
-            if (Fill is not null)
-            {
-                Fill.ZIndex = -3;
+            _fillSizedGeometry ??= new TSizedGeometry();
 
-                _fillSizedGeometry ??= new TSizedGeometry();
+            _fillSizedGeometry.X = drawLocation.X;
+            _fillSizedGeometry.Y = drawLocation.Y;
+            _fillSizedGeometry.Width = drawMarginSize.Width;
+            _fillSizedGeometry.Height = drawMarginSize.Height;
 
-                _fillSizedGeometry.X = drawLocation.X;
-                _fillSizedGeometry.Y = drawLocation.Y;
-                _fillSizedGeometry.Width = drawMarginSize.Width;
-                _fillSizedGeometry.Height = drawMarginSize.Height;
+            Fill.AddGeometryToPaintTask(chart.Canvas, _fillSizedGeometry);
+            chart.Canvas.AddDrawableTask(Fill);
+        }
 
-                Fill.AddGeometryToPaintTask(chart.Canvas, _fillSizedGeometry);
-                chart.Canvas.AddDrawableTask(Fill);
-            }
+        if (Stroke is not null)
+        {
+            Stroke.ZIndex = -2;
 
-            if (Stroke is not null)
-            {
-                Stroke.ZIndex = -2;
+            _strokeSizedGeometry ??= new TSizedGeometry();
 
-                _strokeSizedGeometry ??= new TSizedGeometry();
+            _strokeSizedGeometry.X = drawLocation.X;
+            _strokeSizedGeometry.Y = drawLocation.Y;
+            _strokeSizedGeometry.Width = drawMarginSize.Width;
+            _strokeSizedGeometry.Height = drawMarginSize.Height;
 
-                _strokeSizedGeometry.X = drawLocation.X;
-                _strokeSizedGeometry.Y = drawLocation.Y;
-                _strokeSizedGeometry.Width = drawMarginSize.Width;
-                _strokeSizedGeometry.Height = drawMarginSize.Height;
-
-                Stroke.AddGeometryToPaintTask(chart.Canvas, _strokeSizedGeometry);
-                chart.Canvas.AddDrawableTask(Stroke);
-            }
+            Stroke.AddGeometryToPaintTask(chart.Canvas, _strokeSizedGeometry);
+            chart.Canvas.AddDrawableTask(Stroke);
         }
     }
 }

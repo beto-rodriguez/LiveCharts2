@@ -5,11 +5,11 @@ using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System.Collections.Generic;
 
-namespace ViewModelsSamples.Bars.RowsWithLabels
+namespace ViewModelsSamples.Bars.RowsWithLabels;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        public List<ISeries> Series { get; set; } = new List<ISeries>
+    public List<ISeries> Series { get; set; } = new List<ISeries>
         {
             new RowSeries<int>
             {
@@ -36,5 +36,4 @@ namespace ViewModelsSamples.Bars.RowsWithLabels
                 DataLabelsPosition = DataLabelsPosition.Start
             }
         };
-    }
 }

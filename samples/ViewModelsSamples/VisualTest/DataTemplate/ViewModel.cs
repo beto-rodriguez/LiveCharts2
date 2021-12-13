@@ -3,13 +3,13 @@ using LiveChartsCore.SkiaSharpView;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace ViewModelsSamples.VisualTest.DataTemplate
+namespace ViewModelsSamples.VisualTest.DataTemplate;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        public IEnumerable<IEnumerable<ISeries>> Models { get; set; }
-            = new List<IEnumerable<ISeries>>
-            {
+    public IEnumerable<IEnumerable<ISeries>> Models { get; set; }
+        = new List<IEnumerable<ISeries>>
+        {
                 new ObservableCollection<ISeries>
                 {
                     new LineSeries<double>
@@ -31,6 +31,5 @@ namespace ViewModelsSamples.VisualTest.DataTemplate
                         Values = new ObservableCollection<double> { 2, 5, 4, -2, 4, -3, 5 }
                     }
                 }
-            };
-    }
+        };
 }

@@ -20,23 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Geo
+namespace LiveChartsCore.Geo;
+
+/// <summary>
+/// Map projections.
+/// </summary>
+public enum MapProjection
 {
     /// <summary>
-    /// Map projections.
+    /// The default projection, it only translates longitude and latitude coordinates to
+    /// UI coordinates starting at 0, 0 (up-left corner)
     /// </summary>
-    public enum MapProjection
-    {
-        /// <summary>
-        /// The default projection, it only translates longitude and latitude coordinates to
-        /// UI coordinates starting at 0, 0 (up-left corner)
-        /// </summary>
-        Default,
+    Default,
 
-        /// <summary>
-        /// The Mercator projections, it is a popular projection used by many map engines like
-        /// Google maps or Bing maps.
-        /// </summary>
-        Mercator
-    }
+    /// <summary>
+    /// The Mercator projections, it is a popular projection used by many map engines like
+    /// Google maps or Bing maps.
+    /// </summary>
+    Mercator
 }

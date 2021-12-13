@@ -26,97 +26,96 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
-namespace LiveChartsCore.SkiaSharpView.Blazor
+namespace LiveChartsCore.SkiaSharpView.Blazor;
+
+/// <inheritdoc cref="IChartLegend{TDrawingContext}"/>
+public partial class DefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IDisposable
 {
-    /// <inheritdoc cref="IChartLegend{TDrawingContext}"/>
-    public partial class DefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IDisposable
+    [Inject]
+    private IJSRuntime JS { get; set; } = null!;
+
+    private DomJsInterop? _dom;
+    private ElementReference _wrapper;
+
+    /// <summary>
+    /// Called when the control renders.
+    /// </summary>
+    /// <param name="firstRender"></param>
+    protected override void OnAfterRender(bool firstRender)
     {
-        [Inject]
-        private IJSRuntime JS { get; set; } = null!;
+        base.OnAfterRender(firstRender);
 
-        private DomJsInterop? _dom;
-        private ElementReference _wrapper;
+        if (_dom is null) _dom = new DomJsInterop(JS);
+    }
 
-        /// <summary>
-        /// Called when the control renders.
-        /// </summary>
-        /// <param name="firstRender"></param>
-        protected override void OnAfterRender(bool firstRender)
+    /// <summary>
+    /// Gets or sets the legend template.
+    /// </summary>
+    [Parameter]
+    public RenderFragment<ISeries[]>? LegendTemplate { get; set; }
+
+    /// <summary>
+    /// Gets or sets the series.
+    /// </summary>
+    public ISeries[] Series { get; set; } = Array.Empty<ISeries>();
+
+    /// <summary>
+    /// Gets or sets the orientation class.
+    /// </summary>
+    public string OrientationClass { get; set; } = string.Empty;
+
+    async void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
+    {
+        var series = chart.ChartSeries;
+        var legendOrientation = chart.LegendOrientation;
+        var legendPosition = chart.LegendPosition;
+
+        Series = series.ToArray();
+
+        var blazorChart = (IBlazorChart)chart.View;
+
+        // by default the chart css is a flex box with row direction
+
+        switch (legendPosition)
         {
-            base.OnAfterRender(firstRender);
-
-            if (_dom is null) _dom = new DomJsInterop(JS);
+            case LegendPosition.Hidden:
+                blazorChart.LegendClass = "closed";
+                break;
+            case LegendPosition.Top:
+                blazorChart.LegendClass = "start";
+                blazorChart.ContainerClass = "column";
+                if (legendOrientation == LegendOrientation.Auto) OrientationClass = "";
+                break;
+            case LegendPosition.Left:
+                blazorChart.LegendClass = "start";
+                blazorChart.ContainerClass = "";
+                if (legendOrientation == LegendOrientation.Auto) OrientationClass = "column";
+                break;
+            case LegendPosition.Right:
+                blazorChart.LegendClass = "";
+                blazorChart.ContainerClass = "";
+                if (legendOrientation == LegendOrientation.Auto) OrientationClass = "column";
+                break;
+            case LegendPosition.Bottom:
+                blazorChart.LegendClass = "";
+                blazorChart.ContainerClass = "column";
+                if (legendOrientation == LegendOrientation.Auto) OrientationClass = "";
+                break;
+            default:
+                break;
         }
 
-        /// <summary>
-        /// Gets or sets the legend template.
-        /// </summary>
-        [Parameter]
-        public RenderFragment<ISeries[]>? LegendTemplate { get; set; }
+        if (legendOrientation != LegendOrientation.Auto)
+            OrientationClass = legendOrientation == LegendOrientation.Horizontal
+                ? ""
+                : "column";
 
-        /// <summary>
-        /// Gets or sets the series.
-        /// </summary>
-        public ISeries[] Series { get; set; } = Array.Empty<ISeries>();
+        await InvokeAsync(StateHasChanged);
+    }
 
-        /// <summary>
-        /// Gets or sets the orientation class.
-        /// </summary>
-        public string OrientationClass { get; set; } = string.Empty;
-
-        async void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
-        {
-            var series = chart.ChartSeries;
-            var legendOrientation = chart.LegendOrientation;
-            var legendPosition = chart.LegendPosition;
-
-            Series = series.ToArray();
-
-            var blazorChart = (IBlazorChart)chart.View;
-
-            // by default the chart css is a flex box with row direction
-
-            switch (legendPosition)
-            {
-                case LegendPosition.Hidden:
-                    blazorChart.LegendClass = "closed";
-                    break;
-                case LegendPosition.Top:
-                    blazorChart.LegendClass = "start";
-                    blazorChart.ContainerClass = "column";
-                    if (legendOrientation == LegendOrientation.Auto) OrientationClass = "";
-                    break;
-                case LegendPosition.Left:
-                    blazorChart.LegendClass = "start";
-                    blazorChart.ContainerClass = "";
-                    if (legendOrientation == LegendOrientation.Auto) OrientationClass = "column";
-                    break;
-                case LegendPosition.Right:
-                    blazorChart.LegendClass = "";
-                    blazorChart.ContainerClass = "";
-                    if (legendOrientation == LegendOrientation.Auto) OrientationClass = "column";
-                    break;
-                case LegendPosition.Bottom:
-                    blazorChart.LegendClass = "";
-                    blazorChart.ContainerClass = "column";
-                    if (legendOrientation == LegendOrientation.Auto) OrientationClass = "";
-                    break;
-                default:
-                    break;
-            }
-
-            if (legendOrientation != LegendOrientation.Auto)
-                OrientationClass = legendOrientation == LegendOrientation.Horizontal
-                    ? ""
-                    : "column";
-
-            await InvokeAsync(StateHasChanged);
-        }
-
-        async void IDisposable.Dispose()
-        {
-            if (_dom is null) return;
-            await ((IAsyncDisposable)_dom).DisposeAsync();
-        }
+    async void IDisposable.Dispose()
+    {
+        if (_dom is null) return;
+        await ((IAsyncDisposable)_dom).DisposeAsync();
     }
 }

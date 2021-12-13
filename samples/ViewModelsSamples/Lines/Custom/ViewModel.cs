@@ -1,15 +1,14 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System.Collections.Generic;
 
-namespace ViewModelsSamples.Lines.Custom
+namespace ViewModelsSamples.Lines.Custom;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        public List<ISeries> Series { get; set; } = new List<ISeries>
+    public List<ISeries> Series { get; set; } = new List<ISeries>
         {
             // use the second argument type to specify the geometry to draw for every point
             // there are already many predefined geometries in the
@@ -33,5 +32,4 @@ namespace ViewModelsSamples.Lines.Custom
                 GeometrySize = 40
             }
         };
-    }
 }

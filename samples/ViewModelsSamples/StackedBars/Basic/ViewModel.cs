@@ -5,11 +5,11 @@ using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System.Collections.Generic;
 
-namespace ViewModelsSamples.StackedBars.Basic
+namespace ViewModelsSamples.StackedBars.Basic;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        public List<ISeries> Series { get; set; } = new List<ISeries>
+    public List<ISeries> Series { get; set; } = new List<ISeries>
         {
             new StackedColumnSeries<int>
             {
@@ -36,5 +36,4 @@ namespace ViewModelsSamples.StackedBars.Basic
                 DataLabelsPosition = DataLabelsPosition.Middle
             }
         };
-    }
 }

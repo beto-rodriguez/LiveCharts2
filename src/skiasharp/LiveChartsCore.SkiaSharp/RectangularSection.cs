@@ -23,11 +23,10 @@
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-namespace LiveChartsCore.SkiaSharpView
-{
-    /// <summary>
-    /// Defines a rectangular section in a Cartesian chart.
-    /// </summary>
-    public class RectangularSection : Section<RectangleGeometry, SkiaSharpDrawingContext>
-    { }
-}
+namespace LiveChartsCore.SkiaSharpView;
+
+/// <summary>
+/// Defines a rectangular section in a Cartesian chart.
+/// </summary>
+public class RectangularSection : Section<RectangleGeometry, SkiaSharpDrawingContext>
+{ }

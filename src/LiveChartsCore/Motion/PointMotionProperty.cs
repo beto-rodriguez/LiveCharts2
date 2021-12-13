@@ -22,39 +22,38 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Motion
+namespace LiveChartsCore.Motion;
+
+/// <summary>
+/// Defines the <see cref="LvcPoint"/> motion property class.
+/// </summary>
+public class PointMotionProperty : MotionProperty<LvcPoint>
 {
     /// <summary>
-    /// Defines the <see cref="LvcPoint"/> motion property class.
+    /// Initializes a new instance of the <see cref="PointMotionProperty"/> class.
     /// </summary>
-    public class PointMotionProperty : MotionProperty<LvcPoint>
+    /// <param name="propertyName">Name of the property.</param>
+    public PointMotionProperty(string propertyName)
+        : base(propertyName)
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FloatMotionProperty"/> class.
+    /// </summary>
+    /// <param name="propertyName">Name of the property.</param>
+    /// <param name="value">The value.</param>
+    public PointMotionProperty(string propertyName, LvcPoint value)
+        : base(propertyName)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PointMotionProperty"/> class.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        public PointMotionProperty(string propertyName)
-            : base(propertyName)
-        { }
+        fromValue = value;
+        toValue = value;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FloatMotionProperty"/> class.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        /// <param name="value">The value.</param>
-        public PointMotionProperty(string propertyName, LvcPoint value)
-            : base(propertyName)
-        {
-            fromValue = value;
-            toValue = value;
-        }
-
-        /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
-        protected override LvcPoint OnGetMovement(float progress)
-        {
-            return new LvcPoint(
-                fromValue.X + progress * (toValue.X - fromValue.X),
-                fromValue.Y + progress * (toValue.Y - fromValue.Y));
-        }
+    /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
+    protected override LvcPoint OnGetMovement(float progress)
+    {
+        return new LvcPoint(
+            fromValue.X + progress * (toValue.X - fromValue.X),
+            fromValue.Y + progress * (toValue.Y - fromValue.Y));
     }
 }

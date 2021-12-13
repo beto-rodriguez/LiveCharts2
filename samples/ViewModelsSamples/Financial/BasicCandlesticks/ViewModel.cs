@@ -5,13 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace ViewModelsSamples.Financial.BasicCandlesticks
+namespace ViewModelsSamples.Financial.BasicCandlesticks;
+
+public class ViewModel
 {
-    public class ViewModel
+    // we have to let the chart know that the X axis in days.
+    public Axis[] XAxes { get; set; } = new[]
     {
-        // we have to let the chart know that the X axis in days.
-        public Axis[] XAxes { get; set; } = new[]
-        {
             new Axis
             {
                 LabelsRotation = 15,
@@ -23,7 +23,7 @@ namespace ViewModelsSamples.Financial.BasicCandlesticks
             }
         };
 
-        public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
+    public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
         {
             new CandlesticksSeries<FinancialPoint>
             {
@@ -54,5 +54,4 @@ namespace ViewModelsSamples.Financial.BasicCandlesticks
                 }
             }
         };
-    }
 }

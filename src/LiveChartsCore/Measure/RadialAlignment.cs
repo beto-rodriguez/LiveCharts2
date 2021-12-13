@@ -20,26 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Measure
+namespace LiveChartsCore.Measure;
+
+/// <summary>
+/// Defines the radial alignment.
+/// </summary>
+public enum RadialAlignment
 {
     /// <summary>
-    /// Defines the radial alignment.
+    /// Aligns the element to the outer radius.
     /// </summary>
-    public enum RadialAlignment
-    {
-        /// <summary>
-        /// Aligns the element to the outer radius.
-        /// </summary>
-        Outer,
+    Outer,
 
-        /// <summary>
-        /// Aligns the element to the center of the outer and inner radius.
-        /// </summary>
-        Center,
+    /// <summary>
+    /// Aligns the element to the center of the outer and inner radius.
+    /// </summary>
+    Center,
 
-        /// <summary>
-        /// Aligns the element to the inner radius.
-        /// </summary>
-        Inner
-    }
+    /// <summary>
+    /// Aligns the element to the inner radius.
+    /// </summary>
+    Inner
 }

@@ -6,13 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace ViewModelsSamples.Axes.TimeSpanScaled
+namespace ViewModelsSamples.Axes.TimeSpanScaled;
+
+public class ViewModel
 {
-    public class ViewModel
+    public ViewModel()
     {
-        public ViewModel()
-        {
-            Series = new ObservableCollection<ISeries>
+        Series = new ObservableCollection<ISeries>
             {
                 new ColumnSeries<TimeSpanPoint>
                 {
@@ -27,11 +27,11 @@ namespace ViewModelsSamples.Axes.TimeSpanScaled
                 }
             };
 
-            // The UnitWidth is only required for column or financial series
-            // because the library needs to know the width of each column, by default the
-            // width is 1, but when you are using a different scale, you must let the library know it.
+        // The UnitWidth is only required for column or financial series
+        // because the library needs to know the width of each column, by default the
+        // width is 1, but when you are using a different scale, you must let the library know it.
 
-            XAxes = new List<Axis>
+        XAxes = new List<Axis>
             {
                 new Axis
                 {
@@ -51,10 +51,9 @@ namespace ViewModelsSamples.Axes.TimeSpanScaled
                     // Years: TimeSpan.FromDays(365.25).Ticks
                 }
             };
-        }
-
-        public IEnumerable<ISeries> Series { get; set; }
-
-        public IEnumerable<ICartesianAxis> XAxes { get; set; }
     }
+
+    public IEnumerable<ISeries> Series { get; set; }
+
+    public IEnumerable<ICartesianAxis> XAxes { get; set; }
 }

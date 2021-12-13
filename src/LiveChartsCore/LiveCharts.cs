@@ -23,87 +23,86 @@
 using System;
 using LiveChartsCore.Kernel;
 
-namespace LiveChartsCore
+namespace LiveChartsCore;
+
+/// <summary>
+/// LiveCharts global settings.
+/// </summary>
+public static class LiveCharts
 {
     /// <summary>
-    /// LiveCharts global settings.
+    /// Gets a value indicating whether LiveCharts should create a log as it renders the charts.
     /// </summary>
-    public static class LiveCharts
+    public static bool EnableLogging { get; set; } = false;
+
+    private static readonly object s_defaultPaintTask = new();
+
+    /// <summary>
+    /// Gets a value indicating whether this instance is configured.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if this instance is configured; otherwise, <c>false</c>.
+    /// </value>
+    public static bool IsConfigured { get; private set; } = false;
+
+    /// <summary>
+    /// Gets the current settings.
+    /// </summary>
+    /// <value>
+    /// The current settings.
+    /// </value>
+    public static LiveChartsSettings CurrentSettings { get; } = new();
+
+    /// <summary>
+    /// Gets the default paint.
+    /// </summary>
+    public static object DefaultPaint { get; internal set; } = new object();
+
+    /// <summary>
+    /// Gets the hover key.
+    /// </summary>
+    /// <value>
+    /// The bar series hover key.
+    /// </value>
+    public static string HoverKey => nameof(HoverKey);
+
+    /// <summary>
+    /// Gets a constant that indicates that a rotation angle follows the tangent line, this property is only useful in polar series.
+    /// </summary>
+    public static int TangentAngle => 1 << 25;
+
+    /// <summary>
+    /// Gets a constant that indicates that a rotation angle follows the cotangent line, this property is only useful in polar series.
+    /// </summary>
+    public static int CotangentAngle => 1 << 26;
+
+    /// <summary>
+    /// The disable animations
+    /// </summary>
+    public static TimeSpan DisableAnimations = TimeSpan.FromMilliseconds(1);
+
+    /// <summary>
+    /// Configures LiveCharts.
+    /// </summary>
+    /// <param name="configuration">The configuration.</param>
+    /// <returns></returns>
+    /// <exception cref="NullReferenceException">$"{nameof(LiveChartsSettings)} must not be null.</exception>
+    public static void Configure(Action<LiveChartsSettings> configuration)
     {
-        /// <summary>
-        /// Gets a value indicating whether LiveCharts should create a log as it renders the charts.
-        /// </summary>
-        public static bool EnableLogging { get; set; } = false;
+        if (configuration is null) throw new NullReferenceException($"{nameof(LiveChartsSettings)} must not be null.");
 
-        private static readonly object s_defaultPaintTask = new();
+        IsConfigured = true;
+        configuration(CurrentSettings);
+    }
 
-        /// <summary>
-        /// Gets a value indicating whether this instance is configured.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is configured; otherwise, <c>false</c>.
-        /// </value>
-        public static bool IsConfigured { get; private set; } = false;
-
-        /// <summary>
-        /// Gets the current settings.
-        /// </summary>
-        /// <value>
-        /// The current settings.
-        /// </value>
-        public static LiveChartsSettings CurrentSettings { get; } = new();
-
-        /// <summary>
-        /// Gets the default paint.
-        /// </summary>
-        public static object DefaultPaint { get; internal set; } = new object();
-
-        /// <summary>
-        /// Gets the hover key.
-        /// </summary>
-        /// <value>
-        /// The bar series hover key.
-        /// </value>
-        public static string HoverKey => nameof(HoverKey);
-
-        /// <summary>
-        /// Gets a constant that indicates that a rotation angle follows the tangent line, this property is only useful in polar series.
-        /// </summary>
-        public static int TangentAngle => 1 << 25;
-
-        /// <summary>
-        /// Gets a constant that indicates that a rotation angle follows the cotangent line, this property is only useful in polar series.
-        /// </summary>
-        public static int CotangentAngle => 1 << 26;
-
-        /// <summary>
-        /// The disable animations
-        /// </summary>
-        public static TimeSpan DisableAnimations = TimeSpan.FromMilliseconds(1);
-
-        /// <summary>
-        /// Configures LiveCharts.
-        /// </summary>
-        /// <param name="configuration">The configuration.</param>
-        /// <returns></returns>
-        /// <exception cref="NullReferenceException">$"{nameof(LiveChartsSettings)} must not be null.</exception>
-        public static void Configure(Action<LiveChartsSettings> configuration)
-        {
-            if (configuration is null) throw new NullReferenceException($"{nameof(LiveChartsSettings)} must not be null.");
-
-            IsConfigured = true;
-            configuration(CurrentSettings);
-        }
-
-        /// <summary>
-        /// Defines a mapper for the given type.
-        /// </summary>
-        /// <typeparam name="TModel">The type of the model.</typeparam>
-        /// <param name="mapper">The mapper.</param>
-        /// <returns></returns>
-        public static LiveChartsSettings HasMapFor<TModel>(Action<TModel, ChartPoint> mapper)
-        {
-            return CurrentSettings.HasMap(mapper);
-        }
+    /// <summary>
+    /// Defines a mapper for the given type.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <param name="mapper">The mapper.</param>
+    /// <returns></returns>
+    public static LiveChartsSettings HasMapFor<TModel>(Action<TModel, ChartPoint> mapper)
+    {
+        return CurrentSettings.HasMap(mapper);
     }
 }

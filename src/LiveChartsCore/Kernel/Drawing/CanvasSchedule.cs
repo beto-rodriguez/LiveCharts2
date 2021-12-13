@@ -23,37 +23,36 @@
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Kernel.Drawing
+namespace LiveChartsCore.Kernel.Drawing;
+
+/// <summary>
+/// Defines the paint context.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+public class CanvasSchedule<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines the paint context.
+    /// Gets or sets the width.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public class CanvasSchedule<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets or sets the width.
-        /// </summary>
-        /// <value>
-        /// The width.
-        /// </value>
-        public double Width { get; set; }
+    /// <value>
+    /// The width.
+    /// </value>
+    public double Width { get; set; }
 
-        /// <summary>
-        /// Gets or sets the height.
-        /// </summary>
-        /// <value>
-        /// The height.
-        /// </value>
-        public double Height { get; set; }
+    /// <summary>
+    /// Gets or sets the height.
+    /// </summary>
+    /// <value>
+    /// The height.
+    /// </value>
+    public double Height { get; set; }
 
-        /// <summary>
-        /// Gets or sets the paint schedules.
-        /// </summary>
-        /// <value>
-        /// The paint tasks schedule.
-        /// </value>
-        public List<PaintSchedule<TDrawingContext>> PaintSchedules { get; set; } = new List<PaintSchedule<TDrawingContext>>();
-    }
+    /// <summary>
+    /// Gets or sets the paint schedules.
+    /// </summary>
+    /// <value>
+    /// The paint tasks schedule.
+    /// </value>
+    public List<PaintSchedule<TDrawingContext>> PaintSchedules { get; set; } = new List<PaintSchedule<TDrawingContext>>();
 }

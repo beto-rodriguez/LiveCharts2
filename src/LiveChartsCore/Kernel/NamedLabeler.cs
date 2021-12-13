@@ -22,36 +22,35 @@
 
 using System.Collections.Generic;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel;
+
+/// <summary>
+/// The named labeler helper class.
+/// </summary>
+public class NamedLabeler
 {
+    private readonly IList<string> _labels;
+
     /// <summary>
-    /// The named labeler helper class.
+    /// Initializes a new instance of the <see cref="NamedLabeler"/> class.
     /// </summary>
-    public class NamedLabeler
+    /// <param name="labels">The labels.</param>
+    public NamedLabeler(IList<string> labels)
     {
-        private readonly IList<string> _labels;
+        _labels = labels;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NamedLabeler"/> class.
-        /// </summary>
-        /// <param name="labels">The labels.</param>
-        public NamedLabeler(IList<string> labels)
-        {
-            _labels = labels;
-        }
+    /// <summary>
+    /// Functions the specified value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns></returns>
+    public string Function(double value)
+    {
+        var index = (int)value;
 
-        /// <summary>
-        /// Functions the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns></returns>
-        public string Function(double value)
-        {
-            var index = (int)value;
-
-            return index < 0 || index > _labels.Count - 1
-                ? string.Empty
-                : _labels[index];
-        }
+        return index < 0 || index > _labels.Count - 1
+            ? string.Empty
+            : _labels[index];
     }
 }

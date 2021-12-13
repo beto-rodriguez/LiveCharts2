@@ -24,42 +24,41 @@ using System;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters
+namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
+
+/// <summary>
+/// A wrapper object for skia sharp image filters.
+/// </summary>
+/// <seealso cref="IDisposable" />
+public abstract class ImageFilter : IDisposable
 {
     /// <summary>
-    /// A wrapper object for skia sharp image filters.
+    /// Gets or sets the sk image filter.
     /// </summary>
-    /// <seealso cref="IDisposable" />
-    public abstract class ImageFilter : IDisposable
+    /// <value>
+    /// The sk image filter.
+    /// </value>
+    public SKImageFilter? SKImageFilter { get; set; }
+
+    /// <summary>
+    /// Creates the image filter.
+    /// </summary>
+    /// <param name="drawingContext">The drawing context.</param>
+    public abstract void CreateFilter(SkiaSharpDrawingContext drawingContext);
+
+    /// <summary>
+    /// Clones this instance.
+    /// </summary>
+    /// <returns></returns>
+    public abstract ImageFilter Clone();
+
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
+    public virtual void Dispose()
     {
-        /// <summary>
-        /// Gets or sets the sk image filter.
-        /// </summary>
-        /// <value>
-        /// The sk image filter.
-        /// </value>
-        public SKImageFilter? SKImageFilter { get; set; }
-
-        /// <summary>
-        /// Creates the image filter.
-        /// </summary>
-        /// <param name="drawingContext">The drawing context.</param>
-        public abstract void CreateFilter(SkiaSharpDrawingContext drawingContext);
-
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns></returns>
-        public abstract ImageFilter Clone();
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public virtual void Dispose()
-        {
-            if (SKImageFilter is null) return;
-            SKImageFilter.Dispose();
-            SKImageFilter = null;
-        }
+        if (SKImageFilter is null) return;
+        SKImageFilter.Dispose();
+        SKImageFilter = null;
     }
 }

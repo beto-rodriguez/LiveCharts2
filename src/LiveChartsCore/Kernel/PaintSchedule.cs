@@ -23,51 +23,50 @@
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel;
+
+/// <summary>
+/// Defines a schedule to be drawn by an <see cref="IPaint{TDrawingContext}"/> instance.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+public class PaintSchedule<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a schedule to be drawn by an <see cref="IPaint{TDrawingContext}"/> instance.
+    /// Initializes a new instance of the <see cref="PaintSchedule{TDrawingContext}"/> class.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public class PaintSchedule<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    /// <param name="task">The task.</param>
+    /// <param name="geometries">The geometries.</param>
+    public PaintSchedule(IPaint<TDrawingContext> task, HashSet<IDrawable<TDrawingContext>> geometries)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PaintSchedule{TDrawingContext}"/> class.
-        /// </summary>
-        /// <param name="task">The task.</param>
-        /// <param name="geometries">The geometries.</param>
-        public PaintSchedule(IPaint<TDrawingContext> task, HashSet<IDrawable<TDrawingContext>> geometries)
-        {
-            PaintTask = task;
-            Geometries = geometries;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PaintSchedule{TDrawingContext}"/> class.
-        /// </summary>
-        /// <param name="task">The task.</param>
-        /// <param name="geometries">The geometries.</param>
-        public PaintSchedule(IPaint<TDrawingContext> task, params IDrawable<TDrawingContext>[] geometries)
-        {
-            PaintTask = task;
-            Geometries = new HashSet<IDrawable<TDrawingContext>>(geometries);
-        }
-
-        /// <summary>
-        /// Gets or sets the paint task.
-        /// </summary>
-        /// <value>
-        /// The drawable task.
-        /// </value>
-        public IPaint<TDrawingContext> PaintTask { get; set; }
-
-        /// <summary>
-        /// Gets or sets the geometries.
-        /// </summary>
-        /// <value>
-        /// The geometries.
-        /// </value>
-        public HashSet<IDrawable<TDrawingContext>> Geometries { get; set; }
+        PaintTask = task;
+        Geometries = geometries;
     }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PaintSchedule{TDrawingContext}"/> class.
+    /// </summary>
+    /// <param name="task">The task.</param>
+    /// <param name="geometries">The geometries.</param>
+    public PaintSchedule(IPaint<TDrawingContext> task, params IDrawable<TDrawingContext>[] geometries)
+    {
+        PaintTask = task;
+        Geometries = new HashSet<IDrawable<TDrawingContext>>(geometries);
+    }
+
+    /// <summary>
+    /// Gets or sets the paint task.
+    /// </summary>
+    /// <value>
+    /// The drawable task.
+    /// </value>
+    public IPaint<TDrawingContext> PaintTask { get; set; }
+
+    /// <summary>
+    /// Gets or sets the geometries.
+    /// </summary>
+    /// <value>
+    /// The geometries.
+    /// </value>
+    public HashSet<IDrawable<TDrawingContext>> Geometries { get; set; }
 }

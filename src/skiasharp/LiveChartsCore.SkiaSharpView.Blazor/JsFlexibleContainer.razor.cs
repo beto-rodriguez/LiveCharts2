@@ -24,91 +24,90 @@ using LiveChartsCore.SkiaSharpView.Blazor.JsInterop.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
-namespace LiveChartsCore.SkiaSharpView.Blazor
+namespace LiveChartsCore.SkiaSharpView.Blazor;
+
+/// <summary>
+/// A control in the UI that is able to report its size via JS interop.
+/// </summary>
+public partial class JsFlexibleContainer : IDisposable
 {
+    [Inject]
+    private IJSRuntime JS { get; set; } = null!;
+
+    private DomJsInterop? _dom;
+    private readonly string _id = Guid.NewGuid().ToString();
+
     /// <summary>
-    /// A control in the UI that is able to report its size via JS interop.
+    /// Gets the width.
     /// </summary>
-    public partial class JsFlexibleContainer : IDisposable
+    public double Width { get; private set; }
+
+    /// <summary>
+    /// Gets the height.
+    /// </summary>
+    public double Height { get; private set; }
+
+    /// <summary>
+    /// Gets the container.
+    /// </summary>
+    public ElementReference Container { get; private set; }
+
+    /// <summary>
+    /// Ges whether the control is disposing.
+    /// </summary>
+    public bool Disposing { get; private set; }
+
+    /// <summary>
+    /// Gets or sets the content.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? Content { get; set; }
+
+    /// <summary>
+    /// Gets or sets the container class.
+    /// </summary>
+    [Parameter]
+    public string Class { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Called when the control is resized.
+    /// </summary>
+    public event Action<JsFlexibleContainer>? Resized;
+
+    /// <summary>
+    /// Called when the control is rendered.
+    /// </summary>
+    /// <param name="firstRender"></param>
+    /// <returns></returns>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        [Inject]
-        private IJSRuntime JS { get; set; } = null!;
+        if (_dom is null) _dom = new DomJsInterop(JS);
 
-        private DomJsInterop? _dom;
-        private readonly string _id = Guid.NewGuid().ToString();
+        var wrapperBounds = await _dom.GetBoundingClientRect(Container);
 
-        /// <summary>
-        /// Gets the width.
-        /// </summary>
-        public double Width { get; private set; }
+        Width = wrapperBounds.Width;
+        Height = wrapperBounds.Height;
 
-        /// <summary>
-        /// Gets the height.
-        /// </summary>
-        public double Height { get; private set; }
+        await _dom.OnResize(Container, _id, OnContainerResized);
+    }
 
-        /// <summary>
-        /// Gets the container.
-        /// </summary>
-        public ElementReference Container { get; private set; }
+    /// <summary>
+    /// Called when the container was resized.
+    /// </summary>
+    /// <param name="newSize"></param>
+    protected virtual void OnContainerResized(DOMRect newSize)
+    {
+        Width = newSize.Width;
+        Height = newSize.Height;
 
-        /// <summary>
-        /// Ges whether the control is disposing.
-        /// </summary>
-        public bool Disposing { get; private set; }
+        Resized?.Invoke(this);
+    }
 
-        /// <summary>
-        /// Gets or sets the content.
-        /// </summary>
-        [Parameter]
-        public RenderFragment? Content { get; set; }
-
-        /// <summary>
-        /// Gets or sets the container class.
-        /// </summary>
-        [Parameter]
-        public string Class { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Called when the control is resized.
-        /// </summary>
-        public event Action<JsFlexibleContainer>? Resized;
-
-        /// <summary>
-        /// Called when the control is rendered.
-        /// </summary>
-        /// <param name="firstRender"></param>
-        /// <returns></returns>
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (_dom is null) _dom = new DomJsInterop(JS);
-
-            var wrapperBounds = await _dom.GetBoundingClientRect(Container);
-
-            Width = wrapperBounds.Width;
-            Height = wrapperBounds.Height;
-
-            await _dom.OnResize(Container, _id, OnContainerResized);
-        }
-
-        /// <summary>
-        /// Called when the container was resized.
-        /// </summary>
-        /// <param name="newSize"></param>
-        protected virtual void OnContainerResized(DOMRect newSize)
-        {
-            Width = newSize.Width;
-            Height = newSize.Height;
-
-            Resized?.Invoke(this);
-        }
-
-        async void IDisposable.Dispose()
-        {
-            if (_dom is null) return;
-            _dom.RemoveOnResizeListener(_id);
-            Disposing = true;
-            await ((IAsyncDisposable)_dom).DisposeAsync();
-        }
+    async void IDisposable.Dispose()
+    {
+        if (_dom is null) return;
+        _dom.RemoveOnResizeListener(_id);
+        Disposing = true;
+        await ((IAsyncDisposable)_dom).DisposeAsync();
     }
 }

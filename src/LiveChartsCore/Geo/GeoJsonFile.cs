@@ -20,27 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Geo
+namespace LiveChartsCore.Geo;
+
+/// <summary>
+/// Defines a map using the GeoJson format.
+/// </summary>
+public class GeoJsonFile
 {
     /// <summary>
-    /// Defines a map using the GeoJson format.
+    /// Gets or sets the type.
     /// </summary>
-    public class GeoJsonFile
-    {
-        /// <summary>
-        /// Gets or sets the type.
-        /// </summary>
-        /// <value>
-        /// The type.
-        /// </value>
-        public string? Type { get; set; }
+    /// <value>
+    /// The type.
+    /// </value>
+    public string? Type { get; set; }
 
-        /// <summary>
-        /// Gets or sets the features.
-        /// </summary>
-        /// <value>
-        /// The features.
-        /// </value>
-        public GeoJsonFeature[]? Features { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the features.
+    /// </summary>
+    /// <value>
+    /// The features.
+    /// </value>
+    public GeoJsonFeature[]? Features { get; set; }
 }

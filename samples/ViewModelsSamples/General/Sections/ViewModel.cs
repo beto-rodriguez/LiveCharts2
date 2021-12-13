@@ -6,13 +6,13 @@ using SkiaSharp;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-namespace ViewModelsSamples.General.Sections
+namespace ViewModelsSamples.General.Sections;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        public ObservableCollection<RectangularSection> Sections { get; set; }
-            = new ObservableCollection<RectangularSection>
-            {
+    public ObservableCollection<RectangularSection> Sections { get; set; }
+        = new ObservableCollection<RectangularSection>
+        {
                 new RectangularSection
                 {
                     // creates a section from 3 to 4 in the X axis
@@ -38,11 +38,11 @@ namespace ViewModelsSamples.General.Sections
                     Xi = 8,
                     Fill = new SolidColorPaint(new SKColor(249, 251, 231))
                 }
-            };
+        };
 
-        public ObservableCollection<ISeries> Series { get; set; }
-            = new ObservableCollection<ISeries>
-        {
+    public ObservableCollection<ISeries> Series { get; set; }
+        = new ObservableCollection<ISeries>
+    {
             new ScatterSeries<ObservablePoint>
             {
                 Values = new ObservableCollection<ObservablePoint>
@@ -71,8 +71,7 @@ namespace ViewModelsSamples.General.Sections
                     new ObservablePoint(5.3, 7.1),
                 }
             }
-        };
+    };
 
-        public ICommand ToggleFirstCommand => new Command(o => Sections[0].IsVisible = !Sections[0].IsVisible);
-    }
+    public ICommand ToggleFirstCommand => new Command(o => Sections[0].IsVisible = !Sections[0].IsVisible);
 }

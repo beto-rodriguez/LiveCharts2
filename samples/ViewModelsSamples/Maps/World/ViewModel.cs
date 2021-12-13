@@ -6,18 +6,18 @@ using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-namespace ViewModelsSamples.Maps.World
-{
-    public class ViewModel
-    {
-        private bool _isBrazilInChart = true;
-        private readonly IWeigthedMapShape _brazil;
-        private readonly Random _r = new Random();
+namespace ViewModelsSamples.Maps.World;
 
-        public ViewModel()
+public class ViewModel
+{
+    private bool _isBrazilInChart = true;
+    private readonly IWeigthedMapShape _brazil;
+    private readonly Random _r = new Random();
+
+    public ViewModel()
+    {
+        Series = new HeatLandSeries[]
         {
-            Series = new HeatLandSeries[]
-            {
                 new HeatLandSeries
                 {
                     // every country has a unique identifier
@@ -42,18 +42,18 @@ namespace ViewModelsSamples.Maps.World
                         new HeatLand { Name = "are", Value = 13 }
                     }
                 }
-            };
+        };
 
-            _brazil = Series[0].Lands.First(x => x.Name == "bra");
-            DoRandomChanges();
-        }
+        _brazil = Series[0].Lands.First(x => x.Name == "bra");
+        DoRandomChanges();
+    }
 
-        public HeatLandSeries[] Series { get; set; }
+    public HeatLandSeries[] Series { get; set; }
 
-        #region Obsolete
+    #region Obsolete
 
-        public IWeigthedMapShape[] Shapes => new HeatLand[]
-        {
+    public IWeigthedMapShape[] Shapes => new HeatLand[]
+    {
             new HeatLand { Name = "bra", Value = 13 },
             new HeatLand { Name = "mex", Value = 10 },
             new HeatLand { Name = "usa", Value = 15 },
@@ -68,38 +68,37 @@ namespace ViewModelsSamples.Maps.World
             new HeatLand { Name = "kor", Value = 10 },
             new HeatLand { Name = "zaf", Value = 12 },
             new HeatLand { Name = "are", Value = 13 }
-        };
+    };
 
-        #endregion
+    #endregion
 
-        public ICommand ToggleBrazilCommand => new Command(o => ToggleBrazil());
+    public ICommand ToggleBrazilCommand => new Command(o => ToggleBrazil());
 
-        private async void DoRandomChanges()
+    private async void DoRandomChanges()
+    {
+        await Task.Delay(1000);
+
+        while (true)
         {
-            await Task.Delay(1000);
-
-            while (true)
+            foreach (var shape in Series[0].Lands)
             {
-                foreach (var shape in Series[0].Lands)
-                {
-                    shape.Value = _r.Next(0, 20);
-                }
-
-                await Task.Delay(500);
-            }
-        }
-
-        private void ToggleBrazil()
-        {
-            if (_isBrazilInChart)
-            {
-                Series[0].Lands = Series[0].Lands.Where(x => x != _brazil).ToArray();
-                _isBrazilInChart = false;
-                return;
+                shape.Value = _r.Next(0, 20);
             }
 
-            Series[0].Lands = Series[0].Lands.Concat(new[] { _brazil }).ToArray();
-            _isBrazilInChart = true;
+            await Task.Delay(500);
         }
+    }
+
+    private void ToggleBrazil()
+    {
+        if (_isBrazilInChart)
+        {
+            Series[0].Lands = Series[0].Lands.Where(x => x != _brazil).ToArray();
+            _isBrazilInChart = false;
+            return;
+        }
+
+        Series[0].Lands = Series[0].Lands.Concat(new[] { _brazil }).ToArray();
+        _isBrazilInChart = true;
     }
 }

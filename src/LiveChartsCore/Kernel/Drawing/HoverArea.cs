@@ -23,25 +23,24 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.Kernel.Drawing
+namespace LiveChartsCore.Kernel.Drawing;
+
+/// <summary>
+/// Defines a hover area.
+/// </summary>
+public abstract class HoverArea
 {
     /// <summary>
-    /// Defines a hover area.
+    /// Determines whether the pointer is over the area.
     /// </summary>
-    public abstract class HoverArea
-    {
-        /// <summary>
-        /// Determines whether the pointer is over the area.
-        /// </summary>
-        /// <param name="pointerLocation">The pointer location.</param>
-        /// <param name="strategy">The strategy.</param>
-        /// <returns></returns>
-        public abstract bool IsPointerOver(LvcPoint pointerLocation, TooltipFindingStrategy strategy);
+    /// <param name="pointerLocation">The pointer location.</param>
+    /// <param name="strategy">The strategy.</param>
+    /// <returns></returns>
+    public abstract bool IsPointerOver(LvcPoint pointerLocation, TooltipFindingStrategy strategy);
 
-        /// <summary>
-        /// Suggests the tooltip placement.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        public abstract void SuggestTooltipPlacement(TooltipPlacementContext context);
-    }
+    /// <summary>
+    /// Suggests the tooltip placement.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    public abstract void SuggestTooltipPlacement(TooltipPlacementContext context);
 }

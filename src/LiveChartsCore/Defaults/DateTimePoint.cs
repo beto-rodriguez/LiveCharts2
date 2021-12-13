@@ -24,62 +24,61 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace LiveChartsCore.Defaults
+namespace LiveChartsCore.Defaults;
+
+/// <summary>
+/// Defines a date time point for the Cartesian coordinate system that implements <see cref="INotifyPropertyChanged"/>.
+/// </summary>
+public class DateTimePoint : INotifyPropertyChanged
 {
+    private DateTime _dateTime;
+    private double? _value;
+
     /// <summary>
-    /// Defines a date time point for the Cartesian coordinate system that implements <see cref="INotifyPropertyChanged"/>.
+    /// Initializes a new instance of the <see cref="DateTimePoint"/> class.
     /// </summary>
-    public class DateTimePoint : INotifyPropertyChanged
+    public DateTimePoint()
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DateTimePoint"/> class.
+    /// </summary>
+    /// <param name="dateTime">The date time.</param>
+    /// <param name="value">The value.</param>
+    public DateTimePoint(DateTime dateTime, double? value)
     {
-        private DateTime _dateTime;
-        private double? _value;
+        _dateTime = dateTime;
+        _value = value;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DateTimePoint"/> class.
-        /// </summary>
-        public DateTimePoint()
-        { }
+    /// <summary>
+    /// Gets or sets the date time.
+    /// </summary>
+    /// <value>
+    /// The date time.
+    /// </value>
+    public DateTime DateTime { get => _dateTime; set { _dateTime = value; OnPropertyChanged(); } }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DateTimePoint"/> class.
-        /// </summary>
-        /// <param name="dateTime">The date time.</param>
-        /// <param name="value">The value.</param>
-        public DateTimePoint(DateTime dateTime, double? value)
-        {
-            _dateTime = dateTime;
-            _value = value;
-        }
+    /// <summary>
+    /// Gets or sets the value.
+    /// </summary>
+    /// <value>
+    /// The value.
+    /// </value>
+    public double? Value { get => _value; set { _value = value; OnPropertyChanged(); } }
 
-        /// <summary>
-        /// Gets or sets the date time.
-        /// </summary>
-        /// <value>
-        /// The date time.
-        /// </value>
-        public DateTime DateTime { get => _dateTime; set { _dateTime = value; OnPropertyChanged(); } }
+    /// <summary>
+    /// Occurs when a property value changes.
+    /// </summary>
+    /// <returns></returns>
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-        /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
-        /// <value>
-        /// The value.
-        /// </value>
-        public double? Value { get => _value; set { _value = value; OnPropertyChanged(); } }
-
-        /// <summary>
-        /// Occurs when a property value changes.
-        /// </summary>
-        /// <returns></returns>
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        /// <summary>
-        /// Called when a property changed.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
-        }
+    /// <summary>
+    /// Called when a property changed.
+    /// </summary>
+    /// <param name="propertyName">Name of the property.</param>
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
     }
 }

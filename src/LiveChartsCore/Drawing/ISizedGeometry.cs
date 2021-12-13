@@ -20,30 +20,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Drawing;
+
+/// <summary>
+/// Defines a sized geometry in the user interface.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="IGeometry{TDrawingContext}" />
+public interface ISizedGeometry<TDrawingContext> : IGeometry<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a sized geometry in the user interface.
+    /// Gets or sets the width.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IGeometry{TDrawingContext}" />
-    public interface ISizedGeometry<TDrawingContext> : IGeometry<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets or sets the width.
-        /// </summary>
-        /// <value>
-        /// The width.
-        /// </value>
-        float Width { get; set; }
+    /// <value>
+    /// The width.
+    /// </value>
+    float Width { get; set; }
 
-        /// <summary>
-        /// Gets or sets the height.
-        /// </summary>
-        /// <value>
-        /// The height.
-        /// </value>
-        float Height { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the height.
+    /// </summary>
+    /// <value>
+    /// The height.
+    /// </value>
+    float Height { get; set; }
 }

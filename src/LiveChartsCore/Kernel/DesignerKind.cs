@@ -20,20 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel;
+
+/// <summary>
+/// Designer series kind.
+/// </summary>
+public enum DesignerKind
 {
     /// <summary>
-    /// Designer series kind.
+    /// The Cartesian kind.
     /// </summary>
-    public enum DesignerKind
-    {
-        /// <summary>
-        /// The Cartesian kind.
-        /// </summary>
-        Cartesian,
-        /// <summary>
-        /// The pie kind.
-        /// </summary>
-        Pie
-    }
+    Cartesian,
+    /// <summary>
+    /// The pie kind.
+    /// </summary>
+    Pie
 }

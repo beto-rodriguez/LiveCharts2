@@ -29,476 +29,475 @@ using LiveChartsCore.UnitTesting.MockedObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SkiaSharp;
 
-namespace LiveChartsCore.UnitTesting
+namespace LiveChartsCore.UnitTesting;
+
+[TestClass]
+public class ChangingPaintTasks
 {
-    [TestClass]
-    public class ChangingPaintTasks
+    [TestMethod]
+    public void DrawableSeriesFillChanged()
     {
-        [TestMethod]
-        public void DrawableSeriesFillChanged()
+        var series = new LineSeries<int>
         {
-            var series = new LineSeries<int>
-            {
-                Values = new List<int> { 1, 6, 4, 2 }
-            };
+            Values = new List<int> { 1, 6, 4, 2 }
+        };
 
-            var chart = new TestCartesianChartView
-            {
-                Series = new List<ISeries> { series },
-                XAxes = new[] { new Axis() },
-                YAxes = new[] { new Axis() },
-            };
+        var chart = new TestCartesianChartView
+        {
+            Series = new List<ISeries> { series },
+            XAxes = new[] { new Axis() },
+            YAxes = new[] { new Axis() },
+        };
 
-            var canvas = chart.CoreCanvas;
+        var canvas = chart.CoreCanvas;
 
-            void DrawChart()
+        void DrawChart()
+        {
+            while (!canvas.IsValid)
             {
-                while (!canvas.IsValid)
-                {
-                    canvas.DrawFrame(
-                        new SkiaSharpDrawingContext(
-                            canvas,
-                            new SKImageInfo(100, 100),
-                            SKSurface.CreateNull(100, 100),
-                            new SKCanvas(new SKBitmap())));
-                }
+                canvas.DrawFrame(
+                    new SkiaSharpDrawingContext(
+                        canvas,
+                        new SKImageInfo(100, 100),
+                        SKSurface.CreateNull(100, 100),
+                        new SKCanvas(new SKBitmap())));
             }
-
-            chart.Core.Update(new ChartUpdateParams { Throttling = false });
-            DrawChart();
-
-            var drawables = canvas.DrawablesCount;
-            var geometries = canvas.CountGeometries();
-
-            // on changing the fill task, the previous instance should be removed.
-            series.Fill = new SolidColorPaint();
-
-            chart.Core.Update(new ChartUpdateParams { Throttling = false });
-            DrawChart();
-
-            Assert.IsTrue(
-                drawables == canvas.DrawablesCount &&
-                geometries == canvas.CountGeometries());
         }
 
-        [TestMethod]
-        public void DrawableSeriesStrokeChanged()
+        chart.Core.Update(new ChartUpdateParams { Throttling = false });
+        DrawChart();
+
+        var drawables = canvas.DrawablesCount;
+        var geometries = canvas.CountGeometries();
+
+        // on changing the fill task, the previous instance should be removed.
+        series.Fill = new SolidColorPaint();
+
+        chart.Core.Update(new ChartUpdateParams { Throttling = false });
+        DrawChart();
+
+        Assert.IsTrue(
+            drawables == canvas.DrawablesCount &&
+            geometries == canvas.CountGeometries());
+    }
+
+    [TestMethod]
+    public void DrawableSeriesStrokeChanged()
+    {
+        var series = new LineSeries<int>
         {
-            var series = new LineSeries<int>
-            {
-                Values = new List<int> { 1, 6, 4, 2 }
-            };
+            Values = new List<int> { 1, 6, 4, 2 }
+        };
 
-            var chart = new TestCartesianChartView
-            {
-                Series = new List<ISeries> { series },
-                XAxes = new[] { new Axis() },
-                YAxes = new[] { new Axis() },
-            };
+        var chart = new TestCartesianChartView
+        {
+            Series = new List<ISeries> { series },
+            XAxes = new[] { new Axis() },
+            YAxes = new[] { new Axis() },
+        };
 
-            var canvas = chart.CoreCanvas;
+        var canvas = chart.CoreCanvas;
 
-            void DrawChart()
+        void DrawChart()
+        {
+            while (!canvas.IsValid)
             {
-                while (!canvas.IsValid)
-                {
-                    canvas.DrawFrame(
-                        new SkiaSharpDrawingContext(
-                            canvas,
-                            new SKImageInfo(100, 100),
-                            SKSurface.CreateNull(100, 100),
-                            new SKCanvas(new SKBitmap())));
-                }
+                canvas.DrawFrame(
+                    new SkiaSharpDrawingContext(
+                        canvas,
+                        new SKImageInfo(100, 100),
+                        SKSurface.CreateNull(100, 100),
+                        new SKCanvas(new SKBitmap())));
             }
-
-            chart.Core.Update(new ChartUpdateParams { Throttling = false });
-            DrawChart();
-
-            var drawables = canvas.DrawablesCount;
-            var geometries = canvas.CountGeometries();
-
-            series.Stroke = new SolidColorPaint();
-
-            chart.Core.Update(new ChartUpdateParams { Throttling = false });
-            DrawChart();
-
-            Assert.IsTrue(
-                drawables == canvas.DrawablesCount &&
-                geometries == canvas.CountGeometries());
         }
 
-        [TestMethod]
-        public void LineSeriesGeometryPaintsChanged()
+        chart.Core.Update(new ChartUpdateParams { Throttling = false });
+        DrawChart();
+
+        var drawables = canvas.DrawablesCount;
+        var geometries = canvas.CountGeometries();
+
+        series.Stroke = new SolidColorPaint();
+
+        chart.Core.Update(new ChartUpdateParams { Throttling = false });
+        DrawChart();
+
+        Assert.IsTrue(
+            drawables == canvas.DrawablesCount &&
+            geometries == canvas.CountGeometries());
+    }
+
+    [TestMethod]
+    public void LineSeriesGeometryPaintsChanged()
+    {
+        var series = new LineSeries<int>
         {
-            var series = new LineSeries<int>
-            {
-                Values = new List<int> { 1, 6, 4, 2 }
-            };
+            Values = new List<int> { 1, 6, 4, 2 }
+        };
 
-            var chart = new TestCartesianChartView
-            {
-                Series = new List<ISeries> { series },
-                XAxes = new[] { new Axis() },
-                YAxes = new[] { new Axis() },
-            };
+        var chart = new TestCartesianChartView
+        {
+            Series = new List<ISeries> { series },
+            XAxes = new[] { new Axis() },
+            YAxes = new[] { new Axis() },
+        };
 
-            var canvas = chart.CoreCanvas;
+        var canvas = chart.CoreCanvas;
 
-            void DrawChart()
+        void DrawChart()
+        {
+            while (!canvas.IsValid)
             {
-                while (!canvas.IsValid)
-                {
-                    canvas.DrawFrame(
-                        new SkiaSharpDrawingContext(
-                            canvas,
-                            new SKImageInfo(100, 100),
-                            SKSurface.CreateNull(100, 100),
-                            new SKCanvas(new SKBitmap())));
-                }
+                canvas.DrawFrame(
+                    new SkiaSharpDrawingContext(
+                        canvas,
+                        new SKImageInfo(100, 100),
+                        SKSurface.CreateNull(100, 100),
+                        new SKCanvas(new SKBitmap())));
             }
-
-            chart.Core.Update(new ChartUpdateParams { Throttling = false });
-            DrawChart();
-
-            var drawables = canvas.DrawablesCount;
-            var geometries = canvas.CountGeometries();
-
-            series.GeometryFill = new SolidColorPaint();
-            series.GeometryStroke = new SolidColorPaint();
-
-            chart.Core.Update(new ChartUpdateParams { Throttling = false });
-            DrawChart();
-
-            Assert.IsTrue(
-                drawables == canvas.DrawablesCount &&
-                geometries == canvas.CountGeometries());
         }
 
-        [TestMethod]
-        public void SeriesRemoved()
+        chart.Core.Update(new ChartUpdateParams { Throttling = false });
+        DrawChart();
+
+        var drawables = canvas.DrawablesCount;
+        var geometries = canvas.CountGeometries();
+
+        series.GeometryFill = new SolidColorPaint();
+        series.GeometryStroke = new SolidColorPaint();
+
+        chart.Core.Update(new ChartUpdateParams { Throttling = false });
+        DrawChart();
+
+        Assert.IsTrue(
+            drawables == canvas.DrawablesCount &&
+            geometries == canvas.CountGeometries());
+    }
+
+    [TestMethod]
+    public void SeriesRemoved()
+    {
+        var series = new LineSeries<int> { Values = new List<int> { 1, 6, 4, 2 } };
+
+        var seriesCollection = new List<ISeries> { series };
+
+        var chart = new TestCartesianChartView
         {
-            var series = new LineSeries<int> { Values = new List<int> { 1, 6, 4, 2 } };
+            Series = seriesCollection,
+            XAxes = new[] { new Axis() },
+            YAxes = new[] { new Axis() },
+        };
 
-            var seriesCollection = new List<ISeries> { series };
+        var canvas = chart.CoreCanvas;
 
-            var chart = new TestCartesianChartView
+        void DrawChart()
+        {
+            while (!canvas.IsValid)
             {
-                Series = seriesCollection,
-                XAxes = new[] { new Axis() },
-                YAxes = new[] { new Axis() },
-            };
-
-            var canvas = chart.CoreCanvas;
-
-            void DrawChart()
-            {
-                while (!canvas.IsValid)
-                {
-                    canvas.DrawFrame(
-                        new SkiaSharpDrawingContext(
-                            canvas,
-                            new SKImageInfo(100, 100),
-                            SKSurface.CreateNull(100, 100),
-                            new SKCanvas(new SKBitmap())));
-                }
+                canvas.DrawFrame(
+                    new SkiaSharpDrawingContext(
+                        canvas,
+                        new SKImageInfo(100, 100),
+                        SKSurface.CreateNull(100, 100),
+                        new SKCanvas(new SKBitmap())));
             }
-
-            chart.Core.Update(new ChartUpdateParams { Throttling = false });
-            DrawChart();
-
-            var drawables = canvas.DrawablesCount;
-            var geometries = canvas.CountGeometries();
-            seriesCollection.Add(new LineSeries<int> { Values = new List<int> { 1, 6, 4, 2 } });
-
-            chart.Core.Update(new ChartUpdateParams { Throttling = false });
-            DrawChart();
-
-            seriesCollection.RemoveAt(0);
-            chart.Core.Update(new ChartUpdateParams { Throttling = false });
-            DrawChart();
-
-            Assert.IsTrue(
-                drawables == canvas.DrawablesCount &&
-                geometries == canvas.CountGeometries());
         }
 
-        [TestMethod]
-        public void SeriesCollectionInstanceChanged()
+        chart.Core.Update(new ChartUpdateParams { Throttling = false });
+        DrawChart();
+
+        var drawables = canvas.DrawablesCount;
+        var geometries = canvas.CountGeometries();
+        seriesCollection.Add(new LineSeries<int> { Values = new List<int> { 1, 6, 4, 2 } });
+
+        chart.Core.Update(new ChartUpdateParams { Throttling = false });
+        DrawChart();
+
+        seriesCollection.RemoveAt(0);
+        chart.Core.Update(new ChartUpdateParams { Throttling = false });
+        DrawChart();
+
+        Assert.IsTrue(
+            drawables == canvas.DrawablesCount &&
+            geometries == canvas.CountGeometries());
+    }
+
+    [TestMethod]
+    public void SeriesCollectionInstanceChanged()
+    {
+        var series = new LineSeries<int> { Values = new List<int> { 1, 6, 4, 2 } };
+
+        var seriesCollection = new List<ISeries> { series };
+
+        var chart = new TestCartesianChartView
         {
-            var series = new LineSeries<int> { Values = new List<int> { 1, 6, 4, 2 } };
+            Series = seriesCollection,
+            XAxes = new[] { new Axis() },
+            YAxes = new[] { new Axis() },
+        };
 
-            var seriesCollection = new List<ISeries> { series };
+        var canvas = chart.CoreCanvas;
 
-            var chart = new TestCartesianChartView
+        void DrawChart()
+        {
+            while (!canvas.IsValid)
             {
-                Series = seriesCollection,
-                XAxes = new[] { new Axis() },
-                YAxes = new[] { new Axis() },
-            };
-
-            var canvas = chart.CoreCanvas;
-
-            void DrawChart()
-            {
-                while (!canvas.IsValid)
-                {
-                    canvas.DrawFrame(
-                        new SkiaSharpDrawingContext(
-                            canvas,
-                            new SKImageInfo(100, 100),
-                            SKSurface.CreateNull(100, 100),
-                            new SKCanvas(new SKBitmap())));
-                }
+                canvas.DrawFrame(
+                    new SkiaSharpDrawingContext(
+                        canvas,
+                        new SKImageInfo(100, 100),
+                        SKSurface.CreateNull(100, 100),
+                        new SKCanvas(new SKBitmap())));
             }
+        }
 
-            chart.Core.Update(new ChartUpdateParams { Throttling = false });
-            DrawChart();
+        chart.Core.Update(new ChartUpdateParams { Throttling = false });
+        DrawChart();
 
-            var drawables = canvas.DrawablesCount;
-            var geometries = canvas.CountGeometries();
+        var drawables = canvas.DrawablesCount;
+        var geometries = canvas.CountGeometries();
 
-            chart.Series = new List<ISeries>
+        chart.Series = new List<ISeries>
             {
                 new LineSeries<int> { Values = new List<int> { 1, 6, 4, 2 } }
             };
 
-            chart.Core.Update(new ChartUpdateParams { Throttling = false });
-            DrawChart();
+        chart.Core.Update(new ChartUpdateParams { Throttling = false });
+        DrawChart();
 
-            Assert.IsTrue(
-                drawables == canvas.DrawablesCount &&
-                geometries == canvas.CountGeometries());
-        }
+        Assert.IsTrue(
+            drawables == canvas.DrawablesCount &&
+            geometries == canvas.CountGeometries());
+    }
 
-        [TestMethod]
-        public void AxisTextBrushChanged()
+    [TestMethod]
+    public void AxisTextBrushChanged()
+    {
+        var axis = new Axis();
+
+        var chart = new TestCartesianChartView
         {
-            var axis = new Axis();
-
-            var chart = new TestCartesianChartView
-            {
-                Series = new List<ISeries>
+            Series = new List<ISeries>
                 {
                     new LineSeries<int> { Values = new List<int> { 1, 6, 4, 2 } },
                 },
-                XAxes = new[] { axis },
-                YAxes = new[] { new Axis() },
-            };
+            XAxes = new[] { axis },
+            YAxes = new[] { new Axis() },
+        };
 
-            var canvas = chart.CoreCanvas;
+        var canvas = chart.CoreCanvas;
 
-            void DrawChart()
+        void DrawChart()
+        {
+            while (!canvas.IsValid)
             {
-                while (!canvas.IsValid)
-                {
-                    canvas.DrawFrame(
-                        new SkiaSharpDrawingContext(
-                            canvas,
-                            new SKImageInfo(100, 100),
-                            SKSurface.CreateNull(100, 100),
-                            new SKCanvas(new SKBitmap())));
-                }
+                canvas.DrawFrame(
+                    new SkiaSharpDrawingContext(
+                        canvas,
+                        new SKImageInfo(100, 100),
+                        SKSurface.CreateNull(100, 100),
+                        new SKCanvas(new SKBitmap())));
             }
-
-            chart.Core.Update(new ChartUpdateParams { Throttling = false });
-            DrawChart();
-
-            var drawables = canvas.DrawablesCount;
-            var geometries = canvas.CountGeometries();
-
-            axis.LabelsPaint = new SolidColorPaint();
-
-            chart.Core.Update(new ChartUpdateParams { Throttling = false });
-            DrawChart();
-
-            Assert.IsTrue(
-                drawables == canvas.DrawablesCount &&
-                geometries == canvas.CountGeometries());
         }
 
-        [TestMethod]
-        public void AxisSeparatorBrushChanged()
-        {
-            var axis = new Axis();
+        chart.Core.Update(new ChartUpdateParams { Throttling = false });
+        DrawChart();
 
-            var chart = new TestCartesianChartView
-            {
-                Series = new List<ISeries>
+        var drawables = canvas.DrawablesCount;
+        var geometries = canvas.CountGeometries();
+
+        axis.LabelsPaint = new SolidColorPaint();
+
+        chart.Core.Update(new ChartUpdateParams { Throttling = false });
+        DrawChart();
+
+        Assert.IsTrue(
+            drawables == canvas.DrawablesCount &&
+            geometries == canvas.CountGeometries());
+    }
+
+    [TestMethod]
+    public void AxisSeparatorBrushChanged()
+    {
+        var axis = new Axis();
+
+        var chart = new TestCartesianChartView
+        {
+            Series = new List<ISeries>
                 {
                     new LineSeries<int> { Values = new List<int> { 1, 6, 4, 2 } },
                 },
-                XAxes = new[] { new Axis() },
-                YAxes = new[] { axis },
-            };
+            XAxes = new[] { new Axis() },
+            YAxes = new[] { axis },
+        };
 
-            var canvas = chart.CoreCanvas;
+        var canvas = chart.CoreCanvas;
 
-            void DrawChart()
+        void DrawChart()
+        {
+            while (!canvas.IsValid)
             {
-                while (!canvas.IsValid)
-                {
-                    canvas.DrawFrame(
-                        new SkiaSharpDrawingContext(
-                            canvas,
-                            new SKImageInfo(100, 100),
-                            SKSurface.CreateNull(100, 100),
-                            new SKCanvas(new SKBitmap())));
-                }
+                canvas.DrawFrame(
+                    new SkiaSharpDrawingContext(
+                        canvas,
+                        new SKImageInfo(100, 100),
+                        SKSurface.CreateNull(100, 100),
+                        new SKCanvas(new SKBitmap())));
             }
-
-            chart.Core.Update(new ChartUpdateParams { Throttling = false });
-            DrawChart();
-
-            var drawables = canvas.DrawablesCount;
-            var geometries = canvas.CountGeometries();
-
-            axis.SeparatorsPaint = new SolidColorPaint();
-
-            chart.Core.Update(new ChartUpdateParams { Throttling = false });
-            DrawChart();
-
-            Assert.IsTrue(
-                drawables == canvas.DrawablesCount &&
-                geometries == canvas.CountGeometries());
         }
 
-        [TestMethod]
-        public void AxisCollectionInstanceChanged()
+        chart.Core.Update(new ChartUpdateParams { Throttling = false });
+        DrawChart();
+
+        var drawables = canvas.DrawablesCount;
+        var geometries = canvas.CountGeometries();
+
+        axis.SeparatorsPaint = new SolidColorPaint();
+
+        chart.Core.Update(new ChartUpdateParams { Throttling = false });
+        DrawChart();
+
+        Assert.IsTrue(
+            drawables == canvas.DrawablesCount &&
+            geometries == canvas.CountGeometries());
+    }
+
+    [TestMethod]
+    public void AxisCollectionInstanceChanged()
+    {
+        var chart = new TestCartesianChartView
         {
-            var chart = new TestCartesianChartView
-            {
-                Series = new List<ISeries>
+            Series = new List<ISeries>
                 {
                     new LineSeries<int> { Values = new List<int> { 1, 6, 4, 2 } },
                 },
-                XAxes = new[] { new Axis() },
-                YAxes = new[] { new Axis() },
-            };
+            XAxes = new[] { new Axis() },
+            YAxes = new[] { new Axis() },
+        };
 
-            var canvas = chart.CoreCanvas;
+        var canvas = chart.CoreCanvas;
 
-            void DrawChart()
+        void DrawChart()
+        {
+            while (!canvas.IsValid)
             {
-                while (!canvas.IsValid)
-                {
-                    canvas.DrawFrame(
-                        new SkiaSharpDrawingContext(
-                            canvas,
-                            new SKImageInfo(100, 100),
-                            SKSurface.CreateNull(100, 100),
-                            new SKCanvas(new SKBitmap())));
-                }
+                canvas.DrawFrame(
+                    new SkiaSharpDrawingContext(
+                        canvas,
+                        new SKImageInfo(100, 100),
+                        SKSurface.CreateNull(100, 100),
+                        new SKCanvas(new SKBitmap())));
             }
-
-            chart.Core.Update(new ChartUpdateParams { Throttling = false });
-            DrawChart();
-
-            var drawables = canvas.DrawablesCount;
-            var geometries = canvas.CountGeometries();
-
-            chart.XAxes = new[] { new Axis() };
-
-            chart.Core.Update(new ChartUpdateParams { Throttling = false });
-            DrawChart();
-
-            Assert.IsTrue(
-                drawables == canvas.DrawablesCount &&
-                geometries == canvas.CountGeometries());
         }
 
-        [TestMethod]
-        public void SectionBrushChanged()
-        {
-            var section = new RectangularSection
-            {
-                Fill = new SolidColorPaint()
-            };
+        chart.Core.Update(new ChartUpdateParams { Throttling = false });
+        DrawChart();
 
-            var chart = new TestCartesianChartView
-            {
-                Series = new List<ISeries>
+        var drawables = canvas.DrawablesCount;
+        var geometries = canvas.CountGeometries();
+
+        chart.XAxes = new[] { new Axis() };
+
+        chart.Core.Update(new ChartUpdateParams { Throttling = false });
+        DrawChart();
+
+        Assert.IsTrue(
+            drawables == canvas.DrawablesCount &&
+            geometries == canvas.CountGeometries());
+    }
+
+    [TestMethod]
+    public void SectionBrushChanged()
+    {
+        var section = new RectangularSection
+        {
+            Fill = new SolidColorPaint()
+        };
+
+        var chart = new TestCartesianChartView
+        {
+            Series = new List<ISeries>
                 {
                     new LineSeries<int> { Values = new List<int> { 1, 6, 4, 2 } },
                 },
-                XAxes = new[] { new Axis() },
-                YAxes = new[] { new Axis() },
-                Sections = new[] { section }
-            };
+            XAxes = new[] { new Axis() },
+            YAxes = new[] { new Axis() },
+            Sections = new[] { section }
+        };
 
-            var canvas = chart.CoreCanvas;
+        var canvas = chart.CoreCanvas;
 
-            void DrawChart()
+        void DrawChart()
+        {
+            while (!canvas.IsValid)
             {
-                while (!canvas.IsValid)
-                {
-                    canvas.DrawFrame(
-                        new SkiaSharpDrawingContext(
-                            canvas,
-                            new SKImageInfo(100, 100),
-                            SKSurface.CreateNull(100, 100),
-                            new SKCanvas(new SKBitmap())));
-                }
+                canvas.DrawFrame(
+                    new SkiaSharpDrawingContext(
+                        canvas,
+                        new SKImageInfo(100, 100),
+                        SKSurface.CreateNull(100, 100),
+                        new SKCanvas(new SKBitmap())));
             }
-
-            chart.Core.Update(new ChartUpdateParams { Throttling = false });
-            DrawChart();
-
-            var drawables = canvas.DrawablesCount;
-            var geometries = canvas.CountGeometries();
-
-            section.Fill = new SolidColorPaint();
-
-            chart.Core.Update(new ChartUpdateParams { Throttling = false });
-            DrawChart();
-
-            Assert.IsTrue(
-                drawables == canvas.DrawablesCount &&
-                geometries == canvas.CountGeometries());
         }
 
-        [TestMethod]
-        public void SectionsInstanceChanged()
+        chart.Core.Update(new ChartUpdateParams { Throttling = false });
+        DrawChart();
+
+        var drawables = canvas.DrawablesCount;
+        var geometries = canvas.CountGeometries();
+
+        section.Fill = new SolidColorPaint();
+
+        chart.Core.Update(new ChartUpdateParams { Throttling = false });
+        DrawChart();
+
+        Assert.IsTrue(
+            drawables == canvas.DrawablesCount &&
+            geometries == canvas.CountGeometries());
+    }
+
+    [TestMethod]
+    public void SectionsInstanceChanged()
+    {
+        var chart = new TestCartesianChartView
         {
-            var chart = new TestCartesianChartView
-            {
-                Series = new List<ISeries>
+            Series = new List<ISeries>
                 {
                     new LineSeries<int> { Values = new List<int> { 1, 6, 4, 2 } },
                 },
-                XAxes = new[] { new Axis() },
-                YAxes = new[] { new Axis() },
-                Sections = new[] { new RectangularSection() }
-            };
+            XAxes = new[] { new Axis() },
+            YAxes = new[] { new Axis() },
+            Sections = new[] { new RectangularSection() }
+        };
 
-            var canvas = chart.CoreCanvas;
+        var canvas = chart.CoreCanvas;
 
-            void DrawChart()
+        void DrawChart()
+        {
+            while (!canvas.IsValid)
             {
-                while (!canvas.IsValid)
-                {
-                    canvas.DrawFrame(
-                        new SkiaSharpDrawingContext(
-                            canvas,
-                            new SKImageInfo(100, 100),
-                            SKSurface.CreateNull(100, 100),
-                            new SKCanvas(new SKBitmap())));
-                }
+                canvas.DrawFrame(
+                    new SkiaSharpDrawingContext(
+                        canvas,
+                        new SKImageInfo(100, 100),
+                        SKSurface.CreateNull(100, 100),
+                        new SKCanvas(new SKBitmap())));
             }
-
-            chart.Core.Update(new ChartUpdateParams { Throttling = false });
-            DrawChart();
-
-            var drawables = canvas.DrawablesCount;
-            var geometries = canvas.CountGeometries();
-
-            chart.Sections = new[] { new RectangularSection() };
-
-            chart.Core.Update(new ChartUpdateParams { Throttling = false });
-            DrawChart();
-
-            Assert.IsTrue(
-                drawables == canvas.DrawablesCount &&
-                geometries == canvas.CountGeometries());
         }
+
+        chart.Core.Update(new ChartUpdateParams { Throttling = false });
+        DrawChart();
+
+        var drawables = canvas.DrawablesCount;
+        var geometries = canvas.CountGeometries();
+
+        chart.Sections = new[] { new RectangularSection() };
+
+        chart.Core.Update(new ChartUpdateParams { Throttling = false });
+        DrawChart();
+
+        Assert.IsTrue(
+            drawables == canvas.DrawablesCount &&
+            geometries == canvas.CountGeometries());
     }
 }

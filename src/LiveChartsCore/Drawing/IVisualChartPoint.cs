@@ -20,17 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Drawing;
+
+/// <summary>
+/// Defines an object that contains a <see cref="IDrawable{TDrawingContext}"/> to highlight when the point requires so.
+/// </summary>
+public interface IVisualChartPoint<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines an object that contains a <see cref="IDrawable{TDrawingContext}"/> to highlight when the point requires so.
+    /// Gets the drawable to style when a chart points requires to highlight it.
     /// </summary>
-    public interface IVisualChartPoint<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets the drawable to style when a chart points requires to highlight it.
-        /// </summary>
-        IGeometry<TDrawingContext>? HighlightableGeometry { get; }
-    }
+    IGeometry<TDrawingContext>? HighlightableGeometry { get; }
 }

@@ -20,15 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Drawing;
+
+/// <summary>
+/// Defiens a bezier segment.
+/// </summary>
+/// <typeparam name="TPathContext">The type of the path context.</typeparam>
+/// <seealso cref="IAnimatableBezierSegment" />
+/// <seealso cref="IPathCommand{TPathContext}" />
+public interface IBezierSegment<TPathContext> : IAnimatableBezierSegment, IPathCommand<TPathContext>
 {
-    /// <summary>
-    /// Defiens a bezier segment.
-    /// </summary>
-    /// <typeparam name="TPathContext">The type of the path context.</typeparam>
-    /// <seealso cref="IAnimatableBezierSegment" />
-    /// <seealso cref="IPathCommand{TPathContext}" />
-    public interface IBezierSegment<TPathContext> : IAnimatableBezierSegment, IPathCommand<TPathContext>
-    {
-    }
 }

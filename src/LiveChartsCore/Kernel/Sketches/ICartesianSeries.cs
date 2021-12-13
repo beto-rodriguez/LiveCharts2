@@ -23,49 +23,48 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.Kernel.Sketches
+namespace LiveChartsCore.Kernel.Sketches;
+
+/// <summary>
+/// Defines a Cartesian series.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="IChartSeries{TDrawingContext}" />
+public interface ICartesianSeries<TDrawingContext> : IChartSeries<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a Cartesian series.
+    /// Gets or sets the axis index where the series is scaled in the X plane, the index must exist 
+    /// in the <see cref="ICartesianChartView{TDrawingContext}.XAxes"/> collection.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IChartSeries{TDrawingContext}" />
-    public interface ICartesianSeries<TDrawingContext> : IChartSeries<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets or sets the axis index where the series is scaled in the X plane, the index must exist 
-        /// in the <see cref="ICartesianChartView{TDrawingContext}.XAxes"/> collection.
-        /// </summary>
-        /// <value>
-        /// The index of the axis.
-        /// </value>
-        int ScalesXAt { get; set; }
+    /// <value>
+    /// The index of the axis.
+    /// </value>
+    int ScalesXAt { get; set; }
 
-        /// <summary>
-        /// Gets or sets the axis index where the series is scaled in the Y plane, the index must exist 
-        /// in the <see cref="ICartesianChartView{TDrawingContext}.YAxes"/> collection.
-        /// </summary>
-        /// <value>
-        /// The index of the axis.
-        /// </value>
-        int ScalesYAt { get; set; }
+    /// <summary>
+    /// Gets or sets the axis index where the series is scaled in the Y plane, the index must exist 
+    /// in the <see cref="ICartesianChartView{TDrawingContext}.YAxes"/> collection.
+    /// </summary>
+    /// <value>
+    /// The index of the axis.
+    /// </value>
+    int ScalesYAt { get; set; }
 
-        /// <summary>
-        /// Gets or sets the data labels position.
-        /// </summary>
-        /// <value>
-        /// The data labels position.
-        /// </value>
-        DataLabelsPosition DataLabelsPosition { get; set; }
+    /// <summary>
+    /// Gets or sets the data labels position.
+    /// </summary>
+    /// <value>
+    /// The data labels position.
+    /// </value>
+    DataLabelsPosition DataLabelsPosition { get; set; }
 
-        /// <summary>
-        /// Gets the series bounds.
-        /// </summary>
-        /// <param name="chart">The chart.</param>
-        /// <param name="x">The x.</param>
-        /// <param name="y">The y.</param>
-        /// <returns>the series bounds</returns>
-        SeriesBounds GetBounds(CartesianChart<TDrawingContext> chart, ICartesianAxis x, ICartesianAxis y);
-    }
+    /// <summary>
+    /// Gets the series bounds.
+    /// </summary>
+    /// <param name="chart">The chart.</param>
+    /// <param name="x">The x.</param>
+    /// <param name="y">The y.</param>
+    /// <returns>the series bounds</returns>
+    SeriesBounds GetBounds(CartesianChart<TDrawingContext> chart, ICartesianAxis x, ICartesianAxis y);
 }

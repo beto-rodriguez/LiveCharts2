@@ -20,21 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Measure
+namespace LiveChartsCore.Measure;
+
+/// <summary>
+/// Defines the zooming direction.
+/// </summary>
+public enum ZoomDirection
 {
     /// <summary>
-    /// Defines the zooming direction.
+    /// The zoom in
     /// </summary>
-    public enum ZoomDirection
-    {
-        /// <summary>
-        /// The zoom in
-        /// </summary>
-        ZoomIn,
+    ZoomIn,
 
-        /// <summary>
-        /// The zoom out
-        /// </summary>
-        ZoomOut
-    }
+    /// <summary>
+    /// The zoom out
+    /// </summary>
+    ZoomOut
 }

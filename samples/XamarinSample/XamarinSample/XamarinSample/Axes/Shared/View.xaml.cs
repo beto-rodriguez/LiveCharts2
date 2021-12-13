@@ -1,14 +1,13 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace XamarinSample.Axes.Shared
+namespace XamarinSample.Axes.Shared;
+
+[XamlCompilation(XamlCompilationOptions.Compile)]
+public partial class View : ContentPage
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class View : ContentPage
+    public View()
     {
-        public View()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

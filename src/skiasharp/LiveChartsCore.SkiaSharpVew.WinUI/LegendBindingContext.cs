@@ -24,26 +24,25 @@ using System;
 using System.Collections.Generic;
 using Microsoft.UI.Xaml.Media;
 
-namespace LiveChartsCore.SkiaSharpView.WinUI
+namespace LiveChartsCore.SkiaSharpView.WinUI;
+
+/// <summary>
+/// Defines the legend binding context.
+/// </summary>
+public class LegendBindingContext
 {
     /// <summary>
-    /// Defines the legend binding context.
+    /// Gets the series.
     /// </summary>
-    public class LegendBindingContext
-    {
-        /// <summary>
-        /// Gets the series.
-        /// </summary>
-        public IEnumerable<BindingSeries> SeriesCollection { get; set; } = Array.Empty<BindingSeries>();
+    public IEnumerable<BindingSeries> SeriesCollection { get; set; } = Array.Empty<BindingSeries>();
 
-        /// <summary>
-        /// Gets the background.
-        /// </summary>
-        public Brush Background { get; set; } = new SolidColorBrush();
+    /// <summary>
+    /// Gets the background.
+    /// </summary>
+    public Brush Background { get; set; } = new SolidColorBrush();
 
-        /// <summary>
-        /// Gets the orientation.
-        /// </summary>
-        public Microsoft.UI.Xaml.Controls.Orientation Orientation { get; set; }
-    }
+    /// <summary>
+    /// Gets the orientation.
+    /// </summary>
+    public Microsoft.UI.Xaml.Controls.Orientation Orientation { get; set; }
 }

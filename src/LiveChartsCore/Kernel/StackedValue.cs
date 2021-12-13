@@ -20,35 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel;
+
+/// <summary>
+/// Defines the a stacked value.
+/// </summary>
+public class StackedValue
 {
     /// <summary>
-    /// Defines the a stacked value.
+    /// Gets or sets the start.
     /// </summary>
-    public class StackedValue
-    {
-        /// <summary>
-        /// Gets or sets the start.
-        /// </summary>
-        /// <value>
-        /// The start.
-        /// </value>
-        public double Start { get; set; }
+    /// <value>
+    /// The start.
+    /// </value>
+    public double Start { get; set; }
 
-        /// <summary>
-        /// Gets or sets the end.
-        /// </summary>
-        /// <value>
-        /// The end.
-        /// </value>
-        public double End { get; set; }
+    /// <summary>
+    /// Gets or sets the end.
+    /// </summary>
+    /// <value>
+    /// The end.
+    /// </value>
+    public double End { get; set; }
 
-        /// <summary>
-        /// Gets or sets the total stacked.
-        /// </summary>
-        /// <value>
-        /// The total.
-        /// </value>
-        public double Total { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the total stacked.
+    /// </summary>
+    /// <value>
+    /// The total.
+    /// </value>
+    public double Total { get; set; }
 }

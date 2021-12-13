@@ -22,31 +22,30 @@
 
 using Microsoft.AspNetCore.Components;
 
-namespace LiveChartsCore.SkiaSharpView.Blazor
+namespace LiveChartsCore.SkiaSharpView.Blazor;
+
+/// <summary>
+/// Defines a blazor chart.
+/// </summary>
+public interface IBlazorChart
 {
     /// <summary>
-    /// Defines a blazor chart.
+    /// Gets the canvas element.
     /// </summary>
-    public interface IBlazorChart
-    {
-        /// <summary>
-        /// Gets the canvas element.
-        /// </summary>
-        ElementReference CanvasContainerElement { get; }
+    ElementReference CanvasContainerElement { get; }
 
-        /// <summary>
-        /// Gets or sets the container css class.
-        /// </summary>
-        string ContainerClass { get; set; }
+    /// <summary>
+    /// Gets or sets the container css class.
+    /// </summary>
+    string ContainerClass { get; set; }
 
-        /// <summary>
-        /// Gets or sets the legend class.
-        /// </summary>
-        string LegendClass { get; set; }
+    /// <summary>
+    /// Gets or sets the legend class.
+    /// </summary>
+    string LegendClass { get; set; }
 
-        /// <summary>
-        /// Gets or sets the tooltip class.
-        /// </summary>
-        string TooltipClass { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the tooltip class.
+    /// </summary>
+    string TooltipClass { get; set; }
 }

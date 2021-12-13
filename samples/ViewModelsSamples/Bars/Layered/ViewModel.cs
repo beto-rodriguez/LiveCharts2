@@ -2,11 +2,11 @@
 using LiveChartsCore.SkiaSharpView;
 using System.Collections.Generic;
 
-namespace ViewModelsSamples.Bars.Layered
+namespace ViewModelsSamples.Bars.Layered;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        public List<ISeries> Series { get; set; } = new List<ISeries>
+    public List<ISeries> Series { get; set; } = new List<ISeries>
         {
             new ColumnSeries<int>
             {
@@ -23,5 +23,4 @@ namespace ViewModelsSamples.Bars.Layered
                 IgnoresBarPosition = true
             }
         };
-    }
 }

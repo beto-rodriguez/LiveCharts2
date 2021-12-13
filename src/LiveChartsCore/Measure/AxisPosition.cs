@@ -20,21 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Measure
+namespace LiveChartsCore.Measure;
+
+/// <summary>
+/// Defines an axis position.
+/// </summary>
+public enum AxisPosition
 {
     /// <summary>
-    /// Defines an axis position.
+    /// Places the axis at the bottom for X axes and at the left for Y axes
     /// </summary>
-    public enum AxisPosition
-    {
-        /// <summary>
-        /// Places the axis at the bottom for X axes and at the left for Y axes
-        /// </summary>
-        Start,
+    Start,
 
-        /// <summary>
-        /// Places the axis at the top for X axes and at the right for Y axes
-        /// </summary>
-        End
-    }
+    /// <summary>
+    /// Places the axis at the top for X axes and at the right for Y axes
+    /// </summary>
+    End
 }

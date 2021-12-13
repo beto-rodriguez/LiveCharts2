@@ -2,26 +2,25 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace WPFSample
+namespace WPFSample;
+
+/// <summary>
+/// Interaction logic for MainWindow.xaml
+/// </summary>
+public partial class MainWindow : Window
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    public MainWindow()
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-            Samples = ViewModelsSamples.Index.Samples;
-            DataContext = this;
-        }
+        InitializeComponent();
+        Samples = ViewModelsSamples.Index.Samples;
+        DataContext = this;
+    }
 
-        public string[] Samples { get; set; }
+    public string[] Samples { get; set; }
 
-        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if ((sender as FrameworkElement).DataContext is not string ctx) throw new Exception("Sample not found");
-            content.Content = Activator.CreateInstance(null, $"WPFSample.{ctx.Replace('/', '.')}.View").Unwrap();
-        }
+    private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if ((sender as FrameworkElement).DataContext is not string ctx) throw new Exception("Sample not found");
+        content.Content = Activator.CreateInstance(null, $"WPFSample.{ctx.Replace('/', '.')}.View").Unwrap();
     }
 }

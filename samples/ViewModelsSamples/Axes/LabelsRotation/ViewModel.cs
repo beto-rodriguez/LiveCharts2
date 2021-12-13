@@ -6,15 +6,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
-namespace ViewModelsSamples.Axes.LabelsRotation
-{
-    public class ViewModel : INotifyPropertyChanged
-    {
-        private double _sliderValue = 15;
+namespace ViewModelsSamples.Axes.LabelsRotation;
 
-        public ViewModel()
-        {
-            Series = new ObservableCollection<ISeries>
+public class ViewModel : INotifyPropertyChanged
+{
+    private double _sliderValue = 15;
+
+    public ViewModel()
+    {
+        Series = new ObservableCollection<ISeries>
             {
                 new LineSeries<double>
                 {
@@ -22,7 +22,7 @@ namespace ViewModelsSamples.Axes.LabelsRotation
                 }
             };
 
-            XAxes = new List<Axis>
+        XAxes = new List<Axis>
             {
                 new Axis
                 {
@@ -42,7 +42,7 @@ namespace ViewModelsSamples.Axes.LabelsRotation
                 }
             };
 
-            YAxes = new List<Axis>
+        YAxes = new List<Axis>
             {
                 new Axis
                 {
@@ -63,25 +63,24 @@ namespace ViewModelsSamples.Axes.LabelsRotation
                     SeparatorsPaint = new SolidColorPaint(SKColors.LightGray, 2)
                 }
             };
-        }
-
-        public IEnumerable<ISeries> Series { get; set; }
-
-        public List<Axis> XAxes { get; set; }
-
-        public List<Axis> YAxes { get; set; }
-
-        public double SliderValue
-        {
-            get => _sliderValue;
-            set
-            {
-                _sliderValue = value;
-                YAxes[0].LabelsRotation = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SliderValue)));
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
     }
+
+    public IEnumerable<ISeries> Series { get; set; }
+
+    public List<Axis> XAxes { get; set; }
+
+    public List<Axis> YAxes { get; set; }
+
+    public double SliderValue
+    {
+        get => _sliderValue;
+        set
+        {
+            _sliderValue = value;
+            YAxes[0].LabelsRotation = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SliderValue)));
+        }
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
 }

@@ -31,90 +31,89 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Windows.Foundation;
 
-namespace LiveChartsCore.SkiaSharpView.WinUI
+namespace LiveChartsCore.SkiaSharpView.WinUI;
+
+/// <inheritdoc cref="IChartTooltip{TDrawingContext}"/>
+public sealed partial class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext>
 {
-    /// <inheritdoc cref="IChartTooltip{TDrawingContext}"/>
-    public sealed partial class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext>
+    private readonly DataTemplate _defaultTempalte;
+    private IWinUIChart? _winuiChart;
+
+    /// <summary>
+    /// Initialices a new instance of the <see cref="DefaultTooltip"/> class.
+    /// </summary>
+    public DefaultTooltip()
     {
-        private readonly DataTemplate _defaultTempalte;
-        private IWinUIChart? _winuiChart;
+        InitializeComponent();
+        _defaultTempalte = (DataTemplate)Resources["defaultTemplate"];
+    }
 
-        /// <summary>
-        /// Initialices a new instance of the <see cref="DefaultTooltip"/> class.
-        /// </summary>
-        public DefaultTooltip()
+    /// <summary>
+    /// The actual tempalte property.
+    /// </summary>
+    public static readonly DependencyProperty ActualTemplateProperty =
+        DependencyProperty.Register(nameof(ActualTemplate), typeof(DataTemplate), typeof(DefaultTooltip), new PropertyMetadata(null));
+
+    /// <summary>
+    /// Gets or sets the actual template.
+    /// </summary>
+    public DataTemplate ActualTemplate
+    {
+        get => (DataTemplate)GetValue(ActualTemplateProperty);
+        set => SetValue(ActualTemplateProperty, value);
+    }
+
+    void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+    {
+        var winuiChart = (IWinUIChart)chart.View;
+        _winuiChart = winuiChart;
+
+        var template = winuiChart.TooltipTemplate ?? _defaultTempalte;
+        if (ActualTemplate != template) ActualTemplate = template;
+
+        LvcPoint? location = null;
+        winuiChart.TooltipControl.IsOpen = true;
+
+        Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+
+        if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
         {
-            InitializeComponent();
-            _defaultTempalte = (DataTemplate)Resources["defaultTemplate"];
+            location = tooltipPoints.GetCartesianTooltipLocation(
+                chart.TooltipPosition,
+                new LvcSize((float)DesiredSize.Width,
+                (float)DesiredSize.Height),
+                chart.ControlSize);
+        }
+        if (chart is PieChart<SkiaSharpDrawingContext>)
+        {
+            location = tooltipPoints.GetPieTooltipLocation(
+                chart.TooltipPosition, new LvcSize((float)DesiredSize.Width, (float)DesiredSize.Height));
         }
 
-        /// <summary>
-        /// The actual tempalte property.
-        /// </summary>
-        public static readonly DependencyProperty ActualTemplateProperty =
-            DependencyProperty.Register(nameof(ActualTemplate), typeof(DataTemplate), typeof(DefaultTooltip), new PropertyMetadata(null));
+        if (location is null) throw new Exception("location not supported");
 
-        /// <summary>
-        /// Gets or sets the actual template.
-        /// </summary>
-        public DataTemplate ActualTemplate
+        winuiChart.TooltipControl.PlacementRect = new Rect(location.Value.X, location.Value.Y, 0, 0);
+
+        DataContext = new TooltipBindingContext
         {
-            get => (DataTemplate)GetValue(ActualTemplateProperty);
-            set => SetValue(ActualTemplateProperty, value);
-        }
+            Background = winuiChart.TooltipBackground,
+            Points = tooltipPoints.Select(x =>
+                new BindingPoint
+                {
+                    ChartPoint = x,
+                    FontFamily = winuiChart.TooltipFontFamily,
+                    Foreground = winuiChart.TooltipTextBrush,
+                    FontSize = winuiChart.TooltipFontSize,
+                    FontWeight = winuiChart.TooltipFontWeight,
+                    FontStyle = winuiChart.TooltipFontStyle,
+                    FontStretch = winuiChart.TooltipFontStretch
+                }).ToArray()
+        };
+    }
 
-        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
-        {
-            var winuiChart = (IWinUIChart)chart.View;
-            _winuiChart = winuiChart;
-
-            var template = winuiChart.TooltipTemplate ?? _defaultTempalte;
-            if (ActualTemplate != template) ActualTemplate = template;
-
-            LvcPoint? location = null;
-            winuiChart.TooltipControl.IsOpen = true;
-
-            Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-
-            if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
-            {
-                location = tooltipPoints.GetCartesianTooltipLocation(
-                    chart.TooltipPosition,
-                    new LvcSize((float)DesiredSize.Width,
-                    (float)DesiredSize.Height),
-                    chart.ControlSize);
-            }
-            if (chart is PieChart<SkiaSharpDrawingContext>)
-            {
-                location = tooltipPoints.GetPieTooltipLocation(
-                    chart.TooltipPosition, new LvcSize((float)DesiredSize.Width, (float)DesiredSize.Height));
-            }
-
-            if (location is null) throw new Exception("location not supported");
-
-            winuiChart.TooltipControl.PlacementRect = new Rect(location.Value.X, location.Value.Y, 0, 0);
-
-            DataContext = new TooltipBindingContext
-            {
-                Background = winuiChart.TooltipBackground,
-                Points = tooltipPoints.Select(x =>
-                    new BindingPoint
-                    {
-                        ChartPoint = x,
-                        FontFamily = winuiChart.TooltipFontFamily,
-                        Foreground = winuiChart.TooltipTextBrush,
-                        FontSize = winuiChart.TooltipFontSize,
-                        FontWeight = winuiChart.TooltipFontWeight,
-                        FontStyle = winuiChart.TooltipFontStyle,
-                        FontStretch = winuiChart.TooltipFontStretch
-                    }).ToArray()
-            };
-        }
-
-        void IChartTooltip<SkiaSharpDrawingContext>.Hide()
-        {
-            if (_winuiChart is null) return;
-            _winuiChart.TooltipControl.IsOpen = false;
-        }
+    void IChartTooltip<SkiaSharpDrawingContext>.Hide()
+    {
+        if (_winuiChart is null) return;
+        _winuiChart.TooltipControl.IsOpen = false;
     }
 }

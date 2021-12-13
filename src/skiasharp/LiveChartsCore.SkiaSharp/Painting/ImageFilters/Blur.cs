@@ -23,52 +23,51 @@
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters
+namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
+
+/// <summary>
+/// Creates a blur image filter.
+/// </summary>
+/// <seealso cref="ImageFilter" />
+public class Blur : ImageFilter
 {
+    private readonly float _sigmaX;
+    private readonly float _sigmaY;
+    private readonly SKImageFilter? _filter = null;
+    private readonly SKImageFilter.CropRect? _cropRect = null;
+
     /// <summary>
-    /// Creates a blur image filter.
+    /// Initializes a new instance of the <see cref="Blur"/> class.
     /// </summary>
-    /// <seealso cref="ImageFilter" />
-    public class Blur : ImageFilter
+    /// <param name="sigmaX">The sigma x.</param>
+    /// <param name="sigmaY">The sigma y.</param>
+    /// <param name="input">The input.</param>
+    /// <param name="cropRect">The crop rect.</param>
+    public Blur(float sigmaX, float sigmaY, SKImageFilter? input = null, SKImageFilter.CropRect? cropRect = null)
     {
-        private readonly float _sigmaX;
-        private readonly float _sigmaY;
-        private readonly SKImageFilter? _filter = null;
-        private readonly SKImageFilter.CropRect? _cropRect = null;
+        _sigmaX = sigmaX;
+        _sigmaY = sigmaY;
+        _filter = input;
+        _cropRect = cropRect;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Blur"/> class.
-        /// </summary>
-        /// <param name="sigmaX">The sigma x.</param>
-        /// <param name="sigmaY">The sigma y.</param>
-        /// <param name="input">The input.</param>
-        /// <param name="cropRect">The crop rect.</param>
-        public Blur(float sigmaX, float sigmaY, SKImageFilter? input = null, SKImageFilter.CropRect? cropRect = null)
-        {
-            _sigmaX = sigmaX;
-            _sigmaY = sigmaY;
-            _filter = input;
-            _cropRect = cropRect;
-        }
+    /// <summary>
+    /// Clones this instance.
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="System.NotImplementedException"></exception>
+    public override ImageFilter Clone()
+    {
+        return new Blur(_sigmaX, _sigmaY, _filter, _cropRect);
+    }
 
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public override ImageFilter Clone()
-        {
-            return new Blur(_sigmaX, _sigmaY, _filter, _cropRect);
-        }
-
-        /// <summary>
-        /// Creates the filter.
-        /// </summary>
-        /// <param name="drawingContext">The drawing context.</param>
-        /// <returns></returns>
-        public override void CreateFilter(SkiaSharpDrawingContext drawingContext)
-        {
-            SKImageFilter = SKImageFilter.CreateBlur(_sigmaX, _sigmaY, _filter, _cropRect);
-        }
+    /// <summary>
+    /// Creates the filter.
+    /// </summary>
+    /// <param name="drawingContext">The drawing context.</param>
+    /// <returns></returns>
+    public override void CreateFilter(SkiaSharpDrawingContext drawingContext)
+    {
+        SKImageFilter = SKImageFilter.CreateBlur(_sigmaX, _sigmaY, _filter, _cropRect);
     }
 }

@@ -1,14 +1,13 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace XamarinSample.Heat.Basic
+namespace XamarinSample.Heat.Basic;
+
+[XamlCompilation(XamlCompilationOptions.Compile)]
+public partial class View : ContentPage
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class View : ContentPage
+    public View()
     {
-        public View()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

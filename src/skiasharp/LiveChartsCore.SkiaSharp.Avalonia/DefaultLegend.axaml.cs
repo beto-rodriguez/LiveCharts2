@@ -33,175 +33,174 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.Avalonia
+namespace LiveChartsCore.SkiaSharpView.Avalonia;
+
+/// <summary>
+/// Defines a default legend for a chart.
+/// </summary>
+public class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
 {
+    private readonly DataTemplate _defaultTemplate;
+
     /// <summary>
-    /// Defines a default legend for a chart.
+    /// Initializes a new instance of the <see cref="DefaultLegend"/> class.
     /// </summary>
-    public class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
+    /// <exception cref="Exception">default template not found</exception>
+    public DefaultLegend()
     {
-        private readonly DataTemplate _defaultTemplate;
+        InitializeComponent();
+        _defaultTemplate = (DataTemplate?)Resources["defaultTemplate"] ??
+                           throw new Exception("default template not found");
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultLegend"/> class.
-        /// </summary>
-        /// <exception cref="Exception">default template not found</exception>
-        public DefaultLegend()
+    /// <summary>
+    /// The orientation property
+    /// </summary>
+    public static readonly AvaloniaProperty<Orientation> OrientationProperty =
+       AvaloniaProperty.Register<CartesianChart, Orientation>(nameof(Orientation), Orientation.Horizontal, inherits: true);
+
+    /// <summary>
+    /// The dock property
+    /// </summary>
+    public static readonly AvaloniaProperty<Dock> DockProperty =
+       AvaloniaProperty.Register<CartesianChart, Dock>(nameof(Dock), Dock.Left, inherits: true);
+
+    /// <summary>
+    /// Gets or sets the custom template.
+    /// </summary>
+    /// <value>
+    /// The custom template.
+    /// </value>
+    public DataTemplate? CustomTemplate { get; set; } = null;
+
+    /// <summary>
+    /// Gets or sets the series.
+    /// </summary>
+    /// <value>
+    /// The series.
+    /// </value>
+    public IEnumerable<ISeries> Series { get; set; } = Enumerable.Empty<ISeries>();
+
+    /// <summary>
+    /// Gets or sets the text brush.
+    /// </summary>
+    /// <value>
+    /// The text brush.
+    /// </value>
+    public IBrush TextBrush { get; set; } = new SolidColorBrush(Color.FromRgb(35, 35, 35));
+
+    /// <summary>
+    /// Gets or sets the background brush.
+    /// </summary>
+    /// <value>
+    /// The background brush.
+    /// </value>
+    public IBrush? BackgroundBrush { get; set; } = null;
+
+    /// <summary>
+    /// Gets or sets the orientation.
+    /// </summary>
+    /// <value>
+    /// The orientation.
+    /// </value>
+    public Orientation Orientation
+    {
+        get => (Orientation)GetValue(OrientationProperty);
+        set => SetValue(OrientationProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the dock.
+    /// </summary>
+    /// <value>
+    /// The dock.
+    /// </value>
+    public Dock Dock
+    {
+        get => (Dock)GetValue(DockProperty);
+        set => SetValue(DockProperty, value);
+    }
+
+    void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
+    {
+        var series = chart.ChartSeries;
+        var legendOrientation = chart.LegendOrientation;
+        var legendPosition = chart.LegendPosition;
+        Series = series;
+
+        switch (legendPosition)
         {
-            InitializeComponent();
-            _defaultTemplate = (DataTemplate?)Resources["defaultTemplate"] ??
-                               throw new Exception("default template not found");
+            case LegendPosition.Hidden:
+                IsVisible = false;
+                break;
+            case LegendPosition.Top:
+                IsVisible = true;
+                if (legendOrientation == LegendOrientation.Auto) Orientation = Orientation.Horizontal;
+                Dock = Dock.Top;
+                break;
+            case LegendPosition.Left:
+                IsVisible = true;
+                if (legendOrientation == LegendOrientation.Auto) Orientation = Orientation.Vertical;
+                Dock = Dock.Left;
+                break;
+            case LegendPosition.Right:
+                IsVisible = true;
+                if (legendOrientation == LegendOrientation.Auto) Orientation = Orientation.Vertical;
+                Dock = Dock.Right;
+                break;
+            case LegendPosition.Bottom:
+                IsVisible = true;
+                if (legendOrientation == LegendOrientation.Auto) Orientation = Orientation.Horizontal;
+                Dock = Dock.Bottom;
+                break;
+            default:
+                break;
         }
 
-        /// <summary>
-        /// The orientation property
-        /// </summary>
-        public static readonly AvaloniaProperty<Orientation> OrientationProperty =
-           AvaloniaProperty.Register<CartesianChart, Orientation>(nameof(Orientation), Orientation.Horizontal, inherits: true);
+        if (legendOrientation != LegendOrientation.Auto)
+            Orientation = legendOrientation == LegendOrientation.Horizontal
+                ? Orientation.Horizontal
+                : Orientation.Vertical;
 
-        /// <summary>
-        /// The dock property
-        /// </summary>
-        public static readonly AvaloniaProperty<Dock> DockProperty =
-           AvaloniaProperty.Register<CartesianChart, Dock>(nameof(Dock), Dock.Left, inherits: true);
+        var avaloniaChart = (IAvaloniaChart)chart.View;
 
-        /// <summary>
-        /// Gets or sets the custom template.
-        /// </summary>
-        /// <value>
-        /// The custom template.
-        /// </value>
-        public DataTemplate? CustomTemplate { get; set; } = null;
+        CustomTemplate = avaloniaChart.LegendTemplate;
+        FontFamily = avaloniaChart.LegendFontFamily;
+        FontSize = avaloniaChart.LegendFontSize;
+        FontWeight = avaloniaChart.LegendFontWeight;
+        FontStyle = avaloniaChart.LegendFontStyle;
+        TextBrush = avaloniaChart.LegendTextBrush;
+        BackgroundBrush = avaloniaChart.LegendBackground;
 
-        /// <summary>
-        /// Gets or sets the series.
-        /// </summary>
-        /// <value>
-        /// The series.
-        /// </value>
-        public IEnumerable<ISeries> Series { get; set; } = Enumerable.Empty<ISeries>();
+        BuildContent();
+        Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+    }
 
-        /// <summary>
-        /// Gets or sets the text brush.
-        /// </summary>
-        /// <value>
-        /// The text brush.
-        /// </value>
-        public IBrush TextBrush { get; set; } = new SolidColorBrush(Color.FromRgb(35, 35, 35));
-
-        /// <summary>
-        /// Gets or sets the background brush.
-        /// </summary>
-        /// <value>
-        /// The background brush.
-        /// </value>
-        public IBrush? BackgroundBrush { get; set; } = null;
-
-        /// <summary>
-        /// Gets or sets the orientation.
-        /// </summary>
-        /// <value>
-        /// The orientation.
-        /// </value>
-        public Orientation Orientation
+    /// <summary>
+    /// Builds the content.
+    /// </summary>
+    protected void BuildContent()
+    {
+        var template = CustomTemplate ?? _defaultTemplate;
+        var model = new LegendBindingContext
         {
-            get => (Orientation)GetValue(OrientationProperty);
-            set => SetValue(OrientationProperty, value);
-        }
+            Series = Series,
+            FontFamily = FontFamily,
+            Background = BackgroundBrush,
+            FontSize = FontSize,
+            FontStyle = FontStyle,
+            FontWeight = FontWeight,
+            TextBrush = TextBrush
+        };
 
-        /// <summary>
-        /// Gets or sets the dock.
-        /// </summary>
-        /// <value>
-        /// The dock.
-        /// </value>
-        public Dock Dock
-        {
-            get => (Dock)GetValue(DockProperty);
-            set => SetValue(DockProperty, value);
-        }
+        var templated = template.Build(model);
+        if (templated is null) return;
 
-        void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
-        {
-            var series = chart.ChartSeries;
-            var legendOrientation = chart.LegendOrientation;
-            var legendPosition = chart.LegendPosition;
-            Series = series;
+        Content = templated;
+    }
 
-            switch (legendPosition)
-            {
-                case LegendPosition.Hidden:
-                    IsVisible = false;
-                    break;
-                case LegendPosition.Top:
-                    IsVisible = true;
-                    if (legendOrientation == LegendOrientation.Auto) Orientation = Orientation.Horizontal;
-                    Dock = Dock.Top;
-                    break;
-                case LegendPosition.Left:
-                    IsVisible = true;
-                    if (legendOrientation == LegendOrientation.Auto) Orientation = Orientation.Vertical;
-                    Dock = Dock.Left;
-                    break;
-                case LegendPosition.Right:
-                    IsVisible = true;
-                    if (legendOrientation == LegendOrientation.Auto) Orientation = Orientation.Vertical;
-                    Dock = Dock.Right;
-                    break;
-                case LegendPosition.Bottom:
-                    IsVisible = true;
-                    if (legendOrientation == LegendOrientation.Auto) Orientation = Orientation.Horizontal;
-                    Dock = Dock.Bottom;
-                    break;
-                default:
-                    break;
-            }
-
-            if (legendOrientation != LegendOrientation.Auto)
-                Orientation = legendOrientation == LegendOrientation.Horizontal
-                    ? Orientation.Horizontal
-                    : Orientation.Vertical;
-
-            var avaloniaChart = (IAvaloniaChart)chart.View;
-
-            CustomTemplate = avaloniaChart.LegendTemplate;
-            FontFamily = avaloniaChart.LegendFontFamily;
-            FontSize = avaloniaChart.LegendFontSize;
-            FontWeight = avaloniaChart.LegendFontWeight;
-            FontStyle = avaloniaChart.LegendFontStyle;
-            TextBrush = avaloniaChart.LegendTextBrush;
-            BackgroundBrush = avaloniaChart.LegendBackground;
-
-            BuildContent();
-            Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-        }
-
-        /// <summary>
-        /// Builds the content.
-        /// </summary>
-        protected void BuildContent()
-        {
-            var template = CustomTemplate ?? _defaultTemplate;
-            var model = new LegendBindingContext
-            {
-                Series = Series,
-                FontFamily = FontFamily,
-                Background = BackgroundBrush,
-                FontSize = FontSize,
-                FontStyle = FontStyle,
-                FontWeight = FontWeight,
-                TextBrush = TextBrush
-            };
-
-            var templated = template.Build(model);
-            if (templated is null) return;
-
-            Content = templated;
-        }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
     }
 }

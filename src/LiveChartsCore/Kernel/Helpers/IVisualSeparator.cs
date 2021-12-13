@@ -22,37 +22,36 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Kernel.Helpers
+namespace LiveChartsCore.Kernel.Helpers;
+
+/// <summary>
+/// Defines a visual separator.
+/// </summary>
+/// <typeparam name="TDrawingContext"></typeparam>
+public interface IVisualSeparator<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a visual separator.
+    /// Gets or sets the value.
     /// </summary>
-    /// <typeparam name="TDrawingContext"></typeparam>
-    public interface IVisualSeparator<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
-        /// <value>
-        /// The value.
-        /// </value>
-        public double Value { get; set; }
+    /// <value>
+    /// The value.
+    /// </value>
+    public double Value { get; set; }
 
-        /// <summary>
-        /// Gets or sets the text.
-        /// </summary>
-        /// <value>
-        /// The text.
-        /// </value>
-        public ILabelGeometry<TDrawingContext>? Label { get; set; }
+    /// <summary>
+    /// Gets or sets the text.
+    /// </summary>
+    /// <value>
+    /// The text.
+    /// </value>
+    public ILabelGeometry<TDrawingContext>? Label { get; set; }
 
-        /// <summary>
-        /// Gets the geometry.
-        /// </summary>
-        /// <value>
-        /// The line.
-        /// </value>
-        public IGeometry<TDrawingContext>? Geometry { get; }
-    }
+    /// <summary>
+    /// Gets the geometry.
+    /// </summary>
+    /// <value>
+    /// The line.
+    /// </value>
+    public IGeometry<TDrawingContext>? Geometry { get; }
 }

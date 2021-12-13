@@ -2,56 +2,55 @@
 using System.Windows.Forms;
 using ViewModelsSamples.VisualTest.ReattachVisual;
 
-namespace WinFormsSample.VisualTest.ReattachVisual
+namespace WinFormsSample.VisualTest.ReattachVisual;
+
+public partial class View : UserControl
 {
-    public partial class View : UserControl
+    private bool _isInVisualTree = true;
+    private readonly CartesianChart _cartesianChart;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="View"/> class.
+    /// </summary>
+    public View()
     {
-        private bool _isInVisualTree = true;
-        private readonly CartesianChart _cartesianChart;
+        InitializeComponent();
+        Size = new System.Drawing.Size(50, 50);
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="View"/> class.
-        /// </summary>
-        public View()
+        var viewModel = new ViewModel();
+
+        _cartesianChart = new CartesianChart
         {
-            InitializeComponent();
-            Size = new System.Drawing.Size(50, 50);
+            Series = viewModel.Series,
 
-            var viewModel = new ViewModel();
+            // out of livecharts properties...
+            Location = new System.Drawing.Point(0, 0),
+            Size = new System.Drawing.Size(50, 50),
+            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
+        };
 
-            _cartesianChart = new CartesianChart
-            {
-                Series = viewModel.Series,
+        var b = new Button
+        {
+            Size = new System.Drawing.Size(150, 50),
+            Text = "Toggle"
+        };
+        b.Click += B_Click;
 
-                // out of livecharts properties...
-                Location = new System.Drawing.Point(0, 0),
-                Size = new System.Drawing.Size(50, 50),
-                Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
-            };
+        Controls.Add(_cartesianChart);
+        Controls.Add(b);
+        b.BringToFront();
+    }
 
-            var b = new Button
-            {
-                Size = new System.Drawing.Size(150, 50),
-                Text = "Toggle"
-            };
-            b.Click += B_Click;
-
-            Controls.Add(_cartesianChart);
-            Controls.Add(b);
-            b.BringToFront();
+    private void B_Click(object sender, System.EventArgs e)
+    {
+        if (_isInVisualTree)
+        {
+            Controls.Remove(_cartesianChart);
+            _isInVisualTree = false;
+            return;
         }
 
-        private void B_Click(object sender, System.EventArgs e)
-        {
-            if (_isInVisualTree)
-            {
-                Controls.Remove(_cartesianChart);
-                _isInVisualTree = false;
-                return;
-            }
-
-            Controls.Add(_cartesianChart);
-            _isInVisualTree = true;
-        }
+        Controls.Add(_cartesianChart);
+        _isInVisualTree = true;
     }
 }

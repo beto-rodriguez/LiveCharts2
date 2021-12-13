@@ -4,35 +4,35 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace ViewModelsSamples.Axes.Logaritmic
+namespace ViewModelsSamples.Axes.Logaritmic;
+
+public class ViewModel
 {
-    public class ViewModel
+    // base 10 log, change the base if you require it.
+    // or use any custom scale the logic is the same.
+    private static readonly int s_logBase = 10;
+
+    public ViewModel()
     {
-        // base 10 log, change the base if you require it.
-        // or use any custom scale the logic is the same.
-        private static readonly int s_logBase = 10;
+        // you must normally call this when the application starts.
+        LiveCharts.Configure(config =>
+            config.HasMap<LogaritmicPoint>((model, point) =>
+            {
+                point.SecondaryValue = (float)model.X;
+                point.PrimaryValue = (float)Math.Log(model.Y, s_logBase);
+            }));
+    }
 
-        public ViewModel()
-        {
-            // you must normally call this when the application starts.
-            LiveCharts.Configure(config =>
-                config.HasMap<LogaritmicPoint>((model, point) =>
-                {
-                    point.SecondaryValue = (float)model.X;
-                    point.PrimaryValue = (float)Math.Log(model.Y, s_logBase);
-                }));
-        }
-
-        public IEnumerable<Axis> YAxes { get; set; } = new Axis[]
-        {
+    public IEnumerable<Axis> YAxes { get; set; } = new Axis[]
+    {
             new Axis
             {
                 MinStep = 1, // forces the step of the axis to be at least 1
                 Labeler = value => Math.Pow(s_logBase, value).ToString() // converts the log scale back for the label
             }
-        };
+    };
 
-        public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
+    public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
         {
             new LineSeries<LogaritmicPoint>
             {
@@ -76,5 +76,4 @@ namespace ViewModelsSamples.Axes.Logaritmic
                 }
             }
         };
-    }
 }

@@ -4,11 +4,11 @@ using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using SkiaSharp;
 
-namespace ViewModelsSamples.Heat.Basic
+namespace ViewModelsSamples.Heat.Basic;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        public ObservableCollection<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
+    public ObservableCollection<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
         {
             new HeatSeries<WeightedPoint>
             {
@@ -55,7 +55,7 @@ namespace ViewModelsSamples.Heat.Basic
             }
         };
 
-        public ObservableCollection<Axis> XAxes { get; set; } = new ObservableCollection<Axis>
+    public ObservableCollection<Axis> XAxes { get; set; } = new ObservableCollection<Axis>
         {
             new Axis
             {
@@ -63,12 +63,11 @@ namespace ViewModelsSamples.Heat.Basic
             }
         };
 
-        public ObservableCollection<Axis> YAxes { get; set; } = new ObservableCollection<Axis>
+    public ObservableCollection<Axis> YAxes { get; set; } = new ObservableCollection<Axis>
         {
             new Axis
             {
                 Labels = new [] { "Jan", "Feb", "Mar", "Apr", "May", "Jun" }
             }
         };
-    }
 }

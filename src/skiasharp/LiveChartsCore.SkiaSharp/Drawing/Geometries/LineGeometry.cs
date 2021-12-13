@@ -26,39 +26,38 @@ using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+
+/// <inheritdoc cref="ILineGeometry{TDrawingContext}" />
+public class LineGeometry : Geometry, ILineGeometry<SkiaSharpDrawingContext>
 {
-    /// <inheritdoc cref="ILineGeometry{TDrawingContext}" />
-    public class LineGeometry : Geometry, ILineGeometry<SkiaSharpDrawingContext>
+    private readonly FloatMotionProperty _x1;
+    private readonly FloatMotionProperty _y1;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LineGeometry"/> class.
+    /// </summary>
+    public LineGeometry()
     {
-        private readonly FloatMotionProperty _x1;
-        private readonly FloatMotionProperty _y1;
+        _x1 = RegisterMotionProperty(new FloatMotionProperty(nameof(X1), 0f));
+        _y1 = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LineGeometry"/> class.
-        /// </summary>
-        public LineGeometry()
-        {
-            _x1 = RegisterMotionProperty(new FloatMotionProperty(nameof(X1), 0f));
-            _y1 = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
-        }
+    /// <inheritdoc cref="ILineGeometry{TDrawingContext}.X1" />
+    public float X1 { get => _x1.GetMovement(this); set => _x1.SetMovement(value, this); }
 
-        /// <inheritdoc cref="ILineGeometry{TDrawingContext}.X1" />
-        public float X1 { get => _x1.GetMovement(this); set => _x1.SetMovement(value, this); }
+    /// <inheritdoc cref="ILineGeometry{TDrawingContext}.Y1" />
+    public float Y1 { get => _y1.GetMovement(this); set => _y1.SetMovement(value, this); }
 
-        /// <inheritdoc cref="ILineGeometry{TDrawingContext}.Y1" />
-        public float Y1 { get => _y1.GetMovement(this); set => _y1.SetMovement(value, this); }
+    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
+    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    {
+        context.Canvas.DrawLine(X, Y, X1, Y1, paint);
+    }
 
-        /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-        public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
-        {
-            context.Canvas.DrawLine(X, Y, X1, Y1, paint);
-        }
-
-        /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
-        protected override LvcSize OnMeasure(Paint drawable)
-        {
-            return new LvcSize(Math.Abs(X1 - X), Math.Abs(Y1 - Y));
-        }
+    /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
+    protected override LvcSize OnMeasure(Paint drawable)
+    {
+        return new LvcSize(Math.Abs(X1 - X), Math.Abs(Y1 - Y));
     }
 }

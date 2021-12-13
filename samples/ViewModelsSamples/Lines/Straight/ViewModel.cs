@@ -2,11 +2,11 @@
 using LiveChartsCore.SkiaSharpView;
 using System.Collections.Generic;
 
-namespace ViewModelsSamples.Lines.Straight
+namespace ViewModelsSamples.Lines.Straight;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        public List<ISeries> Series { get; set; } = new List<ISeries>
+    public List<ISeries> Series { get; set; } = new List<ISeries>
         {
             new LineSeries<double>
             {
@@ -18,5 +18,4 @@ namespace ViewModelsSamples.Lines.Straight
                 LineSmoothness = 0
             }
         };
-    }
 }

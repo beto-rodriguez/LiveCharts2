@@ -26,95 +26,94 @@ using LiveChartsCore.Geo;
 using LiveChartsCore.Motion;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+
+/// <summary>
+/// Defines a path geometry with a specified color.
+/// </summary>
+/// <seealso cref="PathGeometry" />
+public class HeatPathShape : PathGeometry, IHeatPathShape
 {
+    private readonly ColorMotionProperty _fillProperty;
+
     /// <summary>
-    /// Defines a path geometry with a specified color.
+    /// Initializes a new instance of the <see cref="HeatPathShape"/> class.
     /// </summary>
-    /// <seealso cref="PathGeometry" />
-    public class HeatPathShape : PathGeometry, IHeatPathShape
+    public HeatPathShape() : base()
     {
-        private readonly ColorMotionProperty _fillProperty;
+        _fillProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(FillColor), LvcColor.Empty));
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HeatPathShape"/> class.
-        /// </summary>
-        public HeatPathShape() : base()
+    /// <summary>
+    /// Gets or sets the color of the fill.
+    /// </summary>
+    /// <value>
+    /// The color of the fill.
+    /// </value>
+    public LvcColor FillColor
+    {
+        get => _fillProperty.GetMovement(this);
+        set => _fillProperty.SetMovement(value, this);
+    }
+
+    /// <inheritdoc cref="PathGeometry.Draw(SkiaSharpDrawingContext)"/>
+    public override void Draw(SkiaSharpDrawingContext context)
+    {
+        if (_commands.Count == 0) return;
+
+        var toRemoveSegments = new List<IPathCommand<SKPath>>();
+
+        using var path = new SKPath();
+        var isValid = true;
+
+        foreach (var segment in _commands)
         {
-            _fillProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(FillColor), LvcColor.Empty));
+            segment.IsValid = true;
+            segment.Execute(path, GetCurrentTime(), this);
+            isValid = isValid && segment.IsValid;
+
+            if (segment.IsValid && segment.RemoveOnCompleted) toRemoveSegments.Add(segment);
         }
 
-        /// <summary>
-        /// Gets or sets the color of the fill.
-        /// </summary>
-        /// <value>
-        /// The color of the fill.
-        /// </value>
-        public LvcColor FillColor
+        foreach (var segment in toRemoveSegments)
         {
-            get => _fillProperty.GetMovement(this);
-            set => _fillProperty.SetMovement(value, this);
+            _ = _commands.Remove(segment);
+            isValid = false;
         }
 
-        /// <inheritdoc cref="PathGeometry.Draw(SkiaSharpDrawingContext)"/>
-        public override void Draw(SkiaSharpDrawingContext context)
+        if (IsClosed)
+            path.Close();
+
+        var originalColor = context.Paint.Color;
+        var originalStyle = context.Paint.Style;
+
+        var fill = FillColor;
+
+        if (fill != LvcColor.Empty)
         {
-            if (_commands.Count == 0) return;
-
-            var toRemoveSegments = new List<IPathCommand<SKPath>>();
-
-            using var path = new SKPath();
-            var isValid = true;
-
-            foreach (var segment in _commands)
-            {
-                segment.IsValid = true;
-                segment.Execute(path, GetCurrentTime(), this);
-                isValid = isValid && segment.IsValid;
-
-                if (segment.IsValid && segment.RemoveOnCompleted) toRemoveSegments.Add(segment);
-            }
-
-            foreach (var segment in toRemoveSegments)
-            {
-                _ = _commands.Remove(segment);
-                isValid = false;
-            }
-
-            if (IsClosed)
-                path.Close();
-
-            var originalColor = context.Paint.Color;
-            var originalStyle = context.Paint.Style;
-
-            var fill = FillColor;
-
-            if (fill != LvcColor.Empty)
-            {
-                context.Paint.Color = fill.AsSKColor();
-                context.Paint.Style = SKPaintStyle.Fill;
-            }
-
-            context.Canvas.DrawPath(path, context.Paint);
-
-            if (fill != LvcColor.Empty)
-            {
-                context.Paint.Color = originalColor;
-                context.Paint.Style = originalStyle;
-            }
-
-            if (!isValid) SetInvalidState();
+            context.Paint.Color = fill.AsSKColor();
+            context.Paint.Style = SKPaintStyle.Fill;
         }
 
-        /// <inheritdoc cref="IAnimatable.CompleteAllTransitions" />
-        public override void CompleteAllTransitions()
-        {
-            foreach (var segment in _commands)
-            {
-                segment.CompleteAllTransitions();
-            }
+        context.Canvas.DrawPath(path, context.Paint);
 
-            base.CompleteAllTransitions();
+        if (fill != LvcColor.Empty)
+        {
+            context.Paint.Color = originalColor;
+            context.Paint.Style = originalStyle;
         }
+
+        if (!isValid) SetInvalidState();
+    }
+
+    /// <inheritdoc cref="IAnimatable.CompleteAllTransitions" />
+    public override void CompleteAllTransitions()
+    {
+        foreach (var segment in _commands)
+        {
+            segment.CompleteAllTransitions();
+        }
+
+        base.CompleteAllTransitions();
     }
 }

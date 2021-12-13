@@ -4,11 +4,11 @@ using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System.Collections.Generic;
 
-namespace ViewModelsSamples.StepLines.Area
+namespace ViewModelsSamples.StepLines.Area;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        public List<ISeries> Series { get; set; } = new List<ISeries>
+    public List<ISeries> Series { get; set; } = new List<ISeries>
         {
             new StepLineSeries<double>
             {
@@ -23,11 +23,10 @@ namespace ViewModelsSamples.StepLines.Area
             }
         };
 
-        // Creates a gray background and border in the draw margin.
-        public DrawMarginFrame DrawMarginFrame => new DrawMarginFrame
-        {
-            Fill = new SolidColorPaint(new SKColor(220, 220, 220)),
-            Stroke = new SolidColorPaint(new SKColor(180, 180, 180), 2)
-        };
-    }
+    // Creates a gray background and border in the draw margin.
+    public DrawMarginFrame DrawMarginFrame => new DrawMarginFrame
+    {
+        Fill = new SolidColorPaint(new SKColor(220, 220, 220)),
+        Stroke = new SolidColorPaint(new SKColor(180, 180, 180), 2)
+    };
 }

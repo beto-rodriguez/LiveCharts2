@@ -2,42 +2,41 @@
 using System.Windows.Forms;
 using ViewModelsSamples.General.Visibility;
 
-namespace WinFormsSample.General.Visibility
+namespace WinFormsSample.General.Visibility;
+
+public partial class View : UserControl
 {
-    public partial class View : UserControl
+    private readonly CartesianChart cartesianChart;
+
+    public View()
     {
-        private readonly CartesianChart cartesianChart;
+        InitializeComponent();
+        Size = new System.Drawing.Size(100, 100);
 
-        public View()
+        var viewModel = new ViewModel();
+
+        cartesianChart = new CartesianChart
         {
-            InitializeComponent();
-            Size = new System.Drawing.Size(100, 100);
+            Series = viewModel.Series,
 
-            var viewModel = new ViewModel();
+            // out of livecharts properties...
+            Location = new System.Drawing.Point(0, 50),
+            Size = new System.Drawing.Size(100, 50),
+            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
+        };
 
-            cartesianChart = new CartesianChart
-            {
-                Series = viewModel.Series,
+        Controls.Add(cartesianChart);
 
-                // out of livecharts properties...
-                Location = new System.Drawing.Point(0, 50),
-                Size = new System.Drawing.Size(100, 50),
-                Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
-            };
+        var b1 = new Button { Text = "toggle 1", Location = new System.Drawing.Point(0, 0) };
+        b1.Click += (object sender, System.EventArgs e) => viewModel.ToogleSeries0();
+        Controls.Add(b1);
 
-            Controls.Add(cartesianChart);
+        var b2 = new Button { Text = "toggle 2", Location = new System.Drawing.Point(80, 0) };
+        b2.Click += (object sender, System.EventArgs e) => viewModel.ToogleSeries1();
+        Controls.Add(b2);
 
-            var b1 = new Button { Text = "toggle 1", Location = new System.Drawing.Point(0, 0) };
-            b1.Click += (object sender, System.EventArgs e) => viewModel.ToogleSeries0();
-            Controls.Add(b1);
-
-            var b2 = new Button { Text = "toggle 2", Location = new System.Drawing.Point(80, 0) };
-            b2.Click += (object sender, System.EventArgs e) => viewModel.ToogleSeries1();
-            Controls.Add(b2);
-
-            var b3 = new Button { Text = "toggle 3", Location = new System.Drawing.Point(160, 0) };
-            b3.Click += (object sender, System.EventArgs e) => viewModel.ToogleSeries2();
-            Controls.Add(b3);
-        }
+        var b3 = new Button { Text = "toggle 3", Location = new System.Drawing.Point(160, 0) };
+        b3.Click += (object sender, System.EventArgs e) => viewModel.ToogleSeries2();
+        Controls.Add(b3);
     }
 }

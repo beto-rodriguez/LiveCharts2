@@ -27,106 +27,105 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-namespace LiveChartsCore.SkiaSharpView.WinUI
+namespace LiveChartsCore.SkiaSharpView.WinUI;
+
+/// <inheritdoc cref="IChartLegend{TDrawingContext}"/>
+public sealed partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
 {
-    /// <inheritdoc cref="IChartLegend{TDrawingContext}"/>
-    public sealed partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
+    private readonly DataTemplate _defaultTempalte;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DefaultLegend"/> class.
+    /// </summary>
+    public DefaultLegend()
     {
-        private readonly DataTemplate _defaultTempalte;
+        InitializeComponent();
+        _defaultTempalte = (DataTemplate)Resources["defaultTemplate"];
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultLegend"/> class.
-        /// </summary>
-        public DefaultLegend()
+    /// <summary>
+    /// The actual tempalte property.
+    /// </summary>
+    public static readonly DependencyProperty ActualTemplateProperty =
+        DependencyProperty.Register(nameof(ActualTemplate), typeof(DataTemplate), typeof(DefaultLegend), new PropertyMetadata(null));
+
+    /// <summary>
+    /// Gets or sets the actual template.
+    /// </summary>
+    public DataTemplate ActualTemplate
+    {
+        get => (DataTemplate)GetValue(ActualTemplateProperty);
+        set => SetValue(ActualTemplateProperty, value);
+    }
+
+    void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
+    {
+        var winuiChart = (IWinUIChart)chart.View;
+
+        var series = chart.ChartSeries;
+        var legendOrientation = chart.LegendOrientation;
+        var legendPosition = chart.LegendPosition;
+
+        var template = winuiChart.LegendTemplate ?? _defaultTempalte;
+        if (ActualTemplate != template) ActualTemplate = template;
+
+        var orientation = Orientation.Horizontal;
+
+        switch (legendPosition)
         {
-            InitializeComponent();
-            _defaultTempalte = (DataTemplate)Resources["defaultTemplate"];
+            case LegendPosition.Hidden:
+                Visibility = Visibility.Collapsed;
+                break;
+            case LegendPosition.Top:
+                Visibility = Visibility.Visible;
+                if (legendOrientation == LegendOrientation.Auto) orientation = Orientation.Horizontal;
+                Grid.SetColumn(winuiChart.Legend, 1);
+                Grid.SetRow(winuiChart.Legend, 0);
+                break;
+            case LegendPosition.Left:
+                Visibility = Visibility.Visible;
+                if (legendOrientation == LegendOrientation.Auto) orientation = Orientation.Vertical;
+                Grid.SetColumn(winuiChart.Legend, 0);
+                Grid.SetRow(winuiChart.Legend, 1);
+                break;
+            case LegendPosition.Right:
+                Visibility = Visibility.Visible;
+                if (legendOrientation == LegendOrientation.Auto) orientation = Orientation.Vertical;
+                Grid.SetColumn(winuiChart.Legend, 2);
+                Grid.SetRow(winuiChart.Legend, 1);
+                break;
+            case LegendPosition.Bottom:
+                Visibility = Visibility.Visible;
+                if (legendOrientation == LegendOrientation.Auto) orientation = Orientation.Horizontal;
+                Grid.SetColumn(winuiChart.Legend, 1);
+                Grid.SetRow(winuiChart.Legend, 2);
+                break;
+            default:
+                break;
         }
 
-        /// <summary>
-        /// The actual tempalte property.
-        /// </summary>
-        public static readonly DependencyProperty ActualTemplateProperty =
-            DependencyProperty.Register(nameof(ActualTemplate), typeof(DataTemplate), typeof(DefaultLegend), new PropertyMetadata(null));
+        if (legendOrientation != LegendOrientation.Auto)
+            orientation = legendOrientation == LegendOrientation.Horizontal
+                ? Orientation.Horizontal
+                : Orientation.Vertical;
 
-        /// <summary>
-        /// Gets or sets the actual template.
-        /// </summary>
-        public DataTemplate ActualTemplate
+        DataContext = new LegendBindingContext
         {
-            get => (DataTemplate)GetValue(ActualTemplateProperty);
-            set => SetValue(ActualTemplateProperty, value);
-        }
+            Background = winuiChart.LegendBackground,
+            Orientation = orientation,
+            SeriesCollection = series.Select(x =>
+                new BindingSeries
+                {
+                    Series = x,
+                    FontFamily = winuiChart.LegendFontFamily,
+                    Foreground = winuiChart.LegendTextBrush,
+                    FontSize = winuiChart.LegendFontSize,
+                    FontWeight = winuiChart.LegendFontWeight,
+                    FontStyle = winuiChart.LegendFontStyle,
+                    FontStretch = winuiChart.LegendFontStretch
+                })
+        };
 
-        void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
-        {
-            var winuiChart = (IWinUIChart)chart.View;
-
-            var series = chart.ChartSeries;
-            var legendOrientation = chart.LegendOrientation;
-            var legendPosition = chart.LegendPosition;
-
-            var template = winuiChart.LegendTemplate ?? _defaultTempalte;
-            if (ActualTemplate != template) ActualTemplate = template;
-
-            var orientation = Orientation.Horizontal;
-
-            switch (legendPosition)
-            {
-                case LegendPosition.Hidden:
-                    Visibility = Visibility.Collapsed;
-                    break;
-                case LegendPosition.Top:
-                    Visibility = Visibility.Visible;
-                    if (legendOrientation == LegendOrientation.Auto) orientation = Orientation.Horizontal;
-                    Grid.SetColumn(winuiChart.Legend, 1);
-                    Grid.SetRow(winuiChart.Legend, 0);
-                    break;
-                case LegendPosition.Left:
-                    Visibility = Visibility.Visible;
-                    if (legendOrientation == LegendOrientation.Auto) orientation = Orientation.Vertical;
-                    Grid.SetColumn(winuiChart.Legend, 0);
-                    Grid.SetRow(winuiChart.Legend, 1);
-                    break;
-                case LegendPosition.Right:
-                    Visibility = Visibility.Visible;
-                    if (legendOrientation == LegendOrientation.Auto) orientation = Orientation.Vertical;
-                    Grid.SetColumn(winuiChart.Legend, 2);
-                    Grid.SetRow(winuiChart.Legend, 1);
-                    break;
-                case LegendPosition.Bottom:
-                    Visibility = Visibility.Visible;
-                    if (legendOrientation == LegendOrientation.Auto) orientation = Orientation.Horizontal;
-                    Grid.SetColumn(winuiChart.Legend, 1);
-                    Grid.SetRow(winuiChart.Legend, 2);
-                    break;
-                default:
-                    break;
-            }
-
-            if (legendOrientation != LegendOrientation.Auto)
-                orientation = legendOrientation == LegendOrientation.Horizontal
-                    ? Orientation.Horizontal
-                    : Orientation.Vertical;
-
-            DataContext = new LegendBindingContext
-            {
-                Background = winuiChart.LegendBackground,
-                Orientation = orientation,
-                SeriesCollection = series.Select(x =>
-                    new BindingSeries
-                    {
-                        Series = x,
-                        FontFamily = winuiChart.LegendFontFamily,
-                        Foreground = winuiChart.LegendTextBrush,
-                        FontSize = winuiChart.LegendFontSize,
-                        FontWeight = winuiChart.LegendFontWeight,
-                        FontStyle = winuiChart.LegendFontStyle,
-                        FontStretch = winuiChart.LegendFontStretch
-                    })
-            };
-
-            UpdateLayout();
-        }
+        UpdateLayout();
     }
 }

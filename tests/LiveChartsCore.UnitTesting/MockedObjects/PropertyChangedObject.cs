@@ -22,19 +22,18 @@
 
 using System.ComponentModel;
 
-namespace LiveChartsCore.UnitTesting.MockedObjects
+namespace LiveChartsCore.UnitTesting.MockedObjects;
+
+public class PropertyChangedObject : INotifyPropertyChanged
 {
-    public class PropertyChangedObject : INotifyPropertyChanged
+    private double value;
+
+    public double Value { get => value; set { this.value = value; OnPropertyChanged(nameof(Value)); } }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    protected void OnPropertyChanged(string propertyName)
     {
-        private double value;
-
-        public double Value { get => value; set { this.value = value; OnPropertyChanged(nameof(Value)); } }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

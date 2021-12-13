@@ -23,33 +23,32 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView
+namespace LiveChartsCore.SkiaSharpView;
+
+/// <inheritdoc cref="HeatLandSeries{TDrawingContext}"/>
+public class HeatLandSeries : HeatLandSeries<SkiaSharpDrawingContext>
 {
-    /// <inheritdoc cref="HeatLandSeries{TDrawingContext}"/>
-    public class HeatLandSeries : HeatLandSeries<SkiaSharpDrawingContext>
+    /// <summary>
+    /// Initialices a new instance of the <see cref="HeatLandSeries"/> class.
+    /// </summary>
+    public HeatLandSeries()
     {
-        /// <summary>
-        /// Initialices a new instance of the <see cref="HeatLandSeries"/> class.
-        /// </summary>
-        public HeatLandSeries()
+        HeatMap = new[]
         {
-            HeatMap = new[]
-            {
                 LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
                 LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
             };
 
-            if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
-            IntitializeSeries(LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetSolidColorPaint());
+        if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
+        IntitializeSeries(LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetSolidColorPaint());
 
-            // ToDo: Themeit!
+        // ToDo: Themeit!
 
-            //var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-            //var initializer = stylesBuilder.GetVisualsInitializer();
-            //if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
-            //    throw new Exception("Default colors are not valid");
+        //var stylesBuilder = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
+        //var initializer = stylesBuilder.GetVisualsInitializer();
+        //if (stylesBuilder.CurrentColors is null || stylesBuilder.CurrentColors.Length == 0)
+        //    throw new Exception("Default colors are not valid");
 
-            //initializer.ApplyStyleToSeries(this);
-        }
+        //initializer.ApplyStyleToSeries(this);
     }
 }

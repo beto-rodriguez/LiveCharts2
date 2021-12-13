@@ -4,11 +4,11 @@ using LiveChartsCore.SkiaSharpView;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace ViewModelsSamples.Scatter.Basic
+namespace ViewModelsSamples.Scatter.Basic;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
+    public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
         {
             new ScatterSeries<ObservablePoint>
             {
@@ -39,5 +39,4 @@ namespace ViewModelsSamples.Scatter.Basic
                 }
             }
         };
-    }
 }

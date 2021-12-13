@@ -25,103 +25,102 @@ using System.Collections.Generic;
 using System.Linq;
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel;
+
+/// <summary>
+/// Defines the points states dictionary class.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+public class PointStatesDictionary<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
+    private readonly Dictionary<string, StrokeAndFillDrawable<TDrawingContext>> _states = new();
+
     /// <summary>
-    /// Defines the points states dictionary class.
+    /// Gets or sets the stroke and fill for the specified state name.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public class PointStatesDictionary<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    /// <value>
+    /// The stroke and fill.
+    /// </value>
+    /// <param name="stateName">Name of the state.</param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException">$"A null instance is not valid at this point, to delete a key please use the {nameof(DeleteState)}() method.</exception>
+    public StrokeAndFillDrawable<TDrawingContext>? this[string stateName]
     {
-        private readonly Dictionary<string, StrokeAndFillDrawable<TDrawingContext>> _states = new();
-
-        /// <summary>
-        /// Gets or sets the stroke and fill for the specified state name.
-        /// </summary>
-        /// <value>
-        /// The stroke and fill.
-        /// </value>
-        /// <param name="stateName">Name of the state.</param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException">$"A null instance is not valid at this point, to delete a key please use the {nameof(DeleteState)}() method.</exception>
-        public StrokeAndFillDrawable<TDrawingContext>? this[string stateName]
+        get => !_states.TryGetValue(stateName, out var state) ? null : state;
+        set
         {
-            get => !_states.TryGetValue(stateName, out var state) ? null : state;
-            set
-            {
-                if (value is null)
-                    throw new InvalidOperationException(
-                        $"A null instance is not valid at this point, to delete a key please use the {nameof(DeleteState)}() method.");
+            if (value is null)
+                throw new InvalidOperationException(
+                    $"A null instance is not valid at this point, to delete a key please use the {nameof(DeleteState)}() method.");
 
-                if (_states.ContainsKey(stateName)) RemoveState(_states[stateName]);
+            if (_states.ContainsKey(stateName)) RemoveState(_states[stateName]);
 
-                _states[stateName] = value;
+            _states[stateName] = value;
 
-                if (Chart is null) return;
-
-                if (value.Fill is not null) Chart.Canvas.AddDrawableTask(value.Fill);
-                if (value.Stroke is not null) Chart.Canvas.AddDrawableTask(value.Stroke);
-            }
-        }
-
-        /// <summary>
-        /// Gets the chart.
-        /// </summary>
-        /// <value>
-        /// The chart.
-        /// </value>
-        public Chart<TDrawingContext>? Chart { get; internal set; }
-
-        /// <summary>
-        /// Gets the states.
-        /// </summary>
-        /// <returns></returns>
-        public StrokeAndFillDrawable<TDrawingContext>[] GetStates()
-        {
-            return _states.Values.ToArray();
-        }
-
-        /// <summary>
-        /// Add the visual state for the given key.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="fill">The fill.</param>
-        /// <param name="stroke">The stroke.</param>
-        /// <param name="isHoverState">Indicates whether the state should be remover when the pointer goes out of a chart.</param>
-        /// <returns></returns>
-        public PointStatesDictionary<TDrawingContext> WithState(
-            string key,
-            IPaint<TDrawingContext>? fill,
-            IPaint<TDrawingContext>? stroke,
-            bool isHoverState = false)
-        {
-            _states.Add(key, new StrokeAndFillDrawable<TDrawingContext>(fill, stroke, isHoverState));
-            return this;
-        }
-
-        /// <summary>
-        /// Deletes the state.
-        /// </summary>
-        /// <param name="stateName">Name of the state.</param>
-        /// <returns></returns>
-        public void DeleteState(string stateName)
-        {
-            RemoveState(_states[stateName]);
-            _ = _states.Remove(stateName);
-        }
-
-        /// <summary>
-        /// Removes the state.
-        /// </summary>
-        /// <param name="state">The state.</param>
-        /// <returns></returns>
-        private void RemoveState(StrokeAndFillDrawable<TDrawingContext> state)
-        {
             if (Chart is null) return;
 
-            if (state.Fill is not null) Chart.Canvas.RemovePaintTask(state.Fill);
-            if (state.Stroke is not null) Chart.Canvas.RemovePaintTask(state.Stroke);
+            if (value.Fill is not null) Chart.Canvas.AddDrawableTask(value.Fill);
+            if (value.Stroke is not null) Chart.Canvas.AddDrawableTask(value.Stroke);
         }
+    }
+
+    /// <summary>
+    /// Gets the chart.
+    /// </summary>
+    /// <value>
+    /// The chart.
+    /// </value>
+    public Chart<TDrawingContext>? Chart { get; internal set; }
+
+    /// <summary>
+    /// Gets the states.
+    /// </summary>
+    /// <returns></returns>
+    public StrokeAndFillDrawable<TDrawingContext>[] GetStates()
+    {
+        return _states.Values.ToArray();
+    }
+
+    /// <summary>
+    /// Add the visual state for the given key.
+    /// </summary>
+    /// <param name="key">The key.</param>
+    /// <param name="fill">The fill.</param>
+    /// <param name="stroke">The stroke.</param>
+    /// <param name="isHoverState">Indicates whether the state should be remover when the pointer goes out of a chart.</param>
+    /// <returns></returns>
+    public PointStatesDictionary<TDrawingContext> WithState(
+        string key,
+        IPaint<TDrawingContext>? fill,
+        IPaint<TDrawingContext>? stroke,
+        bool isHoverState = false)
+    {
+        _states.Add(key, new StrokeAndFillDrawable<TDrawingContext>(fill, stroke, isHoverState));
+        return this;
+    }
+
+    /// <summary>
+    /// Deletes the state.
+    /// </summary>
+    /// <param name="stateName">Name of the state.</param>
+    /// <returns></returns>
+    public void DeleteState(string stateName)
+    {
+        RemoveState(_states[stateName]);
+        _ = _states.Remove(stateName);
+    }
+
+    /// <summary>
+    /// Removes the state.
+    /// </summary>
+    /// <param name="state">The state.</param>
+    /// <returns></returns>
+    private void RemoveState(StrokeAndFillDrawable<TDrawingContext> state)
+    {
+        if (Chart is null) return;
+
+        if (state.Fill is not null) Chart.Canvas.RemovePaintTask(state.Fill);
+        if (state.Stroke is not null) Chart.Canvas.RemovePaintTask(state.Stroke);
     }
 }

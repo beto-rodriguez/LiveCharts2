@@ -3,25 +3,24 @@ using ViewModelsSamples.Bars.Race;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace XamarinSample.Bars.Race
-{
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class View : ContentPage
-    {
-        public View()
-        {
-            InitializeComponent();
-            Update();
-        }
+namespace XamarinSample.Bars.Race;
 
-        public async void Update()
+[XamlCompilation(XamlCompilationOptions.Compile)]
+public partial class View : ContentPage
+{
+    public View()
+    {
+        InitializeComponent();
+        Update();
+    }
+
+    public async void Update()
+    {
+        var vm = (ViewModel)BindingContext;
+        while (true)
         {
-            var vm = (ViewModel)BindingContext;
-            while (true)
-            {
-                Device.BeginInvokeOnMainThread(vm.RandomIncrement);
-                await Task.Delay(1500);
-            }
+            Device.BeginInvokeOnMainThread(vm.RandomIncrement);
+            await Task.Delay(1500);
         }
     }
 }
