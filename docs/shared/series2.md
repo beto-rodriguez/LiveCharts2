@@ -25,7 +25,7 @@ If this property is not set, the library will set it according to the series typ
 
 Produces the following result:
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/1.8.padding00.png)
+![image]({{ assets_url }}/docs/_assets/1.8.padding00.png)
 
 But you can remove the padding only from an axis, for example:
 
@@ -38,7 +38,7 @@ But you can remove the padding only from an axis, for example:
     Fill = null
 }</code></pre>
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/1.8.padding50.png)
+![image]({{ assets_url }}/docs/_assets/1.8.padding50.png)
 
 Or you can increase the distance:
 
@@ -51,4 +51,4 @@ Or you can increase the distance:
     Fill = null
 }</code></pre>
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/1.8.padding22.png)
+![image]({{ assets_url }}/docs/_assets/1.8.padding22.png)

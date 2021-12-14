@@ -72,7 +72,7 @@ Drag a new `CartesianChart` control from your toolbox, then in the code behind a
 };</code></pre>
 {{~ end ~}}
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/cc-mvp.png)
+![image]({{ assets_url }}/docs/_assets/cc-mvp.png)
 
 The main components of this control are:
 
@@ -81,7 +81,7 @@ The main components of this control are:
 - Tooltip
 - Legend
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/chart-overview.png)
+![image]({{ assets_url }}/docs/_assets/chart-overview.png)
 
 But notice in the previous code snippet we did not specify the Axes, Tooltip, Legend or the series colors, this is because LiveCharts will
 decide them based on the current theme of the library, you can also customize any of these properties when you require it, this article will
@@ -94,63 +94,63 @@ any image bellow is a link to an article explaining more about them.
 
 <a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Line%20Series">
 <div class="series-miniature">
-<img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/samples/lines/basic/result.png" alt="series"/>
+<img src="{{ assets_url }}/docs/samples/lines/basic/result.png" alt="series"/>
 <div class="text-center"><b>Line series</b></div>
 </div>
 </a>
 
 <a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Column%20Series">
 <div class="series-miniature">
-<img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/samples/bars/basic/result.png"  alt="series"/>
+<img src="{{ assets_url }}/docs/samples/bars/basic/result.png"  alt="series"/>
 <div class="text-center"><b>Column series</b></div>
 </div>
 </a>
 
 <a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Scatter%20Series">
 <div class="series-miniature">
-<img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/samples/scatter/basic/result.png"  alt="series"/>
+<img src="{{ assets_url }}/docs/samples/scatter/basic/result.png"  alt="series"/>
 <div class="text-center"><b>Scatter series</b></div>
 </div>
 </a>
 
 <a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Step%20line%20Series">
 <div class="series-miniature">
-<img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/samples/stepline/basic/result.png" alt="series"/>
+<img src="{{ assets_url }}/docs/samples/stepline/basic/result.png" alt="series"/>
 <div class="text-center"><b>Step line series</b></div>
 </div>
 </a>
 
 <a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Heat%20Series">
 <div class="series-miniature">
-<img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/samples/heat/basic/result.png" alt="series"/>
+<img src="{{ assets_url }}/docs/samples/heat/basic/result.png" alt="series"/>
 <div class="text-center"><b>Heat series</b></div>
 </div>
 </a>
 
 <a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Candle%20Sticks%20Series">
 <div class="series-miniature">
-<img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/samples/financial/basic/result.png" alt="series"/>
+<img src="{{ assets_url }}/docs/samples/financial/basic/result.png" alt="series"/>
 <div class="text-center"><b>Candle sticks series</b></div>
 </div>
 </a>
 
 <a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Stacked%20Line%20Series">
 <div class="series-miniature">
-<img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/samples/stackedArea/basic/result.png" alt="series"/>
+<img src="{{ assets_url }}/docs/samples/stackedArea/basic/result.png" alt="series"/>
 <div class="text-center"><b>Stacked line series</b></div>
 </div>
 </a>
 
 <a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Stacked%20Column%20Series">
 <div class="series-miniature">
-<img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/samples/stackedColumn/basic/result.png" alt="series"/>
+<img src="{{ assets_url }}/docs/samples/stackedColumn/basic/result.png" alt="series"/>
 <div class="text-center"><b>Stacked column series</b></div>
 </div>
 </a>
 
 <a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Stacked%20Step%20Line%20Series">
 <div class="series-miniature">
-<img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/samples/stackedStepLine/basic/result.png" alt="series"/>
+<img src="{{ assets_url }}/docs/samples/stackedStepLine/basic/result.png" alt="series"/>
 <div class="text-center"><b>Stacked step line series</b></div>
 </div>
 </a>
@@ -312,7 +312,7 @@ cartesianChart1.YAxes = new Axis[]
 };</code></pre>
 {{~ end ~}}
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/axes-paints.png)
+![image]({{ assets_url }}/docs/_assets/axes-paints.png)
 
 ## Axes.Labels and Axes.Labelers
 
@@ -351,7 +351,7 @@ YAxes = new List&lt;Axis>
     }
 };</code></pre>
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/1.7.labels.png)
+![image]({{ assets_url }}/docs/_assets/1.7.labels.png)
 
 ## Zooming and panning
 
@@ -376,7 +376,7 @@ It is disabled by default, to enable it you must set the `ZoomMode` property.
 <pre><code>cartesianChart1.ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X;</code></pre>
 {{~ end ~}}
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/zoom-x.gif)
+![image]({{ assets_url }}/docs/_assets/zoom-x.gif)
 
 ## ZoomingSpeed property
 
@@ -465,7 +465,7 @@ namespace ViewModelsSamples.Lines.Area
 };</code></pre>
 {{~ end ~}}
 
-![sections](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/drawmarginframe.png)
+![sections]({{ assets_url }}/docs/_assets/drawmarginframe.png)
 
 ## Sections 
 
@@ -603,4 +603,4 @@ namespace ViewModelsSamples.General.Sections
 };</code></pre>
 {{~ end ~}}
 
-![sections](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/cc-sections.png)
+![sections]({{ assets_url }}/docs/_assets/cc-sections.png)

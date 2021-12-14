@@ -62,14 +62,14 @@ Drag a new `PieChart` control from your toolbox, then in the code behind assign 
 };</code></pre>
 {{~ end ~}}
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/piemvp.png)
+![image]({{ assets_url }}/docs/_assets/piemvp.png)
 
 ## InitialRotation property
 
 Controls the angle in degrees where the first slice is drawn, the `InitialRotation` property will change the start angle of
 the pie, the following diagram explains where the `PieChart` rotation starts:
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/pie-rotation.png)
+![image]({{ assets_url }}/docs/_assets/pie-rotation.png)
 
 {{~ if xaml ~}}
 <pre><code>&lt;lvc:PieChart
@@ -91,7 +91,7 @@ Drag a new `PieChart` control from your toolbox, then in the code behind assign 
 
 Notice a change in the `InitialRotation` property is animated automatically based on the chart animations settings:
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/pie-inrot.gif)
+![image]({{ assets_url }}/docs/_assets/pie-inrot.gif)
 
 ## MaxAngle property
 
@@ -117,7 +117,7 @@ Drag a new `PieChart` control from your toolbox, then in the code behind assign 
 
 Notice the `MaxAngle` property is animated automatically based on the chart animations settings:
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/pie-maxangle.gif)
+![image]({{ assets_url }}/docs/_assets/pie-maxangle.gif)
 
 {{ render this "~/shared/chart.md" }}
 

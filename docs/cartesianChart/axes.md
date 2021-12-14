@@ -6,7 +6,7 @@
 
 The following diagram illustrates an axis and its main components:
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/1.7.diagram.png)
+![image]({{ assets_url }}/docs/_assets/1.7.diagram.png)
 
 The cartesian chart control has the `XAxes` and `YAxes` properties, both of type `IEnumerable<IAxis>` by default
 when you do not set these properties, they will be an array containing only one element of the `Axis` class 
@@ -48,7 +48,7 @@ by the library to fit all the visible points in the X axis.
 <pre><code>cartesianChart1.ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X;</code></pre>
 {{~ end ~}}
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/zoom-x.gif)
+![image]({{ assets_url }}/docs/_assets/zoom-x.gif)
 
 **Y Mode:**
 
@@ -74,7 +74,7 @@ by the library to fit all the visible points in the Y axis.
 <pre><code>cartesianChart1.ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.Y;</code></pre>
 {{~ end ~}}
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/zoom-y.gif)
+![image]({{ assets_url }}/docs/_assets/zoom-y.gif)
 
 **Both Mode:**
 
@@ -100,7 +100,7 @@ a button to reset the zoom to the data in the chart (settings `MinLimit` and `Ma
 <pre><code>cartesianChart1.ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.Both;</code></pre>
 {{~ end ~}}
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/zoom-both.gif)
+![image]({{ assets_url }}/docs/_assets/zoom-both.gif)
 
 ## MaxLimit and MinLimit properties
 
@@ -157,7 +157,7 @@ places the axis at the top for X axes and at the right for Y axes.
     }
 };</code></pre>
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/1.7.position.png)
+![image]({{ assets_url }}/docs/_assets/1.7.position.png)
 
 ## LabelsPaint and SeparatorsPaint properties
 
@@ -307,7 +307,7 @@ cartesianChart1.YAxes = new Axis[]
 };</code></pre>
 {{~ end ~}}
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/axes-paints.png)
+![image]({{ assets_url }}/docs/_assets/axes-paints.png)
 
 :::info
 Paints can create gradients, dashed lines and more, if you need help using the `Paint` instances take 
@@ -324,7 +324,7 @@ collection, the label is mapped to the chart based on the position of the label 
 if the axis requires a label outside the bounds of the labels collection, then the index will be returned as the label,
 default value is null.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/1.7.labels.png)
+![image]({{ assets_url }}/docs/_assets/1.7.labels.png)
 
 <pre><code>Series = new ObservableCollection&lt;ISeries>
 {
@@ -373,14 +373,14 @@ Indicates the axis labels rotation in degrees, in the following image we have a 
     }
 };</code></pre>
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/1.7.rotation.png)
+![image]({{ assets_url }}/docs/_assets/1.7.rotation.png)
 
 ## Multiple axes
 
 Both of these properties are collections because the library supports to have more than one axis, the following sample illustrates
 how to create a chart that uses multiple axes:
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/1.7.multiple.png)
+![image]({{ assets_url }}/docs/_assets/1.7.multiple.png)
 
 <pre><code>var blue = new SKColor(25, 118, 210);
 var red = new SKColor(229, 57, 53);

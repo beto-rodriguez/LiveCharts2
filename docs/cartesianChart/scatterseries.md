@@ -13,7 +13,7 @@
 If the stroke property is not set, then LiveCharts will create it based on the series position in your series collection
 and the current theme.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/scatterstroke.png)
+![image]({{ assets_url }}/docs/_assets/scatterstroke.png)
 
 <pre><code>Series = new ISeries[]
 {
@@ -41,7 +41,7 @@ a look at the [Paints article]({{ website_url }}/docs/{{ platform }}/{{ version 
 If the fill property is not set, then LiveCharts will create it based on the series position in your series collection
 and the current theme.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/scatterfill.png)
+![image]({{ assets_url }}/docs/_assets/scatterfill.png)
 
 <pre><code>Series = new ISeries[]
 {
@@ -68,7 +68,7 @@ a look at the [Paints article]({{ website_url }}/docs/{{ platform }}/{{ version 
 
 Determines the size of the geometry, if this property is not set, then the library will decide it based on the theme.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/scattergeometrysize.png)
+![image]({{ assets_url }}/docs/_assets/scattergeometrysize.png)
 
 <pre><code>
 var r = new Random();
@@ -108,7 +108,7 @@ size of the geometry will be `15` pixels as specified in the `MinGeometrySize` p
 the geometry size will be `40` defined by the `GeometrySize` property, for any `Weight` between this range the library
 will interpolate lineally to determine the corresponding size.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/scattermgs.png)
+![image]({{ assets_url }}/docs/_assets/scattermgs.png)
 
 <pre><code>var r = new Random();
 var values1 = new ObservableCollection&lt;WeightedPoint>();
@@ -214,7 +214,7 @@ Now we are ready to plot cities all over our application:
     }
 };</code></pre>
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/scatterct.png)
+![image]({{ assets_url }}/docs/_assets/scatterct.png)
 
 Alternatively you could create a **local** mapper that will only work for a specific series, global mappers will be 
 ignored when the series `Mapping` property is not null.
@@ -247,13 +247,13 @@ Series = new[]
     }
 };</code></pre>
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/scatterctl.png)
+![image]({{ assets_url }}/docs/_assets/scatterctl.png)
 
 ## Custom geometries
 
 You can use any geometry to represent a point in a line series.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/scattercustom.png)
+![image]({{ assets_url }}/docs/_assets/scattercustom.png)
 
 <pre><code>var r = new Random();
 var values1 = new ObservableCollection&lt;ObservablePoint>();

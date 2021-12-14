@@ -28,5 +28,5 @@ this sample also uses a ViewModel to populate the properties of the control(s) i
 {{~ end ~}}
 
 <div class="text-center">
-    <img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/{{ unique_name }}/result.png"alt="basic line" />
+    <img src="{{ assets_url }}/docs/{{ unique_name }}/result.png"alt="basic line" />
 </div>

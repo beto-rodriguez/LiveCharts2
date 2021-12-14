@@ -6,7 +6,7 @@
 
 A legend is a visual element that displays a list with the name, stroke and fills of the series in a chart:
 
-![legends](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/legend.png)
+![legends]({{ assets_url }}/docs/_assets/legend.png)
 
 You can place a legend at `Top`, `Bottom`, `Left`, `Right` or `Hidden` positions, notice the `Hidden` position will 
 disable legends in a chart, default value is `Hidden`.
@@ -109,7 +109,7 @@ You can use css to override the style of the tooltip.
 
 The code above would result in the following legend:
 
-![custom](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/legend-custom-style.png)
+![custom]({{ assets_url }}/docs/_assets/legend-custom-style.png)
 
 ## Custom template
 
@@ -217,4 +217,4 @@ You can find another example at the source code of the `DefaultLegend` class
 
 {{~ end ~}}
 
-![custom tooltip](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/legend-custom-template.png)
+![custom tooltip]({{ assets_url }}/docs/_assets/legend-custom-template.png)

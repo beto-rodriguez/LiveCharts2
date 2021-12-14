@@ -13,7 +13,7 @@
 If the stroke property is not set, then LiveCharts will create it based on the series position in your series collection
 and the current theme.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stepstroke.png)
+![image]({{ assets_url }}/docs/_assets/stepstroke.png)
 
 <pre><code>Series = new ISeries[]
 {
@@ -47,7 +47,7 @@ and the current theme.
 
 The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent and 255 disables transparency completely.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stepfill.png)
+![image]({{ assets_url }}/docs/_assets/stepfill.png)
 
 <pre><code>
 Series = new ISeries[]
@@ -73,7 +73,7 @@ The geometry is the circle shape (by default) that the line series draws for eve
 the fill and stroke of this shape, if none of these properties are set then LiveCharts will create them based on 
 the series position in your series collection and the current theme.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stepgeometrystrokefill.png)
+![image]({{ assets_url }}/docs/_assets/stepgeometrystrokefill.png)
 
 <pre><code>Series = new ISeries[]
 {
@@ -96,7 +96,7 @@ a look at the [Paints article]({{ website_url }}/docs/{{ platform }}/{{ version 
 
 Determines the size of the geometry, if this property is not set, then the library will decide it based on the theme.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stepgeometrysize.png)
+![image]({{ assets_url }}/docs/_assets/stepgeometrysize.png)
 
 <pre><code>Series = new ISeries[]
 {
@@ -117,7 +117,7 @@ Determines the size of the geometry, if this property is not set, then the libra
 This property is enabled by default (`true`), it has a performance cost and allows the series to create gaps, when the
 series finds a `null` instance then the series will create a gap.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stepnullsplit.png)
+![image]({{ assets_url }}/docs/_assets/stepnullsplit.png)
 
 <pre><code>Series = new ISeries[]
 {
@@ -204,7 +204,7 @@ Now we are ready to plot cities all over our application:
     }
 };</code></pre>
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stepct.png)
+![image]({{ assets_url }}/docs/_assets/stepct.png)
 
 Alternatively you could create a **local** mapper that will only work for a specific series, global mappers will be 
 ignored when the series `Mapping` property is not null.
@@ -248,13 +248,13 @@ Series = new[]
     }
 };</code></pre>
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stepctl.png)
+![image]({{ assets_url }}/docs/_assets/stepctl.png)
 
 ## Custom geometries
 
 You can use any geometry to represent a point in a line series.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/stepcustom.png)
+![image]({{ assets_url }}/docs/_assets/stepcustom.png)
 
 <pre><code>Series = new List&lt;ISeries>
 {

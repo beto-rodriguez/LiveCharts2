@@ -21,4 +21,4 @@ following sample:
 
 The previous series will result in the following chart:
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/1.8.datalabels.png)
+![image]({{ assets_url }}/docs/_assets/1.8.datalabels.png)

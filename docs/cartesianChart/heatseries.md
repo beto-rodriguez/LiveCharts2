@@ -15,7 +15,7 @@ where the first element in the array is the the smallest or coldest and the last
 any value between the chart limits will be interpolated lineally to create a new color, you can add as many colors as you need 
 to define the gradient.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/heathm.png)
+![image]({{ assets_url }}/docs/_assets/heathm.png)
 
 <pre><code>using SkiaSharp;
 using LiveChartsCore.SkiaSharpView;
@@ -42,7 +42,7 @@ go from 0 to 1, where 0 is the "coldest" and 1 the "hottest", notice in the foll
 black to blue gradient is only used in the last 10 percent of the gradient, while the yellow to black is
 used in the remaining 90% of the gradient.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/heatcs.png)
+![image]({{ assets_url }}/docs/_assets/heatcs.png)
 
 <pre><code>using SkiaSharp;
 using LiveChartsCore.SkiaSharpView;
@@ -71,7 +71,7 @@ Series = new ISeries[]
 
 Defines the padding for every point in the series.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/heatp.png)
+![image]({{ assets_url }}/docs/_assets/heatp.png)
 
 <pre><code>Series = new ISeries[]
 {
@@ -211,7 +211,7 @@ Series = new[]
     }
 };</code></pre>
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/heatct.png)
+![image]({{ assets_url }}/docs/_assets/heatct.png)
 
 Alternatively you could create a **local** mapper that will only work for a specific series, global mappers will be 
 ignored when the series `Mapping` property is not null.
