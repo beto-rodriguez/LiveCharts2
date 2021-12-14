@@ -18,6 +18,7 @@ public partial class View : UserControl
         pieChart = new PieChart
         {
             Series = viewModel.Series,
+            InitialRotation = -90,
 
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 0),

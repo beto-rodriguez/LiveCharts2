@@ -8,12 +8,5 @@
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-	<ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <lvc:PieChart Series="{Binding Series}"></lvc:PieChart>
-        </Grid>
-    </ContentPage.Content>
+    <lvc:PieChart Series="{Binding Series}" InitialRotation="-90"/>
 </ContentPage>

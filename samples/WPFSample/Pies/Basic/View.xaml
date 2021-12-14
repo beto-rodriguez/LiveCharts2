@@ -6,11 +6,5 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <lvc:PieChart Series="{Binding Series}" >
-        </lvc:PieChart>
-    </Grid>
+    <lvc:PieChart Series="{Binding Series}" LegendPosition="Right"/>
 </UserControl>

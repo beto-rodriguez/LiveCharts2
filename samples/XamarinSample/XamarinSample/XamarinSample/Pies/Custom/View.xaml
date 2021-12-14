@@ -7,10 +7,5 @@
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <lvc:PieChart Series="{Binding Series}"></lvc:PieChart>
-    </Grid>
+    <lvc:PieChart Series="{Binding Series}" InitialRotation="-90"/>
 </ContentPage>
