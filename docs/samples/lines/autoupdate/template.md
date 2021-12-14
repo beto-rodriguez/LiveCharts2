@@ -1,14 +1,14 @@
-{{ render this "~/shared/genericSampleSimpleHeader.md" }}
+{{ render this "~/shared/genericSampleJustGifHeader.md" }}
+
+:::tip
+This example uses the `LineSeries` class but it works the same for any series in the library
+:::
 
 ## View model
 
 ```
 {{ full_name | get_vm_from_docs }}
 ```
-
-## MyGeometry.cs
-
-{{~ "~/../samples/ViewModelsSamples/Lines/Custom/MyGeometry.cs" | render_file_as_code ~}}
 
 {{~ if xaml ~}}
 ## XAML

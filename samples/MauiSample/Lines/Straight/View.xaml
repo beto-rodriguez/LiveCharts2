@@ -8,14 +8,5 @@
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-	<ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
-            <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
-
-        </Grid>
-    </ContentPage.Content>
+    <lvc:CartesianChart Series="{Binding Series}"/>
 </ContentPage>

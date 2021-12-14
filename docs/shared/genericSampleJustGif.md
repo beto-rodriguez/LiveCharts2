@@ -1,14 +1,10 @@
-{{ render this "~/shared/genericSampleSimpleHeader.md" }}
+{{ render this "~/shared/genericSampleJustGifHeader.md" }}
 
 ## View model
 
 ```
 {{ full_name | get_vm_from_docs }}
 ```
-
-## MyGeometry.cs
-
-{{~ "~/../samples/ViewModelsSamples/Lines/Custom/MyGeometry.cs" | render_file_as_code ~}}
 
 {{~ if xaml ~}}
 ## XAML
