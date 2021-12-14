@@ -142,6 +142,9 @@
     <Compile Update="Heat\Basic\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Lines\XY\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Lines\Padding\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

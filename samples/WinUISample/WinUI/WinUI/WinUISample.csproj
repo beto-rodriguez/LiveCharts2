@@ -51,6 +51,7 @@
     <None Remove="General\ChartToImage\View.xaml" />
     <None Remove="General\Animations\View.xaml" />
     <None Remove="Heat\Basic\View.xaml" />
+    <None Remove="Lines\XY\View.xaml" />
     <None Remove="Lines\Padding\View.xaml" />
     <None Remove="StepLines\Area\View.xaml" />
     <None Remove="StepLines\AutoUpdate\View.xaml" />

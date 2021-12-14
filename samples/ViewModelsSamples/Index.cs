@@ -19,6 +19,7 @@ public static class Index
             "Lines/Area",
             "Lines/Custom",
             "Lines/Padding",
+            "Lines/XY",
             "Lines/Zoom",
 
             "StepLines/Basic",
