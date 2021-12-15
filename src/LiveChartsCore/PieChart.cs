@@ -74,7 +74,8 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
     /// <value>
     /// The drawable series.
     /// </value>
-    public override IEnumerable<IChartSeries<TDrawingContext>> ChartSeries => Series;
+    public override IEnumerable<IChartSeries<TDrawingContext>> ChartSeries
+        => Series.Where(x => (x is IPieSeries<TDrawingContext> pieSeries) && !pieSeries.IsFillSeries);
 
     /// <summary>
     /// Gets the view.
@@ -115,8 +116,9 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
     /// <returns></returns>
     public override IEnumerable<ChartPoint> FindHoveredPointsBy(LvcPoint pointerPosition)
     {
-        return _chartView.Series.SelectMany(
-            series =>
+        return _chartView.Series
+            .Where(series => (series is IPieSeries<TDrawingContext> pieSeries) && !pieSeries.IsFillSeries)
+            .SelectMany(series =>
                 series.FindHoveredPoints(this, pointerPosition, TooltipFindingStrategy.CompareAll));
     }
 

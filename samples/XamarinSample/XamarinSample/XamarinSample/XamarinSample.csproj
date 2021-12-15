@@ -103,7 +103,7 @@
     <Compile Update="Events\Polar\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Financial\Basic\View.xaml.cs">
+    <Compile Update="Financial\BasicCandlesticks\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="General\Animations\View.xaml.cs">

@@ -18,6 +18,7 @@ public partial class View : UserControl
         cartesianChart = new CartesianChart
         {
             Series = viewModel.Series,
+            XAxes = viewModel.XAxis,
 
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 0),

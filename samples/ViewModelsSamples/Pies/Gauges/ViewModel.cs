@@ -178,7 +178,7 @@ public class ViewModel
             LabelFormatter = point => point.PrimaryValue.ToString(),
             LabelsSize = 20,
             InnerRadius = 20,
-            MaxRadialColumnWidth = 5,
+            MaxColumnWidth = 5,
             Background = null
         }
         .AddValue(new ObservableValue(50), "Vanessa")

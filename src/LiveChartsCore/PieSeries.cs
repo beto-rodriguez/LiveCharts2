@@ -550,27 +550,40 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <exception cref="Exception">Unable to initialize the point instance.</exception>
     protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
     {
+        if (IsFillSeries) return;
+
+        var isGauge = SeriesProperties.HasFlag(SeriesProperties.Gauge);
+
         var chart = chartPoint.Context.Chart;
 
         if (chartPoint.Context.Visual is not TVisual visual) throw new Exception("Unable to initialize the point instance.");
 
         _ = visual
             .TransitionateProperties(
-                nameof(visual.CenterX),
-                nameof(visual.CenterY),
-                nameof(visual.X),
-                nameof(visual.Y),
-                nameof(visual.Width),
-                nameof(visual.Height),
                 nameof(visual.StartAngle),
                 nameof(visual.SweepAngle),
-                nameof(visual.PushOut),
-                nameof(visual.InnerRadius))
+                nameof(visual.PushOut))
             .WithAnimation(animation =>
                 animation
                     .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
                     .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
             .CompleteCurrentTransitions();
+
+        if ((SeriesProperties & SeriesProperties.Gauge) == 0)
+            _ = visual
+                .TransitionateProperties(
+                    nameof(visual.CenterX),
+                    nameof(visual.CenterY),
+                    nameof(visual.X),
+                    nameof(visual.Y),
+                    nameof(visual.InnerRadius),
+                    nameof(visual.Width),
+                    nameof(visual.Height))
+                .WithAnimation(animation =>
+                    animation
+                        .WithDuration(AnimationsSpeed ?? chart.AnimationsSpeed)
+                        .WithEasingFunction(EasingFunction ?? chart.EasingFunction))
+                .CompleteCurrentTransitions();
     }
 
     /// <summary>

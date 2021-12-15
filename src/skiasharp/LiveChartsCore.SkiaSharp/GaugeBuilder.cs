@@ -48,11 +48,11 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     private double? _backgroundOffsetRadius = null;
     private double? _backgroundCornerRadius = null;
     private double? _cornerRadius = null;
-    private IPaint<SkiaSharpDrawingContext> _background = LiveChartsSkiaSharp.DefaultPaint;
+    private IPaint<SkiaSharpDrawingContext>? _background = LiveChartsSkiaSharp.DefaultPaint;
     private double? _labelsSize = null;
     private PolarLabelsPosition? _labelsPosition = null;
     private double? _backgroundMaxRadialColumnWidth = null;
-    private double? _maxRadialColumnWidth = null;
+    private double? _maxColumnWidth = null;
     private Func<ChartPoint, string> _labelFormatter = point => point.PrimaryValue.ToString();
 
     /// <summary>
@@ -64,13 +64,36 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     public double? InnerRadius { get => _innerRadius; set { _innerRadius = value; OnPopertyChanged(); } }
 
     /// <summary>
+    /// Sets the inner radius, setting this property to null will let the theme decide the value, default is null.
+    /// </summary>
+    /// <param name="value">the value.</param>
+    /// <returns></returns>
+    public GaugeBuilder WithInnerRadius(double? value)
+    {
+        InnerRadius = value;
+        return this;
+    }
+
+    /// <summary>
     /// Gets or sets the offset radius, the separation between each gauge if multiple gauges are nested,
     /// setting this property to null will let the theme decide the value, default is null.
     /// </summary>
     /// <value>
-    /// The relative inner radius.
+    /// The value.
     /// </value>
     public double? OffsetRadius { get => _offsetRadius; set { _offsetRadius = value; OnPopertyChanged(); } }
+
+    /// <summary>
+    /// Sets the offset radius, the separation between each gauge if multiple gauges are nested,
+    /// setting this property to null will let the theme decide the value, default is null.
+    /// </summary>
+    /// <param name="value">the value.</param>
+    /// <returns></returns>
+    public GaugeBuilder WithOffsetRadius(double? value)
+    {
+        OffsetRadius = value;
+        return this;
+    }
 
     /// <summary>
     /// Gets or sets the maximum width of the radial column, setting this property to null will let the theme decide the value, default is null.
@@ -78,7 +101,17 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     /// <value>
     /// The maximum width of the radial column.
     /// </value>
-    public double? MaxRadialColumnWidth { get => _maxRadialColumnWidth; set { _maxRadialColumnWidth = value; OnPopertyChanged(); } }
+    public double? MaxColumnWidth { get => _maxColumnWidth; set { _maxColumnWidth = value; OnPopertyChanged(); } }
+
+    /// <summary>
+    /// Sets the maximum width of the radial column, setting this property to null will let the theme decide the value, default is null.
+    /// </summary>
+    /// <param name="value">the value.</param>
+    public GaugeBuilder WithMaxColumnWidth(double? value)
+    {
+        MaxColumnWidth = value;
+        return this;
+    }
 
     /// <summary>
     /// Gets or sets the corner radius, setting this property to null will let the theme decide the value, default is null.
@@ -89,12 +122,32 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     public double? CornerRadius { get => _cornerRadius; set { _cornerRadius = value; OnPopertyChanged(); } }
 
     /// <summary>
-    /// Gets or sets the inner radius, setting this property to null will let the theme decide the value, default is null.
+    /// Sets the corner radius, setting this property to null will let the theme decide the value, default is null.
+    /// </summary>
+    /// <param name="value">the value.</param>
+    public GaugeBuilder WithCornerRadius(double? value)
+    {
+        CornerRadius = value;
+        return this;
+    }
+
+    /// <summary>
+    /// Gets or sets the radial alignment, setting this property to null will let the theme decide the value, default is null.
     /// </summary>
     /// <value>
     /// The inner radius.
     /// </value>
     public RadialAlignment? RadialAlign { get => _radialAlign; set { _radialAlign = value; OnPopertyChanged(); } }
+
+    /// <summary>
+    /// Sets the radial alignment, setting this property to null will let the theme decide the value, default is null.
+    /// </summary>
+    /// <param name="value">the value.</param>
+    public GaugeBuilder WithRadialAlign(RadialAlignment? value)
+    {
+        RadialAlign = value;
+        return this;
+    }
 
     /// <summary>
     /// Gets or sets the background inner radius, setting this property to null will let the theme decide the value, default is null.
@@ -105,6 +158,16 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     public double? BackgroundInnerRadius { get => _backgroundInnerRadius; set { _backgroundInnerRadius = value; OnPopertyChanged(); } }
 
     /// <summary>
+    /// Sets the background inner radius, setting this property to null will let the theme decide the value, default is null.
+    /// </summary>
+    /// <param name="value">the value.</param>
+    public GaugeBuilder WithBackgroundInnerRadius(double? value)
+    {
+        BackgroundInnerRadius = value;
+        return this;
+    }
+
+    /// <summary>
     /// Gets or sets the background offset radius, the separation between each gauge if multiple gauges are nested,
     /// setting this property to null will let the theme decide the value, default is null.
     /// </summary>
@@ -112,6 +175,17 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     /// The background relative inner radius.
     /// </value>
     public double? BackgroundOffsetRadius { get => _backgroundOffsetRadius; set { _backgroundOffsetRadius = value; OnPopertyChanged(); } }
+
+    /// <summary>
+    /// Sets the background offset radius, the separation between each gauge if multiple gauges are nested,
+    /// setting this property to null will let the theme decide the value, default is null.
+    /// </summary>
+    /// <param name="value">the value.</param>
+    public GaugeBuilder WithBackgroundOffsetRadius(double? value)
+    {
+        BackgroundOffsetRadius = value;
+        return this;
+    }
 
     /// <summary>
     /// Gets or sets the width of the background maximum radial column, setting this property to null will let the theme
@@ -127,6 +201,17 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     }
 
     /// <summary>
+    /// Sets the width of the background maximum radial column, setting this property to null will let the theme
+    /// decide the value, default is null.
+    /// </summary>
+    /// <param name="value">the value.</param>
+    public GaugeBuilder WithBackgroundMaxRadialColumnWidth(double? value)
+    {
+        BackgroundMaxRadialColumnWidth = value;
+        return this;
+    }
+
+    /// <summary>
     /// Gets or sets the background corner radius, setting this property to null will let the theme decide the value, default is null.
     /// </summary>
     /// <value>
@@ -135,13 +220,34 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     public double? BackgroundCornerRadius { get => _backgroundCornerRadius; set { _backgroundCornerRadius = value; OnPopertyChanged(); } }
 
     /// <summary>
+    /// Sets the background corner radius, setting this property to null will let the theme decide the value, default is null.
+    /// </summary>
+    /// <param name="value">the value.</param>
+    public GaugeBuilder WithBackgroundCornerRadius(double? value)
+    {
+        BackgroundMaxRadialColumnWidth = value;
+        return this;
+    }
+
+    /// <summary>
     /// Gets or sets the background, setting this property to <see cref="LiveChartsSkiaSharp.DefaultPaint"/> will let the theme decide
     /// the value, default is <see cref="LiveChartsSkiaSharp.DefaultPaint"/>.
     /// </summary>
     /// <value>
     /// The background.
     /// </value>
-    public IPaint<SkiaSharpDrawingContext> Background { get => _background; set { _background = value; OnPopertyChanged(); } }
+    public IPaint<SkiaSharpDrawingContext>? Background { get => _background; set { _background = value; OnPopertyChanged(); } }
+
+    /// <summary>
+    /// Sets the background, setting this property to <see cref="LiveChartsSkiaSharp.DefaultPaint"/> will let the theme decide
+    /// the value, default is <see cref="LiveChartsSkiaSharp.DefaultPaint"/>.
+    /// </summary>
+    /// <param name="value">the value.</param>
+    public GaugeBuilder WithBackground(IPaint<SkiaSharpDrawingContext>? value)
+    {
+        Background = value;
+        return this;
+    }
 
     /// <summary>
     /// Gets or sets the size of the labels, setting this property to null will let the theme decide the value, default is null.
@@ -152,12 +258,32 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     public double? LabelsSize { get => _labelsSize; set { _labelsSize = value; OnPopertyChanged(); } }
 
     /// <summary>
+    /// Sets the size of the labels, setting this property to null will let the theme decide the value, default is null.
+    /// </summary>
+    /// <param name="value">the value.</param>
+    public GaugeBuilder WithLabelsSize(double value)
+    {
+        LabelsSize = value;
+        return this;
+    }
+
+    /// <summary>
     /// Gets or sets the labels position, setting this property to null will let the theme decide the value, default is null.
     /// </summary>
     /// <value>
     /// The labels position.
     /// </value>
     public PolarLabelsPosition? LabelsPosition { get => _labelsPosition; set { _labelsPosition = value; OnPopertyChanged(); } }
+
+    /// <summary>
+    /// Sets  the labels position, setting this property to null will let the theme decide the value, default is null.
+    /// </summary>
+    /// <param name="value">the value.</param>
+    public GaugeBuilder WithLabelsPosition(PolarLabelsPosition value)
+    {
+        LabelsPosition = value;
+        return this;
+    }
 
     /// <summary>
     /// Gets or sets the label formatter.
@@ -168,24 +294,32 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     public Func<ChartPoint, string> LabelFormatter { get => _labelFormatter; set { _labelFormatter = value; OnPopertyChanged(); } }
 
     /// <summary>
+    /// Sets  the labels position, setting this property to null will let the theme decide the value, default is null.
+    /// </summary>
+    /// <param name="value">the value.</param>
+    public GaugeBuilder WithLabelFormatter(Func<ChartPoint, string> value)
+    {
+        LabelFormatter = value;
+        return this;
+    }
+
+    /// <summary>
     /// Adds the value.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <param name="seriesName">The series name.</param>
-    /// <param name="seriesDrawableTask">The series drawable task.</param>
-    /// <param name="labelsDrawableTask">The labels drawable task.</param>
+    /// <param name="seriesPaint">The series paint.</param>
+    /// <param name="labelsPaint">The labels paint.</param>
     /// <returns></returns>
     public GaugeBuilder AddValue(
         ObservableValue value,
         string? seriesName,
-        IPaint<SkiaSharpDrawingContext>? seriesDrawableTask,
-        IPaint<SkiaSharpDrawingContext>? labelsDrawableTask = null)
+        IPaint<SkiaSharpDrawingContext>? seriesPaint,
+        IPaint<SkiaSharpDrawingContext>? labelsPaint = null)
     {
-        labelsDrawableTask ??= new SolidColorPaint(new SKColor(35, 35, 35));
-
         _tuples.Add(
             new Tuple<ObservableValue, string?, IPaint<SkiaSharpDrawingContext>?, IPaint<SkiaSharpDrawingContext>?>(
-                value, seriesName, seriesDrawableTask, labelsDrawableTask));
+                value, seriesName, seriesPaint, labelsPaint));
 
         return this;
     }
@@ -209,10 +343,33 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     /// Adds the value.
     /// </summary>
     /// <param name="value">The value.</param>
+    /// <param name="seriesName">The series name.</param>
+    /// <param name="seriesColor">Color of the series.</param>
+    /// <param name="labelsColor">Color of the labels.</param>
+    /// <returns></returns>
+    public GaugeBuilder AddValue(double value, string seriesName, SKColor seriesColor, SKColor? labelsColor = null)
+    {
+        return AddValue(new ObservableValue(value), seriesName, seriesColor, labelsColor);
+    }
+
+    /// <summary>
+    /// Adds the value.
+    /// </summary>
+    /// <param name="value">The value.</param>
     /// <returns></returns>
     public GaugeBuilder AddValue(ObservableValue value)
     {
-        return AddValue(value, null, LiveChartsSkiaSharp.DefaultPaint, LiveChartsSkiaSharp.DefaultPaint);
+        return AddValue(value, null, LiveChartsSkiaSharp.DefaultPaint, null);
+    }
+
+    /// <summary>
+    /// Adds the value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns></returns>
+    public GaugeBuilder AddValue(double value)
+    {
+        return AddValue(new ObservableValue(value));
     }
 
     /// <summary>
@@ -223,7 +380,18 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     /// <returns></returns>
     public GaugeBuilder AddValue(ObservableValue value, string? seriesName)
     {
-        return AddValue(value, seriesName, LiveChartsSkiaSharp.DefaultPaint, LiveChartsSkiaSharp.DefaultPaint);
+        return AddValue(value, seriesName, LiveChartsSkiaSharp.DefaultPaint, null);
+    }
+
+    /// <summary>
+    /// Adds the value.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="seriesName">The series name.</param>
+    /// <returns></returns>
+    public GaugeBuilder AddValue(double value, string? seriesName)
+    {
+        return AddValue(new ObservableValue(value), seriesName);
     }
 
     /// <summary>
@@ -233,6 +401,8 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
     public List<PieSeries<ObservableValue>> BuildSeries()
     {
         var series = new List<PieSeries<ObservableValue>>();
+
+        var defaultLabelsPaint = _labelsPosition is null ? null : new SolidColorPaint(new SKColor(40, 40, 40));
 
         var i = 0;
         foreach (var item in _tuples)
@@ -249,12 +419,15 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
                 ZIndex = i + 1,
                 Values = list,
                 Name = item.Item2,
-                DataLabelsPaint = item.Item4,
+                DataLabelsPaint = item.Item4 ?? defaultLabelsPaint,
                 DataLabelsFormatter = LabelFormatter,
                 Fill = item.Item3,
                 HoverPushout = 0,
                 DataLabelsPosition = PolarLabelsPosition.ChartCenter
             };
+
+            var a = sf.Stroke;
+
             ApplyStyles(sf);
             series.Add(sf);
             _keyValuePairs.Add(sf, item);
@@ -333,7 +506,7 @@ public class GaugeBuilder : IGaugeBuilder<SkiaSharpDrawingContext>
             series.RelativeInnerRadius = OffsetRadius.Value;
             series.RelativeOuterRadius = OffsetRadius.Value;
         }
-        if (MaxRadialColumnWidth is not null) series.MaxRadialColumnWidth = MaxRadialColumnWidth.Value;
+        if (MaxColumnWidth is not null) series.MaxRadialColumnWidth = MaxColumnWidth.Value;
         if (RadialAlign is not null) series.RadialAlign = RadialAlign.Value;
 
         series.DataLabelsFormatter = LabelFormatter;

@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="WPFSample.Pies.Gauge1.View"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+             xmlns:vms="clr-namespace:ViewModelsSamples.Pies.Gauge1;assembly=ViewModelsSamples"
+             MaxWidth="300"
+             MaxHeight="300">
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    <lvc:PieChart
+        Series="{Binding Series}"
+        InitialRotation="-90"
+        Total="100">
+    </lvc:PieChart>
+</UserControl>

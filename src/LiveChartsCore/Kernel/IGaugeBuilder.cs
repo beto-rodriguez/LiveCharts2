@@ -54,7 +54,7 @@ public interface IGaugeBuilder<TDrawingContext>
     /// <value>
     /// The maximum width of the radial column.
     /// </value>
-    double? MaxRadialColumnWidth { get; set; }
+    double? MaxColumnWidth { get; set; }
 
     /// <summary>
     /// Gets or sets the corner radius.
