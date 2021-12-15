@@ -53,6 +53,11 @@
     <None Remove="Heat\Basic\View.xaml" />
     <None Remove="Lines\XY\View.xaml" />
     <None Remove="Lines\Padding\View.xaml" />
+    <None Remove="Pies\Gauge5\View.xaml" />
+    <None Remove="Pies\Gauge4\View.xaml" />
+    <None Remove="Pies\Gauge3\View.xaml" />
+    <None Remove="Pies\Gauge2\View.xaml" />
+    <None Remove="Pies\Gauge1\View.xaml" />
     <None Remove="StepLines\Area\View.xaml" />
     <None Remove="StepLines\AutoUpdate\View.xaml" />
     <None Remove="StepLines\Basic\View.xaml" />
@@ -266,6 +271,18 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Pies\Gauge - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Pies\Gauge1 - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Pies\Gauge2 - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Pies\Gauge3 - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Pies\Gauge4 - Copy\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Pies\Gauges - Copy\View.xaml">

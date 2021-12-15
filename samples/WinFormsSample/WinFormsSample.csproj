@@ -141,6 +141,21 @@
     <Compile Update="Maps\World\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Pies\Gauge5\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Pies\Gauge4\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Pies\Gauge3\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Pies\Gauge2\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Pies\Gauge1\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Polar\Basic\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
