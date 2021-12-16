@@ -70,7 +70,8 @@ public static class Index
 
             "Heat/Basic",
 
-            "Polar/Basic",
+            //"Polar/Basic",
+            "Polar/RadialArea",
 
             "Axes/ColorsAndPosition",
             "Axes/LabelsFormat",

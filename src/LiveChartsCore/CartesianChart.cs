@@ -582,7 +582,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 axis.Xo = ls + w * 0.5f + ns.Width;
                 ls += w + ns.Width;
                 m.Left = ls;
-                Trace.WriteLine($"ns => {ns.Width}, ls => {w}");
                 if (s.Height * 0.5f > m.Top) { m.Top = s.Height * 0.5f; }
                 if (s.Height * 0.5f > m.Bottom) { m.Bottom = s.Height * 0.5f; }
             }

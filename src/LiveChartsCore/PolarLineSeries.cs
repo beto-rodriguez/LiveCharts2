@@ -510,14 +510,14 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
         var tickPrimary = radiusAxis.GetTick(chart, baseBounds.VisiblePrimaryBounds);
         var tickSecondary = angleAxis.GetTick(chart, baseBounds.VisibleSecondaryBounds);
 
-        var ts = tickSecondary.Value * DataPadding.X;
+        //var ts = tickSecondary.Value * DataPadding.X;
         var tp = tickPrimary.Value * DataPadding.Y;
 
-        if (baseBounds.VisibleSecondaryBounds.Delta == 0)
-        {
-            var ms = baseBounds.VisibleSecondaryBounds.Min == 0 ? 1 : baseBounds.VisibleSecondaryBounds.Min;
-            ts = 0.1 * ms * DataPadding.X;
-        }
+        //if (baseBounds.VisibleSecondaryBounds.Delta == 0)
+        //{
+        //    var ms = baseBounds.VisibleSecondaryBounds.Min == 0 ? 1 : baseBounds.VisibleSecondaryBounds.Min;
+        //    ts = 0.1 * ms * DataPadding.X;
+        //}
 
         if (baseBounds.VisiblePrimaryBounds.Delta == 0)
         {
@@ -535,7 +535,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                     {
                         Max = baseBounds.SecondaryBounds.Max,
                         Min = baseBounds.SecondaryBounds.Min,
-                        PaddingMax = ts,
+                        PaddingMax = 1,
                         PaddingMin = 0,
                         RequestedGeometrySize = rgs
                     },
@@ -677,21 +677,38 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
         CanvasSchedule = context;
     }
 
-    private IEnumerable<BezierData> GetSpline(
+    /// <summary>
+    /// Buils an spline from the given points.
+    /// </summary>
+    /// <param name="points"></param>
+    /// <param name="scaler"></param>
+    /// <param name="stacker"></param>
+    /// <returns></returns>
+    protected internal IEnumerable<BezierData> GetSpline(
         ChartPoint[] points,
         PolarScaler scaler,
         StackPosition<TDrawingContext>? stacker)
     {
         if (points.Length == 0) yield break;
 
-        ChartPoint previous, current, next, next2;
+        LvcPoint previous, current, next, next2;
 
         for (var i = 0; i < points.Length; i++)
         {
-            previous = points[i - 1 < 0 ? 0 : i - 1];
-            current = points[i];
-            next = points[i + 1 > points.Length - 1 ? points.Length - 1 : i + 1];
-            next2 = points[i + 2 > points.Length - 1 ? points.Length - 1 : i + 2];
+            var isClosed = IsClosed && points.Length > 3;
+
+            var a1 = i + 1 - points.Length;
+            var a2 = i + 2 - points.Length;
+
+            var p0 = points[i - 1 < 0 ? 0 : i - 1];
+            var p1 = points[i];
+            var p2 = points[i + 1 > points.Length - 1 ? (isClosed ? a1 : points.Length - 1) : i + 1];
+            var p3 = points[i + 2 > points.Length - 1 ? (isClosed ? a2 : points.Length - 1) : i + 2];
+
+            previous = scaler.ToPixels(p0.SecondaryValue, p0.PrimaryValue);
+            current = scaler.ToPixels(p1.SecondaryValue, p1.PrimaryValue);
+            next = scaler.ToPixels(p2.SecondaryValue, p2.PrimaryValue);
+            next2 = scaler.ToPixels(p3.SecondaryValue, p3.PrimaryValue);
 
             var pys = 0d;
             var cys = 0d;
@@ -700,31 +717,31 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
 
             if (stacker is not null)
             {
-                pys = stacker.GetStack(previous).Start;
-                cys = stacker.GetStack(current).Start;
-                nys = stacker.GetStack(next).Start;
-                nnys = stacker.GetStack(next2).Start;
+                pys = scaler.ToPixels(0, stacker.GetStack(p0).Start).Y;
+                cys = scaler.ToPixels(0, stacker.GetStack(p1).Start).Y;
+                nys = scaler.ToPixels(0, stacker.GetStack(p2).Start).Y;
+                nnys = scaler.ToPixels(0, stacker.GetStack(p3).Start).Y;
             }
 
-            var xc1 = (previous.SecondaryValue + current.SecondaryValue) / 2.0f;
-            var yc1 = (previous.PrimaryValue + pys + current.PrimaryValue + cys) / 2.0f;
-            var xc2 = (current.SecondaryValue + next.SecondaryValue) / 2.0f;
-            var yc2 = (current.PrimaryValue + cys + next.PrimaryValue + nys) / 2.0f;
-            var xc3 = (next.SecondaryValue + next2.SecondaryValue) / 2.0f;
-            var yc3 = (next.PrimaryValue + nys + next2.PrimaryValue + nnys) / 2.0f;
+            var xc1 = (previous.X + current.X) / 2.0f;
+            var yc1 = (previous.Y + pys + current.Y + cys) / 2.0f;
+            var xc2 = (current.X + next.X) / 2.0f;
+            var yc2 = (current.Y + cys + next.Y + nys) / 2.0f;
+            var xc3 = (next.X + next2.X) / 2.0f;
+            var yc3 = (next.Y + nys + next2.Y + nnys) / 2.0f;
 
             var len1 = (float)Math.Sqrt(
-                (current.SecondaryValue - previous.SecondaryValue) *
-                (current.SecondaryValue - previous.SecondaryValue) +
-                (current.PrimaryValue + cys - previous.PrimaryValue + pys) * (current.PrimaryValue + cys - previous.PrimaryValue + pys));
+                (current.X - previous.X) *
+                (current.X - previous.X) +
+                (current.Y + cys - previous.Y + pys) * (current.Y + cys - previous.Y + pys));
             var len2 = (float)Math.Sqrt(
-                (next.SecondaryValue - current.SecondaryValue) *
-                (next.SecondaryValue - current.SecondaryValue) +
-                (next.PrimaryValue + nys - current.PrimaryValue + cys) * (next.PrimaryValue + nys - current.PrimaryValue + cys));
+                (next.X - current.X) *
+                (next.X - current.X) +
+                (next.Y + nys - current.Y + cys) * (next.Y + nys - current.Y + cys));
             var len3 = (float)Math.Sqrt(
-                (next2.SecondaryValue - next.SecondaryValue) *
-                (next2.SecondaryValue - next.SecondaryValue) +
-                (next2.PrimaryValue + nnys - next.PrimaryValue + nys) * (next2.PrimaryValue + nnys - next.PrimaryValue + nys));
+                (next2.X - next.X) *
+                (next2.X - next.X) +
+                (next2.Y + nnys - next.Y + nys) * (next2.Y + nnys - next.Y + nys));
 
             var k1 = len1 / (len1 + len2);
             var k2 = len2 / (len2 + len3);
@@ -737,17 +754,17 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
             var xm2 = xc2 + (xc3 - xc2) * k2;
             var ym2 = yc2 + (yc3 - yc2) * k2;
 
-            var c1X = xm1 + (xc2 - xm1) * _lineSmoothness + current.SecondaryValue - xm1;
-            var c1Y = ym1 + (yc2 - ym1) * _lineSmoothness + current.PrimaryValue + cys - ym1;
-            var c2X = xm2 + (xc2 - xm2) * _lineSmoothness + next.SecondaryValue - xm2;
-            var c2Y = ym2 + (yc2 - ym2) * _lineSmoothness + next.PrimaryValue + nys - ym2;
+            var c1X = xm1 + (xc2 - xm1) * _lineSmoothness + current.X - xm1;
+            var c1Y = ym1 + (yc2 - ym1) * _lineSmoothness + current.Y + cys - ym1;
+            var c2X = xm2 + (xc2 - xm2) * _lineSmoothness + next.X - xm2;
+            var c2Y = ym2 + (yc2 - ym2) * _lineSmoothness + next.Y + nys - ym2;
 
             double x0, y0;
 
             if (i == 0)
             {
-                x0 = current.SecondaryValue;
-                y0 = current.PrimaryValue + cys;
+                x0 = current.X;
+                y0 = current.Y + cys;
             }
             else
             {
@@ -755,33 +772,28 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                 y0 = c1Y;
             }
 
-            var s0 = scaler.ToPixels(x0, y0);
-            var s1 = scaler.ToPixels(c2X, c2Y);
-            var s2 = scaler.ToPixels(next.SecondaryValue, next.PrimaryValue);
-
             yield return new BezierData(points[i])
             {
                 IsFirst = i == 0,
                 IsLast = i == points.Length - 1,
-                X0 = s0.X,
-                Y0 = s0.Y,
-                X1 = s1.X,
-                Y1 = s1.Y,
-                X2 = s2.X,
-                Y2 = s2.Y,
+                X0 = x0,
+                Y0 = y0,
+                X1 = c2X,
+                Y1 = c2Y,
+                X2 = next.X,
+                Y2 = next.Y,
                 OriginalData = new BezierData(points[i])
                 {
                     X0 = x0,
                     Y0 = y0,
                     X1 = c2X,
                     Y1 = c2Y,
-                    X2 = next.SecondaryValue,
-                    Y2 = next.PrimaryValue + nys,
+                    X2 = next.X,
+                    Y2 = next.Y + nys,
                 }
             };
         }
     }
-
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SetDefaultPointTransitions(ChartPoint)"/>
     protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
     {

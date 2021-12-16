@@ -297,8 +297,8 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
         {
             if (i < min) continue;
 
-            if (_orientation == PolarAxisOrientation.Angle && Math.Abs(scaler.GetAngle(i) - b.LabelsAngle) < 10)
-                continue;
+            //if (_orientation == PolarAxisOrientation.Angle && Math.Abs(scaler.GetAngle(i) - b.LabelsAngle) < 10)
+            //    continue;
 
             var label = labeler(i);
 
