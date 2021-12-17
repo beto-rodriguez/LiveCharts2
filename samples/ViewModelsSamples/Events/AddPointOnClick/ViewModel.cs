@@ -20,12 +20,12 @@ public class ViewModel
 
         SeriesCollection = new ISeries[]
         {
-                new LineSeries<ObservablePoint>
-                {
-                    Values = data,
-                    Fill = null,
-                    DataPadding = new LiveChartsCore.Drawing.LvcPoint(5, 5)
-                }
+            new LineSeries<ObservablePoint>
+            {
+                Values = data,
+                Fill = null,
+                DataPadding = new LiveChartsCore.Drawing.LvcPoint(5, 5)
+            }
         };
     }
 
