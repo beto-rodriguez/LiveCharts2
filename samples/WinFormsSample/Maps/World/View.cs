@@ -16,6 +16,7 @@ public partial class View : UserControl
         var chart = new GeoMap
         {
             Shapes = viewModel.Shapes,
+            MapProjection = LiveChartsCore.Geo.MapProjection.Mercator,
 
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 0),

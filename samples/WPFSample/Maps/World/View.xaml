@@ -6,10 +6,5 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <lvc:GeoMap Shapes="{Binding Shapes}"></lvc:GeoMap>
-    </Grid>
+    <lvc:GeoMap Shapes="{Binding Shapes}" MapProjection="Mercator"/>
 </UserControl>
