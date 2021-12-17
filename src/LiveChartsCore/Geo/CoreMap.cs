@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
-using Newtonsoft.Json;
 
 namespace LiveChartsCore.Geo;
 
@@ -120,9 +119,16 @@ public class CoreMap<TDrawingContext>
             Layers.Add(layerName, layer);
         }
 
-        var geoJson = JsonConvert.DeserializeObject<GeoJsonFile>(streamReader.ReadToEnd()) ?? throw new Exception("Map not found");
-        layer.AddFile(geoJson);
+        GeoJsonFile? geoJson;
 
+#if NET5_0_OR_GREATER
+        geoJson = System.Text.Json.JsonSerializer.Deserialize<GeoJsonFile>(streamReader.ReadToEnd());
+#else
+        geoJson = Newtonsoft.Json.JsonConvert.DeserializeObject<GeoJsonFile>(streamReader.ReadToEnd());
+#endif
+
+        if (geoJson is null) throw new Exception("Map not found");
+        layer.AddFile(geoJson);
         return layer;
     }
 
