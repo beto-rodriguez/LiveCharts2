@@ -1,0 +1,27 @@
+<UserControl x:Class="AvaloniaSample.Axes.Paging.View"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:vms="using:ViewModelsSamples.Axes.Paging">
+  <UserControl.DataContext>
+    <vms:ViewModel/>
+  </UserControl.DataContext>
+  <Grid>
+    <Grid.RowDefinitions>
+        <RowDefinition Height="50"/>
+        <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <StackPanel Orientation="Horizontal">
+        <Button Command="{Binding GoToPage1Command}">Page 1</Button>
+        <Button Command="{Binding GoToPage2Command}">Page 2</Button>
+        <Button Command="{Binding GoToPage3Command}">Page 3</Button>
+        <Button Command="{Binding SeeAllCommand}">Clear</Button>
+    </StackPanel>
+    <lvc:CartesianChart
+        Grid.Row="1"
+        Series="{Binding Series}"
+        XAxes="{Binding XAxes}"
+        ZoomMode="X">
+    </lvc:CartesianChart>
+  </Grid>
+</UserControl>

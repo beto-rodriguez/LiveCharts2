@@ -25,6 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Axes\Paging\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Axes\TimeSpanScaled\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
@@ -164,6 +167,12 @@
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Pies\Gauge1\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Polar\Coordinates\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Polar\RadialArea\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Polar\Basic\View.xaml.cs">

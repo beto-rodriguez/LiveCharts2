@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="MauiSample.Axes.Paging.View"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             xmlns:vms="clr-namespace:ViewModelsSamples.Axes.Paging;assembly=ViewModelsSamples"
+             >
+    <ContentPage.BindingContext>
+        <vms:ViewModel/>
+    </ContentPage.BindingContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <VerticalStackLayout>
+            <Button Command="{Binding GoToPage1Command}" Text="Page 1"></Button>
+            <Button Command="{Binding GoToPage2Command}" Text="Page 2"></Button>
+            <Button Command="{Binding GoToPage3Command}" Text="Page 3"></Button>
+            <Button Command="{Binding SeeAllCommand}" Text="Clear"></Button>
+        </VerticalStackLayout>
+        <lvc:CartesianChart
+            Grid.Row="1"
+            Series="{Binding Series}"
+            XAxes="{Binding XAxes}"
+            ZoomMode="X">
+        </lvc:CartesianChart>
+    </Grid>
+</ContentPage>

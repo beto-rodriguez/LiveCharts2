@@ -58,6 +58,10 @@
 	  <MauiXaml Update="AppShell.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Axes\Paging\View.xaml">
+	    <SubType>Designer</SubType>
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Axes\ColorsAndPosition\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -254,8 +258,17 @@
 	  <MauiXaml Update="Pies\Pushout\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Polar\RadialArea\View.xaml">
+	    <SubType>Designer</SubType>
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Polar\Coordinates\View.xaml">
+	    <SubType>Designer</SubType>
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Polar\Basic\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
+	    <SubType>Designer</SubType>
 	  </MauiXaml>
 	  <MauiXaml Update="Scatter\AutoUpdate\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
@@ -314,6 +327,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Axes\Paging\View.xaml.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
 	  <Compile Update="Events\AddPointOnClick\View.xaml.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
@@ -342,6 +358,16 @@
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
 	  <Compile Update="Pies\Gauge1\View.xaml.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
+	  <Compile Update="Polar\RadialArea\View.xaml.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
+	  <Compile Update="Polar\Basic\View.xaml.cs">
+	    <SubType>Code</SubType>
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
+	  <Compile Update="Polar\Coordinates\View.xaml.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
 	</ItemGroup>

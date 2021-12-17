@@ -12,6 +12,7 @@
     <LangVersion>10.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Axes\Paging\View.xaml" />
     <None Remove="Axes\TimeSpanScaled\View.xaml" />
     <None Remove="Axes\Shared\View.xaml" />
     <None Remove="Axes\NamedLabels\View.xaml" />
@@ -58,6 +59,8 @@
     <None Remove="Pies\Gauge3\View.xaml" />
     <None Remove="Pies\Gauge2\View.xaml" />
     <None Remove="Pies\Gauge1\View.xaml" />
+    <None Remove="Polar\Basic - Copy (2)\View.xaml" />
+    <None Remove="Polar\Coordinates\View.xaml" />
     <None Remove="StepLines\Area\View.xaml" />
     <None Remove="StepLines\AutoUpdate\View.xaml" />
     <None Remove="StepLines\Basic\View.xaml" />
@@ -290,6 +293,14 @@
     </Page>
     <Page Update="Pies\NightingaleRose - Copy\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Polar\Basic - Copy %282%29\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Polar\Basic - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
     </Page>
     <Page Update="Polar\Basic\View.xaml">
       <Generator>MSBuild:Compile</Generator>
