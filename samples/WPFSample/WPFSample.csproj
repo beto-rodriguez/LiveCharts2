@@ -23,6 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Axes\Paging\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Axes\TimeSpanScaled\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -179,6 +182,9 @@
     <Compile Update="Pies\Basic\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Polar\Coordinates\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Polar\RadialArea\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -242,6 +248,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Axes\Paging\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Axes\TimeSpanScaled\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
@@ -472,6 +482,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Pies\Basic\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Polar\Coordinates\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

@@ -452,7 +452,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         // or it is initializing in the UI and has no dimensions yet
         if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
 
-        var totalAxes = AngleAxes.Concat(RadiusAxes).ToArray();
+        var totalAxes = RadiusAxes.Concat(AngleAxes).ToArray();
         var toDeleteAxes = new HashSet<IPlane<TDrawingContext>>(_everMeasuredAxes);
         foreach (var axis in totalAxes)
         {

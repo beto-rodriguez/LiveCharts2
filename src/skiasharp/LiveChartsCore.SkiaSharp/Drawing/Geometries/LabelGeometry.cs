@@ -80,7 +80,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
         if (bg != LvcColor.Empty)
         {
             var m = OnMeasure(context.PaintTask);
-            using (var bgPaint = new SKPaint { Color = new SKColor(bg.R, bg.G, bg.B, bg.A) })
+            using (var bgPaint = new SKPaint { Color = new SKColor(bg.R, bg.G, bg.B, (byte)(bg.A * Opacity)) })
             {
                 var p = Padding;
                 context.Canvas.DrawRect(X - p.Left, Y - m.Height + p.Top, m.Width, m.Height, bgPaint);

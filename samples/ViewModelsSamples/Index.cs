@@ -72,6 +72,7 @@ public static class Index
 
             //"Polar/Basic",
             "Polar/RadialArea",
+            "Polar/Coordinates",
 
             "Axes/ColorsAndPosition",
             "Axes/LabelsFormat",
@@ -82,6 +83,7 @@ public static class Index
             "Axes/DateTimeScaled",
             "Axes/TimeSpanScaled",
             "Axes/Logaritmic",
+            "Axes/Paging",
 
             "General/Sections",
             "General/ChartToImage",

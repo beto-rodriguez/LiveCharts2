@@ -700,7 +700,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
             var a1 = i + 1 - points.Length;
             var a2 = i + 2 - points.Length;
 
-            var p0 = points[i - 1 < 0 ? 0 : i - 1];
+            var p0 = points[i - 1 < 0 ? (isClosed ? points.Length - 1 : 0) : i - 1];
             var p1 = points[i];
             var p2 = points[i + 1 > points.Length - 1 ? (isClosed ? a1 : points.Length - 1) : i + 1];
             var p3 = points[i + 2 > points.Length - 1 ? (isClosed ? a2 : points.Length - 1) : i + 2];

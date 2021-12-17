@@ -396,6 +396,22 @@ public class LiveChartsSettings
                 point.PrimaryValue = model.Y.Value;
                 point.SecondaryValue = model.X.Value;
             })
+            .HasMap<ObservablePolarPoint>((model, point) =>
+            {
+                if (model is null)
+                    throw new Exception(
+                        $"A {nameof(ObservablePolarPoint)} can not be null, instead set to null to any of its properties.");
+
+                if (model.Angle is null || model.Radius is null)
+                {
+                    point.IsNull = true;
+                    return;
+                }
+
+                point.IsNull = false;
+                point.PrimaryValue = model.Radius.Value;
+                point.SecondaryValue = model.Angle.Value;
+            })
             .HasMap<DateTimePoint>((model, point) =>
             {
                 if (model is null)

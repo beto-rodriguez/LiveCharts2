@@ -70,8 +70,8 @@ public class PolarScaler
         CenterX = drawMagrinLocation.X + drawMarginSize.Width * 0.5f;
         CenterY = drawMagrinLocation.Y + drawMarginSize.Height * 0.5f;
 
-        MinRadius = actualRadiusVisibleBounds.Min;
-        MaxRadius = actualRadiusVisibleBounds.Max;
+        MinRadius = radiusAxis.MinLimit ?? actualRadiusVisibleBounds.Min;
+        MaxRadius = radiusAxis.MaxLimit ?? actualRadiusVisibleBounds.Max;
         _deltaRadius = MaxRadius - MinRadius;
 
         var minDimension = drawMarginSize.Width < drawMarginSize.Height ? drawMarginSize.Width : drawMarginSize.Height;
@@ -80,8 +80,8 @@ public class PolarScaler
         _outerRadiusOffset = 0; //drawMagrinLocation.X; // We should also check for the top, right and bottom bounds.
         _scalableRadius = minDimension * 0.5 - _innerRadiusOffset - _outerRadiusOffset;
 
-        MinAngle = actualAngleBounds.Min;
-        MaxAngle = actualAngleBounds.Max;
+        MinAngle = angleAxis.MinLimit ?? actualAngleBounds.Min;
+        MaxAngle = angleAxis.MaxLimit ?? actualAngleBounds.Max;
         _deltaAngleVal = MaxAngle - MinAngle;
 
         _initialRotation = initialRotation;

@@ -409,11 +409,12 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
                 visualSeparator.Label.Y = location.Y;
                 visualSeparator.Label.Background = _labelsBackground;
 
+                if (actualRotation < 0) actualRotation = 360 + actualRotation % 360;
                 if (_orientation == PolarAxisOrientation.Angle && ((actualRotation + 90) % 360) > 180)
                     actualRotation += 180;
 
                 visualSeparator.Label.RotateTransform = actualRotation;
-                visualSeparator.Label.Opacity = 1;
+                visualSeparator.Label.Opacity = string.IsNullOrWhiteSpace(label) ? 0 : 1; // workaround to prevent the last label overlaps the first label
 
                 visualSeparator.Label.X = location.X;
                 visualSeparator.Label.Y = location.Y;
