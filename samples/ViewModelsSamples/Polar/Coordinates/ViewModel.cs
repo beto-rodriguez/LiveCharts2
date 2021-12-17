@@ -34,7 +34,9 @@ public class ViewModel
                 // force the axis to always show 360 degrees.
                 MinLimit = 0,
                 MaxLimit = 360,
-                Labeler = angle => $"{angle}°"
+                Labeler = angle => $"{angle}°",
+                ForceStepToMin = true,
+                MinStep = 30
             }
         };
 }

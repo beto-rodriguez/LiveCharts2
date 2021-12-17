@@ -121,7 +121,8 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty InitialRotationProperty =
             DependencyProperty.Register(
-                nameof(InitialRotation), typeof(double), typeof(PolarChart), new PropertyMetadata(0d, OnDependencyPropertyChanged));
+                nameof(InitialRotation), typeof(double), typeof(PolarChart),
+                new PropertyMetadata(LiveCharts.CurrentSettings.PolarInitialRotation, OnDependencyPropertyChanged));
 
         /// <summary>
         /// The series property.

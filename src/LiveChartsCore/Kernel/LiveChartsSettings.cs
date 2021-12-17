@@ -104,6 +104,14 @@ public class LiveChartsSettings
     public TooltipFindingStrategy DefaultTooltipFindingStrategy { get; set; } = TooltipFindingStrategy.Automatic;
 
     /// <summary>
+    /// Gets or sets the default polar initial rotation.
+    /// </summary>
+    /// <value>
+    /// The default animations speed.
+    /// </value>
+    public double PolarInitialRotation { get; set; } = -90;
+
+    /// <summary>
     /// Gets the theme identifier.
     /// </summary>
     /// <value>

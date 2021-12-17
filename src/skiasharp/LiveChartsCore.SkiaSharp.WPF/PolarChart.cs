@@ -104,7 +104,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     /// </summary>
     public static readonly DependencyProperty InitialRotationProperty =
         DependencyProperty.Register(nameof(InitialRotation), typeof(double), typeof(PolarChart),
-            new PropertyMetadata(0d, OnDependencyPropertyChanged));
+            new PropertyMetadata(LiveCharts.CurrentSettings.PolarInitialRotation, OnDependencyPropertyChanged));
 
     /// <summary>
     /// The series property.

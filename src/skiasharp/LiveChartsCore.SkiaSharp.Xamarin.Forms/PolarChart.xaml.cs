@@ -142,8 +142,8 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     /// The Initial rotation property.
     /// </summary>
     public static readonly BindableProperty InitialRotationProperty =
-       BindableProperty.Create(nameof(InitialRotation), typeof(double), typeof(PolarChart), 0d,
-           propertyChanged: OnBindablePropertyChanged);
+       BindableProperty.Create(nameof(InitialRotation), typeof(double), typeof(PolarChart),
+           LiveCharts.CurrentSettings.PolarInitialRotation, propertyChanged: OnBindablePropertyChanged);
 
     /// <summary>
     /// The series property.

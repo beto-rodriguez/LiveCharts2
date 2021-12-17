@@ -149,7 +149,8 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     /// The initial rotation property.
     /// </summary>
     public static readonly AvaloniaProperty<double> InitialRotationProperty =
-        AvaloniaProperty.Register<PolarChart, double>(nameof(InitialRotation), 0d, inherits: true);
+        AvaloniaProperty.Register<PolarChart, double>(
+            nameof(InitialRotation), LiveCharts.CurrentSettings.PolarInitialRotation, inherits: true);
 
     /// <summary>
     /// The x axes property.

@@ -39,7 +39,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     private bool _fitToBounds = false;
     private double _totalAngle = 360;
     private double _innerRadius;
-    private double _initialRotation;
+    private double _initialRotation = LiveCharts.CurrentSettings.PolarInitialRotation;
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
     private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;

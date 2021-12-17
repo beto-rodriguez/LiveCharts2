@@ -300,7 +300,12 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
             //if (_orientation == PolarAxisOrientation.Angle && Math.Abs(scaler.GetAngle(i) - b.LabelsAngle) < 10)
             //    continue;
 
-            var label = labeler(i);
+            // - 1d + 1d is a dummy operation to fix a bug
+            // where i == 0 then calling i.ToString() returns "-0"...
+            // that dummy operation seems to hide that issue
+            // I am not completly sure of what causes that
+            // it seems that the bits storing that number (i) have the negative bit on
+            var label = labeler(i - 1d + 1d);
 
             if (!separators.TryGetValue(i, out var visualSeparator))
             {

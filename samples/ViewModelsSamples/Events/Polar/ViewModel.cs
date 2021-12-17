@@ -15,13 +15,13 @@ public class ViewModel
     {
         var data = new[]
         {
-                new City { Name = "Tokyo", Population = 4 },
-                new City { Name = "New York", Population = 6 },
-                new City { Name = "Seoul", Population = 2 },
-                new City { Name = "Moscow", Population = 8 },
-                new City { Name = "Shanghai", Population = 3 },
-                new City { Name = "Guadalajara", Population = 4 }
-            };
+            new City { Name = "Tokyo", Population = 4 },
+            new City { Name = "New York", Population = 6 },
+            new City { Name = "Seoul", Population = 2 },
+            new City { Name = "Moscow", Population = 8 },
+            new City { Name = "Shanghai", Population = 3 },
+            new City { Name = "Guadalajara", Population = 4 }
+        };
 
         var polarLineSeries = new PolarLineSeries<City>
         {
@@ -38,8 +38,8 @@ public class ViewModel
 
         Series = new ISeries[]
         {
-                polarLineSeries,
-                new PolarLineSeries<int> { Values = new[] { 6, 7, 2, 9, 6, 2 } },
+            polarLineSeries,
+            new PolarLineSeries<int> { Values = new[] { 6, 7, 2, 9, 6, 2 } },
         };
     }
 
