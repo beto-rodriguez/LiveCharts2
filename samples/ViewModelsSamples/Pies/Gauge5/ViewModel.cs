@@ -30,22 +30,8 @@ public class ViewModel
     public IEnumerable<ISeries> Series { get; set; }
     public ICommand DoRandomChangeCommand => new Command(o => DoRandomChange());
 
-    private bool isHola = false;
     public void DoRandomChange()
     {
-        isHola = !isHola;
-
-        if (isHola)
-        {
-            ObservableValue1.Value = 94;
-            ObservableValue2.Value = 86;
-            return;
-        }
-
-        ObservableValue1.Value = 64;
-        ObservableValue2.Value = 78;
-        return;
-
         // modifying the Value property updates and animates the chart automatically
         ObservableValue1.Value = _random.Next(0, 100);
         ObservableValue2.Value = _random.Next(0, 100);
