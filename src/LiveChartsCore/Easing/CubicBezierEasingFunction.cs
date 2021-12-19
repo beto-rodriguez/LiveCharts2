@@ -48,7 +48,7 @@ public static class CubicBezierEasingFunction
     /// <exception cref="Exception">Bezier x values must be in [0, 1] range</exception>
     public static Func<float, float> BuildBezierEasingFunction(float mX1, float mY1, float mX2, float mY2)
     {
-        if (!(mX1 > 0 && mX1 <= 1 && mX2 > 0 && mX2 <= 1))
+        if (mX1 < 0 || mX1 > 1 || mX2 < 0 || mX2 > 1)
         {
             throw new Exception("Bezier x values must be in [0, 1] range");
         }

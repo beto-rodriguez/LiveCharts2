@@ -102,8 +102,8 @@ public class AreaHelper<TDrawingContext, TGeometryPath, TLineSegment, TMoveTo, T
     /// </summary>
     public void ClearLimits()
     {
-        Path.RemoveCommand(StartPoint);
-        Path.RemoveCommand(StartSegment);
-        Path.RemoveCommand(EndSegment);
+        _ = Path.RemoveCommand(StartPoint);
+        _ = Path.RemoveCommand(StartSegment);
+        _ = Path.RemoveCommand(EndSegment);
     }
 }

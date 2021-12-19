@@ -356,10 +356,11 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
                         if (!cartesianChart.IsFirstDraw && previousSecondaryScale is not null && previousPrimaryScale is not null)
                         {
-                            strokePathHelper.StartPoint.X = previousSecondaryScale.ToPixels(data.OriginalData?.X0 ?? 0);
-                            strokePathHelper.StartPoint.Y = previousPrimaryScale.ToPixels(data.OriginalData?.Y0 ?? 0);
+                            strokePathHelper.StartPoint.X = visual.Geometry.X + gs * 0.5f;// previousSecondaryScale.ToPixels(data.OriginalData?.X0 ?? 0);
+                            strokePathHelper.StartPoint.Y = visual.Geometry.Y + gs * 0.5f; // previousPrimaryScale.ToPixels(data.OriginalData?.Y0 ?? 0);
                             strokePathHelper.StartPoint.CompleteTransitions(
-                               nameof(strokePathHelper.StartPoint.Y), nameof(strokePathHelper.StartPoint.X));
+                               nameof(strokePathHelper.StartPoint.Y),
+                               nameof(strokePathHelper.StartPoint.X));
                         }
 
                         strokePathHelper.StartPoint.X = (float)data.X0;
