@@ -22,7 +22,8 @@ public class ViewModel
             {
                 Name = "Salesman/woman",
                 NamePaint = new SolidColorPaint { Color = SKColors.Red },
-                Labels = new string[] { "Sergio", "Lando", "Lewis" },
+                // Use the labels property for named or static labels // mark
+                Labels = new string[] { "Sergio", "Lando", "Lewis" }, // mark
                 LabelsRotation = 15
             }
         };
@@ -34,14 +35,15 @@ public class ViewModel
                 Name = "Sales amount",
                 NamePadding = new LiveChartsCore.Drawing.Padding(0, 15),
 
+                // Use the Labeler property to give format to the axis values // mark
                 // Now the Y axis we will display it as currency
                 // LiveCharts provides some common formatters
                 // in this case we are using the currency formatter.
-                Labeler = Labelers.Currency
+                Labeler = Labelers.Currency // mark
 
                 // you could also build your own currency formatter
                 // for example:
-                // Labeler = (value) => value.ToString("C")
+                // Labeler = (value) => value.ToString("C") // mark
 
                 // But the one that LiveCharts provides creates shorter labels when
                 // the amount is in millions or trillions
