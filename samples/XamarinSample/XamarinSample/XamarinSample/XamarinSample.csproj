@@ -25,6 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Axes\LabelsFormat2\View.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Axes\Paging\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

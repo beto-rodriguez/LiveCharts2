@@ -14,6 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Axes\LabelsFormat2\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Axes\Paging\View.cs">
       <SubType>UserControl</SubType>
     </Compile>

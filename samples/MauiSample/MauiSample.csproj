@@ -58,6 +58,10 @@
 	  <MauiXaml Update="AppShell.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Axes\LabelsFormat2\View.xaml">
+	    <SubType>Designer</SubType>
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Axes\Paging\View.xaml">
 	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:Compile</Generator>
@@ -327,6 +331,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Axes\LabelsFormat2\View.xaml.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
 	  <Compile Update="Axes\Paging\View.xaml.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>

@@ -12,6 +12,7 @@
     <LangVersion>10.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Axes\LabelsFormat2\View.xaml" />
     <None Remove="Axes\Paging\View.xaml" />
     <None Remove="Axes\TimeSpanScaled\View.xaml" />
     <None Remove="Axes\Shared\View.xaml" />

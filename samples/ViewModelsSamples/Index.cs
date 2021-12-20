@@ -76,6 +76,7 @@ public static class Index
 
             "Axes/ColorsAndPosition",
             "Axes/LabelsFormat",
+            "Axes/LabelsFormat2",
             "Axes/NamedLabels",
             "Axes/LabelsRotation",
             "Axes/Multiple",
