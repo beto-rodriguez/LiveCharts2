@@ -15,7 +15,7 @@
           YAxes="{Binding YAxes}"
           LegendPosition="Left"
           LegendFontFamily="Courier New"
-          LegendFontSize="25"
+          LegendFontSize="12"
           LegendTextBrush="#505050"
           LegendBackground="#fafafa">
       </lvc:CartesianChart>
