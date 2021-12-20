@@ -23,7 +23,7 @@
     <Compile Update="Axes\TimeSpanScaled\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Axes\Logaritmic\View.cs" />
+    <Compile Update="Axes\Logarithmic\View.cs" />
     <Compile Update="Axes\DateTimeScaled\View.cs">
       <SubType>UserControl</SubType>
     </Compile>

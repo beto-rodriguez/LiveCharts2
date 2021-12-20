@@ -83,7 +83,7 @@ public static class Index
             "Axes/Shared",
             "Axes/DateTimeScaled",
             "Axes/TimeSpanScaled",
-            "Axes/Logaritmic",
+            "Axes/Logarithmic",
             "Axes/Paging",
 
             "General/Sections",

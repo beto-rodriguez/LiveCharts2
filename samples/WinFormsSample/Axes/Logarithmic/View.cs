@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
 using LiveChartsCore.SkiaSharpView.WinForms;
-using ViewModelsSamples.Axes.Logaritmic;
+using ViewModelsSamples.Axes.Logarithmic;
 
-namespace WinFormsSample.Axes.Logaritmic;
+namespace WinFormsSample.Axes.Logarithmic;
 
 public partial class View : UserControl
 {

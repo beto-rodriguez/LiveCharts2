@@ -1,6 +1,6 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 
-namespace WinUISample.Axes.Logaritmic;
+namespace WinUISample.Axes.Logarithmic;
 
 public sealed partial class View : UserControl
 {

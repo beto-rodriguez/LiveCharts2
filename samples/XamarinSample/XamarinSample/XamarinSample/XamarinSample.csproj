@@ -34,7 +34,7 @@
     <Compile Update="Axes\TimeSpanScaled\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Axes\Logaritmic\View.xaml.cs">
+    <Compile Update="Axes\Logarithmic\View.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Axes\LabelsRotation\View.xaml.cs">

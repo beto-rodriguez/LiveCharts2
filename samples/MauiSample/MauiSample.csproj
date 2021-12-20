@@ -78,7 +78,7 @@
 	  <MauiXaml Update="Axes\LabelsRotation\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Axes\Logaritmic\View.xaml">
+	  <MauiXaml Update="Axes\Logarithmic\View.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Axes\Multiple\View.xaml">

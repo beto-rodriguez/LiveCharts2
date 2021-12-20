@@ -139,7 +139,7 @@
     <Compile Include="Axes\LabelsRotation\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Axes\Logaritmic\View.xaml.cs">
+    <Compile Include="Axes\Logarithmic\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
     <Compile Include="Axes\Multiple\View.xaml.cs">
@@ -428,7 +428,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Axes\Logaritmic\View.xaml">
+    <Page Include="Axes\Logarithmic\View.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

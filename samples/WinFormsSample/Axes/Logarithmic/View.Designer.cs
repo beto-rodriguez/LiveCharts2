@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Axes.Logaritmic
+namespace WinFormsSample.Axes.Logarithmic
 {
     partial class View
     {

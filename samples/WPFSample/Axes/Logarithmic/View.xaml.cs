@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace WPFSample.Axes.Logaritmic;
+namespace WPFSample.Axes.Logarithmic;
 
 /// <summary>
 /// Interaction logic for View.xaml

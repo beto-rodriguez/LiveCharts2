@@ -1,7 +1,7 @@
-﻿using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Xaml;
+﻿using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
-namespace MauiSample.Axes.Logaritmic;
+namespace XamarinSample.Axes.Logarithmic;
 
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class View : ContentPage

@@ -32,7 +32,7 @@
     <Compile Update="Axes\TimeSpanScaled\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Axes\Logaritmic\View.xaml.cs">
+    <Compile Update="Axes\Logarithmic\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Axes\LabelsRotation\View.xaml.cs">
@@ -263,7 +263,7 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Axes\Logaritmic\View.xaml">
+    <Page Update="Axes\Logarithmic\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

@@ -18,7 +18,7 @@
     <None Remove="Axes\Shared\View.xaml" />
     <None Remove="Axes\NamedLabels\View.xaml" />
     <None Remove="Axes\Multiple\View.xaml" />
-    <None Remove="Axes\Logaritmic\View.xaml" />
+    <None Remove="Axes\Logarithmic\View.xaml" />
     <None Remove="Axes\LabelsRotation\View.xaml" />
     <None Remove="Axes\LabelsFormat\View.xaml" />
     <None Remove="Axes\DateTimeScaled\View.xaml" />
