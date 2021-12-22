@@ -25,6 +25,9 @@
     <Resource Include="Assets\livecharts.png" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Axes\Style\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Axes\LabelsFormat2\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
@@ -113,6 +116,9 @@
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="General\MultiThreading\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="General\Sections2\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Lines\XY\View.axaml.cs">

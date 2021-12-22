@@ -121,6 +121,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Axes\Style\View.xaml.cs">
+      <DependentUpon>View.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Axes\LabelsFormat2\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
@@ -218,6 +221,9 @@
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
     <Compile Include="General\NullPoints\View.xaml.cs">
+      <DependentUpon>View.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="General\Sections2\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
     <Compile Include="General\Sections\View.xaml.cs">
@@ -404,6 +410,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Axes\Style\View.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Axes\LabelsFormat2\View.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -533,6 +543,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="General\NullPoints\View.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="General\Sections2\View.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

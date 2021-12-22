@@ -84,9 +84,11 @@ public static class Index
             "Axes/DateTimeScaled",
             "Axes/TimeSpanScaled",
             "Axes/Logarithmic",
+            "Axes/Style",
             "Axes/Paging",
 
             "General/Sections",
+            "General/Sections2",
             "General/ChartToImage",
             "General/Tooltips",
             "General/Legends",

@@ -23,6 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Axes\Style\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Axes\LabelsFormat2\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -111,6 +114,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="General\MultiThreading\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="General\Sections2\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="General\Sections\View.xaml.cs">
@@ -251,6 +257,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Axes\Style\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Axes\LabelsFormat2\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
@@ -368,6 +378,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="General\MultiThreading\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="General\Sections2\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

@@ -12,6 +12,7 @@
     <LangVersion>10.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Axes\Style\View.xaml" />
     <None Remove="Axes\LabelsFormat2\View.xaml" />
     <None Remove="Axes\Paging\View.xaml" />
     <None Remove="Axes\TimeSpanScaled\View.xaml" />
@@ -42,6 +43,7 @@
     <None Remove="Events\Polar\View.xaml" />
     <None Remove="Financial\BasicCandlesticks\View.xaml" />
     <None Remove="General\MultiThreading\View.xaml" />
+    <None Remove="General\Sections2\View.xaml" />
     <None Remove="General\Visibility\View.xaml" />
     <None Remove="General\UserDefinedTypes\View.xaml" />
     <None Remove="General\Tooltips\View.xaml" />

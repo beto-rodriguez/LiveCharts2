@@ -58,6 +58,10 @@
 	  <MauiXaml Update="AppShell.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Axes\Style\View.xaml">
+	    <SubType>Designer</SubType>
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Axes\LabelsFormat2\View.xaml">
 	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:Compile</Generator>
@@ -164,6 +168,10 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="General\NullPoints\View.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="General\Sections2\View.xaml">
+	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="General\Sections\View.xaml">
@@ -331,6 +339,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Axes\Style\View.xaml.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
 	  <Compile Update="Axes\LabelsFormat2\View.xaml.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
@@ -347,6 +358,9 @@
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
 	  <Compile Update="Events\Polar\View.xaml.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
+	  <Compile Update="General\Sections2\View.xaml.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
 	  <Compile Update="Lines\XY\View.xaml.cs">
