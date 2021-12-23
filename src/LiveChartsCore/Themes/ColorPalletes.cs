@@ -22,21 +22,21 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Themes
+namespace LiveChartsCore.Themes;
+
+/// <summary>
+/// Defines a set of predefined colors to use.
+/// </summary>
+public static partial class ColorPalletes
 {
     /// <summary>
-    /// Defines a set of predefined colors to use.
+    /// Gets the fluent design colors.
     /// </summary>
-    public static partial class ColorPalletes
+    /// <value>
+    /// The fluent design.
+    /// </value>
+    public static LvcColor[] FluentDesign => new LvcColor[]
     {
-        /// <summary>
-        /// Gets the fluent design colors.
-        /// </summary>
-        /// <value>
-        /// The fluent design.
-        /// </value>
-        public static LvcColor[] FluentDesign => new LvcColor[]
-        {
             RGB(116,77,169),
             RGB(231,72,86),
             RGB(255,140,0),
@@ -46,16 +46,16 @@ namespace LiveChartsCore.Themes
             RGB(194,57,179),
             RGB(76,74,72),
             RGB(0,183,195)
-        };
+    };
 
-        /// <summary>
-        /// Gets the material design500 colors.
-        /// </summary>
-        /// <value>
-        /// The material design500.
-        /// </value>
-        public static LvcColor[] MaterialDesign500 => new LvcColor[]
-        {
+    /// <summary>
+    /// Gets the material design500 colors.
+    /// </summary>
+    /// <value>
+    /// The material design500.
+    /// </value>
+    public static LvcColor[] MaterialDesign500 => new LvcColor[]
+    {
             RGB(33,150,243),    // blue
             RGB(244,67,54),     // red
             RGB(139,195,74),    // light green
@@ -65,16 +65,16 @@ namespace LiveChartsCore.Themes
             RGB(0,150,136),     // teal
             RGB(233,30,99),     // pink
             RGB(96,125,139),    // blue gray
-        };
+    };
 
-        /// <summary>
-        /// Gets the material design200 colors.
-        /// </summary>
-        /// <value>
-        /// The material design200.
-        /// </value>
-        public static LvcColor[] MaterialDesign200 => new LvcColor[]
-        {
+    /// <summary>
+    /// Gets the material design200 colors.
+    /// </summary>
+    /// <value>
+    /// The material design200.
+    /// </value>
+    public static LvcColor[] MaterialDesign200 => new LvcColor[]
+    {
             RGB(144,202,249),   // blue
             RGB(239,154,154),   // red
             RGB(197,225,165),   // light green
@@ -84,16 +84,16 @@ namespace LiveChartsCore.Themes
             RGB(128,203,196),   // teal
             RGB(244,143,177),   // pink
             RGB(176,190,197),   // blue gray
-        };
+    };
 
-        /// <summary>
-        /// Gets the material design800 colors.
-        /// </summary>
-        /// <value>
-        /// The material design800.
-        /// </value>
-        public static LvcColor[] MaterialDesign800 => new LvcColor[]
-        {
+    /// <summary>
+    /// Gets the material design800 colors.
+    /// </summary>
+    /// <value>
+    /// The material design800.
+    /// </value>
+    public static LvcColor[] MaterialDesign800 => new LvcColor[]
+    {
             RGB(21,101,192),    // blue
             RGB(198,40,40),     // red
             RGB(85,139,47),     // light green
@@ -103,11 +103,10 @@ namespace LiveChartsCore.Themes
             RGB(0,105,92),      // teal
             RGB(173,20,87),     // pink
             RGB(55,71,79),      // blue gray
-        };
+    };
 
-        private static LvcColor RGB(byte r, byte g, byte b)
-        {
-            return LvcColor.FromArgb(255, r, g, b);
-        }
+    private static LvcColor RGB(byte r, byte g, byte b)
+    {
+        return LvcColor.FromArgb(255, r, g, b);
     }
 }

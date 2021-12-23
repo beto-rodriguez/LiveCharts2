@@ -1,30 +1,34 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
-using System.Collections.Generic;
 
-namespace ViewModelsSamples.Lines.Custom
+namespace ViewModelsSamples.Lines.Custom;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        public List<ISeries> Series { get; set; } = new List<ISeries>
-        {
+    public ISeries[] Series { get; set; }
+        = {
+            new LineSeries<double>
+            {
+                Values = new double[] { 3, 1, 4, 3, 2, -5, -2 },
+                GeometrySize = 10,
+                Fill = null
+            },
+
             // use the second argument type to specify the geometry to draw for every point
             // there are already many predefined geometries in the
             // LiveChartsCore.SkiaSharpView.Drawing.Geometries namespace
             new LineSeries<double, LiveChartsCore.SkiaSharpView.Drawing.Geometries.RectangleGeometry>
             {
-                Values = new List<double> { 3, 3, -3, -2, -4, -3, -1 },
-                Fill = null,
-                LineSmoothness = 1
+                Values = new double[] { 3, 3, -3, -2, -4, -3, -1 },
+                Fill = null
             },
 
             // you can also define your own SVG geometry
             new LineSeries<double, MyGeometry>
             {
-                Values = new List<double> { -2, 2, 1, 3, -1, 4, 3 },
+                Values = new double[] { -2, 2, 1, 3, -1, 4, 3 },
 
                 Stroke = new SolidColorPaint(SKColors.DarkOliveGreen, 3),
                 Fill = null,
@@ -33,5 +37,4 @@ namespace ViewModelsSamples.Lines.Custom
                 GeometrySize = 40
             }
         };
-    }
 }

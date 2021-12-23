@@ -24,46 +24,45 @@ using LiveChartsCore.Kernel;
 using Microsoft.UI.Xaml.Media;
 using Windows.UI.Text;
 
-namespace LiveChartsCore.SkiaSharpView.WinUI
+namespace LiveChartsCore.SkiaSharpView.WinUI;
+
+/// <summary>
+/// The Uwp poing class, just used to bind the tooltips.
+/// </summary>
+public class BindingPoint
 {
     /// <summary>
-    /// The Uwp poing class, just used to bind the tooltips.
+    /// Ges the chart point.
     /// </summary>
-    public class BindingPoint
-    {
-        /// <summary>
-        /// Ges the chart point.
-        /// </summary>
-        public ChartPoint ChartPoint { get; init; } = null!; // <- how to force the init.. so the nullables do not complain?
+    public ChartPoint ChartPoint { get; init; } = null!; // <- how to force the init.. so the nullables do not complain?
 
-        /// <summary>
-        /// Gets the font family.
-        /// </summary>
-        public FontFamily FontFamily { get; init; } = null!;
+    /// <summary>
+    /// Gets the font family.
+    /// </summary>
+    public FontFamily FontFamily { get; init; } = null!;
 
-        /// <summary>
-        /// Gets the foreground.
-        /// </summary>
-        public Brush Foreground { get; init; } = null!;
+    /// <summary>
+    /// Gets the foreground.
+    /// </summary>
+    public Brush Foreground { get; init; } = null!;
 
-        /// <summary>
-        /// Gets the font size.
-        /// </summary>
-        public double FontSize { get; init; }
+    /// <summary>
+    /// Gets the font size.
+    /// </summary>
+    public double FontSize { get; init; }
 
-        /// <summary>
-        /// Gets the font weight.
-        /// </summary>
-        public FontWeight FontWeight { get; init; }
+    /// <summary>
+    /// Gets the font weight.
+    /// </summary>
+    public FontWeight FontWeight { get; init; }
 
-        /// <summary>
-        /// Gets the font style.
-        /// </summary>
-        public FontStyle FontStyle { get; init; }
+    /// <summary>
+    /// Gets the font style.
+    /// </summary>
+    public FontStyle FontStyle { get; init; }
 
-        /// <summary>
-        /// Gets the font stretch.
-        /// </summary>
-        public FontStretch FontStretch { get; init; }
-    }
+    /// <summary>
+    /// Gets the font stretch.
+    /// </summary>
+    public FontStretch FontStretch { get; init; }
 }

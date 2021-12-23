@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace WPFSample.Axes.Multiple
+namespace WPFSample.Axes.Multiple;
+
+/// <summary>
+/// Interaction logic for View.xaml
+/// </summary>
+public partial class View : UserControl
 {
-    /// <summary>
-    /// Interaction logic for View.xaml
-    /// </summary>
-    public partial class View : UserControl
+    public View()
     {
-        public View()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

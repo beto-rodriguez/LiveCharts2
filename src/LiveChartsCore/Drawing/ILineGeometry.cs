@@ -20,30 +20,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Drawing;
+
+/// <summary>
+/// Defines a line geometry in the user interface.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="IGeometry{TDrawingContext}" />
+public interface ILineGeometry<TDrawingContext> : IGeometry<TDrawingContext>
+     where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a line geometry in the user interface.
+    /// Gets or sets the x1.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IGeometry{TDrawingContext}" />
-    public interface ILineGeometry<TDrawingContext> : IGeometry<TDrawingContext>
-         where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets or sets the x1.
-        /// </summary>
-        /// <value>
-        /// The x1.
-        /// </value>
-        float X1 { get; set; }
+    /// <value>
+    /// The x1.
+    /// </value>
+    float X1 { get; set; }
 
-        /// <summary>
-        /// Gets or sets the y1.
-        /// </summary>
-        /// <value>
-        /// The y1.
-        /// </value>
-        float Y1 { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the y1.
+    /// </summary>
+    /// <value>
+    /// The y1.
+    /// </value>
+    float Y1 { get; set; }
 }

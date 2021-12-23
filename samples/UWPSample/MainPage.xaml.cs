@@ -12,7 +12,7 @@ namespace UWPSample
     {
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
             Samples = ViewModelsSamples.Index.Samples;
             grid.DataContext = this;

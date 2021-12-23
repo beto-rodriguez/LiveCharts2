@@ -20,59 +20,58 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Drawing;
+
+/// <summary>
+/// Defines a stepline visual point.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <typeparam name="TVisual">The type of the visual.</typeparam>
+/// <typeparam name="TStepLineSegment">The type of the stepline segment.</typeparam>
+/// <typeparam name="TPathArgs">The type of the path arguments.</typeparam>
+/// <seealso cref="IStepLineVisualChartPoint{TDrawingContext}" />
+public class StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPathArgs> : IStepLineVisualChartPoint<TDrawingContext>
+    where TVisual : ISizedVisualChartPoint<TDrawingContext>, new()
+    where TStepLineSegment : IStepLineSegment<TPathArgs>, new()
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a stepline visual point.
+    /// Gets the geometry.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <typeparam name="TVisual">The type of the visual.</typeparam>
-    /// <typeparam name="TStepLineSegment">The type of the stepline segment.</typeparam>
-    /// <typeparam name="TPathArgs">The type of the path arguments.</typeparam>
-    /// <seealso cref="IStepLineVisualChartPoint{TDrawingContext}" />
-    public class StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPathArgs> : IStepLineVisualChartPoint<TDrawingContext>
-        where TVisual : ISizedVisualChartPoint<TDrawingContext>, new()
-        where TStepLineSegment : IStepLineSegment<TPathArgs>, new()
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets the geometry.
-        /// </summary>
-        /// <value>
-        /// The geometry.
-        /// </value>
-        public TVisual Geometry { get; set; } = new TVisual();
+    /// <value>
+    /// The geometry.
+    /// </value>
+    public TVisual Geometry { get; set; } = new();
 
-        /// <summary>
-        /// Gets the stepline.
-        /// </summary>
-        /// <value>
-        /// The stepline.
-        /// </value>
-        public TStepLineSegment StepSegment { get; set; } = new TStepLineSegment();
+    /// <summary>
+    /// Gets the stepline.
+    /// </summary>
+    /// <value>
+    /// The stepline.
+    /// </value>
+    public TStepLineSegment StepSegment { get; set; } = new();
 
-        /// <summary>
-        /// Gets or sets the path.
-        /// </summary>
-        /// <value>
-        /// The path.
-        /// </value>
-        public IPathGeometry<TDrawingContext, TPathArgs>? FillPath { get; set; }
+    /// <summary>
+    /// Gets or sets the path.
+    /// </summary>
+    /// <value>
+    /// The path.
+    /// </value>
+    public IPathGeometry<TDrawingContext, TPathArgs>? FillPath { get; set; }
 
-        /// <summary>
-        /// Gets or sets the stroke path.
-        /// </summary>
-        /// <value>
-        /// The stroke path.
-        /// </value>
-        public IPathGeometry<TDrawingContext, TPathArgs>? StrokePath { get; set; }
+    /// <summary>
+    /// Gets or sets the stroke path.
+    /// </summary>
+    /// <value>
+    /// The stroke path.
+    /// </value>
+    public IPathGeometry<TDrawingContext, TPathArgs>? StrokePath { get; set; }
 
-        /// <summary>
-        /// Gets the main <see cref="T:LiveChartsCore.Drawing.IDrawable`1" />.
-        /// </summary>
-        public IGeometry<TDrawingContext>? HighlightableGeometry => Geometry?.HighlightableGeometry;
+    /// <summary>
+    /// Gets the main <see cref="T:LiveChartsCore.Drawing.IDrawable`1" />.
+    /// </summary>
+    public IGeometry<TDrawingContext>? HighlightableGeometry => Geometry?.HighlightableGeometry;
 
-        ISizedGeometry<TDrawingContext> IStepLineVisualChartPoint<TDrawingContext>.Geometry => Geometry;
-        IAnimatableStepLineSegment IStepLineVisualChartPoint<TDrawingContext>.StepLine => StepSegment;
-    }
+    ISizedGeometry<TDrawingContext> IStepLineVisualChartPoint<TDrawingContext>.Geometry => Geometry;
+    IAnimatableStepLineSegment IStepLineVisualChartPoint<TDrawingContext>.StepLine => StepSegment;
 }

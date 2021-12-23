@@ -1,24 +1,24 @@
-﻿using LiveChartsCore;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 
-namespace ViewModelsSamples.Bars.Race
+namespace ViewModelsSamples.Bars.Race;
+
+public class ViewModel : INotifyPropertyChanged
 {
-    public class ViewModel : INotifyPropertyChanged
-    {
-        private readonly Random _r = new Random();
-        private List<ISeries> _series;
+    private readonly Random _r = new();
+    private List<ISeries> _series;
 
-        public ViewModel()
-        {
-            Series = new List<ISeries>
+    public ViewModel()
+    {
+        Series = new List<ISeries>
             {
                 new RowSeries<ObservableValue>
                 {
@@ -91,26 +91,25 @@ namespace ViewModelsSamples.Bars.Race
                     DataLabelsFormatter = point => $"{point.Context.Series.Name} {point.PrimaryValue}"
                 },
             };
-        }
+    }
 
-        public List<ISeries> Series { get => _series; set { _series = value; OnPropertyChanged(nameof(Series)); } }
+    public List<ISeries> Series { get => _series; set { _series = value; OnPropertyChanged(nameof(Series)); } }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler PropertyChanged;
 
-        public void RandomIncrement()
+    public void RandomIncrement()
+    {
+        foreach (var item in Series)
         {
-            foreach (var item in Series)
-            {
-                var i = ((ObservableValue[])item.Values)[0];
-                i.Value += _r.Next(0, 30);
-            }
-
-            Series = Series.OrderBy(x => ((ObservableValue[])x.Values)[0].Value).ToList();
+            var i = ((ObservableValue[])item.Values)[0];
+            i.Value += _r.Next(0, 30);
         }
 
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        Series = Series.OrderBy(x => ((ObservableValue[])x.Values)[0].Value).ToList();
+    }
+
+    protected void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

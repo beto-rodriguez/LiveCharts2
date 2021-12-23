@@ -28,7 +28,7 @@ Defines the stroke to use when the `Close` is greater than the `Open`.
 
 The following sample illustrates the use of the previous properties.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/financialpaints.png)
+![image]({{ assets_url }}/docs/_assets/financialpaints.png)
 
 <pre><code>XAxes = new[]
 {
@@ -88,7 +88,7 @@ a look at the [Paints article]({{ website_url }}/docs/{{ platform }}/{{ version 
 
 Specifies the maximum width a column can take, take a look at the following sample, where the max width is `10`.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/financialw10.png)
+![image]({{ assets_url }}/docs/_assets/financialw10.png)
 
 <pre><code>XAxes = new[]
 {
@@ -214,7 +214,7 @@ Series = new[]
     }
 };</code></pre>
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/financialct.png)
+![image]({{ assets_url }}/docs/_assets/financialct.png)
 
 Alternatively you could create a **local** mapper that will only work for a specific series, global mappers will be 
 ignored when the series `Mapping` property is not null.

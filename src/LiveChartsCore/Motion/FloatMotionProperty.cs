@@ -20,40 +20,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Motion
+namespace LiveChartsCore.Motion;
+
+/// <summary>
+/// Defines the float motion property class.
+/// </summary>
+public class FloatMotionProperty : MotionProperty<float>
 {
     /// <summary>
-    /// Defines the float motion property class.
+    /// Initializes a new instance of the <see cref="FloatMotionProperty"/> class.
     /// </summary>
-    public class FloatMotionProperty : MotionProperty<float>
+    /// <param name="propertyName">Name of the property.</param>
+    public FloatMotionProperty(string propertyName)
+        : base(propertyName)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FloatMotionProperty"/> class.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        public FloatMotionProperty(string propertyName)
-            : base(propertyName)
-        {
-            fromValue = 0;
-            toValue = 0;
-        }
+        fromValue = 0;
+        toValue = 0;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FloatMotionProperty"/> class.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        /// <param name="value">The value.</param>
-        public FloatMotionProperty(string propertyName, float value)
-            : base(propertyName)
-        {
-            fromValue = value;
-            toValue = value;
-        }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FloatMotionProperty"/> class.
+    /// </summary>
+    /// <param name="propertyName">Name of the property.</param>
+    /// <param name="value">The value.</param>
+    public FloatMotionProperty(string propertyName, float value)
+        : base(propertyName)
+    {
+        fromValue = value;
+        toValue = value;
+    }
 
-        /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
-        protected override float OnGetMovement(float progress)
-        {
-            return fromValue + progress * (toValue - fromValue);
-        }
+    /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
+    protected override float OnGetMovement(float progress)
+    {
+        return fromValue + progress * (toValue - fromValue);
     }
 }

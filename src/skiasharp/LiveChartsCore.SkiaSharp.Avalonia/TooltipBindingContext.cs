@@ -25,67 +25,66 @@ using System.Linq;
 using Avalonia.Media;
 using LiveChartsCore.Kernel;
 
-namespace LiveChartsCore.SkiaSharpView.Avalonia
+namespace LiveChartsCore.SkiaSharpView.Avalonia;
+
+/// <summary>
+/// Defines the tool tip binding context.
+/// </summary>
+public class TooltipBindingContext
 {
     /// <summary>
-    /// Defines the tool tip binding context.
+    /// Gets or sets the points.
     /// </summary>
-    public class TooltipBindingContext
-    {
-        /// <summary>
-        /// Gets or sets the points.
-        /// </summary>
-        /// <value>
-        /// The points.
-        /// </value>
-        public IEnumerable<ChartPoint> Points { get; set; } = Enumerable.Empty<ChartPoint>();
+    /// <value>
+    /// The points.
+    /// </value>
+    public IEnumerable<ChartPoint> Points { get; set; } = Enumerable.Empty<ChartPoint>();
 
-        /// <summary>
-        /// Gets or sets the tool tip font family.
-        /// </summary>
-        /// <value>
-        /// The tool tip font family.
-        /// </value>
-        public FontFamily TooltipFontFamily { get; set; } = new FontFamily("Trebuchet MS");
+    /// <summary>
+    /// Gets or sets the tool tip font family.
+    /// </summary>
+    /// <value>
+    /// The tool tip font family.
+    /// </value>
+    public FontFamily TooltipFontFamily { get; set; } = new("Trebuchet MS");
 
-        /// <summary>
-        /// Gets or sets the size of the tool tip font.
-        /// </summary>
-        /// <value>
-        /// The size of the tool tip font.
-        /// </value>
-        public double TooltipFontSize { get; set; }
+    /// <summary>
+    /// Gets or sets the size of the tool tip font.
+    /// </summary>
+    /// <value>
+    /// The size of the tool tip font.
+    /// </value>
+    public double TooltipFontSize { get; set; }
 
-        /// <summary>
-        /// Gets or sets the tool tip font weight.
-        /// </summary>
-        /// <value>
-        /// The tool tip font weight.
-        /// </value>
-        public FontWeight TooltipFontWeight { get; set; }
+    /// <summary>
+    /// Gets or sets the tool tip font weight.
+    /// </summary>
+    /// <value>
+    /// The tool tip font weight.
+    /// </value>
+    public FontWeight TooltipFontWeight { get; set; }
 
-        /// <summary>
-        /// Gets or sets the tool tip font style.
-        /// </summary>
-        /// <value>
-        /// The tool tip font style.
-        /// </value>
-        public FontStyle TooltipFontStyle { get; set; }
+    /// <summary>
+    /// Gets or sets the tool tip font style.
+    /// </summary>
+    /// <value>
+    /// The tool tip font style.
+    /// </value>
+    public FontStyle TooltipFontStyle { get; set; }
 
-        /// <summary>
-        /// Gets or sets the tool tip text brush.
-        /// </summary>
-        /// <value>
-        /// The tool tip text brush.
-        /// </value>
-        public SolidColorBrush TooltipTextBrush { get; set; } = new SolidColorBrush(Color.FromRgb(35, 35, 35));
+    /// <summary>
+    /// Gets or sets the tool tip text brush.
+    /// </summary>
+    /// <value>
+    /// The tool tip text brush.
+    /// </value>
+    public SolidColorBrush TooltipTextBrush { get; set; } = new(Color.FromRgb(35, 35, 35));
 
-        /// <summary>
-        /// Gets or sets the tool tip background.
-        /// </summary>
-        /// <value>
-        /// The tool tip background.
-        /// </value>
-        public IBrush TooltipBackground { get; set; } = new SolidColorBrush(Color.FromRgb(250, 250, 250));
-    }
+    /// <summary>
+    /// Gets or sets the tool tip background.
+    /// </summary>
+    /// <value>
+    /// The tool tip background.
+    /// </value>
+    public IBrush TooltipBackground { get; set; } = new SolidColorBrush(Color.FromRgb(250, 250, 250));
 }

@@ -1,0 +1,13 @@
+﻿@page "/Polar/RadialArea"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Polar.Basic
+
+<PolarChart
+	Series="ViewModel.Series"
+	AngleAxes="ViewModel.AngleAxes"
+	InitialRotation="-45">
+</PolarChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new();
+}

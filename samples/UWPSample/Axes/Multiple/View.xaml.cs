@@ -6,7 +6,7 @@ namespace UWPSample.Axes.Multiple
     {
         public View()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

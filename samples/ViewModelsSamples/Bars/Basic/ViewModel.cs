@@ -1,18 +1,30 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
-namespace ViewModelsSamples.Bars.Basic
+namespace ViewModelsSamples.Bars.Basic;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
-        {
+    public ISeries[] Series { get; set; }
+        = {
             new ColumnSeries<double>
             {
-                Values = new ObservableCollection<double> { 2, 5, 4, -2, 4, -3, 5 }
+                Name = "Mary",
+                Values = new double[] { 2, 5, 4 }
+            },
+            new ColumnSeries<double>
+            {
+                Name = "Ana",
+                Values = new double[] { 3, 1, 6 }
             }
         };
-    }
+
+    public Axis[] XAxes { get; set; }
+        = {
+            new Axis
+            {
+                Labels = new string[] { "Category 1", "Category 2", "Category 3" },
+                LabelsRotation = 15
+            }
+        };
 }

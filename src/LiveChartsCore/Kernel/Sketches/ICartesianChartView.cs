@@ -24,95 +24,94 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.Kernel.Sketches
+namespace LiveChartsCore.Kernel.Sketches;
+
+/// <summary>
+/// Defines a Cartesian chart view, this view is able to host one or many series in a Cartesian coordinate system.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="IChartView{TDrawingContext}" />
+public interface ICartesianChartView<TDrawingContext> : IChartView<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a Cartesian chart view, this view is able to host one or many series in a Cartesian coordinate system.
+    /// Gets the core.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IChartView{TDrawingContext}" />
-    public interface ICartesianChartView<TDrawingContext> : IChartView<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets the core.
-        /// </summary>
-        /// <value>
-        /// The core.
-        /// </value>
-        CartesianChart<TDrawingContext> Core { get; }
+    /// <value>
+    /// The core.
+    /// </value>
+    CartesianChart<TDrawingContext> Core { get; }
 
-        /// <summary>
-        /// Gets or sets the x axes.
-        /// </summary>
-        /// <value>
-        /// The x axes.
-        /// </value>
-        IEnumerable<ICartesianAxis> XAxes { get; set; }
+    /// <summary>
+    /// Gets or sets the x axes.
+    /// </summary>
+    /// <value>
+    /// The x axes.
+    /// </value>
+    IEnumerable<ICartesianAxis> XAxes { get; set; }
 
-        /// <summary>
-        /// Gets or sets the y axes.
-        /// </summary>
-        /// <value>
-        /// The y axes.
-        /// </value>
-        IEnumerable<ICartesianAxis> YAxes { get; set; }
+    /// <summary>
+    /// Gets or sets the y axes.
+    /// </summary>
+    /// <value>
+    /// The y axes.
+    /// </value>
+    IEnumerable<ICartesianAxis> YAxes { get; set; }
 
-        /// <summary>
-        /// Gets or sets the sections.
-        /// </summary>
-        /// <value>
-        /// The sections.
-        /// </value>
-        IEnumerable<Section<TDrawingContext>> Sections { get; set; }
+    /// <summary>
+    /// Gets or sets the sections.
+    /// </summary>
+    /// <value>
+    /// The sections.
+    /// </value>
+    IEnumerable<Section<TDrawingContext>> Sections { get; set; }
 
-        /// <summary>
-        /// Gets or sets the series to plot in the user interface.
-        /// </summary>
-        /// <value>
-        /// The series.
-        /// </value>
-        IEnumerable<ISeries> Series { get; set; }
+    /// <summary>
+    /// Gets or sets the series to plot in the user interface.
+    /// </summary>
+    /// <value>
+    /// The series.
+    /// </value>
+    IEnumerable<ISeries> Series { get; set; }
 
-        /// <summary>
-        /// Gets or sets the draw margin frame.
-        /// </summary>
-        /// <value>
-        /// The draw margin frame.
-        /// </value>
-        DrawMarginFrame<TDrawingContext>? DrawMarginFrame { get; set; }
+    /// <summary>
+    /// Gets or sets the draw margin frame.
+    /// </summary>
+    /// <value>
+    /// The draw margin frame.
+    /// </value>
+    DrawMarginFrame<TDrawingContext>? DrawMarginFrame { get; set; }
 
-        /// <summary>
-        /// Gets or sets the zoom mode.
-        /// </summary>
-        /// <value>
-        /// The zoom mode.
-        /// </value>
-        ZoomAndPanMode ZoomMode { get; set; }
+    /// <summary>
+    /// Gets or sets the zoom mode.
+    /// </summary>
+    /// <value>
+    /// The zoom mode.
+    /// </value>
+    ZoomAndPanMode ZoomMode { get; set; }
 
-        /// <summary>
-        /// Gets or sets the tool tip finding strategy.
-        /// </summary>
-        /// <value>
-        /// The tool tip finding strategy.
-        /// </value>
-        TooltipFindingStrategy TooltipFindingStrategy { get; set; }
+    /// <summary>
+    /// Gets or sets the tool tip finding strategy.
+    /// </summary>
+    /// <value>
+    /// The tool tip finding strategy.
+    /// </value>
+    TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
-        /// <summary>
-        /// Gets or sets the zooming speed from 0 to 1, where 0 is the slowest and 1 the fastest.
-        /// </summary>
-        /// <value>
-        /// The zooming speed.
-        /// </value>
-        double ZoomingSpeed { get; set; }
+    /// <summary>
+    /// Gets or sets the zooming speed from 0 to 1, where 0 is the slowest and 1 the fastest.
+    /// </summary>
+    /// <value>
+    /// The zooming speed.
+    /// </value>
+    double ZoomingSpeed { get; set; }
 
-        /// <summary>
-        /// Scales the UI point.
-        /// </summary>
-        /// <param name="point">The point.</param>
-        /// <param name="xAxisIndex">Index of the x axis.</param>
-        /// <param name="yAxisIndex">Index of the y axis.</param>
-        /// <returns></returns>
-        double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0);
-    }
+    /// <summary>
+    /// Scales the UI point.
+    /// </summary>
+    /// <param name="point">The point.</param>
+    /// <param name="xAxisIndex">Index of the x axis.</param>
+    /// <param name="yAxisIndex">Index of the y axis.</param>
+    /// <returns></returns>
+    double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0);
 }

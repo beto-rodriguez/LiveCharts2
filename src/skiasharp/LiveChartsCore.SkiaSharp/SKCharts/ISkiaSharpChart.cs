@@ -22,26 +22,25 @@
 
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.SKCharts
+namespace LiveChartsCore.SkiaSharpView.SKCharts;
+
+/// <summary>
+/// A chart that is able to generate images.
+/// </summary>
+public interface ISkiaSharpChart
 {
     /// <summary>
-    /// A chart that is able to generate images.
+    /// Gets the current <see cref="SKSurface"/>.
     /// </summary>
-    public interface ISkiaSharpChart
-    {
-        /// <summary>
-        /// Gets the current <see cref="SKSurface"/>.
-        /// </summary>
-        /// <returns></returns>
-        SKImage GetImage();
+    /// <returns></returns>
+    SKImage GetImage();
 
-        /// <summary>
-        /// Saves the image.
-        /// </summary>
-        /// <param name="path">The path.</param>
-        /// <param name="format">The format.</param>
-        /// <param name="quality">The quality, an integer from 0 to 100.</param>
-        /// <returns></returns>
-        void SaveImage(string path, SKEncodedImageFormat format = SKEncodedImageFormat.Png, int quality = 80);
-    }
+    /// <summary>
+    /// Saves the image.
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <param name="format">The format.</param>
+    /// <param name="quality">The quality, an integer from 0 to 100.</param>
+    /// <returns></returns>
+    void SaveImage(string path, SKEncodedImageFormat format = SKEncodedImageFormat.Png, int quality = 80);
 }

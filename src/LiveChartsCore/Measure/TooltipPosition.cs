@@ -20,41 +20,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Measure
+namespace LiveChartsCore.Measure;
+
+/// <summary>
+/// Defines the tool tip position.
+/// </summary>
+public enum TooltipPosition
 {
     /// <summary>
-    /// Defines the tool tip position.
+    /// The hidden position, tool tips will be hidden.
     /// </summary>
-    public enum TooltipPosition
-    {
-        /// <summary>
-        /// The hidden position, tool tips will be hidden.
-        /// </summary>
-        Hidden,
+    Hidden,
 
-        /// <summary>
-        /// The top position, places the tool tip at the top of the hovered point.
-        /// </summary>
-        Top,
+    /// <summary>
+    /// The top position, places the tool tip at the top of the hovered point.
+    /// </summary>
+    Top,
 
-        /// <summary>
-        /// The bottom position, places the tool tip at the bottom of the hovered point.
-        /// </summary>
-        Bottom,
+    /// <summary>
+    /// The bottom position, places the tool tip at the bottom of the hovered point.
+    /// </summary>
+    Bottom,
 
-        /// <summary>
-        /// The left position, places the tool tip at the left of the hovered point.
-        /// </summary>
-        Left,
+    /// <summary>
+    /// The left position, places the tool tip at the left of the hovered point.
+    /// </summary>
+    Left,
 
-        /// <summary>
-        /// The right position, places the tool tip at the right of the hovered point.
-        /// </summary>
-        Right,
+    /// <summary>
+    /// The right position, places the tool tip at the right of the hovered point.
+    /// </summary>
+    Right,
 
-        /// <summary>
-        /// The center position, places the tool tip at the center of the hovered point.
-        /// </summary>
-        Center
-    }
+    /// <summary>
+    /// The center position, places the tool tip at the center of the hovered point.
+    /// </summary>
+    Center
 }

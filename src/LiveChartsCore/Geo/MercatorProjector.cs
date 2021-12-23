@@ -22,64 +22,63 @@
 
 using System;
 
-namespace LiveChartsCore.Geo
+namespace LiveChartsCore.Geo;
+
+/// <summary>
+/// Projects latitude and longitude coordinates using the Mercator projection.
+/// </summary>
+/// <seealso cref="MapProjector" />
+public class MercatorProjector : MapProjector
 {
+    private readonly float _w;
+    private readonly float _h;
+    private readonly float _ox;
+    private readonly float _oy;
+
     /// <summary>
-    /// Projects latitude and longitude coordinates using the Mercator projection.
+    /// Initializes a new instance of the <see cref="MercatorProjector"/> class.
     /// </summary>
-    /// <seealso cref="MapProjector" />
-    public class MercatorProjector : MapProjector
+    /// <param name="mapWidth">Width of the map.</param>
+    /// <param name="mapHeight">Height of the map.</param>
+    /// <param name="offsetX">The offset x.</param>
+    /// <param name="offsetY">The offset y.</param>
+    public MercatorProjector(float mapWidth, float mapHeight, float offsetX, float offsetY)
     {
-        private readonly float _w;
-        private readonly float _h;
-        private readonly float _ox;
-        private readonly float _oy;
+        _w = mapWidth;
+        _h = mapHeight;
+        _ox = offsetX;
+        _oy = offsetY;
+        XOffset = _ox;
+        YOffset = _oy;
+        MapWidth = mapWidth;
+        MapHeight = mapHeight;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MercatorProjector"/> class.
-        /// </summary>
-        /// <param name="mapWidth">Width of the map.</param>
-        /// <param name="mapHeight">Height of the map.</param>
-        /// <param name="offsetX">The offset x.</param>
-        /// <param name="offsetY">The offset y.</param>
-        public MercatorProjector(float mapWidth, float mapHeight, float offsetX, float offsetY)
+    /// <summary>
+    /// Gets the preferred ratio.
+    /// </summary>
+    /// <value>
+    /// The preferred ratio.
+    /// </value>
+    public static float[] PreferredRatio => new[] { 1f, 1f };
+
+    /// <inheritdoc cref="MapProjector.ToMap(double[])"/>
+    public override float[] ToMap(double[] point)
+    {
+        var lat = point[1];
+        var lon = point[0];
+
+        var latRad = lat * Math.PI / 180d;
+        var mercN = Math.Log(Math.Tan(Math.PI / 4d + latRad / 2d), Math.E);
+        var y = _h / 2d - _h * mercN / (2 * Math.PI);
+
+        return new[]
         {
-            _w = mapWidth;
-            _h = mapHeight;
-            _ox = offsetX;
-            _oy = offsetY;
-            XOffset = _ox;
-            YOffset = _oy;
-            MapWidth = mapWidth;
-            MapHeight = mapHeight;
-        }
-
-        /// <summary>
-        /// Gets the preferred ratio.
-        /// </summary>
-        /// <value>
-        /// The preferred ratio.
-        /// </value>
-        public static float[] PreferredRatio => new[] { 1f, 1f };
-
-        /// <inheritdoc cref="MapProjector.ToMap(double[])"/>
-        public override float[] ToMap(double[] point)
-        {
-            var lat = point[1];
-            var lon = point[0];
-
-            var latRad = lat * Math.PI / 180d;
-            var mercN = Math.Log(Math.Tan(Math.PI / 4d + latRad / 2d), Math.E);
-            var y = _h / 2d - _h * mercN / (2 * Math.PI);
-
-            return new[]
-            {
                 // x' =
                 (float)((lon + 180) * (_w / 360d) + _ox),
 
                 // y' =
                 (float) y + _oy
             };
-        }
     }
 }

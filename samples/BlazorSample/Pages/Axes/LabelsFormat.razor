@@ -4,12 +4,10 @@
 
 <CartesianChart
 	Series="ViewModel.Series"
+	XAxes="ViewModel.XAxes"
 	YAxes="ViewModel.YAxes">
-
-	<!-- XAxes property is bugged in blazor... -->
-
 </CartesianChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new ViewModel();
+	public ViewModel ViewModel { get; set; } = new();
 }

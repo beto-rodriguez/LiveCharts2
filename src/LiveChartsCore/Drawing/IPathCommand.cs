@@ -20,26 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Drawing;
+
+/// <summary>
+/// Defines a path command.
+/// </summary>
+/// <typeparam name="TPathContext">The type of the path context.</typeparam>
+/// <seealso cref="IAnimatable" />
+public interface IPathCommand<TPathContext> : IAnimatable
 {
     /// <summary>
-    /// Defines a path command.
+    /// Gets or sets the segment id.
     /// </summary>
-    /// <typeparam name="TPathContext">The type of the path context.</typeparam>
-    /// <seealso cref="IAnimatable" />
-    public interface IPathCommand<TPathContext> : IAnimatable
-    {
-        /// <summary>
-        /// Gets or sets the segment id.
-        /// </summary>
-        int Id { get; set; }
+    int Id { get; set; }
 
-        /// <summary>
-        /// Executes the command in the path.
-        /// </summary>
-        /// <param name="path">The path.</param>
-        /// <param name="currentTime">The current time.</param>
-        /// <param name="pathGeometry">The path geometry.</param>
-        void Execute(TPathContext path, long currentTime, Animatable pathGeometry);
-    }
+    /// <summary>
+    /// Executes the command in the path.
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <param name="currentTime">The current time.</param>
+    /// <param name="pathGeometry">The path geometry.</param>
+    void Execute(TPathContext path, long currentTime, Animatable pathGeometry);
 }

@@ -22,36 +22,35 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Kernel.Events
+namespace LiveChartsCore.Kernel.Events;
+
+/// <summary>
+/// The pan gesture event arguments.
+/// </summary>
+public class PanGestureEventArgs
 {
     /// <summary>
-    /// The pan gesture event arguments.
+    /// Initializes a new instance of the <see cref="PanGestureEventArgs"/> class.
     /// </summary>
-    public class PanGestureEventArgs
+    public PanGestureEventArgs(LvcPoint delta)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PanGestureEventArgs"/> class.
-        /// </summary>
-        public PanGestureEventArgs(LvcPoint delta)
-        {
-            Delta = delta;
-            Handled = false;
-        }
-
-        /// <summary>
-        /// Gets or sets the delta.
-        /// </summary>
-        /// <value>
-        /// The delta.
-        /// </value>
-        public LvcPoint Delta { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="PanGestureEventArgs"/> is handled.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if handled; otherwise, <c>false</c>.
-        /// </value>
-        public bool Handled { get; set; }
+        Delta = delta;
+        Handled = false;
     }
+
+    /// <summary>
+    /// Gets or sets the delta.
+    /// </summary>
+    /// <value>
+    /// The delta.
+    /// </value>
+    public LvcPoint Delta { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this <see cref="PanGestureEventArgs"/> is handled.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if handled; otherwise, <c>false</c>.
+    /// </value>
+    public bool Handled { get; set; }
 }

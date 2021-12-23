@@ -32,187 +32,188 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.WinForms
+namespace LiveChartsCore.SkiaSharpView.WinForms;
+
+/// <inheritdoc cref="ICartesianChartView{TDrawingContext}" />
+public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext>
 {
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}" />
-    public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext>
+    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+    private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
+    private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
+    private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserverer;
+    private IEnumerable<ISeries> _series = new List<ISeries>();
+    private IEnumerable<ICartesianAxis> _xAxes = new List<Axis> { new() };
+    private IEnumerable<ICartesianAxis> _yAxes = new List<Axis> { new() };
+    private IEnumerable<Section<SkiaSharpDrawingContext>> _sections = new List<Section<SkiaSharpDrawingContext>>();
+    private DrawMarginFrame<SkiaSharpDrawingContext>? _drawMarginFrame;
+    private TooltipFindingStrategy _tooltipFindingStrategy = LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CartesianChart"/> class.
+    /// </summary>
+    public CartesianChart() : this(null, null) { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CartesianChart"/> class.
+    /// </summary>
+    /// <param name="tooltip">The default tool tip control.</param>
+    /// <param name="legend">The default legend control.</param>
+    public CartesianChart(IChartTooltip<SkiaSharpDrawingContext>? tooltip = null, IChartLegend<SkiaSharpDrawingContext>? legend = null)
+        : base(tooltip, legend)
     {
-        private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-        private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
-        private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
-        private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserverer;
-        private IEnumerable<ISeries> _series = new List<ISeries>();
-        private IEnumerable<ICartesianAxis> _xAxes = new List<Axis> { new Axis() };
-        private IEnumerable<ICartesianAxis> _yAxes = new List<Axis> { new Axis() };
-        private IEnumerable<Section<SkiaSharpDrawingContext>> _sections = new List<Section<SkiaSharpDrawingContext>>();
-        private DrawMarginFrame<SkiaSharpDrawingContext>? _drawMarginFrame;
-        private TooltipFindingStrategy _tooltipFindingStrategy = LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy;
+        _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _sectionsObserverer = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
+            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CartesianChart"/> class.
-        /// </summary>
-        public CartesianChart() : this(null, null) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CartesianChart"/> class.
-        /// </summary>
-        /// <param name="tooltip">The default tool tip control.</param>
-        /// <param name="legend">The default legend control.</param>
-        public CartesianChart(IChartTooltip<SkiaSharpDrawingContext>? tooltip = null, IChartLegend<SkiaSharpDrawingContext>? legend = null)
-            : base(tooltip, legend)
-        {
-            _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            _sectionsObserverer = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
-                OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-
-            XAxes = new List<ICartesianAxis>()
+        XAxes = new List<ICartesianAxis>()
             {
                 LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
             };
-            YAxes = new List<ICartesianAxis>()
+        YAxes = new List<ICartesianAxis>()
             {
                 LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
             };
-            Series = new ObservableCollection<ISeries>();
+        Series = new ObservableCollection<ISeries>();
 
-            var c = Controls[0].Controls[0];
+        var c = Controls[0].Controls[0];
 
-            c.MouseDown += OnMouseDown;
-            c.MouseWheel += OnMouseWheel;
-            c.MouseUp += OnMouseUp;
-        }
+        c.MouseDown += OnMouseDown;
+        c.MouseWheel += OnMouseWheel;
+        c.MouseUp += OnMouseUp;
+    }
 
-        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
+    CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core =>
+        core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<ISeries> Series
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public IEnumerable<ISeries> Series
+    {
+        get => _series;
+        set
         {
-            get => _series;
-            set
-            {
-                _seriesObserver.Dispose(_series);
-                _seriesObserver.Initialize(value);
-                _series = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.XAxes" />
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<ICartesianAxis> XAxes
-        {
-            get => _xAxes;
-            set
-            {
-                _xObserver.Dispose(_xAxes);
-                _xObserver.Initialize(value);
-                _xAxes = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.YAxes" />
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<ICartesianAxis> YAxes
-        {
-            get => _yAxes;
-            set
-            {
-                _yObserver.Dispose(_yAxes);
-                _yObserver.Initialize(value);
-                _yAxes = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections" />
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable<Section<SkiaSharpDrawingContext>> Sections
-        {
-            get => _sections;
-            set
-            {
-                _sectionsObserverer.Dispose(_sections);
-                _sectionsObserverer.Initialize(value);
-                _sections = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public DrawMarginFrame<SkiaSharpDrawingContext>? DrawMarginFrame
-        {
-            get => _drawMarginFrame;
-            set
-            {
-                _drawMarginFrame = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomMode" />
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public ZoomAndPanMode ZoomMode { get; set; } = LiveCharts.CurrentSettings.DefaultZoomMode;
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomingSpeed" />
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public double ZoomingSpeed { get; set; } = LiveCharts.CurrentSettings.DefaultZoomSpeed;
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy" />
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public TooltipFindingStrategy TooltipFindingStrategy { get => _tooltipFindingStrategy; set { _tooltipFindingStrategy = value; OnPropertyChanged(); } }
-
-        /// <summary>
-        /// Initializes the core.
-        /// </summary>
-        protected override void InitializeCore()
-        {
-            core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore);
-            if (((IChartView)this).DesignerMode) return;
-            core.Update();
-        }
-
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
-        public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
-        {
-            if (core is null) throw new Exception("core not found");
-            var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
-            return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
-        }
-
-        private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
+            _seriesObserver.Dispose(_series);
+            _seriesObserver.Initialize(value);
+            _series = value;
             OnPropertyChanged();
         }
+    }
 
-        private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.XAxes" />
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public IEnumerable<ICartesianAxis> XAxes
+    {
+        get => _xAxes;
+        set
         {
-            if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
+            _xObserver.Dispose(_xAxes);
+            _xObserver.Initialize(value);
+            _xAxes = value;
             OnPropertyChanged();
         }
+    }
 
-        private void OnMouseWheel(object? sender, MouseEventArgs e)
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.YAxes" />
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public IEnumerable<ICartesianAxis> YAxes
+    {
+        get => _yAxes;
+        set
         {
-            if (core is null) throw new Exception("core not found");
-            var c = (CartesianChart<SkiaSharpDrawingContext>)core;
-            var p = e.Location;
-            c.Zoom(new LvcPoint(p.X, p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
-            Capture = true;
+            _yObserver.Dispose(_yAxes);
+            _yObserver.Initialize(value);
+            _yAxes = value;
+            OnPropertyChanged();
         }
+    }
 
-        private void OnMouseDown(object? sender, MouseEventArgs e)
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections" />
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public IEnumerable<Section<SkiaSharpDrawingContext>> Sections
+    {
+        get => _sections;
+        set
         {
-            core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y));
+            _sectionsObserverer.Dispose(_sections);
+            _sectionsObserverer.Initialize(value);
+            _sections = value;
+            OnPropertyChanged();
         }
+    }
 
-        private void OnMouseUp(object? sender, MouseEventArgs e)
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public DrawMarginFrame<SkiaSharpDrawingContext>? DrawMarginFrame
+    {
+        get => _drawMarginFrame;
+        set
         {
-            core?.InvokePointerUp(new LvcPoint(e.Location.X, e.Location.Y));
+            _drawMarginFrame = value;
+            OnPropertyChanged();
         }
+    }
+
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomMode" />
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public ZoomAndPanMode ZoomMode { get; set; } = LiveCharts.CurrentSettings.DefaultZoomMode;
+
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomingSpeed" />
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public double ZoomingSpeed { get; set; } = LiveCharts.CurrentSettings.DefaultZoomSpeed;
+
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy" />
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public TooltipFindingStrategy TooltipFindingStrategy { get => _tooltipFindingStrategy; set { _tooltipFindingStrategy = value; OnPropertyChanged(); } }
+
+    /// <summary>
+    /// Initializes the core.
+    /// </summary>
+    protected override void InitializeCore()
+    {
+        core = new CartesianChart<SkiaSharpDrawingContext>(
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore, false, true);
+        if (((IChartView)this).DesignerMode) return;
+        core.Update();
+    }
+
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
+    public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
+    {
+        if (core is null) throw new Exception("core not found");
+        var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
+        return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
+    }
+
+    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
+        OnPropertyChanged();
+    }
+
+    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
+        OnPropertyChanged();
+    }
+
+    private void OnMouseWheel(object? sender, MouseEventArgs e)
+    {
+        if (core is null) throw new Exception("core not found");
+        var c = (CartesianChart<SkiaSharpDrawingContext>)core;
+        var p = e.Location;
+        c.Zoom(new LvcPoint(p.X, p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+        Capture = true;
+    }
+
+    private void OnMouseDown(object? sender, MouseEventArgs e)
+    {
+        core?.InvokePointerDown(new LvcPoint(e.Location.X, e.Location.Y));
+    }
+
+    private void OnMouseUp(object? sender, MouseEventArgs e)
+    {
+        core?.InvokePointerUp(new LvcPoint(e.Location.X, e.Location.Y));
     }
 }

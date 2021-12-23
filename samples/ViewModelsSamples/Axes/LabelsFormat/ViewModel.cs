@@ -1,75 +1,57 @@
-﻿using LiveChartsCore;
+﻿using System.Collections.Generic;
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
-namespace ViewModelsSamples.Axes.LabelsFormat
+namespace ViewModelsSamples.Axes.LabelsFormat;
+
+public class ViewModel
 {
-    public class ViewModel
+    public ViewModel()
     {
-        public ViewModel()
+        Series = new ISeries[]
         {
-            Series = new ObservableCollection<ISeries>
+            new ColumnSeries<double> { Values = new double[] { 426, 583, 104 } },
+            new LineSeries<double> { Values = new double[] { 200, 558, 458 }, Fill = null },
+        };
+
+        XAxes = new List<Axis>
+        {
+            new Axis
             {
-                new LineSeries<double>
-                {
-                    Values = new ObservableCollection<double> { 200, 558, 458, 249, 457, 339, 587 },
-                }
-            };
+                Name = "Salesman/woman",
+                NamePaint = new SolidColorPaint { Color = SKColors.Red },
+                // Use the labels property for named or static labels // mark
+                Labels = new string[] { "Sergio", "Lando", "Lewis" }, // mark
+                LabelsRotation = 15
+            }
+        };
 
-            XAxes = new List<Axis>
+        YAxes = new List<Axis>
+        {
+            new Axis
             {
-                new Axis
-                {
-                    Name = "أهلا", // sample strings => "こんにちは" "你好" "أهلا"
+                Name = "Sales amount",
+                NamePadding = new LiveChartsCore.Drawing.Padding(0, 15),
 
-                    NamePaint = new SolidColorPaint
-                    {
-                        Color = SKColors.Red,
-                        FontFamily = LiveChartsSkiaSharp.MatchChar('أ'), // Arab 
-                        //FontFamily = LiveChartsSkiaSharp.MatchChar('あ'), // Japanease 
-                        //FontFamily = LiveChartsSkiaSharp.MatchChar('你') // Chinese 汉语 sample
-                        //FontFamily = "Times New Roman"
-                    },
+                // Use the Labeler property to give format to the axis values // mark
+                // Now the Y axis we will display it as currency
+                // LiveCharts provides some common formatters
+                // in this case we are using the currency formatter.
+                Labeler = Labelers.Currency // mark
 
-                    // Use the Label property to indicate the format of the labels in the axis
-                    // The Labeler takes the value of the label as parameter and must return it as string
-                    Labeler = (value) => "Day " + value,
+                // you could also build your own currency formatter
+                // for example:
+                // Labeler = (value) => value.ToString("C") // mark
 
-                    // The MinStep property lets you define the minimum separation (in chart values scale)
-                    // between every axis separator, in this case we don't want decimals,
-                    // so lets force it to be greater or equals than 1
-                    MinStep = 1
-                }
-            };
-
-            YAxes = new List<Axis>
-            {
-                new Axis
-                {
-                    Name = "Sales",
-
-                    // Now the Y axis we will display it as currency
-                    // LiveCharts provides some common formatters
-                    // in this case we are using the currency formatter.
-                    Labeler = Labelers.Currency
-
-                    // you could also build your own currency formatter
-                    // for example:
-                    // Labeler = (value) => value.ToString("C")
-
-                    // But the one that LiveCharts provides creates shorter labels when
-                    // the amount is in millions or trillions
-                }
-            };
-        }
-
-        public IEnumerable<ISeries> Series { get; set; }
-
-        public List<Axis> XAxes { get; set; }
-
-        public List<Axis> YAxes { get; set; }
+                // But the one that LiveCharts provides creates shorter labels when
+                // the amount is in millions or trillions
+            }
+        };
     }
+
+    public IEnumerable<ISeries> Series { get; set; }
+    public List<Axis> XAxes { get; set; }
+    public List<Axis> YAxes { get; set; }
 }

@@ -22,54 +22,53 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Kernel.Sketches
+namespace LiveChartsCore.Kernel.Sketches;
+
+/// <summary>
+/// Defines a financial series.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="IChartSeries{TDrawingContext}" />
+public interface IFinancialSeries<TDrawingContext> : IChartSeries<TDrawingContext>, ICartesianSeries<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a financial series.
+    /// Gets or sets the maximum width of the bar.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IChartSeries{TDrawingContext}" />
-    public interface IFinancialSeries<TDrawingContext> : IChartSeries<TDrawingContext>, ICartesianSeries<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets or sets the maximum width of the bar.
-        /// </summary>
-        /// <value>
-        /// The maximum width of the bar.
-        /// </value>
-        double MaxBarWidth { get; set; }
+    /// <value>
+    /// The maximum width of the bar.
+    /// </value>
+    double MaxBarWidth { get; set; }
 
-        /// <summary>
-        /// Gets or sets the up stroke, the stroke when the trend goes up.
-        /// </summary>
-        /// <value>
-        /// The stroke.
-        /// </value>
-        IPaint<TDrawingContext>? UpStroke { get; set; }
+    /// <summary>
+    /// Gets or sets the up stroke, the stroke when the trend goes up.
+    /// </summary>
+    /// <value>
+    /// The stroke.
+    /// </value>
+    IPaint<TDrawingContext>? UpStroke { get; set; }
 
-        /// <summary>
-        /// Gets or sets the up stroke, the stroke when the trend goes down.
-        /// </summary>
-        /// <value>
-        /// The stroke.
-        /// </value>
-        IPaint<TDrawingContext>? DownStroke { get; set; }
+    /// <summary>
+    /// Gets or sets the up stroke, the stroke when the trend goes down.
+    /// </summary>
+    /// <value>
+    /// The stroke.
+    /// </value>
+    IPaint<TDrawingContext>? DownStroke { get; set; }
 
-        /// <summary>
-        /// Gets or sets the up fill, the fill when the trend goes up.
-        /// </summary>
-        /// <value>
-        /// The fill.
-        /// </value>
-        IPaint<TDrawingContext>? UpFill { get; set; }
+    /// <summary>
+    /// Gets or sets the up fill, the fill when the trend goes up.
+    /// </summary>
+    /// <value>
+    /// The fill.
+    /// </value>
+    IPaint<TDrawingContext>? UpFill { get; set; }
 
-        /// <summary>
-        /// Gets or sets the up fill, the fill when the trend goes down.
-        /// </summary>
-        /// <value>
-        /// The fill.
-        /// </value>
-        IPaint<TDrawingContext>? DownFill { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the up fill, the fill when the trend goes down.
+    /// </summary>
+    /// <value>
+    /// The fill.
+    /// </value>
+    IPaint<TDrawingContext>? DownFill { get; set; }
 }

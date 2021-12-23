@@ -1,15 +1,15 @@
-﻿using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 
-namespace ViewModelsSamples.Axes.NamedLabels
+namespace ViewModelsSamples.Axes.NamedLabels;
+
+public class ViewModel
 {
-    public class ViewModel
+    public ViewModel()
     {
-        public ViewModel()
-        {
-            Series = new ObservableCollection<ISeries>
+        Series = new ObservableCollection<ISeries>
             {
                 new ColumnSeries<int>
                 {
@@ -24,18 +24,18 @@ namespace ViewModelsSamples.Axes.NamedLabels
                 }
             };
 
-            XAxes = new List<Axis>
+        XAxes = new List<Axis>
             {
-                new Axis
+                new()
                 {
                     // Use the labels property to define named labels.
                     Labels = new string[] { "Anne", "Johnny", "Zac", "Rosa" }
                 }
             };
 
-            YAxes = new List<Axis>
+        YAxes = new List<Axis>
             {
-                new Axis
+                new()
                 {
                     // Now the Y axis we will display labels as currency
                     // LiveCharts provides some common formatters
@@ -50,12 +50,11 @@ namespace ViewModelsSamples.Axes.NamedLabels
                     // the amount is in millions or trillions
                 }
             };
-        }
-
-        public IEnumerable<ISeries> Series { get; set; }
-
-        public List<Axis> XAxes { get; set; }
-
-        public List<Axis> YAxes { get; set; }
     }
+
+    public IEnumerable<ISeries> Series { get; set; }
+
+    public List<Axis> XAxes { get; set; }
+
+    public List<Axis> YAxes { get; set; }
 }

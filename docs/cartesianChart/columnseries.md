@@ -13,7 +13,7 @@
 If the stroke property is not set, then LiveCharts will create it based on the series position in your series collection
 and the current theme.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/columnstroke.png)
+![image]({{ assets_url }}/docs/_assets/columnstroke.png)
 
 <pre><code>Series = new ISeries[]
 {
@@ -41,7 +41,7 @@ a look at the [Paints article]({{ website_url }}/docs/{{ platform }}/{{ version 
 If the fill property is not set, then LiveCharts will create it based on the series position in your series collection
 and the current theme.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/columnfill.png)
+![image]({{ assets_url }}/docs/_assets/columnfill.png)
 
 <pre><code>Series = new ISeries[]
 {
@@ -68,7 +68,7 @@ a look at the [Paints article]({{ website_url }}/docs/{{ platform }}/{{ version 
 
 These properties define the corners radius in the rectangle geometry.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/columnr.png)
+![image]({{ assets_url }}/docs/_assets/columnr.png)
 
 <pre><code>Series = new ISeries[]
 {
@@ -84,7 +84,7 @@ These properties define the corners radius in the rectangle geometry.
 
 Specifies the maximum width a column can take, take a look at the following sample, where the max width is `10`.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/columnmw10.png)
+![image]({{ assets_url }}/docs/_assets/columnmw10.png)
 
 <pre><code>Series = new ISeries[]
 {
@@ -97,7 +97,7 @@ Specifies the maximum width a column can take, take a look at the following samp
 
 But now lets use `double.MaxValue` to see the difference.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/columnmwmax.png)
+![image]({{ assets_url }}/docs/_assets/columnmwmax.png)
 
 <pre><code>Series = new ISeries[]
 {
@@ -110,7 +110,7 @@ But now lets use `double.MaxValue` to see the difference.
 
 Finally we could aso set the padding to `0`.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/columnmwmaxp0.png)
+![image]({{ assets_url }}/docs/_assets/columnmwmaxp0.png)
 
 <pre><code>Series = new ISeries[]
 {
@@ -134,7 +134,7 @@ To highlight this feature the following code uses the ColumnSeries class, but it
 notice the sample above is using the GroupPadding property also.
 :::
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/columngp.png)
+![image]({{ assets_url }}/docs/_assets/columngp.png)
 
 <pre><code>Series = new ISeries[]
 {
@@ -160,7 +160,7 @@ notice the sample above is using the GroupPadding property also.
 The ignores bar position property let the series ignore all the other bar series in the same coordinate, this is useful
 to create backgrounds for columns, take a look at the following sample:
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/columnbg.png)
+![image]({{ assets_url }}/docs/_assets/columnbg.png)
 
 <pre><code>Series = new ISeries[]
 {
@@ -248,7 +248,7 @@ Now we are ready to plot cities all over our application:
     }
 };</code></pre>
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/columnct.png)
+![image]({{ assets_url }}/docs/_assets/columnct.png)
 
 Alternatively you could create a **local** mapper that will only work for a specific series, global mappers will be 
 ignored when the series `Mapping` property is not null.
@@ -292,13 +292,13 @@ Series = new[]
     }
 };</code></pre>
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/columnctl.png)
+![image]({{ assets_url }}/docs/_assets/columnctl.png)
 
 ## Custom geometries
 
 You can use any geometry to represent a point in a line series.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/barscustom.png)
+![image]({{ assets_url }}/docs/_assets/barscustom.png)
 
 <pre><code>Series = new List&lt;ISeries>
 {

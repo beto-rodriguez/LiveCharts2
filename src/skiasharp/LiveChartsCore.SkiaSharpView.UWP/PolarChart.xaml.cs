@@ -121,7 +121,8 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// </summary>
         public static readonly DependencyProperty InitialRotationProperty =
             DependencyProperty.Register(
-                nameof(InitialRotation), typeof(double), typeof(PolarChart), new PropertyMetadata(0d, OnDependencyPropertyChanged));
+                nameof(InitialRotation), typeof(double), typeof(PolarChart),
+                new PropertyMetadata(LiveCharts.CurrentSettings.PolarInitialRotation, OnDependencyPropertyChanged));
 
         /// <summary>
         /// The series property.
@@ -425,7 +426,7 @@ namespace LiveChartsCore.SkiaSharpView.UWP
 
         LvcSize IChartView.ControlSize => _canvas == null
             ? throw new Exception("Canvas not found")
-            : (new() { Width = (float)_canvas.ActualWidth, Height = (float)_canvas.ActualHeight });
+            : (new LvcSize { Width = (float)_canvas.ActualWidth, Height = (float)_canvas.ActualHeight });
 
         /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
         public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => _canvas == null ? throw new Exception("Canvas not found") : _canvas.CanvasCore;

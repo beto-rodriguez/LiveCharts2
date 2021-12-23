@@ -1,26 +1,25 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace WPFSample
+namespace WPFSample;
+
+public class Command : ICommand
 {
-    public class Command : ICommand
+    private readonly Action<object> command;
+    public event EventHandler CanExecuteChanged;
+
+    public Command(Action<object> command)
     {
-        private Action<object> command;
-        public event EventHandler CanExecuteChanged;
+        this.command = command;
+    }
 
-        public Command(Action<object> command)
-        {
-            this.command = command;
-        }
+    public bool CanExecute(object parameter)
+    {
+        return true;
+    }
 
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
-
-        public void Execute(object parameter)
-        {
-            command(parameter);
-        }
+    public void Execute(object parameter)
+    {
+        command(parameter);
     }
 }

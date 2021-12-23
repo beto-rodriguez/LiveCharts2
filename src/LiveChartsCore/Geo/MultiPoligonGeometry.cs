@@ -20,27 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Geo
+namespace LiveChartsCore.Geo;
+
+/// <summary>
+/// The multi-polygon feature class.
+/// </summary>
+public class MultiPoligonGeometry
 {
     /// <summary>
-    /// The multi-polygon feature class.
+    /// Gets or sets the type.
     /// </summary>
-    public class MultiPoligonGeometry
-    {
-        /// <summary>
-        /// Gets or sets the type.
-        /// </summary>
-        /// <value>
-        /// The type.
-        /// </value>
-        public string? Type { get; set; }
+    /// <value>
+    /// The type.
+    /// </value>
+    public string? Type { get; set; }
 
-        /// <summary>
-        /// Gets or sets the coordinates.
-        /// </summary>
-        /// <value>
-        /// The coordinates.
-        /// </value>
-        public double[][][][]? Coordinates { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the coordinates.
+    /// </summary>
+    /// <value>
+    /// The coordinates.
+    /// </value>
+    public double[][][][]? Coordinates { get; set; }
 }

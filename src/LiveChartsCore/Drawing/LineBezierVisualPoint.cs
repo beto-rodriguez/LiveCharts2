@@ -20,59 +20,58 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Drawing;
+
+/// <summary>
+/// Defines a line bezier visual point.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <typeparam name="TVisual">The type of the visual.</typeparam>
+/// <typeparam name="TBezierSegment">The type of the bezier segment.</typeparam>
+/// <typeparam name="TPathArgs">The type of the path arguments.</typeparam>
+/// <seealso cref="ILineBezierVisualChartPoint{TDrawingContext}" />
+public class LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs> : ILineBezierVisualChartPoint<TDrawingContext>
+    where TVisual : ISizedVisualChartPoint<TDrawingContext>, new()
+    where TBezierSegment : IBezierSegment<TPathArgs>, new()
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a line bezier visual point.
+    /// Gets the geometry.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <typeparam name="TVisual">The type of the visual.</typeparam>
-    /// <typeparam name="TBezierSegment">The type of the bezier segment.</typeparam>
-    /// <typeparam name="TPathArgs">The type of the path arguments.</typeparam>
-    /// <seealso cref="ILineBezierVisualChartPoint{TDrawingContext}" />
-    public class LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs> : ILineBezierVisualChartPoint<TDrawingContext>
-        where TVisual : ISizedVisualChartPoint<TDrawingContext>, new()
-        where TBezierSegment : IBezierSegment<TPathArgs>, new()
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets the geometry.
-        /// </summary>
-        /// <value>
-        /// The geometry.
-        /// </value>
-        public TVisual Geometry { get; set; } = new TVisual();
+    /// <value>
+    /// The geometry.
+    /// </value>
+    public TVisual Geometry { get; set; } = new();
 
-        /// <summary>
-        /// Gets the bezier.
-        /// </summary>
-        /// <value>
-        /// The bezier.
-        /// </value>
-        public TBezierSegment Bezier { get; set; } = new TBezierSegment();
+    /// <summary>
+    /// Gets the bezier.
+    /// </summary>
+    /// <value>
+    /// The bezier.
+    /// </value>
+    public TBezierSegment Bezier { get; set; } = new();
 
-        /// <summary>
-        /// Gets or sets the path.
-        /// </summary>
-        /// <value>
-        /// The path.
-        /// </value>
-        public IPathGeometry<TDrawingContext, TPathArgs>? FillPath { get; set; }
+    /// <summary>
+    /// Gets or sets the path.
+    /// </summary>
+    /// <value>
+    /// The path.
+    /// </value>
+    public IPathGeometry<TDrawingContext, TPathArgs>? FillPath { get; set; }
 
-        /// <summary>
-        /// Gets or sets the stroke path.
-        /// </summary>
-        /// <value>
-        /// The stroke path.
-        /// </value>
-        public IPathGeometry<TDrawingContext, TPathArgs>? StrokePath { get; set; }
+    /// <summary>
+    /// Gets or sets the stroke path.
+    /// </summary>
+    /// <value>
+    /// The stroke path.
+    /// </value>
+    public IPathGeometry<TDrawingContext, TPathArgs>? StrokePath { get; set; }
 
-        /// <summary>
-        /// Gets the main <see cref="T:LiveChartsCore.Drawing.IDrawable`1" />.
-        /// </summary>
-        public IGeometry<TDrawingContext>? HighlightableGeometry => Geometry?.HighlightableGeometry;
+    /// <summary>
+    /// Gets the main <see cref="T:LiveChartsCore.Drawing.IDrawable`1" />.
+    /// </summary>
+    public IGeometry<TDrawingContext>? HighlightableGeometry => Geometry?.HighlightableGeometry;
 
-        ISizedGeometry<TDrawingContext> ILineBezierVisualChartPoint<TDrawingContext>.Geometry => Geometry;
-        IAnimatableBezierSegment ILineBezierVisualChartPoint<TDrawingContext>.Bezier => Bezier;
-    }
+    ISizedGeometry<TDrawingContext> ILineBezierVisualChartPoint<TDrawingContext>.Geometry => Geometry;
+    IAnimatableBezierSegment ILineBezierVisualChartPoint<TDrawingContext>.Bezier => Bezier;
 }

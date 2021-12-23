@@ -23,30 +23,29 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel;
+
+/// <summary>
+/// Defines a visual element in a chart.
+/// </summary>
+public interface IChartElement<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a visual element in a chart.
+    /// Measures and schedule the draw of the element in the user interface.
     /// </summary>
-    public interface IChartElement<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Measures and schedule the draw of the element in the user interface.
-        /// </summary>
-        /// <param name="chart">The chart.</param>
-        void Measure(Chart<TDrawingContext> chart);
+    /// <param name="chart">The chart.</param>
+    void Measure(Chart<TDrawingContext> chart);
 
-        /// <summary>
-        /// Deletes the <see cref="IPaint{TDrawingContext}"/> instances that changed from the user interface.
-        /// </summary>
-        /// <param name="chart">The chart.</param>
-        void RemoveOldPaints(IChartView<TDrawingContext> chart);
+    /// <summary>
+    /// Deletes the <see cref="IPaint{TDrawingContext}"/> instances that changed from the user interface.
+    /// </summary>
+    /// <param name="chart">The chart.</param>
+    void RemoveOldPaints(IChartView<TDrawingContext> chart);
 
-        /// <summary>
-        /// Removes the element from the UI.
-        /// </summary>
-        /// <param name="chart">The chart.</param>
-        void RemoveFromUI(Chart<TDrawingContext> chart);
-    }
+    /// <summary>
+    /// Removes the element from the UI.
+    /// </summary>
+    /// <param name="chart">The chart.</param>
+    void RemoveFromUI(Chart<TDrawingContext> chart);
 }

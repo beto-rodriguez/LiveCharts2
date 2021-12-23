@@ -13,7 +13,7 @@
 If the stroke property is not set, then LiveCharts will create it based on the series position in your series collection
 and the current theme.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/linestroke.png)
+![image]({{ assets_url }}/docs/_assets/linestroke.png)
 
 <pre><code>Series = new ISeries[]
 {
@@ -55,7 +55,7 @@ and the current theme.
 
 The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent and 255 disables transparency completely.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/linefill.png)
+![image]({{ assets_url }}/docs/_assets/linefill.png)
 
 <pre><code>Series = new ISeries[]
 {
@@ -96,7 +96,7 @@ The geometry is the circle shape (by default) that the line series draws for eve
 the fill and stroke of this shape, if none of these properties are set then LiveCharts will create them based on 
 the series position in your series collection and the current theme.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/geometrystrokefill.png)
+![image]({{ assets_url }}/docs/_assets/geometrystrokefill.png)
 
 <pre><code>Series = new ISeries[]
 {
@@ -127,7 +127,7 @@ a look at the [Paints article]({{ website_url }}/docs/{{ platform }}/{{ version 
 
 Determines the size of the geometry, if this property is not set, then the library will decide it based on the theme.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/geometrysize.png)
+![image]({{ assets_url }}/docs/_assets/geometrysize.png)
 
 <pre><code>Series = new ISeries[]
 {
@@ -148,7 +148,7 @@ Determines the size of the geometry, if this property is not set, then the libra
 Determines if the series line is straight or curved, this property is of type `double` and goes from `0` to `1` any other
 value will be ignored, where 0 is straight and 1 is the most curved line.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/linesmothness.png)
+![image]({{ assets_url }}/docs/_assets/linesmothness.png)
 
 <pre><code>Series = new ISeries[]
 {
@@ -169,7 +169,7 @@ value will be ignored, where 0 is straight and 1 is the most curved line.
 This property is enabled by default (`true`), it has a performance cost and allows the series to create gaps, when the
 series finds a `null` instance then the series will create a gap.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/linesnullsplit.png)
+![image]({{ assets_url }}/docs/_assets/linesnullsplit.png)
 
 <pre><code>Series = new ISeries[]
 {
@@ -257,7 +257,7 @@ Now we are ready to plot cities all over our application:
     }
 };</code></pre>
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/linect.png)
+![image]({{ assets_url }}/docs/_assets/linect.png)
 
 Alternatively you could create a **local** mapper that will only work for a specific series, global mappers will be 
 ignored when the series `Mapping` property is not null.
@@ -314,13 +314,13 @@ Series = new[]
     //}
 };</code></pre>
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/linectl.png)
+![image]({{ assets_url }}/docs/_assets/linectl.png)
 
 ## Custom geometries
 
 You can use any geometry to represent a point in a line series.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/linescustom.png)
+![image]({{ assets_url }}/docs/_assets/linescustom.png)
 
 <pre><code>Series = new List&lt;ISeries>
 {

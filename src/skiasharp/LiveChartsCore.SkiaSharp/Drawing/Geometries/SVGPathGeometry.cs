@@ -1,4 +1,4 @@
-﻿ // The MIT License(MIT)
+﻿// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -22,87 +22,86 @@
 
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+
+/// <summary>
+/// Defines a geometry that is built using from a svg path.
+/// </summary>
+/// <seealso cref="SizedGeometry" />
+public class SVGPathGeometry : SizedGeometry
 {
+    private string _svg = string.Empty;
+    internal SKPath? _svgPath;
+
     /// <summary>
-    /// Defines a geometry that is built using from a svg path.
+    /// Initializes a new instance of the <see cref="SVGPathGeometry"/> class.
     /// </summary>
-    /// <seealso cref="SizedGeometry" />
-    public class SVGPathGeometry : SizedGeometry
+    public SVGPathGeometry() : base()
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SVGPathGeometry"/> class.
+    /// </summary>
+    /// <param name="svgPath">The SVG path.</param>
+    public SVGPathGeometry(SKPath svgPath)
     {
-        private string _svg = string.Empty;
-        internal SKPath? _svgPath;
+        _svgPath = svgPath;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SVGPathGeometry"/> class.
-        /// </summary>
-        public SVGPathGeometry() : base()
-        { }
+    /// <summary>
+    /// Gets or sets the SVG path.
+    /// </summary>
+    /// <value>
+    /// The SVG.
+    /// </value>
+    public string SVG { get => _svg; set { _svg = value; OnSVGPropertyChanged(); } }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SVGPathGeometry"/> class.
-        /// </summary>
-        /// <param name="svgPath">The SVG path.</param>
-        public SVGPathGeometry(SKPath svgPath)
+    /// <summary>
+    /// Gets or sets whether the path should be fitted to the size of the geometry.
+    /// </summary>
+    public bool FitToSize { get; set; } = false;
+
+    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
+    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    {
+        if (_svgPath is null)
+            throw new System.NullReferenceException(
+                $"{nameof(SVG)} property is null and there is not a defined path to draw.");
+
+        _ = context.Canvas.Save();
+
+        var canvas = context.Canvas;
+        _ = _svgPath.GetTightBounds(out var bounds);
+
+        if (FitToSize)
         {
-            _svgPath = svgPath;
+            // fit to both axis
+            canvas.Translate(X + Width / 2f, Y + Height / 2f);
+            canvas.Scale(
+                Width / (bounds.Width + paint.StrokeWidth),
+                Height / (bounds.Height + paint.StrokeWidth));
+            canvas.Translate(-bounds.MidX, -bounds.MidY);
+        }
+        else
+        {
+            // fit to the max dimension
+            // preserve the corresponding scale in the min axis.
+            var maxB = bounds.Width < bounds.Height ? bounds.Height : bounds.Width;
+
+            canvas.Translate(X + Width / 2f, Y + Height / 2f);
+            canvas.Scale(
+                Width / (maxB + paint.StrokeWidth),
+                Height / (maxB + paint.StrokeWidth));
+            canvas.Translate(-bounds.MidX, -bounds.MidY);
         }
 
-        /// <summary>
-        /// Gets or sets the SVG path.
-        /// </summary>
-        /// <value>
-        /// The SVG.
-        /// </value>
-        public string SVG { get => _svg; set { _svg = value; OnSVGPropertyChanged(); } }
+        canvas.DrawPath(_svgPath, paint);
 
-        /// <summary>
-        /// Gets or sets whether the path should be fitted to the size of the geometry.
-        /// </summary>
-        public bool FitToSize { get; set; } = false;
+        context.Canvas.Restore();
+    }
 
-        /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-        public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
-        {
-            if (_svgPath is null)
-                throw new System.NullReferenceException(
-                    $"{nameof(SVG)} property is null and there is not a defined path to draw.");
-
-            _ = context.Canvas.Save();
-
-            var canvas = context.Canvas;
-            _ = _svgPath.GetTightBounds(out var bounds);
-
-            if (FitToSize)
-            {
-                // fit to both axis
-                canvas.Translate(X + Width / 2f, Y + Height / 2f);
-                canvas.Scale(
-                    Width / (bounds.Width + paint.StrokeWidth),
-                    Height / (bounds.Height + paint.StrokeWidth));
-                canvas.Translate(-bounds.MidX, -bounds.MidY);
-            }
-            else
-            {
-                // fit to the max dimension
-                // preserve the corresponding scale in the min axis.
-                var maxB = bounds.Width < bounds.Height ? bounds.Height : bounds.Width;
-
-                canvas.Translate(X + Width / 2f, Y + Height / 2f);
-                canvas.Scale(
-                    Width / (maxB + paint.StrokeWidth),
-                    Height / (maxB + paint.StrokeWidth));
-                canvas.Translate(-bounds.MidX, -bounds.MidY);
-            }
-
-            canvas.DrawPath(_svgPath, paint);
-
-            context.Canvas.Restore();
-        }
-
-        private void OnSVGPropertyChanged()
-        {
-            _svgPath = SKPath.ParseSvgPathData(_svg);
-        }
+    private void OnSVGPropertyChanged()
+    {
+        _svgPath = SKPath.ParseSvgPathData(_svg);
     }
 }

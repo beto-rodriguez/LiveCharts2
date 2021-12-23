@@ -22,19 +22,18 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Kernel.Sketches
+namespace LiveChartsCore.Kernel.Sketches;
+
+/// <summary>
+/// Defines a chart legend.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+public interface IChartLegend<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a chart legend.
+    /// Draws the legend for the specified chart.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public interface IChartLegend<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Draws the legend for the specified chart.
-        /// </summary>
-        /// <param name="chart">The chart.</param>
-        void Draw(Chart<TDrawingContext> chart);
-    }
+    /// <param name="chart">The chart.</param>
+    void Draw(Chart<TDrawingContext> chart);
 }

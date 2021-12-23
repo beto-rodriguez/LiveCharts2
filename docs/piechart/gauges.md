@@ -42,7 +42,7 @@ pieChart1.Series = new GaugeBuilder
 .BuildSeries();</code></pre>
 {{~ end ~}}
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/basicgauge.png)
+![image]({{ assets_url }}/docs/_assets/basicgauge.png)
 
 ## InitialRotation property
 
@@ -90,7 +90,7 @@ pieChart1.Series = new GaugeBuilder
 .BuildSeries();</code></pre>
 {{~ end ~}}
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/basicgauge-90.png)
+![image]({{ assets_url }}/docs/_assets/basicgauge-90.png)
 
 ## OffsetRadius property
 
@@ -125,7 +125,7 @@ pieChart1.Series = new GaugeBuilder
 .BuildSeries();</code></pre>
 {{~ end ~}}
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/basicgaugeor.png)
+![image]({{ assets_url }}/docs/_assets/basicgaugeor.png)
 
 Notice that there is a similar property the `GaugeBuilder.BackgroundOffsetRadius` will do the same effect
 but in the background slice (gray one).
@@ -171,7 +171,7 @@ pieChart1.Series = new GaugeBuilder
 .BuildSeries();</code></pre>
 {{~ end ~}}
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/basicgaugemultiple.png)
+![image]({{ assets_url }}/docs/_assets/basicgaugemultiple.png)
 
 ## MaxAngle property
 
@@ -236,4 +236,4 @@ pieChart1.Series = new GaugeBuilder
 .BuildSeries();</code></pre>
 {{~ end ~}}
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/basicgaugemultiple270.png)
+![image]({{ assets_url }}/docs/_assets/basicgaugemultiple270.png)

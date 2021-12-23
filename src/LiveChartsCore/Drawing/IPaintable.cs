@@ -20,32 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Drawing;
+
+/// <summary>
+/// Defines a paintable object, an object that has can have its own paint definition.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="IDrawable{TDrawingContext}" />
+public interface IPaintable<TDrawingContext> : IDrawable<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a paintable object, an object that has can have its own paint definition.
+    /// Gets or sets the stroke paint.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IDrawable{TDrawingContext}" />
-    public interface IPaintable<TDrawingContext> : IDrawable<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets or sets the stroke paint.
-        /// </summary>
-        IPaint<TDrawingContext>? Stroke { get; set; }
+    IPaint<TDrawingContext>? Stroke { get; set; }
 
-        /// <summary>
-        /// Gets or sets the fill paint.
-        /// </summary>
-        IPaint<TDrawingContext>? Fill { get; set; }
+    /// <summary>
+    /// Gets or sets the fill paint.
+    /// </summary>
+    IPaint<TDrawingContext>? Fill { get; set; }
 
-        /// <summary>
-        /// Gets or sets the opacity.
-        /// </summary>
-        /// <value>
-        /// The opacity.
-        /// </value>
-        float Opacity { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the opacity.
+    /// </summary>
+    /// <value>
+    /// The opacity.
+    /// </value>
+    float Opacity { get; set; }
 }

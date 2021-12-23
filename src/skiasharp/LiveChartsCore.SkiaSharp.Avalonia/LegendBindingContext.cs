@@ -24,67 +24,66 @@ using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Media;
 
-namespace LiveChartsCore.SkiaSharpView.Avalonia
+namespace LiveChartsCore.SkiaSharpView.Avalonia;
+
+/// <summary>
+/// The legend binding context.
+/// </summary>
+public class LegendBindingContext
 {
     /// <summary>
-    /// The legend binding context.
+    /// Gets or sets the series.
     /// </summary>
-    public class LegendBindingContext
-    {
-        /// <summary>
-        /// Gets or sets the series.
-        /// </summary>
-        /// <value>
-        /// The series.
-        /// </value>
-        public IEnumerable<ISeries> Series { get; set; } = Enumerable.Empty<ISeries>();
+    /// <value>
+    /// The series.
+    /// </value>
+    public IEnumerable<ISeries> Series { get; set; } = Enumerable.Empty<ISeries>();
 
-        /// <summary>
-        /// Gets or sets the font family.
-        /// </summary>
-        /// <value>
-        /// The font family.
-        /// </value>
-        public FontFamily FontFamily { get; set; } = new FontFamily("Trebuchet MS");
+    /// <summary>
+    /// Gets or sets the font family.
+    /// </summary>
+    /// <value>
+    /// The font family.
+    /// </value>
+    public FontFamily FontFamily { get; set; } = new("Trebuchet MS");
 
-        /// <summary>
-        /// Gets or sets the size of the font.
-        /// </summary>
-        /// <value>
-        /// The size of the font.
-        /// </value>
-        public double FontSize { get; set; }
+    /// <summary>
+    /// Gets or sets the size of the font.
+    /// </summary>
+    /// <value>
+    /// The size of the font.
+    /// </value>
+    public double FontSize { get; set; }
 
-        /// <summary>
-        /// Gets or sets the font weight.
-        /// </summary>
-        /// <value>
-        /// The font weight.
-        /// </value>
-        public FontWeight FontWeight { get; set; }
+    /// <summary>
+    /// Gets or sets the font weight.
+    /// </summary>
+    /// <value>
+    /// The font weight.
+    /// </value>
+    public FontWeight FontWeight { get; set; }
 
-        /// <summary>
-        /// Gets or sets the font style.
-        /// </summary>
-        /// <value>
-        /// The font style.
-        /// </value>
-        public FontStyle FontStyle { get; set; }
+    /// <summary>
+    /// Gets or sets the font style.
+    /// </summary>
+    /// <value>
+    /// The font style.
+    /// </value>
+    public FontStyle FontStyle { get; set; }
 
-        /// <summary>
-        /// Gets or sets the text brush.
-        /// </summary>
-        /// <value>
-        /// The text brush.
-        /// </value>
-        public IBrush? TextBrush { get; set; } = new SolidColorBrush(Color.FromRgb(35, 35, 35));
+    /// <summary>
+    /// Gets or sets the text brush.
+    /// </summary>
+    /// <value>
+    /// The text brush.
+    /// </value>
+    public IBrush? TextBrush { get; set; } = new SolidColorBrush(Color.FromRgb(35, 35, 35));
 
-        /// <summary>
-        /// Gets or sets the background.
-        /// </summary>
-        /// <value>
-        /// The background.
-        /// </value>
-        public IBrush? Background { get; set; } = new SolidColorBrush(Color.FromRgb(250, 250, 250));
-    }
+    /// <summary>
+    /// Gets or sets the background.
+    /// </summary>
+    /// <value>
+    /// The background.
+    /// </value>
+    public IBrush? Background { get; set; } = new SolidColorBrush(Color.FromRgb(250, 250, 250));
 }

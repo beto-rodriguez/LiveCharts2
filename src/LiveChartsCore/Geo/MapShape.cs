@@ -24,42 +24,41 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Geo
+namespace LiveChartsCore.Geo;
+
+/// <summary>
+/// Defines a shape in a map.
+/// </summary>
+public abstract class MapShape<TDrawingContext> : IMapElement, INotifyPropertyChanged
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a shape in a map.
+    /// Called when a property changes.
     /// </summary>
-    public abstract class MapShape<TDrawingContext> : IMapElement, INotifyPropertyChanged
-        where TDrawingContext : DrawingContext
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    /// <inheritdoc cref="IMapElement.Measure(object)"/>
+    public abstract void Measure(MapShapeContext<TDrawingContext> context);
+
+    /// <inheritdoc cref="IMapElement.RemoveFromUI(object)"/>
+    public abstract void RemoveFromUI(MapShapeContext<TDrawingContext> context);
+
+    void IMapElement.Measure(object context)
     {
-        /// <summary>
-        /// Called when a property changes.
-        /// </summary>
-        public event PropertyChangedEventHandler? PropertyChanged;
+        Measure((MapShapeContext<TDrawingContext>)context);
+    }
 
-        /// <inheritdoc cref="IMapElement.Measure(object)"/>
-        public abstract void Measure(MapShapeContext<TDrawingContext> context);
+    void IMapElement.RemoveFromUI(object context)
+    {
+        RemoveFromUI((MapShapeContext<TDrawingContext>)context);
+    }
 
-        /// <inheritdoc cref="IMapElement.RemoveFromUI(object)"/>
-        public abstract void RemoveFromUI(MapShapeContext<TDrawingContext> context);
-
-        void IMapElement.Measure(object context)
-        {
-            Measure((MapShapeContext<TDrawingContext>)context);
-        }
-
-        void IMapElement.RemoveFromUI(object context)
-        {
-            RemoveFromUI((MapShapeContext<TDrawingContext>)context);
-        }
-
-        /// <summary>
-        /// Called when a property changes.
-        /// </summary>
-        /// <param name="propertyName"></param>
-        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+    /// <summary>
+    /// Called when a property changes.
+    /// </summary>
+    /// <param name="propertyName"></param>
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

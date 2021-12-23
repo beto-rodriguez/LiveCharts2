@@ -1,36 +1,35 @@
-﻿using LiveChartsCore.SkiaSharpView.WinForms;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using LiveChartsCore.SkiaSharpView.WinForms;
 using ViewModelsSamples.General.Animations;
 
-namespace WinFormsSample.General.Animations
+namespace WinFormsSample.General.Animations;
+
+public partial class View : UserControl
 {
-    public partial class View : UserControl
+    private readonly CartesianChart cartesianChart;
+
+    public View()
     {
-        private readonly CartesianChart cartesianChart;
+        InitializeComponent();
+        Size = new System.Drawing.Size(100, 100);
 
-        public View()
+        var viewModel = new ViewModel();
+
+        cartesianChart = new CartesianChart
         {
-            InitializeComponent();
-            Size = new System.Drawing.Size(100, 100);
+            Series = viewModel.Series,
 
-            var viewModel = new ViewModel();
+            // there are already many defined functions in the EasingFunctions static class
+            EasingFunction = LiveChartsCore.EasingFunctions.BackOut,
+            AnimationsSpeed = TimeSpan.FromMilliseconds(600),
 
-            cartesianChart = new CartesianChart
-            {
-                Series = viewModel.Series,
+            // out of livecharts properties...
+            Location = new System.Drawing.Point(0, 50),
+            Size = new System.Drawing.Size(100, 50),
+            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
+        };
 
-                // there are already many defined functions in the EasingFunctions static class
-                EasingFunction = LiveChartsCore.EasingFunctions.BackOut,
-                AnimationsSpeed = TimeSpan.FromMilliseconds(600),
-
-                // out of livecharts properties...
-                Location = new System.Drawing.Point(0, 50),
-                Size = new System.Drawing.Size(100, 50),
-                Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
-            };
-
-            Controls.Add(cartesianChart);
-        }
+        Controls.Add(cartesianChart);
     }
 }

@@ -20,26 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Measure
+namespace LiveChartsCore.Measure;
+
+/// <summary>
+/// Defines the polar axis orientation.
+/// </summary>
+public enum PolarAxisOrientation
 {
     /// <summary>
-    /// Defines the polar axis orientation.
+    /// The unknown orientation.
     /// </summary>
-    public enum PolarAxisOrientation
-    {
-        /// <summary>
-        /// The unknown orientation.
-        /// </summary>
-        Unknown,
+    Unknown,
 
-        /// <summary>
-        /// The angle orientation.
-        /// </summary>
-        Angle,
+    /// <summary>
+    /// The angle orientation.
+    /// </summary>
+    Angle,
 
-        /// <summary>
-        /// The radius orientation.
-        /// </summary>
-        Radius
-    }
+    /// <summary>
+    /// The radius orientation.
+    /// </summary>
+    Radius
 }

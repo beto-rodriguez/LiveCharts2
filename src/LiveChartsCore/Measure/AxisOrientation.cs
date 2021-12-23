@@ -20,26 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Measure
+namespace LiveChartsCore.Measure;
+
+/// <summary>
+/// Defines the axis orientation.
+/// </summary>
+public enum AxisOrientation
 {
     /// <summary>
-    /// Defines the axis orientation.
+    /// The unknown orientation.
     /// </summary>
-    public enum AxisOrientation
-    {
-        /// <summary>
-        /// The unknown orientation.
-        /// </summary>
-        Unknown,
+    Unknown,
 
-        /// <summary>
-        /// The x orientation.
-        /// </summary>
-        X,
+    /// <summary>
+    /// The x orientation.
+    /// </summary>
+    X,
 
-        /// <summary>
-        /// The y orientation.
-        /// </summary>
-        Y
-    }
+    /// <summary>
+    /// The y orientation.
+    /// </summary>
+    Y
 }

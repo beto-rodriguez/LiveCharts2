@@ -1,45 +1,58 @@
-﻿using LiveChartsCore;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
-namespace ViewModelsSamples.Scatter.Bubbles
+namespace ViewModelsSamples.Scatter.Bubbles;
+
+public class ViewModel
 {
-    public class ViewModel
+    public ViewModel()
     {
-        public ViewModel()
+        var r = new Random();
+        var values1 = new ObservableCollection<WeightedPoint>();
+        var values2 = new ObservableCollection<WeightedPoint>();
+
+        for (var i = 0; i < 8; i++)
         {
-            var r = new Random();
-            var values1 = new ObservableCollection<WeightedPoint>();
-            var values2 = new ObservableCollection<WeightedPoint>();
+            // the WeightedPoint has 3 properties, X, Y and Weight
+            // we use the X and Y coordinates to position the point in the chart
+            // the weight will be used by the library to define the size of the points
 
-            for (var i = 0; i < 20; i++)
-            {
-                values1.Add(new WeightedPoint(r.Next(0, 20), r.Next(0, 20), r.Next(0, 20)));
-                values2.Add(new WeightedPoint(r.Next(0, 20), r.Next(0, 20), r.Next(0, 20)));
-            }
+            // where the minimum weight will be the smallest point, and the max weight the biggest
 
-            Series = new ObservableCollection<ISeries>
-            {
-                new ScatterSeries<WeightedPoint, RoundedRectangleGeometry>
-                {
-                    Values = values1,
-                    GeometrySize = 40,
-                    MinGeometrySize = 15
-                },
+            // for any weight between these limits the library
+            // will interpolate lineally to determine the size of each point
 
-                new ScatterSeries<WeightedPoint, CircleGeometry>
-                {
-                    Values = values2,
-                    GeometrySize = 40,
-                    MinGeometrySize = 15
-                }
-            };
+            var x = r.Next(0, 20);
+            var y = r.Next(0, 20);
+            var w = r.Next(0, 100);
+
+            values1.Add(new WeightedPoint(x, y, w));
+
+            // we do the same for our seconds values collection.
+            values2.Add(new WeightedPoint(r.Next(0, 20), r.Next(0, 20), r.Next(0, 100)));
         }
 
-        public IEnumerable<ISeries> Series { get; set; }
+        Series = new ObservableCollection<ISeries>
+            {
+                new ScatterSeries<WeightedPoint>
+                {
+                    Values = values1,
+                    GeometrySize = 50,
+                    MinGeometrySize = 5
+                },
+                new ScatterSeries<WeightedPoint, RoundedRectangleGeometry>
+                {
+                    Values = values2,
+                    GeometrySize = 50,
+                    MinGeometrySize = 5
+                }
+            };
     }
+
+    public IEnumerable<ISeries> Series { get; set; }
 }

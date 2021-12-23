@@ -20,27 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Measure
+namespace LiveChartsCore.Measure;
+
+/// <summary>
+/// Defines an axis tick, the distance between every separator.
+/// </summary>
+public struct AxisTick
 {
     /// <summary>
-    /// Defines an axis tick, the distance between every separator.
+    /// Gets or sets the value.
     /// </summary>
-    public struct AxisTick
-    {
-        /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
-        /// <value>
-        /// The value.
-        /// </value>
-        public double Value { get; set; }
+    /// <value>
+    /// The value.
+    /// </value>
+    public double Value { get; set; }
 
-        /// <summary>
-        /// Gets or sets the magnitude.
-        /// </summary>
-        /// <value>
-        /// The magnitude.
-        /// </value>
-        public double Magnitude { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the magnitude.
+    /// </summary>
+    /// <value>
+    /// The magnitude.
+    /// </value>
+    public double Magnitude { get; set; }
 }

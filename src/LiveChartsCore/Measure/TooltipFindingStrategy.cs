@@ -20,31 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Measure
+namespace LiveChartsCore.Measure;
+
+/// <summary>
+/// Defines the tool tip finding strategy.
+/// </summary>
+public enum TooltipFindingStrategy
 {
     /// <summary>
-    /// Defines the tool tip finding strategy.
+    /// The automatic mode, it will be calculated based on the series in the chart.
     /// </summary>
-    public enum TooltipFindingStrategy
-    {
-        /// <summary>
-        /// The automatic mode, it will be calculated based on the series in the chart.
-        /// </summary>
-        Automatic,
+    Automatic,
 
-        /// <summary>
-        /// Compares X and Y coordinates.
-        /// </summary>
-        CompareAll,
+    /// <summary>
+    /// Compares X and Y coordinates.
+    /// </summary>
+    CompareAll,
 
-        /// <summary>
-        /// Compares X coordinates and ignores Y.
-        /// </summary>
-        CompareOnlyX,
+    /// <summary>
+    /// Compares X coordinates and ignores Y.
+    /// </summary>
+    CompareOnlyX,
 
-        /// <summary>
-        /// Compares Y coordinates and ignores X.
-        /// </summary>
-        CompareOnlyY
-    }
+    /// <summary>
+    /// Compares Y coordinates and ignores X.
+    /// </summary>
+    CompareOnlyY
 }

@@ -6,18 +6,13 @@
   <UserControl.DataContext>
     <vms:ViewModel/>
   </UserControl.DataContext>
-  <Grid>
-      <Grid.RowDefinitions>
-          <RowDefinition Height="*"/>
-      </Grid.RowDefinitions>
-      <lvc:CartesianChart
-          Series="{Binding Series}"
-          YAxes="{Binding YAxes}"
-          LegendPosition="Left"
-          LegendFontFamily="Courier New"
-          LegendFontSize="25"
-          LegendTextBrush="#505050"
-          LegendBackground="#fafafa">
-      </lvc:CartesianChart>
-  </Grid> 
+  <lvc:CartesianChart
+    Series="{Binding Series}"
+    YAxes="{Binding YAxes}"
+    LegendPosition="Left"
+    LegendFontFamily="Courier New"
+    LegendFontSize="12"
+    LegendTextBrush="#505050"
+    LegendBackground="#fafafa">
+  </lvc:CartesianChart>
 </UserControl>

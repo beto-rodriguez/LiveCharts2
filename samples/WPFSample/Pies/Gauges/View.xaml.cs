@@ -22,16 +22,15 @@
 
 using System.Windows.Controls;
 
-namespace WPFSample.Pies.Gauges
+namespace WPFSample.Pies.Gauges;
+
+/// <summary>
+/// Interaction logic for View.xaml
+/// </summary>
+public partial class View : UserControl
 {
-    /// <summary>
-    /// Interaction logic for View.xaml
-    /// </summary>
-    public partial class View : UserControl
+    public View()
     {
-        public View()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

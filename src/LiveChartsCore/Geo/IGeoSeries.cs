@@ -22,29 +22,28 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Geo
+namespace LiveChartsCore.Geo;
+
+/// <summary>
+/// Defines a geographical data series.
+/// </summary>
+public interface IGeoSeries<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a geographical data series.
+    /// Gets or sets a value to indecate whether the series is visible.
     /// </summary>
-    public interface IGeoSeries<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets or sets a value to indecate whether the series is visible.
-        /// </summary>
-        public bool IsVisible { get; set; }
+    public bool IsVisible { get; set; }
 
-        /// <summary>
-        /// Draw the series.
-        /// </summary>
-        /// <param name="context">The map context.</param>
-        void Measure(MapContext<TDrawingContext> context);
+    /// <summary>
+    /// Draw the series.
+    /// </summary>
+    /// <param name="context">The map context.</param>
+    void Measure(MapContext<TDrawingContext> context);
 
-        /// <summary>
-        /// Deltes the series.
-        /// </summary>
-        /// <param name="context">The map context.</param>
-        void Delete(MapContext<TDrawingContext> context);
-    }
+    /// <summary>
+    /// Deltes the series.
+    /// </summary>
+    /// <param name="context">The map context.</param>
+    void Delete(MapContext<TDrawingContext> context);
 }

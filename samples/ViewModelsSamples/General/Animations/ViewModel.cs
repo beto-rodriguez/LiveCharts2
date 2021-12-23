@@ -4,46 +4,45 @@ using System.Runtime.CompilerServices;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
-namespace ViewModelsSamples.General.Animations
+namespace ViewModelsSamples.General.Animations;
+
+public class ViewModel : INotifyPropertyChanged
 {
-    public class ViewModel : INotifyPropertyChanged
-    {
-        private AvailableEasingCurve _selectedAvailableCurve;
-        private Func<float, float> _actualCurve;
-        private AvailableSpeed _selectedAvailableSpeed;
-        private TimeSpan _actualSpeed;
+    private AvailableEasingCurve _selectedAvailableCurve;
+    private Func<float, float> _actualCurve;
+    private AvailableSpeed _selectedAvailableSpeed;
+    private TimeSpan _actualSpeed;
 
-        private ISeries[] _series = new ISeries[]
-        {
+    private ISeries[] _series = {
             new ColumnSeries<int> { Values = new [] { 5, 6, 3, 1, 8, 5, 3, 5, 6, 3, 1} }
-        };
+    };
 
-        public ISeries[] Series { get => _series; set { _series = value; OnPropertyChanged(); } }
+    public ISeries[] Series { get => _series; set { _series = value; OnPropertyChanged(); } }
 
-        public AvailableEasingCurve SelectedCurve
+    public AvailableEasingCurve SelectedCurve
+    {
+        get => _selectedAvailableCurve;
+        set
         {
-            get => _selectedAvailableCurve;
-            set
-            {
-                _selectedAvailableCurve = value;
-                ActualCurve = _selectedAvailableCurve.EasingFunction;
-                OnPropertyChanged();
-            }
+            _selectedAvailableCurve = value;
+            ActualCurve = _selectedAvailableCurve.EasingFunction;
+            OnPropertyChanged();
         }
+    }
 
-        public Func<float, float> ActualCurve
+    public Func<float, float> ActualCurve
+    {
+        get => _actualCurve;
+        set
         {
-            get => _actualCurve;
-            set
-            {
-                _actualCurve = value;
-                RestartAnimations();
-                OnPropertyChanged();
-            }
+            _actualCurve = value;
+            RestartAnimations();
+            OnPropertyChanged();
         }
+    }
 
-        public AvailableEasingCurve[] AvalaibaleCurves => new[]
-        {
+    public AvailableEasingCurve[] AvalaibaleCurves => new[]
+    {
             // LiveCharts already contains many common animating curves in the EasingFunctions static class.
              new AvailableEasingCurve("Back in", EasingFunctions.BackIn),
              new AvailableEasingCurve("Back out", EasingFunctions.BackOut),
@@ -88,29 +87,29 @@ namespace ViewModelsSamples.General.Animations
              new AvailableEasingCurve("custom cubic bezier", EasingFunctions.BuildCubicBezier(0.17f, 0.67f, 0.83f, 0.67f)),
         };
 
-        public AvailableSpeed SelectedSpeed
+    public AvailableSpeed SelectedSpeed
+    {
+        get => _selectedAvailableSpeed;
+        set
         {
-            get => _selectedAvailableSpeed;
-            set
-            {
-                _selectedAvailableSpeed = value;
-                ActualSpeed = _selectedAvailableSpeed.Speed;
-                OnPropertyChanged();
-            }
+            _selectedAvailableSpeed = value;
+            ActualSpeed = _selectedAvailableSpeed.Speed;
+            OnPropertyChanged();
         }
-        public TimeSpan ActualSpeed
+    }
+    public TimeSpan ActualSpeed
+    {
+        get => _actualSpeed;
+        set
         {
-            get => _actualSpeed;
-            set
-            {
-                _actualSpeed = value;
-                RestartAnimations();
-                OnPropertyChanged();
-            }
+            _actualSpeed = value;
+            RestartAnimations();
+            OnPropertyChanged();
         }
+    }
 
-        public AvailableSpeed[] AvailableSpeeds => new[]
-        {
+    public AvailableSpeed[] AvailableSpeeds => new[]
+    {
             new AvailableSpeed("Slowest", TimeSpan.FromMilliseconds(1300)),
             new AvailableSpeed("Slow", TimeSpan.FromMilliseconds(800)),
             new AvailableSpeed("Medium", TimeSpan.FromMilliseconds(500)),
@@ -118,17 +117,16 @@ namespace ViewModelsSamples.General.Animations
             new AvailableSpeed("Fastest", TimeSpan.FromMilliseconds(100)),
         };
 
-        public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+    protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 
-        private void RestartAnimations()
-        {
-            foreach (var series in Series)
-                series.RestartAnimations();
-        }
+    private void RestartAnimations()
+    {
+        foreach (var series in Series)
+            series.RestartAnimations();
     }
 }

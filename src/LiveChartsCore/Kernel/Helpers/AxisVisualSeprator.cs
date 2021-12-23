@@ -22,42 +22,41 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Kernel.Helpers
+namespace LiveChartsCore.Kernel.Helpers;
+
+/// <summary>
+/// Defines an axis visual separator.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+public class AxisVisualSeprator<TDrawingContext> : IVisualSeparator<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines an axis visual separator.
+    /// Gets or sets the value.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public class AxisVisualSeprator<TDrawingContext> : IVisualSeparator<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
-        /// <value>
-        /// The value.
-        /// </value>
-        public double Value { get; set; }
+    /// <value>
+    /// The value.
+    /// </value>
+    public double Value { get; set; }
 
-        /// <summary>
-        /// Gets or sets the text.
-        /// </summary>
-        /// <value>
-        /// The text.
-        /// </value>
-        public ILabelGeometry<TDrawingContext>? Label { get; set; }
+    /// <summary>
+    /// Gets or sets the text.
+    /// </summary>
+    /// <value>
+    /// The text.
+    /// </value>
+    public ILabelGeometry<TDrawingContext>? Label { get; set; }
 
-        /// <summary>
-        /// Gets or sets the line.
-        /// </summary>
-        /// <value>
-        /// The line.
-        /// </value>
-        public ILineGeometry<TDrawingContext>? Line { get; set; }
+    /// <summary>
+    /// Gets or sets the line.
+    /// </summary>
+    /// <value>
+    /// The line.
+    /// </value>
+    public ILineGeometry<TDrawingContext>? Line { get; set; }
 
-        /// <summary>
-        /// Gets the geometry.
-        /// </summary>
-        public IGeometry<TDrawingContext>? Geometry => Line;
-    }
+    /// <summary>
+    /// Gets the geometry.
+    /// </summary>
+    public IGeometry<TDrawingContext>? Geometry => Line;
 }

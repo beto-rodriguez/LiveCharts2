@@ -3,9 +3,10 @@
 @using ViewModelsSamples.Pies.Basic
 
 <PieChart
-	Series="ViewModel.Series">
+	Series="ViewModel.Series"
+	LegendPosition="LiveChartsCore.Measure.LegendPosition.Right">
 </PieChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new ViewModel();
+	public ViewModel ViewModel { get; set; } = new();
 }

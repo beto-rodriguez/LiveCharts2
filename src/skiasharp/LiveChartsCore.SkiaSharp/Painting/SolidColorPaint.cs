@@ -25,141 +25,140 @@ using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Painting
+namespace LiveChartsCore.SkiaSharpView.Painting;
+
+/// <summary>
+/// Defines a set of geometries that will be painted using a solid color.
+/// </summary>
+/// <seealso cref="Paint" />
+public class SolidColorPaint : Paint
 {
+    private SkiaSharpDrawingContext? _drawingContext;
+
     /// <summary>
-    /// Defines a set of geometries that will be painted using a solid color.
+    /// Initializes a new instance of the <see cref="SolidColorPaint"/> class.
     /// </summary>
-    /// <seealso cref="Paint" />
-    public class SolidColorPaint : Paint
+    public SolidColorPaint()
     {
-        private SkiaSharpDrawingContext? _drawingContext;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SolidColorPaint"/> class.
-        /// </summary>
-        public SolidColorPaint()
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SolidColorPaint"/> class.
+    /// </summary>
+    /// <param name="color">The color.</param>
+    public SolidColorPaint(SKColor color)
+        : base(color)
+    {
+        Color = color;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SolidColorPaint"/> class.
+    /// </summary>
+    /// <param name="color">The color.</param>
+    /// <param name="strokeWidth">Width of the stroke.</param>
+    public SolidColorPaint(SKColor color, float strokeWidth)
+        : base(color)
+    {
+        strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness), strokeWidth));
+        Color = color;
+    }
+
+    /// <inheritdoc cref="IPaint{TDrawingContext}.CloneTask" />
+    public override IPaint<SkiaSharpDrawingContext> CloneTask()
+    {
+        var clone = new SolidColorPaint
         {
+            Style = Style,
+            IsStroke = IsStroke,
+            IsFill = IsFill,
+            Color = Color,
+            IsAntialias = IsAntialias,
+            StrokeThickness = StrokeThickness,
+            StrokeCap = StrokeCap,
+            StrokeJoin = StrokeJoin,
+            StrokeMiter = StrokeMiter,
+            FontFamily = FontFamily,
+            PathEffect = PathEffect?.Clone(),
+            ImageFilter = ImageFilter?.Clone()
+        };
+
+        return clone;
+    }
+
+    /// <inheritdoc cref="IPaint{TDrawingContext}.InitializeTask(TDrawingContext)" />
+    public override void InitializeTask(SkiaSharpDrawingContext drawingContext)
+    {
+        skiaPaint ??= new SKPaint();
+
+        skiaPaint.Color = Color;
+        skiaPaint.IsAntialias = IsAntialias;
+        skiaPaint.IsStroke = IsStroke;
+        skiaPaint.StrokeCap = StrokeCap;
+        skiaPaint.StrokeJoin = StrokeJoin;
+        skiaPaint.StrokeMiter = StrokeMiter;
+        skiaPaint.StrokeWidth = StrokeThickness;
+        skiaPaint.Style = IsStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
+        if (FontFamily != null) skiaPaint.Typeface = GetTypeFaceFromFontFamily();
+
+        if (PathEffect is not null)
+        {
+            PathEffect.CreateEffect(drawingContext);
+            skiaPaint.PathEffect = PathEffect.SKPathEffect;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SolidColorPaint"/> class.
-        /// </summary>
-        /// <param name="color">The color.</param>
-        public SolidColorPaint(SKColor color)
-            : base(color)
+        if (ImageFilter is not null)
         {
-            Color = color;
+            ImageFilter.CreateFilter(drawingContext);
+            skiaPaint.ImageFilter = ImageFilter.SKImageFilter;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SolidColorPaint"/> class.
-        /// </summary>
-        /// <param name="color">The color.</param>
-        /// <param name="strokeWidth">Width of the stroke.</param>
-        public SolidColorPaint(SKColor color, float strokeWidth)
-            : base(color)
+        var clip = GetClipRectangle(drawingContext.MotionCanvas);
+        if (clip != LvcRectangle.Empty)
         {
-            strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness), strokeWidth));
-            Color = color;
+            _ = drawingContext.Canvas.Save();
+            drawingContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
+            _drawingContext = drawingContext;
         }
 
-        /// <inheritdoc cref="IPaint{TDrawingContext}.CloneTask" />
-        public override IPaint<SkiaSharpDrawingContext> CloneTask()
-        {
-            var clone = new SolidColorPaint
-            {
-                Style = Style,
-                IsStroke = IsStroke,
-                IsFill = IsFill,
-                Color = Color,
-                IsAntialias = IsAntialias,
-                StrokeThickness = StrokeThickness,
-                StrokeCap = StrokeCap,
-                StrokeJoin = StrokeJoin,
-                StrokeMiter = StrokeMiter,
-                FontFamily = FontFamily,
-                PathEffect = PathEffect?.Clone(),
-                ImageFilter = ImageFilter?.Clone()
-            };
+        drawingContext.Paint = skiaPaint;
+        drawingContext.PaintTask = this;
+    }
 
-            return clone;
+    /// <inheritdoc cref="IPaint{TDrawingContext}.ApplyOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
+    public override void ApplyOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry)
+    {
+        if (context.PaintTask is null || context.Paint is null) return;
+
+        var baseColor = context.PaintTask.Color;
+        context.Paint.Color =
+            new SKColor(baseColor.Red, baseColor.Green, baseColor.Blue, unchecked((byte)(255 * geometry.Opacity)));
+    }
+
+    /// <inheritdoc cref="IPaint{TDrawingContext}.RestoreOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
+    public override void RestoreOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry)
+    {
+        if (context.PaintTask is null || context.Paint is null) return;
+
+        var baseColor = context.PaintTask.Color;
+        context.Paint.Color = baseColor;
+    }
+
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
+    public override void Dispose()
+    {
+        if (FontFamily != null && skiaPaint != null) skiaPaint.Typeface.Dispose();
+        if (PathEffect is not null) PathEffect.Dispose();
+        if (ImageFilter is not null) ImageFilter.Dispose();
+
+        if (_drawingContext is not null && GetClipRectangle(_drawingContext.MotionCanvas) != LvcRectangle.Empty)
+        {
+            _drawingContext.Canvas.Restore();
+            _drawingContext = null;
         }
 
-        /// <inheritdoc cref="IPaint{TDrawingContext}.InitializeTask(TDrawingContext)" />
-        public override void InitializeTask(SkiaSharpDrawingContext drawingContext)
-        {
-            skiaPaint ??= new SKPaint();
-
-            skiaPaint.Color = Color;
-            skiaPaint.IsAntialias = IsAntialias;
-            skiaPaint.IsStroke = IsStroke;
-            skiaPaint.StrokeCap = StrokeCap;
-            skiaPaint.StrokeJoin = StrokeJoin;
-            skiaPaint.StrokeMiter = StrokeMiter;
-            skiaPaint.StrokeWidth = StrokeThickness;
-            skiaPaint.Style = IsStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
-            if (FontFamily != null) skiaPaint.Typeface = GetTypeFaceFromFontFamily();
-
-            if (PathEffect is not null)
-            {
-                PathEffect.CreateEffect(drawingContext);
-                skiaPaint.PathEffect = PathEffect.SKPathEffect;
-            }
-
-            if (ImageFilter is not null)
-            {
-                ImageFilter.CreateFilter(drawingContext);
-                skiaPaint.ImageFilter = ImageFilter.SKImageFilter;
-            }
-
-            var clip = GetClipRectangle(drawingContext.MotionCanvas);
-            if (clip != LvcRectangle.Empty)
-            {
-                _ = drawingContext.Canvas.Save();
-                drawingContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
-                _drawingContext = drawingContext;
-            }
-
-            drawingContext.Paint = skiaPaint;
-            drawingContext.PaintTask = this;
-        }
-
-        /// <inheritdoc cref="IPaint{TDrawingContext}.ApplyOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
-        public override void ApplyOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry)
-        {
-            if (context.PaintTask is null || context.Paint is null) return;
-
-            var baseColor = context.PaintTask.Color;
-            context.Paint.Color =
-                new SKColor(baseColor.Red, baseColor.Green, baseColor.Blue, unchecked((byte)(255 * geometry.Opacity)));
-        }
-
-        /// <inheritdoc cref="IPaint{TDrawingContext}.RestoreOpacityMask(TDrawingContext, IPaintable{TDrawingContext})" />
-        public override void RestoreOpacityMask(SkiaSharpDrawingContext context, IPaintable<SkiaSharpDrawingContext> geometry)
-        {
-            if (context.PaintTask is null || context.Paint is null) return;
-
-            var baseColor = context.PaintTask.Color;
-            context.Paint.Color = baseColor;
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public override void Dispose()
-        {
-            if (FontFamily != null && skiaPaint != null) skiaPaint.Typeface.Dispose();
-            if (PathEffect is not null) PathEffect.Dispose();
-            if (ImageFilter is not null) ImageFilter.Dispose();
-
-            if (_drawingContext is not null && GetClipRectangle(_drawingContext.MotionCanvas) != LvcRectangle.Empty)
-            {
-                _drawingContext.Canvas.Restore();
-                _drawingContext = null;
-            }
-
-            base.Dispose();
-        }
+        base.Dispose();
     }
 }

@@ -6,7 +6,7 @@ namespace UWPSample.Axes.LabelsFormat
     {
         public View()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

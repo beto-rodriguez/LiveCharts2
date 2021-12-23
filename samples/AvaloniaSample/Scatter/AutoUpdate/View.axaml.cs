@@ -1,37 +1,36 @@
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using System.Threading.Tasks;
 using ViewModelsSamples.Scatter.AutoUpdate;
 
-namespace AvaloniaSample.Scatter.AutoUpdate
+namespace AvaloniaSample.Scatter.AutoUpdate;
+
+public class View : UserControl
 {
-    public class View : UserControl
+    private bool? isStreaming = false;
+
+    public View()
     {
-        private bool? isStreaming = false;
+        InitializeComponent();
+    }
 
-        public View()
+    private async void ButtonClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        var vm = (ViewModel?)DataContext;
+        if (vm is null) return;
+
+        isStreaming = isStreaming is null ? true : !isStreaming;
+
+        while (isStreaming.Value)
         {
-            InitializeComponent();
+            vm.RemoveFirstItem();
+            vm.AddRandomItem();
+            await Task.Delay(1000);
         }
+    }
 
-        private async void ButtonClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-        {
-            var vm = (ViewModel?)DataContext;
-            if (vm is null) return;
-
-            isStreaming = isStreaming is null ? true : !isStreaming;
-
-            while (isStreaming.Value)
-            {
-                vm.RemoveFirstItem();
-                vm.AddRandomItem();
-                await Task.Delay(1000);
-            }
-        }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
     }
 }

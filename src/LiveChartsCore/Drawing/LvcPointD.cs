@@ -20,72 +20,71 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Drawing;
+
+/// <summary>
+/// Defines a point with double precision.
+/// </summary>
+public struct LvcPointD
 {
     /// <summary>
-    /// Defines a point with double precision.
+    /// Initializes a new instance of the <see cref="LvcPointD"/> struct.
     /// </summary>
-    public struct LvcPointD
+    /// <param name="x">The x coordinate.</param>
+    /// <param name="y">The y coordinate.</param>
+    public LvcPointD(double x, double y)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LvcPointD"/> struct.
-        /// </summary>
-        /// <param name="x">The x coordinate.</param>
-        /// <param name="y">The y coordinate.</param>
-        public LvcPointD(double x, double y)
-        {
-            X = x;
-            Y = y;
-        }
-
-        /// <summary>
-        /// Gets or sets the X coordinate.
-        /// </summary>
-        public double X { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Y coordinate.
-        /// </summary>
-        public double Y { get; set; }
-
-        /// <summary>
-        /// Determines whether the instance is equals to the given instance.
-        /// </summary>
-        /// <param name="obj">The instance to compare to.</param>
-        /// <returns>The comparision result.</returns>
-        public override bool Equals(object? obj)
-        {
-            return obj is LvcPoint point &&
-                X == point.X &&
-                Y == point.Y;
-        }
-
-        /// <summary>
-        /// Gets the object hash code.
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            var hashCode = 1861411795;
-            hashCode = hashCode * -1521134295 + X.GetHashCode();
-            hashCode = hashCode * -1521134295 + Y.GetHashCode();
-            return hashCode;
-        }
-
-        /// <summary>
-        /// Compares two <see cref="LvcPointD"/> instances.
-        /// </summary>
-        /// <param name="l"></param>
-        /// <param name="r"></param>
-        /// <returns></returns>
-        public static bool operator ==(LvcPointD l, LvcPointD r) => l.Equals(r);
-
-        /// <summary>
-        /// Compares two <see cref="LvcPointD"/> instances.
-        /// </summary>
-        /// <param name="l"></param>
-        /// <param name="r"></param>
-        /// <returns></returns>
-        public static bool operator !=(LvcPointD l, LvcPointD r) => !(l == r);
+        X = x;
+        Y = y;
     }
+
+    /// <summary>
+    /// Gets or sets the X coordinate.
+    /// </summary>
+    public double X { get; set; }
+
+    /// <summary>
+    /// Gets or sets the Y coordinate.
+    /// </summary>
+    public double Y { get; set; }
+
+    /// <summary>
+    /// Determines whether the instance is equals to the given instance.
+    /// </summary>
+    /// <param name="obj">The instance to compare to.</param>
+    /// <returns>The comparision result.</returns>
+    public override bool Equals(object? obj)
+    {
+        return obj is LvcPoint point &&
+            X == point.X &&
+            Y == point.Y;
+    }
+
+    /// <summary>
+    /// Gets the object hash code.
+    /// </summary>
+    /// <returns></returns>
+    public override int GetHashCode()
+    {
+        var hashCode = 1861411795;
+        hashCode = hashCode * -1521134295 + X.GetHashCode();
+        hashCode = hashCode * -1521134295 + Y.GetHashCode();
+        return hashCode;
+    }
+
+    /// <summary>
+    /// Compares two <see cref="LvcPointD"/> instances.
+    /// </summary>
+    /// <param name="l"></param>
+    /// <param name="r"></param>
+    /// <returns></returns>
+    public static bool operator ==(LvcPointD l, LvcPointD r) => l.Equals(r);
+
+    /// <summary>
+    /// Compares two <see cref="LvcPointD"/> instances.
+    /// </summary>
+    /// <param name="l"></param>
+    /// <param name="r"></param>
+    /// <returns></returns>
+    public static bool operator !=(LvcPointD l, LvcPointD r) => !(l == r);
 }

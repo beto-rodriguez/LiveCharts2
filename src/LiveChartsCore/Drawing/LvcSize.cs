@@ -20,72 +20,71 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Drawing;
+
+/// <summary>
+/// Defines a size.
+/// </summary>
+public struct LvcSize
 {
     /// <summary>
-    /// Defines a size.
+    /// Initializes a new instance of the <see cref="LvcSize"/> struct.
     /// </summary>
-    public struct LvcSize
+    /// <param name="width">The width.</param>
+    /// <param name="height">The height.</param>
+    public LvcSize(float width, float height)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LvcSize"/> struct.
-        /// </summary>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        public LvcSize(float width, float height)
-        {
-            Width = width;
-            Height = height;
-        }
-
-        /// <summary>
-        /// Gets or sets the width.
-        /// </summary>
-        public float Width { get; set; }
-
-        /// <summary>
-        /// Gets or sets the height.
-        /// </summary>
-        public float Height { get; set; }
-
-        /// <summary>
-        /// Determines whether the instance is equals to the given instance.
-        /// </summary>
-        /// <param name="obj">The instance to compare to.</param>
-        /// <returns>The comparision result.</returns>
-        public override bool Equals(object? obj)
-        {
-            return obj is LvcSize size &&
-                Width == size.Width &&
-                Height == size.Height;
-        }
-
-        /// <summary>
-        /// Gets the object hash code.
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            var hashCode = 859600377;
-            hashCode = hashCode * -1521134295 + Width.GetHashCode();
-            hashCode = hashCode * -1521134295 + Height.GetHashCode();
-            return hashCode;
-        }
-
-        /// <summary>
-        /// Compares two <see cref="LvcSize"/> instances.
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
-        public static bool operator ==(LvcSize left, LvcSize right) => left.Equals(right);
-
-        /// <summary>
-        /// Compares two <see cref="LvcSize"/> instances.
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
-        public static bool operator !=(LvcSize left, LvcSize right) => !(left == right);
+        Width = width;
+        Height = height;
     }
+
+    /// <summary>
+    /// Gets or sets the width.
+    /// </summary>
+    public float Width { get; set; }
+
+    /// <summary>
+    /// Gets or sets the height.
+    /// </summary>
+    public float Height { get; set; }
+
+    /// <summary>
+    /// Determines whether the instance is equals to the given instance.
+    /// </summary>
+    /// <param name="obj">The instance to compare to.</param>
+    /// <returns>The comparision result.</returns>
+    public override bool Equals(object? obj)
+    {
+        return obj is LvcSize size &&
+            Width == size.Width &&
+            Height == size.Height;
+    }
+
+    /// <summary>
+    /// Gets the object hash code.
+    /// </summary>
+    /// <returns></returns>
+    public override int GetHashCode()
+    {
+        var hashCode = 859600377;
+        hashCode = hashCode * -1521134295 + Width.GetHashCode();
+        hashCode = hashCode * -1521134295 + Height.GetHashCode();
+        return hashCode;
+    }
+
+    /// <summary>
+    /// Compares two <see cref="LvcSize"/> instances.
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <returns></returns>
+    public static bool operator ==(LvcSize left, LvcSize right) => left.Equals(right);
+
+    /// <summary>
+    /// Compares two <see cref="LvcSize"/> instances.
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <returns></returns>
+    public static bool operator !=(LvcSize left, LvcSize right) => !(left == right);
 }

@@ -22,26 +22,25 @@
 
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+
+/// <summary>
+/// Defines an oval geometry.
+/// </summary>
+/// <seealso cref="SizedGeometry" />
+public class OvalGeometry : SizedGeometry
 {
     /// <summary>
-    /// Defines an oval geometry.
+    /// Initializes a new instance of the <see cref="OvalGeometry"/> class.
     /// </summary>
-    /// <seealso cref="SizedGeometry" />
-    public class OvalGeometry : SizedGeometry
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OvalGeometry"/> class.
-        /// </summary>
-        public OvalGeometry() : base()
-        { }
+    public OvalGeometry() : base()
+    { }
 
-        /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-        public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
-        {
-            var rx = Width / 2f;
-            var ry = Height / 2f;
-            context.Canvas.DrawOval(X + rx, Y + ry, rx, ry, paint);
-        }
+    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
+    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    {
+        var rx = Width / 2f;
+        var ry = Height / 2f;
+        context.Canvas.DrawOval(X + rx, Y + ry, rx, ry, paint);
     }
 }

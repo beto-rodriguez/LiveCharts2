@@ -32,173 +32,172 @@ using Microsoft.Maui.Controls.Xaml;
 using Microsoft.Maui.Essentials;
 using Microsoft.Maui.Graphics;
 
-namespace LiveChartsCore.SkiaSharpView.Maui
+namespace LiveChartsCore.SkiaSharpView.Maui;
+
+[XamlCompilation(XamlCompilationOptions.Compile)]
+public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawingContext>
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class DefaultTooltip : ContentView, IChartTooltip<SkiaSharpDrawingContext>
+    private Chart<SkiaSharpDrawingContext>? _chart;
+    private readonly DataTemplate _defaultTemplate;
+    private readonly Timer _closeTimer = new();
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
+    /// </summary>
+    public DefaultTooltip()
     {
-        private Chart<SkiaSharpDrawingContext>? _chart;
-        private readonly DataTemplate _defaultTemplate;
-        private readonly Timer _closeTimer = new();
+        InitializeComponent();
+        _defaultTemplate = (DataTemplate)Resources["defaultTemplate"];
+        _closeTimer.Interval = 3000;
+        _closeTimer.Elapsed += _closeTimer_Elapsed;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
-        /// </summary>
-        public DefaultTooltip()
+    /// <summary>
+    /// Gets or sets the tool tip template.
+    /// </summary>
+    /// <value>
+    /// The tool tip template.
+    /// </value>
+    public DataTemplate? TooltipTemplate { get; set; }
+
+    /// <summary>
+    /// Gets or sets the points.
+    /// </summary>
+    /// <value>
+    /// The points.
+    /// </value>
+    public IEnumerable<ChartPoint> Points { get; set; } = Enumerable.Empty<ChartPoint>();
+
+    /// <summary>
+    /// Gets or sets the font family.
+    /// </summary>
+    /// <value>
+    /// The font family.
+    /// </value>
+    public string? TooltipFontFamily { get; set; }
+
+    /// <summary>
+    /// Gets or sets the size of the font.
+    /// </summary>
+    /// <value>
+    /// The size of the font.
+    /// </value>
+    public double TooltipFontSize { get; set; }
+
+    /// <summary>
+    /// Gets or sets the color of the text.
+    /// </summary>
+    /// <value>
+    /// The color of the text.
+    /// </value>
+    public Color TooltipTextColor { get; set; }
+
+    /// <summary>
+    /// Gets or sets the font attributes.
+    /// </summary>
+    /// <value>
+    /// The font attributes.
+    /// </value>
+    public FontAttributes TooltipFontAttributes { get; set; }
+
+    /// <summary>
+    /// Gets or sets the color of the tool tip background.
+    /// </summary>
+    /// <value>
+    /// The color of the tool tip background.
+    /// </value>
+    public Color TooltipBackgroundColor { get; set; }
+
+    void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+    {
+        var mobileChart = (IMauiChart)chart.View;
+
+        Points = tooltipPoints;
+
+        LvcPoint? location = null;
+        var size = new Size
         {
-            InitializeComponent();
-            _defaultTemplate = (DataTemplate)Resources["defaultTemplate"];
-            _closeTimer.Interval = 3000;
-            _closeTimer.Elapsed += _closeTimer_Elapsed;
+            Width = Width * DeviceDisplay.MainDisplayInfo.Density,
+            Height = Height * DeviceDisplay.MainDisplayInfo.Density
+        };
+
+        if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
+        {
+            location = tooltipPoints.GetCartesianTooltipLocation(
+                chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height), chart.ControlSize);
         }
-
-        /// <summary>
-        /// Gets or sets the tool tip template.
-        /// </summary>
-        /// <value>
-        /// The tool tip template.
-        /// </value>
-        public DataTemplate? TooltipTemplate { get; set; }
-
-        /// <summary>
-        /// Gets or sets the points.
-        /// </summary>
-        /// <value>
-        /// The points.
-        /// </value>
-        public IEnumerable<ChartPoint> Points { get; set; } = Enumerable.Empty<ChartPoint>();
-
-        /// <summary>
-        /// Gets or sets the font family.
-        /// </summary>
-        /// <value>
-        /// The font family.
-        /// </value>
-        public string? TooltipFontFamily { get; set; }
-
-        /// <summary>
-        /// Gets or sets the size of the font.
-        /// </summary>
-        /// <value>
-        /// The size of the font.
-        /// </value>
-        public double TooltipFontSize { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color of the text.
-        /// </summary>
-        /// <value>
-        /// The color of the text.
-        /// </value>
-        public Color TooltipTextColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the font attributes.
-        /// </summary>
-        /// <value>
-        /// The font attributes.
-        /// </value>
-        public FontAttributes TooltipFontAttributes { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color of the tool tip background.
-        /// </summary>
-        /// <value>
-        /// The color of the tool tip background.
-        /// </value>
-        public Color TooltipBackgroundColor { get; set; }
-
-        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+        if (chart is PieChart<SkiaSharpDrawingContext>)
         {
-            var mobileChart = (IMauiChart)chart.View;
+            location = tooltipPoints.GetPieTooltipLocation(
+                chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height));
+        }
+        if (location is null) return;
 
-            Points = tooltipPoints;
+        IsVisible = true;
+        var template = mobileChart.TooltipTemplate ?? _defaultTemplate;
+        if (TooltipTemplate != template) TooltipTemplate = template;
+        TooltipFontFamily = mobileChart.TooltipFontFamily;
+        TooltipTextColor = mobileChart.TooltipTextBrush;
+        TooltipFontSize = mobileChart.TooltipFontSize;
+        TooltipFontAttributes = mobileChart.TooltipFontAttributes;
+        TooltipBackgroundColor = mobileChart.TooltipBackground;
+        BuildContent();
+        InvalidateLayout();
 
-            LvcPoint? location = null;
-            var size = new Size
-            {
-                Width = Width * DeviceDisplay.MainDisplayInfo.Density,
-                Height = Height * DeviceDisplay.MainDisplayInfo.Density
-            };
+        _ = Measure(double.PositiveInfinity, double.PositiveInfinity);
+        var chartSize = chart.ControlSize;
+        _chart = chart;
 
-            if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
-            {
-                location = tooltipPoints.GetCartesianTooltipLocation(
-                    chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height), chart.ControlSize);
-            }
-            if (chart is PieChart<SkiaSharpDrawingContext>)
-            {
-                location = tooltipPoints.GetPieTooltipLocation(
-                    chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height));
-            }
-            if (location is null) return;
+        AbsoluteLayout.SetLayoutBounds(
+            this,
+            new Rectangle(
+                location.Value.X / chartSize.Width,
+                location.Value.Y / chartSize.Height,
+                AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
 
-            IsVisible = true;
-            var template = mobileChart.TooltipTemplate ?? _defaultTemplate;
-            if (TooltipTemplate != template) TooltipTemplate = template;
-            TooltipFontFamily = mobileChart.TooltipFontFamily;
-            TooltipTextColor = mobileChart.TooltipTextBrush;
-            TooltipFontSize = mobileChart.TooltipFontSize;
-            TooltipFontAttributes = mobileChart.TooltipFontAttributes;
-            TooltipBackgroundColor = mobileChart.TooltipBackground;
-            BuildContent();
-            InvalidateLayout();
+        _closeTimer.Stop();
+        _closeTimer.Start();
+    }
 
-            _ = Measure(double.PositiveInfinity, double.PositiveInfinity);
-            var chartSize = chart.ControlSize;
-            _chart = chart;
+    /// <summary>
+    /// Builds the content.
+    /// </summary>
+    /// <returns></returns>
+    protected void BuildContent()
+    {
+        var template = TooltipTemplate ?? _defaultTemplate;
+        if (template.CreateContent() is not View view) return;
 
+        view.BindingContext = new TooltipBindingContext
+        {
+            TooltipBackgroundColor = TooltipBackgroundColor,
+            Points = Points,
+            FontFamily = TooltipFontFamily,
+            FontSize = TooltipFontSize,
+            TextColor = TooltipTextColor,
+            FontAttributes = TooltipFontAttributes
+        };
+
+        Content = view;
+    }
+
+    void IChartTooltip<SkiaSharpDrawingContext>.Hide()
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
             AbsoluteLayout.SetLayoutBounds(
                 this,
                 new Rectangle(
-                    location.Value.X / chartSize.Width,
-                    location.Value.Y / chartSize.Height,
+                    -1, -1,
                     AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
 
-            _closeTimer.Stop();
-            _closeTimer.Start();
-        }
+            _chart?.Update();
+        });
+    }
 
-        /// <summary>
-        /// Builds the content.
-        /// </summary>
-        /// <returns></returns>
-        protected void BuildContent()
-        {
-            var template = TooltipTemplate ?? _defaultTemplate;
-            if (template.CreateContent() is not View view) return;
-
-            view.BindingContext = new TooltipBindingContext
-            {
-                TooltipBackgroundColor = TooltipBackgroundColor,
-                Points = Points,
-                FontFamily = TooltipFontFamily,
-                FontSize = TooltipFontSize,
-                TextColor = TooltipTextColor,
-                FontAttributes = TooltipFontAttributes
-            };
-
-            Content = view;
-        }
-
-        void IChartTooltip<SkiaSharpDrawingContext>.Hide()
-        {
-            MainThread.BeginInvokeOnMainThread(() =>
-            {
-                AbsoluteLayout.SetLayoutBounds(
-                    this,
-                    new Rectangle(
-                        -1, -1,
-                        AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
-
-                _chart?.Update();
-            });
-        }
-
-        private void _closeTimer_Elapsed(object? sender, ElapsedEventArgs e)
-        {
-            ((IChartTooltip<SkiaSharpDrawingContext>)this).Hide();
-            _closeTimer.Stop();
-        }
+    private void _closeTimer_Elapsed(object? sender, ElapsedEventArgs e)
+    {
+        ((IChartTooltip<SkiaSharpDrawingContext>)this).Hide();
+        _closeTimer.Stop();
     }
 }

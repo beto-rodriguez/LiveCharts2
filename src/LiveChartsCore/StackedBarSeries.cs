@@ -25,109 +25,108 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore
+namespace LiveChartsCore;
+
+/// <summary>
+/// Defines the stacked bar series class.
+/// </summary>
+/// <typeparam name="TModel">The type of the model.</typeparam>
+/// <typeparam name="TVisual">The type of the visual.</typeparam>
+/// <typeparam name="TLabel">The type of the label.</typeparam>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
+/// <seealso cref="IStackedBarSeries{TDrawingContext}" />
+public abstract class StackedBarSeries<TModel, TVisual, TLabel, TDrawingContext>
+    : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IStackedBarSeries<TDrawingContext>
+        where TVisual : class, IRoundedRectangleChartPoint<TDrawingContext>, new()
+        where TDrawingContext : DrawingContext
+        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
     /// <summary>
-    /// Defines the stacked bar series class.
+    /// The stack group
     /// </summary>
-    /// <typeparam name="TModel">The type of the model.</typeparam>
-    /// <typeparam name="TVisual">The type of the visual.</typeparam>
-    /// <typeparam name="TLabel">The type of the label.</typeparam>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}" />
-    /// <seealso cref="IStackedBarSeries{TDrawingContext}" />
-    public abstract class StackedBarSeries<TModel, TVisual, TLabel, TDrawingContext>
-        : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel, TDrawingContext>, IStackedBarSeries<TDrawingContext>
-            where TVisual : class, IRoundedRectangleChartPoint<TDrawingContext>, new()
-            where TDrawingContext : DrawingContext
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    protected int stackGroup;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StackedBarSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+    /// </summary>
+    /// <param name="properties">The series properties.</param>
+    protected StackedBarSeries(SeriesProperties properties)
+        : base(properties)
+    { }
+
+    /// <inheritdoc cref="IBarSeries{TDrawingContext}.GroupPadding"/>
+    public double GroupPadding { get; set; } = 10;
+
+    /// <inheritdoc cref="IStackedBarSeries{TDrawingContext}.StackGroup"/>
+    public int StackGroup { get => stackGroup; set => stackGroup = value; }
+
+    /// <inheritdoc cref="IStackedBarSeries{TDrawingContext}.MaxBarWidth"/>
+    public double MaxBarWidth { get; set; } = 50;
+
+    /// <inheritdoc cref="IStackedBarSeries{TDrawingContext}.Rx"/>
+    public double Rx { get; set; }
+
+    /// <inheritdoc cref="IStackedBarSeries{TDrawingContext}.Ry"/>
+    public double Ry { get; set; }
+
+    /// <summary>
+    /// Called when the paint context changed.
+    /// </summary>
+    protected override void OnSeriesMiniatureChanged()
     {
-        /// <summary>
-        /// The stack group
-        /// </summary>
-        protected int stackGroup;
+        var context = new CanvasSchedule<TDrawingContext>();
+        var w = LegendShapeSize;
+        var sh = 0f;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StackedBarSeries{TModel, TVisual, TLabel, TDrawingContext}"/> class.
-        /// </summary>
-        /// <param name="properties">The series properties.</param>
-        protected StackedBarSeries(SeriesProperties properties)
-            : base(properties)
-        { }
-
-        /// <inheritdoc cref="IBarSeries{TDrawingContext}.GroupPadding"/>
-        public double GroupPadding { get; set; } = 10;
-
-        /// <inheritdoc cref="IStackedBarSeries{TDrawingContext}.StackGroup"/>
-        public int StackGroup { get => stackGroup; set => stackGroup = value; }
-
-        /// <inheritdoc cref="IStackedBarSeries{TDrawingContext}.MaxBarWidth"/>
-        public double MaxBarWidth { get; set; } = 50;
-
-        /// <inheritdoc cref="IStackedBarSeries{TDrawingContext}.Rx"/>
-        public double Rx { get; set; }
-
-        /// <inheritdoc cref="IStackedBarSeries{TDrawingContext}.Ry"/>
-        public double Ry { get; set; }
-
-        /// <summary>
-        /// Called when the paint context changed.
-        /// </summary>
-        protected override void OnSeriesMiniatureChanged()
+        if (Stroke is not null)
         {
-            var context = new CanvasSchedule<TDrawingContext>();
-            var w = LegendShapeSize;
-            var sh = 0f;
-
-            if (Stroke is not null)
+            var strokeClone = Stroke.CloneTask();
+            var st = Stroke.StrokeThickness;
+            if (st > MaxSeriesStroke)
             {
-                var strokeClone = Stroke.CloneTask();
-                var st = Stroke.StrokeThickness;
-                if (st > MaxSeriesStroke)
-                {
-                    st = MaxSeriesStroke;
-                    strokeClone.StrokeThickness = MaxSeriesStroke;
-                }
-
-                var visual = new TVisual
-                {
-                    X = st + MaxSeriesStroke - st,
-                    Y = st + MaxSeriesStroke - st,
-                    Height = (float)LegendShapeSize,
-                    Width = (float)LegendShapeSize
-                };
-                sh = st;
-                strokeClone.ZIndex = 1;
-                context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
+                st = MaxSeriesStroke;
+                strokeClone.StrokeThickness = MaxSeriesStroke;
             }
 
-            if (Fill is not null)
+            var visual = new TVisual
             {
-                var fillClone = Fill.CloneTask();
-                var visual = new TVisual
-                {
-                    X = sh + MaxSeriesStroke - sh,
-                    Y = sh + MaxSeriesStroke - sh,
-                    Height = (float)LegendShapeSize,
-                    Width = (float)LegendShapeSize
-                };
-                context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(fillClone, visual));
-            }
-
-            context.Width = w + MaxSeriesStroke * 2;
-            context.Height = w + MaxSeriesStroke * 2;
-
-            CanvasSchedule = context;
+                X = st + MaxSeriesStroke - st,
+                Y = st + MaxSeriesStroke - st,
+                Height = (float)LegendShapeSize,
+                Width = (float)LegendShapeSize
+            };
+            sh = st;
+            strokeClone.ZIndex = 1;
+            context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(strokeClone, visual));
         }
 
-        /// <summary>
-        /// Gets the stack group.
-        /// </summary>
-        /// <returns></returns>
-        /// <inheritdoc />
-        public override int GetStackGroup()
+        if (Fill is not null)
         {
-            return stackGroup;
+            var fillClone = Fill.CloneTask();
+            var visual = new TVisual
+            {
+                X = sh + MaxSeriesStroke - sh,
+                Y = sh + MaxSeriesStroke - sh,
+                Height = (float)LegendShapeSize,
+                Width = (float)LegendShapeSize
+            };
+            context.PaintSchedules.Add(new PaintSchedule<TDrawingContext>(fillClone, visual));
         }
+
+        context.Width = w + MaxSeriesStroke * 2;
+        context.Height = w + MaxSeriesStroke * 2;
+
+        CanvasSchedule = context;
+    }
+
+    /// <summary>
+    /// Gets the stack group.
+    /// </summary>
+    /// <returns></returns>
+    /// <inheritdoc />
+    public override int GetStackGroup()
+    {
+        return stackGroup;
     }
 }

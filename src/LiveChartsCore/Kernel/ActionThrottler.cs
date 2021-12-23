@@ -23,82 +23,81 @@
 using System;
 using System.Threading.Tasks;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel;
+
+/// <summary>
+/// An object that is able to throttle an action.
+/// </summary>
+public class ActionThrottler
 {
+    private readonly object _sync = new();
+    private readonly Func<Task> _action;
+    private bool _isWaiting = false;
+
     /// <summary>
-    /// An object that is able to throttle an action.
+    /// Initializes a new instance of the <see cref="ActionThrottler"/> class.
     /// </summary>
-    public class ActionThrottler
+    /// <param name="targetAction">The target action to throttle.</param>
+    /// <param name="time">The throttling time.</param>
+    public ActionThrottler(Func<Task> targetAction, TimeSpan time)
     {
-        private readonly object _sync = new();
-        private readonly Func<Task> _action;
-        private bool _isWaiting = false;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ActionThrottler"/> class.
-        /// </summary>
-        /// <param name="targetAction">The target action to throttle.</param>
-        /// <param name="time">The throttling time.</param>
-        public ActionThrottler(Func<Task> targetAction, TimeSpan time)
-        {
-            _action = targetAction;
-            ThrottlerTimeSpan = time;
-        }
+        _action = targetAction;
+        ThrottlerTimeSpan = time;
+    }
 
 #if DEBUG
-        /// <summary>
-        /// Gets the calls.
-        /// </summary>
-        /// <value>
-        /// The calls.
-        /// </value>
-        public int Calls { get; private set; } = 0;
+    /// <summary>
+    /// Gets the calls.
+    /// </summary>
+    /// <value>
+    /// The calls.
+    /// </value>
+    public int Calls { get; private set; } = 0;
 #endif
 
-        /// <summary>
-        /// Gets or sets the throttler time span.
-        /// </summary>
-        /// <value>
-        /// The throttler time span.
-        /// </value>
-        public TimeSpan ThrottlerTimeSpan { get; set; }
+    /// <summary>
+    /// Gets or sets the throttler time span.
+    /// </summary>
+    /// <value>
+    /// The throttler time span.
+    /// </value>
+    public TimeSpan ThrottlerTimeSpan { get; set; }
 
-        /// <summary>
-        /// Schedules a call to the target action.
-        /// </summary>
-        /// <returns></returns>
-        public async void Call()
+    /// <summary>
+    /// Schedules a call to the target action.
+    /// </summary>
+    /// <returns></returns>
+    public async void Call()
+    {
+        lock (_sync)
         {
-            lock (_sync)
-            {
 #if DEBUG
-                Calls++;
+            Calls++;
 #endif
 
-                if (_isWaiting) return;
-                _isWaiting = true;
-            }
-
-            await Task.Delay(ThrottlerTimeSpan);
-
-            // notice it is important that the unlock comes before invoking the Action
-            // this way we can call the throttler again from the Action
-            // otherwise calling the throttler from the Action will be ignored always.
-            lock (_sync)
-            {
-                _isWaiting = false;
-            }
-
-            await _action();
+            if (_isWaiting) return;
+            _isWaiting = true;
         }
 
-        /// <summary>
-        /// Forces the call to the target action, this call is not throttled.
-        /// </summary>
-        /// <returns></returns>
-        public void ForceCall()
+        await Task.Delay(ThrottlerTimeSpan);
+
+        // notice it is important that the unlock comes before invoking the Action
+        // this way we can call the throttler again from the Action
+        // otherwise calling the throttler from the Action will be ignored always.
+        lock (_sync)
         {
-            _action().GetAwaiter().GetResult();
+            _isWaiting = false;
         }
+
+        await _action();
+    }
+
+    /// <summary>
+    /// Forces the call to the target action, this call is not throttled.
+    /// </summary>
+    /// <returns></returns>
+    public void ForceCall()
+    {
+        _action().GetAwaiter().GetResult();
     }
 }

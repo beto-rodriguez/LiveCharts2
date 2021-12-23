@@ -20,15 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
-{
-    /// <summary>
-    /// Defines a dough nut visual chart point.
-    /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IDoughnutGeometry{TDrawingContext}" />
-    /// <seealso cref="IVisualChartPoint{TDrawingContext}" />
-    public interface IDoughnutVisualChartPoint<TDrawingContext> : IDoughnutGeometry<TDrawingContext>, IVisualChartPoint<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    { }
-}
+namespace LiveChartsCore.Drawing;
+
+/// <summary>
+/// Defines a dough nut visual chart point.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="IDoughnutGeometry{TDrawingContext}" />
+/// <seealso cref="IVisualChartPoint{TDrawingContext}" />
+public interface IDoughnutVisualChartPoint<TDrawingContext> : IDoughnutGeometry<TDrawingContext>, IVisualChartPoint<TDrawingContext>
+    where TDrawingContext : DrawingContext
+{ }

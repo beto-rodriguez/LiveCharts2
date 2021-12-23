@@ -1,26 +1,25 @@
 ﻿using Xamarin.Forms;
 
-namespace XamarinSample
+namespace XamarinSample;
+
+public partial class App : Application
 {
-    public partial class App : Application
+    public App()
     {
-        public App()
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-            MainPage = new AppShell();
-        }
+        MainPage = new AppShell();
+    }
 
-        protected override void OnStart()
-        {
-        }
+    protected override void OnStart()
+    {
+    }
 
-        protected override void OnSleep()
-        {
-        }
+    protected override void OnSleep()
+    {
+    }
 
-        protected override void OnResume()
-        {
-        }
+    protected override void OnResume()
+    {
     }
 }

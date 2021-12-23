@@ -26,50 +26,49 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Xamarin.Forms;
 
-namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
+namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms;
+
+/// <summary>
+/// A converter value helper
+/// </summary>
+public class PaintTasksValueConverter : IValueConverter
 {
     /// <summary>
-    /// A converter value helper
+    /// Implement this method to convert <paramref name="value" /> to <paramref name="targetType" /> by using <paramref name="parameter" /> and <paramref name="culture" />.
     /// </summary>
-    public class PaintTasksValueConverter : IValueConverter
+    /// <param name="value">The value to convert.</param>
+    /// <param name="targetType">The type to which to convert the value.</param>
+    /// <param name="parameter">A parameter to use during the conversion.</param>
+    /// <param name="culture">The culture to use during the conversion.</param>
+    /// <returns>
+    /// To be added.
+    /// </returns>
+    /// <remarks>
+    /// To be added.
+    /// </remarks>
+    public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        /// <summary>
-        /// Implement this method to convert <paramref name="value" /> to <paramref name="targetType" /> by using <paramref name="parameter" /> and <paramref name="culture" />.
-        /// </summary>
-        /// <param name="value">The value to convert.</param>
-        /// <param name="targetType">The type to which to convert the value.</param>
-        /// <param name="parameter">A parameter to use during the conversion.</param>
-        /// <param name="culture">The culture to use during the conversion.</param>
-        /// <returns>
-        /// To be added.
-        /// </returns>
-        /// <remarks>
-        /// To be added.
-        /// </remarks>
-        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return value is IChartSeries<SkiaSharpDrawingContext> v
-                ? v.CanvasSchedule.PaintSchedules
-                : null;
-        }
+        return value is IChartSeries<SkiaSharpDrawingContext> v
+            ? v.CanvasSchedule.PaintSchedules
+            : null;
+    }
 
-        /// <summary>
-        /// Implement this method to convert <paramref name="value" /> back from <paramref name="targetType" /> by using <paramref name="parameter" /> and <paramref name="culture" />.
-        /// </summary>
-        /// <param name="value">The value to convert.</param>
-        /// <param name="targetType">The type to which to convert the value.</param>
-        /// <param name="parameter">A parameter to use during the conversion.</param>
-        /// <param name="culture">The culture to use during the conversion.</param>
-        /// <returns>
-        /// To be added.
-        /// </returns>
-        /// <exception cref="NotImplementedException"></exception>
-        /// <remarks>
-        /// To be added.
-        /// </remarks>
-        public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+    /// <summary>
+    /// Implement this method to convert <paramref name="value" /> back from <paramref name="targetType" /> by using <paramref name="parameter" /> and <paramref name="culture" />.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <param name="targetType">The type to which to convert the value.</param>
+    /// <param name="parameter">A parameter to use during the conversion.</param>
+    /// <param name="culture">The culture to use during the conversion.</param>
+    /// <returns>
+    /// To be added.
+    /// </returns>
+    /// <exception cref="NotImplementedException"></exception>
+    /// <remarks>
+    /// To be added.
+    /// </remarks>
+    public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

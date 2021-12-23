@@ -22,62 +22,61 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Kernel
+namespace LiveChartsCore.Kernel;
+
+/// <summary>
+/// Defines the stroke and ill drawable class.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+public class StrokeAndFillDrawable<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines the stroke and ill drawable class.
+    /// Initializes a new instance of the <see cref="StrokeAndFillDrawable{TDrawingContext}"/> class.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public class StrokeAndFillDrawable<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    /// <param name="stroke">The stroke.</param>
+    /// <param name="fill">The fill.</param>
+    /// <param name="isHoverState">is hover state?.</param>
+    public StrokeAndFillDrawable(IPaint<TDrawingContext>? stroke, IPaint<TDrawingContext>? fill, bool isHoverState = false)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StrokeAndFillDrawable{TDrawingContext}"/> class.
-        /// </summary>
-        /// <param name="stroke">The stroke.</param>
-        /// <param name="fill">The fill.</param>
-        /// <param name="isHoverState">is hover state?.</param>
-        public StrokeAndFillDrawable(IPaint<TDrawingContext>? stroke, IPaint<TDrawingContext>? fill, bool isHoverState = false)
+        Stroke = stroke;
+        if (stroke is not null)
         {
-            Stroke = stroke;
-            if (stroke is not null)
-            {
-                stroke.IsStroke = true;
-                stroke.IsFill = false;
-            }
-
-            Fill = fill;
-            if (fill is not null)
-            {
-                fill.IsStroke = false;
-                fill.IsFill = true;
-                fill.StrokeThickness = 0;
-            }
-            IsHoverState = isHoverState;
+            stroke.IsStroke = true;
+            stroke.IsFill = false;
         }
 
-        /// <summary>
-        /// Gets the stroke.
-        /// </summary>
-        /// <value>
-        /// The stroke.
-        /// </value>
-        public IPaint<TDrawingContext>? Stroke { get; }
-
-        /// <summary>
-        /// Gets the fill.
-        /// </summary>
-        /// <value>
-        /// The fill.
-        /// </value>
-        public IPaint<TDrawingContext>? Fill { get; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is hover state.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is hover state; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsHoverState { get; set; }
+        Fill = fill;
+        if (fill is not null)
+        {
+            fill.IsStroke = false;
+            fill.IsFill = true;
+            fill.StrokeThickness = 0;
+        }
+        IsHoverState = isHoverState;
     }
+
+    /// <summary>
+    /// Gets the stroke.
+    /// </summary>
+    /// <value>
+    /// The stroke.
+    /// </value>
+    public IPaint<TDrawingContext>? Stroke { get; }
+
+    /// <summary>
+    /// Gets the fill.
+    /// </summary>
+    /// <value>
+    /// The fill.
+    /// </value>
+    public IPaint<TDrawingContext>? Fill { get; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this instance is hover state.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if this instance is hover state; otherwise, <c>false</c>.
+    /// </value>
+    public bool IsHoverState { get; set; }
 }

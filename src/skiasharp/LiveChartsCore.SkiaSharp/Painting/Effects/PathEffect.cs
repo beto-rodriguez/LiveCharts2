@@ -24,45 +24,44 @@ using System;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Painting.Effects
+namespace LiveChartsCore.SkiaSharpView.Painting.Effects;
+
+/// <summary>
+/// A wrapper object for skia sharp path effects.
+/// </summary>
+/// <seealso cref="IDisposable" />
+public abstract class PathEffect : IDisposable
 {
     /// <summary>
-    /// A wrapper object for skia sharp path effects.
+    /// Gets or sets the sk path effect.
     /// </summary>
-    /// <seealso cref="IDisposable" />
-    public abstract class PathEffect : IDisposable
+    /// <value>
+    /// The sk path effect.
+    /// </value>
+    public SKPathEffect? SKPathEffect { get; set; }
+
+    /// <summary>
+    /// Creates a new object that is a copy of the current instance.
+    /// </summary>
+    /// <returns>
+    /// A new object that is a copy of this instance.
+    /// </returns>
+    public abstract PathEffect Clone();
+
+    /// <summary>
+    /// Creates the path effect.
+    /// </summary>
+    /// <param name="drawingContext">The drawing context.</param>
+    public abstract void CreateEffect(SkiaSharpDrawingContext drawingContext);
+
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
+    /// <exception cref="NotImplementedException"></exception>
+    public virtual void Dispose()
     {
-        /// <summary>
-        /// Gets or sets the sk path effect.
-        /// </summary>
-        /// <value>
-        /// The sk path effect.
-        /// </value>
-        public SKPathEffect? SKPathEffect { get; set; }
-
-        /// <summary>
-        /// Creates a new object that is a copy of the current instance.
-        /// </summary>
-        /// <returns>
-        /// A new object that is a copy of this instance.
-        /// </returns>
-        public abstract PathEffect Clone();
-
-        /// <summary>
-        /// Creates the path effect.
-        /// </summary>
-        /// <param name="drawingContext">The drawing context.</param>
-        public abstract void CreateEffect(SkiaSharpDrawingContext drawingContext);
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        /// <exception cref="NotImplementedException"></exception>
-        public virtual void Dispose()
-        {
-            if (SKPathEffect is null) return;
-            SKPathEffect.Dispose();
-            SKPathEffect = null;
-        }
+        if (SKPathEffect is null) return;
+        SKPathEffect.Dispose();
+        SKPathEffect = null;
     }
 }

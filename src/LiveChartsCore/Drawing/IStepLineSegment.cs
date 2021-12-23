@@ -20,15 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Drawing;
+
+/// <summary>
+/// Defiens a stepline segment.
+/// </summary>
+/// <typeparam name="TPathContext">The type of the path context.</typeparam>
+/// <seealso cref="IAnimatableStepLineSegment" />
+/// <seealso cref="IPathCommand{TPathContext}" />
+public interface IStepLineSegment<TPathContext> : IAnimatableStepLineSegment, IPathCommand<TPathContext>
 {
-    /// <summary>
-    /// Defiens a stepline segment.
-    /// </summary>
-    /// <typeparam name="TPathContext">The type of the path context.</typeparam>
-    /// <seealso cref="IAnimatableStepLineSegment" />
-    /// <seealso cref="IPathCommand{TPathContext}" />
-    public interface IStepLineSegment<TPathContext> : IAnimatableStepLineSegment, IPathCommand<TPathContext>
-    {
-    }
 }

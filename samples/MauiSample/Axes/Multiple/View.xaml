@@ -8,22 +8,13 @@
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-	<ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
-            <lvc:CartesianChart
-                Series="{Binding Series}"
-                YAxes="{Binding YAxes}"
-                LegendPosition="Bottom"
-                LegendFontFamily="Courier New"
-                LegendFontSize="25"
-                LegendTextBrush="#505050"
-                LegendBackground="#fafafa">
-            </lvc:CartesianChart>
-
-        </Grid>
-    </ContentPage.Content>
+    <lvc:CartesianChart
+        Series="{Binding Series}"
+        YAxes="{Binding YAxes}"
+        LegendPosition="Bottom"
+        LegendFontFamily="Courier New"
+        LegendFontSize="25"
+        LegendTextBrush="#505050"
+        LegendBackground="#fafafa">
+    </lvc:CartesianChart>
 </ContentPage>

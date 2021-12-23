@@ -22,42 +22,41 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Kernel.Helpers
+namespace LiveChartsCore.Kernel.Helpers;
+
+/// <summary>
+/// Defines an polar axis visual separator.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+public class RadialAxisVisualSeparator<TDrawingContext> : IVisualSeparator<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines an polar axis visual separator.
+    /// Gets or sets the value.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public class RadialAxisVisualSeparator<TDrawingContext> : IVisualSeparator<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
-        /// <value>
-        /// The value.
-        /// </value>
-        public double Value { get; set; }
+    /// <value>
+    /// The value.
+    /// </value>
+    public double Value { get; set; }
 
-        /// <summary>
-        /// Gets or sets the text.
-        /// </summary>
-        /// <value>
-        /// The text.
-        /// </value>
-        public ILabelGeometry<TDrawingContext>? Label { get; set; }
+    /// <summary>
+    /// Gets or sets the text.
+    /// </summary>
+    /// <value>
+    /// The text.
+    /// </value>
+    public ILabelGeometry<TDrawingContext>? Label { get; set; }
 
-        /// <summary>
-        /// Gets or sets the circle.
-        /// </summary>
-        /// <value>
-        /// The line.
-        /// </value>
-        public ISizedGeometry<TDrawingContext>? Circle { get; set; }
+    /// <summary>
+    /// Gets or sets the circle.
+    /// </summary>
+    /// <value>
+    /// The line.
+    /// </value>
+    public ISizedGeometry<TDrawingContext>? Circle { get; set; }
 
-        /// <summary>
-        /// Gets the geometry.
-        /// </summary>
-        public IGeometry<TDrawingContext>? Geometry => Circle;
-    }
+    /// <summary>
+    /// Gets the geometry.
+    /// </summary>
+    public IGeometry<TDrawingContext>? Geometry => Circle;
 }

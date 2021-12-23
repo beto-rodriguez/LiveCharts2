@@ -23,36 +23,35 @@
 using LiveChartsCore.Drawing;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing
+namespace LiveChartsCore.SkiaSharpView.Drawing;
+
+/// <summary>
+/// Defines an avalonia-skiasharp drawing context.
+/// </summary>
+/// <seealso cref="SkiaSharpDrawingContext" />
+public class AvaloniaDrawingContext : SkiaSharpDrawingContext
 {
     /// <summary>
-    /// Defines an avalonia-skiasharp drawing context.
+    /// Initializes a new instance of the <see cref="AvaloniaDrawingContext"/> class.
     /// </summary>
-    /// <seealso cref="SkiaSharpDrawingContext" />
-    public class AvaloniaDrawingContext : SkiaSharpDrawingContext
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AvaloniaDrawingContext"/> class.
-        /// </summary>
-        /// <param name="motionCanvas">The motion canvas.</param>
-        /// <param name="info">The information.</param>
-        /// <param name="surface">The surface.</param>
-        /// <param name="canvas">The canvas.</param>
-        public AvaloniaDrawingContext(MotionCanvas<SkiaSharpDrawingContext> motionCanvas, SKImageInfo info, SKSurface surface, SKCanvas canvas)
-            : base(motionCanvas, info, surface, canvas, true)
-        { }
+    /// <param name="motionCanvas">The motion canvas.</param>
+    /// <param name="info">The information.</param>
+    /// <param name="surface">The surface.</param>
+    /// <param name="canvas">The canvas.</param>
+    public AvaloniaDrawingContext(MotionCanvas<SkiaSharpDrawingContext> motionCanvas, SKImageInfo info, SKSurface surface, SKCanvas canvas)
+        : base(motionCanvas, info, surface, canvas, true)
+    { }
 
-        /// <summary>
-        /// Gets or sets the color of the back.
-        /// </summary>
-        /// <value>
-        /// The color of the back.
-        /// </value>
-        public SKColor BackColor { get; set; } = new SKColor(255, 255, 255, 255);
+    /// <summary>
+    /// Gets or sets the color of the back.
+    /// </summary>
+    /// <value>
+    /// The color of the back.
+    /// </value>
+    public SKColor BackColor { get; set; } = new(255, 255, 255, 255);
 
-        /// <summary>
-        /// Clears the canvas.
-        /// </summary>
-        public override void ClearCanvas() { }
-    }
+    /// <summary>
+    /// Clears the canvas.
+    /// </summary>
+    public override void ClearCanvas() { }
 }

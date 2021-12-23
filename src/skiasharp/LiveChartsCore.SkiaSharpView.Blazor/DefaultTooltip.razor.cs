@@ -27,102 +27,101 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
-namespace LiveChartsCore.SkiaSharpView.Blazor
+namespace LiveChartsCore.SkiaSharpView.Blazor;
+
+/// <inheritdoc cref="IChartTooltip{TDrawingContext}"/>
+public partial class DefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IDisposable
 {
-    /// <inheritdoc cref="IChartTooltip{TDrawingContext}"/>
-    public partial class DefaultTooltip : IChartTooltip<SkiaSharpDrawingContext>, IDisposable
+    [Inject]
+    private IJSRuntime JS { get; set; } = null!;
+
+    private DomJsInterop? _dom;
+    private ElementReference _wrapper;
+    private IBlazorChart? _chart = null;
+
+    /// <summary>
+    /// Called when the control renders.
+    /// </summary>
+    /// <param name="firstRender"></param>
+    protected override void OnAfterRender(bool firstRender)
     {
-        [Inject]
-        private IJSRuntime JS { get; set; } = null!;
+        base.OnAfterRender(firstRender);
 
-        private DomJsInterop? _dom;
-        private ElementReference _wrapper;
-        private IBlazorChart? _chart = null;
+        if (_dom is null) _dom = new DomJsInterop(JS);
+    }
 
-        /// <summary>
-        /// Called when the control renders.
-        /// </summary>
-        /// <param name="firstRender"></param>
-        protected override void OnAfterRender(bool firstRender)
-        {
-            base.OnAfterRender(firstRender);
+    /// <summary>
+    /// Gets ir sets the class.
+    /// </summary>
+    [Parameter]
+    public string Class { get; set; } = "closed";
 
-            if (_dom is null) _dom = new DomJsInterop(JS);
-        }
+    /// <summary>
+    /// Gets or sets the tooltip legend.
+    /// </summary>
+    [Parameter]
+    public RenderFragment<ChartPoint[]>? TooltipTemplate { get; set; }
 
-        /// <summary>
-        /// Gets ir sets the class.
-        /// </summary>
-        [Parameter]
-        public string Class { get; set; } = "closed";
+    /// <summary>
+    /// Gets or sets the points.
+    /// </summary>
+    public ChartPoint[] Points { get; set; } = Array.Empty<ChartPoint>();
 
-        /// <summary>
-        /// Gets or sets the tooltip legend.
-        /// </summary>
-        [Parameter]
-        public RenderFragment<ChartPoint[]>? TooltipTemplate { get; set; }
+    async void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+    {
+        if (_dom is null) return;
 
-        /// <summary>
-        /// Gets or sets the points.
-        /// </summary>
-        public ChartPoint[] Points { get; set; } = Array.Empty<ChartPoint>();
+        var blazorChart = (IBlazorChart)chart.View;
+        _chart = blazorChart;
 
-        async void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
-        {
-            if (_dom is null) return;
+        _chart.TooltipClass = "";
+        Points = tooltipPoints.ToArray();
 
-            var blazorChart = (IBlazorChart)chart.View;
-            _chart = blazorChart;
+        //TooltipBackground = avaloniaChart.TooltipBackground;
+        //TooltipFontFamily = avaloniaChart.TooltipFontFamily;
+        //TooltipFontSize = avaloniaChart.TooltipFontSize;
+        //TooltipFontStyle = avaloniaChart.TooltipFontStyle;
+        //TooltipFontWeight = avaloniaChart.TooltipFontWeight;
+        //TooltipTextBrush = avaloniaChart.TooltipTextBrush;
 
-            _chart.TooltipClass = "";
-            Points = tooltipPoints.ToArray();
+        await InvokeAsync(StateHasChanged);
+        var clientRect = await _dom.GetBoundingClientRect(_wrapper);
+        var tooltipSize = new LvcSize((float)clientRect.Width, (float)clientRect.Height);
 
-            //TooltipBackground = avaloniaChart.TooltipBackground;
-            //TooltipFontFamily = avaloniaChart.TooltipFontFamily;
-            //TooltipFontSize = avaloniaChart.TooltipFontSize;
-            //TooltipFontStyle = avaloniaChart.TooltipFontStyle;
-            //TooltipFontWeight = avaloniaChart.TooltipFontWeight;
-            //TooltipTextBrush = avaloniaChart.TooltipTextBrush;
+        LvcPoint? location = null;
+        if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
+            location = tooltipPoints.GetCartesianTooltipLocation(chart.TooltipPosition, tooltipSize, chart.ControlSize);
+        if (chart is PieChart<SkiaSharpDrawingContext>)
+            location = tooltipPoints.GetPieTooltipLocation(chart.TooltipPosition, tooltipSize);
 
-            await InvokeAsync(StateHasChanged);
-            var clientRect = await _dom.GetBoundingClientRect(_wrapper);
-            var tooltipSize = new LvcSize((float)clientRect.Width, (float)clientRect.Height);
+        if (location is null) throw new Exception("location not found");
 
-            LvcPoint? location = null;
-            if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
-                location = tooltipPoints.GetCartesianTooltipLocation(chart.TooltipPosition, tooltipSize, chart.ControlSize);
-            if (chart is PieChart<SkiaSharpDrawingContext>)
-                location = tooltipPoints.GetPieTooltipLocation(chart.TooltipPosition, tooltipSize);
+        double x = location.Value.X;
+        double y = location.Value.Y;
+        var s = chart.ControlSize;
+        var w = s.Width;
+        var h = s.Height;
+        if (location.Value.X + tooltipSize.Width > w) x = w - tooltipSize.Width;
+        if (location.Value.X < 0) x = 0;
+        if (location.Value.Y < 0) y = 0;
+        if (location.Value.Y + tooltipSize.Height > h) x = h - tooltipSize.Height;
 
-            if (location is null) throw new Exception("location not found");
+        await _dom.SetPosition(_wrapper, x, y, blazorChart.CanvasContainerElement);
+    }
 
-            double x = location.Value.X;
-            double y = location.Value.Y;
-            var s = chart.ControlSize;
-            var w = s.Width;
-            var h = s.Height;
-            if (location.Value.X + tooltipSize.Width > w) x = w - tooltipSize.Width;
-            if (location.Value.X < 0) x = 0;
-            if (location.Value.Y < 0) y = 0;
-            if (location.Value.Y + tooltipSize.Height > h) x = h - tooltipSize.Height;
+    void IChartTooltip<SkiaSharpDrawingContext>.Hide()
+    {
+        if (_chart is null) return;
 
-            await _dom.SetPosition(_wrapper, x, y, blazorChart.CanvasContainerElement);
-        }
+        // ToDo:
+        // the LiveCharts API should inject the chart to this method.
 
-        void IChartTooltip<SkiaSharpDrawingContext>.Hide()
-        {
-            if (_chart is null) return;
+        _chart.TooltipClass = "closed";
+    }
 
-            // ToDo:
-            // the LiveCharts API should inject the chart to this method.
-
-            _chart.TooltipClass = "closed";
-        }
-
-        async void IDisposable.Dispose()
-        {
-            if (_dom is null) return;
-            await ((IAsyncDisposable)_dom).DisposeAsync();
-        }
+    async void IDisposable.Dispose()
+    {
+        if (_dom is null) return;
+        await ((IAsyncDisposable)_dom).DisposeAsync();
     }
 }

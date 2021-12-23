@@ -32,308 +32,307 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.WPF
+namespace LiveChartsCore.SkiaSharpView.WPF;
+
+/// <inheritdoc cref="ICartesianChartView{TDrawingContext}" />
+public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext>
 {
-    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}" />
-    public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext>
+    #region fields
+
+    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+    private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
+    private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
+    private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+
+    #endregion
+
+    static CartesianChart()
     {
-        #region fields
+        DefaultStyleKeyProperty.OverrideMetadata(typeof(CartesianChart), new FrameworkPropertyMetadata(typeof(CartesianChart)));
+    }
 
-        private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-        private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
-        private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
-        private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CartesianChart"/> class.
+    /// </summary>
+    public CartesianChart()
+    {
+        _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
+            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-        #endregion
-
-        static CartesianChart()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(CartesianChart), new FrameworkPropertyMetadata(typeof(CartesianChart)));
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CartesianChart"/> class.
-        /// </summary>
-        public CartesianChart()
-        {
-            _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
-                OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-
-            SetCurrentValue(XAxesProperty, new ObservableCollection<ICartesianAxis>()
+        SetCurrentValue(XAxesProperty, new ObservableCollection<ICartesianAxis>()
             {
                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
             });
-            SetCurrentValue(YAxesProperty, new ObservableCollection<ICartesianAxis>()
+        SetCurrentValue(YAxesProperty, new ObservableCollection<ICartesianAxis>()
             {
                 LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
             });
-            SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
-            SetCurrentValue(SectionsProperty, new ObservableCollection<Section<SkiaSharpDrawingContext>>());
+        SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
+        SetCurrentValue(SectionsProperty, new ObservableCollection<Section<SkiaSharpDrawingContext>>());
 
-            MouseWheel += OnMouseWheel;
-            MouseDown += OnMouseDown;
-            MouseUp += OnMouseUp;
-        }
+        MouseWheel += OnMouseWheel;
+        MouseDown += OnMouseDown;
+        MouseUp += OnMouseUp;
+    }
 
-        #region dependency properties
+    #region dependency properties
 
-        /// <summary>
-        /// The series property
-        /// </summary>
-        public static readonly DependencyProperty SeriesProperty =
-            DependencyProperty.Register(
-                nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new PropertyMetadata(null,
-                    (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                    {
-                        var chart = (CartesianChart)o;
-                        var seriesObserver = chart._seriesObserver;
-                        seriesObserver.Dispose((IEnumerable<ISeries>)args.OldValue);
-                        seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
-                        if (chart.core is null) return;
-                        chart.core.Update();
-                    },
-                    (DependencyObject o, object value) =>
-                    {
-                        return value is IEnumerable<ISeries> ? value : new ObservableCollection<ISeries>();
-                    }));
+    /// <summary>
+    /// The series property
+    /// </summary>
+    public static readonly DependencyProperty SeriesProperty =
+        DependencyProperty.Register(
+            nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new PropertyMetadata(null,
+                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                {
+                    var chart = (CartesianChart)o;
+                    var seriesObserver = chart._seriesObserver;
+                    seriesObserver.Dispose((IEnumerable<ISeries>)args.OldValue);
+                    seriesObserver.Initialize((IEnumerable<ISeries>)args.NewValue);
+                    if (chart.core is null) return;
+                    chart.core.Update();
+                },
+                (DependencyObject o, object value) =>
+                {
+                    return value is IEnumerable<ISeries> ? value : new ObservableCollection<ISeries>();
+                }));
 
-        /// <summary>
-        /// The x axes property
-        /// </summary>
-        public static readonly DependencyProperty XAxesProperty =
-            DependencyProperty.Register(
-                nameof(XAxes), typeof(IEnumerable<ICartesianAxis>), typeof(CartesianChart), new PropertyMetadata(null,
-                    (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                    {
-                        var chart = (CartesianChart)o;
-                        var observer = chart._xObserver;
-                        observer.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
-                        observer.Initialize((IEnumerable<ICartesianAxis>)args.NewValue);
-                        if (chart.core is null) return;
-                        chart.core.Update();
-                    },
-                    (DependencyObject o, object value) =>
-                    {
-                        return value is IEnumerable<ICartesianAxis>
-                            ? value
-                            : new List<ICartesianAxis>()
-                            {
-                                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
-                            };
-                    }));
-
-        /// <summary>
-        /// The y axes property
-        /// </summary>
-        public static readonly DependencyProperty YAxesProperty =
-            DependencyProperty.Register(
-                nameof(YAxes), typeof(IEnumerable<ICartesianAxis>), typeof(CartesianChart), new PropertyMetadata(null,
-                    (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                    {
-                        var chart = (CartesianChart)o;
-                        var observer = chart._yObserver;
-                        observer.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
-                        observer.Initialize((IEnumerable<ICartesianAxis>)args.NewValue);
-                        if (chart.core is null) return;
-                        chart.core.Update();
-                    },
-                    (DependencyObject o, object value) =>
-                    {
-                        return value is IEnumerable<ICartesianAxis>
-                            ? value
-                            : new List<ICartesianAxis>()
-                            {
-                                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
-                            };
-                    }));
-
-        /// <summary>
-        /// The sections property
-        /// </summary>
-        public static readonly DependencyProperty SectionsProperty =
-            DependencyProperty.Register(
-                nameof(Sections), typeof(IEnumerable<Section<SkiaSharpDrawingContext>>), typeof(CartesianChart), new PropertyMetadata(null,
-                    (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                    {
-                        var chart = (CartesianChart)o;
-                        var observer = chart._sectionsObserver;
-                        observer.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)args.OldValue);
-                        observer.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)args.NewValue);
-                        if (chart.core is null) return;
-                        chart.core.Update();
-                    },
-                    (DependencyObject o, object value) =>
-                    {
-                        return value is IEnumerable<Section<SkiaSharpDrawingContext>>
+    /// <summary>
+    /// The x axes property
+    /// </summary>
+    public static readonly DependencyProperty XAxesProperty =
+        DependencyProperty.Register(
+            nameof(XAxes), typeof(IEnumerable<ICartesianAxis>), typeof(CartesianChart), new PropertyMetadata(null,
+                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                {
+                    var chart = (CartesianChart)o;
+                    var observer = chart._xObserver;
+                    observer.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
+                    observer.Initialize((IEnumerable<ICartesianAxis>)args.NewValue);
+                    if (chart.core is null) return;
+                    chart.core.Update();
+                },
+                (DependencyObject o, object value) =>
+                {
+                    return value is IEnumerable<ICartesianAxis>
                         ? value
-                        : new List<Section<SkiaSharpDrawingContext>>();
-                    }));
+                        : new List<ICartesianAxis>()
+                        {
+                                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                        };
+                }));
 
-        /// <summary>
-        /// The zoom mode property
-        /// </summary>
-        public static readonly DependencyProperty DrawMarginFrameProperty =
-            DependencyProperty.Register(
-                nameof(DrawMarginFrame), typeof(DrawMarginFrame<SkiaSharpDrawingContext>), typeof(CartesianChart), new PropertyMetadata(null));
+    /// <summary>
+    /// The y axes property
+    /// </summary>
+    public static readonly DependencyProperty YAxesProperty =
+        DependencyProperty.Register(
+            nameof(YAxes), typeof(IEnumerable<ICartesianAxis>), typeof(CartesianChart), new PropertyMetadata(null,
+                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                {
+                    var chart = (CartesianChart)o;
+                    var observer = chart._yObserver;
+                    observer.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
+                    observer.Initialize((IEnumerable<ICartesianAxis>)args.NewValue);
+                    if (chart.core is null) return;
+                    chart.core.Update();
+                },
+                (DependencyObject o, object value) =>
+                {
+                    return value is IEnumerable<ICartesianAxis>
+                        ? value
+                        : new List<ICartesianAxis>()
+                        {
+                                LiveCharts.CurrentSettings.GetProvider<SkiaSharpDrawingContext>().GetDefaultCartesianAxis()
+                        };
+                }));
 
-        /// <summary>
-        /// The zoom mode property
-        /// </summary>
-        public static readonly DependencyProperty ZoomModeProperty =
-            DependencyProperty.Register(
-                nameof(ZoomMode), typeof(ZoomAndPanMode), typeof(CartesianChart),
-                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultZoomMode));
+    /// <summary>
+    /// The sections property
+    /// </summary>
+    public static readonly DependencyProperty SectionsProperty =
+        DependencyProperty.Register(
+            nameof(Sections), typeof(IEnumerable<Section<SkiaSharpDrawingContext>>), typeof(CartesianChart), new PropertyMetadata(null,
+                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                {
+                    var chart = (CartesianChart)o;
+                    var observer = chart._sectionsObserver;
+                    observer.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)args.OldValue);
+                    observer.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)args.NewValue);
+                    if (chart.core is null) return;
+                    chart.core.Update();
+                },
+                (DependencyObject o, object value) =>
+                {
+                    return value is IEnumerable<Section<SkiaSharpDrawingContext>>
+                    ? value
+                    : new List<Section<SkiaSharpDrawingContext>>();
+                }));
 
-        /// <summary>
-        /// The zooming speed property
-        /// </summary>
-        public static readonly DependencyProperty ZoomingSpeedProperty =
-            DependencyProperty.Register(
-                nameof(ZoomingSpeed), typeof(double), typeof(CartesianChart),
-                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultZoomSpeed));
+    /// <summary>
+    /// The zoom mode property
+    /// </summary>
+    public static readonly DependencyProperty DrawMarginFrameProperty =
+        DependencyProperty.Register(
+            nameof(DrawMarginFrame), typeof(DrawMarginFrame<SkiaSharpDrawingContext>), typeof(CartesianChart), new PropertyMetadata(null));
 
-        /// <summary>
-        /// The tool tip finding strategy property
-        /// </summary>
-        public static readonly DependencyProperty TooltipFindingStrategyProperty =
-            DependencyProperty.Register(
-                nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(Chart),
-                new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, OnDependencyPropertyChanged));
+    /// <summary>
+    /// The zoom mode property
+    /// </summary>
+    public static readonly DependencyProperty ZoomModeProperty =
+        DependencyProperty.Register(
+            nameof(ZoomMode), typeof(ZoomAndPanMode), typeof(CartesianChart),
+            new PropertyMetadata(LiveCharts.CurrentSettings.DefaultZoomMode));
 
-        #endregion
+    /// <summary>
+    /// The zooming speed property
+    /// </summary>
+    public static readonly DependencyProperty ZoomingSpeedProperty =
+        DependencyProperty.Register(
+            nameof(ZoomingSpeed), typeof(double), typeof(CartesianChart),
+            new PropertyMetadata(LiveCharts.CurrentSettings.DefaultZoomSpeed));
 
-        #region properties
+    /// <summary>
+    /// The tool tip finding strategy property
+    /// </summary>
+    public static readonly DependencyProperty TooltipFindingStrategyProperty =
+        DependencyProperty.Register(
+            nameof(TooltipFindingStrategy), typeof(TooltipFindingStrategy), typeof(Chart),
+            new PropertyMetadata(LiveCharts.CurrentSettings.DefaultTooltipFindingStrategy, OnDependencyPropertyChanged));
 
-        CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core =>
-            core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
+    #endregion
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
-        public IEnumerable<ISeries> Series
-        {
-            get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
-            set => SetValue(SeriesProperty, value);
-        }
+    #region properties
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.XAxes" />
-        public IEnumerable<ICartesianAxis> XAxes
-        {
-            get => (IEnumerable<ICartesianAxis>)GetValue(XAxesProperty);
-            set => SetValue(XAxesProperty, value);
-        }
+    CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core =>
+        core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.YAxes" />
-        public IEnumerable<ICartesianAxis> YAxes
-        {
-            get => (IEnumerable<ICartesianAxis>)GetValue(YAxesProperty);
-            set => SetValue(YAxesProperty, value);
-        }
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
+    public IEnumerable<ISeries> Series
+    {
+        get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
+        set => SetValue(SeriesProperty, value);
+    }
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections" />
-        public IEnumerable<Section<SkiaSharpDrawingContext>> Sections
-        {
-            get => (IEnumerable<Section<SkiaSharpDrawingContext>>)GetValue(SectionsProperty);
-            set => SetValue(SectionsProperty, value);
-        }
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.XAxes" />
+    public IEnumerable<ICartesianAxis> XAxes
+    {
+        get => (IEnumerable<ICartesianAxis>)GetValue(XAxesProperty);
+        set => SetValue(XAxesProperty, value);
+    }
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
-        public DrawMarginFrame<SkiaSharpDrawingContext>? DrawMarginFrame
-        {
-            get => (DrawMarginFrame<SkiaSharpDrawingContext>)GetValue(DrawMarginFrameProperty);
-            set => SetValue(DrawMarginFrameProperty, value);
-        }
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.YAxes" />
+    public IEnumerable<ICartesianAxis> YAxes
+    {
+        get => (IEnumerable<ICartesianAxis>)GetValue(YAxesProperty);
+        set => SetValue(YAxesProperty, value);
+    }
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomMode" />
-        public ZoomAndPanMode ZoomMode
-        {
-            get => (ZoomAndPanMode)GetValue(ZoomModeProperty);
-            set => SetValue(ZoomModeProperty, value);
-        }
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections" />
+    public IEnumerable<Section<SkiaSharpDrawingContext>> Sections
+    {
+        get => (IEnumerable<Section<SkiaSharpDrawingContext>>)GetValue(SectionsProperty);
+        set => SetValue(SectionsProperty, value);
+    }
 
-        ZoomAndPanMode ICartesianChartView<SkiaSharpDrawingContext>.ZoomMode
-        {
-            get => ZoomMode;
-            set => SetValueOrCurrentValue(ZoomModeProperty, value);
-        }
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
+    public DrawMarginFrame<SkiaSharpDrawingContext>? DrawMarginFrame
+    {
+        get => (DrawMarginFrame<SkiaSharpDrawingContext>)GetValue(DrawMarginFrameProperty);
+        set => SetValue(DrawMarginFrameProperty, value);
+    }
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomingSpeed" />
-        public double ZoomingSpeed
-        {
-            get => (double)GetValue(ZoomingSpeedProperty);
-            set => SetValue(ZoomingSpeedProperty, value);
-        }
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomMode" />
+    public ZoomAndPanMode ZoomMode
+    {
+        get => (ZoomAndPanMode)GetValue(ZoomModeProperty);
+        set => SetValue(ZoomModeProperty, value);
+    }
 
-        double ICartesianChartView<SkiaSharpDrawingContext>.ZoomingSpeed
-        {
-            get => ZoomingSpeed;
-            set => SetValueOrCurrentValue(ZoomingSpeedProperty, value);
-        }
+    ZoomAndPanMode ICartesianChartView<SkiaSharpDrawingContext>.ZoomMode
+    {
+        get => ZoomMode;
+        set => SetValueOrCurrentValue(ZoomModeProperty, value);
+    }
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy" />
-        public TooltipFindingStrategy TooltipFindingStrategy
-        {
-            get => (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty);
-            set => SetValue(TooltipFindingStrategyProperty, value);
-        }
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomingSpeed" />
+    public double ZoomingSpeed
+    {
+        get => (double)GetValue(ZoomingSpeedProperty);
+        set => SetValue(ZoomingSpeedProperty, value);
+    }
 
-        #endregion
+    double ICartesianChartView<SkiaSharpDrawingContext>.ZoomingSpeed
+    {
+        get => ZoomingSpeed;
+        set => SetValueOrCurrentValue(ZoomingSpeedProperty, value);
+    }
 
-        /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
-        public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
-        {
-            if (core is null) throw new Exception("core not found");
-            var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
-            return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
-        }
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy" />
+    public TooltipFindingStrategy TooltipFindingStrategy
+    {
+        get => (TooltipFindingStrategy)GetValue(TooltipFindingStrategyProperty);
+        set => SetValue(TooltipFindingStrategyProperty, value);
+    }
 
-        /// <summary>
-        /// Initializes the core.
-        /// </summary>
-        /// <exception cref="Exception">canvas not found</exception>
-        protected override void InitializeCore()
-        {
-            if (canvas is null) throw new Exception("canvas not found");
+    #endregion
 
-            core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
-            legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
-            tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
-            core.Update();
-        }
+    /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />
+    public double[] ScaleUIPoint(LvcPoint point, int xAxisIndex = 0, int yAxisIndex = 0)
+    {
+        if (core is null) throw new Exception("core not found");
+        var cartesianCore = (CartesianChart<SkiaSharpDrawingContext>)core;
+        return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
+    }
 
-        private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-            core.Update();
-        }
+    /// <summary>
+    /// Initializes the core.
+    /// </summary>
+    /// <exception cref="Exception">canvas not found</exception>
+    protected override void InitializeCore()
+    {
+        if (canvas is null) throw new Exception("canvas not found");
 
-        private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
-            core.Update();
-        }
+        core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+        legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
+        tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
+        core.Update();
+    }
 
-        private void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            _ = CaptureMouse();
-            var p = e.GetPosition(this);
-            core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y));
-        }
+    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+        core.Update();
+    }
 
-        private void OnMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            var p = e.GetPosition(this);
-            core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y));
-            ReleaseMouseCapture();
-        }
+    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
+        core.Update();
+    }
 
-        private void OnMouseWheel(object? sender, System.Windows.Input.MouseWheelEventArgs e)
-        {
-            if (core is null) throw new Exception("core not found");
-            var c = (CartesianChart<SkiaSharpDrawingContext>)core;
-            var p = e.GetPosition(this);
-            c.Zoom(new LvcPoint((float)p.X, (float)p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
-        }
+    private void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        _ = CaptureMouse();
+        var p = e.GetPosition(this);
+        core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y));
+    }
+
+    private void OnMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        var p = e.GetPosition(this);
+        core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y));
+        ReleaseMouseCapture();
+    }
+
+    private void OnMouseWheel(object? sender, System.Windows.Input.MouseWheelEventArgs e)
+    {
+        if (core is null) throw new Exception("core not found");
+        var c = (CartesianChart<SkiaSharpDrawingContext>)core;
+        var p = e.GetPosition(this);
+        c.Zoom(new LvcPoint((float)p.X, (float)p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
     }
 }

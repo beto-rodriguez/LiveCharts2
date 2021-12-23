@@ -23,67 +23,66 @@
 using System;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Painting
+namespace LiveChartsCore.SkiaSharpView.Painting;
+
+/// <inheritdoc cref="LinearGradientPaint"/>
+[Obsolete("Renamed to LinearGradientPaint")]
+public class LinearGradientPaintTask : LinearGradientPaint
 {
-    /// <inheritdoc cref="LinearGradientPaint"/>
-    [Obsolete("Renamed to LinearGradientPaint")]
-    public class LinearGradientPaintTask : LinearGradientPaint
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LinearGradientPaint"/> class.
+    /// </summary>
+    /// <param name="gradientStops">The gradient stops.</param>
+    /// <param name="startPoint">
+    /// The start point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
+    /// </param>
+    /// <param name="endPoint">
+    /// The end point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
+    /// </param>
+    /// <param name="colorPos">
+    /// An array of integers in the range of 0 to 1.
+    /// These integers indicate the relative positions of the colors, You can set that argument to null to equally
+    /// space the colors, default is null.
+    /// </param>
+    /// <param name="tileMode">
+    /// The shader tile mode, default is <see cref="SKShaderTileMode.Repeat"/>.
+    /// </param>
+    public LinearGradientPaintTask(
+        SKColor[] gradientStops,
+        SKPoint startPoint,
+        SKPoint endPoint,
+        float[]? colorPos = null,
+        SKShaderTileMode tileMode = SKShaderTileMode.Repeat)
+            : base(gradientStops, startPoint, endPoint, colorPos, tileMode)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LinearGradientPaint"/> class.
-        /// </summary>
-        /// <param name="gradientStops">The gradient stops.</param>
-        /// <param name="startPoint">
-        /// The start point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
-        /// </param>
-        /// <param name="endPoint">
-        /// The end point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
-        /// </param>
-        /// <param name="colorPos">
-        /// An array of integers in the range of 0 to 1.
-        /// These integers indicate the relative positions of the colors, You can set that argument to null to equally
-        /// space the colors, default is null.
-        /// </param>
-        /// <param name="tileMode">
-        /// The shader tile mode, default is <see cref="SKShaderTileMode.Repeat"/>.
-        /// </param>
-        public LinearGradientPaintTask(
-            SKColor[] gradientStops,
-            SKPoint startPoint,
-            SKPoint endPoint,
-            float[]? colorPos = null,
-            SKShaderTileMode tileMode = SKShaderTileMode.Repeat)
-                : base(gradientStops, startPoint, endPoint, colorPos, tileMode)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LinearGradientPaint"/> class.
-        /// </summary>
-        /// <param name="gradientStops">The gradient stops.</param>
-        public LinearGradientPaintTask(SKColor[] gradientStops)
-            : this(gradientStops, s_defaultStartPoint, s_defaultEndPoint) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LinearGradientPaint"/> class.
-        /// </summary>
-        /// <param name="startColor">The start color.</param>
-        /// <param name="endColor">The end color.</param>
-        /// <param name="startPoint">
-        /// The start point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
-        /// </param>
-        /// <param name="endPoint">
-        /// The end point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
-        /// </param>
-        public LinearGradientPaintTask(SKColor startColor, SKColor endColor, SKPoint startPoint, SKPoint endPoint)
-                : this(new[] { startColor, endColor }, startPoint, endPoint) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LinearGradientPaint"/> class.
-        /// </summary>
-        /// <param name="start">The start.</param>
-        /// <param name="end">The end.</param>
-        public LinearGradientPaintTask(SKColor start, SKColor end)
-            : this(start, end, s_defaultStartPoint, s_defaultEndPoint) { }
     }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LinearGradientPaint"/> class.
+    /// </summary>
+    /// <param name="gradientStops">The gradient stops.</param>
+    public LinearGradientPaintTask(SKColor[] gradientStops)
+        : this(gradientStops, s_defaultStartPoint, s_defaultEndPoint) { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LinearGradientPaint"/> class.
+    /// </summary>
+    /// <param name="startColor">The start color.</param>
+    /// <param name="endColor">The end color.</param>
+    /// <param name="startPoint">
+    /// The start point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
+    /// </param>
+    /// <param name="endPoint">
+    /// The end point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
+    /// </param>
+    public LinearGradientPaintTask(SKColor startColor, SKColor endColor, SKPoint startPoint, SKPoint endPoint)
+            : this(new[] { startColor, endColor }, startPoint, endPoint) { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LinearGradientPaint"/> class.
+    /// </summary>
+    /// <param name="start">The start.</param>
+    /// <param name="end">The end.</param>
+    public LinearGradientPaintTask(SKColor start, SKColor end)
+        : this(start, end, s_defaultStartPoint, s_defaultEndPoint) { }
 }

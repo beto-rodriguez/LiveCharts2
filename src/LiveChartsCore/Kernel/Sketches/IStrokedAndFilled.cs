@@ -22,29 +22,28 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Kernel.Sketches
+namespace LiveChartsCore.Kernel.Sketches;
+
+/// <summary>
+/// Defines an object with a stroke and fill.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+public interface IStrokedAndFilled<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines an object with a stroke and fill.
+    /// Gets or sets the fill.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public interface IStrokedAndFilled<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets or sets the fill.
-        /// </summary>
-        /// <value>
-        /// The fill.
-        /// </value>
-        IPaint<TDrawingContext>? Fill { get; set; }
+    /// <value>
+    /// The fill.
+    /// </value>
+    IPaint<TDrawingContext>? Fill { get; set; }
 
-        /// <summary>
-        /// Gets or sets the stroke.
-        /// </summary>
-        /// <value>
-        /// The stroke.
-        /// </value>
-        IPaint<TDrawingContext>? Stroke { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the stroke.
+    /// </summary>
+    /// <value>
+    /// The stroke.
+    /// </value>
+    IPaint<TDrawingContext>? Stroke { get; set; }
 }

@@ -5,6 +5,7 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <IsPackable>false</IsPackable>
+    <LangVersion>10.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,10 +14,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Axes\Style\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Axes\LabelsFormat2\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Axes\Paging\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Axes\TimeSpanScaled\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Axes\Logaritmic\View.cs" />
+    <Compile Update="Axes\Logarithmic\View.cs" />
     <Compile Update="Axes\DateTimeScaled\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -101,6 +111,9 @@
     <Compile Update="General\MultiThreading\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="General\Sections2\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="General\Sections\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -131,10 +144,34 @@
     <Compile Update="Heat\Basic\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Lines\XY\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Lines\Padding\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Maps\World\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Pies\Gauge5\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Pies\Gauge4\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Pies\Gauge3\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Pies\Gauge2\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Pies\Gauge1\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Polar\RadialArea\View.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Polar\Coordinates\View.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Polar\Basic\View.cs">

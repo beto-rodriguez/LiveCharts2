@@ -22,59 +22,58 @@
 
 using System;
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Drawing;
+
+/// <summary>
+/// The Transition builder class helps to build transitions using fluent syntax.
+/// </summary>
+public class TransitionBuilder
 {
+    private readonly string[] _properties;
+    private readonly IAnimatable _target;
+
     /// <summary>
-    /// The Transition builder class helps to build transitions using fluent syntax.
+    /// Initializes a new instance of the <see cref="TransitionBuilder"/> class.
     /// </summary>
-    public class TransitionBuilder
+    /// <param name="target">The target.</param>
+    /// <param name="properties">The properties.</param>
+    public TransitionBuilder(IAnimatable target, string[] properties)
     {
-        private readonly string[] _properties;
-        private readonly IAnimatable _target;
+        _target = target;
+        _properties = properties;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TransitionBuilder"/> class.
-        /// </summary>
-        /// <param name="target">The target.</param>
-        /// <param name="properties">The properties.</param>
-        public TransitionBuilder(IAnimatable target, string[] properties)
-        {
-            _target = target;
-            _properties = properties;
-        }
+    /// <summary>
+    /// Sets the animation.
+    /// </summary>
+    /// <param name="animation">The animation.</param>
+    /// <returns>The transition</returns>
+    public TransitionBuilder WithAnimation(Animation animation)
+    {
+        _target.SetPropertiesTransitions(animation, _properties);
 
-        /// <summary>
-        /// Sets the animation.
-        /// </summary>
-        /// <param name="animation">The animation.</param>
-        /// <returns>The transition</returns>
-        public TransitionBuilder WithAnimation(Animation animation)
-        {
-            _target.SetPropertiesTransitions(animation, _properties);
+        return this;
+    }
 
-            return this;
-        }
+    /// <summary>
+    /// Sets the animation.
+    /// </summary>
+    /// <param name="animationBuilder">The animation builder.</param>
+    /// <returns>The transition</returns>
+    public TransitionBuilder WithAnimation(Action<Animation> animationBuilder)
+    {
+        var animation = new Animation();
+        animationBuilder(animation);
+        return WithAnimation(animation);
+    }
 
-        /// <summary>
-        /// Sets the animation.
-        /// </summary>
-        /// <param name="animationBuilder">The animation builder.</param>
-        /// <returns>The transition</returns>
-        public TransitionBuilder WithAnimation(Action<Animation> animationBuilder)
-        {
-            var animation = new Animation();
-            animationBuilder(animation);
-            return WithAnimation(animation);
-        }
-
-        /// <summary>
-        /// Sets the current transitions.
-        /// </summary>
-        /// <returns>The transition</returns>
-        public TransitionBuilder CompleteCurrentTransitions()
-        {
-            _target.CompleteTransitions(_properties);
-            return this;
-        }
+    /// <summary>
+    /// Sets the current transitions.
+    /// </summary>
+    /// <returns>The transition</returns>
+    public TransitionBuilder CompleteCurrentTransitions()
+    {
+        _target.CompleteTransitions(_properties);
+        return this;
     }
 }

@@ -27,77 +27,76 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.AspNetCore.Components;
 
-namespace LiveChartsCore.SkiaSharpView.Blazor
+namespace LiveChartsCore.SkiaSharpView.Blazor;
+
+/// <inheritdoc cref="IPieChartView{TDrawingContext}"/>
+public partial class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
 {
-    /// <inheritdoc cref="IPieChartView{TDrawingContext}"/>
-    public partial class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
+    private CollectionDeepObserver<ISeries>? _seriesObserver;
+    private IEnumerable<ISeries> _series = new List<ISeries>();
+    private double _initialRotation;
+    private double _maxAngle = 360;
+    private double? _total;
+
+    /// <summary>
+    /// Called when the control is initialized.
+    /// </summary>
+    protected override void OnInitialized()
     {
-        private CollectionDeepObserver<ISeries>? _seriesObserver;
-        private IEnumerable<ISeries> _series = new List<ISeries>();
-        private double _initialRotation;
-        private double _maxAngle = 360;
-        private double? _total;
+        base.OnInitialized();
 
-        /// <summary>
-        /// Called when the control is initialized.
-        /// </summary>
-        protected override void OnInitialized()
+        _seriesObserver = new CollectionDeepObserver<ISeries>(
+               (object? sender, NotifyCollectionChangedEventArgs e) =>
+               {
+                   if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
+                   OnPropertyChanged();
+               },
+               (object? sender, PropertyChangedEventArgs e) =>
+               {
+                   if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
+                   OnPropertyChanged();
+               },
+               true);
+    }
+
+    PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core =>
+        core is null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
+
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Series" />
+    [Parameter]
+    public IEnumerable<ISeries> Series
+    {
+        get => _series;
+        set
         {
-            base.OnInitialized();
-
-            _seriesObserver = new CollectionDeepObserver<ISeries>(
-                   (object? sender, NotifyCollectionChangedEventArgs e) =>
-                   {
-                       if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
-                       OnPropertyChanged();
-                   },
-                   (object? sender, PropertyChangedEventArgs e) =>
-                   {
-                       if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;
-                       OnPropertyChanged();
-                   },
-                   true);
+            _seriesObserver?.Dispose(_series);
+            _seriesObserver?.Initialize(value);
+            _series = value;
+            OnPropertyChanged();
         }
+    }
 
-        PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core =>
-            core is null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />
+    [Parameter]
+    public double InitialRotation { get => _initialRotation; set { _initialRotation = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IPieChartView{TDrawingContext}.Series" />
-        [Parameter]
-        public IEnumerable<ISeries> Series
-        {
-            get => _series;
-            set
-            {
-                _seriesObserver?.Dispose(_series);
-                _seriesObserver?.Initialize(value);
-                _series = value;
-                OnPropertyChanged();
-            }
-        }
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxAngle" />
+    [Parameter]
+    public double MaxAngle { get => _maxAngle; set { _maxAngle = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IPieChartView{TDrawingContext}.InitialRotation" />
-        [Parameter]
-        public double InitialRotation { get => _initialRotation; set { _initialRotation = value; OnPropertyChanged(); } }
+    /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total" />
+    [Parameter]
+    public double? Total { get => _total; set { _total = value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="IPieChartView{TDrawingContext}.MaxAngle" />
-        [Parameter]
-        public double MaxAngle { get => _maxAngle; set { _maxAngle = value; OnPropertyChanged(); } }
+    /// <summary>
+    /// Initializes the core.
+    /// </summary>
+    protected override void InitializeCore()
+    {
+        if (motionCanvas is null) throw new Exception("MotionCanvas component was not found");
 
-        /// <inheritdoc cref="IPieChartView{TDrawingContext}.Total" />
-        [Parameter]
-        public double? Total { get => _total; set { _total = value; OnPropertyChanged(); } }
-
-        /// <summary>
-        /// Initializes the core.
-        /// </summary>
-        protected override void InitializeCore()
-        {
-            if (motionCanvas is null) throw new Exception("MotionCanvas component was not found");
-
-            core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore);
-            if (((IChartView)this).DesignerMode) return;
-            core.Update();
-        }
+        core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore);
+        if (((IChartView)this).DesignerMode) return;
+        core.Update();
     }
 }

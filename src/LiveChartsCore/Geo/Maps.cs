@@ -25,86 +25,85 @@ using System.IO;
 using System.Reflection;
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Geo
+namespace LiveChartsCore.Geo;
+
+/// <summary>
+/// Defines the maps
+/// </summary>
+public static class Maps
 {
     /// <summary>
-    /// Defines the maps
+    /// Gets the world map.
     /// </summary>
-    public static class Maps
+    /// <returns>The map.</returns>
+    /// <exception cref="Exception">Map not found</exception>
+    public static CoreMap<TDrawingContext> GetWorldMap<TDrawingContext>()
+        where TDrawingContext : DrawingContext
     {
-        /// <summary>
-        /// Gets the world map.
-        /// </summary>
-        /// <returns>The map.</returns>
-        /// <exception cref="Exception">Map not found</exception>
-        public static CoreMap<TDrawingContext> GetWorldMap<TDrawingContext>()
-            where TDrawingContext : DrawingContext
-        {
-            var a = Assembly.GetExecutingAssembly();
-            var map = "LiveChartsCore.Geo.world.geojson";
-            using var reader = new StreamReader(a.GetManifestResourceStream(map) ?? throw new Exception("file not found"));
+        var a = Assembly.GetExecutingAssembly();
+        var map = "LiveChartsCore.Geo.world.geojson";
+        using var reader = new StreamReader(a.GetManifestResourceStream(map) ?? throw new Exception("file not found"));
 
-            return GetMapFromStreamReader<TDrawingContext>(reader);
+        return GetMapFromStreamReader<TDrawingContext>(reader);
+    }
+
+    /// <summary>
+    /// Gets a map from a specified path.
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <returns>The map.</returns>
+    public static CoreMap<TDrawingContext> GetMapFromDirectory<TDrawingContext>(string path)
+        where TDrawingContext : DrawingContext
+    {
+        using var sr = new StreamReader(path);
+
+        return GetMapFromStreamReader<TDrawingContext>(sr);
+    }
+
+    /// <summary>
+    /// Gets a map from a specified stream.
+    /// </summary>
+    /// <param name="stream">The stream.</param>
+    /// <returns>The map.</returns>
+    public static CoreMap<TDrawingContext> GetMapFromStreamReader<TDrawingContext>(StreamReader stream)
+        where TDrawingContext : DrawingContext
+    {
+        return new CoreMap<TDrawingContext>(stream, "default");
+    }
+
+    /// <summary>
+    /// Builds a projector with the given parameters.
+    /// </summary>
+    /// <param name="projection">The projection.</param>
+    /// <param name="mapSize">Size of the map.</param>
+    /// <returns></returns>
+    public static MapProjector BuildProjector(MapProjection projection, float[] mapSize)
+    {
+        var mapRatio =
+            projection == MapProjection.Default
+            ? ControlCoordinatesProjector.PreferredRatio
+            : MercatorProjector.PreferredRatio;
+
+        var normalizedW = mapSize[0] / mapRatio[0];
+        var normalizedH = mapSize[1] / mapRatio[1];
+        float ox = 0f, oy = 0f;
+
+        if (normalizedW < normalizedH)
+        {
+            var h = mapSize[0] * mapRatio[1] / mapRatio[0];
+            oy = (float)(mapSize[1] - h) * 0.5f;
+            mapSize[1] = h;
+        }
+        else
+        {
+            var w = mapSize[1] * mapRatio[0] / mapRatio[1];
+            ox = (float)(mapSize[0] - w) * 0.5f;
+            mapSize[0] = w;
         }
 
-        /// <summary>
-        /// Gets a map from a specified path.
-        /// </summary>
-        /// <param name="path">The path.</param>
-        /// <returns>The map.</returns>
-        public static CoreMap<TDrawingContext> GetMapFromDirectory<TDrawingContext>(string path)
-            where TDrawingContext : DrawingContext
-        {
-            using var sr = new StreamReader(path);
-
-            return GetMapFromStreamReader<TDrawingContext>(sr);
-        }
-
-        /// <summary>
-        /// Gets a map from a specified stream.
-        /// </summary>
-        /// <param name="stream">The stream.</param>
-        /// <returns>The map.</returns>
-        public static CoreMap<TDrawingContext> GetMapFromStreamReader<TDrawingContext>(StreamReader stream)
-            where TDrawingContext : DrawingContext
-        {
-            return new CoreMap<TDrawingContext>(stream, "default");
-        }
-
-        /// <summary>
-        /// Builds a projector with the given parameters.
-        /// </summary>
-        /// <param name="projection">The projection.</param>
-        /// <param name="mapSize">Size of the map.</param>
-        /// <returns></returns>
-        public static MapProjector BuildProjector(MapProjection projection, float[] mapSize)
-        {
-            var mapRatio =
-                projection == MapProjection.Default
-                ? ControlCoordinatesProjector.PreferredRatio
-                : MercatorProjector.PreferredRatio;
-
-            var normalizedW = mapSize[0] / mapRatio[0];
-            var normalizedH = mapSize[1] / mapRatio[1];
-            float ox = 0f, oy = 0f;
-
-            if (normalizedW < normalizedH)
-            {
-                var h = mapSize[0] * mapRatio[1] / mapRatio[0];
-                oy = (float)(mapSize[1] - h) * 0.5f;
-                mapSize[1] = h;
-            }
-            else
-            {
-                var w = mapSize[1] * mapRatio[0] / mapRatio[1];
-                ox = (float)(mapSize[0] - w) * 0.5f;
-                mapSize[0] = w;
-            }
-
-            return
-                projection == MapProjection.Default
-                ? new ControlCoordinatesProjector(mapSize[0], mapSize[1], ox, oy)
-                : new MercatorProjector(mapSize[0], mapSize[1], ox, oy);
-        }
+        return
+            projection == MapProjection.Default
+            ? new ControlCoordinatesProjector(mapSize[0], mapSize[1], ox, oy)
+            : new MercatorProjector(mapSize[0], mapSize[1], ox, oy);
     }
 }

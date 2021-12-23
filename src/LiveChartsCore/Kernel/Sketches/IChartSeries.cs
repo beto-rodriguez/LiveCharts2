@@ -24,72 +24,71 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Drawing;
 
-namespace LiveChartsCore.Kernel.Sketches
+namespace LiveChartsCore.Kernel.Sketches;
+
+/// <summary>
+/// Defines a series a chart series that has a visual representation in the user interface.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="ISeries" />
+public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawingContext>
+     where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a series a chart series that has a visual representation in the user interface.
+    /// Gets or sets the data labels paint.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="ISeries" />
-    public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawingContext>
-         where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets or sets the data labels paint.
-        /// </summary>
-        /// <value>
-        /// The data labels paint.
-        /// </value>
-        IPaint<TDrawingContext>? DataLabelsPaint { get; set; }
+    /// <value>
+    /// The data labels paint.
+    /// </value>
+    IPaint<TDrawingContext>? DataLabelsPaint { get; set; }
 
-        /// <summary>
-        /// Gets or sets the size of the data labels.
-        /// </summary>
-        /// <value>
-        /// The size of the data labels.
-        /// </value>
-        double DataLabelsSize { get; set; }
+    /// <summary>
+    /// Gets or sets the size of the data labels.
+    /// </summary>
+    /// <value>
+    /// The size of the data labels.
+    /// </value>
+    double DataLabelsSize { get; set; }
 
-        /// <summary>
-        /// Gets or sets the data labels rotation in degrees.
-        /// </summary>
-        /// <value>
-        /// The rotation of the data labels in degrees.
-        /// </value>
-        double DataLabelsRotation { get; set; }
+    /// <summary>
+    /// Gets or sets the data labels rotation in degrees.
+    /// </summary>
+    /// <value>
+    /// The rotation of the data labels in degrees.
+    /// </value>
+    double DataLabelsRotation { get; set; }
 
-        /// <summary>
-        /// Gets or sets the data labels padding.
-        /// </summary>
-        /// <value>
-        /// The data labels padding.
-        /// </value>
-        Padding DataLabelsPadding { get; set; }
+    /// <summary>
+    /// Gets or sets the data labels padding.
+    /// </summary>
+    /// <value>
+    /// The data labels padding.
+    /// </value>
+    Padding DataLabelsPadding { get; set; }
 
-        /// <summary>
-        /// Gets the paint schedule, normally handled internally to display tool tips and legends.
-        /// </summary>
-        /// <value>
-        /// The default paint context.
-        /// </value>
-        CanvasSchedule<TDrawingContext> CanvasSchedule { get; }
+    /// <summary>
+    /// Gets the paint schedule, normally handled internally to display tool tips and legends.
+    /// </summary>
+    /// <value>
+    /// The default paint context.
+    /// </value>
+    CanvasSchedule<TDrawingContext> CanvasSchedule { get; }
 
-        /// <summary>
-        /// Gets the stack group, normally used internally to handled the stacked series.
-        /// </summary>
-        /// <returns></returns>
-        int GetStackGroup();
+    /// <summary>
+    /// Gets the stack group, normally used internally to handled the stacked series.
+    /// </summary>
+    /// <returns></returns>
+    int GetStackGroup();
 
-        /// <summary>
-        /// Determines if the given instance has the same series miniature.
-        /// </summary>
-        /// <param name="instance">The instance to compare.</param>
-        /// <returns></returns>
-        bool MiniatureEquals(IChartSeries<TDrawingContext> instance);
+    /// <summary>
+    /// Determines if the given instance has the same series miniature.
+    /// </summary>
+    /// <param name="instance">The instance to compare.</param>
+    /// <returns></returns>
+    bool MiniatureEquals(IChartSeries<TDrawingContext> instance);
 
-        /// <summary>
-        /// Called when the pointer goes down on a data point or points.
-        /// </summary>
-        void OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points);
-    }
+    /// <summary>
+    /// Called when the pointer goes down on a data point or points.
+    /// </summary>
+    void OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points);
 }

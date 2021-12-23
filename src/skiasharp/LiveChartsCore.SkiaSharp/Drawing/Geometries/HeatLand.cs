@@ -26,71 +26,70 @@ using System.Linq;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+
+/// <summary>
+/// Defines a heat lane.
+/// </summary>
+public class HeatLand : MapShape<SkiaSharpDrawingContext>, IWeigthedMapShape
 {
+    private double _value;
+    private Tuple<HeatPathShape, IEnumerable<PathCommand>>[]? _paths;
+
     /// <summary>
-    /// Defines a heat lane.
+    /// Initializes a new instance of the <see cref="HeatLand"/> class.
     /// </summary>
-    public class HeatLand : MapShape<SkiaSharpDrawingContext>, IWeigthedMapShape
+    public HeatLand() { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HeatLand"/> class.
+    /// </summary>
+    /// <param name="name">The name/</param>
+    /// <param name="value">The value.</param>
+    public HeatLand(string name, double value)
     {
-        private double _value;
-        private Tuple<HeatPathShape, IEnumerable<PathCommand>>[]? _paths;
+        Name = name;
+        Value = value;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HeatLand"/> class.
-        /// </summary>
-        public HeatLand() { }
+    /// <summary>
+    /// Gets or sets the land name.
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HeatLand"/> class.
-        /// </summary>
-        /// <param name="name">The name/</param>
-        /// <param name="value">The value.</param>
-        public HeatLand(string name, double value)
+    /// <inheritdoc cref="IWeigthedMapShape.Value"/>
+    public double Value { get => _value; set { _value = value; OnPropertyChanged(); } }
+
+    /// <inheritdoc cref="IMapElement.Measure(object)"/>
+    public override void Measure(MapShapeContext<SkiaSharpDrawingContext> context)
+    {
+        var projector = Maps.BuildProjector(context.Chart.MapProjection, new[] { context.Chart.Width, context.Chart.Height });
+
+        var heat = HeatFunctions.InterpolateColor(
+            (float)Value, context.Bounds, context.Chart.HeatMap, context.HeatStops);
+
+        var land = context.Chart.ActiveMap.FindLand(Name);
+        if (land is null) return;
+
+        var shapesQuery = land.Data
+            .Select(x => x.Shape)
+            .Where(x => x is not null)
+            .Cast<HeatPathShape>();
+
+        foreach (var pathShape in shapesQuery)
         {
-            Name = name;
-            Value = value;
+            pathShape.FillColor = heat;
         }
+    }
 
-        /// <summary>
-        /// Gets or sets the land name.
-        /// </summary>
-        public string Name { get; set; } = string.Empty;
+    /// <inheritdoc cref="IMapElement.RemoveFromUI(object)"/>
+    public override void RemoveFromUI(MapShapeContext<SkiaSharpDrawingContext> context)
+    {
+        if (_paths is null) return;
 
-        /// <inheritdoc cref="IWeigthedMapShape.Value"/>
-        public double Value { get => _value; set { _value = value; OnPropertyChanged(); } }
+        foreach (var path in _paths)
+            context.HeatPaint.RemoveGeometryFromPainTask(context.Chart.Canvas, path.Item1);
 
-        /// <inheritdoc cref="IMapElement.Measure(object)"/>
-        public override void Measure(MapShapeContext<SkiaSharpDrawingContext> context)
-        {
-            var projector = Maps.BuildProjector(context.Chart.MapProjection, new[] { context.Chart.Width, context.Chart.Height });
-
-            var heat = HeatFunctions.InterpolateColor(
-                (float)Value, context.Bounds, context.Chart.HeatMap, context.HeatStops);
-
-            var land = context.Chart.ActiveMap.FindLand(Name);
-            if (land is null) return;
-
-            var shapesQuery = land.Data
-                .Select(x => x.Shape)
-                .Where(x => x is not null)
-                .Cast<HeatPathShape>();
-
-            foreach (var pathShape in shapesQuery)
-            {
-                pathShape.FillColor = heat;
-            }
-        }
-
-        /// <inheritdoc cref="IMapElement.RemoveFromUI(object)"/>
-        public override void RemoveFromUI(MapShapeContext<SkiaSharpDrawingContext> context)
-        {
-            if (_paths is null) return;
-
-            foreach (var path in _paths)
-                context.HeatPaint.RemoveGeometryFromPainTask(context.Chart.Canvas, path.Item1);
-
-            _paths = null;
-        }
+        _paths = null;
     }
 }

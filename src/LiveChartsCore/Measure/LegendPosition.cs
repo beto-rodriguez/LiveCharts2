@@ -20,36 +20,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Measure
+namespace LiveChartsCore.Measure;
+
+/// <summary>
+/// Defines the legend position enumeration.
+/// </summary>
+public enum LegendPosition
 {
     /// <summary>
-    /// Defines the legend position enumeration.
+    /// The hidden position, hides the legend form the user interface.
     /// </summary>
-    public enum LegendPosition
-    {
-        /// <summary>
-        /// The hidden position, hides the legend form the user interface.
-        /// </summary>
-        Hidden,
+    Hidden,
 
-        /// <summary>
-        /// The top position, places the legend at the top of the chart.
-        /// </summary>
-        Top,
+    /// <summary>
+    /// The top position, places the legend at the top of the chart.
+    /// </summary>
+    Top,
 
-        /// <summary>
-        /// The left position, places the legend at the left of the chart.
-        /// </summary>
-        Left,
+    /// <summary>
+    /// The left position, places the legend at the left of the chart.
+    /// </summary>
+    Left,
 
-        /// <summary>
-        /// The right position, places the legend at the right of the chart.
-        /// </summary>
-        Right,
+    /// <summary>
+    /// The right position, places the legend at the right of the chart.
+    /// </summary>
+    Right,
 
-        /// <summary>
-        /// The bottom position, places the legend at the bottom of the chart.
-        /// </summary>
-        Bottom
-    }
+    /// <summary>
+    /// The bottom position, places the legend at the bottom of the chart.
+    /// </summary>
+    Bottom
 }

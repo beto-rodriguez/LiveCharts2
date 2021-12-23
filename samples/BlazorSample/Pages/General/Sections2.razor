@@ -1,0 +1,12 @@
+﻿@page "/General/Sections2"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.General.Sections2
+
+<CartesianChart
+	Series="ViewModel.Series"
+	Sections="ViewModel.Sections">
+</CartesianChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new();
+}

@@ -2,10 +2,8 @@
 @using LiveChartsCore.SkiaSharpView.Blazor
 @using ViewModelsSamples.Lines.Basic
 
-<CartesianChart
-	Series="ViewModel.Series">
-</CartesianChart>
+<CartesianChart Series="ViewModel.Series"/>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new ViewModel();
+	public ViewModel ViewModel { get; set; } = new();
 }

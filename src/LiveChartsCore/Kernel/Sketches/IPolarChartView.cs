@@ -23,109 +23,108 @@
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Kernel.Sketches
+namespace LiveChartsCore.Kernel.Sketches;
+
+/// <summary>
+/// Defines a polar chart view, this view is able to host one or many series in a polar coordinate system.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="IPolarChartView{TDrawingContext}" />
+public interface IPolarChartView<TDrawingContext> : IChartView<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a polar chart view, this view is able to host one or many series in a polar coordinate system.
+    /// Gets the core.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IPolarChartView{TDrawingContext}" />
-    public interface IPolarChartView<TDrawingContext> : IChartView<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets the core.
-        /// </summary>
-        /// <value>
-        /// The core.
-        /// </value>
-        PolarChart<TDrawingContext> Core { get; }
+    /// <value>
+    /// The core.
+    /// </value>
+    PolarChart<TDrawingContext> Core { get; }
 
-        /// <summary>
-        /// Gets whether the chart scales to try to fit the plot to the series bounds, it calculates a new center of the radial chart,
-        /// default is false.
-        /// </summary>
-        bool FitToBounds { get; set; }
+    /// <summary>
+    /// Gets whether the chart scales to try to fit the plot to the series bounds, it calculates a new center of the radial chart,
+    /// default is false.
+    /// </summary>
+    bool FitToBounds { get; set; }
 
-        /// <summary>
-        /// Gets or sets the total circumference angle in degrees, default is 360.
-        /// </summary>
-        /// <value>
-        /// The inner radius.
-        /// </value>
-        double TotalAngle { get; set; }
+    /// <summary>
+    /// Gets or sets the total circumference angle in degrees, default is 360.
+    /// </summary>
+    /// <value>
+    /// The inner radius.
+    /// </value>
+    double TotalAngle { get; set; }
 
-        /// <summary>
-        /// Gets or sets the inner radius, default is 0.
-        /// </summary>
-        /// <value>
-        /// The inner radius.
-        /// </value>
-        double InnerRadius { get; set; }
+    /// <summary>
+    /// Gets or sets the inner radius, default is 0.
+    /// </summary>
+    /// <value>
+    /// The inner radius.
+    /// </value>
+    double InnerRadius { get; set; }
 
-        /// <summary>
-        /// Gets or sets the initial rotation, default is 0.
-        /// </summary>
-        /// <value>
-        /// The inner radius.
-        /// </value>
-        double InitialRotation { get; set; }
+    /// <summary>
+    /// Gets or sets the initial rotation, default is 0.
+    /// </summary>
+    /// <value>
+    /// The inner radius.
+    /// </value>
+    double InitialRotation { get; set; }
 
-        /// <summary>
-        /// Gets or sets the angle axes.
-        /// </summary>
-        /// <value>
-        /// The angle axes.
-        /// </value>
-        IEnumerable<IPolarAxis> AngleAxes { get; set; }
+    /// <summary>
+    /// Gets or sets the angle axes.
+    /// </summary>
+    /// <value>
+    /// The angle axes.
+    /// </value>
+    IEnumerable<IPolarAxis> AngleAxes { get; set; }
 
-        /// <summary>
-        /// Gets or sets the radius axes.
-        /// </summary>
-        /// <value>
-        /// The radius axes.
-        /// </value>
-        IEnumerable<IPolarAxis> RadiusAxes { get; set; }
+    /// <summary>
+    /// Gets or sets the radius axes.
+    /// </summary>
+    /// <value>
+    /// The radius axes.
+    /// </value>
+    IEnumerable<IPolarAxis> RadiusAxes { get; set; }
 
-        ///// <summary>
-        ///// Gets or sets the sections.
-        ///// </summary>
-        ///// <value>
-        ///// The sections.
-        ///// </value>
-        //IEnumerable<Section<TDrawingContext>> Sections { get; set; }
+    ///// <summary>
+    ///// Gets or sets the sections.
+    ///// </summary>
+    ///// <value>
+    ///// The sections.
+    ///// </value>
+    //IEnumerable<Section<TDrawingContext>> Sections { get; set; }
 
-        /// <summary>
-        /// Gets or sets the series to plot in the user interface.
-        /// </summary>
-        /// <value>
-        /// The series.
-        /// </value>
-        IEnumerable<ISeries> Series { get; set; }
+    /// <summary>
+    /// Gets or sets the series to plot in the user interface.
+    /// </summary>
+    /// <value>
+    /// The series.
+    /// </value>
+    IEnumerable<ISeries> Series { get; set; }
 
-        ///// <summary>
-        ///// Gets or sets the tool tip finding strategy.
-        ///// </summary>
-        ///// <value>
-        ///// The tool tip finding strategy.
-        ///// </value>
-        //TooltipFindingStrategy TooltipFindingStrategy { get; set; }
+    ///// <summary>
+    ///// Gets or sets the tool tip finding strategy.
+    ///// </summary>
+    ///// <value>
+    ///// The tool tip finding strategy.
+    ///// </value>
+    //TooltipFindingStrategy TooltipFindingStrategy { get; set; }
 
-        ///// <summary>
-        ///// Gets or sets the zooming speed from 0 to 1, where 0 is the fastest and 1 the slowest.
-        ///// </summary>
-        ///// <value>
-        ///// The zooming speed.
-        ///// </value>
-        //double ZoomingSpeed { get; set; }
+    ///// <summary>
+    ///// Gets or sets the zooming speed from 0 to 1, where 0 is the fastest and 1 the slowest.
+    ///// </summary>
+    ///// <value>
+    ///// The zooming speed.
+    ///// </value>
+    //double ZoomingSpeed { get; set; }
 
-        /// <summary>
-        /// Scales the UI point.
-        /// </summary>
-        /// <param name="point">The point.</param>
-        /// <param name="angleAxisIndex">Index of the angle axis.</param>
-        /// <param name="radiusAxisIndex">Index of the radius axis.</param>
-        /// <returns></returns>
-        double[] ScaleUIPoint(LvcPoint point, int angleAxisIndex = 0, int radiusAxisIndex = 0);
-    }
+    /// <summary>
+    /// Scales the UI point.
+    /// </summary>
+    /// <param name="point">The point.</param>
+    /// <param name="angleAxisIndex">Index of the angle axis.</param>
+    /// <param name="radiusAxisIndex">Index of the radius axis.</param>
+    /// <returns></returns>
+    double[] ScaleUIPoint(LvcPoint point, int angleAxisIndex = 0, int radiusAxisIndex = 0);
 }

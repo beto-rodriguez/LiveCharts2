@@ -13,7 +13,7 @@
 If the stroke property is not set, then LiveCharts will create it based on the series position in your series collection
 and the current theme.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/piestroke.png)
+![image]({{ assets_url }}/docs/_assets/piestroke.png)
 
 {{~ if xaml ~}}
 <pre><code>using LiveChartsCore;
@@ -98,7 +98,7 @@ a look at the [Paints article]({{ website_url }}/docs/{{ platform }}/{{ version 
 If the fill property is not set, then LiveCharts will create it based on the series position in your series collection
 and the current theme.
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/piefill.png)
+![image]({{ assets_url }}/docs/_assets/piefill.png)
 
 {{~ if xaml ~}}
 <pre><code>using LiveChartsCore;
@@ -189,7 +189,7 @@ It is the distance in pixels between the center of the control and the pie slice
     Pushout = 40 // mark
 };</code></pre>
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/piepushout.png)
+![image]({{ assets_url }}/docs/_assets/piepushout.png)
 
 ## InnerRadius property
 
@@ -201,7 +201,7 @@ The inner radius of the slice in pixels.
     InnerRadius = 50 // mark 
 };</code></pre>
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/pieInnerRadius.png)
+![image]({{ assets_url }}/docs/_assets/pieInnerRadius.png)
 
 ## MaxOuterRadius property
 
@@ -213,6 +213,6 @@ Specifies the max radius (in percentage) the slice can take, the value goes from
     MaxOuterRadius = 0.8 // mark
 };</code></pre>
 
-![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/piemaxoutter.png)
+![image]({{ assets_url }}/docs/_assets/piemaxoutter.png)
 
 {{ render this "~/shared/series2.md" }}

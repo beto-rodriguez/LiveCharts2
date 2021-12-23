@@ -23,36 +23,35 @@
 using System;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Painting
+namespace LiveChartsCore.SkiaSharpView.Painting;
+
+/// <inheritdoc cref="SolidColorPaint"/>
+[Obsolete("Renamed to SolidColorPaint")]
+public class SolidColorPaintTask : SolidColorPaint
 {
-    /// <inheritdoc cref="SolidColorPaint"/>
-    [Obsolete("Renamed to SolidColorPaint")]
-    public class SolidColorPaintTask : SolidColorPaint
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SolidColorPaint"/> class.
+    /// </summary>
+    public SolidColorPaintTask()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SolidColorPaint"/> class.
-        /// </summary>
-        public SolidColorPaintTask()
-        {
-        }
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SolidColorPaint"/> class.
-        /// </summary>
-        /// <param name="color">The color.</param>
-        public SolidColorPaintTask(SKColor color)
-            : base(color)
-        {
-        }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SolidColorPaint"/> class.
+    /// </summary>
+    /// <param name="color">The color.</param>
+    public SolidColorPaintTask(SKColor color)
+        : base(color)
+    {
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SolidColorPaint"/> class.
-        /// </summary>
-        /// <param name="color">The color.</param>
-        /// <param name="strokeWidth">Width of the stroke.</param>
-        public SolidColorPaintTask(SKColor color, float strokeWidth)
-            : base(color, strokeWidth)
-        {
-        }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SolidColorPaint"/> class.
+    /// </summary>
+    /// <param name="color">The color.</param>
+    /// <param name="strokeWidth">Width of the stroke.</param>
+    public SolidColorPaintTask(SKColor color, float strokeWidth)
+        : base(color, strokeWidth)
+    {
     }
 }

@@ -24,92 +24,91 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.Kernel.Drawing
+namespace LiveChartsCore.Kernel.Drawing;
+
+/// <summary>
+/// Defines a semicircle hover area.
+/// </summary>
+/// <seealso cref="HoverArea" />
+public class SemicircleHoverArea : HoverArea
 {
     /// <summary>
-    /// Defines a semicircle hover area.
+    /// Gets or sets the center x.
     /// </summary>
-    /// <seealso cref="HoverArea" />
-    public class SemicircleHoverArea : HoverArea
+    /// <value>
+    /// The center x coordinate.
+    /// </value>
+    public float CenterX { get; set; }
+
+    /// <summary>
+    /// Gets or sets the center y.
+    /// </summary>
+    /// <value>
+    /// The center y coordinate.
+    /// </value>
+    public float CenterY { get; set; }
+
+    /// <summary>
+    /// Gets or sets the start angle in degrees.
+    /// </summary>
+    public float StartAngle { get; set; }
+
+    /// <summary>
+    /// Gets or sets the and angle in degrees.
+    /// </summary>
+    public float EndAngle { get; set; }
+
+    /// <summary>
+    /// Gets or sets the radius.
+    /// </summary>
+    /// <value>
+    /// The radius.
+    /// </value>
+    public float Radius { get; set; }
+
+    /// <summary>
+    /// Sets the area dimensions.
+    /// </summary>
+    /// <param name="centerX">The center x.</param>
+    /// <param name="centerY">The center y.</param>
+    /// <param name="startAngle">The start angle.</param>
+    /// <param name="endAngle">The end angle.</param>
+    /// <param name="radius">The radius.</param>
+    /// <returns></returns>
+    public SemicircleHoverArea SetDimensions(float centerX, float centerY, float startAngle, float endAngle, float radius)
     {
-        /// <summary>
-        /// Gets or sets the center x.
-        /// </summary>
-        /// <value>
-        /// The center x coordinate.
-        /// </value>
-        public float CenterX { get; set; }
+        CenterX = centerX;
+        CenterY = centerY;
+        StartAngle = startAngle;
+        EndAngle = endAngle;
+        Radius = radius;
+        return this;
+    }
 
-        /// <summary>
-        /// Gets or sets the center y.
-        /// </summary>
-        /// <value>
-        /// The center y coordinate.
-        /// </value>
-        public float CenterY { get; set; }
+    /// <inheritdoc cref="HoverArea.IsPointerOver(LvcPoint, TooltipFindingStrategy)"/>
+    public override bool IsPointerOver(LvcPoint pointerLocation, TooltipFindingStrategy strategy)
+    {
+        var startAngle = StartAngle % 360;
+        // -0.01 is a work around to avoid the case where the last slice (360) would be converted to 0 also
+        var endAngle = (EndAngle - 0.01) % 360;
 
-        /// <summary>
-        /// Gets or sets the start angle in degrees.
-        /// </summary>
-        public float StartAngle { get; set; }
+        var dx = CenterX - pointerLocation.X;
+        var dy = CenterY - pointerLocation.Y;
+        var beta = Math.Atan(dy / dx) * (180 / Math.PI);
 
-        /// <summary>
-        /// Gets or sets the and angle in degrees.
-        /// </summary>
-        public float EndAngle { get; set; }
+        if ((dx > 0 && dy < 0) || (dx > 0 && dy > 0)) beta += 180;
+        if (dx < 0 && dy > 0) beta += 360;
 
-        /// <summary>
-        /// Gets or sets the radius.
-        /// </summary>
-        /// <value>
-        /// The radius.
-        /// </value>
-        public float Radius { get; set; }
+        var r = Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2));
 
-        /// <summary>
-        /// Sets the area dimensions.
-        /// </summary>
-        /// <param name="centerX">The center x.</param>
-        /// <param name="centerY">The center y.</param>
-        /// <param name="startAngle">The start angle.</param>
-        /// <param name="endAngle">The end angle.</param>
-        /// <param name="radius">The radius.</param>
-        /// <returns></returns>
-        public SemicircleHoverArea SetDimensions(float centerX, float centerY, float startAngle, float endAngle, float radius)
-        {
-            CenterX = centerX;
-            CenterY = centerY;
-            StartAngle = startAngle;
-            EndAngle = endAngle;
-            Radius = radius;
-            return this;
-        }
+        return startAngle <= beta && endAngle >= beta && r < Radius; // previously -> startAngle <= beta && endAngle >= beta && r < Radius ? 0 : float.MaxValue;
+    }
 
-        /// <inheritdoc cref="HoverArea.IsPointerOver(LvcPoint, TooltipFindingStrategy)"/>
-        public override bool IsPointerOver(LvcPoint pointerLocation, TooltipFindingStrategy strategy)
-        {
-            var startAngle = StartAngle % 360;
-            // -0.01 is a work around to avoid the case where the last slice (360) would be converted to 0 also
-            var endAngle = (EndAngle - 0.01) % 360;
-
-            var dx = CenterX - pointerLocation.X;
-            var dy = CenterY - pointerLocation.Y;
-            var beta = Math.Atan(dy / dx) * (180 / Math.PI);
-
-            if ((dx > 0 && dy < 0) || (dx > 0 && dy > 0)) beta += 180;
-            if (dx < 0 && dy > 0) beta += 360;
-
-            var r = Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2));
-
-            return startAngle <= beta && endAngle >= beta && r < Radius; // previously -> startAngle <= beta && endAngle >= beta && r < Radius ? 0 : float.MaxValue;
-        }
-
-        /// <inheritdoc cref="HoverArea.SuggestTooltipPlacement(TooltipPlacementContext)"/>
-        public override void SuggestTooltipPlacement(TooltipPlacementContext context)
-        {
-            var angle = (StartAngle + EndAngle) / 2;
-            context.PieX = CenterX + (float)Math.Cos(angle * (Math.PI / 180)) * Radius;
-            context.PieY = CenterY + (float)Math.Sin(angle * (Math.PI / 180)) * Radius;
-        }
+    /// <inheritdoc cref="HoverArea.SuggestTooltipPlacement(TooltipPlacementContext)"/>
+    public override void SuggestTooltipPlacement(TooltipPlacementContext context)
+    {
+        var angle = (StartAngle + EndAngle) / 2d;
+        context.PieX = CenterX + (float)Math.Cos(angle * (Math.PI / 180)) * Radius;
+        context.PieY = CenterY + (float)Math.Sin(angle * (Math.PI / 180)) * Radius;
     }
 }

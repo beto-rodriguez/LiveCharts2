@@ -6,12 +6,10 @@
   <UserControl.DataContext>
     <vms:ViewModel/>
   </UserControl.DataContext>
-  <Grid>
-    <lvc:CartesianChart
-        x:Name="chart"
-        Series="{Binding SeriesCollection}"
-        PointerPressed="ChartPointerPressed"
-        TooltipPosition="Hidden">
-    </lvc:CartesianChart>
-  </Grid>
+  <lvc:CartesianChart
+      x:Name="chart"
+      Series="{Binding SeriesCollection}"
+      PointerPressed="ChartPointerPressed"
+      TooltipPosition="Hidden">
+  </lvc:CartesianChart>
 </UserControl>

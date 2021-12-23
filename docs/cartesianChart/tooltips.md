@@ -6,7 +6,7 @@
 
 Tooltips are popups that help the user to read a chart as the pointer moves.
 
-![tooltips](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/tooltips.gif)
+![tooltips]({{ assets_url }}/docs/_assets/tooltips.gif)
 
 ## TooltipPosition property
 
@@ -85,15 +85,15 @@ in the chart, the following options are available:
 
 **CompareOnlyX**: Selects all the points that share the same X unit range (the space taken in the plot by a unit in the X axis).
 
-![tooltips](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/compare-x-strategy.gif)
+![tooltips]({{ assets_url }}/docs/_assets/compare-x-strategy.gif)
 
 **CompareOnlyY**: Selects all the points that share the same Y unit range (the space taken in the plot by a unit in the Y axis).
 
-![tooltips](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/compare-y-strategy.gif)
+![tooltips]({{ assets_url }}/docs/_assets/compare-y-strategy.gif)
 
 **CompareAll**: Selects all the points that share the X and Y range.
 
-![tooltips](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/compare-all-strategy.gif)
+![tooltips]({{ assets_url }}/docs/_assets/compare-all-strategy.gif)
 
 **Automatic** *(default)*: Based on the series in the chart, LiveCharts will determine a finding strategy (`CompareAll`, `CompareOnlyX` or 
 `CompareOnlyY`), all the series have a preferred finding strategy, normally vertical series prefer the `CompareOnlyX` strategy, 
@@ -216,7 +216,7 @@ You can use css to override the style of the tooltip.
 
 The code above would result in the following tooltip:
 
-![zooming](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/tooltip-custom-style.png)
+![zooming]({{ assets_url }}/docs/_assets/tooltip-custom-style.png)
 
 ## Custom template
 
@@ -308,4 +308,4 @@ You can find a more complete example at the source code of the `DefaultTooltip` 
 :::
 {{~ end ~}}
 
-![custom tooltip](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/master/docs/_assets/tooltip-custom-template.png)
+![custom tooltip]({{ assets_url }}/docs/_assets/tooltip-custom-template.png)

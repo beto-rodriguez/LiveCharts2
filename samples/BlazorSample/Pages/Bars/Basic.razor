@@ -3,9 +3,11 @@
 @using ViewModelsSamples.Bars.Basic
 
 <CartesianChart
-	Series="ViewModel.Series">
+	Series="ViewModel.Series"
+	XAxes="ViewModel.XAxes"
+	LegendPosition="LiveChartsCore.Measure.LegendPosition.Right">
 </CartesianChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new ViewModel();
+	public ViewModel ViewModel { get; set; } = new();
 }

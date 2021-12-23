@@ -1,30 +1,29 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace AvaloniaSample.Home
+namespace AvaloniaSample.Home;
+
+public class View : UserControl
 {
-    public class View : UserControl
+    public View()
     {
-        public View()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        public MainWindowViewModel? MainWindowVM { get; set; }
+    public MainWindowViewModel? MainWindowVM { get; set; }
 
-        private void SetDark(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-        {
-            MainWindowVM?.SetDark();
-        }
+    private void SetDark(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        MainWindowVM?.SetDark();
+    }
 
-        private void SetLight(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-        {
-            MainWindowVM?.SetLight();
-        }
+    private void SetLight(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        MainWindowVM?.SetLight();
+    }
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
     }
 }

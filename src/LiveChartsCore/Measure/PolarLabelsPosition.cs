@@ -20,31 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Measure
+namespace LiveChartsCore.Measure;
+
+/// <summary>
+/// 
+/// </summary>
+public enum PolarLabelsPosition
 {
     /// <summary>
-    /// 
+    /// Places the label at the center of the chart.
     /// </summary>
-    public enum PolarLabelsPosition
-    {
-        /// <summary>
-        /// Places the label at the center of the chart.
-        /// </summary>
-        ChartCenter,
+    ChartCenter,
 
-        /// <summary>
-        /// Aligns the label to the end in the axis direction.
-        /// </summary>
-        End,
+    /// <summary>
+    /// Aligns the label to the end in the axis direction.
+    /// </summary>
+    End,
 
-        /// <summary>
-        /// Aligns the label to the start  in the axis direction.
-        /// </summary>
-        Start,
+    /// <summary>
+    /// Aligns the label to the start  in the axis direction.
+    /// </summary>
+    Start,
 
-        /// <summary>
-        /// Aligns the label to the middle of the axis.
-        /// </summary>
-        Middle
-    }
+    /// <summary>
+    /// Aligns the label to the middle of the axis.
+    /// </summary>
+    Middle
 }

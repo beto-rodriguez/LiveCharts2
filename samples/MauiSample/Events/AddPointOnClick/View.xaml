@@ -8,14 +8,10 @@
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-	<ContentPage.Content>
-        <Grid>
-            <lvc:CartesianChart
+    <lvc:CartesianChart
                 x:Name="chart"
                 Series="{Binding SeriesCollection}"
                 Touched="Chart_Touched"
                 TooltipPosition="Hidden">
-            </lvc:CartesianChart>
-        </Grid>
-    </ContentPage.Content>
+    </lvc:CartesianChart>
 </ContentPage>

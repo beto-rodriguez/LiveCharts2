@@ -24,62 +24,61 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace LiveChartsCore.Defaults
+namespace LiveChartsCore.Defaults;
+
+/// <summary>
+/// Defines a time span point for the Cartesian coordinate system that implements <see cref="INotifyPropertyChanged"/>.
+/// </summary>
+public class TimeSpanPoint : INotifyPropertyChanged
 {
+    private TimeSpan _timeSpan;
+    private double? _value;
+
     /// <summary>
-    /// Defines a time span point for the Cartesian coordinate system that implements <see cref="INotifyPropertyChanged"/>.
+    /// Initializes a new instance of the <see cref="TimeSpanPoint"/> class.
     /// </summary>
-    public class TimeSpanPoint : INotifyPropertyChanged
+    public TimeSpanPoint()
+    { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TimeSpanPoint"/> class.
+    /// </summary>
+    /// <param name="timeSpan">The date time.</param>
+    /// <param name="value">The value.</param>
+    public TimeSpanPoint(TimeSpan timeSpan, double? value)
     {
-        private TimeSpan _timeSpan;
-        private double? _value;
+        _timeSpan = timeSpan;
+        _value = value;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TimeSpanPoint"/> class.
-        /// </summary>
-        public TimeSpanPoint()
-        { }
+    /// <summary>
+    /// Gets or sets the time span.
+    /// </summary>
+    /// <value>
+    /// The date time.
+    /// </value>
+    public TimeSpan TimeSpan { get => _timeSpan; set { _timeSpan = value; OnPropertyChanged(); } }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TimeSpanPoint"/> class.
-        /// </summary>
-        /// <param name="timeSpan">The date time.</param>
-        /// <param name="value">The value.</param>
-        public TimeSpanPoint(TimeSpan timeSpan, double? value)
-        {
-            _timeSpan = timeSpan;
-            _value = value;
-        }
+    /// <summary>
+    /// Gets or sets the value.
+    /// </summary>
+    /// <value>
+    /// The value.
+    /// </value>
+    public double? Value { get => _value; set { _value = value; OnPropertyChanged(); } }
 
-        /// <summary>
-        /// Gets or sets the time span.
-        /// </summary>
-        /// <value>
-        /// The date time.
-        /// </value>
-        public TimeSpan TimeSpan { get => _timeSpan; set { _timeSpan = value; OnPropertyChanged(); } }
+    /// <summary>
+    /// Occurs when a property value changes.
+    /// </summary>
+    /// <returns></returns>
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-        /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
-        /// <value>
-        /// The value.
-        /// </value>
-        public double? Value { get => _value; set { _value = value; OnPropertyChanged(); } }
-
-        /// <summary>
-        /// Occurs when a property value changes.
-        /// </summary>
-        /// <returns></returns>
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        /// <summary>
-        /// Called when a property changed.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
-        }
+    /// <summary>
+    /// Called when a property changed.
+    /// </summary>
+    /// <param name="propertyName">Name of the property.</param>
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(propertyName, new PropertyChangedEventArgs(propertyName));
     }
 }

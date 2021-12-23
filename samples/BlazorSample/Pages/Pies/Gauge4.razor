@@ -1,0 +1,24 @@
+﻿@page "/Pies/Gauge4"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Pies.Gauge4
+
+<style>
+	.sample-wrap {
+		display: inline-block;
+		width: 600px;
+		height: 600px;
+	}
+</style>
+
+<div class="sample-wrap">
+	<PieChart
+		Series="ViewModel.Series"
+		InitialRotation="-225"
+        MaxAngle="270"
+        Total="100">
+	</PieChart>
+</div>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new();
+}

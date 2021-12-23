@@ -20,24 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
+namespace LiveChartsCore.Drawing;
+
+/// <summary>
+/// Defines the drawing alignment.
+/// </summary>
+public enum Align
 {
     /// <summary>
-    /// Defines the drawing alignment.
+    /// Aligns to the start
     /// </summary>
-    public enum Align
-    {
-        /// <summary>
-        /// Aligns to the start
-        /// </summary>
-        Start,
-        /// <summary>
-        /// Aligns to the end
-        /// </summary>
-        End,
-        /// <summary>
-        /// Aligns to the middle
-        /// </summary>
-        Middle
-    }
+    Start,
+    /// <summary>
+    /// Aligns to the end
+    /// </summary>
+    End,
+    /// <summary>
+    /// Aligns to the middle
+    /// </summary>
+    Middle
 }

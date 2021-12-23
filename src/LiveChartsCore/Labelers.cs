@@ -25,114 +25,113 @@ using System.Collections.Generic;
 using System.Globalization;
 using LiveChartsCore.Kernel;
 
-namespace LiveChartsCore
+namespace LiveChartsCore;
+
+/// <summary>
+/// Defines common functions to build labels in a chart.
+/// </summary>
+public static class Labelers
 {
-    /// <summary>
-    /// Defines common functions to build labels in a chart.
-    /// </summary>
-    public static class Labelers
+    static Labelers()
     {
-        static Labelers()
+        Default = Log10_7;
+    }
+
+    /// <summary>
+    /// Gets the default labeler.
+    /// </summary>
+    /// <value>
+    /// The default.
+    /// </value>
+    public static Func<double, string> Default { get; private set; }
+
+    /// <summary>
+    /// Gets the seven representative digits labeler.
+    /// </summary>
+    /// <value>
+    /// The seven representative digits.
+    /// </value>
+    public static Func<double, string> SevenRepresentativeDigits => Log10_7;
+
+    /// <summary>
+    /// Gets the currency labeler.
+    /// </summary>
+    /// <value>
+    /// The currency.
+    /// </value>
+    public static Func<double, string> Currency =>
+        value => FormatCurrency(value, ",", ".", NumberFormatInfo.CurrentInfo.CurrencySymbol);
+
+    /// <summary>
+    /// Sets the default labeler.
+    /// </summary>
+    /// <param name="labeler">The labeler.</param>
+    public static void SetDefaultLabeler(Func<double, string> labeler)
+    {
+        Default = labeler;
+    }
+
+    /// <summary>
+    /// Formats to currency.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="thousands">The thousands.</param>
+    /// <param name="decimals">The decimals.</param>
+    /// <param name="symbol">The symbol.</param>
+    /// <returns></returns>
+    public static string FormatCurrency(double value, string thousands, string decimals, string symbol)
+    {
+        var l = value == 0 ? 0 : (int)Math.Log10(Math.Abs(value));
+        var u = "";
+
+        if (l > 12)
         {
-            Default = Log10_7;
+            value /= Math.Pow(10, 12);
+            u = "T";
+        }
+        if (l > 10)
+        {
+            value /= Math.Pow(10, 9);
+            u = "G";
+        }
+        else if (l > 7)
+        {
+            value /= Math.Pow(10, 6);
+            u = "M";
         }
 
-        /// <summary>
-        /// Gets the default labeler.
-        /// </summary>
-        /// <value>
-        /// The default.
-        /// </value>
-        public static Func<double, string> Default { get; private set; }
+        return value.ToString($"{symbol} #{thousands}###{thousands}##0{decimals}## {u}");
+    }
 
-        /// <summary>
-        /// Gets the seven representative digits labeler.
-        /// </summary>
-        /// <value>
-        /// The seven representative digits.
-        /// </value>
-        public static Func<double, string> SevenRepresentativeDigits => Log10_7;
+    /// <summary>
+    /// Builds a named labeler.
+    /// </summary>
+    /// <param name="labels">The labels.</param>
+    /// <returns></returns>
+    public static NamedLabeler BuildNamedLabeler(IList<string> labels)
+    {
+        return new NamedLabeler(labels);
+    }
 
-        /// <summary>
-        /// Gets the currency labeler.
-        /// </summary>
-        /// <value>
-        /// The currency.
-        /// </value>
-        public static Func<double, string> Currency =>
-            value => FormatCurrency(value, ",", ".", NumberFormatInfo.CurrentInfo.CurrencySymbol);
+    private static string Log10_7(double value)
+    {
+        var l = value == 0 ? 0 : (int)Math.Log10(Math.Abs(value));
+        var u = "";
 
-        /// <summary>
-        /// Sets the default labeler.
-        /// </summary>
-        /// <param name="labeler">The labeler.</param>
-        public static void SetDefaultLabeler(Func<double, string> labeler)
+        if (l > 7)
         {
-            Default = labeler;
-        }
-
-        /// <summary>
-        /// Formats to currency.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="thousands">The thousands.</param>
-        /// <param name="decimals">The decimals.</param>
-        /// <param name="symbol">The symbol.</param>
-        /// <returns></returns>
-        public static string FormatCurrency(double value, string thousands, string decimals, string symbol)
-        {
-            var l = value == 0 ? 0 : (int)Math.Log10(Math.Abs(value));
-            var u = "";
-
-            if (l > 12)
-            {
-                value /= Math.Pow(10, 12);
-                u = "T";
-            }
-            if (l > 10)
-            {
-                value /= Math.Pow(10, 9);
-                u = "G";
-            }
-            else if (l > 7)
+            if (value > 0)
             {
                 value /= Math.Pow(10, 6);
                 u = "M";
             }
-
-            return value.ToString($"{symbol} #{thousands}###{thousands}##0{decimals}## {u}");
-        }
-
-        /// <summary>
-        /// Builds a named labeler.
-        /// </summary>
-        /// <param name="labels">The labels.</param>
-        /// <returns></returns>
-        public static NamedLabeler BuildNamedLabeler(IList<string> labels)
-        {
-            return new(labels);
-        }
-
-        private static string Log10_7(double value)
-        {
-            var l = value == 0 ? 0 : (int)Math.Log10(Math.Abs(value));
-            var u = "";
-
-            if (l > 7)
+            else
             {
-                if (value > 0)
-                {
-                    value /= Math.Pow(10, 6);
-                    u = "M";
-                }
-                else
-                {
-                    value *= Math.Pow(10, 6);
-                    u = "µ";
-                }
+                value *= Math.Pow(10, 6);
+                u = "µ";
             }
-
-            return value.ToString($"######0.####### {u}");
         }
+
+        return value.ToString($"######0.####### {u}");
     }
 }

@@ -1,31 +1,30 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 
-namespace WinUISample.VisualTest.ReattachVisual
+namespace WinUISample.VisualTest.ReattachVisual;
+
+public sealed partial class View : UserControl
 {
-    public sealed partial class View : UserControl
+    private bool _isInVisualTree = true;
+
+    public View()
     {
-        private bool _isInVisualTree = true;
+        InitializeComponent();
+    }
 
-        public View()
+    private void Button_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        if (_isInVisualTree)
         {
-            InitializeComponent();
+            _ = parent.Children.Remove(chart);
+            _ = parent.Children.Remove(pieChart);
+            _ = parent.Children.Remove(polarChart);
+            _isInVisualTree = false;
+            return;
         }
 
-        private void Button_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-        {
-            if (_isInVisualTree)
-            {
-                _ = parent.Children.Remove(chart);
-                _ = parent.Children.Remove(pieChart);
-                _ = parent.Children.Remove(polarChart);
-                _isInVisualTree = false;
-                return;
-            }
-
-            parent.Children.Add(chart);
-            parent.Children.Add(pieChart);
-            parent.Children.Add(polarChart);
-            _isInVisualTree = true;
-        }
+        parent.Children.Add(chart);
+        parent.Children.Add(pieChart);
+        parent.Children.Add(polarChart);
+        _isInVisualTree = true;
     }
 }

@@ -3,9 +3,10 @@
 @using ViewModelsSamples.Pies.Custom
 
 <PieChart
-	Series="ViewModel.Series">
+	Series="ViewModel.Series"
+	InitialRotation="-90">
 </PieChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new ViewModel();
+	public ViewModel ViewModel { get; set; } = new();
 }

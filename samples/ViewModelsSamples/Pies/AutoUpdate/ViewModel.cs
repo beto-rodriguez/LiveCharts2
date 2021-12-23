@@ -1,22 +1,22 @@
-﻿using LiveChartsCore;
-using LiveChartsCore.Defaults;
-using LiveChartsCore.SkiaSharpView;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using LiveChartsCore;
+using LiveChartsCore.Defaults;
+using LiveChartsCore.SkiaSharpView;
 
-namespace ViewModelsSamples.Pies.AutoUpdate
+namespace ViewModelsSamples.Pies.AutoUpdate;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        private Random random = new Random();
+    private readonly Random random = new();
 
-        public ViewModel()
-        {
-            // using a collection that implements INotifyCollectionChanged as your series collection
-            // will allow the chart to update every time a series is added, removed, replaced or the whole list was cleared
-            // .Net already provides the System.Collections.ObjectModel.ObservableCollection class
-            Series = new ObservableCollection<ISeries>
+    public ViewModel()
+    {
+        // using a collection that implements INotifyCollectionChanged as your series collection
+        // will allow the chart to update every time a series is added, removed, replaced or the whole list was cleared
+        // .Net already provides the System.Collections.ObjectModel.ObservableCollection class
+        Series = new ObservableCollection<ISeries>
             {
                 // using object that implements INotifyPropertyChanged
                 // will allow the chart to update everytime a property in a point changes.
@@ -32,42 +32,41 @@ namespace ViewModelsSamples.Pies.AutoUpdate
                 new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(4) } },
                 new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(3) } }
             };
-        }
+    }
 
-        public ObservableCollection<ISeries> Series { get; set; }
+    public ObservableCollection<ISeries> Series { get; set; }
 
-        public void AddSeries()
+    public void AddSeries()
+    {
+        //  for this sample only 15 series are supported.
+        if (Series.Count == 15) return;
+
+        Series.Add(
+            new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(random.Next(1, 10)) } });
+    }
+
+    public void UpdateAll()
+    {
+        foreach (var series in Series)
         {
-            //  for this sample only 15 series are supported.
-            if (Series.Count == 15) return;
-
-            Series.Add(
-                new PieSeries<ObservableValue> { Values = new[] { new ObservableValue(random.Next(1, 10)) } });
-        }
-
-        public void UpdateAll()
-        {
-            foreach (var series in Series)
+            foreach (var value in series.Values)
             {
-                foreach (var value in series.Values)
-                {
-                    var observableValue = (ObservableValue)value;
-                    observableValue.Value = random.Next(1, 10);
-                }
+                var observableValue = (ObservableValue)value;
+                observableValue.Value = random.Next(1, 10);
             }
         }
-
-        public void RemoveLastSeries()
-        {
-            if (Series.Count == 1) return;
-
-            Series.RemoveAt(Series.Count - 1);
-        }
-
-        // The next commands are only to enable XAML bindings
-        // they are not used in the WinForms sample
-        public ICommand AddSeriesCommand => new Command(o => AddSeries());
-        public ICommand UpdateAllCommand => new Command(o => UpdateAll());
-        public ICommand RemoveSeriesCommand => new Command(o => RemoveLastSeries());
     }
+
+    public void RemoveLastSeries()
+    {
+        if (Series.Count == 1) return;
+
+        Series.RemoveAt(Series.Count - 1);
+    }
+
+    // The next commands are only to enable XAML bindings
+    // they are not used in the WinForms sample
+    public ICommand AddSeriesCommand => new Command(o => AddSeries());
+    public ICommand UpdateAllCommand => new Command(o => UpdateAll());
+    public ICommand RemoveSeriesCommand => new Command(o => RemoveLastSeries());
 }

@@ -2,23 +2,22 @@
 using Microsoft.Maui.Hosting;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 
-namespace MauiSample
+namespace MauiSample;
+
+public static class MauiProgram
 {
-    public static class MauiProgram
+    public static MauiApp CreateMauiApp()
     {
-        public static MauiApp CreateMauiApp()
-        {
-            var builder = MauiApp.CreateBuilder();
+        var builder = MauiApp.CreateBuilder();
 
-            _ = builder
-                .UseSkiaSharp(true)
-                .UseMauiApp<App>()
-                .ConfigureFonts(fonts =>
-                {
-                    _ = fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                });
+        _ = builder
+            .UseSkiaSharp(true)
+            .UseMauiApp<App>()
+            .ConfigureFonts(fonts =>
+            {
+                _ = fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+            });
 
-            return builder.Build();
-        }
+        return builder.Build();
     }
 }

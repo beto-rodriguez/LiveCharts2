@@ -1,41 +1,40 @@
-﻿using LiveChartsCore.SkiaSharpView.WinForms;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+using LiveChartsCore.SkiaSharpView.WinForms;
 using ViewModelsSamples.Axes.ColorsAndPosition;
 
-namespace WinFormsSample.Axes.ColorsAndPosition
+namespace WinFormsSample.Axes.ColorsAndPosition;
+
+public partial class View : UserControl
 {
-    public partial class View : UserControl
+    private readonly CartesianChart cartesianChart;
+
+    public View()
     {
-        private readonly CartesianChart cartesianChart;
+        InitializeComponent();
+        Size = new System.Drawing.Size(100, 100);
 
-        public View()
+        var viewModel = new ViewModel();
+
+        cartesianChart = new CartesianChart
         {
-            InitializeComponent();
-            Size = new System.Drawing.Size(100, 100);
+            Series = viewModel.Series,
+            XAxes = viewModel.XAxes,
+            YAxes = viewModel.YAxes,
 
-            var viewModel = new ViewModel();
+            // out of livecharts properties...
+            Location = new System.Drawing.Point(0, 50),
+            Size = new System.Drawing.Size(100, 50),
+            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
+        };
 
-            cartesianChart = new CartesianChart
-            {
-                Series = viewModel.Series,
-                XAxes = viewModel.XAxes,
-                YAxes = viewModel.YAxes,
+        Controls.Add(cartesianChart);
 
-                // out of livecharts properties...
-                Location = new System.Drawing.Point(0, 50),
-                Size = new System.Drawing.Size(100, 50),
-                Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
-            };
+        var b1 = new Button { Text = "toggle position", Location = new System.Drawing.Point(0, 0) };
+        b1.Click += (object sender, System.EventArgs e) => viewModel.TogglePosition();
+        Controls.Add(b1);
 
-            Controls.Add(cartesianChart);
-
-            var b1 = new Button { Text = "toggle position", Location = new System.Drawing.Point(0, 0) };
-            b1.Click += (object sender, System.EventArgs e) => viewModel.TogglePosition();
-            Controls.Add(b1);
-
-            var b2 = new Button { Text = "new color", Location = new System.Drawing.Point(80, 0) };
-            b2.Click += (object sender, System.EventArgs e) => viewModel.SetNewColor();
-            Controls.Add(b2);
-        }
+        var b2 = new Button { Text = "new color", Location = new System.Drawing.Point(80, 0) };
+        b2.Click += (object sender, System.EventArgs e) => viewModel.SetNewColor();
+        Controls.Add(b2);
     }
 }

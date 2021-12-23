@@ -22,22 +22,21 @@
 
 using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.Kernel.Events
-{
-    /// <summary>
-    /// Defines a method to handle chart point events.
-    /// </summary>
-    /// <param name="chart">The sender chart.</param>
-    /// <param name="point">The found points.</param>
-    public delegate void ChartPointHandler(IChartView chart, ChartPoint point);
+namespace LiveChartsCore.Kernel.Events;
 
-    /// <summary>
-    /// Defines a method to handle chart point events.
-    /// </summary>
-    /// <typeparam name="TModel">The type of the model.</typeparam>
-    /// <typeparam name="TVisual">The type of the visual.</typeparam>
-    /// <typeparam name="TLabel">The type of the label.</typeparam>
-    /// <param name="chart">The sender chart.</param>
-    /// <param name="point">The found points.</param>
-    public delegate void ChartPointHandler<TModel, TVisual, TLabel>(IChartView chart, ChartPoint<TModel, TVisual, TLabel> point);
-}
+/// <summary>
+/// Defines a method to handle chart point events.
+/// </summary>
+/// <param name="chart">The sender chart.</param>
+/// <param name="point">The found points.</param>
+public delegate void ChartPointHandler(IChartView chart, ChartPoint point);
+
+/// <summary>
+/// Defines a method to handle chart point events.
+/// </summary>
+/// <typeparam name="TModel">The type of the model.</typeparam>
+/// <typeparam name="TVisual">The type of the visual.</typeparam>
+/// <typeparam name="TLabel">The type of the label.</typeparam>
+/// <param name="chart">The sender chart.</param>
+/// <param name="point">The found points.</param>
+public delegate void ChartPointHandler<TModel, TVisual, TLabel>(IChartView chart, ChartPoint<TModel, TVisual, TLabel> point);

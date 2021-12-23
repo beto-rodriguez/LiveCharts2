@@ -4,71 +4,70 @@ using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using SkiaSharp;
 
-namespace ViewModelsSamples.Heat.Basic
+namespace ViewModelsSamples.Heat.Basic;
+
+public class ViewModel
 {
-    public class ViewModel
+    public ObservableCollection<ISeries> Series { get; set; } = new()
     {
-        public ObservableCollection<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
+        new HeatSeries<WeightedPoint>
         {
-            new HeatSeries<WeightedPoint>
-            {
-                HeatMap = new[]
+            HeatMap = new[]
                 {
                     new SKColor(255, 241, 118).AsLvcColor(), // the first element is the "coldest"
                     SKColors.DarkSlateGray.AsLvcColor(),
                     SKColors.Blue.AsLvcColor() // the last element is the "hottest"
                 },
-                Values = new ObservableCollection<WeightedPoint>
+            Values = new ObservableCollection<WeightedPoint>
                 {
                     // Charles
-                    new WeightedPoint(0, 0, 150), // Jan
-                    new WeightedPoint(0, 1, 123), // Feb
-                    new WeightedPoint(0, 2, 310), // Mar
-                    new WeightedPoint(0, 3, 225), // Apr
-                    new WeightedPoint(0, 4, 473), // May
-                    new WeightedPoint(0, 5, 373), // Jun
+                    new(0, 0, 150), // Jan
+                    new(0, 1, 123), // Feb
+                    new(0, 2, 310), // Mar
+                    new(0, 3, 225), // Apr
+                    new(0, 4, 473), // May
+                    new(0, 5, 373), // Jun
 
                     // Richard
-                    new WeightedPoint(1, 0, 432), // Jan
-                    new WeightedPoint(1, 1, 312), // Feb
-                    new WeightedPoint(1, 2, 135), // Mar
-                    new WeightedPoint(1, 3, 78), // Apr
-                    new WeightedPoint(1, 4, 124), // May
-                    new WeightedPoint(1, 5, 423), // Jun
+                    new(1, 0, 432), // Jan
+                    new(1, 1, 312), // Feb
+                    new(1, 2, 135), // Mar
+                    new(1, 3, 78), // Apr
+                    new(1, 4, 124), // May
+                    new(1, 5, 423), // Jun
 
                     // Ana
-                    new WeightedPoint(2, 0, 543), // Jan
-                    new WeightedPoint(2, 1, 134), // Feb
-                    new WeightedPoint(2, 2, 524), // Mar
-                    new WeightedPoint(2, 3, 315), // Apr
-                    new WeightedPoint(2, 4, 145), // May
-                    new WeightedPoint(2, 5, 80), // Jun
+                    new(2, 0, 543), // Jan
+                    new(2, 1, 134), // Feb
+                    new(2, 2, 524), // Mar
+                    new(2, 3, 315), // Apr
+                    new(2, 4, 145), // May
+                    new(2, 5, 80), // Jun
 
                     // Mari
-                    new WeightedPoint(3, 0, 90), // Jan
-                    new WeightedPoint(3, 1, 123), // Feb
-                    new WeightedPoint(3, 2, 70), // Mar
-                    new WeightedPoint(3, 3, 123), // Apr
-                    new WeightedPoint(3, 4, 432), // May
-                    new WeightedPoint(3, 5, 142), // Jun
+                    new(3, 0, 90), // Jan
+                    new(3, 1, 123), // Feb
+                    new(3, 2, 70), // Mar
+                    new(3, 3, 123), // Apr
+                    new(3, 4, 432), // May
+                    new(3, 5, 142), // Jun
                 },
-            }
-        };
+        }
+    };
 
-        public ObservableCollection<Axis> XAxes { get; set; } = new ObservableCollection<Axis>
+    public ObservableCollection<Axis> XAxes { get; set; } = new()
+    {
+        new Axis
         {
-            new Axis
-            {
-                Labels = new [] { "Charles", "Richard", "Ana", "Mari" }
-            }
-        };
+            Labels = new[] { "Charles", "Richard", "Ana", "Mari" }
+        }
+    };
 
-        public ObservableCollection<Axis> YAxes { get; set; } = new ObservableCollection<Axis>
+    public ObservableCollection<Axis> YAxes { get; set; } = new()
+    {
+        new Axis
         {
-            new Axis
-            {
-                Labels = new [] { "Jan", "Feb", "Mar", "Apr", "May", "Jun" }
-            }
-        };
-    }
+            Labels = new[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun" }
+        }
+    };
 }

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
 using ViewModelsSamples.Scatter.AutoUpdate;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
 namespace UWPSample.Scatter.AutoUpdate

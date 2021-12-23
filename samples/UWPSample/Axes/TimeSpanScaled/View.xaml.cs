@@ -6,7 +6,7 @@ namespace UWPSample.Axes.TimeSpanScaled
     {
         public View()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

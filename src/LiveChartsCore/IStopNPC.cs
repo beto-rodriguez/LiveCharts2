@@ -22,21 +22,20 @@
 
 using System.ComponentModel;
 
-namespace LiveChartsCore
+namespace LiveChartsCore;
+
+/// <summary>
+/// Defines an object that helps the library to stop listening to <see cref="INotifyPropertyChanged"/>, this is used internally
+/// to apply themes and avoid the chart to update as we apply it.
+/// </summary>
+public interface IStopNPC
 {
     /// <summary>
-    /// Defines an object that helps the library to stop listening to <see cref="INotifyPropertyChanged"/>, this is used internally
-    /// to apply themes and avoid the chart to update as we apply it.
+    /// Gets or sets a value indicating whether this instance is notifying changes, this property is used internally to turn off
+    /// notifications while the theme is being applied, this property is not designed to be used by the user.
     /// </summary>
-    public interface IStopNPC
-    {
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is notifying changes, this property is used internally to turn off
-        /// notifications while the theme is being applied, this property is not designed to be used by the user.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is notifying changes; otherwise, <c>false</c>.
-        /// </value>
-        bool IsNotifyingChanges { get; set; }
-    }
+    /// <value>
+    ///   <c>true</c> if this instance is notifying changes; otherwise, <c>false</c>.
+    /// </value>
+    bool IsNotifyingChanges { get; set; }
 }

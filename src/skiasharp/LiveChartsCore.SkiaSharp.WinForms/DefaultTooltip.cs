@@ -21,17 +21,6 @@
 // SOFTWARE.
 
 using System;
-
-/* Unmerged change from project 'LiveChartsCore.SkiaSharpView.WinForms (netcoreapp3.1)'
-Before:
-using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.SkiaSharpView.Drawing;
-After:
-using LiveChartsCore.Collections.Generic;
-using System.Drawing;
-using LiveChartsCore.Linq;
-*/
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -40,129 +29,140 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.WinForms
+namespace LiveChartsCore.SkiaSharpView.WinForms;
+
+/// <inheritdoc cref="IChartTooltip{TDrawingContext}" />
+public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>, IDisposable
 {
-    /// <inheritdoc cref="IChartTooltip{TDrawingContext}" />
-    public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>, IDisposable
+    private Panel? _tooltipContainer;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
+    /// </summary>
+    public DefaultTooltip()
     {
-        private const int CS_DROPSHADOW = 0x00020000;
+        InitializeComponent();
+        SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+        BackColor = Color.Transparent;
+        ShowInTaskbar = false;
+        Paint += DefaultTooltip_Paint;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
-        /// </summary>
-        public DefaultTooltip()
+    void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+    {
+        var wfChart = (Chart)chart.View;
+
+        var size = DrawAndMesure(tooltipPoints, wfChart);
+        LvcPoint? location = null;
+
+        if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
         {
-            InitializeComponent();
-            ShowInTaskbar = false;
+            location = tooltipPoints.GetCartesianTooltipLocation(
+                chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height), chart.ControlSize);
         }
-
-        void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
+        if (chart is PieChart<SkiaSharpDrawingContext>)
         {
-            var wfChart = (Chart)chart.View;
+            location = tooltipPoints.GetPieTooltipLocation(
+                chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height));
+        }
+        if (location is null) throw new Exception("location not supported");
+        Height = (int)size.Height;
+        Width = (int)size.Width;
+        if (_tooltipContainer is not null) _tooltipContainer.BackColor = wfChart.TooltipBackColor;
 
-            var size = DrawAndMesure(tooltipPoints, wfChart);
-            LvcPoint? location = null;
+        var l = wfChart.PointToScreen(Point.Empty);
+        var x = l.X + (int)location.Value.X;
+        var y = l.Y + (int)location.Value.Y;
+        Location = new Point(x, y);
+        Show();
+    }
 
-            if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
+    private SizeF DrawAndMesure(IEnumerable<ChartPoint> tooltipPoints, Chart chart)
+    {
+        SuspendLayout();
+        Controls.Clear();
+
+        var h = 0f;
+        var w = 0f;
+
+        using var g = CreateGraphics();
+
+        var container = new Panel { Location = new Point(10, 10) };
+        _tooltipContainer = container;
+        Controls.Add(container);
+
+        foreach (var point in tooltipPoints)
+        {
+            var text = point.AsTooltipString;
+            var size = g.MeasureString(text, chart.TooltipFont);
+
+            var drawableSeries = (IChartSeries<SkiaSharpDrawingContext>)point.Context.Series;
+
+            container.Controls.Add(new MotionCanvas
             {
-                location = tooltipPoints.GetCartesianTooltipLocation(
-                    chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height), chart.ControlSize);
-            }
-            if (chart is PieChart<SkiaSharpDrawingContext>)
+                Location = new Point(8, (int)h + 6),
+                PaintTasks = drawableSeries.CanvasSchedule.PaintSchedules,
+                Width = (int)drawableSeries.CanvasSchedule.Width,
+                Height = (int)drawableSeries.CanvasSchedule.Height
+            });
+            container.Controls.Add(new Label
             {
-                location = tooltipPoints.GetPieTooltipLocation(
-                    chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height));
-            }
-            if (location is null) throw new Exception("location not supported");
+                Text = text,
+                Font = chart.TooltipFont,
+                ForeColor = chart.TooltipTextColor,
+                Location = new Point(6 + (int)drawableSeries.CanvasSchedule.Width + 6, (int)h + 6),
+                AutoSize = true
+            });
 
-            BackColor = wfChart.TooltipBackColor;
-            Height = (int)size.Height;
-            Width = (int)size.Width;
-
-            var l = wfChart.PointToScreen(Point.Empty);
-            var x = l.X + (int)location.Value.X;
-            var y = l.Y + (int)location.Value.Y;
-            Location = new Point(x, y);
-            Show();
+            var thisW = size.Width + 18 + (int)drawableSeries.CanvasSchedule.Width;
+            h += size.Height + 6;
+            w = thisW > w ? thisW : w;
         }
 
-        private SizeF DrawAndMesure(IEnumerable<ChartPoint> tooltipPoints, Chart chart)
+        h += 12;
+        container.Width = (int)w + 4;
+        container.Height = (int)h;
+
+        ResumeLayout();
+        return new SizeF(w + 20, h + 20);
+    }
+
+    void IChartTooltip<SkiaSharpDrawingContext>.Hide()
+    {
+        Location = new Point(10000, 10000);
+    }
+
+    private void DefaultTooltip_Paint(object sender, PaintEventArgs e)
+    {
+        if (_tooltipContainer is null) return;
+
+        using var p1 = new Pen(Color.FromArgb(220, 220, 220));
+
+        e.Graphics.DrawRectangle(
+            p1,
+            new Rectangle(
+                _tooltipContainer.Location.X - 1, _tooltipContainer.Location.Y - 1,
+                _tooltipContainer.Width + 1, _tooltipContainer.Height + 1));
+    }
+
+    /// <summary>
+    /// Paints the form background.
+    /// </summary>
+    /// <param name="e"></param>
+    protected override void OnPaintBackground(PaintEventArgs e) { /* Ignore */ }
+
+    /// <summary>
+    /// Disposes the specified disposing.
+    /// </summary>
+    /// <param name="disposing">if set to <c>true</c> [disposing].</param>
+    /// <returns></returns>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing && (components is not null))
         {
-            SuspendLayout();
-            Controls.Clear();
-
-            var h = 0f;
-            var w = 0f;
-
-            using var g = CreateGraphics();
-            foreach (var point in tooltipPoints)
-            {
-                var text = point.AsTooltipString;
-                var size = g.MeasureString(text, chart.TooltipFont);
-
-                var drawableSeries = (IChartSeries<SkiaSharpDrawingContext>)point.Context.Series;
-
-                Controls.Add(new MotionCanvas
-                {
-                    Location = new Point(6, (int)h + 6),
-                    PaintTasks = drawableSeries.CanvasSchedule.PaintSchedules,
-                    Width = (int)drawableSeries.CanvasSchedule.Width,
-                    Height = (int)drawableSeries.CanvasSchedule.Height
-                });
-                Controls.Add(new Label
-                {
-                    Text = text,
-                    Font = chart.TooltipFont,
-                    ForeColor = chart.TooltipTextColor,
-                    Location = new Point(6 + (int)drawableSeries.CanvasSchedule.Width + 6, (int)h + 6),
-                    AutoSize = true
-                });
-
-                var thisW = size.Width + 18 + (int)drawableSeries.CanvasSchedule.Width;
-                h += size.Height + 6;
-                w = thisW > w ? thisW : w;
-            }
-
-            h += 6;
-
-            ResumeLayout();
-            return new SizeF(w, h);
+            components.Dispose();
         }
 
-        void IChartTooltip<SkiaSharpDrawingContext>.Hide()
-        {
-            Location = new Point(10000, 10000);
-        }
-
-        /// <summary>
-        /// Disposes the specified disposing.
-        /// </summary>
-        /// <param name="disposing">if set to <c>true</c> [disposing].</param>
-        /// <returns></returns>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components is not null))
-            {
-                components.Dispose();
-            }
-
-            base.Dispose(disposing);
-        }
-
-        /// <summary>
-        /// Gets the create parameters.
-        /// </summary>
-        /// <value>
-        /// The create parameters.
-        /// </value>
-        protected override CreateParams CreateParams
-        {
-            get
-            {
-                var cp = base.CreateParams;
-                cp.ClassStyle |= CS_DROPSHADOW;
-                return cp;
-            }
-        }
+        base.Dispose(disposing);
     }
 }

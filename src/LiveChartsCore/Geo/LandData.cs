@@ -24,67 +24,66 @@ using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Geo
+namespace LiveChartsCore.Geo;
+
+/// <summary>
+/// Defines the land data class.
+/// </summary>
+public class LandData
 {
     /// <summary>
-    /// Defines the land data class.
+    /// Initializes a new instance of the <see cref="LandData"/> class.
     /// </summary>
-    public class LandData
+    public LandData(double[][] coordinates)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LandData"/> class.
-        /// </summary>
-        public LandData(double[][] coordinates)
+        var c = new List<LvcPointD>();
+
+        foreach (var point in coordinates)
         {
-            var c = new List<LvcPointD>();
+            var x = point[0];
+            var y = point[1];
 
-            foreach (var point in coordinates)
-            {
-                var x = point[0];
-                var y = point[1];
+            if (x > MaxBounds[0]) MaxBounds[0] = x;
+            if (x < MinBounds[0]) MinBounds[0] = x;
 
-                if (x > MaxBounds[0]) MaxBounds[0] = x;
-                if (x < MinBounds[0]) MinBounds[0] = x;
+            if (y > MaxBounds[1]) MaxBounds[1] = y;
+            if (y < MinBounds[1]) MinBounds[1] = y;
 
-                if (y > MaxBounds[1]) MaxBounds[1] = y;
-                if (y < MinBounds[1]) MinBounds[1] = y;
-
-                c.Add(new LvcPointD(x, y));
-            }
-
-            Coordinates = c.ToArray();
-            BoundsHypotenuse = Math.Sqrt(Math.Pow(MaxBounds[0] - MinBounds[0], 2) + Math.Pow(MaxBounds[1] - MinBounds[1], 2));
+            c.Add(new LvcPointD(x, y));
         }
 
-        /// <summary>
-        /// Gets or sets the maximum bounds.
-        /// </summary>
-        /// <value>
-        /// The maximum bounds.
-        /// </value>
-        public double[] MaxBounds { get; set; } = new double[] { double.MinValue, double.MinValue };
-
-        /// <summary>
-        /// Gets or sets the minimum bounds.
-        /// </summary>
-        /// <value>
-        /// The minimum bounds.
-        /// </value>
-        public double[] MinBounds { get; set; } = new double[] { double.MaxValue, double.MaxValue };
-
-        /// <summary>
-        /// Gets the bounds hypotenuse.
-        /// </summary>
-        public double BoundsHypotenuse { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the land data.
-        /// </summary>
-        public LvcPointD[] Coordinates { get; }
-
-        /// <summary>
-        /// Gets or sets the shape.
-        /// </summary>
-        public object? Shape { get; set; }
+        Coordinates = c.ToArray();
+        BoundsHypotenuse = Math.Sqrt(Math.Pow(MaxBounds[0] - MinBounds[0], 2) + Math.Pow(MaxBounds[1] - MinBounds[1], 2));
     }
+
+    /// <summary>
+    /// Gets or sets the maximum bounds.
+    /// </summary>
+    /// <value>
+    /// The maximum bounds.
+    /// </value>
+    public double[] MaxBounds { get; set; } = { double.MinValue, double.MinValue };
+
+    /// <summary>
+    /// Gets or sets the minimum bounds.
+    /// </summary>
+    /// <value>
+    /// The minimum bounds.
+    /// </value>
+    public double[] MinBounds { get; set; } = { double.MaxValue, double.MaxValue };
+
+    /// <summary>
+    /// Gets the bounds hypotenuse.
+    /// </summary>
+    public double BoundsHypotenuse { get; private set; }
+
+    /// <summary>
+    /// Gets or sets the land data.
+    /// </summary>
+    public LvcPointD[] Coordinates { get; }
+
+    /// <summary>
+    /// Gets or sets the shape.
+    /// </summary>
+    public object? Shape { get; set; }
 }

@@ -1,19 +1,16 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
-namespace ViewModelsSamples.Lines.Basic
+namespace ViewModelsSamples.Lines.Basic;
+
+public class ViewModel
 {
-    public class ViewModel
-    {
-        public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
-        {
+    public ISeries[] Series { get; set; }
+        = {
             new LineSeries<double>
             {
-                Values = new ObservableCollection<double> { 2, 1, 3, 5, 3, 4, 6 },
+                Values = new double[] { 2, 1, 3, 5, 3, 4, 6 },
                 Fill = null
             }
         };
-    }
 }

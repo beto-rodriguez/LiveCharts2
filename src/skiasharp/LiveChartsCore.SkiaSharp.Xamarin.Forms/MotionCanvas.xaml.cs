@@ -31,121 +31,120 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms
+namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms;
+
+/// <summary>
+/// The motion canvas control fro Xamarin, <see cref="MotionCanvas{TDrawingContext}"/>.
+/// </summary>
+[XamlCompilation(XamlCompilationOptions.Compile)]
+public partial class MotionCanvas : ContentView
 {
+    private bool _isDrawingLoopRunning = false;
+
     /// <summary>
-    /// The motion canvas control fro Xamarin, <see cref="MotionCanvas{TDrawingContext}"/>.
+    /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
     /// </summary>
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MotionCanvas : ContentView
+    public MotionCanvas()
     {
-        private bool _isDrawingLoopRunning = false;
+        InitializeComponent();
+        if (skiaElement is null)
+            throw new Exception(
+                $"SkiaElement not found. This was probably caused because the control {nameof(MotionCanvas)} template was overridden, " +
+                $"If you override the template please add an {nameof(SKCanvasView)} to the template and name it 'skiaElement'");
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
-        /// </summary>
-        public MotionCanvas()
+        skiaElement.PaintSurface += OnCanvasViewPaintSurface;
+        CanvasCore.Invalidated += OnCanvasCoreInvalidated;
+    }
+
+    /// <summary>
+    /// The paint tasks property
+    /// </summary>
+    public static readonly BindableProperty PaintTasksProperty = BindableProperty.Create(
+        nameof(PaintTasks), typeof(List<PaintSchedule<SkiaSharpDrawingContext>>),
+        typeof(MotionCanvas), propertyChanged: PaintTasksChanged);
+
+    /// <summary>
+    /// Gets the sk canvas view.
+    /// </summary>
+    /// <value>
+    /// The sk canvas view.
+    /// </value>
+    public SKCanvasView SkCanvasView => skiaElement;
+
+    /// <summary>
+    /// Gets or sets the frames per second.
+    /// </summary>
+    /// <value>
+    /// The frames per second.
+    /// </value>
+    public double FramesPerSecond { get; set; } = 90;
+
+    /// <summary>
+    /// Gets or sets the paint tasks.
+    /// </summary>
+    /// <value>
+    /// The paint tasks.
+    /// </value>
+    public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
+    {
+        get => (List<PaintSchedule<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty);
+        set => SetValue(PaintTasksProperty, value);
+    }
+
+    /// <summary>
+    /// Gets the canvas core.
+    /// </summary>
+    /// <value>
+    /// The canvas core.
+    /// </value>
+    public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
+
+    /// <summary>
+    /// Invalidates this instance.
+    /// </summary>
+    /// <returns></returns>
+    public void Invalidate()
+    {
+        MainThread.BeginInvokeOnMainThread(RunDrawingLoop);
+    }
+
+    private void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs args)
+    {
+        CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
+    }
+
+    private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
+    {
+        Invalidate();
+    }
+
+    private async void RunDrawingLoop()
+    {
+        if (_isDrawingLoopRunning) return;
+        _isDrawingLoopRunning = true;
+
+        var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
+        while (!CanvasCore.IsValid)
         {
-            InitializeComponent();
-            if (skiaElement is null)
-                throw new Exception(
-                    $"SkiaElement not found. This was probably caused because the control {nameof(MotionCanvas)} template was overridden, " +
-                    $"If you override the template please add an {nameof(SKCanvasView)} to the template and name it 'skiaElement'");
-
-            skiaElement.PaintSurface += OnCanvasViewPaintSurface;
-            CanvasCore.Invalidated += OnCanvasCoreInvalidated;
+            skiaElement.InvalidateSurface();
+            await Task.Delay(ts);
         }
 
-        /// <summary>
-        /// The paint tasks property
-        /// </summary>
-        public static readonly BindableProperty PaintTasksProperty = BindableProperty.Create(
-            nameof(PaintTasks), typeof(List<PaintSchedule<SkiaSharpDrawingContext>>),
-            typeof(MotionCanvas), propertyChanged: PaintTasksChanged);
+        _isDrawingLoopRunning = false;
+    }
 
-        /// <summary>
-        /// Gets the sk canvas view.
-        /// </summary>
-        /// <value>
-        /// The sk canvas view.
-        /// </value>
-        public SKCanvasView SkCanvasView => skiaElement;
+    private static void PaintTasksChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var motionCanvas = (MotionCanvas)bindable;
 
-        /// <summary>
-        /// Gets or sets the frames per second.
-        /// </summary>
-        /// <value>
-        /// The frames per second.
-        /// </value>
-        public double FramesPerSecond { get; set; } = 90;
+        var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>>();
 
-        /// <summary>
-        /// Gets or sets the paint tasks.
-        /// </summary>
-        /// <value>
-        /// The paint tasks.
-        /// </value>
-        public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
+        foreach (var item in motionCanvas.PaintTasks)
         {
-            get => (List<PaintSchedule<SkiaSharpDrawingContext>>)GetValue(PaintTasksProperty);
-            set => SetValue(PaintTasksProperty, value);
+            item.PaintTask.SetGeometries(motionCanvas.CanvasCore, item.Geometries);
+            _ = tasks.Add(item.PaintTask);
         }
 
-        /// <summary>
-        /// Gets the canvas core.
-        /// </summary>
-        /// <value>
-        /// The canvas core.
-        /// </value>
-        public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
-
-        /// <summary>
-        /// Invalidates this instance.
-        /// </summary>
-        /// <returns></returns>
-        public void Invalidate()
-        {
-            MainThread.BeginInvokeOnMainThread(RunDrawingLoop);
-        }
-
-        private void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs args)
-        {
-            CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
-        }
-
-        private void OnCanvasCoreInvalidated(MotionCanvas<SkiaSharpDrawingContext> sender)
-        {
-            Invalidate();
-        }
-
-        private async void RunDrawingLoop()
-        {
-            if (_isDrawingLoopRunning) return;
-            _isDrawingLoopRunning = true;
-
-            var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
-            while (!CanvasCore.IsValid)
-            {
-                skiaElement.InvalidateSurface();
-                await Task.Delay(ts);
-            }
-
-            _isDrawingLoopRunning = false;
-        }
-
-        private static void PaintTasksChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            var motionCanvas = (MotionCanvas)bindable;
-
-            var tasks = new HashSet<IPaint<SkiaSharpDrawingContext>>();
-
-            foreach (var item in motionCanvas.PaintTasks)
-            {
-                item.PaintTask.SetGeometries(motionCanvas.CanvasCore, item.Geometries);
-                _ = tasks.Add(item.PaintTask);
-            }
-
-            motionCanvas.CanvasCore.SetPaintTasks(tasks);
-        }
+        motionCanvas.CanvasCore.SetPaintTasks(tasks);
     }
 }

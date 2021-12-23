@@ -1,12 +1,11 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 
-namespace WinUISample.Axes.LabelsFormat
+namespace WinUISample.Axes.LabelsFormat;
+
+public sealed partial class View : UserControl
 {
-    public sealed partial class View : UserControl
+    public View()
     {
-        public View()
-        {
-            this.InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

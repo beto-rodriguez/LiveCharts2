@@ -22,52 +22,51 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Kernel.Sketches
+namespace LiveChartsCore.Kernel.Sketches;
+
+/// <summary>
+/// Defines a bar series point.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="IChartSeries{TDrawingContext}" />
+public interface IBarSeries<TDrawingContext> : IChartSeries<TDrawingContext>, IStrokedAndFilled<TDrawingContext>, ICartesianSeries<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Defines a bar series point.
+    /// Gets or sets the rx, the radius used in the x axis to round the corners of each column in pixels.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="IChartSeries{TDrawingContext}" />
-    public interface IBarSeries<TDrawingContext> : IChartSeries<TDrawingContext>, IStrokedAndFilled<TDrawingContext>, ICartesianSeries<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    {
-        /// <summary>
-        /// Gets or sets the rx, the radius used in the x axis to round the corners of each column in pixels.
-        /// </summary>
-        /// <value>
-        /// The rx.
-        /// </value>
-        double Rx { get; set; }
+    /// <value>
+    /// The rx.
+    /// </value>
+    double Rx { get; set; }
 
-        /// <summary>
-        /// Gets or sets the ry, the radius used in the y axis to round the corners of each column in pixels.
-        /// </summary>
-        /// <value>
-        /// The ry.
-        /// </value>
-        double Ry { get; set; }
+    /// <summary>
+    /// Gets or sets the ry, the radius used in the y axis to round the corners of each column in pixels.
+    /// </summary>
+    /// <value>
+    /// The ry.
+    /// </value>
+    double Ry { get; set; }
 
-        /// <summary>
-        /// Gets or sets the padding for each group of bars that share the same secondary coordinate.
-        /// </summary>
-        /// <value>
-        /// The bar group padding.
-        /// </value>
-        double GroupPadding { get; set; }
+    /// <summary>
+    /// Gets or sets the padding for each group of bars that share the same secondary coordinate.
+    /// </summary>
+    /// <value>
+    /// The bar group padding.
+    /// </value>
+    double GroupPadding { get; set; }
 
-        /// <summary>
-        /// Gets or sets the maximum width of the bar.
-        /// </summary>
-        /// <value>
-        /// The maximum width of the bar.
-        /// </value>
-        double MaxBarWidth { get; set; }
+    /// <summary>
+    /// Gets or sets the maximum width of the bar.
+    /// </summary>
+    /// <value>
+    /// The maximum width of the bar.
+    /// </value>
+    double MaxBarWidth { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the bar position respects the other bars that share 
-        /// the same <see cref="ChartPoint.SecondaryValue"/>.
-        /// </summary>
-        bool IgnoresBarPosition { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets a value indicating whether the bar position respects the other bars that share 
+    /// the same <see cref="ChartPoint.SecondaryValue"/>.
+    /// </summary>
+    bool IgnoresBarPosition { get; set; }
 }

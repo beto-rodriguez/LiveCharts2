@@ -8,13 +8,5 @@
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-	<ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <lvc:GeoMap Shapes="{Binding Values}"></lvc:GeoMap>
-        </Grid>
-    </ContentPage.Content>
+    <lvc:GeoMap Shapes="{Binding Values}"  MapProjection="Mercator"/>
 </ContentPage>

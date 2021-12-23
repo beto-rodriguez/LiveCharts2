@@ -1,45 +1,44 @@
-﻿using LiveChartsCore.SkiaSharpView.WinForms;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows.Forms;
+using LiveChartsCore.SkiaSharpView.WinForms;
 using ViewModelsSamples.Bars.Race;
 
-namespace WinFormsSample.Bars.Race
+namespace WinFormsSample.Bars.Race;
+
+public partial class View : UserControl
 {
-    public partial class View : UserControl
+    private readonly CartesianChart cartesianChart;
+    private readonly ViewModel viewModel;
+
+    public View()
     {
-        private readonly CartesianChart cartesianChart;
-        private readonly ViewModel viewModel;
+        InitializeComponent();
+        Size = new System.Drawing.Size(50, 50);
 
-        public View()
+        viewModel = new ViewModel();
+
+        cartesianChart = new CartesianChart
         {
-            InitializeComponent();
-            Size = new System.Drawing.Size(50, 50);
+            Series = viewModel.Series,
 
-            viewModel = new ViewModel();
+            // out of livecharts properties...
+            Location = new System.Drawing.Point(0, 0),
+            Size = new System.Drawing.Size(50, 50),
+            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
+        };
 
-            cartesianChart = new CartesianChart
-            {
-                Series = viewModel.Series,
+        Controls.Add(cartesianChart);
 
-                // out of livecharts properties...
-                Location = new System.Drawing.Point(0, 0),
-                Size = new System.Drawing.Size(50, 50),
-                Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
-            };
+        UpdateViewModel();
+    }
 
-            Controls.Add(cartesianChart);
-
-            UpdateViewModel();
-        }
-
-        public async void UpdateViewModel()
+    public async void UpdateViewModel()
+    {
+        while (true)
         {
-            while (true)
-            {
-                viewModel.RandomIncrement();
-                cartesianChart.Series = viewModel.Series;
-                await Task.Delay(1500);
-            }
+            viewModel.RandomIncrement();
+            cartesianChart.Series = viewModel.Series;
+            await Task.Delay(1500);
         }
     }
 }

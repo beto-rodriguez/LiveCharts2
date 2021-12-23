@@ -23,23 +23,22 @@
 using System;
 using System.ComponentModel;
 
-namespace LiveChartsCore.Geo
+namespace LiveChartsCore.Geo;
+
+/// <summary>
+/// Defines a shape in a map.
+/// </summary>
+public interface IMapElement : INotifyPropertyChanged
 {
     /// <summary>
-    /// Defines a shape in a map.
+    /// Measures the element with the given context.
     /// </summary>
-    public interface IMapElement : INotifyPropertyChanged
-    {
-        /// <summary>
-        /// Measures the element with the given context.
-        /// </summary>
-        [Obsolete]
-        void Measure(object context);
+    [Obsolete]
+    void Measure(object context);
 
-        /// <summary>
-        /// Removes the element with the given context.
-        /// </summary>
-        [Obsolete]
-        void RemoveFromUI(object context);
-    }
+    /// <summary>
+    /// Removes the element with the given context.
+    /// </summary>
+    [Obsolete]
+    void RemoveFromUI(object context);
 }

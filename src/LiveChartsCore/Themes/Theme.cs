@@ -24,127 +24,126 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.Themes
+namespace LiveChartsCore.Themes;
+
+/// <summary>
+/// Defines a style builder.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+public class Theme<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
+    private VisualsStyle<TDrawingContext>? _style;
+
     /// <summary>
-    /// Defines a style builder.
+    /// Gets the current colors.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    public class Theme<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    /// <value>
+    /// The current colors.
+    /// </value>
+    public LvcColor[]? CurrentColors { get; private set; }
+
+    /// <summary>
+    /// Gets the style.
+    /// </summary>
+    /// <value>
+    /// The style.
+    /// </value>
+    public VisualsStyle<TDrawingContext> Style
     {
-        private VisualsStyle<TDrawingContext>? _style;
+        get => _style ?? throw new Exception("There is no style defined yet.");
+        private set => _style = value;
+    }
 
-        /// <summary>
-        /// Gets the current colors.
-        /// </summary>
-        /// <value>
-        /// The current colors.
-        /// </value>
-        public LvcColor[]? CurrentColors { get; private set; }
+    /// <summary>
+    /// Gets or sets the series default resolver.
+    /// </summary>
+    /// <value>
+    /// The series default resolver.
+    /// </value>
+    public Action<LvcColor[], IChartSeries<TDrawingContext>, bool>? SeriesDefaultsResolver { get; set; }
 
-        /// <summary>
-        /// Gets the style.
-        /// </summary>
-        /// <value>
-        /// The style.
-        /// </value>
-        public VisualsStyle<TDrawingContext> Style
-        {
-            get => _style ?? throw new Exception("There is no style defined yet.");
-            private set => _style = value;
-        }
+    /// <summary>
+    /// Gets or sets the plane default resolver.
+    /// </summary>
+    /// <value>
+    /// The axis default resolver.
+    /// </value>
+    public Action<IPlane<TDrawingContext>, bool>? AxisDefaultResolver { get; set; }
 
-        /// <summary>
-        /// Gets or sets the series default resolver.
-        /// </summary>
-        /// <value>
-        /// The series default resolver.
-        /// </value>
-        public Action<LvcColor[], IChartSeries<TDrawingContext>, bool>? SeriesDefaultsResolver { get; set; }
+    /// <summary>
+    /// Uses the colors.
+    /// </summary>
+    /// <param name="colors">The colors.</param>
+    /// <returns>The current theme instance</returns>
+    public Theme<TDrawingContext> WithColors(params LvcColor[] colors)
+    {
+        CurrentColors = colors;
+        return this;
+    }
 
-        /// <summary>
-        /// Gets or sets the plane default resolver.
-        /// </summary>
-        /// <value>
-        /// The axis default resolver.
-        /// </value>
-        public Action<IPlane<TDrawingContext>, bool>? AxisDefaultResolver { get; set; }
+    /// <summary>
+    /// Creates a new styles builder and configures it using the given predicate.
+    /// </summary>
+    /// <param name="predicate">The predicate.</param>
+    /// <returns>The current theme instance</returns>
+    public Theme<TDrawingContext> WithStyle(Action<VisualsStyle<TDrawingContext>> predicate)
+    {
+        predicate(Style = new VisualsStyle<TDrawingContext>());
+        return this;
+    }
 
-        /// <summary>
-        /// Uses the colors.
-        /// </summary>
-        /// <param name="colors">The colors.</param>
-        /// <returns>The current theme instance</returns>
-        public Theme<TDrawingContext> WithColors(params LvcColor[] colors)
-        {
-            CurrentColors = colors;
-            return this;
-        }
+    /// <summary>
+    /// Sets the series defaults resolver.
+    /// </summary>
+    /// <param name="resolver">The resolver.</param>
+    /// <returns></returns>
+    public Theme<TDrawingContext> WithSeriesDefaultsResolver(Action<LvcColor[], IChartSeries<TDrawingContext>, bool> resolver)
+    {
+        SeriesDefaultsResolver = resolver;
+        return this;
+    }
 
-        /// <summary>
-        /// Creates a new styles builder and configures it using the given predicate.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        /// <returns>The current theme instance</returns>
-        public Theme<TDrawingContext> WithStyle(Action<VisualsStyle<TDrawingContext>> predicate)
-        {
-            predicate(Style = new VisualsStyle<TDrawingContext>());
-            return this;
-        }
+    /// <summary>
+    /// Sets the plane defaults resolver.
+    /// </summary>
+    /// <param name="resolver">The resolver.</param>
+    /// <returns></returns>
+    public Theme<TDrawingContext> WithAxisDefaultsResolver(Action<IPlane<TDrawingContext>, bool> resolver)
+    {
+        AxisDefaultResolver = resolver;
+        return this;
+    }
 
-        /// <summary>
-        /// Sets the series defaults resolver.
-        /// </summary>
-        /// <param name="resolver">The resolver.</param>
-        /// <returns></returns>
-        public Theme<TDrawingContext> WithSeriesDefaultsResolver(Action<LvcColor[], IChartSeries<TDrawingContext>, bool> resolver)
-        {
-            SeriesDefaultsResolver = resolver;
-            return this;
-        }
+    /// <summary>
+    /// Gets the objects builder.
+    /// </summary>
+    /// <returns>The current theme instance</returns>
+    public VisualsStyle<TDrawingContext> GetVisualsInitializer()
+    {
+        return Style ?? throw new NullReferenceException(
+                $"An instance of {nameof(VisualsStyle<TDrawingContext>)} is no configured yet, " +
+                $"please register an instance using {nameof(WithStyle)}() method.");
+    }
 
-        /// <summary>
-        /// Sets the plane defaults resolver.
-        /// </summary>
-        /// <param name="resolver">The resolver.</param>
-        /// <returns></returns>
-        public Theme<TDrawingContext> WithAxisDefaultsResolver(Action<IPlane<TDrawingContext>, bool> resolver)
-        {
-            AxisDefaultResolver = resolver;
-            return this;
-        }
+    /// <summary>
+    /// Resolves the series defaults.
+    /// </summary>
+    /// <param name="colors">The colors.</param>
+    /// <param name="series">The series.</param>
+    /// <param name="forceApply">Forces the apply of the theme.</param>
+    public virtual void ResolveSeriesDefaults(LvcColor[] colors, IChartSeries<TDrawingContext> series, bool forceApply)
+    {
+        SeriesDefaultsResolver?.Invoke(colors, series, forceApply);
+    }
 
-        /// <summary>
-        /// Gets the objects builder.
-        /// </summary>
-        /// <returns>The current theme instance</returns>
-        public VisualsStyle<TDrawingContext> GetVisualsInitializer()
-        {
-            return Style ?? throw new NullReferenceException(
-                    $"An instance of {nameof(VisualsStyle<TDrawingContext>)} is no configured yet, " +
-                    $"please register an instance using {nameof(WithStyle)}() method.");
-        }
-
-        /// <summary>
-        /// Resolves the series defaults.
-        /// </summary>
-        /// <param name="colors">The colors.</param>
-        /// <param name="series">The series.</param>
-        /// <param name="forceApply">Forces the apply of the theme.</param>
-        public virtual void ResolveSeriesDefaults(LvcColor[] colors, IChartSeries<TDrawingContext> series, bool forceApply)
-        {
-            SeriesDefaultsResolver?.Invoke(colors, series, forceApply);
-        }
-
-        /// <summary>
-        /// Resolves the plane defaults.
-        /// </summary>
-        /// <param name="plane">The plane.</param>
-        /// /// <param name="forceApply">Forces the apply of the theme.</param>
-        public virtual void ResolveAxisDefaults(IPlane<TDrawingContext> plane, bool forceApply)
-        {
-            AxisDefaultResolver?.Invoke(plane, forceApply);
-        }
+    /// <summary>
+    /// Resolves the plane defaults.
+    /// </summary>
+    /// <param name="plane">The plane.</param>
+    /// /// <param name="forceApply">Forces the apply of the theme.</param>
+    public virtual void ResolveAxisDefaults(IPlane<TDrawingContext> plane, bool forceApply)
+    {
+        AxisDefaultResolver?.Invoke(plane, forceApply);
     }
 }

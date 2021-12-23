@@ -33,417 +33,422 @@ using LiveChartsCore.Kernel.Providers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 
-namespace LiveChartsCore
+namespace LiveChartsCore;
+
+/// <summary>
+/// Defines a series in a Cartesian chart.
+/// </summary>
+/// <typeparam name="TModel">The type of the model.</typeparam>
+/// <typeparam name="TVisual">The type of the visual.</typeparam>
+/// <typeparam name="TLabel">The type of the label.</typeparam>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="ISeries" />
+/// <seealso cref="ISeries{TModel}" />
+/// <seealso cref="IDisposable" />
+/// <seealso cref="INotifyPropertyChanged" />
+public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
+    : ChartElement<TDrawingContext>, ISeries, ISeries<TModel>, INotifyPropertyChanged
+        where TDrawingContext : DrawingContext
+        where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
+        where TLabel : class, ILabelGeometry<TDrawingContext>, new()
 {
     /// <summary>
-    /// Defines a series in a Cartesian chart.
+    /// The subscribed to
     /// </summary>
-    /// <typeparam name="TModel">The type of the model.</typeparam>
-    /// <typeparam name="TVisual">The type of the visual.</typeparam>
-    /// <typeparam name="TLabel">The type of the label.</typeparam>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="ISeries" />
-    /// <seealso cref="ISeries{TModel}" />
-    /// <seealso cref="IDisposable" />
-    /// <seealso cref="INotifyPropertyChanged" />
-    public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
-        : ChartElement<TDrawingContext>, ISeries, ISeries<TModel>, INotifyPropertyChanged
-            where TDrawingContext : DrawingContext
-            where TVisual : class, IVisualChartPoint<TDrawingContext>, new()
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
+    protected readonly HashSet<IChart> subscribedTo = new();
+
+    /// <summary>
+    /// The implements icp
+    /// </summary>
+    protected readonly bool implementsICP;
+
+    /// <summary>
+    /// The pivot
+    /// </summary>
+    protected float pivot = 0f;
+
+    /// <summary>
+    /// The max series stroke.
+    /// </summary>
+    protected const float MaxSeriesStroke = 5f;
+
+    /// <summary>
+    /// The ever fetched
+    /// </summary>
+    protected HashSet<ChartPoint> everFetched = new();
+
+    /// <summary>
+    /// The hover paint.
+    /// </summary>
+    protected IPaint<TDrawingContext>? hoverPaint;
+
+    /// <summary>
+    /// Indicates whether the custom measure handler was requested already.
+    /// </summary>
+    protected bool _requestedCustomMeasureHandler = false;
+
+    /// <summary>
+    /// The custom measure handler.
+    /// </summary>
+    protected Action<Chart<TDrawingContext>>? _customMeasureHandler = null;
+
+    private readonly CollectionDeepObserver<TModel> _observer;
+    private IEnumerable<TModel>? _values;
+    private string? _name;
+    private Action<TModel, ChartPoint>? _mapping;
+    private int _zIndex;
+    private Func<ChartPoint<TModel, TVisual, TLabel>, string> _tooltipLabelFormatter = (point) => $"{point.Context.Series.Name} {point.PrimaryValue}";
+    private Func<ChartPoint<TModel, TVisual, TLabel>, string> _dataLabelsFormatter = (point) => $"{point.PrimaryValue}";
+    private bool _isVisible = true;
+    private LvcPoint _dataPadding = new(0.5f, 0.5f);
+    private DataFactory<TModel, TDrawingContext>? _dataFactory;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}"/> class.
+    /// </summary>
+    /// <param name="properties">The properties.</param>
+    protected Series(SeriesProperties properties)
     {
-        /// <summary>
-        /// The subscribed to
-        /// </summary>
-        protected readonly HashSet<IChart> subscribedTo = new();
+        SeriesProperties = properties;
+        _observer = new CollectionDeepObserver<TModel>(
+            (sender, e) => NotifySubscribers(),
+            (sender, e) => NotifySubscribers());
+    }
 
-        /// <summary>
-        /// The implements icp
-        /// </summary>
-        protected readonly bool implementsICP;
+    /// <inheritdoc cref="ISeries.ActivePoints" />
+    public HashSet<ChartPoint> ActivePoints => everFetched;
 
-        /// <summary>
-        /// The pivot
-        /// </summary>
-        protected float pivot = 0f;
+    /// <inheritdoc cref="ISeries.SeriesProperties"/>
+    public SeriesProperties SeriesProperties { get; }
 
-        /// <summary>
-        /// The max series stroke.
-        /// </summary>
-        protected const float MaxSeriesStroke = 5f;
+    /// <inheritdoc cref="ISeries.Name"/>
+    public string? Name { get => _name; set { _name = value; OnPropertyChanged(); } }
 
-        /// <summary>
-        /// The ever fetched
-        /// </summary>
-        protected HashSet<ChartPoint> everFetched = new();
-
-        /// <summary>
-        /// The hover paint.
-        /// </summary>
-        protected IPaint<TDrawingContext>? hoverPaint;
-
-        /// <summary>
-        /// Indicates whether the custom measure handler was requested already.
-        /// </summary>
-        protected bool _requestedCustomMeasureHandler = false;
-
-        /// <summary>
-        /// The custom measure handler.
-        /// </summary>
-        protected Action<Chart<TDrawingContext>>? _customMeasureHandler = null;
-
-        private readonly CollectionDeepObserver<TModel> _observer;
-        private IEnumerable<TModel>? _values;
-        private string? _name;
-        private Action<TModel, ChartPoint>? _mapping;
-        private int _zIndex;
-        private Func<ChartPoint<TModel, TVisual, TLabel>, string> _tooltipLabelFormatter = (point) => $"{point.Context.Series.Name} {point.PrimaryValue}";
-        private Func<ChartPoint<TModel, TVisual, TLabel>, string> _dataLabelsFormatter = (point) => $"{point.PrimaryValue}";
-        private bool _isVisible = true;
-        private LvcPoint _dataPadding = new(0.5f, 0.5f);
-        private DataFactory<TModel, TDrawingContext>? _dataFactory;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel, TDrawingContext}"/> class.
-        /// </summary>
-        /// <param name="properties">The properties.</param>
-        protected Series(SeriesProperties properties)
+    /// <summary>
+    /// Gets or sets the data set to draw in the chart.
+    /// </summary>
+    public IEnumerable<TModel>? Values
+    {
+        get => _values;
+        set
         {
-            SeriesProperties = properties;
-            _observer = new CollectionDeepObserver<TModel>(
-                (sender, e) => NotifySubscribers(),
-                (sender, e) => NotifySubscribers());
+            _observer.Dispose(_values);
+            _observer.Initialize(value);
+            _values = value;
+            OnPropertyChanged();
         }
+    }
 
-        /// <inheritdoc cref="ISeries.ActivePoints" />
-        public HashSet<ChartPoint> ActivePoints => everFetched;
+    IEnumerable? ISeries.Values { get => Values; set => Values = (IEnumerable<TModel>?)value; }
 
-        /// <inheritdoc cref="ISeries.SeriesProperties"/>
-        public SeriesProperties SeriesProperties { get; }
+    /// <inheritdoc cref="ISeries.Pivot"/>
+    public double Pivot { get => pivot; set { pivot = (float)value; OnPropertyChanged(); } }
 
-        /// <inheritdoc cref="ISeries.Name"/>
-        public string? Name { get => _name; set { _name = value; OnPropertyChanged(); } }
+    /// <summary>
+    /// Gets or sets the mapping that defines how a type is mapped to a <see cref="ChartPoint"/> instance, 
+    /// then the <see cref="ChartPoint"/> will be drawn as a point in the chart.
+    /// </summary>
+    public Action<TModel, ChartPoint>? Mapping { get => _mapping; set { _mapping = value; OnPropertyChanged(); } }
 
-        /// <summary>
-        /// Gets or sets the data set to draw in the chart.
-        /// </summary>
-        public IEnumerable<TModel>? Values
+    int ISeries.SeriesId { get; set; } = -1;
+
+    bool ISeries.RequiresFindClosestOnPointerDown => DataPointerDown is not null;
+
+    /// <summary>
+    /// Occurs when an instance of <see cref="ChartPoint"/> is measured.
+    /// </summary>
+    public event Action<ChartPoint<TModel, TVisual, TLabel>>? PointMeasured;
+
+    /// <summary>
+    /// Occurs when an instance of <see cref="ChartPoint"/> is created.
+    /// </summary>
+    public event Action<ChartPoint<TModel, TVisual, TLabel>>? PointCreated;
+
+    /// <summary>
+    /// Occurs when the pointer is over a chart point.
+    /// </summary>
+    public event ChartPointHandler<TModel, TVisual, TLabel>? DataPointerHover;
+
+    /// <summary>
+    /// Occurs when the pointer left a chart point.
+    /// </summary>
+    public event ChartPointHandler<TModel, TVisual, TLabel>? DataPointerHoverLost;
+
+    /// <summary>
+    /// Occurs when the pointer goes down over a chart point(s).
+    /// </summary>
+    public event ChartPointsHandler<TModel, TVisual, TLabel>? DataPointerDown;
+
+    /// <summary>
+    /// Occurs when a property changes.
+    /// </summary>
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    /// <inheritdoc cref="ISeries.ZIndex" />
+    public int ZIndex { get => _zIndex; set { _zIndex = value; OnPropertyChanged(); } }
+
+    /// <summary>
+    /// Gets or sets the tool tip label formatter, this function will build the label when a point in this series 
+    /// is shown inside a tool tip.
+    /// </summary>
+    /// <value>
+    /// The tool tip label formatter.
+    /// </value>
+    public Func<ChartPoint<TModel, TVisual, TLabel>, string> TooltipLabelFormatter
+    {
+        get => _tooltipLabelFormatter;
+        set { _tooltipLabelFormatter = value; OnPropertyChanged(); }
+    }
+
+    /// <summary>
+    /// Gets or sets the data label formatter, this function will build the label when a point in this series 
+    /// is shown as data label.
+    /// </summary>
+    /// <value>
+    /// The data label formatter.
+    /// </value>
+    public Func<ChartPoint<TModel, TVisual, TLabel>, string> DataLabelsFormatter
+    {
+        get => _dataLabelsFormatter;
+        set { _dataLabelsFormatter = value; OnPropertyChanged(); }
+    }
+
+    /// <inheritdoc cref="ISeries.IsVisible" />
+    public bool IsVisible
+    {
+        get => _isVisible;
+        set
         {
-            get => _values;
-            set
-            {
-                _observer.Dispose(_values);
-                _observer.Initialize(value);
-                _values = value;
-                OnPropertyChanged();
-            }
+            var changed = value != _isVisible;
+            _isVisible = value;
+            if (!_isVisible) RestartAnimations();
+            if (value && !((ISeries)this).IsNotifyingChanges) ((ISeries)this).IsNotifyingChanges = true;
+            OnPropertyChanged();
+            if (changed) OnVisibilityChanged();
         }
+    }
 
-        IEnumerable? ISeries.Values { get => Values; set => Values = (IEnumerable<TModel>?)value; }
+    /// <inheritdoc cref="ISeries.IsHoverable" />
+    public bool IsHoverable { get; set; } = true;
 
-        /// <inheritdoc cref="ISeries.Pivot"/>
-        public double Pivot { get => pivot; set { pivot = (float)value; OnPropertyChanged(); } }
+    /// <inheritdoc cref="ISeries.DataPadding" />
+    public LvcPoint DataPadding { get => _dataPadding; set { _dataPadding = value; OnPropertyChanged(); } }
 
-        /// <summary>
-        /// Gets or sets the mapping that defines how a type is mapped to a <see cref="ChartPoint"/> instance, 
-        /// then the <see cref="ChartPoint"/> will be drawn as a point in the chart.
-        /// </summary>
-        public Action<TModel, ChartPoint>? Mapping { get => _mapping; set { _mapping = value; OnPropertyChanged(); } }
+    /// <inheritdoc cref="ISeries.AnimationsSpeed" />
+    public TimeSpan? AnimationsSpeed { get; set; }
 
-        int ISeries.SeriesId { get; set; } = -1;
+    /// <inheritdoc cref="ISeries.EasingFunction" />
+    public Func<float, float>? EasingFunction { get; set; }
 
-        bool ISeries.RequiresFindClosestOnPointerDown => DataPointerDown is not null;
+    /// <inheritdoc cref="IStopNPC.IsNotifyingChanges"/>
+    bool IStopNPC.IsNotifyingChanges { get; set; }
 
-        /// <summary>
-        /// Occurs when an instance of <see cref="ChartPoint"/> is measured.
-        /// </summary>
-        public event Action<ChartPoint<TModel, TVisual, TLabel>>? PointMeasured;
-
-        /// <summary>
-        /// Occurs when an instance of <see cref="ChartPoint"/> is created.
-        /// </summary>
-        public event Action<ChartPoint<TModel, TVisual, TLabel>>? PointCreated;
-
-        /// <summary>
-        /// Occurs when the pointer is over a chart point.
-        /// </summary>
-        public event ChartPointHandler<TModel, TVisual, TLabel>? DataPointerHover;
-
-        /// <summary>
-        /// Occurs when the pointer left a chart point.
-        /// </summary>
-        public event ChartPointHandler<TModel, TVisual, TLabel>? DataPointerHoverLost;
-
-        /// <summary>
-        /// Occurs when the pointer goes down over a chart point(s).
-        /// </summary>
-        public event ChartPointsHandler<TModel, TVisual, TLabel>? DataPointerDown;
-
-        /// <summary>
-        /// Occurs when a property changes.
-        /// </summary>
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        /// <inheritdoc cref="ISeries.ZIndex" />
-        public int ZIndex { get => _zIndex; set { _zIndex = value; OnPropertyChanged(); } }
-
-        /// <summary>
-        /// Gets or sets the tool tip label formatter, this function will build the label when a point in this series 
-        /// is shown inside a tool tip.
-        /// </summary>
-        /// <value>
-        /// The tool tip label formatter.
-        /// </value>
-        public Func<ChartPoint<TModel, TVisual, TLabel>, string> TooltipLabelFormatter
+    /// <summary>
+    /// Gets the data factory.
+    /// </summary>
+    protected DataFactory<TModel, TDrawingContext> DataFactory
+    {
+        get
         {
-            get => _tooltipLabelFormatter;
-            set { _tooltipLabelFormatter = value; OnPropertyChanged(); }
-        }
-
-        /// <summary>
-        /// Gets or sets the data label formatter, this function will build the label when a point in this series 
-        /// is shown as data label.
-        /// </summary>
-        /// <value>
-        /// The data label formatter.
-        /// </value>
-        public Func<ChartPoint<TModel, TVisual, TLabel>, string> DataLabelsFormatter
-        {
-            get => _dataLabelsFormatter;
-            set { _dataLabelsFormatter = value; OnPropertyChanged(); }
-        }
-
-        /// <inheritdoc cref="ISeries.IsVisible" />
-        public bool IsVisible
-        {
-            get => _isVisible;
-            set
-            {
-                var changed = value != _isVisible;
-                _isVisible = value;
-                if (!_isVisible) RestartAnimations();
-                if (value && !((ISeries)this).IsNotifyingChanges) ((ISeries)this).IsNotifyingChanges = true;
-                OnPropertyChanged();
-                if (changed) OnVisibilityChanged();
-            }
-        }
-
-        /// <inheritdoc cref="ISeries.DataPadding" />
-        public LvcPoint DataPadding { get => _dataPadding; set { _dataPadding = value; OnPropertyChanged(); } }
-
-        /// <inheritdoc cref="ISeries.AnimationsSpeed" />
-        public TimeSpan? AnimationsSpeed { get; set; }
-
-        /// <inheritdoc cref="ISeries.EasingFunction" />
-        public Func<float, float>? EasingFunction { get; set; }
-
-        /// <inheritdoc cref="IStopNPC.IsNotifyingChanges"/>
-        bool IStopNPC.IsNotifyingChanges { get; set; }
-
-        /// <summary>
-        /// Gets the data factory.
-        /// </summary>
-        protected DataFactory<TModel, TDrawingContext> DataFactory
-        {
-            get
-            {
-                if (_dataFactory is null)
-                {
-                    var factory = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>();
-                    _dataFactory = factory.GetDefaultDataFactory<TModel>();
-                }
-
-                return _dataFactory;
-            }
-        }
-
-        /// <inheritdoc cref="ISeries.VisibilityChanged"/>
-        public event Action<ISeries>? VisibilityChanged;
-
-        /// <inheritdoc cref="IChartSeries{TDrawingContext}.GetStackGroup"/>
-        public virtual int GetStackGroup()
-        {
-            return 0;
-        }
-
-        /// <inheritdoc cref="ISeries.Fetch(IChart)"/>
-        protected IEnumerable<ChartPoint> Fetch(IChart chart)
-        {
-            _ = subscribedTo.Add(chart);
-            return DataFactory.Fetch(this, chart);
-        }
-
-        /// <summary>
-        /// Called when the pointer goes down on a point or points.
-        /// </summary>
-        /// <param name="chart">the chart.</param>
-        /// <param name="points">the points.</param>
-        protected virtual void OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points)
-        {
-            DataPointerDown?.Invoke(chart, points.Select(x => new ChartPoint<TModel, TVisual, TLabel>(x)));
-        }
-
-        IEnumerable<ChartPoint> ISeries.Fetch(IChart chart)
-        {
-            return Fetch(chart);
-        }
-
-        IEnumerable<ChartPoint> ISeries.FindHoveredPoints(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy)
-        {
-            return
-                Fetch(chart)
-                .Where(x =>
-                    x.Context.HoverArea is not null &&
-                    x.Context.HoverArea.IsPointerOver(pointerPosition, strategy));
-        }
-
-        void ISeries.OnPointerEnter(ChartPoint point)
-        {
-            WhenPointerEnters(point);
-        }
-
-        void ISeries.OnPointerLeft(ChartPoint point)
-        {
-            WhenPointerLeaves(point);
-        }
-
-        /// <inheritdoc cref="ISeries.RestartAnimations"/>
-        public void RestartAnimations()
-        {
-            if (DataFactory is null) throw new Exception("Data provider not found");
-            DataFactory.RestartVisuals();
-        }
-
-        /// <inheritdoc cref="ISeries.GetTooltipText(ChartPoint)"/>
-        public string GetTooltipText(ChartPoint point)
-        {
-            return TooltipLabelFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
-        }
-
-        /// <inheritdoc cref="ISeries.GetDataLabelText(ChartPoint)"/>
-        public string GetDataLabelText(ChartPoint point)
-        {
-            return DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
-        }
-
-        /// <inheritdoc cref="ISeries.SoftDeleteOrDispose"/>
-        public abstract void SoftDeleteOrDispose(IChartView chart);
-
-        /// <summary>
-        /// Called when a point was measured.
-        /// </summary>
-        /// <param name="chartPoint">The chart point.</param>
-        protected internal virtual void OnPointMeasured(ChartPoint chartPoint)
-        {
-            PointMeasured?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(chartPoint));
-        }
-
-        /// <summary>
-        /// Called when a point is created.
-        /// </summary>
-        /// <param name="chartPoint">The chart point.</param>
-        protected internal virtual void OnPointCreated(ChartPoint chartPoint)
-        {
-            SetDefaultPointTransitions(chartPoint);
-            PointCreated?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(chartPoint));
-        }
-
-        /// <summary>
-        /// Sets the default point transitions.
-        /// </summary>
-        /// <param name="chartPoint">The chart point.</param>
-        /// <returns></returns>
-        protected abstract void SetDefaultPointTransitions(ChartPoint chartPoint);
-
-        /// <summary>
-        /// Called when a property changed.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        /// <returns></returns>
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            if (!((ISeries)this).IsNotifyingChanges) return;
-            NotifySubscribers();
-        }
-
-        /// <summary>
-        /// Called when the visibility changes.
-        /// </summary>
-        protected virtual void OnVisibilityChanged()
-        {
-            VisibilityChanged?.Invoke(this);
-        }
-
-        /// <summary>
-        /// Called when the pointer enters a point.
-        /// </summary>
-        /// /// <param name="point">The chart point.</param>
-        protected virtual void WhenPointerEnters(ChartPoint point)
-        {
-            var chart = (IChartView<TDrawingContext>)point.Context.Chart;
-
-            if (hoverPaint is null)
-            {
-                hoverPaint = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>()
-                    .GetSolidColorPaint(new LvcColor(255, 255, 255, 180));
-                hoverPaint.ZIndex = int.MaxValue;
-                chart.CoreCanvas.AddDrawableTask(hoverPaint);
-            }
-
-            var visual = (TVisual?)point.Context.Visual;
-            if (visual is null || visual.HighlightableGeometry is null) return;
-
-            hoverPaint.AddGeometryToPaintTask(chart.CoreCanvas, visual.HighlightableGeometry);
-
-            DataPointerHover?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
-        }
-
-        /// <summary>
-        /// Called when the pointer leaves a point.
-        /// </summary>
-        /// /// <param name="point">The chart point.</param>
-        protected virtual void WhenPointerLeaves(ChartPoint point)
-        {
-            if (hoverPaint is null) return;
-
-            var visual = (TVisual?)point.Context.Visual;
-            if (visual is null || visual.HighlightableGeometry is null) return;
-
-            hoverPaint.RemoveGeometryFromPainTask(
-                (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas,
-                visual.HighlightableGeometry);
-
-            DataPointerHoverLost?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
-        }
-
-        /// <summary>
-        /// Gets the custom measure handler.
-        /// </summary>
-        protected virtual Action<Chart<TDrawingContext>>? GetCustomMeasureHandler()
-        {
-            if (!_requestedCustomMeasureHandler)
+            if (_dataFactory is null)
             {
                 var factory = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>();
-                _customMeasureHandler = factory.SeriesCustomMeasureHandler(this);
-                _requestedCustomMeasureHandler = true;
+                _dataFactory = factory.GetDefaultDataFactory<TModel>();
             }
 
-            return _customMeasureHandler;
+            return _dataFactory;
+        }
+    }
+
+    /// <inheritdoc cref="ISeries.VisibilityChanged"/>
+    public event Action<ISeries>? VisibilityChanged;
+
+    /// <inheritdoc cref="IChartSeries{TDrawingContext}.GetStackGroup"/>
+    public virtual int GetStackGroup()
+    {
+        return 0;
+    }
+
+    /// <inheritdoc cref="ISeries.Fetch(IChart)"/>
+    protected IEnumerable<ChartPoint> Fetch(IChart chart)
+    {
+        _ = subscribedTo.Add(chart);
+        return DataFactory.Fetch(this, chart);
+    }
+
+    /// <summary>
+    /// Called when the pointer goes down on a point or points.
+    /// </summary>
+    /// <param name="chart">the chart.</param>
+    /// <param name="points">the points.</param>
+    protected virtual void OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points)
+    {
+        DataPointerDown?.Invoke(chart, points.Select(x => new ChartPoint<TModel, TVisual, TLabel>(x)));
+    }
+
+    IEnumerable<ChartPoint> ISeries.Fetch(IChart chart)
+    {
+        return Fetch(chart);
+    }
+
+    IEnumerable<ChartPoint> ISeries.FindHoveredPoints(IChart chart, LvcPoint pointerPosition, TooltipFindingStrategy strategy)
+    {
+        return
+            Fetch(chart)
+            .Where(x =>
+                x.Context.HoverArea is not null &&
+                x.Context.HoverArea.IsPointerOver(pointerPosition, strategy));
+    }
+
+    void ISeries.OnPointerEnter(ChartPoint point)
+    {
+        WhenPointerEnters(point);
+    }
+
+    void ISeries.OnPointerLeft(ChartPoint point)
+    {
+        WhenPointerLeaves(point);
+    }
+
+    /// <inheritdoc cref="ISeries.RestartAnimations"/>
+    public void RestartAnimations()
+    {
+        if (DataFactory is null) throw new Exception("Data provider not found");
+        DataFactory.RestartVisuals();
+    }
+
+    /// <inheritdoc cref="ISeries.GetTooltipText(ChartPoint)"/>
+    public string GetTooltipText(ChartPoint point)
+    {
+        return TooltipLabelFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
+    }
+
+    /// <inheritdoc cref="ISeries.GetDataLabelText(ChartPoint)"/>
+    public string GetDataLabelText(ChartPoint point)
+    {
+        return DataLabelsFormatter(new ChartPoint<TModel, TVisual, TLabel>(point));
+    }
+
+    /// <inheritdoc cref="ISeries.SoftDeleteOrDispose"/>
+    public abstract void SoftDeleteOrDispose(IChartView chart);
+
+    /// <summary>
+    /// Called when a point was measured.
+    /// </summary>
+    /// <param name="chartPoint">The chart point.</param>
+    protected internal virtual void OnPointMeasured(ChartPoint chartPoint)
+    {
+        PointMeasured?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(chartPoint));
+    }
+
+    /// <summary>
+    /// Called when a point is created.
+    /// </summary>
+    /// <param name="chartPoint">The chart point.</param>
+    protected internal virtual void OnPointCreated(ChartPoint chartPoint)
+    {
+        SetDefaultPointTransitions(chartPoint);
+        PointCreated?.Invoke(new ChartPoint<TModel, TVisual, TLabel>(chartPoint));
+    }
+
+    /// <summary>
+    /// Sets the default point transitions.
+    /// </summary>
+    /// <param name="chartPoint">The chart point.</param>
+    /// <returns></returns>
+    protected abstract void SetDefaultPointTransitions(ChartPoint chartPoint);
+
+    /// <summary>
+    /// Called when a property changed.
+    /// </summary>
+    /// <param name="propertyName">Name of the property.</param>
+    /// <returns></returns>
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        if (!((ISeries)this).IsNotifyingChanges) return;
+        NotifySubscribers();
+    }
+
+    /// <summary>
+    /// Called when the visibility changes.
+    /// </summary>
+    protected virtual void OnVisibilityChanged()
+    {
+        VisibilityChanged?.Invoke(this);
+    }
+
+    /// <summary>
+    /// Called when the pointer enters a point.
+    /// </summary>
+    /// /// <param name="point">The chart point.</param>
+    protected virtual void WhenPointerEnters(ChartPoint point)
+    {
+        var chartView = (IChartView<TDrawingContext>)point.Context.Chart;
+
+        if (hoverPaint is null)
+        {
+            var coreChart = (Chart<TDrawingContext>)chartView.CoreChart;
+
+            hoverPaint = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>()
+                .GetSolidColorPaint(new LvcColor(255, 255, 255, 180));
+            hoverPaint.ZIndex = int.MaxValue;
+            hoverPaint.SetClipRectangle(chartView.CoreCanvas, new LvcRectangle(coreChart.DrawMarginLocation, coreChart.DrawMarginSize));
+            chartView.CoreCanvas.AddDrawableTask(hoverPaint);
         }
 
-        /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
-        public override void RemoveFromUI(Chart<TDrawingContext> chart)
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null || visual.HighlightableGeometry is null) return;
+
+        hoverPaint.AddGeometryToPaintTask(chartView.CoreCanvas, visual.HighlightableGeometry);
+
+        DataPointerHover?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
+    }
+
+    /// <summary>
+    /// Called when the pointer leaves a point.
+    /// </summary>
+    /// /// <param name="point">The chart point.</param>
+    protected virtual void WhenPointerLeaves(ChartPoint point)
+    {
+        if (hoverPaint is null) return;
+
+        var visual = (TVisual?)point.Context.Visual;
+        if (visual is null || visual.HighlightableGeometry is null) return;
+
+        hoverPaint.RemoveGeometryFromPainTask(
+            (MotionCanvas<TDrawingContext>)point.Context.Chart.CoreChart.Canvas,
+            visual.HighlightableGeometry);
+
+        DataPointerHoverLost?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
+    }
+
+    /// <summary>
+    /// Gets the custom measure handler.
+    /// </summary>
+    protected virtual Action<Chart<TDrawingContext>>? GetCustomMeasureHandler()
+    {
+        if (!_requestedCustomMeasureHandler)
         {
-            base.RemoveFromUI(chart);
-            DataFactory?.Dispose(chart);
-            _dataFactory = null;
-            everFetched = new();
+            var factory = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>();
+            _customMeasureHandler = factory.SeriesCustomMeasureHandler(this);
+            _requestedCustomMeasureHandler = true;
         }
 
-        private void NotifySubscribers()
-        {
-            foreach (var chart in subscribedTo) chart.Update();
-        }
+        return _customMeasureHandler;
+    }
+
+    /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
+    public override void RemoveFromUI(Chart<TDrawingContext> chart)
+    {
+        base.RemoveFromUI(chart);
+        DataFactory?.Dispose(chart);
+        _dataFactory = null;
+        everFetched = new HashSet<ChartPoint>();
+    }
+
+    private void NotifySubscribers()
+    {
+        foreach (var chart in subscribedTo) chart.Update();
     }
 }

@@ -22,32 +22,31 @@
 
 using System;
 
-namespace LiveChartsCore.Measure
+namespace LiveChartsCore.Measure;
+
+/// <summary>
+/// Defines the zooming and panning mode.
+/// </summary>
+[Flags]
+public enum ZoomAndPanMode
 {
     /// <summary>
-    /// Defines the zooming and panning mode.
+    /// Disables zooming and panning.
     /// </summary>
-    [Flags]
-    public enum ZoomAndPanMode
-    {
-        /// <summary>
-        /// Disables zooming and panning.
-        /// </summary>
-        None = 0,
+    None = 0,
 
-        /// <summary>
-        /// Zooms only in the X axis.
-        /// </summary>
-        X = 1 << 0,
+    /// <summary>
+    /// Zooms only in the X axis.
+    /// </summary>
+    X = 1 << 0,
 
-        /// <summary>
-        /// Zooms only in the Y axis.
-        /// </summary>
-        Y = 1 << 1,
+    /// <summary>
+    /// Zooms only in the Y axis.
+    /// </summary>
+    Y = 1 << 1,
 
-        /// <summary>
-        /// Zooms on both axes.
-        /// </summary>
-        Both = X | Y
-    }
+    /// <summary>
+    /// Zooms on both axes.
+    /// </summary>
+    Both = X | Y
 }

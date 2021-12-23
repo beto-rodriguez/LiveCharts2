@@ -20,12 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing
-{
-    /// <summary>
-    /// Defines a sized and solid color visual chart point.
-    /// </summary>
-    public interface ISolidColorChartPoint<TDrawingContext> : ISolidColorGeometry<TDrawingContext>, IVisualChartPoint<TDrawingContext>
-        where TDrawingContext : DrawingContext
-    { }
-}
+namespace LiveChartsCore.Drawing;
+
+/// <summary>
+/// Defines a sized and solid color visual chart point.
+/// </summary>
+public interface ISolidColorChartPoint<TDrawingContext> : ISolidColorGeometry<TDrawingContext>, IVisualChartPoint<TDrawingContext>
+    where TDrawingContext : DrawingContext
+{ }

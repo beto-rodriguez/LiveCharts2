@@ -22,35 +22,34 @@
 
 using System.Collections.Generic;
 
-namespace LiveChartsCore.Geo
+namespace LiveChartsCore.Geo;
+
+/// <summary>
+/// Defines geo json features
+/// </summary>
+public class GeoJsonFeature
 {
     /// <summary>
-    /// Defines geo json features
+    /// Gets or sets the type.
     /// </summary>
-    public class GeoJsonFeature
-    {
-        /// <summary>
-        /// Gets or sets the type.
-        /// </summary>
-        /// <value>
-        /// The type.
-        /// </value>
-        public string? Type { get; set; }
+    /// <value>
+    /// The type.
+    /// </value>
+    public string? Type { get; set; }
 
-        /// <summary>
-        /// Gets or sets the properties.
-        /// </summary>
-        /// <value>
-        /// The properties.
-        /// </value>
-        public Dictionary<string, string>? Properties { get; set; }
+    /// <summary>
+    /// Gets or sets the properties.
+    /// </summary>
+    /// <value>
+    /// The properties.
+    /// </value>
+    public Dictionary<string, string>? Properties { get; set; }
 
-        /// <summary>
-        /// Gets or sets the geometry.
-        /// </summary>
-        /// <value>
-        /// The geometry.
-        /// </value>
-        public MultiPoligonGeometry? Geometry { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the geometry.
+    /// </summary>
+    /// <value>
+    /// The geometry.
+    /// </value>
+    public MultiPoligonGeometry? Geometry { get; set; }
 }

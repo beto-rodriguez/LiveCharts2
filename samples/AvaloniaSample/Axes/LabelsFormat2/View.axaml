@@ -1,0 +1,14 @@
+<UserControl x:Class="AvaloniaSample.Axes.LabelsFormat2.View"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:vms="using:ViewModelsSamples.Axes.LabelsFormat2">
+  <UserControl.DataContext>
+    <vms:ViewModel/>
+  </UserControl.DataContext>
+  <lvc:CartesianChart
+    Series="{Binding Series}"
+    XAxes="{Binding XAxes}"
+    YAxes="{Binding YAxes}">
+  </lvc:CartesianChart>
+</UserControl>

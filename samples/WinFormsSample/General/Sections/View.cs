@@ -1,30 +1,29 @@
-﻿using LiveChartsCore.SkiaSharpView.WinForms;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+using LiveChartsCore.SkiaSharpView.WinForms;
 using ViewModelsSamples.General.Sections;
 
-namespace WinFormsSample.General.Sections
+namespace WinFormsSample.General.Sections;
+
+public partial class View : UserControl
 {
-    public partial class View : UserControl
+    public View()
     {
-        public View()
+        InitializeComponent();
+        Size = new System.Drawing.Size(50, 50);
+
+        var viewModel = new ViewModel();
+
+        var cartesianChart = new CartesianChart
         {
-            InitializeComponent();
-            Size = new System.Drawing.Size(50, 50);
+            Series = viewModel.Series,
+            Sections = viewModel.Sections,
 
-            var viewModel = new ViewModel();
+            // out of livecharts properties...
+            Location = new System.Drawing.Point(0, 0),
+            Size = new System.Drawing.Size(50, 50),
+            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
+        };
 
-            var cartesianChart = new CartesianChart
-            {
-                Series = viewModel.Series,
-                Sections = viewModel.Sections,
-
-                // out of livecharts properties...
-                Location = new System.Drawing.Point(0, 0),
-                Size = new System.Drawing.Size(50, 50),
-                Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
-            };
-
-            Controls.Add(cartesianChart);
-        }
+        Controls.Add(cartesianChart);
     }
 }

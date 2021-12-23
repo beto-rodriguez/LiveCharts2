@@ -24,64 +24,63 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.Kernel.Sketches
+namespace LiveChartsCore.Kernel.Sketches;
+
+/// <summary>
+/// Defines a polar axis.
+/// </summary>
+public interface IPolarAxis : IPlane
 {
     /// <summary>
-    /// Defines a polar axis.
+    /// Gets the orientation.
     /// </summary>
-    public interface IPolarAxis : IPlane
-    {
-        /// <summary>
-        /// Gets the orientation.
-        /// </summary>
-        /// <value>
-        /// The orientation.
-        /// </value>
-        PolarAxisOrientation Orientation { get; }
+    /// <value>
+    /// The orientation.
+    /// </value>
+    PolarAxisOrientation Orientation { get; }
 
-        /// <summary>
-        /// Gets or sets the ro, a reference used internally to calculate the axis position.
-        /// </summary>
-        /// <value>
-        /// The ro.
-        /// </value>
-        float Ro { get; set; }
+    /// <summary>
+    /// Gets or sets the ro, a reference used internally to calculate the axis position.
+    /// </summary>
+    /// <value>
+    /// The ro.
+    /// </value>
+    float Ro { get; set; }
 
-        /// <summary>
-        /// Gets the angle in degrees where the labels are drawn, default is 0, notice this property has no effect
-        /// when the axis has <see cref="PolarAxisOrientation.Angle"/> orientation.
-        /// </summary>
-        double LabelsAngle { get; set; }
+    /// <summary>
+    /// Gets the angle in degrees where the labels are drawn, default is 0, notice this property has no effect
+    /// when the axis has <see cref="PolarAxisOrientation.Angle"/> orientation.
+    /// </summary>
+    double LabelsAngle { get; set; }
 
-        /// <summary>
-        /// Gets or sets the labels vertical alignment.
-        /// </summary>
-        Align LabelsVerticalAlignment { get; set; }
+    /// <summary>
+    /// Gets or sets the labels vertical alignment.
+    /// </summary>
+    Align LabelsVerticalAlignment { get; set; }
 
-        /// <summary>
-        /// Gets or sets the labels horizontal alignment.
-        /// </summary>
-        Align LabelsHorizontalAlignment { get; set; }
+    /// <summary>
+    /// Gets or sets the labels horizontal alignment.
+    /// </summary>
+    Align LabelsHorizontalAlignment { get; set; }
 
-        /// <summary>
-        /// Gets or sets the labels padding.
-        /// </summary>
-        Padding LabelsPadding { get; set; }
+    /// <summary>
+    /// Gets or sets the labels padding.
+    /// </summary>
+    Padding LabelsPadding { get; set; }
 
-        /// <summary>
-        /// Gets or sets the labels background.
-        /// </summary>
-        LvcColor LabelsBackground { get; set; }
+    /// <summary>
+    /// Gets or sets the labels background.
+    /// </summary>
+    LvcColor LabelsBackground { get; set; }
 
-        /// <summary>
-        /// Initializes the axis for the specified orientation.
-        /// </summary>
-        /// <param name="orientation">The orientation.</param>
-        void Initialize(PolarAxisOrientation orientation);
+    /// <summary>
+    /// Initializes the axis for the specified orientation.
+    /// </summary>
+    /// <param name="orientation">The orientation.</param>
+    void Initialize(PolarAxisOrientation orientation);
 
-        /// <summary>
-        /// Occurs when the axis is initialized.
-        /// </summary>
-        event Action<IPolarAxis>? Initialized;
-    }
+    /// <summary>
+    /// Occurs when the axis is initialized.
+    /// </summary>
+    event Action<IPolarAxis>? Initialized;
 }

@@ -1,0 +1,20 @@
+﻿@page "/Axes/Paging"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.Axes.Paging
+
+<div>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.GoToPage1">Page 1</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.GoToPage2">Page 2</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.GoToPage3">Page 3</button>
+	<button type="button" class="btn btn-primary" @onclick="ViewModel.SeeAll">Clear</button>
+</div>
+
+<CartesianChart
+	Series="ViewModel.Series"
+	XAxes="ViewModel.XAxes"
+	ZoomMode="LiveChartsCore.Measure.ZoomAndPanMode.X">
+</CartesianChart>
+
+@code {
+	public ViewModel ViewModel { get; set; } = new();
+}

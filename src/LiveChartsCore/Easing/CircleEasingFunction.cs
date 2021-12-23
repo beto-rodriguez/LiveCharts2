@@ -22,47 +22,46 @@
 
 using System;
 
-namespace LiveChartsCore.Easing
+namespace LiveChartsCore.Easing;
+
+/// <summary>
+/// Defines the CircleEasingFunction
+/// </summary>
+public static class CircleEasingFunction
 {
     /// <summary>
-    /// Defines the CircleEasingFunction
+    /// the ease in.
     /// </summary>
-    public static class CircleEasingFunction
+    /// <param name="t">The t.</param>
+    /// <returns></returns>
+    public static float In(float t)
     {
-        /// <summary>
-        /// the ease in.
-        /// </summary>
-        /// <param name="t">The t.</param>
-        /// <returns></returns>
-        public static float In(float t)
+        unchecked
         {
-            unchecked
-            {
-                return (float)(1 - Math.Sqrt(1 - (t * t)));
-            }
+            return (float)(1 - Math.Sqrt(1 - (t * t)));
         }
+    }
 
-        /// <summary>
-        /// the ease out.
-        /// </summary>
-        /// <param name="t">The t.</param>
-        /// <returns></returns>
-        public static float Out(float t)
+    /// <summary>
+    /// the ease out.
+    /// </summary>
+    /// <param name="t">The t.</param>
+    /// <returns></returns>
+    public static float Out(float t)
+    {
+        unchecked
         {
-            unchecked
-            {
-                return (float)Math.Sqrt(1 - (--t * t));
-            }
+            return (float)Math.Sqrt(1 - (--t * t));
         }
+    }
 
-        /// <summary>
-        /// the ease in out
-        /// </summary>
-        /// <param name="t">The t.</param>
-        /// <returns></returns>
-        public static float InOut(float t)
-        {
-            return (float)((t *= 2) <= 1 ? 1 - Math.Sqrt(1 - (t * t)) : Math.Sqrt(1 - ((t -= 2) * t)) + 1) / 2f;
-        }
+    /// <summary>
+    /// the ease in out
+    /// </summary>
+    /// <param name="t">The t.</param>
+    /// <returns></returns>
+    public static float InOut(float t)
+    {
+        return (float)((t *= 2) <= 1 ? 1 - Math.Sqrt(1 - (t * t)) : Math.Sqrt(1 - ((t -= 2) * t)) + 1) / 2f;
     }
 }

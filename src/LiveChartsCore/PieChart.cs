@@ -29,223 +29,229 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 
-namespace LiveChartsCore
+namespace LiveChartsCore;
+
+/// <summary>
+/// Defines a pie chart.
+/// </summary>
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <seealso cref="Chart{TDrawingContext}" />
+public class PieChart<TDrawingContext> : Chart<TDrawingContext>
+    where TDrawingContext : DrawingContext
 {
+    private readonly HashSet<ISeries> _everMeasuredSeries = new();
+    private readonly IPieChartView<TDrawingContext> _chartView;
+    private int _nextSeries = 0;
+    private readonly bool _requiresLegendMeasureAlways = false;
+
     /// <summary>
-    /// Defines a pie chart.
+    /// Initializes a new instance of the <see cref="PieChart{TDrawingContext}"/> class.
     /// </summary>
-    /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-    /// <seealso cref="Chart{TDrawingContext}" />
-    public class PieChart<TDrawingContext> : Chart<TDrawingContext>
-        where TDrawingContext : DrawingContext
+    /// <param name="view">The view.</param>
+    /// <param name="defaultPlatformConfig">The default platform configuration.</param>
+    /// <param name="canvas">The canvas.</param>
+    /// <param name="lockOnMeasure">Indicates if the thread should lock the measure operation</param>
+    public PieChart(
+        IPieChartView<TDrawingContext> view,
+        Action<LiveChartsSettings> defaultPlatformConfig,
+        MotionCanvas<TDrawingContext> canvas,
+        bool lockOnMeasure = false,
+        bool requiresLegendMeasureAlways = false)
+        : base(canvas, defaultPlatformConfig, view, lockOnMeasure)
     {
-        private readonly HashSet<ISeries> _everMeasuredSeries = new();
-        private readonly IPieChartView<TDrawingContext> _chartView;
-        private int _nextSeries = 0;
+        _chartView = view;
+        _requiresLegendMeasureAlways = requiresLegendMeasureAlways;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PieChart{TDrawingContext}"/> class.
-        /// </summary>
-        /// <param name="view">The view.</param>
-        /// <param name="defaultPlatformConfig">The default platform configuration.</param>
-        /// <param name="canvas">The canvas.</param>
-        /// <param name="lockOnMeasure">Indicates if the thread should lock the measure operation</param>
-        public PieChart(
-            IPieChartView<TDrawingContext> view,
-            Action<LiveChartsSettings> defaultPlatformConfig,
-            MotionCanvas<TDrawingContext> canvas,
-            bool lockOnMeasure = false)
-            : base(canvas, defaultPlatformConfig, view, lockOnMeasure)
-        {
-            _chartView = view;
-        }
+    /// <summary>
+    /// Gets the series.
+    /// </summary>
+    /// <value>
+    /// The series.
+    /// </value>
+    public IPieSeries<TDrawingContext>[] Series { get; private set; } = Array.Empty<IPieSeries<TDrawingContext>>();
 
-        /// <summary>
-        /// Gets the series.
-        /// </summary>
-        /// <value>
-        /// The series.
-        /// </value>
-        public IPieSeries<TDrawingContext>[] Series { get; private set; } = Array.Empty<IPieSeries<TDrawingContext>>();
+    /// <summary>
+    /// Gets the drawable series.
+    /// </summary>
+    /// <value>
+    /// The drawable series.
+    /// </value>
+    public override IEnumerable<IChartSeries<TDrawingContext>> ChartSeries
+        => Series.Where(x => (x is IPieSeries<TDrawingContext> pieSeries) && !pieSeries.IsFillSeries);
 
-        /// <summary>
-        /// Gets the drawable series.
-        /// </summary>
-        /// <value>
-        /// The drawable series.
-        /// </value>
-        public override IEnumerable<IChartSeries<TDrawingContext>> ChartSeries => Series;
+    /// <summary>
+    /// Gets the view.
+    /// </summary>
+    /// <value>
+    /// The view.
+    /// </value>
+    public override IChartView<TDrawingContext> View => _chartView;
 
-        /// <summary>
-        /// Gets the view.
-        /// </summary>
-        /// <value>
-        /// The view.
-        /// </value>
-        public override IChartView<TDrawingContext> View => _chartView;
+    /// <summary>
+    /// Gets the value bounds.
+    /// </summary>
+    /// <value>
+    /// The value bounds.
+    /// </value>
+    public Bounds ValueBounds { get; private set; } = new();
 
-        /// <summary>
-        /// Gets the value bounds.
-        /// </summary>
-        /// <value>
-        /// The value bounds.
-        /// </value>
-        public Bounds ValueBounds { get; private set; } = new Bounds();
+    /// <summary>
+    /// Gets the index bounds.
+    /// </summary>
+    /// <value>
+    /// The index bounds.
+    /// </value>
+    public Bounds IndexBounds { get; private set; } = new();
 
-        /// <summary>
-        /// Gets the index bounds.
-        /// </summary>
-        /// <value>
-        /// The index bounds.
-        /// </value>
-        public Bounds IndexBounds { get; private set; } = new Bounds();
+    /// <summary>
+    /// Gets the pushout bounds.
+    /// </summary>
+    /// <value>
+    /// The pushout bounds.
+    /// </value>
+    public Bounds PushoutBounds { get; private set; } = new();
 
-        /// <summary>
-        /// Gets the pushout bounds.
-        /// </summary>
-        /// <value>
-        /// The pushout bounds.
-        /// </value>
-        public Bounds PushoutBounds { get; private set; } = new Bounds();
+    /// <summary>
+    /// Finds the points near to the specified point.
+    /// </summary>
+    /// <param name="pointerPosition">The pointer position.</param>
+    /// <returns></returns>
+    public override IEnumerable<ChartPoint> FindHoveredPointsBy(LvcPoint pointerPosition)
+    {
+        return _chartView.Series
+            .Where(series => (series is IPieSeries<TDrawingContext> pieSeries) && !pieSeries.IsFillSeries)
+            .Where(series => series.IsHoverable)
+            .SelectMany(series => series.FindHoveredPoints(this, pointerPosition, TooltipFindingStrategy.CompareAll));
+    }
 
-        /// <summary>
-        /// Finds the points near to the specified point.
-        /// </summary>
-        /// <param name="pointerPosition">The pointer position.</param>
-        /// <returns></returns>
-        public override IEnumerable<ChartPoint> FindHoveredPointsBy(LvcPoint pointerPosition)
-        {
-            return _chartView.Series.SelectMany(
-                series =>
-                    series.FindHoveredPoints(this, pointerPosition, TooltipFindingStrategy.CompareAll));
-        }
-
-        /// <summary>
-        /// Measures this chart.
-        /// </summary>
-        /// <returns></returns>
-        protected override void Measure()
-        {
+    /// <summary>
+    /// Measures this chart.
+    /// </summary>
+    /// <returns></returns>
+    protected override void Measure()
+    {
 #if DEBUG
-            if (LiveCharts.EnableLogging)
-            {
-                Trace.WriteLine(
-                    $"[Cartesian chart measured]".PadRight(60) +
-                    $"tread: {Environment.CurrentManagedThreadId}");
-            }
+        if (LiveCharts.EnableLogging)
+        {
+            Trace.WriteLine(
+                $"[Cartesian chart measured]".PadRight(60) +
+                $"tread: {Environment.CurrentManagedThreadId}");
+        }
 #endif
 
-            if (!IsLoaded) return; // <- prevents a visual glitch where the visual call the measure method
-                                   // while they are not visible, the problem is when the control is visible again
-                                   // the animations are not as expected because previously it ran in an invalid case.
+        if (!IsLoaded) return; // <- prevents a visual glitch where the visual call the measure method
+                               // while they are not visible, the problem is when the control is visible again
+                               // the animations are not as expected because previously it ran in an invalid case.
 
-            InvokeOnMeasuring();
+        InvokeOnMeasuring();
 
-            if (preserveFirstDraw)
-            {
-                IsFirstDraw = true;
-                preserveFirstDraw = false;
-            }
-
-            MeasureWork = new object();
-
-            var viewDrawMargin = _chartView.DrawMargin;
-            ControlSize = _chartView.ControlSize;
-
-            var actualSeries = (_chartView.Series ?? Enumerable.Empty<ISeries>()).Where(x => x.IsVisible);
-
-            Series = actualSeries
-                .Cast<IPieSeries<TDrawingContext>>()
-                .ToArray();
-
-            LegendPosition = _chartView.LegendPosition;
-            LegendOrientation = _chartView.LegendOrientation;
-            Legend = _chartView.Legend;
-
-            TooltipPosition = _chartView.TooltipPosition;
-            Tooltip = _chartView.Tooltip;
-
-            AnimationsSpeed = _chartView.AnimationsSpeed;
-            EasingFunction = _chartView.EasingFunction;
-
-            SeriesContext = new SeriesContext<TDrawingContext>(Series);
-
-            var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
-            if (theme.CurrentColors is null || theme.CurrentColors.Length == 0)
-                throw new Exception("Default colors are not valid");
-            var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
-
-            ValueBounds = new Bounds();
-            IndexBounds = new Bounds();
-            PushoutBounds = new Bounds();
-            foreach (var series in Series)
-            {
-                series.IsNotifyingChanges = false;
-
-                if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
-                theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
-
-                var seriesBounds = series.GetBounds(this);
-
-                ValueBounds.AppendValue(seriesBounds.PrimaryBounds.Max);
-                ValueBounds.AppendValue(seriesBounds.PrimaryBounds.Min);
-                IndexBounds.AppendValue(seriesBounds.SecondaryBounds.Max);
-                IndexBounds.AppendValue(seriesBounds.SecondaryBounds.Min);
-                PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Max);
-                PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Min);
-
-                series.IsNotifyingChanges = true;
-            }
-
-            if (Legend is not null && SeriesMiniatureChanged(Series, LegendPosition))
-            {
-                Legend.Draw(this);
-                Update();
-                preserveFirstDraw = IsFirstDraw;
-            }
-
-            if (viewDrawMargin is null)
-            {
-                var m = viewDrawMargin ?? new Margin();
-                SetDrawMargin(ControlSize, m);
-            }
-
-            // invalid dimensions, probably the chart is too small
-            // or it is initializing in the UI and has no dimensions yet
-            if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
-
-            var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
-            foreach (var series in Series)
-            {
-                series.Measure(this);
-                series.RemoveOldPaints(View);
-                _ = _everMeasuredSeries.Add(series);
-                _ = toDeleteSeries.Remove(series);
-            }
-
-            foreach (var series in toDeleteSeries)
-            {
-                series.SoftDeleteOrDispose(View);
-                _ = _everMeasuredSeries.Remove(series);
-            }
-
-            InvokeOnUpdateStarted();
-            IsFirstDraw = false;
-            ThemeId = LiveCharts.CurrentSettings.ThemeId;
-            PreviousSeries = Series;
-            PreviousLegendPosition = LegendPosition;
-
-            Canvas.Invalidate();
-        }
-
-        /// <inheritdoc cref="Chart{TDrawingContext}.Unload"/>
-        public override void Unload()
+        if (preserveFirstDraw)
         {
-            base.Unload();
-
-            foreach (var item in _everMeasuredSeries) ((ChartElement<TDrawingContext>)item).RemoveFromUI(this);
-            _everMeasuredSeries.Clear();
             IsFirstDraw = true;
+            preserveFirstDraw = false;
         }
+
+        MeasureWork = new object();
+
+        var viewDrawMargin = _chartView.DrawMargin;
+        ControlSize = _chartView.ControlSize;
+
+        var actualSeries = (_chartView.Series ?? Enumerable.Empty<ISeries>()).Where(x => x.IsVisible);
+
+        Series = actualSeries
+            .Cast<IPieSeries<TDrawingContext>>()
+            .ToArray();
+
+        LegendPosition = _chartView.LegendPosition;
+        LegendOrientation = _chartView.LegendOrientation;
+        Legend = _chartView.Legend;
+
+        TooltipPosition = _chartView.TooltipPosition;
+        Tooltip = _chartView.Tooltip;
+
+        AnimationsSpeed = _chartView.AnimationsSpeed;
+        EasingFunction = _chartView.EasingFunction;
+
+        SeriesContext = new SeriesContext<TDrawingContext>(Series);
+
+        var theme = LiveCharts.CurrentSettings.GetTheme<TDrawingContext>();
+        if (theme.CurrentColors is null || theme.CurrentColors.Length == 0)
+            throw new Exception("Default colors are not valid");
+        var forceApply = ThemeId != LiveCharts.CurrentSettings.ThemeId && !IsFirstDraw;
+
+        ValueBounds = new Bounds();
+        IndexBounds = new Bounds();
+        PushoutBounds = new Bounds();
+        foreach (var series in Series)
+        {
+            series.IsNotifyingChanges = false;
+
+            if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
+            theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
+
+            var seriesBounds = series.GetBounds(this);
+
+            ValueBounds.AppendValue(seriesBounds.PrimaryBounds.Max);
+            ValueBounds.AppendValue(seriesBounds.PrimaryBounds.Min);
+            IndexBounds.AppendValue(seriesBounds.SecondaryBounds.Max);
+            IndexBounds.AppendValue(seriesBounds.SecondaryBounds.Min);
+            PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Max);
+            PushoutBounds.AppendValue(seriesBounds.TertiaryBounds.Min);
+
+            series.IsNotifyingChanges = true;
+        }
+
+        if (Legend is not null && (SeriesMiniatureChanged(Series, LegendPosition) || (_requiresLegendMeasureAlways && SizeChanged())))
+        {
+            Legend.Draw(this);
+            Update();
+            PreviousLegendPosition = LegendPosition;
+            PreviousSeries = Series;
+            preserveFirstDraw = IsFirstDraw;
+        }
+
+        if (viewDrawMargin is null)
+        {
+            var m = viewDrawMargin ?? new Margin();
+            SetDrawMargin(ControlSize, m);
+        }
+
+        // invalid dimensions, probably the chart is too small
+        // or it is initializing in the UI and has no dimensions yet
+        if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
+
+        var toDeleteSeries = new HashSet<ISeries>(_everMeasuredSeries);
+        foreach (var series in Series)
+        {
+            series.Measure(this);
+            series.RemoveOldPaints(View);
+            _ = _everMeasuredSeries.Add(series);
+            _ = toDeleteSeries.Remove(series);
+        }
+
+        foreach (var series in toDeleteSeries)
+        {
+            series.SoftDeleteOrDispose(View);
+            _ = _everMeasuredSeries.Remove(series);
+        }
+
+        InvokeOnUpdateStarted();
+        IsFirstDraw = false;
+        ThemeId = LiveCharts.CurrentSettings.ThemeId;
+        PreviousSeries = Series;
+        PreviousLegendPosition = LegendPosition;
+
+        Canvas.Invalidate();
+    }
+
+    /// <inheritdoc cref="Chart{TDrawingContext}.Unload"/>
+    public override void Unload()
+    {
+        base.Unload();
+
+        foreach (var item in _everMeasuredSeries) ((ChartElement<TDrawingContext>)item).RemoveFromUI(this);
+        _everMeasuredSeries.Clear();
+        IsFirstDraw = true;
     }
 }

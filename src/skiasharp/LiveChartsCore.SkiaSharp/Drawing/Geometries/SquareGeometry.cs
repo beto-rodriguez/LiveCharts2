@@ -22,27 +22,26 @@
 
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+
+/// <summary>
+/// Defines a square geometry.
+/// </summary>
+/// <seealso cref="SizedGeometry" />
+public class SquareGeometry : SizedGeometry
 {
     /// <summary>
-    /// Defines a square geometry.
+    /// Initializes a new instance of the <see cref="SquareGeometry"/> class.
     /// </summary>
-    /// <seealso cref="SizedGeometry" />
-    public class SquareGeometry : SizedGeometry
+    public SquareGeometry() : base()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SquareGeometry"/> class.
-        /// </summary>
-        public SquareGeometry() : base()
-        {
-            matchDimensions = true;
-        }
+        matchDimensions = true;
+    }
 
-        /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-        public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
-        {
-            context.Canvas.DrawRect(
-                new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Width, Width = Width } }, paint);
-        }
+    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
+    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    {
+        context.Canvas.DrawRect(
+            new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Width, Width = Width } }, paint);
     }
 }

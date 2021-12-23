@@ -22,25 +22,24 @@
 
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+
+/// <summary>
+/// Defines a rectangle geometry.
+/// </summary>
+/// <seealso cref="SizedGeometry" />
+public class RectangleGeometry : SizedGeometry
 {
     /// <summary>
-    /// Defines a rectangle geometry.
+    /// Initializes a new instance of the <see cref="RectangleGeometry"/> class.
     /// </summary>
-    /// <seealso cref="SizedGeometry" />
-    public class RectangleGeometry : SizedGeometry
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RectangleGeometry"/> class.
-        /// </summary>
-        public RectangleGeometry() : base()
-        { }
+    public RectangleGeometry() : base()
+    { }
 
-        /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
-        public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
-        {
-            context.Canvas.DrawRect(
-                new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } }, paint);
-        }
+    /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
+    public override void OnDraw(SkiaSharpDrawingContext context, SKPaint paint)
+    {
+        context.Canvas.DrawRect(
+            new SKRect { Top = Y, Left = X, Size = new SKSize { Height = Height, Width = Width } }, paint);
     }
 }
