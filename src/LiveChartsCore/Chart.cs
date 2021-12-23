@@ -56,6 +56,7 @@ public abstract class Chart<TDrawingContext> : IChart
     private bool _isPanning = false;
     private bool _isPointerIn = false;
     private readonly Dictionary<ChartPoint, object> _activePoints = new();
+    private LvcSize _previousSize = new();
 
     #endregion
 
@@ -416,6 +417,7 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <returns></returns>
     protected void InvokeOnUpdateStarted()
     {
+        _previousSize = ControlSize;
         UpdateStarted?.Invoke(View);
     }
 
@@ -426,6 +428,15 @@ public abstract class Chart<TDrawingContext> : IChart
     protected void InvokeOnUpdateFinished()
     {
         UpdateFinished?.Invoke(View);
+    }
+
+    /// <summary>
+    /// Returns a value indicating if the control size changed.
+    /// </summary>
+    /// <returns></returns>
+    protected bool SizeChanged()
+    {
+        return _previousSize.Width != ControlSize.Width || _previousSize.Height != ControlSize.Height;
     }
 
     /// <summary>

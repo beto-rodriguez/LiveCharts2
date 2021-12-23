@@ -45,6 +45,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     private readonly ICartesianChartView<TDrawingContext> _chartView;
     private int _nextSeries = 0;
     private double _zoomingSpeed = 0;
+    private readonly bool _requiresLegendMeasureAlways = false;
     private ZoomAndPanMode _zoomMode;
     private DrawMarginFrame<TDrawingContext>? _previousDrawMarginFrame;
 
@@ -59,10 +60,12 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         ICartesianChartView<TDrawingContext> view,
         Action<LiveChartsSettings> defaultPlatformConfig,
         MotionCanvas<TDrawingContext> canvas,
-        bool lockOnMeasure = false)
+        bool lockOnMeasure = false,
+        bool requiresLegendMeasureAlways = false)
         : base(canvas, defaultPlatformConfig, view, lockOnMeasure)
     {
         _chartView = view;
+        _requiresLegendMeasureAlways = requiresLegendMeasureAlways;
     }
 
     /// <summary>
@@ -496,7 +499,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
 
         #endregion
 
-        if (Legend is not null && SeriesMiniatureChanged(Series, LegendPosition))
+        if (Legend is not null && (SeriesMiniatureChanged(Series, LegendPosition) || (_requiresLegendMeasureAlways && SizeChanged())))
         {
             Legend.Draw(this);
             Update();

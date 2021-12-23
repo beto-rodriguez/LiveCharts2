@@ -84,7 +84,8 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         c.MouseUp += OnMouseUp;
     }
 
-    CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core => core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
+    CartesianChart<SkiaSharpDrawingContext> ICartesianChartView<SkiaSharpDrawingContext>.Core =>
+        core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -171,7 +172,8 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     /// </summary>
     protected override void InitializeCore()
     {
-        core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore);
+        core = new CartesianChart<SkiaSharpDrawingContext>(
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore, false, true);
         if (((IChartView)this).DesignerMode) return;
         core.Update();
     }

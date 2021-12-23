@@ -44,6 +44,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
     internal readonly HashSet<Section<TDrawingContext>> _everMeasuredSections = new();
     private readonly IPolarChartView<TDrawingContext> _chartView;
     private int _nextSeries = 0;
+    private readonly bool _requiresLegendMeasureAlways = false;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PolarChart{TDrawingContext}"/> class.
@@ -56,10 +57,12 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         IPolarChartView<TDrawingContext> view,
         Action<LiveChartsSettings> defaultPlatformConfig,
         MotionCanvas<TDrawingContext> canvas,
-        bool lockOnMeasure = false)
+        bool lockOnMeasure = false,
+        bool requiresLegendMeasureAlways = false)
         : base(canvas, defaultPlatformConfig, view, lockOnMeasure)
     {
         _chartView = view;
+        _requiresLegendMeasureAlways = requiresLegendMeasureAlways;
     }
 
     /// <summary>
@@ -323,7 +326,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
         #endregion
 
-        if (Legend is not null && SeriesMiniatureChanged(Series, LegendPosition))
+        if (Legend is not null && (SeriesMiniatureChanged(Series, LegendPosition) || (_requiresLegendMeasureAlways && SizeChanged())))
         {
             Legend.Draw(this);
             Update();

@@ -81,7 +81,8 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         c.MouseUp += OnMouseUp;
     }
 
-    PolarChart<SkiaSharpDrawingContext> IPolarChartView<SkiaSharpDrawingContext>.Core => core is null ? throw new Exception("core not found") : (PolarChart<SkiaSharpDrawingContext>)core;
+    PolarChart<SkiaSharpDrawingContext> IPolarChartView<SkiaSharpDrawingContext>.Core =>
+        core is null ? throw new Exception("core not found") : (PolarChart<SkiaSharpDrawingContext>)core;
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.FitToBounds" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -178,7 +179,8 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     /// </summary>
     protected override void InitializeCore()
     {
-        core = new PolarChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore);
+        core = new PolarChart<SkiaSharpDrawingContext>(
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore, false, true);
         if (((IChartView)this).DesignerMode) return;
         core.Update();
     }
