@@ -21,17 +21,6 @@
 // SOFTWARE.
 
 using System;
-
-/* Unmerged change from project 'LiveChartsCore.SkiaSharpView.WinForms (netcoreapp3.1)'
-Before:
-using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.SkiaSharpView.Drawing;
-After:
-using LiveChartsCore.Collections.Generic;
-using System.Drawing;
-using LiveChartsCore.Linq;
-*/
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -45,7 +34,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms;
 /// <inheritdoc cref="IChartTooltip{TDrawingContext}" />
 public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>, IDisposable
 {
-    private const int CS_DROPSHADOW = 0x00020000;
+    private Panel? _tooltipContainer;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
@@ -53,7 +42,10 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
     public DefaultTooltip()
     {
         InitializeComponent();
+        BackColor = Color.LimeGreen;
+        TransparencyKey = Color.LimeGreen;
         ShowInTaskbar = false;
+        Paint += DefaultTooltip_Paint;
     }
 
     void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
@@ -74,10 +66,9 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
                 chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height));
         }
         if (location is null) throw new Exception("location not supported");
-
-        BackColor = wfChart.TooltipBackColor;
         Height = (int)size.Height;
         Width = (int)size.Width;
+        if (_tooltipContainer is not null) _tooltipContainer.BackColor = wfChart.TooltipBackColor;
 
         var l = wfChart.PointToScreen(Point.Empty);
         var x = l.X + (int)location.Value.X;
@@ -95,6 +86,11 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
         var w = 0f;
 
         using var g = CreateGraphics();
+
+        var container = new Panel { Location = new Point(10, 10) };
+        _tooltipContainer = container;
+        Controls.Add(container);
+
         foreach (var point in tooltipPoints)
         {
             var text = point.AsTooltipString;
@@ -102,14 +98,14 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
 
             var drawableSeries = (IChartSeries<SkiaSharpDrawingContext>)point.Context.Series;
 
-            Controls.Add(new MotionCanvas
+            container.Controls.Add(new MotionCanvas
             {
-                Location = new Point(6, (int)h + 6),
+                Location = new Point(8, (int)h + 6),
                 PaintTasks = drawableSeries.CanvasSchedule.PaintSchedules,
                 Width = (int)drawableSeries.CanvasSchedule.Width,
                 Height = (int)drawableSeries.CanvasSchedule.Height
             });
-            Controls.Add(new Label
+            container.Controls.Add(new Label
             {
                 Text = text,
                 Font = chart.TooltipFont,
@@ -123,15 +119,30 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
             w = thisW > w ? thisW : w;
         }
 
-        h += 6;
+        h += 12;
+        container.Width = (int)w + 4;
+        container.Height = (int)h;
 
         ResumeLayout();
-        return new SizeF(w, h);
+        return new SizeF(w + 20, h + 20);
     }
 
     void IChartTooltip<SkiaSharpDrawingContext>.Hide()
     {
         Location = new Point(10000, 10000);
+    }
+
+    private void DefaultTooltip_Paint(object sender, PaintEventArgs e)
+    {
+        if (_tooltipContainer is null) return;
+
+        using var p1 = new Pen(Color.FromArgb(220, 220, 220));
+
+        e.Graphics.DrawRectangle(
+            p1,
+            new Rectangle(
+                _tooltipContainer.Location.X - 1, _tooltipContainer.Location.Y - 1,
+                _tooltipContainer.Width + 2, _tooltipContainer.Height + 2));
     }
 
     /// <summary>
@@ -147,21 +158,5 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
         }
 
         base.Dispose(disposing);
-    }
-
-    /// <summary>
-    /// Gets the create parameters.
-    /// </summary>
-    /// <value>
-    /// The create parameters.
-    /// </value>
-    protected override CreateParams CreateParams
-    {
-        get
-        {
-            var cp = base.CreateParams;
-            cp.ClassStyle |= CS_DROPSHADOW;
-            return cp;
-        }
     }
 }
