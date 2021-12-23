@@ -136,6 +136,16 @@ public class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext
         var template = avaloniaChart.TooltipTemplate ?? _defaultTemplate;
         if (TooltipTemplate != template) TooltipTemplate = template;
 
+        Points = tooltipPoints;
+        TooltipBackground = avaloniaChart.TooltipBackground;
+        TooltipFontFamily = avaloniaChart.TooltipFontFamily;
+        TooltipFontSize = avaloniaChart.TooltipFontSize;
+        TooltipFontStyle = avaloniaChart.TooltipFontStyle;
+        TooltipFontWeight = avaloniaChart.TooltipFontWeight;
+        TooltipTextBrush = avaloniaChart.TooltipTextBrush;
+        BuildContent();
+        Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+
         LvcPoint? location = null;
 
         if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
@@ -150,17 +160,6 @@ public class DefaultTooltip : UserControl, IChartTooltip<SkiaSharpDrawingContext
         }
 
         if (location is null) throw new Exception("location not found");
-
-        Points = tooltipPoints;
-        TooltipBackground = avaloniaChart.TooltipBackground;
-        TooltipFontFamily = avaloniaChart.TooltipFontFamily;
-        TooltipFontSize = avaloniaChart.TooltipFontSize;
-        TooltipFontStyle = avaloniaChart.TooltipFontStyle;
-        TooltipFontWeight = avaloniaChart.TooltipFontWeight;
-        TooltipTextBrush = avaloniaChart.TooltipTextBrush;
-        BuildContent();
-
-        Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
         double x = location.Value.X;
         double y = location.Value.Y;

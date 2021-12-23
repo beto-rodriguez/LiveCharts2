@@ -99,7 +99,9 @@ public static class Extensions
             break; // we only care about the first one.
         }
 
-        return found ? new LvcPoint(placementContext.PieX, placementContext.PieY) : null;
+        return found
+            ? new LvcPoint(placementContext.PieX - tooltipSize.Width * 0.5f, placementContext.PieY - tooltipSize.Height * 0.5f)
+            : null;
     }
 
     /// <summary>

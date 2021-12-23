@@ -107,7 +107,7 @@ public class SemicircleHoverArea : HoverArea
     /// <inheritdoc cref="HoverArea.SuggestTooltipPlacement(TooltipPlacementContext)"/>
     public override void SuggestTooltipPlacement(TooltipPlacementContext context)
     {
-        var angle = (StartAngle + EndAngle) / 2;
+        var angle = (StartAngle + EndAngle) / 2d;
         context.PieX = CenterX + (float)Math.Cos(angle * (Math.PI / 180)) * Radius;
         context.PieY = CenterY + (float)Math.Sin(angle * (Math.PI / 180)) * Radius;
     }
