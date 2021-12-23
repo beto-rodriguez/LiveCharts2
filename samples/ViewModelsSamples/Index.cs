@@ -72,7 +72,7 @@ public static class Index
 
             //"Polar/Basic",
             "Polar/RadialArea",
-            //"Polar/Coordinates",
+            "Polar/Coordinates",
 
             //"Axes/ColorsAndPosition",
             //"Axes/LabelsFormat",

@@ -400,10 +400,8 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                 visual.FillPath = fillPathHelper.Path;
                 visual.StrokePath = strokePathHelper.Path;
 
-                var hags = gs < 8 ? 8 : gs;
-
-                data.TargetPoint.Context.HoverArea = new RectangleHoverArea()
-                    .SetDimensions(x - hgs, y - hgs + 2 * sw, hags, hags + 2 * sw);
+                var hags = gs < 16 ? 16 : gs;
+                data.TargetPoint.Context.HoverArea = new RectangleHoverArea(x - hags * 0.5f, y - hags * 0.5f, hags, hags);
 
                 _ = toDeletePoints.Remove(data.TargetPoint);
 
