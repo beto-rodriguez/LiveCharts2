@@ -42,8 +42,8 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
     public DefaultTooltip()
     {
         InitializeComponent();
-        BackColor = Color.LimeGreen;
-        TransparencyKey = Color.LimeGreen;
+        SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+        BackColor = Color.Transparent;
         ShowInTaskbar = false;
         Paint += DefaultTooltip_Paint;
     }
@@ -142,8 +142,14 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
             p1,
             new Rectangle(
                 _tooltipContainer.Location.X - 1, _tooltipContainer.Location.Y - 1,
-                _tooltipContainer.Width + 2, _tooltipContainer.Height + 2));
+                _tooltipContainer.Width + 1, _tooltipContainer.Height + 1));
     }
+
+    /// <summary>
+    /// Paints the form background.
+    /// </summary>
+    /// <param name="e"></param>
+    protected override void OnPaintBackground(PaintEventArgs e) { /* Ignore */ }
 
     /// <summary>
     /// Disposes the specified disposing.
