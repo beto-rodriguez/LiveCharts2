@@ -75,24 +75,6 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             uwpChart.TooltipControl.IsOpen = true;
             Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
-            if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
-            {
-                location = tooltipPoints.GetCartesianTooltipLocation(
-                    chart.TooltipPosition,
-                    new LvcSize((float)DesiredSize.Width,
-                    (float)DesiredSize.Height),
-                    chart.ControlSize);
-            }
-            if (chart is PieChart<SkiaSharpDrawingContext>)
-            {
-                location = tooltipPoints.GetPieTooltipLocation(
-                    chart.TooltipPosition, new LvcSize((float)DesiredSize.Width, (float)DesiredSize.Height));
-            }
-
-            if (location is null) throw new Exception("location not supported");
-
-            uwpChart.TooltipControl.PlacementRect = new Rect(location.Value.X, location.Value.Y, 0, 0);
-
             DataContext = new TooltipBindingContext
             {
                 Background = uwpChart.TooltipBackground,
@@ -108,6 +90,23 @@ namespace LiveChartsCore.SkiaSharpView.UWP
                         FontStretch = uwpChart.TooltipFontStretch
                     }).ToArray()
             };
+
+            if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
+            {
+                location = tooltipPoints.GetCartesianTooltipLocation(
+                    chart.TooltipPosition, new LvcSize((float)DesiredSize.Width, (float)DesiredSize.Height), chart.ControlSize);
+            }
+            if (chart is PieChart<SkiaSharpDrawingContext>)
+            {
+                location = tooltipPoints.GetPieTooltipLocation(
+                    chart.TooltipPosition, new LvcSize((float)DesiredSize.Width, (float)DesiredSize.Height));
+            }
+
+            if (location is null) throw new Exception("location not supported");
+
+            // strange.... something is strange here...
+            uwpChart.TooltipControl.PlacementRect =
+                new Rect(location.Value.X, location.Value.Y + DesiredSize.Height, DesiredSize.Width, DesiredSize.Height);
         }
 
         void IChartTooltip<SkiaSharpDrawingContext>.Hide()
