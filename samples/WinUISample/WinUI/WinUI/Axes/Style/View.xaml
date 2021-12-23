@@ -7,7 +7,6 @@
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
     xmlns:vms="using:ViewModelsSamples.Axes.Style"
     mc:Ignorable="d">
-
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>

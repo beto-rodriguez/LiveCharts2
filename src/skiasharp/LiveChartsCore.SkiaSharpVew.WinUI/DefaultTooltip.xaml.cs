@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -74,26 +75,6 @@ public sealed partial class DefaultTooltip : UserControl, IChartTooltip<SkiaShar
         LvcPoint? location = null;
         winuiChart.TooltipControl.IsOpen = true;
 
-        Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-
-        if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
-        {
-            location = tooltipPoints.GetCartesianTooltipLocation(
-                chart.TooltipPosition,
-                new LvcSize((float)DesiredSize.Width,
-                (float)DesiredSize.Height),
-                chart.ControlSize);
-        }
-        if (chart is PieChart<SkiaSharpDrawingContext>)
-        {
-            location = tooltipPoints.GetPieTooltipLocation(
-                chart.TooltipPosition, new LvcSize((float)DesiredSize.Width, (float)DesiredSize.Height));
-        }
-
-        if (location is null) throw new Exception("location not supported");
-
-        winuiChart.TooltipControl.PlacementRect = new Rect(location.Value.X, location.Value.Y, 0, 0);
-
         DataContext = new TooltipBindingContext
         {
             Background = winuiChart.TooltipBackground,
@@ -109,6 +90,26 @@ public sealed partial class DefaultTooltip : UserControl, IChartTooltip<SkiaShar
                     FontStretch = winuiChart.TooltipFontStretch
                 }).ToArray()
         };
+
+        Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+
+        if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
+        {
+            Trace.WriteLine($"w => {DesiredSize.Width}, h => {DesiredSize.Height}");
+            location = tooltipPoints.GetCartesianTooltipLocation(
+                chart.TooltipPosition, new LvcSize((float)DesiredSize.Width, (float)DesiredSize.Height), chart.ControlSize);
+        }
+        if (chart is PieChart<SkiaSharpDrawingContext>)
+        {
+            location = tooltipPoints.GetPieTooltipLocation(
+                chart.TooltipPosition, new LvcSize((float)DesiredSize.Width, (float)DesiredSize.Height));
+        }
+
+        if (location is null) throw new Exception("location not supported");
+
+        // strange.... something is strange here...
+        winuiChart.TooltipControl.PlacementRect =
+            new Rect(location.Value.X, location.Value.Y + DesiredSize.Height, DesiredSize.Width, DesiredSize.Height);
     }
 
     void IChartTooltip<SkiaSharpDrawingContext>.Hide()
