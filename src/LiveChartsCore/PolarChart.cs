@@ -138,8 +138,9 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
     /// <returns></returns>
     public override IEnumerable<ChartPoint> FindHoveredPointsBy(LvcPoint pointerPosition)
     {
-        return ChartSeries.SelectMany(x =>
-            x.FindHoveredPoints(this, pointerPosition, TooltipFindingStrategy.CompareAll));
+        return ChartSeries
+            .Where(series => series.IsHoverable)
+            .SelectMany(series => series.FindHoveredPoints(this, pointerPosition, TooltipFindingStrategy.CompareAll));
     }
 
     /// <summary>

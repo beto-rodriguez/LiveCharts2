@@ -118,8 +118,8 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
     {
         return _chartView.Series
             .Where(series => (series is IPieSeries<TDrawingContext> pieSeries) && !pieSeries.IsFillSeries)
-            .SelectMany(series =>
-                series.FindHoveredPoints(this, pointerPosition, TooltipFindingStrategy.CompareAll));
+            .Where(series => series.IsHoverable)
+            .SelectMany(series => series.FindHoveredPoints(this, pointerPosition, TooltipFindingStrategy.CompareAll));
     }
 
     /// <summary>

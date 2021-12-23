@@ -11,6 +11,7 @@ public class ViewModel
         = {
             new ColumnSeries<double>
             {
+                IsHoverable = false, // disables the series from the tooltips // mark
                 Values = new double[] { 10, 10, 10, 10, 10, 10, 10 },
                 Stroke = null,
                 Fill = new SolidColorPaint(new SKColor(30, 30, 30, 30)),

@@ -145,8 +145,9 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 : (areAllY ? TooltipFindingStrategy.CompareOnlyY : TooltipFindingStrategy.CompareAll);
         }
 
-        return ChartSeries.SelectMany(x =>
-            x.FindHoveredPoints(this, pointerPosition, actualStrategy));
+        return ChartSeries
+            .Where(series => series.IsHoverable)
+            .SelectMany(series => series.FindHoveredPoints(this, pointerPosition, actualStrategy));
     }
 
     /// <summary>

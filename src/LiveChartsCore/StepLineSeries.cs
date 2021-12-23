@@ -164,6 +164,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         foreach (var item in strokePathHelperContainer) item.Path.ClearCommands();
         foreach (var item in fillPathHelperContainer) item.Path.ClearCommands();
 
+        var uwx = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
+
         foreach (var segment in segments)
         {
             var wasFillInitialized = false;
@@ -360,8 +362,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
                 var hags = gs < 8 ? 8 : gs;
 
-                data.TargetPoint.Context.HoverArea = new RectangleHoverArea()
-                    .SetDimensions(x - hgs, y - hgs + 2 * sw, hags, hags + 2 * sw);
+                data.TargetPoint.Context.HoverArea = new RectangleHoverArea(x - uwx * 0.5f, y - hgs, uwx, gs);
 
                 _ = toDeletePoints.Remove(data.TargetPoint);
 

@@ -228,6 +228,9 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         }
     }
 
+    /// <inheritdoc cref="ISeries.IsHoverable" />
+    public bool IsHoverable { get; set; } = true;
+
     /// <inheritdoc cref="ISeries.DataPadding" />
     public LvcPoint DataPadding { get => _dataPadding; set { _dataPadding = value; OnPropertyChanged(); } }
 

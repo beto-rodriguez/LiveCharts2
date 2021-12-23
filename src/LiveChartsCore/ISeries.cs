@@ -78,6 +78,15 @@ public interface ISeries : IStopNPC
     bool IsVisible { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether this instance will show up in tooltips when the pointer is over a point.
+    /// defualt value is <c>true</c>.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if this instance is hoverable; otherwise, <c>false</c>.
+    /// </value>
+    bool IsHoverable { get; set; }
+
+    /// <summary>
     /// Gets or sets the data padding, both coordinates (X and Y) from 0 to 1, where 0 is nothing and 1 is the axis tick
     /// (the separation between every label).
     /// </summary>
