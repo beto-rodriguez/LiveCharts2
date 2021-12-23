@@ -252,32 +252,6 @@ public partial class DefaultTooltip : Popup, IChartTooltip<SkiaSharpDrawingConte
         var template = wpfChart.TooltipTemplate ?? _defaultTempalte;
         if (Template != template) Template = template;
 
-        LvcPoint? location = null;
-
-        if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
-        {
-            location = tooltipPoints.GetCartesianTooltipLocation(
-                chart.TooltipPosition, new LvcSize((float)border.ActualWidth, (float)border.ActualHeight), chart.ControlSize);
-        }
-        if (chart is PieChart<SkiaSharpDrawingContext>)
-        {
-            location = tooltipPoints.GetPieTooltipLocation(
-                chart.TooltipPosition, new LvcSize((float)border.ActualWidth, (float)border.ActualHeight));
-        }
-
-        if (location is null) throw new Exception("location not supported");
-
-        IsOpen = true;
-        Points = tooltipPoints;
-
-        Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-
-        var from = PlacementRectangle;
-        var to = new Rect(location.Value.X, location.Value.Y, 0, 0);
-        if (from == Rect.Empty) from = to;
-        var animation = new RectAnimation(from, to, AnimationsSpeed) { EasingFunction = EasingFunction };
-        BeginAnimation(PlacementRectangleProperty, animation);
-
         Background = wpfChart.TooltipBackground;
         FontFamily = wpfChart.TooltipFontFamily;
         TextColor = wpfChart.TooltipTextBrush;
@@ -285,6 +259,35 @@ public partial class DefaultTooltip : Popup, IChartTooltip<SkiaSharpDrawingConte
         FontWeight = wpfChart.TooltipFontWeight;
         FontStyle = wpfChart.TooltipFontStyle;
         FontStretch = wpfChart.TooltipFontStretch;
+
+        IsOpen = true;
+        Points = tooltipPoints;
+
+        Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+
+        LvcPoint? location = null;
+
+        if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
+        {
+            var a = border.ActualHeight - border.DesiredSize.Height;
+
+            location = tooltipPoints.GetCartesianTooltipLocation(
+                chart.TooltipPosition, new LvcSize((float)border.DesiredSize.Width, (float)border.DesiredSize.Height), chart.ControlSize);
+        }
+        if (chart is PieChart<SkiaSharpDrawingContext>)
+        {
+            location = tooltipPoints.GetPieTooltipLocation(
+                chart.TooltipPosition, new LvcSize((float)border.DesiredSize.Width, (float)border.DesiredSize.Height));
+        }
+
+        if (location is null) throw new Exception("location not supported");
+
+        var from = PlacementRectangle;
+        // this should not be necessary? + border.DesiredSize.Width why???
+        var to = new Rect(location.Value.X + border.DesiredSize.Width, location.Value.Y, DesiredSize.Width, DesiredSize.Height);
+        if (from == Rect.Empty) from = to;
+        var animation = new RectAnimation(from, to, AnimationsSpeed) { EasingFunction = EasingFunction };
+        BeginAnimation(PlacementRectangleProperty, animation);
     }
 
     void IChartTooltip<SkiaSharpDrawingContext>.Hide()
