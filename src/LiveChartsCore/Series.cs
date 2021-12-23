@@ -384,20 +384,24 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// /// <param name="point">The chart point.</param>
     protected virtual void WhenPointerEnters(ChartPoint point)
     {
-        var chart = (IChartView<TDrawingContext>)point.Context.Chart;
+        var chartView = (IChartView<TDrawingContext>)point.Context.Chart;
 
         if (hoverPaint is null)
         {
+            var coreChart = (Chart<TDrawingContext>)chartView.CoreChart;
+
             hoverPaint = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>()
                 .GetSolidColorPaint(new LvcColor(255, 255, 255, 180));
             hoverPaint.ZIndex = int.MaxValue;
-            chart.CoreCanvas.AddDrawableTask(hoverPaint);
+            hoverPaint.SetClipRectangle(chartView.CoreCanvas, new LvcRectangle(coreChart.DrawMarginLocation, coreChart.DrawMarginSize));
+            chartView.CoreCanvas.AddDrawableTask(hoverPaint);
+
         }
 
         var visual = (TVisual?)point.Context.Visual;
         if (visual is null || visual.HighlightableGeometry is null) return;
 
-        hoverPaint.AddGeometryToPaintTask(chart.CoreCanvas, visual.HighlightableGeometry);
+        hoverPaint.AddGeometryToPaintTask(chartView.CoreCanvas, visual.HighlightableGeometry);
 
         DataPointerHover?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
     }
