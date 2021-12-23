@@ -59,6 +59,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
 
     private Chart<SkiaSharpDrawingContext>? _core;
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+    private MotionCanvas? _avaloniaCanvas;
 
     #endregion
 
@@ -316,11 +317,13 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
         }
     }
 
-    LvcSize IChartView.ControlSize => new()
-    {
-        Width = (float)Bounds.Width,
-        Height = (float)Bounds.Height
-    };
+    LvcSize IChartView.ControlSize => _avaloniaCanvas is null
+        ? new LvcSize()
+        : new LvcSize
+        {
+            Width = (float)_avaloniaCanvas.Bounds.Width,
+            Height = (float)_avaloniaCanvas.Bounds.Height
+        };
 
     /// <inheritdoc cref="IChartView.SyncContext" />
     public object SyncContext
@@ -660,6 +663,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
     protected void InitializeCore()
     {
         var canvas = this.FindControl<MotionCanvas>("canvas");
+        _avaloniaCanvas = canvas;
         _core = new PieChart<SkiaSharpDrawingContext>(
             this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore, true);
 

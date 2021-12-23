@@ -395,7 +395,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
             hoverPaint.ZIndex = int.MaxValue;
             hoverPaint.SetClipRectangle(chartView.CoreCanvas, new LvcRectangle(coreChart.DrawMarginLocation, coreChart.DrawMarginSize));
             chartView.CoreCanvas.AddDrawableTask(hoverPaint);
-
         }
 
         var visual = (TVisual?)point.Context.Visual;
