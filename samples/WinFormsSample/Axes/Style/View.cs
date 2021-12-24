@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 using LiveChartsCore.SkiaSharpView.WinForms;
-using ViewModelsSamples.Axes.ColorsAndPosition;
+using ViewModelsSamples.Axes.Style;
 
 namespace WinFormsSample.Axes.Style;
 
@@ -20,6 +20,7 @@ public partial class View : UserControl
             Series = viewModel.Series,
             XAxes = viewModel.XAxes,
             YAxes = viewModel.YAxes,
+            DrawMarginFrame = viewModel.Frame,
 
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 0),
