@@ -142,10 +142,11 @@ public class SKGeoMap : IGeoMapView<SkiaSharpDrawingContext>, ISkiaSharpChart
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
+    [Obsolete("Use the Series property instead.")]
     public IEnumerable<IMapElement> Shapes { get; set; } = Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>();
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
-    public IEnumerable<IGeoSeries<SkiaSharpDrawingContext>> Series { get; set; } = Array.Empty<IGeoSeries<SkiaSharpDrawingContext>>();
+    public IEnumerable<IGeoSeries> Series { get; set; } = Array.Empty<IGeoSeries>();
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ViewCommand"/>
     public object? ViewCommand
