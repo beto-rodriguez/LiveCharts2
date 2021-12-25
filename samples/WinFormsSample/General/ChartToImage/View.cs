@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.SkiaSharpView.WinForms;
 using ViewModelsSamples.General.ChartToImage;
@@ -26,8 +25,7 @@ public partial class View : UserControl
 
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 0),
-            Size = new System.Drawing.Size(400, 200),
-            //Anchor = AnchorStyles.Left | AnchorStyles.Right
+            Size = new System.Drawing.Size(400, 200)
         };
         Controls.Add(_cartesian);
 
@@ -38,8 +36,7 @@ public partial class View : UserControl
 
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 200),
-            Size = new System.Drawing.Size(400, 200),
-            //Anchor = AnchorStyles.Left | AnchorStyles.Right
+            Size = new System.Drawing.Size(400, 200)
         };
         Controls.Add(_pie);
 
@@ -50,61 +47,14 @@ public partial class View : UserControl
 
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 400),
-            Size = new System.Drawing.Size(400, 200),
-            //Anchor = AnchorStyles.Left | AnchorStyles.Right
+            Size = new System.Drawing.Size(400, 200)
         };
         Controls.Add(_map);
 
-        // CARTESIAN CHART IMAGE
-
-        // you can create an image of a chart from memory using the
-        // SKCartesianChart, SKPieChart or SKGeoMap classes.
-
-        // in the case of this sample
-        // the image was generated at the root folder
-        var cartesianChart = new SKCartesianChart
-        {
-            Width = 900,
-            Height = 600,
-            Series = viewModel.CatesianSeries
-        };
-
-        // notice classes that implement ISkiaSharpChart (SKCartesianChart, SKPieChart and SKGeoMap classes)
-        // do not require a UI you can use this objects installing only the
-        // LiveChartsCore.SkiaSharpView package.
-
-        // you can save the image to png (by default), or use the second argument to specify another format.
-        cartesianChart.SaveImage("CartesianImageFromMemory.png"); // <- path where the image will be generated
-
-        // alternatively you can get the image and do different operations:
-        using var image = cartesianChart.GetImage();
-        using var data = image.Encode();
-        var base64 = Convert.ToBase64String(data.AsSpan());
-
-        // or you could also use a chart in the user interface to create an image
-        CreateImageFromCartesianControl();
-
-        // PIE CHART IMAGE
-        new SKPieChart
-        {
-            Width = 900,
-            Height = 600,
-            Series = viewModel.PieSeries
-        }.SaveImage("PieImageFromMemory.png");
-
-        // or create it from a control in the UI
-        CreateImageFromPieControl();
-
-        // GEO MAP CHART IMAGE
-        new SKGeoMap
-        {
-            Width = 900,
-            Height = 600,
-            Shapes = viewModel.MapShapes
-        }.SaveImage("MapImageFromMemory.png");
-
-        // or create it from a control in the UI
-        CreateImageFromGeoControl();
+        // now lets create the images // mark
+        CreateImageFromCartesianControl(); // mark
+        CreateImageFromPieControl(); // mark
+        CreateImageFromGeoControl(); // mark
     }
 
     private void CreateImageFromCartesianControl()
