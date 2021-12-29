@@ -15,7 +15,8 @@ var cartesianChart = new SKCartesianChart
     }
 };
 
-// you can save the image to png (by default), or use the second argument to specify another format.
+// you can save the image to png (by default)
+// or use the second argument to specify another format.
 cartesianChart.SaveImage("cartesianChart.png");
 
 var pieChart = new SKPieChart

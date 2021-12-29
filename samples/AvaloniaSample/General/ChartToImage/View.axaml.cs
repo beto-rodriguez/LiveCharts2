@@ -10,6 +10,9 @@ public class View : UserControl
     public View()
     {
         InitializeComponent();
+
+        // in this case in the constructor of this view // mark
+        // we render our chart controls as images // mark
         CreateImageFromCartesianControl();
         CreateImageFromPieControl();
         CreateImageFromGeoControl();
@@ -17,6 +20,7 @@ public class View : UserControl
 
     private void CreateImageFromCartesianControl()
     {
+        // you can take any chart in the UI, and build an image from it // mark
         var chartControl = this.FindControl<CartesianChart>("cartesianChart");
         var skChart = new SKCartesianChart(chartControl) { Width = 900, Height = 600, };
         skChart.SaveImage("CartesianImageFromControl.png");

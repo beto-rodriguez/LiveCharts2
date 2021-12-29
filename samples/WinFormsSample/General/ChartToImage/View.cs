@@ -59,6 +59,7 @@ public partial class View : UserControl
 
     private void CreateImageFromCartesianControl()
     {
+        // you can take any chart in the UI, and build an image from it // mark
         var chartControl = _cartesian;
         var skChart = new SKCartesianChart(chartControl) { Width = 900, Height = 600, };
         skChart.SaveImage("CartesianImageFromControl.png");

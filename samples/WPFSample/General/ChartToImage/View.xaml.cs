@@ -1,7 +1,6 @@
 ﻿using System.Windows.Controls;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.SkiaSharpView.WPF;
-using ViewModelsSamples.General.ChartToImage;
 
 namespace WPFSample.General.ChartToImage;
 
@@ -10,15 +9,12 @@ namespace WPFSample.General.ChartToImage;
 /// </summary>
 public partial class View : UserControl
 {
-    private readonly ViewModel _vm = new();
-
     public View()
     {
         InitializeComponent();
 
-        _vm = new ViewModel();
-        DataContext = _vm;
-
+        // in this case, when the view is loaded // mark
+        // we render our chart controls as images // mark
         Loaded += View_Loaded;
     }
 
@@ -31,6 +27,7 @@ public partial class View : UserControl
 
     private void CreateImageFromCartesianControl()
     {
+        // you can take any chart in the UI, and build an image from it // mark
         var chartControl = (CartesianChart)FindName("cartesianChart");
         var skChart = new SKCartesianChart(chartControl) { Width = 900, Height = 600, };
         skChart.SaveImage("CartesianImageFromControl.png");

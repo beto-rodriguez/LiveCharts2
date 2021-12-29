@@ -37,6 +37,8 @@
 	{
 		base.OnAfterRender(firstRender);
 
+		// in this case when the view is rendered // mark
+        // we build our charts controls as images // mark
 		CreateImageFromCartesianControl();
 		CreateImageFromPieControl();
 		CreateImageFromGeoControl();
@@ -44,7 +46,8 @@
 
 	private void CreateImageFromCartesianControl()
 	{
-		var chartControl = _cartesianChart; 
+		// you can take any chart in the UI, and build an image from it // mark
+		var chartControl = _cartesianChart;
 		var skChart = new SKCartesianChart(chartControl) { Width = 900, Height = 600, };
 		skChart.SaveImage("CartesianImageFromControl.png");
 	}
