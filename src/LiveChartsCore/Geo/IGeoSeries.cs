@@ -27,14 +27,20 @@ namespace LiveChartsCore.Geo;
 /// <summary>
 /// Defines a geographical data series.
 /// </summary>
-public interface IGeoSeries<TDrawingContext>
-    where TDrawingContext : DrawingContext
+public interface IGeoSeries
 {
     /// <summary>
     /// Gets or sets a value to indecate whether the series is visible.
     /// </summary>
     public bool IsVisible { get; set; }
+}
 
+/// <summary>
+/// Defines a geographical data series.
+/// </summary>
+public interface IGeoSeries<TDrawingContext> : IGeoSeries
+    where TDrawingContext : DrawingContext
+{
     /// <summary>
     /// Draw the series.
     /// </summary>

@@ -56,4 +56,18 @@ public class ViewModel
                 }
             }
         };
+
+    public DrawMarginFrame Frame { get; set; }
+        = new DrawMarginFrame
+        {
+            Fill = new SolidColorPaint
+            {
+                Color = new SKColor(0, 0, 0, 30)
+            },
+            Stroke = new SolidColorPaint
+            {
+                Color = new SKColor(80, 80, 80),
+                StrokeThickness = 2
+            }
+        };
 }

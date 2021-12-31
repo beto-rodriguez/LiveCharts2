@@ -11,8 +11,9 @@
         <vms:ViewModel/>
     </UserControl.DataContext>
     <lvc:CartesianChart
-            Series="{Binding Series}"
-            XAxes="{Binding XAxes}"
-            YAxes="{Binding YAxes}">
+        Series="{Binding Series}"
+        XAxes="{Binding XAxes}"
+        YAxes="{Binding YAxes}"
+        DrawMarginFrame="{Binding Frame}">
     </lvc:CartesianChart>
 </UserControl>

@@ -32,6 +32,6 @@ this sample also uses a ViewModel to populate the properties of the control(s) i
 {{~ end ~}}
 
 <div class="position-relative text-center">
-    <img src="{{ assets_url }}/docs/{{ unique_name }}/result.png" class="static" alt="basic line" />
-    <img src="{{ assets_url }}/docs/{{ unique_name }}/result.gif" alt="basic line" />
+    <img src="{{ assets_url }}/docs/{{ unique_name }}/result.png" class="static" alt="sample image" />
+    <img src="{{ assets_url }}/docs/{{ unique_name }}/result.gif" alt="sample image" />
 </div>

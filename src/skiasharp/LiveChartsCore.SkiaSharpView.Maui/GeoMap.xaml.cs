@@ -45,7 +45,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
 {
     private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
-    private readonly CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>> _seriesObserver;
+    private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
     private readonly GeoMap<SkiaSharpDrawingContext> _core;
 
     /// <summary>
@@ -66,12 +66,12 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
             (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
             (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
             true);
-        _seriesObserver = new CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>>(
+        _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
             (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
             (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
             true);
         SetValue(ShapesProperty, Enumerable.Empty<IMapElement>());
-        SetValue(SeriesProperty, Enumerable.Empty<IGeoSeries<SkiaSharpDrawingContext>>());
+        SetValue(SeriesProperty, Enumerable.Empty<IGeoSeries>());
         SetValue(ActiveMapProperty, Maps.GetWorldMap<SkiaSharpDrawingContext>());
         SetValue(SyncContextProperty, new object());
     }
@@ -169,14 +169,14 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
     /// </summary>
     public static readonly BindableProperty SeriesProperty =
        BindableProperty.Create(
-           nameof(Series), typeof(IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>), typeof(GeoMap),
-           Enumerable.Empty<IGeoSeries<SkiaSharpDrawingContext>>(),
+           nameof(Series), typeof(IEnumerable<IGeoSeries>), typeof(GeoMap),
+           Enumerable.Empty<IGeoSeries>(),
            BindingMode.Default, null, (BindableObject o, object oldValue, object newValue) =>
            {
                var chart = (GeoMap)o;
                var seriesObserver = chart._seriesObserver;
-               seriesObserver.Dispose((IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)oldValue);
-               seriesObserver.Initialize((IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)newValue);
+               seriesObserver.Dispose((IEnumerable<IGeoSeries>)oldValue);
+               seriesObserver.Initialize((IEnumerable<IGeoSeries>)newValue);
                chart._core.Update();
            });
 
@@ -271,9 +271,9 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
-    public IEnumerable<IGeoSeries<SkiaSharpDrawingContext>> Series
+    public IEnumerable<IGeoSeries> Series
     {
-        get => (IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty);
+        get => (IEnumerable<IGeoSeries>)GetValue(SeriesProperty);
         set => SetValue(SeriesProperty, value);
     }
 

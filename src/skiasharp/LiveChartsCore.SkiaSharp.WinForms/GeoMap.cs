@@ -43,10 +43,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms;
 public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 {
     private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
-    private readonly CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>> _seriesObserver;
+    private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
     private readonly GeoMap<SkiaSharpDrawingContext> _core;
     private IEnumerable<IMapElement> _shapes = Enumerable.Empty<IMapElement>();
-    private IEnumerable<IGeoSeries<SkiaSharpDrawingContext>> _series = Enumerable.Empty<IGeoSeries<SkiaSharpDrawingContext>>();
+    private IEnumerable<IGeoSeries> _series = Enumerable.Empty<IGeoSeries>();
     private CoreMap<SkiaSharpDrawingContext> _activeMap;
     private MapProjection _mapProjection = MapProjection.Default;
     private LvcColor[] _heatMap = {
@@ -72,7 +72,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
             (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
             (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
             true);
-        _seriesObserver = new CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>>(
+        _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
             (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
             (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
             true);
@@ -177,7 +177,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IEnumerable<IGeoSeries<SkiaSharpDrawingContext>> Series
+    public IEnumerable<IGeoSeries> Series
     {
         get => _series;
         set

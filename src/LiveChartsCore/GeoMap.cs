@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
@@ -235,7 +236,7 @@ public class GeoMap<TDrawingContext>
         var toDeleteShapes = new HashSet<IMapElement>(_everMeasuredShapes);
 
         var toDeleteSeries = new HashSet<IGeoSeries<TDrawingContext>>(_everMeasuredSeries);
-        foreach (var series in View.Series)
+        foreach (var series in View.Series.Cast<IGeoSeries<TDrawingContext>>())
         {
             series.Measure(context);
             _ = _everMeasuredSeries.Add(series);

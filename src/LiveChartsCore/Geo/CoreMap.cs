@@ -122,7 +122,12 @@ public class CoreMap<TDrawingContext>
         GeoJsonFile? geoJson;
 
 #if NET5_0_OR_GREATER
-        geoJson = System.Text.Json.JsonSerializer.Deserialize<GeoJsonFile>(streamReader.ReadToEnd());
+        geoJson = System.Text.Json.JsonSerializer.Deserialize<GeoJsonFile>(
+            streamReader.ReadToEnd(),
+            new System.Text.Json.JsonSerializerOptions
+            {
+                PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
+            });
 #else
         geoJson = Newtonsoft.Json.JsonConvert.DeserializeObject<GeoJsonFile>(streamReader.ReadToEnd());
 #endif

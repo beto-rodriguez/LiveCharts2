@@ -115,5 +115,5 @@ public interface IGeoMapView<TDrawingContext>
     /// <summary>
     /// Gets or sets the series.
     /// </summary>
-    IEnumerable<IGeoSeries<TDrawingContext>> Series { get; set; }
+    IEnumerable<IGeoSeries> Series { get; set; }
 }

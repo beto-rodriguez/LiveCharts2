@@ -46,7 +46,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia;
 public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 {
     private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
-    private readonly CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>> _seriesObserver;
+    private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
     private readonly GeoMap<SkiaSharpDrawingContext> _core;
 
     /// <summary>
@@ -61,7 +61,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
             (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
             (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
             true);
-        _seriesObserver = new CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>>(
+        _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
             (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
             (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
             true);
@@ -131,9 +131,9 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     /// <summary>
     /// The series property.
     /// </summary>
-    public static readonly AvaloniaProperty<IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>> SeriesProperty =
-      AvaloniaProperty.Register<CartesianChart, IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>>(nameof(Series),
-          Enumerable.Empty<IGeoSeries<SkiaSharpDrawingContext>>(), inherits: true);
+    public static readonly AvaloniaProperty<IEnumerable<IGeoSeries>> SeriesProperty =
+      AvaloniaProperty.Register<CartesianChart, IEnumerable<IGeoSeries>>(nameof(Series),
+          Enumerable.Empty<IGeoSeries>(), inherits: true);
 
     /// <summary>
     /// The stroke property.
@@ -247,9 +247,9 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
-    public IEnumerable<IGeoSeries<SkiaSharpDrawingContext>> Series
+    public IEnumerable<IGeoSeries> Series
     {
-        get => (IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty);
+        get => (IEnumerable<IGeoSeries>)GetValue(SeriesProperty);
         set => SetValue(ShapesProperty, value);
     }
 
@@ -275,8 +275,8 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 
         if (change.Property.Name == nameof(Series))
         {
-            _seriesObserver.Dispose((IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)change.OldValue.Value);
-            _seriesObserver.Initialize((IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)change.NewValue.Value);
+            _seriesObserver.Dispose((IEnumerable<IGeoSeries>)change.OldValue.Value);
+            _seriesObserver.Initialize((IEnumerable<IGeoSeries>)change.NewValue.Value);
         }
 
         if (change.Property.Name == nameof(ViewCommand))

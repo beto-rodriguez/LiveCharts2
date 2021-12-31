@@ -226,38 +226,46 @@ If you need to customize more, you can also pass your own template:
 
 {{~ if avalonia ~}}
 {{~ "~/../samples/AvaloniaSample/General/TemplatedTooltips/View.axaml" | render_file_as_code ~}}
+
 :::tip
-You can find a more complete example at the source code of the `DefaultTooltip` class 
+You can find a another example at the source code of the `DefaultTooltip` class 
 ([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia/DefaultTooltip.axaml), 
 [code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia/DefaultTooltip.axaml.cs)).
 :::
+
 {{~ end ~}}
 
 {{~ if blazor ~}}
 {{~ "~/../samples/BlazorSample/Pages/General/TemplatedTooltips.razor" | render_file_as_code ~}}
+
 :::tip
-You can find a more complete example at the source code of the `DefaultTooltip` class 
+You can find a another example at the source code of the `DefaultTooltip` class 
 ([view](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Blazor/DefaultTooltip.razor), 
 [code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Blazor/DefaultTooltip.razor.cs)).
 :::
+
 {{~ end ~}}
 
 {{~ if maui ~}}
 {{~ "~/../samples/MauiSample/General/TemplatedTooltips/View.xaml" | render_file_as_code ~}}
+
 :::tip
-You can find a more complete example at the source code of the `DefaultTooltip` class 
+You can find a another example at the source code of the `DefaultTooltip` class 
 ([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Maui/DefaultTooltip.xaml), 
 [code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.Maui/DefaultTooltip.xaml.cs)).
 :::
+
 {{~ end ~}}
 
 {{~ if uwp ~}}
 {{~ "~/../samples/UWPSample/General/TemplatedTooltips/View.xaml" | render_file_as_code ~}}
+
 :::tip
-You can find a more complete example at the source code of the `DefaultTooltip` class 
+You can find a another example at the source code of the `DefaultTooltip` class 
 ([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.UWP/DefaultTooltip.xaml), 
 [code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpView.UWP/DefaultTooltip.xaml.cs)).
 :::
+
 {{~ end ~}}
 
 {{~ if winforms ~}}
@@ -274,38 +282,46 @@ Your tooltip is ready to be used, now when you create a chart, we have to pass a
 {
     Series = viewModel.Series
 };</code></pre>
+
 :::tip
-You can find a more complete example at the source code of the `DefaultTooltip` class 
+You can find a another example at the source code of the `DefaultTooltip` class 
 ([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia/DefaultTooltip.axaml.cs), 
 [code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia/DefaultTooltip.axaml.cs)).
 :::
+
 {{~ end ~}}
 
 {{~ if winui ~}}
 {{~ "~/../samples/WinUISample/WinUI/WinUI/General/TemplatedTooltips/View.xaml" | render_file_as_code ~}}
+
 :::tip
-You can find a more complete example at the source code of the `DefaultTooltip` class 
+You can find a another example at the source code of the `DefaultTooltip` class 
 ([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI/DefaultTooltip.xaml), 
 [code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI/DefaultTooltip.xaml.cs)).
 :::
+
 {{~ end ~}}
 
 {{~ if wpf ~}}
 {{~ "~/../samples/WPFSample/General/TemplatedTooltips/View.xaml" | render_file_as_code ~}}
+
 :::tip
-You can find a more complete example at the source code of the `DefaultTooltip` class 
+You can find a another example at the source code of the `DefaultTooltip` class 
 ([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.WPF/DefaultTooltip.xaml), 
 [code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.WPF/DefaultTooltip.xaml.cs)).
 :::
+
 {{~ end ~}}
 
 {{~ if xamarin ~}}
 {{~ "~/../samples/XamarinSample/XamarinSample/XamarinSample/General/TemplatedTooltips/View.xaml" | render_file_as_code ~}}
+
 :::tip
-You can find a more complete example at the source code of the `DefaultTooltip` class 
+You can find a another example at the source code of the `DefaultTooltip` class 
 ([xaml](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms/DefaultTooltip.xaml), 
 [code](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms/DefaultTooltip.xaml.cs)).
 :::
+
 {{~ end ~}}
 
 ![custom tooltip]({{ assets_url }}/docs/_assets/tooltip-custom-template.png)

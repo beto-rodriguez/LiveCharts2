@@ -44,7 +44,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
 {
     private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
-    private readonly CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>> _seriesObserver;
+    private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
     private GeoMap<SkiaSharpDrawingContext>? _core;
 
     static GeoMap()
@@ -71,12 +71,12 @@ public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
             (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
             (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
             true);
-        _seriesObserver = new CollectionDeepObserver<IGeoSeries<SkiaSharpDrawingContext>>(
+        _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
             (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
             (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
             true);
         SetCurrentValue(ShapesProperty, Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>());
-        SetCurrentValue(SeriesProperty, Enumerable.Empty<IGeoSeries<SkiaSharpDrawingContext>>());
+        SetCurrentValue(SeriesProperty, Enumerable.Empty<IGeoSeries>());
         SetCurrentValue(ActiveMapProperty, Maps.GetWorldMap<SkiaSharpDrawingContext>());
         SetCurrentValue(SyncContextProperty, new object());
     }
@@ -154,13 +154,13 @@ public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
     /// The series property
     /// </summary>
     public static readonly DependencyProperty SeriesProperty =
-        DependencyProperty.Register(nameof(Series), typeof(IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>),
+        DependencyProperty.Register(nameof(Series), typeof(IEnumerable<IGeoSeries>),
             typeof(GeoMap), new PropertyMetadata(null, (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
             {
                 var chart = (GeoMap)o;
                 var seriesObserver = chart._seriesObserver;
-                seriesObserver.Dispose((IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)args.OldValue);
-                seriesObserver.Initialize((IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)args.NewValue);
+                seriesObserver.Dispose((IEnumerable<IGeoSeries>)args.OldValue);
+                seriesObserver.Initialize((IEnumerable<IGeoSeries>)args.NewValue);
                 chart._core?.Update();
             }));
 
@@ -276,9 +276,9 @@ public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
-    public IEnumerable<IGeoSeries<SkiaSharpDrawingContext>> Series
+    public IEnumerable<IGeoSeries> Series
     {
-        get => (IEnumerable<IGeoSeries<SkiaSharpDrawingContext>>)GetValue(SeriesProperty);
+        get => (IEnumerable<IGeoSeries>)GetValue(SeriesProperty);
         set => SetValue(SeriesProperty, value);
     }
 

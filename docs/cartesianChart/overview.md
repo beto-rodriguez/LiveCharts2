@@ -129,7 +129,7 @@ any image bellow is a link to an article explaining more about them.
 
 <a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Candle%20Sticks%20Series">
 <div class="series-miniature">
-<img src="{{ assets_url }}/docs/samples/financial/basic/result.png" alt="series"/>
+<img src="{{ assets_url }}/docs/samples/financial/basicCandlesticks/result.png" alt="series"/>
 <div class="text-center"><b>Candle sticks series</b></div>
 </div>
 </a>
@@ -143,7 +143,7 @@ any image bellow is a link to an article explaining more about them.
 
 <a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Stacked%20Column%20Series">
 <div class="series-miniature">
-<img src="{{ assets_url }}/docs/samples/stackedColumn/basic/result.png" alt="series"/>
+<img src="{{ assets_url }}/docs/samples/stackedBars/basic/result.png" alt="series"/>
 <div class="text-center"><b>Stacked column series</b></div>
 </div>
 </a>
