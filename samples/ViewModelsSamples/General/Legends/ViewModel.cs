@@ -34,12 +34,12 @@ public class ViewModel : INotifyPropertyChanged
 
     public List<AvailablePosition> Positions => new()
     {
-            new AvailablePosition("hidden", LegendPosition.Hidden),
-            new AvailablePosition("top", LegendPosition.Top),
-            new AvailablePosition("bottom", LegendPosition.Bottom),
-            new AvailablePosition("right", LegendPosition.Right),
-            new AvailablePosition("left", LegendPosition.Left)
-        };
+        new AvailablePosition("hidden", LegendPosition.Hidden),
+        new AvailablePosition("top", LegendPosition.Top),
+        new AvailablePosition("bottom", LegendPosition.Bottom),
+        new AvailablePosition("right", LegendPosition.Right),
+        new AvailablePosition("left", LegendPosition.Left)
+    };
 
     public AvailablePosition SelectedPosition
     {

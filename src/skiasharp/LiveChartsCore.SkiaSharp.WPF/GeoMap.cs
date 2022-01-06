@@ -275,7 +275,7 @@ public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
         set => SetValue(ShapesProperty, value);
     }
 
-    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
+    /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
     public IEnumerable<IGeoSeries> Series
     {
         get => (IEnumerable<IGeoSeries>)GetValue(SeriesProperty);

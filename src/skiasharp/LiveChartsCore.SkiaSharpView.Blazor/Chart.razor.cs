@@ -128,6 +128,11 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
     #region properties
 
+    /// <summary>
+    /// Gets the actual class.
+    /// </summary>
+    public string ContainerActualClass => $"lvc-chart-container {ContainerClass}";
+
     /// <inheritdoc cref="IBlazorChart.CanvasContainerElement"/>
     public ElementReference CanvasContainerElement { get; private set; }
 

@@ -28,7 +28,7 @@
 		{
 			@foreach (var series in Series)
 			{
-				<div class="lvc-legend-item @OrientationClass">
+				<div class="lvc-legend-item">
 					<div class="lvc-miniature" style="@LiveChartsBlazor.GetSeriesMiniatureStyle(series)">
 						<MotionCanvas PaintTasks="@LiveChartsBlazor.GetSeriesAsMiniaturePaints(series)" />
 					</div>

@@ -45,6 +45,7 @@
     }
 
 ::deep .lvc-canvas-container {
+    width: 100%;
     -webkit-order: 0;
     -ms-flex-order: 0;
     order: 0;
@@ -58,38 +59,50 @@
 
 /* Legends */
 
-::deep .lvc-legend-container {
-    -webkit-order: 0;
-    -ms-flex-order: 0;
-    order: 0;
+::deep .lvc-legend {
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-align-content: stretch;
+    -ms-flex-line-pack: stretch;
+    align-content: stretch;
+    -webkit-align-items: flex-start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+}
+
+::deep .row-fx .lvc-legend {
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+}
+
+::deep .lvc-legend-container.start {
+    -webkit-order: -1;
+    -ms-flex-order: -1;
+    order: -1;
     -webkit-flex: 0 0 auto;
     -ms-flex: 0 0 auto;
     flex: 0 0 auto;
-    -webkit-align-self: auto;
-    -ms-flex-item-align: auto;
-    align-self: auto;
 }
 
-    ::deep .lvc-legend-container.start {
-        -webkit-order: -1;
-        -ms-flex-order: -1;
-        order: -1;
-        -webkit-flex: 0 0 auto;
-        -ms-flex: 0 0 auto;
-        flex: 0 0 auto;
-        -webkit-align-self: auto;
-        -ms-flex-item-align: auto;
-        align-self: auto;
-    }
+::deep .lvc-legend-container.closed {
+    display: none !important;
+}
 
-    ::deep .lvc-legend-container.closed {
-        display: none !important;
-    }
-
-    ::deep .lvc-legend-container canvas {
-        width: 100%;
-        height: 100%;
-    }
+::deep .lvc-legend-container canvas {
+    width: 100%;
+    height: 100%;
+}
 
 ::deep .lvc-legend-item {
     display: -ms-flexbox;
@@ -111,27 +124,6 @@
     -ms-flex-align: center;
     align-items: center;
 }
-
-    ::deep .lvc-legend-item.column {
-        display: -ms-flexbox;
-        display: -webkit-flex;
-        display: flex;
-        -webkit-flex-direction: column;
-        -ms-flex-direction: column;
-        flex-direction: column;
-        -webkit-flex-wrap: nowrap;
-        -ms-flex-wrap: nowrap;
-        flex-wrap: nowrap;
-        -webkit-justify-content: flex-start;
-        -ms-flex-pack: start;
-        justify-content: flex-start;
-        -webkit-align-content: stretch;
-        -ms-flex-line-pack: stretch;
-        align-content: stretch;
-        -webkit-align-items: center;
-        -ms-flex-align: center;
-        align-items: center;
-    }
 
     ::deep .lvc-legend-item div {
         -webkit-order: 0;

@@ -59,56 +59,44 @@ public partial class DefaultLegend : IChartLegend<SkiaSharpDrawingContext>, IDis
     /// </summary>
     public ISeries[] Series { get; set; } = Array.Empty<ISeries>();
 
-    /// <summary>
-    /// Gets or sets the orientation class.
-    /// </summary>
-    public string OrientationClass { get; set; } = string.Empty;
-
     async void IChartLegend<SkiaSharpDrawingContext>.Draw(Chart<SkiaSharpDrawingContext> chart)
     {
         var series = chart.ChartSeries;
         var legendOrientation = chart.LegendOrientation;
         var legendPosition = chart.LegendPosition;
 
+        if (legendOrientation != LegendOrientation.Auto)
+            throw new Exception("Custom orientation is not supported.");
+
         Series = series.ToArray();
 
         var blazorChart = (IBlazorChart)chart.View;
 
         // by default the chart css is a flex box with row direction
-
         switch (legendPosition)
         {
             case LegendPosition.Hidden:
                 blazorChart.LegendClass = "closed";
                 break;
             case LegendPosition.Top:
-                blazorChart.LegendClass = "start";
+                blazorChart.LegendClass = "start row-fx";
                 blazorChart.ContainerClass = "column";
-                if (legendOrientation == LegendOrientation.Auto) OrientationClass = "";
                 break;
             case LegendPosition.Left:
-                blazorChart.LegendClass = "start";
+                blazorChart.LegendClass = "start column";
                 blazorChart.ContainerClass = "";
-                if (legendOrientation == LegendOrientation.Auto) OrientationClass = "column";
                 break;
             case LegendPosition.Right:
                 blazorChart.LegendClass = "";
                 blazorChart.ContainerClass = "";
-                if (legendOrientation == LegendOrientation.Auto) OrientationClass = "column";
                 break;
             case LegendPosition.Bottom:
-                blazorChart.LegendClass = "";
+                blazorChart.LegendClass = "row-fx";
                 blazorChart.ContainerClass = "column";
-                if (legendOrientation == LegendOrientation.Auto) OrientationClass = "";
                 break;
             default:
                 break;
         }
-
-        if (legendOrientation != LegendOrientation.Auto)
-            OrientationClass = legendOrientation == LegendOrientation.Horizontal
-                ? ""
-                : "column";
 
         await InvokeAsync(StateHasChanged);
     }

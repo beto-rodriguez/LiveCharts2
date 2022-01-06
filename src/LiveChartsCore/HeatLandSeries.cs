@@ -94,7 +94,7 @@ public class HeatLandSeries<TDrawingContext> : IGeoSeries<TDrawingContext>, INot
         }
     }
 
-    /// <inheritdoc cref="IGeoSeries{TDrawingContext}.IsVisible"/>
+    /// <inheritdoc cref="IGeoSeries.IsVisible"/>
     public bool IsVisible { get => _isVisible; set { _isVisible = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IGeoSeries{TDrawingContext}.Measure(MapContext{TDrawingContext})"/>
