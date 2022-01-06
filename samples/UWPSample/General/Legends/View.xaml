@@ -21,7 +21,8 @@
             ItemsSource="{Binding Positions}"
             DisplayMemberPath="Name"
             SelectedValuePath="Position"
-            SelectedValue="{Binding Position}"/>
+            SelectedValue="{Binding Position, Mode=TwoWay}"/>
+
         <lvc:CartesianChart
             Grid.Row="1"
             Series="{Binding Series}"

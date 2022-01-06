@@ -86,7 +86,6 @@ public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingC
         }
 
         DrawAndMesure(series, wfChart);
-
         BackColor = wfChart.LegendBackColor;
     }
 
@@ -102,16 +101,14 @@ public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingC
         {
             if (Orientation == LegendOrientation.Vertical)
             {
-                var parent = new Panel();
-                parent.BackColor = chart.LegendBackColor;
+                var parent = new Panel { BackColor = chart.LegendBackColor };
                 Controls.Add(parent);
                 using var g = CreateGraphics();
                 foreach (var s in series)
                 {
                     var size = g.MeasureString(s.Name, chart.LegendFont);
 
-                    var p = new Panel();
-                    p.Location = new Point(0, (int)h);
+                    var p = new Panel { Location = new Point(0, (int)h) };
                     parent.Controls.Add(p);
 
                     p.Controls.Add(new MotionCanvas
@@ -151,14 +148,13 @@ public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingC
                 {
                     var size = g.MeasureString(s.Name, chart.LegendFont);
 
-                    var p = new Panel();
-                    p.Location = new Point((int)w, 0);
+                    var p = new Panel { Location = new Point((int)w, 0) };
                     parent.Controls.Add(p);
 
                     p.Controls.Add(new MotionCanvas
                     {
                         Location = new Point(0, 6),
-                        //PaintTasks = s.DefaultPaintContext.PaintTasks,
+                        PaintTasks = s.CanvasSchedule.PaintSchedules,
                         Width = (int)s.CanvasSchedule.Width,
                         Height = (int)s.CanvasSchedule.Height
                     });
