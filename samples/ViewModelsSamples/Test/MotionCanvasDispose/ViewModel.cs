@@ -1,6 +1,7 @@
 ﻿using System;
 using LiveChartsCore;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -21,19 +22,19 @@ public class ViewModel
         {
             var circle = new CircleGeometry { X = r.Next(15, 285), Y = r.Next(15, 285), Width = 5, Height = 5 };
 
-            //_ = circle
-            //    .TransitionateProperties(
-            //        nameof(circle.X), nameof(circle.Y))
-            //    .WithAnimation(animation =>
-            //        animation
-            //            .WithDuration(TimeSpan.FromSeconds(1))
-            //            .WithEasingFunction(EasingFunctions.ElasticOut))
-            //    .CompleteCurrentTransitions();
+            _ = circle
+                .TransitionateProperties(
+                    nameof(circle.X), nameof(circle.Y))
+                .WithAnimation(animation =>
+                    animation
+                        .WithDuration(TimeSpan.FromSeconds(1))
+                        .WithEasingFunction(EasingFunctions.ElasticOut))
+                .CompleteCurrentTransitions();
 
-            circle.SetPropertiesTransitions(
-                new Animation(EasingFunctions.ElasticOut, TimeSpan.FromSeconds(1)),
-                nameof(circle.X), nameof(circle.Y));
-            circle.CompleteAllTransitions();
+            //circle.SetPropertiesTransitions(
+            //    new Animation(EasingFunctions.ElasticOut, TimeSpan.FromSeconds(1)),
+            //    nameof(circle.X), nameof(circle.Y));
+            //circle.CompleteAllTransitions();
 
             p.AddGeometryToPaintTask(canvas, circle);
 
