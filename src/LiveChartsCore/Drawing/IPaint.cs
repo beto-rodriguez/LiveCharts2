@@ -136,6 +136,12 @@ public interface IPaint<TDrawingContext> : IAnimatable, IDisposable
     void ClearGeometriesFromPaintTask(MotionCanvas<TDrawingContext> canvas);
 
     /// <summary>
+    /// Releases the canvas resources.
+    /// </summary>
+    /// <param name="canvas">The canvas.</param>
+    void ReleaseCanvas(MotionCanvas<TDrawingContext> canvas);
+
+    /// <summary>
     /// Sets the opacity according to the given geometry.
     /// </summary>
     /// <param name="context">The context.</param>

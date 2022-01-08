@@ -216,6 +216,12 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
         SetInvalidState();
     }
 
+    /// <inheritdoc cref="IPaint{TDrawingContext}.ReleaseCanvas(MotionCanvas{TDrawingContext})"/>
+    public void ReleaseCanvas(MotionCanvas<SkiaSharpDrawingContext> canvas)
+    {
+        _ = _geometriesByCanvas.Remove(canvas);
+    }
+
     /// <inheritdoc cref="IPaint{TDrawingContext}.GetClipRectangle(MotionCanvas{TDrawingContext})" />
     public LvcRectangle GetClipRectangle(MotionCanvas<SkiaSharpDrawingContext> canvas)
     {

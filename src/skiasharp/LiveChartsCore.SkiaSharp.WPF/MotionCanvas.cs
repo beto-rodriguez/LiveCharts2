@@ -145,7 +145,7 @@ public class MotionCanvas : Control
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
         CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
-        PaintTasks.Clear();
+        CanvasCore.Dispose();
     }
 
     private async void RunDrawingLoop()

@@ -218,4 +218,7 @@ public class DefaultPaint<TDrawingContext> : IPaint<TDrawingContext>
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.SetClipRectangle(MotionCanvas{TDrawingContext}, LvcRectangle)" />
     public void SetClipRectangle(MotionCanvas<TDrawingContext> canvas, LvcRectangle value) { }
+
+    /// <inheritdoc cref="IPaint{TDrawingContext}.ReleaseCanvas(MotionCanvas{TDrawingContext})" />
+    public void ReleaseCanvas(MotionCanvas<TDrawingContext> canvas) { }
 }
