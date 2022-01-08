@@ -234,5 +234,6 @@ public class MotionCanvas<TDrawingContext> : IDisposable
         }
 
         _paintTasks.Clear();
+        IsValid = true;
     }
 }
