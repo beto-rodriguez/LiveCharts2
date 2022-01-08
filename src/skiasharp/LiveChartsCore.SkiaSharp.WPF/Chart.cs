@@ -779,8 +779,14 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
 
     private void Chart_Unloaded(object sender, RoutedEventArgs e)
     {
+        BeforeUnloaded();
         core?.Unload();
     }
+
+    /// <summary>
+    /// Called before the chart is unloaded.
+    /// </summary>
+    protected virtual void BeforeUnloaded() { }
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
     {

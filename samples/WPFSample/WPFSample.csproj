@@ -242,6 +242,9 @@
     <Compile Update="StepLines\Zoom\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Test\MotionCanvasDispose\UserControl1.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="VisualTest\DataTemplate\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -573,6 +576,22 @@
     <Page Update="StepLines\Zoom\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Test\ChangeSeriesInstance\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Test\Dispose\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Test\MotionCanvasDispose\UserControl1.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Test\MotionCanvasDispose\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="VisualTest\DataTemplate\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>

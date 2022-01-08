@@ -335,4 +335,9 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         var p = e.GetPosition(this);
         c.Zoom(new LvcPoint((float)p.X, (float)p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
     }
+
+    /// <inheritdoc cref="Chart.BeforeUnloaded"/>
+    protected override void BeforeUnloaded()
+    {
+    }
 }
