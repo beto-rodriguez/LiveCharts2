@@ -92,7 +92,7 @@ public class LabelGeometry : Geometry, ILabelGeometry<SkiaSharpDrawingContext>
     /// <inheritdoc cref="Geometry.OnMeasure(Paint)" />
     protected override LvcSize OnMeasure(Paint drawable)
     {
-        var p = new SKPaint
+        using var p = new SKPaint
         {
             Color = drawable.Color,
             IsAntialias = drawable.IsAntialias,
