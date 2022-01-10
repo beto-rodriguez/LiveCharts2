@@ -194,12 +194,6 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
     public IChartTooltip<SkiaSharpDrawingContext>? Tooltip { get; private set; } = null!;
 
-    /// <summary>
-    /// Gets or sets the point states.
-    /// </summary>
-    [Parameter]
-    public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
-
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
     [Parameter]
     public bool AutoUpdateEnabled { get; set; } = true;
@@ -260,13 +254,6 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     public void HideTooltip()
     {
         if (Tooltip is null || core is null) return;
-
-        foreach (var state in PointStates.GetStates())
-        {
-            if (!state.IsHoverState) continue;
-            if (state.Fill is not null) state.Fill.ClearGeometriesFromPaintTask(core.Canvas);
-            if (state.Stroke is not null) state.Stroke.ClearGeometriesFromPaintTask(core.Canvas);
-        }
 
         core.ClearTooltipData();
         Tooltip.Hide();

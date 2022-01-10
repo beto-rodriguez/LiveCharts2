@@ -670,11 +670,6 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
         public IChartLegend<SkiaSharpDrawingContext> Legend => legend;
 
-        /// <summary>
-        /// Gets or sets the point states.
-        /// </summary>
-        public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
-
         /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
         public bool AutoUpdateEnabled { get; set; } = true;
 
@@ -712,13 +707,6 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         public void HideTooltip()
         {
             if (tooltip == null || _core == null) return;
-
-            foreach (var state in PointStates.GetStates())
-            {
-                if (!state.IsHoverState) continue;
-                if (state.Fill != null) state.Fill.ClearGeometriesFromPaintTask(_core.Canvas);
-                if (state.Stroke != null) state.Stroke.ClearGeometriesFromPaintTask(_core.Canvas);
-            }
 
             _core.ClearTooltipData();
             ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();

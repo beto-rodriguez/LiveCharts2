@@ -669,11 +669,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
     public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
 
-    /// <summary>
-    /// Gets or sets the point states.
-    /// </summary>
-    public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
-
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
 

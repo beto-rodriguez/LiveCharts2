@@ -331,6 +331,7 @@ public abstract class Chart<TDrawingContext> : IChart
     public virtual void Unload()
     {
         IsLoaded = false;
+        _activePoints.Clear();
     }
 
     internal void ClearTooltipData()

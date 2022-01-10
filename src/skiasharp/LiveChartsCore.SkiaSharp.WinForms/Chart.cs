@@ -252,12 +252,6 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
 
-    /// <summary>
-    /// Gets or sets the point states.
-    /// </summary>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
-
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public bool AutoUpdateEnabled { get; set; } = true;
@@ -288,13 +282,6 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     public void HideTooltip()
     {
         if (tooltip is null || core is null) return;
-
-        foreach (var state in PointStates.GetStates())
-        {
-            if (!state.IsHoverState) continue;
-            if (state.Fill is not null) state.Fill.ClearGeometriesFromPaintTask(core.Canvas);
-            if (state.Stroke is not null) state.Stroke.ClearGeometriesFromPaintTask(core.Canvas);
-        }
 
         core.ClearTooltipData();
         tooltip.Hide();

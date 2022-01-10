@@ -605,11 +605,6 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
     public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
 
-    /// <summary>
-    /// Gets or sets the point states.
-    /// </summary>
-    public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
-
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
 
@@ -672,14 +667,6 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     public void HideTooltip()
     {
         if (tooltip is null || core is null) return;
-
-        foreach (var state in PointStates.GetStates())
-        {
-            if (!state.IsHoverState) continue;
-            if (state.Fill is not null) state.Fill.ClearGeometriesFromPaintTask(core.Canvas);
-            if (state.Stroke is not null) state.Stroke.ClearGeometriesFromPaintTask(core.Canvas);
-        }
-
         core.ClearTooltipData();
         tooltip.Hide();
     }
@@ -779,14 +766,14 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
 
     private void Chart_Unloaded(object sender, RoutedEventArgs e)
     {
-        BeforeUnloaded();
         core?.Unload();
+        OnUnloaded();
     }
 
     /// <summary>
     /// Called before the chart is unloaded.
     /// </summary>
-    protected virtual void BeforeUnloaded() { }
+    protected virtual void OnUnloaded() { }
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
     {

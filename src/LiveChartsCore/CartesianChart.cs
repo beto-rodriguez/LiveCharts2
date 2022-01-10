@@ -747,7 +747,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         foreach (var item in _everMeasuredSeries) ((ChartElement<TDrawingContext>)item).RemoveFromUI(this);
         _everMeasuredSeries.Clear();
 
-        _chartView.CoreCanvas.Clear();
+        Canvas.Dispose();
 
         IsFirstDraw = true;
     }

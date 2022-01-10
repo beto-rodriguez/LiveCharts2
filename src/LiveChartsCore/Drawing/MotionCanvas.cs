@@ -166,15 +166,6 @@ public class MotionCanvas<TDrawingContext> : IDisposable
     }
 
     /// <summary>
-    /// Clears the canvas and tasks.
-    /// </summary>
-    public void Clear()
-    {
-        _paintTasks.Clear();
-        Invalidate();
-    }
-
-    /// <summary>
     /// Adds a drawable task.
     /// </summary>
     /// <param name="task">The task.</param>
@@ -201,7 +192,21 @@ public class MotionCanvas<TDrawingContext> : IDisposable
     /// <returns></returns>
     public void RemovePaintTask(IPaint<TDrawingContext> task)
     {
+        task.ReleaseCanvas(this);
         _ = _paintTasks.Remove(task);
+    }
+
+    /// <summary>
+    /// Clears the canvas and tasks.
+    /// </summary>
+    public void Clear()
+    {
+        foreach (var task in _paintTasks)
+        {
+            task.ReleaseCanvas(this);
+        }
+        _paintTasks.Clear();
+        Invalidate();
     }
 
     /// <summary>
@@ -232,7 +237,6 @@ public class MotionCanvas<TDrawingContext> : IDisposable
         {
             task.ReleaseCanvas(this);
         }
-
         _paintTasks.Clear();
         IsValid = true;
     }
