@@ -1,7 +1,8 @@
-﻿<UserControl x:Class="WPFSample.Test.Dispose.View"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<UserControl x:Class="AvaloniaSample.Test.MotionCanvasDispose.View"
+             xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:sample="clr-namespace:WPFSample.Test.Dispose">
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:sample="using:AvaloniaSample.Test.MotionCanvasDispose">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"></RowDefinition>

@@ -45,8 +45,8 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia;
 /// <inheritdoc cref="IGeoMapView{TDrawingContext}"/>
 public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 {
-    private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
-    private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
+    private CollectionDeepObserver<IMapElement> _shapesObserver;
+    private CollectionDeepObserver<IGeoSeries> _seriesObserver;
     private readonly GeoMap<SkiaSharpDrawingContext> _core;
 
     /// <summary>
@@ -76,6 +76,8 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         //Shapes = Enumerable.Empty<MapShape<SkiaSharpDrawingContext>>();
         ActiveMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
         SyncContext = new object();
+
+        DetachedFromVisualTree += GeoMap_DetachedFromVisualTree;
     }
 
     #region dependency props
@@ -250,7 +252,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     public IEnumerable<IGeoSeries> Series
     {
         get => (IEnumerable<IGeoSeries>)GetValue(SeriesProperty);
-        set => SetValue(ShapesProperty, value);
+        set => SetValue(SeriesProperty, value);
     }
 
     #endregion
@@ -325,6 +327,19 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     private void OnPointerLeave(object? sender, PointerEventArgs e)
     {
         _core?.InvokePointerLeft();
+    }
+
+    private void GeoMap_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+    {
+        Series = Array.Empty<IGeoSeries>();
+        Shapes = Array.Empty<MapShape<SkiaSharpDrawingContext>>();
+        _seriesObserver = null!;
+        _shapesObserver = null!;
+
+        Canvas.Dispose();
+
+        if (_core is null) return;
+        _core.Unload();
     }
 
     private void InitializeComponent()

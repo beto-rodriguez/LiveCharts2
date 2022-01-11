@@ -61,9 +61,9 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
 
     private MotionCanvas? _avaloniaCanvas;
     private Chart<SkiaSharpDrawingContext>? _core;
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
-    private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
+    private CollectionDeepObserver<ISeries> _seriesObserver;
+    private CollectionDeepObserver<IPolarAxis> _angleObserver;
+    private CollectionDeepObserver<IPolarAxis> _radiusObserver;
 
     #endregion
 
@@ -840,6 +840,13 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
     private void PolarChart_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
     {
         _core?.Unload();
+
+        Series = Array.Empty<ISeries>();
+        AngleAxes = Array.Empty<IPolarAxis>();
+        RadiusAxes = Array.Empty<IPolarAxis>();
+        _seriesObserver = null!;
+        _angleObserver = null!;
+        _radiusObserver = null!;
     }
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)

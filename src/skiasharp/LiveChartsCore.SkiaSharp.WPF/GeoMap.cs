@@ -83,19 +83,6 @@ public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
         Unloaded += GeoMap_Unloaded;
     }
 
-    private void GeoMap_Unloaded(object sender, RoutedEventArgs e)
-    {
-        Series = Array.Empty<IGeoSeries>();
-        Shapes = Array.Empty<MapShape<SkiaSharpDrawingContext>>();
-        _seriesObserver = null!;
-        _shapesObserver = null!;
-
-        Canvas.Dispose();
-
-        if (_core is null) return;
-        _core.Unload();
-    }
-
     #region dependency props
 
     /// <summary>
@@ -352,6 +339,19 @@ public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
         _core.ViewTo(
             new ZoomOnPointerView(
                 new LvcPoint((float)p.X, (float)p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut));
+    }
+
+    private void GeoMap_Unloaded(object sender, RoutedEventArgs e)
+    {
+        Series = Array.Empty<IGeoSeries>();
+        Shapes = Array.Empty<MapShape<SkiaSharpDrawingContext>>();
+        _seriesObserver = null!;
+        _shapesObserver = null!;
+
+        Canvas.Dispose();
+
+        if (_core is null) return;
+        _core.Unload();
     }
 
     private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)

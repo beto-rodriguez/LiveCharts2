@@ -58,7 +58,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
     protected IChartTooltip<SkiaSharpDrawingContext>? tooltip;
 
     private Chart<SkiaSharpDrawingContext>? _core;
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+    private CollectionDeepObserver<ISeries> _seriesObserver;
     private MotionCanvas? _avaloniaCanvas;
 
     #endregion
@@ -741,6 +741,9 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
     private void PieChart_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
     {
         _core?.Unload();
+
+        Series = Array.Empty<ISeries>();
+        _seriesObserver = null!;
     }
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
