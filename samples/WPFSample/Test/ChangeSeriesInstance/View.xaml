@@ -7,13 +7,21 @@
         <vms:ViewModel/>
     </UserControl.DataContext>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <Button Grid.Row="0" Command="{Binding GenerateDataCommand}">Change Data</Button>
+            <Button Grid.Row="0" Command="{Binding GenerateDataCommand}">Change Data</Button>
 
-        <lvc:CartesianChart Grid.Row="1" Series="{Binding Data}"/>
+            <lvc:CartesianChart Grid.Row="1" Series="{Binding CartesianSeries}" />
+            <lvc:PieChart Grid.Row="2" Series="{Binding PieSeries}"/>
+            <lvc:PolarChart Grid.Row="3" Series="{Binding PolarSeries}"/>
+            <lvc:GeoMap Grid.Row="4" Series="{Binding GeoSeries}" MapProjection="Mercator"/>
+        </Grid>
     </Grid>
 </UserControl>

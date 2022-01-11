@@ -41,9 +41,10 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
     private readonly HashSet<HeatPathShape> _usedPathShapes = new();
     private readonly HashSet<IPaint<SkiaSharpDrawingContext>> _usedPaints = new();
     private readonly HashSet<string> _usedLayers = new();
+    private IGeoMapView<SkiaSharpDrawingContext>? _mapView;
 
     /// <inheritdoc cref="IMapFactory{TDrawingContext}.FetchMapElements(MapContext{TDrawingContext})"/>
-    public IEnumerable<IMapElement> FetchMapElements(MapContext<SkiaSharpDrawingContext> context)
+    IEnumerable<IMapElement> IMapFactory<SkiaSharpDrawingContext>.FetchMapElements(MapContext<SkiaSharpDrawingContext> context)
     {
         foreach (var shape in context.View.Shapes) yield return shape;
     }
@@ -60,6 +61,8 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
         var layersQuery = context.View.ActiveMap.Layers.Values
             .Where(x => x.IsVisible)
             .OrderByDescending(x => x.ProcessIndex);
+
+        _mapView = context.View;
 
         foreach (var layer in layersQuery)
         {
@@ -166,4 +169,49 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IMapFactory{TDrawingContext}.Pan(GeoMap{TDrawingContext}, LvcPoint)"/>
     public void Pan(GeoMap<SkiaSharpDrawingContext> sender, LvcPoint delta) { }
+
+    /// <summary>
+    /// Disposes the map factory.
+    /// </summary>
+    public void Dispose()
+    {
+        if (_mapView is not null)
+        {
+            var layersQuery = _mapView.ActiveMap.Layers.Values
+               .Where(x => x.IsVisible)
+               .OrderByDescending(x => x.ProcessIndex);
+
+            foreach (var layer in layersQuery)
+            {
+                var stroke = layer.Stroke == LiveCharts.DefaultPaint ? _mapView.Stroke : layer.Stroke;
+                var fill = layer.Fill == LiveCharts.DefaultPaint ? _mapView.Fill : layer.Fill;
+
+                foreach (var landDefinition in layer.Lands.Values)
+                {
+                    foreach (var landData in landDefinition.Data)
+                    {
+                        var shape = (IDrawable<SkiaSharpDrawingContext>?)landData.Shape;
+                        if (shape is null) continue;
+
+                        if (stroke is not null) stroke.RemoveGeometryFromPainTask(_mapView.Canvas, shape);
+                        if (fill is not null) fill.AddGeometryToPaintTask(_mapView.Canvas, shape);
+
+                        landData.Shape = null;
+                    }
+                }
+                foreach (var paint in _usedPaints)
+                {
+                    _mapView.Canvas.RemovePaintTask(paint);
+                    paint.ClearGeometriesFromPaintTask(_mapView.Canvas);
+                }
+
+                _mapView.Canvas.RemovePaintTask(stroke);
+                _mapView.Canvas.RemovePaintTask(fill);
+            }
+        }
+
+        _usedPathShapes.Clear();
+        _usedLayers.Clear();
+        _usedPaints.Clear();
+    }
 }

@@ -31,7 +31,7 @@ namespace LiveChartsCore.Geo;
 /// <summary>
 /// Defines a geographic map for LiveCharts controls.
 /// </summary>
-public class CoreMap<TDrawingContext>
+public class CoreMap<TDrawingContext> : IDisposable
     where TDrawingContext : DrawingContext
 {
     /// <summary>
@@ -199,5 +199,13 @@ public class CoreMap<TDrawingContext>
     {
         var defaultPaint = (IPaint<TDrawingContext>)LiveCharts.DefaultPaint;
         return Task.Run(() => AddLayerFromStreamReader(streamReader, defaultPaint, defaultPaint, layerName));
+    }
+
+    /// <summary>
+    /// Disposes the map.
+    /// </summary>
+    public void Dispose()
+    {
+        Layers.Clear();
     }
 }

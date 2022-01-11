@@ -302,6 +302,19 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         core.Update();
     }
 
+    /// <inheritdoc cref="Chart.OnUnloaded"/>
+    protected override void OnUnloaded()
+    {
+        Series = Array.Empty<ISeries>();
+        XAxes = Array.Empty<ICartesianAxis>();
+        YAxes = Array.Empty<ICartesianAxis>();
+        Sections = Array.Empty<RectangularSection>();
+        _seriesObserver = null!;
+        _xObserver = null!;
+        _yObserver = null!;
+        _sectionsObserver = null!;
+    }
+
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (core is null || (sender is IStopNPC stop && !stop.IsNotifyingChanges)) return;
@@ -334,19 +347,5 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         var c = (CartesianChart<SkiaSharpDrawingContext>)core;
         var p = e.GetPosition(this);
         c.Zoom(new LvcPoint((float)p.X, (float)p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
-    }
-
-    /// <inheritdoc cref="Chart.OnUnloaded"/>
-    protected override void OnUnloaded()
-    {
-        Series = Array.Empty<ISeries>();
-        XAxes = Array.Empty<ICartesianAxis>();
-        YAxes = Array.Empty<ICartesianAxis>();
-        Sections = Array.Empty<RectangularSection>();
-
-        _seriesObserver = null!;
-        _xObserver = null!;
-        _yObserver = null!;
-        _sectionsObserver = null!;
     }
 }

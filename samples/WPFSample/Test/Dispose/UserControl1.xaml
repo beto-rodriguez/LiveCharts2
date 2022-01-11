@@ -10,5 +10,19 @@
     <UserControl.DataContext>
         <vms:ViewModel></vms:ViewModel>
     </UserControl.DataContext>
-    <lvc:CartesianChart Series="{Binding Series}" TooltipPosition="Hidden"></lvc:CartesianChart>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <lvc:CartesianChart Grid.Row="0" Series="{Binding CartesianSeries}" />
+        <lvc:PieChart Grid.Row="1" Series="{Binding PieSeries}"/>
+        <lvc:PolarChart Grid.Row="2" Series="{Binding PolarSeries}"/>
+        <lvc:GeoMap Grid.Row="3" Series="{Binding GeoSeries}" MapProjection="Mercator"/>
+
+    </Grid>
 </UserControl>
