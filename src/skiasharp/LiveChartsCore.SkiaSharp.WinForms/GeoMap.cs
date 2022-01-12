@@ -42,17 +42,18 @@ namespace LiveChartsCore.SkiaSharpView.WinForms;
 /// <seealso cref="UserControl" />
 public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 {
-    private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
-    private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
     private readonly GeoMap<SkiaSharpDrawingContext> _core;
+    private CollectionDeepObserver<IMapElement> _shapesObserver;
+    private CollectionDeepObserver<IGeoSeries> _seriesObserver;
     private IEnumerable<IMapElement> _shapes = Enumerable.Empty<IMapElement>();
     private IEnumerable<IGeoSeries> _series = Enumerable.Empty<IGeoSeries>();
     private CoreMap<SkiaSharpDrawingContext> _activeMap;
     private MapProjection _mapProjection = MapProjection.Default;
-    private LvcColor[] _heatMap = {
-            LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
-            LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
-        };
+    private LvcColor[] _heatMap =
+    {
+        LvcColor.FromArgb(255, 179, 229, 252), // cold (min value)
+        LvcColor.FromArgb(255, 2, 136, 209) // hot (max value)
+    };
     private double[]? _colorStops = null;
     private IPaint<SkiaSharpDrawingContext>? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { IsStroke = true };
     private IPaint<SkiaSharpDrawingContext>? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { IsFill = true };
@@ -201,6 +202,24 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     protected void OnPropertyChanged()
     {
         _core?.Update();
+    }
+
+    /// <inheritdoc cref="ContainerControl.OnParentChanged(EventArgs)"/>
+    protected override void OnParentChanged(EventArgs e)
+    {
+        base.OnParentChanged(e);
+
+        if (Parent is null)
+        {
+            _core?.Unload();
+
+            Series = Array.Empty<IGeoSeries>();
+            Shapes = Array.Empty<MapShape<SkiaSharpDrawingContext>>();
+            _seriesObserver = null!;
+            _shapesObserver = null!;
+
+            Canvas.Dispose();
+        }
     }
 
     private void GeoMap_Resize(object? sender, EventArgs e)

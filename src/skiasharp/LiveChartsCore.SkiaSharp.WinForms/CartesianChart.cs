@@ -37,10 +37,10 @@ namespace LiveChartsCore.SkiaSharpView.WinForms;
 /// <inheritdoc cref="ICartesianChartView{TDrawingContext}" />
 public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext>
 {
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
-    private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
-    private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserverer;
+    private CollectionDeepObserver<ISeries> _seriesObserver;
+    private CollectionDeepObserver<ICartesianAxis> _xObserver;
+    private CollectionDeepObserver<ICartesianAxis> _yObserver;
+    private CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
     private IEnumerable<ISeries> _series = new List<ISeries>();
     private IEnumerable<ICartesianAxis> _xAxes = new List<Axis> { new() };
     private IEnumerable<ICartesianAxis> _yAxes = new List<Axis> { new() };
@@ -64,7 +64,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _sectionsObserverer = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
+        _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         XAxes = new List<ICartesianAxis>()
@@ -136,8 +136,8 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         get => _sections;
         set
         {
-            _sectionsObserverer.Dispose(_sections);
-            _sectionsObserverer.Initialize(value);
+            _sectionsObserver.Dispose(_sections);
+            _sectionsObserver.Initialize(value);
             _sections = value;
             OnPropertyChanged();
         }
@@ -176,6 +176,19 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
             this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore, false, true);
         if (((IChartView)this).DesignerMode) return;
         core.Update();
+    }
+
+    /// <inheritdoc cref="Chart.OnUnloading"/>
+    protected override void OnUnloading()
+    {
+        Series = Array.Empty<ISeries>();
+        XAxes = Array.Empty<ICartesianAxis>();
+        YAxes = Array.Empty<ICartesianAxis>();
+        Sections = Array.Empty<RectangularSection>();
+        _seriesObserver = null!;
+        _xObserver = null!;
+        _yObserver = null!;
+        _sectionsObserver = null!;
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />

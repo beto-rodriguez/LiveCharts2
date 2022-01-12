@@ -336,13 +336,25 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         base.OnHandleDestroyed(e);
     }
 
+    /// <summary>
+    /// Called when the control is being unloaded.
+    /// </summary>
+    protected virtual void OnUnloading() { }
+
     /// <inheritdoc cref="ContainerControl.OnParentChanged(EventArgs)"/>
     protected override void OnParentChanged(EventArgs e)
     {
         base.OnParentChanged(e);
 
-        if (Parent is null) core?.Unload();
-        else core?.Load();
+        if (Parent is null)
+        {
+            core?.Unload();
+            OnUnloading();
+
+            return;
+        }
+
+        core?.Load();
     }
 
     private void OnResized(object? sender, EventArgs e)
