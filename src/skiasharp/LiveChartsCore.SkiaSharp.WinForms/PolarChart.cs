@@ -40,9 +40,9 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     private double _totalAngle = 360;
     private double _innerRadius;
     private double _initialRotation = LiveCharts.CurrentSettings.PolarInitialRotation;
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
-    private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
+    private CollectionDeepObserver<ISeries> _seriesObserver;
+    private CollectionDeepObserver<IPolarAxis> _angleObserver;
+    private CollectionDeepObserver<IPolarAxis> _radiusObserver;
     private IEnumerable<ISeries> _series = new List<ISeries>();
     private IEnumerable<IPolarAxis> _angleAxes = new List<PolarAxis>();
     private IEnumerable<IPolarAxis> _radiusAxes = new List<PolarAxis>();
@@ -183,6 +183,17 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
             this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore, false, true);
         if (((IChartView)this).DesignerMode) return;
         core.Update();
+    }
+
+    /// <inheritdoc cref="Chart.OnUnloading"/>
+    protected override void OnUnloading()
+    {
+        Series = Array.Empty<ISeries>();
+        AngleAxes = Array.Empty<IPolarAxis>();
+        RadiusAxes = Array.Empty<IPolarAxis>();
+        _seriesObserver = null!;
+        _angleObserver = null!;
+        _radiusObserver = null!;
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.ScaleUIPoint(LvcPoint, int, int)" />

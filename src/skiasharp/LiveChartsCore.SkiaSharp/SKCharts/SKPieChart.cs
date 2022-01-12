@@ -128,11 +128,6 @@ public class SKPieChart : IPieChartView<SkiaSharpDrawingContext>, ISkiaSharpChar
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip"/>
     public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => null;
 
-    /// <summary>
-    /// Gets or sets the point states.
-    /// </summary>
-    public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
-
     /// <inheritdoc cref="IChartView.CoreChart"/>
     public IChart CoreChart => Core;
 

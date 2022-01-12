@@ -51,9 +51,9 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     /// </summary>
     protected Chart<SkiaSharpDrawingContext>? core;
 
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
-    private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
+    private CollectionDeepObserver<ISeries> _seriesObserver;
+    private CollectionDeepObserver<IPolarAxis> _angleObserver;
+    private CollectionDeepObserver<IPolarAxis> _radiusObserver;
 
     #endregion
 
@@ -640,11 +640,6 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
     public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
 
-    /// <summary>
-    /// Gets or sets the point states.
-    /// </summary>
-    public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
-
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
 
@@ -744,8 +739,21 @@ public partial class PolarChart : ContentView, IPolarChartView<SkiaSharpDrawingC
     protected override void OnParentSet()
     {
         base.OnParentSet();
-        if (Parent == null) core?.Unload();
-        else core?.Load();
+        if (Parent == null)
+        {
+            core?.Unload();
+
+            Series = Array.Empty<ISeries>();
+            AngleAxes = Array.Empty<IPolarAxis>();
+            RadiusAxes = Array.Empty<IPolarAxis>();
+            _seriesObserver = null!;
+            _angleObserver = null!;
+            _radiusObserver = null!;
+
+            return;
+        }
+
+        core?.Load();
     }
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

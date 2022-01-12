@@ -145,6 +145,21 @@
     <Compile Update="Polar\Coordinates\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Test\ChangeSeriesInstance\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Test\Dispose\UserControl1.axaml.cs">
+      <DependentUpon>UserControl1.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Test\Dispose\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Test\MotionCanvasDispose\UserControl1.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Test\MotionCanvasDispose\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="VisualTest\Tabs\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

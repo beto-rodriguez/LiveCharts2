@@ -39,10 +39,10 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
 {
     #region fields
 
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
-    private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
-    private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+    private CollectionDeepObserver<ISeries> _seriesObserver;
+    private CollectionDeepObserver<ICartesianAxis> _xObserver;
+    private CollectionDeepObserver<ICartesianAxis> _yObserver;
+    private CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
 
     #endregion
 
@@ -300,6 +300,21 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
         tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
         core.Update();
+    }
+
+    /// <inheritdoc cref="Chart.OnUnloaded"/>
+    protected override void OnUnloaded()
+    {
+        core?.Unload();
+
+        Series = Array.Empty<ISeries>();
+        XAxes = Array.Empty<ICartesianAxis>();
+        YAxes = Array.Empty<ICartesianAxis>();
+        Sections = Array.Empty<RectangularSection>();
+        _seriesObserver = null!;
+        _xObserver = null!;
+        _yObserver = null!;
+        _sectionsObserver = null!;
     }
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

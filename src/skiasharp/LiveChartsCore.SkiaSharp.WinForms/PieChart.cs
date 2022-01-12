@@ -35,7 +35,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms;
 /// <inheritdoc cref="IPieChartView{TDrawingContext}" />
 public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
 {
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+    private CollectionDeepObserver<ISeries> _seriesObserver;
     private IEnumerable<ISeries> _series = new List<ISeries>();
     private double _initialRotation;
     private double _maxAngle = 360;
@@ -106,6 +106,13 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
             this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore, false, true);
         if (((IChartView)this).DesignerMode) return;
         core.Update();
+    }
+
+    /// <inheritdoc cref="Chart.OnUnloading"/>
+    protected override void OnUnloading()
+    {
+        Series = Array.Empty<ISeries>();
+        _seriesObserver = null!;
     }
 
     private void OnMouseDown(object? sender, MouseEventArgs e)

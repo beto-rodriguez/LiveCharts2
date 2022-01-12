@@ -105,6 +105,10 @@ public static class Index
         "VisualTest/DataTemplate",
         "VisualTest/Tabs",
 
+        "Test/ChangeSeriesInstance",
+        "Test/Dispose",
+        "Test/MotionCanvasDispose",
+
         "Maps/World"
         };
 }

@@ -13,6 +13,7 @@
 
     <IsPackable>false</IsPackable>
     <LangVersion>10.0</LangVersion>
+    <Nullable>Enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

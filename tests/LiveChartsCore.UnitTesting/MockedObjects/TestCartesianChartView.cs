@@ -72,8 +72,6 @@ public class TestCartesianChartView : ICartesianChartView<SkiaSharpDrawingContex
 
     public IChartTooltip<SkiaSharpDrawingContext> Tooltip => null;
 
-    public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; }
-
     public LvcSize ControlSize => new(100, 100);
 
     public Margin DrawMargin { get; set; }

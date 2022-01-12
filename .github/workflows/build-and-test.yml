@@ -31,18 +31,19 @@ jobs:
         dotnet workload install maui --from-rollback-file https://aka.ms/dotnet/maui/preview.10.json --source https://aka.ms/dotnet6/nuget/index.json --source https://api.nuget.org/v3/index.json
         dotnet workload install wasm-tools
 
-    - name: Build assemblies
-      run: |
-        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia
-        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Blazor
-        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Maui
-        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.WinForms
-        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.WPF
-        dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms
-        msbuild ./src/skiasharp/LiveChartsCore.SkiaSharpView.UWP/LiveChartsCore.SkiaSharpView.UWP.csproj /t:Restore
-        msbuild ./src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI/LiveChartsCore.SkiaSharpView.WinUI.csproj /t:Restore
+    # not necesessary... the samples also need to compile these projects.
+    #- name: Build assemblies
+    #  run: |
+    #    dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia
+    #    dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Blazor
+    #    dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharpView.Maui
+    #    dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.WinForms
+    #    dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.WPF
+    #    dotnet build ./src/skiasharp/LiveChartsCore.SkiaSharp.Xamarin.Forms
+    #    msbuild ./src/skiasharp/LiveChartsCore.SkiaSharpView.UWP/LiveChartsCore.SkiaSharpView.UWP.csproj /t:Restore
+    #    msbuild ./src/skiasharp/LiveChartsCore.SkiaSharpVew.WinUI/LiveChartsCore.SkiaSharpView.WinUI.csproj /t:Restore
 
-    - name: Build samples
+    - name: Build
       run: |
         dotnet build ./samples/AvaloniaSample
         dotnet build ./samples/BlazorSample

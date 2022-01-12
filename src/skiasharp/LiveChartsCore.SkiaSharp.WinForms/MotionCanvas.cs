@@ -84,6 +84,21 @@ public partial class MotionCanvas : UserControl
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
 
+    /// <inheritdoc cref="ContainerControl.OnParentChanged(EventArgs)"/>
+    protected override void OnParentChanged(EventArgs e)
+    {
+        base.OnParentChanged(e);
+    }
+
+    /// <inheritdoc cref="Control.OnHandleDestroyed(EventArgs)"/>
+    protected override void OnHandleDestroyed(EventArgs e)
+    {
+        base.OnHandleDestroyed(e);
+
+        CanvasCore.Invalidated -= CanvasCore_Invalidated;
+        CanvasCore.Dispose();
+    }
+
     private void SkControl_PaintSurface(object sender, SKPaintSurfaceEventArgs e)
     {
         CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));

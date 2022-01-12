@@ -47,10 +47,10 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
     private Chart<SkiaSharpDrawingContext>? _core;
     private MotionCanvas? _canvas;
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
-    private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
-    private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+    private CollectionDeepObserver<ISeries> _seriesObserver;
+    private CollectionDeepObserver<ICartesianAxis> _xObserver;
+    private CollectionDeepObserver<ICartesianAxis> _yObserver;
+    private CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
 
     #endregion
 
@@ -779,11 +779,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
     public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
 
-    /// <summary>
-    /// Gets or sets the point states.
-    /// </summary>
-    public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
-
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
 
@@ -829,13 +824,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     public void HideTooltip()
     {
         if (tooltip == null || _core == null) return;
-
-        foreach (var state in PointStates.GetStates())
-        {
-            if (!state.IsHoverState) continue;
-            if (state.Fill != null) state.Fill.ClearGeometriesFromPaintTask(_core.Canvas);
-            if (state.Stroke != null) state.Stroke.ClearGeometriesFromPaintTask(_core.Canvas);
-        }
 
         _core.ClearTooltipData();
         ((IChartTooltip<SkiaSharpDrawingContext>)tooltip).Hide();
@@ -976,6 +964,15 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
         _core?.Unload();
+
+        Series = Array.Empty<ISeries>();
+        XAxes = Array.Empty<ICartesianAxis>();
+        YAxes = Array.Empty<ICartesianAxis>();
+        Sections = Array.Empty<RectangularSection>();
+        _seriesObserver = null!;
+        _xObserver = null!;
+        _yObserver = null!;
+        _sectionsObserver = null!;
     }
 
     private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)

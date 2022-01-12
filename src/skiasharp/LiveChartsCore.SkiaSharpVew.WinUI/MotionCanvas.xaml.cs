@@ -142,5 +142,6 @@ public sealed partial class MotionCanvas : UserControl
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
         CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
+        CanvasCore.Dispose();
     }
 }

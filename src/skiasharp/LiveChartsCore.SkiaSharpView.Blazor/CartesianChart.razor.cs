@@ -39,7 +39,7 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
     private CollectionDeepObserver<ISeries>? _seriesObserver;
     private CollectionDeepObserver<ICartesianAxis>? _xObserver;
     private CollectionDeepObserver<ICartesianAxis>? _yObserver;
-    private CollectionDeepObserver<Section<SkiaSharpDrawingContext>>? _sectionsObserverer;
+    private CollectionDeepObserver<Section<SkiaSharpDrawingContext>>? _sectionsObserver;
     private IEnumerable<ISeries> _series = new ObservableCollection<ISeries>();
     private IEnumerable<ICartesianAxis>? _xAxes;
     private IEnumerable<ICartesianAxis>? _yAxes;
@@ -55,7 +55,7 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
         _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _sectionsObserverer = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
+        _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         if (_xAxes is null)
@@ -130,8 +130,8 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
         get => _sections;
         set
         {
-            _sectionsObserverer?.Dispose(_sections);
-            _sectionsObserverer?.Initialize(value);
+            _sectionsObserver?.Dispose(_sections);
+            _sectionsObserver?.Initialize(value);
             _sections = value;
             OnPropertyChanged();
         }
@@ -201,6 +201,21 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
         // ToDo:
         // capute pointer??
         // Capture = true;
+    }
+
+    /// <inheritdoc cref="Chart.OnDisposing"/>
+    protected override void OnDisposing()
+    {
+        core?.Unload();
+
+        Series = Array.Empty<ISeries>();
+        XAxes = Array.Empty<ICartesianAxis>();
+        YAxes = Array.Empty<ICartesianAxis>();
+        Sections = Array.Empty<RectangularSection>();
+        _seriesObserver = null!;
+        _xObserver = null!;
+        _yObserver = null!;
+        _sectionsObserver = null!;
     }
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

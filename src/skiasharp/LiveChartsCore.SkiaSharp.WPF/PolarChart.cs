@@ -38,10 +38,9 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
 {
     #region fields
 
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
-    private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
-    private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+    private CollectionDeepObserver<ISeries> _seriesObserver;
+    private CollectionDeepObserver<IPolarAxis> _angleObserver;
+    private CollectionDeepObserver<IPolarAxis> _radiusObserver;
 
     #endregion
 
@@ -58,8 +57,6 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _angleObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _radiusObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
-            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         SetCurrentValue(AngleAxesProperty, new ObservableCollection<IPolarAxis>()
             {
@@ -256,6 +253,19 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
         tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
         core.Update();
+    }
+
+    /// <inheritdoc cref="Chart.OnUnloaded"/>
+    protected override void OnUnloaded()
+    {
+        core?.Unload();
+
+        Series = Array.Empty<ISeries>();
+        AngleAxes = Array.Empty<IPolarAxis>();
+        RadiusAxes = Array.Empty<IPolarAxis>();
+        _seriesObserver = null!;
+        _angleObserver = null!;
+        _radiusObserver = null!;
     }
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

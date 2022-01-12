@@ -52,10 +52,10 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// </summary>
     protected Chart<SkiaSharpDrawingContext>? core;
 
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
-    private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
-    private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserverer;
+    private CollectionDeepObserver<ISeries> _seriesObserver;
+    private CollectionDeepObserver<ICartesianAxis> _xObserver;
+    private CollectionDeepObserver<ICartesianAxis> _yObserver;
+    private CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
     private Grid? _grid;
 
     #endregion
@@ -82,7 +82,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
         _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
         _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _sectionsObserverer = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
+        _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
             OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
         XAxes = new List<ICartesianAxis>()
@@ -177,7 +177,7 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
             BindingMode.Default, null, (BindableObject o, object oldValue, object newValue) =>
             {
                 var chart = (CartesianChart)o;
-                var observer = chart._sectionsObserverer;
+                var observer = chart._sectionsObserver;
                 observer.Dispose((IEnumerable<Section<SkiaSharpDrawingContext>>)oldValue);
                 observer.Initialize((IEnumerable<Section<SkiaSharpDrawingContext>>)newValue);
                 if (chart.core is null) return;
@@ -672,11 +672,6 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
     public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
 
-    /// <summary>
-    /// Gets or sets the point states.
-    /// </summary>
-    public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
-
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
 
@@ -776,8 +771,23 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     protected override void OnParentSet()
     {
         base.OnParentSet();
-        if (Parent == null) core?.Unload();
-        else core?.Load();
+        if (Parent == null)
+        {
+            core?.Unload();
+
+            Series = Array.Empty<ISeries>();
+            XAxes = Array.Empty<ICartesianAxis>();
+            YAxes = Array.Empty<ICartesianAxis>();
+            Sections = Array.Empty<RectangularSection>();
+            _seriesObserver = null!;
+            _xObserver = null!;
+            _yObserver = null!;
+            _sectionsObserver = null!;
+
+            return;
+        }
+
+        core?.Load();
     }
 
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

@@ -61,10 +61,10 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
     private Chart<SkiaSharpDrawingContext>? _core;
     private MotionCanvas? _avaloniaCanvas;
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
-    private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
-    private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+    private CollectionDeepObserver<ISeries> _seriesObserver;
+    private CollectionDeepObserver<ICartesianAxis> _xObserver;
+    private CollectionDeepObserver<ICartesianAxis> _yObserver;
+    private CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
 
     #endregion
 
@@ -649,11 +649,6 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
     public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
 
-    /// <summary>
-    /// Gets or sets the point states.
-    /// </summary>
-    public PointStatesDictionary<SkiaSharpDrawingContext> PointStates { get; set; } = new();
-
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
     public bool AutoUpdateEnabled { get; set; } = true;
 
@@ -699,13 +694,6 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     public void HideTooltip()
     {
         if (tooltip is null || _core is null) return;
-
-        foreach (var state in PointStates.GetStates())
-        {
-            if (!state.IsHoverState) continue;
-            if (state.Fill is not null) state.Fill.ClearGeometriesFromPaintTask(_core.Canvas);
-            if (state.Stroke is not null) state.Stroke.ClearGeometriesFromPaintTask(_core.Canvas);
-        }
 
         _core.ClearTooltipData();
         tooltip.Hide();
@@ -881,6 +869,15 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
     private void CartesianChart_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
     {
         _core?.Unload();
+
+        Series = Array.Empty<ISeries>();
+        XAxes = Array.Empty<ICartesianAxis>();
+        YAxes = Array.Empty<ICartesianAxis>();
+        Sections = Array.Empty<RectangularSection>();
+        _seriesObserver = null!;
+        _xObserver = null!;
+        _yObserver = null!;
+        _sectionsObserver = null!;
     }
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)

@@ -249,7 +249,14 @@ public partial class GeoMap : IGeoMapView<SkiaSharpDrawingContext>, IDisposable
 
     async void IDisposable.Dispose()
     {
-        if (_dom is null) return;
-        await ((IAsyncDisposable)_dom).DisposeAsync();
+        Series = Array.Empty<IGeoSeries>();
+        Shapes = Array.Empty<MapShape<SkiaSharpDrawingContext>>();
+        _seriesObserver = null!;
+        _shapesObserver = null!;
+
+        Canvas.Dispose();
+
+        if (_core is not null) _core.Unload();
+        if (_dom is not null) await ((IAsyncDisposable)_dom).DisposeAsync();
     }
 }

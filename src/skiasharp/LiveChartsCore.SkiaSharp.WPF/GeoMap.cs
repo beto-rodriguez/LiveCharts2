@@ -43,8 +43,8 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 /// <seealso cref="Control" />
 public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
 {
-    private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
-    private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
+    private CollectionDeepObserver<IMapElement> _shapesObserver;
+    private CollectionDeepObserver<IGeoSeries> _seriesObserver;
     private GeoMap<SkiaSharpDrawingContext>? _core;
 
     static GeoMap()
@@ -79,6 +79,8 @@ public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
         SetCurrentValue(SeriesProperty, Enumerable.Empty<IGeoSeries>());
         SetCurrentValue(ActiveMapProperty, Maps.GetWorldMap<SkiaSharpDrawingContext>());
         SetCurrentValue(SyncContextProperty, new object());
+
+        Unloaded += GeoMap_Unloaded;
     }
 
     #region dependency props
@@ -269,6 +271,7 @@ public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
+    [Obsolete("Use the series property instead.")]
     public IEnumerable<IMapElement> Shapes
     {
         get => (IEnumerable<IMapElement>)GetValue(ShapesProperty);
@@ -336,6 +339,18 @@ public class GeoMap : Control, IGeoMapView<SkiaSharpDrawingContext>
         _core.ViewTo(
             new ZoomOnPointerView(
                 new LvcPoint((float)p.X, (float)p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut));
+    }
+
+    private void GeoMap_Unloaded(object sender, RoutedEventArgs e)
+    {
+        _core?.Unload();
+
+        Series = Array.Empty<IGeoSeries>();
+        Shapes = Array.Empty<MapShape<SkiaSharpDrawingContext>>();
+        _seriesObserver = null!;
+        _shapesObserver = null!;
+
+        Canvas.Dispose();
     }
 
     private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)

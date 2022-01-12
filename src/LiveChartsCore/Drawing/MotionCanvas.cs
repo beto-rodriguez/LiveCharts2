@@ -31,7 +31,7 @@ namespace LiveChartsCore.Drawing;
 /// Defines a canvas that is able to animate the shapes inside it.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-public class MotionCanvas<TDrawingContext>
+public class MotionCanvas<TDrawingContext> : IDisposable
     where TDrawingContext : DrawingContext
 {
     private readonly Stopwatch _stopwatch = new();
@@ -166,15 +166,6 @@ public class MotionCanvas<TDrawingContext>
     }
 
     /// <summary>
-    /// Clears the canvas and tasks.
-    /// </summary>
-    public void Clear()
-    {
-        _paintTasks.Clear();
-        Invalidate();
-    }
-
-    /// <summary>
     /// Adds a drawable task.
     /// </summary>
     /// <param name="task">The task.</param>
@@ -201,7 +192,21 @@ public class MotionCanvas<TDrawingContext>
     /// <returns></returns>
     public void RemovePaintTask(IPaint<TDrawingContext> task)
     {
+        task.ReleaseCanvas(this);
         _ = _paintTasks.Remove(task);
+    }
+
+    /// <summary>
+    /// Clears the canvas and tasks.
+    /// </summary>
+    public void Clear()
+    {
+        foreach (var task in _paintTasks)
+        {
+            task.ReleaseCanvas(this);
+        }
+        _paintTasks.Clear();
+        Invalidate();
     }
 
     /// <summary>
@@ -221,5 +226,18 @@ public class MotionCanvas<TDrawingContext>
         }
 
         return count;
+    }
+
+    /// <summary>
+    /// Releases the resources.
+    /// </summary>
+    public void Dispose()
+    {
+        foreach (var task in _paintTasks)
+        {
+            task.ReleaseCanvas(this);
+        }
+        _paintTasks.Clear();
+        IsValid = true;
     }
 }

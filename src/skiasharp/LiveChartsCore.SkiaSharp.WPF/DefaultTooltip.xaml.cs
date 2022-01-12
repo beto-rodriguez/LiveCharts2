@@ -269,8 +269,6 @@ public partial class DefaultTooltip : Popup, IChartTooltip<SkiaSharpDrawingConte
 
         if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
         {
-            var a = border.ActualHeight - border.DesiredSize.Height;
-
             location = tooltipPoints.GetCartesianTooltipLocation(
                 chart.TooltipPosition, new LvcSize((float)border.DesiredSize.Width, (float)border.DesiredSize.Height), chart.ControlSize);
         }

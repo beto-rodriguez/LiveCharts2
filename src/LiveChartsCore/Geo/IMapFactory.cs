@@ -29,7 +29,7 @@ namespace LiveChartsCore.Geo;
 /// <summary>
 /// Defines a map factory.
 /// </summary>
-public interface IMapFactory<TDrawingContext>
+public interface IMapFactory<TDrawingContext> : IDisposable
     where TDrawingContext : DrawingContext
 {
     /// <summary>

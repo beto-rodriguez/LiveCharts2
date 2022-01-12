@@ -39,19 +39,20 @@ namespace LiveChartsCore;
 public class GeoMap<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
-    private readonly IMapFactory<TDrawingContext> _mapFactory;
     private readonly HashSet<IMapElement> _everMeasuredShapes = new();
     private readonly HashSet<IGeoSeries<TDrawingContext>> _everMeasuredSeries = new();
     private readonly ActionThrottler _updateThrottler;
     private readonly ActionThrottler _panningThrottler;
-    private readonly IPaint<TDrawingContext> _heatPaint;
     private bool _isHeatInCanvas = false;
+    private IPaint<TDrawingContext> _heatPaint;
     private IPaint<TDrawingContext>? _previousStroke;
     private IPaint<TDrawingContext>? _previousFill;
     private LvcPoint _pointerPanningPosition = new(-10, -10);
     private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
     private bool _isPanning = false;
+    private IMapFactory<TDrawingContext> _mapFactory;
     private CoreMap<TDrawingContext>? _activeMap;
+    private bool _isUnloaded = false;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GeoMap{TDrawingContext}"/> class.
@@ -116,6 +117,29 @@ public class GeoMap<TDrawingContext>
         _updateThrottler.Call();
     }
 
+    /// <summary>
+    /// Unload the map resources.
+    /// </summary>
+    public void Unload()
+    {
+        if (View.Stroke is not null) View.Canvas.RemovePaintTask(View.Stroke);
+        if (View.Fill is not null) View.Canvas.RemovePaintTask(View.Fill);
+
+        _everMeasuredSeries.Clear();
+        _everMeasuredShapes.Clear();
+        _heatPaint = null!;
+        _previousStroke = null!;
+        _previousFill = null!;
+        _isUnloaded = true;
+        _mapFactory.Dispose();
+        _activeMap?.Dispose();
+
+        _activeMap = null!;
+        _mapFactory = null!;
+
+        View.Canvas.Dispose();
+    }
+
     internal void InvokePointerDown(LvcPoint point)
     {
         PointerDown?.Invoke(point);
@@ -153,6 +177,7 @@ public class GeoMap<TDrawingContext>
             {
                 lock (View.Canvas.Sync)
                 {
+                    if (_isUnloaded) return;
                     Measure();
                 }
             });

@@ -36,7 +36,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 /// <inheritdoc cref="IPieChartView{TDrawingContext}" />
 public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
 {
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+    private CollectionDeepObserver<ISeries> _seriesObserver;
 
     static PieChart()
     {
@@ -146,6 +146,15 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
         legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
         tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
         core.Update();
+    }
+
+    /// <inheritdoc cref="Chart.OnUnloaded"/>
+    protected override void OnUnloaded()
+    {
+        core?.Unload();
+
+        Series = Array.Empty<ISeries>();
+        _seriesObserver = null!;
     }
 
     private void OnMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
