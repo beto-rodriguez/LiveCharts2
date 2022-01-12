@@ -7,7 +7,7 @@ public static class Index
         //"Design/LinearGradients",
         //"Design/RadialGradients",
 
-        //"Lines/Basic",
+        "Lines/Basic",
         //"Lines/AutoUpdate",
         //"Lines/Straight",
         //"Lines/Properties",
@@ -41,7 +41,7 @@ public static class Index
         //"StackedBars/Basic",
         //"StackedBars/Groups",
 
-        //"Pies/Basic",
+        "Pies/Basic",
         //"Pies/AutoUpdate",
         //"Pies/Processing",
         //"Pies/Doughnut",
@@ -65,7 +65,7 @@ public static class Index
 
         //"Heat/Basic",
 
-        //"Polar/Basic",
+        "Polar/Basic",
         //"Polar/RadialArea",
         //"Polar/Coordinates",
 
@@ -105,10 +105,10 @@ public static class Index
         //"VisualTest/DataTemplate",
         //"VisualTest/Tabs",
 
-        "Test/ChangeSeriesInstance",
-        "Test/Dispose",
-        "Test/MotionCanvasDispose",
+        //"Test/ChangeSeriesInstance",
+        //"Test/Dispose",
+        //"Test/MotionCanvasDispose",
 
-        //"Maps/World"
+        "Maps/World"
         };
 }

@@ -334,6 +334,9 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     {
         if (tooltip is IDisposable disposableTooltip) disposableTooltip.Dispose();
         base.OnHandleDestroyed(e);
+
+        core?.Unload();
+        OnUnloading();
     }
 
     /// <summary>
@@ -345,15 +348,6 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     protected override void OnParentChanged(EventArgs e)
     {
         base.OnParentChanged(e);
-
-        if (Parent is null)
-        {
-            core?.Unload();
-            OnUnloading();
-
-            return;
-        }
-
         core?.Load();
     }
 

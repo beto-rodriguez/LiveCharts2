@@ -88,12 +88,15 @@ public partial class MotionCanvas : UserControl
     protected override void OnParentChanged(EventArgs e)
     {
         base.OnParentChanged(e);
+    }
 
-        if (Parent is null)
-        {
-            CanvasCore.Invalidated -= CanvasCore_Invalidated;
-            CanvasCore.Dispose();
-        }
+    /// <inheritdoc cref="Control.OnHandleDestroyed(EventArgs)"/>
+    protected override void OnHandleDestroyed(EventArgs e)
+    {
+        base.OnHandleDestroyed(e);
+
+        CanvasCore.Invalidated -= CanvasCore_Invalidated;
+        CanvasCore.Dispose();
     }
 
     private void SkControl_PaintSurface(object sender, SKPaintSurfaceEventArgs e)

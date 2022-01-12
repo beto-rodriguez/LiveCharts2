@@ -204,22 +204,19 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         _core?.Update();
     }
 
-    /// <inheritdoc cref="ContainerControl.OnParentChanged(EventArgs)"/>
-    protected override void OnParentChanged(EventArgs e)
+    /// <inheritdoc cref="Control.OnHandleDestroyed(EventArgs)"/>
+    protected override void OnHandleDestroyed(EventArgs e)
     {
-        base.OnParentChanged(e);
+        base.OnHandleDestroyed(e);
 
-        if (Parent is null)
-        {
-            _core?.Unload();
+        _core?.Unload();
 
-            Series = Array.Empty<IGeoSeries>();
-            Shapes = Array.Empty<MapShape<SkiaSharpDrawingContext>>();
-            _seriesObserver = null!;
-            _shapesObserver = null!;
+        Series = Array.Empty<IGeoSeries>();
+        Shapes = Array.Empty<MapShape<SkiaSharpDrawingContext>>();
+        _seriesObserver = null!;
+        _shapesObserver = null!;
 
-            Canvas.Dispose();
-        }
+        Canvas.Dispose();
     }
 
     private void GeoMap_Resize(object? sender, EventArgs e)
