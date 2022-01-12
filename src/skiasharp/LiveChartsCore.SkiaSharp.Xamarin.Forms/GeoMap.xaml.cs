@@ -45,9 +45,9 @@ namespace LiveChartsCore.SkiaSharpView.Xamarin.Forms;
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
 {
-    private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
-    private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
     private readonly GeoMap<SkiaSharpDrawingContext> _core;
+    private CollectionDeepObserver<IMapElement> _shapesObserver;
+    private CollectionDeepObserver<IGeoSeries> _seriesObserver;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GeoMap"/> class.
@@ -279,6 +279,24 @@ public partial class GeoMap : ContentView, IGeoMapView<SkiaSharpDrawingContext>
     }
 
     #endregion
+
+    /// <inheritdoc cref="NavigableElement.OnParentSet"/>
+    protected override void OnParentSet()
+    {
+        base.OnParentSet();
+
+        if (Parent == null)
+        {
+            _core?.Unload();
+
+            Series = Array.Empty<IGeoSeries>();
+            Shapes = Array.Empty<MapShape<SkiaSharpDrawingContext>>();
+            _seriesObserver = null!;
+            _shapesObserver = null!;
+
+            Canvas.Dispose();
+        }
+    }
 
     void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
     {

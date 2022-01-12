@@ -51,7 +51,7 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     /// The core
     /// </summary>
     protected Chart<SkiaSharpDrawingContext>? core;
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+    private CollectionDeepObserver<ISeries> _seriesObserver;
     private Grid? _grid;
 
     #endregion
@@ -670,8 +670,17 @@ public partial class PieChart : ContentView, IPieChartView<SkiaSharpDrawingConte
     protected override void OnParentSet()
     {
         base.OnParentSet();
-        if (Parent == null) core?.Unload();
-        else core?.Load();
+        if (Parent == null)
+        {
+            core?.Unload();
+
+            Series = Array.Empty<ISeries>();
+            _seriesObserver = null!;
+
+            return;
+        }
+
+        core?.Load();
     }
 
     private void OnSizeChanged(object sender, EventArgs e)
