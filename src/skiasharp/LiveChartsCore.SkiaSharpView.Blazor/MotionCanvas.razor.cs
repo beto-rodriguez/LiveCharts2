@@ -32,7 +32,7 @@ namespace LiveChartsCore.SkiaSharpView.Blazor;
 /// <inheritdoc cref="MotionCanvas{TDrawingContext}"/>
 public partial class MotionCanvas : IDisposable
 {
-    //private readonly SKGLView? _glCanvas;
+    private SKGLView? _glView;
     private SKCanvasView? _canvas;
     private bool _disposing = false;
     private bool _isDrawingLoopRunning = false;
@@ -50,6 +50,12 @@ public partial class MotionCanvas : IDisposable
     /// Gets the <see cref="MotionCanvas{TDrawingContext}"/> (core).
     /// </summary>
     public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
+
+    /// <summary>
+    /// Gets or sets whether the web GL view should be used.
+    /// </summary>
+    [Parameter]
+    public bool UseGLView { get; set; } = false;
 
     /// <summary>
     /// Gets or sets the FPS.
@@ -146,10 +152,10 @@ public partial class MotionCanvas : IDisposable
         _ = OnPointerLeaveCallback.InvokeAsync(e);
     }
 
-    //private void OnPaintGlSurface(SKPaintGLSurfaceEventArgs e)
-    //{
-    //    CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
-    //}
+    private void OnPaintGlSurface(SKPaintGLSurfaceEventArgs e)
+    {
+        CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
+    }
 
     private void OnPaintSurface(SKPaintSurfaceEventArgs e)
     {
@@ -167,11 +173,22 @@ public partial class MotionCanvas : IDisposable
         _isDrawingLoopRunning = true;
 
         var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
-        while (!CanvasCore.IsValid && !_disposing)
+
+        if (UseGLView)
         {
-            //_glCanvas?.Invalidate();
-            _canvas?.Invalidate();
-            await Task.Delay(ts);
+            while (!CanvasCore.IsValid && !_disposing)
+            {
+                _glView?.Invalidate();
+                await Task.Delay(ts);
+            }
+        }
+        else
+        {
+            while (!CanvasCore.IsValid && !_disposing)
+            {
+                _canvas?.Invalidate();
+                await Task.Delay(ts);
+            }
         }
 
         _isDrawingLoopRunning = false;
