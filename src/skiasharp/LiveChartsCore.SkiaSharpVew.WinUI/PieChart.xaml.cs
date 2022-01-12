@@ -44,7 +44,7 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
 {
     private Chart<SkiaSharpDrawingContext>? _core;
     private MotionCanvas? _canvas;
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
+    private CollectionDeepObserver<ISeries> _seriesObserver;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CartesianChart"/> class.
@@ -820,6 +820,9 @@ public sealed partial class PieChart : UserControl, IPieChartView<SkiaSharpDrawi
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
         _core?.Unload();
+
+        Series = Array.Empty<ISeries>();
+        _seriesObserver = null!;
     }
 
     private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)

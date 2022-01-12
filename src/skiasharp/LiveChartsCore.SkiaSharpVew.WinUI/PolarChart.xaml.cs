@@ -47,9 +47,9 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
 
     private Chart<SkiaSharpDrawingContext>? _core;
     private MotionCanvas? _canvas;
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
-    private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
+    private CollectionDeepObserver<ISeries> _seriesObserver;
+    private CollectionDeepObserver<IPolarAxis> _angleObserver;
+    private CollectionDeepObserver<IPolarAxis> _radiusObserver;
 
     #endregion
 
@@ -919,6 +919,13 @@ public sealed partial class PolarChart : UserControl, IPolarChartView<SkiaSharpD
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
         _core?.Unload();
+
+        Series = Array.Empty<ISeries>();
+        AngleAxes = Array.Empty<IPolarAxis>();
+        RadiusAxes = Array.Empty<IPolarAxis>();
+        _seriesObserver = null!;
+        _angleObserver = null!;
+        _radiusObserver = null!;
     }
 
     private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
