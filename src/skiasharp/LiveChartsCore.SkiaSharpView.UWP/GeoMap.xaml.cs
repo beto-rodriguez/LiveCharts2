@@ -45,8 +45,8 @@ namespace LiveChartsCore.SkiaSharpView.UWP
     /// </summary>
     public sealed partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     {
-        private readonly CollectionDeepObserver<IMapElement> _shapesObserver;
-        private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
+        private CollectionDeepObserver<IMapElement> _shapesObserver;
+        private CollectionDeepObserver<IGeoSeries> _seriesObserver;
         private readonly GeoMap<SkiaSharpDrawingContext> _core;
 
         /// <summary>
@@ -78,6 +78,8 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             SetValue(SeriesProperty, Enumerable.Empty<IGeoSeries>());
             SetValue(ActiveMapProperty, Maps.GetWorldMap<SkiaSharpDrawingContext>());
             SetValue(SyncContextProperty, new object());
+
+            Unloaded += GeoMap_Unloaded;
         }
 
         #region dependency props
@@ -290,6 +292,16 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         private void GeoMap_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             _core.Update();
+        }
+
+        private void GeoMap_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Series = Array.Empty<IGeoSeries>();
+            Shapes = Array.Empty<MapShape<SkiaSharpDrawingContext>>();
+            _seriesObserver = null!;
+            _shapesObserver = null!;
+
+            Canvas.Dispose();
         }
 
         private void OnPointerPressed(object sender, PointerRoutedEventArgs e)

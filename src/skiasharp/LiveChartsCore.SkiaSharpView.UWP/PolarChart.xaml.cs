@@ -51,10 +51,9 @@ namespace LiveChartsCore.SkiaSharpView.UWP
 
         private Chart<SkiaSharpDrawingContext> _core;
         private MotionCanvas _canvas;
-        private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-        private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
-        private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
-        private readonly CollectionDeepObserver<Section<SkiaSharpDrawingContext>> _sectionsObserver;
+        private CollectionDeepObserver<ISeries> _seriesObserver;
+        private CollectionDeepObserver<IPolarAxis> _angleObserver;
+        private CollectionDeepObserver<IPolarAxis> _radiusObserver;
 
         #endregion
 
@@ -76,8 +75,6 @@ namespace LiveChartsCore.SkiaSharpView.UWP
             _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _angleObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
             _radiusObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-            _sectionsObserver = new CollectionDeepObserver<Section<SkiaSharpDrawingContext>>(
-                OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
             Loaded += OnLoaded;
             Unloaded += OnUnloaded;
@@ -923,6 +920,13 @@ namespace LiveChartsCore.SkiaSharpView.UWP
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
             _core?.Unload();
+
+            Series = Array.Empty<ISeries>();
+            AngleAxes = Array.Empty<IPolarAxis>();
+            RadiusAxes = Array.Empty<IPolarAxis>();
+            _seriesObserver = null!;
+            _angleObserver = null!;
+            _radiusObserver = null!;
         }
 
         private static void OnDependencyPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
