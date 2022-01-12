@@ -305,6 +305,8 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     /// <inheritdoc cref="Chart.OnUnloaded"/>
     protected override void OnUnloaded()
     {
+        core?.Unload();
+
         Series = Array.Empty<ISeries>();
         XAxes = Array.Empty<ICartesianAxis>();
         YAxes = Array.Empty<ICartesianAxis>();

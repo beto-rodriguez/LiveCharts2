@@ -107,6 +107,18 @@ public partial class MotionCanvas : ContentView
         MainThread.BeginInvokeOnMainThread(RunDrawingLoop);
     }
 
+    /// <inheritdoc cref="NavigableElement.OnParentSet"/>
+    protected override void OnParentSet()
+    {
+        base.OnParentSet();
+
+        if (Parent == null)
+        {
+            CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
+            CanvasCore.Dispose();
+        }
+    }
+
     private void OnCanvasViewPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
     {
         CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));

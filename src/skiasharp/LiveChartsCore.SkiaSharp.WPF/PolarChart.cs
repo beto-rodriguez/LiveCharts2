@@ -258,6 +258,8 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="Chart.OnUnloaded"/>
     protected override void OnUnloaded()
     {
+        core?.Unload();
+
         Series = Array.Empty<ISeries>();
         AngleAxes = Array.Empty<IPolarAxis>();
         RadiusAxes = Array.Empty<IPolarAxis>();

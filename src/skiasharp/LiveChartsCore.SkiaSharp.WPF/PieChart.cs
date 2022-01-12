@@ -151,6 +151,8 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="Chart.OnUnloaded"/>
     protected override void OnUnloaded()
     {
+        core?.Unload();
+
         Series = Array.Empty<ISeries>();
         _seriesObserver = null!;
     }
