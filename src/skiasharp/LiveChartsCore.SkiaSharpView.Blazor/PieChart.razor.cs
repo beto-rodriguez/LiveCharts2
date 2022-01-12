@@ -99,4 +99,13 @@ public partial class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
         if (((IChartView)this).DesignerMode) return;
         core.Update();
     }
+
+    /// <inheritdoc cref="Chart.OnDisposing"/>
+    protected override void OnDisposing()
+    {
+        core?.Unload();
+
+        Series = Array.Empty<ISeries>();
+        _seriesObserver = null!;
+    }
 }

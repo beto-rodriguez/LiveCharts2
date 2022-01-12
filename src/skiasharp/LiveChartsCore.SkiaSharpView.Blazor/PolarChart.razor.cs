@@ -189,6 +189,19 @@ public partial class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext
         //return cartesianCore.ScaleUIPoint(point, xAxisIndex, yAxisIndex);
     }
 
+    /// <inheritdoc cref="Chart.OnDisposing"/>
+    protected override void OnDisposing()
+    {
+        core?.Unload();
+
+        Series = Array.Empty<ISeries>();
+        AngleAxes = Array.Empty<IPolarAxis>();
+        RadiusAxes = Array.Empty<IPolarAxis>();
+        _seriesObserver = null!;
+        _angleObserver = null!;
+        _radiusObserver = null!;
+    }
+
     private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (sender is IStopNPC stop && !stop.IsNotifyingChanges) return;

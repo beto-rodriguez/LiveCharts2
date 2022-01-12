@@ -350,6 +350,11 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
     protected virtual void OnWheel(WheelEventArgs e) { }
 
     /// <summary>
+    /// Called when the control is disposing.
+    /// </summary>
+    protected virtual void OnDisposing() { }
+
+    /// <summary>
     /// Called when the pointer leaves the control.
     /// </summary>
     /// <param name="e"></param>
@@ -377,6 +382,8 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView<SkiaSharpDraw
 
     async void IDisposable.Dispose()
     {
+        OnDisposing();
+
         if (_dom is null) return;
         await ((IAsyncDisposable)_dom).DisposeAsync();
     }
