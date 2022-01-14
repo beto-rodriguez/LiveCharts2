@@ -713,8 +713,6 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
             Dispatcher.UIThread.VerifyAccess();
             action();
         });
-
-        //Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Normal).GetAwaiter().GetResult();
     }
 
     /// <inheritdoc cref="IChartView.SyncAction(Action)"/>

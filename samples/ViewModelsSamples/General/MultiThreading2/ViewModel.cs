@@ -8,7 +8,7 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
-namespace ViewModelsSamples.General.MultiThreading;
+namespace ViewModelsSamples.General.MultiThreading2;
 
 public class ViewModel
 {
@@ -17,10 +17,8 @@ public class ViewModel
     private readonly ObservableCollection<int> _values;
     private int _current;
 
-    public ViewModel()
+    public ViewModel(Action<Action> UIThreadInvoker)
     {
-        // notice this case is not working in Avalonia, use the invoke on UI thread alternative (MultiThreading2).
-
         var items = new List<int>();
         for (var i = 0; i < 1500; i++)
         {
@@ -48,15 +46,18 @@ public class ViewModel
         // create {readTasks} parallel tasks that will add a point every {_delay} milliseconds
         for (var i = 0; i < readTasks; i++)
         {
-            _ = Task.Run(ReadData);
+            UIThreadInvoker(() =>
+            {
+                ReadData();
+            });
         }
     }
 
     public ISeries[] Series { get; set; }
 
-    public object Sync { get; } = new object();
+    public Action<ViewModel>? ReadDataOnUiThread { get; set; }
 
-    private async void ReadData()
+    public async void ReadData()
     {
         await Task.Delay(1000);
 
@@ -65,12 +66,8 @@ public class ViewModel
             await Task.Delay(_delay);
 
             _current = Interlocked.Add(ref _current, _r.Next(-9, 10));
-
-            lock (Sync)
-            {
-                _values.Add(_current);
-                _values.RemoveAt(0);
-            }
+            _values.Add(_current);
+            _values.RemoveAt(0);
         }
     }
 }

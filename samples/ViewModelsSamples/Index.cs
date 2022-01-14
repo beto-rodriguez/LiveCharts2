@@ -7,7 +7,7 @@ public static class Index
         //"Design/LinearGradients",
         //"Design/RadialGradients",
 
-        //"Lines/Basic",
+        "Lines/Basic",
         //"Lines/AutoUpdate",
         //"Lines/Straight",
         //"Lines/Properties",
@@ -99,6 +99,7 @@ public static class Index
         //"General/UserDefinedTypes",
         //"General/NullPoints",
         "General/MultiThreading",
+        "General/MultiThreading2",
 
         //"VisualTest/TwoChartsOneSeries",
         //"VisualTest/ReattachVisual",

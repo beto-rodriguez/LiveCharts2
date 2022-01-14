@@ -115,6 +115,9 @@
     <Compile Update="Financial\BasicCandlesticks\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="General\MultiThreading2\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="General\MultiThreading\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
