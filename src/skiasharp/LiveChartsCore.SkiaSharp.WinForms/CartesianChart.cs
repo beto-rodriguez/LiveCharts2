@@ -173,7 +173,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     protected override void InitializeCore()
     {
         core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore, false, true);
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore, true);
         if (((IChartView)this).DesignerMode) return;
         core.Update();
     }

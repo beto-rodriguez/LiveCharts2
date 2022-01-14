@@ -53,7 +53,8 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
             throw new Exception("Default colors are not valid");
         initializer.ApplyStyleToChart(this);
 
-        Core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, CoreCanvas);
+        Core = new CartesianChart<SkiaSharpDrawingContext>(
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, CoreCanvas);
         Core.Measuring += OnCoreMeasuring;
         Core.UpdateStarted += OnCoreUpdateStarted;
         Core.UpdateFinished += OnCoreUpdateFinished;

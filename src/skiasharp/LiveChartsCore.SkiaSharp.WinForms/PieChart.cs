@@ -103,7 +103,7 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     protected override void InitializeCore()
     {
         core = new PieChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore, false, true);
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore, true);
         if (((IChartView)this).DesignerMode) return;
         core.Update();
     }

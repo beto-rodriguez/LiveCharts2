@@ -50,14 +50,13 @@ public class PieChart<TDrawingContext> : Chart<TDrawingContext>
     /// <param name="view">The view.</param>
     /// <param name="defaultPlatformConfig">The default platform configuration.</param>
     /// <param name="canvas">The canvas.</param>
-    /// <param name="lockOnMeasure">Indicates if the thread should lock the measure operation</param>
+    /// <param name="requiresLegendMeasureAlways">Forces the legends to redraw with every measure request.</param>
     public PieChart(
         IPieChartView<TDrawingContext> view,
         Action<LiveChartsSettings> defaultPlatformConfig,
         MotionCanvas<TDrawingContext> canvas,
-        bool lockOnMeasure = false,
         bool requiresLegendMeasureAlways = false)
-        : base(canvas, defaultPlatformConfig, view, lockOnMeasure)
+        : base(canvas, defaultPlatformConfig, view)
     {
         _chartView = view;
         _requiresLegendMeasureAlways = requiresLegendMeasureAlways;

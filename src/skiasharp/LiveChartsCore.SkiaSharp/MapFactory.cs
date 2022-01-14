@@ -160,8 +160,6 @@ public class MapFactory : IMapFactory<SkiaSharpDrawingContext>
             _ = context.MapFile.Layers.Remove(layerName);
             _ = _usedLayers.Remove(layerName);
         }
-
-        Trace.WriteLine(context.View.Canvas.CountGeometries());
     }
 
     /// <inheritdoc cref="IMapFactory{TDrawingContext}.ViewTo(GeoMap{TDrawingContext}, object)"/>

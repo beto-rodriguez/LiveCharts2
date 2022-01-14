@@ -632,7 +632,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
 
     void IChartView.InvokeOnUIThread(Action action)
     {
-        _ = Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Normal); //.GetAwaiter().GetResult();
+        Dispatcher.UIThread.Post(action);
     }
 
     /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
@@ -653,7 +653,7 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
         var canvas = this.FindControl<MotionCanvas>("canvas");
         _avaloniaCanvas = canvas;
         _core = new PieChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore, true);
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
 
         _core.Measuring += OnCoreMeasuring;
         _core.UpdateStarted += OnCoreUpdateStarted;

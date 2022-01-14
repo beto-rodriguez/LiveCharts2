@@ -182,7 +182,8 @@ public partial class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawin
     {
         if (motionCanvas is null) throw new Exception("MotionCanvas component was not found");
 
-        core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore);
+        core = new CartesianChart<SkiaSharpDrawingContext>(
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore);
         if (((IChartView)this).DesignerMode) return;
         core.Update();
     }

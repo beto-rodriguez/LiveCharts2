@@ -95,7 +95,8 @@ public partial class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     {
         if (motionCanvas is null) throw new Exception("MotionCanvas component was not found");
 
-        core = new PieChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore);
+        core = new PieChart<SkiaSharpDrawingContext>(
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore);
         if (((IChartView)this).DesignerMode) return;
         core.Update();
     }

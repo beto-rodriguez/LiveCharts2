@@ -708,7 +708,13 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
     void IChartView.InvokeOnUIThread(Action action)
     {
-        _ = Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Normal); //.GetAwaiter().GetResult();
+        Dispatcher.UIThread.Post(() =>
+        {
+            Dispatcher.UIThread.VerifyAccess();
+            action();
+        });
+
+        //Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Normal).GetAwaiter().GetResult();
     }
 
     /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
@@ -729,7 +735,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
         var canvas = this.FindControl<MotionCanvas>("canvas");
         _avaloniaCanvas = canvas;
         _core = new CartesianChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore, true);
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
 
         _core.Measuring += OnCoreMeasuring;
         _core.UpdateStarted += OnCoreUpdateStarted;

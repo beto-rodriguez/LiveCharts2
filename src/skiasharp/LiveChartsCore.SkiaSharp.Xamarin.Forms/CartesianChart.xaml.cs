@@ -749,7 +749,8 @@ public partial class CartesianChart : ContentView, ICartesianChartView<SkiaSharp
     /// <returns></returns>
     protected void InitializeCore()
     {
-        core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+        core = new CartesianChart<SkiaSharpDrawingContext>(
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
         core.Update();
     }
 
