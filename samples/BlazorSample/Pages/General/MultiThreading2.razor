@@ -1,0 +1,31 @@
+﻿@page "/General/MultiThreading2"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using ViewModelsSamples.General.MultiThreading2
+
+@if (ViewModel != null)
+{
+    <CartesianChart
+	    Series="ViewModel.Series">
+    </CartesianChart>   
+}
+
+@code {
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        ViewModel = new ViewModel(InvokeOnUIThread);
+    }
+
+    public ViewModel? ViewModel { get; set; }
+
+    // this method takes another function as an argument.
+    // the idea is that we are invoking the passed action in the UI thread
+    // but the UI framework will let the view model how to do this.
+    // we will pass the InvokeOnUIThread method to our view model so the view model knows how
+    // to invoke an action in the UI thred.
+    private void InvokeOnUIThread(Action action)
+    {
+       InvokeAsync(action);
+    }
+}

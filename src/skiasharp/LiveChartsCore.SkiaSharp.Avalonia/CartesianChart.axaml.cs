@@ -708,11 +708,7 @@ public class CartesianChart : UserControl, ICartesianChartView<SkiaSharpDrawingC
 
     void IChartView.InvokeOnUIThread(Action action)
     {
-        Dispatcher.UIThread.Post(() =>
-        {
-            Dispatcher.UIThread.VerifyAccess();
-            action();
-        });
+        Dispatcher.UIThread.Post(action);
     }
 
     /// <inheritdoc cref="IChartView.SyncAction(Action)"/>

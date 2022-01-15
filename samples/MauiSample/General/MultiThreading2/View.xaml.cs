@@ -1,19 +1,19 @@
-using System;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-using Avalonia.Threading;
+﻿using System;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
+using Microsoft.Maui.Essentials;
 using ViewModelsSamples.General.MultiThreading2;
 
-namespace AvaloniaSample.General.MultiThreading2;
+namespace MauiSample.General.MultiThreading2;
 
-public class View : UserControl
+[XamlCompilation(XamlCompilationOptions.Compile)]
+public partial class View : ContentPage
 {
     public View()
     {
         InitializeComponent();
-
-        var viewModel = new ViewModel(InvokeOnUIThread);
-        DataContext = viewModel;
+        var vm = new ViewModel(InvokeOnUIThread);
+        BindingContext = vm;
     }
 
     // this method takes another function as an argument.
@@ -23,11 +23,8 @@ public class View : UserControl
     // to invoke an action in the UI thred.
     private void InvokeOnUIThread(Action action)
     {
-        Dispatcher.UIThread.Post(action);
-    }
-
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
+        // throws on win ui
+        // https://github.com/dotnet/maui/issues/2451
+        MainThread.BeginInvokeOnMainThread(action);
     }
 }

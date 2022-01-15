@@ -42,6 +42,7 @@
     <None Remove="Events\Pie\View.xaml" />
     <None Remove="Events\Polar\View.xaml" />
     <None Remove="Financial\BasicCandlesticks\View.xaml" />
+    <None Remove="General\MultiThreading2\View.xaml" />
     <None Remove="General\MultiThreading\View.xaml" />
     <None Remove="General\Sections2\View.xaml" />
     <None Remove="General\Visibility\View.xaml" />
@@ -198,6 +199,9 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="General\Legends - Copy\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="General\MultiThreading - Copy\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="General\NullPoints - Copy\View.xaml">

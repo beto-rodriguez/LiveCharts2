@@ -259,7 +259,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 
     void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
     {
-        _ = Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Normal); //.GetAwaiter().GetResult();
+        Dispatcher.UIThread.Post(action);
     }
 
     /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})"/>

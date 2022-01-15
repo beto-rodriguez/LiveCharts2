@@ -1,19 +1,20 @@
-using System;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-using Avalonia.Threading;
+﻿using System;
+using System.Windows.Controls;
 using ViewModelsSamples.General.MultiThreading2;
 
-namespace AvaloniaSample.General.MultiThreading2;
+namespace WPFSample.General.MultiThreading2;
 
-public class View : UserControl
+/// <summary>
+/// Interaction logic for View.xaml
+/// </summary>
+public partial class View : UserControl
 {
     public View()
     {
         InitializeComponent();
 
-        var viewModel = new ViewModel(InvokeOnUIThread);
-        DataContext = viewModel;
+        var vm = new ViewModel(InvokeOnUIThread);
+        DataContext = vm;
     }
 
     // this method takes another function as an argument.
@@ -23,11 +24,6 @@ public class View : UserControl
     // to invoke an action in the UI thred.
     private void InvokeOnUIThread(Action action)
     {
-        Dispatcher.UIThread.Post(action);
-    }
-
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
+        Dispatcher.Invoke(action);
     }
 }

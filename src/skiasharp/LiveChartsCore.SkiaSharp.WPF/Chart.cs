@@ -681,7 +681,6 @@ public abstract class Chart : Control, IChartView<SkiaSharpDrawingContext>
     void IChartView.InvokeOnUIThread(Action action)
     {
         Dispatcher.Invoke(action);
-        //Application.Current.Dispatcher.Invoke(action);
     }
 
     /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
