@@ -55,14 +55,13 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     /// <param name="view">The view.</param>
     /// <param name="defaultPlatformConfig">The default platform configuration.</param>
     /// <param name="canvas">The canvas.</param>
-    /// <param name="lockOnMeasure">Indicates if the thread should lock the measure operation</param>
+    /// <param name="requiresLegendMeasureAlways">Forces the legends to redraw with every measure request.</param>
     public CartesianChart(
         ICartesianChartView<TDrawingContext> view,
         Action<LiveChartsSettings> defaultPlatformConfig,
         MotionCanvas<TDrawingContext> canvas,
-        bool lockOnMeasure = false,
         bool requiresLegendMeasureAlways = false)
-        : base(canvas, defaultPlatformConfig, view, lockOnMeasure)
+        : base(canvas, defaultPlatformConfig, view)
     {
         _chartView = view;
         _requiresLegendMeasureAlways = requiresLegendMeasureAlways;
@@ -331,6 +330,10 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 $"tread: {Environment.CurrentManagedThreadId}");
         }
 #endif
+
+        Trace.WriteLine(
+               $"[Cartesian chart measured]".PadRight(60) +
+               $"tread: {Environment.CurrentManagedThreadId}");
 
         if (!IsLoaded) return; // <- prevents a visual glitch where the visual call the measure method
                                // while they are not visible, the problem is when the control is visible again

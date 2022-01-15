@@ -867,7 +867,8 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView<Sk
 
         if (_core is null)
         {
-            _core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+            _core = new CartesianChart<SkiaSharpDrawingContext>(
+                this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
             //_legend = Template.FindName("legend", this) as IChartLegend<SkiaSharpDrawingContext>;
             //_tooltip = Template.FindName("tooltip", this) as IChartTooltip<SkiaSharpDrawingContext>;
             if (SyncContext != null)

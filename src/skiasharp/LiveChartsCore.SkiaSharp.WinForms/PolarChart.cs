@@ -180,7 +180,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     protected override void InitializeCore()
     {
         core = new PolarChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore, false, true);
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore, true);
         if (((IChartView)this).DesignerMode) return;
         core.Update();
     }

@@ -95,7 +95,6 @@ public sealed partial class DefaultTooltip : UserControl, IChartTooltip<SkiaShar
 
         if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
         {
-            Trace.WriteLine($"w => {DesiredSize.Width}, h => {DesiredSize.Height}");
             location = tooltipPoints.GetCartesianTooltipLocation(
                 chart.TooltipPosition, new LvcSize((float)DesiredSize.Width, (float)DesiredSize.Height), chart.ControlSize);
         }

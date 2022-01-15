@@ -113,6 +113,9 @@
     <Compile Update="Events\Cartesian\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="General\MultiThreading2\View.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="General\MultiThreading\View.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -377,6 +380,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Events\Cartesian\View.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="General\MultiThreading2\View.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

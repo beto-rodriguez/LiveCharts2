@@ -66,12 +66,10 @@ public abstract class Chart<TDrawingContext> : IChart
     /// <param name="canvas">The canvas.</param>
     /// <param name="defaultPlatformConfig">The default platform configuration.</param>
     /// <param name="view">The chart view.</param>
-    /// <param name="lockOnMeasure">Indicates if the thread should lock the measure operation</param>
     protected Chart(
         MotionCanvas<TDrawingContext> canvas,
         Action<LiveChartsSettings> defaultPlatformConfig,
-        IChartView view,
-        bool lockOnMeasure = false)
+        IChartView view)
     {
         Canvas = canvas;
         canvas.Validated += OnCanvasValidated;
@@ -89,7 +87,6 @@ public abstract class Chart<TDrawingContext> : IChart
 
         _tooltipThrottler = new ActionThrottler(TooltipThrottlerUnlocked, TimeSpan.FromMilliseconds(10));
         _panningThrottler = new ActionThrottler(PanningThrottlerUnlocked, TimeSpan.FromMilliseconds(30));
-        LockOnMeasure = true; //lockOnMeasure;
     }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Measuring" />
@@ -112,11 +109,6 @@ public abstract class Chart<TDrawingContext> : IChart
     internal event Action<PanGestureEventArgs>? PanGesture;
 
     #region properties
-
-    /// <summary>
-    /// Indicates whether the thread should lock the measure operation.
-    /// </summary>
-    protected bool LockOnMeasure { get; }
 
     /// <summary>
     /// Gets the measure work.
@@ -499,6 +491,7 @@ public abstract class Chart<TDrawingContext> : IChart
                              $"tread: {Environment.CurrentManagedThreadId}");
                      }
 #endif
+
                      if (Tooltip is null || TooltipPosition == TooltipPosition.Hidden || !_isPointerIn) return;
 
                      // TODO:
@@ -548,10 +541,11 @@ public abstract class Chart<TDrawingContext> : IChart
                 lock (Canvas.Sync)
                 {
                     cartesianChart.Pan(
-                    new LvcPoint(
-                        (float)(_pointerPanningPosition.X - _pointerPreviousPanningPosition.X),
-                        (float)(_pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y)));
-                    _pointerPreviousPanningPosition = new LvcPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
+                        new LvcPoint(
+                            (float)(_pointerPanningPosition.X - _pointerPreviousPanningPosition.X),
+                            (float)(_pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y)));
+                    _pointerPreviousPanningPosition = new LvcPoint(
+                        _pointerPanningPosition.X, _pointerPanningPosition.Y);
                 }
             }));
     }

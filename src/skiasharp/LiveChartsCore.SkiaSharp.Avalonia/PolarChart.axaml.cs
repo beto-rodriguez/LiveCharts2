@@ -685,7 +685,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
 
     void IChartView.InvokeOnUIThread(Action action)
     {
-        _ = Dispatcher.UIThread.InvokeAsync(action, DispatcherPriority.Normal); //.GetAwaiter().GetResult();
+        Dispatcher.UIThread.Post(action);
     }
 
     /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
@@ -706,7 +706,7 @@ public class PolarChart : UserControl, IPolarChartView<SkiaSharpDrawingContext>,
         var canvas = this.FindControl<MotionCanvas>("canvas");
         _avaloniaCanvas = canvas;
         _core = new PolarChart<SkiaSharpDrawingContext>(
-            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore, true);
+            this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
 
         _core.Measuring += OnCoreMeasuring;
         _core.UpdateStarted += OnCoreUpdateStarted;

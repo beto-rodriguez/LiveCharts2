@@ -31,21 +31,28 @@
 
 @implements IDisposable
 
-@*<SKGLView
-	@ref="_glCanvas"
-	OnPaintSurface="OnPaintGlSurface"
-	IgnorePixelScaling="true"
-	@onpointerdown="OnPointerDown"
-	@onpointermove="OnPointerMove"
-	@onpointerup="OnPointerUp"
-	@onpointerleave="OnPointerLeave"
-	@onmousewheel="OnWheel"/>*@
-
-<SKCanvasView
-	@ref="_canvas"
-	OnPaintSurface="OnPaintSurface"
-	@onpointerdown="OnPointerDown"
-	@onpointermove="OnPointerMove"
-	@onpointerup="OnPointerUp"
-	@onpointerleave="OnPointerLeave"
-	@onmousewheel="OnWheel" />
+@if(UseGLView)
+{
+    <SKGLView
+	    @ref="_glView"
+	    OnPaintSurface="OnPaintGlSurface"
+	    IgnorePixelScaling="true"
+	    @onpointerdown="OnPointerDown"
+	    @onpointermove="OnPointerMove"
+	    @onpointerup="OnPointerUp"
+	    @onpointerleave="OnPointerLeave"
+	    @onmousewheel="OnWheel">
+    </SKGLView>
+}
+else
+{
+    <SKCanvasView
+	    @ref="_canvas"
+	    OnPaintSurface="OnPaintSurface"
+	    @onpointerdown="OnPointerDown"
+	    @onpointermove="OnPointerMove"
+	    @onpointerup="OnPointerUp"
+	    @onpointerleave="OnPointerLeave"
+	    @onmousewheel="OnWheel" >
+    </SKCanvasView>
+}

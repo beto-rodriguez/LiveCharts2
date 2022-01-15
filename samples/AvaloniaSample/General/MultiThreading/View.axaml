@@ -13,7 +13,8 @@
 
       <lvc:CartesianChart
           SyncContext="{Binding Sync}"
-          Series="{Binding Series}">
+          Series="{Binding Series}"
+          TooltipPosition="Hidden">
       </lvc:CartesianChart>
   </Grid>
 </UserControl>

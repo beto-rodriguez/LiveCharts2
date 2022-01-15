@@ -136,7 +136,7 @@ public class MotionCanvas<TDrawingContext> : IDisposable
             {
                 tuple.Item1.RemoveGeometryFromPainTask(this, tuple.Item2);
 
-                // if we removed at least one geometry, we need to redraw the chart
+                // if we removed at least one geometry, we need to redraw the control
                 // to ensure it is not present in the next frame
                 isValid = false;
             }

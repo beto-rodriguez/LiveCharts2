@@ -29,6 +29,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
+using Avalonia.Threading;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -115,9 +116,13 @@ public class MotionCanvas : UserControl
     /// <param name="context"></param>
     public override void Render(a.DrawingContext context)
     {
-        var drawOperation = new CustomDrawOp(this, CanvasCore, new Rect(0, 0, Bounds.Width, Bounds.Height), BackColor);
+        if (_isDeatached) return;
+        var drawOperation = new CustomDrawOp(
+            this, CanvasCore, new Rect(0, 0, Bounds.Width, Bounds.Height), BackColor);
         context.Custom(drawOperation);
     }
+
+    public bool _isDeatached = false;
 
     /// <inheritdoc cref="OnPropertyChanged{T}(AvaloniaPropertyChangedEventArgs{T})" />
     protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> change)
@@ -145,14 +150,15 @@ public class MotionCanvas : UserControl
 
     private void MotionCanvas_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
     {
+        _isDeatached = true;
         CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
         CanvasCore.Dispose();
     }
 
-    //private void InvalidateOnUIThread()
-    //{
-    //    _ = Dispatcher.UIThread.InvokeAsync(InvalidateVisual);
-    //}
+    private void InvalidateOnUIThread()
+    {
+        Dispatcher.UIThread.Post(InvalidateVisual);
+    }
 
     // based on:
     // https://github.com/AvaloniaUI/Avalonia/blob/554aaec5e5cc96c0b4318b6ed1fbf8159f442889/samples/RenderDemo/Pages/CustomSkiaPage.cs
@@ -201,19 +207,26 @@ public class MotionCanvas : UserControl
 
             // why isn't the render method called on the UI thread always?
             // as a workaround we lock the canvas to draw the frame.
-            lock (_motionCanvas.Sync)
-            {
-                _motionCanvas.DrawFrame(
-                   new AvaloniaDrawingContext(
-                       _motionCanvas, new SKImageInfo((int)Bounds.Width, (int)Bounds.Height), skiaContext.SkSurface, skiaContext.SkCanvas)
-                   {
-                       BackColor = _backColor
-                   });
-            }
+
+            // UPDATE
+            // the lock seems to cause deadlocks
+
+            //lock (_motionCanvas.Sync)
+            //{
+            _motionCanvas.DrawFrame(
+                new AvaloniaDrawingContext(
+                    _motionCanvas,
+                    new SKImageInfo(
+                        (int)Bounds.Width, (int)Bounds.Height),
+                        skiaContext.SkSurface, skiaContext.SkCanvas)
+                {
+                    BackColor = _backColor
+                });
+            //}
 
             if (_motionCanvas.IsValid) return;
 
-            _avaloniaControl.InvalidateVisual();
+            _avaloniaControl.InvalidateOnUIThread();
         }
     }
 }

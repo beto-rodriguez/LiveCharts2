@@ -13,9 +13,9 @@
     <AvaloniaResource Include="Assets\livecharts.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.10.6" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.10.6" />
-    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.6" />
+    <PackageReference Include="Avalonia" Version="0.10.11" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.10.11" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.11" />
    </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharp.Avalonia\LiveChartsCore.SkiaSharpView.Avalonia.csproj" />
@@ -113,6 +113,9 @@
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Financial\BasicCandlesticks\View.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="General\MultiThreading2\View.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="General\MultiThreading\View.axaml.cs">

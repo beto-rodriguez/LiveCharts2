@@ -865,7 +865,8 @@ namespace LiveChartsCore.SkiaSharpView.UWP
 
             if (_core is null)
             {
-                _core = new CartesianChart<SkiaSharpDrawingContext>(this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
+                _core = new CartesianChart<SkiaSharpDrawingContext>(
+                    this, LiveChartsSkiaSharp.DefaultPlatformBuilder, canvas.CanvasCore);
 
                 if (SyncContext != null)
                     _canvas.CanvasCore.Sync = SyncContext;
