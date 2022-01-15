@@ -127,8 +127,8 @@ public class Scaler
 
             if (maxLimit is not null || minLimit is not null)
             {
-                _maxVal = axis.IsInverted ? maxLimit ?? _maxVal : minLimit ?? _minVal;
-                _minVal = axis.IsInverted ? minLimit ?? _minVal : maxLimit ?? _maxVal;
+                _maxVal = axis.IsInverted ? maxLimit ?? _minVal : minLimit ?? _maxVal;
+                _minVal = axis.IsInverted ? minLimit ?? _maxVal : maxLimit ?? _minVal;
             }
             else
             {
