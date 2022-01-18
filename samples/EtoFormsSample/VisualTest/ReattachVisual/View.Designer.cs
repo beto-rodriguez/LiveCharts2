@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.VisualTest.ReattachVisual
+namespace EtoFormsSample.VisualTest.ReattachVisual
 {
     partial class View
     {

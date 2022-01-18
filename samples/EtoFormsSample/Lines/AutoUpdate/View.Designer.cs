@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Lines.AutoUpdate
+namespace EtoFormsSample.Lines.AutoUpdate
 {
     partial class View
     {

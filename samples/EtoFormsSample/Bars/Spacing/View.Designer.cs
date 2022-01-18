@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Bars.Spacing
+namespace EtoFormsSample.Bars.Spacing
 {
     partial class View
     {

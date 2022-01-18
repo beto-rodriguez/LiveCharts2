@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.Lines.Zoom;
 
-namespace WinFormsSample.Lines.Zoom;
+namespace EtoFormsSample.Lines.Zoom;
 
 public partial class View : UserControl
 {

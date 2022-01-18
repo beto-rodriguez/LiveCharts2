@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.General.NullPoints
+namespace EtoFormsSample.General.NullPoints
 {
     partial class View
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.General.Animations;
 
-namespace WinFormsSample.General.Animations;
+namespace EtoFormsSample.General.Animations;
 
 public partial class View : UserControl
 {

@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.Design.StrokeDashArray;
 
-namespace WinFormsSample.Design.StrokeDashArray;
+namespace EtoFormsSample.Design.StrokeDashArray;
 
 public partial class View : UserControl
 {

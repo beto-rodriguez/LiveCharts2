@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.VisualTest.DataTemplate
+namespace EtoFormsSample.VisualTest.DataTemplate
 {
     partial class View
     {

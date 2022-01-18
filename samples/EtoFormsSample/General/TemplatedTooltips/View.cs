@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.General.TemplatedTooltips;
 
-namespace WinFormsSample.General.TemplatedTooltips;
+namespace EtoFormsSample.General.TemplatedTooltips;
 
 public partial class View : UserControl
 {

@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Bars.RowsWithLabels
+namespace EtoFormsSample.Bars.RowsWithLabels
 {
     partial class View
     {

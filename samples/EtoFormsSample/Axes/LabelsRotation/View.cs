@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.Axes.LabelsRotation;
 
-namespace WinFormsSample.Axes.LabelsRotation;
+namespace EtoFormsSample.Axes.LabelsRotation;
 
 public partial class View : UserControl
 {

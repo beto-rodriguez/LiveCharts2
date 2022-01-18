@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Bars.DelayedAnimation
+namespace EtoFormsSample.Bars.DelayedAnimation
 {
     partial class View
     {

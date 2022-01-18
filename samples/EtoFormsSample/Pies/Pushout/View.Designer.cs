@@ -1,4 +1,4 @@
-﻿namespace WinFormsSample.Pies.Pushout
+﻿namespace EtoFormsSample.Pies.Pushout
 {
     partial class View
     {

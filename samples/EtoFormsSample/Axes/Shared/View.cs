@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.Axes.Shared;
 
-namespace WinFormsSample.Axes.Shared;
+namespace EtoFormsSample.Axes.Shared;
 
 public partial class View : UserControl
 {

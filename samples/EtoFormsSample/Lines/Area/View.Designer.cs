@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Lines.Area
+namespace EtoFormsSample.Lines.Area
 {
     partial class View
     {

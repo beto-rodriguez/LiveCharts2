@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Lines.Zoom
+namespace EtoFormsSample.Lines.Zoom
 {
     partial class View
     {

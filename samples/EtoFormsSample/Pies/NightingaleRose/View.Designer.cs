@@ -1,4 +1,4 @@
-﻿namespace WinFormsSample.Pies.NightingaleRose
+﻿namespace EtoFormsSample.Pies.NightingaleRose
 {
     partial class View
     {

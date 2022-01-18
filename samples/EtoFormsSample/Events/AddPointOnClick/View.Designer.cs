@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Events.AddPointOnClick
+namespace EtoFormsSample.Events.AddPointOnClick
 {
     partial class View
     {

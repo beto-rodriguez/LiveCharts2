@@ -32,7 +32,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.WinForms;
+namespace LiveChartsCore.SkiaSharpView.Eto.Forms;
 
 /// <inheritdoc cref="IChartView" />
 public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
@@ -153,7 +153,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     LvcSize IChartView.ControlSize =>
         // return the full control size as a workaround when the legend is not set.
-        // for some reason WinForms has not loaded the correct size at this point when the control loads.
+        // for some reason Eto.Forms has not loaded the correct size at this point when the control loads.
         LegendPosition == LegendPosition.Hidden
             ? new LvcSize() { Width = ClientSize.Width, Height = ClientSize.Height }
             : new LvcSize() { Width = motionCanvas.Width, Height = motionCanvas.Height };

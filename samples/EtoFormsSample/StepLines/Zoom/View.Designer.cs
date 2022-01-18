@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.StepLines.Zoom
+namespace EtoFormsSample.StepLines.Zoom
 {
     partial class View
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Scatter.AutoUpdate
+namespace EtoFormsSample.Scatter.AutoUpdate
 {
     partial class View
     {

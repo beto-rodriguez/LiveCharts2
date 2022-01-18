@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Lines.Straight
+namespace EtoFormsSample.Lines.Straight
 {
     partial class View
     {

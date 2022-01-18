@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.General.UserDefinedTypes
+namespace EtoFormsSample.General.UserDefinedTypes
 {
     partial class View
     {

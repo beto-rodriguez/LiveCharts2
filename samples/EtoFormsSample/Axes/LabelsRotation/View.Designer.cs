@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Axes.LabelsRotation
+namespace EtoFormsSample.Axes.LabelsRotation
 {
     partial class View
     {

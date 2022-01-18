@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace WinFormsSample;
+namespace EtoFormsSample;
 
 static class Program
 {

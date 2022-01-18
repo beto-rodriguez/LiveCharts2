@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace WinFormsSample.VisualTest.Tabs;
+namespace EtoFormsSample.VisualTest.Tabs;
 
 public partial class View : UserControl
 {

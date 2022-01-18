@@ -5,9 +5,9 @@ using LiveChartsCore;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 
-namespace WinFormsSample.General.TemplatedLegends;
+namespace EtoFormsSample.General.TemplatedLegends;
 
 public partial class CustomLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
 {

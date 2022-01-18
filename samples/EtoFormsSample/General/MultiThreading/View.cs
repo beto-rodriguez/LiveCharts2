@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.General.MultiThreading;
 
-namespace WinFormsSample.General.MultiThreading;
+namespace EtoFormsSample.General.MultiThreading;
 
 public partial class View : UserControl
 {

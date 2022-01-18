@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Bars.States
+namespace EtoFormsSample.Bars.States
 {
     partial class View
     {

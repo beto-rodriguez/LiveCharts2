@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.Bars.AutoUpdate;
 
-namespace WinFormsSample.Bars.AutoUpdate;
+namespace EtoFormsSample.Bars.AutoUpdate;
 
 public partial class View : UserControl
 {

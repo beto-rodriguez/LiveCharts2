@@ -1,5 +1,5 @@
 ﻿
-namespace LiveChartsCore.SkiaSharpView.WinForms
+namespace LiveChartsCore.SkiaSharpView.Eto.Forms
 {
     partial class DefaultTooltip
     {

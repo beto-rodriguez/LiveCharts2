@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.Polar.RadialArea;
 
-namespace WinFormsSample.Polar.RadialArea;
+namespace EtoFormsSample.Polar.RadialArea;
 
 public partial class View : UserControl
 {

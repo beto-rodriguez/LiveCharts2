@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace WinFormsSample.VisualTest.DataTemplate;
+namespace EtoFormsSample.VisualTest.DataTemplate;
 
 public partial class View : UserControl
 {
@@ -14,7 +14,7 @@ public partial class View : UserControl
 
         var label = new Label
         {
-            Text = "data templates are not supported in WinForms...",
+            Text = "data templates are not supported in Eto.Forms...",
 
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 0),

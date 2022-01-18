@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.Polar.Coordinates;
 
-namespace WinFormsSample.Polar.Coordinates;
+namespace EtoFormsSample.Polar.Coordinates;
 
 public partial class View : UserControl
 {

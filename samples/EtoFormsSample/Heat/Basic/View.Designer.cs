@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Heat.Basic
+namespace EtoFormsSample.Heat.Basic
 {
     partial class View
     {

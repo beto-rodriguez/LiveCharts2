@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Bars.WithBackground
+namespace EtoFormsSample.Bars.WithBackground
 {
     partial class View
     {

@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.Financial.BasicCandlesticks;
 
-namespace WinFormsSample.Financial.BasicCandlesticks;
+namespace EtoFormsSample.Financial.BasicCandlesticks;
 
 public partial class View : UserControl
 {

@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample
+namespace EtoFormsSample
 {
     partial class Form1
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Axes.ColorsAndPosition
+namespace EtoFormsSample.Axes.ColorsAndPosition
 {
     partial class View
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Lines.Padding
+namespace EtoFormsSample.Lines.Padding
 {
     partial class View
     {

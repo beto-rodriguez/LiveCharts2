@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Axes.Multiple
+namespace EtoFormsSample.Axes.Multiple
 {
     partial class View
     {

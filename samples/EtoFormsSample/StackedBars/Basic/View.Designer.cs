@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.StackedBars.Basic
+namespace EtoFormsSample.StackedBars.Basic
 {
     partial class View
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Polar.Basic
+namespace EtoFormsSample.Polar.Basic
 {
     partial class View
     {

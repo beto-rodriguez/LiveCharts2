@@ -7,9 +7,9 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 
-namespace WinFormsSample.General.TemplatedTooltips;
+namespace EtoFormsSample.General.TemplatedTooltips;
 
 public partial class CustomTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>, IDisposable
 {

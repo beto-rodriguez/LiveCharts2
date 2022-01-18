@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Lines.Properties
+namespace EtoFormsSample.Lines.Properties
 {
     partial class View
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Pies.Gauge1
+namespace EtoFormsSample.Pies.Gauge1
 {
     partial class View
     {

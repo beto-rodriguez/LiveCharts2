@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Axes.Paging
+namespace EtoFormsSample.Axes.Paging
 {
     partial class View
     {

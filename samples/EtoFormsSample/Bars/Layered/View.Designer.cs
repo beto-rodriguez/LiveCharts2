@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Bars.Layered
+namespace EtoFormsSample.Bars.Layered
 {
     partial class View
     {

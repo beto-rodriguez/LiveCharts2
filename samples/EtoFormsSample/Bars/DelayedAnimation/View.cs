@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.Bars.DelayedAnimation;
 
-namespace WinFormsSample.Bars.DelayedAnimation;
+namespace EtoFormsSample.Bars.DelayedAnimation;
 
 public partial class View : UserControl
 {

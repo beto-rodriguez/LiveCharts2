@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.Bars.Spacing;
 
-namespace WinFormsSample.Bars.Spacing;
+namespace EtoFormsSample.Bars.Spacing;
 
 public partial class View : UserControl
 {

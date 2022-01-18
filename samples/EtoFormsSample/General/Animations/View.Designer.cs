@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.General.Animations
+namespace EtoFormsSample.General.Animations
 {
     partial class View
     {

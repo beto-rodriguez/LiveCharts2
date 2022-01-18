@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Windows.Forms;
 using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.General.MultiThreading2;
 
-namespace WinFormsSample.General.MultiThreading2;
+namespace EtoFormsSample.General.MultiThreading2;
 
 public partial class View : UserControl
 {

@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Scatter.Custom
+namespace EtoFormsSample.Scatter.Custom
 {
     partial class View
     {

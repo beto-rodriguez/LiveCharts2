@@ -31,7 +31,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.WinForms;
+namespace LiveChartsCore.SkiaSharpView.Eto.Forms;
 
 /// <inheritdoc cref="IPolarChartView{TDrawingContext}" />
 public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>

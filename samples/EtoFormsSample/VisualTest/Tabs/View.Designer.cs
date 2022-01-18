@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.VisualTest.Tabs
+namespace EtoFormsSample.VisualTest.Tabs
 {
     partial class View
     {

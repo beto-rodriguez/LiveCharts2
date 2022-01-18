@@ -32,7 +32,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.WinForms;
+namespace LiveChartsCore.SkiaSharpView.Eto.Forms;
 
 /// <inheritdoc cref="ICartesianChartView{TDrawingContext}" />
 public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext>

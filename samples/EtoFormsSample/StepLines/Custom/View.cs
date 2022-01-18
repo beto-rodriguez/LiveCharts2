@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.StepLines.Custom;
 
-namespace WinFormsSample.StepLines.Custom;
+namespace EtoFormsSample.StepLines.Custom;
 
 public partial class View : UserControl
 {

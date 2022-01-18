@@ -1,9 +1,9 @@
 ﻿using System.Windows.Forms;
 using LiveChartsCore.SkiaSharpView.SKCharts;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.General.ChartToImage;
 
-namespace WinFormsSample.General.ChartToImage;
+namespace EtoFormsSample.General.ChartToImage;
 
 public partial class View : UserControl
 {

@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Events.Polar
+namespace EtoFormsSample.Events.Polar
 {
     partial class View
     {

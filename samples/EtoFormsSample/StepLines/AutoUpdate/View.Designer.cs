@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.StepLines.AutoUpdate
+namespace EtoFormsSample.StepLines.AutoUpdate
 {
     partial class View
     {

@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.Axes.DateTimeScaled;
 
-namespace WinFormsSample.Axes.DateTimeScaled;
+namespace EtoFormsSample.Axes.DateTimeScaled;
 
 public partial class View : UserControl
 {

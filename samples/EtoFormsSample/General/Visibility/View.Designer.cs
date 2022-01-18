@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.General.Visibility
+namespace EtoFormsSample.General.Visibility
 {
     partial class View
     {

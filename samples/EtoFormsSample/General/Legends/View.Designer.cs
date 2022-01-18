@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.General.Legends
+namespace EtoFormsSample.General.Legends
 {
     partial class View
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Bars.Race
+namespace EtoFormsSample.Bars.Race
 {
     partial class View
     {

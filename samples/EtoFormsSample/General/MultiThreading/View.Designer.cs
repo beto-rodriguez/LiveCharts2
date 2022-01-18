@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.General.MultiThreading
+namespace EtoFormsSample.General.MultiThreading
 {
     partial class View
     {

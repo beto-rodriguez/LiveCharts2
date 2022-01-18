@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Polar.RadialArea
+namespace EtoFormsSample.Polar.RadialArea
 {
     partial class View
     {

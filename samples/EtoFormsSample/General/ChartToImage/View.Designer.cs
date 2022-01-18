@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.General.ChartToImage
+namespace EtoFormsSample.General.ChartToImage
 {
     partial class View
     {

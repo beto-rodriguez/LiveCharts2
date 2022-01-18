@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Axes.NamedLabels
+namespace EtoFormsSample.Axes.NamedLabels
 {
     partial class View
     {

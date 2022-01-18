@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Axes.DateTimeScaled
+namespace EtoFormsSample.Axes.DateTimeScaled
 {
     partial class View
     {

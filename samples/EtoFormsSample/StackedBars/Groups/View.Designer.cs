@@ -1,4 +1,4 @@
-﻿namespace WinFormsSample.StackedBars.Groups
+﻿namespace EtoFormsSample.StackedBars.Groups
 {
     partial class View
     {

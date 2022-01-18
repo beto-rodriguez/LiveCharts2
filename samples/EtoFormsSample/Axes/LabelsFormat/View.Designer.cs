@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Axes.LabelsFormat
+namespace EtoFormsSample.Axes.LabelsFormat
 {
     partial class View
     {

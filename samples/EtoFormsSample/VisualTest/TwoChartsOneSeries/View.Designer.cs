@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.VisualTest.TwoChartsOneSeries
+namespace EtoFormsSample.VisualTest.TwoChartsOneSeries
 {
     partial class View
     {

@@ -2,10 +2,10 @@
 using System.Windows.Forms;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.Events.AddPointOnClick;
 
-namespace WinFormsSample.Events.AddPointOnClick;
+namespace EtoFormsSample.Events.AddPointOnClick;
 
 public partial class View : UserControl
 {

@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Bars.AutoUpdate
+namespace EtoFormsSample.Bars.AutoUpdate
 {
     partial class View
     {

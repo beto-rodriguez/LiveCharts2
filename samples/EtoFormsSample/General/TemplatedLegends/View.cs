@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.General.TemplatedLegends;
 
-namespace WinFormsSample.General.TemplatedLegends;
+namespace EtoFormsSample.General.TemplatedLegends;
 
 public partial class View : UserControl
 {

@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Pies.Doughnut
+namespace EtoFormsSample.Pies.Doughnut
 {
     partial class View
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Pies.Basic
+namespace EtoFormsSample.Pies.Basic
 {
     partial class View
     {

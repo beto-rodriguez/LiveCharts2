@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Events.Cartesian
+namespace EtoFormsSample.Events.Cartesian
 {
     partial class View
     {

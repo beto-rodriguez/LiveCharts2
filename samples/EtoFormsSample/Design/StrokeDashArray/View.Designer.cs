@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Design.StrokeDashArray
+namespace EtoFormsSample.Design.StrokeDashArray
 {
     partial class View
     {

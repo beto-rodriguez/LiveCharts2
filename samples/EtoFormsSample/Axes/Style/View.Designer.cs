@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Axes.Style
+namespace EtoFormsSample.Axes.Style
 {
     partial class View
     {

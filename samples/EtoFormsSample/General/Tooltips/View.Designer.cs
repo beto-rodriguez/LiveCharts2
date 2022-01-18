@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.General.Tooltips
+namespace EtoFormsSample.General.Tooltips
 {
     partial class View
     {

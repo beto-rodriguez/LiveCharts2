@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Scatter.Bubbles
+namespace EtoFormsSample.Scatter.Bubbles
 {
     partial class View
     {

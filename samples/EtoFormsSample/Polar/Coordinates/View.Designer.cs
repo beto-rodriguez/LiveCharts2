@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Polar.Coordinates
+namespace EtoFormsSample.Polar.Coordinates
 {
     partial class View
     {

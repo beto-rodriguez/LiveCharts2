@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Axes.Shared
+namespace EtoFormsSample.Axes.Shared
 {
     partial class View
     {

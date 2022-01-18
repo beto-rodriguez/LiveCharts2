@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Design.LinearGradients
+namespace EtoFormsSample.Design.LinearGradients
 {
     partial class View
     {

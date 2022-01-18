@@ -3,10 +3,10 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.Events.Polar;
 
-namespace WinFormsSample.Events.Polar;
+namespace EtoFormsSample.Events.Polar;
 
 public partial class View : UserControl
 {

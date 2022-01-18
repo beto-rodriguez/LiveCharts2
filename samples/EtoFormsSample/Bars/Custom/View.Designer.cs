@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Bars.Custom
+namespace EtoFormsSample.Bars.Custom
 {
     partial class View
     {

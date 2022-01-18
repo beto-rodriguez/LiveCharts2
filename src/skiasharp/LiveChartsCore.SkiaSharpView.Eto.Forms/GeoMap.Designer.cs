@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 
-namespace LiveChartsCore.SkiaSharpView.WinForms
+namespace LiveChartsCore.SkiaSharpView.Eto.Forms
 {
     partial class GeoMap
     {
@@ -51,7 +51,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// </summary>
         private void InitializeComponent()
         {
-            this.motionCanvas1 = new LiveChartsCore.SkiaSharpView.WinForms.MotionCanvas();
+            this.motionCanvas1 = new LiveChartsCore.SkiaSharpView.Eto.Forms.MotionCanvas();
             this.SuspendLayout();
             // 
             // motionCanvas1

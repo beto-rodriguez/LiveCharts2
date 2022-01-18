@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.General.Sections2
+namespace EtoFormsSample.General.Sections2
 {
     partial class View
     {

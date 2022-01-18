@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Design.RadialGradients
+namespace EtoFormsSample.Design.RadialGradients
 {
     partial class View
     {

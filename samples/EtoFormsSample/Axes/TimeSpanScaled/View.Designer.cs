@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Axes.TimeSpanScaled
+namespace EtoFormsSample.Axes.TimeSpanScaled
 {
     partial class View
     {

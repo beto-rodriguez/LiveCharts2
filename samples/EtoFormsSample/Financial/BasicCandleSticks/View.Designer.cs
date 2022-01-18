@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Financial.BasicCandlesticks
+namespace EtoFormsSample.Financial.BasicCandlesticks
 {
     partial class View
     {

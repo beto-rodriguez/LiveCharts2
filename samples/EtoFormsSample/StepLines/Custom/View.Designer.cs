@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.StepLines.Custom
+namespace EtoFormsSample.StepLines.Custom
 {
     partial class View
     {

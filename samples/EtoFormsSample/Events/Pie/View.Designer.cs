@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Events.Pie
+namespace EtoFormsSample.Events.Pie
 {
     partial class View
     {

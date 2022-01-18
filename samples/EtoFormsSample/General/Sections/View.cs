@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.General.Sections;
 
-namespace WinFormsSample.General.Sections;
+namespace EtoFormsSample.General.Sections;
 
 public partial class View : UserControl
 {

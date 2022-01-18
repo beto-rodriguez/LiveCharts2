@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace WinFormsSample;
+namespace EtoFormsSample;
 
 public partial class Form1 : Form
 {
@@ -29,7 +29,7 @@ public partial class Form1 : Form
         }
 
         var selected = listBox1.SelectedItem.ToString();
-        activeControl = (UserControl)Activator.CreateInstance(null, $"WinFormsSample.{selected.Replace('/', '.')}.View").Unwrap();
+        activeControl = (UserControl)Activator.CreateInstance(null, $"EtoFormsSample.{selected.Replace('/', '.')}.View").Unwrap();
 
         var padding = 0;
         activeControl.Location = new System.Drawing.Point(listBox1.Width + padding, padding);

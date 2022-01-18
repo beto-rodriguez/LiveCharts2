@@ -1,9 +1,9 @@
 ﻿using System.Windows.Forms;
 using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.General.Legends;
 
-namespace WinFormsSample.General.Legends;
+namespace EtoFormsSample.General.Legends;
 
 public partial class View : UserControl
 {

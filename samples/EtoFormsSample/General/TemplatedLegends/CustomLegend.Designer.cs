@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.General.TemplatedLegends
+namespace EtoFormsSample.General.TemplatedLegends
 {
     partial class CustomLegend
     {

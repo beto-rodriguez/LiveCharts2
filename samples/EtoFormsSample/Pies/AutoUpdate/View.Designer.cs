@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Pies.AutoUpdate
+namespace EtoFormsSample.Pies.AutoUpdate
 {
     partial class View
     {

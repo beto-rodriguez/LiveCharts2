@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.Lines.Padding;
 
-namespace WinFormsSample.Lines.Padding;
+namespace EtoFormsSample.Lines.Padding;
 
 public partial class View : UserControl
 {

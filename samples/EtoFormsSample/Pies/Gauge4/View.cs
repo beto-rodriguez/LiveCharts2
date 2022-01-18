@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.Pies.Gauge4;
 
-namespace WinFormsSample.Pies.Gauge4;
+namespace EtoFormsSample.Pies.Gauge4;
 
 public partial class View : UserControl
 {

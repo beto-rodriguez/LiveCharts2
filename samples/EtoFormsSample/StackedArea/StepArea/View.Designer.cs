@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.StackedArea.StepArea
+namespace EtoFormsSample.StackedArea.StepArea
 {
     partial class View
     {

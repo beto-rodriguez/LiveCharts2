@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
-using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.General.NullPoints;
 
-namespace WinFormsSample.General.NullPoints;
+namespace EtoFormsSample.General.NullPoints;
 
 public partial class View : UserControl
 {

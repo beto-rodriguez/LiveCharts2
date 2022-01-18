@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsSample.Maps.World
+namespace EtoFormsSample.Maps.World
 {
     partial class View
     {
