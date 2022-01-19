@@ -1,4 +1,4 @@
-<Project Sdk="Eto.Forms/2.6.0">
+﻿<Project Sdk="Eto.Forms/2.6.0">
 
   <!--
     Set the BuildPlatform property to the Eto platform you wish to build for.
@@ -34,7 +34,6 @@
     <Compile Remove="Bars\Spacing\View*.cs" />
     <Compile Remove="Bars\States\View*.cs" />
     <Compile Remove="Bars\WithBackground\View*.cs" />
-    <Compile Remove="Design\LinearGradients\View*.cs" />
     <Compile Remove="Design\RadialGradients\View*.cs" />
     <Compile Remove="Design\StrokeDashArray\View*.cs" />
     <Compile Remove="Events\AddPointOnClick\View*.cs" />

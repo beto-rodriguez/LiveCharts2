@@ -6,9 +6,8 @@ namespace EtoFormsSample;
 
 public class Form1 : Form
 {
-    private readonly ListBox listBox1 = new ListBox();
-    private Control activeControl = new Panel();
-    private readonly PixelLayout layout = new PixelLayout();
+    private readonly Scrollable _scroll = new Scrollable();
+    private readonly DynamicLayout _layout = new DynamicLayout();
 
     public Form1()
     {
@@ -16,29 +15,28 @@ public class Form1 : Form
 
         Size = new Size(800, 600);
 
-        var scroll = new Scrollable() { Content = listBox1 };
-        listBox1.MouseWheel += (o, e) => { scroll.ScrollPosition -= new Point(0, (int)e.Delta.Height * 48); };
-
-        layout.Add(scroll, Point.Empty);
-        layout.Add(activeControl, new Point(scroll.Width, 0));
-
-        Content = layout;
-
+        var listbox = new ListBox();
         foreach (var item in ViewModelsSamples.Index.Samples)
         {
-            listBox1.Items.Add(item);
+            listbox.Items.Add(item);
         }
-        listBox1.SelectedIndexChanged += listBox1_SelectedIndexChanged;
+
+        _scroll = new Scrollable() { Content = listbox };
+        listbox.MouseWheel += (o, e) => { _scroll.ScrollPosition -= new Point(0, (int)e.Delta.Height * 48); };
+
+        _layout.AddRow(_scroll, new Panel());
+        Content = _layout;
+
+        listbox.SelectedIndexChanged += listBox1_SelectedIndexChanged;
     }
 
     private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
     {
-        layout.Remove(activeControl);
-        activeControl.Dispose();
+        var selected = (sender as ListBox).SelectedKey;
+        var chart = (Control)Activator.CreateInstance(null, $"EtoFormsSample.{selected.Replace('/', '.')}.View").Unwrap();
 
-        var selected = listBox1.SelectedKey;
-        activeControl = (Control)Activator.CreateInstance(null, $"EtoFormsSample.{selected.Replace('/', '.')}.View").Unwrap();
-
-        layout.Add(activeControl, listBox1.Width, 0);
+        var layout = new DynamicLayout();
+        layout.AddRow(_scroll, chart);
+        Content = layout;
     }
 }
