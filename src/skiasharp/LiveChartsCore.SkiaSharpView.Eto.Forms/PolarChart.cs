@@ -74,7 +74,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
             };
         Series = new ObservableCollection<ISeries>();
 
-        var c = motionCanvas.skControl2;
+        var c = motionCanvas;
 
         c.MouseWheel += OnMouseWheel;
         c.MouseDown += OnMouseDown;

@@ -77,7 +77,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
             };
         Series = new ObservableCollection<ISeries>();
 
-        var c = motionCanvas.skControl2;
+        var c = motionCanvas;
 
         c.MouseDown += OnMouseDown;
         c.MouseWheel += OnMouseWheel;

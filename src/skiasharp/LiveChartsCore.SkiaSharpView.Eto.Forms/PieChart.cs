@@ -67,8 +67,7 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
            },
            true);
 
-        var c = motionCanvas.skControl2;
-        c.MouseDown += OnMouseDown;
+        motionCanvas.MouseDown += OnMouseDown;
     }
 
     PieChart<SkiaSharpDrawingContext> IPieChartView<SkiaSharpDrawingContext>.Core =>

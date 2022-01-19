@@ -78,7 +78,7 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
             (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
             true);
 
-        var c = motionCanvas1.skControl2;
+        var c = motionCanvas1;
 
         c.MouseDown += OnMouseDown;
         c.MouseMove += OnMouseMove;

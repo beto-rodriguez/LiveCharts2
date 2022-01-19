@@ -36,9 +36,8 @@ namespace LiveChartsCore.SkiaSharpView.Eto.Forms;
 /// The motion canvas control for windows forms, <see cref="MotionCanvas{TDrawingContext}"/>.
 /// </summary>
 /// <seealso cref="Eto.Forms.Control" />
-public class MotionCanvas : Control
+public class MotionCanvas : SkiaDrawable
 {
-    internal SkiaDrawable skControl2 = new SkiaDrawable();
     private bool _isDrawingLoopRunning = false;
     private List<PaintSchedule<SkiaSharpDrawingContext>> _paintTasksSchedule = new();
 
@@ -47,7 +46,7 @@ public class MotionCanvas : Control
     /// </summary>
     public MotionCanvas()
     {
-        skControl2.Paint += new EventHandler<SKPaintEventArgs>(SkControl_PaintSurface);
+        Paint += new EventHandler<SKPaintEventArgs>(SkControl_PaintSurface);
 
         CanvasCore.Invalidated += CanvasCore_Invalidated;
     }
@@ -113,7 +112,7 @@ public class MotionCanvas : Control
         var ts = TimeSpan.FromSeconds(1 / FramesPerSecond);
         while (!CanvasCore.IsValid)
         {
-            skControl2.Invalidate();
+            Invalidate();
             await Task.Delay(ts);
         }
 

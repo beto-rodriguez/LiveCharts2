@@ -100,7 +100,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
         core.UpdateStarted += OnCoreUpdateStarted;
         core.UpdateFinished += OnCoreUpdateFinished;
 
-        var c = motionCanvas.skControl2;
+        var c = motionCanvas;
         c.MouseMove += OnMouseMove;
         c.MouseLeave += Chart_MouseLeave;
 
