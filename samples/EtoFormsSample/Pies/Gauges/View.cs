@@ -1,22 +1,22 @@
-﻿using System.Windows.Forms;
+﻿using Eto.Forms;
 using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.Pies.Gauges;
 
 namespace EtoFormsSample.Pies.Gauges;
 
-public partial class View : UserControl
+public class View : Panel
 {
     public View()
     {
         InitializeComponent();
-        Size = new System.Drawing.Size(50, 50);
+        Size = new Eto.Drawing.Size(50, 50);
 
         var viewModel = new ViewModel();
 
         var flowLayoutPanel1 = new FlowLayoutPanel
         {
-            Location = new System.Drawing.Point(0, 0),
-            Size = new System.Drawing.Size(50, 50),
+            Location = new Eto.Drawing.Point(0, 0),
+            Size = new Eto.Drawing.Size(50, 50),
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom,
             FlowDirection = FlowDirection.TopDown,
             WrapContents = false,
@@ -27,7 +27,7 @@ public partial class View : UserControl
 
         flowLayoutPanel1.Controls.Add(new PieChart
         {
-            Location = new System.Drawing.Point(0, 0),
+            Location = new Eto.Drawing.Point(0, 0),
             Height = 400,
             Width = 400,
             Series = viewModel.Series1,
@@ -35,7 +35,7 @@ public partial class View : UserControl
         });
         flowLayoutPanel1.Controls.Add(new PieChart
         {
-            Location = new System.Drawing.Point(0, 300),
+            Location = new Eto.Drawing.Point(0, 300),
             Height = 400,
             Width = 400,
             Series = viewModel.Series2,
@@ -44,7 +44,7 @@ public partial class View : UserControl
         });
         flowLayoutPanel1.Controls.Add(new PieChart
         {
-            Location = new System.Drawing.Point(0, 600),
+            Location = new Eto.Drawing.Point(0, 600),
             Height = 400,
             Width = 400,
             Series = viewModel.Series3,
@@ -53,7 +53,7 @@ public partial class View : UserControl
         });
         flowLayoutPanel1.Controls.Add(new PieChart
         {
-            Location = new System.Drawing.Point(0, 900),
+            Location = new Eto.Drawing.Point(0, 900),
             Height = 400,
             Width = 400,
             Series = viewModel.Series4,
@@ -62,7 +62,7 @@ public partial class View : UserControl
         });
         flowLayoutPanel1.Controls.Add(new PieChart
         {
-            Location = new System.Drawing.Point(0, 1200),
+            Location = new Eto.Drawing.Point(0, 1200),
             Height = 400,
             Width = 400,
             Series = viewModel.Series5,
@@ -71,7 +71,7 @@ public partial class View : UserControl
         });
         flowLayoutPanel1.Controls.Add(new PieChart
         {
-            Location = new System.Drawing.Point(0, 1500),
+            Location = new Eto.Drawing.Point(0, 1500),
             Height = 400,
             Width = 400,
             Series = viewModel.Series6,
@@ -80,7 +80,7 @@ public partial class View : UserControl
         });
         flowLayoutPanel1.Controls.Add(new PieChart
         {
-            Location = new System.Drawing.Point(0, 1800),
+            Location = new Eto.Drawing.Point(0, 1800),
             Height = 400,
             Width = 400,
             Series = viewModel.Series7,
@@ -89,7 +89,7 @@ public partial class View : UserControl
         });
         flowLayoutPanel1.Controls.Add(new PieChart
         {
-            Location = new System.Drawing.Point(0, 2100),
+            Location = new Eto.Drawing.Point(0, 2100),
             Height = 400,
             Width = 400,
             Series = viewModel.Series8,
@@ -99,7 +99,7 @@ public partial class View : UserControl
         });
         flowLayoutPanel1.Controls.Add(new PieChart
         {
-            Location = new System.Drawing.Point(0, 2400),
+            Location = new Eto.Drawing.Point(0, 2400),
             Height = 400,
             Width = 400,
             Series = viewModel.Series9,
@@ -109,7 +109,7 @@ public partial class View : UserControl
         });
         flowLayoutPanel1.Controls.Add(new PieChart
         {
-            Location = new System.Drawing.Point(0, 2700),
+            Location = new Eto.Drawing.Point(0, 2700),
             Height = 400,
             Width = 400,
             Series = viewModel.Series10,
@@ -119,7 +119,7 @@ public partial class View : UserControl
         });
         flowLayoutPanel1.Controls.Add(new PieChart
         {
-            Location = new System.Drawing.Point(0, 3000),
+            Location = new Eto.Drawing.Point(0, 3000),
             Height = 400,
             Width = 400,
             Series = viewModel.Series11,
@@ -129,7 +129,7 @@ public partial class View : UserControl
         });
         flowLayoutPanel1.Controls.Add(new PieChart
         {
-            Location = new System.Drawing.Point(0, 3300),
+            Location = new Eto.Drawing.Point(0, 3300),
             Height = 400,
             Width = 400,
             Series = viewModel.Series12,
@@ -139,7 +139,7 @@ public partial class View : UserControl
         });
         flowLayoutPanel1.Controls.Add(new PieChart
         {
-            Location = new System.Drawing.Point(0, 3600),
+            Location = new Eto.Drawing.Point(0, 3600),
             Height = 400,
             Width = 400,
             Series = viewModel.Series13,
@@ -149,7 +149,7 @@ public partial class View : UserControl
         });
         flowLayoutPanel1.Controls.Add(new PieChart
         {
-            Location = new System.Drawing.Point(0, 3900),
+            Location = new Eto.Drawing.Point(0, 3900),
             Height = 400,
             Width = 400,
             Series = viewModel.Series14,

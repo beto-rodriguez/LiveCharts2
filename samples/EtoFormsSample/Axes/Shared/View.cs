@@ -1,15 +1,15 @@
-﻿using System.Windows.Forms;
+﻿using Eto.Forms;
 using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.Axes.Shared;
 
 namespace EtoFormsSample.Axes.Shared;
 
-public partial class View : UserControl
+public class View : Panel
 {
     public View()
     {
         InitializeComponent();
-        Size = new System.Drawing.Size(50, 50);
+        Size = new Eto.Drawing.Size(50, 50);
 
         var viewModel = new ViewModel();
 
@@ -20,8 +20,8 @@ public partial class View : UserControl
             XAxes = viewModel.SharedXAxis, // <-- notice we are using the same variable for both charts, this syncs both charts
 
             // out of livecharts properties...
-            Location = new System.Drawing.Point(0, 0),
-            Size = new System.Drawing.Size(50, 50),
+            Location = new Eto.Drawing.Point(0, 0),
+            Size = new Eto.Drawing.Size(50, 50),
             Dock = DockStyle.Fill
         };
 
@@ -32,8 +32,8 @@ public partial class View : UserControl
             XAxes = viewModel.SharedXAxis, // <-- notice we are using the same variable for both charts, this syncs both charts
 
             // out of livecharts properties...
-            Location = new System.Drawing.Point(0, 0),
-            Size = new System.Drawing.Size(50, 50),
+            Location = new Eto.Drawing.Point(0, 0),
+            Size = new Eto.Drawing.Size(50, 50),
             Dock = DockStyle.Fill
         };
 

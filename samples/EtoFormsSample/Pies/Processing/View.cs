@@ -1,5 +1,5 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
+﻿using Eto.Drawing;
+using Eto.Forms;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -8,7 +8,7 @@ using ViewModelsSamples.Pies.Processing;
 
 namespace EtoFormsSample.Pies.Processing;
 
-public partial class View : UserControl
+public class View : Panel
 {
     private readonly PieChart pieChart;
 

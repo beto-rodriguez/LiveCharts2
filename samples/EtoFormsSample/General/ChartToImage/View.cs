@@ -1,11 +1,11 @@
-﻿using System.Windows.Forms;
+﻿using Eto.Forms;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.General.ChartToImage;
 
 namespace EtoFormsSample.General.ChartToImage;
 
-public partial class View : UserControl
+public class View : Panel
 {
     private readonly CartesianChart _cartesian;
     private readonly PieChart _pie;
@@ -14,7 +14,7 @@ public partial class View : UserControl
     public View()
     {
         InitializeComponent();
-        Size = new System.Drawing.Size(90, 90);
+        Size = new Eto.Drawing.Size(90, 90);
 
         var viewModel = new ViewModel();
 
@@ -24,8 +24,8 @@ public partial class View : UserControl
             Series = viewModel.CatesianSeries,
 
             // out of livecharts properties...
-            Location = new System.Drawing.Point(0, 0),
-            Size = new System.Drawing.Size(400, 200)
+            Location = new Eto.Drawing.Point(0, 0),
+            Size = new Eto.Drawing.Size(400, 200)
         };
         Controls.Add(_cartesian);
 
@@ -35,8 +35,8 @@ public partial class View : UserControl
             Series = viewModel.PieSeries,
 
             // out of livecharts properties...
-            Location = new System.Drawing.Point(0, 200),
-            Size = new System.Drawing.Size(400, 200)
+            Location = new Eto.Drawing.Point(0, 200),
+            Size = new Eto.Drawing.Size(400, 200)
         };
         Controls.Add(_pie);
 
@@ -46,8 +46,8 @@ public partial class View : UserControl
             Shapes = viewModel.MapShapes,
 
             // out of livecharts properties...
-            Location = new System.Drawing.Point(0, 400),
-            Size = new System.Drawing.Size(400, 200)
+            Location = new Eto.Drawing.Point(0, 400),
+            Size = new Eto.Drawing.Size(400, 200)
         };
         Controls.Add(_map);
 

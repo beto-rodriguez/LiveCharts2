@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
+using Eto.Drawing;
+using Eto.Forms;
 using LiveChartsCore;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;

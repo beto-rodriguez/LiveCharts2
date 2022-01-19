@@ -1,10 +1,10 @@
-﻿using System.Windows.Forms;
+﻿using Eto.Forms;
 using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.Axes.LabelsRotation;
 
 namespace EtoFormsSample.Axes.LabelsRotation;
 
-public partial class View : UserControl
+public class View : Panel
 {
     private readonly CartesianChart _cartesianChart;
     private readonly ViewModel _viewModel;
@@ -12,7 +12,7 @@ public partial class View : UserControl
     public View()
     {
         InitializeComponent();
-        Size = new System.Drawing.Size(100, 100);
+        Size = new Eto.Drawing.Size(100, 100);
 
         _viewModel = new ViewModel();
 
@@ -22,14 +22,14 @@ public partial class View : UserControl
             YAxes = _viewModel.YAxes,
 
             // out of livecharts properties...
-            Location = new System.Drawing.Point(0, 50),
-            Size = new System.Drawing.Size(100, 50),
+            Location = new Eto.Drawing.Point(0, 50),
+            Size = new Eto.Drawing.Size(100, 50),
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
         };
 
         Controls.Add(_cartesianChart);
 
-        var b1 = new TrackBar { Location = new System.Drawing.Point(0, 0), Width = 300, Minimum = -360, Maximum = 720 };
+        var b1 = new TrackBar { Location = new Eto.Drawing.Point(0, 0), Width = 300, Minimum = -360, Maximum = 720 };
         b1.ValueChanged += (object sender, System.EventArgs e) =>
         {
             _viewModel.YAxes[0].LabelsRotation = b1.Value;

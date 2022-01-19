@@ -1,17 +1,17 @@
-﻿using System.Windows.Forms;
+﻿using Eto.Forms;
 using LiveChartsCore.SkiaSharpView.Eto.Forms;
 using ViewModelsSamples.Axes.Style;
 
 namespace EtoFormsSample.Axes.Style;
 
-public partial class View : UserControl
+public class View : Panel
 {
     private readonly CartesianChart cartesianChart;
 
     public View()
     {
         InitializeComponent();
-        Size = new System.Drawing.Size(100, 100);
+        Size = new Eto.Drawing.Size(100, 100);
 
         var viewModel = new ViewModel();
 
@@ -23,8 +23,8 @@ public partial class View : UserControl
             DrawMarginFrame = viewModel.Frame,
 
             // out of livecharts properties...
-            Location = new System.Drawing.Point(0, 0),
-            Size = new System.Drawing.Size(100, 100),
+            Location = new Eto.Drawing.Point(0, 0),
+            Size = new Eto.Drawing.Size(100, 100),
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
         };
 
