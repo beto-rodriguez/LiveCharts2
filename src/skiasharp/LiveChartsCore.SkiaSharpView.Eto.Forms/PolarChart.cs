@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Windows.Forms;
+using Eto.Forms;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -74,7 +74,7 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
             };
         Series = new ObservableCollection<ISeries>();
 
-        var c = Controls[0].Controls[0];
+        var c = motionCanvas.skControl2;
 
         c.MouseWheel += OnMouseWheel;
         c.MouseDown += OnMouseDown;

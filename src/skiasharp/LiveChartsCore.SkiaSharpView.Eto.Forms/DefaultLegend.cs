@@ -21,8 +21,7 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
+using Eto.Forms;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -30,14 +29,13 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 namespace LiveChartsCore.SkiaSharpView.Eto.Forms;
 
 /// <inheritdoc cref="IChartLegend{TDrawingContext}" />
-public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
+public class DefaultLegend : Panel, IChartLegend<SkiaSharpDrawingContext>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="DefaultLegend"/> class.
     /// </summary>
     public DefaultLegend()
     {
-        InitializeComponent();
     }
 
     /// <summary>
@@ -64,35 +62,36 @@ public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingC
             case LegendPosition.Top:
                 Visible = true;
                 if (legendOrientation == LegendOrientation.Auto) Orientation = LegendOrientation.Horizontal;
-                Dock = DockStyle.Top;
+                //todo Dock = DockStyle.Top;
                 break;
             case LegendPosition.Left:
                 Visible = true;
                 if (legendOrientation == LegendOrientation.Auto) Orientation = LegendOrientation.Vertical;
-                Dock = DockStyle.Left;
+                //todo Dock = DockStyle.Left;
                 break;
             case LegendPosition.Right:
                 Visible = true;
                 if (legendOrientation == LegendOrientation.Auto) Orientation = LegendOrientation.Vertical;
-                Dock = DockStyle.Right;
+                //todo Dock = DockStyle.Right;
                 break;
             case LegendPosition.Bottom:
                 Visible = true;
                 if (legendOrientation == LegendOrientation.Auto) Orientation = LegendOrientation.Horizontal;
-                Dock = DockStyle.Bottom;
+                //todo Dock = DockStyle.Bottom;
                 break;
             default:
                 break;
         }
 
         DrawAndMesure(series, wfChart);
-        BackColor = wfChart.LegendBackColor;
+        BackgroundColor = wfChart.LegendBackColor;
     }
 
     private void DrawAndMesure(IEnumerable<IChartSeries<SkiaSharpDrawingContext>> series, Chart chart)
     {
+#if false
         SuspendLayout();
-        Controls.Clear();
+        Content?.Dispose();
 
         var h = 0f;
         var w = 0f;
@@ -183,5 +182,6 @@ public partial class DefaultLegend : UserControl, IChartLegend<SkiaSharpDrawingC
         catch { }
 
         ResumeLayout();
+#endif
     }
 }

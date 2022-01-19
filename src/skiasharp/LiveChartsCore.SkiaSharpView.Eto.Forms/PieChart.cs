@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Windows.Forms;
+using Eto.Forms;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -67,7 +67,7 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
            },
            true);
 
-        var c = Controls[0].Controls[0];
+        var c = motionCanvas.skControl2;
         c.MouseDown += OnMouseDown;
     }
 

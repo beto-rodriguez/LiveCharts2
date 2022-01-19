@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Windows.Forms;
+using Eto.Forms;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -77,7 +77,7 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
             };
         Series = new ObservableCollection<ISeries>();
 
-        var c = Controls[0].Controls[0];
+        var c = motionCanvas.skControl2;
 
         c.MouseDown += OnMouseDown;
         c.MouseWheel += OnMouseWheel;
@@ -216,8 +216,8 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         if (core is null) throw new Exception("core not found");
         var c = (CartesianChart<SkiaSharpDrawingContext>)core;
         var p = e.Location;
-        c.Zoom(new LvcPoint(p.X, p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
-        Capture = true;
+        c.Zoom(new LvcPoint(p.X, p.Y), e.Delta.Height > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+        e.Handled = true;
     }
 
     private void OnMouseDown(object? sender, MouseEventArgs e)

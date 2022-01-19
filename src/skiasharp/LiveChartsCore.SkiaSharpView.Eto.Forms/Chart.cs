@@ -23,8 +23,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
+using Eto.Forms;
+using Eto.Drawing;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
@@ -35,7 +35,7 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 namespace LiveChartsCore.SkiaSharpView.Eto.Forms;
 
 /// <inheritdoc cref="IChartView" />
-public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
+public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
 {
     /// <summary>
     /// The core
@@ -61,9 +61,9 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     private LegendOrientation _legendOrientation = LiveCharts.CurrentSettings.DefaultLegendOrientation;
     private Margin? _drawMargin = null;
     private TooltipPosition _tooltipPosition = LiveCharts.CurrentSettings.DefaultTooltipPosition;
-    private Font _tooltipFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
+    private Font _tooltipFont = Fonts.Sans(11);
     private Color _tooltipBackColor = Color.FromArgb(255, 250, 250, 250);
-    private Font _legendFont = new(new FontFamily("Trebuchet MS"), 11, FontStyle.Regular);
+    private Font _legendFont = Fonts.Sans(11);
     private Color _legendBackColor = Color.FromArgb(255, 255, 255, 255);
     private Color _legendTextColor = Color.FromArgb(255, 35, 35, 35);
     private Color _tooltipTextColor;
@@ -80,22 +80,10 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         if (legend is not null) this.legend = legend;
 
         motionCanvas = new MotionCanvas();
-        SuspendLayout();
-        motionCanvas.Dock = DockStyle.Fill;
         motionCanvas.FramesPerSecond = 90D;
-        motionCanvas.Location = new Point(0, 0);
-        motionCanvas.Name = "motionCanvas";
-        motionCanvas.Size = new Size(150, 150);
-        motionCanvas.TabIndex = 0;
-        motionCanvas.Resize += OnResized;
-        AutoScaleMode = AutoScaleMode.Font;
-        Controls.Add(motionCanvas);
-        var l = (Control)this.legend;
-        l.Visible = false;
-        l.Dock = DockStyle.Right;
-        Controls.Add(l);
-        Name = "CartesianChart";
-        ResumeLayout(true);
+        motionCanvas.SizeChanged += OnResized;
+
+        UpdateLegendLayout();
 
         if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
@@ -112,11 +100,34 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         core.UpdateStarted += OnCoreUpdateStarted;
         core.UpdateFinished += OnCoreUpdateFinished;
 
-        var c = Controls[0].Controls[0];
+        var c = motionCanvas.skControl2;
         c.MouseMove += OnMouseMove;
         c.MouseLeave += Chart_MouseLeave;
 
         Load += Chart_Load;
+    }
+
+    internal void UpdateLegendLayout()
+    {
+        var l = (Control) this.legend;
+
+        switch (this.LegendPosition) // TODO
+        {
+            case LegendPosition.Top:
+                this.Content = new TableLayout(l, motionCanvas);
+                break;
+
+            case LegendPosition.Bottom:
+                this.Content = new DynamicLayout(motionCanvas, l);
+                break;
+
+            case LegendPosition.Left:
+            case LegendPosition.Right:
+
+            default: // hidden
+                this.Content = motionCanvas;
+                break;
+        }
     }
 
     #region events
@@ -146,8 +157,8 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     LvcColor IChartView.BackColor
     {
-        get => new(BackColor.R, BackColor.G, BackColor.B, BackColor.A);
-        set => BackColor = Color.FromArgb(value.A, value.R, value.G, value.B);
+        get => new((byte)BackgroundColor.Rb, (byte)BackgroundColor.Gb, (byte)BackgroundColor.Bb, (byte)BackgroundColor.Ab);
+        set => BackgroundColor = Color.FromArgb(value.R, value.G, value.B, value.A);
     }
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -296,8 +307,7 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
 
     void IChartView.InvokeOnUIThread(Action action)
     {
-        if (!IsHandleCreated) return;
-        _ = BeginInvoke(action).AsyncWaitHandle.WaitOne();
+        Application.Instance.InvokeAsync(action).Wait();
     }
 
     /// <inheritdoc cref="IChartView.SyncAction(Action)"/>
@@ -325,15 +335,12 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
         core.Update();
     }
 
-    /// <summary>
-    /// Raises the <see cref="E:HandleDestroyed" /> event.
-    /// </summary>
-    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    /// <returns></returns>
-    protected override void OnHandleDestroyed(EventArgs e)
+    /// <inheritdoc cref="Control.OnUnLoad(EventArgs)"/>
+    protected override void OnUnLoad(EventArgs e)
     {
         if (tooltip is IDisposable disposableTooltip) disposableTooltip.Dispose();
-        base.OnHandleDestroyed(e);
+
+        base.OnUnLoad(e);
 
         core?.Unload();
         OnUnloading();
@@ -344,10 +351,10 @@ public abstract class Chart : UserControl, IChartView<SkiaSharpDrawingContext>
     /// </summary>
     protected virtual void OnUnloading() { }
 
-    /// <inheritdoc cref="ContainerControl.OnParentChanged(EventArgs)"/>
-    protected override void OnParentChanged(EventArgs e)
+    /// <inheritdoc cref="Control.OnLoadComplete(EventArgs)"/>
+    protected override void OnLoadComplete(EventArgs e)
     {
-        base.OnParentChanged(e);
+        base.OnLoadComplete(e);
         core?.Load();
     }
 

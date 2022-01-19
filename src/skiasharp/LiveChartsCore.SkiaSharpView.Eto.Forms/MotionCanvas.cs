@@ -24,20 +24,21 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using Eto.Forms;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using SkiaSharp.Views.Desktop;
+using Eto.SkiaDraw;
 
 namespace LiveChartsCore.SkiaSharpView.Eto.Forms;
 
 /// <summary>
 /// The motion canvas control for windows forms, <see cref="MotionCanvas{TDrawingContext}"/>.
 /// </summary>
-/// <seealso cref="UserControl" />
-public partial class MotionCanvas : UserControl
+/// <seealso cref="Eto.Forms.Control" />
+public class MotionCanvas : Control
 {
+    internal SkiaDrawable skControl2 = new SkiaDrawable();
     private bool _isDrawingLoopRunning = false;
     private List<PaintSchedule<SkiaSharpDrawingContext>> _paintTasksSchedule = new();
 
@@ -46,7 +47,8 @@ public partial class MotionCanvas : UserControl
     /// </summary>
     public MotionCanvas()
     {
-        InitializeComponent();
+        skControl2.Paint += new EventHandler<SKPaintEventArgs>(SkControl_PaintSurface);
+
         CanvasCore.Invalidated += CanvasCore_Invalidated;
     }
 
@@ -84,22 +86,16 @@ public partial class MotionCanvas : UserControl
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
 
-    /// <inheritdoc cref="ContainerControl.OnParentChanged(EventArgs)"/>
-    protected override void OnParentChanged(EventArgs e)
+    /// <inheritdoc cref="Control.OnUnLoad(EventArgs)"/>
+    protected override void OnUnLoad(EventArgs e)
     {
-        base.OnParentChanged(e);
-    }
-
-    /// <inheritdoc cref="Control.OnHandleDestroyed(EventArgs)"/>
-    protected override void OnHandleDestroyed(EventArgs e)
-    {
-        base.OnHandleDestroyed(e);
+        base.OnUnLoad(e);
 
         CanvasCore.Invalidated -= CanvasCore_Invalidated;
         CanvasCore.Dispose();
     }
 
-    private void SkControl_PaintSurface(object sender, SKPaintSurfaceEventArgs e)
+    private void SkControl_PaintSurface(object sender, SKPaintEventArgs e)
     {
         CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
     }

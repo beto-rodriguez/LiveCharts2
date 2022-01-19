@@ -1,12 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <UseWindowsForms>true</UseWindowsForms>
     <OutputType>Library</OutputType>
     <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>LiveChartsCore.SkiaSharpView.Eto.Forms</AssemblyName>
     <RootNamespace>LiveChartsCore.SkiaSharpView.Eto.Forms</RootNamespace>
     <Version>2.0.0-beta.90</Version>
@@ -20,15 +18,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <SignAssembly Condition="'$(Configuration)' == 'Release'">True</SignAssembly>
     <AssemblyOriginatorKeyFile Condition="'$(Configuration)' == 'Release'">./../../../../../../nupkgs/keypair.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="2.88.0-preview.179" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
@@ -39,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="PolarChart.cs" />
+    <PackageReference Include="Eto.SkiaDraw" Version="0.1.0-ci.19" />
   </ItemGroup>
 
 </Project>

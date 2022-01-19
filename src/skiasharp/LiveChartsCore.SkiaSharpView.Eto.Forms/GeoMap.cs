@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Forms;
+using Eto.Forms;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel;
@@ -39,9 +39,10 @@ namespace LiveChartsCore.SkiaSharpView.Eto.Forms;
 /// <summary>
 /// The geo map control.
 /// </summary>
-/// <seealso cref="UserControl" />
-public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
+/// <seealso cref="Eto.Forms.Panel" />
+public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
 {
+    private MotionCanvas motionCanvas1 = new MotionCanvas();
     private readonly GeoMap<SkiaSharpDrawingContext> _core;
     private CollectionDeepObserver<IMapElement> _shapesObserver;
     private CollectionDeepObserver<IGeoSeries> _seriesObserver;
@@ -64,7 +65,6 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
     /// </summary>
     public GeoMap()
     {
-        InitializeComponent();
         if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
         _activeMap = Maps.GetWorldMap<SkiaSharpDrawingContext>();
 
@@ -78,7 +78,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
             (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
             true);
 
-        var c = Controls[0].Controls[0];
+        var c = motionCanvas1.skControl2;
 
         c.MouseDown += OnMouseDown;
         c.MouseMove += OnMouseMove;
@@ -86,7 +86,9 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         c.MouseLeave += OnMouseLeave;
         c.MouseWheel += OnMouseWheel;
 
-        Resize += GeoMap_Resize;
+        SizeChanged += GeoMap_Resize;
+
+        Content = motionCanvas1;
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Canvas"/>
@@ -192,8 +194,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
 
     void IGeoMapView<SkiaSharpDrawingContext>.InvokeOnUIThread(Action action)
     {
-        if (!IsHandleCreated) return;
-        _ = BeginInvoke(action).AsyncWaitHandle.WaitOne();
+        Application.Instance.InvokeAsync(action).Wait();
     }
 
     /// <summary>
@@ -204,10 +205,10 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         _core?.Update();
     }
 
-    /// <inheritdoc cref="Control.OnHandleDestroyed(EventArgs)"/>
-    protected override void OnHandleDestroyed(EventArgs e)
+    /// <inheritdoc cref="Control.OnUnLoad(EventArgs)"/>
+    protected override void OnUnLoad(EventArgs e)
     {
-        base.OnHandleDestroyed(e);
+        base.OnUnLoad(e);
 
         _core?.Unload();
 
@@ -248,7 +249,7 @@ public partial class GeoMap : UserControl, IGeoMapView<SkiaSharpDrawingContext>
         if (_core is null) throw new Exception("core not found");
         var p = e.Location;
         _core.ViewTo(
-            new ZoomOnPointerView(new LvcPoint(p.X, p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut));
-        Capture = true;
+            new ZoomOnPointerView(new LvcPoint(p.X, p.Y), e.Delta.Height > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut));
+        e.Handled = true;
     }
 }

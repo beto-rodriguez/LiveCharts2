@@ -22,8 +22,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
+using Eto.Forms;
+using Eto.Drawing;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -32,20 +32,23 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 namespace LiveChartsCore.SkiaSharpView.Eto.Forms;
 
 /// <inheritdoc cref="IChartTooltip{TDrawingContext}" />
-public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>, IDisposable
+public class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>
 {
     private Panel? _tooltipContainer;
+    private Label label1 = new Label();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
     /// </summary>
     public DefaultTooltip()
     {
-        InitializeComponent();
-        SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-        BackColor = Color.Transparent;
+        BackgroundColor = Colors.Transparent;
+        WindowStyle = WindowStyle.None;
         ShowInTaskbar = false;
-        Paint += DefaultTooltip_Paint;
+
+        var drawable = new global::Eto.Forms.Drawable();
+        drawable.Paint += DefaultTooltip_Paint;
+        Content = drawable;
     }
 
     void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
@@ -68,17 +71,18 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
         if (location is null) throw new Exception("location not supported");
         Height = (int)size.Height;
         Width = (int)size.Width;
-        if (_tooltipContainer is not null) _tooltipContainer.BackColor = wfChart.TooltipBackColor;
+        if (_tooltipContainer is not null) _tooltipContainer.BackgroundColor = wfChart.TooltipBackColor;
 
         var l = wfChart.PointToScreen(Point.Empty);
-        var x = l.X + (int)location.Value.X;
-        var y = l.Y + (int)location.Value.Y;
-        Location = new Point(x, y);
+        var x = l.X + location.Value.X;
+        var y = l.Y + location.Value.Y;
+        Location = new Point((int)x, (int)y);
         Show();
     }
-
     private SizeF DrawAndMesure(IEnumerable<ChartPoint> tooltipPoints, Chart chart)
     {
+        return SizeF.Empty; // TODO
+#if false
         SuspendLayout();
         Controls.Clear();
 
@@ -125,6 +129,7 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
 
         ResumeLayout();
         return new SizeF(w + 20, h + 20);
+#endif
     }
 
     void IChartTooltip<SkiaSharpDrawingContext>.Hide()
@@ -143,26 +148,5 @@ public partial class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContex
             new Rectangle(
                 _tooltipContainer.Location.X - 1, _tooltipContainer.Location.Y - 1,
                 _tooltipContainer.Width + 1, _tooltipContainer.Height + 1));
-    }
-
-    /// <summary>
-    /// Paints the form background.
-    /// </summary>
-    /// <param name="e"></param>
-    protected override void OnPaintBackground(PaintEventArgs e) { /* Ignore */ }
-
-    /// <summary>
-    /// Disposes the specified disposing.
-    /// </summary>
-    /// <param name="disposing">if set to <c>true</c> [disposing].</param>
-    /// <returns></returns>
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing && (components is not null))
-        {
-            components.Dispose();
-        }
-
-        base.Dispose(disposing);
     }
 }
