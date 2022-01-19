@@ -1,281 +1,205 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Eto.Forms/2.6.0">
+
+  <!--
+    Set the BuildPlatform property to the Eto platform you wish to build for.
+    The default is the platform you are building on.
+    Valid values: Wpf, Windows, Mac64, XamMac2, Gtk, Direct2D
+-->
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
-    <IsPackable>false</IsPackable>
+    <TargetFramework>net6.0</TargetFramework>
     <LangVersion>10.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Eto.Forms\LiveChartsCore.SkiaSharpView.Eto.Forms.csproj" />
-    <ProjectReference Include="..\ViewModelsSamples\ViewModelsSamples.csproj" />
+    <Compile Remove="Axes\ColorsAndPosition\View*.cs" />
+    <Compile Remove="Axes\DateTimeScaled\View*.cs" />
+    <Compile Remove="Axes\LabelsFormat2\View*.cs" />
+    <Compile Remove="Axes\LabelsFormat\View*.cs" />
+    <Compile Remove="Axes\LabelsRotation\View*.cs" />
+    <Compile Remove="Axes\Logarithmic\View*.cs" />
+    <Compile Remove="Axes\Multiple\View*.cs" />
+    <Compile Remove="Axes\NamedLabels\View*.cs" />
+    <Compile Remove="Axes\Paging\View*.cs" />
+    <Compile Remove="Axes\Shared\View*.cs" />
+    <Compile Remove="Axes\Style\View*.cs" />
+    <Compile Remove="Axes\TimeSpanScaled\View*.cs" />
+    <Compile Remove="Bars\AutoUpdate\View*.cs" />
+    <Compile Remove="Bars\Basic\View*.cs" />
+    <Compile Remove="Bars\Custom\View*.cs" />
+    <Compile Remove="Bars\DelayedAnimation\View*.cs" />
+    <Compile Remove="Bars\Layered\View*.cs" />
+    <Compile Remove="Bars\Race\View*.cs" />
+    <Compile Remove="Bars\RowsWithLabels\View*.cs" />
+    <Compile Remove="Bars\Spacing\View*.cs" />
+    <Compile Remove="Bars\States\View*.cs" />
+    <Compile Remove="Bars\WithBackground\View*.cs" />
+    <Compile Remove="Design\LinearGradients\View*.cs" />
+    <Compile Remove="Design\RadialGradients\View*.cs" />
+    <Compile Remove="Design\StrokeDashArray\View*.cs" />
+    <Compile Remove="Events\AddPointOnClick\View*.cs" />
+    <Compile Remove="Events\Cartesian\View*.cs" />
+    <Compile Remove="Events\Pie\View*.cs" />
+    <Compile Remove="Events\Polar\View*.cs" />
+    <Compile Remove="Financial\BasicCandleSticks\View*.cs" />
+    <Compile Remove="General\Animations\View*.cs" />
+    <Compile Remove="General\ChartToImage\View*.cs" />
+    <Compile Remove="General\Legends\View*.cs" />
+    <Compile Remove="General\MultiThreading2\View*.cs" />
+    <Compile Remove="General\MultiThreading\View*.cs" />
+    <Compile Remove="General\NullPoints\View*.cs" />
+    <Compile Remove="General\Sections2\View*.cs" />
+    <Compile Remove="General\Sections\View*.cs" />
+    <Compile Remove="General\TemplatedLegends\CustomLegend*.cs" />
+    <Compile Remove="General\TemplatedLegends\View*.cs" />
+    <Compile Remove="General\TemplatedTooltips\CustomTooltip*.cs" />
+    <Compile Remove="General\TemplatedTooltips\View*.cs" />
+    <Compile Remove="General\Tooltips\View*.cs" />
+    <Compile Remove="General\UserDefinedTypes\View*.cs" />
+    <Compile Remove="General\Visibility\View*.cs" />
+    <Compile Remove="Heat\Basic\View*.cs" />
+    <Compile Remove="Lines\Area\View*.cs" />
+    <Compile Remove="Lines\AutoUpdate\View*.cs" />
+    <Compile Remove="Lines\Basic\View*.cs" />
+    <Compile Remove="Lines\Custom\View*.cs" />
+    <Compile Remove="Lines\Padding\View*.cs" />
+    <Compile Remove="Lines\Properties\View*.cs" />
+    <Compile Remove="Lines\Straight\View*.cs" />
+    <Compile Remove="Lines\XY\View*.cs" />
+    <Compile Remove="Lines\Zoom\View*.cs" />
+    <Compile Remove="Maps\World\View*.cs" />
+    <Compile Remove="Pies\AutoUpdate\View*.cs" />
+    <Compile Remove="Pies\Basic\View*.cs" />
+    <Compile Remove="Pies\Custom\View*.cs" />
+    <Compile Remove="Pies\Doughnut\View*.cs" />
+    <Compile Remove="Pies\Gauge1\View*.cs" />
+    <Compile Remove="Pies\Gauge2\View*.cs" />
+    <Compile Remove="Pies\Gauge3\View*.cs" />
+    <Compile Remove="Pies\Gauge4\View*.cs" />
+    <Compile Remove="Pies\Gauge5\View*.cs" />
+    <Compile Remove="Pies\Gauges\View*.cs" />
+    <Compile Remove="Pies\NightingaleRose\View*.cs" />
+    <Compile Remove="Pies\Processing\View*.cs" />
+    <Compile Remove="Pies\Pushout\View*.cs" />
+    <Compile Remove="Polar\Basic\View*.cs" />
+    <Compile Remove="Polar\Coordinates\View*.cs" />
+    <Compile Remove="Polar\RadialArea\View*.cs" />
+    <Compile Remove="Scatter\AutoUpdate\View*.cs" />
+    <Compile Remove="Scatter\Basic\View*.cs" />
+    <Compile Remove="Scatter\Bubbles\View*.cs" />
+    <Compile Remove="Scatter\Custom\View*.cs" />
+    <Compile Remove="StackedArea\Basic\View*.cs" />
+    <Compile Remove="StackedArea\StepArea\View*.cs" />
+    <Compile Remove="StackedBars\Basic\View*.cs" />
+    <Compile Remove="StackedBars\Groups\View*.cs" />
+    <Compile Remove="StepLines\Area\View*.cs" />
+    <Compile Remove="StepLines\AutoUpdate\View*.cs" />
+    <Compile Remove="StepLines\Basic\View*.cs" />
+    <Compile Remove="StepLines\Custom\View*.cs" />
+    <Compile Remove="StepLines\Properties\View*.cs" />
+    <Compile Remove="StepLines\Zoom\View*.cs" />
+    <Compile Remove="VisualTest\DataTemplate\View*.cs" />
+    <Compile Remove="VisualTest\ReattachVisual\View*.cs" />
+    <Compile Remove="VisualTest\Tabs\View*.cs" />
+    <Compile Remove="VisualTest\TwoChartsOneSeries\View*.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Axes\Style\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Axes\LabelsFormat2\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Axes\Paging\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Axes\TimeSpanScaled\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Axes\Logarithmic\View.cs" />
-    <Compile Update="Axes\DateTimeScaled\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Axes\Shared\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Axes\Multiple\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Axes\LabelsRotation\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Axes\NamedLabels\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Axes\LabelsFormat\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Axes\ColorsAndPosition\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Bars\AutoUpdate\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Bars\Spacing\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Bars\Race\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Bars\DelayedAnimation\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Bars\Layered\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Bars\RowsWithLabels\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Bars\States\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Bars\Basic\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Bars\WithBackground\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Bars\Custom\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Design\StrokeDashArray\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Design\RadialGradients\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Design\LinearGradients\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Events\AddPointOnClick\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Events\Cartesian\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Events\Pie\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Events\Polar\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Financial\BasicCandleSticks\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="General\Animations\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="General\ChartToImage\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="General\MultiThreading2\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="General\MultiThreading\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="General\Sections2\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="General\Sections\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="General\Visibility\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="General\Legends\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="General\TemplatedTooltips\CustomTooltip.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="General\TemplatedTooltips\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="General\TemplatedLegends\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="General\Tooltips\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="General\UserDefinedTypes\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="General\NullPoints\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Heat\Basic\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Lines\XY\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Lines\Padding\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Maps\World\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Pies\Gauge5\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Pies\Gauge4\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Pies\Gauge3\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Pies\Gauge2\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Pies\Gauge1\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Polar\RadialArea\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Polar\Coordinates\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Polar\Basic\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Scatter\Bubbles\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="StackedArea\StepArea\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="StepLines\Area\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="StepLines\AutoUpdate\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="StepLines\Basic\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="StepLines\Custom\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="StepLines\Properties\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="StepLines\Zoom\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Lines\Area\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Lines\AutoUpdate\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Lines\Zoom\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Lines\Properties\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Lines\Straight\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Lines\Custom\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Pies\AutoUpdate\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Pies\Gauges\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Pies\Processing\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Pies\Pushout\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Pies\NightingaleRose\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Pies\Doughnut\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Pies\Custom\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Pies\Basic\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Scatter\AutoUpdate\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Scatter\Custom\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Scatter\Basic\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="StackedArea\Basic\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="StackedBars\Groups\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="StackedBars\Basic\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="VisualTest\Tabs\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="VisualTest\DataTemplate\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="VisualTest\ReattachVisual\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="VisualTest\TwoChartsOneSeries\View.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <None Include="Axes\ColorsAndPosition\View.cs" />
+    <None Include="Axes\DateTimeScaled\View.cs" />
+    <None Include="Axes\LabelsFormat2\View.cs" />
+    <None Include="Axes\LabelsFormat\View.cs" />
+    <None Include="Axes\LabelsRotation\View.cs" />
+    <None Include="Axes\Logarithmic\View.cs" />
+    <None Include="Axes\Multiple\View.cs" />
+    <None Include="Axes\NamedLabels\View.cs" />
+    <None Include="Axes\Paging\View.cs" />
+    <None Include="Axes\Shared\View.cs" />
+    <None Include="Axes\Style\View.cs" />
+    <None Include="Axes\TimeSpanScaled\View.cs" />
+    <None Include="Bars\AutoUpdate\View.cs" />
+    <None Include="Bars\Basic\View.cs" />
+    <None Include="Bars\Custom\View.cs" />
+    <None Include="Bars\DelayedAnimation\View.cs" />
+    <None Include="Bars\Layered\View.cs" />
+    <None Include="Bars\Race\View.cs" />
+    <None Include="Bars\RowsWithLabels\View.cs" />
+    <None Include="Bars\Spacing\View.cs" />
+    <None Include="Bars\States\View.cs" />
+    <None Include="Bars\WithBackground\View.cs" />
+    <None Include="Design\LinearGradients\View.cs" />
+    <None Include="Design\RadialGradients\View.cs" />
+    <None Include="Design\StrokeDashArray\View.cs" />
+    <None Include="Events\AddPointOnClick\View.cs" />
+    <None Include="Events\Cartesian\View.cs" />
+    <None Include="Events\Pie\View.cs" />
+    <None Include="Events\Polar\View.cs" />
+    <None Include="Financial\BasicCandleSticks\View.cs" />
+    <None Include="General\Animations\View.cs" />
+    <None Include="General\ChartToImage\View.cs" />
+    <None Include="General\Legends\View.cs" />
+    <None Include="General\MultiThreading2\View.cs" />
+    <None Include="General\MultiThreading\View.cs" />
+    <None Include="General\NullPoints\View.cs" />
+    <None Include="General\Sections2\View.cs" />
+    <None Include="General\Sections\View.cs" />
+    <None Include="General\TemplatedLegends\CustomLegend.cs" />
+    <None Include="General\TemplatedLegends\View.cs" />
+    <None Include="General\TemplatedTooltips\CustomTooltip.cs" />
+    <None Include="General\TemplatedTooltips\View.cs" />
+    <None Include="General\Tooltips\View.cs" />
+    <None Include="General\UserDefinedTypes\View.cs" />
+    <None Include="General\Visibility\View.cs" />
+    <None Include="Heat\Basic\View.cs" />
+    <None Include="Lines\Area\View.cs" />
+    <None Include="Lines\AutoUpdate\View.cs" />
+    <None Include="Lines\Basic\View.cs" />
+    <None Include="Lines\Custom\View.cs" />
+    <None Include="Lines\Padding\View.cs" />
+    <None Include="Lines\Properties\View.cs" />
+    <None Include="Lines\Straight\View.cs" />
+    <None Include="Lines\XY\View.cs" />
+    <None Include="Lines\Zoom\View.cs" />
+    <None Include="Maps\World\View.cs" />
+    <None Include="Pies\AutoUpdate\View.cs" />
+    <None Include="Pies\Basic\View.cs" />
+    <None Include="Pies\Custom\View.cs" />
+    <None Include="Pies\Doughnut\View.cs" />
+    <None Include="Pies\Gauge1\View.cs" />
+    <None Include="Pies\Gauge2\View.cs" />
+    <None Include="Pies\Gauge3\View.cs" />
+    <None Include="Pies\Gauge4\View.cs" />
+    <None Include="Pies\Gauge5\View.cs" />
+    <None Include="Pies\Gauges\View.cs" />
+    <None Include="Pies\NightingaleRose\View.cs" />
+    <None Include="Pies\Processing\View.cs" />
+    <None Include="Pies\Pushout\View.cs" />
+    <None Include="Polar\Basic\View.cs" />
+    <None Include="Polar\Coordinates\View.cs" />
+    <None Include="Polar\RadialArea\View.cs" />
+    <None Include="Scatter\AutoUpdate\View.cs" />
+    <None Include="Scatter\Basic\View.cs" />
+    <None Include="Scatter\Bubbles\View.cs" />
+    <None Include="Scatter\Custom\View.cs" />
+    <None Include="StackedArea\Basic\View.cs" />
+    <None Include="StackedArea\StepArea\View.cs" />
+    <None Include="StackedBars\Basic\View.cs" />
+    <None Include="StackedBars\Groups\View.cs" />
+    <None Include="StepLines\Area\View.cs" />
+    <None Include="StepLines\AutoUpdate\View.cs" />
+    <None Include="StepLines\Basic\View.cs" />
+    <None Include="StepLines\Custom\View.cs" />
+    <None Include="StepLines\Properties\View.cs" />
+    <None Include="StepLines\Zoom\View.cs" />
+    <None Include="VisualTest\DataTemplate\View.cs" />
+    <None Include="VisualTest\ReattachVisual\View.cs" />
+    <None Include="VisualTest\Tabs\View.cs" />
+    <None Include="VisualTest\TwoChartsOneSeries\View.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Eto.Forms\LiveChartsCore.SkiaSharpView.Eto.Forms.csproj" />
+    <ProjectReference Include="..\ViewModelsSamples\ViewModelsSamples.csproj" />
   </ItemGroup>
 
 </Project>

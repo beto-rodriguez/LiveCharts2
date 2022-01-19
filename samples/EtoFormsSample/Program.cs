@@ -1,5 +1,6 @@
+using Eto.Drawing;
+using Eto.Forms;
 using System;
-using System.Windows.Forms;
 
 namespace EtoFormsSample;
 
@@ -11,9 +12,6 @@ static class Program
     [STAThread]
     static void Main()
     {
-        _ = Application.SetHighDpiMode(HighDpiMode.SystemAware);
-        Application.EnableVisualStyles();
-        Application.SetCompatibleTextRenderingDefault(false);
-        Application.Run(new Form1());
+        new Application(Eto.Platform.Detect).Run(new Form1());
     }
 }
