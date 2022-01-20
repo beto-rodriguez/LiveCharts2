@@ -62,10 +62,10 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     private Margin? _drawMargin = null;
     private TooltipPosition _tooltipPosition = LiveCharts.CurrentSettings.DefaultTooltipPosition;
     private Font _tooltipFont = Fonts.Sans(11);
-    private Color _tooltipBackColor = Color.FromArgb(255, 250, 250, 250);
+    private Color _tooltipBackColor = Color.FromArgb(250, 250, 250);
     private Font _legendFont = Fonts.Sans(11);
-    private Color _legendBackColor = Color.FromArgb(255, 255, 255, 255);
-    private Color _legendTextColor = Color.FromArgb(255, 35, 35, 35);
+    private Color _legendBackColor = Color.FromArgb(255, 255, 255);
+    private Color _legendTextColor = Color.FromArgb(35, 35, 35);
     private Color _tooltipTextColor;
 
     /// <summary>
@@ -301,8 +301,8 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView.SetTooltipStyle(LvcColor, LvcColor)"/>
     public void SetTooltipStyle(LvcColor background, LvcColor textColor)
     {
-        TooltipBackColor = Color.FromArgb(background.A, background.R, background.G, background.B);
-        TooltipTextColor = Color.FromArgb(textColor.A, textColor.R, textColor.G, textColor.B);
+        TooltipBackColor = Color.FromArgb(background.R, background.G, background.B, background.A);
+        TooltipTextColor = Color.FromArgb(textColor.R, textColor.G, textColor.B, textColor.A);
     }
 
     void IChartView.InvokeOnUIThread(Action action)
