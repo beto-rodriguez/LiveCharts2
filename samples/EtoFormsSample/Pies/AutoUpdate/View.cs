@@ -13,38 +13,33 @@ public class View : Panel
 
     public View()
     {
-        InitializeComponent();
-        Size = new Eto.Drawing.Size(100, 100);
-
         viewModel = new ViewModel();
 
         piechart = new PieChart
         {
             Series = viewModel.Series,
-
-            // out of livecharts properties...
-            Location = new Eto.Drawing.Point(0, 50),
-            Size = new Eto.Drawing.Size(100, 50),
-            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
         };
 
-        Controls.Add(piechart);
+        Content = piechart;
 
-        var b1 = new Button { Text = "Add series", Location = new Eto.Drawing.Point(0, 0) };
+        var b1 = new Button { Text = "Add series" };
         b1.Click += (object sender, System.EventArgs e) => viewModel.AddSeries();
-        Controls.Add(b1);
 
-        var b2 = new Button { Text = "Remove series", Location = new Eto.Drawing.Point(80, 0) };
+        var b2 = new Button { Text = "Remove series" };
         b2.Click += (object sender, System.EventArgs e) => viewModel.RemoveLastSeries();
-        Controls.Add(b2);
 
-        var b3 = new Button { Text = "Update all", Location = new Eto.Drawing.Point(160, 0) };
+        var b3 = new Button { Text = "Update all" };
         b3.Click += (object sender, System.EventArgs e) => viewModel.UpdateAll();
-        Controls.Add(b3);
 
-        var b4 = new Button { Text = "Constant changes", Location = new Eto.Drawing.Point(240, 0) };
+        var b4 = new Button { Text = "Constant changes" };
         b4.Click += OnConstantChangesClick;
-        Controls.Add(b4);
+
+        var layout = new DynamicLayout(
+            new DynamicRow(b1, b2, b3, b4),
+            new DynamicRow(piechart)
+            );
+
+        Content = layout;
     }
 
     private async void OnConstantChangesClick(object sender, System.EventArgs e)

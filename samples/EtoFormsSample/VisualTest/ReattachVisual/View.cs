@@ -14,43 +14,32 @@ public class View : Panel
     /// </summary>
     public View()
     {
-        InitializeComponent();
-        Size = new Eto.Drawing.Size(50, 50);
-
         var viewModel = new ViewModel();
 
         _cartesianChart = new CartesianChart
         {
             Series = viewModel.Series,
-
-            // out of livecharts properties...
-            Location = new Eto.Drawing.Point(0, 0),
-            Size = new Eto.Drawing.Size(50, 50),
-            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
         };
 
         var b = new Button
         {
-            Size = new Eto.Drawing.Size(150, 50),
             Text = "Toggle"
         };
         b.Click += B_Click;
 
-        Controls.Add(_cartesianChart);
-        Controls.Add(b);
-        b.BringToFront();
+        Content = new StackLayout(b, _cartesianChart);
     }
 
     private void B_Click(object sender, System.EventArgs e)
     {
         if (_isInVisualTree)
         {
-            Controls.Remove(_cartesianChart);
+            (Content as StackLayout).Items.RemoveAt(1);
             _isInVisualTree = false;
             return;
         }
 
-        Controls.Add(_cartesianChart);
+        (Content as StackLayout).Items.Add(_cartesianChart);
         _isInVisualTree = true;
     }
 }

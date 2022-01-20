@@ -11,11 +11,10 @@ using LiveChartsCore.SkiaSharpView.Eto.Forms;
 
 namespace EtoFormsSample.General.TemplatedTooltips;
 
-public partial class CustomTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>, IDisposable
+public class CustomTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>
 {
     public CustomTooltip()
     {
-        InitializeComponent();
     }
 
     public void Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
@@ -36,14 +35,14 @@ public partial class CustomTooltip : Form, IChartTooltip<SkiaSharpDrawingContext
                 chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height));
         }
 
-        BackColor = Color.FromArgb(255, 30, 30, 30);
+        BackgroundColor = Color.FromArgb(30, 30, 30);
         Height = (int)size.Height;
         Width = (int)size.Width;
 
         var l = wfChart.PointToScreen(Point.Empty);
-        var x = l.X + (int)location.Value.X;
-        var y = l.Y + (int)location.Value.Y;
-        Location = new Point(x, y);
+        var x = l.X + location.Value.X;
+        var y = l.Y + location.Value.Y;
+        Location = new Point((int)x, (int)y);
         Show();
 
         wfChart.CoreCanvas.Invalidate();
@@ -51,6 +50,8 @@ public partial class CustomTooltip : Form, IChartTooltip<SkiaSharpDrawingContext
 
     private SizeF DrawAndMesure(IEnumerable<ChartPoint> tooltipPoints, Chart chart)
     {
+        return SizeF.Empty; //todo
+#if false
         SuspendLayout();
         Controls.Clear();
 
@@ -74,7 +75,7 @@ public partial class CustomTooltip : Form, IChartTooltip<SkiaSharpDrawingContext
             Controls.Add(new Label
             {
                 Text = text,
-                ForeColor = Color.FromArgb(255, 250, 250, 250),
+                ForeColor = Color.FromArgb(250, 250, 250),
                 Font = chart.TooltipFont,
                 Location = new Point(6 + (int)drawableSeries.CanvasSchedule.Width + 6, (int)h + 6),
                 AutoSize = true
@@ -89,15 +90,11 @@ public partial class CustomTooltip : Form, IChartTooltip<SkiaSharpDrawingContext
 
         ResumeLayout();
         return new SizeF(w, h);
+#endif
     }
 
-    protected override void Dispose(bool disposing)
+    public void Hide()
     {
-        if (disposing && (components is not null))
-        {
-            components.Dispose();
-        }
-
-        base.Dispose(disposing);
+        Close();
     }
 }

@@ -11,30 +11,20 @@ public class View : Panel
 
     public View()
     {
-        InitializeComponent();
-        Size = new Eto.Drawing.Size(100, 100);
-
         _viewModel = new ViewModel();
 
         _cartesianChart = new CartesianChart
         {
             Series = _viewModel.Series,
             YAxes = _viewModel.YAxes,
-
-            // out of livecharts properties...
-            Location = new Eto.Drawing.Point(0, 50),
-            Size = new Eto.Drawing.Size(100, 50),
-            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
         };
 
-        Controls.Add(_cartesianChart);
-
-        var b1 = new TrackBar { Location = new Eto.Drawing.Point(0, 0), Width = 300, Minimum = -360, Maximum = 720 };
+        var b1 = new Slider() { Width = 300, MinValue = -360, MaxValue = 720 };
         b1.ValueChanged += (object sender, System.EventArgs e) =>
         {
             _viewModel.YAxes[0].LabelsRotation = b1.Value;
         };
 
-        Controls.Add(b1);
+        Content = new StackLayout(b1, _cartesianChart);
     }
 }

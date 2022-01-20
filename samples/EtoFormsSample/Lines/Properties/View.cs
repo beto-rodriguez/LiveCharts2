@@ -10,65 +10,54 @@ public class View : Panel
 
     public View()
     {
-        InitializeComponent();
-        Size = new Eto.Drawing.Size(100, 100);
-
         var viewModel = new ViewModel();
 
         cartesianChart = new CartesianChart
         {
             Series = viewModel.Series,
-
-            // out of livecharts properties...
-            Location = new Eto.Drawing.Point(0, 50),
-            Size = new Eto.Drawing.Size(100, 50),
-            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
         };
 
-        Controls.Add(cartesianChart);
+        Content = cartesianChart;
 
-        var b1 = new Button { Text = "new values", Location = new Eto.Drawing.Point(0, 0) };
+        var b1 = new Button { Text = "new values" };
         b1.Click += (object sender, System.EventArgs e) => viewModel.ChangeValuesInstance();
-        Controls.Add(b1);
 
-        var b2 = new Button { Text = "new fill", Location = new Eto.Drawing.Point(80, 0) };
+        var b2 = new Button { Text = "new fill" };
         b2.Click += (object sender, System.EventArgs e) => viewModel.NewFill();
-        Controls.Add(b2);
 
-        var b3 = new Button { Text = "new stroke", Location = new Eto.Drawing.Point(160, 0) };
+        var b3 = new Button { Text = "new stroke" };
         b3.Click += (object sender, System.EventArgs e) => viewModel.NewStroke();
-        Controls.Add(b3);
 
-        var b4 = new Button { Text = "newGfill", Location = new Eto.Drawing.Point(240, 0) };
+        var b4 = new Button { Text = "newGfill" };
         b4.Click += (object sender, System.EventArgs e) => viewModel.NewGeometryFill();
-        Controls.Add(b4);
 
-        var b5 = new Button { Text = "newGstroke", Location = new Eto.Drawing.Point(320, 0) };
+        var b5 = new Button { Text = "newGstroke" };
         b5.Click += (object sender, System.EventArgs e) => viewModel.NewGeometryStroke();
-        Controls.Add(b5);
 
-        var b6 = new Button { Text = "+ smooth", Location = new Eto.Drawing.Point(400, 0) };
+        var b6 = new Button { Text = "+ smooth" };
         b6.Click += (object sender, System.EventArgs e) => viewModel.IncreaseLineSmoothness();
-        Controls.Add(b6);
 
-        var b7 = new Button { Text = "- smooth", Location = new Eto.Drawing.Point(480, 0) };
+        var b7 = new Button { Text = "- smooth" };
         b7.Click += (object sender, System.EventArgs e) => viewModel.DecreaseLineSmoothness();
-        Controls.Add(b7);
 
-        var b8 = new Button { Text = "+ size", Location = new Eto.Drawing.Point(560, 0) };
+        var b8 = new Button { Text = "+ size" };
         b8.Click += (object sender, System.EventArgs e) => viewModel.IncreaseGeometrySize();
-        Controls.Add(b8);
 
-        var b9 = new Button { Text = "- size", Location = new Eto.Drawing.Point(640, 0) };
+        var b9 = new Button { Text = "- size" };
         b9.Click += (object sender, System.EventArgs e) => viewModel.DecreaseGeometrySize();
-        Controls.Add(b9);
 
-        var b10 = new Button { Text = "new series", Location = new Eto.Drawing.Point(720, 0) };
+        var b10 = new Button { Text = "new series" };
         b10.Click += (object sender, System.EventArgs e) =>
         {
             viewModel.ChangeSeriesInstance();
             cartesianChart.Series = viewModel.Series;
         };
-        Controls.Add(b10);
+
+        var layout = new DynamicLayout(
+            new DynamicRow(b1, b2, b3, b4, b5, b6, b7, b8, b9, b10),
+            new DynamicRow(cartesianChart)
+            );
+
+        Content = layout;
     }
 }

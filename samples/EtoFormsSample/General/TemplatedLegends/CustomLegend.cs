@@ -9,11 +9,10 @@ using LiveChartsCore.SkiaSharpView.Eto.Forms;
 
 namespace EtoFormsSample.General.TemplatedLegends;
 
-public partial class CustomLegend : UserControl, IChartLegend<SkiaSharpDrawingContext>
+public class CustomLegend : Panel, IChartLegend<SkiaSharpDrawingContext>
 {
     public CustomLegend()
     {
-        InitializeComponent();
     }
 
     public LegendOrientation Orientation { get; set; }
@@ -27,15 +26,16 @@ public partial class CustomLegend : UserControl, IChartLegend<SkiaSharpDrawingCo
 
         Visible = true;
         if (legendOrientation == LegendOrientation.Auto) Orientation = LegendOrientation.Vertical;
-        Dock = DockStyle.Right;
+        //todo Dock = DockStyle.Right;
 
         DrawAndMesure(series, wfChart);
 
-        BackColor = wfChart.LegendBackColor;
+        BackgroundColor = wfChart.LegendBackColor;
     }
 
     private void DrawAndMesure(IEnumerable<IChartSeries<SkiaSharpDrawingContext>> series, Chart chart)
     {
+#if false
         SuspendLayout();
         Controls.Clear();
 
@@ -43,7 +43,7 @@ public partial class CustomLegend : UserControl, IChartLegend<SkiaSharpDrawingCo
         var w = 0f;
 
         var parent = new Panel();
-        parent.BackColor = Color.FromArgb(255, 245, 245, 220);
+        parent.BackColor = Color.FromArgb(245, 245, 220);
         Controls.Add(parent);
         using var g = CreateGraphics();
         foreach (var s in series)
@@ -82,5 +82,6 @@ public partial class CustomLegend : UserControl, IChartLegend<SkiaSharpDrawingCo
         parent.Location = new Point(0, (int)(Height / 2 - h / 2));
 
         ResumeLayout();
+#endif
     }
 }

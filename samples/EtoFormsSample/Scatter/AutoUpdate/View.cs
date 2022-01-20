@@ -13,46 +13,37 @@ public class View : Panel
 
     public View()
     {
-        InitializeComponent();
-        Size = new Eto.Drawing.Size(100, 100);
-
         viewModel = new ViewModel();
 
         cartesianChart = new CartesianChart
         {
             Series = viewModel.Series,
-
-            // out of livecharts properties...
-            Location = new Eto.Drawing.Point(0, 50),
-            Size = new Eto.Drawing.Size(100, 50),
-            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
         };
 
-        Controls.Add(cartesianChart);
-
-        var b1 = new Button { Text = "Add item", Location = new Eto.Drawing.Point(0, 0) };
+        var b1 = new Button { Text = "Add item" };
         b1.Click += (object sender, System.EventArgs e) => viewModel.AddRandomItem();
-        Controls.Add(b1);
 
-        var b2 = new Button { Text = "Replace item", Location = new Eto.Drawing.Point(80, 0) };
+        var b2 = new Button { Text = "Replace item" };
         b2.Click += (object sender, System.EventArgs e) => viewModel.ReplaceRandomItem();
-        Controls.Add(b2);
 
-        var b3 = new Button { Text = "Remove item", Location = new Eto.Drawing.Point(160, 0) };
+        var b3 = new Button { Text = "Remove item" };
         b3.Click += (object sender, System.EventArgs e) => viewModel.RemoveFirstItem();
-        Controls.Add(b3);
 
-        var b4 = new Button { Text = "Add series", Location = new Eto.Drawing.Point(240, 0) };
+        var b4 = new Button { Text = "Add series" };
         b4.Click += (object sender, System.EventArgs e) => viewModel.AddSeries();
-        Controls.Add(b4);
 
-        var b5 = new Button { Text = "Remove series", Location = new Eto.Drawing.Point(320, 0) };
+        var b5 = new Button { Text = "Remove series" };
         b5.Click += (object sender, System.EventArgs e) => viewModel.RemoveLastSeries();
-        Controls.Add(b5);
 
-        var b6 = new Button { Text = "Constant changes", Location = new Eto.Drawing.Point(400, 0) };
+        var b6 = new Button { Text = "Constant changes" };
         b6.Click += OnConstantChangesClick;
-        Controls.Add(b6);
+
+        var layout = new DynamicLayout(
+            new DynamicRow(b1, b2, b3, b4, b5, b6),
+            new DynamicRow(cartesianChart)
+            );
+
+        Content = layout;
     }
 
     private async void OnConstantChangesClick(object sender, System.EventArgs e)

@@ -10,9 +10,6 @@ public class View : Panel
 
     public View()
     {
-        InitializeComponent();
-        Size = new Eto.Drawing.Size(50, 50);
-
         var viewModel = new ViewModel();
 
         pieChart = new PieChart
@@ -20,13 +17,8 @@ public class View : Panel
             Series = viewModel.Series,
             InitialRotation = -90,
             Total = 100,
-
-            // out of livecharts properties...
-            Location = new Eto.Drawing.Point(0, 0),
-            Size = new Eto.Drawing.Size(50, 50),
-            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
         };
 
-        Controls.Add(pieChart);
+        Content = pieChart;
     }
 }

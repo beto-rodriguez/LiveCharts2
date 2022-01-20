@@ -10,9 +10,6 @@ public class View : Panel
 
     public View()
     {
-        InitializeComponent();
-        Size = new Eto.Drawing.Size(50, 50);
-
         var viewModel = new ViewModel();
 
         cartesianChart = new CartesianChart
@@ -21,16 +18,11 @@ public class View : Panel
             XAxes = viewModel.XAxes,
             YAxes = viewModel.YAxes,
             TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Left, // mark
-            TooltipFont = new Eto.Drawing.Font("Courier New", 25), // mark
-            TooltipTextColor = Eto.Drawing.Color.FromArgb(255, 242, 244, 195), // mark
-            TooltipBackColor = Eto.Drawing.Color.FromArgb(255, 72, 0, 50), // mark
-
-            // out of livecharts properties...
-            Location = new Eto.Drawing.Point(0, 0),
-            Size = new Eto.Drawing.Size(50, 50),
-            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
+            TooltipFont = Eto.Drawing.Fonts.Monospace(25), // mark
+            TooltipTextColor = Eto.Drawing.Color.FromArgb(242, 244, 195), // mark
+            TooltipBackColor = Eto.Drawing.Color.FromArgb(72, 0, 50), // mark
         };
 
-        Controls.Add(cartesianChart);
+        Content = cartesianChart;
     }
 }

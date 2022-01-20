@@ -16,9 +16,6 @@ public class View : Panel
     /// </summary>
     public View()
     {
-        InitializeComponent();
-        Size = new Eto.Drawing.Size(50, 50);
-
         var viewModel = new ViewModel();
 
         _data = viewModel.Data;
@@ -26,16 +23,11 @@ public class View : Panel
         var cartesianChart = new CartesianChart
         {
             Series = viewModel.SeriesCollection,
-
-            // out of livecharts properties...
-            Location = new Eto.Drawing.Point(0, 0),
-            Size = new Eto.Drawing.Size(50, 50),
-            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
         };
 
         cartesianChart.MouseDown += CartesianChart_Click;
 
-        Controls.Add(cartesianChart);
+        Content = cartesianChart;
     }
 
     private void CartesianChart_Click(object sender, MouseEventArgs e)

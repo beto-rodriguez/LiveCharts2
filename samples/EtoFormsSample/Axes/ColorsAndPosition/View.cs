@@ -10,9 +10,6 @@ public class View : Panel
 
     public View()
     {
-        InitializeComponent();
-        Size = new Eto.Drawing.Size(100, 100);
-
         var viewModel = new ViewModel();
 
         cartesianChart = new CartesianChart
@@ -20,21 +17,19 @@ public class View : Panel
             Series = viewModel.Series,
             XAxes = viewModel.XAxes,
             YAxes = viewModel.YAxes,
-
-            // out of livecharts properties...
-            Location = new Eto.Drawing.Point(0, 50),
-            Size = new Eto.Drawing.Size(100, 50),
-            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
         };
 
-        Controls.Add(cartesianChart);
-
-        var b1 = new Button { Text = "toggle position", Location = new Eto.Drawing.Point(0, 0) };
+        var b1 = new Button { Text = "toggle position" };
         b1.Click += (object sender, System.EventArgs e) => viewModel.TogglePosition();
-        Controls.Add(b1);
 
-        var b2 = new Button { Text = "new color", Location = new Eto.Drawing.Point(80, 0) };
+        var b2 = new Button { Text = "new color" };
         b2.Click += (object sender, System.EventArgs e) => viewModel.SetNewColor();
-        Controls.Add(b2);
+
+        var layout = new DynamicLayout(
+            new DynamicRow(b1,b2),
+            new DynamicRow(cartesianChart)
+            );
+
+        Content = layout;
     }
 }

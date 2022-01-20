@@ -10,9 +10,6 @@ public class View : Panel
 
     public View()
     {
-        InitializeComponent();
-        Size = new Eto.Drawing.Size(100, 100);
-
         var viewModel = new ViewModel();
 
         cartesianChart = new CartesianChart
@@ -20,29 +17,24 @@ public class View : Panel
             Series = viewModel.Series,
             XAxes = viewModel.XAxes,
             ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X,
-
-            // out of livecharts properties...
-            Location = new Eto.Drawing.Point(0, 50),
-            Size = new Eto.Drawing.Size(100, 50),
-            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
         };
 
-        Controls.Add(cartesianChart);
-
-        var b1 = new Button { Text = "Go to page 1", Location = new Eto.Drawing.Point(0, 0) };
+        var b1 = new Button { Text = "Go to page 1" };
         b1.Click += (object sender, System.EventArgs e) => viewModel.GoToPage1();
-        Controls.Add(b1);
 
-        var b2 = new Button { Text = "Go to page 2", Location = new Eto.Drawing.Point(80, 0) };
+        var b2 = new Button { Text = "Go to page 2" };
         b2.Click += (object sender, System.EventArgs e) => viewModel.GoToPage2();
-        Controls.Add(b2);
 
-        var b3 = new Button { Text = "Go to page 3", Location = new Eto.Drawing.Point(160, 0) };
+        var b3 = new Button { Text = "Go to page 3" };
         b3.Click += (object sender, System.EventArgs e) => viewModel.GoToPage3();
-        Controls.Add(b3);
 
-        var b4 = new Button { Text = "Clear", Location = new Eto.Drawing.Point(24, 0) };
+        var b4 = new Button { Text = "Clear" };
         b4.Click += (object sender, System.EventArgs e) => viewModel.SeeAll();
-        Controls.Add(b4);
+
+        var layout = new DynamicLayout(
+            new DynamicRow(b1,b2,b3,b4),
+            new DynamicRow(cartesianChart)
+            );
+        Content = layout;
     }
 }

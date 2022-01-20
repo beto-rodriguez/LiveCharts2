@@ -13,43 +13,26 @@ public class View : Panel
 
     public View()
     {
-        InitializeComponent();
-        Size = new Eto.Drawing.Size(90, 90);
-
         var viewModel = new ViewModel();
 
         // Adding a cartesian chart to the UI...
         _cartesian = new CartesianChart
         {
             Series = viewModel.CatesianSeries,
-
-            // out of livecharts properties...
-            Location = new Eto.Drawing.Point(0, 0),
-            Size = new Eto.Drawing.Size(400, 200)
         };
-        Controls.Add(_cartesian);
 
         // Adding a pie chart to the UI...
         _pie = new PieChart
         {
             Series = viewModel.PieSeries,
-
-            // out of livecharts properties...
-            Location = new Eto.Drawing.Point(0, 200),
-            Size = new Eto.Drawing.Size(400, 200)
         };
-        Controls.Add(_pie);
 
         // Adding a map chart to the UI...
         _map = new GeoMap
         {
             Shapes = viewModel.MapShapes,
-
-            // out of livecharts properties...
-            Location = new Eto.Drawing.Point(0, 400),
-            Size = new Eto.Drawing.Size(400, 200)
         };
-        Controls.Add(_map);
+        Content = new StackLayout(_cartesian, _pie, _map);
 
         // now lets create the images // mark
         CreateImageFromCartesianControl(); // mark
