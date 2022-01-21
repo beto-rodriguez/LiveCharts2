@@ -22,11 +22,13 @@ public class View : Panel
         Content = cartesianChart;
 
         UpdateViewModel();
+
+        UnLoad += (o, e) => Visible = false;
     }
 
     public async void UpdateViewModel()
     {
-        while (true)
+        while (Visible)
         {
             viewModel.RandomIncrement();
             cartesianChart.Series = viewModel.Series;
