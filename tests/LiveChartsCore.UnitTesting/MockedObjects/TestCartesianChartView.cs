@@ -99,6 +99,7 @@ public class TestCartesianChartView : ICartesianChartView<SkiaSharpDrawingContex
     public event ChartEventHandler<SkiaSharpDrawingContext> UpdateStarted;
     public event ChartEventHandler<SkiaSharpDrawingContext> UpdateFinished;
     public event ChartPointsHandler DataPointerDown;
+    public event ChartPointHandler ChartPointPointerDown;
 
     public void DummyRaiseEvents()
     {
@@ -128,7 +129,7 @@ public class TestCartesianChartView : ICartesianChartView<SkiaSharpDrawingContex
         action();
     }
 
-    public void OnDataPointerDown(IEnumerable<ChartPoint> points)
+    public void OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint ponter)
     {
         throw new NotImplementedException();
     }

@@ -152,7 +152,7 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
 
     int ISeries.SeriesId { get; set; } = -1;
 
-    bool ISeries.RequiresFindClosestOnPointerDown => DataPointerDown is not null;
+    bool ISeries.RequiresFindClosestOnPointerDown => DataPointerDown is not null || ChartPointPointerDown is not null;
 
     /// <summary>
     /// Occurs when an instance of <see cref="ChartPoint"/> is measured.
@@ -178,6 +178,11 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
     /// Occurs when the pointer goes down over a chart point(s).
     /// </summary>
     public event ChartPointsHandler<TModel, TVisual, TLabel>? DataPointerDown;
+
+    /// <summary>
+    /// Occurs when the pointer goes down over a chart point, if there are multiple points, the closest one will be selected.
+    /// </summary>
+    public event ChartPointHandler<TModel, TVisual, TLabel>? ChartPointPointerDown;
 
     /// <summary>
     /// Occurs when a property changes.
@@ -276,14 +281,11 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         return DataFactory.Fetch(this, chart);
     }
 
-    /// <summary>
-    /// Called when the pointer goes down on a point or points.
-    /// </summary>
-    /// <param name="chart">the chart.</param>
-    /// <param name="points">the points.</param>
-    protected virtual void OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points)
+    /// <inheritdoc cref="IChartSeries{TDrawingContext}.OnDataPointerDown(IChartView, IEnumerable{ChartPoint}, LvcPoint)"/>
+    protected virtual void OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points, LvcPoint pointer)
     {
-        DataPointerDown?.Invoke(chart, points.Select(x => new ChartPoint<TModel, TVisual, TLabel>(x)));
+        DataPointerDown?.Invoke(chart, points.Select(point => new ChartPoint<TModel, TVisual, TLabel>(point)));
+        ChartPointPointerDown?.Invoke(chart, new ChartPoint<TModel, TVisual, TLabel>(points.FindClosestTo<TModel, TVisual, TLabel>(pointer)!));
     }
 
     IEnumerable<ChartPoint> ISeries.Fetch(IChart chart)

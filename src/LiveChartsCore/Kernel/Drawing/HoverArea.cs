@@ -31,6 +31,13 @@ namespace LiveChartsCore.Kernel.Drawing;
 public abstract class HoverArea
 {
     /// <summary>
+    /// Gets the distance to a given point.
+    /// </summary>
+    /// <param name="point">The point to calculate the distance to.</param>
+    /// <returns>The distance in pixels.</returns>
+    public abstract double DistanceTo(LvcPoint point);
+
+    /// <summary>
     /// Determines whether the pointer is over the area.
     /// </summary>
     /// <param name="pointerLocation">The pointer location.</param>

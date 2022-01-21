@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Kernel;
@@ -110,6 +111,16 @@ public class ChartPoint
     /// The context.
     /// </value>
     public ChartPointContext Context { get; }
+
+    /// <summary>
+    /// Gets the distance to a given point.
+    /// </summary>
+    /// <param name="point">The point to calculate the distance to.</param>
+    /// <returns>The distance in pixels.</returns>
+    public double DistanceTo(LvcPoint point)
+    {
+        return Context.HoverArea?.DistanceTo(point) ?? double.NaN;
+    }
 }
 
 /// <summary>

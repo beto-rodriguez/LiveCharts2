@@ -190,6 +190,9 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
     /// <inheritdoc cref="IChartView.DataPointerDown" />
     public event ChartPointsHandler? DataPointerDown;
 
+    /// <inheritdoc cref="IChartView.ChartPointPointerDown" />
+    public event ChartPointHandler? ChartPointPointerDown;
+
     /// <inheritdoc cref="IChartView{TDrawingContext}.HideTooltip"/>
     public void HideTooltip()
     {
@@ -276,8 +279,9 @@ public class SKCartesianChart : ICartesianChartView<SkiaSharpDrawingContext>, IS
         Measuring?.Invoke(this);
     }
 
-    void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
+    void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
     {
         DataPointerDown?.Invoke(this, points);
+        ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
     }
 }

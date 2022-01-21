@@ -34,13 +34,19 @@ public class ViewModel
             }
         };
 
+        columnSeries.ChartPointPointerDown += ColumnSeries_ChartPointPointerDown;
         columnSeries.DataPointerDown += ColumnSeries_DataPointerDown;
 
         Series = new ISeries[]
         {
-                columnSeries,
-                new LineSeries<int> { Values = new[] { 6, 7, 2, 9, 6, 2 } },
+            columnSeries,
+            new LineSeries<int> { Values = new[] { 6, 7, 2, 9, 6, 2 } },
         };
+    }
+
+    private void ColumnSeries_ChartPointPointerDown(IChartView chart, ChartPoint<City, RoundedRectangleGeometry, LabelGeometry> point)
+    {
+        Trace.WriteLine($"[series.ChartPointPointerDownEvent] clicked on {point.Model.Name}");
     }
 
     private void ColumnSeries_DataPointerDown(
@@ -50,7 +56,7 @@ public class ViewModel
         // the event passes a collection of the points that were triggered by the pointer down event.
         foreach (var point in points)
         {
-            Trace.WriteLine($"[series.dataPointerDownEvent] clicked on {point.Model.Name}");
+            Trace.WriteLine($"[series.DataPointerDownEvent] clicked on {point.Model.Name}");
         }
     }
 

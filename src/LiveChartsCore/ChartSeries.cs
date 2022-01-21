@@ -100,9 +100,9 @@ public abstract class ChartSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="IChartSeries{TDrawingContext}.MiniatureEquals(IChartSeries{TDrawingContext})"/>
     public abstract bool MiniatureEquals(IChartSeries<TDrawingContext> instance);
 
-    void IChartSeries<TDrawingContext>.OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points)
+    void IChartSeries<TDrawingContext>.OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points, LvcPoint pointer)
     {
-        OnDataPointerDown(chart, points);
+        OnDataPointerDown(chart, points, pointer);
     }
 
     /// <summary>
