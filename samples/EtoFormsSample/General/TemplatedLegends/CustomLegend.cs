@@ -26,12 +26,12 @@ public class CustomLegend : Panel, IChartLegend<SkiaSharpDrawingContext>
 
         wfChart.LegendPosition = LegendPosition.Right;
 
-        DrawAndMesure(chart.ChartSeries, wfChart);
+        DrawAndMeasure(chart.ChartSeries, wfChart);
 
         BackgroundColor = wfChart.LegendBackColor;
     }
 
-    private void DrawAndMesure(IEnumerable<IChartSeries<SkiaSharpDrawingContext>> series, Chart chart)
+    private void DrawAndMeasure(IEnumerable<IChartSeries<SkiaSharpDrawingContext>> series, Chart chart)
     {
 #if false
         SuspendLayout();

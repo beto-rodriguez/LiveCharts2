@@ -21,7 +21,7 @@ public class CustomTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>
     {
         var wfChart = (Chart)chart.View;
 
-        var size = DrawAndMesure(tooltipPoints, wfChart);
+        var size = DrawAndMeasure(tooltipPoints, wfChart);
         LvcPoint? location = null;
 
         if (chart is CartesianChart<SkiaSharpDrawingContext>)
@@ -48,7 +48,7 @@ public class CustomTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>
         wfChart.CoreCanvas.Invalidate();
     }
 
-    private SizeF DrawAndMesure(IEnumerable<ChartPoint> tooltipPoints, Chart chart)
+    private SizeF DrawAndMeasure(IEnumerable<ChartPoint> tooltipPoints, Chart chart)
     {
         return SizeF.Empty; //todo
 #if false

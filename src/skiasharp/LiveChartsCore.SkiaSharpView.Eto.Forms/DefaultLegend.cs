@@ -57,11 +57,11 @@ public class DefaultLegend : Panel, IChartLegend<SkiaSharpDrawingContext>
                 : LegendOrientation.Vertical;
         }
 
-        DrawAndMesure(chart.ChartSeries, wfChart);
+        DrawAndMeasure(chart.ChartSeries, wfChart);
         BackgroundColor = wfChart.LegendBackColor;
     }
 
-    private void DrawAndMesure(IEnumerable<IChartSeries<SkiaSharpDrawingContext>> series, Chart chart)
+    private void DrawAndMeasure(IEnumerable<IChartSeries<SkiaSharpDrawingContext>> series, Chart chart)
     {
 #if false //todo
         SuspendLayout();

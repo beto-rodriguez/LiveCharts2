@@ -55,7 +55,7 @@ public class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>
     {
         var wfChart = (Chart)chart.View;
 
-        var size = DrawAndMesure(tooltipPoints, wfChart);
+        var size = DrawAndMeasure(tooltipPoints, wfChart);
         LvcPoint? location = null;
 
         if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
@@ -79,7 +79,7 @@ public class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>
         Location = new Point((int)x, (int)y);
         Show();
     }
-    private SizeF DrawAndMesure(IEnumerable<ChartPoint> tooltipPoints, Chart chart)
+    private SizeF DrawAndMeasure(IEnumerable<ChartPoint> tooltipPoints, Chart chart)
     {
         return SizeF.Empty; // TODO
 #if false
