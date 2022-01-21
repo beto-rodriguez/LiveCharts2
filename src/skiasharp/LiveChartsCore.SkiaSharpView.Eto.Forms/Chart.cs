@@ -66,7 +66,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     private Font _legendFont = Fonts.Sans(11);
     private Color _legendBackColor = Color.FromArgb(255, 255, 255);
     private Color _legendTextColor = Color.FromArgb(35, 35, 35);
-    private Color _tooltipTextColor;
+    private Color _tooltipTextColor = SystemColors.ControlText;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Chart"/> class.
@@ -84,6 +84,8 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
         motionCanvas.SizeChanged += OnResized;
 
         UpdateLegendLayout();
+
+        BackgroundColor = Colors.White;
 
         if (!LiveCharts.IsConfigured) LiveCharts.Configure(LiveChartsSkiaSharp.DefaultPlatformBuilder);
 
