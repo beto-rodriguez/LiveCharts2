@@ -107,22 +107,29 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
         Load += Chart_Load;
     }
 
-    internal void UpdateLegendLayout()
+    private void UpdateLegendLayout()
     {
-        var l = (Control) this.legend;
+        var legend = (Control) this.legend;
 
-        switch (this.LegendPosition) // TODO
+        var canvas = new DynamicControl() { Control = motionCanvas, XScale = true, YScale = true };
+
+        switch (this.LegendPosition)
         {
             case LegendPosition.Top:
-                this.Content = new TableLayout(l, motionCanvas);
-                break;
-
-            case LegendPosition.Bottom:
-                this.Content = new DynamicLayout(motionCanvas, l);
+                this.Content = new DynamicLayout(legend, new DynamicRow(canvas));
                 break;
 
             case LegendPosition.Left:
+                this.Content = new DynamicLayout(new DynamicRow(legend, canvas));
+                break;
+
             case LegendPosition.Right:
+                this.Content = new DynamicLayout(new DynamicRow(canvas, legend));
+                break;
+
+            case LegendPosition.Bottom:
+                this.Content = new DynamicLayout(new DynamicRow(canvas), legend);
+                break;
 
             default: // hidden
                 this.Content = motionCanvas;
@@ -191,7 +198,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
 
     /// <inheritdoc cref="IChartView.LegendPosition" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public LegendPosition LegendPosition { get => _legendPosition; set { _legendPosition = value; OnPropertyChanged(); } }
+    public LegendPosition LegendPosition { get => _legendPosition; set { _legendPosition = value; UpdateLegendLayout(); OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.LegendOrientation" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

@@ -50,46 +50,20 @@ public class DefaultLegend : Panel, IChartLegend<SkiaSharpDrawingContext>
     {
         var wfChart = (Chart)chart.View;
 
-        var series = chart.ChartSeries;
-        var legendOrientation = chart.LegendOrientation;
-        var legendPosition = chart.LegendPosition;
-
-        switch (legendPosition)
+        if (chart.LegendOrientation == LegendOrientation.Auto)
         {
-            case LegendPosition.Hidden:
-                Visible = false;
-                break;
-            case LegendPosition.Top:
-                Visible = true;
-                if (legendOrientation == LegendOrientation.Auto) Orientation = LegendOrientation.Horizontal;
-                //todo Dock = DockStyle.Top;
-                break;
-            case LegendPosition.Left:
-                Visible = true;
-                if (legendOrientation == LegendOrientation.Auto) Orientation = LegendOrientation.Vertical;
-                //todo Dock = DockStyle.Left;
-                break;
-            case LegendPosition.Right:
-                Visible = true;
-                if (legendOrientation == LegendOrientation.Auto) Orientation = LegendOrientation.Vertical;
-                //todo Dock = DockStyle.Right;
-                break;
-            case LegendPosition.Bottom:
-                Visible = true;
-                if (legendOrientation == LegendOrientation.Auto) Orientation = LegendOrientation.Horizontal;
-                //todo Dock = DockStyle.Bottom;
-                break;
-            default:
-                break;
+            Orientation = chart.LegendPosition is LegendPosition.Top or LegendPosition.Bottom
+                ? LegendOrientation.Horizontal
+                : LegendOrientation.Vertical;
         }
 
-        DrawAndMesure(series, wfChart);
+        DrawAndMesure(chart.ChartSeries, wfChart);
         BackgroundColor = wfChart.LegendBackColor;
     }
 
     private void DrawAndMesure(IEnumerable<IChartSeries<SkiaSharpDrawingContext>> series, Chart chart)
     {
-#if false
+#if false //todo
         SuspendLayout();
         Content?.Dispose();
 

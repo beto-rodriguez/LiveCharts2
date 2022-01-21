@@ -21,14 +21,12 @@ public class CustomLegend : Panel, IChartLegend<SkiaSharpDrawingContext>
     {
         var wfChart = (Chart)chart.View;
 
-        var series = chart.ChartSeries;
-        var legendOrientation = chart.LegendOrientation;
+        if (chart.LegendOrientation == LegendOrientation.Auto)
+            Orientation = LegendOrientation.Vertical;
 
-        Visible = true;
-        if (legendOrientation == LegendOrientation.Auto) Orientation = LegendOrientation.Vertical;
-        //todo Dock = DockStyle.Right;
+        wfChart.LegendPosition = LegendPosition.Right;
 
-        DrawAndMesure(series, wfChart);
+        DrawAndMesure(chart.ChartSeries, wfChart);
 
         BackgroundColor = wfChart.LegendBackColor;
     }
