@@ -234,11 +234,11 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                 var x = secondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
                 var y = primaryScale.ToPixels(data.TargetPoint.PrimaryValue + s);
 
-                var visual = (LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>?)data.TargetPoint.Context.Visual;
+                var visual = (TBezierVisual?)data.TargetPoint.Context.Visual;
 
                 if (visual is null)
                 {
-                    var v = new LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>();
+                    var v = new TBezierVisual();
 
                     visual = v;
 
@@ -743,7 +743,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
     {
         var chart = chartPoint.Context.Chart;
 
-        if (chartPoint.Context.Visual is not LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs> visual)
+        if (chartPoint.Context.Visual is not TBezierVisual visual)
             throw new Exception("Unable to initialize the point instance.");
 
         _ = visual.Geometry
@@ -776,7 +776,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
     protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
     {
-        var visual = (LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>?)point.Context.Visual;
+        var visual = (TBezierVisual?)point.Context.Visual;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
@@ -874,7 +874,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         {
             if (point.IsNull)
             {
-                if (point.Context.Visual is LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs> visual)
+                if (point.Context.Visual is TBezierVisual visual)
                 {
                     var x = xScale.ToPixels(point.SecondaryValue);
                     var y = yScale.ToPixels(point.PrimaryValue);
