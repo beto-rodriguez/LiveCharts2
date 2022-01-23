@@ -43,8 +43,10 @@ namespace LiveChartsCore;
 /// <typeparam name="TBezierSegment">The type of the bezier segmen.</typeparam>
 /// <typeparam name="TMoveToCommand">The type of the move command.</typeparam>
 /// <typeparam name="TPathArgs">The type of the path arguments.</typeparam>
-public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>
-    : StrokeAndFillCartesianSeries<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel, TDrawingContext>, ILineSeries<TDrawingContext>
+/// <typeparam name="TBezierVisual">The type of the bezier.</typeparam>
+public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs, TBezierVisual>
+    : StrokeAndFillCartesianSeries<TModel, TBezierVisual, TLabel, TDrawingContext>, ILineSeries<TDrawingContext>
+        where TBezierVisual : LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, new()
         where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
         where TLineSegment : ILinePathSegment<TPathArgs>, new()
         where TBezierSegment : IBezierSegment<TPathArgs>, new()
@@ -62,7 +64,9 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
     private IPaint<TDrawingContext>? _geometryStroke;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="LineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs}"/> class.
+    /// Initializes a new instance of the
+    /// <see cref="LineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs, TBezierVisual}"/>
+    /// class.
     /// </summary>
     /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
     public LineSeries(bool isStacked = false)
@@ -407,7 +411,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
                     DataLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, label);
                     label.Text = DataLabelsFormatter(
-                        new ChartPoint<TModel, LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, TLabel>(data.TargetPoint));
+                        new ChartPoint<TModel, TBezierVisual, TLabel>(data.TargetPoint));
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
                     var labelPosition = GetLabelPosition(
@@ -809,7 +813,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         if (!_requestedCustomMeasureHandler)
         {
             var factory = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>();
-            _customMeasureHandler = factory.LineCustomMeasureHandler<TModel, TVisual, TLabel, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>(this);
+            _customMeasureHandler =
+                factory.LineCustomMeasureHandler<TModel, TVisual, TLabel, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs, TBezierVisual>(this);
             _requestedCustomMeasureHandler = true;
         }
 

@@ -24,7 +24,7 @@ public class RelayCommand : ICommand
 
         foreach (var point in points)
         {
-            if (point.Context.DataSource is City city)
+            if (point.Context.DataSource is Fruit city)
             {
                 Trace.WriteLine($"[chart.dataPointerDownCommand] clicked on {city.Name}");
                 continue;

@@ -36,9 +36,11 @@ namespace LiveChartsCore;
 /// <typeparam name="TStepLineSegment">The type of the step segment.</typeparam>
 /// <typeparam name="TMoveToCommand">The type of the move to command.</typeparam>
 /// <typeparam name="TPathArgs">The type of the path arguments.</typeparam>
-/// <seealso cref="LineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs}" />
-public class StackedStepAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TStepLineSegment, TMoveToCommand, TPathArgs>
-    : StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TStepLineSegment, TMoveToCommand, TPathArgs>
+/// <typeparam name="TStepSegmentVisual">The type of the bezier.</typeparam>
+/// <seealso cref="StepLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TStepLineSegment, TMoveToCommand, TPathArgs, TStepSegmentVisual}" />
+public class StackedStepAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TStepLineSegment, TMoveToCommand, TPathArgs, TStepSegmentVisual>
+    : StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TStepLineSegment, TMoveToCommand, TPathArgs, TStepSegmentVisual>
+        where TStepSegmentVisual : StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPathArgs>, new()
         where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
         where TLineSegment : ILinePathSegment<TPathArgs>, new()
         where TStepLineSegment : IStepLineSegment<TPathArgs>, new()
@@ -48,7 +50,7 @@ public class StackedStepAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPa
         where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="StackedAreaSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs}"/> class.
+    /// Initializes a new instance of the <see cref="StackedAreaSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs, TStepLineSegment}"/> class.
     /// </summary>
     public StackedStepAreaSeries()
         : base(true)

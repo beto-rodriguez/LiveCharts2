@@ -36,9 +36,11 @@ namespace LiveChartsCore;
 /// <typeparam name="TBezierSegment">The type of the bezier segment.</typeparam>
 /// <typeparam name="TMoveToCommand">The type of the move to command.</typeparam>
 /// <typeparam name="TPathArgs">The type of the path arguments.</typeparam>
-/// <seealso cref="LineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs}" />
-public class StackedAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>
-    : LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>
+/// /// <typeparam name="TBezierVisual">The type of the bezier.</typeparam>
+/// <seealso cref="LineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs, TBezierVisual}" />
+public class StackedAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs, TBezierVisual>
+    : LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs, TBezierVisual>
+        where TBezierVisual : LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, new()
         where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
         where TLineSegment : ILinePathSegment<TPathArgs>, new()
         where TBezierSegment : IBezierSegment<TPathArgs>, new()
@@ -48,7 +50,7 @@ public class StackedAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGe
         where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="StackedAreaSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs}"/> class.
+    /// Initializes a new instance of the <see cref="StackedAreaSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs, TBezierVisual}"/> class.
     /// </summary>
     public StackedAreaSeries()
         : base(true)

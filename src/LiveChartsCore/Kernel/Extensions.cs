@@ -326,6 +326,8 @@ public static class Extensions
 
     private static ChartPoint _findClosestTo(this IEnumerable<ChartPoint> points, LvcPoint point)
     {
-        return points.OrderBy(p => p.DistanceTo(point)).First();
+        var o = points.Select(p => new { distance = p.DistanceTo(point), point = p }).OrderBy(p => p.distance).ToArray();
+
+        return o.First().point; //points.OrderBy(p => p.DistanceTo(point)).ToArray().First();
     }
 }

@@ -43,8 +43,10 @@ namespace LiveChartsCore;
 /// <typeparam name="TStepLineSegment">The type of the step segment.</typeparam>
 /// <typeparam name="TMoveToCommand">The type of the move to command.</typeparam>
 /// <typeparam name="TPathArgs">The type of the path arguments.</typeparam>
-public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TStepLineSegment, TMoveToCommand, TPathArgs>
+/// /// <typeparam name="TStepSegmentVisual">The type of the bezier.</typeparam>
+public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TStepLineSegment, TMoveToCommand, TPathArgs, TStepSegmentVisual>
     : StrokeAndFillCartesianSeries<TModel, StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPathArgs>, TLabel, TDrawingContext>, IStepLineSeries<TDrawingContext>
+        where TStepSegmentVisual : StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPathArgs>, new()
         where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
         where TLineSegment : ILinePathSegment<TPathArgs>, new()
         where TStepLineSegment : IStepLineSegment<TPathArgs>, new()
@@ -61,7 +63,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     private bool _enableNullSplitting = true;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TStepLineSegment, TMoveToCommand, TPathArgs}"/> class.
+    /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TStepLineSegment, TMoveToCommand, TPathArgs, TStepSegmentVisual}"/> class.
     /// </summary>
     /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
     public StepLineSeries(bool isStacked = false)

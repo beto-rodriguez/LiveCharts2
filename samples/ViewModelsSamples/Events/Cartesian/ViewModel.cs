@@ -2,10 +2,14 @@
 using System.Diagnostics;
 using System.Windows.Input;
 using LiveChartsCore;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
+using SkiaSharp;
 
 namespace ViewModelsSamples.Events.Cartesian;
 
@@ -15,45 +19,73 @@ public class ViewModel
     {
         var data = new[]
         {
-                new City { Name = "Tokyo", Population = 4 },
-                new City { Name = "New York", Population = 6 },
-                new City { Name = "Seoul", Population = 2 },
-                new City { Name = "Moscow", Population = 8 },
-                new City { Name = "Shanghai", Population = 3 },
-                new City { Name = "Guadalajara", Population = 4 }
-            };
+            new Fruit { Name = "Apple", SalesPerDay = 4, Stock = 6 },
+            new Fruit { Name = "Orange", SalesPerDay = 6, Stock = 4 },
+            new Fruit { Name = "Pinaple", SalesPerDay = 2, Stock = 2 },
+            new Fruit { Name = "Potoato", SalesPerDay = 8, Stock = 4 },
+            new Fruit { Name = "Lettuce", SalesPerDay = 3, Stock = 6 },
+            new Fruit { Name = "Cherry", SalesPerDay = 4, Stock = 8 }
+        };
 
-        var columnSeries = new ColumnSeries<City>
+        var salesPerDaysSeries = new LineSeries<Fruit>
         {
+            Name = "Items sold per day",
             Values = data,
-            TooltipLabelFormatter = point => $"{point.Model.Name} {point.Model.Population} Million",
-            Mapping = (city, point) =>
+            TooltipLabelFormatter = point => $"{point.Model.Name}, sold {point.Model.SalesPerDay} items",
+            Mapping = (fruit, point) =>
             {
-                point.PrimaryValue = city.Population; // use the population property in this series // mark
+                point.PrimaryValue = fruit.SalesPerDay; // use the SalesPerDay property in this series // mark
                 point.SecondaryValue = point.Context.Index;
             }
         };
 
-        columnSeries.ChartPointPointerDown += ColumnSeries_ChartPointPointerDown;
-        columnSeries.DataPointerDown += ColumnSeries_DataPointerDown;
-
-        Series = new ISeries[]
+        var stockSeries = new LineSeries<Fruit>
         {
-            columnSeries,
-            new LineSeries<int> { Values = new[] { 6, 7, 2, 9, 6, 2 } },
+            Name = "Active stock",
+            Values = data,
+            TooltipLabelFormatter = point => $"{point.Model.Stock} items remaining",
+            Mapping = (fruit, point) =>
+            {
+                point.PrimaryValue = fruit.Stock; // use the Stock property in this series // mark
+                point.SecondaryValue = point.Context.Index;
+            }
         };
+
+        salesPerDaysSeries.ChartPointPointerDown += SalesPerDaysSeries_ChartPointPointerDown1;
+
+        Series = new ISeries[] { salesPerDaysSeries, stockSeries };
     }
 
-    private void ColumnSeries_ChartPointPointerDown(IChartView chart, ChartPoint<City, RoundedRectangleGeometry, LabelGeometry> point)
+    private void SalesPerDaysSeries_ChartPointPointerDown1(IChartView chart, ChartPoint<Fruit, BezierPoint<CircleGeometry>, LabelGeometry> point)
     {
+        throw new System.NotImplementedException();
+    }
+
+    private void SalesPerDaysSeries_ChartPointPointerDown(
+        IChartView chart, ChartPoint<
+            Fruit,
+            LineBezierVisualPoint<SkiaSharpDrawingContext, CircleGeometry, CubicBezierSegment, SKPath>,
+            LabelGeometry> point)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    private void ColumnSeries_ChartPointPointerDown(
+        IChartView chart,
+        ChartPoint<Fruit, CircleGeometry, LabelGeometry> point)
+    {
+        // the ChartPointPointerDown event is called when the user clicks over a chart point in the UI.
+
         Trace.WriteLine($"[series.ChartPointPointerDownEvent] clicked on {point.Model.Name}");
     }
 
     private void ColumnSeries_DataPointerDown(
         IChartView chart,
-        IEnumerable<ChartPoint<City, RoundedRectangleGeometry, LabelGeometry>> points)
+        IEnumerable<ChartPoint<Fruit, CircleGeometry, LabelGeometry>> points)
     {
-        // the event passes a collection of the points that were triggered by the pointer down event.
+        // When points overlap you can use the DataPointerDown event,
+        // it will pass all the points clicked even if they overlapped.
+
         foreach (var point in points)
         {
             Trace.WriteLine($"[series.DataPointerDownEvent] clicked on {point.Model.Name}");
