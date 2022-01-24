@@ -21,33 +21,15 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Measure;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
+using SkiaSharp;
 
-namespace LiveChartsCore.Kernel.Drawing;
+namespace LiveChartsCore.SkiaSharpView.Drawing;
 
 /// <summary>
-/// Defines a hover area.
+/// Defines a bezier point.
 /// </summary>
-public abstract class HoverArea
-{
-    /// <summary>
-    /// Gets the distance to a given point.
-    /// </summary>
-    /// <param name="point">The point to calculate the distance to.</param>
-    /// <returns>The distance in pixels.</returns>
-    public abstract double DistanceTo(LvcPoint point);
-
-    /// <summary>
-    /// Determines whether the pointer is over the area.
-    /// </summary>
-    /// <param name="pointerLocation">The pointer location.</param>
-    /// <param name="strategy">The strategy.</param>
-    /// <returns></returns>
-    public abstract bool IsPointerOver(LvcPoint pointerLocation, TooltipFindingStrategy strategy);
-
-    /// <summary>
-    /// Suggests the tooltip placement.
-    /// </summary>
-    /// <param name="context">The context.</param>
-    public abstract void SuggestTooltipPlacement(TooltipPlacementContext context);
-}
+/// <typeparam name="TGeometry">The type of the geometry.</typeparam>
+public class BezierPoint<TGeometry> : LineBezierVisualPoint<SkiaSharpDrawingContext, TGeometry, CubicBezierSegment, SKPath>
+    where TGeometry : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
+{ }

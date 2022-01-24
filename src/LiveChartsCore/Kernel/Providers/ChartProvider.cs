@@ -81,8 +81,9 @@ public abstract class ChartProvider<TDrawingContext>
     /// Gets the line series custom measure handler.
     /// </summary>
     /// <returns></returns>
-    public virtual Action<Chart<TDrawingContext>>? LineCustomMeasureHandler<TModel, TVisual, TLabel, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs>(
-        LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs> series)
+    public virtual Action<Chart<TDrawingContext>>? LineCustomMeasureHandler<TModel, TVisual, TLabel, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs, TBezierVisual>(
+        LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs, TBezierVisual> series)
+            where TBezierVisual : LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, new()
             where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
             where TLineSegment : ILinePathSegment<TPathArgs>, new()
             where TBezierSegment : IBezierSegment<TPathArgs>, new()

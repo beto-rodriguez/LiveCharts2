@@ -278,6 +278,12 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
     public static readonly AvaloniaProperty<ICommand?> DataPointerDownCommandProperty =
         AvaloniaProperty.Register<PieChart, ICommand?>(nameof(DataPointerDownCommand), null, inherits: true);
 
+    /// <summary>
+    /// The chart point pointer down command property
+    /// </summary>
+    public static readonly AvaloniaProperty<ICommand?>ChartPointPointerDownCommandProperty =
+        AvaloniaProperty.Register<PieChart, ICommand?>(nameof(ChartPointPointerDownCommand), null, inherits: true);
+
     #endregion
 
     #region events
@@ -293,6 +299,9 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
 
     /// <inheritdoc cref="IChartView.DataPointerDown" />
     public event ChartPointsHandler? DataPointerDown;
+
+    /// <inheritdoc cref="IChartView.ChartPointPointerDown" />
+    public event ChartPointHandler? ChartPointPointerDown;
 
     #endregion
 
@@ -604,6 +613,15 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
         set => SetValue(DataPointerDownCommandProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets a command to execute when the pointer goes down on a chart point.
+    /// </summary>
+    public ICommand? ChartPointPointerDownCommand
+    {
+        get => (ICommand?)GetValue(ChartPointPointerDownCommandProperty);
+        set => SetValue(ChartPointPointerDownCommandProperty, value);
+    }
+
     #endregion
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
@@ -746,10 +764,13 @@ public class PieChart : UserControl, IPieChartView<SkiaSharpDrawingContext>, IAv
         _seriesObserver = null!;
     }
 
-    void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
+    void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
     {
         DataPointerDown?.Invoke(this, points);
-        if (DataPointerDownCommand is null) return;
-        if (DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
+        if (DataPointerDownCommand is not null && DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
+
+        var closest = points.FindClosestTo(pointer);
+        ChartPointPointerDown?.Invoke(this, closest);
+        if (ChartPointPointerDownCommand is not null && ChartPointPointerDownCommand.CanExecute(closest)) ChartPointPointerDownCommand.Execute(closest);
     }
 }

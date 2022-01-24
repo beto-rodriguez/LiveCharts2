@@ -131,21 +131,9 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     public override IEnumerable<ChartPoint> FindHoveredPointsBy(LvcPoint pointerPosition)
     {
         var actualStrategy = TooltipFindingStrategy;
+
         if (actualStrategy == TooltipFindingStrategy.Automatic)
-        {
-            var areAllX = true;
-            var areAllY = true;
-
-            foreach (var series in Series)
-            {
-                areAllX = areAllX && (series.SeriesProperties & SeriesProperties.PrefersXStrategyTooltips) != 0;
-                areAllY = areAllY && (series.SeriesProperties & SeriesProperties.PrefersYStrategyTooltips) != 0;
-            }
-
-            actualStrategy = areAllX
-                ? TooltipFindingStrategy.CompareOnlyX
-                : (areAllY ? TooltipFindingStrategy.CompareOnlyY : TooltipFindingStrategy.CompareAll);
-        }
+            actualStrategy = Series.GetTooltipFindingStrategy();
 
         return ChartSeries
             .Where(series => series.IsHoverable)

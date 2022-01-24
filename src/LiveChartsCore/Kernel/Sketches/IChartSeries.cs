@@ -90,5 +90,8 @@ public interface IChartSeries<TDrawingContext> : ISeries, IChartElement<TDrawing
     /// <summary>
     /// Called when the pointer goes down on a data point or points.
     /// </summary>
-    void OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points);
+    /// <param name="chart">The chart.</param>
+    /// <param name="points">The found points.</param>
+    /// <param name="pointerLocation">The pointer location.</param>
+    void OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points, LvcPoint pointerLocation);
 }

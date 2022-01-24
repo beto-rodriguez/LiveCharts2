@@ -5,6 +5,7 @@ using LiveChartsCore;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Events.Cartesian;
@@ -15,43 +16,59 @@ public class ViewModel
     {
         var data = new[]
         {
-                new City { Name = "Tokyo", Population = 4 },
-                new City { Name = "New York", Population = 6 },
-                new City { Name = "Seoul", Population = 2 },
-                new City { Name = "Moscow", Population = 8 },
-                new City { Name = "Shanghai", Population = 3 },
-                new City { Name = "Guadalajara", Population = 4 }
-            };
+            new Fruit { Name = "Apple", SalesPerDay = 4, Stock = 6 },
+            new Fruit { Name = "Orange", SalesPerDay = 6, Stock = 4 },
+            new Fruit { Name = "Pinaple", SalesPerDay = 2, Stock = 2 },
+            new Fruit { Name = "Potoato", SalesPerDay = 8, Stock = 4 },
+            new Fruit { Name = "Lettuce", SalesPerDay = 3, Stock = 6 },
+            new Fruit { Name = "Cherry", SalesPerDay = 4, Stock = 8 }
+        };
 
-        var columnSeries = new ColumnSeries<City>
+        var salesPerDaysSeries = new LineSeries<Fruit>
         {
+            Name = "Items sold per day",
             Values = data,
-            TooltipLabelFormatter = point => $"{point.Model.Name} {point.Model.Population} Million",
-            Mapping = (city, point) =>
+            TooltipLabelFormatter = point => $"{point.Model.Name}, sold {point.Model.SalesPerDay} items",
+            Mapping = (fruit, point) =>
             {
-                point.PrimaryValue = city.Population; // use the population property in this series // mark
+                point.PrimaryValue = fruit.SalesPerDay; // use the SalesPerDay property in this series // mark
                 point.SecondaryValue = point.Context.Index;
             }
         };
 
-        columnSeries.DataPointerDown += ColumnSeries_DataPointerDown;
-
-        Series = new ISeries[]
+        var stockSeries = new StepLineSeries<Fruit>
         {
-                columnSeries,
-                new LineSeries<int> { Values = new[] { 6, 7, 2, 9, 6, 2 } },
+            Name = "Active stock",
+            Values = data,
+            TooltipLabelFormatter = point => $"{point.Model.Stock} items remaining",
+            Mapping = (fruit, point) =>
+            {
+                point.PrimaryValue = fruit.Stock; // use the Stock property in this series // mark
+                point.SecondaryValue = point.Context.Index;
+            }
         };
+
+        salesPerDaysSeries.ChartPointPointerDown += SalesPerDaysSeries_ChartPointPointerDown;
+        stockSeries.ChartPointPointerDown += StockSeries_ChartPointPointerDown;
+
+        Series = new ISeries[] { salesPerDaysSeries, stockSeries };
     }
 
-    private void ColumnSeries_DataPointerDown(
+    private void SalesPerDaysSeries_ChartPointPointerDown(
         IChartView chart,
-        IEnumerable<ChartPoint<City, RoundedRectangleGeometry, LabelGeometry>> points)
+        ChartPoint<Fruit, BezierPoint<CircleGeometry>, LabelGeometry> point)
     {
-        // the event passes a collection of the points that were triggered by the pointer down event.
-        foreach (var point in points)
-        {
-            Trace.WriteLine($"[series.dataPointerDownEvent] clicked on {point.Model.Name}");
-        }
+        Trace.WriteLine(
+            $"[salesPerDay ChartPointPointerDown] clicked on {point.Model.Name}, {point.Model.SalesPerDay} items sold per day");
+    }
+
+
+    private void StockSeries_ChartPointPointerDown(
+        IChartView chart,
+        ChartPoint<Fruit, StepPoint<CircleGeometry>, LabelGeometry> point)
+    {
+        Trace.WriteLine(
+            $"[stock ChartPointPointerDown] clicked on {point.Model.Name},  current stock {point.Model.Stock}");
     }
 
     public IEnumerable<ISeries> Series { get; set; }

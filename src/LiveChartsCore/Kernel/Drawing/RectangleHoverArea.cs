@@ -101,6 +101,15 @@ public class RectangleHoverArea : HoverArea
         return this;
     }
 
+    /// <inheritdoc cref="HoverArea.DistanceTo(LvcPoint)"/>
+    public override double DistanceTo(LvcPoint point)
+    {
+        var cx = X + Width * 0.5;
+        var cy = Y + Height * 0.5;
+
+        return Math.Sqrt(Math.Pow(point.X - cx, 2) + Math.Pow(point.Y - cy, 2));
+    }
+
     /// <inheritdoc cref="HoverArea.IsPointerOver(LvcPoint, TooltipFindingStrategy)"/>
     public override bool IsPointerOver(LvcPoint pointerLocation, TooltipFindingStrategy strategy)
     {

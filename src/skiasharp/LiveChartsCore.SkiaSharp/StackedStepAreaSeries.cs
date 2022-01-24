@@ -78,7 +78,7 @@ public class StackedStepAreaSeries<TModel, TVisual>
 /// The type of the data label of every point.
 /// </typeparam>
 public class StackedStepAreaSeries<TModel, TVisual, TLabel>
-    : StackedStepAreaSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, PathGeometry, LineSegment, StepLineSegment, MoveToPathCommand, SKPath>
+    : StackedStepAreaSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, PathGeometry, LineSegment, StepLineSegment, MoveToPathCommand, SKPath, StepPoint<TVisual>>
     where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 {

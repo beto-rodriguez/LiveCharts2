@@ -23,7 +23,7 @@ namespace UWPSample.Events.Cartesian
 
             foreach (var point in points)
             {
-                if (point.Context.DataSource is City city)
+                if (point.Context.DataSource is Fruit city)
                 {
                     Trace.WriteLine($"[chart.dataPointerDownEvent] clicked on {city.Name}");
                     continue;

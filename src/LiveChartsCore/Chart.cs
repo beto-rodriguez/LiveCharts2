@@ -341,15 +341,22 @@ public abstract class Chart<TDrawingContext> : IChart
     {
         PointerDown?.Invoke(point);
 
+        var strategy = ChartSeries.GetTooltipFindingStrategy();
+
         foreach (var series in ChartSeries)
         {
             if (!series.RequiresFindClosestOnPointerDown) continue;
 
-            var points = series.FindHoveredPoints(this, point, TooltipFindingStrategy.CompareOnlyX);
-            series.OnDataPointerDown(View, points);
+            var points = series.FindHoveredPoints(this, point, strategy);
+            if (!points.Any()) continue;
+
+            series.OnDataPointerDown(View, points, point);
         }
 
-        View.OnDataPointerDown(ChartSeries.SelectMany(x => x.FindHoveredPoints(this, point, TooltipFindingStrategy.CompareOnlyX)));
+        var iterable = ChartSeries.SelectMany(x => x.FindHoveredPoints(this, point, strategy));
+        if (!iterable.Any()) return;
+
+        View.OnDataPointerDown(iterable, point);
     }
 
     internal void InvokePointerMove(LvcPoint point)
@@ -433,7 +440,7 @@ public abstract class Chart<TDrawingContext> : IChart
     }
 
     /// <summary>
-    /// SDetermines whether the series miniature changed or not.
+    ///SDetermines whether the series miniature changed or not.
     /// </summary>
     /// <param name="newSeries">The new series.</param>
     /// <param name="position">The legend position.</param>

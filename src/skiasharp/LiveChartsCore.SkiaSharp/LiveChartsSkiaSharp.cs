@@ -27,6 +27,8 @@ using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
+using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
@@ -138,5 +140,84 @@ public static class LiveChartsSkiaSharp
                 return series;
             })
             .ToArray());
+    }
+
+    /// <summary>
+    /// Calculates the distance in pixels from the target <see cref="ChartPoint"/> to the given location in the UI.
+    /// </summary>
+    /// <param name="target">The target.</param>
+    /// <param name="location">The location.</param>
+    /// <returns>The distance in pixels.</returns>
+    public static double GetDistanceTo(this ChartPoint target, LvcPoint location)
+    {
+        double[] dataCoordinates;
+        double x, y;
+
+        if (target.Context is ICartesianChartView<SkiaSharpDrawingContext> cartesianChart)
+        {
+            dataCoordinates = cartesianChart.ScaleUIPoint(location);
+
+            var cartesianSeries = (ICartesianSeries<SkiaSharpDrawingContext>)target.Context.Series;
+
+            if (target.Context.Series.SeriesProperties.HasFlag(SeriesProperties.PrimaryAxisHorizontalOrientation))
+            {
+                var primaryAxis = cartesianChart.Core.YAxes[cartesianSeries.ScalesYAt];
+                var secondaryAxis = cartesianChart.Core.XAxes[cartesianSeries.ScalesXAt];
+
+                var drawLocation = cartesianChart.Core.DrawMarginLocation;
+                var drawMarginSize = cartesianChart.Core.DrawMarginSize;
+                var secondaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
+                var primaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
+
+                x = secondaryScale.ToPixels(target.SecondaryValue);
+                y = primaryScale.ToPixels(target.PrimaryValue);
+            }
+            else
+            {
+                var primaryAxis = cartesianChart.Core.YAxes[cartesianSeries.ScalesXAt];
+                var secondaryAxis = cartesianChart.Core.XAxes[cartesianSeries.ScalesYAt];
+
+                var drawLocation = cartesianChart.Core.DrawMarginLocation;
+                var drawMarginSize = cartesianChart.Core.DrawMarginSize;
+
+                var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
+                var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
+
+                x = secondaryScale.ToPixels(target.SecondaryValue);
+                y = primaryScale.ToPixels(target.PrimaryValue);
+            }
+        }
+        else if (target.Context is IPolarChartView<SkiaSharpDrawingContext> polarChart)
+        {
+            dataCoordinates = polarChart.ScaleUIPoint(location);
+
+            var polarSeries = (IPolarSeries<SkiaSharpDrawingContext>)target.Context.Series;
+
+            var angleAxis = polarChart.Core.AngleAxes[polarSeries.ScalesAngleAt];
+            var radiusAxis = polarChart.Core.RadiusAxes[polarSeries.ScalesRadiusAt];
+
+            var drawLocation = polarChart.Core.DrawMarginLocation;
+            var drawMarginSize = polarChart.Core.DrawMarginSize;
+
+            var scaler = new PolarScaler(
+                drawLocation, drawMarginSize, angleAxis, radiusAxis,
+                polarChart.Core.InnerRadius, polarChart.Core.InitialRotation, polarChart.Core.TotalAnge);
+
+            var scaled = scaler.ToPixels(target);
+            x = scaled.X;
+            y = scaled.Y;
+        }
+        else
+        {
+            throw new NotImplementedException();
+        }
+
+        // calculate the distance
+        var dx = dataCoordinates[0] - x;
+        var dy = dataCoordinates[1] - y;
+
+        var distance = Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2));
+
+        return distance;
     }
 }

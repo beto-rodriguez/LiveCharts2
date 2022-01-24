@@ -126,10 +126,16 @@ public interface IChartView
     event ChartPointsHandler? DataPointerDown;
 
     /// <summary>
+    /// Occurs when the pointer goes down over a chart point, if there are multiple points, the closest one will be selected.
+    /// </summary>
+    event ChartPointHandler? ChartPointPointerDown;
+
+    /// <summary>
     /// Called when the pointer goes down on a data point or points.
     /// </summary>
-    /// <param name="points"></param>
-    void OnDataPointerDown(IEnumerable<ChartPoint> points);
+    /// <param name="points">The found points.</param>
+    /// <param name="pointer">The ppointer location.</param>
+    void OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer);
 
     /// <summary>
     /// Gets or sets the Synchronization Context, use this property to

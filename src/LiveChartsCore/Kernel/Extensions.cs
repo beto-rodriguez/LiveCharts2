@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -277,5 +278,56 @@ public static class Extensions
     public static bool IsFinancialSeries(this ISeries series)
     {
         return (series.SeriesProperties & SeriesProperties.Financial) != 0;
+    }
+
+    /// <summary>
+    /// Calculates the tooltips finding strategy based on the series properties.
+    /// </summary>
+    /// <param name="seriesCollection">The series collection</param>
+    /// <returns></returns>
+    public static TooltipFindingStrategy GetTooltipFindingStrategy(this IEnumerable<ISeries> seriesCollection)
+    {
+        var areAllX = true;
+        var areAllY = true;
+
+        foreach (var series in seriesCollection)
+        {
+            areAllX = areAllX && (series.SeriesProperties & SeriesProperties.PrefersXStrategyTooltips) != 0;
+            areAllY = areAllY && (series.SeriesProperties & SeriesProperties.PrefersYStrategyTooltips) != 0;
+        }
+
+        return areAllX
+            ? TooltipFindingStrategy.CompareOnlyX
+            : (areAllY ? TooltipFindingStrategy.CompareOnlyY : TooltipFindingStrategy.CompareAll);
+    }
+
+    /// <summary>
+    /// Finds the closest point to the specified location in UI coordinates.
+    /// </summary>
+    /// <param name="points">The points to look in to.</param>bcv 
+    /// <param name="point">The location.</param>
+    /// <returns></returns>
+    public static ChartPoint FindClosestTo(this IEnumerable<ChartPoint> points, LvcPoint point)
+    {
+        return _findClosestTo(points, point);
+    }
+
+    /// <summary>
+    /// Finds the closest point to the specified location in UI coordinates.
+    /// </summary>
+    /// <param name="points">The points to look in to.</param>bcv 
+    /// <param name="point">The location.</param>
+    /// <returns></returns>
+    public static ChartPoint<TModel, TVisual, TLabel> FindClosestTo<TModel, TVisual, TLabel>(
+        this IEnumerable<ChartPoint> points, LvcPoint point)
+    {
+        return  new ChartPoint<TModel, TVisual, TLabel>(_findClosestTo(points, point));
+    }
+
+    private static ChartPoint _findClosestTo(this IEnumerable<ChartPoint> points, LvcPoint point)
+    {
+        var o = points.Select(p => new { distance = p.DistanceTo(point), point = p }).OrderBy(p => p.distance).ToArray();
+
+        return o.First().point; //points.OrderBy(p => p.DistanceTo(point)).ToArray().First();
     }
 }

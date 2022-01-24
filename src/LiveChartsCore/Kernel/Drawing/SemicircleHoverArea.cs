@@ -85,6 +85,20 @@ public class SemicircleHoverArea : HoverArea
         return this;
     }
 
+    /// <inheritdoc cref="HoverArea.DistanceTo(LvcPoint)"/>
+    public override double DistanceTo(LvcPoint point)
+    {
+        var a = (StartAngle + EndAngle) * 0.5;
+        var r = Radius * 0.5f;
+
+        a *= Math.PI / 180d;
+
+        var y = r * Math.Cos(a);
+        var x = r * Math.Sin(a);
+
+        return Math.Sqrt(Math.Pow(point.X - x, 2) + Math.Pow(point.Y - y, 2));
+    }
+
     /// <inheritdoc cref="HoverArea.IsPointerOver(LvcPoint, TooltipFindingStrategy)"/>
     public override bool IsPointerOver(LvcPoint pointerLocation, TooltipFindingStrategy strategy)
     {

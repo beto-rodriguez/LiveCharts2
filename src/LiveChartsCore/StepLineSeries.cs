@@ -43,8 +43,10 @@ namespace LiveChartsCore;
 /// <typeparam name="TStepLineSegment">The type of the step segment.</typeparam>
 /// <typeparam name="TMoveToCommand">The type of the move to command.</typeparam>
 /// <typeparam name="TPathArgs">The type of the path arguments.</typeparam>
-public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TStepLineSegment, TMoveToCommand, TPathArgs>
-    : StrokeAndFillCartesianSeries<TModel, StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPathArgs>, TLabel, TDrawingContext>, IStepLineSeries<TDrawingContext>
+/// /// <typeparam name="TStepSegmentVisual">The type of the bezier.</typeparam>
+public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TStepLineSegment, TMoveToCommand, TPathArgs, TStepSegmentVisual>
+    : StrokeAndFillCartesianSeries<TModel, TStepSegmentVisual, TLabel, TDrawingContext>, IStepLineSeries<TDrawingContext>
+        where TStepSegmentVisual : StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPathArgs>, new()
         where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
         where TLineSegment : ILinePathSegment<TPathArgs>, new()
         where TStepLineSegment : IStepLineSegment<TPathArgs>, new()
@@ -61,7 +63,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     private bool _enableNullSplitting = true;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TStepLineSegment, TMoveToCommand, TPathArgs}"/> class.
+    /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TStepLineSegment, TMoveToCommand, TPathArgs, TStepSegmentVisual}"/> class.
     /// </summary>
     /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
     public StepLineSeries(bool isStacked = false)
@@ -215,11 +217,11 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 var x = secondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
                 var y = primaryScale.ToPixels(data.TargetPoint.PrimaryValue + s);
 
-                var visual = (StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPathArgs>?)data.TargetPoint.Context.Visual;
+                var visual = (TStepSegmentVisual?)data.TargetPoint.Context.Visual;
 
                 if (visual is null)
                 {
-                    var v = new StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPathArgs>();
+                    var v = new TStepSegmentVisual();
 
                     visual = v;
 
@@ -386,7 +388,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     }
 
                     DataLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, label);
-                    label.Text = DataLabelsFormatter(new ChartPoint<TModel, StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPathArgs>, TLabel>(data.TargetPoint));
+                    label.Text = DataLabelsFormatter(new ChartPoint<TModel, TStepSegmentVisual, TLabel>(data.TargetPoint));
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
                     var labelPosition = GetLabelPosition(
@@ -669,7 +671,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     {
         var chart = chartPoint.Context.Chart;
 
-        if (chartPoint.Context.Visual is not StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPathArgs> visual)
+        if (chartPoint.Context.Visual is not TStepSegmentVisual visual)
             throw new Exception("Unable to initialize the point instance.");
 
         _ = visual.Geometry
@@ -700,7 +702,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
     protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
     {
-        var visual = (StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPathArgs>?)point.Context.Visual;
+        var visual = (TStepSegmentVisual?)point.Context.Visual;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
@@ -775,7 +777,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         {
             if (point.IsNull)
             {
-                if (point.Context.Visual is StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPathArgs> visual)
+                if (point.Context.Visual is TStepSegmentVisual visual)
                 {
                     var x = xScale.ToPixels(point.SecondaryValue);
                     var y = yScale.ToPixels(point.PrimaryValue);
