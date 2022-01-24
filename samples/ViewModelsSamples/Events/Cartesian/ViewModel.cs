@@ -2,14 +2,11 @@
 using System.Diagnostics;
 using System.Windows.Input;
 using LiveChartsCore;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
-using SkiaSharp;
 
 namespace ViewModelsSamples.Events.Cartesian;
 
@@ -39,7 +36,7 @@ public class ViewModel
             }
         };
 
-        var stockSeries = new LineSeries<Fruit>
+        var stockSeries = new StepLineSeries<Fruit>
         {
             Name = "Active stock",
             Values = data,
@@ -51,45 +48,27 @@ public class ViewModel
             }
         };
 
-        salesPerDaysSeries.ChartPointPointerDown += SalesPerDaysSeries_ChartPointPointerDown1;
+        salesPerDaysSeries.ChartPointPointerDown += SalesPerDaysSeries_ChartPointPointerDown;
+        stockSeries.ChartPointPointerDown += StockSeries_ChartPointPointerDown;
 
         Series = new ISeries[] { salesPerDaysSeries, stockSeries };
     }
 
-    private void SalesPerDaysSeries_ChartPointPointerDown1(IChartView chart, ChartPoint<Fruit, BezierPoint<CircleGeometry>, LabelGeometry> point)
-    {
-        throw new System.NotImplementedException();
-    }
-
     private void SalesPerDaysSeries_ChartPointPointerDown(
-        IChartView chart, ChartPoint<
-            Fruit,
-            LineBezierVisualPoint<SkiaSharpDrawingContext, CircleGeometry, CubicBezierSegment, SKPath>,
-            LabelGeometry> point)
+        IChartView chart,
+        ChartPoint<Fruit, BezierPoint<CircleGeometry>, LabelGeometry> point)
     {
-        throw new System.NotImplementedException();
+        Trace.WriteLine(
+            $"[salesPerDay ChartPointPointerDown] clicked on {point.Model.Name}, {point.Model.SalesPerDay} items sold per day");
     }
 
-    private void ColumnSeries_ChartPointPointerDown(
+
+    private void StockSeries_ChartPointPointerDown(
         IChartView chart,
-        ChartPoint<Fruit, CircleGeometry, LabelGeometry> point)
+        ChartPoint<Fruit, StepPoint<CircleGeometry>, LabelGeometry> point)
     {
-        // the ChartPointPointerDown event is called when the user clicks over a chart point in the UI.
-
-        Trace.WriteLine($"[series.ChartPointPointerDownEvent] clicked on {point.Model.Name}");
-    }
-
-    private void ColumnSeries_DataPointerDown(
-        IChartView chart,
-        IEnumerable<ChartPoint<Fruit, CircleGeometry, LabelGeometry>> points)
-    {
-        // When points overlap you can use the DataPointerDown event,
-        // it will pass all the points clicked even if they overlapped.
-
-        foreach (var point in points)
-        {
-            Trace.WriteLine($"[series.DataPointerDownEvent] clicked on {point.Model.Name}");
-        }
+        Trace.WriteLine(
+            $"[stock ChartPointPointerDown] clicked on {point.Model.Name},  current stock {point.Model.Stock}");
     }
 
     public IEnumerable<ISeries> Series { get; set; }
