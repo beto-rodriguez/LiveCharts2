@@ -7,7 +7,7 @@ LiveCharts2 (v2) is the evolution of [LiveCharts](https://github.com/Live-Charts
 
 ### Extremely flexible data visualization library
 
-The following image is a preview, `v2.0` is beta now, you can install it from NuGet: https://github.com/beto-rodriguez/LiveCharts2/issues/35, it support WPF, WinForms, Avalonia, WinUI, UWP, Xamarin and Blazor Wasm for now but MAUI ([#279](https://github.com/beto-rodriguez/LiveCharts2/pull/279)) will also be supported.
+The following image is a preview, `v2.0` is beta now, you can install it from NuGet: https://github.com/beto-rodriguez/LiveCharts2/issues/35, it support WPF, WinForms, Avalonia, WinUI, UWP, Xamarin and Blazor Wasm and MAUI.
 
 here is a preview (1.4MB gif, wait for it to load if you see a blank space bellow this text...):
 
@@ -24,6 +24,7 @@ LiveChartsCore.SkiaSharpView.XamarinForms<br/>
 LiveChartsCore.SkiaSharpView.UWP<br/>
 LiveChartsCore.SkiaSharpView.WinUI<br/>
 LiveChartsCore.SkiaSharpView.Blazor<br/>
+LiveChartsCore.SkiaSharpView.Maui<br/>
 
 You can also use LiveCharts 2 on a console app or on the server side installing only the core packages, and using the `ISkiaSharpChart` objects (see [this sample](https://github.com/beto-rodriguez/LiveCharts2/blob/master/samples/WPFSample/General/ChartToImage/View.xaml.cs#L28)).
 
