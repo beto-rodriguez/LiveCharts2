@@ -34,9 +34,6 @@ namespace LiveChartsCore.SkiaSharpView.Eto.Forms;
 /// <inheritdoc cref="IChartTooltip{TDrawingContext}" />
 public class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>
 {
-    private Panel? _tooltipContainer;
-    private Label label1 = new Label();
-
     /// <summary>
     /// Initializes a new instance of the <see cref="DefaultTooltip"/> class.
     /// </summary>
@@ -45,10 +42,6 @@ public class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>
         BackgroundColor = Colors.Transparent;
         WindowStyle = WindowStyle.None;
         ShowInTaskbar = false;
-
-        var drawable = new global::Eto.Forms.Drawable();
-        drawable.Paint += DefaultTooltip_Paint;
-        Content = drawable;
     }
 
     void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
@@ -61,92 +54,64 @@ public class DefaultTooltip : Form, IChartTooltip<SkiaSharpDrawingContext>
         if (chart is CartesianChart<SkiaSharpDrawingContext> or PolarChart<SkiaSharpDrawingContext>)
         {
             location = tooltipPoints.GetCartesianTooltipLocation(
-                chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height), chart.ControlSize);
+                chart.TooltipPosition, new LvcSize(size.Width, size.Height), chart.ControlSize);
         }
         if (chart is PieChart<SkiaSharpDrawingContext>)
         {
             location = tooltipPoints.GetPieTooltipLocation(
-                chart.TooltipPosition, new LvcSize((float)size.Width, (float)size.Height));
+                chart.TooltipPosition, new LvcSize(size.Width, size.Height));
         }
         if (location is null) throw new Exception("location not supported");
-        Height = (int)size.Height;
-        Width = (int)size.Width;
-        if (_tooltipContainer is not null) _tooltipContainer.BackgroundColor = wfChart.TooltipBackColor;
 
         var l = wfChart.PointToScreen(Point.Empty);
         var x = l.X + location.Value.X;
         var y = l.Y + location.Value.Y;
         Location = new Point((int)x, (int)y);
+
         Show();
     }
     private SizeF DrawAndMeasure(IEnumerable<ChartPoint> tooltipPoints, Chart chart)
     {
-        return SizeF.Empty; // TODO
-#if false
-        SuspendLayout();
-        Controls.Clear();
-
         var h = 0f;
         var w = 0f;
 
-        using var g = CreateGraphics();
-
-        var container = new Panel { Location = new Point(10, 10) };
-        _tooltipContainer = container;
-        Controls.Add(container);
+        var container = new DynamicLayout() { BackgroundColor = chart.BackgroundColor, Padding = new global::Eto.Drawing.Padding(4) };
 
         foreach (var point in tooltipPoints)
         {
             var text = point.AsTooltipString;
-            var size = g.MeasureString(text, chart.TooltipFont);
+            var size = chart.TooltipFont.MeasureString(text);
 
             var drawableSeries = (IChartSeries<SkiaSharpDrawingContext>)point.Context.Series;
 
-            container.Controls.Add(new MotionCanvas
+            var marker = new MotionCanvas
             {
-                Location = new Point(8, (int)h + 6),
                 PaintTasks = drawableSeries.CanvasSchedule.PaintSchedules,
                 Width = (int)drawableSeries.CanvasSchedule.Width,
                 Height = (int)drawableSeries.CanvasSchedule.Height
-            });
-            container.Controls.Add(new Label
+            };
+            var label = new Label
             {
                 Text = text,
                 Font = chart.TooltipFont,
-                ForeColor = chart.TooltipTextColor,
-                Location = new Point(6 + (int)drawableSeries.CanvasSchedule.Width + 6, (int)h + 6),
-                AutoSize = true
-            });
+                TextColor = chart.TooltipTextColor,
+            };
 
-            var thisW = size.Width + 18 + (int)drawableSeries.CanvasSchedule.Width;
-            h += size.Height + 6;
-            w = thisW > w ? thisW : w;
+            _ = container.AddRow(marker, label);
+
+            var thisW = size.Width + (float) drawableSeries.CanvasSchedule.Width;
+
+            h += Math.Max(marker.Height, size.Height);
+            w = Math.Max(thisW, w);
         }
 
-        h += 12;
-        container.Width = (int)w + 4;
-        container.Height = (int)h;
+        Content = container;
 
-        ResumeLayout();
-        return new SizeF(w + 20, h + 20);
-#endif
+        return new SizeF(w + 25, h + 25);
     }
 
     void IChartTooltip<SkiaSharpDrawingContext>.Hide()
     {
-        Location = new Point(10000, 10000);
-    }
-
-    private void DefaultTooltip_Paint(object sender, PaintEventArgs e)
-    {
-        if (_tooltipContainer is null) return;
-
-        using var p1 = new Pen(Color.FromArgb(220, 220, 220));
-
-        e.Graphics.DrawRectangle(
-            p1,
-            new Rectangle(
-                _tooltipContainer.Location.X - 1, _tooltipContainer.Location.Y - 1,
-                _tooltipContainer.Width + 1, _tooltipContainer.Height + 1));
+        Visible = false;
     }
 }
