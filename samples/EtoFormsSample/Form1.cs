@@ -11,7 +11,7 @@ public class Form1 : Form
 
     public Form1()
     {
-        Title = "Eto.Forms Sample";
+        Title = $"Eto.Forms Sample ({Eto.Platform.Instance} / {System.Runtime.InteropServices.RuntimeInformation.OSDescription})";
 
         Size = new Size(800, 600);
 
