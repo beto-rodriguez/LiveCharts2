@@ -29,13 +29,14 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 namespace LiveChartsCore.SkiaSharpView.Eto.Forms;
 
 /// <inheritdoc cref="IChartLegend{TDrawingContext}" />
-public class DefaultLegend : Panel, IChartLegend<SkiaSharpDrawingContext>
+public class DefaultLegend : DynamicLayout, IChartLegend<SkiaSharpDrawingContext>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="DefaultLegend"/> class.
     /// </summary>
     public DefaultLegend()
     {
+        Padding = 4;
     }
 
     /// <summary>
@@ -57,105 +58,32 @@ public class DefaultLegend : Panel, IChartLegend<SkiaSharpDrawingContext>
                 : LegendOrientation.Vertical;
         }
 
-        DrawAndMeasure(chart.ChartSeries, wfChart);
         BackgroundColor = wfChart.LegendBackColor;
+        DrawAndMeasure(chart.ChartSeries, wfChart);
     }
 
     private void DrawAndMeasure(IEnumerable<IChartSeries<SkiaSharpDrawingContext>> series, Chart chart)
     {
-#if false //todo
-        SuspendLayout();
-        Content?.Dispose();
+        Clear();
 
-        var h = 0f;
-        var w = 0f;
-
-        try
+        foreach (var s in series)
         {
-            if (Orientation == LegendOrientation.Vertical)
+            var marker = new MotionCanvas
             {
-                var parent = new Panel { BackColor = chart.LegendBackColor };
-                Controls.Add(parent);
-                using var g = CreateGraphics();
-                foreach (var s in series)
-                {
-                    var size = g.MeasureString(s.Name, chart.LegendFont);
-
-                    var p = new Panel { Location = new Point(0, (int)h) };
-                    parent.Controls.Add(p);
-
-                    p.Controls.Add(new MotionCanvas
-                    {
-                        Location = new Point(6, 0),
-                        PaintTasks = s.CanvasSchedule.PaintSchedules,
-                        Width = (int)s.CanvasSchedule.Width,
-                        Height = (int)s.CanvasSchedule.Height
-                    });
-                    p.Controls.Add(new Label
-                    {
-                        Text = s.Name,
-                        Font = chart.LegendFont,
-                        ForeColor = chart.LegendTextColor,
-                        Location = new Point(6 + (int)s.CanvasSchedule.Width + 6, 0),
-                        AutoSize = true
-                    });
-
-                    var thisW = size.Width + 36 + (int)s.CanvasSchedule.Width;
-                    p.Width = (int)thisW + 6;
-                    p.Height = (int)size.Height + 6;
-                    h += size.Height + 6;
-                    w = thisW > w ? thisW : w;
-                }
-                h += 6;
-                parent.Height = (int)h;
-
-                Width = (int)w;
-                parent.Location = new Point(0, (int)(Height / 2 - h / 2));
-            }
-            else
+                PaintTasks = s.CanvasSchedule.PaintSchedules,
+                Width = (int)s.CanvasSchedule.Width,
+                Height = (int)s.CanvasSchedule.Height
+            };
+            var label = new Label
             {
-                var parent = new Panel();
-                Controls.Add(parent);
-                using var g = CreateGraphics();
-                foreach (var s in series)
-                {
-                    var size = g.MeasureString(s.Name, chart.LegendFont);
+                Text = s.Name,
+                Font = chart.LegendFont,
+                TextColor = chart.LegendTextColor,
+            };
 
-                    var p = new Panel { Location = new Point((int)w, 0) };
-                    parent.Controls.Add(p);
-
-                    p.Controls.Add(new MotionCanvas
-                    {
-                        Location = new Point(0, 6),
-                        PaintTasks = s.CanvasSchedule.PaintSchedules,
-                        Width = (int)s.CanvasSchedule.Width,
-                        Height = (int)s.CanvasSchedule.Height
-                    });
-                    p.Controls.Add(new Label
-                    {
-                        Text = s.Name,
-                        Font = chart.LegendFont,
-                        Location = new Point(6 + (int)s.CanvasSchedule.Width + 6, 6)
-                    });
-
-                    var thisW = size.Width + 36 + (int)s.CanvasSchedule.Width;
-                    p.Width = (int)thisW;
-                    p.Height = (int)size.Height + 6 + 6;
-                    h = size.Height + 6;
-                    w += thisW;
-                }
-                h += 6;
-                parent.Height = (int)h;
-                parent.Width = (int)w;
-
-                Height = (int)h;
-
-                parent.Location = new Point((int)(Width / 2 - w / 2), 0);
-            }
+            _ = AddRow(marker, label);
         }
-        catch { }
 
-        ResumeLayout();
-#endif
+        Create();
     }
 }

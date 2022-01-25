@@ -113,30 +113,26 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     {
         var legend = (Control) this.legend;
 
-        var canvas = new DynamicControl() { Control = motionCanvas, XScale = true, YScale = true };
+        var layout = new DynamicLayout();
 
-        switch (this.LegendPosition)
-        {
-            case LegendPosition.Top:
-                this.Content = new DynamicLayout(legend, new DynamicRow(canvas));
-                break;
+        if (LegendPosition is LegendPosition.Left or LegendPosition.Right)
+            _ = layout.BeginHorizontal();
+        else
+            _ = layout.BeginVertical();
 
-            case LegendPosition.Left:
-                this.Content = new DynamicLayout(new DynamicRow(legend, canvas));
-                break;
+        if (LegendPosition is LegendPosition.Top)
+            layout.AddCentered(legend, horizontalCenter: true);
+        if (LegendPosition is LegendPosition.Left)
+            layout.AddCentered(legend, verticalCenter: true);
 
-            case LegendPosition.Right:
-                this.Content = new DynamicLayout(new DynamicRow(canvas, legend));
-                break;
+        _ = layout.Add(motionCanvas, xscale: true, yscale: true);
 
-            case LegendPosition.Bottom:
-                this.Content = new DynamicLayout(new DynamicRow(canvas), legend);
-                break;
+        if (LegendPosition is LegendPosition.Bottom)
+            layout.AddCentered(legend, horizontalCenter: true);
+        if (LegendPosition is LegendPosition.Right)
+            layout.AddCentered(legend, verticalCenter: true);
 
-            default: // hidden
-                this.Content = motionCanvas;
-                break;
-        }
+        Content = layout;
     }
 
     #region events
@@ -153,9 +149,9 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView.DataPointerDown" />
     public event ChartPointsHandler? DataPointerDown;
 
-    #endregion
+#endregion
 
-    #region properties
+#region properties
 
     /// <inheritdoc cref="IChartView.DesignerMode" />
     bool IChartView.DesignerMode => LicenseManager.UsageMode == LicenseUsageMode.Designtime;
@@ -288,7 +284,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
         }
     }
 
-    #endregion
+#endregion
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.ShowTooltip(IEnumerable{ChartPoint})"/>
     public void ShowTooltip(IEnumerable<ChartPoint> points)
