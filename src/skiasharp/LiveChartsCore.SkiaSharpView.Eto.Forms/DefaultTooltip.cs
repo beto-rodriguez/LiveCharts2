@@ -45,6 +45,7 @@ public class DefaultTooltip : FloatingForm, IChartTooltip<SkiaSharpDrawingContex
         BackgroundColor = Colors.Transparent;
         WindowStyle = WindowStyle.None;
         ShowInTaskbar = false;
+        Resizable = false;
     }
 
     void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
@@ -116,7 +117,7 @@ public class DefaultTooltip : FloatingForm, IChartTooltip<SkiaSharpDrawingContex
             _ = container.AddRow(marker, label);
         }
 
-        Content = new GroupBox() { BackgroundColor = chart.BackgroundColor, Content = container };
+        Content = new Scrollable { Content = container }; // wrap inside a scrollable just to get a border !
     }
 
     void IChartTooltip<SkiaSharpDrawingContext>.Hide()
