@@ -26,8 +26,54 @@ namespace LiveChartsCore.Drawing;
 /// Defiens a bezier segment.
 /// </summary>
 /// <typeparam name="TPathContext">The type of the path context.</typeparam>
-/// <seealso cref="IAnimatableBezierSegment" />
 /// <seealso cref="IPathCommand{TPathContext}" />
-public interface IBezierSegment<TPathContext> : IAnimatableBezierSegment, IPathCommand<TPathContext>
+public interface ICubicBezierPathCommand<TPathContext> : IPathCommand<TPathContext>
 {
+    /// <summary>
+    /// Gets or sets the x0.
+    /// </summary>
+    /// <value>
+    /// The x0.
+    /// </value>
+    float X0 { get; set; }
+
+    /// <summary>
+    /// Gets or sets the y0.
+    /// </summary>
+    /// <value>
+    /// The y0.
+    /// </value>
+    float Y0 { get; set; }
+
+    /// <summary>
+    /// Gets or sets the x1.
+    /// </summary>
+    /// <value>
+    /// The x1.
+    /// </value>
+    float X1 { get; set; }
+
+    /// <summary>
+    /// Gets or sets the y1.
+    /// </summary>
+    /// <value>
+    /// The y1.
+    /// </value>
+    float Y1 { get; set; }
+
+    /// <summary>
+    /// Gets or sets the x2.
+    /// </summary>
+    /// <value>
+    /// The x2.
+    /// </value>
+    float X2 { get; set; }
+
+    /// <summary>
+    /// Gets or sets the y2.
+    /// </summary>
+    /// <value>
+    /// The y2.
+    /// </value>
+    float Y2 { get; set; }
 }

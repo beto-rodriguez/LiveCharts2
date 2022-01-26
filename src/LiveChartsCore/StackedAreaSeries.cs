@@ -43,7 +43,7 @@ public class StackedAreaSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGe
         where TBezierVisual : LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, new()
         where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
         where TLineSegment : ILinePathSegment<TPathArgs>, new()
-        where TBezierSegment : IBezierSegment<TPathArgs>, new()
+        where TBezierSegment : ICubicBezierPathCommand<TPathArgs>, new()
         where TMoveToCommand : IMoveToPathCommand<TPathArgs>, new()
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()

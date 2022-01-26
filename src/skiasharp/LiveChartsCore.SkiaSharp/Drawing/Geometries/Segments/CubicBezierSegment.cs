@@ -26,8 +26,8 @@ using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
 
-/// <inheritdoc cref="IBezierSegment{TPathContext}" />
-public class CubicBezierSegment : PathCommand, IBezierSegment<SKPath>
+/// <inheritdoc cref="ICubicBezierPathCommand{TPathContext}" />
+public class CubicBezierSegment : PathCommand, ICubicBezierPathCommand<SKPath>
 {
     private readonly FloatMotionProperty _x0Property;
     private readonly FloatMotionProperty _y0Property;
@@ -49,22 +49,22 @@ public class CubicBezierSegment : PathCommand, IBezierSegment<SKPath>
         _y2Property = RegisterMotionProperty(new FloatMotionProperty(nameof(Y2), 0f));
     }
 
-    /// <inheritdoc cref="IAnimatableBezierSegment.X0" />
+    /// <inheritdoc cref="ICubicBezierPathCommand{TPathContext}.X0" />
     public float X0 { get => _x0Property.GetMovement(this); set => _x0Property.SetMovement(value, this); }
 
-    /// <inheritdoc cref="IAnimatableBezierSegment.Y0" />
+    /// <inheritdoc cref="ICubicBezierPathCommand{TPathContext}.Y0" />
     public float Y0 { get => _y0Property.GetMovement(this); set => _y0Property.SetMovement(value, this); }
 
-    /// <inheritdoc cref="IAnimatableBezierSegment.X1" />
+    /// <inheritdoc cref="ICubicBezierPathCommand{TPathContext}.X1" />
     public float X1 { get => _x1Property.GetMovement(this); set => _x1Property.SetMovement(value, this); }
 
-    /// <inheritdoc cref="IAnimatableBezierSegment.Y1" />
+    /// <inheritdoc cref="ICubicBezierPathCommand{TPathContext}.Y1" />
     public float Y1 { get => _y1Property.GetMovement(this); set => _y1Property.SetMovement(value, this); }
 
-    /// <inheritdoc cref="IAnimatableBezierSegment.X2" />
+    /// <inheritdoc cref="ICubicBezierPathCommand{TPathContext}.X2" />
     public float X2 { get => _x2Property.GetMovement(this); set => _x2Property.SetMovement(value, this); }
 
-    /// <inheritdoc cref="IAnimatableBezierSegment.Y2" />
+    /// <inheritdoc cref="ICubicBezierPathCommand{TPathContext}.Y2" />
     public float Y2 { get => _y2Property.GetMovement(this); set => _y2Property.SetMovement(value, this); }
 
     /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />

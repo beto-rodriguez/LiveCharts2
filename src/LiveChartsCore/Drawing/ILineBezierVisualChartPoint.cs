@@ -26,8 +26,9 @@ namespace LiveChartsCore.Drawing;
 /// Defines a line bezier segment chart point.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <typeparam name="TPathArgs">The type of the path.</typeparam>
 /// <seealso cref="IVisualChartPoint{TDrawingContext}" />
-public interface ILineBezierVisualChartPoint<TDrawingContext> : IVisualChartPoint<TDrawingContext>
+public interface ILineBezierVisualChartPoint<TDrawingContext, TPathArgs> : IVisualChartPoint<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
     /// <summary>
@@ -44,5 +45,5 @@ public interface ILineBezierVisualChartPoint<TDrawingContext> : IVisualChartPoin
     /// <value>
     /// The bezier.
     /// </value>
-    IAnimatableBezierSegment Bezier { get; }
+    ICubicBezierPathCommand<TPathArgs> Bezier { get; }
 }

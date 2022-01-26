@@ -52,13 +52,14 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// </summary>
     protected readonly Dictionary<IChart, Dictionary<double, AxisVisualSeprator<TDrawingContext>>> activeSeparators = new();
 
+    // xo (x origin) and yo (y origin) are the distance to the center of the axis to the control bounds
+    internal float _xo = 0f, _yo = 0f;
     internal AxisOrientation _orientation;
+
     private double _minStep = 0;
     private Bounds? _dataBounds = null;
     private Bounds? _visibleDataBounds = null;
     private double _labelsRotation;
-    // xo (x origin) and yo (y origin) are the distance to the center of the axis to the control bounds
-    private float _xo = 0f, _yo = 0f;
     private LvcRectangle _labelsDesiredSize = new(), _nameDesiredSize = new();
     private TTextGeometry? _nameGeometry;
     private AxisPosition _position = AxisPosition.Start;

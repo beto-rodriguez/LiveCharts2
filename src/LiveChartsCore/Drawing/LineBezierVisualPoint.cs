@@ -29,10 +29,9 @@ namespace LiveChartsCore.Drawing;
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
 /// <typeparam name="TBezierSegment">The type of the bezier segment.</typeparam>
 /// <typeparam name="TPathArgs">The type of the path arguments.</typeparam>
-/// <seealso cref="ILineBezierVisualChartPoint{TDrawingContext}" />
-public class LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs> : ILineBezierVisualChartPoint<TDrawingContext>
+public class LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs> : ILineBezierVisualChartPoint<TDrawingContext, TPathArgs>
     where TVisual : ISizedVisualChartPoint<TDrawingContext>, new()
-    where TBezierSegment : IBezierSegment<TPathArgs>, new()
+    where TBezierSegment : ICubicBezierPathCommand<TPathArgs>, new()
     where TDrawingContext : DrawingContext
 {
     /// <summary>
@@ -72,6 +71,6 @@ public class LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPa
     /// </summary>
     public IGeometry<TDrawingContext>? HighlightableGeometry => Geometry?.HighlightableGeometry;
 
-    ISizedGeometry<TDrawingContext> ILineBezierVisualChartPoint<TDrawingContext>.Geometry => Geometry;
-    IAnimatableBezierSegment ILineBezierVisualChartPoint<TDrawingContext>.Bezier => Bezier;
+    ISizedGeometry<TDrawingContext> ILineBezierVisualChartPoint<TDrawingContext, TPathArgs>.Geometry => Geometry;
+    ICubicBezierPathCommand<TPathArgs> ILineBezierVisualChartPoint<TDrawingContext, TPathArgs>.Bezier => Bezier;
 }
