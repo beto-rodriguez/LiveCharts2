@@ -47,11 +47,8 @@ public class View : Panel
             cartesianChart.Series = viewModel.Series;
         };
 
-        var layout = new DynamicLayout(
-            new DynamicRow(b1, b2, b3, b4, b5, b8, b9, b10),
-            new DynamicRow(cartesianChart)
-            );
+        var buttons = new StackLayout(b1, b2, b3, b4, b5, b8, b9, b10) { Orientation = Orientation.Horizontal, Padding = 2, Spacing = 4 };
 
-        Content = layout;
+        Content = new DynamicLayout(buttons, cartesianChart);
     }
 }

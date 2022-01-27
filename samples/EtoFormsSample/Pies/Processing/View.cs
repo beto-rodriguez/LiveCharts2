@@ -43,12 +43,9 @@ public class View : Panel
             b3.TextColor = GetForeColor(series);
         };
 
-        var layout = new DynamicLayout(
-            new DynamicRow(b1,b2,b3),
-            new DynamicRow(pieChart)
-            );
+        var buttons = new StackLayout(b1, b2, b3) { Orientation = Orientation.Horizontal, Padding = 2, Spacing = 4 };
 
-        Content = layout;
+        Content = new DynamicLayout(buttons, pieChart);
     }
 
     private static Color GetForeColor(PieSeries<ObservableValue> pieSeries)

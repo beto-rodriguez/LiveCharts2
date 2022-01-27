@@ -38,11 +38,9 @@ public class View : Panel
         var b6 = new Button { Text = "Constant changes" };
         b6.Click += OnConstantChangesClick;
 
-        var layout = new DynamicLayout(
-            new DynamicRow(b1,b2,b3,b4,b5,b6),
-            new DynamicRow(cartesianChart)
-            );
-        Content = layout;
+        var buttons = new StackLayout(b1, b2, b3, b4, b5, b6) { Orientation = Orientation.Horizontal, Padding = 2, Spacing = 4 };
+
+        Content = new DynamicLayout(buttons, cartesianChart);
     }
 
     private async void OnConstantChangesClick(object sender, System.EventArgs e)

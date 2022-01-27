@@ -26,11 +26,8 @@ public class View : Panel
         var b3 = new Button { Text = "toggle 3" };
         b3.Click += (object sender, System.EventArgs e) => viewModel.ToogleSeries2();
 
-        var layout = new DynamicLayout(
-            new DynamicRow(b1,b2,b3),
-            new DynamicRow(cartesianChart)
-            );
+        var buttons = new StackLayout(b1, b2, b3) { Orientation = Orientation.Horizontal, Padding = 2, Spacing = 4 };
 
-        Content = layout;
+        Content = new DynamicLayout(buttons, cartesianChart);
     }
 }

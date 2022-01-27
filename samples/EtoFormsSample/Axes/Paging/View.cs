@@ -31,10 +31,8 @@ public class View : Panel
         var b4 = new Button { Text = "Clear" };
         b4.Click += (object sender, System.EventArgs e) => viewModel.SeeAll();
 
-        var layout = new DynamicLayout(
-            new DynamicRow(b1,b2,b3,b4),
-            new DynamicRow(cartesianChart)
-            );
-        Content = layout;
+        var buttons = new StackLayout(b1, b2, b3, b4) { Orientation = Orientation.Horizontal, Padding = 2, Spacing = 4 };
+
+        Content = new DynamicLayout(buttons, cartesianChart);
     }
 }

@@ -34,12 +34,9 @@ public class View : Panel
         var b4 = new Button { Text = "Constant changes" };
         b4.Click += OnConstantChangesClick;
 
-        var layout = new DynamicLayout(
-            new DynamicRow(b1, b2, b3, b4),
-            new DynamicRow(piechart)
-            );
+        var buttons = new StackLayout(b1, b2, b3, b4) { Orientation = Orientation.Horizontal, Padding = 2, Spacing = 4 };
 
-        Content = layout;
+        Content = new DynamicLayout(buttons, piechart);
     }
 
     private async void OnConstantChangesClick(object sender, System.EventArgs e)

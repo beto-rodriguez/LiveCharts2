@@ -25,11 +25,8 @@ public class View : Panel
         var b2 = new Button { Text = "new color" };
         b2.Click += (object sender, System.EventArgs e) => viewModel.SetNewColor();
 
-        var layout = new DynamicLayout(
-            new DynamicRow(b1,b2),
-            new DynamicRow(cartesianChart)
-            );
+        var buttons = new StackLayout(b1, b2) { Orientation = Orientation.Horizontal, Padding = 2, Spacing = 4 };
 
-        Content = layout;
+        Content = new DynamicLayout(buttons, cartesianChart);
     }
 }
