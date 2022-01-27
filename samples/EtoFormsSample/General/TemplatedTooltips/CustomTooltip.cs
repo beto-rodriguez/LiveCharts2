@@ -22,6 +22,7 @@ public class CustomTooltip : FloatingForm, IChartTooltip<SkiaSharpDrawingContext
         WindowStyle = WindowStyle.None;
         ShowInTaskbar = false;
         Resizable = false;
+        AutoSize = true;
     }
 
     void IChartTooltip<SkiaSharpDrawingContext>.Show(IEnumerable<ChartPoint> tooltipPoints, Chart<SkiaSharpDrawingContext> chart)
