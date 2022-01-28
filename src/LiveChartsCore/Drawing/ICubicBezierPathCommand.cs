@@ -23,11 +23,10 @@
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// Defiens a bezier segment.
+/// Defiens a bezier command.
 /// </summary>
-/// <typeparam name="TPathContext">The type of the path context.</typeparam>
 /// <seealso cref="IPathCommand{TPathContext}" />
-public interface ICubicBezierPathCommand<TPathContext> : IPathCommand<TPathContext>
+public interface ICubicBezierPathCommand<SKPath> : IPathCommand<SKPath>
 {
     /// <summary>
     /// Gets or sets the x0.

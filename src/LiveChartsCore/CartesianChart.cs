@@ -39,6 +39,8 @@ namespace LiveChartsCore;
 public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
+    private readonly ActionThrottler _zoomThrottler;
+
     internal readonly HashSet<ISeries> _everMeasuredSeries = new();
     internal readonly HashSet<IPlane<TDrawingContext>> _everMeasuredAxes = new();
     internal readonly HashSet<Section<TDrawingContext>> _everMeasuredSections = new();
@@ -318,10 +320,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
                 $"tread: {Environment.CurrentManagedThreadId}");
         }
 #endif
-
-        Trace.WriteLine(
-               $"[Cartesian chart measured]".PadRight(60) +
-               $"tread: {Environment.CurrentManagedThreadId}");
 
         if (!IsLoaded) return; // <- prevents a visual glitch where the visual call the measure method
                                // while they are not visible, the problem is when the control is visible again

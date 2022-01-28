@@ -22,44 +22,57 @@
 
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Segments;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-/// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}" />
-public class PathGeometry : Drawable, IPathGeometry<SkiaSharpDrawingContext, SKPath>
+/// <summary>
+/// Defines an area geometry.
+/// </summary>
+public class AreaGeometry : Drawable, ICubicBezierAreaGeometry<SkiaSharpDrawingContext>
 {
-    /// <summary>
-    /// The commands
-    /// </summary>
-    protected readonly LinkedList<IPathCommand<SKPath>> _commands = new();
+    private readonly LinkedList<CubicBezier> _commands = new();
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.FirstCommand" />
-    public LinkedListNode<IPathCommand<SKPath>>? FirstCommand => _commands.First;
+    /// <inheritdoc cref="ICubicBezierAreaGeometry{TDrawingContext}.FirstCommand" />
+    public LinkedListNode<CubicBezier>? FirstCommand => _commands.First;
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.LastCommand" />
-    public LinkedListNode<IPathCommand<SKPath>>? LastCommand => _commands.Last;
+    /// <inheritdoc cref="ICubicBezierAreaGeometry{TDrawingContext}.LastCommand" />
+    public LinkedListNode<CubicBezier>? LastCommand => _commands.Last;
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.CountCommands" />
+    /// <inheritdoc cref="ICubicBezierAreaGeometry{TDrawingContext}.CountCommands" />
     public int CountCommands => _commands.Count;
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.IsClosed" />
+    /// <inheritdoc cref="ICubicBezierAreaGeometry{TDrawingContext}.IsClosed" />
     public bool IsClosed { get; set; }
+
+    /// <inheritdoc cref="ICubicBezierAreaGeometry{TDrawingContext}.Pivot" />
+    public float Pivot { get; set; }
 
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
     public override void Draw(SkiaSharpDrawingContext context)
     {
         if (_commands.Count == 0) return;
 
-        var toRemoveSegments = new List<IPathCommand<SKPath>>();
+        var toRemoveSegments = new List<CubicBezier>();
 
         using var path = new SKPath();
         var isValid = true;
 
+        var currentTime = CurrentTime;
+        var isFirst = true;
+
         foreach (var segment in _commands)
         {
             segment.IsValid = true;
-            segment.Execute(path, GetCurrentTime(), this);
+            segment.CurrentTime = currentTime;
+
+            if (isFirst)
+            {
+                isFirst = false;
+            }
+
+            path.CubicTo(segment.X0, segment.Y0, segment.X1, segment.Y1, segment.X2, segment.Y2);
             isValid = isValid && segment.IsValid;
 
             if (segment.IsValid && segment.RemoveOnCompleted) toRemoveSegments.Add(segment);
@@ -71,63 +84,61 @@ public class PathGeometry : Drawable, IPathGeometry<SkiaSharpDrawingContext, SKP
             isValid = false;
         }
 
-        if (IsClosed)
-            path.Close();
-
+        if (IsClosed) path.Close();
         context.Canvas.DrawPath(path, context.Paint);
 
         if (!isValid) SetInvalidState();
     }
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.AddLast(IPathCommand{TPathArgs})" />
-    public LinkedListNode<IPathCommand<SKPath>> AddLast(IPathCommand<SKPath> command)
+    /// <inheritdoc cref="ICubicBezierAreaGeometry{TDrawingContext}.AddLast(CubicBezier)" />
+    public LinkedListNode<CubicBezier> AddLast(CubicBezier command)
     {
         SetInvalidState();
         return _commands.AddLast(command);
     }
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.AddFirst(IPathCommand{TPathArgs})" />
-    public LinkedListNode<IPathCommand<SKPath>> AddFirst(IPathCommand<SKPath> command)
+    /// <inheritdoc cref="ICubicBezierAreaGeometry{TDrawingContext}.AddFirst(CubicBezier)" />
+    public LinkedListNode<CubicBezier> AddFirst(CubicBezier command)
     {
         SetInvalidState();
         return _commands.AddFirst(command);
     }
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.AddAfter(LinkedListNode{IPathCommand{TPathArgs}}, IPathCommand{TPathArgs})" />
-    public LinkedListNode<IPathCommand<SKPath>> AddAfter(LinkedListNode<IPathCommand<SKPath>> node, IPathCommand<SKPath> command)
+    /// <inheritdoc cref="ICubicBezierAreaGeometry{TDrawingContext}.AddAfter(LinkedListNode{CubicBezier}, CubicBezier)" />
+    public LinkedListNode<CubicBezier> AddAfter(LinkedListNode<CubicBezier> node, CubicBezier command)
     {
         SetInvalidState();
         return _commands.AddAfter(node, command);
     }
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.AddBefore(LinkedListNode{IPathCommand{TPathArgs}}, IPathCommand{TPathArgs})" />
-    public LinkedListNode<IPathCommand<SKPath>> AddBefore(LinkedListNode<IPathCommand<SKPath>> node, IPathCommand<SKPath> command)
+    /// <inheritdoc cref="ICubicBezierAreaGeometry{TDrawingContext}.AddBefore(LinkedListNode{CubicBezier}, CubicBezier)" />
+    public LinkedListNode<CubicBezier> AddBefore(LinkedListNode<CubicBezier> node, CubicBezier command)
     {
         SetInvalidState();
         return _commands.AddBefore(node, command);
     }
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.ContainsCommand(IPathCommand{TPathArgs})" />
-    public bool ContainsCommand(IPathCommand<SKPath> segment)
+    /// <inheritdoc cref="ICubicBezierAreaGeometry{TDrawingContext}.ContainsCommand(CubicBezier)" />
+    public bool ContainsCommand(CubicBezier segment)
     {
         return _commands.Contains(segment);
     }
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.RemoveCommand(IPathCommand{TPathArgs})" />
-    public bool RemoveCommand(IPathCommand<SKPath> command)
+    /// <inheritdoc cref="ICubicBezierAreaGeometry{TDrawingContext}.RemoveCommand(CubicBezier)" />
+    public bool RemoveCommand(CubicBezier command)
     {
         SetInvalidState();
         return _commands.Remove(command);
     }
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.RemoveCommand(LinkedListNode{IPathCommand{TPathArgs}})" />
-    public void RemoveCommand(LinkedListNode<IPathCommand<SKPath>> node)
+    /// <inheritdoc cref="ICubicBezierAreaGeometry{TDrawingContext}.RemoveCommand(LinkedListNode{CubicBezier})" />
+    public void RemoveCommand(LinkedListNode<CubicBezier> node)
     {
         SetInvalidState();
         _commands.Remove(node);
     }
 
-    /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.ClearCommands" />
+    /// <inheritdoc cref="ICubicBezierAreaGeometry{TDrawingContext}.ClearCommands" />
     public void ClearCommands()
     {
         _commands.Clear();
