@@ -1,7 +1,7 @@
 ﻿using Eto.Forms;
-using ViewModelsSamples.VisualTest.DataTemplate;
+using ViewModelsSamples.Test.MotionCanvasDispose;
 
-namespace EtoFormsSample.VisualTest.DataTemplate;
+namespace EtoFormsSample.Test.MotionCanvasDispose;
 
 public class View : Panel
 {

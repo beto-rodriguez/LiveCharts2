@@ -1,7 +1,7 @@
 ﻿using Eto.Forms;
-using ViewModelsSamples.VisualTest.DataTemplate;
+using ViewModelsSamples.Test.ChangeSeriesInstance;
 
-namespace EtoFormsSample.VisualTest.DataTemplate;
+namespace EtoFormsSample.Test.ChangeSeriesInstance;
 
 public class View : Panel
 {
