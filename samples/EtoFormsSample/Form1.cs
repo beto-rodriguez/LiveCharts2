@@ -6,7 +6,7 @@ namespace EtoFormsSample;
 
 public class Form1 : Form
 {
-    private readonly ListBox _listbox = new();
+    private readonly DynamicLayout _leftside = new();
     private readonly DynamicLayout _layout = new();
 
     public Form1()
@@ -15,15 +15,23 @@ public class Form1 : Form
 
         Size = new Size(800, 600);
 
+        var listbox = new ListBox() { DataStore = ViewModelsSamples.Index.Samples };
         foreach (var item in ViewModelsSamples.Index.Samples)
         {
-            _listbox.Items.Add(item);
+            // listbox.Items.Add(item);
         }
+        listbox.SelectedIndexChanged += listBox1_SelectedIndexChanged;
 
-        _ = _layout.AddRow(_listbox, new Panel());
+        var image = new ImageView() { Image = Bitmap.FromResource("EtoFormsSample.Images.livecharts.png") };
+
+        _leftside = new DynamicLayout(
+            new DynamicRow(image),
+            new DynamicRow(listbox)
+            );
+
+        _ = _layout.AddRow(_leftside, new Panel());
+
         Content = _layout;
-
-        _listbox.SelectedIndexChanged += listBox1_SelectedIndexChanged;
     }
 
     private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -32,7 +40,7 @@ public class Form1 : Form
         var chart = (Control)Activator.CreateInstance(null, $"EtoFormsSample.{selected.Replace('/', '.')}.View").Unwrap();
 
         var layout = new DynamicLayout();
-        _ = layout.AddRow(_listbox, chart);
+        _ = layout.AddRow(_leftside, chart);
         Content = layout;
     }
 }
