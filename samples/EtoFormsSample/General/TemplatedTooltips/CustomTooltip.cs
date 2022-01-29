@@ -18,7 +18,6 @@ public class CustomTooltip : FloatingForm, IChartTooltip<SkiaSharpDrawingContext
 
     public CustomTooltip()
     {
-        BackgroundColor = Colors.Transparent;
         WindowStyle = WindowStyle.None;
         ShowInTaskbar = false;
         Resizable = false;
@@ -33,8 +32,6 @@ public class CustomTooltip : FloatingForm, IChartTooltip<SkiaSharpDrawingContext
         var wfChart = (Chart)chart.View;
 
         DrawAndMeasure(tooltipPoints, wfChart);
-
-        Content.BackgroundColor = Color.FromArgb(30, 30, 30);
 
         SetLocation();
 
@@ -76,7 +73,7 @@ public class CustomTooltip : FloatingForm, IChartTooltip<SkiaSharpDrawingContext
 
     private void DrawAndMeasure(IEnumerable<ChartPoint> tooltipPoints, Chart chart)
     {
-        var container = new DynamicLayout() { BackgroundColor = chart.BackgroundColor, Padding = new Eto.Drawing.Padding(4) };
+        var container = new DynamicLayout() { BackgroundColor = Color.FromArgb(30, 30, 30), Padding = new Eto.Drawing.Padding(4) };
 
         foreach (var point in tooltipPoints)
         {

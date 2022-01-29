@@ -42,7 +42,6 @@ public class DefaultTooltip : FloatingForm, IChartTooltip<SkiaSharpDrawingContex
     /// </summary>
     public DefaultTooltip()
     {
-        BackgroundColor = Colors.Transparent;
         WindowStyle = WindowStyle.None;
         ShowInTaskbar = false;
         Resizable = false;
@@ -96,7 +95,7 @@ public class DefaultTooltip : FloatingForm, IChartTooltip<SkiaSharpDrawingContex
     }
     private void DrawAndMeasure(IEnumerable<ChartPoint> tooltipPoints, Chart chart)
     {
-        var container = new DynamicLayout() { BackgroundColor = chart.BackgroundColor, Padding = new global::Eto.Drawing.Padding(4) };
+        var container = new DynamicLayout() { BackgroundColor = chart.TooltipBackColor, Padding = new global::Eto.Drawing.Padding(4) };
 
         foreach (var point in tooltipPoints)
         {
