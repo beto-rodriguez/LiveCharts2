@@ -11,10 +11,10 @@ public class View : Panel
     {
         var tabsControl = new TabControl();
 
-        var tabPage1 = new TabPage("tab 1");
+        var tabPage1 = new TabPage() { Text = "tab 1" };
         tabPage1.Content = new Lines.Basic.View();
 
-        var tabPage2 = new TabPage("tab 2");
+        var tabPage2 = new TabPage() { Text = "tab 2" };
         tabPage2.Content = new Bars.Basic.View();
 
         tabsControl.Pages.Add(tabPage1);
