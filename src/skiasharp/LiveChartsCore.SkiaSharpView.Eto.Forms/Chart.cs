@@ -343,7 +343,12 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="Control.OnUnLoad(EventArgs)"/>
     protected override void OnUnLoad(EventArgs e)
     {
-        if (tooltip is IDisposable disposableTooltip) disposableTooltip.Dispose();
+        if (tooltip is IDisposable disposableTooltip)
+        {
+//            disposableTooltip.Dispose();
+
+ //           tooltip = null;
+        }
 
         base.OnUnLoad(e);
 
