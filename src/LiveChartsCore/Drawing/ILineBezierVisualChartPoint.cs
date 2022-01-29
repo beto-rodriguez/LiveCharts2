@@ -20,15 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing.Segments;
+
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
 /// Defines a line bezier segment chart point.
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <typeparam name="TPathArgs">The type of the path.</typeparam>
 /// <seealso cref="IVisualChartPoint{TDrawingContext}" />
-public interface ILineBezierVisualChartPoint<TDrawingContext, TPathArgs> : IVisualChartPoint<TDrawingContext>
+public interface ILineBezierVisualChartPoint<TDrawingContext> : IVisualChartPoint<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
     /// <summary>
@@ -45,5 +46,5 @@ public interface ILineBezierVisualChartPoint<TDrawingContext, TPathArgs> : IVisu
     /// <value>
     /// The bezier.
     /// </value>
-    ICubicBezierPathCommand<TPathArgs> Bezier { get; }
+    CubicBezierSegment Bezier { get; }
 }

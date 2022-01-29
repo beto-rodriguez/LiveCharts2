@@ -21,15 +21,14 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
-using LiveChartsCore.Drawing.Segments;
-
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// Defines an area built with cubic beziers.
+/// Defines an area geometry.
 /// </summary>
+/// <typeparam name="TSegment"></typeparam>
 /// <typeparam name="TDrawingContext"></typeparam>
-public interface ICubicBezierAreaGeometry<TDrawingContext> : IDrawable<TDrawingContext>
+public interface IAreaGeometry<TSegment, TDrawingContext> : IDrawable<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
     /// <summary>
@@ -45,12 +44,12 @@ public interface ICubicBezierAreaGeometry<TDrawingContext> : IDrawable<TDrawingC
     /// <summary>
     /// Gets the first linked node.
     /// </summary>
-    LinkedListNode<CubicBezier>? FirstCommand { get; }
+    LinkedListNode<TSegment>? FirstCommand { get; }
 
     /// <summary>
     /// Gets the last linked node.
     /// </summary>
-    LinkedListNode<CubicBezier>? LastCommand { get; }
+    LinkedListNode<TSegment>? LastCommand { get; }
 
     /// <summary>
     /// Gets current commands count.
@@ -62,14 +61,14 @@ public interface ICubicBezierAreaGeometry<TDrawingContext> : IDrawable<TDrawingC
     /// </summary>
     /// <param name="command">The command.</param>
     /// <returns>The linked node.</returns>
-    LinkedListNode<CubicBezier> AddLast(CubicBezier command);
+    LinkedListNode<TSegment> AddLast(TSegment command);
 
     /// <summary>
     /// Adds a path command at the beginning.
     /// </summary>
     /// <param name="command">The command.</param>
     /// <returns>The linked node.</returns>
-    LinkedListNode<CubicBezier> AddFirst(CubicBezier command);
+    LinkedListNode<TSegment> AddFirst(TSegment command);
 
     /// <summary>
     /// Adds a command after the given liked node.
@@ -77,8 +76,7 @@ public interface ICubicBezierAreaGeometry<TDrawingContext> : IDrawable<TDrawingC
     /// <param name="node">The linked node.</param>
     /// <param name="command"></param>
     /// <returns>The linked node.</returns>
-    LinkedListNode<CubicBezier> AddAfter(
-        LinkedListNode<CubicBezier> node, CubicBezier command);
+    LinkedListNode<TSegment> AddAfter(LinkedListNode<TSegment> node, TSegment command);
 
     /// <summary>
     /// Adds a path command before the given linked node.
@@ -86,20 +84,19 @@ public interface ICubicBezierAreaGeometry<TDrawingContext> : IDrawable<TDrawingC
     /// <param name="node">The linked node.</param>
     /// <param name="command"></param>
     /// <returns>The linked node.</returns>
-    LinkedListNode<CubicBezier> AddBefore(
-        LinkedListNode<CubicBezier> node, CubicBezier command);
+    LinkedListNode<TSegment> AddBefore(LinkedListNode<TSegment> node, TSegment command);
 
     /// <summary>
     /// Removes a path command.
     /// </summary>
     /// <param name="command">The command.</param>
-    bool RemoveCommand(CubicBezier command);
+    bool RemoveCommand(TSegment command);
 
     /// <summary>
     /// Removes the specified node.
     /// </summary>
     /// <param name="node">The node.</param>
-    void RemoveCommand(LinkedListNode<CubicBezier> node);
+    void RemoveCommand(LinkedListNode<TSegment> node);
 
     /// <summary>
     /// Determines whether the specified command is contained in the current path.
@@ -108,7 +105,7 @@ public interface ICubicBezierAreaGeometry<TDrawingContext> : IDrawable<TDrawingC
     /// <returns>
     ///   <c>true</c> if the specified command contains command; otherwise, <c>false</c>.
     /// </returns>
-    bool ContainsCommand(CubicBezier command);
+    bool ContainsCommand(TSegment command);
 
     /// <summary>
     /// Clears the commands.

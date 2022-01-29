@@ -25,10 +25,9 @@ using LiveChartsCore.Motion;
 namespace LiveChartsCore.Drawing.Segments;
 
 /// <summary>
-/// Defiens a cubic bezier segment.
+/// Defines a cubic bezier segment.
 /// </summary>
-/// <seealso cref="IPathCommand{TPathContext}" />
-public class CubicBezier : Animatable
+public class CubicBezierSegment : Animatable
 {
     private readonly FloatMotionProperty _x0Property;
     private readonly FloatMotionProperty _y0Property;
@@ -38,9 +37,9 @@ public class CubicBezier : Animatable
     private readonly FloatMotionProperty _y2Property;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CubicBezier"/> class.
+    /// Initializes a new instance of the <see cref="CubicBezierSegment"/> class.
     /// </summary>
-    public CubicBezier()
+    public CubicBezierSegment()
     {
         _x0Property = RegisterMotionProperty(new FloatMotionProperty(nameof(X0), 0f));
         _y0Property = RegisterMotionProperty(new FloatMotionProperty(nameof(Y0), 0f));

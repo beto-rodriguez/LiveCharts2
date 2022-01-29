@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing.Segments;
+
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
@@ -27,11 +29,8 @@ namespace LiveChartsCore.Drawing;
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
-/// <typeparam name="TBezierSegment">The type of the bezier segment.</typeparam>
-/// <typeparam name="TPathArgs">The type of the path arguments.</typeparam>
-public class LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs> : ILineBezierVisualChartPoint<TDrawingContext, TPathArgs>
+public class BezierVisualPoint<TDrawingContext, TVisual> : ILineBezierVisualChartPoint<TDrawingContext>
     where TVisual : ISizedVisualChartPoint<TDrawingContext>, new()
-    where TBezierSegment : ICubicBezierPathCommand<TPathArgs>, new()
     where TDrawingContext : DrawingContext
 {
     /// <summary>
@@ -48,7 +47,7 @@ public class LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPa
     /// <value>
     /// The bezier.
     /// </value>
-    public TBezierSegment Bezier { get; set; } = new();
+    public CubicBezierSegment Bezier { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the path.
@@ -56,7 +55,7 @@ public class LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPa
     /// <value>
     /// The path.
     /// </value>
-    public IPathGeometry<TDrawingContext, TPathArgs>? FillPath { get; set; }
+    public IAreaGeometry<CubicBezierSegment, TDrawingContext>? FillPath { get; set; }
 
     /// <summary>
     /// Gets or sets the stroke path.
@@ -64,13 +63,9 @@ public class LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPa
     /// <value>
     /// The stroke path.
     /// </value>
-    public IPathGeometry<TDrawingContext, TPathArgs>? StrokePath { get; set; }
+    public IAreaGeometry<CubicBezierSegment, TDrawingContext>? StrokePath { get; set; }
 
-    /// <summary>
-    /// Gets the main <see cref="T:LiveChartsCore.Drawing.IDrawable`1" />.
-    /// </summary>
-    public IGeometry<TDrawingContext>? HighlightableGeometry => Geometry?.HighlightableGeometry;
+    IGeometry<TDrawingContext>? IVisualChartPoint<TDrawingContext>.HighlightableGeometry => Geometry?.HighlightableGeometry;
 
-    ISizedGeometry<TDrawingContext> ILineBezierVisualChartPoint<TDrawingContext, TPathArgs>.Geometry => Geometry;
-    ICubicBezierPathCommand<TPathArgs> ILineBezierVisualChartPoint<TDrawingContext, TPathArgs>.Bezier => Bezier;
+    ISizedGeometry<TDrawingContext> ILineBezierVisualChartPoint<TDrawingContext>.Geometry => Geometry;
 }

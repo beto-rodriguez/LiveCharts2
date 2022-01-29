@@ -39,8 +39,6 @@ namespace LiveChartsCore;
 public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
     where TDrawingContext : DrawingContext
 {
-    private readonly ActionThrottler _zoomThrottler;
-
     internal readonly HashSet<ISeries> _everMeasuredSeries = new();
     internal readonly HashSet<IPlane<TDrawingContext>> _everMeasuredAxes = new();
     internal readonly HashSet<Section<TDrawingContext>> _everMeasuredSections = new();

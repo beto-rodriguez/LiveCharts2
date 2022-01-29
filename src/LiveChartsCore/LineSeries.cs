@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Segments;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
@@ -39,24 +40,17 @@ namespace LiveChartsCore;
 /// <typeparam name="TLabel">The type of the data label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
-/// <typeparam name="TLineSegment">The type of the line segment.</typeparam>
-/// <typeparam name="TBezierSegment">The type of the bezier segmen.</typeparam>
-/// <typeparam name="TMoveToCommand">The type of the move command.</typeparam>
-/// <typeparam name="TPathArgs">The type of the path arguments.</typeparam>
-/// <typeparam name="TBezierVisual">The type of the bezier.</typeparam>
-public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs, TBezierVisual>
-    : StrokeAndFillCartesianSeries<TModel, TBezierVisual, TLabel, TDrawingContext>, ILineSeries<TDrawingContext>
-        where TBezierVisual : LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, new()
-        where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
-        where TLineSegment : ILinePathSegment<TPathArgs>, new()
-        where TBezierSegment : ICubicBezierPathCommand<TPathArgs>, new()
-        where TMoveToCommand : IMoveToPathCommand<TPathArgs>, new()
+/// <typeparam name="TVisualPoint">The type of the visual point.</typeparam>
+public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
+    : StrokeAndFillCartesianSeries<TModel, TVisualPoint, TLabel, TDrawingContext>, ILineSeries<TDrawingContext>
+        where TVisualPoint : BezierVisualPoint<TDrawingContext, TVisual>, new()
+        where TPathGeometry : IAreaGeometry<CubicBezierSegment, TDrawingContext>, new()
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {
-    internal readonly Dictionary<object, List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>> _fillPathHelperDictionary = new();
-    internal readonly Dictionary<object, List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>> _strokePathHelperDictionary = new();
+    internal readonly Dictionary<object, List<TPathGeometry>> _fillPathHelperDictionary = new();
+    internal readonly Dictionary<object, List<TPathGeometry>> _strokePathHelperDictionary = new();
     private float _lineSmoothness = 0.65f;
     private float _geometrySize = 14f;
     private bool _enableNullSplitting = true;
@@ -65,7 +59,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
     /// <summary>
     /// Initializes a new instance of the
-    /// <see cref="LineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs, TBezierVisual}"/>
+    /// <see cref="LineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TBezierVisual}"/>
     /// class.
     /// </summary>
     /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
@@ -170,54 +164,49 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
         if (!_strokePathHelperDictionary.TryGetValue(chart.Canvas.Sync, out var strokePathHelperContainer))
         {
-            strokePathHelperContainer = new List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>();
+            strokePathHelperContainer = new List<TPathGeometry>();
             _strokePathHelperDictionary[chart.Canvas.Sync] = strokePathHelperContainer;
         }
 
         if (!_fillPathHelperDictionary.TryGetValue(chart.Canvas.Sync, out var fillPathHelperContainer))
         {
-            fillPathHelperContainer = new List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>();
+            fillPathHelperContainer = new List<TPathGeometry>();
             _fillPathHelperDictionary[chart.Canvas.Sync] = fillPathHelperContainer;
         }
 
-        foreach (var item in strokePathHelperContainer) item.Path.ClearCommands();
-        foreach (var item in fillPathHelperContainer) item.Path.ClearCommands();
+        foreach (var item in strokePathHelperContainer) item.ClearCommands();
+        foreach (var item in fillPathHelperContainer) item.ClearCommands();
 
         var uwx = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
 
         foreach (var segment in segments)
         {
-            var wasFillInitialized = false;
-            var wasStrokeInitialized = false;
-
-            AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs> fillPathHelper;
-            AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs> strokePathHelper;
+            TPathGeometry fillPath;
+            TPathGeometry strokePath;
 
             if (segmentI >= fillPathHelperContainer.Count)
             {
-                fillPathHelper = new AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>();
-                strokePathHelper = new AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>();
-                fillPathHelperContainer.Add(fillPathHelper);
-                strokePathHelperContainer.Add(strokePathHelper);
+                fillPath = new TPathGeometry();
+                strokePath = new TPathGeometry();
+                fillPathHelperContainer.Add(fillPath);
+                strokePathHelperContainer.Add(strokePath);
             }
             else
             {
-                fillPathHelper = fillPathHelperContainer[segmentI];
-                strokePathHelper = strokePathHelperContainer[segmentI];
+                fillPath = fillPathHelperContainer[segmentI];
+                strokePath = strokePathHelperContainer[segmentI];
             }
 
             if (Fill is not null)
             {
-                wasFillInitialized = fillPathHelper.Initialize(SetDefaultPathTransitions, chartAnimation);
-                Fill.AddGeometryToPaintTask(cartesianChart.Canvas, fillPathHelper.Path);
+                Fill.AddGeometryToPaintTask(cartesianChart.Canvas, fillPath);
                 cartesianChart.Canvas.AddDrawableTask(Fill);
                 Fill.ZIndex = actualZIndex + 0.1;
                 Fill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             }
             if (Stroke is not null)
             {
-                wasStrokeInitialized = strokePathHelper.Initialize(SetDefaultPathTransitions, chartAnimation);
-                Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, strokePathHelper.Path);
+                Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, strokePath);
                 cartesianChart.Canvas.AddDrawableTask(Stroke);
                 Stroke.ZIndex = actualZIndex + 0.2;
                 Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
@@ -234,11 +223,11 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                 var x = secondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
                 var y = primaryScale.ToPixels(data.TargetPoint.PrimaryValue + s);
 
-                var visual = (TBezierVisual?)data.TargetPoint.Context.Visual;
+                var visual = (TVisualPoint?)data.TargetPoint.Context.Visual;
 
                 if (visual is null)
                 {
-                    var v = new TBezierVisual();
+                    var v = new TVisualPoint();
 
                     visual = v;
 
@@ -264,9 +253,9 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                         x0b = previousSecondaryScale.ToPixels(data.OriginalData.X0);
                         x1b = previousSecondaryScale.ToPixels(data.OriginalData.X1);
                         x2b = previousSecondaryScale.ToPixels(data.OriginalData.X2);
-                        y0b = previousPrimaryScale.ToPixels(data.OriginalData.Y0); // cartesianChart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y0) : pg - hgs;
-                        y1b = previousPrimaryScale.ToPixels(data.OriginalData.Y1); //cartesianChart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y1) : pg - hgs;
-                        y2b = previousPrimaryScale.ToPixels(data.OriginalData.Y2); // cartesianChart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y2) : pg - hgs;
+                        y0b = previousPrimaryScale.ToPixels(data.OriginalData.Y0);
+                        y1b = previousPrimaryScale.ToPixels(data.OriginalData.Y1);
+                        y2b = previousPrimaryScale.ToPixels(data.OriginalData.Y2);
                     }
 
                     v.Geometry.X = xg;
@@ -297,83 +286,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                 visual.Bezier.X2 = (float)data.X2;
                 visual.Bezier.Y2 = (float)data.Y2;
 
-                if (Fill is not null)
-                {
-                    if (data.IsFirst)
-                    {
-                        if (wasFillInitialized)
-                        {
-                            fillPathHelper.StartPoint.X = (float)data.X0;
-                            fillPathHelper.StartPoint.Y = p;
-
-                            fillPathHelper.StartSegment.X = (float)data.X0;
-                            fillPathHelper.StartSegment.Y = p;
-
-                            fillPathHelper.StartPoint.CompleteTransitions(
-                                nameof(fillPathHelper.StartPoint.Y), nameof(fillPathHelper.StartPoint.X));
-                            fillPathHelper.StartSegment.CompleteTransitions(
-                                nameof(fillPathHelper.StartSegment.Y), nameof(fillPathHelper.StartSegment.X));
-                        }
-
-                        fillPathHelper.StartPoint.X = (float)data.X0;
-                        fillPathHelper.StartPoint.Y = p;
-                        _ = fillPathHelper.Path.AddLast(fillPathHelper.StartPoint);
-
-                        fillPathHelper.StartSegment.X = (float)data.X0;
-                        fillPathHelper.StartSegment.Y = (float)data.Y0;
-                        _ = fillPathHelper.Path.AddLast(fillPathHelper.StartSegment);
-                    }
-
-                    _ = fillPathHelper.Path.AddLast(visual.Bezier);
-
-                    if (data.IsLast)
-                    {
-                        fillPathHelper.EndSegment.X = (float)data.X2;
-                        fillPathHelper.EndSegment.Y = p;
-                        _ = fillPathHelper.Path.AddLast(fillPathHelper.EndSegment);
-
-                        if (wasFillInitialized)
-                            fillPathHelper.EndSegment.CompleteTransitions(
-                                nameof(fillPathHelper.EndSegment.Y), nameof(fillPathHelper.EndSegment.X));
-                    }
-                }
-                if (Stroke is not null)
-                {
-                    if (data.IsFirst)
-                    {
-                        if (wasStrokeInitialized || cartesianChart.IsZoomingOrPanning)
-                        {
-                            if (cartesianChart.IsZoomingOrPanning && previousPrimaryScale is not null && previousSecondaryScale is not null)
-                            {
-                                strokePathHelper.StartPoint.X = previousSecondaryScale.ToPixels(data.OriginalData?.X0 ?? 0);
-                                strokePathHelper.StartPoint.Y = previousPrimaryScale.ToPixels(data.OriginalData?.Y0 ?? 0);
-                            }
-                            else
-                            {
-                                strokePathHelper.StartPoint.X = (float)data.X0;
-                                strokePathHelper.StartPoint.Y = p;
-                            }
-
-                            strokePathHelper.StartPoint.CompleteTransitions(
-                               nameof(strokePathHelper.StartPoint.Y), nameof(strokePathHelper.StartPoint.X));
-                        }
-
-                        if (!cartesianChart.IsFirstDraw && previousSecondaryScale is not null && previousPrimaryScale is not null)
-                        {
-                            strokePathHelper.StartPoint.X = visual.Geometry.X + gs * 0.5f;// previousSecondaryScale.ToPixels(data.OriginalData?.X0 ?? 0);
-                            strokePathHelper.StartPoint.Y = visual.Geometry.Y + gs * 0.5f; // previousPrimaryScale.ToPixels(data.OriginalData?.Y0 ?? 0);
-                            strokePathHelper.StartPoint.CompleteTransitions(
-                               nameof(strokePathHelper.StartPoint.Y),
-                               nameof(strokePathHelper.StartPoint.X));
-                        }
-
-                        strokePathHelper.StartPoint.X = (float)data.X0;
-                        strokePathHelper.StartPoint.Y = (float)data.Y0;
-                        _ = strokePathHelper.Path.AddLast(strokePathHelper.StartPoint);
-                    }
-
-                    _ = strokePathHelper.Path.AddLast(visual.Bezier);
-                }
+                if (Fill is not null) _ = fillPath.AddLast(visual.Bezier);
+                if (Stroke is not null) _ = strokePath.AddLast(visual.Bezier);
 
                 visual.Geometry.X = x - hgs;
                 visual.Geometry.Y = y - hgs;
@@ -381,8 +295,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                 visual.Geometry.Height = gs;
                 visual.Geometry.RemoveOnCompleted = false;
 
-                visual.FillPath = fillPathHelper.Path;
-                visual.StrokePath = strokePathHelper.Path;
+                visual.FillPath = fillPath;
+                visual.StrokePath = strokePath;
 
                 var hags = gs < 8 ? 8 : gs;
 
@@ -410,8 +324,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                     }
 
                     DataLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, label);
-                    label.Text = DataLabelsFormatter(
-                        new ChartPoint<TModel, TBezierVisual, TLabel>(data.TargetPoint));
+                    label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisualPoint, TLabel>(data.TargetPoint));
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
                     var labelPosition = GetLabelPosition(
@@ -443,12 +356,12 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         {
             var iFill = fillPathHelperContainer.Count - 1;
             var fillHelper = fillPathHelperContainer[iFill];
-            if (Fill is not null) Fill.RemoveGeometryFromPainTask(cartesianChart.Canvas, fillHelper.Path);
+            if (Fill is not null) Fill.RemoveGeometryFromPainTask(cartesianChart.Canvas, fillHelper);
             fillPathHelperContainer.RemoveAt(iFill);
 
             var iStroke = strokePathHelperContainer.Count - 1;
             var strokeHelper = strokePathHelperContainer[iStroke];
-            if (Stroke is not null) Stroke.RemoveGeometryFromPainTask(cartesianChart.Canvas, strokeHelper.Path);
+            if (Stroke is not null) Stroke.RemoveGeometryFromPainTask(cartesianChart.Canvas, strokeHelper);
             strokePathHelperContainer.RemoveAt(iStroke);
         }
 
@@ -530,32 +443,6 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                     MinDeltaSecondary = baseBounds.MinDeltaSecondary
                 },
                 false);
-    }
-
-    /// <summary>
-    /// Sets the default path transitions.
-    /// </summary>
-    /// <param name="areaHelper">The area helper.</param>
-    /// <param name="defaultAnimation">The default animation.</param>
-    /// <returns></returns>
-    protected internal virtual void SetDefaultPathTransitions(
-        AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs> areaHelper,
-        Animation defaultAnimation)
-    {
-        _ = areaHelper.StartPoint
-            .TransitionateProperties(nameof(areaHelper.StartPoint.X), nameof(areaHelper.StartPoint.Y))
-            .WithAnimation(defaultAnimation)
-            .CompleteCurrentTransitions();
-
-        _ = areaHelper.StartSegment
-            .TransitionateProperties(nameof(areaHelper.StartSegment.X), nameof(areaHelper.StartSegment.Y))
-            .WithAnimation(defaultAnimation)
-            .CompleteCurrentTransitions();
-
-        _ = areaHelper.EndSegment
-            .TransitionateProperties(nameof(areaHelper.EndSegment.X), nameof(areaHelper.EndSegment.Y))
-            .WithAnimation(defaultAnimation)
-            .CompleteCurrentTransitions();
     }
 
     /// <inheritdoc cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}.OnSeriesMiniatureChanged"/>
@@ -743,7 +630,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
     {
         var chart = chartPoint.Context.Chart;
 
-        if (chartPoint.Context.Visual is not TBezierVisual visual)
+        if (chartPoint.Context.Visual is not TVisualPoint visual)
             throw new Exception("Unable to initialize the point instance.");
 
         _ = visual.Geometry
@@ -776,7 +663,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
     protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
     {
-        var visual = (TBezierVisual?)point.Context.Visual;
+        var visual = (TVisualPoint?)point.Context.Visual;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
@@ -813,8 +700,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         if (!_requestedCustomMeasureHandler)
         {
             var factory = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>();
-            _customMeasureHandler =
-                factory.LineCustomMeasureHandler<TModel, TVisual, TLabel, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs, TBezierVisual>(this);
+            _customMeasureHandler = factory.LineCustomMeasureHandler<TModel, TVisual, TLabel, TPathGeometry, TVisualPoint>(this);
             _requestedCustomMeasureHandler = true;
         }
 
@@ -840,14 +726,14 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         {
             foreach (var activeChartContainer in _fillPathHelperDictionary.ToArray())
                 foreach (var pathHelper in activeChartContainer.Value.ToArray())
-                    Fill.RemoveGeometryFromPainTask(canvas, pathHelper.Path);
+                    Fill.RemoveGeometryFromPainTask(canvas, pathHelper);
         }
 
         if (Stroke is not null)
         {
             foreach (var activeChartContainer in _strokePathHelperDictionary.ToArray())
                 foreach (var pathHelper in activeChartContainer.Value.ToArray())
-                    Stroke.RemoveGeometryFromPainTask(canvas, pathHelper.Path);
+                    Stroke.RemoveGeometryFromPainTask(canvas, pathHelper);
         }
 
         if (GeometryFill is not null) canvas.RemovePaintTask(GeometryFill);
@@ -874,7 +760,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         {
             if (point.IsNull)
             {
-                if (point.Context.Visual is TBezierVisual visual)
+                if (point.Context.Visual is TVisualPoint visual)
                 {
                     var x = xScale.ToPixels(point.SecondaryValue);
                     var y = yScale.ToPixels(point.PrimaryValue);

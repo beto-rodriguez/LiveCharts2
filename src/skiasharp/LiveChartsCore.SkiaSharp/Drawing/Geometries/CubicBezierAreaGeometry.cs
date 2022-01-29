@@ -20,14 +20,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Segments;
+using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing;
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 /// <summary>
-/// Defines a bezier point.
+/// Defines an area drawn using cubic beziers.
 /// </summary>
-/// <typeparam name="TGeometry">The type of the geometry.</typeparam>
-public class BezierPoint<TGeometry> : BezierVisualPoint<SkiaSharpDrawingContext, TGeometry>
-    where TGeometry : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
-{ }
+public class CubicBezierAreaGeometry : AreaGeometry<CubicBezierSegment>
+{
+    /// <inheritdoc cref="AreaGeometry{TSegment}.OnDrawSegment(SkiaSharpDrawingContext, SKPath, TSegment)"/>
+    protected override void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, CubicBezierSegment segment)
+    {
+        path.CubicTo(segment.X0, segment.Y0, segment.X1, segment.Y1, segment.X2, segment.Y2);
+    }
+
+    /// <inheritdoc cref="AreaGeometry{TSegment}.OnOpen(SkiaSharpDrawingContext, SKPath)"/>
+    protected override void OnOpen(SkiaSharpDrawingContext context, SKPath path)
+    {
+    }
+
+    /// <inheritdoc cref="AreaGeometry{TSegment}.OnClose(SkiaSharpDrawingContext, SKPath)"/>
+    protected override void OnClose(SkiaSharpDrawingContext context, SKPath path)
+    {
+    }
+}

@@ -26,8 +26,7 @@ namespace LiveChartsCore.Drawing;
 /// Defiens a stepline segment.
 /// </summary>
 /// <typeparam name="TPathContext">The type of the path context.</typeparam>
-/// <seealso cref="IAnimatableStepLineSegment" />
 /// <seealso cref="IPathCommand{TPathContext}" />
-public interface IStepLineSegment<TPathContext> : IAnimatableStepLineSegment, IPathCommand<TPathContext>
+public interface IStepLineSegment<TPathContext> : IPathCommand<TPathContext>
 {
 }

@@ -20,43 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Segments;
+using SkiaSharp;
+
+namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 /// <summary>
-/// Defiens an animable stepline segment.
+/// Defines an area drawin using bezier segments.
 /// </summary>
-/// <seealso cref="IAnimatable" />
-public interface IAnimatableStepLineSegment : IAnimatable
+public class StepLineAreaGeometry : AreaGeometry<StepLineSegment>
 {
-    /// <summary>
-    /// Gets or sets the x0.
-    /// </summary>
-    /// <value>
-    /// The x0.
-    /// </value>
-    float X0 { get; set; }
+    /// <inheritdoc cref="AreaGeometry{TSegment}.OnDrawSegment(SkiaSharpDrawingContext, SKPath, TSegment)"/>
+    protected override void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, StepLineSegment segment)
+    {
+        path.LineTo(segment.X0, segment.Y0);
+        path.LineTo(segment.X1, segment.Y1);
+    }
 
-    /// <summary>
-    /// Gets or sets the y0.
-    /// </summary>
-    /// <value>
-    /// The y0.
-    /// </value>
-    float Y0 { get; set; }
+    /// <inheritdoc cref="AreaGeometry{TSegment}.OnClose(SkiaSharpDrawingContext, SKPath)"/>
+    protected override void OnClose(SkiaSharpDrawingContext context, SKPath path)
+    {
+    }
 
-    /// <summary>
-    /// Gets or sets the x1.
-    /// </summary>
-    /// <value>
-    /// The x1.
-    /// </value>
-    float X1 { get; set; }
-
-    /// <summary>
-    /// Gets or sets the y1.
-    /// </summary>
-    /// <value>
-    /// The y1.
-    /// </value>
-    float Y1 { get; set; }
+    /// <inheritdoc cref="AreaGeometry{TSegment}.OnOpen(SkiaSharpDrawingContext, SKPath)"/>
+    protected override void OnOpen(SkiaSharpDrawingContext context, SKPath path)
+    {
+    }
 }
