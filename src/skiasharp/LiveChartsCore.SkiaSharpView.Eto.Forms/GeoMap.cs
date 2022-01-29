@@ -88,6 +88,8 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
 
         SizeChanged += GeoMap_Resize;
 
+        BackgroundColor = global::Eto.Drawing.Colors.White;
+
         Content = motionCanvas1;
     }
 

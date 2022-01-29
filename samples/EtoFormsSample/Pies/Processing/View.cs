@@ -53,9 +53,9 @@ public class View : Panel
         return pieSeries.Fill is not SolidColorPaint solidColorBrush
             ? new Color()
             : Color.FromArgb(
-                solidColorBrush.Color.Alpha,
                 solidColorBrush.Color.Red,
                 solidColorBrush.Color.Green,
-                solidColorBrush.Color.Blue);
+                solidColorBrush.Color.Blue,
+                solidColorBrush.Color.Alpha);
     }
 }
