@@ -24,6 +24,6 @@ public class View : Panel
         var b1 = new Button { Text = "Update" };
         b1.Click += (object sender, System.EventArgs e) => viewModel.DoRandomChange();
 
-        Content = new StackLayout(b1, pieChart);
+        Content = new DynamicLayout(new StackLayout(b1), pieChart);
     }
 }

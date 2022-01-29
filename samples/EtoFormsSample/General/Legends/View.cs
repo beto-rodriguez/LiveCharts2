@@ -19,7 +19,7 @@ public class View : Panel
             LegendPosition = LegendPosition.Right,
         };
 
-        var b1 = new ComboBox();
+        var b1 = new DropDown();
         b1.Items.AddRange(new ListItem[] { "hidden", "top", "left", "right", "bottom" });
         b1.SelectedValueChanged += (object sender, System.EventArgs e) =>
         {
@@ -29,7 +29,10 @@ public class View : Panel
             if (b1.SelectedKey == "left") cartesianChart.LegendPosition = LegendPosition.Left;
             if (b1.SelectedKey == "right") cartesianChart.LegendPosition = LegendPosition.Right;
         };
+        b1.SelectedIndex = 0;
 
-        Content = new StackLayout(b1, cartesianChart);
+        Content = new DynamicLayout(
+            new DynamicRow(new DynamicControl() { Control = b1, XScale = true }),
+            cartesianChart);
     }
 }

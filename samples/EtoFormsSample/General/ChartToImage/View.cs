@@ -32,7 +32,11 @@ public class View : Panel
         {
             Shapes = viewModel.MapShapes,
         };
-        Content = new StackLayout(_cartesian, _pie, _map);
+        Content = new DynamicLayout(
+            new DynamicRow(new DynamicControl() { Control = _cartesian, YScale = true } ),
+            new DynamicRow(new DynamicControl() { Control = _pie, YScale = true }),
+            new DynamicRow(new DynamicControl() { Control = _map, YScale = true })
+            );
 
         // now lets create the images // mark
         CreateImageFromCartesianControl(); // mark

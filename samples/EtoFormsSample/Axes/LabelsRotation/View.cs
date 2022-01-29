@@ -25,6 +25,6 @@ public class View : Panel
             _viewModel.YAxes[0].LabelsRotation = b1.Value;
         };
 
-        Content = new StackLayout(b1, _cartesianChart);
+        Content = new DynamicLayout(new StackLayout(b1), _cartesianChart);
     }
 }

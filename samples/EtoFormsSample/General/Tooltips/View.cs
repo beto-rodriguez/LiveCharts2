@@ -18,7 +18,7 @@ public class View : Panel
             Series = viewModel.Series,
         };
 
-        var b1 = new ComboBox();
+        var b1 = new DropDown();
         b1.Items.AddRange(new ListItem[] { "hidden", "top", "left", "right", "bottom", "center" });
         b1.SelectedValueChanged += (object sender, System.EventArgs e) =>
         {
@@ -29,7 +29,10 @@ public class View : Panel
             if (b1.SelectedKey == "right") cartesianChart.TooltipPosition = TooltipPosition.Right;
             if (b1.SelectedKey == "center") cartesianChart.TooltipPosition = TooltipPosition.Center;
         };
+        b1.SelectedIndex = 0;
 
-        Content = new StackLayout(b1, cartesianChart);
+        Content = new DynamicLayout(
+            new DynamicRow(new DynamicControl() { Control = b1, XScale = true }),
+            cartesianChart);
     }
 }
