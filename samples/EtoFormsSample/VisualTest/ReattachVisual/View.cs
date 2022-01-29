@@ -7,7 +7,8 @@ namespace EtoFormsSample.VisualTest.ReattachVisual;
 public class View : Panel
 {
     private bool _isInVisualTree = true;
-    private readonly CartesianChart _cartesianChart;
+    private CartesianChart _cartesianChart;
+    private Button _toggleButton;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="View"/> class.
@@ -21,25 +22,27 @@ public class View : Panel
             Series = viewModel.Series,
         };
 
-        var b = new Button
+        _toggleButton = new Button
         {
             Text = "Toggle"
         };
-        b.Click += B_Click;
+        _toggleButton.Click += toggleButton_Click;
 
-        Content = new StackLayout(b, _cartesianChart);
+        UpdateLayout();
     }
 
-    private void B_Click(object sender, System.EventArgs e)
+    void UpdateLayout()
     {
-        if (_isInVisualTree)
-        {
-            (Content as StackLayout).Items.RemoveAt(1);
-            _isInVisualTree = false;
-            return;
-        }
+        var chart = _isInVisualTree ? _cartesianChart : null;
 
-        (Content as StackLayout).Items.Add(_cartesianChart);
-        _isInVisualTree = true;
+        var chartRow = new DynamicRow(new DynamicControl() { Control = chart, YScale = true });
+
+        Content = new DynamicLayout(chartRow, _toggleButton);
+    }
+    private void toggleButton_Click(object sender, System.EventArgs e)
+    {
+        _isInVisualTree = !_isInVisualTree;
+
+        UpdateLayout();
     }
 }
