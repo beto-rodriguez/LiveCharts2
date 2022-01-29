@@ -76,7 +76,7 @@ public class StackedAreaSeries<TModel, TVisual> : StackedAreaSeries<TModel, TVis
 /// The type of the data label of every point.
 /// </typeparam>
 public class StackedAreaSeries<TModel, TVisual, TLabel>
-    : StackedAreaSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, PathGeometry, LineSegment, CubicBezierSegment, MoveToPathCommand, SKPath, BezierPoint<TVisual>>
+    : StackedAreaSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, CubicBezierAreaGeometry, BezierPoint<TVisual>>
     where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 {
