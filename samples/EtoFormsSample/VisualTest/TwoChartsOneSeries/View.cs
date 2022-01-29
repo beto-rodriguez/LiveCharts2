@@ -25,13 +25,9 @@ public class View : Panel
             ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X,
         };
 
-        var splitContainer = new Splitter
-        {
-            Orientation = Orientation.Horizontal
-        };
-
-        splitContainer.Panel1 = cartesianChart;
-        splitContainer.Panel2 = cartesianChart2;
-        Content = splitContainer;
+        Content = new DynamicLayout(
+            new DynamicRow(new DynamicControl() { Control = cartesianChart, YScale = true }),
+            new DynamicRow(new DynamicControl() { Control = cartesianChart2, YScale = true })
+            );
     }
 }
