@@ -1,5 +1,5 @@
 ﻿using Eto.Forms;
-using LiveChartsCore.SkiaSharpView.Eto.Forms;
+using LiveChartsCore.SkiaSharpView.Eto;
 using ViewModelsSamples.Axes.LabelsFormat2;
 
 namespace EtoFormsSample.Axes.LabelsFormat2;

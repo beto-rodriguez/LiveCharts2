@@ -34,7 +34,7 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Eto.Forms;
+namespace LiveChartsCore.SkiaSharpView.Eto;
 
 /// <summary>
 /// The geo map control.

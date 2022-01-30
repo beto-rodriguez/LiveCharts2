@@ -1,5 +1,5 @@
 ﻿using Eto.Forms;
-using LiveChartsCore.SkiaSharpView.Eto.Forms;
+using LiveChartsCore.SkiaSharpView.Eto;
 using ViewModelsSamples.General.Visibility;
 
 namespace EtoFormsSample.General.Visibility;

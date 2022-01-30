@@ -2,7 +2,7 @@
 using Eto.Forms;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.SkiaSharpView.Eto.Forms;
+using LiveChartsCore.SkiaSharpView.Eto;
 using ViewModelsSamples.Events.AddPointOnClick;
 
 namespace EtoFormsSample.Events.AddPointOnClick;

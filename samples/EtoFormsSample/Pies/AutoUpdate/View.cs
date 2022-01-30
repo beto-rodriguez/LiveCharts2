@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Eto.Forms;
-using LiveChartsCore.SkiaSharpView.Eto.Forms;
+using LiveChartsCore.SkiaSharpView.Eto;
 using ViewModelsSamples.Pies.AutoUpdate;
 
 namespace EtoFormsSample.Pies.AutoUpdate;

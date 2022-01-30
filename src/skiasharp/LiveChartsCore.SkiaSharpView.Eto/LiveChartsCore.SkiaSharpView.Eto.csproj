@@ -5,8 +5,8 @@
     <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <AssemblyName>LiveChartsCore.SkiaSharpView.Eto.Forms</AssemblyName>
-    <RootNamespace>LiveChartsCore.SkiaSharpView.Eto.Forms</RootNamespace>
+    <AssemblyName>LiveChartsCore.SkiaSharpView.Eto</AssemblyName>
+    <RootNamespace>LiveChartsCore.SkiaSharpView.Eto</RootNamespace>
     <Version>2.0.0-beta.90</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for Eto.Forms.</Description>

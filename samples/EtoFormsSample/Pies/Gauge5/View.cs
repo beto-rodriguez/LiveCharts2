@@ -1,5 +1,5 @@
 ﻿using Eto.Forms;
-using LiveChartsCore.SkiaSharpView.Eto.Forms;
+using LiveChartsCore.SkiaSharpView.Eto;
 using ViewModelsSamples.Pies.Gauge5;
 
 namespace EtoFormsSample.Pies.Gauge5;

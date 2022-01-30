@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Eto.Forms;
-using LiveChartsCore.SkiaSharpView.Eto.Forms;
+using LiveChartsCore.SkiaSharpView.Eto;
 using ViewModelsSamples.Bars.Race;
 
 namespace EtoFormsSample.Bars.Race;

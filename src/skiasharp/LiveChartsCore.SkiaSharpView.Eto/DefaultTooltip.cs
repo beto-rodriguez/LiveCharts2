@@ -29,7 +29,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.Eto.Forms;
+namespace LiveChartsCore.SkiaSharpView.Eto;
 
 /// <inheritdoc cref="IChartTooltip{TDrawingContext}" />
 public class DefaultTooltip : FloatingForm, IChartTooltip<SkiaSharpDrawingContext>

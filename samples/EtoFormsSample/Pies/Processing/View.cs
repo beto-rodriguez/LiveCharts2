@@ -3,7 +3,7 @@ using Eto.Forms;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using LiveChartsCore.SkiaSharpView.Eto.Forms;
+using LiveChartsCore.SkiaSharpView.Eto;
 using ViewModelsSamples.Pies.Processing;
 
 namespace EtoFormsSample.Pies.Processing;

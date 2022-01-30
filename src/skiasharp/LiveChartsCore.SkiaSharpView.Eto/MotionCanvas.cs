@@ -30,7 +30,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Eto.SkiaDraw;
 
-namespace LiveChartsCore.SkiaSharpView.Eto.Forms;
+namespace LiveChartsCore.SkiaSharpView.Eto;
 
 /// <summary>
 /// The motion canvas control for windows forms, <see cref="MotionCanvas{TDrawingContext}"/>.

@@ -1,6 +1,6 @@
 ﻿using Eto.Forms;
 using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView.Eto.Forms;
+using LiveChartsCore.SkiaSharpView.Eto;
 using ViewModelsSamples.General.Tooltips;
 
 namespace EtoFormsSample.General.Tooltips;

@@ -1,6 +1,6 @@
 ﻿using Eto.Forms;
 using LiveChartsCore.SkiaSharpView.SKCharts;
-using LiveChartsCore.SkiaSharpView.Eto.Forms;
+using LiveChartsCore.SkiaSharpView.Eto;
 using ViewModelsSamples.General.ChartToImage;
 
 namespace EtoFormsSample.General.ChartToImage;

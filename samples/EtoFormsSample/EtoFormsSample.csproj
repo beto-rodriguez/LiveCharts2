@@ -1,4 +1,4 @@
-<Project Sdk="Eto.Forms/2.6.0">
+﻿<Project Sdk="Eto.Forms/2.6.0">
 
   <!--
     Set the BuildPlatform property to the Eto platform you wish to build for.
@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Eto.Forms\LiveChartsCore.SkiaSharpView.Eto.Forms.csproj" />
+    <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Eto\LiveChartsCore.SkiaSharpView.Eto.csproj" />
     <ProjectReference Include="..\ViewModelsSamples\ViewModelsSamples.csproj" />
   </ItemGroup>
 

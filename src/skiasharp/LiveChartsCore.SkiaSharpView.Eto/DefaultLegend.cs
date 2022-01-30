@@ -26,7 +26,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Drawing;
 
-namespace LiveChartsCore.SkiaSharpView.Eto.Forms;
+namespace LiveChartsCore.SkiaSharpView.Eto;
 
 /// <inheritdoc cref="IChartLegend{TDrawingContext}" />
 public class DefaultLegend : DynamicLayout, IChartLegend<SkiaSharpDrawingContext>

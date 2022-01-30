@@ -1,6 +1,6 @@
 ﻿using System;
 using Eto.Forms;
-using LiveChartsCore.SkiaSharpView.Eto.Forms;
+using LiveChartsCore.SkiaSharpView.Eto;
 using ViewModelsSamples.General.Animations;
 
 namespace EtoFormsSample.General.Animations;

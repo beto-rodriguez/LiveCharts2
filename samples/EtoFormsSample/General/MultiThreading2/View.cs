@@ -2,7 +2,7 @@
 using System.Linq;
 using Eto.Forms;
 using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView.Eto.Forms;
+using LiveChartsCore.SkiaSharpView.Eto;
 using ViewModelsSamples.General.MultiThreading2;
 
 namespace EtoFormsSample.General.MultiThreading2;
