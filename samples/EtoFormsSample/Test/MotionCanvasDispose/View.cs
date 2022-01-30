@@ -1,4 +1,5 @@
 ﻿using Eto.Forms;
+using LiveChartsCore.SkiaSharpView.Eto;
 using ViewModelsSamples.Test.MotionCanvasDispose;
 
 namespace EtoFormsSample.Test.MotionCanvasDispose;
@@ -10,10 +11,26 @@ public class View : Panel
     /// </summary>
     public View()
     {
-        var label = new Label
-        {
-            Text = "data templates are not supported in Eto.Forms...",
-        };
-        Content = label;
+        var button = new Button() { Text = "Change content", Height = 40 };
+
+        button.Click += (o, e) => { Content = createLayout(button); };
+
+        Content = createLayout(button);
+    }
+
+    private static Control createLayout(Button button)
+    {
+        var canvas = new MotionCanvas();
+
+        ViewModel.Generate(canvas.CanvasCore);
+
+        return new DynamicLayout(
+            new DynamicRow(new DynamicControl()
+            {
+                Control = button,
+                XScale = true
+            }),
+            canvas
+            );
     }
 }
