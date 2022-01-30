@@ -90,10 +90,12 @@ public class CustomTooltip : FloatingForm, IChartTooltip<SkiaSharpDrawingContext
                 Text = point.AsTooltipString,
                 TextColor = Color.FromArgb(250, 250, 250),
                 Font = chart.TooltipFont,
+                VerticalAlignment = VerticalAlignment.Center,
             };
 
             _ = container.AddRow(marker, label);
         }
+        _ = container.AddRow(); // workaround ! empty row else last label renders incorrectly
 
         Content = new Scrollable { Content = container }; // wrap inside a scrollable just to get a border !
     }

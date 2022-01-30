@@ -50,10 +50,12 @@ public class CustomLegend : DynamicLayout, IChartLegend<SkiaSharpDrawingContext>
                 Text = s.Name,
                 TextColor = Colors.Black,
                 Font = chart.LegendFont,
+                VerticalAlignment = VerticalAlignment.Center,
             };
 
             _ = AddRow(marker, label);
         }
+        _ = AddRow(); // workaround ! empty row else last label renders incorrectly
 
         Create();
     }
