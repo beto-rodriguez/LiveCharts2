@@ -13,7 +13,7 @@ public class Form1 : Form
     {
         Title = $"Eto.Forms Sample ({Eto.Platform.Instance} / {System.Runtime.InteropServices.RuntimeInformation.OSDescription})";
 
-        Size = new Size(800, 600);
+        ClientSize = new Size(3, 2) * 300;
 
         var listbox = new ListBox() { DataStore = ViewModelsSamples.Index.Samples };
         foreach (var item in ViewModelsSamples.Index.Samples)

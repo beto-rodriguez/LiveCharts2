@@ -1,4 +1,4 @@
-﻿<Project Sdk="Eto.Forms/2.6.0">
+<Project Sdk="Eto.Forms/2.6.0">
 
   <!--
     Set the BuildPlatform property to the Eto platform you wish to build for.
@@ -22,6 +22,10 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Images\livecharts.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.0-preview.179" />
   </ItemGroup>
 
   <ItemGroup>
