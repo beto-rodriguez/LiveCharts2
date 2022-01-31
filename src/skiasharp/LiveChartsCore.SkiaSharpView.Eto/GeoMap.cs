@@ -97,18 +97,15 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
     public MotionCanvas<SkiaSharpDrawingContext> Canvas => motionCanvas1.CanvasCore;
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.AutoUpdateEnabled" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.DesignerMode" />
-    bool IGeoMapView<SkiaSharpDrawingContext>.DesignerMode => LicenseManager.UsageMode == LicenseUsageMode.Designtime;
+    bool IGeoMapView<SkiaSharpDrawingContext>.DesignerMode => false;
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.SyncContext" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public object SyncContext { get; set; } = new();
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ViewCommand" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public object? ViewCommand
     {
         get => _viewCommand;
@@ -119,7 +116,6 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
         }
     }
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ActiveMap"/>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public CoreMap<SkiaSharpDrawingContext> ActiveMap { get => _activeMap; set { _activeMap = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Width"/>
@@ -129,19 +125,15 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
     float IGeoMapView<SkiaSharpDrawingContext>.Height => ClientSize.Height;
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.MapProjection"/>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public MapProjection MapProjection { get => _mapProjection; set { _mapProjection = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.HeatMap"/>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public LvcColor[] HeatMap { get => _heatMap; set { _heatMap = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.ColorStops"/>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public double[]? ColorStops { get => _colorStops; set { _colorStops = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Stroke"/>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IPaint<SkiaSharpDrawingContext>? Stroke
     {
         get => _stroke;
@@ -154,7 +146,6 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Fill"/>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IPaint<SkiaSharpDrawingContext>? Fill
     {
         get => _fill;
@@ -167,7 +158,6 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Shapes"/>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IEnumerable<IMapElement> Shapes
     {
         get => _shapes;
@@ -181,7 +171,6 @@ public class GeoMap : Panel, IGeoMapView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IGeoMapView{TDrawingContext}.Series"/>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IEnumerable<IGeoSeries> Series
     {
         get => _series;

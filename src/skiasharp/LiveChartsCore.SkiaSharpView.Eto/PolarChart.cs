@@ -85,7 +85,6 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
         core is null ? throw new Exception("core not found") : (PolarChart<SkiaSharpDrawingContext>)core;
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.FitToBounds" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public bool FitToBounds
     {
         get => _fitToBounds;
@@ -97,7 +96,6 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.TotalAngle" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public double TotalAngle
     {
         get => _totalAngle;
@@ -109,7 +107,6 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InnerRadius" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public double InnerRadius
     {
         get => _innerRadius;
@@ -121,7 +118,6 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.InitialRotation" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public double InitialRotation
     {
         get => _initialRotation;
@@ -133,7 +129,6 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.Series" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IEnumerable<ISeries> Series
     {
         get => _series;
@@ -147,7 +142,6 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.AngleAxes" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IEnumerable<IPolarAxis> AngleAxes
     {
         get => _angleAxes;
@@ -161,7 +155,6 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     }
 
     /// <inheritdoc cref="IPolarChartView{TDrawingContext}.RadiusAxes" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IEnumerable<IPolarAxis> RadiusAxes
     {
         get => _radiusAxes;
@@ -181,7 +174,6 @@ public class PolarChart : Chart, IPolarChartView<SkiaSharpDrawingContext>
     {
         core = new PolarChart<SkiaSharpDrawingContext>(
             this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore, true);
-        if (((IChartView)this).DesignerMode) return;
         core.Update();
     }
 

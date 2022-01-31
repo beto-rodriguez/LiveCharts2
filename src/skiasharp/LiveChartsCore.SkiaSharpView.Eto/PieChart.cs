@@ -74,7 +74,6 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
         core is null ? throw new Exception("core not found") : (PieChart<SkiaSharpDrawingContext>)core;
 
     /// <inheritdoc cref="IPieChartView{TDrawingContext}.Series" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IEnumerable<ISeries> Series
     {
         get => _series;
@@ -103,7 +102,6 @@ public class PieChart : Chart, IPieChartView<SkiaSharpDrawingContext>
     {
         core = new PieChart<SkiaSharpDrawingContext>(
             this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore, true);
-        if (((IChartView)this).DesignerMode) return;
         core.Update();
     }
 

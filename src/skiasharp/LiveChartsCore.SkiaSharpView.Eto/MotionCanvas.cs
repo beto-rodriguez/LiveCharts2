@@ -57,7 +57,6 @@ public class MotionCanvas : SkiaDrawable
     /// <value>
     /// The paint tasks.
     /// </value>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public List<PaintSchedule<SkiaSharpDrawingContext>> PaintTasks
     {
         get => _paintTasksSchedule;
@@ -82,7 +81,6 @@ public class MotionCanvas : SkiaDrawable
     /// <value>
     /// The canvas core.
     /// </value>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public MotionCanvas<SkiaSharpDrawingContext> CanvasCore { get; } = new();
 
     /// <inheritdoc cref="Control.OnUnLoad(EventArgs)"/>

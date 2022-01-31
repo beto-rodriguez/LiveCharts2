@@ -154,19 +154,17 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
 #region properties
 
     /// <inheritdoc cref="IChartView.DesignerMode" />
-    bool IChartView.DesignerMode => LicenseManager.UsageMode == LicenseUsageMode.Designtime;
+    bool IChartView.DesignerMode => false;
 
     /// <inheritdoc cref="IChartView.CoreChart" />
     public IChart CoreChart => core ?? throw new Exception("Core not set yet.");
 
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     LvcColor IChartView.BackColor
     {
         get => new((byte)BackgroundColor.Rb, (byte)BackgroundColor.Gb, (byte)BackgroundColor.Bb, (byte)BackgroundColor.Ab);
         set => BackgroundColor = Color.FromArgb(value.R, value.G, value.B, value.A);
     }
 
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     LvcSize IChartView.ControlSize =>
         // return the full control size as a workaround when the legend is not set.
         // for some reason Eto.Forms has not loaded the correct size at this point when the control loads.
@@ -175,31 +173,24 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
             : new LvcSize() { Width = motionCanvas.Width, Height = motionCanvas.Height };
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.CoreCanvas" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public MotionCanvas<SkiaSharpDrawingContext> CoreCanvas => motionCanvas.CanvasCore;
 
     /// <inheritdoc cref="IChartView.DrawMargin" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Margin? DrawMargin { get => _drawMargin; set { _drawMargin = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.SyncContext" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public object SyncContext { get => CoreCanvas.Sync; set { CoreCanvas.Sync = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public TimeSpan AnimationsSpeed { get; set; } = LiveCharts.CurrentSettings.DefaultAnimationsSpeed;
 
     /// <inheritdoc cref="IChartView.AnimationsSpeed" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Func<float, float>? EasingFunction { get; set; } = LiveCharts.CurrentSettings.DefaultEasingFunction;
 
     /// <inheritdoc cref="IChartView.LegendPosition" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public LegendPosition LegendPosition { get => _legendPosition; set { _legendPosition = value; UpdateLegendLayout(); OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.LegendOrientation" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public LegendOrientation LegendOrientation { get => _legendOrientation; set { _legendOrientation = value; OnPropertyChanged(); } }
 
     /// <summary>
@@ -208,7 +199,6 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// <value>
     /// The legend font.
     /// </value>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Font LegendFont { get => _legendFont; set { _legendFont = value; OnPropertyChanged(); } }
 
     /// <summary>
@@ -217,7 +207,6 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// <value>
     /// The color of the legend back.
     /// </value>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Color LegendTextColor { get => _legendTextColor; set { _legendTextColor = value; OnPropertyChanged(); } }
 
     /// <summary>
@@ -226,15 +215,12 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// <value>
     /// The color of the legend back.
     /// </value>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Color LegendBackColor { get => _legendBackColor; set { _legendBackColor = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Legend" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IChartLegend<SkiaSharpDrawingContext>? Legend => legend;
 
     /// <inheritdoc cref="IChartView.LegendPosition" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public TooltipPosition TooltipPosition { get => _tooltipPosition; set { _tooltipPosition = value; OnPropertyChanged(); } }
 
     /// <summary>
@@ -243,7 +229,6 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// <value>
     /// The tool tip font.
     /// </value>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Font TooltipFont { get => _tooltipFont; set { _tooltipFont = value; OnPropertyChanged(); } }
 
     /// <summary>
@@ -252,7 +237,6 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// <value>
     /// The color of the tool tip text.
     /// </value>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Color TooltipTextColor { get => _tooltipTextColor; set { _tooltipTextColor = value; OnPropertyChanged(); } }
 
     /// <summary>
@@ -261,19 +245,15 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// <value>
     /// The color of the tool tip back.
     /// </value>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Color TooltipBackColor { get => _tooltipBackColor; set { _tooltipBackColor = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.Tooltip" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IChartTooltip<SkiaSharpDrawingContext>? Tooltip => tooltip;
 
     /// <inheritdoc cref="IChartView{TDrawingContext}.AutoUpdateEnabled" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public bool AutoUpdateEnabled { get; set; } = true;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public TimeSpan UpdaterThrottler
     {
         get => core?.UpdaterThrottler ?? throw new Exception("core not set yet.");
@@ -336,8 +316,7 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// <returns></returns>
     protected void OnPropertyChanged()
     {
-        if (core is null || ((IChartView)this).DesignerMode) return;
-        core.Update();
+        core?.Update();
     }
 
     /// <inheritdoc cref="Control.OnUnLoad(EventArgs)"/>

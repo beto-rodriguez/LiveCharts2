@@ -88,7 +88,6 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
         core is null ? throw new Exception("core not found") : (CartesianChart<SkiaSharpDrawingContext>)core;
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Series" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IEnumerable<ISeries> Series
     {
         get => _series;
@@ -102,7 +101,6 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.XAxes" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IEnumerable<ICartesianAxis> XAxes
     {
         get => _xAxes;
@@ -116,7 +114,6 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.YAxes" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IEnumerable<ICartesianAxis> YAxes
     {
         get => _yAxes;
@@ -130,7 +127,6 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.Sections" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IEnumerable<Section<SkiaSharpDrawingContext>> Sections
     {
         get => _sections;
@@ -144,7 +140,6 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.DrawMarginFrame" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public DrawMarginFrame<SkiaSharpDrawingContext>? DrawMarginFrame
     {
         get => _drawMarginFrame;
@@ -156,15 +151,12 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     }
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomMode" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public ZoomAndPanMode ZoomMode { get; set; } = LiveCharts.CurrentSettings.DefaultZoomMode;
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.ZoomingSpeed" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public double ZoomingSpeed { get; set; } = LiveCharts.CurrentSettings.DefaultZoomSpeed;
 
     /// <inheritdoc cref="ICartesianChartView{TDrawingContext}.TooltipFindingStrategy" />
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public TooltipFindingStrategy TooltipFindingStrategy { get => _tooltipFindingStrategy; set { _tooltipFindingStrategy = value; OnPropertyChanged(); } }
 
     /// <summary>
@@ -174,7 +166,6 @@ public class CartesianChart : Chart, ICartesianChartView<SkiaSharpDrawingContext
     {
         core = new CartesianChart<SkiaSharpDrawingContext>(
             this, LiveChartsSkiaSharp.DefaultPlatformBuilder, motionCanvas.CanvasCore, true);
-        if (((IChartView)this).DesignerMode) return;
         core.Update();
     }
 
