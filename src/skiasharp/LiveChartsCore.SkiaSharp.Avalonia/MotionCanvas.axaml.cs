@@ -112,7 +112,7 @@ public class MotionCanvas : UserControl
 
     /// <summary>
     /// Renders the control.
-    /// </summary>
+    /// </summary>p
     /// <param name="context"></param>
     public override void Render(a.DrawingContext context)
     {
@@ -218,10 +218,7 @@ public class MotionCanvas : UserControl
                     _motionCanvas,
                     new SKImageInfo(
                         (int)Bounds.Width, (int)Bounds.Height),
-                        skiaContext.SkSurface, skiaContext.SkCanvas)
-                {
-                    BackColor = _backColor
-                });
+                        skiaContext.SkSurface, skiaContext.SkCanvas));
             //}
 
             if (_motionCanvas.IsValid) return;
