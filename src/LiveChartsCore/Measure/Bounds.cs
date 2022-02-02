@@ -102,7 +102,7 @@ public class Bounds
     {
         if (Max <= bounds.Max) Max = bounds.Max;
         if (Min >= bounds.Min) Min = bounds.Min;
-        if (MinDelta < bounds.MinDelta) MinDelta = bounds.MinDelta;
+        if (bounds.MinDelta < MinDelta) MinDelta = bounds.MinDelta;
         if (RequestedGeometrySize < bounds.RequestedGeometrySize) RequestedGeometrySize = bounds.RequestedGeometrySize;
         if (PaddingMin < bounds.PaddingMin) PaddingMin = bounds.PaddingMin;
         if (PaddingMax < bounds.PaddingMax) PaddingMax = bounds.PaddingMax;

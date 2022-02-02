@@ -58,8 +58,8 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     internal AxisOrientation _orientation;
 
     private double _minStep = 0;
-    private Bounds? _dataBounds = null;
-    private Bounds? _visibleDataBounds = null;
+    private Bounds _dataBounds = new();
+    private Bounds _visibleDataBounds = new();
     private double _labelsRotation;
     private LvcRectangle _labelsDesiredSize = new(), _nameDesiredSize = new();
     private TTextGeometry? _nameGeometry;

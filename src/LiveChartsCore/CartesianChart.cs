@@ -396,18 +396,16 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
             theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
 
-            var secondaryAxis = XAxes[series.ScalesXAt];
-            var primaryAxis = YAxes[series.ScalesYAt];
+            var xAxis = XAxes[series.ScalesXAt];
+            var yAxis = YAxes[series.ScalesYAt];
 
-            var seriesBounds = series.GetBounds(this, secondaryAxis, primaryAxis).Bounds;
-
+            var seriesBounds = series.GetBounds(this, xAxis, yAxis).Bounds;
             if (seriesBounds.IsEmpty) continue;
 
-            secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds);
-            secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds);
-
-            primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds);
-            primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds);
+            xAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds);
+            yAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds);
+            xAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds);
+            yAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds);
 
             series.IsNotifyingChanges = true;
         }
@@ -537,7 +535,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             var drawablePlane = (IPlane<TDrawingContext>)axis;
             var ns = drawablePlane.GetNameLabelSize(this);
             var s = drawablePlane.GetPossibleSize(this);
-            var w = s.Width; //s.Width > m.Left ? s.Width : m.Left;
+            var w = s.Width;
 
             if (axis.Position == AxisPosition.Start)
             {
