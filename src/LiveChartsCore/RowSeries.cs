@@ -277,6 +277,7 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
                     {
                         Max = baseBounds.SecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth,
                         Min = baseBounds.SecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth,
+                        MinDelta = baseBounds.SecondaryBounds.MinDelta,
                         PaddingMax = ts,
                         PaddingMin = ts
                     },
@@ -284,6 +285,7 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
                     {
                         Max = baseBounds.PrimaryBounds.Max,
                         Min = baseBounds.PrimaryBounds.Min,
+                        MinDelta = baseBounds.PrimaryBounds.MinDelta,
                         PaddingMax = tp,
                         PaddingMin = tp
                     },
@@ -296,9 +298,7 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
                     {
                         Max = baseBounds.VisiblePrimaryBounds.Max,
                         Min = baseBounds.VisiblePrimaryBounds.Min
-                    },
-                    MinDeltaPrimary = baseBounds.MinDeltaPrimary,
-                    MinDeltaSecondary = baseBounds.MinDeltaSecondary
+                    }
                 },
                 false);
     }

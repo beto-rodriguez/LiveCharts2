@@ -255,6 +255,7 @@ public class StackedColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : Sta
                     {
                         Max = baseBounds.SecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth,
                         Min = baseBounds.SecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth,
+                        MinDelta = baseBounds.SecondaryBounds.MinDelta,
                         PaddingMax = ts,
                         PaddingMin = ts
                     },
@@ -262,6 +263,7 @@ public class StackedColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : Sta
                     {
                         Max = baseBounds.PrimaryBounds.Max + tp,
                         Min = baseBounds.PrimaryBounds.Min < 0 ? baseBounds.PrimaryBounds.Min : 0,
+                        MinDelta = baseBounds.PrimaryBounds.MinDelta,
                         PaddingMax = tp,
                         PaddingMin = baseBounds.PrimaryBounds.Min < 0 ? tp : 0,
                     },
@@ -274,9 +276,7 @@ public class StackedColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : Sta
                     {
                         Max = baseBounds.VisiblePrimaryBounds.Max + tp,
                         Min = baseBounds.VisiblePrimaryBounds.Min < 0 ? baseBounds.PrimaryBounds.Min - tp : 0
-                    },
-                    MinDeltaPrimary = baseBounds.MinDeltaPrimary,
-                    MinDeltaSecondary = baseBounds.MinDeltaSecondary
+                    }
                 },
                 false);
     }

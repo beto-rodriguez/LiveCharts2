@@ -104,20 +104,4 @@ public class DimensionalBounds
     /// Gets or sets the tertiary bounds.
     /// </summary>
     public Bounds VisibleTertiaryBounds { get; set; }
-
-    /// <summary>
-    /// Gets or sets the minimum delta primary.
-    /// </summary>
-    /// <value>
-    /// The minimum delta primary.
-    /// </value>
-    public double MinDeltaPrimary { get; set; } = float.MaxValue;
-
-    /// <summary>
-    /// Gets or sets the minimum delta secondary.
-    /// </summary>
-    /// <value>
-    /// The minimum delta secondary.
-    /// </value>
-    public double MinDeltaSecondary { get; set; } = float.MaxValue;
 }

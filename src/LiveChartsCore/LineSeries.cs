@@ -122,10 +122,6 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         var drawMarginSize = cartesianChart.DrawMarginSize;
         var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
         var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
-        var previousPrimaryScale =
-            primaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis, true);
-        var previousSecondaryScale =
-            secondaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
 
         var gs = _geometrySize;
         var hgs = gs / 2f;
@@ -231,32 +227,16 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
                     visual = v;
 
-                    var pg = p;
+                    var pg = y;
                     var xg = x - hgs;
-                    var yg = p - hgs;
+                    var yg = y - hgs;
 
                     var x0b = data.X0;
                     var x1b = data.X1;
                     var x2b = data.X2;
-                    var y0b = p - hgs;
-                    var y1b = p - hgs;
-                    var y2b = p - hgs;
-
-                    if (previousSecondaryScale is not null && previousPrimaryScale is not null)
-                    {
-                        pg = previousPrimaryScale.ToPixels(pivot);
-                        xg = previousSecondaryScale.ToPixels(data.TargetPoint.SecondaryValue) - hgs;
-                        yg = previousPrimaryScale.ToPixels(data.TargetPoint.PrimaryValue + s) - hgs;
-
-                        if (data.OriginalData is null) throw new Exception("Original data not found");
-
-                        x0b = previousSecondaryScale.ToPixels(data.OriginalData.X0);
-                        x1b = previousSecondaryScale.ToPixels(data.OriginalData.X1);
-                        x2b = previousSecondaryScale.ToPixels(data.OriginalData.X2);
-                        y0b = previousPrimaryScale.ToPixels(data.OriginalData.Y0);
-                        y1b = previousPrimaryScale.ToPixels(data.OriginalData.Y1);
-                        y2b = previousPrimaryScale.ToPixels(data.OriginalData.Y2);
-                    }
+                    var y0b = data.Y0;
+                    var y1b = data.Y1;
+                    var y2b = data.Y2;
 
                     v.Geometry.X = xg;
                     v.Geometry.Y = yg;
@@ -264,11 +244,11 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                     v.Geometry.Height = gs;
 
                     v.Bezier.X0 = (float)x0b;
-                    v.Bezier.Y0 = y0b;
+                    v.Bezier.Y0 = (float)y0b;
                     v.Bezier.X1 = (float)x1b;
-                    v.Bezier.Y1 = y1b;
+                    v.Bezier.Y1 = (float)y1b;
                     v.Bezier.X2 = (float)x2b;
-                    v.Bezier.Y2 = y2b;
+                    v.Bezier.Y2 = (float)y2b;
 
                     data.TargetPoint.Context.Visual = v;
                     OnPointCreated(data.TargetPoint);
@@ -417,6 +397,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                     {
                         Max = baseBounds.SecondaryBounds.Max,
                         Min = baseBounds.SecondaryBounds.Min,
+                        MinDelta = baseBounds.SecondaryBounds.MinDelta,
                         PaddingMax = ts,
                         PaddingMin = ts,
                         RequestedGeometrySize = rgs
@@ -425,6 +406,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                     {
                         Max = baseBounds.PrimaryBounds.Max,
                         Min = baseBounds.PrimaryBounds.Min,
+                        MinDelta = baseBounds.PrimaryBounds.MinDelta,
                         PaddingMax = tp,
                         PaddingMin = tp,
                         RequestedGeometrySize = rgs
@@ -438,9 +420,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                     {
                         Max = baseBounds.VisiblePrimaryBounds.Max,
                         Min = baseBounds.VisiblePrimaryBounds.Min
-                    },
-                    MinDeltaPrimary = baseBounds.MinDeltaPrimary,
-                    MinDeltaSecondary = baseBounds.MinDeltaSecondary
+                    }
                 },
                 false);
     }

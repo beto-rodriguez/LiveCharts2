@@ -274,6 +274,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
                     {
                         Max = baseBounds.SecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth,
                         Min = baseBounds.SecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth,
+                        MinDelta = baseBounds.SecondaryBounds.MinDelta,
                         PaddingMax = ts,
                         PaddingMin = ts
                     },
@@ -282,7 +283,8 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
                         Max = baseBounds.PrimaryBounds.Max,
                         Min = baseBounds.PrimaryBounds.Min,
                         PaddingMax = tp,
-                        PaddingMin = tp
+                        PaddingMin = tp,
+                        MinDelta = baseBounds.PrimaryBounds.MinDelta
                     },
                     VisibleSecondaryBounds = new Bounds
                     {
@@ -293,9 +295,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
                     {
                         Max = baseBounds.VisiblePrimaryBounds.Max,
                         Min = baseBounds.VisiblePrimaryBounds.Min
-                    },
-                    MinDeltaPrimary = baseBounds.MinDeltaPrimary,
-                    MinDeltaSecondary = baseBounds.MinDeltaSecondary
+                    }
                 },
                 false);
     }

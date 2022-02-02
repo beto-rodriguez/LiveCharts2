@@ -249,6 +249,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
                     {
                         Max = baseBounds.SecondaryBounds.Max,
                         Min = baseBounds.SecondaryBounds.Min,
+                        MinDelta = baseBounds.SecondaryBounds.MinDelta,
                         PaddingMax = ts,
                         PaddingMin = ts
                     },
@@ -256,6 +257,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
                     {
                         Max = baseBounds.PrimaryBounds.Max,
                         Min = baseBounds.PrimaryBounds.Min,
+                        MinDelta = baseBounds.PrimaryBounds.MinDelta,
                         PaddingMax = tp,
                         PaddingMin = tp
                     },
@@ -268,9 +270,7 @@ public class ScatterSeries<TModel, TVisual, TLabel, TDrawingContext>
                     {
                         Max = baseBounds.VisiblePrimaryBounds.Max,
                         Min = baseBounds.VisiblePrimaryBounds.Min
-                    },
-                    MinDeltaPrimary = baseBounds.MinDeltaPrimary,
-                    MinDeltaSecondary = baseBounds.MinDeltaSecondary
+                    }
                 },
                 false);
     }

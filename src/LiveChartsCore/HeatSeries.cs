@@ -275,6 +275,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
                     {
                         Max = baseBounds.SecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth,
                         Min = baseBounds.SecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth,
+                        MinDelta = baseBounds.SecondaryBounds.MinDelta,
                         PaddingMax = ts,
                         PaddingMin = ts
                     },
@@ -282,6 +283,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
                     {
                         Max = baseBounds.PrimaryBounds.Max + 0.5 * primaryAxis.UnitWidth,
                         Min = baseBounds.PrimaryBounds.Min - 0.5 * primaryAxis.UnitWidth,
+                        MinDelta = baseBounds.PrimaryBounds.MinDelta,
                         PaddingMax = tp,
                         PaddingMin = tp
                     },
@@ -294,9 +296,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
                     {
                         Max = baseBounds.VisiblePrimaryBounds.Max + 0.5 * primaryAxis.UnitWidth,
                         Min = baseBounds.VisiblePrimaryBounds.Min - 0.5 * primaryAxis.UnitWidth
-                    },
-                    MinDeltaPrimary = baseBounds.MinDeltaPrimary,
-                    MinDeltaSecondary = baseBounds.MinDeltaSecondary
+                    }
                 },
                 false);
     }

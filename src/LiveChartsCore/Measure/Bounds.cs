@@ -85,11 +85,27 @@ public class Bounds
     /// if the given value is less than the current instance <see cref="Min"/> property then the given value is set at <see cref="Min"/> property.
     /// </summary>
     /// <param name="value">the value to append</param>
-    /// <returns>Whether the value affected the current bounds, true if it affected, false if did not.</returns>
     public void AppendValue(double value)
     {
         if (Max <= value) Max = value;
         if (Min >= value) Min = value;
+        IsEmpty = false;
+    }
+
+    /// <summary>
+    /// Compares the current bounds with a given value,
+    /// if the given value is greater than the current instance <see cref="Max"/> property then the given value is set at <see cref="Max"/> property,
+    /// if the given value is less than the current instance <see cref="Min"/> property then the given value is set at <see cref="Min"/> property.
+    /// </summary>
+    /// <param name="bounds">the bounds to append</param>
+    public void AppendValue(Bounds bounds)
+    {
+        if (Max <= bounds.Max) Max = bounds.Max;
+        if (Min >= bounds.Min) Min = bounds.Min;
+        if (MinDelta < bounds.MinDelta) MinDelta = bounds.MinDelta;
+        if (RequestedGeometrySize < bounds.RequestedGeometrySize) RequestedGeometrySize = bounds.RequestedGeometrySize;
+        if (PaddingMin < bounds.PaddingMin) PaddingMin = bounds.PaddingMin;
+        if (PaddingMax < bounds.PaddingMax) PaddingMax = bounds.PaddingMax;
         IsEmpty = false;
     }
 

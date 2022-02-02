@@ -36,13 +36,15 @@ public class CubicBezierAreaGeometry : AreaGeometry<CubicBezierSegment>
         path.CubicTo(segment.X0, segment.Y0, segment.X1, segment.Y1, segment.X2, segment.Y2);
     }
 
-    /// <inheritdoc cref="AreaGeometry{TSegment}.OnOpen(SkiaSharpDrawingContext, SKPath)"/>
-    protected override void OnOpen(SkiaSharpDrawingContext context, SKPath path)
+    /// <inheritdoc cref="AreaGeometry{TSegment}.OnOpen(SkiaSharpDrawingContext, SKPath, TSegment)"/>
+    protected override void OnOpen(SkiaSharpDrawingContext context, SKPath path, CubicBezierSegment segment)
     {
+        path.MoveTo(segment.X0, segment.Y0);
     }
 
-    /// <inheritdoc cref="AreaGeometry{TSegment}.OnClose(SkiaSharpDrawingContext, SKPath)"/>
-    protected override void OnClose(SkiaSharpDrawingContext context, SKPath path)
+    /// <inheritdoc cref="AreaGeometry{TSegment}.OnClose(SkiaSharpDrawingContext, SKPath, TSegment)"/>
+    protected override void OnClose(SkiaSharpDrawingContext context, SKPath path, CubicBezierSegment segment)
     {
+
     }
 }

@@ -395,6 +395,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     {
                         Max = baseBounds.SecondaryBounds.Max + ts,
                         Min = baseBounds.SecondaryBounds.Min - ts,
+                        MinDelta = baseBounds.SecondaryBounds.MinDelta,
                         PaddingMax = ts,
                         PaddingMin = ts,
                         RequestedGeometrySize = rgs
@@ -403,6 +404,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     {
                         Max = baseBounds.PrimaryBounds.Max + tp,
                         Min = baseBounds.PrimaryBounds.Min - tp,
+                        MinDelta = baseBounds.PrimaryBounds.MinDelta,
                         PaddingMax = tp,
                         PaddingMin = tp,
                         RequestedGeometrySize = rgs
@@ -416,9 +418,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     {
                         Max = baseBounds.VisiblePrimaryBounds.Max + tp,
                         Min = baseBounds.VisiblePrimaryBounds.Min - tp
-                    },
-                    MinDeltaPrimary = baseBounds.MinDeltaPrimary,
-                    MinDeltaSecondary = baseBounds.MinDeltaSecondary
+                    }
                 }, false);
     }
 

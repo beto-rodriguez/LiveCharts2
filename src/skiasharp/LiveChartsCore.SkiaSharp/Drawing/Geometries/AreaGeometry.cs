@@ -31,7 +31,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// </summary>
 /// <typeparam name="TSegment">The type of the segment.</typeparam>
 public abstract class AreaGeometry<TSegment> : Drawable, IAreaGeometry<TSegment, SkiaSharpDrawingContext>
-    where TSegment : IAnimatable
+    where TSegment : class, IAnimatable
 {
     private readonly LinkedList<TSegment> _commands = new();
 
@@ -127,6 +127,7 @@ public abstract class AreaGeometry<TSegment> : Drawable, IAreaGeometry<TSegment,
 
         var currentTime = CurrentTime;
         var isFirst = true;
+        TSegment? last = null;
 
         foreach (var segment in _commands)
         {
@@ -136,13 +137,14 @@ public abstract class AreaGeometry<TSegment> : Drawable, IAreaGeometry<TSegment,
             if (isFirst)
             {
                 isFirst = false;
-                OnOpen(context, path);
+                OnOpen(context, path, segment);
             }
 
             OnDrawSegment(context, path, segment);
             isValid = isValid && segment.IsValid;
 
             if (segment.IsValid && segment.RemoveOnCompleted) toRemoveSegments.Add(segment);
+            last = segment;
         }
 
         foreach (var segment in toRemoveSegments)
@@ -151,7 +153,7 @@ public abstract class AreaGeometry<TSegment> : Drawable, IAreaGeometry<TSegment,
             isValid = false;
         }
 
-        OnClose(context, path);
+        if (last is not null) OnClose(context, path, last);
 
         context.Canvas.DrawPath(path, context.Paint);
 
@@ -163,14 +165,16 @@ public abstract class AreaGeometry<TSegment> : Drawable, IAreaGeometry<TSegment,
     /// </summary>
     /// <param name="context">The context.</param>
     /// <param name="path">The path.</param>
-    protected abstract void OnOpen(SkiaSharpDrawingContext context, SKPath path);
+    /// <param name="segment">The segment.</param>
+    protected abstract void OnOpen(SkiaSharpDrawingContext context, SKPath path, TSegment segment);
 
     /// <summary>
     /// Called to close the area.
     /// </summary>
     /// <param name="context">The context.</param>
     /// <param name="path">The path.</param>
-    protected abstract void OnClose(SkiaSharpDrawingContext context, SKPath path);
+    /// <param name="segment">The segment.</param>
+    protected abstract void OnClose(SkiaSharpDrawingContext context, SKPath path, TSegment segment);
 
     /// <summary>
     /// Called to draw the segment.

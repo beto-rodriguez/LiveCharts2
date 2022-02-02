@@ -20,31 +20,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing.Segments;
-using SkiaSharp;
-
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
+namespace LiveChartsCore.Motion;
 
 /// <summary>
-/// Defines an area drawin using bezier segments.
+/// Defines the <see cref="NullableDoubleMotionProperty"/> class.
 /// </summary>
-public class StepLineAreaGeometry : AreaGeometry<StepLineSegment>
+public class NullableDoubleMotionProperty : MotionProperty<double?>
 {
-    /// <inheritdoc cref="AreaGeometry{TSegment}.OnDrawSegment(SkiaSharpDrawingContext, SKPath, TSegment)"/>
-    protected override void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, StepLineSegment segment)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NullableDoubleMotionProperty"/> class.
+    /// </summary>
+    /// <param name="propertyName">Name of the property.</param>
+    public NullableDoubleMotionProperty(string propertyName)
+        : base(propertyName)
     {
-        path.LineTo(segment.X0, segment.Y0);
-        path.LineTo(segment.X1, segment.Y1);
+        fromValue = 0;
+        toValue = 0;
     }
 
-    /// <inheritdoc cref="AreaGeometry{TSegment}.OnOpen(SkiaSharpDrawingContext, SKPath, TSegment)"/>
-    protected override void OnOpen(SkiaSharpDrawingContext context, SKPath path, StepLineSegment segment)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FloatMotionProperty"/> class.
+    /// </summary>
+    /// <param name="propertyName">Name of the property.</param>
+    /// <param name="value">The value.</param>
+    public NullableDoubleMotionProperty(string propertyName, double? value)
+        : base(propertyName)
     {
-        path.MoveTo(segment.X0, segment.Y0);
+        fromValue = value;
+        toValue = value;
     }
 
-    /// <inheritdoc cref="AreaGeometry{TSegment}.OnClose(SkiaSharpDrawingContext, SKPath, TSegment)"/>
-    protected override void OnClose(SkiaSharpDrawingContext context, SKPath path, StepLineSegment segment)
+    /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
+    protected override double? OnGetMovement(float progress)
     {
+        return fromValue is null || toValue is null
+            ? null
+            : fromValue + progress * (toValue - fromValue);
     }
 }

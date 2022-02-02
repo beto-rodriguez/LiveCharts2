@@ -456,6 +456,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                     {
                         Max = baseBounds.SecondaryBounds.Max,
                         Min = baseBounds.SecondaryBounds.Min,
+                        MinDelta = baseBounds.SecondaryBounds.MinDelta,
                         PaddingMax = 1,
                         PaddingMin = 0,
                         RequestedGeometrySize = rgs
@@ -464,6 +465,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                     {
                         Max = baseBounds.PrimaryBounds.Max,
                         Min = baseBounds.PrimaryBounds.Min,
+                        MinDelta = baseBounds.PrimaryBounds.MinDelta,
                         PaddingMax = tp,
                         PaddingMin = tp,
                         RequestedGeometrySize = rgs
@@ -477,9 +479,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                     {
                         Max = baseBounds.VisiblePrimaryBounds.Max,
                         Min = baseBounds.VisiblePrimaryBounds.Min
-                    },
-                    MinDeltaPrimary = baseBounds.MinDeltaPrimary,
-                    MinDeltaSecondary = baseBounds.MinDeltaSecondary
+                    }
                 },
                 false);
     }

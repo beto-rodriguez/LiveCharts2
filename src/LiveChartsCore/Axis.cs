@@ -30,6 +30,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Helpers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 
 namespace LiveChartsCore;
 
@@ -78,6 +79,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private bool _isVisible = true;
     private bool _isInverted;
     private bool _forceStepToMin;
+    private AnimatableAxisBounds? _animatableBounds = null;
 
     #endregion
 
@@ -235,6 +237,23 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         if (s < _minStep) s = _minStep;
         if (_forceStepToMin) s = _minStep;
 
+        var max = MaxLimit is null ? (_visibleDataBounds ?? _dataBounds).Max : MaxLimit.Value;
+        var min = MinLimit is null ? (_visibleDataBounds ?? _dataBounds).Min : MinLimit.Value;
+
+        if (_animatableBounds is null)
+        {
+            _animatableBounds = new AnimatableAxisBounds();
+
+            _ = _animatableBounds
+                .TransitionateProperties(nameof(_animatableBounds.MinLimit), nameof(_animatableBounds.MaxLimit))
+                .WithAnimation(animation =>
+                         animation
+                             .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
+                             .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
+
+            _ = cartesianChart.Canvas.Trackers.Add(_animatableBounds);
+        }
+
         if (NamePaint is not null)
         {
             if (NamePaint.ZIndex == 0) NamePaint.ZIndex = -1;
@@ -275,9 +294,6 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var size = (float)TextSize;
         var r = (float)_labelsRotation;
         var hasRotation = Math.Abs(r) > 0.01f;
-
-        var max = MaxLimit is null ? (_visibleDataBounds ?? _dataBounds).Max : MaxLimit.Value;
-        var min = MinLimit is null ? (_visibleDataBounds ?? _dataBounds).Min : MinLimit.Value;
 
         var start = Math.Truncate(min / s) * s;
         if (!activeSeparators.TryGetValue(cartesianChart, out var separators))
@@ -584,15 +600,12 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <returns></returns>
     public virtual void Delete(Chart<TDrawingContext> chart)
     {
-        if (_labelsPaint is not null)
+        foreach (var paint in GetPaintTasks())
         {
-            chart.Canvas.RemovePaintTask(_labelsPaint);
-            _labelsPaint.ClearGeometriesFromPaintTask(chart.Canvas);
-        }
-        if (_separatorsPaint is not null)
-        {
-            chart.Canvas.RemovePaintTask(_separatorsPaint);
-            _separatorsPaint.ClearGeometriesFromPaintTask(chart.Canvas);
+            if (paint is null) continue;
+
+            chart.Canvas.RemovePaintTask(paint);
+            paint.ClearGeometriesFromPaintTask(chart.Canvas);
         }
 
         _ = activeSeparators.Remove(chart);
