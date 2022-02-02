@@ -77,7 +77,7 @@ public class Bounds
     /// <value>
     /// The minimum delta.
     /// </value>
-    public double MinDelta { get; set; }
+    public double MinDelta { get; set; } = double.MaxValue;
 
     /// <summary>
     /// Compares the current bounds with a given value,
