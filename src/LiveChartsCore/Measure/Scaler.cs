@@ -59,11 +59,6 @@ public class Scaler
 
         if (usePreviousScale)
         {
-            //actualBounds = axis.PreviousDataBounds;
-            //maxLimit = axis.PreviousMaxLimit;
-            //minLimit = axis.PreviousMinLimit;
-            //actualVisibleBounds = axis.PreviousVisibleDataBounds;
-
             actualBounds = new Bounds(axis.DataBounds)
             {
                 Max = axis.ActualBounds.MaxDataBound,
@@ -86,11 +81,6 @@ public class Scaler
             maxLimit = axis.MaxLimit;
             minLimit = axis.MinLimit;
         }
-
-        //var actualBounds = usePreviousScale ? axis.PreviousDataBounds : axis.DataBounds;
-        //var actualVisibleBounds = usePreviousScale ? axis.PreviousVisibleDataBounds : axis.VisibleDataBounds;
-        //var maxLimit = usePreviousScale ? axis.PreviousMaxLimit : axis.MaxLimit;
-        //var minLimit = usePreviousScale ? axis.PreviousMinLimit : axis.MinLimit;
 
         if (bounds != null)
         {

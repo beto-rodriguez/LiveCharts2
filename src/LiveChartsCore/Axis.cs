@@ -232,10 +232,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             _ = cartesianChart.Canvas.Trackers.Add(_animatableBounds);
         }
 
-        var scale = new Scaler(drawLocation, drawMarginSize, this);
-        var previousSacale = !_animatableBounds.HasPreviousState
-            ? null
-            : new Scaler(drawLocation, drawMarginSize, this, true);
+        var scale = this.GetScaler(cartesianChart);
+        var actualScale = this.GetActualScalerScaler(cartesianChart);
+
         var axisTick = this.GetTick(drawMarginSize);
 
         var labeler = Labeler;
@@ -391,19 +390,19 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
                     textGeometry.Opacity = 0;
 
-                    if (previousSacale is not null)
+                    if (actualScale is not null)
                     {
                         float xi, yi;
 
                         if (_orientation == AxisOrientation.X)
                         {
-                            xi = previousSacale.ToPixels(i);
+                            xi = actualScale.ToPixels(i);
                             yi = yoo;
                         }
                         else
                         {
                             xi = xoo;
-                            yi = previousSacale.ToPixels(i);
+                            yi = actualScale.ToPixels(i);
                         }
 
                         textGeometry.X = xi;
@@ -430,19 +429,19 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
                     lineGeometry.Opacity = 0;
 
-                    if (previousSacale is not null)
+                    if (actualScale is not null)
                     {
                         float xi, yi;
 
                         if (_orientation == AxisOrientation.X)
                         {
-                            xi = previousSacale.ToPixels(i);
+                            xi = actualScale.ToPixels(i);
                             yi = yoo;
                         }
                         else
                         {
                             xi = xoo;
-                            yi = previousSacale.ToPixels(i);
+                            yi = actualScale.ToPixels(i);
                         }
 
                         if (_orientation == AxisOrientation.X)
