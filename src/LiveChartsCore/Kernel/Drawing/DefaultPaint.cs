@@ -221,4 +221,10 @@ public class DefaultPaint<TDrawingContext> : IPaint<TDrawingContext>
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.ReleaseCanvas(MotionCanvas{TDrawingContext})" />
     public void ReleaseCanvas(MotionCanvas<TDrawingContext> canvas) { }
+
+    ///  <inheritdoc cref="IAnimatable.GetAllAnimatableProperties"/>
+    public string[] GetAllAnimatableProperties()
+    {
+        return Array.Empty<string>();
+    }
 }

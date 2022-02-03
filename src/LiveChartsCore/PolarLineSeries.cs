@@ -676,16 +676,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                 X1 = c2X,
                 Y1 = c2Y,
                 X2 = next.X,
-                Y2 = next.Y,
-                OriginalData = new BezierData(points[i])
-                {
-                    X0 = x0,
-                    Y0 = y0,
-                    X1 = c2X,
-                    Y1 = c2Y,
-                    X2 = next.X,
-                    Y2 = next.Y + nys,
-                }
+                Y2 = next.Y
             };
         }
     }

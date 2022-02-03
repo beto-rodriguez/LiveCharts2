@@ -61,6 +61,12 @@ public abstract class Animatable : IAnimatable
             transitionProperties[name].Animation = a;
     }
 
+    /// <inheritdoc cref="IAnimatable.GetAllAnimatableProperties" />
+    public string[] GetAllAnimatableProperties()
+    {
+        return transitionProperties.Keys.ToArray();
+    }
+
     /// <inheritdoc cref="IAnimatable.RemovePropertyTransition(string)" />
     public void RemovePropertyTransition(string propertyName)
     {

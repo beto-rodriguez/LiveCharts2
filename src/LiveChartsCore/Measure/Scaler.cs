@@ -66,10 +66,16 @@ public class Scaler
 
             actualBounds = new Bounds(axis.DataBounds)
             {
+                Max = axis.ActualBounds.MaxDataBound,
+                Min = axis.ActualBounds.MinDataBound
+            };
+
+            actualVisibleBounds = new Bounds(axis.VisibleDataBounds)
+            {
                 Max = axis.ActualBounds.MaxVisibleBound,
                 Min = axis.ActualBounds.MinVisibleBound
             };
-            actualVisibleBounds = new Bounds(axis.VisibleDataBounds);
+
             maxLimit = axis.ActualBounds.MaxLimit;
             minLimit = axis.ActualBounds.MinLimit;
         }

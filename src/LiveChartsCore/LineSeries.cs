@@ -120,8 +120,10 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
-        var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
-        var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
+        var secondaryScale = secondaryAxis.GetScaler(cartesianChart);
+        var primaryScale = primaryAxis.GetScaler(cartesianChart);
+        var actualSecondaryScale = secondaryAxis.GetActualScalerScaler(cartesianChart);
+        var actualPrimaryScale = primaryAxis.GetActualScalerScaler(cartesianChart);
 
         var gs = _geometrySize;
         var hgs = gs / 2f;
@@ -208,47 +210,49 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                 Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             }
 
-            foreach (var data in GetSpline(segment, secondaryScale, primaryScale, stacker))
+            foreach (var data in GetSpline(segment, stacker))
             {
                 var s = 0d;
-                if (stacker is not null)
-                {
-                    s = stacker.GetStack(data.TargetPoint).Start;
-                }
-
-                var x = secondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
-                var y = primaryScale.ToPixels(data.TargetPoint.PrimaryValue + s);
+                if (stacker is not null) s = stacker.GetStack(data.TargetPoint).Start;
 
                 var visual = (TVisualPoint?)data.TargetPoint.Context.Visual;
 
                 if (visual is null)
                 {
                     var v = new TVisualPoint();
-
                     visual = v;
 
-                    var pg = y;
-                    var xg = x - hgs;
-                    var yg = y - hgs;
+                    if (actualPrimaryScale is null || actualSecondaryScale is null)
+                    {
+                        v.Geometry.X = secondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
+                        v.Geometry.Y = p;
+                        v.Geometry.Width = 0;
+                        v.Geometry.Height = 0;
 
-                    var x0b = data.X0;
-                    var x1b = data.X1;
-                    var x2b = data.X2;
-                    var y0b = data.Y0;
-                    var y1b = data.Y1;
-                    var y2b = data.Y2;
+                        v.Bezier.X0 = secondaryScale.ToPixels(data.X0);
+                        v.Bezier.X1 = secondaryScale.ToPixels(data.X1);
+                        v.Bezier.X2 = secondaryScale.ToPixels(data.X2);
+                        v.Bezier.Y0 = p;
+                        v.Bezier.Y1 = p;
+                        v.Bezier.Y2 = p;
+                    }
+                    else
+                    {
+                        var xng = actualSecondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
+                        var yng = actualPrimaryScale.ToPixels(data.TargetPoint.PrimaryValue + s);
 
-                    v.Geometry.X = xg;
-                    v.Geometry.Y = yg;
-                    v.Geometry.Width = gs;
-                    v.Geometry.Height = gs;
+                        v.Geometry.X = xng - hgs;
+                        v.Geometry.Y = yng - hgs;
+                        v.Geometry.Width = gs;
+                        v.Geometry.Height = gs;
 
-                    v.Bezier.X0 = (float)x0b;
-                    v.Bezier.Y0 = (float)y0b;
-                    v.Bezier.X1 = (float)x1b;
-                    v.Bezier.Y1 = (float)y1b;
-                    v.Bezier.X2 = (float)x2b;
-                    v.Bezier.Y2 = (float)y2b;
+                        v.Bezier.X0 = actualSecondaryScale.ToPixels(data.X0);
+                        v.Bezier.X1 = actualSecondaryScale.ToPixels(data.X1);
+                        v.Bezier.X2 = actualSecondaryScale.ToPixels(data.X2);
+                        v.Bezier.Y0 = actualPrimaryScale.ToPixels(data.Y0);
+                        v.Bezier.Y1 = actualPrimaryScale.ToPixels(data.Y1);
+                        v.Bezier.Y2 = actualPrimaryScale.ToPixels(data.Y2);
+                    }
 
                     data.TargetPoint.Context.Visual = v;
                     OnPointCreated(data.TargetPoint);
@@ -259,15 +263,18 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                 if (GeometryFill is not null) GeometryFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
                 if (GeometryStroke is not null) GeometryStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
 
-                visual.Bezier.X0 = (float)data.X0;
-                visual.Bezier.Y0 = (float)data.Y0;
-                visual.Bezier.X1 = (float)data.X1;
-                visual.Bezier.Y1 = (float)data.Y1;
-                visual.Bezier.X2 = (float)data.X2;
-                visual.Bezier.Y2 = (float)data.Y2;
+                visual.Bezier.X0 = secondaryScale.ToPixels(data.X0);
+                visual.Bezier.X1 = secondaryScale.ToPixels(data.X1);
+                visual.Bezier.X2 = secondaryScale.ToPixels(data.X2);
+                visual.Bezier.Y0 = primaryScale.ToPixels(data.Y0);
+                visual.Bezier.Y1 = primaryScale.ToPixels(data.Y1);
+                visual.Bezier.Y2 = primaryScale.ToPixels(data.Y2);
 
                 if (Fill is not null) _ = fillPath.AddLast(visual.Bezier);
                 if (Stroke is not null) _ = strokePath.AddLast(visual.Bezier);
+
+                var x = secondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
+                var y = primaryScale.ToPixels(data.TargetPoint.PrimaryValue + s);
 
                 visual.Geometry.X = x - hgs;
                 visual.Geometry.Y = y - hgs;
@@ -498,15 +505,11 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
     /// <summary>
     /// Buils an spline from the given points.
     /// </summary>
-    /// <param name="points"></param>
-    /// <param name="xScale"></param>
-    /// <param name="yScale"></param>
-    /// <param name="stacker"></param>
+    /// <param name="points">The points.</param>
+    /// <param name="stacker">The stacker.</param>
     /// <returns></returns>
     protected internal IEnumerable<BezierData> GetSpline(
         ChartPoint[] points,
-        Scaler xScale,
-        Scaler yScale,
         StackPosition<TDrawingContext>? stacker)
     {
         if (points.Length == 0) yield break;
@@ -586,21 +589,12 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
             {
                 IsFirst = i == 0,
                 IsLast = i == points.Length - 1,
-                X0 = xScale.ToPixels(x0),
-                Y0 = yScale.ToPixels(y0),
-                X1 = xScale.ToPixels(c2X),
-                Y1 = yScale.ToPixels(c2Y),
-                X2 = xScale.ToPixels(next.SecondaryValue),
-                Y2 = yScale.ToPixels(next.PrimaryValue + nys),
-                OriginalData = new BezierData(points[i])
-                {
-                    X0 = x0,
-                    Y0 = y0,
-                    X1 = c2X,
-                    Y1 = c2Y,
-                    X2 = next.SecondaryValue,
-                    Y2 = next.PrimaryValue + nys,
-                }
+                X0 = x0,
+                Y0 = y0,
+                X1 = c2X,
+                Y1 = c2Y,
+                X2 = next.SecondaryValue,
+                Y2 = next.PrimaryValue + nys
             };
         }
     }

@@ -199,6 +199,17 @@ public static class Extensions
     }
 
     /// <summary>
+    /// Creates a transition builder for the all the properties.
+    /// </summary>
+    /// <param name="animatable">The animatable.</param>
+    /// <returns></returns>
+    /// <exception cref="Exception">At least one property is required when calling {nameof(TransitionateProperties)}</exception>
+    public static TransitionBuilder TransitionateAllProperties(this IAnimatable animatable)
+    {
+        return TransitionateProperties(animatable, animatable.GetAllAnimatableProperties());
+    }
+
+    /// <summary>
     /// Determines whether is bar series.
     /// </summary>
     /// <param name="series">The series.</param>
@@ -321,7 +332,35 @@ public static class Extensions
     public static ChartPoint<TModel, TVisual, TLabel> FindClosestTo<TModel, TVisual, TLabel>(
         this IEnumerable<ChartPoint> points, LvcPoint point)
     {
-        return  new ChartPoint<TModel, TVisual, TLabel>(_findClosestTo(points, point));
+        return new ChartPoint<TModel, TVisual, TLabel>(_findClosestTo(points, point));
+    }
+
+    /// <summary>
+    /// Gets a scaler for the given axis.
+    /// </summary>
+    /// <typeparam name="TDrawingContext"></typeparam>
+    /// <param name="axis"></param>
+    /// <param name="chart"></param>
+    /// <returns></returns>
+    public static Scaler GetScaler<TDrawingContext>(this ICartesianAxis axis, CartesianChart<TDrawingContext> chart)
+        where TDrawingContext : DrawingContext
+    {
+        return new Scaler(chart.DrawMarginLocation, chart.DrawMarginSize, axis);
+    }
+
+    /// <summary>
+    /// Gets a scaler that is aware of its current state or scale for the given axis.
+    /// </summary>
+    /// <typeparam name="TDrawingContext"></typeparam>
+    /// <param name="axis"></param>
+    /// <param name="chart"></param>
+    /// <returns></returns>
+    public static Scaler? GetActualScalerScaler<TDrawingContext>(this ICartesianAxis axis, CartesianChart<TDrawingContext> chart)
+        where TDrawingContext : DrawingContext
+    {
+        return !axis.ActualBounds.HasPreviousState
+            ? null
+            : new Scaler(chart.DrawMarginLocation, chart.DrawMarginSize, axis, true);
     }
 
     private static ChartPoint _findClosestTo(this IEnumerable<ChartPoint> points, LvcPoint point)

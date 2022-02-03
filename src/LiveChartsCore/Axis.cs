@@ -212,6 +212,26 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
 
+        _animatableBounds.MaxLimit = MinLimit;
+        _animatableBounds.MaxLimit = MaxLimit;
+        _animatableBounds.MaxDataBound = _dataBounds.Max;
+        _animatableBounds.MinDataBound = _dataBounds.Min;
+        _animatableBounds.MaxVisibleBound = _visibleDataBounds.Max;
+        _animatableBounds.MinDataBound = _visibleDataBounds.Min;
+
+        if (!_animatableBounds.HasPreviousState)
+        {
+            _ = _animatableBounds
+                .TransitionateAllProperties()
+                .WithAnimation(animation =>
+                         animation
+                             .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
+                             .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction))
+                .CompleteCurrentTransitions();
+
+            _ = cartesianChart.Canvas.Trackers.Add(_animatableBounds);
+        }
+
         var scale = new Scaler(drawLocation, drawMarginSize, this);
         var previousSacale = !_animatableBounds.HasPreviousState
             ? null
@@ -228,18 +248,6 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var s = axisTick.Value;
         if (s < _minStep) s = _minStep;
         if (_forceStepToMin) s = _minStep;
-
-        if (!_animatableBounds.HasPreviousState)
-        {
-            _ = _animatableBounds
-                .TransitionateProperties(nameof(_animatableBounds.MinLimit), nameof(_animatableBounds.MaxLimit))
-                .WithAnimation(animation =>
-                         animation
-                             .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
-                             .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
-
-            _ = cartesianChart.Canvas.Trackers.Add(_animatableBounds);
-        }
 
         if (NamePaint is not null)
         {

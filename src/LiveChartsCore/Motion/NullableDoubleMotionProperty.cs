@@ -54,7 +54,7 @@ public class NullableDoubleMotionProperty : MotionProperty<double?>
     protected override double? OnGetMovement(float progress)
     {
         return fromValue is null || toValue is null
-            ? null
+            ? toValue
             : fromValue + progress * (toValue - fromValue);
     }
 }

@@ -93,14 +93,6 @@ public class BezierData
     public double Y2 { get; set; }
 
     /// <summary>
-    /// Gets or sets the original data.
-    /// </summary>
-    /// <value>
-    /// The original data.
-    /// </value>
-    public BezierData? OriginalData { get; set; }
-
-    /// <summary>
     /// Gets or sets a value indicating whether this instance is first.
     /// </summary>
     /// <value>

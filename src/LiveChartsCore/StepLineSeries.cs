@@ -225,21 +225,21 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     var y1b = p - hgs;
                     var y2b = p - hgs;
 
-                    if (previousSecondaryScale is not null && previousPrimaryScale is not null)
-                    {
-                        pg = previousPrimaryScale.ToPixels(pivot);
-                        xg = previousSecondaryScale.ToPixels(data.TargetPoint.SecondaryValue) - hgs;
-                        yg = previousPrimaryScale.ToPixels(data.TargetPoint.PrimaryValue + s) - hgs;
+                    //if (previousSecondaryScale is not null && previousPrimaryScale is not null)
+                    //{
+                    //    pg = previousPrimaryScale.ToPixels(pivot);
+                    //    xg = previousSecondaryScale.ToPixels(data.TargetPoint.SecondaryValue) - hgs;
+                    //    yg = previousPrimaryScale.ToPixels(data.TargetPoint.PrimaryValue + s) - hgs;
 
-                        if (data.OriginalData is null) throw new Exception("Original data not found");
+                    //    if (data.OriginalData is null) throw new Exception("Original data not found");
 
-                        x0b = previousSecondaryScale.ToPixels(data.OriginalData.X0);
-                        x1b = previousSecondaryScale.ToPixels(data.OriginalData.X1);
-                        x2b = previousSecondaryScale.ToPixels(data.OriginalData.X2);
-                        y0b = previousPrimaryScale.ToPixels(data.OriginalData.Y0);
-                        y1b = previousPrimaryScale.ToPixels(data.OriginalData.Y1);
-                        y2b = previousPrimaryScale.ToPixels(data.OriginalData.Y2);
-                    }
+                    //    x0b = previousSecondaryScale.ToPixels(data.OriginalData.X0);
+                    //    x1b = previousSecondaryScale.ToPixels(data.OriginalData.X1);
+                    //    x2b = previousSecondaryScale.ToPixels(data.OriginalData.X2);
+                    //    y0b = previousPrimaryScale.ToPixels(data.OriginalData.Y0);
+                    //    y1b = previousPrimaryScale.ToPixels(data.OriginalData.Y1);
+                    //    y2b = previousPrimaryScale.ToPixels(data.OriginalData.Y2);
+                    //}
 
                     v.Geometry.X = xg;
                     v.Geometry.Y = yg;
@@ -541,16 +541,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 X1 = xScale.ToPixels(c2X),
                 Y1 = yScale.ToPixels(c2Y),
                 X2 = xScale.ToPixels(next.SecondaryValue),
-                Y2 = yScale.ToPixels(next.PrimaryValue),
-                OriginalData = new BezierData(points[i])
-                {
-                    X0 = x0,
-                    Y0 = y0,
-                    X1 = c2X,
-                    Y1 = c2Y,
-                    X2 = next.SecondaryValue,
-                    Y2 = next.PrimaryValue,
-                }
+                Y2 = yScale.ToPixels(next.PrimaryValue)
             };
         }
     }

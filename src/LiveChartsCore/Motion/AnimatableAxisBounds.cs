@@ -31,6 +31,8 @@ public class AnimatableAxisBounds : Animatable
 {
     private readonly NullableDoubleMotionProperty _maxLimitProperty;
     private readonly NullableDoubleMotionProperty _minLimitProperty;
+    private readonly DoubleMotionProperty _maxDataBoundProperty;
+    private readonly DoubleMotionProperty _minDataBoundProperty;
     private readonly DoubleMotionProperty _maxVisibleBoundProperty;
     private readonly DoubleMotionProperty _minVisibleBoundProperty;
 
@@ -41,6 +43,8 @@ public class AnimatableAxisBounds : Animatable
     {
         _maxLimitProperty = RegisterMotionProperty(new NullableDoubleMotionProperty(nameof(MaxLimit), null));
         _minLimitProperty = RegisterMotionProperty(new NullableDoubleMotionProperty(nameof(MinLimit), null));
+        _maxDataBoundProperty = RegisterMotionProperty(new DoubleMotionProperty(nameof(MaxDataBound), 0d));
+        _minDataBoundProperty = RegisterMotionProperty(new DoubleMotionProperty(nameof(MinDataBound), 0d));
         _maxVisibleBoundProperty = RegisterMotionProperty(new DoubleMotionProperty(nameof(MaxVisibleBound), 0d));
         _minVisibleBoundProperty = RegisterMotionProperty(new DoubleMotionProperty(nameof(MinVisibleBound), 0d));
     }
@@ -64,7 +68,26 @@ public class AnimatableAxisBounds : Animatable
     }
 
     /// <summary>
-    /// Gets or sets the max  visible limit.
+    /// Gets or sets the max data limit.
+    /// </summary>
+    public double MaxDataBound
+    {
+        get => _maxDataBoundProperty.GetMovement(this);
+        set => _maxDataBoundProperty.SetMovement(value, this);
+    }
+
+    /// <summary>
+    /// Gets or sets the min data limit.
+    /// </summary>
+    public double MinDataBound
+    {
+        get => _minDataBoundProperty.GetMovement(this);
+        set => _minDataBoundProperty.SetMovement(value, this);
+    }
+
+
+    /// <summary>
+    /// Gets or sets the max visible limit.
     /// </summary>
     public double MaxVisibleBound
     {

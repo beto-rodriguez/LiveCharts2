@@ -61,6 +61,12 @@ public interface IAnimatable
     void SetPropertiesTransitions(Animation? animation, params string[] propertyName);
 
     /// <summary>
+    /// Gewts all the animatable properties.
+    /// </summary>
+    /// <returns></returns>
+    string[] GetAllAnimatableProperties();
+
+    /// <summary>
     /// Removes a property transition.
     /// </summary>
     /// <param name="propertyName">Name of the property.</param>
