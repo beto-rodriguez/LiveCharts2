@@ -677,10 +677,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         foreach (var axis in totalAxes)
         {
             axis.IsNotifyingChanges = false;
-            axis.PreviousDataBounds = axis.DataBounds;
-            axis.PreviousVisibleDataBounds = axis.VisibleDataBounds;
-            axis.PreviousMaxLimit = axis.MaxLimit;
-            axis.PreviousMinLimit = axis.MinLimit;
+            axis.ActualBounds.HasPreviousState = true;
             axis.IsNotifyingChanges = true;
         }
 

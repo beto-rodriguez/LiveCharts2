@@ -31,10 +31,8 @@ public class AnimatableAxisBounds : Animatable
 {
     private readonly NullableDoubleMotionProperty _maxLimitProperty;
     private readonly NullableDoubleMotionProperty _minLimitProperty;
-    private readonly DoubleMotionProperty _maxDataLimitProperty;
-    private readonly DoubleMotionProperty _minDataLimitProperty;
-    private readonly DoubleMotionProperty _maxVisibleLimitProperty;
-    private readonly DoubleMotionProperty _minVisibleLimitProperty;
+    private readonly DoubleMotionProperty _maxVisibleBoundProperty;
+    private readonly DoubleMotionProperty _minVisibleBoundProperty;
 
     /// <summary>
     /// Intializes a new isntance of the <see cref="AnimatableAxisBounds"/> class.
@@ -43,10 +41,8 @@ public class AnimatableAxisBounds : Animatable
     {
         _maxLimitProperty = RegisterMotionProperty(new NullableDoubleMotionProperty(nameof(MaxLimit), null));
         _minLimitProperty = RegisterMotionProperty(new NullableDoubleMotionProperty(nameof(MinLimit), null));
-        _maxDataLimitProperty = RegisterMotionProperty(new DoubleMotionProperty(nameof(MaxDataLimit), 0d));
-        _minDataLimitProperty = RegisterMotionProperty(new DoubleMotionProperty(nameof(MinDataLimit), 0d));
-        _maxVisibleLimitProperty = RegisterMotionProperty(new DoubleMotionProperty(nameof(MaxVisibleLimit), 0d));
-        _minVisibleLimitProperty = RegisterMotionProperty(new DoubleMotionProperty(nameof(MinVisibleLimit), 0d));
+        _maxVisibleBoundProperty = RegisterMotionProperty(new DoubleMotionProperty(nameof(MaxVisibleBound), 0d));
+        _minVisibleBoundProperty = RegisterMotionProperty(new DoubleMotionProperty(nameof(MinVisibleBound), 0d));
     }
 
     /// <summary>
@@ -68,38 +64,25 @@ public class AnimatableAxisBounds : Animatable
     }
 
     /// <summary>
-    /// Gets or sets the max data limit.
-    /// </summary>
-    public double MaxDataLimit
-    {
-        get => _maxDataLimitProperty.GetMovement(this);
-        set => _maxDataLimitProperty.SetMovement(value, this);
-    }
-
-    /// <summary>
-    /// Gets or sets the min data limit.
-    /// </summary>
-    public double MinDataLimit
-    {
-        get => _minDataLimitProperty.GetMovement(this);
-        set => _minDataLimitProperty.SetMovement(value, this);
-    }
-
-    /// <summary>
     /// Gets or sets the max  visible limit.
     /// </summary>
-    public double MaxVisibleLimit
+    public double MaxVisibleBound
     {
-        get => _maxVisibleLimitProperty.GetMovement(this);
-        set => _maxVisibleLimitProperty.SetMovement(value, this);
+        get => _maxVisibleBoundProperty.GetMovement(this);
+        set => _maxVisibleBoundProperty.SetMovement(value, this);
     }
 
     /// <summary>
     /// Gets or sets the min visible limit.
     /// </summary>
-    public double MinVisibleLimit
+    public double MinVisibleBound
     {
-        get => _minVisibleLimitProperty.GetMovement(this);
-        set => _minVisibleLimitProperty.SetMovement(value, this);
+        get => _minVisibleBoundProperty.GetMovement(this);
+        set => _minVisibleBoundProperty.SetMovement(value, this);
     }
+
+    /// <summary>
+    /// Gets a valuea indicating whewhter the bounds have a previous state.
+    /// </summary>
+    public bool HasPreviousState { get; internal set; }
 }

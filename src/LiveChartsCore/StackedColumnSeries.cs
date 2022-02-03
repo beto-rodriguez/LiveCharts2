@@ -66,7 +66,7 @@ public class StackedColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : Sta
         var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
         var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
         var previousSecondaryScale =
-            secondaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis);
+            !secondaryAxis.ActualBounds.HasPreviousState ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis);
 
         var uw = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
         var actualUw = uw;

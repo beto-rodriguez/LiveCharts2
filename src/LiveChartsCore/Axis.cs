@@ -79,7 +79,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private bool _isVisible = true;
     private bool _isInverted;
     private bool _forceStepToMin;
-    private AnimatableAxisBounds? _animatableBounds = null;
+    private AnimatableAxisBounds _animatableBounds = new();
 
     #endregion
 
@@ -90,17 +90,11 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     LvcRectangle ICartesianAxis.LabelsDesiredSize { get => _labelsDesiredSize; set => _labelsDesiredSize = value; }
     LvcRectangle ICartesianAxis.NameDesiredSize { get => _nameDesiredSize; set => _nameDesiredSize = value; }
 
-    Bounds? IPlane.PreviousDataBounds { get; set; }
+    Bounds IPlane.DataBounds => _dataBounds;
 
-    Bounds? IPlane.PreviousVisibleDataBounds { get; set; }
+    Bounds IPlane.VisibleDataBounds => _visibleDataBounds;
 
-    double? IPlane.PreviousMaxLimit { get; set; }
-
-    double? IPlane.PreviousMinLimit { get; set; }
-
-    Bounds IPlane.DataBounds => _dataBounds ?? throw new Exception("bounds not found");
-
-    Bounds IPlane.VisibleDataBounds => _visibleDataBounds ?? throw new Exception("bounds not found");
+    AnimatableAxisBounds IPlane.ActualBounds => _animatableBounds;
 
     /// <inheritdoc cref="IPlane.Name"/>
     public string? Name { get; set; } = null;
@@ -214,14 +208,12 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     {
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
 
-        if (_dataBounds is null) throw new Exception("DataBounds not found");
-
         var controlSize = cartesianChart.ControlSize;
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
 
         var scale = new Scaler(drawLocation, drawMarginSize, this);
-        var previousSacale = ((ICartesianAxis)this).PreviousDataBounds is null
+        var previousSacale = !_animatableBounds.HasPreviousState
             ? null
             : new Scaler(drawLocation, drawMarginSize, this, true);
         var axisTick = this.GetTick(drawMarginSize);
@@ -237,13 +229,8 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         if (s < _minStep) s = _minStep;
         if (_forceStepToMin) s = _minStep;
 
-        var max = MaxLimit is null ? (_visibleDataBounds ?? _dataBounds).Max : MaxLimit.Value;
-        var min = MinLimit is null ? (_visibleDataBounds ?? _dataBounds).Min : MinLimit.Value;
-
-        if (_animatableBounds is null)
+        if (!_animatableBounds.HasPreviousState)
         {
-            _animatableBounds = new AnimatableAxisBounds();
-
             _ = _animatableBounds
                 .TransitionateProperties(nameof(_animatableBounds.MinLimit), nameof(_animatableBounds.MaxLimit))
                 .WithAnimation(animation =>
@@ -294,6 +281,9 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var size = (float)TextSize;
         var r = (float)_labelsRotation;
         var hasRotation = Math.Abs(r) > 0.01f;
+
+        var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
+        var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
 
         var start = Math.Truncate(min / s) * s;
         if (!activeSeparators.TryGetValue(cartesianChart, out var separators))
@@ -486,7 +476,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
                 visualSeparator.Label.Opacity = 1;
 
-                if (((ICartesianAxis)this).PreviousDataBounds is null) visualSeparator.Label.CompleteAllTransitions();
+                if (!_animatableBounds.HasPreviousState) visualSeparator.Label.CompleteAllTransitions();
             }
 
             if (visualSeparator.Line is not null)
@@ -508,7 +498,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
                 visualSeparator.Line.Opacity = 1;
 
-                if (((ICartesianAxis)this).PreviousDataBounds is null) visualSeparator.Line.CompleteAllTransitions();
+                if (!_animatableBounds.HasPreviousState) visualSeparator.Line.CompleteAllTransitions();
             }
 
             if (visualSeparator.Label is not null || visualSeparator.Line is not null) _ = measured.Add(visualSeparator);
@@ -558,8 +548,8 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var s = axisTick.Value;
         if (s < _minStep) s = _minStep;
 
-        var max = MaxLimit is null ? (_visibleDataBounds ?? _dataBounds).Max : MaxLimit.Value;
-        var min = MinLimit is null ? (_visibleDataBounds ?? _dataBounds).Min : MinLimit.Value;
+        var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
+        var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
 
         var start = Math.Truncate(min / s) * s;
 
@@ -615,7 +605,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     public override void RemoveFromUI(Chart<TDrawingContext> chart)
     {
         base.RemoveFromUI(chart);
-        ((IPlane)this).PreviousDataBounds = null;
+        _animatableBounds = null!;
         _ = activeSeparators.Remove(chart);
     }
 

@@ -69,7 +69,7 @@ public class StackedRowSeries<TModel, TVisual, TLabel, TDrawingContext> : Stacke
         var drawMarginSize = cartesianChart.DrawMarginSize;
         var secondaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
         var previousSecondaryScale =
-            primaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis);
+            !primaryAxis.ActualBounds.HasPreviousState ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis);
         var primaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
 
         var uw = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth); //secondaryScale.ToPixels(1f) - secondaryScale.ToPixels(0f);
