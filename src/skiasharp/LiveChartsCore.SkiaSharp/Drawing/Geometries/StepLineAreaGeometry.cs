@@ -48,12 +48,24 @@ public class StepLineAreaGeometry : AreaGeometry<StepLineSegment>
     /// <inheritdoc cref="AreaGeometry{TSegment}.OnOpen(SkiaSharpDrawingContext, SKPath, TSegment)"/>
     protected override void OnOpen(SkiaSharpDrawingContext context, SKPath path, StepLineSegment segment)
     {
-        path.MoveTo(segment.X1, segment.Y1);
+        if (!IsClosed)
+        {
+            path.MoveTo(segment.X1, segment.Y1);
+            return;
+        }
+
+        path.MoveTo(segment.X1, Pivot);
+        path.LineTo(segment.X1, segment.Y1);
     }
 
     /// <inheritdoc cref="AreaGeometry{TSegment}.OnClose(SkiaSharpDrawingContext, SKPath, TSegment)"/>
     protected override void OnClose(SkiaSharpDrawingContext context, SKPath path, StepLineSegment segment)
     {
         _isFirst = true;
+
+        if (!IsClosed) return;
+
+        path.LineTo(segment.X1, Pivot);
+        path.Close();
     }
 }

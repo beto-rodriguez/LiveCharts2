@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Motion;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -34,6 +35,15 @@ public abstract class AreaGeometry<TSegment> : Drawable, IAreaGeometry<TSegment,
     where TSegment : class, IAnimatable
 {
     private readonly LinkedList<TSegment> _commands = new();
+    private readonly FloatMotionProperty _pivotProperty;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AreaGeometry{TSegment}"/> class.
+    /// </summary>
+    public AreaGeometry()
+    {
+        _pivotProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Pivot), 0f));
+    }
 
     /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.FirstCommand" />
     public LinkedListNode<TSegment>? FirstCommand => _commands.First;
@@ -48,7 +58,7 @@ public abstract class AreaGeometry<TSegment> : Drawable, IAreaGeometry<TSegment,
     public bool IsClosed { get; set; }
 
     /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.Pivot" />
-    public float Pivot { get; set; }
+    public float Pivot { get => _pivotProperty.GetMovement(this); set => _pivotProperty.SetMovement(value, this); }
 
     /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.AddLast(TSegment)" />
     public LinkedListNode<TSegment> AddLast(TSegment command)

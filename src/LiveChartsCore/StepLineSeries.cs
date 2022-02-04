@@ -164,11 +164,13 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         {
             TPathGeometry fillPath;
             TPathGeometry strokePath;
+            var isNew = false;
 
             if (segmentI >= fillPathHelperContainer.Count)
             {
-                fillPath = new TPathGeometry();
-                strokePath = new TPathGeometry();
+                isNew = true;
+                fillPath = new TPathGeometry { IsClosed = true };
+                strokePath = new TPathGeometry { IsClosed = false };
                 fillPathHelperContainer.Add(fillPath);
                 strokePathHelperContainer.Add(strokePath);
             }
@@ -184,6 +186,16 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 cartesianChart.Canvas.AddDrawableTask(Fill);
                 Fill.ZIndex = actualZIndex + 0.1;
                 Fill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+                fillPath.Pivot = p;
+                if (isNew)
+                {
+                    _ = fillPath.TransitionateProperties(nameof(fillPath.Pivot))
+                        .WithAnimation(animation =>
+                                    animation
+                                        .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
+                                        .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction))
+                        .CompleteCurrentTransitions();
+                }
             }
             if (Stroke is not null)
             {
@@ -191,6 +203,16 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 cartesianChart.Canvas.AddDrawableTask(Stroke);
                 Stroke.ZIndex = actualZIndex + 0.2;
                 Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+                strokePath.Pivot = p;
+                if (isNew)
+                {
+                    _ = strokePath.TransitionateProperties(nameof(strokePath.Pivot))
+                        .WithAnimation(animation =>
+                                    animation
+                                        .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
+                                        .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction))
+                        .CompleteCurrentTransitions();
+                }
             }
 
             double previousPrimary = 0, previousSecondary = 0;
