@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading;
 using System.Threading.Tasks;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
@@ -15,15 +14,16 @@ public class ViewModel
     private readonly Random _r = new();
     private readonly int _delay = 100;
     private readonly ObservableCollection<int> _values;
-    private int _current;
+    private static int s_current;
+    private readonly Action<Action> _uiThreadInvoker;
 
-    public ViewModel(Action<Action> UIThreadInvoker)
+    public ViewModel(Action<Action> uiThreadInvoker)
     {
         var items = new List<int>();
         for (var i = 0; i < 1500; i++)
         {
-            _current += _r.Next(-9, 10);
-            items.Add(_current);
+            s_current += _r.Next(-9, 10);
+            items.Add(s_current);
         }
 
         _values = new ObservableCollection<int>(items);
@@ -40,22 +40,18 @@ public class ViewModel
             }
         };
 
+        _uiThreadInvoker = uiThreadInvoker;
         _delay = 1;
         var readTasks = 10;
 
         // create {readTasks} parallel tasks that will add a point every {_delay} milliseconds
         for (var i = 0; i < readTasks; i++)
         {
-            UIThreadInvoker(() =>
-            {
-                ReadData();
-            });
+            ReadData();
         }
     }
 
     public ISeries[] Series { get; set; }
-
-    public Action<ViewModel>? ReadDataOnUiThread { get; set; }
 
     public async void ReadData()
     {
@@ -65,9 +61,13 @@ public class ViewModel
         {
             await Task.Delay(_delay);
 
-            _current = Interlocked.Add(ref _current, _r.Next(-9, 10));
-            _values.Add(_current);
-            _values.RemoveAt(0);
+            // force the change to happen in the UI thread.
+            _uiThreadInvoker(() =>
+            {
+                s_current += _r.Next(-9, 10);
+                _values.Add(s_current);
+                _values.RemoveAt(0);
+            });
         }
     }
 }
