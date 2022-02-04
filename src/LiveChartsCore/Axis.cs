@@ -56,10 +56,11 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     // xo (x origin) and yo (y origin) are the distance to the center of the axis to the control bounds
     internal float _xo = 0f, _yo = 0f;
     internal AxisOrientation _orientation;
+    internal AnimatableAxisBounds _animatableBounds = new();
+    internal Bounds _dataBounds = new();
+    internal Bounds _visibleDataBounds = new();
 
     private double _minStep = 0;
-    private Bounds _dataBounds = new();
-    private Bounds _visibleDataBounds = new();
     private double _labelsRotation;
     private LvcRectangle _labelsDesiredSize = new(), _nameDesiredSize = new();
     private TTextGeometry? _nameGeometry;
@@ -79,7 +80,6 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     private bool _isVisible = true;
     private bool _isInverted;
     private bool _forceStepToMin;
-    private AnimatableAxisBounds _animatableBounds = new();
 
     #endregion
 
@@ -212,7 +212,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
 
-        _animatableBounds.MaxLimit = MinLimit;
+        _animatableBounds.MinLimit = MinLimit;
         _animatableBounds.MaxLimit = MaxLimit;
         _animatableBounds.MaxDataBound = _dataBounds.Max;
         _animatableBounds.MinDataBound = _dataBounds.Min;
