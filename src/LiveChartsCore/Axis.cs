@@ -217,7 +217,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         _animatableBounds.MaxDataBound = _dataBounds.Max;
         _animatableBounds.MinDataBound = _dataBounds.Min;
         _animatableBounds.MaxVisibleBound = _visibleDataBounds.Max;
-        _animatableBounds.MinDataBound = _visibleDataBounds.Min;
+        _animatableBounds.MinVisibleBound = _visibleDataBounds.Min;
 
         if (!_animatableBounds.HasPreviousState)
         {
