@@ -108,12 +108,6 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
     public override void Measure(Chart<TDrawingContext> chart)
     {
-        if (GetCustomMeasureHandler() is not null)
-        {
-            GetCustomMeasureHandler()!(chart);
-            return;
-        }
-
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
         var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
@@ -688,19 +682,6 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
         label.TextSize = 1;
         label.RemoveOnCompleted = true;
-    }
-
-    /// <inheritdoc/>
-    protected override Action<Chart<TDrawingContext>>? GetCustomMeasureHandler()
-    {
-        if (!_requestedCustomMeasureHandler)
-        {
-            var factory = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>();
-            _customMeasureHandler = factory.LineCustomMeasureHandler<TModel, TVisual, TLabel, TPathGeometry, TVisualPoint>(this);
-            _requestedCustomMeasureHandler = true;
-        }
-
-        return _customMeasureHandler;
     }
 
     /// <summary>

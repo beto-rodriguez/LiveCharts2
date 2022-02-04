@@ -27,7 +27,7 @@ namespace LiveChartsCore.Drawing.Segments;
 /// <summary>
 /// Defines a cubic bezier segment.
 /// </summary>
-public class CubicBezierSegment : Animatable
+public class CubicBezierSegment : Animatable, IPathSegment
 {
     private readonly FloatMotionProperty _x0Property;
     private readonly FloatMotionProperty _y0Property;
@@ -49,9 +49,7 @@ public class CubicBezierSegment : Animatable
         _y2Property = RegisterMotionProperty(new FloatMotionProperty(nameof(Y2), 0f));
     }
 
-    /// <summary>
-    /// Gets or sets the segment id, it must represent the consecutive order.
-    /// </summary>
+    /// <inheritdoc cref="IPathSegment.Id"/>
     public int Id { get; set; }
 
     /// <summary>

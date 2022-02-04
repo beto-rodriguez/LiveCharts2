@@ -27,7 +27,7 @@ namespace LiveChartsCore.Drawing.Segments;
 /// <summary>
 /// Defines a step line segment.
 /// </summary>
-public class StepLineSegment : Animatable
+public class StepLineSegment : Animatable, IPathSegment
 {
     private readonly FloatMotionProperty _x0Property;
     private readonly FloatMotionProperty _y0Property;
@@ -44,6 +44,9 @@ public class StepLineSegment : Animatable
         _x1Property = RegisterMotionProperty(new FloatMotionProperty(nameof(X1), 0f));
         _y1Property = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
     }
+
+    /// <inheritdoc cref="IPathSegment.Id"/>
+    public int Id { get; set; }
 
     /// <summary>
     /// Gets or sets the X0.

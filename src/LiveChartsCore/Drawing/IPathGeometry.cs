@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 
 namespace LiveChartsCore.Drawing;
@@ -30,6 +31,7 @@ namespace LiveChartsCore.Drawing;
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TPathArgs">The type of the path.</typeparam>
 /// <seealso cref="IDrawable{TDrawingContext}" />
+[Obsolete("Replaced by IAreaGeometry<T1, T2>")]
 public interface IPathGeometry<TDrawingContext, TPathArgs> : IDrawable<TDrawingContext>
      where TDrawingContext : DrawingContext
 {

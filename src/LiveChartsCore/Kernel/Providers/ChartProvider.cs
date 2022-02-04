@@ -20,9 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Drawing.Segments;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel.Sketches;
 
@@ -68,27 +66,4 @@ public abstract class ChartProvider<TDrawingContext>
     /// </summary>
     /// <returns></returns>
     public abstract IPaint<TDrawingContext> GetSolidColorPaint(LvcColor color = new());
-
-    /// <summary>
-    /// Gets the series custom measure handler.
-    /// </summary>
-    /// <returns></returns>
-    public virtual Action<Chart<TDrawingContext>>? SeriesCustomMeasureHandler(ISeries series)
-    {
-        return null;
-    }
-
-    /// <summary>
-    /// Gets the line series custom measure handler.
-    /// </summary>
-    /// <returns></returns>
-    public virtual Action<Chart<TDrawingContext>>? LineCustomMeasureHandler<TModel, TVisual, TLabel, TPathGeometry, TBezierVisual>(
-        LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TBezierVisual> series)
-            where TBezierVisual : BezierVisualPoint<TDrawingContext, TVisual>, new()
-            where TPathGeometry : IAreaGeometry<CubicBezierSegment, TDrawingContext>, new()
-            where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-    {
-        return null;
-    }
 }
