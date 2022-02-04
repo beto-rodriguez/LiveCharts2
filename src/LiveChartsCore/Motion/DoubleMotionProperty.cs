@@ -28,7 +28,7 @@ namespace LiveChartsCore.Motion;
 public class DoubleMotionProperty : MotionProperty<double>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="FloatMotionProperty"/> class.
+    /// Initializes a new instance of the <see cref="DoubleMotionProperty"/> class.
     /// </summary>
     /// <param name="propertyName">Name of the property.</param>
     public DoubleMotionProperty(string propertyName)
@@ -39,7 +39,7 @@ public class DoubleMotionProperty : MotionProperty<double>
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="FloatMotionProperty"/> class.
+    /// Initializes a new instance of the <see cref="DoubleMotionProperty"/> class.
     /// </summary>
     /// <param name="propertyName">Name of the property.</param>
     /// <param name="value">The value.</param>

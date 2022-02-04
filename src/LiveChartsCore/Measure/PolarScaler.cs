@@ -58,11 +58,28 @@ public class PolarScaler
         float totalAngle,
         bool usePreviousScale = false)
     {
-        var actualAngleBounds = usePreviousScale ? angleAxis.PreviousDataBounds : angleAxis.DataBounds;
-        var actualAngleVisibleBounds = usePreviousScale ? angleAxis.PreviousVisibleDataBounds : angleAxis.VisibleDataBounds;
+        Bounds actualAngleBounds, actualAngleVisibleBounds, actualRadiusBounds, actualRadiusVisibleBounds;
 
-        var actualRadiusBounds = usePreviousScale ? radiusAxis.PreviousDataBounds : radiusAxis.DataBounds;
-        var actualRadiusVisibleBounds = usePreviousScale ? radiusAxis.PreviousVisibleDataBounds : radiusAxis.VisibleDataBounds;
+        if (usePreviousScale)
+        {
+            actualAngleBounds = angleAxis.DataBounds;
+            actualAngleVisibleBounds = angleAxis.VisibleDataBounds;
+            actualRadiusBounds = radiusAxis.DataBounds;
+            actualRadiusVisibleBounds = radiusAxis.VisibleDataBounds;
+        }
+        else
+        {
+            actualAngleBounds = angleAxis.DataBounds;
+            actualAngleVisibleBounds = angleAxis.VisibleDataBounds;
+            actualRadiusBounds = radiusAxis.DataBounds;
+            actualRadiusVisibleBounds = radiusAxis.VisibleDataBounds;
+        }
+
+        //var actualAngleBounds = usePreviousScale ? angleAxis.PreviousDataBounds : angleAxis.DataBounds;
+        //var actualAngleVisibleBounds = usePreviousScale ? angleAxis.PreviousVisibleDataBounds : angleAxis.VisibleDataBounds;
+
+        //var actualRadiusBounds = usePreviousScale ? radiusAxis.PreviousDataBounds : radiusAxis.DataBounds;
+        //var actualRadiusVisibleBounds = usePreviousScale ? radiusAxis.PreviousVisibleDataBounds : radiusAxis.VisibleDataBounds;
 
         if (actualAngleBounds is null || actualAngleVisibleBounds is null) throw new Exception("angle bounds not found");
         if (actualRadiusBounds is null || actualRadiusVisibleBounds is null) throw new Exception("radius bounds not found");

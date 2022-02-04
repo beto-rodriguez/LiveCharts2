@@ -80,6 +80,11 @@ public class MotionCanvas<TDrawingContext> : IDisposable
     public object Sync { get; internal set; } = new();
 
     /// <summary>
+    /// Gets the animatables collection.
+    /// </summary>
+    public HashSet<IAnimatable> Trackers { get; } = new HashSet<IAnimatable>();
+
+    /// <summary>
     /// Draws the frame.
     /// </summary>
     /// <param name="context">The context.</param>
@@ -130,6 +135,13 @@ public class MotionCanvas<TDrawingContext> : IDisposable
 
                 if (task.RemoveOnCompleted && task.IsValid) _ = _paintTasks.Remove(task);
                 task.Dispose();
+            }
+
+            foreach (var tracker in Trackers)
+            {
+                tracker.IsValid = true;
+                tracker.CurrentTime = frameTime;
+                isValid = isValid && tracker.IsValid;
             }
 
             foreach (var tuple in toRemoveGeometries)
@@ -238,6 +250,7 @@ public class MotionCanvas<TDrawingContext> : IDisposable
             task.ReleaseCanvas(this);
         }
         _paintTasks.Clear();
+        Trackers.Clear();
         IsValid = true;
     }
 }

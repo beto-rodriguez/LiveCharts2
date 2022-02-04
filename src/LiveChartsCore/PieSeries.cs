@@ -129,12 +129,6 @@ public abstract class PieSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
     public override void Measure(Chart<TDrawingContext> chart)
     {
-        if (GetCustomMeasureHandler() is not null)
-        {
-            GetCustomMeasureHandler()!(chart);
-            return;
-        }
-
         var pieChart = (PieChart<TDrawingContext>)chart;
 
         var drawLocation = pieChart.DrawMarginLocation;

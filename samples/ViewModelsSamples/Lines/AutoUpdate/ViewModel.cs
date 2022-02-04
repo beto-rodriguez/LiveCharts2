@@ -38,7 +38,7 @@ public class ViewModel
             new LineSeries<ObservableValue>
             {
                 Values = _observableValues,
-                Fill = null
+                //Fill = null
             }
         };
     }

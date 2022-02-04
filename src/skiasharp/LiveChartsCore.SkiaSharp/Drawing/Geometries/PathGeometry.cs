@@ -34,11 +34,6 @@ public class PathGeometry : Drawable, IPathGeometry<SkiaSharpDrawingContext, SKP
     /// </summary>
     protected readonly LinkedList<IPathCommand<SKPath>> _commands = new();
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PathGeometry"/> class.
-    /// </summary>
-    public PathGeometry() { }
-
     /// <inheritdoc cref="IPathGeometry{TDrawingContext, TPathArgs}.FirstCommand" />
     public LinkedListNode<IPathCommand<SKPath>>? FirstCommand => _commands.First;
 

@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing.Segments;
+
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
@@ -44,5 +46,5 @@ public interface ILineBezierVisualChartPoint<TDrawingContext> : IVisualChartPoin
     /// <value>
     /// The bezier.
     /// </value>
-    IAnimatableBezierSegment Bezier { get; }
+    CubicBezierSegment Bezier { get; }
 }

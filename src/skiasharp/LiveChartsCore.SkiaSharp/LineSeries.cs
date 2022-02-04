@@ -24,8 +24,6 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
-using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView;
 
@@ -76,7 +74,7 @@ public class LineSeries<TModel, TVisual> : LineSeries<TModel, TVisual, LabelGeom
 /// The type of the data label of every point.
 /// </typeparam>
 public class LineSeries<TModel, TVisual, TLabel>
-    : LineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, PathGeometry, LineSegment, CubicBezierSegment, MoveToPathCommand, SKPath, BezierPoint<TVisual>>
+    : LineSeries<TModel, TVisual, TLabel, SkiaSharpDrawingContext, CubicBezierAreaGeometry, BezierPoint<TVisual>>
     where TVisual : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
     where TLabel : class, ILabelGeometry<SkiaSharpDrawingContext>, new()
 {

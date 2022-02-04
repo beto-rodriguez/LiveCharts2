@@ -21,8 +21,6 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
-using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing;
 
@@ -30,6 +28,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing;
 /// Defines a step line point.
 /// </summary>
 /// <typeparam name="TGeometry">The type of the geometry.</typeparam>
-public class StepPoint<TGeometry> : StepLineVisualPoint<SkiaSharpDrawingContext, TGeometry, StepLineSegment, SKPath>
+public class StepPoint<TGeometry> : StepLineVisualPoint<SkiaSharpDrawingContext, TGeometry>
     where TGeometry : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
 { }

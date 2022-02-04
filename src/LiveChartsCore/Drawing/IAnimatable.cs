@@ -25,7 +25,7 @@ using LiveChartsCore.Motion;
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// Defines an object that is able to animate its properties transitions.
+/// Defines an animated object, the properties of this object transitionate softly when a change occurs.
 /// </summary>
 public interface IAnimatable
 {
@@ -59,6 +59,12 @@ public interface IAnimatable
     /// <param name="animation">The animation.</param>
     /// <param name="propertyName">Name of the property.</param>
     void SetPropertiesTransitions(Animation? animation, params string[] propertyName);
+
+    /// <summary>
+    /// Gewts all the animatable properties.
+    /// </summary>
+    /// <returns></returns>
+    string[] GetAllAnimatableProperties();
 
     /// <summary>
     /// Removes a property transition.

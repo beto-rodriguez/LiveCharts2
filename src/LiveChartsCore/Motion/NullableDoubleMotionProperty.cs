@@ -20,43 +20,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Drawing;
+namespace LiveChartsCore.Motion;
 
 /// <summary>
-/// Defiens an animable stepline segment.
+/// Defines the <see cref="NullableDoubleMotionProperty"/> class.
 /// </summary>
-/// <seealso cref="IAnimatable" />
-public interface IAnimatableStepLineSegment : IAnimatable
+public class NullableDoubleMotionProperty : MotionProperty<double?>
 {
     /// <summary>
-    /// Gets or sets the x0.
+    /// Initializes a new instance of the <see cref="NullableDoubleMotionProperty"/> class.
     /// </summary>
-    /// <value>
-    /// The x0.
-    /// </value>
-    float X0 { get; set; }
+    /// <param name="propertyName">Name of the property.</param>
+    public NullableDoubleMotionProperty(string propertyName)
+        : base(propertyName)
+    {
+        fromValue = 0;
+        toValue = 0;
+    }
 
     /// <summary>
-    /// Gets or sets the y0.
+    /// Initializes a new instance of the <see cref="FloatMotionProperty"/> class.
     /// </summary>
-    /// <value>
-    /// The y0.
-    /// </value>
-    float Y0 { get; set; }
+    /// <param name="propertyName">Name of the property.</param>
+    /// <param name="value">The value.</param>
+    public NullableDoubleMotionProperty(string propertyName, double? value)
+        : base(propertyName)
+    {
+        fromValue = value;
+        toValue = value;
+    }
 
-    /// <summary>
-    /// Gets or sets the x1.
-    /// </summary>
-    /// <value>
-    /// The x1.
-    /// </value>
-    float X1 { get; set; }
-
-    /// <summary>
-    /// Gets or sets the y1.
-    /// </summary>
-    /// <value>
-    /// The y1.
-    /// </value>
-    float Y1 { get; set; }
+    /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
+    protected override double? OnGetMovement(float progress)
+    {
+        return fromValue is null || toValue is null
+            ? toValue
+            : fromValue + progress * (toValue - fromValue);
+    }
 }

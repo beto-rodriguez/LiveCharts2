@@ -242,36 +242,8 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
 
             if (seriesBounds.IsEmpty) continue;
 
-            secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.Max);
-            secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.Min);
-
-            secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.Max);
-            secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.Min);
-
-            primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.Max);
-            primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.Min);
-
-            primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.Max);
-            primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.Min);
-
-            if (primaryAxis.DataBounds.MinDelta < seriesBounds.MinDeltaPrimary)
-                primaryAxis.DataBounds.MinDelta = seriesBounds.MinDeltaPrimary;
-            if (secondaryAxis.DataBounds.MinDelta < seriesBounds.MinDeltaSecondary)
-                secondaryAxis.DataBounds.MinDelta = seriesBounds.MinDeltaSecondary;
-
-            if (primaryAxis.DataBounds.RequestedGeometrySize < seriesBounds.PrimaryBounds.RequestedGeometrySize)
-                primaryAxis.DataBounds.RequestedGeometrySize = seriesBounds.PrimaryBounds.RequestedGeometrySize;
-            if (secondaryAxis.DataBounds.RequestedGeometrySize < seriesBounds.SecondaryBounds.RequestedGeometrySize)
-                secondaryAxis.DataBounds.RequestedGeometrySize = seriesBounds.SecondaryBounds.RequestedGeometrySize;
-
-            if (primaryAxis.DataBounds.PaddingMin < seriesBounds.PrimaryBounds.PaddingMin)
-                primaryAxis.DataBounds.PaddingMin = seriesBounds.PrimaryBounds.PaddingMin;
-            if (secondaryAxis.DataBounds.PaddingMin < seriesBounds.SecondaryBounds.PaddingMin)
-                secondaryAxis.DataBounds.PaddingMin = seriesBounds.SecondaryBounds.PaddingMin;
-            if (primaryAxis.DataBounds.PaddingMax < seriesBounds.PrimaryBounds.PaddingMax)
-                primaryAxis.DataBounds.PaddingMax = seriesBounds.PrimaryBounds.PaddingMax;
-            if (secondaryAxis.DataBounds.PaddingMax < seriesBounds.SecondaryBounds.PaddingMax)
-                secondaryAxis.DataBounds.PaddingMax = seriesBounds.SecondaryBounds.PaddingMax;
+            secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds);
+            primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds);
 
             series.IsNotifyingChanges = true;
         }
@@ -524,10 +496,7 @@ public class PolarChart<TDrawingContext> : Chart<TDrawingContext>
         foreach (var axis in totalAxes)
         {
             axis.IsNotifyingChanges = false;
-            axis.PreviousDataBounds = axis.DataBounds;
-            axis.PreviousVisibleDataBounds = axis.VisibleDataBounds;
-            axis.PreviousMaxLimit = axis.MaxLimit;
-            axis.PreviousMinLimit = axis.MinLimit;
+            axis.ActualBounds.HasPreviousState = true;
             axis.IsNotifyingChanges = true;
         }
 

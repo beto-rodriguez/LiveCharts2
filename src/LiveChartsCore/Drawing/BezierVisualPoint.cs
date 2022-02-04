@@ -20,59 +20,52 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing.Segments;
+
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// Defiens an animable bezier segment.
+/// Defines a line bezier visual point.
 /// </summary>
-/// <seealso cref="IAnimatable" />
-public interface IAnimatableBezierSegment : IAnimatable
+/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
+/// <typeparam name="TVisual">The type of the visual.</typeparam>
+public class BezierVisualPoint<TDrawingContext, TVisual> : ILineBezierVisualChartPoint<TDrawingContext>
+    where TVisual : ISizedVisualChartPoint<TDrawingContext>, new()
+    where TDrawingContext : DrawingContext
 {
     /// <summary>
-    /// Gets or sets the x0.
+    /// Gets the geometry.
     /// </summary>
     /// <value>
-    /// The x0.
+    /// The geometry.
     /// </value>
-    float X0 { get; set; }
+    public TVisual Geometry { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the y0.
+    /// Gets the bezier.
     /// </summary>
     /// <value>
-    /// The y0.
+    /// The bezier.
     /// </value>
-    float Y0 { get; set; }
+    public CubicBezierSegment Bezier { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the x1.
+    /// Gets or sets the path.
     /// </summary>
     /// <value>
-    /// The x1.
+    /// The path.
     /// </value>
-    float X1 { get; set; }
+    public IAreaGeometry<CubicBezierSegment, TDrawingContext>? FillPath { get; set; }
 
     /// <summary>
-    /// Gets or sets the y1.
+    /// Gets or sets the stroke path.
     /// </summary>
     /// <value>
-    /// The y1.
+    /// The stroke path.
     /// </value>
-    float Y1 { get; set; }
+    public IAreaGeometry<CubicBezierSegment, TDrawingContext>? StrokePath { get; set; }
 
-    /// <summary>
-    /// Gets or sets the x2.
-    /// </summary>
-    /// <value>
-    /// The x2.
-    /// </value>
-    float X2 { get; set; }
+    IGeometry<TDrawingContext>? IVisualChartPoint<TDrawingContext>.HighlightableGeometry => Geometry?.HighlightableGeometry;
 
-    /// <summary>
-    /// Gets or sets the y2.
-    /// </summary>
-    /// <value>
-    /// The y2.
-    /// </value>
-    float Y2 { get; set; }
+    ISizedGeometry<TDrawingContext> ILineBezierVisualChartPoint<TDrawingContext>.Geometry => Geometry;
 }

@@ -34,6 +34,21 @@ public class Bounds
     { }
 
     /// <summary>
+    /// Creates a new instance of the <see cref="Bounds"/> class. based on the given <see cref="Bounds"/>.
+    /// </summary>
+    /// <param name="bounds"></param>
+    public Bounds(Bounds bounds)
+    {
+        IsEmpty = bounds.IsEmpty;
+        Max = bounds.Max;
+        Min = bounds.Min;
+        PaddingMax = bounds.PaddingMax;
+        PaddingMin = bounds.PaddingMin;
+        RequestedGeometrySize = bounds.RequestedGeometrySize;
+        MinDelta = bounds.MinDelta;
+    }
+
+    /// <summary>
     /// Gets whether the bounds are empty.
     /// </summary>
     public bool IsEmpty { get; internal set; } = true;
@@ -77,7 +92,7 @@ public class Bounds
     /// <value>
     /// The minimum delta.
     /// </value>
-    public double MinDelta { get; set; }
+    public double MinDelta { get; set; } = double.MaxValue;
 
     /// <summary>
     /// Compares the current bounds with a given value,
@@ -85,11 +100,27 @@ public class Bounds
     /// if the given value is less than the current instance <see cref="Min"/> property then the given value is set at <see cref="Min"/> property.
     /// </summary>
     /// <param name="value">the value to append</param>
-    /// <returns>Whether the value affected the current bounds, true if it affected, false if did not.</returns>
     public void AppendValue(double value)
     {
         if (Max <= value) Max = value;
         if (Min >= value) Min = value;
+        IsEmpty = false;
+    }
+
+    /// <summary>
+    /// Compares the current bounds with a given value,
+    /// if the given value is greater than the current instance <see cref="Max"/> property then the given value is set at <see cref="Max"/> property,
+    /// if the given value is less than the current instance <see cref="Min"/> property then the given value is set at <see cref="Min"/> property.
+    /// </summary>
+    /// <param name="bounds">the bounds to append</param>
+    public void AppendValue(Bounds bounds)
+    {
+        if (Max <= bounds.Max) Max = bounds.Max;
+        if (Min >= bounds.Min) Min = bounds.Min;
+        if (bounds.MinDelta < MinDelta) MinDelta = bounds.MinDelta;
+        if (RequestedGeometrySize < bounds.RequestedGeometrySize) RequestedGeometrySize = bounds.RequestedGeometrySize;
+        if (PaddingMin < bounds.PaddingMin) PaddingMin = bounds.PaddingMin;
+        if (PaddingMax < bounds.PaddingMax) PaddingMax = bounds.PaddingMax;
         IsEmpty = false;
     }
 

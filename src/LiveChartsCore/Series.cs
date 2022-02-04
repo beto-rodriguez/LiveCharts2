@@ -425,21 +425,6 @@ public abstract class Series<TModel, TVisual, TLabel, TDrawingContext>
         DataPointerHoverLost?.Invoke(point.Context.Chart, new ChartPoint<TModel, TVisual, TLabel>(point));
     }
 
-    /// <summary>
-    /// Gets the custom measure handler.
-    /// </summary>
-    protected virtual Action<Chart<TDrawingContext>>? GetCustomMeasureHandler()
-    {
-        if (!_requestedCustomMeasureHandler)
-        {
-            var factory = LiveCharts.CurrentSettings.GetProvider<TDrawingContext>();
-            _customMeasureHandler = factory.SeriesCustomMeasureHandler(this);
-            _requestedCustomMeasureHandler = true;
-        }
-
-        return _customMeasureHandler;
-    }
-
     /// <inheritdoc cref="ChartElement{TDrawingContext}.RemoveFromUI(Chart{TDrawingContext})"/>
     public override void RemoveFromUI(Chart<TDrawingContext> chart)
     {

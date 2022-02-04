@@ -319,10 +319,6 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         }
 #endif
 
-        Trace.WriteLine(
-               $"[Cartesian chart measured]".PadRight(60) +
-               $"tread: {Environment.CurrentManagedThreadId}");
-
         if (!IsLoaded) return; // <- prevents a visual glitch where the visual call the measure method
                                // while they are not visible, the problem is when the control is visible again
                                // the animations are not as expected because previously it ran in an invalid case.
@@ -400,43 +396,16 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
             theme.ResolveSeriesDefaults(theme.CurrentColors, series, forceApply);
 
-            var secondaryAxis = XAxes[series.ScalesXAt];
-            var primaryAxis = YAxes[series.ScalesYAt];
+            var xAxis = XAxes[series.ScalesXAt];
+            var yAxis = YAxes[series.ScalesYAt];
 
-            var seriesBounds = series.GetBounds(this, secondaryAxis, primaryAxis).Bounds;
-
+            var seriesBounds = series.GetBounds(this, xAxis, yAxis).Bounds;
             if (seriesBounds.IsEmpty) continue;
 
-            secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.Max);
-            secondaryAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds.Min);
-
-            secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.Max);
-            secondaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds.Min);
-
-            primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.Max);
-            primaryAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds.Min);
-
-            primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.Max);
-            primaryAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds.Min);
-
-            if (primaryAxis.DataBounds.MinDelta < seriesBounds.MinDeltaPrimary)
-                primaryAxis.DataBounds.MinDelta = seriesBounds.MinDeltaPrimary;
-            if (secondaryAxis.DataBounds.MinDelta < seriesBounds.MinDeltaSecondary)
-                secondaryAxis.DataBounds.MinDelta = seriesBounds.MinDeltaSecondary;
-
-            if (primaryAxis.DataBounds.RequestedGeometrySize < seriesBounds.PrimaryBounds.RequestedGeometrySize)
-                primaryAxis.DataBounds.RequestedGeometrySize = seriesBounds.PrimaryBounds.RequestedGeometrySize;
-            if (secondaryAxis.DataBounds.RequestedGeometrySize < seriesBounds.SecondaryBounds.RequestedGeometrySize)
-                secondaryAxis.DataBounds.RequestedGeometrySize = seriesBounds.SecondaryBounds.RequestedGeometrySize;
-
-            if (primaryAxis.DataBounds.PaddingMin < seriesBounds.PrimaryBounds.PaddingMin)
-                primaryAxis.DataBounds.PaddingMin = seriesBounds.PrimaryBounds.PaddingMin;
-            if (secondaryAxis.DataBounds.PaddingMin < seriesBounds.SecondaryBounds.PaddingMin)
-                secondaryAxis.DataBounds.PaddingMin = seriesBounds.SecondaryBounds.PaddingMin;
-            if (primaryAxis.DataBounds.PaddingMax < seriesBounds.PrimaryBounds.PaddingMax)
-                primaryAxis.DataBounds.PaddingMax = seriesBounds.PrimaryBounds.PaddingMax;
-            if (secondaryAxis.DataBounds.PaddingMax < seriesBounds.SecondaryBounds.PaddingMax)
-                secondaryAxis.DataBounds.PaddingMax = seriesBounds.SecondaryBounds.PaddingMax;
+            xAxis.DataBounds.AppendValue(seriesBounds.SecondaryBounds);
+            yAxis.DataBounds.AppendValue(seriesBounds.PrimaryBounds);
+            xAxis.VisibleDataBounds.AppendValue(seriesBounds.VisibleSecondaryBounds);
+            yAxis.VisibleDataBounds.AppendValue(seriesBounds.VisiblePrimaryBounds);
 
             series.IsNotifyingChanges = true;
         }
@@ -566,7 +535,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
             var drawablePlane = (IPlane<TDrawingContext>)axis;
             var ns = drawablePlane.GetNameLabelSize(this);
             var s = drawablePlane.GetPossibleSize(this);
-            var w = s.Width; //s.Width > m.Left ? s.Width : m.Left;
+            var w = s.Width;
 
             if (axis.Position == AxisPosition.Start)
             {
@@ -708,10 +677,7 @@ public class CartesianChart<TDrawingContext> : Chart<TDrawingContext>
         foreach (var axis in totalAxes)
         {
             axis.IsNotifyingChanges = false;
-            axis.PreviousDataBounds = axis.DataBounds;
-            axis.PreviousVisibleDataBounds = axis.VisibleDataBounds;
-            axis.PreviousMaxLimit = axis.MaxLimit;
-            axis.PreviousMinLimit = axis.MinLimit;
+            axis.ActualBounds.HasPreviousState = true;
             axis.IsNotifyingChanges = true;
         }
 

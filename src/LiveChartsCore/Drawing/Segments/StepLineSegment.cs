@@ -20,57 +20,51 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
-using SkiaSharp;
 
-namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
+namespace LiveChartsCore.Drawing.Segments;
 
-/// <inheritdoc cref="ICubicBezierPathCommand{TPathContext}" />
-public class CubicBezierSegment : PathCommand, ICubicBezierPathCommand<SKPath>
+/// <summary>
+/// Defines a step line segment.
+/// </summary>
+public class StepLineSegment : Animatable, IPathSegment
 {
     private readonly FloatMotionProperty _x0Property;
     private readonly FloatMotionProperty _y0Property;
     private readonly FloatMotionProperty _x1Property;
     private readonly FloatMotionProperty _y1Property;
-    private readonly FloatMotionProperty _x2Property;
-    private readonly FloatMotionProperty _y2Property;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CubicBezierSegment"/> class.
+    /// Initializes a new instance of the <see cref="StepLineSegment"/> class.
     /// </summary>
-    public CubicBezierSegment()
+    public StepLineSegment()
     {
         _x0Property = RegisterMotionProperty(new FloatMotionProperty(nameof(X0), 0f));
         _y0Property = RegisterMotionProperty(new FloatMotionProperty(nameof(Y0), 0f));
         _x1Property = RegisterMotionProperty(new FloatMotionProperty(nameof(X1), 0f));
         _y1Property = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
-        _x2Property = RegisterMotionProperty(new FloatMotionProperty(nameof(X2), 0f));
-        _y2Property = RegisterMotionProperty(new FloatMotionProperty(nameof(Y2), 0f));
     }
 
-    /// <inheritdoc cref="ICubicBezierPathCommand{SKPath}.X0" />
+    /// <inheritdoc cref="IPathSegment.Id"/>
+    public int Id { get; set; }
+
+    /// <summary>
+    /// Gets or sets the X0.
+    /// </summary>
     public float X0 { get => _x0Property.GetMovement(this); set => _x0Property.SetMovement(value, this); }
 
-    /// <inheritdoc cref="ICubicBezierPathCommand{SKPath}.Y0" />
+    /// <summary>
+    /// Gets or sets the Y0.
+    /// </summary>
     public float Y0 { get => _y0Property.GetMovement(this); set => _y0Property.SetMovement(value, this); }
 
-    /// <inheritdoc cref="ICubicBezierPathCommand{SKPath}.X1" />
+    /// <summary>
+    /// Gets or sets the X1.
+    /// </summary>
     public float X1 { get => _x1Property.GetMovement(this); set => _x1Property.SetMovement(value, this); }
 
-    /// <inheritdoc cref="ICubicBezierPathCommand{SKPath}.Y1" />
+    /// <summary>
+    /// Gets or sets the Y1.
+    /// </summary>
     public float Y1 { get => _y1Property.GetMovement(this); set => _y1Property.SetMovement(value, this); }
-
-    /// <inheritdoc cref="ICubicBezierPathCommand{SKPath}.X2" />
-    public float X2 { get => _x2Property.GetMovement(this); set => _x2Property.SetMovement(value, this); }
-
-    /// <inheritdoc cref="ICubicBezierPathCommand{SKPath}.Y2" />
-    public float Y2 { get => _y2Property.GetMovement(this); set => _y2Property.SetMovement(value, this); }
-
-    /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
-    public override void Execute(SKPath path, long currentTime, Animatable pathGeometry)
-    {
-        SetCurrentTime(currentTime);
-        path.CubicTo(X0, Y0, X1, Y1, X2, Y2);
-    }
 }

@@ -78,12 +78,6 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
     public override void Measure(Chart<TDrawingContext> chart)
     {
-        if (GetCustomMeasureHandler() is not null)
-        {
-            GetCustomMeasureHandler()!(chart);
-            return;
-        }
-
         _paintTaks ??= LiveCharts.CurrentSettings.GetProvider<TDrawingContext>().GetSolidColorPaint();
 
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
@@ -95,9 +89,9 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
         var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
         var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
         var previousPrimaryScale =
-            primaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis, true);
+            !primaryAxis.ActualBounds.HasPreviousState ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis, true);
         var previousSecondaryScale =
-            secondaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
+            !secondaryAxis.ActualBounds.HasPreviousState ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
 
         var uws = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
         var uwp = primaryScale.MeasureInPixels(primaryAxis.UnitWidth);
@@ -275,6 +269,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
                     {
                         Max = baseBounds.SecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth,
                         Min = baseBounds.SecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth,
+                        MinDelta = baseBounds.SecondaryBounds.MinDelta,
                         PaddingMax = ts,
                         PaddingMin = ts
                     },
@@ -282,6 +277,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
                     {
                         Max = baseBounds.PrimaryBounds.Max + 0.5 * primaryAxis.UnitWidth,
                         Min = baseBounds.PrimaryBounds.Min - 0.5 * primaryAxis.UnitWidth,
+                        MinDelta = baseBounds.PrimaryBounds.MinDelta,
                         PaddingMax = tp,
                         PaddingMin = tp
                     },
@@ -294,9 +290,7 @@ public abstract class HeatSeries<TModel, TVisual, TLabel, TDrawingContext>
                     {
                         Max = baseBounds.VisiblePrimaryBounds.Max + 0.5 * primaryAxis.UnitWidth,
                         Min = baseBounds.VisiblePrimaryBounds.Min - 0.5 * primaryAxis.UnitWidth
-                    },
-                    MinDeltaPrimary = baseBounds.MinDeltaPrimary,
-                    MinDeltaSecondary = baseBounds.MinDeltaSecondary
+                    }
                 },
                 false);
     }

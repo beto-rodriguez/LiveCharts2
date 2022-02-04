@@ -30,6 +30,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Helpers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 
 namespace LiveChartsCore;
 
@@ -52,13 +53,15 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// </summary>
     protected readonly Dictionary<IChart, Dictionary<double, AxisVisualSeprator<TDrawingContext>>> activeSeparators = new();
 
-    internal AxisOrientation _orientation;
-    private double _minStep = 0;
-    private Bounds? _dataBounds = null;
-    private Bounds? _visibleDataBounds = null;
-    private double _labelsRotation;
     // xo (x origin) and yo (y origin) are the distance to the center of the axis to the control bounds
-    private float _xo = 0f, _yo = 0f;
+    internal float _xo = 0f, _yo = 0f;
+    internal AxisOrientation _orientation;
+    internal AnimatableAxisBounds _animatableBounds = new();
+    internal Bounds _dataBounds = new();
+    internal Bounds _visibleDataBounds = new();
+
+    private double _minStep = 0;
+    private double _labelsRotation;
     private LvcRectangle _labelsDesiredSize = new(), _nameDesiredSize = new();
     private TTextGeometry? _nameGeometry;
     private AxisPosition _position = AxisPosition.Start;
@@ -87,17 +90,11 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     LvcRectangle ICartesianAxis.LabelsDesiredSize { get => _labelsDesiredSize; set => _labelsDesiredSize = value; }
     LvcRectangle ICartesianAxis.NameDesiredSize { get => _nameDesiredSize; set => _nameDesiredSize = value; }
 
-    Bounds? IPlane.PreviousDataBounds { get; set; }
+    Bounds IPlane.DataBounds => _dataBounds;
 
-    Bounds? IPlane.PreviousVisibleDataBounds { get; set; }
+    Bounds IPlane.VisibleDataBounds => _visibleDataBounds;
 
-    double? IPlane.PreviousMaxLimit { get; set; }
-
-    double? IPlane.PreviousMinLimit { get; set; }
-
-    Bounds IPlane.DataBounds => _dataBounds ?? throw new Exception("bounds not found");
-
-    Bounds IPlane.VisibleDataBounds => _visibleDataBounds ?? throw new Exception("bounds not found");
+    AnimatableAxisBounds IPlane.ActualBounds => _animatableBounds;
 
     /// <inheritdoc cref="IPlane.Name"/>
     public string? Name { get; set; } = null;
@@ -211,16 +208,33 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     {
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
 
-        if (_dataBounds is null) throw new Exception("DataBounds not found");
-
         var controlSize = cartesianChart.ControlSize;
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
 
-        var scale = new Scaler(drawLocation, drawMarginSize, this);
-        var previousSacale = ((ICartesianAxis)this).PreviousDataBounds is null
-            ? null
-            : new Scaler(drawLocation, drawMarginSize, this, true);
+        _animatableBounds.MinLimit = MinLimit;
+        _animatableBounds.MaxLimit = MaxLimit;
+        _animatableBounds.MaxDataBound = _dataBounds.Max;
+        _animatableBounds.MinDataBound = _dataBounds.Min;
+        _animatableBounds.MaxVisibleBound = _visibleDataBounds.Max;
+        _animatableBounds.MinVisibleBound = _visibleDataBounds.Min;
+
+        if (!_animatableBounds.HasPreviousState)
+        {
+            _ = _animatableBounds
+                .TransitionateAllProperties()
+                .WithAnimation(animation =>
+                         animation
+                             .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
+                             .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction))
+                .CompleteCurrentTransitions();
+
+            _ = cartesianChart.Canvas.Trackers.Add(_animatableBounds);
+        }
+
+        var scale = this.GetScaler(cartesianChart);
+        var actualScale = this.GetActualScalerScaler(cartesianChart);
+
         var axisTick = this.GetTick(drawMarginSize);
 
         var labeler = Labeler;
@@ -275,8 +289,8 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var r = (float)_labelsRotation;
         var hasRotation = Math.Abs(r) > 0.01f;
 
-        var max = MaxLimit is null ? (_visibleDataBounds ?? _dataBounds).Max : MaxLimit.Value;
-        var min = MinLimit is null ? (_visibleDataBounds ?? _dataBounds).Min : MinLimit.Value;
+        var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
+        var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
 
         var start = Math.Truncate(min / s) * s;
         if (!activeSeparators.TryGetValue(cartesianChart, out var separators))
@@ -376,19 +390,19 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
                     textGeometry.Opacity = 0;
 
-                    if (previousSacale is not null)
+                    if (actualScale is not null)
                     {
                         float xi, yi;
 
                         if (_orientation == AxisOrientation.X)
                         {
-                            xi = previousSacale.ToPixels(i);
+                            xi = actualScale.ToPixels(i);
                             yi = yoo;
                         }
                         else
                         {
                             xi = xoo;
-                            yi = previousSacale.ToPixels(i);
+                            yi = actualScale.ToPixels(i);
                         }
 
                         textGeometry.X = xi;
@@ -415,19 +429,19 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
                     lineGeometry.Opacity = 0;
 
-                    if (previousSacale is not null)
+                    if (actualScale is not null)
                     {
                         float xi, yi;
 
                         if (_orientation == AxisOrientation.X)
                         {
-                            xi = previousSacale.ToPixels(i);
+                            xi = actualScale.ToPixels(i);
                             yi = yoo;
                         }
                         else
                         {
                             xi = xoo;
-                            yi = previousSacale.ToPixels(i);
+                            yi = actualScale.ToPixels(i);
                         }
 
                         if (_orientation == AxisOrientation.X)
@@ -469,7 +483,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
                 visualSeparator.Label.Opacity = 1;
 
-                if (((ICartesianAxis)this).PreviousDataBounds is null) visualSeparator.Label.CompleteAllTransitions();
+                if (!_animatableBounds.HasPreviousState) visualSeparator.Label.CompleteAllTransitions();
             }
 
             if (visualSeparator.Line is not null)
@@ -491,7 +505,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
                 visualSeparator.Line.Opacity = 1;
 
-                if (((ICartesianAxis)this).PreviousDataBounds is null) visualSeparator.Line.CompleteAllTransitions();
+                if (!_animatableBounds.HasPreviousState) visualSeparator.Line.CompleteAllTransitions();
             }
 
             if (visualSeparator.Label is not null || visualSeparator.Line is not null) _ = measured.Add(visualSeparator);
@@ -541,8 +555,8 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         var s = axisTick.Value;
         if (s < _minStep) s = _minStep;
 
-        var max = MaxLimit is null ? (_visibleDataBounds ?? _dataBounds).Max : MaxLimit.Value;
-        var min = MinLimit is null ? (_visibleDataBounds ?? _dataBounds).Min : MinLimit.Value;
+        var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
+        var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
 
         var start = Math.Truncate(min / s) * s;
 
@@ -583,15 +597,12 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     /// <returns></returns>
     public virtual void Delete(Chart<TDrawingContext> chart)
     {
-        if (_labelsPaint is not null)
+        foreach (var paint in GetPaintTasks())
         {
-            chart.Canvas.RemovePaintTask(_labelsPaint);
-            _labelsPaint.ClearGeometriesFromPaintTask(chart.Canvas);
-        }
-        if (_separatorsPaint is not null)
-        {
-            chart.Canvas.RemovePaintTask(_separatorsPaint);
-            _separatorsPaint.ClearGeometriesFromPaintTask(chart.Canvas);
+            if (paint is null) continue;
+
+            chart.Canvas.RemovePaintTask(paint);
+            paint.ClearGeometriesFromPaintTask(chart.Canvas);
         }
 
         _ = activeSeparators.Remove(chart);
@@ -601,7 +612,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
     public override void RemoveFromUI(Chart<TDrawingContext> chart)
     {
         base.RemoveFromUI(chart);
-        ((IPlane)this).PreviousDataBounds = null;
+        _animatableBounds = null!;
         _ = activeSeparators.Remove(chart);
     }
 

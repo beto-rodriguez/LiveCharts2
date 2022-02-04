@@ -23,55 +23,56 @@
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
-/// Defines a line bezier visual point.
+/// Defiens a bezier command.
 /// </summary>
-/// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
-/// <typeparam name="TVisual">The type of the visual.</typeparam>
-/// <typeparam name="TBezierSegment">The type of the bezier segment.</typeparam>
-/// <typeparam name="TPathArgs">The type of the path arguments.</typeparam>
-/// <seealso cref="ILineBezierVisualChartPoint{TDrawingContext}" />
-public class LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs> : ILineBezierVisualChartPoint<TDrawingContext>
-    where TVisual : ISizedVisualChartPoint<TDrawingContext>, new()
-    where TBezierSegment : IBezierSegment<TPathArgs>, new()
-    where TDrawingContext : DrawingContext
+/// <seealso cref="IPathCommand{TPathContext}" />
+public interface ICubicBezierPathCommand<SKPath> : IPathCommand<SKPath>
 {
     /// <summary>
-    /// Gets the geometry.
+    /// Gets or sets the x0.
     /// </summary>
     /// <value>
-    /// The geometry.
+    /// The x0.
     /// </value>
-    public TVisual Geometry { get; set; } = new();
+    float X0 { get; set; }
 
     /// <summary>
-    /// Gets the bezier.
+    /// Gets or sets the y0.
     /// </summary>
     /// <value>
-    /// The bezier.
+    /// The y0.
     /// </value>
-    public TBezierSegment Bezier { get; set; } = new();
+    float Y0 { get; set; }
 
     /// <summary>
-    /// Gets or sets the path.
+    /// Gets or sets the x1.
     /// </summary>
     /// <value>
-    /// The path.
+    /// The x1.
     /// </value>
-    public IPathGeometry<TDrawingContext, TPathArgs>? FillPath { get; set; }
+    float X1 { get; set; }
 
     /// <summary>
-    /// Gets or sets the stroke path.
+    /// Gets or sets the y1.
     /// </summary>
     /// <value>
-    /// The stroke path.
+    /// The y1.
     /// </value>
-    public IPathGeometry<TDrawingContext, TPathArgs>? StrokePath { get; set; }
+    float Y1 { get; set; }
 
     /// <summary>
-    /// Gets the main <see cref="T:LiveChartsCore.Drawing.IDrawable`1" />.
+    /// Gets or sets the x2.
     /// </summary>
-    public IGeometry<TDrawingContext>? HighlightableGeometry => Geometry?.HighlightableGeometry;
+    /// <value>
+    /// The x2.
+    /// </value>
+    float X2 { get; set; }
 
-    ISizedGeometry<TDrawingContext> ILineBezierVisualChartPoint<TDrawingContext>.Geometry => Geometry;
-    IAnimatableBezierSegment ILineBezierVisualChartPoint<TDrawingContext>.Bezier => Bezier;
+    /// <summary>
+    /// Gets or sets the y2.
+    /// </summary>
+    /// <value>
+    /// The y2.
+    /// </value>
+    float Y2 { get; set; }
 }

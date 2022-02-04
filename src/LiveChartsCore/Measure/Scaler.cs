@@ -44,16 +44,43 @@ public class Scaler
     /// <param name="bounds">Indicates the bounds to use.</param>
     /// <exception cref="Exception">The axis is not ready to be scaled.</exception>
     public Scaler(
-        LvcPoint drawMagrinLocation, LvcSize drawMarginSize, ICartesianAxis axis, bool usePreviousScale = false, Bounds? bounds = null)
+        LvcPoint drawMagrinLocation,
+        LvcSize drawMarginSize,
+        ICartesianAxis axis,
+        bool usePreviousScale = false,
+        Bounds? bounds = null)
     {
         if (axis.Orientation == AxisOrientation.Unknown) throw new Exception("The axis is not ready to be scaled.");
 
         _orientation = axis.Orientation;
 
-        var actualBounds = usePreviousScale ? axis.PreviousDataBounds : axis.DataBounds;
-        var actualVisibleBounds = usePreviousScale ? axis.PreviousVisibleDataBounds : axis.VisibleDataBounds;
-        var maxLimit = usePreviousScale ? axis.PreviousMaxLimit : axis.MaxLimit;
-        var minLimit = usePreviousScale ? axis.PreviousMinLimit : axis.MinLimit;
+        Bounds? actualBounds, actualVisibleBounds;
+        double? minLimit, maxLimit;
+
+        if (usePreviousScale)
+        {
+            actualBounds = new Bounds(axis.DataBounds)
+            {
+                Max = axis.ActualBounds.MaxDataBound,
+                Min = axis.ActualBounds.MinDataBound
+            };
+
+            actualVisibleBounds = new Bounds(axis.VisibleDataBounds)
+            {
+                Max = axis.ActualBounds.MaxVisibleBound,
+                Min = axis.ActualBounds.MinVisibleBound
+            };
+
+            maxLimit = axis.ActualBounds.MaxLimit;
+            minLimit = axis.ActualBounds.MinLimit;
+        }
+        else
+        {
+            actualBounds = axis.DataBounds;
+            actualVisibleBounds = axis.VisibleDataBounds;
+            maxLimit = axis.MaxLimit;
+            minLimit = axis.MinLimit;
+        }
 
         if (bounds != null)
         {

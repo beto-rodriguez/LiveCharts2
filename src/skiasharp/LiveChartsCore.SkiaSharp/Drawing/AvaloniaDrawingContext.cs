@@ -39,16 +39,8 @@ public class AvaloniaDrawingContext : SkiaSharpDrawingContext
     /// <param name="surface">The surface.</param>
     /// <param name="canvas">The canvas.</param>
     public AvaloniaDrawingContext(MotionCanvas<SkiaSharpDrawingContext> motionCanvas, SKImageInfo info, SKSurface surface, SKCanvas canvas)
-        : base(motionCanvas, info, surface, canvas, true)
+        : base(motionCanvas, info, surface, canvas)
     { }
-
-    /// <summary>
-    /// Gets or sets the color of the back.
-    /// </summary>
-    /// <value>
-    /// The color of the back.
-    /// </value>
-    public SKColor BackColor { get; set; } = new(255, 255, 255, 255);
 
     /// <summary>
     /// Clears the canvas.

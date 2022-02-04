@@ -55,12 +55,6 @@ public class StackedRowSeries<TModel, TVisual, TLabel, TDrawingContext> : Stacke
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
     public override void Measure(Chart<TDrawingContext> chart)
     {
-        if (GetCustomMeasureHandler() is not null)
-        {
-            GetCustomMeasureHandler()!(chart);
-            return;
-        }
-
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
         var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
@@ -69,7 +63,7 @@ public class StackedRowSeries<TModel, TVisual, TLabel, TDrawingContext> : Stacke
         var drawMarginSize = cartesianChart.DrawMarginSize;
         var secondaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
         var previousSecondaryScale =
-            primaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis);
+            !primaryAxis.ActualBounds.HasPreviousState ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis);
         var primaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
 
         var uw = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth); //secondaryScale.ToPixels(1f) - secondaryScale.ToPixels(0f);
@@ -266,6 +260,7 @@ public class StackedRowSeries<TModel, TVisual, TLabel, TDrawingContext> : Stacke
                     {
                         Max = baseBounds.SecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth + ts,
                         Min = baseBounds.SecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth - ts,
+                        MinDelta = baseBounds.SecondaryBounds.MinDelta,
                         PaddingMax = ts,
                         PaddingMin = ts
                     },
@@ -273,6 +268,7 @@ public class StackedRowSeries<TModel, TVisual, TLabel, TDrawingContext> : Stacke
                     {
                         Max = baseBounds.PrimaryBounds.Max + tp,
                         Min = baseBounds.PrimaryBounds.Min < 0 ? baseBounds.PrimaryBounds.Min : 0,
+                        MinDelta = baseBounds.SecondaryBounds.MinDelta,
                         PaddingMax = tp,
                         PaddingMin = baseBounds.PrimaryBounds.Min < 0 ? tp : 0,
                     },
@@ -285,9 +281,7 @@ public class StackedRowSeries<TModel, TVisual, TLabel, TDrawingContext> : Stacke
                     {
                         Max = baseBounds.VisiblePrimaryBounds.Max + tp,
                         Min = baseBounds.VisiblePrimaryBounds.Min < 0 ? baseBounds.PrimaryBounds.Min - tp : 0
-                    },
-                    MinDeltaPrimary = baseBounds.MinDeltaPrimary,
-                    MinDeltaSecondary = baseBounds.MinDeltaSecondary
+                    }
                 }, false);
     }
 

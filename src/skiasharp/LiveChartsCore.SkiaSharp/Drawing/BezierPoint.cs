@@ -21,8 +21,6 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries.Segments;
-using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing;
 
@@ -30,6 +28,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing;
 /// Defines a bezier point.
 /// </summary>
 /// <typeparam name="TGeometry">The type of the geometry.</typeparam>
-public class BezierPoint<TGeometry> : LineBezierVisualPoint<SkiaSharpDrawingContext, TGeometry, CubicBezierSegment, SKPath>
+public class BezierPoint<TGeometry> : BezierVisualPoint<SkiaSharpDrawingContext, TGeometry>
     where TGeometry : class, ISizedVisualChartPoint<SkiaSharpDrawingContext>, new()
 { }

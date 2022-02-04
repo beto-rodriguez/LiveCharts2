@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Drawing.Segments;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
@@ -34,36 +35,29 @@ namespace LiveChartsCore;
 /// <summary>
 /// Defines the data to plot as a line.
 /// </summary>
-/// <typeparam name="TModel">The type of the model.</typeparam>
-/// <typeparam name="TVisual">The type of the visual.</typeparam>
-/// <typeparam name="TLabel">The type of the label.</typeparam>
+/// <typeparam name="TModel">The type of the model to plot.</typeparam>
+/// <typeparam name="TVisual">The type of the visual point.</typeparam>
+/// <typeparam name="TLabel">The type of the data label.</typeparam>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TPathGeometry">The type of the path geometry.</typeparam>
-/// <typeparam name="TLineSegment">The type of the line segment.</typeparam>
-/// <typeparam name="TStepLineSegment">The type of the step segment.</typeparam>
-/// <typeparam name="TMoveToCommand">The type of the move to command.</typeparam>
-/// <typeparam name="TPathArgs">The type of the path arguments.</typeparam>
-/// /// <typeparam name="TStepSegmentVisual">The type of the bezier.</typeparam>
-public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TStepLineSegment, TMoveToCommand, TPathArgs, TStepSegmentVisual>
-    : StrokeAndFillCartesianSeries<TModel, TStepSegmentVisual, TLabel, TDrawingContext>, IStepLineSeries<TDrawingContext>
-        where TStepSegmentVisual : StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPathArgs>, new()
-        where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
-        where TLineSegment : ILinePathSegment<TPathArgs>, new()
-        where TStepLineSegment : IStepLineSegment<TPathArgs>, new()
-        where TMoveToCommand : IMoveToPathCommand<TPathArgs>, new()
+/// <typeparam name="TVisualPoint">The type of the visual point.</typeparam>
+public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint>
+    : StrokeAndFillCartesianSeries<TModel, TVisualPoint, TLabel, TDrawingContext>, IStepLineSeries<TDrawingContext>
+        where TVisualPoint : StepLineVisualPoint<TDrawingContext, TVisual>, new()
+        where TPathGeometry : IAreaGeometry<StepLineSegment, TDrawingContext>, new()
         where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
         where TLabel : class, ILabelGeometry<TDrawingContext>, new()
         where TDrawingContext : DrawingContext
 {
-    private readonly Dictionary<object, List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>> _fillPathHelperDictionary = new();
-    private readonly Dictionary<object, List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>> _strokePathHelperDictionary = new();
+    private readonly Dictionary<object, List<TPathGeometry>> _fillPathHelperDictionary = new();
+    private readonly Dictionary<object, List<TPathGeometry>> _strokePathHelperDictionary = new();
     private float _geometrySize = 14f;
     private IPaint<TDrawingContext>? _geometryFill;
     private IPaint<TDrawingContext>? _geometryStroke;
     private bool _enableNullSplitting = true;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TStepLineSegment, TMoveToCommand, TPathArgs, TStepSegmentVisual}"/> class.
+    /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TVisualPoint}"/> class.
     /// </summary>
     /// <param name="isStacked">if set to <c>true</c> [is stacked].</param>
     public StepLineSeries(bool isStacked = false)
@@ -97,24 +91,16 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
     public override void Measure(Chart<TDrawingContext> chart)
     {
-        if (GetCustomMeasureHandler() is not null)
-        {
-            GetCustomMeasureHandler()!(chart);
-            return;
-        }
-
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
         var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
 
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
-        var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
-        var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
-        var previousPrimaryScale =
-            primaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis, true);
-        var previousSecondaryScale =
-            secondaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
+        var secondaryScale = secondaryAxis.GetScaler(cartesianChart);
+        var primaryScale = primaryAxis.GetScaler(cartesianChart);
+        var actualSecondaryScale = secondaryAxis.GetActualScalerScaler(cartesianChart);
+        var actualPrimaryScale = primaryAxis.GetActualScalerScaler(cartesianChart);
 
         var gs = _geometrySize;
         var hgs = gs / 2f;
@@ -153,205 +139,139 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
         if (!_strokePathHelperDictionary.TryGetValue(chart.Canvas.Sync, out var strokePathHelperContainer))
         {
-            strokePathHelperContainer = new List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>();
+            strokePathHelperContainer = new List<TPathGeometry>();
             _strokePathHelperDictionary[chart.Canvas.Sync] = strokePathHelperContainer;
         }
 
         if (!_fillPathHelperDictionary.TryGetValue(chart.Canvas.Sync, out var fillPathHelperContainer))
         {
-            fillPathHelperContainer = new List<AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>>();
+            fillPathHelperContainer = new List<TPathGeometry>();
             _fillPathHelperDictionary[chart.Canvas.Sync] = fillPathHelperContainer;
         }
 
-        foreach (var item in strokePathHelperContainer) item.Path.ClearCommands();
-        foreach (var item in fillPathHelperContainer) item.Path.ClearCommands();
+        foreach (var item in strokePathHelperContainer) item.ClearCommands();
+        foreach (var item in fillPathHelperContainer) item.ClearCommands();
 
         var uwx = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
 
         foreach (var segment in segments)
         {
-            var wasFillInitialized = false;
-            var wasStrokeInitialized = false;
-
-            AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs> fillPathHelper;
-            AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs> strokePathHelper;
+            TPathGeometry fillPath;
+            TPathGeometry strokePath;
+            var isNew = false;
 
             if (segmentI >= fillPathHelperContainer.Count)
             {
-                fillPathHelper = new AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>();
-                strokePathHelper = new AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs>();
-                fillPathHelperContainer.Add(fillPathHelper);
-                strokePathHelperContainer.Add(strokePathHelper);
+                isNew = true;
+                fillPath = new TPathGeometry { IsClosed = true };
+                strokePath = new TPathGeometry { IsClosed = false };
+                fillPathHelperContainer.Add(fillPath);
+                strokePathHelperContainer.Add(strokePath);
             }
             else
             {
-                fillPathHelper = fillPathHelperContainer[segmentI];
-                strokePathHelper = strokePathHelperContainer[segmentI];
+                fillPath = fillPathHelperContainer[segmentI];
+                strokePath = strokePathHelperContainer[segmentI];
             }
 
             if (Fill is not null)
             {
-                wasFillInitialized = fillPathHelper.Initialize(SetDefaultPathTransitions, chartAnimation);
-                Fill.AddGeometryToPaintTask(cartesianChart.Canvas, fillPathHelper.Path);
+                Fill.AddGeometryToPaintTask(cartesianChart.Canvas, fillPath);
                 cartesianChart.Canvas.AddDrawableTask(Fill);
                 Fill.ZIndex = actualZIndex + 0.1;
                 Fill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+                fillPath.Pivot = p;
+                if (isNew)
+                {
+                    _ = fillPath.TransitionateProperties(nameof(fillPath.Pivot))
+                        .WithAnimation(animation =>
+                                    animation
+                                        .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
+                                        .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction))
+                        .CompleteCurrentTransitions();
+                }
             }
             if (Stroke is not null)
             {
-                wasStrokeInitialized = strokePathHelper.Initialize(SetDefaultPathTransitions, chartAnimation);
-                Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, strokePathHelper.Path);
+                Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, strokePath);
                 cartesianChart.Canvas.AddDrawableTask(Stroke);
                 Stroke.ZIndex = actualZIndex + 0.2;
                 Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+                strokePath.Pivot = p;
+                if (isNew)
+                {
+                    _ = strokePath.TransitionateProperties(nameof(strokePath.Pivot))
+                        .WithAnimation(animation =>
+                                    animation
+                                        .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
+                                        .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction))
+                        .CompleteCurrentTransitions();
+                }
             }
 
-            foreach (var data in GetStepLine(segment, secondaryScale, primaryScale, stacker))
+            double previousPrimary = 0, previousSecondary = 0;
+
+            foreach (var point in segment)
             {
                 var s = 0d;
-                if (stacker is not null)
-                {
-                    s = stacker.GetStack(data.TargetPoint).Start;
-                }
+                if (stacker is not null) s = stacker.GetStack(point).Start;
 
-                var x = secondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
-                var y = primaryScale.ToPixels(data.TargetPoint.PrimaryValue + s);
-
-                var visual = (TStepSegmentVisual?)data.TargetPoint.Context.Visual;
+                var visual = (TVisualPoint?)point.Context.Visual;
+                var dp = point.PrimaryValue + s - previousPrimary;
+                var ds = point.SecondaryValue - previousSecondary;
 
                 if (visual is null)
                 {
-                    var v = new TStepSegmentVisual();
-
+                    var v = new TVisualPoint();
                     visual = v;
 
-                    var pg = p;
-                    var xg = x - hgs;
-                    var yg = p - hgs;
-
-                    var x0b = data.X0;
-                    var x1b = data.X1;
-                    var x2b = data.X2;
-                    var y0b = p - hgs;
-                    var y1b = p - hgs;
-                    var y2b = p - hgs;
-
-                    if (previousSecondaryScale is not null && previousPrimaryScale is not null)
+                    if (actualSecondaryScale is null || actualPrimaryScale is null)
                     {
-                        pg = previousPrimaryScale.ToPixels(pivot);
-                        xg = previousSecondaryScale.ToPixels(data.TargetPoint.SecondaryValue) - hgs;
-                        yg = previousPrimaryScale.ToPixels(data.TargetPoint.PrimaryValue + s) - hgs;
+                        v.Geometry.X = secondaryScale.ToPixels(point.SecondaryValue);
+                        v.Geometry.Y = p;
+                        v.Geometry.Width = 0;
+                        v.Geometry.Height = 0;
 
-                        if (data.OriginalData is null) throw new Exception("Original data not found");
+                        v.StepSegment.X0 = secondaryScale.ToPixels(point.SecondaryValue - ds);
+                        v.StepSegment.X1 = secondaryScale.ToPixels(point.SecondaryValue);
+                        v.StepSegment.Y0 = p;
+                        v.StepSegment.Y1 = p;
+                    }
+                    else
+                    {
+                        var xng = actualSecondaryScale.ToPixels(point.SecondaryValue);
+                        var yng = actualPrimaryScale.ToPixels(point.PrimaryValue + s);
 
-                        x0b = previousSecondaryScale.ToPixels(data.OriginalData.X0);
-                        x1b = previousSecondaryScale.ToPixels(data.OriginalData.X1);
-                        x2b = previousSecondaryScale.ToPixels(data.OriginalData.X2);
-                        y0b = previousPrimaryScale.ToPixels(data.OriginalData.Y0); //chart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y0) : pg - hgs;
-                        y1b = previousPrimaryScale.ToPixels(data.OriginalData.Y1); //chart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y1) : pg - hgs;
-                        y2b = previousPrimaryScale.ToPixels(data.OriginalData.Y2); //chart.IsZoomingOrPanning ? previousPrimaryScale.ToPixels(data.OriginalData.Y2) : pg - hgs;
+                        v.Geometry.X = xng - hgs;
+                        v.Geometry.Y = yng - hgs;
+                        v.Geometry.Width = gs;
+                        v.Geometry.Height = gs;
+
+                        v.StepSegment.X0 = actualSecondaryScale.ToPixels(point.SecondaryValue - ds);
+                        v.StepSegment.X1 = actualSecondaryScale.ToPixels(point.SecondaryValue);
+                        v.StepSegment.Y0 = actualPrimaryScale.ToPixels(point.PrimaryValue + s - dp);
+                        v.StepSegment.Y1 = actualPrimaryScale.ToPixels(point.PrimaryValue + s);
                     }
 
-                    v.Geometry.X = xg;
-                    v.Geometry.Y = yg;
-                    v.Geometry.Width = gs;
-                    v.Geometry.Height = gs;
-
-                    v.StepSegment.X0 = (float)x0b;
-                    v.StepSegment.Y0 = y0b;
-                    v.StepSegment.X1 = (float)x1b;
-                    v.StepSegment.Y1 = y1b;
-
-                    data.TargetPoint.Context.Visual = v;
-                    OnPointCreated(data.TargetPoint);
+                    point.Context.Visual = v;
+                    OnPointCreated(point);
                 }
 
-                _ = everFetched.Add(data.TargetPoint);
+                _ = everFetched.Add(point);
 
                 if (GeometryFill is not null) GeometryFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
                 if (GeometryStroke is not null) GeometryStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
 
-                visual.StepSegment.X0 = (float)data.X0;
-                visual.StepSegment.Y0 = (float)data.Y0;
-                visual.StepSegment.X1 = (float)data.X1;
-                visual.StepSegment.Y1 = (float)data.Y1;
+                visual.StepSegment.X0 = secondaryScale.ToPixels(point.SecondaryValue - ds);
+                visual.StepSegment.X1 = secondaryScale.ToPixels(point.SecondaryValue);
+                visual.StepSegment.Y0 = primaryScale.ToPixels(point.PrimaryValue + s - dp);
+                visual.StepSegment.Y1 = primaryScale.ToPixels(point.PrimaryValue + s);
 
-                if (Fill is not null)
-                {
-                    if (data.IsFirst)
-                    {
-                        if (wasFillInitialized)
-                        {
-                            fillPathHelper.StartPoint.X = (float)data.X0;
-                            fillPathHelper.StartPoint.Y = p;
+                if (Fill is not null) _ = fillPath.AddLast(visual.StepSegment);
+                if (Stroke is not null) _ = strokePath.AddLast(visual.StepSegment);
 
-                            fillPathHelper.StartSegment.X = (float)data.X0;
-                            fillPathHelper.StartSegment.Y = p;
-
-                            fillPathHelper.StartPoint.CompleteTransitions(
-                                nameof(fillPathHelper.StartPoint.Y), nameof(fillPathHelper.StartPoint.X));
-                            fillPathHelper.StartSegment.CompleteTransitions(
-                                nameof(fillPathHelper.StartSegment.Y), nameof(fillPathHelper.StartSegment.X));
-                        }
-
-                        fillPathHelper.StartPoint.X = (float)data.X0;
-                        fillPathHelper.StartPoint.Y = p;
-                        _ = fillPathHelper.Path.AddLast(fillPathHelper.StartPoint);
-
-                        fillPathHelper.StartSegment.X = (float)data.X0;
-                        fillPathHelper.StartSegment.Y = (float)data.Y0;
-                        _ = fillPathHelper.Path.AddLast(fillPathHelper.StartSegment);
-                    }
-
-                    _ = fillPathHelper.Path.AddLast(visual.StepSegment);
-
-                    if (data.IsLast)
-                    {
-                        fillPathHelper.EndSegment.X = (float)data.X2;
-                        fillPathHelper.EndSegment.Y = p;
-                        _ = fillPathHelper.Path.AddLast(fillPathHelper.EndSegment);
-
-                        if (wasFillInitialized)
-                            fillPathHelper.EndSegment.CompleteTransitions(
-                                nameof(fillPathHelper.EndSegment.Y), nameof(fillPathHelper.EndSegment.X));
-                    }
-                }
-                if (Stroke is not null)
-                {
-                    if (data.IsFirst)
-                    {
-                        if (wasStrokeInitialized || cartesianChart.IsZoomingOrPanning)
-                        {
-                            if (cartesianChart.IsZoomingOrPanning && previousPrimaryScale is not null && previousSecondaryScale is not null)
-                            {
-                                strokePathHelper.StartPoint.X = previousSecondaryScale.ToPixels(data.OriginalData?.X0 ?? 0);
-                                strokePathHelper.StartPoint.Y = previousPrimaryScale.ToPixels(data.OriginalData?.Y0 ?? 0);
-                            }
-                            else
-                            {
-                                strokePathHelper.StartPoint.X = (float)data.X0;
-                                strokePathHelper.StartPoint.Y = p;
-                            }
-
-                            strokePathHelper.StartPoint.CompleteTransitions(
-                               nameof(strokePathHelper.StartPoint.Y), nameof(strokePathHelper.StartPoint.X));
-                        }
-
-                        if (!cartesianChart.IsFirstDraw && previousSecondaryScale is not null && previousPrimaryScale is not null)
-                        {
-                            strokePathHelper.StartPoint.X = previousSecondaryScale.ToPixels(data.OriginalData?.X0 ?? 0);
-                            strokePathHelper.StartPoint.Y = previousPrimaryScale.ToPixels(data.OriginalData?.Y0 ?? 0);
-                            strokePathHelper.StartPoint.CompleteTransitions(
-                               nameof(strokePathHelper.StartPoint.Y), nameof(strokePathHelper.StartPoint.X));
-                        }
-
-                        strokePathHelper.StartPoint.X = (float)data.X0;
-                        strokePathHelper.StartPoint.Y = (float)data.Y0;
-                        _ = strokePathHelper.Path.AddLast(strokePathHelper.StartPoint);
-                    }
-
-                    _ = strokePathHelper.Path.AddLast(visual.StepSegment);
-                }
+                var x = secondaryScale.ToPixels(point.SecondaryValue);
+                var y = primaryScale.ToPixels(point.PrimaryValue + s);
 
                 visual.Geometry.X = x - hgs;
                 visual.Geometry.Y = y - hgs;
@@ -359,18 +279,18 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 visual.Geometry.Height = gs;
                 visual.Geometry.RemoveOnCompleted = false;
 
-                visual.FillPath = fillPathHelper.Path;
-                visual.StrokePath = strokePathHelper.Path;
+                visual.FillPath = fillPath;
+                visual.StrokePath = strokePath;
 
                 var hags = gs < 8 ? 8 : gs;
 
-                data.TargetPoint.Context.HoverArea = new RectangleHoverArea(x - uwx * 0.5f, y - hgs, uwx, gs);
+                point.Context.HoverArea = new RectangleHoverArea(x - uwx * 0.5f, y - hgs, uwx, gs);
 
-                _ = toDeletePoints.Remove(data.TargetPoint);
+                _ = toDeletePoints.Remove(point);
 
                 if (DataLabelsPaint is not null)
                 {
-                    var label = (TLabel?)data.TargetPoint.Context.Label;
+                    var label = (TLabel?)point.Context.Label;
 
                     if (label is null)
                     {
@@ -384,21 +304,23 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
                         l.CompleteAllTransitions();
                         label = l;
-                        data.TargetPoint.Context.Label = l;
+                        point.Context.Label = l;
                     }
 
                     DataLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, label);
-                    label.Text = DataLabelsFormatter(new ChartPoint<TModel, TStepSegmentVisual, TLabel>(data.TargetPoint));
+                    label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisualPoint, TLabel>(point));
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
                     var labelPosition = GetLabelPosition(
                         x - hgs, y - hgs, gs, gs, label.Measure(DataLabelsPaint), DataLabelsPosition,
-                        SeriesProperties, data.TargetPoint.PrimaryValue > Pivot, drawLocation, drawMarginSize);
+                        SeriesProperties, point.PrimaryValue > Pivot, drawLocation, drawMarginSize);
                     label.X = labelPosition.X;
                     label.Y = labelPosition.Y;
                 }
 
-                OnPointMeasured(data.TargetPoint);
+                OnPointMeasured(point);
+                previousPrimary = point.PrimaryValue + s;
+                previousSecondary = point.SecondaryValue;
             }
 
             if (GeometryFill is not null)
@@ -420,12 +342,12 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         {
             var iFill = fillPathHelperContainer.Count - 1;
             var fillHelper = fillPathHelperContainer[iFill];
-            if (Fill is not null) Fill.RemoveGeometryFromPainTask(cartesianChart.Canvas, fillHelper.Path);
+            if (Fill is not null) Fill.RemoveGeometryFromPainTask(cartesianChart.Canvas, fillHelper);
             fillPathHelperContainer.RemoveAt(iFill);
 
             var iStroke = strokePathHelperContainer.Count - 1;
             var strokeHelper = strokePathHelperContainer[iStroke];
-            if (Stroke is not null) Stroke.RemoveGeometryFromPainTask(cartesianChart.Canvas, strokeHelper.Path);
+            if (Stroke is not null) Stroke.RemoveGeometryFromPainTask(cartesianChart.Canvas, strokeHelper);
             strokePathHelperContainer.RemoveAt(iStroke);
         }
 
@@ -480,6 +402,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     {
                         Max = baseBounds.SecondaryBounds.Max + ts,
                         Min = baseBounds.SecondaryBounds.Min - ts,
+                        MinDelta = baseBounds.SecondaryBounds.MinDelta,
                         PaddingMax = ts,
                         PaddingMin = ts,
                         RequestedGeometrySize = rgs
@@ -488,6 +411,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     {
                         Max = baseBounds.PrimaryBounds.Max + tp,
                         Min = baseBounds.PrimaryBounds.Min - tp,
+                        MinDelta = baseBounds.PrimaryBounds.MinDelta,
                         PaddingMax = tp,
                         PaddingMin = tp,
                         RequestedGeometrySize = rgs
@@ -501,36 +425,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                     {
                         Max = baseBounds.VisiblePrimaryBounds.Max + tp,
                         Min = baseBounds.VisiblePrimaryBounds.Min - tp
-                    },
-                    MinDeltaPrimary = baseBounds.MinDeltaPrimary,
-                    MinDeltaSecondary = baseBounds.MinDeltaSecondary
+                    }
                 }, false);
-    }
-
-    /// <summary>
-    /// Sets the default path transitions.
-    /// </summary>
-    /// <param name="areaHelper">The area helper.</param>
-    /// <param name="defaultAnimation">The default animation.</param>
-    /// <returns></returns>
-    protected virtual void SetDefaultPathTransitions(
-        AreaHelper<TDrawingContext, TPathGeometry, TLineSegment, TMoveToCommand, TPathArgs> areaHelper,
-        Animation defaultAnimation)
-    {
-        _ = areaHelper.StartPoint
-            .TransitionateProperties(nameof(areaHelper.StartPoint.X), nameof(areaHelper.StartPoint.Y))
-            .WithAnimation(defaultAnimation)
-            .CompleteCurrentTransitions();
-
-        _ = areaHelper.StartSegment
-            .TransitionateProperties(nameof(areaHelper.StartSegment.X), nameof(areaHelper.StartSegment.Y))
-            .WithAnimation(defaultAnimation)
-            .CompleteCurrentTransitions();
-
-        _ = areaHelper.EndSegment
-            .TransitionateProperties(nameof(areaHelper.EndSegment.X), nameof(areaHelper.EndSegment.Y))
-            .WithAnimation(defaultAnimation)
-            .CompleteCurrentTransitions();
     }
 
     /// <inheritdoc cref="ChartSeries{TModel, TVisual, TLabel, TDrawingContext}.OnSeriesMiniatureChanged"/>
@@ -603,75 +499,12 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         CanvasSchedule = context;
     }
 
-    private IEnumerable<BezierData> GetStepLine(
-        ChartPoint[] points,
-        Scaler xScale,
-        Scaler yScale,
-        StackPosition<TDrawingContext>? stacker)
-    {
-        if (points.Length == 0) yield break;
-
-        ChartPoint current, next;
-
-        var cys = 0d;
-
-        for (var i = 0; i < points.Length; i++)
-        {
-            current = points[i];
-            next = points[i + 1 > points.Length - 1 ? points.Length - 1 : i + 1];
-
-            if (stacker is not null)
-            {
-                cys = stacker.GetStack(current).Start;
-            }
-
-            var c1X = current.SecondaryValue;
-            var c1Y = current.PrimaryValue + cys;
-            var c2X = next.SecondaryValue;
-            var c2Y = current.PrimaryValue + cys;
-
-            double x0, y0;
-
-            if (i == 0)
-            {
-                x0 = current.SecondaryValue;
-                y0 = current.PrimaryValue + cys;
-            }
-            else
-            {
-                x0 = c1X;
-                y0 = c1Y;
-            }
-
-            yield return new BezierData(points[i])
-            {
-                IsFirst = i == 0,
-                IsLast = i == points.Length - 1,
-                X0 = xScale.ToPixels(x0),
-                Y0 = yScale.ToPixels(y0),
-                X1 = xScale.ToPixels(c2X),
-                Y1 = yScale.ToPixels(c2Y),
-                X2 = xScale.ToPixels(next.SecondaryValue),
-                Y2 = yScale.ToPixels(next.PrimaryValue),
-                OriginalData = new BezierData(points[i])
-                {
-                    X0 = x0,
-                    Y0 = y0,
-                    X1 = c2X,
-                    Y1 = c2Y,
-                    X2 = next.SecondaryValue,
-                    Y2 = next.PrimaryValue,
-                }
-            };
-        }
-    }
-
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SetDefaultPointTransitions(ChartPoint)"/>
     protected override void SetDefaultPointTransitions(ChartPoint chartPoint)
     {
         var chart = chartPoint.Context.Chart;
 
-        if (chartPoint.Context.Visual is not TStepSegmentVisual visual)
+        if (chartPoint.Context.Visual is not TVisualPoint visual)
             throw new Exception("Unable to initialize the point instance.");
 
         _ = visual.Geometry
@@ -702,7 +535,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel, TDrawingContext}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
     protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
     {
-        var visual = (TStepSegmentVisual?)point.Context.Visual;
+        var visual = (TVisualPoint?)point.Context.Visual;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
@@ -743,14 +576,14 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         {
             foreach (var activeChartContainer in _fillPathHelperDictionary.ToArray())
                 foreach (var pathHelper in activeChartContainer.Value.ToArray())
-                    Fill.RemoveGeometryFromPainTask(canvas, pathHelper.Path);
+                    Fill.RemoveGeometryFromPainTask(canvas, pathHelper);
         }
 
         if (Stroke is not null)
         {
             foreach (var activeChartContainer in _strokePathHelperDictionary.ToArray())
                 foreach (var pathHelper in activeChartContainer.Value.ToArray())
-                    Stroke.RemoveGeometryFromPainTask(canvas, pathHelper.Path);
+                    Stroke.RemoveGeometryFromPainTask(canvas, pathHelper);
         }
 
         if (GeometryFill is not null) canvas.RemovePaintTask(GeometryFill);
@@ -777,7 +610,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         {
             if (point.IsNull)
             {
-                if (point.Context.Visual is TStepSegmentVisual visual)
+                if (point.Context.Visual is TVisualPoint visual)
                 {
                     var x = xScale.ToPixels(point.SecondaryValue);
                     var y = yScale.ToPixels(point.PrimaryValue);

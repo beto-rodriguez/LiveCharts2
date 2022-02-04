@@ -59,12 +59,6 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
     public override void Measure(Chart<TDrawingContext> chart)
     {
-        if (GetCustomMeasureHandler() is not null)
-        {
-            GetCustomMeasureHandler()!(chart);
-            return;
-        }
-
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
         var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
@@ -73,10 +67,10 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
         var drawMarginSize = cartesianChart.DrawMarginSize;
         var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
         var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
-        var previousPrimaryScale = primaryAxis.PreviousDataBounds is null
+        var previousPrimaryScale = !primaryAxis.ActualBounds.HasPreviousState
             ? null
             : new Scaler(drawLocation, drawMarginSize, primaryAxis, true);
-        var previousSecondaryScale = secondaryAxis.PreviousDataBounds is null
+        var previousSecondaryScale = !secondaryAxis.ActualBounds.HasPreviousState
             ? null
             : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
 
@@ -274,6 +268,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
                     {
                         Max = baseBounds.SecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth,
                         Min = baseBounds.SecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth,
+                        MinDelta = baseBounds.SecondaryBounds.MinDelta,
                         PaddingMax = ts,
                         PaddingMin = ts
                     },
@@ -282,7 +277,8 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
                         Max = baseBounds.PrimaryBounds.Max,
                         Min = baseBounds.PrimaryBounds.Min,
                         PaddingMax = tp,
-                        PaddingMin = tp
+                        PaddingMin = tp,
+                        MinDelta = baseBounds.PrimaryBounds.MinDelta
                     },
                     VisibleSecondaryBounds = new Bounds
                     {
@@ -293,9 +289,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
                     {
                         Max = baseBounds.VisiblePrimaryBounds.Max,
                         Min = baseBounds.VisiblePrimaryBounds.Min
-                    },
-                    MinDeltaPrimary = baseBounds.MinDeltaPrimary,
-                    MinDeltaSecondary = baseBounds.MinDeltaSecondary
+                    }
                 },
                 false);
     }

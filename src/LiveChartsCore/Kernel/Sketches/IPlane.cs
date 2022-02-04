@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
@@ -51,20 +52,9 @@ public interface IPlane : IStopNPC
     Padding NamePadding { get; set; }
 
     /// <summary>
-    /// Gets the previous data bounds.
+    /// Get or sets the actual bounds.
     /// </summary>
-    /// <value>
-    /// The previous data bounds.
-    /// </value>
-    Bounds? PreviousDataBounds { get; set; }
-
-    /// <summary>
-    /// Gets the previous data bounds.
-    /// </summary>
-    /// <value>
-    /// The previous data bounds.
-    /// </value>
-    Bounds? PreviousVisibleDataBounds { get; set; }
+    AnimatableAxisBounds ActualBounds { get; }
 
     /// <summary>
     /// Gets the data bounds, the min and max values in the axis.
@@ -150,22 +140,6 @@ public interface IPlane : IStopNPC
     ///   <c>true</c> if this instance is inverted; otherwise, <c>false</c>.
     /// </value>
     bool IsInverted { get; set; }
-
-    /// <summary>
-    /// Gets or sets the previous maximum limit.
-    /// </summary>
-    /// <value>
-    /// The previous maximum limit.
-    /// </value>
-    double? PreviousMaxLimit { get; set; }
-
-    /// <summary>
-    /// Gets or sets the previous minimum limit.
-    /// </summary>
-    /// <value>
-    /// The previous minimum limit.
-    /// </value>
-    double? PreviousMinLimit { get; set; }
 
     /// <summary>
     /// Gets or sets the labels rotation in degrees.

@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing.Segments;
+
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
@@ -27,12 +29,9 @@ namespace LiveChartsCore.Drawing;
 /// </summary>
 /// <typeparam name="TDrawingContext">The type of the drawing context.</typeparam>
 /// <typeparam name="TVisual">The type of the visual.</typeparam>
-/// <typeparam name="TStepLineSegment">The type of the stepline segment.</typeparam>
-/// <typeparam name="TPathArgs">The type of the path arguments.</typeparam>
 /// <seealso cref="IStepLineVisualChartPoint{TDrawingContext}" />
-public class StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPathArgs> : IStepLineVisualChartPoint<TDrawingContext>
+public class StepLineVisualPoint<TDrawingContext, TVisual> : IStepLineVisualChartPoint<TDrawingContext>
     where TVisual : ISizedVisualChartPoint<TDrawingContext>, new()
-    where TStepLineSegment : IStepLineSegment<TPathArgs>, new()
     where TDrawingContext : DrawingContext
 {
     /// <summary>
@@ -49,7 +48,7 @@ public class StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPa
     /// <value>
     /// The stepline.
     /// </value>
-    public TStepLineSegment StepSegment { get; set; } = new();
+    public StepLineSegment StepSegment { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the path.
@@ -57,7 +56,7 @@ public class StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPa
     /// <value>
     /// The path.
     /// </value>
-    public IPathGeometry<TDrawingContext, TPathArgs>? FillPath { get; set; }
+    public IAreaGeometry<StepLineSegment, TDrawingContext>? FillPath { get; set; }
 
     /// <summary>
     /// Gets or sets the stroke path.
@@ -65,7 +64,7 @@ public class StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPa
     /// <value>
     /// The stroke path.
     /// </value>
-    public IPathGeometry<TDrawingContext, TPathArgs>? StrokePath { get; set; }
+    public IAreaGeometry<StepLineSegment, TDrawingContext>? StrokePath { get; set; }
 
     /// <summary>
     /// Gets the main <see cref="T:LiveChartsCore.Drawing.IDrawable`1" />.
@@ -73,5 +72,4 @@ public class StepLineVisualPoint<TDrawingContext, TVisual, TStepLineSegment, TPa
     public IGeometry<TDrawingContext>? HighlightableGeometry => Geometry?.HighlightableGeometry;
 
     ISizedGeometry<TDrawingContext> IStepLineVisualChartPoint<TDrawingContext>.Geometry => Geometry;
-    IAnimatableStepLineSegment IStepLineVisualChartPoint<TDrawingContext>.StepLine => StepSegment;
 }

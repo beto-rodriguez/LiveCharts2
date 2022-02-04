@@ -59,12 +59,6 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
     public override void Measure(Chart<TDrawingContext> chart)
     {
-        if (GetCustomMeasureHandler() is not null)
-        {
-            GetCustomMeasureHandler()!(chart);
-            return;
-        }
-
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
         var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
@@ -73,7 +67,7 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
         var drawMarginSize = cartesianChart.DrawMarginSize;
         var secondaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
         var previousSecondaryScale =
-            primaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis);
+            !primaryAxis.ActualBounds.HasPreviousState ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis);
         var primaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
 
         var uw = secondaryScale.MeasureInPixels(primaryAxis.UnitWidth); //secondaryScale.ToPixels(0f) - secondaryScale.ToPixels(primaryAxis.UnitWidth);
@@ -277,6 +271,7 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
                     {
                         Max = baseBounds.SecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth,
                         Min = baseBounds.SecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth,
+                        MinDelta = baseBounds.SecondaryBounds.MinDelta,
                         PaddingMax = ts,
                         PaddingMin = ts
                     },
@@ -284,6 +279,7 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
                     {
                         Max = baseBounds.PrimaryBounds.Max,
                         Min = baseBounds.PrimaryBounds.Min,
+                        MinDelta = baseBounds.PrimaryBounds.MinDelta,
                         PaddingMax = tp,
                         PaddingMin = tp
                     },
@@ -296,9 +292,7 @@ public class RowSeries<TModel, TVisual, TLabel, TDrawingContext> : BarSeries<TMo
                     {
                         Max = baseBounds.VisiblePrimaryBounds.Max,
                         Min = baseBounds.VisiblePrimaryBounds.Min
-                    },
-                    MinDeltaPrimary = baseBounds.MinDeltaPrimary,
-                    MinDeltaSecondary = baseBounds.MinDeltaSecondary
+                    }
                 },
                 false);
     }

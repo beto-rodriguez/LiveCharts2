@@ -44,10 +44,10 @@ public abstract class Animatable : IAnimatable
     protected Animatable() { }
 
     /// <inheritdoc cref="IAnimatable.IsValid" />
-    bool IAnimatable.IsValid { get => _isCompleted; set => _isCompleted = value; }
+    public bool IsValid { get => _isCompleted; set => _isCompleted = value; }
 
     /// <inheritdoc cref="IAnimatable.CurrentTime" />
-    long IAnimatable.CurrentTime { get => _currentTime; set => _currentTime = value; }
+    public long CurrentTime { get => _currentTime; set => _currentTime = value; }
 
     /// <inheritdoc cref="IAnimatable.RemoveOnCompleted" />
     public bool RemoveOnCompleted { get => _removeOnCompleted; set => _removeOnCompleted = value; }
@@ -59,6 +59,12 @@ public abstract class Animatable : IAnimatable
 
         foreach (var name in properties)
             transitionProperties[name].Animation = a;
+    }
+
+    /// <inheritdoc cref="IAnimatable.GetAllAnimatableProperties" />
+    public string[] GetAllAnimatableProperties()
+    {
+        return transitionProperties.Keys.ToArray();
     }
 
     /// <inheritdoc cref="IAnimatable.RemovePropertyTransition(string)" />
@@ -137,6 +143,7 @@ public abstract class Animatable : IAnimatable
     /// </summary>
     /// <param name="time">The time.</param>
     /// <returns></returns>
+    [Obsolete]
     protected void SetCurrentTime(long time)
     {
         _currentTime = time;
@@ -146,6 +153,7 @@ public abstract class Animatable : IAnimatable
     /// Gets the current time.
     /// </summary>
     /// <returns></returns>
+    [Obsolete]
     protected long GetCurrentTime()
     {
         return _currentTime;

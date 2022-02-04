@@ -30,6 +30,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Helpers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 
 namespace LiveChartsCore;
 
@@ -79,6 +80,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
     private Align _labelsVerticalAlign = Align.Middle;
     private Align _labelsHorizontalAlign = Align.Middle;
     private LvcColor _labelsBackground = new(255, 255, 255);
+    private AnimatableAxisBounds _animatableBounds = new();
 
     #endregion
 
@@ -86,17 +88,11 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
 
     float IPolarAxis.Ro { get; set; }
 
-    Bounds? IPlane.PreviousDataBounds { get; set; }
-
-    Bounds? IPlane.PreviousVisibleDataBounds { get; set; }
-
-    double? IPlane.PreviousMaxLimit { get; set; }
-
-    double? IPlane.PreviousMinLimit { get; set; }
-
     Bounds IPlane.DataBounds => _dataBounds ?? throw new Exception("bounds not found");
 
     Bounds IPlane.VisibleDataBounds => _visibleDataBounds ?? throw new Exception("bounds not found");
+
+    AnimatableAxisBounds IPlane.ActualBounds => _animatableBounds;
 
     /// <inheritdoc cref="IPlane.Name"/>
     public string? Name { get; set; } = null;
@@ -225,6 +221,18 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
         var s = axisTick.Value;
         if (s < _minStep) s = _minStep;
         if (_forceStepToMin) s = _minStep;
+
+        if (!_animatableBounds.HasPreviousState)
+        {
+            _ = _animatableBounds
+                .TransitionateProperties(nameof(_animatableBounds.MinLimit), nameof(_animatableBounds.MaxLimit))
+                .WithAnimation(animation =>
+                         animation
+                             .WithDuration(AnimationsSpeed ?? polarChart.AnimationsSpeed)
+                             .WithEasingFunction(EasingFunction ?? polarChart.EasingFunction));
+
+            _ = polarChart.Canvas.Trackers.Add(_animatableBounds);
+        }
 
         if (NamePaint is not null)
         {
@@ -424,7 +432,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
                 visualSeparator.Label.X = location.X;
                 visualSeparator.Label.Y = location.Y;
 
-                if (((IPolarAxis)this).PreviousDataBounds is null) visualSeparator.Label.CompleteAllTransitions();
+                if (!_animatableBounds.HasPreviousState) visualSeparator.Label.CompleteAllTransitions();
             }
 
             if (visualSeparator.Geometry is not null)
@@ -438,7 +446,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
                     lineSepartator.Line.Y = innerPos.Y;
                     lineSepartator.Line.Y1 = location.Y;
 
-                    if (((IPolarAxis)this).PreviousDataBounds is null) lineSepartator.Line.CompleteAllTransitions();
+                    if (!_animatableBounds.HasPreviousState) lineSepartator.Line.CompleteAllTransitions();
                 }
 
                 if (visualSeparator is RadialAxisVisualSeparator<TDrawingContext> polarSeparator && polarSeparator.Circle is not null)
@@ -450,7 +458,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
                     polarSeparator.Circle.Width = radius * 2;
                     polarSeparator.Circle.Height = radius * 2;
 
-                    if (((IPolarAxis)this).PreviousDataBounds is null) polarSeparator.Circle.CompleteAllTransitions();
+                    if (!_animatableBounds.HasPreviousState) polarSeparator.Circle.CompleteAllTransitions();
                 }
 
                 visualSeparator.Geometry.Opacity = 1;
@@ -578,7 +586,7 @@ public abstract class PolarAxis<TDrawingContext, TTextGeometry, TLineGeometry, T
     public override void RemoveFromUI(Chart<TDrawingContext> chart)
     {
         base.RemoveFromUI(chart);
-        ((IPlane)this).PreviousDataBounds = null;
+        _animatableBounds = null!;
         _ = activeSeparators.Remove(chart);
     }
 

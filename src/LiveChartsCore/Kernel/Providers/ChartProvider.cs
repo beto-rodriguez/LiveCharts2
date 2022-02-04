@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel.Sketches;
@@ -67,30 +66,4 @@ public abstract class ChartProvider<TDrawingContext>
     /// </summary>
     /// <returns></returns>
     public abstract IPaint<TDrawingContext> GetSolidColorPaint(LvcColor color = new());
-
-    /// <summary>
-    /// Gets the series custom measure handler.
-    /// </summary>
-    /// <returns></returns>
-    public virtual Action<Chart<TDrawingContext>>? SeriesCustomMeasureHandler(ISeries series)
-    {
-        return null;
-    }
-
-    /// <summary>
-    /// Gets the line series custom measure handler.
-    /// </summary>
-    /// <returns></returns>
-    public virtual Action<Chart<TDrawingContext>>? LineCustomMeasureHandler<TModel, TVisual, TLabel, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs, TBezierVisual>(
-        LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry, TLineSegment, TBezierSegment, TMoveToCommand, TPathArgs, TBezierVisual> series)
-            where TBezierVisual : LineBezierVisualPoint<TDrawingContext, TVisual, TBezierSegment, TPathArgs>, new()
-            where TPathGeometry : IPathGeometry<TDrawingContext, TPathArgs>, new()
-            where TLineSegment : ILinePathSegment<TPathArgs>, new()
-            where TBezierSegment : IBezierSegment<TPathArgs>, new()
-            where TMoveToCommand : IMoveToPathCommand<TPathArgs>, new()
-            where TVisual : class, ISizedVisualChartPoint<TDrawingContext>, new()
-            where TLabel : class, ILabelGeometry<TDrawingContext>, new()
-    {
-        return null;
-    }
 }

@@ -210,8 +210,8 @@ public class DataFactory<TModel, TDrawingContext>
             {
                 var dx = Math.Abs(previous.SecondaryValue - point.SecondaryValue);
                 var dy = Math.Abs(previous.PrimaryValue - point.PrimaryValue);
-                if (dx < bounds.MinDeltaSecondary) bounds.MinDeltaSecondary = dx;
-                if (dy < bounds.MinDeltaPrimary) bounds.MinDeltaPrimary = dy;
+                if (dx < bounds.SecondaryBounds.MinDelta) bounds.SecondaryBounds.MinDelta = dx;
+                if (dy < bounds.PrimaryBounds.MinDelta) bounds.PrimaryBounds.MinDelta = dy;
             }
 
             previous = point;
@@ -270,8 +270,8 @@ public class DataFactory<TModel, TDrawingContext>
             {
                 var dx = Math.Abs(previous.SecondaryValue - point.SecondaryValue);
                 var dy = Math.Abs(previous.PrimaryValue - point.PrimaryValue);
-                if (dx < bounds.MinDeltaSecondary) bounds.MinDeltaSecondary = dx;
-                if (dy < bounds.MinDeltaPrimary) bounds.MinDeltaPrimary = dy;
+                if (dx < bounds.SecondaryBounds.MinDelta) bounds.SecondaryBounds.MinDelta = dx;
+                if (dy < bounds.PrimaryBounds.MinDelta) bounds.PrimaryBounds.MinDelta = dy;
             }
 
             previous = point;

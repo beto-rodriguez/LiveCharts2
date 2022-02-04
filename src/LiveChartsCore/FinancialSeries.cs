@@ -96,12 +96,6 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext>
     /// <inheritdoc cref="ChartElement{TDrawingContext}.Measure(Chart{TDrawingContext})"/>
     public override void Measure(Chart<TDrawingContext> chart)
     {
-        if (GetCustomMeasureHandler() is not null)
-        {
-            GetCustomMeasureHandler()!(chart);
-            return;
-        }
-
         var cartesianChart = (CartesianChart<TDrawingContext>)chart;
         var primaryAxis = cartesianChart.YAxes[ScalesYAt];
         var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
@@ -111,9 +105,9 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext>
         var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
         var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
         var previousPrimaryScale =
-            primaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis, true);
+            !primaryAxis.ActualBounds.HasPreviousState ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis, true);
         var previousSecondaryScale =
-            secondaryAxis.PreviousDataBounds is null ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
+            !secondaryAxis.ActualBounds.HasPreviousState ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
 
         var uw = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
         var puw = previousSecondaryScale is null ? 0 : previousSecondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
@@ -332,6 +326,7 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext>
                     {
                         Max = baseBounds.SecondaryBounds.Max + 0.5 * secondaryAxis.UnitWidth,
                         Min = baseBounds.SecondaryBounds.Min - 0.5 * secondaryAxis.UnitWidth,
+                        MinDelta = baseBounds.SecondaryBounds.MinDelta,
                         PaddingMax = ts,
                         PaddingMin = ts
                     },
@@ -339,6 +334,7 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext>
                     {
                         Max = baseBounds.PrimaryBounds.Max,
                         Min = baseBounds.PrimaryBounds.Min,
+                        MinDelta = baseBounds.PrimaryBounds.MinDelta,
                         PaddingMax = tp,
                         PaddingMin = tp
                     },
@@ -351,9 +347,7 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext>
                     {
                         Max = baseBounds.VisiblePrimaryBounds.Max,
                         Min = baseBounds.VisiblePrimaryBounds.Min
-                    },
-                    MinDeltaPrimary = baseBounds.MinDeltaPrimary,
-                    MinDeltaSecondary = baseBounds.MinDeltaSecondary
+                    }
                 },
                 false);
     }

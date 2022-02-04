@@ -46,10 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference
-      Condition="'$(TargetFramework)' == 'net462' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp2.0'"
-      Include="Newtonsoft.Json"
-      Version="13.0.1" />
+    <PackageReference Condition="'$(TargetFramework)' == 'net462' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp2.0'" Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
 </Project>
