@@ -7,7 +7,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <lvc:CartesianChart
-            SyncContext="{Binding Sync}"
             Series="{Binding Series}">
         </lvc:CartesianChart>
     </Grid>
