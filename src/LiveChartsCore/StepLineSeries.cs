@@ -193,7 +193,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             }
 
-            ChartPoint? previousPoint = null;
+            double previousPrimary = 0, previousSecondary = 0;
 
             foreach (var point in segment)
             {
@@ -201,8 +201,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 if (stacker is not null) s = stacker.GetStack(point).Start;
 
                 var visual = (TVisualPoint?)point.Context.Visual;
-                var ds = point.SecondaryValue - (previousPoint?.SecondaryValue ?? 0);
-                var dp = point.PrimaryValue - (previousPoint?.PrimaryValue ?? 0);
+                var dp = point.PrimaryValue + s - previousPrimary;
+                var ds = point.SecondaryValue - previousSecondary;
 
                 if (visual is null)
                 {
@@ -233,8 +233,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
                         v.StepSegment.X0 = actualSecondaryScale.ToPixels(point.SecondaryValue - ds);
                         v.StepSegment.X1 = actualSecondaryScale.ToPixels(point.SecondaryValue);
-                        v.StepSegment.Y0 = actualPrimaryScale.ToPixels(point.PrimaryValue - dp);
-                        v.StepSegment.Y1 = actualPrimaryScale.ToPixels(point.PrimaryValue);
+                        v.StepSegment.Y0 = actualPrimaryScale.ToPixels(point.PrimaryValue + s - dp);
+                        v.StepSegment.Y1 = actualPrimaryScale.ToPixels(point.PrimaryValue + s);
                     }
 
                     point.Context.Visual = v;
@@ -248,8 +248,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
                 visual.StepSegment.X0 = secondaryScale.ToPixels(point.SecondaryValue - ds);
                 visual.StepSegment.X1 = secondaryScale.ToPixels(point.SecondaryValue);
-                visual.StepSegment.Y0 = primaryScale.ToPixels(point.PrimaryValue - dp);
-                visual.StepSegment.Y1 = primaryScale.ToPixels(point.PrimaryValue);
+                visual.StepSegment.Y0 = primaryScale.ToPixels(point.PrimaryValue + s - dp);
+                visual.StepSegment.Y1 = primaryScale.ToPixels(point.PrimaryValue + s);
 
                 if (Fill is not null) _ = fillPath.AddLast(visual.StepSegment);
                 if (Stroke is not null) _ = strokePath.AddLast(visual.StepSegment);
@@ -303,7 +303,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 }
 
                 OnPointMeasured(point);
-                previousPoint = point;
+                previousPrimary = point.PrimaryValue + s;
+                previousSecondary = point.SecondaryValue;
             }
 
             if (GeometryFill is not null)
