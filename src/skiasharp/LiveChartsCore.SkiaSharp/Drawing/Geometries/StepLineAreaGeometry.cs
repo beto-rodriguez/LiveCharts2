@@ -30,21 +30,30 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// </summary>
 public class StepLineAreaGeometry : AreaGeometry<StepLineSegment>
 {
+    private bool _isFirst = true;
+
     /// <inheritdoc cref="AreaGeometry{TSegment}.OnDrawSegment(SkiaSharpDrawingContext, SKPath, TSegment)"/>
     protected override void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, StepLineSegment segment)
     {
-        path.LineTo(segment.X0, segment.Y0);
+        if (_isFirst)
+        {
+            _isFirst = false;
+            return;
+        }
+
+        path.LineTo(segment.X1, segment.Y0);
         path.LineTo(segment.X1, segment.Y1);
     }
 
     /// <inheritdoc cref="AreaGeometry{TSegment}.OnOpen(SkiaSharpDrawingContext, SKPath, TSegment)"/>
     protected override void OnOpen(SkiaSharpDrawingContext context, SKPath path, StepLineSegment segment)
     {
-        path.MoveTo(segment.X0, segment.Y0);
+        path.MoveTo(segment.X1, segment.Y1);
     }
 
     /// <inheritdoc cref="AreaGeometry{TSegment}.OnClose(SkiaSharpDrawingContext, SKPath, TSegment)"/>
     protected override void OnClose(SkiaSharpDrawingContext context, SKPath path, StepLineSegment segment)
     {
+        _isFirst = true;
     }
 }

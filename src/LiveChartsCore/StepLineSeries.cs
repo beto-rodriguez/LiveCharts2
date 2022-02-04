@@ -103,12 +103,10 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
-        var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
-        var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
-        var previousPrimaryScale =
-            !primaryAxis.ActualBounds.HasPreviousState ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis, true);
-        var previousSecondaryScale =
-            !secondaryAxis.ActualBounds.HasPreviousState ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
+        var secondaryScale = secondaryAxis.GetScaler(cartesianChart);
+        var primaryScale = primaryAxis.GetScaler(cartesianChart);
+        var actualSecondaryScale = secondaryAxis.GetActualScalerScaler(cartesianChart);
+        var actualPrimaryScale = primaryAxis.GetActualScalerScaler(cartesianChart);
 
         var gs = _geometrySize;
         var hgs = gs / 2f;
@@ -195,78 +193,69 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                 Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             }
 
-            foreach (var data in GetStepLine(segment, secondaryScale, primaryScale, stacker))
+            ChartPoint? previousPoint = null;
+
+            foreach (var point in segment)
             {
                 var s = 0d;
-                if (stacker is not null)
-                {
-                    s = stacker.GetStack(data.TargetPoint).Start;
-                }
+                if (stacker is not null) s = stacker.GetStack(point).Start;
 
-                var x = secondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
-                var y = primaryScale.ToPixels(data.TargetPoint.PrimaryValue + s);
-
-                var visual = (TVisualPoint?)data.TargetPoint.Context.Visual;
+                var visual = (TVisualPoint?)point.Context.Visual;
+                var ds = point.SecondaryValue - (previousPoint?.SecondaryValue ?? 0);
+                var dp = point.PrimaryValue - (previousPoint?.PrimaryValue ?? 0);
 
                 if (visual is null)
                 {
                     var v = new TVisualPoint();
-
                     visual = v;
 
-                    var pg = p;
-                    var xg = x - hgs;
-                    var yg = p - hgs;
+                    if (actualSecondaryScale is null || actualPrimaryScale is null)
+                    {
+                        v.Geometry.X = secondaryScale.ToPixels(point.SecondaryValue);
+                        v.Geometry.Y = p;
+                        v.Geometry.Width = 0;
+                        v.Geometry.Height = 0;
 
-                    var x0b = data.X0;
-                    var x1b = data.X1;
-                    var x2b = data.X2;
-                    var y0b = p - hgs;
-                    var y1b = p - hgs;
-                    var y2b = p - hgs;
+                        v.StepSegment.X0 = secondaryScale.ToPixels(point.SecondaryValue - ds);
+                        v.StepSegment.X1 = secondaryScale.ToPixels(point.SecondaryValue);
+                        v.StepSegment.Y0 = p;
+                        v.StepSegment.Y1 = p;
+                    }
+                    else
+                    {
+                        var xng = actualSecondaryScale.ToPixels(point.SecondaryValue);
+                        var yng = actualPrimaryScale.ToPixels(point.PrimaryValue + s);
 
-                    //if (previousSecondaryScale is not null && previousPrimaryScale is not null)
-                    //{
-                    //    pg = previousPrimaryScale.ToPixels(pivot);
-                    //    xg = previousSecondaryScale.ToPixels(data.TargetPoint.SecondaryValue) - hgs;
-                    //    yg = previousPrimaryScale.ToPixels(data.TargetPoint.PrimaryValue + s) - hgs;
+                        v.Geometry.X = xng - hgs;
+                        v.Geometry.Y = yng - hgs;
+                        v.Geometry.Width = gs;
+                        v.Geometry.Height = gs;
 
-                    //    if (data.OriginalData is null) throw new Exception("Original data not found");
+                        v.StepSegment.X0 = actualSecondaryScale.ToPixels(point.SecondaryValue - ds);
+                        v.StepSegment.X1 = actualSecondaryScale.ToPixels(point.SecondaryValue);
+                        v.StepSegment.Y0 = actualPrimaryScale.ToPixels(point.PrimaryValue - dp);
+                        v.StepSegment.Y1 = actualPrimaryScale.ToPixels(point.PrimaryValue);
+                    }
 
-                    //    x0b = previousSecondaryScale.ToPixels(data.OriginalData.X0);
-                    //    x1b = previousSecondaryScale.ToPixels(data.OriginalData.X1);
-                    //    x2b = previousSecondaryScale.ToPixels(data.OriginalData.X2);
-                    //    y0b = previousPrimaryScale.ToPixels(data.OriginalData.Y0);
-                    //    y1b = previousPrimaryScale.ToPixels(data.OriginalData.Y1);
-                    //    y2b = previousPrimaryScale.ToPixels(data.OriginalData.Y2);
-                    //}
-
-                    v.Geometry.X = xg;
-                    v.Geometry.Y = yg;
-                    v.Geometry.Width = gs;
-                    v.Geometry.Height = gs;
-
-                    v.StepSegment.X0 = (float)x0b;
-                    v.StepSegment.Y0 = y0b;
-                    v.StepSegment.X1 = (float)x1b;
-                    v.StepSegment.Y1 = y1b;
-
-                    data.TargetPoint.Context.Visual = v;
-                    OnPointCreated(data.TargetPoint);
+                    point.Context.Visual = v;
+                    OnPointCreated(point);
                 }
 
-                _ = everFetched.Add(data.TargetPoint);
+                _ = everFetched.Add(point);
 
                 if (GeometryFill is not null) GeometryFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
                 if (GeometryStroke is not null) GeometryStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
 
-                visual.StepSegment.X0 = (float)data.X0;
-                visual.StepSegment.Y0 = (float)data.Y0;
-                visual.StepSegment.X1 = (float)data.X1;
-                visual.StepSegment.Y1 = (float)data.Y1;
+                visual.StepSegment.X0 = secondaryScale.ToPixels(point.SecondaryValue - ds);
+                visual.StepSegment.X1 = secondaryScale.ToPixels(point.SecondaryValue);
+                visual.StepSegment.Y0 = primaryScale.ToPixels(point.PrimaryValue - dp);
+                visual.StepSegment.Y1 = primaryScale.ToPixels(point.PrimaryValue);
 
                 if (Fill is not null) _ = fillPath.AddLast(visual.StepSegment);
                 if (Stroke is not null) _ = strokePath.AddLast(visual.StepSegment);
+
+                var x = secondaryScale.ToPixels(point.SecondaryValue);
+                var y = primaryScale.ToPixels(point.PrimaryValue + s);
 
                 visual.Geometry.X = x - hgs;
                 visual.Geometry.Y = y - hgs;
@@ -279,13 +268,13 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
                 var hags = gs < 8 ? 8 : gs;
 
-                data.TargetPoint.Context.HoverArea = new RectangleHoverArea(x - uwx * 0.5f, y - hgs, uwx, gs);
+                point.Context.HoverArea = new RectangleHoverArea(x - uwx * 0.5f, y - hgs, uwx, gs);
 
-                _ = toDeletePoints.Remove(data.TargetPoint);
+                _ = toDeletePoints.Remove(point);
 
                 if (DataLabelsPaint is not null)
                 {
-                    var label = (TLabel?)data.TargetPoint.Context.Label;
+                    var label = (TLabel?)point.Context.Label;
 
                     if (label is null)
                     {
@@ -299,21 +288,22 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
                         l.CompleteAllTransitions();
                         label = l;
-                        data.TargetPoint.Context.Label = l;
+                        point.Context.Label = l;
                     }
 
                     DataLabelsPaint.AddGeometryToPaintTask(cartesianChart.Canvas, label);
-                    label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisualPoint, TLabel>(data.TargetPoint));
+                    label.Text = DataLabelsFormatter(new ChartPoint<TModel, TVisualPoint, TLabel>(point));
                     label.TextSize = dls;
                     label.Padding = DataLabelsPadding;
                     var labelPosition = GetLabelPosition(
                         x - hgs, y - hgs, gs, gs, label.Measure(DataLabelsPaint), DataLabelsPosition,
-                        SeriesProperties, data.TargetPoint.PrimaryValue > Pivot, drawLocation, drawMarginSize);
+                        SeriesProperties, point.PrimaryValue > Pivot, drawLocation, drawMarginSize);
                     label.X = labelPosition.X;
                     label.Y = labelPosition.Y;
                 }
 
-                OnPointMeasured(data.TargetPoint);
+                OnPointMeasured(point);
+                previousPoint = point;
             }
 
             if (GeometryFill is not null)
@@ -490,60 +480,6 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         context.Height = w + MaxSeriesStroke * 2;
 
         CanvasSchedule = context;
-    }
-
-    private IEnumerable<BezierData> GetStepLine(
-        ChartPoint[] points,
-        Scaler xScale,
-        Scaler yScale,
-        StackPosition<TDrawingContext>? stacker)
-    {
-        if (points.Length == 0) yield break;
-
-        ChartPoint current, next;
-
-        var cys = 0d;
-
-        for (var i = 0; i < points.Length; i++)
-        {
-            current = points[i];
-            next = points[i + 1 > points.Length - 1 ? points.Length - 1 : i + 1];
-
-            if (stacker is not null)
-            {
-                cys = stacker.GetStack(current).Start;
-            }
-
-            var c1X = current.SecondaryValue;
-            var c1Y = current.PrimaryValue + cys;
-            var c2X = next.SecondaryValue;
-            var c2Y = current.PrimaryValue + cys;
-
-            double x0, y0;
-
-            if (i == 0)
-            {
-                x0 = current.SecondaryValue;
-                y0 = current.PrimaryValue + cys;
-            }
-            else
-            {
-                x0 = c1X;
-                y0 = c1Y;
-            }
-
-            yield return new BezierData(points[i])
-            {
-                IsFirst = i == 0,
-                IsLast = i == points.Length - 1,
-                X0 = xScale.ToPixels(x0),
-                Y0 = yScale.ToPixels(y0),
-                X1 = xScale.ToPixels(c2X),
-                Y1 = yScale.ToPixels(c2Y),
-                X2 = xScale.ToPixels(next.SecondaryValue),
-                Y2 = yScale.ToPixels(next.PrimaryValue)
-            };
-        }
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel, TDrawingContext}.SetDefaultPointTransitions(ChartPoint)"/>

@@ -19,41 +19,41 @@ public class ViewModel
         // using an INotifyCollectionChanged instance as your values collection
         // will let the chart update every time a point is added, removed, replaced or the whole list was cleared
         _observableValues = new ObservableCollection<ObservablePoint>
-            {
-                // using an object that implements INotifyPropertyChanged
-                // will allow the chart to update everytime a property in a point changes.
+        {
+            // using an object that implements INotifyPropertyChanged
+            // will allow the chart to update everytime a property in a point changes.
 
-                // LiveCharts already provides the ObservableValue class
-                // notice you can plot any type, but you must let LiveCharts know how to handle it
-                // for more info please see:
-                // https://github.com/beto-rodriguez/LiveCharts2/blob/master/samples/ViewModelsSamples/General/UserDefinedTypes/ViewModel.cs#L22
+            // LiveCharts already provides the ObservableValue class
+            // notice you can plot any type, but you must let LiveCharts know how to handle it
+            // for more info please see:
+            // https://github.com/beto-rodriguez/LiveCharts2/blob/master/samples/ViewModelsSamples/General/UserDefinedTypes/ViewModel.cs#L22
 
-                new(_index++, 2),
-                new(_index++, 5),
-                new(_index++, 4),
-                new(_index++, 5),
-                new(_index++, 2),
-                new(_index++, 6),
-                new(_index++, 6),
-                new(_index++, 6),
-                new(_index++, 4),
-                new(_index++, 2),
-                new(_index++, 3),
-                new(_index++, 4),
-                new(_index++, 3)
-            };
+            new(_index++, 2),
+            new(_index++, 5),
+            new(_index++, 4),
+            new(_index++, 5),
+            new(_index++, 2),
+            new(_index++, 6),
+            new(_index++, 6),
+            new(_index++, 6),
+            new(_index++, 4),
+            new(_index++, 2),
+            new(_index++, 3),
+            new(_index++, 4),
+            new(_index++, 3)
+        };
 
         // using a collection that implements INotifyCollectionChanged as your series collection
         // will allow the chart to update every time a series is added, removed, replaced or the whole list was cleared
         // .Net already provides the System.Collections.ObjectModel.ObservableCollection class
         Series = new ObservableCollection<ISeries>
+        {
+            new StepLineSeries<ObservablePoint>
             {
-                new StepLineSeries<ObservablePoint>
-                {
-                    Values = _observableValues,
-                    Fill = null
-                }
-            };
+                Values = _observableValues,
+                // Fill = null
+            }
+        };
 
         // in the following series notice that the type int does not implement INotifyPropertyChanged
         // and our Series.Values collection is of type List<T>

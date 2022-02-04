@@ -15,7 +15,7 @@ public static class Index
         //"Lines/Custom",
         //"Lines/Padding",
         //"Lines/XY",
-        "Lines/Zoom",
+        //"Lines/Zoom",
 
         //"StepLines/Basic",
         "StepLines/AutoUpdate",
@@ -24,8 +24,8 @@ public static class Index
         //"StepLines/Custom",
         //"StepLines/Zoom",
 
-        //"StackedArea/Basic",
-        //"StackedArea/StepArea",
+        "StackedArea/Basic",
+        "StackedArea/StepArea",
 
         //"Bars/Basic",
         //"Bars/AutoUpdate",
