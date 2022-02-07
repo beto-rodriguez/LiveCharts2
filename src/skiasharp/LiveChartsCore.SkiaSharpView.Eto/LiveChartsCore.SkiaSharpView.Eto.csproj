@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Eto.SkiaDraw" Version="0.1.0-ci.19" />
+    <PackageReference Include="Eto.SkiaDraw" Version="0.2.0" />
   </ItemGroup>
 
 </Project>
