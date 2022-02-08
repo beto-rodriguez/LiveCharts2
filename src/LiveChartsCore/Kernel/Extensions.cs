@@ -360,7 +360,15 @@ public static class Extensions
     {
         return !axis.ActualBounds.HasPreviousState
             ? null
-            : new Scaler(chart.DrawMarginLocation, chart.DrawMarginSize, axis, true);
+            : new Scaler(
+                chart.DrawMarginLocation,
+                chart.DrawMarginSize,
+                axis,
+                new Bounds
+                {
+                    Max = axis.ActualBounds.MaxVisibleBound,
+                    Min = axis.ActualBounds.MinVisibleBound
+                });
     }
 
     private static ChartPoint _findClosestTo(this IEnumerable<ChartPoint> points, LvcPoint point)

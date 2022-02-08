@@ -102,12 +102,10 @@ public abstract class FinancialSeries<TModel, TVisual, TLabel, TDrawingContext>
 
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
-        var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
-        var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
-        var previousPrimaryScale =
-            !primaryAxis.ActualBounds.HasPreviousState ? null : new Scaler(drawLocation, drawMarginSize, primaryAxis, true);
-        var previousSecondaryScale =
-            !secondaryAxis.ActualBounds.HasPreviousState ? null : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
+        var secondaryScale = secondaryAxis.GetScaler(cartesianChart);
+        var primaryScale = primaryAxis.GetScaler(cartesianChart);
+        var previousPrimaryScale = primaryAxis.GetActualScalerScaler(cartesianChart);
+        var previousSecondaryScale = secondaryAxis.GetActualScalerScaler(cartesianChart);
 
         var uw = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
         var puw = previousSecondaryScale is null ? 0 : previousSecondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);

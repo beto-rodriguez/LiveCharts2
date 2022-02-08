@@ -65,14 +65,10 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
 
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
-        var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
-        var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
-        var previousPrimaryScale = !primaryAxis.ActualBounds.HasPreviousState
-            ? null
-            : new Scaler(drawLocation, drawMarginSize, primaryAxis, true);
-        var previousSecondaryScale = !secondaryAxis.ActualBounds.HasPreviousState
-            ? null
-            : new Scaler(drawLocation, drawMarginSize, secondaryAxis, true);
+        var secondaryScale = secondaryAxis.GetScaler(cartesianChart);
+        var primaryScale = primaryAxis.GetScaler(cartesianChart);
+        var previousPrimaryScale = primaryAxis.GetActualScalerScaler(cartesianChart);
+        var previousSecondaryScale = secondaryAxis.GetActualScalerScaler(cartesianChart);
 
         var helper = new MeasureHelper(secondaryScale, cartesianChart, this, secondaryAxis, primaryScale.ToPixels(pivot));
         var pHelper = previousSecondaryScale == null || previousPrimaryScale == null

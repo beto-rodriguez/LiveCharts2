@@ -40,55 +40,30 @@ public class Scaler
     /// <param name="drawMagrinLocation">The draw margin location.</param>
     /// <param name="drawMarginSize">Size of the draw margin.</param>
     /// <param name="axis">The axis.</param>
-    /// <param name="usePreviousScale">Indicates if the scaler should be built based on the previous known data.</param>
     /// <param name="bounds">Indicates the bounds to use.</param>
     /// <exception cref="Exception">The axis is not ready to be scaled.</exception>
     public Scaler(
         LvcPoint drawMagrinLocation,
         LvcSize drawMarginSize,
         ICartesianAxis axis,
-        bool usePreviousScale = false,
         Bounds? bounds = null)
     {
         if (axis.Orientation == AxisOrientation.Unknown) throw new Exception("The axis is not ready to be scaled.");
 
         _orientation = axis.Orientation;
 
-        Bounds? actualBounds, actualVisibleBounds;
-        double? minLimit, maxLimit;
-
-        if (usePreviousScale)
-        {
-            actualBounds = new Bounds(axis.DataBounds)
-            {
-                Max = axis.ActualBounds.MaxDataBound,
-                Min = axis.ActualBounds.MinDataBound
-            };
-
-            actualVisibleBounds = new Bounds(axis.VisibleDataBounds)
-            {
-                Max = axis.ActualBounds.MaxVisibleBound,
-                Min = axis.ActualBounds.MinVisibleBound
-            };
-
-            maxLimit = axis.ActualBounds.MaxLimit;
-            minLimit = axis.ActualBounds.MinLimit;
-        }
-        else
-        {
-            actualBounds = axis.DataBounds;
-            actualVisibleBounds = axis.VisibleDataBounds;
-            maxLimit = axis.MaxLimit;
-            minLimit = axis.MinLimit;
-        }
+        var actualBounds = axis.DataBounds;
+        var actualVisibleBounds = axis.VisibleDataBounds;
+        var maxLimit = axis.MaxLimit;
+        var minLimit = axis.MinLimit;
 
         if (bounds != null)
         {
             actualBounds = bounds;
             actualVisibleBounds = bounds;
+            minLimit = null;
+            maxLimit = null;
         }
-
-        if (actualBounds is null || actualVisibleBounds is null) throw new Exception("bounds not found");
 
         if (double.IsInfinity(actualBounds.Delta) || double.IsInfinity(actualVisibleBounds.Delta))
         {
