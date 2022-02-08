@@ -149,9 +149,12 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
     /// <inheritdoc cref="IChartView.DataPointerDown" />
     public event ChartPointsHandler? DataPointerDown;
 
-#endregion
+    /// <inheritdoc cref="IChartView.ChartPointPointerDown" />
+    public event ChartPointHandler? ChartPointPointerDown;
 
-#region properties
+    #endregion
+
+    #region properties
 
     /// <inheritdoc cref="IChartView.DesignerMode" />
     bool IChartView.DesignerMode => false;
@@ -402,8 +405,9 @@ public abstract class Chart : Panel, IChartView<SkiaSharpDrawingContext>
         core?.Load();
     }
 
-    void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points)
+    void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
     {
         DataPointerDown?.Invoke(this, points);
+        ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
     }
 }
