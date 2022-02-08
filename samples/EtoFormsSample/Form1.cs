@@ -16,10 +16,6 @@ public class Form1 : Form
         ClientSize = new Size(3, 2) * 300;
 
         var listbox = new ListBox() { DataStore = ViewModelsSamples.Index.Samples };
-        foreach (var item in ViewModelsSamples.Index.Samples)
-        {
-            // listbox.Items.Add(item);
-        }
         listbox.SelectedIndexChanged += listBox1_SelectedIndexChanged;
 
         var image = new ImageView() { Image = Bitmap.FromResource("EtoFormsSample.Images.livecharts.png") };
