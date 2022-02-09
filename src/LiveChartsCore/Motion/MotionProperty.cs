@@ -102,7 +102,7 @@ public abstract class MotionProperty<T> : IMotionProperty
             }
             Animation._animationCompletedCount = 0;
             IsCompleted = false;
-            _requiresToInitialize = true;
+            //_requiresToInitialize = true;
         }
         animatable.SetInvalidState();
     }
@@ -125,9 +125,6 @@ public abstract class MotionProperty<T> : IMotionProperty
 
         // at this points we are sure that the animatable has not finished at least with this property.
         animatable._isCompleted = false;
-
-        // is this line necessary? ...
-        //if (animatable.currentTime - startTime <= 0) return OnGetMovement(0);
 
         var p = (animatable._currentTime - _startTime) / unchecked((float)(_endTime - _startTime));
 
