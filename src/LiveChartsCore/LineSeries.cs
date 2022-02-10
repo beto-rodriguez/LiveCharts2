@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Segments;
@@ -114,8 +115,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
-        var secondaryScale = secondaryAxis.GetScaler(cartesianChart);
-        var primaryScale = primaryAxis.GetScaler(cartesianChart);
+        var secondaryScale = secondaryAxis.GetNextScaler(cartesianChart);
+        var primaryScale = primaryAxis.GetNextScaler(cartesianChart);
         var actualSecondaryScale = secondaryAxis.GetActualScalerScaler(cartesianChart);
         var actualPrimaryScale = primaryAxis.GetActualScalerScaler(cartesianChart);
 
@@ -166,8 +167,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
             _fillPathHelperDictionary[chart.Canvas.Sync] = fillPathHelperContainer;
         }
 
-        foreach (var item in strokePathHelperContainer) item.ClearCommands();
-        foreach (var item in fillPathHelperContainer) item.ClearCommands();
+        //foreach (var item in strokePathHelperContainer) item.ClearCommands();
+        //foreach (var item in fillPathHelperContainer) item.ClearCommands();
 
         var uwx = secondaryScale.MeasureInPixels(secondaryAxis.UnitWidth);
 
@@ -190,6 +191,9 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                 fillPath = fillPathHelperContainer[segmentI];
                 strokePath = strokePathHelperContainer[segmentI];
             }
+
+            var strokeVector = new VectorManager<CubicBezierSegment, TDrawingContext>(strokePath);
+            var fillVector = new VectorManager<CubicBezierSegment, TDrawingContext>(fillPath);
 
             if (Fill is not null)
             {
@@ -238,7 +242,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                     var v = new TVisualPoint();
                     visual = v;
 
-                    if (actualPrimaryScale is null || actualSecondaryScale is null)
+                    //if (actualPrimaryScale is null || actualSecondaryScale is null)
+                    if (chart.IsFirstDraw)
                     {
                         v.Geometry.X = secondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
                         v.Geometry.Y = p;
@@ -252,23 +257,23 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                         v.Bezier.Y1 = p;
                         v.Bezier.Y2 = p;
                     }
-                    else
-                    {
-                        var xng = actualSecondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
-                        var yng = actualPrimaryScale.ToPixels(data.TargetPoint.PrimaryValue + s);
+                    //else
+                    //{
+                    //    var xng = actualSecondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
+                    //    var yng = actualPrimaryScale.ToPixels(data.TargetPoint.PrimaryValue + s);
 
-                        v.Geometry.X = xng - hgs;
-                        v.Geometry.Y = yng - hgs;
-                        v.Geometry.Width = gs;
-                        v.Geometry.Height = gs;
+                    //    v.Geometry.X = xng - hgs;
+                    //    v.Geometry.Y = yng - hgs;
+                    //    v.Geometry.Width = gs;
+                    //    v.Geometry.Height = gs;
 
-                        v.Bezier.X0 = actualSecondaryScale.ToPixels(data.X0);
-                        v.Bezier.X1 = actualSecondaryScale.ToPixels(data.X1);
-                        v.Bezier.X2 = actualSecondaryScale.ToPixels(data.X2);
-                        v.Bezier.Y0 = actualPrimaryScale.ToPixels(data.Y0);
-                        v.Bezier.Y1 = actualPrimaryScale.ToPixels(data.Y1);
-                        v.Bezier.Y2 = actualPrimaryScale.ToPixels(data.Y2);
-                    }
+                    //    v.Bezier.X0 = actualSecondaryScale.ToPixels(data.X0);
+                    //    v.Bezier.X1 = actualSecondaryScale.ToPixels(data.X1);
+                    //    v.Bezier.X2 = actualSecondaryScale.ToPixels(data.X2);
+                    //    v.Bezier.Y0 = actualPrimaryScale.ToPixels(data.Y0);
+                    //    v.Bezier.Y1 = actualPrimaryScale.ToPixels(data.Y1);
+                    //    v.Bezier.Y2 = actualPrimaryScale.ToPixels(data.Y2);
+                    //}
 
                     data.TargetPoint.Context.Visual = v;
                     OnPointCreated(data.TargetPoint);
@@ -279,15 +284,17 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                 if (GeometryFill is not null) GeometryFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
                 if (GeometryStroke is not null) GeometryStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
 
+                visual.Bezier.Id = data.TargetPoint.Context.Index;
+
+                if (Fill is not null) fillVector.AddConsecutiveSegment(visual.Bezier, !chart.IsFirstDraw);
+                if (Stroke is not null) strokeVector.AddConsecutiveSegment(visual.Bezier, !chart.IsFirstDraw);
+
                 visual.Bezier.X0 = secondaryScale.ToPixels(data.X0);
                 visual.Bezier.X1 = secondaryScale.ToPixels(data.X1);
                 visual.Bezier.X2 = secondaryScale.ToPixels(data.X2);
                 visual.Bezier.Y0 = primaryScale.ToPixels(data.Y0);
                 visual.Bezier.Y1 = primaryScale.ToPixels(data.Y1);
                 visual.Bezier.Y2 = primaryScale.ToPixels(data.Y2);
-
-                if (Fill is not null) _ = fillPath.AddLast(visual.Bezier);
-                if (Stroke is not null) _ = strokePath.AddLast(visual.Bezier);
 
                 var x = secondaryScale.ToPixels(data.TargetPoint.SecondaryValue);
                 var y = primaryScale.ToPixels(data.TargetPoint.PrimaryValue + s);
@@ -339,6 +346,8 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
 
                 OnPointMeasured(data.TargetPoint);
             }
+
+            Trace.WriteLine(strokePath.CountCommands);
 
             if (GeometryFill is not null)
             {

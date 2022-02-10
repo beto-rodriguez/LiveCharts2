@@ -169,6 +169,10 @@ public class Scaler
         _mInv = 1 / _m;
     }
 
+    public double MaxVal => _maxVal;
+
+    public double MinVal => _minVal;
+
     /// <summary>
     /// Converts to pixels.
     /// </summary>

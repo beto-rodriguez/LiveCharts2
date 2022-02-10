@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Diagnostics;
 using LiveChartsCore.Drawing.Segments;
 using SkiaSharp;
 
@@ -33,6 +34,7 @@ public class CubicBezierAreaGeometry : AreaGeometry<CubicBezierSegment>
     /// <inheritdoc cref="AreaGeometry{TSegment}.OnDrawSegment(SkiaSharpDrawingContext, SKPath, TSegment)"/>
     protected override void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, CubicBezierSegment segment)
     {
+        Trace.WriteLine(segment.X0);
         path.CubicTo(segment.X0, segment.Y0, segment.X1, segment.Y1, segment.X2, segment.Y2);
     }
 

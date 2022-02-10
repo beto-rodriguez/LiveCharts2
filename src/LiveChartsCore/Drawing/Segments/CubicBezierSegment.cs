@@ -49,16 +49,13 @@ public class CubicBezierSegment : Animatable, IPathSegment
         _y2Property = RegisterMotionProperty(new FloatMotionProperty(nameof(Y2), 0f));
     }
 
-    /// <inheritdoc cref="IPathSegment.Id"/>
-    public int Id { get; set; }
-
     /// <summary>
     /// Gets or sets the x0.
     /// </summary>
     /// <value>
     /// The x0.
     /// </value>
-    public float X0 { get => _x0Property.GetMovement(this); set => _x0Property.SetMovement(value, this); }
+    public float X0 { get => _x0Property.GetMovement(this); set => _x0Property.SetMovement(value, Source ?? this); }
 
     /// <summary>
     /// Gets or sets the y0.
@@ -66,7 +63,7 @@ public class CubicBezierSegment : Animatable, IPathSegment
     /// <value>
     /// The y0.
     /// </value>
-    public float Y0 { get => _y0Property.GetMovement(this); set => _y0Property.SetMovement(value, this); }
+    public float Y0 { get => _y0Property.GetMovement(this); set => _y0Property.SetMovement(value, Source ?? this); }
 
     /// <summary>
     /// Gets or sets the x1.
@@ -74,7 +71,7 @@ public class CubicBezierSegment : Animatable, IPathSegment
     /// <value>
     /// The x1.
     /// </value>
-    public float X1 { get => _x1Property.GetMovement(this); set => _x1Property.SetMovement(value, this); }
+    public float X1 { get => _x1Property.GetMovement(this); set => _x1Property.SetMovement(value, Source ?? this); }
 
     /// <summary>
     /// Gets or sets the y1.
@@ -82,7 +79,7 @@ public class CubicBezierSegment : Animatable, IPathSegment
     /// <value>
     /// The y1.
     /// </value>
-    public float Y1 { get => _y1Property.GetMovement(this); set => _y1Property.SetMovement(value, this); }
+    public float Y1 { get => _y1Property.GetMovement(this); set => _y1Property.SetMovement(value, Source ?? this); }
 
     /// <summary>
     /// Gets or sets the x2.
@@ -90,7 +87,7 @@ public class CubicBezierSegment : Animatable, IPathSegment
     /// <value>
     /// The x2.
     /// </value>
-    public float X2 { get => _x2Property.GetMovement(this); set => _x2Property.SetMovement(value, this); }
+    public float X2 { get => _x2Property.GetMovement(this); set => _x2Property.SetMovement(value, Source ?? this); }
 
     /// <summary>
     /// Gets or sets the y2.
@@ -98,5 +95,26 @@ public class CubicBezierSegment : Animatable, IPathSegment
     /// <value>
     /// The y2.
     /// </value>
-    public float Y2 { get => _y2Property.GetMovement(this); set => _y2Property.SetMovement(value, this); }
+    public float Y2 { get => _y2Property.GetMovement(this); set => _y2Property.SetMovement(value, Source ?? this); }
+
+    /// <inheritdoc cref="IPathSegment.Id"/>
+    public int Id { get; set; }
+
+    /// <inheritdoc cref="IPathSegment.Source"/>
+    public Animatable? Source { get; set; }
+
+    /// <inheritdoc cref="IPathSegment.CopyTo(IPathSegment)"/>
+    public void CopyTo(IPathSegment source)
+    {
+        var cubic = (CubicBezierSegment)source;
+
+        CurrentTime = cubic.CurrentTime;
+
+        cubic.X0 = X0;
+        cubic.X1 = X1;
+        cubic.X2 = X2;
+        cubic.Y0 = Y0;
+        cubic.Y1 = Y1;
+        cubic.Y2 = Y2;
+    }
 }

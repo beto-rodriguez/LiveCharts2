@@ -30,6 +30,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 
 namespace LiveChartsCore;
 
@@ -109,6 +110,11 @@ public abstract class Chart<TDrawingContext> : IChart
     internal event Action<PanGestureEventArgs>? PanGesture;
 
     #region properties
+
+    /// <summary>
+    /// Gets the bounds of the chart.
+    /// </summary>
+    public AnimatableContainer ActualBounds { get; } = new();
 
     /// <summary>
     /// Gets the measure work.
@@ -481,6 +487,28 @@ public abstract class Chart<TDrawingContext> : IChart
                 }
             });
         });
+    }
+
+    /// <summary>
+    /// Updates thhe bounds tracker.
+    /// </summary>
+    protected void UpdateBounds()
+    {
+        ActualBounds.Location = DrawMarginLocation;
+        ActualBounds.Size = DrawMarginSize;
+
+        if (IsFirstDraw)
+        {
+            _ = ActualBounds
+                .TransitionateAllProperties()
+                .WithAnimation(animation =>
+                         animation
+                             .WithDuration(AnimationsSpeed)
+                             .WithEasingFunction(EasingFunction))
+                .CompleteCurrentTransitions();
+
+            _ = Canvas.Trackers.Add(ActualBounds);
+        }
     }
 
     private Task TooltipThrottlerUnlocked()

@@ -97,8 +97,8 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
 
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
-        var secondaryScale = secondaryAxis.GetScaler(cartesianChart);
-        var primaryScale = primaryAxis.GetScaler(cartesianChart);
+        var secondaryScale = secondaryAxis.GetNextScaler(cartesianChart);
+        var primaryScale = primaryAxis.GetNextScaler(cartesianChart);
         var actualSecondaryScale = secondaryAxis.GetActualScalerScaler(cartesianChart);
         var actualPrimaryScale = primaryAxis.GetActualScalerScaler(cartesianChart);
 

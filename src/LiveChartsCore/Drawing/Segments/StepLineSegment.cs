@@ -45,26 +45,42 @@ public class StepLineSegment : Animatable, IPathSegment
         _y1Property = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
     }
 
-    /// <inheritdoc cref="IPathSegment.Id"/>
-    public int Id { get; set; }
-
     /// <summary>
     /// Gets or sets the X0.
     /// </summary>
-    public float X0 { get => _x0Property.GetMovement(this); set => _x0Property.SetMovement(value, this); }
+    public float X0 { get => _x0Property.GetMovement(this); set => _x0Property.SetMovement(value, Source ?? this); }
 
     /// <summary>
     /// Gets or sets the Y0.
     /// </summary>
-    public float Y0 { get => _y0Property.GetMovement(this); set => _y0Property.SetMovement(value, this); }
+    public float Y0 { get => _y0Property.GetMovement(this); set => _y0Property.SetMovement(value, Source ?? this); }
 
     /// <summary>
     /// Gets or sets the X1.
     /// </summary>
-    public float X1 { get => _x1Property.GetMovement(this); set => _x1Property.SetMovement(value, this); }
+    public float X1 { get => _x1Property.GetMovement(this); set => _x1Property.SetMovement(value, Source ?? this); }
 
     /// <summary>
     /// Gets or sets the Y1.
     /// </summary>
-    public float Y1 { get => _y1Property.GetMovement(this); set => _y1Property.SetMovement(value, this); }
+    public float Y1 { get => _y1Property.GetMovement(this); set => _y1Property.SetMovement(value, Source ?? this); }
+
+    /// <inheritdoc cref="IPathSegment.Id"/>
+    public int Id { get; set; }
+
+    /// <inheritdoc cref="IPathSegment.Source"/>
+    public Animatable? Source { get; set; }
+
+    /// <inheritdoc cref="IPathSegment.CopyTo(IPathSegment)"/>
+    public void CopyTo(IPathSegment source)
+    {
+        var step = (StepLineSegment)source;
+
+        CurrentTime = step.CurrentTime;
+
+        step.X0 = X0;
+        step.X1 = X1;
+        step.Y0 = Y0;
+        step.Y1 = Y1;
+    }
 }

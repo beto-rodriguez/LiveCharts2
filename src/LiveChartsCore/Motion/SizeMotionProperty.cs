@@ -25,24 +25,24 @@ using LiveChartsCore.Drawing;
 namespace LiveChartsCore.Motion;
 
 /// <summary>
-/// Defines the <see cref="LvcPoint"/> motion property class.
+/// Defines the <see cref="LvcSize"/> motion property class.
 /// </summary>
-public class PointMotionProperty : MotionProperty<LvcPoint>
+public class SizeMotionProperty : MotionProperty<LvcSize>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="PointMotionProperty"/> class.
+    /// Initializes a new instance of the <see cref="SizeMotionProperty"/> class.
     /// </summary>
     /// <param name="propertyName">Name of the property.</param>
-    public PointMotionProperty(string propertyName)
+    public SizeMotionProperty(string propertyName)
         : base(propertyName)
     { }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PointMotionProperty"/> class.
+    /// Initializes a new instance of the <see cref="SizeMotionProperty"/> class.
     /// </summary>
     /// <param name="propertyName">Name of the property.</param>
     /// <param name="value">The value.</param>
-    public PointMotionProperty(string propertyName, LvcPoint value)
+    public SizeMotionProperty(string propertyName, LvcSize value)
         : base(propertyName)
     {
         fromValue = value;
@@ -50,10 +50,10 @@ public class PointMotionProperty : MotionProperty<LvcPoint>
     }
 
     /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
-    protected override LvcPoint OnGetMovement(float progress)
+    protected override LvcSize OnGetMovement(float progress)
     {
-        return new LvcPoint(
-            fromValue.X + progress * (toValue.X - fromValue.X),
-            fromValue.Y + progress * (toValue.Y - fromValue.Y));
+        return new LvcSize(
+            fromValue.Width + progress * (toValue.Width - fromValue.Width),
+            fromValue.Height + progress * (toValue.Height - fromValue.Height));
     }
 }

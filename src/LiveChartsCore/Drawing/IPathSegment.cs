@@ -25,10 +25,21 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines a path segment.
 /// </summary>
-public interface IPathSegment
+public interface IPathSegment : IAnimatable
 {
     /// <summary>
     /// Gets or sets the segment id, a unique and consecutive integer.
     /// </summary>
     int Id { get; set; }
+
+    /// <summary>
+    /// Gets or sets the source.
+    /// </summary>
+    Animatable? Source { get; set; }
+
+    /// <summary>
+    /// Copies the data of segment to the destination segment.
+    /// </summary>
+    /// <param name="destination"></param>
+    void CopyTo(IPathSegment destination);
 }

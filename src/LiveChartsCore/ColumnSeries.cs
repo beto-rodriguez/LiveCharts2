@@ -65,8 +65,8 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
 
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
-        var secondaryScale = secondaryAxis.GetScaler(cartesianChart);
-        var primaryScale = primaryAxis.GetScaler(cartesianChart);
+        var secondaryScale = secondaryAxis.GetNextScaler(cartesianChart);
+        var primaryScale = primaryAxis.GetNextScaler(cartesianChart);
         var previousPrimaryScale = primaryAxis.GetActualScalerScaler(cartesianChart);
         var previousSecondaryScale = secondaryAxis.GetActualScalerScaler(cartesianChart);
 

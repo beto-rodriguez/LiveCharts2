@@ -25,35 +25,43 @@ using LiveChartsCore.Drawing;
 namespace LiveChartsCore.Motion;
 
 /// <summary>
-/// Defines the <see cref="LvcPoint"/> motion property class.
+/// Defines the animatable container class.
 /// </summary>
-public class PointMotionProperty : MotionProperty<LvcPoint>
+public class AnimatableContainer : Animatable
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PointMotionProperty"/> class.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    public PointMotionProperty(string propertyName)
-        : base(propertyName)
-    { }
+    private readonly PointMotionProperty _locationProperty;
+    private readonly SizeMotionProperty _sizeMotionProperty;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PointMotionProperty"/> class.
+    /// Initializes a new instance of the <see cref="AnimatableContainer"/> class.
     /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <param name="value">The value.</param>
-    public PointMotionProperty(string propertyName, LvcPoint value)
-        : base(propertyName)
+    public AnimatableContainer()
     {
-        fromValue = value;
-        toValue = value;
+        _locationProperty = RegisterMotionProperty(new PointMotionProperty(nameof(Location), new LvcPoint()));
+        _sizeMotionProperty = RegisterMotionProperty(new SizeMotionProperty(nameof(Size), new LvcSize()));
     }
 
-    /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
-    protected override LvcPoint OnGetMovement(float progress)
+    /// <summary>
+    /// Gets or sets the location.
+    /// </summary>
+    public LvcPoint Location
     {
-        return new LvcPoint(
-            fromValue.X + progress * (toValue.X - fromValue.X),
-            fromValue.Y + progress * (toValue.Y - fromValue.Y));
+        get => _locationProperty.GetMovement(this);
+        set => _locationProperty.SetMovement(value, this);
     }
+
+
+    /// <summary>
+    /// Gets or sets the size.
+    /// </summary>
+    public LvcSize Size
+    {
+        get => _sizeMotionProperty.GetMovement(this);
+        set => _sizeMotionProperty.SetMovement(value, this);
+    }
+
+    /// <summary>
+    /// Gets a valuea indicating whewhter the container have a previous state.
+    /// </summary>
+    public bool HasPreviousState { get; internal set; }
 }

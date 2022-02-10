@@ -232,7 +232,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
             _ = cartesianChart.Canvas.Trackers.Add(_animatableBounds);
         }
 
-        var scale = this.GetScaler(cartesianChart);
+        var scale = this.GetNextScaler(cartesianChart);
         var actualScale = this.GetActualScalerScaler(cartesianChart);
 
         var axisTick = this.GetTick(drawMarginSize);

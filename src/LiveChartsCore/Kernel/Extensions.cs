@@ -336,20 +336,21 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Gets a scaler for the given axis.
+    /// Gets a scaler for the given axis with the measured bounds (the target, the final dimension of the chart).
     /// </summary>
     /// <typeparam name="TDrawingContext"></typeparam>
     /// <param name="axis"></param>
     /// <param name="chart"></param>
     /// <returns></returns>
-    public static Scaler GetScaler<TDrawingContext>(this ICartesianAxis axis, CartesianChart<TDrawingContext> chart)
+    public static Scaler GetNextScaler<TDrawingContext>(this ICartesianAxis axis, CartesianChart<TDrawingContext> chart)
         where TDrawingContext : DrawingContext
     {
         return new Scaler(chart.DrawMarginLocation, chart.DrawMarginSize, axis);
     }
 
     /// <summary>
-    /// Gets a scaler that is aware of its current state or scale for the given axis.
+    /// Gets a scaler that is built based on the dimensions of the chart at a given time, the scaler is built based on the
+    /// animations that are happening in the chart at the moment this method is called.
     /// </summary>
     /// <typeparam name="TDrawingContext"></typeparam>
     /// <param name="axis"></param>
@@ -361,8 +362,8 @@ public static class Extensions
         return !axis.ActualBounds.HasPreviousState
             ? null
             : new Scaler(
-                chart.DrawMarginLocation,
-                chart.DrawMarginSize,
+                chart.ActualBounds.Location,
+                chart.ActualBounds.Size,
                 axis,
                 new Bounds
                 {

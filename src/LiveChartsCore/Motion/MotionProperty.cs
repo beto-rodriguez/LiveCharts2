@@ -102,7 +102,7 @@ public abstract class MotionProperty<T> : IMotionProperty
             }
             Animation._animationCompletedCount = 0;
             IsCompleted = false;
-            //_requiresToInitialize = true;
+            _requiresToInitialize = true;
         }
         animatable.SetInvalidState();
     }

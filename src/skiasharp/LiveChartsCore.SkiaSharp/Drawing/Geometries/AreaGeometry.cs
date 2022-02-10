@@ -143,6 +143,7 @@ public abstract class AreaGeometry<TSegment> : Drawable, IAreaGeometry<TSegment,
         {
             segment.IsValid = true;
             segment.CurrentTime = currentTime;
+            segment.Source = this;
 
             if (isFirst)
             {
