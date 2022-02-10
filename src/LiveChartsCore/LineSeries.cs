@@ -328,7 +328,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
                                     .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
                                     .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
 
-                        l.CompleteAllTransitions();
+                        l.CompleteTransition(null);
                         label = l;
                         data.TargetPoint.Context.Label = l;
                     }
@@ -669,7 +669,7 @@ public class LineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeometry,
         var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
         if (chartView.Core.IsZoomingOrPanning)
         {
-            visual.Geometry.CompleteAllTransitions();
+            visual.Geometry.CompleteTransition(null);
             visual.Geometry.RemoveOnCompleted = true;
             DataFactory.DisposePoint(point);
             return;

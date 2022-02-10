@@ -188,25 +188,11 @@ public static class Extensions
     /// Creates a transition builder for the specified properties.
     /// </summary>
     /// <param name="animatable">The animatable.</param>
-    /// <param name="properties">The properties.</param>
-    /// <returns></returns>
-    /// <exception cref="Exception">At least one property is required when calling {nameof(TransitionateProperties)}</exception>
-    public static TransitionBuilder TransitionateProperties(this IAnimatable animatable, params string[] properties)
+    /// <param name="properties">The properties, use null to apply the transition to all the properties.</param>
+    /// <returns>The builder</returns>
+    public static TransitionBuilder TransitionateProperties(this IAnimatable animatable, params string[]? properties)
     {
-        return properties is null || properties.Length == 0
-            ? throw new Exception($"At least one property is required when calling {nameof(TransitionateProperties)}")
-            : new TransitionBuilder(animatable, properties);
-    }
-
-    /// <summary>
-    /// Creates a transition builder for the all the properties.
-    /// </summary>
-    /// <param name="animatable">The animatable.</param>
-    /// <returns></returns>
-    /// <exception cref="Exception">At least one property is required when calling {nameof(TransitionateProperties)}</exception>
-    public static TransitionBuilder TransitionateAllProperties(this IAnimatable animatable)
-    {
-        return TransitionateProperties(animatable, animatable.GetAllAnimatableProperties());
+        return new TransitionBuilder(animatable, properties);
     }
 
     /// <summary>

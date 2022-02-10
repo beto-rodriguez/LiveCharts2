@@ -222,7 +222,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
         if (!_animatableBounds.HasPreviousState)
         {
             _ = _animatableBounds
-                .TransitionateAllProperties()
+                .TransitionateProperties(null)
                 .WithAnimation(animation =>
                          animation
                              .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
@@ -340,7 +340,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                 _nameGeometry.Y = (lyi + lyj) * 0.5f;
             }
 
-            if (isNew) _nameGeometry.CompleteAllTransitions();
+            if (isNew) _nameGeometry.CompleteTransition(null);
         }
 
         var measured = new HashSet<AxisVisualSeprator<TDrawingContext>>();
@@ -407,7 +407,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
                         textGeometry.X = xi;
                         textGeometry.Y = yi;
-                        textGeometry.CompleteAllTransitions();
+                        textGeometry.CompleteTransition(null);
                     }
                 }
 
@@ -459,7 +459,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
                             lineGeometry.Y1 = yi;
                         }
 
-                        lineGeometry.CompleteAllTransitions();
+                        lineGeometry.CompleteTransition(null);
                     }
                 }
 
@@ -483,7 +483,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
                 visualSeparator.Label.Opacity = 1;
 
-                if (!_animatableBounds.HasPreviousState) visualSeparator.Label.CompleteAllTransitions();
+                if (!_animatableBounds.HasPreviousState) visualSeparator.Label.CompleteTransition(null);
             }
 
             if (visualSeparator.Line is not null)
@@ -505,7 +505,7 @@ public abstract class Axis<TDrawingContext, TTextGeometry, TLineGeometry>
 
                 visualSeparator.Line.Opacity = 1;
 
-                if (!_animatableBounds.HasPreviousState) visualSeparator.Line.CompleteAllTransitions();
+                if (!_animatableBounds.HasPreviousState) visualSeparator.Line.CompleteTransition(null);
             }
 
             if (visualSeparator.Label is not null || visualSeparator.Line is not null) _ = measured.Add(visualSeparator);

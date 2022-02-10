@@ -79,7 +79,7 @@ public class VectorManager<TSegment, TDrawingContext>
             var source = _lastActiveSegment ?? _activeNode.Value;
             source.CurrentTime = _areaGeometry.CurrentTime;
             source.CopyTo(segment);
-            segment.CompleteAllTransitions();
+            segment.CompleteTransition(null);
         }
 
         _activeNode = _areaGeometry.AddAfter(_activeNode, segment);

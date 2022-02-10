@@ -63,28 +63,28 @@ public abstract class AreaGeometry<TSegment> : Drawable, IAreaGeometry<TSegment,
     /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.AddLast(TSegment)" />
     public LinkedListNode<TSegment> AddLast(TSegment command)
     {
-        SetInvalidState();
+        IsValid = false;
         return _commands.AddLast(command);
     }
 
     /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.AddFirst(TSegment)" />
     public LinkedListNode<TSegment> AddFirst(TSegment command)
     {
-        SetInvalidState();
+        IsValid = false;
         return _commands.AddFirst(command);
     }
 
     /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.AddAfter(LinkedListNode{TSegment}, TSegment)" />
     public LinkedListNode<TSegment> AddAfter(LinkedListNode<TSegment> node, TSegment command)
     {
-        SetInvalidState();
+        IsValid = false;
         return _commands.AddAfter(node, command);
     }
 
     /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.AddBefore(LinkedListNode{TSegment}, TSegment)" />
     public LinkedListNode<TSegment> AddBefore(LinkedListNode<TSegment> node, TSegment command)
     {
-        SetInvalidState();
+        IsValid = false;
         return _commands.AddBefore(node, command);
     }
 
@@ -97,14 +97,14 @@ public abstract class AreaGeometry<TSegment> : Drawable, IAreaGeometry<TSegment,
     /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.RemoveCommand(TSegment)" />
     public bool RemoveCommand(TSegment command)
     {
-        SetInvalidState();
+        IsValid = false;
         return _commands.Remove(command);
     }
 
     /// <inheritdoc cref="IAreaGeometry{TSegment, TDrawingContext}.RemoveCommand(LinkedListNode{TSegment})" />
     public void RemoveCommand(LinkedListNode<TSegment> node)
     {
-        SetInvalidState();
+        IsValid = false;
         _commands.Remove(node);
     }
 
@@ -114,15 +114,15 @@ public abstract class AreaGeometry<TSegment> : Drawable, IAreaGeometry<TSegment,
         _commands.Clear();
     }
 
-    /// <inheritdoc cref="IAnimatable.CompleteAllTransitions" />
-    public override void CompleteAllTransitions()
+    /// <inheritdoc cref="IAnimatable.CompleteTransition(string[])" />
+    public override void CompleteTransition(params string[]? propertyName)
     {
         foreach (var segment in _commands)
         {
-            segment.CompleteAllTransitions();
+            segment.CompleteTransition(propertyName);
         }
 
-        base.CompleteAllTransitions();
+        base.CompleteTransition(propertyName);
     }
 
     /// <inheritdoc cref="Geometry.OnDraw(SkiaSharpDrawingContext, SKPaint)" />
@@ -143,7 +143,6 @@ public abstract class AreaGeometry<TSegment> : Drawable, IAreaGeometry<TSegment,
         {
             segment.IsValid = true;
             segment.CurrentTime = currentTime;
-            segment.Source = this;
 
             if (isFirst)
             {
@@ -168,7 +167,7 @@ public abstract class AreaGeometry<TSegment> : Drawable, IAreaGeometry<TSegment,
 
         context.Canvas.DrawPath(path, context.Paint);
 
-        if (!isValid) SetInvalidState();
+        if (!isValid) IsValid = false;
     }
 
     /// <summary>

@@ -91,20 +91,20 @@ public abstract class MotionProperty<T> : IMotionProperty
         toValue = value;
         if (Animation is not null)
         {
-            if (animatable._currentTime == long.MinValue) // the animatable is not in the canvas yet.
+            if (animatable.CurrentTime == long.MinValue) // the animatable is not in the canvas yet.
             {
                 _requiresToInitialize = true;
             }
             else
             {
-                _startTime = animatable._currentTime;
-                _endTime = animatable._currentTime + Animation._duration;
+                _startTime = animatable.CurrentTime;
+                _endTime = animatable.CurrentTime + Animation._duration;
             }
             Animation._animationCompletedCount = 0;
             IsCompleted = false;
             _requiresToInitialize = true;
         }
-        animatable.SetInvalidState();
+        animatable.IsValid = false;
     }
 
     /// <summary>
@@ -118,15 +118,15 @@ public abstract class MotionProperty<T> : IMotionProperty
 
         if (_requiresToInitialize)
         {
-            _startTime = animatable._currentTime;
-            _endTime = animatable._currentTime + Animation._duration;
+            _startTime = animatable.CurrentTime;
+            _endTime = animatable.CurrentTime + Animation._duration;
             _requiresToInitialize = false;
         }
 
         // at this points we are sure that the animatable has not finished at least with this property.
-        animatable._isCompleted = false;
+        animatable.IsValid = false;
 
-        var p = (animatable._currentTime - _startTime) / unchecked((float)(_endTime - _startTime));
+        var p = (animatable.CurrentTime - _startTime) / unchecked((float)(_endTime - _startTime));
 
         if (p >= 1)
         {
@@ -136,8 +136,8 @@ public abstract class MotionProperty<T> : IMotionProperty
             IsCompleted = Animation._repeatTimes != int.MaxValue && Animation._repeatTimes < Animation._animationCompletedCount;
             if (!IsCompleted)
             {
-                _startTime = animatable._currentTime;
-                _endTime = animatable._currentTime + Animation._duration;
+                _startTime = animatable.CurrentTime;
+                _endTime = animatable.CurrentTime + Animation._duration;
                 IsCompleted = false;
             }
         }

@@ -201,7 +201,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
                                 .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
                                 .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
 
-                    l.CompleteAllTransitions();
+                    l.CompleteTransition(null);
                     label = l;
                     point.Context.Label = l;
                 }
@@ -320,7 +320,7 @@ public abstract class ColumnSeries<TModel, TVisual, TLabel, TDrawingContext> : B
         var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
         if (chartView.Core.IsZoomingOrPanning)
         {
-            visual.CompleteAllTransitions();
+            visual.CompleteTransition(null);
             visual.RemoveOnCompleted = true;
             DataFactory.DisposePoint(point);
             return;

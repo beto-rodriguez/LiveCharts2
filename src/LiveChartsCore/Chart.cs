@@ -500,7 +500,7 @@ public abstract class Chart<TDrawingContext> : IChart
         if (IsFirstDraw)
         {
             _ = ActualBounds
-                .TransitionateAllProperties()
+                .TransitionateProperties(null)
                 .WithAnimation(animation =>
                          animation
                              .WithDuration(AnimationsSpeed)

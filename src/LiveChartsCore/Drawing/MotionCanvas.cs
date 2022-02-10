@@ -110,7 +110,7 @@ public class MotionCanvas<TDrawingContext> : IDisposable
 
             foreach (var task in _paintTasks.OrderBy(x => x.ZIndex))
             {
-                if (DisableAnimations) task.CompleteAllTransitions();
+                if (DisableAnimations) task.CompleteTransition(null);
                 task.IsValid = true;
                 task.CurrentTime = frameTime;
                 task.InitializeTask(context);
@@ -118,7 +118,7 @@ public class MotionCanvas<TDrawingContext> : IDisposable
                 foreach (var geometry in task.GetGeometries(this))
                 {
                     if (geometry is null) continue;
-                    if (DisableAnimations) geometry.CompleteAllTransitions();
+                    if (DisableAnimations) geometry.CompleteTransition(null);
 
                     geometry.IsValid = true;
                     geometry.CurrentTime = frameTime;

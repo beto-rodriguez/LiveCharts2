@@ -33,11 +33,6 @@ public interface IPathSegment : IAnimatable
     int Id { get; set; }
 
     /// <summary>
-    /// Gets or sets the source.
-    /// </summary>
-    Animatable? Source { get; set; }
-
-    /// <summary>
     /// Copies the data of segment to the destination segment.
     /// </summary>
     /// <param name="destination"></param>

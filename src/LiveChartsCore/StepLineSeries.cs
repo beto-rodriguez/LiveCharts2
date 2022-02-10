@@ -302,7 +302,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
                                     .WithDuration(AnimationsSpeed ?? cartesianChart.AnimationsSpeed)
                                     .WithEasingFunction(EasingFunction ?? cartesianChart.EasingFunction));
 
-                        l.CompleteAllTransitions();
+                        l.CompleteTransition(null);
                         label = l;
                         point.Context.Label = l;
                     }
@@ -542,7 +542,7 @@ public class StepLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeome
         var chartView = (ICartesianChartView<TDrawingContext>)point.Context.Chart;
         if (chartView.Core.IsZoomingOrPanning)
         {
-            visual.Geometry.CompleteAllTransitions();
+            visual.Geometry.CompleteTransition(null);
             visual.Geometry.RemoveOnCompleted = true;
             DataFactory.DisposePoint(point);
             return;

@@ -241,7 +241,7 @@ public abstract class Section<TSizedGeometry, TDrawingContext> : Section<TDrawin
                            .WithDuration(chart.AnimationsSpeed)
                            .WithEasingFunction(chart.EasingFunction));
 
-                _fillSizedGeometry.CompleteAllTransitions();
+                _fillSizedGeometry.CompleteTransition(null);
             }
 
             _fillSizedGeometry.X = xi;
@@ -279,7 +279,7 @@ public abstract class Section<TSizedGeometry, TDrawingContext> : Section<TDrawin
                            .WithDuration(chart.AnimationsSpeed)
                            .WithEasingFunction(chart.EasingFunction));
 
-                _strokeSizedGeometry.CompleteAllTransitions();
+                _strokeSizedGeometry.CompleteTransition(null);
             }
 
             _strokeSizedGeometry.X = xi;

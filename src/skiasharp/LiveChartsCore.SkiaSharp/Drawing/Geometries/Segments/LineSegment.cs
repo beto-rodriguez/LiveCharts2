@@ -50,7 +50,7 @@ public class LineSegment : PathCommand, ILinePathSegment<SKPath>
     /// <inheritdoc cref="IPathCommand{TPathContext}.Execute(TPathContext, long, Animatable)" />
     public override void Execute(SKPath path, long currentTime, Animatable pathGeometry)
     {
-        SetCurrentTime(currentTime);
+        CurrentTime = currentTime;
         path.LineTo(X, Y);
     }
 }

@@ -352,7 +352,7 @@ public class PolarLineSeries<TModel, TVisual, TLabel, TDrawingContext, TPathGeom
                                     .WithDuration(AnimationsSpeed ?? polarChart.AnimationsSpeed)
                                     .WithEasingFunction(EasingFunction ?? polarChart.EasingFunction));
 
-                        l.CompleteAllTransitions();
+                        l.CompleteTransition(null);
                         label = l;
                         data.TargetPoint.Context.Label = l;
                     }

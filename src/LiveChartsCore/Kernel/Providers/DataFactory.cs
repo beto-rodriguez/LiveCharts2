@@ -329,7 +329,7 @@ public class DataFactory<TModel, TDrawingContext>
             foreach (var item in byReferenceVisualMap.Value)
             {
                 if (item.Value.Context.Visual is not IAnimatable visual) continue;
-                visual.RemoveTransitions();
+                visual.RemoveTransition(null);
             }
             byReferenceVisualMap.Value.Clear();
         }
@@ -339,7 +339,7 @@ public class DataFactory<TModel, TDrawingContext>
             foreach (var item in byValueVisualMap.Value)
             {
                 if (item.Value.Context.Visual is not IAnimatable visual) continue;
-                visual.RemoveTransitions();
+                visual.RemoveTransition(null);
             }
             byValueVisualMap.Value.Clear();
         }

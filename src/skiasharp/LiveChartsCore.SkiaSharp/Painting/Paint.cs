@@ -186,7 +186,7 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
     public void SetGeometries(MotionCanvas<SkiaSharpDrawingContext> canvas, HashSet<IDrawable<SkiaSharpDrawingContext>> geometries)
     {
         _geometriesByCanvas[canvas.Sync] = geometries;
-        SetInvalidState();
+        IsValid = false;
     }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.AddGeometryToPaintTask(MotionCanvas{TDrawingContext}, IDrawable{TDrawingContext})" />
@@ -199,21 +199,21 @@ public abstract class Paint : Animatable, IDisposable, IPaint<SkiaSharpDrawingCo
             _geometriesByCanvas[canvas.Sync] = g;
         }
         _ = g.Add(geometry);
-        SetInvalidState();
+        IsValid = false;
     }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.RemoveGeometryFromPainTask(MotionCanvas{TDrawingContext}, IDrawable{TDrawingContext})" />
     public void RemoveGeometryFromPainTask(MotionCanvas<SkiaSharpDrawingContext> canvas, IDrawable<SkiaSharpDrawingContext> geometry)
     {
         _ = GetGeometriesByCanvas(canvas)?.Remove(geometry);
-        SetInvalidState();
+        IsValid = false;
     }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.ClearGeometriesFromPaintTask(MotionCanvas{TDrawingContext})"/>
     public void ClearGeometriesFromPaintTask(MotionCanvas<SkiaSharpDrawingContext> canvas)
     {
         GetGeometriesByCanvas(canvas)?.Clear();
-        SetInvalidState();
+        IsValid = false;
     }
 
     /// <inheritdoc cref="IPaint{TDrawingContext}.ReleaseCanvas(MotionCanvas{TDrawingContext})"/>

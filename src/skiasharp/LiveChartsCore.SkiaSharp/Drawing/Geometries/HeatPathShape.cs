@@ -69,7 +69,7 @@ public class HeatPathShape : PathGeometry, IHeatPathShape
         foreach (var segment in _commands)
         {
             segment.IsValid = true;
-            segment.Execute(path, GetCurrentTime(), this);
+            segment.Execute(path, CurrentTime, this);
             isValid = isValid && segment.IsValid;
 
             if (segment.IsValid && segment.RemoveOnCompleted) toRemoveSegments.Add(segment);
@@ -81,8 +81,7 @@ public class HeatPathShape : PathGeometry, IHeatPathShape
             isValid = false;
         }
 
-        if (IsClosed)
-            path.Close();
+        if (IsClosed) path.Close();
 
         var originalColor = context.Paint.Color;
         var originalStyle = context.Paint.Style;
@@ -103,17 +102,17 @@ public class HeatPathShape : PathGeometry, IHeatPathShape
             context.Paint.Style = originalStyle;
         }
 
-        if (!isValid) SetInvalidState();
+        if (!isValid) IsValid = false;
     }
 
-    /// <inheritdoc cref="IAnimatable.CompleteAllTransitions" />
-    public override void CompleteAllTransitions()
+    /// <inheritdoc cref="IAnimatable.CompleteTransition(string[])" />
+    public override void CompleteTransition(params string[]? propertyName)
     {
-        foreach (var segment in _commands)
+        foreach (var item in _commands)
         {
-            segment.CompleteAllTransitions();
+            item.CompleteTransition(propertyName);
         }
 
-        base.CompleteAllTransitions();
+        base.CompleteTransition(propertyName);
     }
 }
